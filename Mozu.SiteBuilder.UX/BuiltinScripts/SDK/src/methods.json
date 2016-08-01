@@ -580,6 +580,17 @@
             "template": "{+orderService}{id}/digitalWallet/VisaCheckout",
             "includeSelf": true,
             "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        },
+        "get-attribute-definitions": {
+            "template": "{+orderAttributeDefService}",
+            "returnType": "orderattribute"
+        },
+        "update-attributes": {
+            "verb": "PUT",
+            "includeSelf": true,
+            "template": "{+orderService}{id}/attributes{?removeMissing}",
+            "shortcutParam": "removeMissing",
+            "returnType": "orderattributes"
         }
     },
     "rma": {

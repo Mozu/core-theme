@@ -275,8 +275,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                              Id = "paypalExpress",
                              SkipRename= true,
                             InternalUrl = settings.AppSettings("PaypalExpressRedirectUrl")
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "OrderAttributeDefService",
+                            InternalUrl = settings.Urls("service-url-OrderAttributeWebApi"),
+                            RequiresSsl = true
                         }
-
 
                         
                     };

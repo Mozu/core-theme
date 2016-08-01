@@ -134,6 +134,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.ShippingStates = shipStateTask.Result;
 
             this.PageContext.ReasonCollection = reasonList.Result.ReadAsSync().ToJObject();
+
+            this.PageContext.StorefrontOrderAttributes = GetShopperOrderAttributes().Result;
             
             CommerceRuntime.Contracts.Wishlists.Wishlist wishlist = null;
             try {

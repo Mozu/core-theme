@@ -21,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         /// </param>
         public static string ToSortString(this SortingCollection sortCollection, bool useSiteContext = false)
         {
-            if (sortCollection == null)
-                return null;
+            if (sortCollection == null || sortCollection.Count == 0)
+                return "attributeid desc";
             //Mozu.ProductAdmin.Contracts.Product p;
             //p.AuditInfo.UpdateDate 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
@@ -36,8 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             {
                 case "adminname":
                     return ADMIN_NAME;
-                case "name":
-                    return CONTENT_NAME;
                 case "code":
                     return ATTRIBUTE_CODE;
                 default:

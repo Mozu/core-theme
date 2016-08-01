@@ -178,6 +178,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         DateTime Now { get; set; }
         string CategoryCode { get; set; }
         int? CategoryId { get; set; }
+        List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
     }
     public class CrawlerInfo: ICrawlerInfo
     {
@@ -499,6 +500,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public  string CategoryCode { get; set; }
         public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
+        public List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
 
         ICrawlerInfo _crawlerInfo;
         public ICrawlerInfo CrawlerInfo

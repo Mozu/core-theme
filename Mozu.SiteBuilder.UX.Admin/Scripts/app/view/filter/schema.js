@@ -88,9 +88,10 @@ Ext.define('Taco.view.filter.Schema', {
             defaultValue: "",
             dataType: "string",
             supportedOperators: ["eq", "req", "ne", "in"],
-            //editorCfg: {
-            //    xtype: "textfield"
-            //},
+            editorCfg: {
+               xtype: "taco-categorycombobox",
+               isPickerField: true
+            },
             allowBlank: false
         }, {
             id: "producttypeid",

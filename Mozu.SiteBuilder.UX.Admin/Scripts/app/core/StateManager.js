@@ -131,6 +131,7 @@ Ext.define('Taco.core.StateManager', {
             'ipblocking',
             'generalsettings',
             'customers',
+            'orderattributes',
             'synonyms',
             'categoriesRx'
         ];

@@ -1,5 +1,5 @@
 Ext.define('Taco.view.orderAttribute.Edit', {
-    extend: 'Taco.core.ux.form.FullEditor',
+    extend: 'Taco.view.react.Index',
     requires: [
         'Taco.view.orderAttribute.Form'
     ],
@@ -9,4 +9,7 @@ Ext.define('Taco.view.orderAttribute.Edit', {
         title: 'Order Attributes',
         controller: 'orderattributes'
     },
+    initComponent: function () {
+        this.callParent(arguments);
+    }
 });

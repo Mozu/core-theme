@@ -57,11 +57,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient cartWebApiClient, ISettings settings)
+        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, 
+            ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, 
+            Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, 
+            ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient 
+            cartWebApiClient, ISettings settings)
         {
 
             _authHelper = authHelper;
@@ -73,8 +76,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _creditWebApiClient = creditWebApiClient.CloneWithoutUserClaims();
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
-
-
         }
 
 
@@ -187,9 +188,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var billTask = GetBillingCountries();
             var shipStateTask = GetUSShippingStates();
             var billStateTask = GetUSBillingStates();
+            var shopperOrderAttributesTask = GetShopperOrderAttributes();
 
             var orderTask = _orderWebApiClient.GetOrder(id);
-            await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask);
+            await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask).ConfigureAwait(false);
 
             try
             {
@@ -246,6 +248,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.ShippingStates = shipStateTask.Result;
             this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
             this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
+
+            this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
 
             if (!this.PageContext.User.IsAnonymous)
             {
