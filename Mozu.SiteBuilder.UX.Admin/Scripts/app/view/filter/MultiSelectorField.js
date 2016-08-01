@@ -1,4 +1,4 @@
-﻿/**
+/**
  * The multiSelectorField is used when selecting multiple values. Is typically paired with a multiSelectorModal
  */
 Ext.define('Taco.view.filter.MultiSelectorField', {
@@ -38,7 +38,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         gridActions: [],
         gridEditAction : Ext.emptyFn,
         fieldActions: [],
-        removeAction :"destroy", // or remove
+        removeAction :"remove", // destroy or remove
         // warning this can cause layout run errors when the grid has no data. this is not ready for use yet
         autoHideGrid:true,
         value: null,
@@ -141,7 +141,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                         }, me.store);
                     });
             }
-                
+
+
 
             if (me.store.getCount()) {
                 me.store.fireEvent('add');
@@ -392,7 +393,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 minWidth: 150
             },
             {
-                dataIndex: 'value',
+                dataIndex: 'name',
                 text: 'Name',
                 flex: 1
             }
