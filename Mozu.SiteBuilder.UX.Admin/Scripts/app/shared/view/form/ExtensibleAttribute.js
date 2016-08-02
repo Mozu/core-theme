@@ -13,13 +13,19 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
     statics: {
         editors: {
             'Date': function (ptAttribute, values) {
-                var date = (! values[0]) ? '' : new Date(values[0]);
+
+                var date = (!values[0]) ? '' : new Date(values[0]),
+                    day = date.getUTCDate(),
+                    month = date.getUTCMonth(),
+                    year = date.getUTCFullYear(),
+                    displayDate = new Date(year, month, day);
+                
                 return [{
                     xtype: 'datefield',
                     name: this.getFieldName(ptAttribute),
                     fieldLabel: ptAttribute.get('adminName'),
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
-                    value: Ext.util.Format.date(date, 'm/d/Y'),
+                    value: displayDate,
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
                 }];
             },
@@ -31,7 +37,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                     allowBlank: ptAttribute.get('isRequired') === true ? false: true,
                     value:(values && values.length) ? values[0] : null,
                     width: '100%',
-                    rows: 12,
+                    cols: 100,
+                    rows: 6,
                     resizable: true,
                     resizeHandles: 's',
                     disabled: ptAttribute.get('valueType') === 'ShopperEntered' || this.isFieldReadonly(ptAttribute)
