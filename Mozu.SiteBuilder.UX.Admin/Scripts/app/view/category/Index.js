@@ -219,7 +219,7 @@ Ext.define('Taco.view.category.Index', {
                     var record = eventData.record;
                     Ext.defer(function () {
                         me.addRecordToBrowserHistory(record);
-                        Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+                        Taco.core.StateManager.attemptNavigate('category/edit/' + record.getId(), { complexMetaData: { record: record } });
                     }, 1, this);
 
                 }
@@ -473,7 +473,7 @@ Ext.define('Taco.view.category.Index', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('category/edit/' + record.getId(), { complexMetaData: { record: record } });
             }, 1, this);
         return;
     },

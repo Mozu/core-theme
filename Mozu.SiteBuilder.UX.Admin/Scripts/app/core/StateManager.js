@@ -133,7 +133,7 @@ Ext.define('Taco.core.StateManager', {
             'customers',
             'orderattributes',
             'synonyms',
-            'categoriesRx'
+            'categories'
         ];
 
         if (this.REACT_VIEWS
