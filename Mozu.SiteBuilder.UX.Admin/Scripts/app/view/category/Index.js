@@ -67,7 +67,7 @@ Ext.define('Taco.view.category.Index', {
                                 return;
                             }
 
-                            var url = (menuItem.getItemId() == "Dynamic") ? 'categories/createdynamic' : 'categories/create';
+                            var url = (menuItem.getItemId() == "Dynamic") ? 'category/createdynamic' : 'category/create';
                             Taco.core.StateManager.attemptNavigate(url);
                         },
                         scope: me,
@@ -235,7 +235,7 @@ Ext.define('Taco.view.category.Index', {
                         metaData = {
                             id: record.getId()
                         };
-                    Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                    Taco.app.StateManager.attemptNavigate('category/duplicate/' + record.getId(), metaData);
                 }
             }, {
                 text: 'Delete',
@@ -343,7 +343,7 @@ Ext.define('Taco.view.category.Index', {
 
     addRecordToBrowserHistory: function(record) {
 
-        var URIStem = '/categories?view=';
+        var URIStem = '/category?view=';
         var id = record.get('id');
 
         if (!id) {
