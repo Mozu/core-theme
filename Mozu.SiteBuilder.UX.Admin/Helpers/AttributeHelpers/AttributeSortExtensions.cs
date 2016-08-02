@@ -36,6 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             {
                 case "adminname":
                     return ADMIN_NAME;
+                case "name":
+                    return CONTENT_NAME;
                 case "code":
                     return ATTRIBUTE_CODE;
                 default:
