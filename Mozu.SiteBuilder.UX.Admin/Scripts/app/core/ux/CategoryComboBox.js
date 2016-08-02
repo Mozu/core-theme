@@ -7,7 +7,7 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     alias: 'widget.categorycombobox',
     xtype: 'taco-categorycombobox',
     requires: ['Taco.store.Categories'],
-    displayField: 'nameAndCode',
+    displayField: 'nameAndCodeAndStatus',
     valueField: 'id',
     minChars: 1,
     queryMode: 'local',
