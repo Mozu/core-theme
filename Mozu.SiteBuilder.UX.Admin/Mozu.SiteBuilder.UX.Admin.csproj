@@ -512,16 +512,20 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\Category.js" />
+    <Content Include="Scripts\app\controller\CustomRoutes.js" />
+    <Content Include="Scripts\app\controller\CustomSchema.js" />
+    <Content Include="Scripts\app\controller\IpBlocking.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
     <Content Include="Scripts\app\controller\PriceLists.js" />
+    <Content Include="Scripts\app\controller\Publishing.js" />
+    <Content Include="Scripts\app\controller\React.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
-    <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
-    <Content Include="Scripts\app\controller\CategoriesRx.js" />
     <Content Include="Scripts\app\controller\Synonyms.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
@@ -795,6 +799,7 @@
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
+    <Content Include="Scripts\app\view\categories\Index.js" />
     <Content Include="Scripts\app\view\category\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
@@ -910,6 +915,7 @@
     <Content Include="Scripts\app\view\publishing\modal\CreatePublishSet.js" />
     <Content Include="Scripts\app\view\publishing\modal\PublishSetPicker.js" />
     <Content Include="Scripts\app\view\publishing\Split.js" />
+    <Content Include="Scripts\app\view\react\Index.js" />
     <Content Include="Scripts\app\view\report\ReportList.js" />
     <Content Include="Scripts\app\view\report\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
@@ -926,6 +932,7 @@
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Panel.js" />
+    <Content Include="Scripts\app\view\synonyms\Index.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -1555,7 +1562,6 @@
     <Content Include="Scripts\app\controller\Attributes.js" />
     <Content Include="Scripts\app\controller\FileManager.js" />
     <Content Include="Scripts\app\controller\ProductTypes.js" />
-    <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
     <Content Include="Scripts\app\controller\Settings.js" />
