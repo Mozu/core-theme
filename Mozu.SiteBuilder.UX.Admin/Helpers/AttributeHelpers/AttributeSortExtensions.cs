@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string ADMIN_NAME = "adminname";
         private const string CONTENT_NAME = "content.name";
         private const string ATTRIBUTE_CODE = "attributecode";
+        private const string IS_ACTIVE = "isactive";
         
 
         /// <summary>
@@ -40,6 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                     return CONTENT_NAME;
                 case "code":
                     return ATTRIBUTE_CODE;
+                case "isactive":
+                    return IS_ACTIVE;
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
