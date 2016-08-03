@@ -1681,7 +1681,7 @@
             },
 
             validateReviewCheckoutFields: function(){
-                var validationResults = []
+                var validationResults = [];
                 for (var field in checkoutPageValidation) {
                     if(checkoutPageValidation.hasOwnProperty(field)) {
                         var result = this.validate(field);
