@@ -1680,6 +1680,20 @@
                 return this.get('createAccount') && !this.customerCreated;
             },
 
+            validateReviewCheckoutFields: function(){
+                var validationResults = []
+                for (var field in checkoutPageValidation) {
+                    if(checkoutPageValidation.hasOwnProperty(field)) {
+                        var result = this.validate(field);
+                        if(result) {
+                            validationResults.push(result);
+                        }
+                    }
+                }
+
+                return validationResults.length > 0;
+            },
+
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1727,17 +1741,19 @@
                 if (requiresBillingInfo && !billingContact.isValid()) {
                     // reconcile the empty address after we got back from paypal and possibly other situations.
                     // also happens with visacheckout ..
-                    var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
+                    var billingInfoFromPayment = (this.apiModel.getCurrentPayment() || {}).billingInfo;
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate()) {
+                // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
+                if ((nonStoreCreditTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) {
                     this.isSubmitting = false;
                     return false;
-                }
+                } 
+
                 this.isLoading(true);
 
                 if (isSavingNewCustomer) {
