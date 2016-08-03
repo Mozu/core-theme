@@ -114,8 +114,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                                         return value.id === record.get('id');
                                     });
 
-                                    var model = me.store.getAt(index);
-                                    model.set(record.data);
+                                    var model = me.store.findRecord('id', record.get('id'));
+                                    model.set(property);
 
                                 });
                             }
@@ -130,7 +130,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                             me.store.model.load(record.get('id'), {
                                 scope: me.store,
                                 success: function(record, operation) {
-                                    var model = me.store.getAt(index);
+                                    var key = me.getKeyByStoreType(me.store.$className);
+                                    var model = me.store.findRecord('id', record.get(key));
                                     model.set(record.data);
                                 },
                                 failure: function(record, operation) {
@@ -337,6 +338,17 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         configs['properties.'] = 'Taco.store.Attributes';
 
         return val && configs[val] ? configs[val] : configs['default'];
+    },
+
+    getKeyByStoreType: function(type) {
+        // custom mapping for store/models that don't use the 'id' property
+        switch (type) {
+            case 'Taco.store.Products':
+                return 'productCode';
+            case 'Taco.store.Categories':
+                return 'categoryCode';
+        }
+        return 'id';
     },
 
     getColumnConfigByValue: function(val) {
