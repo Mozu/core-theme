@@ -44,7 +44,14 @@ Ext.define('Taco.store.EntityEditors', {
 
                 if (entityRecord.get('entityType') == 'cms') {
                     isMatch = isMatch || Ext.Array.findBy((item.data.documentTypes || []), function (crit) {
-                        return crit && entityRecord.data.documentTypeFQN && crit.toLowerCase() == entityRecord.data.documentTypeFQN.toLowerCase();
+                        var documentType = Ext.isArray(entityRecord.data.documentTypeFQN)
+                            ? entityRecord.data.documentTypeFQN[0]
+                            : entityRecord.data.documentTypeFQN;
+
+                        documentType = documentType || '';
+
+
+                        return crit && documentType && crit.toLowerCase() == documentType.toLowerCase();
                     });
                     isMatch = isMatch || Ext.Array.findBy((item.data.documentLists || []), function (crit) {
                         return crit && entityRecord.data.listFQN && crit.toLowerCase() == entityRecord.data.listFQN.toLowerCase();

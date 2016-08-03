@@ -93,6 +93,9 @@ Ext.define('Taco.view.customSchema.Split', {
     getCreateButton: function() {
         return {
             xtype: 'splitbutton',
+            handler: function() {
+                // do nothing;
+            },
             menu: [
                 {
                     text: 'Create Default',
