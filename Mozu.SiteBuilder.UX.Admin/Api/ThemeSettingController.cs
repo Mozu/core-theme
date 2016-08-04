@@ -59,7 +59,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var values = await _themeSettingsRepository.GetInstanceValues(themeId);
             var docId = String.Join("", "theme_settings_", themeId); 
-            var document = (await _documentListWebApiClient.GetTreeDocument(documentListName: "siteSettings@mozu", documentName: docId)).ReadAsSync();
+            var document = (await _documentListWebApiClient.GetTreeDocument(documentListName: "siteSettings@mozu", documentName: docId));
+
             var docList = (await _documentListWebApiClient.GetDocumentList(documentListName: "siteSettings@mozu")).ReadAsSync();
             var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = themeId });
 
@@ -67,9 +68,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             string cmsDocId = null;
             bool? isPublishingEnabled = docList.EnablePublishing;
 
-            if (document != null)
+            if (document.ResponseMessage.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                cmsDocId = document.Id;
+                cmsDocId = document.ReadAsSync().Id;
             }
 
             foreach (var setting in configSettings.Items)
@@ -82,8 +83,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            values.Add("MozuDocumentId", cmsDocId);
-            values.Add("MozuPublishingEnabled", isPublishingEnabled);
+            if (values != null)
+            {
+                values.Add("MozuDocumentId", cmsDocId);
+                values.Add("MozuPublishingEnabled", isPublishingEnabled);
+            }
 
             return this.Request.CreateResponse(HttpStatusCode.OK, values);
         }
