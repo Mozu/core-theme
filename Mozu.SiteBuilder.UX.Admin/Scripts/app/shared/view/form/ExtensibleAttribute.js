@@ -15,10 +15,15 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
             'Date': function (ptAttribute, values) {
 
                 var date = (!values[0]) ? '' : new Date(values[0]),
-                    day = date.getUTCDate(),
-                    month = date.getUTCMonth(),
-                    year = date.getUTCFullYear(),
+                    displayDate = '';
+
+                if (date) {
+                    var day = date.getUTCDate(),
+                        month = date.getUTCMonth(),
+                        year = date.getUTCFullYear();
+
                     displayDate = new Date(year, month, day);
+                }
                 
                 return [{
                     xtype: 'datefield',
