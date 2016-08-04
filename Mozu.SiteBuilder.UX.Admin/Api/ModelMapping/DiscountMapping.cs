@@ -217,8 +217,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToProductsWithSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty))
-                .ForMember(x => x.CouponSets, op => op.Ignore());
-            
+                .ForMember(x => x.CouponSets, op => op.Ignore())
+                //AuditInfo
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
+                .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
+                .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
+                ;
+
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
