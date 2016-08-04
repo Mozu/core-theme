@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             else
             {
                 var sort = "isactive desc";
-                if(pagingParams.sort == null)
+                if(pagingParams.sort != null && pagingParams.sort.Count != 0)
                 {
                     sort = pagingParams.sort.ToSortString();
                 }
