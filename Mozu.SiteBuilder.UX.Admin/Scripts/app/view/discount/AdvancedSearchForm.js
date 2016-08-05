@@ -302,7 +302,11 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
             },
             {
                 xtype: 'fieldcontainer',
+<<<<<<< HEAD
                 fieldLabel: 'Modified Date Range',
+=======
+                fieldLabel: 'Modfied Range',
+>>>>>>> 1c829b2c65058a97c25d390c06b3a802812d62a6
                 layout: {
                     type: 'hbox',
                     align: 'middle'
