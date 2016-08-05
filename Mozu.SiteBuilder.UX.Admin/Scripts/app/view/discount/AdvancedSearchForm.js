@@ -262,8 +262,69 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     name: 'endDateTo',
                     flex: 1
                 }]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'createBy',
+                fieldLabel: 'Created By',
+                flex: 1
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Created Date Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [
+                    {
+                        xtype: 'datefield',
+                        name: 'createdFrom',
+                        altFormats: "c",
+                        flex: 1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'createdTo',
+                        altFormats: "c",
+                        flex: 1
+                    }
+                ]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'lastModifiedBy',
+                fieldLabel: 'Modified By',
+                flex: 1
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Modified Date Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [
+                    {
+                        xtype: 'datefield',
+                        name: 'modifiedFrom',
+                        altFormats: "c",
+                        flex: 1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'modifiedTo',
+                        altFormats: "c",
+                        flex: 1
+                    }
+                ]
             }
-        
         ];
 
             

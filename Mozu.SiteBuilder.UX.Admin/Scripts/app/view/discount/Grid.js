@@ -249,6 +249,40 @@ Ext.define('Taco.view.discount.Grid', {
                     flex: 1,
                     width: 80,
                     hidden: false
+                }, {
+                    xtype: 'datecolumn',
+                    dataIndex: 'createDate',
+                    stateId: 'createDate',
+                    format: 'n/j/Y g:i a',
+                    flex: 2,
+                    text: 'Created Date',
+                    hidden: true,
+                    sortable: true
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'createByUser',
+                    stateId: 'createByUser',
+                    text: 'Created By',
+                    flex: 1,
+                    hidden: true,
+                    sortable: false
+                }, {
+                    xtype: 'datecolumn',
+                    dataIndex: 'lastModifiedDate',
+                    stateId: 'lastModifiedDate',
+                    format: 'n/j/Y g:i a',
+                    flex: 2,
+                    text: 'Last Modified Date',
+                    hidden: true,
+                    sortable: true
+                }, {
+                    xtype: 'gridcolumn',
+                    dataIndex: 'lastModifiedByUser',
+                    stateId: 'lastModifiedByUser',
+                    text: 'Last Modified By',
+                    flex: 1,
+                    hidden: true,
+                    sortable: false
                 }
             ];
 
