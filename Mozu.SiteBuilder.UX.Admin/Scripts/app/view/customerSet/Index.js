@@ -131,14 +131,14 @@ Ext.define('Taco.view.customerSet.Index', {
                     }
                 }],
                 preProcessMenuItems: function (items, menuColumn, eventData) {
-                    if (eventData.record.get('isDefault')) {
-                        var found = items.find(function (item, index) {
-                            return item.itemId.toLowerCase() === 'delete';
-                        });
-                        if (found) {
-                            found.disabled = true;
-                        }
+                    
+                    var found = items.find(function (item, index) {
+                        return item.itemId.toLowerCase() === 'delete';
+                    });
+                    if (found) {
+                        found.disabled = eventData.record.get('isDefault');
                     }
+                    
                     return items;
                 }
             }
