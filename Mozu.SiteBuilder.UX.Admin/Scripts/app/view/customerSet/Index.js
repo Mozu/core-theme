@@ -159,14 +159,19 @@ Ext.define('Taco.view.customerSet.Index', {
     },
 
     beforeRowUpdate: function (rowEditor, store) {
-        // I'm purposely checking if found > 0 because found can't be greater then 0. I'm searching starting at index 1.
-        var found = store.find('code', store.getAt(0).get('code'), 1);
-        if (found > 0) {
-            Taco.app.fireEvent('setmessage', 'New customer set code already exists. The code must be unique.', 'error');
-            store.removeAt(0);
-            return false;
+        if (rowEditor.context.rowIdx > 0) {
+            // Not adding a new row, just editing an existing one.
+            return true;
+        } else {
+            // I'm purposely checking if found > 0 because found can't be greater then 0. I'm searching starting at index 1.
+            var found = store.find('code', store.getAt(0).get('code'), 1, false, true, true);
+            if (found > 0) {
+                Taco.app.fireEvent('setmessage', 'New customer set code already exists. The code must be unique.', 'error');
+                store.removeAt(0);
+                return false;
+            }
+            return true;
         }
-        return true;
     },
 
     doDelete: function(record, store) {
