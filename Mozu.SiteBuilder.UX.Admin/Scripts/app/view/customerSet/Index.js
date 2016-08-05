@@ -122,11 +122,25 @@ Ext.define('Taco.view.customerSet.Index', {
                 menuItems: [{
                     itemId: 'Delete',
                     text: 'Delete',
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
+                        if (eventData.record.get('isDefault')) {
+                            return;
+                        }
                         var record = eventData.record;
                         me.doDelete(record, me.store);
                     }
-                }]
+                }],
+                preProcessMenuItems: function (items, menuColumn, eventData) {
+                    if (eventData.record.get('isDefault')) {
+                        var found = items.find(function (item, index) {
+                            return item.itemId.toLowerCase() === 'delete';
+                        });
+                        if (found) {
+                            found.disabled = true;
+                        }
+                    }
+                    return items;
+                }
             }
         ];
 
