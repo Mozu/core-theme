@@ -35,6 +35,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return "enddate" + GetSortDirection(sortItem);
                 case "amounttype":
                     return "amounttype" + GetSortDirection(sortItem) + ", amount" + GetSortDirection(sortItem);
+                case "lastmodifieddate":
+                    return "updatedate" + GetSortDirection(sortItem);
                 default:
                     return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
             }
