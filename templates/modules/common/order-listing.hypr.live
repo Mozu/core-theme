@@ -34,14 +34,16 @@
             <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
             {% endif %}
             {% endblock order-shipped-to %}
+        </dl>
 
-            {% block attributes %}
-            {% for attribute in model.attributes %}
-            {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
-                {% if attDef %}
-                    {% with attribute.values|first as attributeVal %}
-                        <dt>{{ attDef.content.value }}</dt>
-                        <dd>
+        {% block attributes %}
+        {% for attribute in model.attributes %}
+        {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
+            {% if attDef %}
+                {% with attribute.values|first as attributeVal %}
+                    <div class="mz-orderlisting-attribute">
+                        <span>{{ attDef.content.value }}</span>
+                        <div>
                             {% if attDef.dataType === "DateTime" %}
                                 {{ attributeVal|date("F j, Y") }}
                             {% else %}
@@ -56,14 +58,15 @@
                                     {{ attributeVal }}
                                 {% endif %}
                             {% endif %}
-                        </dd>
-                    {% endwith %}
-                {% endif %}
-            {% endwith %}
-            {% endfor %}
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
 
-            {% endblock attributes %}
-        </dl>
+        {% endblock attributes %}
+
         {% endblock order-details %}
     </div>
     <div class="mz-orderlisting-items">
