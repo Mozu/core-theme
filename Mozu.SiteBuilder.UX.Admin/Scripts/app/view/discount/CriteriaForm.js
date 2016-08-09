@@ -190,7 +190,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             valueField: 'id',
             style: {
                 display: 'inline-table',
@@ -281,7 +281,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             disableKeyFilter: true,
             typeAhead: true,
             lastQuery:"",
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             valueField: 'id',
             fieldLabel: 'Excluded Categories',
             style: {

@@ -95,6 +95,22 @@ Ext.define('Taco.model.Category', {
             persist: false
         },
         {
+            name: 'nameAndCodeAndStatus',
+            convert: function(v, record) {
+                var result = record.get('name');
+                result += !record.get('categoryCode') ? '' : ' (' + record.get('categoryCode') + ')';
+                result += record.get('isActive') ? '' : ' (disabled)';
+                return result;
+            },
+            persist: false
+        },
+        {
+            name: 'isActive',
+            type: 'boolean',
+            useNull: true,
+            defaultValue: true
+        },
+        {
             "name": "description",
             "type": "string",
             "useNull": true
