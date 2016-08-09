@@ -184,7 +184,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             PageContext.CmsContext.Page.DocumentTypeFQN = "emailTemplateContent@mozu";
             PageContext.PageType = "email";
-
+            
             if (res.IsSuccessStatusCode)
             {
                 var vr = ((ObjectContent) res.Content).Value as ViewResult;
@@ -205,6 +205,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
             ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
+
+            ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
         }
@@ -240,7 +242,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 user = await TryGetUser(notification);
                 PageContext.User = user;
             }
-
 
             var site = (await _sitesWebApiClient.GetSite(SbApiContext.SiteId)).ReadAsSync();
             var v = await Page("emailTemplateContent@mozu", GetCmsPage(emailTemplate));
@@ -326,6 +327,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             vdd["User"] = user;
             vdd["rmaLocation"] = await GetDirectShipLocationOrDefault();
             vdd["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
+
+            vdd["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
             var context = new HyprViewContext(Request, vdd);
             return await Render(view, context);
