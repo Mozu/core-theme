@@ -46,6 +46,38 @@
             </tr>
 
 			{% endifnotequal %}
+
+            {% if model.attributes.length > 0 %}
+                <tr>
+                    <td>
+                    <b>{{ labels.additionalInformation }}</b>:
+                    <br>
+                    <br>
+                    {% for attribute in model.attributes %}
+                    {% with attribute.values|first as attributeVal %}
+                    {% with storefrontOrderAttributes|findwhere('attributeFQN', attribute.fullyQualifiedName) as attributeDef %}
+                    {% if attributeDef %}
+                            {{ attributeDef.content.value }} 
+                                {% if attributeDef.dataType == "DateTime" %}
+                                    {{ attributeVal|date("F j, Y") }}
+                                {% else %}
+                                    {% if attributeDef.dataType == "Bool" %}
+                                        {% if attributeVal == "True" %}
+                                        Yes
+                                        {% else %}
+                                        No
+                                        {% endif %}
+                                    {% else %}
+                                        {{ attributeVal }}
+                                    {% endif %}
+                                {% endif %}
+                    {% endif %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 
