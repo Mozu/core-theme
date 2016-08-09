@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICategoryHelper _categoryHelper;
         private readonly ICategoryWebApiClient  _categoriesClient;
+        private const string _listResponseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name),auditInfo)";
 
         public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper)
         {
@@ -34,27 +35,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null)
+        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null, bool? isActive=null)
         {
             if (id.HasValue && id != 666)
             {
                 return await GetSingleCategory(id);
             }
-
+            //getting rid of server filtering for now.  all filtering done on the client.
+            
             int start = 0;
+            var ctxLevel = TargetContextLevelType.MasterCatalog;
+
+            int siteId = -1;
+            ICategoryWebApiClient catClient = _categoriesClient;
+            if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
+            {
+                ctxLevel = TargetContextLevelType.Site;
+                catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
+
+            }
             List<Category> categories = new List<Category>();
-            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+            var client = _categoriesClient.CloneWithApiContext(x =>
+            {
+                x.CatalogId = null;
+                x.SiteId = null;
+            });
+            var extFilter = filterCollection.ToFilterString();
+
+            if (isActive.HasValue && !(filterCollection.Any(x => x.property == "status")))
+            {
+                extFilter = AppendIsActiveDefault(isActive, extFilter);
+            }
+            
             while (true)
             {
-                var cats = (await _categoriesClient.GetCategories(startIndex: start,
+                var cats = (await client.GetCategories(startIndex: start,
                     pageSize: 200, //current API maximum is 200 - May 2016
                     sortBy: "sequence asc",
-                    filter: filterCollection.ToFilterString(),
-                    responseFields: responseFields
+                    filter: extFilter,
+                    responseFields: _listResponseFields
                     )).ReadAsSync();
                 categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
                 start = cats.PageSize + cats.StartIndex;
-                if (cats.TotalCount <= start )
+                if (cats.TotalCount <= start)
                 {
                     break;
                 }
@@ -86,7 +109,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
 
             }
-
             return List2(categories);
         }
 
@@ -103,12 +125,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 sort = "sequence asc";
             }
             //getting rid of server filtering for now.  all filtering done on the client.
-            const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name),auditInfo)";
             var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
                 pageSize: pagingParams.pageSize,
                 sortBy: sort,
                 filter: filterCollection.ToFilterString(),
-                responseFields: responseFields
+                responseFields: _listResponseFields
                 )).ReadAsSync();
             return List2(Mapper.Map<List<Category>>(cats.Items));
         }
@@ -118,6 +139,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
             var retList = new List<Category> { Mapper.Map<Category>(cat) };
             return List2(retList);
+        }
+
+        private static string AppendIsActiveDefault(bool? isActive, string extFilter)
+        {
+            return string.IsNullOrEmpty(extFilter) 
+                ?  $"isactive eq \"{isActive}\""
+                : $"{extFilter} and isactive eq \"{isActive}\"";
         }
 
         [HttpGetRoute(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]

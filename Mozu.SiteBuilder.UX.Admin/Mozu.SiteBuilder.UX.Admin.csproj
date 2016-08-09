@@ -1562,6 +1562,7 @@
     <Content Include="Scripts\app\controller\Attributes.js" />
     <Content Include="Scripts\app\controller\FileManager.js" />
     <Content Include="Scripts\app\controller\ProductTypes.js" />
+    <Content Include="Scripts\app\controller\PendingChanges.js" />
     <Content Include="Scripts\app\controller\Errors.js" />
     <Content Include="Scripts\app\controller\Roles.js" />
     <Content Include="Scripts\app\controller\Settings.js" />

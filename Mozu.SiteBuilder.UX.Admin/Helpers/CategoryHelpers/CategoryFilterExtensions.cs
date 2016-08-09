@@ -64,6 +64,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "isactive":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE);
 
+                case "status":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "active":
+                            return String.Format("{0} eq \"true\"", IS_ACTIVE);
+                        case "disabled":
+                            return String.Format("{0} eq \"false\"", IS_ACTIVE);
+                        default:
+                            return "";
+                    }
+
+                case "hiddenonstorefront":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "yes":
+                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
+                        case "no":
+                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
+                        default:
+                            return "";
+                    }
+
                 case "createdate":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_DATE);
 

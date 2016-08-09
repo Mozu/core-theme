@@ -256,11 +256,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     return String.Format("{0} eq \"{1}\"", CURRENT_REDEMPTION_COUNT_PROPERTY, filter.value);
                 case "createdate":
                     return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "createdfrom":
+                    return string.Format("{0} ge {1}", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "createdto":
+                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "createby":
                     return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
                 case "updatedate":
                     return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "modifiedfrom":
+                    return string.Format("{0} ge {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "modifiedto":
+                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "updateby":
+                case "lastmodifiedby":
                     return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
                 case "productsid":
                     return String.Format("{0} eq \"{1}\"", TARGET_PRODUCTS_ID_PROPERTY, filter.value);

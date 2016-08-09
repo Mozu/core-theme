@@ -52,7 +52,7 @@ Ext.define("Taco.view.category.Form", {
                 itemId: "dynamic-cat-type-combo",
                 fieldLabel: "Product Membership",
                 margin: { left: 20 },
-                flex: 1,
+                flex: 2,
                 valueField: "id",
                 displayField: "name",
                 queryMode: "local",
@@ -101,6 +101,28 @@ Ext.define("Taco.view.category.Form", {
 
         var secondRowItems = [
             {
+                xtype: 'combobox',
+                name: 'isActive',
+                fieldLabel: 'Status',
+                flex: 1,
+                editable: false,
+                allowBlank: false,
+                store: [[
+                    true,
+                    'Active'
+                ], [
+                    false,
+                    'Disabled'
+                ]],
+                listeners: {
+                    scope: me,
+                    change: function(cmp, newValue, oldValue, eOpts) {
+                        me.optionsContainer.setVisible(newValue);
+                        //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
+                    }
+                }
+            },
+            {
                 xtype: "categorycombobox",
                 name: "parentId",
                 fieldLabel: "Parent Category",
@@ -113,7 +135,29 @@ Ext.define("Taco.view.category.Form", {
 
         if (categoryType !== "Static") {
             secondRowItems.push(this.dynamicCategoryTypeCombo);
+        } else {
+            secondRowItems.push({
+                xtype: 'container',
+                flex: 2
+            })
         }
+
+        this.hiddenOnStorefront = Ext.create('Ext.form.field.Checkbox', {
+            name: "isHidden",
+            width: "100%",
+            xtype: "checkboxfield",
+            boxLabel: "Hide category on storefront"
+        });
+
+        this.optionsContainer = Ext.create('Ext.form.FieldContainer', {
+            xtype: "fieldcontainer",
+            layout: "fit",
+            width: "100%",
+            fieldLabel: "Options",
+            items: [
+                me.hiddenOnStorefront
+            ]
+        });
 
         this.items.push({
             xtype: "fieldcontainer",
@@ -190,20 +234,7 @@ Ext.define("Taco.view.category.Form", {
             xtype: "fieldcontainer",
             layout: "hbox",
             items: secondRowItems
-        }, {
-            xtype: "fieldcontainer",
-            layout: "fit",
-            width: "100%",
-            fieldLabel: "Options",
-            items: [
-                {
-                    name: "isHidden",
-                    width: "100%",
-                    xtype: "checkboxfield",
-                    boxLabel: "Hide category on store front"
-                }
-            ]
-        });
+        }, me.optionsContainer);
 
 
         if (categoryType !== "Static") {

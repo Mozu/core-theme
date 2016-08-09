@@ -22,16 +22,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
             {
                 throw new ArgumentNullException("id");
             }
-            if (inputCategories.Any(c => c.Sequence == null))
-            {
-                throw new ArgumentNullException("sequence");
-            }
 
             categorySequenceCollection.Items = inputCategories.Select(c => new DC.CategorySequence
             {
-                CategoryId = (int) c.Id,
+                CategoryId = c.Id.GetValueOrDefault(),
                 ParentCategoryId = (c.ParentId < 0) ? null : c.ParentId,
-                Sequence = (int) c.Sequence
+                Sequence = c.Sequence.GetValueOrDefault(999999)
             }).ToList();
             return categorySequenceCollection;
         }
