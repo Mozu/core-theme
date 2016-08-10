@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string ADMIN_NAME = "adminname";
         private const string CONTENT_NAME = "content.name";
         private const string ATTRIBUTE_CODE = "attributecode";
+        private const string IS_ACTIVE = "isactive";
         
 
         /// <summary>
@@ -21,8 +22,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         /// </param>
         public static string ToSortString(this SortingCollection sortCollection, bool useSiteContext = false)
         {
-            if (sortCollection == null || sortCollection.Count == 0)
-                return "attributeid desc";
+            if (sortCollection == null)
+                return null;
             //Mozu.ProductAdmin.Contracts.Product p;
             //p.AuditInfo.UpdateDate 
             return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
@@ -36,8 +37,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             {
                 case "adminname":
                     return ADMIN_NAME;
+                case "name":
+                    return CONTENT_NAME;
                 case "code":
                     return ATTRIBUTE_CODE;
+                case "isactive":
+                    return IS_ACTIVE;
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }

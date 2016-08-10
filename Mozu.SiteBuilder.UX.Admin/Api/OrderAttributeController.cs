@@ -52,7 +52,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var sort = pagingParams.sort.ToSortString();
+                var sort = "isactive desc";
+                if(pagingParams.sort != null && pagingParams.sort.Count != 0)
+                {
+                    sort = pagingParams.sort.ToSortString();
+                }
 
                 var results = (await _orderAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort)).ReadAsSync();
                 var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);

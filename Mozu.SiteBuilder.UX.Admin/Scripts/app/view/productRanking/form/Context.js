@@ -89,7 +89,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             valueField: 'categoryCode',
             style: {
                 display: 'inline-table',

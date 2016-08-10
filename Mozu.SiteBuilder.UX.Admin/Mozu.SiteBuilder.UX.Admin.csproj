@@ -792,6 +792,7 @@
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
+    <Content Include="Scripts\app\view\category\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
@@ -906,6 +907,7 @@
     <Content Include="Scripts\app\view\publishing\modal\CreatePublishSet.js" />
     <Content Include="Scripts\app\view\publishing\modal\PublishSetPicker.js" />
     <Content Include="Scripts\app\view\publishing\Split.js" />
+    <Content Include="Scripts\app\view\react\Index.js" />
     <Content Include="Scripts\app\view\report\ReportList.js" />
     <Content Include="Scripts\app\view\report\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
@@ -2466,7 +2468,6 @@
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
-    <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />

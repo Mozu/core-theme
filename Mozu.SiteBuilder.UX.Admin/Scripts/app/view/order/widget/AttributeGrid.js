@@ -43,8 +43,31 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
             throw "store is required";
         }
         this.columns = this.getColumnConfig();
+
+        this.store.filter([
+            {
+                filterFn: function (item) {
+                    var me = this;
+
+                    var attr = Ext.Array.filter(me.record.get('attributes'), function(attribute){
+                        return (attribute.fullyQualifiedName || '').toLowerCase() === (item.get('id') || '').toLowerCase();
+                    }) || [];
+
+                    if (!item.get('isActive')) {
+                        return attr.length > 0
+                    } else {
+                        return true;
+                    }
+                },
+                scope: this
+            }
+        ]);
+
         me.callParent(arguments);
+
     },
+
+    GridEmptyItemText : '--',
 
     // Method override from base class to configure the displayed columns.
     getColumnConfig: function () {
@@ -68,11 +91,25 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
                     return (attribute.fullyQualifiedName || '').toLowerCase() === (record.get('id') || '').toLowerCase();
                 });
 
-                if (record.get('inputType') == "YesNo") {
-                    return att && !Ext.isEmpty(att.values) && att.values[0] ? (att.values[0].toLowerCase() === 'true' ? 'Yes' : 'No') : '--';
+                if (record.get('inputType') === "YesNo") {
+                    return att && !Ext.isEmpty(att.values) && att.values[0] ? (att.values[0].toLowerCase() === 'true' ? 'Yes' : 'No') : this.GridEmptyItemText;
                 }
 
-                return (att && !Ext.isEmpty(att.values) ? att.values.map(Ext.util.Format.htmlEncode).join(', ').replace(/\n/g, '<br>') : '--');
+                if (record.get('inputType') === "Date") {
+                    if (att && !Ext.isEmpty(att.values) && att.values[0]) {
+                        var date = new Date(att.values[0]),
+                            day = date.getUTCDate(),
+                            month = date.getUTCMonth() + 1, // month is 0 based.
+                            year = date.getUTCFullYear();
+
+                        return month + '/' + day + '/' + year;
+                    }
+                    else {
+                        return this.GridEmptyItemText
+                    };
+                }
+
+                return (att && !Ext.isEmpty(att.values) ? att.values.map(Ext.util.Format.htmlEncode).join(', ').replace(/\n/g, '<br>') : this.GridEmptyItemText);
             }
         }]    
 

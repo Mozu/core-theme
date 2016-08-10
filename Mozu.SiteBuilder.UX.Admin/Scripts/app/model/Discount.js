@@ -216,15 +216,33 @@ Ext.define('Taco.model.Discount', {
             type: 'boolean',
             defaultValue: false
         }, {
-            name: 'usePurchaseRequirementAsTarget',
-            type: 'boolean',
-            defaultValue: null,
+            name: 'createBy',
+            type: 'string',
             useNull: true
         }, {
-            name: 'isBxGx',
-            type: 'boolean',
-            defaultValue: null,
+            name: 'createByUser',
+            type: 'string',
+            convert: Taco.core.util.Common.getCreateByUser,
+            persist: false
+        }, {
+            name: 'createDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
+        }, {
+            name: 'lastModifiedBy',
+            type: 'string',
             useNull: true
+        }, {
+            name: 'lastModifiedByUser',
+            type: 'string',
+            convert: Taco.core.util.Common.getLastModifiedByUser,
+            persist: false
+        }, {
+            name: 'lastModifiedDate',
+            type: 'date',
+            useNull: true,
+            dateFormat: 'c'
         }
 
     ],

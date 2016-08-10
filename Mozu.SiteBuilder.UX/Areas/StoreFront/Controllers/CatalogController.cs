@@ -102,10 +102,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails, () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
-            if (redirect != null)
+            if (string.IsNullOrEmpty(product.VariationProductCode))
             {
-                return redirect;
+                var redirect =
+                    await
+                        _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,
+                            () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
+                if (redirect != null)
+                {
+                    return redirect;
+                }
             }
 
             if (Request.Method == HttpMethod.Head)

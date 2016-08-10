@@ -35,6 +35,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return "enddate" + GetSortDirection(sortItem);
                 case "amounttype":
                     return "amounttype" + GetSortDirection(sortItem) + ", amount" + GetSortDirection(sortItem);
+                case "lastmodifieddate":
+                    return "updatedate" + GetSortDirection(sortItem);
                 default:
                     return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
             }
@@ -217,14 +219,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, op => op.ResolveUsing(dc => dc.DoesNotApplyToProductsWithSalePrice))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty))
-                .ForMember(d=> d.UsePurchaseRequirementAsTarget, o=>o.ResolveUsing(s=>s.Target.AppliesToPurchaseConditionItems))
-                .ForMember(d=>d.IsBxGx, o=> o.ResolveUsing(s=>s.IsBxGx))
-                .ForMember(x => x.CouponSets, op => op.Ignore());
-            
+                .ForMember(x => x.CouponSets, op => op.Ignore())
+                //AuditInfo
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
+                .ForMember(x => x.LastModifiedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
+                .ForMember(x => x.LastModifiedDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
+                ;
+
             // To data contract
             Mapper.CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))
+                
+
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))
@@ -269,7 +277,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                            ShippingZones = (x.ShippingZones ?? Enumerable.Empty<string>()).Select(_ => new DC.TargetedShippingZone()  { Zone  = _ }).ToList(),                                                                          
                                                                            IncludeAllProducts = x.IncludeAllProducts,
                                                                            AppliesToLeastExpensiveProductsFirst = x.AppliesToLeastExpensiveProductsFirst,
-                                                                           AppliesToPurchaseConditionItems = x.UsePurchaseRequirementAsTarget
                                                                        }))
 
                 .ForMember(dc => dc.IncludedPriceLists, op => op.ResolveUsing(x => x.IncludedPriceLists))
