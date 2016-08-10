@@ -153,7 +153,9 @@ Ext.define('Taco.view.discount.Edit', {
         });
 
     },
-
+    onSaveSuccess: function(record) {
+        this.updateTitle(record.get('name'));
+    },
     onDestroy: function () {
         var me = this;
 
