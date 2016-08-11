@@ -99,29 +99,31 @@ Ext.define("Taco.view.category.Form", {
             }
         );
 
-        var secondRowItems = [
-            {
-                xtype: 'combobox',
-                name: 'isActive',
-                fieldLabel: 'Status',
-                flex: 1,
-                editable: false,
-                allowBlank: false,
-                store: [[
-                    true,
-                    'Active'
-                ], [
-                    false,
-                    'Disabled'
-                ]],
-                listeners: {
-                    scope: me,
-                    change: function(cmp, newValue, oldValue, eOpts) {
-                        me.optionsContainer.setVisible(newValue);
-                        //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
-                    }
+        me.isActive = Ext.create('Ext.form.field.ComboBox', {
+            xtype: 'combobox',
+            name: 'isActive',
+            fieldLabel: 'Status',
+            flex: 1,
+            editable: false,
+            allowBlank: false,
+            store: [[
+                true,
+                'Active'
+            ], [
+                false,
+                'Disabled'
+            ]],
+            listeners: {
+                scope: me,
+                change: function(cmp, newValue, oldValue, eOpts) {
+                    me.optionsContainer.setVisible(newValue);
+                    //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
                 }
-            },
+            }
+        })
+
+        var secondRowItems = [
+            me.isActive,
             {
                 xtype: "categorycombobox",
                 name: "parentId",
@@ -129,7 +131,21 @@ Ext.define("Taco.view.category.Form", {
                 flex: 1,
                 showDynamicRealTime: false,
                 showDynamicPreComputed: false,
-                excludedIds: [this.record.get("categoryCode")]
+                excludedIds: [this.record.get("categoryCode")],
+                listeners: {
+                    change: function(cmp, newValue, oldValue, eOpts) {
+                        var store = cmp.getStore(),
+                            parent = store.getById(newValue);
+
+                        if (parent && !parent.get('isActive')) {
+                            me.isActive.setValue(false).disable();
+                        }
+                        else {
+                            me.isActive.enable();
+                        }
+                    },
+                    scope: me
+                }
             }
         ];
 
