@@ -125,6 +125,9 @@ Ext.define('Taco.view.filter.OperatorField', {
 
     isRecursiveOperator : function(value) {
         value = value || this.getValue();
+        if (value === 'in') {
+            return false;
+        }
         return (this.isRecursiveAllowed() && value && (value == "eq" || value == "req"));
     },
 

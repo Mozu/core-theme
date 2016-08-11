@@ -125,28 +125,6 @@ Ext.define("Taco.view.category.Form", {
         var secondRowItems = [
             me.isActive,
             {
-                xtype: 'combobox',
-                name: 'isActive',
-                fieldLabel: 'Status',
-                flex: 1,
-                editable: false,
-                allowBlank: false,
-                store: [[
-                    true,
-                    'Active'
-                ], [
-                    false,
-                    'Disabled'
-                ]],
-                listeners: {
-                    scope: me,
-                    change: function(cmp, newValue, oldValue, eOpts) {
-                        me.optionsContainer.setVisible(newValue);
-                        //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
-                    }
-                }
-            },
-            {
                 xtype: "categorycombobox",
                 name: "parentId",
                 fieldLabel: "Parent Category",
