@@ -79,16 +79,18 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         {
             var pageContext = rerouted.Resolve<PageContext>();
             var siteContext = rerouted.Resolve<ISiteContext>();
-            if (pageContext.IsEditMode) return await continuation().ConfigureAwait(false);
-            
-            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
-            var currentUrl = new Uri(pageContext.Url);
-
-            if (!sslValidationEnabled)
+            if (pageContext.IsEditMode || 
+                !pageContext.HandledByProxy ||
+                !sslValidationEnabled)
             {
                 return await continuation().ConfigureAwait(false);
             }
-            if ( customRoute?.UrlScheme.HasValue == true )
+
+            var customRoute = rerouted.GetRouteData().Route as CustomRoute;
+            var currentUrl = new Uri(pageContext.Url);
+
+
+            if (customRoute?.UrlScheme.HasValue == true)
             {
                 if (customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme))
                 {
