@@ -34,7 +34,15 @@ Ext.define('Taco.view.filter.OperatorField', {
             xtype: 'checkboxfield',
             checked: (this.value === "req"),
             hidden: !this.isRecursiveOperator(this.value),
-            boxLabel: this.recurseText
+            boxLabel: this.recurseText,
+            listeners: {
+                show: function(cmp, eOpts) {
+                    if (me.getValue() === 'in') {
+                        cmp.hide();
+                    }
+                },
+                scope: me
+            }
         });
 
         me.mon(me.parentForm.leftField, 'change', me.onLeftFieldChange, me)
