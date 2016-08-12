@@ -35,17 +35,13 @@ Ext.define('Taco.view.customerset.DeleteModal', {
         me.items = [
             {
                 xtype: 'box',
-                html: me.record.get('name') + ' is currently assigned to ' + me.record.raw.sites.length + ' Sites(s) and ' + me.record.raw.aggregateInfo.customerCount + 'Customer(s)'
+                html: me.record.get('name') + ' is currently assigned to ' + me.record.raw.sites.length + ' Sites(s) and ' + me.record.raw.aggregateInfo.customerCount + ' Customer(s)'
             },
             {
                 xtype: 'box',
-                html: 'Those Sites and Customers will be re assigned to the following'
+                html: 'They will be reassigned to the following'
             },
             me.customerSetCb,
-            {
-                xtype: 'box',
-                html: 'This Cannot be undone.'
-            },
             {
                 xtype: 'box',
                 html: 'Are you sure you want to delete <b>' + me.record.get('name') + '</b>?'
