@@ -17,7 +17,7 @@ Ext.define('Taco.shared.view.field.Customer', {
 
     // adds extraParam to the proxy to show anonymous customers as well;
     showAnonymousCustomers: false,
-
+    filterByCustomerSet:false,
     enableKeyboardPaging: true,
    
     tpl: Ext.create('Ext.XTemplate',
@@ -87,6 +87,11 @@ Ext.define('Taco.shared.view.field.Customer', {
             });
 
             var proxy = me.getStore().getProxy();
+            if (me.filterByCustomerSet) {
+              proxy.setExtraParam("filterByCustomerSet", 'true');
+            } else {
+              delete proxy.extraParams["filterByCustomerSet"]
+            }
             if (me.showAnonymousCustomers) {                
                 proxy.setExtraParam("showAnonymous", 'true');
             } else {
