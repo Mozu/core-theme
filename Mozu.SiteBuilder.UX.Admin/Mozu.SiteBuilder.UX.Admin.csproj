@@ -434,8 +434,8 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryFilterExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
-    <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategorySortExtensions.cs" />
+    <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
     <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />
@@ -513,20 +513,14 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
     <Content Include="Scripts\app\controller\Category.js" />
-    <Content Include="Scripts\app\controller\CustomRoutes.js" />
-    <Content Include="Scripts\app\controller\CustomSchema.js" />
-    <Content Include="Scripts\app\controller\IpBlocking.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
     <Content Include="Scripts\app\controller\PriceLists.js" />
-    <Content Include="Scripts\app\controller\Publishing.js" />
-    <Content Include="Scripts\app\controller\React.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
-    <Content Include="Scripts\app\controller\Synonyms.js" />
     <Content Include="Scripts\app\controller\Tests.js" />
     <Content Include="Scripts\app\controller\Capability.js" />
     <Content Include="Scripts\app\controller\Channels.js" />
@@ -720,6 +714,7 @@
     <Content Include="Scripts\app\store\BlockedProducts.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\CustomerSet.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PaymentGateways.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
@@ -800,6 +795,8 @@
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
     <Content Include="Scripts\app\view\categories\Index.js" />
+    <Content Include="Scripts\app\view\customerSet\DeleteModal.js" />
+    <Content Include="Scripts\app\view\customerSet\Index.js" />
     <Content Include="Scripts\app\view\category\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
@@ -2477,7 +2474,6 @@
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
-    <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />
