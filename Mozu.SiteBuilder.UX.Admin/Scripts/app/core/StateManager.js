@@ -135,6 +135,7 @@ Ext.define('Taco.core.StateManager', {
             'synonyms',
             'categories'
         ];
+        var NOT_VIEWS =[ 'customerset'];
 
         if (this.REACT_VIEWS
             && Array.isArray(this.REACT_VIEWS)
@@ -145,10 +146,11 @@ Ext.define('Taco.core.StateManager', {
         for (var i =0; i < VIEWS.length; i++) {
             var route = VIEWS[i];
 
-            if (uriOrState.toLowerCase().indexOf(route) !== -1) {
-                return true;
+            if (uriOrState.toLowerCase().indexOf(route) !== -1 ) {
+                return uriOrState.toLowerCase().indexOf('customerset') ==-1;
             }
         };
+
 
         return false;
     },

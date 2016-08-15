@@ -139,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 if (interimCollection.PageSize < pageSize)
                     pageSize = interimCollection.PageSize;
 
-                if (interimCollection.TotalCount < pageSize)
+                if (interimCollection.TotalCount <= pageSize)
                     break;
 
                 startIndex = startIndex + pageSize;

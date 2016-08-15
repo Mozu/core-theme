@@ -47,6 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "categorycode":
                     return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
+                case "categorycodes":
+                    var codes = filter.escapedValue.ToString().Split(',');
+                    var codeList = codes.Select(x => string.Format("{0} eq {1}", CATEGORY_CODE, x)).ToArray();
+                    return String.Join(" or ", codeList);
+
                 // dc contract is isDisplay, mvc & js is isHidden, therefore have to switch comparison.
                 case "ishidden":
                     return String.Format("{2} {1} {0}", filter.value, 

@@ -476,6 +476,11 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'channels',
                     'label': 'Channels',
                     'address': 'channels'
+                },
+                {
+                  'id': 'customersets',
+                  'label': 'Customer Sets',
+                  'address': 'customersets'
                 }
                 ]
             },

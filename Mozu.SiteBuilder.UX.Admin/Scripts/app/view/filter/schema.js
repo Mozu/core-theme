@@ -90,7 +90,8 @@ Ext.define('Taco.view.filter.Schema', {
             supportedOperators: ["eq", "req", "ne", "in"],
             editorCfg: {
                xtype: "taco-categorycombobox",
-               isPickerField: true
+               isPickerField: true,
+               valueField: 'categoryCode'
             },
             allowBlank: false
         }, {
