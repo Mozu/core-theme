@@ -24,16 +24,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IApiContext _context;
         private readonly ITenantsWebApiClient _tenantClient;
         private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
-
+        IAggregateSiteSettingsWebApiClient _aggregateSiteSettingsWebApiClient;
         /// <summary>
         /// Constructor.
         /// </summary>
-        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ITenantsWebApiClient tenantClient, IApiContext context, ITenantAdminSettingsContext tenantAdminSettingsContext)
+        public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
+            , ITenantsWebApiClient tenantClient
+            , IApiContext context
+            , ITenantAdminSettingsContext tenantAdminSettingsContext
+            , IAggregateSiteSettingsWebApiClient aggregateSiteSettingsWebApiClient
+            )
         {
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _context = context;
             _tenantClient = tenantClient.CloneWithoutUserClaims();
-
+            _aggregateSiteSettingsWebApiClient = aggregateSiteSettingsWebApiClient.CloneWithoutUserClaims();
             _tenantAdminSettingsContext = tenantAdminSettingsContext;
         }
 
@@ -67,30 +72,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
         public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()
         {
-            var tenant = (await _tenantClient.GetTenant(this.SbApiContext.TenantId)).ReadAsSync();
+            
+            var poSettings = (await _aggregateSiteSettingsWebApiClient.GetPurchaseOrderSettings()).ReadAsSync();
 
-            var tasks = tenant.Sites.Take(10).Select(site => _checkoutSettingsWebApiClient.CloneWithApiContext(ctx =>
+            var ret = poSettings.Select(x => new SitePaymentTerm()
             {
-                ctx.SiteId = site.Id;
-                ctx.CurrencyCode = site.CurrencyCode;
-                ctx.MasterCatalogId = tenant.MasterCatalogs.FirstOrDefault(mc => mc.Catalogs.Any(cat => cat.Id == site.CatalogId))?.Id;
-                ctx.CatalogId = site.CatalogId;               
-            }).CloneWithoutUserClaims().GetPaymentSettings().ContinueWith( res=>
-            {
-                var po = res.Result.ReadAsSync()?.PurchaseOrder;
-                return new SitePaymentTerm()
-                {
-                    siteId = site.Id,
-                    isPoEnabled = po?.IsEnabled == true,
-                    paymentTerms = po?.PaymentTerms ?? new System.Collections.Generic.List<DC.PurchaseOrderPaymentTerm>()
-                };
-                
-            })).ToList();
+                siteId = x.Key,
+                isPoEnabled = x.Value.IsEnabled,
+                paymentTerms = x.Value.PaymentTerms ?? new System.Collections.Generic.List<DC.PurchaseOrderPaymentTerm>()
+            }).ToList();
 
-            var list = (await Task.WhenAll(tasks)).ToList();
-
-
-            return List2(list);
+            return List2(ret);
         }
 
         public class SitePaymentTerm

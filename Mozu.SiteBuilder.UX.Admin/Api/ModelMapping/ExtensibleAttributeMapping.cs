@@ -208,6 +208,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     IsRequired = source.IsRequired,
                     IsVisible = source.IsVisible ,
                     IsActive = source.IsActive,
+                    IsReadOnly = source.IsReadOnly ?? false,
                     DisplayGroup = source.DisplayGroup ,
                     AttributeCode = !String.IsNullOrEmpty(source.AttributeCode) ? source.AttributeCode : (source.Name ?? "").Trim(),
                     Id = source.AttributeId,

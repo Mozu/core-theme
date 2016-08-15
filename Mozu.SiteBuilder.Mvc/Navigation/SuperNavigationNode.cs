@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public bool AllowDrag { get { return _allowDrag.HasValue ? _allowDrag.Value : !IsSystemNode; } set { _allowDrag = value; } }
 
         private bool? _allowDrop;
-        public bool AllowDrop { get { return _allowDrop.HasValue ? _allowDrop.Value : (!IsSystemNode && (NodeType.IsCategory || NodeType.IsGroup || NodeType.IsPage)); } set { _allowDrop = value; } }
+        public bool AllowDrop { get { return _allowDrop.HasValue ? _allowDrop.Value : (!IsSystemNode && (NodeType.IsCategory || NodeType.IsLink || NodeType.IsGroup || NodeType.IsPage)); } set { _allowDrop = value; } }
 
         private bool? _expanded;
         public bool Expanded { get { return _expanded.HasValue ? _expanded.Value : (Expandable && IsSystemNode); } set { _expanded = value; } }

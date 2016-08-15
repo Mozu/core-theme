@@ -11,7 +11,9 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Core.Api.Client;
 using AttributeDC = Mozu.Core.Extensible.Contracts.Attribute;
 using AttributeModel = Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible.Attribute;
-
+using System.Net.Http;
+using System.Net;
+using Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -24,6 +26,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             _orderAttributeDefinitionWebApiClient = orderAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
 
+        }
+
+        [HttpGetRoute(UriTemplate = "{attributeFQN}/enable")]
+        public async Task<HttpResponseMessage> Enable(string attributeFQN)
+        {
+            var attribute = await (await _orderAttributeDefinitionWebApiClient.GetAttribute(attributeFQN).ConfigureAwait(false)).ReadAsAsync();
+            attribute.IsActive = true;
+
+            await _orderAttributeDefinitionWebApiClient.UpdateAttribute(attributeFQN, attribute).ConfigureAwait(false);
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -39,7 +52,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                var results = (await _orderAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
+                var sort = "isactive desc";
+                if(pagingParams.sort != null && pagingParams.sort.Count != 0)
+                {
+                    sort = pagingParams.sort.ToSortString();
+                }
+
+                var results = (await _orderAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, sortBy: sort)).ReadAsSync();
                 var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);
                 return this.List2(vmItems, (int)results.TotalCount);
 

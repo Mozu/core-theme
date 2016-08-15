@@ -5,6 +5,7 @@
  */
 Ext.define('Taco.view.discount.widget.CategoryPicker', {
     extend: 'Ext.form.Panel',
+    xtype: 'taco-categorypickerfield',
     alias: 'widget.categorypicker',
     layout: 'hbox',
     catStore: null,

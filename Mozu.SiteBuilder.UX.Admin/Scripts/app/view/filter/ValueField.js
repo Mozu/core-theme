@@ -82,7 +82,8 @@ Ext.define('Taco.view.filter.ValueField', {
                 scope:me
             },
             emptyText:fieldCfg.emptyText || "",
-            value:value
+            value:value,
+            parentForm: this.parentForm
         });
 
         this.initRelayEvents();
@@ -317,7 +318,7 @@ Ext.define('Taco.view.filter.ValueField', {
             fieldCfg = {},
             dataType,
             cfg;
-        
+
         if (fieldRecord) {
             // if record provides a fieldCfg then use it.
             fieldCfg = fieldRecord.get("editorCfg");

@@ -140,19 +140,27 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                     return null;
                 }))
                 .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForLive))
+                .ForMember(m => m.EnforceSitewideSSL, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.EnforceSitewideSSL))
                 .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending));
             Mapper.CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
                 .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
+                .ForMember(x => x.EnforceSitewideSSL, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.EnforceSitewideSSL))
                 .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
-
+                
             Mapper.CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
+                 .ForMember((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL, op => op.ResolveUsing((ViewModeToggles vm) => vm.EnforceSitewideSSL))
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
+
+
             Mapper.CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
+                .ForMember((ViewModeToggles vm) => vm.EnforceSitewideSSL, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL))
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
+
             Mapper.CreateMap<GeneralSettings, GDC.General.ViewAuthorizations>()
                 .ForMember(x => x.RequireAuthForLive, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForLiveEnabled))
+                .ForMember(x => x.EnforceSitewideSSL, opt => opt.ResolveUsing((GeneralSettings gs) => gs.EnforceSitewideSSL))
                 .ForMember(x => x.RequireAuthForPending, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForStagingEnabled));
 
             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));

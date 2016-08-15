@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -76,18 +77,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class CustomRouteHandler : ICustomRouteHandler
     {
-        private readonly Lazy<HttpRequestMessage> _requestMessage;
+        private readonly HttpRequestMessage _requestMessage;
         private readonly Lazy<ISiteBuilderApiContext> _siteBuilderApiContext;
         private readonly IRouteConfig _routeconfig;
         private readonly Lazy<ICustomRouteCollectionRepository> _customRouteRepository;
         private object _httpRouteCollection;
+        Lazy<bool> _forceSSL;
 
         public CustomRouteHandler(HttpRequestMessage request, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext, IRouteConfig routeconfig)
         {
-            _requestMessage = new Lazy<HttpRequestMessage>(() => request);
+            _requestMessage = request;
             _customRouteRepository = customRouteRepository;
             _siteBuilderApiContext = siteBuilderApiContext;
             _routeconfig = routeconfig;
+            _forceSSL = new Lazy<bool>(() => request.Resolve<ISiteContext>().GeneralSettings?.EnforceSitewideSSL == true, LazyThreadSafetyMode.None);
         }
 
         public void Reset ()
@@ -115,7 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public async Task<bool> RouteIncomingRequest()
         {
-            var path = _requestMessage.Value.RequestUri.AbsolutePath;
+            var path = _requestMessage.RequestUri.AbsolutePath;
             if ( path.Contains( "=") || path.Contains("?"))
             {
                 return false;
@@ -127,16 +130,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 return false;
             }
 
-            var rerouteData = routeCollection.GetRouteData(_requestMessage.Value);
+            var rerouteData = routeCollection.GetRouteData(_requestMessage);
             if (rerouteData == null) return false;
 
             if (rerouteData.Route is CustomRoute)
             {
                 var cr = rerouteData.Route as CustomRoute;
-                cr.RewriteRouteData(_requestMessage.Value, rerouteData.Values);
+                cr.RewriteRouteData(_requestMessage, rerouteData.Values);
             }
 
-            _requestMessage.Value.SetRouteData(rerouteData);
+            _requestMessage.SetRouteData(rerouteData);
             return true;
         }
 
@@ -202,7 +205,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .ChainSet("httproute", true);
 
             var newReq = new HttpRequestMessage();
-            foreach ( var rp in _requestMessage.Value.Properties)
+            foreach ( var rp in _requestMessage.Properties)
             {
                 newReq.Properties[rp.Key]= rp.Value;
             }
@@ -218,7 +221,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     //only redirect if stem is different
                     if (!string.Equals(
                         uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
-                        _requestMessage.Value.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        _requestMessage.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
                         StringComparison.OrdinalIgnoreCase))
                     {
                         if (!IsValidForExistingContext(request , uri, routeCollection, _routeconfig.DefaultRoutes))
@@ -288,20 +291,20 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var  routingValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) { { "httproute", true } };
             if (useContext)
             {
-                routingValues.ChainSet(_requestMessage.Value.GetRouteData().Values, true);
+                routingValues.ChainSet(_requestMessage.GetRouteData().Values, true);
             }
             if ( viewDataAdditionFunc != null)
             {
                 routingValues.ChainSet(viewDataAdditionFunc(), true);
             }
         
-            var newReq = PrepareNewHttpRequest(_requestMessage.Value);
+            var newReq = PrepareNewHttpRequest(_requestMessage);
             foreach (var route in routes)
             {
                 var vpath = route.GetVirtualPath(newReq, routingValues);
                 if (vpath != null)
                 {
-                    return CreateOutboundUri(route, vpath, hostName , hostName != null);
+                    return CreateOutboundUri(route, vpath, hostName , hostName != null, _forceSSL);
                 }
             }
             return null;
@@ -321,10 +324,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return newReq;
         }
         
-        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string host, bool fullyQualifyUris)
+        static string CreateOutboundUri(CustomRoute route, IHttpVirtualPathData vpath, string host, bool fullyQualifyUris, Lazy<bool> forceSsl)
         {
-           
-            var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
+           var path = "/" + new Uri("http://localhost/" + vpath.VirtualPath, UriKind.Absolute).GetComponents(UriComponents.Path, UriFormat.Unescaped);
            // var query = useInboundQuery ? incomingUri.Query.TrimStart('?') :  string.Empty;
            // var scheme = route.UrlScheme.HasValue ? route.UrlScheme.Value.ToStringQuickly() : incomingUri.Scheme;
             var builder = new UriBuilder("http://localhost");
@@ -332,7 +334,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             if ( fullyQualifyUris)
             {
                 builder.Host = host;
-                builder.Scheme = route.UrlScheme.GetValueOrDefault(CustomRoute.Scheme.Http).ToString();
+                builder.Scheme = route.UrlScheme.HasValue ? route.UrlScheme.ToString() : (forceSsl.Value ? "https" : "http");
 
                 return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
             }
@@ -344,7 +346,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             var routeCollection = GetRouteCollectionAsync().Result;
             if (routeCollection == null) return null;
 
-            return  routeCollection.GetRouteData(_requestMessage.Value);
+            return  routeCollection.GetRouteData(_requestMessage);
         }
     }
 }

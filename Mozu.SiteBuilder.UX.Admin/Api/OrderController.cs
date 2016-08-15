@@ -22,6 +22,7 @@ using DCcore = Mozu.Core.Api.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
+using Mozu.Core.Api.Client.Exceptions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -158,9 +159,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "submit")]
         public async Task<Response<Order>> SubmitOrder(OrderIdArgs args)
         {
-            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "SubmitOrder" })).ReadAsSync();
-
-            return Single2(dc.Map<Order>());
+            try
+            {
+                var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "SubmitOrder" })).ReadAsSync();
+                return Single2(dc.Map<Order>());
+            }
+            catch (ApiWebClientException ex)
+            {
+                if (ex.ErrorCode == "FORBIDDEN" && ex.RemoteError != null && ex.RemoteError.AdditionalErrorData != null && ex.RemoteError.AdditionalErrorData.Count > 0)
+                {
+                    throw new Exception(string.Join(" ", ex.RemoteError.AdditionalErrorData.Select(e => e.Value)));
+                }
+                else
+                {
+                    throw ex;
+                }
+            }
         }
 
         [HttpPostRoute(UriTemplate = "commitdraft")]
@@ -189,25 +203,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "attributes/update")]
         public async Task<Response<List<DCo.OrderAttribute>>> UpdateAttributes(UpdateAttributeArgs args)
         {
-            List<DCo.OrderAttribute> returnList = null;
-            var existingAttrs = (await _orderWebApiClient.GetOrderAttributes(args.OrderId)).ReadAsSync();
-            List<Task> attributeTasks = new List<Task>();
-
-            var orderAttrIds = args.Attributes.Select(attr => attr.FullyQualifiedName);
-            var existingAttrIds = (existingAttrs ?? new List<DCo.OrderAttribute>()).Select(attr => attr.FullyQualifiedName);
-
-            var createdAttributeIds = orderAttrIds.Except(existingAttrIds).ToList();
-            var updatedAttributeIds = orderAttrIds.Intersect(existingAttrIds).ToList();
-
             // because we tell the update to remove missing attributes, create and update cannot run simultaneously.
-            if (createdAttributeIds.Count > 0)
-            {
-                returnList = (await _orderWebApiClient.CreateOrderAttributes(args.OrderId, args.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).ToList())).ReadAsSync();
-            }
-            if (updatedAttributeIds.Count > 0)
-            {
-                returnList = (await _orderWebApiClient.UpdateOrderAttributes(args.OrderId, args.Attributes, removeMissing: true)).ReadAsSync();
-            }
+            var returnList = (await _orderWebApiClient.UpdateOrderAttributes(args.OrderId, args.Attributes, removeMissing: false)).ReadAsSync();
 
             return List2(returnList);
         }
