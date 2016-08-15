@@ -101,17 +101,17 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 
             switch (storeType) {
                 case 'Taco.store.Attributes':
-                    me.store.on('add', function(store, eOpts) {
+                    me.store.on('add', function() {
                         if (!me.store.data) { return; }
                         var attribute = me.parentForm.attributePickerField.getValue();
                         me.store.model.load(attribute, {
                             scope: me.store,
-                            success: function(record, operation) {
+                            success: function(record) {
 
                                 var values = record.get('values');
 
                                 var records = me.store.data.items;
-                                Ext.Array.each(records, function(record, index, allItems) {
+                                Ext.Array.each(records, function(record) {
 
                                     var property = Ext.Array.findBy(values, function(value) {
                                         return value.id === record.get('id');
@@ -119,15 +119,14 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
                                     var model = me.store.findRecord('id', record.get('id'));
                                     model.set(property);
-
                                 });
                             }
                         });
                     });
                     break;
                 case 'Taco.store.Categories':
-                    me.store.on('add', function(store, catRecord, eOpt) {
-                        if (!me.store.data || catRecord) {
+                    me.store.on('add', function(store, catRecord) {
+                        if (!me.store.data || (catRecord && catRecord.length > 0 && catRecord[0].get('categoryId') !== 0)) {
                             return;
                         }
                         var searchCodes = Ext.Array.map(me.store.data.items, function (record) {
@@ -153,13 +152,13 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                     });
                     break;
                 default:
-                    me.store.on('add', function(store, eOpts) {
+                    me.store.on('add', function() {
                         if (!me.store.data) { return; }
                         var records = me.store.data.items;
-                        Ext.Array.each(records, function(record, index, allItems) {
+                        Ext.Array.each(records, function(record) {
                             me.store.model.load(record.get('id'), {
                                 scope: me.store,
-                                success: function(record, operation) {
+                                success: function(record) {
                                     var key = me.getKeyByStoreType(me.store.$className);
                                     var model = me.store.findRecord('id', record.get(key), 0, false, false, true);
                                     if (model) {
@@ -306,27 +305,26 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                             values: me.store.data.items,
                              listeners: {
                                 aftersaveclose: function() {
-                                    var formValue = this.down('#bulkvalue-field').getValue();
-                                    var values = formValue.split(/\s|[ ,]+/);
-                                    var cleanedValues = Ext.unique(
-                                        values.map(function(val) {
-                                            return {
-                                                data: {
-                                                    id: val.replace(/\s/g,'')
-                                                }
-                                            };
-                                        })
-                                    );
-
+                                    var self = me,
+                                        formValue = this.down('#bulkvalue-field').getValue(),
+                                        values = formValue.split(/\s|[ ,]+/),
+                                        idField = me.getKeyByStoreType(me.store.$className),
+                                        cleanedValues = Ext.unique(
+                                            values.map(function(val) {
+                                                var cleanedVal = val.replace(/\s/g,'');
+                                                var result = { data: {} };
+                                                result.data[idField] = self.coerceDataType(cleanedVal);
+                                                return result;
+                                            })
+                                        );
                                     me.store.removeAll();
-
                                     cleanedValues.reverse().forEach(function(rec) {
-                                        me.addValue(rec.data.id, rec);
+                                        me.addValue(rec.data[idField], rec);
                                     })
                                 }
                             }
                         });
-                    },
+                    }
                 }
             ]
         });
@@ -385,8 +383,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
     },
 
     getColumnConfigByValue: function(val) {
-        var me = this,
-            configs = {};
+        var configs = {};
 
         configs['default'] = [
             {
@@ -501,7 +498,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             return;
         }
 
-        var recordToSelect = me.store.getById(id);
+        var idField = me.getKeyByStoreType(me.store.$className);
+        var recordToSelect = me.store.findRecord(idField, id, 0, false, false, true);
         if (!recordToSelect) {
             if (this.getSingleSelect()) {
                 //clear out any old records;
