@@ -72,3 +72,5 @@ Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 .paket/
 .fake
 ext/
+/Mozu.SiteBuilder.sdf
+/Mozu.SiteBuilder.VC.opendb
