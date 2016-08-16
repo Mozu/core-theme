@@ -417,12 +417,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
 
             }
-            if (categoryCode == null && categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 categoryId = _resolver.ResolveMemberOrDefault(obj, "categoryId", -1);
             }
 
-            if (categoryCode == null && categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 var facetValue = _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
                 if (!string.IsNullOrEmpty(facetValue))
@@ -437,7 +437,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
             }
 
-            else if (categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 return "#";
             }
