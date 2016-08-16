@@ -383,6 +383,7 @@ Ext.define('Taco.view.order.Header', {
             xtype: 'taco-customerfield',
             itemId: 'customerSelector',
             showAnonymousCustomers: true,
+            filterByCustomerSet: true,
             width: 300,
             emptyText: 'Customer Search',
             listeners: {

@@ -28,6 +28,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public bool IsAnonymous { get; set; }
 
+        public string CustomerSet { get; set; }
+
 
         public List<CustomerSegment> Segments { get; set; }
 

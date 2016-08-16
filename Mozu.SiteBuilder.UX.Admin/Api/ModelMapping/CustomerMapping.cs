@@ -44,6 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //todo: confirm default of 0 Greg Murray on 2014-01-27 (ordercount defaults to 0 above so should be ok)
                 .ForMember(x => x.VisitCount, op => op.ResolveUsing(dc => (dc.CommerceSummary != null) ? dc.CommerceSummary.VisitsCount : 0))
                 .ForMember(x => x.IsAnonymous, op => op.ResolveUsing(dc => dc.IsAnonymous))
+                .ForMember(x => x.CustomerSet, op => op.ResolveUsing(dc => dc.CustomerSet))
                 .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
                 //ignores
                 .ForMember(x => x.WishlistCount, op => op.Ignore())
@@ -64,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.FirstName, op => op.ResolveUsing(x => x.FirstName))
                 .ForMember(dc => dc.LastName, op => op.ResolveUsing(x => x.LastName))
                 .ForMember(dc => dc.Contacts, op => op.ResolveUsing(x => x.Contacts))
-
+                .ForMember(dc => dc.CustomerSet, op => op.ResolveUsing(x => x.CustomerSet))
                 .ForMember(dc => dc.Contacts, op => op.ResolveUsing(x => x.Contacts))
                 .ForMember(x => x.HasExternalPassword, op => op.Ignore())
                 .ForMember(dc => dc.CompanyOrOrganization, op => op.ResolveUsing(x => x.CompanyOrOrganization))

@@ -29,6 +29,7 @@ using Mozu.Tenant.Contracts.Clients;
 using Constants = Mozu.Core.Api.Contracts.Constants;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Handler;
+using Mozu.SiteBuilder.Mvc.ActionFilters;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
 
-
+        [RefreshStoreFrontUserAuthTicketFilter]
         [AcceptVerbs("POST")]
         public HttpResponseMessage RefreshAPiContextHeaders()
         {

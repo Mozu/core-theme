@@ -28,18 +28,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/customer", SuppressDescriptorGeneration = true)]
     public class CustomerController : BaseController
     {
-        private readonly ICustomerAccountWebApiClient _customerWebApiClient;
+         ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly ICustomerSegmentWebApiClient _customerSegmentWebApiClient;
         //  private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ILogger _log;
-
+        ICustomerSetWebApiClient _customerSetWebApiClient;
         public CustomerController(ICustomerAccountWebApiClient customerWebApiClient,
             ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
-            ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/)
+            ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/
+            ,ICustomerSetWebApiClient customerSetWebApiClient
+            )
         {
             _customerWebApiClient = customerWebApiClient;
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
@@ -47,6 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _creditWebApiClient = creditWebApiClient;
             _orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => { ctx.SiteId = null; });
             _log = log;
+            _customerSetWebApiClient = customerSetWebApiClient;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
         }
 
@@ -132,10 +135,112 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments));
         }
 
+
+
+        /*********** 
+         *  customer set start
+         **********/
+
+
+        [HttpGetRoute(UriTemplate = "customerSets/list")]
+        public async Task<HttpResponseMessage> GetCustomerSets([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
+        {
+            // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
+            var customerSets = (await _customerSetWebApiClient.GetCustomerSets(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize, responseGroups: "AggregateInfo")).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(customerSets.Items, (int)customerSets.TotalCount));
+        }
+        [HttpPostRoute(UriTemplate = "customerSets/create")]
+        public async Task<HttpResponseMessage> CraeteCustomerSets(List<DC.CustomerSet> customerSets)
+        {
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.AddCustomerSet(x)).ToList();
+            await Task.WhenAll(tasks);
+            await Task.WhenAll(customerSets.Where(x => x.Sites != null).SelectMany(x => x.Sites).Select(x => _customerSetWebApiClient.AssignToSite(x, x.CustomerSetCode)).ToList());
+
+
+            var result = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(result));
+        }
+
+       
+
+        
+
+        [HttpPostRoute(UriTemplate = "customerSets/delete")]
+        public async Task<HttpResponseMessage> DeleteCustomerSets(List<Newtonsoft.Json.Linq.JObject> customerSets)
+        {
+
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.DeleteCustomerSet((string)x["code"], (string)x["replacementCode"])).ToList();
+            await Task.WhenAll(tasks);
+
+            foreach (var task in tasks.Where(x => !x.Result.ResponseMessage.IsSuccessStatusCode))
+            {
+                throw task.Result.ReadException();
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, new List<int>());
+        }
+
+        [HttpPostRoute(UriTemplate = "customerSets/edit")]
+        public async Task<HttpResponseMessage> EditCustomerSets(List<DC.CustomerSet> customerSets)
+        {
+            //update name/code/desc
+            var tasks = customerSets.Select(x => _customerSetWebApiClient.UpdateCustomerSet(x, x.Code)).ToList();
+            await Task.WhenAll(tasks);
+            var retList = tasks.Select(x => x.Result.ReadAsSync()).ToList();
+            //update assignments  ... remove when assignemnt moved to gen settings
+            var currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
+            var defaultCs = currentCustomerSets.FirstOrDefault(x => x.IsDefault);
+            List<Task> assignTasks = new System.Collections.Generic.List<Task>();
+            foreach ( var cs in customerSets)
+            {
+                
+                var existingCS = currentCustomerSets.FirstOrDefault(x => string.Equals(x.Code, cs.Code, StringComparison.OrdinalIgnoreCase));
+                //new site assignments
+                assignTasks.AddRange(cs.Sites?
+                    .Where(x => existingCS?.Sites.Any(s => s.SiteId == x.SiteId) == false)
+                    .Select(y => _customerSetWebApiClient.AssignToSite(y, cs.Code)));
+
+                //unassignements
+                if ( defaultCs != null && !string.Equals( defaultCs.Code , cs.Code, StringComparison.OrdinalIgnoreCase))
+                {
+                    assignTasks.AddRange(existingCS.Sites?
+                        .Where(x => cs?.Sites.Any(s => s.SiteId == x.SiteId) == false)
+                        .Select(y => _customerSetWebApiClient.AssignToSite(y, defaultCs.Code)));
+                }
+
+
+            }
+            if ( assignTasks.Count > 0 )
+            {
+                await Task.WhenAll(assignTasks);
+                currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
+            }
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(currentCustomerSets));
+        }
+
+
+        /**************
+         * cust set end
+         * ************/
+
+
+
+
+
+
+
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null)
+        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null, bool? filterByCustomerSet = false)
         {
             int customerId;
+
+            if (filterByCustomerSet!= true)
+            {
+               _customerWebApiClient = _customerWebApiClient.CloneWithApiContext(x => x.SiteId = null);
+            }
+
             if (pagingParameters.id != null)
             {
                 customerId = Convert.ToInt32(pagingParameters.id);
@@ -189,10 +294,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //TODO:this flag info should ideally come from getAccounts api call  
             if (isPOFlagRequired.GetValueOrDefault(false))
             {
+                var poTasks = customers.Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value,responseFields:"id,isEnabled")).ToArray();
+                await Task.WhenAll(poTasks);
+                var poAccounts = poTasks.Where(x => !x.Result.HasException).Select( x=> x.Result.ReadAsSync()).ToArray();
                 foreach (var customer in customers)
                 {
-                    var result = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
-                    customer.IsPoEnabled = result?.IsEnabled ?? false;
+                    customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.Id == customer.Id)?.IsEnabled == true;
                 }
             }
 
