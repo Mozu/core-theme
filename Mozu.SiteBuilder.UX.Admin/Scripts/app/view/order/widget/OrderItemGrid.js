@@ -61,7 +61,11 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
 
 
         // attribute names need to be looked up for each order item that contains an option. :(
-        this.attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
+
+        // 08/16/2016 - We cannot do this, becuase there are now tenants with over 700 attributes, and this is call is expensive.
+        // the name is already available for the attribute is already available on the Product.
+        // Bug 90758.
+        // this.attributeStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Attributes');
 
         // set tabIndex on the grid so that it can be tabbed too;
         if (this.getEditMode()) {
@@ -297,8 +301,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '{[this.determineProductPriceListParticipation(values)]}',
                         {
                             getAttributeName: function (val) {
-                                var rec = me.attributeStore.getById(val.attributeFQN);
-                                return (rec) ? rec.get('name') : '';
+                                return val.name;
                             }
                         },
                         {
@@ -318,9 +321,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         {
                             getAttributeValue: function (val) {
                                 var display = Ext.util.Format.htmlEncode(val.stringValue || val.shopperEnteredValue || val.value);
-                                var rec = me.attributeStore.getById(val.attributeFQN);
-                                var isListType = rec && rec.get('inputType') === 'List' && rec.get('dataType') === 'String';
-                                if (isListType) {
+
+                                if (val.value) {
                                     display = display + " <span class=\"product-options-raw\">(" + val.value + ")</span>";
                                 }
 
