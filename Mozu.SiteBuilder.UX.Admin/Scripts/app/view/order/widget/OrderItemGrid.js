@@ -51,7 +51,9 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
         actionColumnWidth: 30,
         
         // components to add to the panel header. typically used to add an actions menu button
-        tools: []
+        tools: [],
+
+        record: null
     },
     
     initComponent: function(eOpts) {
@@ -264,7 +266,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'productCode'
                 },
                 {
-                    text: 'Products',
+                    text: 'Name',
                     draggable: false,
                     minWidth:80,
                     xtype: 'templatecolumn',
@@ -433,7 +435,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     ],
                     editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
                 }, {
-                    text: 'Price',
+                    text: 'Amount',
                     draggable: false,
                     resizable: false,
                     width: 80,
@@ -460,10 +462,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     } : null,
                     dataIndex: 'unitPrice'
                 }, {
-                    text: 'Quantity',
+                    text: 'Qty',
                     draggable: false,
                     resizable: false,
-                    width: 80,
+                    width: 50,
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
@@ -480,8 +482,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'quantity'
                 },
                 {
-                    text: 'Row Total',
-                    width: 80,
+                    text: 'Line Item Total',
+                    width: 110,
                     draggable: false,
                     resizable: false,
                     menuDisabled: true,
@@ -494,8 +496,29 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     dataIndex: 'displaySubtotal'
                 },
                 {
-                    //xtype: 'taco.menucolumn',
-                    //xtype:'templatecolumn',
+                    xtype: 'taco.actioncolumn',
+                    width: 40,
+                    iconCls: 'itemDetail-button',
+                    actionIconTpl: [
+                        '<div roles="button" alt="{altText}" class="{cls}" {tooltip} ></div>'
+                    ],
+                    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
+
+                        var orderItem = record.raw;
+                        var order = me.record.data;
+
+                        var key = record.get('id');
+                        var config = { metadata: { order: order, orderItem: orderItem } };
+
+                        globalModalEmitter.emit('open', {
+                            modalType: 'OrderItemDetailModal',
+                            key: key,
+                            config: config
+                        });
+
+                    }
+                },
+                {
                     xtype: 'taco.actioncolumn',
                     
                     disabled:(!this.getEditMode()),

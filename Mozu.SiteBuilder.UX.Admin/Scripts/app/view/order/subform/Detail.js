@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         totalColumnWidth: 100,
 
         // width of the row total Column. used to align the grid total container
-        rowTotalColumnWidth: 100,
+        rowTotalColumnWidth: 150,
 
         itemId: "orderDetails"
 
@@ -187,7 +187,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             record: me.record,
             //data: me.record.getData(),
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.actionColumnWidth
+            //actionColumnWidth: me.actionColumnWidth
         });
 
         // customer notes class
@@ -430,7 +430,7 @@ Ext.define('Taco.view.order.subform.Detail', {
 
         me.customerNoteRow.update(me.record.data);
         
-
+        me.detailGrid.record = me.record;
         // todo: update the internalNotes
         //me.internalNoteRow.setRecord(me.record);
 

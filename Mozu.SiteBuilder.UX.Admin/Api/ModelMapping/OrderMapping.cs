@@ -45,6 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcAdjustment_to_Adjustment();
             Map_DcAppliedDiscount_to_OrderDiscount();
             Map_DcOrderNote_to_OrderNote();
+            Map_DcHandlingDiscount_to_HandlingDiscount();
 
             Map_OrderPackage_to_DcPackage();
             Map_OrderPackageItem_to_DcPackageItem();
@@ -147,6 +148,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     return null;
                 }))
+                .ForMember(x => x.HandlingDiscounts, op => op.ResolveUsing(dc => dc.HandlingDiscounts))
+
 
                 //ignores, handled in aftermap
                 .ForMember(x => x.Customer, op => op.Ignore())
@@ -167,6 +170,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.TaxDutyTotal, op => op.Ignore())
                 .ForMember(x => x.ReturnableItems, op => op.Ignore())
+                .ForMember(x => x.LineItemHandlingFees, op => op.Ignore())
+                .ForMember(x => x.ShippingAndHandlingTotal, op => op.Ignore())
+                .ForMember(x => x.AdjustmentTotal, op => op.Ignore())
+                .ForMember(x => x.LineItemShippingDiscounts, op => op.Ignore())
             
                 .AfterMap(MapAvailableBulkActions)
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
@@ -734,7 +741,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             ? orderItem.Quantity : d.Quantity);
                     }
 
-
+                    if (orderItem.ActiveShippingDiscount != null)
+                    {
+                        orderItem.ActiveShippingDiscount.ItemLineId = orderItem.LineId;
+                    }
+                    
                 });
             // TODO: shopper entered values
         }
@@ -778,11 +789,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ProductUsage, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                 .ForMember(dc => dc.HandlingAmount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28
                 .ForMember(dc => dc.DutyAmount, op => op.Ignore())
-            
-//                             ProductCode = orderItem.ProductCode,
-//                             ProductName = orderItem.ProductName,
-//                             Weight = orderItem.UnitWeight * remainingQuantity,
-//                             Quantity = remainingQuantity
+
+                .ForMember(dc => dc.WeightedOrderAdjustment, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderDiscount, op => op.Ignore())
+                .ForMember(dc => dc.AdjustedLineItemSubtotal, op => op.Ignore())
+                .ForMember(dc => dc.TotalWithoutWeightedShippingAndHandling, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderTax, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderShipping, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderShippingDiscount, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderShippingManualAdjustment, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderShippingTax, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderHandlingFee, op => op.Ignore())
+                .ForMember(dc => dc.TotalWithWeightedShippingAndHandling, op => op.Ignore())
+                .ForMember(dc => dc.ItemTaxTotal, op => op.Ignore())
+                .ForMember(dc => dc.DiscountedTotal, op => op.Ignore())
+                .ForMember(dc => dc.ShippingTaxTotal, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderHandlingFeeTax, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderHandlingFeeDiscount, op => op.Ignore())
+                .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderDuty, op => op.Ignore())
+
+
+                //                             ProductCode = orderItem.ProductCode,
+                //                             ProductName = orderItem.ProductName,
+                //                             Weight = orderItem.UnitWeight * remainingQuantity,
+                //                             Quantity = remainingQuantity
                 ;
         }
 
@@ -821,6 +852,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
+        private void Map_DcHandlingDiscount_to_HandlingDiscount()
+        {
+
+            Mapper.CreateMap<DiscountDC.AppliedDiscount, HandlingDiscount>()
+                //todo: confirm 0 default when null Greg Murray on 2014-01-28 
+                .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => (dc.Discount != null)
+                    ? dc.Discount.Id : 0))
+                .ForMember(x => x.Description, op => op.ResolveUsing(dc => (dc.Discount != null)
+                    ? dc.Discount.Name : null))
+                .ForMember(x => x.ExpirationDate, op => op.ResolveUsing(dc => (dc.Discount != null)
+                    ? dc.Discount.ExpirationDate : null))
+                .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => dc.CouponCode))
+                .ForMember(x => x.Total, op => op.ResolveUsing(dc => dc.Impact))
+                .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
+                ;
+        }
+
         private void Map_DcShippingDiscount_to_ShippingDiscount()
         {
             Mapper.CreateMap<DiscountDC.AppliedLineItemShippingDiscount, ShippingDiscount>()
@@ -833,6 +881,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null)
                     ? dc.Discount.CouponCode : null))
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
+                .ForMember(x => x.ItemLineId, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
@@ -845,6 +894,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CouponCode, op => op.ResolveUsing(dc => (dc.Discount != null)
                     ? dc.Discount.CouponCode : null))
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Discount != null && dc.Discount.Excluded.HasValue && !dc.Discount.Excluded.Value))
+                .ForMember(x => x.ItemLineId, op => op.Ignore())
                 ;
         }
 
@@ -1198,7 +1248,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.DiscountedTotal, op => op.Ignore())
                   .ForMember(dc => dc.ItemTaxTotal, op => op.Ignore())
                   .ForMember(dc => dc.ShippingTaxTotal, op => op.Ignore())
-                  .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
+                  //.ForMember(dc => dc.ShippingTotal, op => op.Ignore())
                   .ForMember(dc => dc.FeeTotal, op => op.Ignore())
                   .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                   .ForMember(dc => dc.HandlingAmount, op => op.Ignore())

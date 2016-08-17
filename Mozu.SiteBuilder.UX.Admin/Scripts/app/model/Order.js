@@ -161,11 +161,9 @@ Ext.define('Taco.model.Order', {
             name: 'activeDiscountDescription',
             type: 'string',
             useNull: true
-        },
-
-        {
+        }, {
             name: 'activeShippingDiscount',
-            type: 'float',
+            type: 'auto',
             useNull: true
         }, {
             name: 'shippingDiscounts',
@@ -218,7 +216,36 @@ Ext.define('Taco.model.Order', {
             name: 'handlingTotal',
             type: 'float',
             useNull: true
+        }, {
+            name: 'lineItemSubtotalWithOrderAdjustments',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'dutyTotal',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'itemTaxTotal',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'handlingTaxTotal',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'shippingTaxTotal',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'handlingFee',
+            type: 'float',
+            useNull: true
+        }, {
+            name: 'handlingDiscounts',
+            type: '[]',
+            defaultValue: []
         },
+
     {
         name: 'orderAdjustment',
         type: 'object',
@@ -291,9 +318,14 @@ Ext.define('Taco.model.Order', {
             useNull: true
         },
 
-    // deprecated?
         {
             name: 'adjustmentTotal',
+            type: 'float',
+            useNull: true
+        },
+
+        {
+            name: 'shippingAndHandlingTotal',
             type: 'float',
             useNull: true
         },
@@ -660,6 +692,18 @@ Ext.define('Taco.model.Order', {
             useNull: true
         },
         {
+            name: 'handlingAmount',
+            type: 'float',
+            persist: false,
+            useNull: true
+        },
+        {
+            name: 'discountedTotalWithAdjustment',
+            type: 'float',
+            persist: false,
+            useNull: true
+        },
+        {
             name: 'couponCodes',
             type: 'auto',
             persist: false,
@@ -671,6 +715,18 @@ Ext.define('Taco.model.Order', {
             type: 'auto',
             persist: false,
             defaultValue: [],
+            useNull: true
+        },
+        {
+            name: 'lineItemHandlingFees',
+            type: 'auto',
+            persist: false,
+            useNull: true
+        },
+        {
+            name: 'lineItemShippingDiscounts',
+            type: 'auto',
+            persist: false,
             useNull: true
         }
     ],

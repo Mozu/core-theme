@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     /**
      * width of the actions column in the associated order item grid. this keeps the labels and values aligned with the associated grid;
      */
-    actionColumnWidth: 30,
+    actionColumnWidth: 50,
 
     initComponent: function(eOpts) {
         var me = this;
@@ -124,7 +124,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         // remove the read only version of the text label
         orderAdjustmentLabel.update("");
         
-        var subtractOrderLabelText = "Subtract from Order Total";
+        var subtractOrderLabelText = "Subtract from Order Subtotal";
         var addOrderLabelText = "Add to Order Total";
 
         this.orderAdjustmentLabelButton = new Ext.button.Button({
@@ -257,7 +257,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     },
 
     getOrderAdjustmentText: function (value){
-        var subtractLabelText = "Subtract from Order Total";
+        var subtractLabelText = "Subtract from Order Subtotal";
         var addLabelText = "Add to Order Total";
         return (value) ? subtractLabelText : addLabelText;
     },
@@ -357,7 +357,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         this.masterTable = Ext.create("Ext.Component", {
             data: me.getData(),
             flex: flex,
-            tpl: this.getMasterTemplate()
+            tpl: me.getMasterTemplate(),
+            listeners: {
+                boxready: {
+                    fn: function () {
+                        me.initSummaryToggleButtons();
+                    },
+                    scope: me
+                }
+            }
         });
 
         this.items = [
@@ -689,7 +697,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // add some css class variables to the data for use in the templates
             Ext.apply(data, {
                 tdCls: "taco-grid-cell ",
-                tdInnerCls: "taco-grid-cell-inner "
+                tdInnerCls: "taco-grid-cell-inner ",
+                priceCls: "price-detail "
             });
 
             // do a quick check to make sure the component hasn't been destroyed;
@@ -701,10 +710,22 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             var subTpl_1_el = this.masterTable.el.down("[itemId = taco-subTpl_1]");
             var subTpl_2_el = this.masterTable.el.down("[itemId = taco-subTpl_2]");
             var subTpl_3_el = this.masterTable.el.down("[itemId = taco-subTpl_3]");
+            var subTpl_4_el = this.masterTable.el.down("[itemId = taco-subTpl_4]");
+            var subTpl_5_el = this.masterTable.el.down("[itemId = taco-subTpl_5]");
+            var subTpl_6_el = this.masterTable.el.down("[itemId = taco-subTpl_6]");
+            var subTpl_7_el = this.masterTable.el.down("[itemId = taco-subTpl_7]");
+            var subTpl_8_el = this.masterTable.el.down("[itemId = taco-subTpl_8]");
+            var subTpl_9_el = this.masterTable.el.down("[itemId = taco-subTpl_9]");
 
             this["subTpl_1"].overwrite(subTpl_1_el, data);
             this["subTpl_2"].overwrite(subTpl_2_el, data);
             this["subTpl_3"].overwrite(subTpl_3_el, data);
+            this["subTpl_4"].overwrite(subTpl_4_el, data);
+            this["subTpl_5"].overwrite(subTpl_5_el, data);
+            this["subTpl_6"].overwrite(subTpl_6_el, data);
+            this["subTpl_7"].overwrite(subTpl_7_el, data);
+            this["subTpl_8"].overwrite(subTpl_8_el, data);
+            this["subTpl_9"].overwrite(subTpl_9_el, data);
             // update the ext components
             this.updateShippingMethodButton(record);
             // need to hide the coupon error unless the hide was deferred. This happens because the record updates after the application of the error.
@@ -714,6 +735,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 // reset this deferral
                 this.deferCouponErrorhide = false;
             }
+
+            me.initSummaryToggleButtons();
         }
 
         return record;
