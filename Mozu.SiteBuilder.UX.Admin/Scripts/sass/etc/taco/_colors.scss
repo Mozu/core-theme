@@ -3,7 +3,7 @@ $black-color:                   rgb(0, 0, 0);                                   
 $white-color:                   rgb(255, 255, 255);                                         /* #ffffff              255, 255, 255 */
 
 /* theme colors */
-$gray-text-dark:                rgb(165, 165, 165);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
+$gray-text-dark:                rgb(124, 124, 124);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
                                 /* darken($white-color, 35); */
 $mask-color:                    rgba(236, 236, 236, 0.9);                            /* #ececec --> #ebebeb  236, 236, 236 */
                                 /* rgba(darken($white-color, 8), .9); */
@@ -167,7 +167,7 @@ $color-neutral-80:              darken($color-neutral-white, 20%); /* #cccccc  2
 $color-neutral-75:              darken($color-neutral-white, 25%); /* #bfbfbf  191,191,191 */
 $color-neutral-70:              darken($color-neutral-white, 30%); /* #b3b3b3  179,179,179 */
 $color-neutral-65:              darken($color-neutral-white, 35%); /* #a6a6a6  166,166,166 */
-$color-neutral-60:              darken($color-neutral-white, 40%); /* #999999  153,153,153 */
+$color-neutral-60:              #7c7c7c;
 $color-neutral-55:              darken($color-neutral-white, 45%); /* #8c8c8c  140,140,140 */
 $color-neutral-50:              darken($color-neutral-white, 50%); /* #808080  128,128,128 */
 $color-neutral-45:              darken($color-neutral-white, 55%); /* #737373  115,115,115 */
