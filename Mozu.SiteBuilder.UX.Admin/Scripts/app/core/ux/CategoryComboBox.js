@@ -15,8 +15,27 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     showDynamicRealTime: true,
     showDynamicPreComputed: true,
     excludedIds:[],
+    listeners: {
+        beforequery: function(queryPlan) {
+            var me = this;
+            me.store.clearFilter(me.customFilter);
+            me.store.filter(me.customFilter);
+            return true;
+        }
+    },
     initComponent: function () {
         var me = this;
+
+        me.customFilter = new Ext.util.Filter({
+            filterFn: function(item) {
+                var searchValue = me.getValue().toLowerCase();
+                var name = item.get('name');
+                var categoryCode = item.get('categoryCode');
+                var id = item.get('id');
+
+                return name.toLowerCase().indexOf(searchValue) == 0 || categoryCode.toLowerCase().indexOf(searchValue) == 0 || id.toString().indexOf(searchValue) == 0;
+            }
+        });
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
             createOnly: true,
