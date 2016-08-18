@@ -101,6 +101,7 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
                                 /* adjust_hue(saturate(lighten($black-color, 41), 57), 165); */
 
 $primary-btn-background:        $valid-green;
+$primary-btn-shadow:            rgba(0, 0, 0, 0.2);
 $primary-btn-hover-background:  $valid-green-active;
 $primary-btn-active-background: rgb(48, 165, 136);
 $primary-btn-disabled-background: rgb(234, 234, 234);                               /* #eaeaea --> #e8e8e8  232, 232, 232 */
@@ -108,9 +109,9 @@ $primary-btn-disabled-split-border: rgb(241, 241, 241);                         
 $primary-btn-split-border:      rgba(0, 0, 0, 0.09);
 $secondary-btn-active-background: whitesmoke;
 $secondary-btn-hover-text:      $dark-color;
-$card-btn-text-color:           darken($white-color, 38);                           /* #9e9e9e              158, 158, 158 */
-$card-btn-border:               $gray-border-color;
-$card-btn-hover-border:         #e4e4e4;
+$card-btn-text-color:           rgb(124, 124, 124);                                 /* #7c7c7c              124, 124, 124 */
+$card-btn-border:               rgba(63, 63, 63, .19);
+$card-btn-hover-border:         rgba(63, 63, 63, .3);
 $card-btn-active-border:        #e2e2e2;
 $card-btn-active-background:    whitesmoke;
 $card-btn-disabled-text:        #dadada;
@@ -145,6 +146,8 @@ $checkbox-checked:              rgb(59, 153, 252);                              
 $nav-heading-color:             rgb(187, 190, 191);                                 /* #BBBEBF              187, 190, 191 */
 $glyph-icon-color:              lighten($black-color, 40);                          /* #666666              102, 102, 102 */
 $glyph-icon-color-inactive:     lighten($black-color, 79);                          /* #c9c9c9              201, 201, 201 */
+
+$toolbar-btn-shadow:            rgba(0, 0, 0, .05);
 
 $tooltip-background-color:      rgba(63, 63, 63, 0.95);
 /**
