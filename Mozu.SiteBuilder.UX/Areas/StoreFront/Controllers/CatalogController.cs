@@ -34,6 +34,7 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -101,6 +102,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ProductRuntime.Contracts.Product prod = await productResponse.ReadAsAsync();
 
 
+
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
             if (string.IsNullOrEmpty(product.VariationProductCode))
@@ -127,11 +129,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
             PageContext.CmsContext = new CmsPageContext
             {
-                Template = new DocumentRequest
-                {
-                    Path = "product",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                },
                 Page = new DocumentRequest
                 {
                     Path = "product-" + productCode,
@@ -140,8 +137,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
-            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
+
             await ContextInitializationTasks;
+
+            PageContext.CmsContext.Template = new DocumentRequest
+            {
+                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "product"),
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+
+
+            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
+       
 
             string template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
 
@@ -350,11 +357,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.Title = cat.Name;
             PageContext.CmsContext = new CmsPageContext
             {
-                Template = new DocumentRequest
-                {
-                    Path = "category",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                },
                 Page = new DocumentRequest
                 {
                     Path = "category-" + categoryId,
@@ -366,7 +368,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             await ContextInitializationTasks;
 
+            PageContext.CmsContext.Template = new DocumentRequest
+            {
+                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "category") ,
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+
+
             string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
+
+
+
+
+
+
             var result = View(template, cat);
 
             SetCatalogContext(cat);

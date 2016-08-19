@@ -135,7 +135,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             while (true)
              {
-                var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
+                var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims()
+                    .CloneWithConfigOptions(cfg=>cfg.TimeoutMilliseconds = 60000)
+                    .GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
                 
 
                 var vm = Mapper.Map<ProductCollection>(prods);

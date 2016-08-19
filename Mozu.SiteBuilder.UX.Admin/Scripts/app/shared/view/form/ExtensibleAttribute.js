@@ -50,7 +50,7 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                 }];
             },
             'YesNo': function (ptAttribute, values) {
-                var currentValue = (values[0] || '').toLowerCase();
+                var currentValue = (values[0] || '').toString().toLowerCase();
 
                 return [{
                     xtype: 'radiogroup',

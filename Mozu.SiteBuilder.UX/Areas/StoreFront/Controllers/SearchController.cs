@@ -18,6 +18,8 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 using System.Collections.Generic;
 using System;
 using System.Net.Http;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.Mvc.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -114,6 +116,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     facetHierValue = "categoryId:" + categoryId;
                 }
             }
+
+            //protect against bad people 
+            if ( startIndex > 10000 || pageSize > 2000)
+            {
+                var redirect = Request.CreateResponse(System.Net.HttpStatusCode.MovedPermanently);
+                redirect.Headers.Location = new Uri(PageContext.Search.ToUrl(new SearchContextOverrides()
+                {
+                    PageSize = ((int?)(JToken)themeSettings["defaultPageSize"]) ?? 20,
+                    StartIndex = 0
+                }), UriKind.Relative);
+                return redirect;
+            }
+
+            
 
             var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets, searchTuningRuleContext: searchTuningRuleContext, responseOptions:responseOptions)).ReadAsSync();
             var pc = Mapper.Map<ProductSearchResult>(searchResponse);
