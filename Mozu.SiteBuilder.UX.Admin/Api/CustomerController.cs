@@ -304,7 +304,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var poAccounts = poTasks.Where(x => !x.Result.HasException).Select( x=> x.Result.ReadAsSync()).ToArray();
                 foreach (var customer in customers)
                 {
-                    customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.Id == customer.Id)?.IsEnabled == true;
+                    customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.AccountId == customer.Id)?.IsEnabled == true;
                 }
             }
 
