@@ -22,8 +22,6 @@
     initComponent: function() {
         var me = this;
 
-        me.originalEmptyText = me.fieldCfg.emptyText;
-
         var checkboxCfg = {};
 
         Ext.apply(checkboxCfg, me.checkboxCfg, {
@@ -92,7 +90,7 @@
                 scope: me
             }
         });
-
+        me.originalEmptyText = fieldCfg.emptyText;
         me.overrideField = Ext.widget(fieldCfg);
 
         me.items = [

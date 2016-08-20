@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Logging;
@@ -22,6 +23,7 @@ using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Behaviors;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,11 +38,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly ILogger _log;
         ICustomerSetWebApiClient _customerSetWebApiClient;
+        private readonly IApiContext _apiContext;
         public CustomerController(ICustomerAccountWebApiClient customerWebApiClient,
             ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
             ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/
             ,ICustomerSetWebApiClient customerSetWebApiClient
+            , IApiContext apiContext
             )
         {
             _customerWebApiClient = customerWebApiClient;
@@ -51,6 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _log = log;
             _customerSetWebApiClient = customerSetWebApiClient;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
+            _apiContext = apiContext;
         }
 
         [HttpGetRoute(UriTemplate = "search")]
@@ -334,27 +339,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var retList = new List<ApiCustomer>();
             var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
             Response<CustomerPurchaseOrderAccount> poResponse;
-
-            // save purchase orderInfo
-            foreach (var cust in customers)
+            int purchaseOrderUpdateBehaviorId = new PurchaseOrderUpdateBehavior().Id;
+            if (_apiContext.UserClaims !=null && _apiContext.UserClaims.BehaviorIds.Any(id => id == purchaseOrderUpdateBehaviorId))
             {
-                if (cust.PurchaseOrderAccount != null)
+                // save purchase orderInfo
+                foreach (var cust in customers)
                 {
-                    var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
-                    
-                    if (purchaseOrder.Id != null && purchaseOrder.Id != 0)
+                    if (cust.PurchaseOrderAccount != null)
                     {
-                        purchaseOrder.AccountId = cust.Id.Value;
-                        poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
-                    }
+                        var purchaseOrder = Mapper.Map<CustomerPurchaseOrderAccount>(cust.PurchaseOrderAccount);
 
-                    else if(purchaseOrder.IsEnabled)
-                    {
-                        purchaseOrder.AccountId = cust.Id.Value;
-                        poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
+                        if (purchaseOrder.Id != null && purchaseOrder.Id != 0)
+                        {
+                            purchaseOrder.AccountId = cust.Id.Value;
+                            poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
+                        }
+
+                        else if(purchaseOrder.IsEnabled)
+                        {
+                            purchaseOrder.AccountId = cust.Id.Value;
+                            poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
+                        }
                     }
                 }
-            } 
+            }
 
             foreach (var dcCust in dcCustomers)
             {
