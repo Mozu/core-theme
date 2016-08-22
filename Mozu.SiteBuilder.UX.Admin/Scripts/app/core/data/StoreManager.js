@@ -230,17 +230,20 @@ Ext.define('Taco.core.data.StoreManager', {
         });
 
     },
-    getCategoryTreeByCatalog: function (catalogId) {
+    getCategoryTreeByCatalog: function (catalogId, isActive) {
         if (!Ext.isNumeric(catalogId)) {
             catalogId = Taco.app.context.getCatalogId();
         }
-        
-        return this.getOrCreate({
+        var storeConfig = {
             type: 'Taco.store.CategoriesTree',
             id: 'Taco.store.CategoriesTree-' + catalogId,
             createOnly: true,
-            catalogId: catalogId
-        });
-
+            catalogId: catalogId,
+            autoLoad: false
+        };
+        if (isActive) {
+            storeConfig.isActive = true;
+        }
+        return this.getOrCreate(storeConfig);
     }
 });

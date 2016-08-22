@@ -194,8 +194,8 @@ Ext.define('Taco.Application', {
                 return tag;
             };
 
-            var hotPath = 'http://localhost:8080/lib/bundle.js';
-            var productionPath = '/admin/_mz_AdminUI_App/lib/bundle.js';
+            var hotPath = 'http://localhost:8080/dist/bundle.js';
+            var productionPath = '/admin/_mz_AdminUI_App/dist/bundle.js';
 
             var finalPath = productionPath;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Mozu.ProductAdmin.Contracts;
 using Newtonsoft.Json;
 
@@ -25,6 +26,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public string CategoryCode { get; set; }
 
         //public string CategoryPath { get; set; }
+
+        /// <summary>
+        /// Represents whether the product is active in this site.
+        /// </summary>
+        public bool IsActive { get; set; }
 
         public bool? IsHidden { get; set; }
 
@@ -62,6 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public Category Parent { get; set; }
 
         public List<CategoryImage> CategoryImages { get; set; }
+
     }
 
     

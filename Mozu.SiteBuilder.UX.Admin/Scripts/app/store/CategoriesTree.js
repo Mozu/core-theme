@@ -25,20 +25,25 @@ Ext.define('Taco.store.CategoriesTree', {
         clearFilters: true
     },
     load: function(options) {
-        var me = this;
+        var me = this,
+          defaultOptions = {
+              catalogId: me.catalogId,
+              bypassCache: true
+          };
         options = options || {};
-
         if (typeof options == 'function') {
             options = {
                 callback: options
             };
         }
-
-        options = Ext.apply({
-            catalogId: me.catalogId,
-            bypassCache: true
-        }, options);
-
+        if (me.isActive) {
+            defaultOptions.params = { isActive: true };
+            defaultOptions.callback = function() {
+                this.lastOptions.params = {};
+                this.getProxy().extraParams = {};
+            }
+        }
+        options = Ext.apply(defaultOptions, options);
         return me.callParent([options]);
     },
     reload: function(options) {

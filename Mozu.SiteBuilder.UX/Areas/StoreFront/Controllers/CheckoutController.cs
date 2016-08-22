@@ -420,6 +420,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.PageType = "confirmation";
 
 
+            var shopperOrderAttributesTask = GetShopperOrderAttributes();
+
+            this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
+
             if (order == null)
                 return Redirect("/");
 

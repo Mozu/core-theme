@@ -8,12 +8,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 {
     internal static class CategoryFilterExtensions
     {
-        private const string PARENT_ID = "parentid";
+        private const string PARENT_ID = "parentcategoryid";
         private const string ID = "id";
         private const string CATEGORY_CODE = "categorycode";
         private const string IS_DISPLAYED = "isdisplayed";
         private const string CATALOG_ID = "catalogid";
         private const string CATEGORY_TYPE = "categorytype";
+        private const string IS_ACTIVE = "isactive";
         private const string CREATE_DATE = "createdate";
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
@@ -46,6 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "categorycode":
                     return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
+                case "categorycodes":
+                    var codes = filter.escapedValue.ToString().Split(',');
+                    var codeList = codes.Select(x => string.Format("{0} eq {1}", CATEGORY_CODE, x)).ToArray();
+                    return String.Join(" or ", codeList);
+
                 // dc contract is isDisplay, mvc & js is isHidden, therefore have to switch comparison.
                 case "ishidden":
                     return String.Format("{2} {1} {0}", filter.value, 
@@ -59,6 +65,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 
                 case "categorytype":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_TYPE);
+
+                case "isactive":
+                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE);
+
+                case "status":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "active":
+                            return String.Format("{0} eq \"true\"", IS_ACTIVE);
+                        case "disabled":
+                            return String.Format("{0} eq \"false\"", IS_ACTIVE);
+                        default:
+                            return "";
+                    }
+
+                case "hiddenonstorefront":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "yes":
+                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
+                        case "no":
+                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
+                        default:
+                            return "";
+                    }
 
                 case "createdate":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_DATE);

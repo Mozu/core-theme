@@ -52,7 +52,7 @@ Ext.define("Taco.view.category.Form", {
                 itemId: "dynamic-cat-type-combo",
                 fieldLabel: "Product Membership",
                 margin: { left: 20 },
-                flex: 1,
+                flex: 2,
                 valueField: "id",
                 displayField: "name",
                 queryMode: "local",
@@ -99,7 +99,31 @@ Ext.define("Taco.view.category.Form", {
             }
         );
 
+        me.isActive = Ext.create('Ext.form.field.ComboBox', {
+            xtype: 'combobox',
+            name: 'isActive',
+            fieldLabel: 'Status',
+            flex: 1,
+            editable: false,
+            allowBlank: false,
+            store: [[
+                true,
+                'Active'
+            ], [
+                false,
+                'Disabled'
+            ]],
+            listeners: {
+                scope: me,
+                change: function(cmp, newValue, oldValue, eOpts) {
+                    me.optionsContainer.setVisible(newValue);
+                    //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
+                }
+            }
+        })
+
         var secondRowItems = [
+            me.isActive,
             {
                 xtype: "categorycombobox",
                 name: "parentId",
@@ -107,13 +131,49 @@ Ext.define("Taco.view.category.Form", {
                 flex: 1,
                 showDynamicRealTime: false,
                 showDynamicPreComputed: false,
-                excludedIds: [this.record.get("categoryCode")]
+                excludedIds: [this.record.get("categoryCode")],
+                listeners: {
+                    change: function(cmp, newValue, oldValue, eOpts) {
+                        var store = cmp.getStore(),
+                            parent = store.getById(newValue);
+
+                        if (parent && !parent.get('isActive')) {
+                            me.isActive.setValue(false).disable();
+                        }
+                        else {
+                            me.isActive.enable();
+                        }
+                    },
+                    scope: me
+                }
             }
         ];
 
         if (categoryType !== "Static") {
             secondRowItems.push(this.dynamicCategoryTypeCombo);
+        } else {
+            secondRowItems.push({
+                xtype: 'container',
+                flex: 2
+            })
         }
+
+        this.hiddenOnStorefront = Ext.create('Ext.form.field.Checkbox', {
+            name: "isHidden",
+            width: "100%",
+            xtype: "checkboxfield",
+            boxLabel: "Hide category on storefront"
+        });
+
+        this.optionsContainer = Ext.create('Ext.form.FieldContainer', {
+            xtype: "fieldcontainer",
+            layout: "fit",
+            width: "100%",
+            fieldLabel: "Options",
+            items: [
+                me.hiddenOnStorefront
+            ]
+        });
 
         this.items.push({
             xtype: "fieldcontainer",
@@ -190,20 +250,7 @@ Ext.define("Taco.view.category.Form", {
             xtype: "fieldcontainer",
             layout: "hbox",
             items: secondRowItems
-        }, {
-            xtype: "fieldcontainer",
-            layout: "fit",
-            width: "100%",
-            fieldLabel: "Options",
-            items: [
-                {
-                    name: "isHidden",
-                    width: "100%",
-                    xtype: "checkboxfield",
-                    boxLabel: "Hide category on store front"
-                }
-            ]
-        });
+        }, me.optionsContainer);
 
 
         if (categoryType !== "Static") {

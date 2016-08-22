@@ -34,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null)
+        public async Task<Response<List<Category>>> GetCategories([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, int? nodeQuery= null, int? id=null, bool? isActive=null)
         {
             if (id.HasValue && id != 666)
             {
@@ -62,14 +62,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     x.CatalogId = null;
                     x.SiteId = null;
                 });
-                const string responseFields = "items(id,categoryCode,isDisplayed,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
-                //                const string responseFields = "";
+                var extFilter = filterCollection.ToFilterString();
+                
+                if (isActive.HasValue && !(filterCollection.Any(x => x.property == "status")))
+                {
+                    extFilter = AppendIsActiveDefault(isActive, extFilter);
+                }
+                const string responseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+
                 while (true)
                 {
                     var cats = (await client.GetCategories(startIndex: start,
                         pageSize: 200, //current API maximum is 200 - May 2016
                         sortBy: "sequence asc",
-                        filter: filterCollection.ToFilterString(),
+                        filter: extFilter,
                         responseFields: responseFields
                         )).ReadAsSync();
                     categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
@@ -113,6 +119,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
              
             return List2(Mapper.Map<Category>(category));
+        }
+
+        private static string AppendIsActiveDefault(bool? isActive, string extFilter)
+        {
+            return string.IsNullOrEmpty(extFilter) 
+                ?  $"isactive eq \"{isActive}\""
+                : $"{extFilter} and isactive eq \"{isActive}\"";
         }
 
         [HttpGetRoute(UriTemplate = "autocomplete/?query={query}&value={categoryIdsString}")]

@@ -37,7 +37,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             getStore: function () {
                 return listStore;
             },
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             valueField: 'id',
             lastQuery: "",
             value: this.record.get('categoryIds'),

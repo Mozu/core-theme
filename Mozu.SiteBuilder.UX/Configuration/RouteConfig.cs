@@ -349,7 +349,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
               null,
               null,
               FancyRoute.ProductDetails,
-              true);
+              false);
 
             routes.MapCustomHttpRoute(
                 "StoreFront_productDetails_SEO",

@@ -511,6 +511,7 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\CustomerSets.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
     <Content Include="Scripts\app\controller\PriceLists.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
@@ -596,6 +597,7 @@
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
+    <Content Include="Scripts\app\model\CustomerSet.js" />
     <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />
@@ -713,6 +715,7 @@
     <Content Include="Scripts\app\store\BlockedProducts.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
+    <Content Include="Scripts\app\store\CustomerSet.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PaymentGateways.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
@@ -792,6 +795,9 @@
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
+    <Content Include="Scripts\app\view\customerSet\DeleteModal.js" />
+    <Content Include="Scripts\app\view\customerSet\Index.js" />
+    <Content Include="Scripts\app\view\category\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\channel\Index.js" />
     <Content Include="Scripts\app\view\couponCode\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\couponCode\DiscountGrid.js" />
@@ -906,6 +912,7 @@
     <Content Include="Scripts\app\view\publishing\modal\CreatePublishSet.js" />
     <Content Include="Scripts\app\view\publishing\modal\PublishSetPicker.js" />
     <Content Include="Scripts\app\view\publishing\Split.js" />
+    <Content Include="Scripts\app\view\react\Index.js" />
     <Content Include="Scripts\app\view\report\ReportList.js" />
     <Content Include="Scripts\app\view\report\Split.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
@@ -2466,7 +2473,6 @@
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
-    <Folder Include="Scripts\build\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />

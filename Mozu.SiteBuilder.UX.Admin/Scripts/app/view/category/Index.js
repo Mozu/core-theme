@@ -18,7 +18,7 @@ Ext.define('Taco.view.category.Index', {
     },
 
     advancedSearchConfig: {
-        advancedFormCls: 'Taco.view.category.AdvancedSearchForm',
+        form: null,
         emptySearchText: 'Search'
     },
 
@@ -62,7 +62,7 @@ Ext.define('Taco.view.category.Index', {
                 showSeparator: false,
                 listeners: {
                     click: {
-                        fn: function (menu, menuItem, e) {
+                        fn: function (menu, menuItem) {
                             if (!menuItem) {
                                 return;
                             }
@@ -90,7 +90,7 @@ Ext.define('Taco.view.category.Index', {
             }
         };
 
-        me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        me.store = Taco.core.data.StoreManager.getCategoryTreeByCatalog(me.catalogId, true);
 
         // if were filter categories, turn off drag and drop because
         // that would be crazy, amirite?
@@ -129,7 +129,7 @@ Ext.define('Taco.view.category.Index', {
         {
             xtype: 'treecolumn',
             text: 'Name',
-            flex: 2,
+            flex: 3,
             checkboxText:'',
             dataIndex: 'name',
             renderer: function (value) {
@@ -144,6 +144,26 @@ Ext.define('Taco.view.category.Index', {
             dataIndex: 'categoryType',
             renderer: function (value) {
                 return '<a href="#" class="taco-launch-editor">' + me.parseCategoryType(value) + '</a>';
+            }
+        }, {
+            xtype: 'treecolumn',
+            text: 'Status',
+            flex: 1,
+            checkboxText: '',
+            dataIndex: 'isActive',
+            renderer: function (value) {
+                var activeDisplayText = (value ? 'Active' : 'Disabled');
+                return '<a href="#" class="taco-launch-editor">' + activeDisplayText + '</a>';
+            }
+        }, {
+            xtype: 'treecolumn',
+            text: 'Hidden on Storefront',
+            flex: 1,
+            checkboxText: '',
+            dataIndex: 'isHidden',
+            renderer: function (value) {
+                var hiddenDisplayText = (value ? 'Y' : 'N');
+                return '<a href="#" class="taco-launch-editor">' + hiddenDisplayText + '</a>';
             }
         },
         {
@@ -255,7 +275,7 @@ Ext.define('Taco.view.category.Index', {
                 items: [
                     {
                         text: 'Expand All',
-                        handler: function (menuItem) {
+                        handler: function () {
                            this.expandAll()
                         },
                         scope: this
@@ -276,6 +296,8 @@ Ext.define('Taco.view.category.Index', {
             itemmove: me.onItemMove,
             scope: me
         };
+
+        me.advancedSearchConfig.form = Ext.create('Taco.view.category.AdvancedSearchForm', {});
 
         me.callParent(arguments);
 
@@ -353,7 +375,7 @@ Ext.define('Taco.view.category.Index', {
         Taco.core.StateManager.addState(URIStem + id);
     },
 
-    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e, eOpts) {
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e) {
 
 
         if (this.getSelectionText()) {  // inherited from the launchEditor mixin;
@@ -376,11 +398,11 @@ Ext.define('Taco.view.category.Index', {
         }
     },
 
-    onItemClick: function (view, record, elm, index, e) {
+    onItemClick: function (view, record) {
         this.launchEditor(record);
     },
 
-    onItemMove: function (node, oldParent, newParent, index, options) {
+    onItemMove: function (node, oldParent, newParent) {
         var me = this,
             store = me.store,
             i;
@@ -456,7 +478,7 @@ Ext.define('Taco.view.category.Index', {
         grid.setLoading(true);
         record.remove();
         store.sync({
-            success: function (m) {
+            success: function () {
                 grid.setLoading(false);
                 if (reloadGridToMoveSubcategoryUp) {
                     grid.getStore().load(); 
@@ -481,7 +503,7 @@ Ext.define('Taco.view.category.Index', {
     setHidden: function (records) {
         var me = this;
 
-        Ext.each(records, function (item, index, list) {
+        Ext.each(records, function (item) {
             var hiddenCls = '';
             if (item.get("isHidden")) {
                 hiddenCls = "taco-row-hidden";
@@ -494,8 +516,7 @@ Ext.define('Taco.view.category.Index', {
         });
     },
     viewInSite: function(site, env, record) {
-        var me = this,
-            url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + record.getId());
+        var url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + record.getId());
         window.open(url);
     }
 });

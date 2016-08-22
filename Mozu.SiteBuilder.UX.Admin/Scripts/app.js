@@ -26,6 +26,7 @@ Ext.application({
         'CustomRoutes',
         'StoreCredits',
         'CustomerAttributes',
+        'CustomerSets',
         'Categories',
         'Products',
         'Publishing',

@@ -55,7 +55,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
             forceSelection: true,
             disableKeyFilter: true,
             typeAhead: true,
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             value: this.record.get(this.name),
             valueField: 'id',
             style: {

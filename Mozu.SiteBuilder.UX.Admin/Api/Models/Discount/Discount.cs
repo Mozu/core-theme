@@ -188,5 +188,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool? AppliesToLeastExpensiveProductsFirst { get; set; }
 
         public List<string> IncludedPriceLists { get; set; }
+
+        public DateTime? CreateDate { get; set; }
+
+        public string CreateBy { get; set; }
+
+        public DateTime? LastModifiedDate { get; set; }
+
+        public string LastModifiedBy { get; set; }
+
     }
 }
