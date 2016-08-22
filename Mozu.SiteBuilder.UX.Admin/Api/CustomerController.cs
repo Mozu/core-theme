@@ -146,6 +146,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
          *  customer set start
          **********/
 
+        [HttpGetRoute(UriTemplate = "customerSetsById")]
+        public async Task<HttpResponseMessage> GetCustomerSetsById([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, [FromUri]int Id)
+        {
+            var dcCustomer = (await _customerWebApiClient.GetAccount(accountId: Id)).ReadAsSync();
+            var code = dcCustomer.CustomerSet;
+            var set = (await _customerSetWebApiClient.GetCustomerSet(code: code)).ReadAsSync();
+
+            var applicableSites = set.Sites;
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(applicableSites, (int)applicableSites.Count));
+        }
 
         [HttpGetRoute(UriTemplate = "customerSets/list")]
         public async Task<HttpResponseMessage> GetCustomerSets([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
