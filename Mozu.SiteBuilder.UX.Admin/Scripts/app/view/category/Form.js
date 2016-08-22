@@ -120,33 +120,36 @@ Ext.define("Taco.view.category.Form", {
                     //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
                 }
             }
-        })
+        });
+
+        me.parentCategory = Ext.create('Taco.core.ux.CategoryComboBox', {
+            xtype: "taco-categorycombobox",
+            name: "parentId",
+            fieldLabel: "Parent Category",
+            flex: 1,
+            showDynamicRealTime: false,
+            showDynamicPreComputed: false,
+            excludedIds: [this.record.get("categoryCode")]
+        });
+
+        me.parentCategory.on({ // so it doesn't overwrite the listeners handler in the class
+            change: function(cmp, newValue, oldValue, eOpts) {
+                var store = cmp.getStore(),
+                    parent = store.getById(newValue);
+
+                if (parent && !parent.get('isActive')) {
+                    me.isActive.setValue(false).disable();
+                }
+                else {
+                    me.isActive.enable();
+                }
+            },
+            scope: me
+        });
 
         var secondRowItems = [
             me.isActive,
-            {
-                xtype: "categorycombobox",
-                name: "parentId",
-                fieldLabel: "Parent Category",
-                flex: 1,
-                showDynamicRealTime: false,
-                showDynamicPreComputed: false,
-                excludedIds: [this.record.get("categoryCode")],
-                listeners: {
-                    change: function(cmp, newValue, oldValue, eOpts) {
-                        var store = cmp.getStore(),
-                            parent = store.getById(newValue);
-
-                        if (parent && !parent.get('isActive')) {
-                            me.isActive.setValue(false).disable();
-                        }
-                        else {
-                            me.isActive.enable();
-                        }
-                    },
-                    scope: me
-                }
-            }
+            me.parentCategory
         ];
 
         if (categoryType !== "Static") {
