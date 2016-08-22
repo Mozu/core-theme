@@ -66,8 +66,26 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                 change: function (cmp, newValue,oldValue) {
                     this.fireEvent('change', cmp, newValue, oldValue);
                 },
+                beforequery: function(queryplan) {
+                    var cl = this.categoryList;
+                    cl.store.clearFilter(cl.customFilter);
+                    cl.store.filter(cl.customFilter);
+                    return true;
+                },
                 scope: this
-            }
+            },
+            customFilter: new Ext.util.Filter({
+                filterFn: function(item) {
+                    var searchValue = me.categoryList.inputEl.getValue() || '',
+                        name = item.get('name'),
+                        categoryCode = item.get('categoryCode'),
+                        id = item.get('id'),
+                        matchesName = name.toLowerCase().indexOf(searchValue) == 0,
+                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
+                        matchesId = id.toString().indexOf(searchValue) == 0;
+                    return matchesName || matchesCode || matchesId;
+                }
+            })
             
         });
 

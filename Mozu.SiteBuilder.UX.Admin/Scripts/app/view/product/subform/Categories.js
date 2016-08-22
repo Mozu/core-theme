@@ -30,7 +30,7 @@ Ext.define('Taco.view.product.subform.Categories', {
         listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        list = Ext.create('Ext.ux.form.field.BoxSelect', {
+        list = Ext.create('Taco.core.ux.CategoryComboBox', {
             name: 'categoryIds',
             store: listStore,
             flex: 1,
