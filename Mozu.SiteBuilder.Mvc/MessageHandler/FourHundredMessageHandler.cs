@@ -12,9 +12,54 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.Mvc.OAF;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
+
+    public class DeepPagingLimitingRequestHandler : DelegatingHandler
+    {
+        protected override  Task<HttpResponseMessage> SendAsync(
+           HttpRequestMessage request,
+           CancellationToken cancellationToken)
+        {
+            var startIndexLimit = GetStartIndexLimit(request.Resolve<Mozu.Core.Settings.ISettings>());
+            var pageSizeLimit = GetDeepPagingLimit(request.Resolve<Mozu.Core.Settings.ISettings>());
+            var sc = SearchContext.Get(request);
+            if ( sc.StartIndex > startIndexLimit)
+            {
+                return Task.FromResult(GetRirect(request, sc, new SearchContextOverrides() { StartIndex = 0 }));
+            }
+
+            if (sc.PageSize > pageSizeLimit)
+            {
+                return Task.FromResult(GetRirect(request, sc, new SearchContextOverrides() { PageSize = 24 }));
+            }
+
+            return base.SendAsync(request, cancellationToken);
+        }
+
+        private static HttpResponseMessage GetRirect (HttpRequestMessage request, SearchContext sc , SearchContextOverrides searchContextOverrides)
+        { 
+            var uri = new Uri(sc.ToUrl(searchContextOverrides), UriKind.RelativeOrAbsolute);
+            var resp = request.CreateResponse(HttpStatusCode.MovedPermanently);
+            resp.ReasonPhrase = "exceeded paging limit";
+            resp.Headers.Location = uri;
+            return resp;
+        }
+        public static int GetStartIndexLimit(Mozu.Core.Settings.ISettings settings)
+        {
+            return settings.AppSettingsAsNullableInt("deep_paging_startIndex_Limit").GetValueOrDefault(5000);
+        }
+        public static int GetPageLimit(Mozu.Core.Settings.ISettings settings)
+        {
+            return settings.AppSettingsAsNullableInt("deep_paging_page_Limit").GetValueOrDefault(10);
+        }
+        public static int GetDeepPagingLimit(Mozu.Core.Settings.ISettings settings)
+        {
+            return settings.AppSettingsAsNullableInt("deep_paging_pageSize_Limit").GetValueOrDefault(500);
+        }
+    }
     public class FourHundredMessageHandler : DelegatingHandler
     {
         protected override async Task<HttpResponseMessage> SendAsync(
