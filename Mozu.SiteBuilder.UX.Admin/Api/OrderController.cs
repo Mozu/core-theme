@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IPriceListRuntimeWebApiClient _priceListRuntimeWebApiClient;
         private readonly IApiContext _apiContext;
         ICartWebApiClient _cartWebApiClient;
+        private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         /*
          * All order item operations have an updateMode attribute.
          * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient
             , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext,
-            ICartWebApiClient cartWebApiClient
+            ICartWebApiClient cartWebApiClient, ICustomerSetWebApiClient customerSetWebApiClient
             )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -59,6 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
             _apiContext = apiContext;
             _cartWebApiClient = cartWebApiClient;
+            _customerSetWebApiClient = customerSetWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -380,6 +382,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId)).ReadAsSync();
 
+            if (dcCustomer?.CustomerSet != null)
+            {
+                CustomerSet customerset =  (await _customerSetWebApiClient.GetCustomerSet(dcCustomer.CustomerSet)).ReadAsSync();
+                if (!customerset.Sites.Any(site => site.SiteId == _apiContext.SiteId))
+                {
+                    throw new Exception("Customer doesn't belong to the site/customer set");
+                }
+            }
+            
             string priceListCode = (await GetPriceListCode(args.CustomerAccountId));
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
