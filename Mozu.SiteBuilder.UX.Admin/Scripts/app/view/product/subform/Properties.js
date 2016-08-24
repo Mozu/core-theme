@@ -9,7 +9,8 @@ Ext.define('Taco.view.product.subform.Properties', {
     alias: 'widget.productpropertiesform',
     requires: [
         'Taco.core.ux.form.field.Product',
-        'Taco.core.ux.form.DateTime'
+        'Taco.core.ux.form.DateTime',
+        'Ext.ux.form.field.BoxSelect'
     ],
 
     title: 'Properties',
@@ -60,26 +61,57 @@ Ext.define('Taco.view.product.subform.Properties', {
             },
             'List': function (ptAttribute, values) {
                 var allowMulti = ptAttribute.get('allowMulti');
-                return [
-                    {
-                        xtype: allowMulti ? 'taco.field.multiselect' : 'combobox',
-                        name: this.getFieldName(ptAttribute),
-                        fieldLabel: ptAttribute.get('adminName'),
-                        displayField: 'value',
-                        valueField: 'id',
-                        allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? (allowMulti ? values : values[0]) : (allowMulti ? [] : null),
-                        layout: 'fit',
-                        minHeight: 70,
-                        store: Ext.create('Ext.data.Store', {
-                            fields: [
-                                { name: 'id', type: 'string' },
-                                { name: 'value', type: 'string' }
-                            ],
-                            data: ptAttribute.get('selectedValues')
+                if (allowMulti) {
+                    return [
+                        Ext.create('Ext.ux.form.field.BoxSelect',{
+                            name: this.getFieldName(ptAttribute),
+                            fieldLabel: ptAttribute.get('adminName'),
+                            displayField: 'value',
+                            valueField: 'id',
+                            allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                            value: (values && values.length) ? values : [],
+                            layout: 'fit',
+                            minHeight: 70,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: [
+                                    {name: 'id', type: 'string'},
+                                    {name: 'value', type: 'string'}
+                                ],
+                                data: ptAttribute.get('selectedValues')
+                            }),
+                            hideTrigger: false,
+                            triggerOnClick: false,
+                            forceSelection: true,
+                            disableKeyFilter: true,
+                            typeAhead: true,
+                            style: {
+                                display: 'inline-table',
+                                verticalAlign: 'bottom'
+                            }
                         })
-                    }
-                ];
+                    ];
+                } else {
+                    return [
+                        {
+                            xtype: 'combobox',
+                            name: this.getFieldName(ptAttribute),
+                            fieldLabel: ptAttribute.get('adminName'),
+                            displayField: 'value',
+                            valueField: 'id',
+                            allowBlank: ptAttribute.get('isRequired') === true ? false : true,
+                            value: (values && values.length) ? values[0] : null,
+                            layout: 'fit',
+                            minHeight: 70,
+                            store: Ext.create('Ext.data.Store', {
+                                fields: [
+                                    {name: 'id', type: 'string'},
+                                    {name: 'value', type: 'string'}
+                                ],
+                                data: ptAttribute.get('selectedValues')
+                            })
+                        }
+                    ];
+                }
             },
             'TextBox': function (ptAttribute, values) {
                 return [
