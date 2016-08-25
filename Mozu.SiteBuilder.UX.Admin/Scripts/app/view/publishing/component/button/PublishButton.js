@@ -188,6 +188,14 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             ? 'enable'
             : 'disable';
 
+        // dont do a noop
+        // dont remove, since we have a listener for afterEnable
+        // we dont want to trigger multiple events
+        if (func === 'enable' && !me.disabled 
+            || func === 'disabel' && me.disabled) {
+            return;
+        }
+
         me[func]();
 
     },
