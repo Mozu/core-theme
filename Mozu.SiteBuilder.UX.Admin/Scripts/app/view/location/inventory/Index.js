@@ -17,7 +17,7 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     // used by create button
     typeName: 'Location Inventory',
-    enableSearchBarInHeader: false,
+    enableSearchBarInHeader: true,
     createButtonEnabled: true,
     createButtonText: 'Create New Location Inventory',
     saveButtonEnabled: false,
@@ -39,8 +39,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     
     // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
-        var filters = store.filters,
-            locationCode = null,
+        var locationCode = null,
             locationFilter = store.extraFilters.getByKey("locationCode");
         
         if (!locationFilter) {
@@ -53,8 +52,6 @@ Ext.define('Taco.view.location.inventory.Index', {
     modelName: 'Taco.model.LocationInventory',
     
     initComponent : function() {
-
-        var me = this;
 
         this.store = Ext.create('Taco.store.LocationInventories', {
             autoLoad: false
@@ -79,7 +76,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             }],
             autoLoad: true,
             listeners: {
-                beforeload: function (store, operation) {
+                beforeload: function (store) {
                     var proxy = store.getProxy();
                     if (proxy.extraParams) {
                         //reset params at proxy (e.g. advSearch)
@@ -307,7 +304,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     },
                     listeners: {
                         select: {
-                            fn: function(combo, records, eOpts) {
+                            fn: function(combo, records) {
                                 var record = records[0],
                                     rowEditor = combo.up('roweditor'),
                                     productCodeField = rowEditor.form.findField("productCode"),
