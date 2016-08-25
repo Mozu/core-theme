@@ -284,6 +284,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
         {
+            if (string.IsNullOrWhiteSpace(details?.email))
+            {
+                return LoginFailed();
+            }
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
@@ -299,13 +303,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
-                
             }
-            else
-            {
-                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email)) : "Login failed. Please specify a user.";
-                return Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
-            }
+            return LoginFailed(email);
+        }
+
+        private HttpResponseMessage LoginFailed(string email = null)
+        {
+            string errorStr = (email != null)
+                ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email))
+                : "Login failed. Please specify a user.";
+            return Request.CreateResponse(HttpStatusCode.Unauthorized,
+                View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
         }
 
         [HttpPost]
