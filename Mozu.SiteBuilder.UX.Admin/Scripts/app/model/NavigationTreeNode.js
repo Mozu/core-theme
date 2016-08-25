@@ -15,6 +15,11 @@ Ext.define('Taco.model.NavigationTreeNode', {
         type: 'boolean'
     },
     {
+        name: 'categoryCode',
+        type: 'string',
+        useNull: true
+    },
+    {
         name: 'originalId',
         type: 'string',
         useNull: true
@@ -52,6 +57,13 @@ Ext.define('Taco.model.NavigationTreeNode', {
     }, {
         name: 'name',
         type: 'string'
+    },
+    {
+        name: 'nameAndCode',
+        convert: function (v, record) {
+            return record.get('name') + (!record.get('categoryCode') ? '' : " (" + record.get('categoryCode') + ")");
+        },
+        persist: false
     }, {
         name: 'nodeType',
         type: 'string'
