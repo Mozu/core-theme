@@ -355,7 +355,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string MakeProductUrl(object obj, Dictionary<string, object> config, string hostName=null)
         {
-            if (config != null && config.ContainsKey("variant"))
+            if (config != null && (config.ContainsKey("variant") || config.ContainsKey("vpc")) )
             {
                 return MakeProductVariantUrl(obj, config, hostName);
             }
@@ -390,17 +390,21 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         private string MakeProductVariantUrl(object obj, Dictionary<string, object> config, string hostName=null)
         {
             Product product = obj as Product;
+            string variantKey = config.ContainsKey("variant") ? "variant" : "vpc";
             string url = "#";
-            string vpc = config["variant"] as string;
+            string vpc = config[variantKey] as string;
             string qsVpc = $"?vpc={vpc}";
-            string qs = AddQueryString(config.Where(x => !x.Key.EqualsIgnoreCase("variant"))
+            string qs = AddQueryString(config.Where(x => !x.Key.EqualsIgnoreCase(variantKey))
                 .ToDictionary(y => y.Key, z => z.Value), true);
 
             if (product != null)
             {
                 url =
                     _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails,
-                        () => Mapper.Map<IDictionary<string, object>>(product).ChainSet("VariationProductCode", vpc, true), false, hostName).Result;
+                        () => Mapper.Map<IDictionary<string, object>>(product)
+                                    .ChainSet("variant", vpc, true)
+                                    .ChainSet("vpc", vpc, true),
+                        false, hostName).Result;
                 if (!string.IsNullOrEmpty(url))
                 {
                     return $"{url}{qsVpc}{qs}";

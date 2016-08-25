@@ -231,6 +231,17 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     } }},
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd?vpc=purple-small")
                 },
+                   new TestDescriptor
+                {
+                    Name = "productVariantObjectWithVpcParam",
+                    Template = @"{% make_url ""product"" product with vpc=""purple-small"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
+                    {
+                        ProductCode = "abcd"
+                    } }},
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd?vpc=purple-small")
+                },
                     new TestDescriptor
                 {
                     Name = "productVariantObjectWithMultipleParameters",
