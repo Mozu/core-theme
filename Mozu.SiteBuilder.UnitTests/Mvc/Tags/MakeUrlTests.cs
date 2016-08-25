@@ -204,13 +204,21 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     Context = new Dictionary<string, object>(),
                     ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd")
                 },
+                new TestDescriptor
+                {
+                    Name = "productCodeWithQuerystring",
+                    Template = @"{% make_url ""product"" ""abcd"" with test=""true"" %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>(),
+                    ExpectedFunc = TestDescriptor.CompareLiteral("/p/abcd?test=true")
+                },
                     new TestDescriptor
                 {
                     Name = "productVariant",
                     Template = @"{% make_url ""product"" productCode with variant=""purple-small"" as_paramater %}",
                     ContainerModifier = containerMods,
                     Context = new Dictionary<string, object>() { { "productCode", "abcd" }},
-                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd/v/purple-small")
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd?vpc=purple-small")
                 },
                     new TestDescriptor
                 {
@@ -221,7 +229,18 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
                     {
                         ProductCode = "abcd"
                     } }},
-                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd/v/purple-small")
+                    ExpectedFunc = TestDescriptor.ContainsLiteral("p/abcd?vpc=purple-small")
+                },
+                    new TestDescriptor
+                {
+                    Name = "productVariantObjectWithMultipleParameters",
+                    Template = @"{% make_url ""product"" product with variant=""purple-small"" test=""true"" as_paramater %}",
+                    ContainerModifier = containerMods,
+                    Context = new Dictionary<string, object>() { { "product", new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product
+                    {
+                        ProductCode = "abcd"
+                    } }},
+                    ExpectedFunc = TestDescriptor.CompareLiteral("/p/abcd?vpc=purple-small&test=true")
                 }
             };
         }
