@@ -17,6 +17,7 @@ using NDjango.FiltersCS.Compatibility;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Newtonsoft.Json.Linq;
+using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -89,6 +90,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var enableSearchTuningRules = arguments.GetValueOrDefault<bool?>("enableSearchTuningRules");
             var searchTuningRuleContext = arguments.GetValueOrDefault<string>("searchTuningRuleContext");
             var facetTemplateExclude = arguments.GetValueOrDefault<string>("facetTemplateExclude");
+            var suppressErrors = arguments.GetValueOrDefault<bool>("suppressErrors", MozuConfigurationManager.Settings.AppSettingsAsNullableBool("sitebuilder_includeproducttag_suppressErrors").GetValueOrDefault(false));
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
             int? facetCategoryId;
             int? categoryId;
@@ -150,7 +152,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetTemplateExclude,
                 sbAPIContext.PriceListCode,
                 facetPrefix,
-                responseOptions
+                responseOptions,
+                suppressErrors
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -197,7 +200,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetTemplateExclude,
             string priceList,
             string facetPrefix,
-            string responseOptions
+            string responseOptions,
+            bool suppressErrors
             )
         {
             string cacheKey = null;
@@ -251,11 +255,21 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
                 if (res.HasException)
                 {
-                    if (pageContext.IsDebugMode || pageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors))
+                   
+                    if ( pageContext.IsDebugMode || 
+                         pageContext.DebugFlags.HasFlag(DebugModeFlagValues.ShowErrors))
+                    {
+                        suppressErrors = false;
+                    }
+
+                    if (suppressErrors)
+                    {
+                        pc = new ProductSearchResult();
+                    }
+                    else
                     {
                         throw res.ReadException();
                     }
-                    pc = new ProductSearchResult();
                 }
                 else
                 {
@@ -276,7 +290,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         }
                     }
                 }
-                if (cacheResults)
+                if (cacheResults  && !res.HasException)
                 {
                     cache.Set(cacheKey, pc, scope:CacheScope.Site, cacheType :StorefrontCacheTypes.ProductSearch);
                 }
