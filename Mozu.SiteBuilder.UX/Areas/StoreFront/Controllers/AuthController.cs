@@ -309,42 +309,49 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private HttpResponseMessage LoginFailed(string email = null)
         {
-            string errorStr = (email != null)
-                ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email))
-                : "Login failed. Please specify a user.";
+            var errorMsg = GetLoginFailureMessage(email);
             return Request.CreateResponse(HttpStatusCode.Unauthorized,
-                View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
+                View("Login", new { email, Messages = new List<object> { new { Message = errorMsg } } }));
+        }
+
+        private static string GetLoginFailureMessage(string email)
+        {
+            return (email != null)
+                ? $"Login as {HttpUtility.HtmlEncode(email)} failed. Please try again."
+                : "Login failed. Please specify a user.";
         }
 
         [HttpPost]
         [SslOnlyActionFilter]
         public async Task<object> AjaxLogin(LoginDetails details)
         {
-            if ( details == null)
+            if (string.IsNullOrWhiteSpace(details?.email))
             {
-                throw new Mozu.Core.Exceptions.VaeValidationConflictException( "invalid input");
+                return AjaxLoginFailure();
             }
             string email = details.email;
             string password = details.password;
-            string returnUrl = details.returnUrl;
             var res = await DoLogin(email, password);
-                    
+
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 return new
-                    {
-                    Message = string.Format("Logged in as {0}.", HttpUtility.HtmlEncode(email))
-                    };
-                }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, new
                 {
-                    Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode( email))
-                });
+                    Message = $"Logged in as {HttpUtility.HtmlEncode(email)}."
+                };
             }
+            return AjaxLoginFailure(email);
         }
-        
+
+        private object AjaxLoginFailure(string email=null)
+        {
+            var errorMsg = GetLoginFailureMessage(email);
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new
+            {
+                Message = errorMsg
+            });
+        }
+
         public class OrderDetails
         {
             public string orderNumber { get; set; }
