@@ -178,7 +178,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public ActionResult Login(string returnUrl = null)
         {
-
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
@@ -213,7 +212,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public ActionResult AjaxForgotPassword(string returnUrl = null)
         {
-
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
@@ -255,7 +253,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
-           
              var res = await DoCreateAccount(authInfo);
              if (res.ResponseMessage.IsSuccessStatusCode)
              {
@@ -264,8 +261,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
                 Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress))
-                                                                             });
-             }
+            });
+        }
 
         [AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
@@ -364,10 +361,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> AnonymousOrderLogin(OrderDetails details)
         {
-            var orderNumber = details.orderNumber;
-            var email = details.email;
-            var billingZipCode = details.billingZipCode;
-            var billingPhoneNumber = details.billingPhoneNumber;
+            var orderNumber = details?.orderNumber;
+            var email = details?.email;
+            var billingZipCode = details?.billingZipCode;
+            var billingPhoneNumber = details?.billingPhoneNumber;
 
             if (string.IsNullOrEmpty(orderNumber))
             {
