@@ -5,6 +5,7 @@
 
 Ext.define('Taco.controller.Categories', {
     extend: 'Taco.core.Controller',
+    modelName: 'Category',
     requires: ['Taco.view.categories.Index'],
     views: ['categories.Index'],
     indexView: 'Taco.view.categories.Index',
