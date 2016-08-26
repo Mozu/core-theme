@@ -877,8 +877,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "{accountId}/resetpassword")]
-        public async Task<HttpResponseMessage> ResetPassword(int accountId)
+        public async Task<HttpResponseMessage> ResetPassword(int accountId, [FromUri] int? siteId)
         {
+            if (siteId.HasValue)
+            {
+                (_apiContext as ApiContext).SiteId = siteId;
+            }
+
             var result = (await _customerWebApiClient.SendPasswordResetEmail(accountId));
             if (result.HasException)
             {
