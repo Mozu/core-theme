@@ -117,18 +117,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            //protect against bad people 
-            if ( startIndex > 10000 || pageSize > 2000)
-            {
-                var redirect = Request.CreateResponse(System.Net.HttpStatusCode.MovedPermanently);
-                redirect.Headers.Location = new Uri(PageContext.Search.ToUrl(new SearchContextOverrides()
-                {
-                    PageSize = ((int?)(JToken)themeSettings["defaultPageSize"]) ?? 20,
-                    StartIndex = 0
-                }), UriKind.Relative);
-                return redirect;
-            }
-
             
 
             var searchResponse = (await _searchClient.Search(query, searchQuery.ToString(), facetHierValue: facetHierValue, facetTemplate: facetTemplate, facetHierDepth: facetHierDepth, facetValueFilter: PageContext.Search.ToFacetValueFilter(), startIndex: startIndex.Value, sortBy: PageContext.Search.SortBy, pageSize: pageSize.Value, facet: facets, searchTuningRuleContext: searchTuningRuleContext, responseOptions:responseOptions)).ReadAsSync();

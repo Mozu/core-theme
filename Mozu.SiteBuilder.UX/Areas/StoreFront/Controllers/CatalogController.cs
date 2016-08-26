@@ -35,6 +35,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -265,7 +266,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Lazy<IDictionary<string, object>> catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
 
 
+            
 
+           
 
             var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
 
@@ -274,9 +277,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
 
 
-
+            var pageLimit = DeepPagingLimitingRequestHandler.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
             var defaultPageSize = this.PageContext.Search.PageSize  ??  ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]) ?? 15;
             var currentIdx = this.PageContext.Search.StartIndex.GetValueOrDefault(0);
+
+
+
             if ( this.PageContext.Search.StartIndex.GetValueOrDefault(0) > 0)
             {
                 var previousIdx = Math.Max(0, currentIdx - defaultPageSize);
@@ -303,7 +309,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                    
             }
 
-            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0))
+            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0)  && currentIdx / defaultPageSize < pageLimit )
             {
                 var nextIndx = currentIdx + defaultPageSize;
                 this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
