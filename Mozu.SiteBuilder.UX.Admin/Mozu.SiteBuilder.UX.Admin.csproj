@@ -454,6 +454,7 @@
     <Compile Include="Helpers\LocalizedContentHelpers\LocalizedContentFilterExtensions.cs" />
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
+    <Compile Include="Helpers\LocationInventoryHelpers\LocationInventorySortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\IPasswordHelper.cs" />
@@ -812,6 +813,7 @@
     <Content Include="Scripts\app\view\customSchema\Lists.js" />
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
+    <Content Include="Scripts\app\view\location\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />

@@ -78,17 +78,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
             }
+            string sortBy = pagingParams.sort.ToSortString();
             if (extFilter.ContainsProperty("locationcode"))
             {
                 string locationCode = extFilter.PopValue<string>("locationcode");
                 string filterString = extFilter.ToFilterString();
-                inventories = (await _locationInventoryClient.GetLocationInventories(locationCode: locationCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+                inventories = (await _locationInventoryClient.GetLocationInventories(locationCode: locationCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString, sortBy: sortBy)).ReadAsSync();
             }
             else if (extFilter.ContainsProperty("productcode"))
             {
                 string productCode = extFilter.PopValue<string>("productcode");
                 string filterString = extFilter.ToFilterString();
-                inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync();
+                inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString, sortBy: sortBy)).ReadAsSync();
 
                 if (inventories.TotalCount == 0)
                 {
