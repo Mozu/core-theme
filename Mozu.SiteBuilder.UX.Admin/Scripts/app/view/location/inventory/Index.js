@@ -10,7 +10,8 @@ Ext.define('Taco.view.location.inventory.Index', {
         'Taco.model.LocationInventory',
         'Taco.store.LocationInventories',
         'Taco.view.location.inventory.InventoryStockColumns',
-        'Taco.store.Locations'
+        'Taco.store.Locations',
+        'Taco.view.location.inventory.AdvancedSearchForm'
     ],
 
     cls: 'taco-locationiventory',
@@ -36,6 +37,11 @@ Ext.define('Taco.view.location.inventory.Index', {
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
     enableSearch: false,
+
+    advancedSearchConfig : {
+        advancedFormCls: 'Taco.view.location.inventory.AdvancedSearchForm',
+        emptySearchText: 'Search'
+    },
     
     // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
@@ -262,7 +268,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             {
                 dataIndex: 'productCode',
                 stateId: 'productCode',
-                width: 100,
+                width: 150,
                 text: 'Product Code',
                 menuDisabled: true,
 
@@ -277,7 +283,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 stateId: 'productName',
                 flex: 1,
                 text: 'Product Name',
-
+                sortable: false,
                 menuDisabled: true,
                 // product selector
                 editor: {
