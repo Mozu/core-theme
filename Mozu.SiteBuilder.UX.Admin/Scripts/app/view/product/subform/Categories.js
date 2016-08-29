@@ -30,7 +30,7 @@ Ext.define('Taco.view.product.subform.Categories', {
         listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        list = Ext.create('Taco.core.ux.CategoryComboBox', {
+        list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
             store: listStore,
             flex: 1,
@@ -42,7 +42,26 @@ Ext.define('Taco.view.product.subform.Categories', {
             lastQuery: "",
             value: this.record.get('categoryIds'),
             queryMode: 'local',
-            enableKeyEvents: true
+            enableKeyEvents: true,
+            customFilter: new Ext.util.Filter({
+                filterFn: function(item) {
+                    var searchValue = list.inputEl.getValue() || '';
+                    searchValue = typeof searchValue === 'string' ? searchValue.toLowerCase() : searchValue.toString().toLowerCase();
+                    var name = item.get('name');
+                    var categoryCode = item.get('categoryCode');
+                    var id = item.get('id');
+
+                    return name.toLowerCase().indexOf(searchValue) == 0 || categoryCode.toLowerCase().indexOf(searchValue) == 0 || id.toString().indexOf(searchValue) == 0;
+                }
+            })
+        });
+
+        list.on({
+            beforequery: function(queryPlan) {
+                list.store.clearFilter(list.customFilter);
+                list.store.filter(list.customFilter);
+                return true;
+            }
         });
 
         this.listStore = listStore;
