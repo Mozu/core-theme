@@ -174,17 +174,29 @@ Ext.define('Taco.view.customerSet.Index', {
         }
     },
 
-    doDelete: function(record, store) {
-        this.modal = Ext.create('Taco.view.customerset.DeleteModal', {
-            record: record,
-            store: store,
-            listeners: {
-                savesuccess: function(modal, values) {
-                    store.reload();
-                },
-                scope: this
-            }
-        });
+    doDelete: function (record, store) {
+        if (record.raw.sites.length > 0 || record.raw.aggregateInfo.customerCount > 0) {
+            this.modal = Ext.create('Taco.view.customerset.DeleteModal', {
+                record: record,
+                store: store,
+                listeners: {
+                    savesuccess: function(modal, values) {
+                        store.reload();
+                    },
+                    scope: this
+                }
+            });
+        } else {
+            record.destroy({
+                callback: function (rec, opt) {
+                    var err = opt.getError();
+                    if (err) {
+                        var message = err.remoteException ? err.remoteException.getError() : 'error occurred';
+                        Taco.app.fireEvent('setmessage', message, 'error');
+                    }
+                }
+            });
+        }
     }
 
 });
