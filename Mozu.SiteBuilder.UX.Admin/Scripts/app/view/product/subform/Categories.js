@@ -42,7 +42,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             lastQuery: "",
             value: this.record.get('categoryIds'),
             queryMode: 'local',
-            enableKeyEvents: true,
+            enableKeyEvents: true/*,
             customFilter: new Ext.util.Filter({
                 filterFn: function(item) {
                     var searchValue = list.inputEl.getValue() || '';
@@ -53,16 +53,16 @@ Ext.define('Taco.view.product.subform.Categories', {
 
                     return name.toLowerCase().indexOf(searchValue) == 0 || categoryCode.toLowerCase().indexOf(searchValue) == 0 || id.toString().indexOf(searchValue) == 0;
                 }
-            })
+            })*/
         });
 
-        list.on({
+        /*list.on({
             beforequery: function(queryPlan) {
                 list.store.clearFilter(list.customFilter);
                 list.store.filter(list.customFilter);
                 return true;
             }
-        });
+        });*/
 
         this.listStore = listStore;
         list.parentThing = this;

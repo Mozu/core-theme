@@ -66,15 +66,15 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                 change: function (cmp, newValue,oldValue) {
                     this.fireEvent('change', cmp, newValue, oldValue);
                 },
-                beforequery: function(queryplan) {
+                /*beforequery: function(queryplan) {
                     var cl = this.categoryList;
                     cl.store.clearFilter(cl.customFilter);
                     cl.store.filter(cl.customFilter);
                     cl.inputEl.focus();
                     return true;
-                },
+                },*/
                 scope: this
-            },
+            }/*,
             customFilter: new Ext.util.Filter({
                 filterFn: function(item) {
                     var searchValue = me.categoryList.inputEl.getValue() || '',
@@ -86,7 +86,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                         matchesId = id.toString().indexOf(searchValue.toLowerCase()) == 0;
                     return matchesName || matchesCode || matchesId;
                 }
-            })
+            })*/
             
         });
 
