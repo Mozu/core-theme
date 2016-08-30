@@ -70,6 +70,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                     var cl = this.categoryList;
                     cl.store.clearFilter(cl.customFilter);
                     cl.store.filter(cl.customFilter);
+                    cl.inputEl.focus();
                     return true;
                 },
                 scope: this
@@ -80,9 +81,9 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                         name = item.get('name'),
                         categoryCode = item.get('categoryCode'),
                         id = item.get('id'),
-                        matchesName = name.toLowerCase().indexOf(searchValue) == 0,
-                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
-                        matchesId = id.toString().indexOf(searchValue) == 0;
+                        matchesName = name.toLowerCase().indexOf(searchValue.toLowerCase()) == 0,
+                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue.toLowerCase()) == 0,
+                        matchesId = id.toString().indexOf(searchValue.toLowerCase()) == 0;
                     return matchesName || matchesCode || matchesId;
                 }
             })
