@@ -70,13 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             DC.LocationInventoryCollection inventories = null;
             if (extFilter.ContainsProperty("locationcode") && extFilter.ContainsProperty("productcode"))
             {
-                var inventoryResp = await _locationInventoryClient.GetLocationInventory(extFilter.PopValue<string>("locationcode"), extFilter.PopValue<string>("productcode"));
-
-                // handle 404 by returning an empty list
-                if (inventoryResp.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                    return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>());
-
-                return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
+                return await GetIndividualLocationInventory(extFilter);
             }
             string sortBy = pagingParams.sort.ToSortString();
             if (extFilter.ContainsProperty("locationcode"))
@@ -114,6 +108,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, (int)inventories.TotalCount));
+        }
+
+        private async Task<HttpResponseMessage> GetIndividualLocationInventory(FilterCollection extFilter)
+        {
+            var inventoryResp =
+                await
+                    _locationInventoryClient.GetLocationInventory(extFilter.PopValue<string>("locationcode"),
+                        extFilter.PopValue<string>("productcode"));
+
+            // handle 404 by returning an empty list
+            if (inventoryResp.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                return this.Request.CreateResponse(HttpStatusCode.OK, EmptyList2<DC.LocationInventory>());
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventoryResp.ReadAsSync()));
         }
 
         [HttpPostRoute(UriTemplate = "create")]
