@@ -20,24 +20,10 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
             }, {
                 name: 'productName',
                 fieldLabel: 'Product Name'
-            },
-            {
-                xtype: 'fieldcontainer',
-                layout:"hbox",
-                items: [{
-                    xtype:"textfield",
-                    fieldLabel: "Product Code",
-                    name: 'productCode',
-                    flex: 1,
-                    margin: { right: 40 }
-                },{
-                    xtype:"textfield",
-                    fieldLabel: "Base Product Code",
-                    name: 'baseProductCode',
-                    flex: 1
-                }]
-            },
-            {
+            }, {
+                fieldLabel: "Product Code",
+                name: 'productCodeFilter'
+            }, {
                 xtype: 'panel',
                 layout: "column",
                 items: [
@@ -130,12 +116,12 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
             {
                 xtype: 'taco-adminuserfield',
                 name: 'createBy',
-                fieldLabel: 'Created By',
+                fieldLabel: 'Inventory Created By',
                 flex: 1
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Created Date Range',
+                fieldLabel: 'Inventory Created Date Range',
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -161,12 +147,12 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
             {
                 xtype: 'taco-adminuserfield',
                 name: 'lastModifiedBy',
-                fieldLabel: 'Modified By',
+                fieldLabel: 'Inventory Modified By',
                 flex: 1
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Modified Date Range',
+                fieldLabel: 'Inventory Modified Date Range',
                 layout: {
                     type: 'hbox',
                     align: 'middle'
@@ -191,7 +177,6 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
             }
         ];
 
-            
         this.callParent(arguments);
     }
 });
