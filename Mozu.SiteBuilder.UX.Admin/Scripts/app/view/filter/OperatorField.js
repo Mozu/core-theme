@@ -36,10 +36,8 @@ Ext.define('Taco.view.filter.OperatorField', {
             hidden: !this.isRecursiveOperator(this.value),
             boxLabel: this.recurseText,
             listeners: {
-                show: function(cmp, eOpts) {
-                    if (me.getValue() === 'in') {
-                        cmp.hide();
-                    }
+                beforeshow: function(cmp, eOpts) {
+                    return me.getValue() === 'eq';
                 },
                 scope: me
             }
