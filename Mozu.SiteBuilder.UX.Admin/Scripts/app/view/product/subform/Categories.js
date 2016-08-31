@@ -37,32 +37,40 @@ Ext.define('Taco.view.product.subform.Categories', {
             getStore: function () {
                 return listStore;
             },
-            displayField: 'nameAndCodeAndStatus',
-            valueField: 'id',
-            lastQuery: "",
-            value: this.record.get('categoryIds'),
             queryMode: 'local',
-            enableKeyEvents: true/*,
+            lastQuery: '',
+            triggerOnClick: false,
+            forceSelection: true,
+            typeAhead: true,
+            displayField: 'nameAndCodeAndStatus',
+            value: this.record.get('categoryIds'),
+            valueField: 'id',
+            style: {
+                display: 'inline-table',
+                verticalAlign: 'bottom'
+            },
+            listeners: {
+                beforequery: function(queryPlan) {
+                    list.store.clearFilter(list.customFilter);
+                    list.store.filter(list.customFilter);
+                    return true;
+                }
+            },
             customFilter: new Ext.util.Filter({
                 filterFn: function(item) {
                     var searchValue = list.inputEl.getValue() || '';
-                    searchValue = typeof searchValue === 'string' ? searchValue.toLowerCase() : searchValue.toString().toLowerCase();
-                    var name = item.get('name');
-                    var categoryCode = item.get('categoryCode');
-                    var id = item.get('id');
+                    searchValue = searchValue.toLowerCase();
+                    var name = item.get('name'),
+                        categoryCode = item.get('categoryCode'),
+                        id = item.get('id'),
+                        matchesName = name.toLowerCase().indexOf(searchValue) == 0,
+                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
+                        matchesId = id.toString().indexOf(searchValue) == 0;
 
-                    return name.toLowerCase().indexOf(searchValue) == 0 || categoryCode.toLowerCase().indexOf(searchValue) == 0 || id.toString().indexOf(searchValue) == 0;
+                    return matchesName || matchesCode || matchesId;
                 }
-            })*/
+            })
         });
-
-        /*list.on({
-            beforequery: function(queryPlan) {
-                list.store.clearFilter(list.customFilter);
-                list.store.filter(list.customFilter);
-                return true;
-            }
-        });*/
 
         this.listStore = listStore;
         list.parentThing = this;
