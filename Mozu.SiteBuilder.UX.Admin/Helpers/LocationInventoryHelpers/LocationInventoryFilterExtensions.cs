@@ -10,6 +10,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
         private const string BASE_PRODUCT_CODE = "baseproductcode";
         private const string PRODUCT_CODE = "productcode";
         private const string LOCATION_CODE = "locationcode";
+        private const string STOCK_ON_HAND = "stockonhand";
+        private const string STOCK_AVAILABLE = "stockavailable";
+        private const string STOCK_ON_BACKORDER = "stockonbackorder";
+
+        private const string CREATE_DATE_PROPERTY = "createdate"; 
+        private const string CREATED_BY_PROPERTY = "createby";
+        private const string UPDATE_DATE_PROPERTY = "updatedate"; 
+        private const string UPDATE_BY_PROPERTY = "updateby"; 
+
 
         /// <summary>
         /// Converts a FilterCollection for LocationInventory to a mozu services-compatible filter string.
@@ -19,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
             var statements = extFilter.Where(x => x.property != "all").Select(GetFilter).ToList();
             var allFilter = extFilter.FirstOrDefault(x => x.property == "all");
             if (allFilter != null)
-                statements.Add(String.Format("({1} sw {0} or {2} sw {0} or {3} sw {0})", allFilter.value, PRODUCT_CODE, LOCATION_CODE, PRODUCT_NAME));
+                statements.Add(String.Format("({1} sw {0} or {2} sw {0} or {3} sw {0} or {4} eq {0})", allFilter.value, PRODUCT_CODE, LOCATION_CODE, PRODUCT_NAME, BASE_PRODUCT_CODE));
 
             return string.Join(" and ", statements);
         }
@@ -30,12 +39,46 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
             {
                 case "productname":
                     return string.Format("({1} sw {0})", filter.value, PRODUCT_NAME);
-                case "baseproductcode":
-                    return string.Format("({1} {2} {0})", filter.value, BASE_PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
                 case "productcode":
                     return string.Format("({1} {2} {0})", filter.value, PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
+                case "productcodefilter":
+                    return $"({PRODUCT_CODE} sw \"{filter.value}\" or {BASE_PRODUCT_CODE} eq \"{filter.value}\")";
                 case "locationcode":
                     return string.Format("({1} {2} {0})", filter.value, LOCATION_CODE, filter.comparison == "sw" ? "sw" : "eq");
+
+                case "onhandfrom":
+                    return $"{STOCK_ON_HAND} ge \"{filter.value}\"";
+                case "onhandto":
+                    return $"{STOCK_ON_HAND} le \"{filter.value}\"";
+
+                case "availablefrom":
+                    return $"{STOCK_AVAILABLE} ge \"{filter.value}\"";
+                case "availableto":
+                    return $"{STOCK_AVAILABLE} le \"{filter.value}\"";
+
+                case "backorderfrom":
+                    return $"{STOCK_ON_BACKORDER} ge \"{filter.value}\"";
+                case "backorderto":
+                    return $"{STOCK_ON_BACKORDER} le \"{filter.value}\"";
+
+                case "createdate":
+                    return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "createdfrom":
+                    return string.Format("{0} ge {1}", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "createdto":
+                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                case "createby":
+                    return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
+                case "updatedate":
+                    return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "modifiedfrom":
+                    return string.Format("{0} ge {1}", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                case "modifiedto":
+                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                case "updateby":
+                case "lastmodifiedby":
+                    return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
+
                 default:
                     throw new NotImplementedException("unable to filter on property " + filter.property);
             }

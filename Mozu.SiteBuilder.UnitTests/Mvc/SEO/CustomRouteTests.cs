@@ -602,6 +602,36 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             yield return new TestCase()
             {
+                Name = "prod variant",
+                Url = "pslug/p/pcode?vpc=pvarcode",
+                ValidateRoute = route =>
+                {
+                   // Assert.AreEqual(route.InternalRoute, FancyRoute.ProductDetails );
+
+                },
+                ValidateRequest = req =>
+                {
+                   // Assert.AreEqual((string)req.GetRouteData().Values["variationProductCode"], "pvarcode");
+                },
+                DoLinkStuff = (handler, tree, urlhelper) =>
+                {
+                    var product = new Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product()
+                    {
+                        ProductCode = "pcode",
+                        Content = new UX.Models.StoreFront.Catalog.ProductContent()
+                        {
+                            SEOFriendlyUrl = "pslug"
+                        }
+                    };
+                    
+                    var link = urlhelper.MakeUrl(Mozu.SiteBuilder.Mvc.Helpers.UrlHelper.UrlType.Product, product, new Dictionary<string, object> { { "variant", "pvarcode" } });
+                    Assert.AreEqual(link, "/pslug/p/pcode?vpc=pvarcode");
+                }
+            };
+
+
+            yield return new TestCase()
+            {
                 Name = "sale sub cat",
                 Url = "sale/women",
                 ValidateRoute = route =>
@@ -707,7 +737,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var logger = subber.ResolveAndSubstituteFor<ILogger>();
             var cache = new MemoryCache("testcache");
             subber.Provide<ObjectCache>(cache);
-            
+            subber.SubstituteFor<System.Web.HttpContextBase>();
             HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/" + test.Url ); ;
             pc.Url.Returns(reqMessage.RequestUri.ToString());
 
@@ -776,6 +806,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             }
 
             
+          
             
             
 
