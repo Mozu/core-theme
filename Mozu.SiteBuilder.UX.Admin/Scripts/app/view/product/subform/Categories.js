@@ -27,15 +27,15 @@ Ext.define('Taco.view.product.subform.Categories', {
         this.record = this.productInCatalogInfo;
 
 
-        listStore = this.record.getUnfilteredCategoryStore();
+        me.listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
-            store: listStore,
+            store: me.listStore,
             flex: 1,
             getStore: function () {
-                return listStore;
+                return me.listStore;
             },
             queryMode: 'local',
             lastQuery: '',
@@ -65,21 +65,21 @@ Ext.define('Taco.view.product.subform.Categories', {
                         id = item.get('id'),
                         matchesName = name.toLowerCase().indexOf(searchValue) == 0,
                         matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
-                        matchesId = id.toString().indexOf(searchValue) == 0;
+                        matchesId = id.toString().indexOf(searchValue) == 0,
+                        isStatic = item.get('categoryType') === 'Static';
 
-                    return matchesName || matchesCode || matchesId;
+                    return (matchesName || matchesCode || matchesId) && isStatic;
                 }
             })
         });
 
-        this.listStore = listStore;
         list.parentThing = this;
 
         this.items = [list];
 
         this.callParent(arguments);
 
-        this.mon(listStore, 'load', function () {
+        this.mon(me.listStore, 'load', function () {
             me.listStore.filterBy(function (record) {
                 var isStatic = record.get("categoryType") === "Static";
                 return isStatic;
