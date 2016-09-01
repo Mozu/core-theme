@@ -178,6 +178,7 @@
     <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
+    <Compile Include="Api\Models\Category\CategoryNode.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />
