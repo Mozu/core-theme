@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                     return PRODUCT_CODE_PROPERTY;
                 case "stockavailable":
                     return STOCK_AVAILABLE_PROPERTY;
-                case "stockreserved":
+                case "stockonbackorder":
                     return STOCK_ON_BACKORDER_PROPERTY;
                 case "stockonhand":
                     return STOCK_ON_HAND_PROPERTY;
