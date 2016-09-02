@@ -27,59 +27,32 @@ Ext.define('Taco.view.product.subform.Categories', {
         this.record = this.productInCatalogInfo;
 
 
-        me.listStore = this.record.getUnfilteredCategoryStore();
+        listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
-            store: me.listStore,
+            store: listStore,
             flex: 1,
             getStore: function () {
-                return me.listStore;
+                return listStore;
             },
-            queryMode: 'local',
-            lastQuery: '',
-            triggerOnClick: false,
-            forceSelection: true,
-            typeAhead: true,
             displayField: 'nameAndCodeAndStatus',
-            value: this.record.get('categoryIds'),
             valueField: 'id',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            },
-            listeners: {
-                beforequery: function(queryPlan) {
-                    list.store.clearFilter(list.customFilter);
-                    list.store.filter(list.customFilter);
-                    return true;
-                }
-            },
-            customFilter: new Ext.util.Filter({
-                filterFn: function(item) {
-                    var searchValue = list.inputEl.getValue() || '';
-                    searchValue = searchValue.toLowerCase();
-                    var name = item.get('name'),
-                        categoryCode = item.get('categoryCode'),
-                        id = item.get('id'),
-                        matchesName = name.toLowerCase().indexOf(searchValue) == 0,
-                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
-                        matchesId = id.toString().indexOf(searchValue) == 0,
-                        isStatic = item.get('categoryType') === 'Static';
-
-                    return (matchesName || matchesCode || matchesId) && isStatic;
-                }
-            })
+            lastQuery: "",
+            value: this.record.get('categoryIds'),
+            queryMode: 'local',
+            enableKeyEvents: true
         });
 
+        this.listStore = listStore;
         list.parentThing = this;
 
         this.items = [list];
 
         this.callParent(arguments);
 
-        this.mon(me.listStore, 'load', function () {
+        this.mon(listStore, 'load', function () {
             me.listStore.filterBy(function (record) {
                 var isStatic = record.get("categoryType") === "Static";
                 return isStatic;
