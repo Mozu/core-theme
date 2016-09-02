@@ -38,7 +38,6 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
                             xtype: 'numberfield',
                             name: 'onhandFrom',
                             hideTrigger: true,
-                            minValue: 0,
                             mouseWheelEnabled: true,
                             selectOnFocus: true,
                             width: 100
@@ -50,7 +49,6 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
                             xtype: 'numberfield',
                             name: 'onhandTo',
                             hideTrigger: true,
-                            minValue: 0,
                             mouseWheelEnabled: true,
                             selectOnFocus: true,
                             width: 100,

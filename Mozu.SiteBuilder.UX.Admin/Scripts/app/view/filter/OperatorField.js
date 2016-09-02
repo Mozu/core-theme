@@ -36,10 +36,8 @@ Ext.define('Taco.view.filter.OperatorField', {
             hidden: !this.isRecursiveOperator(this.value),
             boxLabel: this.recurseText,
             listeners: {
-                show: function(cmp, eOpts) {
-                    if (me.getValue() === 'in') {
-                        cmp.hide();
-                    }
+                beforeshow: function(cmp, eOpts) {
+                    return me.getValue() === 'eq';
                 },
                 scope: me
             }
@@ -139,8 +137,9 @@ Ext.define('Taco.view.filter.OperatorField', {
 
     onLeftFieldChange: function (field, newValue, oldValue, e) {
         if (this.recurseField) {
-            this.recurseField.setVisible(newValue.indexOf('categories') > -1);
-            this.recurseField.setValue(newValue.indexOf('categories') > -1 ? this.recurseField.getValue() : false);
+            var allowed = this.isRecursiveAllowed();
+            this.recurseField.setVisible(newValue.indexOf('categories') > -1 && allowed);
+            this.recurseField.setValue((newValue.indexOf('categories') > -1 ? this.recurseField.getValue() : false) && allowed);
         }
     },
 
