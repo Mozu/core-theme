@@ -80,9 +80,9 @@ Ext.define('Taco.view.product.subform.Categories', {
         this.callParent(arguments);
 
         this.mon(listStore, 'load', function () {
-            me.listStore.filterBy(function (record) {
-                var isStatic = record.get("categoryType") === "Static";
-                return isStatic;
+            me.listStore.addFilter({
+                property: 'categoryType',
+                value: 'Static'
             });
             list.resetOriginalValue();
         }, this);
