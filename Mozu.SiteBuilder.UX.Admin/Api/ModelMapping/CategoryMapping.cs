@@ -50,13 +50,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.Category, CategoryNode>()
+            Mapper.CreateMap<DC.CategoryNode, CategoryNode>()
                  .ForMember(dest => dest.IsHidden, opt => opt.ResolveUsing(c => !c.IsDisplayed))
                  .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1))
                 .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
                 .ForMember(dest => dest.Name, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Name : null)))
-                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(dc => dc.ChildCount.GetValueOrDefault() == 0))
-                ;
+                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(s => s.Children != null ? s.Children.Count <= 0 : true))
+                .ForMember(d=> d.Description, o=>o.ResolveUsing(s=>s.Content.Description ))
+                .ForMember(d=>d.Code, o=>o.ResolveUsing(s=>s.CategoryCode))
+                 ;
 
             Mapper.CreateMap<DC.Category, CategoryTreeNode>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
