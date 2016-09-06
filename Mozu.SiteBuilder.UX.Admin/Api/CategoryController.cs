@@ -316,7 +316,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "node/{id}?showInactive={showInactive}&isDisplayed={isDisplayed}")]
         public async Task<Response<Models.Category.CategoryNode>> GetCategoryNode(int? id=0, bool? showInactive = null, bool? isDisplayed = null)
         {
-            var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+            var cat = (await _categoriesClient.GetCategoryTreeNode(id, showInactive, isDisplayed)).ReadAsSync();
             var retList = Mapper.Map<Models.Category.CategoryNode>(cat) ;
             return Single2(retList);
         }
