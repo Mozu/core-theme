@@ -268,10 +268,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2( ret);
         }
 
-        [HttpPostRoute(UriTemplate = "delete/?force={force}")]
-        public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool force = true)
+        [HttpPostRoute(UriTemplate = "delete/?cascadeDelete={cascadeDelete}")]
+        public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool cascadeDelete = false)
         {
-            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, category.CascadeDelete, forceDelete: force, reassignToParent: !category.CascadeDelete)).ToList();
+            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, cascadeDelete, forceDelete: true, reassignToParent: !cascadeDelete)).ToList();
             await Task.WhenAll(tasks);
             AnyExceptionsThenThrow(tasks);
 
@@ -283,8 +283,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
             originalCategory.Id = -1;
-            //originalCategory.Content.CategoryId = -1;
-            //originalCategory.CategoryCode += "-COPY";
             originalCategory.Content.Name += "-COPY";
 
             var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
