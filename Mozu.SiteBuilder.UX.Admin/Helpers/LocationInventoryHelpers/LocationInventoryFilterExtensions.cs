@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                 case "createdfrom":
                     return string.Format("{0} ge {1}", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
                 case "createdto":
-                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                    return string.Format("{0} le {1}", CREATE_DATE_PROPERTY, ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "createby":
                     return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
                 case "updatedate":
