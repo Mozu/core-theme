@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "catalogid":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATALOG_ID);
 
-                case "categorytype":
+                case "type":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_TYPE);
 
                 case "isactive":
@@ -99,12 +99,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                             return "";
                     }
 
-                case "createdate":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_DATE);
-
-                case "updatedate":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, UPDATE_DATE);
-
+                case "createdfrom":
+                    return $"{CREATE_DATE} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
+                case "createdto":
+                    return
+                        $"{CREATE_DATE} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
+                case "modifiedfrom":
+                    return $"{UPDATE_DATE} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
+                case "modifiedto":
+                    return
+                        $"{UPDATE_DATE} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
+  
                 case "createby":
                     return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CREATE_BY);
 
