@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
                 .ForMember(dest => dest.Name, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Name : null)))
                  .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(s => s.Children != null ? s.Children.Count <= 0 : true))
-                .ForMember(d=> d.Description, o=>o.ResolveUsing(s=>s.Content.Description ))
+                .ForMember(d=> d.Description, o=>o.ResolveUsing(s=>(s.Content != null) ? s.Content.Description : null ))
                 .ForMember(d=>d.Code, o=>o.ResolveUsing(s=>s.CategoryCode))
                  ;
 
