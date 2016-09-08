@@ -9,7 +9,9 @@
             JP: true,
             TW: true
         },
-            defaultStateProv = "n/a";
+            defaultStateProv = "n/a",
+            //Zip code can not be empty in order for {order}method/payments to work correctly
+            defaultZipCode = "n/a";
 
         var PhoneNumbers = Backbone.MozuModel.extend({
             validation: {
@@ -64,6 +66,12 @@
                 var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
                 if ((!options || !options.helpers) && !j.stateOrProvince) {
                     j.stateOrProvince = defaultStateProv;
+                }
+                if ((!options || !options.helpers) && !j.postalOrZipCode) {
+                    j.postalOrZipCode = defaultZipCode;
+                }
+                if (options && options.helpers && j.postalOrZipCode === defaultZipCode) {
+                    delete j.postalOrZipCode;
                 }
                 if (options && options.helpers && j.stateOrProvince === defaultStateProv) {
                     delete j.stateOrProvince;
