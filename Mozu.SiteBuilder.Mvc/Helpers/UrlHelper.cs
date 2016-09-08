@@ -254,20 +254,15 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 str = '/' + str;
                 sb.Insert(0, str);
             }
-
-            sb.Append(str.IndexOf('?') == -1 ? '?' : '&');
-
-            foreach (var kvp in config)
+            var qs = AddQueryString(config, hasQuestionMark: str.Contains("?"));
+            if (qs.Length > 0)
             {
-                if (kvp.Value == null)
-                {
-                    continue;
-                }
-                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
+                sb.Append(qs);
             }
-
+            
             if (!_siteContext.GeneralSettings.CdnCacheBustKey.IsNullOrEmpty())
             {
+                sb.Append(qs.Length > 0 ? "&" : "?");
                 sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
             }
 
@@ -358,45 +353,78 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         }
 
-       
-
         string MakeProductUrl(object obj, Dictionary<string, object> config, string hostName=null)
         {
+            if (config != null && (config.ContainsKey("variant") || config.ContainsKey("vpc")) )
+            {
+                return MakeProductVariantUrl(obj, config, hostName);
+            }
             Product product = obj as Product;
-            string url = "#";
+            string qs = string.Empty;
+            if (config != null)
+            {
+                qs = AddQueryString(config, false);
+            }
             if (product == null)
             {
                 string productCode = null;
+                string url = "#";
                 if (obj is string)
                 {
                     productCode = (string)obj;
-                    url = "/p/" + productCode;
+                    url = $"/p/{productCode}";
                 }
                 if (productCode == null)
                 {
                     url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
+                return $"{url}{qs}";
+            }
+
+            var canonicalUrl = _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, 
+                () => Mapper.Map<IDictionary<string, object>>(product), 
+                false, hostName).Result ?? "/p/" + product.ProductCode;
+            return canonicalUrl + qs;
+        }
+
+        private string MakeProductVariantUrl(object obj, Dictionary<string, object> config, string hostName=null)
+        {
+            Product product = obj as Product;
+            string variantKey = config.ContainsKey("variant") ? "variant" : "vpc";
+            string url = "#";
+            string vpc = config[variantKey] as string;
+            string qsVpc = $"?vpc={vpc}";
+            string qs = AddQueryString(config.Where(x => !x.Key.EqualsIgnoreCase(variantKey))
+                .ToDictionary(y => y.Key, z => z.Value), true);
+
+            if (product != null)
+            {
+                url =
+                    _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails,
+                        () => Mapper.Map<IDictionary<string, object>>(product)
+                                    .ChainSet("variant", vpc, true)
+                                    .ChainSet("vpc", vpc, true),
+                        false, hostName).Result;
+                if (!string.IsNullOrEmpty(url))
+                {
+                    return $"{url}{qsVpc}{qs}";
+                }
+                url = $"/p/{product.ProductCode}";
             }
             else
             {
-                if (config != null && config.ContainsKey("variant"))
+                string productCode = null;
+                if (obj is string)
                 {
-                    product.VariationProductCode = config["variant"] as string;
+                    productCode = (string)obj;
+                    url = $"/p/{productCode}";
                 }
-                url =
-                    _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails,
-                        () => Mapper.Map<IDictionary<string, object>>(product), false, hostName: hostName).Result;
-                if (!string.IsNullOrEmpty(url))
+                if (string.IsNullOrEmpty(productCode))
                 {
-                    return url; 
+                    url = _resolver.ResolveMemberOrDefault<string>(obj, "url", "#");
                 }
-                url = "/p/" + product.ProductCode;
             }
-            if (config != null && config.ContainsKey("variant"))
-            {
-                url = $"{url}/v/{config["variant"]}";
-            }
-            return url;
+            return $"{url}{qsVpc}{qs}";
         }
 
         string MakeCategoryUrl(object obj, Dictionary<string, object> config, bool includeContxt, bool forFaceting, string hostname=null)
@@ -417,12 +445,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
 
             }
-            if (categoryCode == null && categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 categoryId = _resolver.ResolveMemberOrDefault(obj, "categoryId", -1);
             }
 
-            if (categoryCode == null && categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 var facetValue = _resolver.ResolveMemberOrDefault<string>(obj, "filterValue");
                 if (!string.IsNullOrEmpty(facetValue))
@@ -437,7 +465,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 }
             }
 
-            else if (categoryId == -1)
+            if (string.IsNullOrWhiteSpace(categoryCode) && categoryId == -1)
             {
                 return "#";
             }
@@ -501,25 +529,15 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (url.Length > 2 && url[0] == '/' && url[1] != '/')
             {
                 sb.Insert(0, _siteContext.CdnPrefix);
-                //  url = _siteContext.CdnPrefix + url;
             }
-            if (url.IndexOf('?') == -1)
+            var qs = AddQueryString(config, hasQuestionMark: url.Contains("?"));
+            if (qs.Length > 0)
             {
-                sb.Append("?");
+                sb.Append(qs).Append("&");
             }
             else
             {
-                sb.Append("&");
-
-            }
-
-            foreach (var kvp in config)
-            {
-                if (kvp.Value == null)
-                {
-                    continue;
-                }
-                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
+                sb.Append("?");
             }
 
             sb.Append("_mzcb=").Append(_siteContext.GeneralSettings.CdnCacheBustKey);
@@ -639,6 +657,18 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         static string ClearFacetsFromUrl(string url, SearchContext context)
         {
             return context.ToUrl(new SearchContextOverrides { ClearFacets = true, UrlBase = url, StartIndex = 0 });
+        }
+
+        static string AddQueryString(Dictionary<string, object> config, bool hasQuestionMark=false)
+        {
+            if (config.Count == 0) return string.Empty;
+            var sb = new StringBuilder();
+            sb.Append(hasQuestionMark ? '&' : '?');
+            foreach (var kvp in config.Where(kvp => kvp.Value != null))
+            {
+                sb.Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value.ToString())).Append("&");
+            }
+            return sb.ToString(0, sb.Length-1);
         }
     }
 }

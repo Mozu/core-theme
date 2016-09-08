@@ -34,6 +34,8 @@ using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -71,15 +73,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Retrieves information about a single product given its product code.  
         /// </summary>
         /// <param name="productCode">Required. Merchant-created code associated with the product, for example, a SKU. Max length: 30.</param>
-        /// <param name="variationProductCode">Optional variationProductCode. Merchant-created code associated with a specific product variation. Max length: #.</param>
+        /// <param name="vpc">Optional vpc = variation product code. Merchant-created code associated with a specific product variation. Max length: #.</param>
         /// <returns>Returns information about a single product given its product code including its ... to be continued.</returns>
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> ProductDetail(string productCode, string variationProductCode = null)
+        public async Task<HttpResponseMessage> ProductDetail(string productCode, string vpc = null)
         {
-            var productResponse = await _productClient.GetProduct(productCode, variationProductCode, "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
+            var productResponse = await _productClient.GetProduct(productCode, vpc, 
+                "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
 
             if (!productResponse.ResponseMessage.IsSuccessStatusCode)
             {
@@ -101,18 +104,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ProductRuntime.Contracts.Product prod = await productResponse.ReadAsAsync();
 
 
+
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
-            if (string.IsNullOrEmpty(product.VariationProductCode))
+            var redirect =
+                await
+                    _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,
+                        () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
+            if (redirect != null)
             {
-                var redirect =
-                    await
-                        _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,
-                            () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
-                if (redirect != null)
-                {
-                    return redirect;
-                }
+                return redirect;
             }
 
             if (Request.Method == HttpMethod.Head)
@@ -127,11 +128,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.MetaKeywords = prod.Content.MetaTagKeywords;
             PageContext.CmsContext = new CmsPageContext
             {
-                Template = new DocumentRequest
-                {
-                    Path = "product",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                },
                 Page = new DocumentRequest
                 {
                     Path = "product-" + productCode,
@@ -140,8 +136,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     IncludeInactiveDocument = PageContext.IsEditMode
                 }
             };
-            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
+
             await ContextInitializationTasks;
+
+            PageContext.CmsContext.Template = new DocumentRequest
+            {
+                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "product"),
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+
+
+            PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
+       
 
             string template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
 
@@ -260,7 +266,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Lazy<IDictionary<string, object>> catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
 
 
+            
 
+           
 
             var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
 
@@ -269,9 +277,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
 
 
-
+            var pageLimit = DeepPagingLimitingRequestHandler.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
             var defaultPageSize = this.PageContext.Search.PageSize  ??  ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]) ?? 15;
             var currentIdx = this.PageContext.Search.StartIndex.GetValueOrDefault(0);
+
+
+
             if ( this.PageContext.Search.StartIndex.GetValueOrDefault(0) > 0)
             {
                 var previousIdx = Math.Max(0, currentIdx - defaultPageSize);
@@ -298,7 +309,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                    
             }
 
-            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0))
+            if (currentIdx+defaultPageSize < totCount.GetValueOrDefault(0)  && currentIdx / defaultPageSize < pageLimit )
             {
                 var nextIndx = currentIdx + defaultPageSize;
                 this.PageContext.CrawlerInfo.NextUrl = this.PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase, StartIndex = nextIndx });
@@ -350,11 +361,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.Title = cat.Name;
             PageContext.CmsContext = new CmsPageContext
             {
-                Template = new DocumentRequest
-                {
-                    Path = "category",
-                    IncludeInactiveDocument = PageContext.IsEditMode
-                },
                 Page = new DocumentRequest
                 {
                     Path = "category-" + categoryId,
@@ -366,7 +372,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             await ContextInitializationTasks;
 
+            PageContext.CmsContext.Template = new DocumentRequest
+            {
+                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "category") ,
+                IncludeInactiveDocument = PageContext.IsEditMode
+            };
+
+
             string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
+
+
+
+
+
+
             var result = View(template, cat);
 
             SetCatalogContext(cat);

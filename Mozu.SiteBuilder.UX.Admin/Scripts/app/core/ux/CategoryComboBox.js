@@ -17,33 +17,57 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     excludedIds:[],
     initComponent: function () {
         var me = this;
+
+        me.dynamicFilter = function (record) {
+            //exclude any id's past in via the excludedIds array;
+            if (me.excludedIds.length) {
+                var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
+                    return id == record.get("categoryCode");
+                });
+
+                if (isExcluded) {
+                    return false;
+                }
+            }
+
+            var categoryType = record.get("categoryType");
+            if (categoryType == "Static") {
+                return true;
+            } else if (categoryType == "DynamicPreComputed") {
+                return (me.showDynamicPreComputed);
+            } else if (categoryType == "DynamicRealTime") {
+                return (me.showDynamicRealTime);
+            }
+            return true;
+        };
+
+        me.on({
+            beforequery: function(queryPlan) {
+                var me = this;
+                me.store.clearFilter();
+                me.store.filter([me.dynamicFilter, me.customFilter]);
+                return true;
+            }
+        });
+
+        me.customFilter = new Ext.util.Filter({
+            filterFn: function(item) {
+                var searchValue = me.getValue() || '';
+                searchValue = typeof searchValue === 'string' ? searchValue.toLowerCase() : searchValue.toString().toLowerCase();
+                var name = item.get('name');
+                var categoryCode = item.get('categoryCode');
+                var id = item.get('id');
+
+                return name.toLowerCase().indexOf(searchValue) == 0 || categoryCode.toLowerCase().indexOf(searchValue) == 0 || id.toString().indexOf(searchValue) == 0;
+            }
+        });
+
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.Categories',
             createOnly: true,
             autoLoad: false,
             filters: [
-                function (record) {
-                    //exclude any id's past in via the excludedIds array;
-                    if (me.excludedIds.length) {
-                        var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
-                            return id == record.get("categoryCode");
-                        });
-
-                        if (isExcluded) {
-                            return false;
-                        }
-                    }
-
-                    var categoryType = record.get("categoryType");
-                    if (categoryType == "Static") {
-                        return true;
-                    } else if (categoryType == "DynamicPreComputed") {
-                        return (me.showDynamicPreComputed);
-                    } else if (categoryType == "DynamicRealTime") {
-                        return (me.showDynamicRealTime);
-                    }
-                    return true;
-                }
+                me.dynamicFilter
             ]
         });
     

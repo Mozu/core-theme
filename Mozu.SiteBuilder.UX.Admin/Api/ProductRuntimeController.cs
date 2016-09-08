@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.Core;
-using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Routing;
-using Mozu.Core.Extensions;
-using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
@@ -31,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public ProductRuntimeController(
             IApiContext context,
-            Lazy<ICategoryWebApiClient> categoryWebApiClient, 
+            Lazy<ICategoryWebApiClient> categoryWebApiClient,
             Lazy<IProductSearchWebApiClient> productSearchWebApiClient,
             Lazy<IProductRuntimeWebApiClient> productRuntimeWebApiClient,
             Lazy<IProductRuntimeSortExpressionBuilder> sortExpressionBuilder)
@@ -51,52 +47,61 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var jobj = JObject.FromObject(prod);
             return Single2(jobj);
         }
-
-        [HttpGetRoute(UriTemplate = "preview")]
-        public async Task<Response<List<StorefrontProduct>>> PreviewExpressionProducts(
-            PagingParamaters pagingParams,
-            FilterCollection extFilter,
-            string expression, 
-            int siteId, 
-            string dataViewMode, 
-            DateTime? previewDate = null)
+        
+        [HttpPostRoute(UriTemplate = "preview")]
+        public async Task<Response<List<StorefrontProduct>>> PreviewExpressionProducts(ProductRuntimePreviewArgs inputArgs)
         {
-            var start = pagingParams != null ? pagingParams.startIndex : 0;
-            var pageSize = pagingParams != null ? pagingParams.pageSize : 25;
-            var sort = (pagingParams != null && pagingParams.sort != null) ? _sortExpressionBuilder.Value.ToSortString(pagingParams.sort) : null; 
-
+            string keywords = string.Empty;
+            int siteId = (inputArgs?.siteId).GetValueOrDefault(0);
+            var start = (inputArgs?.start).GetValueOrDefault(0);
+            var pageSize = (inputArgs?.limit).GetValueOrDefault(0);
+            string sortString = _sortExpressionBuilder.Value.GetFromSortString(inputArgs?.sort);
+            if (!string.IsNullOrWhiteSpace(inputArgs?.advancedSearch))
+            {
+                var values = (JObject)Newtonsoft.Json.JsonConvert.DeserializeObject(inputArgs.advancedSearch);
+                foreach (var kvp in values)
+                {
+                    if (kvp.Key == "keyword")
+                        keywords = (string) kvp.Value;
+                }
+            }
             var client = _productSearchWebApiClient.Value.CloneWithApiContext(context =>
             {
                 context.SiteId = siteId;
-                context.DataViewMode = FastEnum<DataViewModeType>.Parse(dataViewMode);
-                context.PreviewDate = previewDate;
+                context.DataViewMode = FastEnum<DataViewModeType>.Parse(inputArgs?.dataViewMode);
+                context.PreviewDate = inputArgs?.previewDate;
             });
+            
+            var products = (await client.Search(keywords, inputArgs?.expression, pageSize: pageSize, sortBy: sortString, startIndex: start)).ReadAsSync();
 
-            string keywords = string.Empty;
-            //FilterCollection actually contains any keywords typed in so unwind those
-            if (!extFilter.IsNullOrEmpty())
-            {
-                var keywordEntry = extFilter.FirstOrDefault(f => f.field.EqualsIgnoreCase("all"));
-                if (keywordEntry != null)
-                {
-                    keywords = (string) keywordEntry.value;
-                }
-            }
-
-            var prod = (await client.Search(keywords, expression, pageSize:pageSize, sortBy:sort, startIndex:start)).ReadAsSync();
-
-            var mapped = prod.Items.Map<List<StorefrontProduct>>();
-            return List2(mapped, prod.TotalCount);
+            var mapped = products.Items.Map<List<StorefrontProduct>>();
+            return List2(mapped, products.TotalCount);
         }
-
 
         [HttpPostRoute(UriTemplate = "configure")]
         public async Task<Response<JObject>> Configure([FromBody] ProductOptionSelections selections,
             [FromUri] string productCode, [FromUri] int? quantity = null)
         {
-            var res = (await _productRuntimeWebApiClient.Value.ConfiguredProduct(selections, productCode, true, quantity:quantity)).ReadAsSync();
+            var res = (await _productRuntimeWebApiClient.Value.ConfiguredProduct(selections, productCode, true, quantity: quantity)).ReadAsSync();
             var jobj = JObject.FromObject(res);
             return Single2(jobj);
         }
     }
+
+    /// <summary>
+    ///     Used as input arguments for the Product-Runtime Preview
+    /// </summary>
+    public class ProductRuntimePreviewArgs
+    {
+        public string expression { get; set; }
+        public string advancedSearch { get; set; }
+        public int siteId { get; set; }
+        public int? limit { get; set; }
+        public int? start { get; set; }
+        public int? page { get; set; }
+        public string sort { get; set; }
+        public string dataViewMode { get; set; }
+        public DateTime? previewDate { get; set; }
+    }
+
 }

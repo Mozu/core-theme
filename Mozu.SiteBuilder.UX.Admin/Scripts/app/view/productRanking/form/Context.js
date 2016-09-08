@@ -73,7 +73,7 @@ Ext.define('Taco.view.productRanking.form.Context', {
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.categoryList = Ext.widget({
-            xtype: 'combobox',
+            xtype: 'taco-categorycombobox',
             name: 'categoryFilters',
             flex: 1,
             emptyText: 'Search for Categories',

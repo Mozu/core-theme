@@ -105,7 +105,7 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                 }]
         },
         {
-            xtype: 'combo',
+            xtype: 'taco-categorycombobox',
             store: { type: 'Taco.store.Categories' },
             flex:1,
             name: 'category',

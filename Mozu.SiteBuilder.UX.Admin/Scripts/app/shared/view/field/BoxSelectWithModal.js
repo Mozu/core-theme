@@ -35,6 +35,7 @@ Ext.define('Taco.shared.view.field.BoxSelectWithModal', {
             displayField: this.displayField || 'name',
             valueField: this.valueField || 'id',
             fieldLabel: this.fieldLabel || 'Select',
+            minChars: 2,
             style: {
                 display: 'inline-table',
                 verticalAlign: 'bottom'

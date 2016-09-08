@@ -3,7 +3,7 @@ $black-color:                   rgb(0, 0, 0);                                   
 $white-color:                   rgb(255, 255, 255);                                         /* #ffffff              255, 255, 255 */
 
 /* theme colors */
-$gray-text-dark:                rgb(165, 165, 165);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
+$gray-text-dark:                rgb(124, 124, 124);                                 /* #a5a5a5 --> #a6a6a6  165, 165, 165 */
                                 /* darken($white-color, 35); */
 $mask-color:                    rgba(236, 236, 236, 0.9);                            /* #ececec --> #ebebeb  236, 236, 236 */
                                 /* rgba(darken($white-color, 8), .9); */
@@ -20,7 +20,7 @@ $light-bg:                      rgb(234, 234, 234);                             
 $input-focus-border:            rgb(158, 202, 237);                                 /* #9ecaed              158, 202, 237 */
                                 /* adjust_hue(saturate(lighten($black-color, 77), 69), 207) */
 
-$label-color:                   rgb(172, 172, 172);                                 /* #acacac --> #adadad  172, 172, 172 */
+$label-color:                   rgb(124, 124, 124);                                 /* #acacac --> #adadad  172, 172, 172 */
                                 /* darken($white-color, 32); */
 $light-link-color:      $label-color;
 
@@ -101,6 +101,7 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
                                 /* adjust_hue(saturate(lighten($black-color, 41), 57), 165); */
 
 $primary-btn-background:        $valid-green;
+$primary-btn-shadow:            rgba(0, 0, 0, 0.2);
 $primary-btn-hover-background:  $valid-green-active;
 $primary-btn-active-background: rgb(48, 165, 136);
 $primary-btn-disabled-background: rgb(234, 234, 234);                               /* #eaeaea --> #e8e8e8  232, 232, 232 */
@@ -108,9 +109,9 @@ $primary-btn-disabled-split-border: rgb(241, 241, 241);                         
 $primary-btn-split-border:      rgba(0, 0, 0, 0.09);
 $secondary-btn-active-background: whitesmoke;
 $secondary-btn-hover-text:      $dark-color;
-$card-btn-text-color:           darken($white-color, 38);                           /* #9e9e9e              158, 158, 158 */
-$card-btn-border:               $gray-border-color;
-$card-btn-hover-border:         #e4e4e4;
+$card-btn-text-color:           rgb(124, 124, 124);                                 /* #7c7c7c              124, 124, 124 */
+$card-btn-border:               rgba(63, 63, 63, .19);
+$card-btn-hover-border:         rgba(63, 63, 63, .3);
 $card-btn-active-border:        #e2e2e2;
 $card-btn-active-background:    whitesmoke;
 $card-btn-disabled-text:        #dadada;
@@ -146,6 +147,8 @@ $nav-heading-color:             rgb(187, 190, 191);                             
 $glyph-icon-color:              lighten($black-color, 40);                          /* #666666              102, 102, 102 */
 $glyph-icon-color-inactive:     lighten($black-color, 79);                          /* #c9c9c9              201, 201, 201 */
 
+$toolbar-btn-shadow:            rgba(0, 0, 0, .05);
+
 $tooltip-background-color:      rgba(63, 63, 63, 0.95);
 /**
  * Old colors from _colors.scss
@@ -164,7 +167,7 @@ $color-neutral-80:              darken($color-neutral-white, 20%); /* #cccccc  2
 $color-neutral-75:              darken($color-neutral-white, 25%); /* #bfbfbf  191,191,191 */
 $color-neutral-70:              darken($color-neutral-white, 30%); /* #b3b3b3  179,179,179 */
 $color-neutral-65:              darken($color-neutral-white, 35%); /* #a6a6a6  166,166,166 */
-$color-neutral-60:              darken($color-neutral-white, 40%); /* #999999  153,153,153 */
+$color-neutral-60:              #7c7c7c;
 $color-neutral-55:              darken($color-neutral-white, 45%); /* #8c8c8c  140,140,140 */
 $color-neutral-50:              darken($color-neutral-white, 50%); /* #808080  128,128,128 */
 $color-neutral-45:              darken($color-neutral-white, 55%); /* #737373  115,115,115 */

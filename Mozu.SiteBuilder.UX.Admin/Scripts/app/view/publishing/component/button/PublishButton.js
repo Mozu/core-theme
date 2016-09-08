@@ -178,15 +178,27 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
             this.record.get('publishState') || this.record.get('publishedState')
         ) || '').toLowerCase();
 
-        if (!state && !this.record.phantom) return false;
+        if (!state && !this.record.phantom) {
+            return false;
+        }
 
-        if (this.record.phantom) state = 'live';
+        if (this.record.phantom) {
+            state = 'live';
+        }
 
         var func = state === 'draft'
             || state === 'new'
-            || state !== 'active'
+            || (state !== 'active' && state !== 'live')
             ? 'enable'
             : 'disable';
+
+        // dont do a noop
+        // dont remove, since we have a listener for afterEnable
+        // we dont want to trigger multiple events
+        if (func === 'enable' && !me.disabled 
+            || func === 'disable' && me.disabled) {
+            return;
+        }
 
         me[func]();
 

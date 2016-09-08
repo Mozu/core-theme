@@ -178,7 +178,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public ActionResult Login(string returnUrl = null)
         {
-
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
@@ -213,7 +212,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public ActionResult AjaxForgotPassword(string returnUrl = null)
         {
-
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
@@ -255,7 +253,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
-           
              var res = await DoCreateAccount(authInfo);
              if (res.ResponseMessage.IsSuccessStatusCode)
              {
@@ -264,8 +261,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
                 Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress))
-                                                                             });
-             }
+            });
+        }
 
         [AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
@@ -284,6 +281,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
         {
+            if (string.IsNullOrWhiteSpace(details?.email))
+            {
+                return LoginFailed();
+            }
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
@@ -299,44 +300,55 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
-                
             }
-            else
-            {
-                string errorStr = (email != null) ? string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(email)) : "Login failed. Please specify a user.";
-                return Request.CreateResponse(HttpStatusCode.OK, View("Login", new { email = email, Messages = new List<object> { new { Message = errorStr } } }));
-            }
+            return LoginFailed(email);
+        }
+
+        private HttpResponseMessage LoginFailed(string email = null)
+        {
+            var errorMsg = GetLoginFailureMessage(email);
+            return Request.CreateResponse(HttpStatusCode.Unauthorized,
+                View("Login", new { email, Messages = new List<object> { new { Message = errorMsg } } }));
+        }
+
+        private static string GetLoginFailureMessage(string email)
+        {
+            return (email != null)
+                ? $"Login as {HttpUtility.HtmlEncode(email)} failed. Please try again."
+                : "Login failed. Please specify a user.";
         }
 
         [HttpPost]
         [SslOnlyActionFilter]
         public async Task<object> AjaxLogin(LoginDetails details)
         {
-            if ( details == null)
+            if (string.IsNullOrWhiteSpace(details?.email))
             {
-                throw new Mozu.Core.Exceptions.VaeValidationConflictException( "invalid input");
+                return AjaxLoginFailure();
             }
             string email = details.email;
             string password = details.password;
-            string returnUrl = details.returnUrl;
             var res = await DoLogin(email, password);
-                    
+
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
                 return new
-                    {
-                    Message = string.Format("Logged in as {0}.", HttpUtility.HtmlEncode(email))
-                    };
-                }
-            else
-            {
-                return Request.CreateResponse(HttpStatusCode.Unauthorized, new
                 {
-                    Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode( email))
-                });
+                    Message = $"Logged in as {HttpUtility.HtmlEncode(email)}."
+                };
             }
+            return AjaxLoginFailure(email);
         }
-        
+
+        private object AjaxLoginFailure(string email=null)
+        {
+            var errorMsg = GetLoginFailureMessage(email);
+            return Request.CreateResponse(HttpStatusCode.Unauthorized, new
+            {
+                Message = errorMsg
+            });
+        }
+
         public class OrderDetails
         {
             public string orderNumber { get; set; }
@@ -349,10 +361,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> AnonymousOrderLogin(OrderDetails details)
         {
-            var orderNumber = details.orderNumber;
-            var email = details.email;
-            var billingZipCode = details.billingZipCode;
-            var billingPhoneNumber = details.billingPhoneNumber;
+            var orderNumber = details?.orderNumber;
+            var email = details?.email;
+            var billingZipCode = details?.billingZipCode;
+            var billingPhoneNumber = details?.billingPhoneNumber;
 
             if (string.IsNullOrEmpty(orderNumber))
             {

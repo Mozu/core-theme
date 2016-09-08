@@ -70,6 +70,7 @@
     a.#{$prefix}btn-action-primary-toolbar-medium {
         background-color: $primary-btn-background;
         border: none;
+        box-shadow: 0 2px 4px 0 $primary-btn-shadow;
         padding: 5px 19px;
         .#{$prefix}btn-inner-center {
             color: $white-color;
@@ -217,11 +218,12 @@
             &::after {
                 color: $card-btn-text-color;
                 content: $glyph-arrow-down;
-                font-size: 10px;
+                font-size: 8px;
                 padding-top: 0px;
-                right: 0px;
-                top: 5px;
-                width: 13px;
+                right: -12px;
+                text-align: center;
+                top: 6px;
+                width: 21px;
             }
         }
 
@@ -232,6 +234,14 @@
 
     a.#{$prefix}btn-action-medium,
     a.#{$prefix}btn-action-toolbar-medium {
+
+        .#{$prefix}btn-split-right {
+            padding-right: 16px;
+        }
+
+        .#{$prefix}btn-arrow-right {
+            padding-right: 10px;
+        }
 
         &:not(.#{$prefix}btn-action-primary-toolbar-medium):not(.#{$prefix}btn-disabled):hover {
 
@@ -274,6 +284,7 @@
     .#{$prefix}btn-action-medium {
         background-color: $card-button-bg;
         border: 1px solid $card-btn-border;
+        box-shadow: 0 1px 2px 0 $toolbar-btn-shadow;
         @include btn-inner-center-no-padding;
         color: $card-btn-text-color;
         padding: 5px 12px;
