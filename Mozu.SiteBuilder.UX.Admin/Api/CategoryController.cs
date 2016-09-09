@@ -113,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Category>>> GetCategoryList([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection)
+        public async Task<Response<List<Category>>> GetCategoryList([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, [FromUri] bool isPicker = false)
         {
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
@@ -124,12 +124,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 sort = "sequence asc";
             }
+            var responseFields = (isPicker)
+                ? "items(id, categoryCode, isActive, content(name)"
+                : _listResponseFields;
             //getting rid of server filtering for now.  all filtering done on the client.
             var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
                 pageSize: pagingParams.pageSize,
                 sortBy: sort,
                 filter: filterCollection.ToFilterString(),
-                responseFields: _listResponseFields
+                responseFields: responseFields
                 )).ReadAsSync();
             return List2(Mapper.Map<List<Category>>(cats.Items));
         }

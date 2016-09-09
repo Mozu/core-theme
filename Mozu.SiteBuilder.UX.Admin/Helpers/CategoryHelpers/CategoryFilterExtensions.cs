@@ -15,6 +15,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         private const string CATALOG_ID = "catalogid";
         private const string CATEGORY_TYPE = "categorytype";
         private const string IS_ACTIVE = "isactive";
+        private const string NAME = "content.name";
+        private const string SLUG = "content.slug";
+        private const string DESCRIPTION = "content.description";
+
         private const string CREATE_DATE = "createdate";
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
@@ -35,15 +39,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
-                case "parentid":
+                case "parent":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, PARENT_ID);
 
                 case "id":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ID);
 
                 case "all":
-                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.escapedValue);
-
+                    var allFilter = $"({NAME} cont \"{filter.escapedValue}\" or {SLUG} cont \"{filter.escapedValue}\" or {DESCRIPTION} cont  \"{filter.escapedValue}\" or {CATEGORY_CODE} eq \"{filter.escapedValue}\"";
+                    int catId;
+                    if (int.TryParse(filter.escapedValue.ToString(), out catId))
+                    {
+                        allFilter += $" or {ID} eq {catId}";
+                    }
+                    return allFilter + ")";
+                    
                 case "categorycode":
                     return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
