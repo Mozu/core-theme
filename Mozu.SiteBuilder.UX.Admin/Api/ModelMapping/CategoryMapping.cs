@@ -58,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                  .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(s => s.Children != null ? s.Children.Count <= 0 : true))
                 .ForMember(d=> d.Description, o=>o.ResolveUsing(s=>(s.Content != null) ? s.Content.Description : null ))
                 .ForMember(d=>d.Code, o=>o.ResolveUsing(s=>s.CategoryCode))
+                .ForMember(x=>x.IsLeaf, o=>o.ResolveUsing(s=> s.IsLeafNode))
                  ;
 
             Mapper.CreateMap<DC.Category, CategoryTreeNode>()
