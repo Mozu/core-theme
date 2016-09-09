@@ -6,9 +6,10 @@ Ext.define('Taco.model.AttributeValue', {
     fields: [
         { name: 'id', type: 'auto' },
         { name: 'attributeId', type: 'auto' },
+        { name: 'localeCode', type: 'string', useNull: true },
         { name: 'value', type: 'any' },
-        { name: 'valueSequence', type: 'int', useNull: true}
+        { name: 'optionalValue', type: 'string' },
+        { name: 'isOverriden', type: 'bool' },
+        { name: 'valueSequence', type: 'int', useNull: true }
     ]
-
-    
 });
