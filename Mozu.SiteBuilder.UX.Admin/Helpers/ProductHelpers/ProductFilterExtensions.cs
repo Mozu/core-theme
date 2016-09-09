@@ -26,6 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PRODUCT_MFG_PART_NUM_PROPERTY = "supplierInfo.mfgPartNumber";
         private const string PRODUCT_DIST_PART_NUM_PROPERTY = "supplierInfo.distPartNumber";
         private const string PUBLISH_SET_CODE = "publishsetcode";
+        private const string PRODUCT_USAGE = "productUsage";
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -179,6 +180,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{1} eq {0}", filter.value, PUBLISH_SET_CODE);
                 case "includevariations":
                     return string.Format("({0} eq true or {0} eq false)", IS_VARIATION);
+                case "excludebase":
+                    return string.Format("({0} eq standard or {0} eq component or ({0} eq configurable and {1} eq true))", PRODUCT_USAGE, IS_VARIATION);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

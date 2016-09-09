@@ -157,77 +157,110 @@ Ext.define('Taco.view.attribute.AttributeValueGrid', {
             actionColumn = {
                 xtype: 'taco.menucolumn',
                 menuItems: actions
+            };
+            if (this.isProduct()) {
+                actionColumn['onMenuShow'] = this.onActionMenuShow;
             }
         }
-
         return actionColumn;
     },
 
     getActionItems: function() {
-        var me = this;
-        return [
-          {
-            text: 'Move to Top',
-            menuColumnHandler: function(item, eventData) {
-              var record = eventData.record;
-              me.moveRow(record, 0);
-            }
-          },
-          {
-            text: 'Move to Position',
-            menuColumnHandler: function(item, eventData) {
-                var record = eventData.record;
-              
-                Ext.MessageBox.prompt('Move to Position', 'Enter a value from 1 to ' + me.store.getCount(), function (val, index) {
-                    index = parseInt(index, 10) - 1; // parse the string, and fix for zero-index
-                    me.moveRow(record, index);
-                }, me);
+        var me = this,
+            items = [
+              {
+                text: 'Move to Top',
+                menuColumnHandler: function(item, eventData) {
+                  var record = eventData.record;
+                  me.moveRow(record, 0);
+                }
+              },
+              {
+                text: 'Move to Position',
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record;
 
-            }
-          },
-          {
-            text: 'Move to Bottom',
-            menuColumnHandler: function(item, eventData) {
-              var record = eventData.record;
-              me.moveRow(record, me.store.getCount()-1);
-            }
-          },
-          {
-            text: 'Remove',
-            menuColumnHandler: function(item, eventData) {
-              var record = eventData.record;
-              me.removeRow(record);
-            }
-          },
-          {
-              xtype: 'menuseparator',
-              style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
-          },
-          {
-            text: 'Remove All',
-            menuColumnHandler: function() {
-                Ext.MessageBox.show({
-                    title: 'Confirm',
-                    // pushes the buttons to the right to be consistant with our dialog ux.
-                    rightJustifyButtons: true,
-                    // reverses the order of the buttons
-                    reverseOrder: true,
-                    msg: 'Are you sure you want to remove all records?',
-                    closable: false,
-                    buttons: Ext.Msg.YESNO,
-                    fn: function (val) {
-                        if (val === 'yes') {
-                            me.store.removeAll();
+                    Ext.MessageBox.prompt('Move to Position', 'Enter a value from 1 to ' + me.store.getCount(), function (val, index) {
+                        index = parseInt(index, 10) - 1; // parse the string, and fix for zero-index
+                        me.moveRow(record, index);
+                    }, me);
+
+                }
+              },
+              {
+                text: 'Move to Bottom',
+                menuColumnHandler: function(item, eventData) {
+                  var record = eventData.record;
+                  me.moveRow(record, me.store.getCount()-1);
+                }
+              }
+          ];
+        if (this.isProduct()) {
+            items.push({
+                text: 'Reset Label',
+                itemId: 'revertProductName',
+                menuColumnHandler: function(item, eventData) {
+                    var record = eventData.record;
+                    record.set('value', record.get('optionalValue'));
+                }
+            });
+        }
+        items = items.concat([
+              {
+                text: 'Remove',
+                menuColumnHandler: function(item, eventData) {
+                  var record = eventData.record;
+                  me.removeRow(record);
+                }
+              },
+              {
+                  xtype: 'menuseparator',
+                  style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
+              },
+              {
+                text: 'Remove All',
+                menuColumnHandler: function() {
+                    Ext.MessageBox.show({
+                        title: 'Confirm',
+                        // pushes the buttons to the right to be consistant with our dialog ux.
+                        rightJustifyButtons: true,
+                        // reverses the order of the buttons
+                        reverseOrder: true,
+                        msg: 'Are you sure you want to remove all records?',
+                        closable: false,
+                        buttons: Ext.Msg.YESNO,
+                        fn: function (val) {
+                            if (val === 'yes') {
+                                me.store.removeAll();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+              }
+            ]
+        );
+
+        return items;
+    },
+
+    onActionMenuShow: function (menu, eventData) {
+        // need to disable the revert menu when product name matches
+        var revertMenuItem = menu.down("#revertProductName");
+        if (revertMenuItem) {
+            if (eventData.record.get('optionalValue') && eventData.record.get('value') !== eventData.record.get('optionalValue')) {
+                revertMenuItem.show();
+            } else {
+                revertMenuItem.hide();
             }
-          }
-        ];
+        }
     },
 
   getValues: function () {
       return this.store.data.items;
+  },
+
+  isProduct: function () {
+    return (this.record && this.record.get('dataType') === 'ProductCode');
   }
 
 });

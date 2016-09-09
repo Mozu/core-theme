@@ -57,7 +57,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 new DC.AttributeVocabularyValueInProductType
                     {
                         Value = val.Id ,
-                        Order = idx
+                        Order = idx,
+                        VocabularyValueDetail = 
+                            (val.OptionalValue != null 
+                            && !val.OptionalValue.Equals(val.Value)
+                            && val.Value is string)
+                                ? new DC.AttributeVocabularyValue
+                                    {
+                                        Value = val.Id,
+                                        Content = new DC.AttributeVocabularyValueLocalizedContent
+                                        {
+                                            LocaleCode = val.LocaleCode,
+                                            StringValue = (string) val.Value
+                                        }
+                                    }
+                                : null
                     }).ToList();
         }
 
@@ -134,29 +148,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsMultiValueProperty  , opt => opt.ResolveUsing(x => x.AllowMulti))
                 .ForMember(dc => dc.VocabularyValues, opt => opt.ResolveUsing(x => MapSelectedValuesToVocabularyValueInProductTypeList(x.SelectedValues)))
                 .ForMember(x => x.DisplayInfo, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
-            
                 ;
 
             Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
-                .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) => x.Value is string
+                .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x => x.Value is string
                     ? new DC.AttributeVocabularyValueLocalizedContent
                     {
-                        //                LocaleCode = "??-??", 
-                        StringValue = x.Value as string
+                        LocaleCode = x.LocaleCode,
+                        StringValue = (string) x.Value
                     }
                     : null))
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id))
                 // TODO: do not hard code this.
                 .ForMember(dc => dc.ValueSequence, opt => opt.ResolveUsing(x => x.ValueSequence))
-                .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
+                .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) 
                 .ForMember(x => x.DisplayOrder, op => op.Ignore());
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.StringValue) 
-                    ? x.Content.StringValue 
-                    :  x.Value))
-                .ForMember(x => x.Id, op => op.ResolveUsing(( DC.AttributeVocabularyValue x) => (x.Value != null) ? x.Value.ToString() : null))
+                .ForMember(x => x.Value, opt => opt.ResolveUsing(dc => !string.IsNullOrEmpty(dc.Content?.StringValue) 
+                    ? dc.Content.StringValue 
+                    : dc.Value))
+                .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => x.Value?.ToString()))
                 .ForMember(x => x.AttributeFQN, op => op.Ignore())
+                .ForMember(x => x.OptionalValue, op => op.Ignore())
+                .ForMember(x => x.IsOverriden, op => op.ResolveUsing(dc => !string.IsNullOrEmpty(dc.Content?.StringValue)))
+                .ForMember(x => x.LocaleCode, op => op.ResolveUsing(dc => dc.Content?.LocaleCode))
                 //.ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.ValueSequence))
                 ;
 
@@ -170,11 +186,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
                 .ForMember(x => x.Id , opt => opt.ResolveUsing(( DC.AttributeVocabularyValueInProductType dc) => dc.Value))
-                .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> dc.VocabularyValueDetail != null && dc.VocabularyValueDetail.Content != null && !string.IsNullOrEmpty( dc.VocabularyValueDetail.Content.StringValue) 
+                .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> !string.IsNullOrEmpty(dc.VocabularyValueDetail?.Content?.StringValue) 
                     ? dc.VocabularyValueDetail.Content.StringValue 
                     : dc.Value ))
+                .ForMember(x => x.IsOverriden, op => op.ResolveUsing(dc => dc.VocabularyValueDetail?.Content != null))
+                .ForMember(x => x.LocaleCode, op => op.ResolveUsing(dc => dc.VocabularyValueDetail?.Content != null ? dc.VocabularyValueDetail.Content.LocaleCode : null))
                 .ForMember(x => x.AttributeFQN, op => op.Ignore())
                 .ForMember(x => x.ValueSequence, op => op.Ignore())
+                .ForMember(x => x.OptionalValue, op => op.Ignore())
             ;
             
             #endregion
