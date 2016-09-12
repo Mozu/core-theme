@@ -18,11 +18,34 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
     initComponent: function () {
         var me = this;
 
+        me.dynamicFilter = function (record) {
+            //exclude any id's past in via the excludedIds array;
+            if (me.excludedIds.length) {
+                var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
+                    return id == record.get("categoryCode");
+                });
+
+                if (isExcluded) {
+                    return false;
+                }
+            }
+
+            var categoryType = record.get("categoryType");
+            if (categoryType == "Static") {
+                return true;
+            } else if (categoryType == "DynamicPreComputed") {
+                return (me.showDynamicPreComputed);
+            } else if (categoryType == "DynamicRealTime") {
+                return (me.showDynamicRealTime);
+            }
+            return true;
+        };
+
         me.on({
             beforequery: function(queryPlan) {
                 var me = this;
-                me.store.clearFilter(me.customFilter);
-                me.store.filter(me.customFilter);
+                me.store.clearFilter();
+                me.store.filter([me.dynamicFilter, me.customFilter]);
                 return true;
             }
         });
@@ -44,28 +67,7 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
             createOnly: true,
             autoLoad: false,
             filters: [
-                function (record) {
-                    //exclude any id's past in via the excludedIds array;
-                    if (me.excludedIds.length) {
-                        var isExcluded = Ext.Array.findBy(me.excludedIds, function (id) {
-                            return id == record.get("categoryCode");
-                        });
-
-                        if (isExcluded) {
-                            return false;
-                        }
-                    }
-
-                    var categoryType = record.get("categoryType");
-                    if (categoryType == "Static") {
-                        return true;
-                    } else if (categoryType == "DynamicPreComputed") {
-                        return (me.showDynamicPreComputed);
-                    } else if (categoryType == "DynamicRealTime") {
-                        return (me.showDynamicRealTime);
-                    }
-                    return true;
-                }
+                me.dynamicFilter
             ]
         });
     

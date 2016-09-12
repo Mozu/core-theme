@@ -161,7 +161,7 @@ Ext.define('Taco.view.attribute.Form', {
 
                 grid = {
                     xtype: 'attribute-value-grid',
-                    width: 800,
+                    width: 850,
                     sortableColumns: false,
                     disableSelection: false,
                     hideHeaders: false,
@@ -229,8 +229,15 @@ Ext.define('Taco.view.attribute.Form', {
                             },
                             {
                                 dataIndex: 'value',
-                                text: 'Product Name',
-                                flex: 2
+                                text: 'Storefront Label',
+                                flex: 2,
+                                editor: {
+                                    xtype: 'textfield',
+                                    hideTrigger: true,
+                                    ignoreParentFormTracking: true,
+                                    keyNavEnabled: false,
+                                    mouseWheelEnabled: false
+                                }
                             }
                         ],
                         all: [
@@ -442,60 +449,40 @@ Ext.define('Taco.view.attribute.Form', {
                             type: 'hbox',
                             align: 'bottom'
                         },
-                        width: 808,
+                        width: 858,
                         itemId: 'addProductContainer',
                         items: [{
-                            xtype: 'taco-productfield',
-                            name: 'addValueProductCode',
-                            multiSelect: false,
-                            showVariations: false,//currently the runtime can't support variants
-                            showProductUsages: 'standard,component', //only standard and component will work in runtime at this time
-                            ignoreParentFormTracking: true,
-                            submitValue: false,
-                            width: 600,
-                            hideMode: 'display',
-                            fieldLabel: 'Values',
-                            checkDirty: Ext.emptyFn,
-                            isDirty: function () {
-                                return false;
-                            },
-                            validate: function () {
-                                var me = this,
-                                    isValid = me.isValid();
-                                if (isValid !== me.wasValid) {
-                                    me.wasValid = isValid;
-                                }
-                                return isValid;
-                            },
-                            listeners: {
-                                beforerender: function () {
-                                    this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
+                                xtype: 'taco-productfield',
+                                name: 'addValueProductCode',
+                                multiSelect: false,
+                                showVariations: true,
+                                excludeBase: true,
+                                showProductUsages: '',
+                                ignoreParentFormTracking: true,
+                                submitValue: false,
+                                width: 650,
+                                hideMode: 'display',
+                                fieldLabel: 'Values',
+                                checkDirty: Ext.emptyFn,
+                                isDirty: function () {
+                                    return false;
                                 },
-                                select: function (field, records) {
-                                    if (records && records.length) {
-                                        var productName = records[0].get('productName'),
-                                            productCode = records[0].getId(),
-                                            attributeId = me.record.getId();
-
-                                        field.reset();
-
-                                        var existing = me.valuesStore.findRecord('id', productCode, 0, false, false);
-                                        if (existing) {
-                                            Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
-                                            return;
-                                        }
-
-                                        var positionSelector = Ext.ComponentQuery.query('#attr-productcode-value-placement-selector');
-                                        var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
-                                        Taco.app.fireEvent('added-attribute-value', {
-                                            attributeId: attributeId,
-                                            value: productName,
-                                            id: productCode,
-                                            position: position
-                                        });
+                                validate: function () {
+                                    var me = this,
+                                      isValid = me.isValid();
+                                    if (isValid !== me.wasValid) {
+                                        me.wasValid = isValid;
+                                    }
+                                    return isValid;
+                                },
+                                listeners: {
+                                    beforerender: function () {
+                                        this.setVisible(me.getForm().findField('dataType').getValue() === 'ProductCode');
+                                    },
+                                    select: function (field, records) {
+                                        me.selectProduct(field, records);
                                     }
                                 }
-                            }
                             },
                             createPlacementSelector('ProductCode')
                         ]
@@ -650,7 +637,6 @@ Ext.define('Taco.view.attribute.Form', {
         this.buildFormComponents();
 
         this.valuesStore = this.record.getAttributeValues();
-        this.mon(this.valuesStore, 'load', this.onValueStoreLoad, this);
 
         this.stores = [this.valuesStore];
 
@@ -660,7 +646,6 @@ Ext.define('Taco.view.attribute.Form', {
 
         if (this.record.get('inputType')) {
             this.setAttributeInputType(this.record.get('inputType'));
-            this.onValueStoreLoad();
         }
 
     },
@@ -699,47 +684,6 @@ Ext.define('Taco.view.attribute.Form', {
         }*/
     },
 
-    onValueStoreLoad: function () {
-        var me = this;
-        if ((this.record.get('dataType') || '').toLowerCase() != 'productcode') {
-            return;
-        }
-
-        var prodIds = [], store;
-        this.valuesStore.each(function (record) {
-            if (!record.get('value') || record.get('value') == record.getId()) {
-                prodIds.push(record.getId());
-            }
-        });
-        if (!prodIds.length) {
-            return;
-        }
-        store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
-        store.load({
-            limit: 200, //max API will allow
-            filters: [
-                {
-                    property: 'productcode',
-                    value: prodIds.join()
-                }
-            ],
-            callback: function (products) {
-                if (!products) {
-                    return;
-                }
-                Ext.Array.each(products, function (prod) {
-                    var valRec = me.valuesStore.getById(prod.getId());
-                    if (valRec) {
-                        valRec.set('value', prod.get('productName'));
-                        valRec.commit();
-                    }
-                });
-            }
-        });
-
-
-    },
-
     createSearchOptions: function () {
         var me = this;
 
@@ -764,7 +708,7 @@ Ext.define('Taco.view.attribute.Form', {
                 offsetTop: 22,
                 arrowPosition: 'left'
             })
-        })
+        });
 
         this.searchLabel = Ext.widget({
             xtype: 'radio',
@@ -1058,6 +1002,46 @@ Ext.define('Taco.view.attribute.Form', {
             this.record.set('inputType', inputType);
             this.searchInStorefront.setVisible(this.record.supportsSearchInStorefront());
             this.searchDisplayContainer.setVisible(this.record.supportsSearchDisplayType());
+        }
+    },
+
+    getAttrLabelWithVariations: function(productName, variationOptions) {
+        if (!variationOptions || variationOptions.length === 0) return productName;
+        var joinedOptions = Ext.Array.map(variationOptions, function (opt) {
+            return opt.attributeFQN.split('~')[1] + ': ' + opt.value;
+        }).join(', ');
+        return productName + ' (' + joinedOptions + ')';
+    },
+
+    selectProduct: function (field, records) {
+        if (records && records.length) {
+            var productName = records[0].get('productName'),
+              productCode = records[0].getId(),
+              hasConfigOptions = records[0].get('hasConfigurableOptions'),
+              variationOptions = records[0].get('variationOptions'),
+              attributeId = this.record.getId(),
+              attributeValue = productName;
+
+              field.reset();
+
+            var existing = this.valuesStore.findRecord('id', productCode, 0, false, false, true);
+            if (existing) {
+                Taco.app.fireEvent('setmessage', ('Product "' + existing.get('value') + '" already exists'), 'error');
+                return;
+            }
+            if (hasConfigOptions) {
+                attributeValue = this.getAttrLabelWithVariations(productName, variationOptions);
+            }
+
+            var positionSelector = Ext.ComponentQuery.query('#attr-productcode-value-placement-selector');
+            var position = (positionSelector.length > 0) ? positionSelector[0].getValue() : 'bottom';
+            Taco.app.fireEvent('added-attribute-value', {
+                attributeId: attributeId,
+                value: attributeValue,
+                optionalValue: productName,
+                id: productCode,
+                position: position
+            });
         }
     }
 });

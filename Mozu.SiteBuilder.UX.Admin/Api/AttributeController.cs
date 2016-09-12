@@ -33,9 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (!String.IsNullOrEmpty(pagingParams.id))
             {
-                // get single Attribute
-                var item = await _attributeHelper.GetAttribute(pagingParams.id);
-                return List2(item);
+                return await GetSingleAttribute(pagingParams);
             }
 
             // search coming from the attributePickerField. Treat is like a normal keyword search;
@@ -66,6 +64,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var mapped = Mapper.Map<List<Attribute>>(dcAttributes.Item1 );
             return List2(mapped, (int)dcAttributes.Item2);
+        }
+
+        private async Task<Response<List<Attribute>>> GetSingleAttribute(PagingParamaters pagingParams)
+        {
+            var item = await _attributeHelper.GetAttribute(pagingParams.id);
+            return List2(item);
         }
 
         public async Task<Tuple<List<ProductAdmin.Contracts.Attribute>, long>> GetAttributesRaw(PagingParamaters pagingParams, FilterCollection extFilter, string responseFields = null)
@@ -113,41 +117,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (attributes == null || !attributes.Any())
                 return Message3<List<Attribute>>(false, "No attributes were created because they were not sent correctly. Please try again.");
 
-            GenTestData(attributes);
-
-
             IEnumerable<Attribute> createdAttributes = await _attributeHelper.CreateAttributes(attributes);
             return List2(createdAttributes.ToList());
 
         }
 
-        void GenTestData(List<Attribute> attributes)
-	    {
-	        IEnumerable<string> vals;
-	        var tasks = new List<Task>();
-	        if (Request.Headers.TryGetValues("createTestData", out vals))
-	        {
-	            int cnt = int.Parse(vals.First());
-	            var att = attributes[0];
-
-	            var testAtts = new List<Attribute>() {att};
-	            for (int i = 1; i < cnt; i++)
-	            {
-	                var dcatt = Mapper.Map<Mozu.ProductAdmin.Contracts.Attribute>(att);
-	                dcatt.AttributeCode += i;
-	                dcatt.AdminName += i;
-	                if (dcatt.Content != null && dcatt.Content.Name != null)
-	                {
-	                    dcatt.Content.Name += i;
-	                }
-	                tasks.Add(_attributeWebApiClient.AddAttribute(dcatt));
-	            }
-	            Task.WaitAll(tasks.ToArray());
-                
-	            throw new NotImplementedException("nope");
-	        }
-	    }
-
+     
 	    [HttpPostRoute(UriTemplate = "update")]
         public async Task<Models.Response<List<Attribute>>> EditAttribute(List<Attribute> attributes)
         {
