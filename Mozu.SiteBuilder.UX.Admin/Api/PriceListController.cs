@@ -214,17 +214,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var lookup = (priceListEntry.Extras.IsNullOrEmpty())
                 ? new Dictionary<string, PriceListEntryExtra>()
-                : priceListEntry.Extras.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
+                : priceListEntry.Extras.ToDictionary(x => $"{x.AttributeFQN}-{x.Value}");
 
-            Func<string, string, decimal?> getOverridePrice = (attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
-                      ? lookup[attrFqn + "-" + attrValue].OverridePrice
-                      : (decimal?)null;
+            Func<string, string, decimal?> getOverridePrice = (attrFqn, attrValue) => lookup.ContainsKey($"{attrFqn}-{attrValue}")
+                      ? lookup[$"{attrFqn}-{attrValue}"].OverridePrice
+                      : null as decimal?;
 
             var productExtras = await GetProductTypeAttributesAsync(getOverridePrice, dcProduct);
 
             var orphans = priceListEntry.Extras.Where(x => !productExtras
-                .Select(orp => orp.AttributeFQN + "-" + orp.Value)
-                .Contains(x.AttributeFQN + "-" + x.Value));
+                .Select(orp => $"{orp.AttributeFQN}-{orp.Value}")
+                .Contains($"{x.AttributeFQN}-{x.Value}"));
 
             productExtras.AddRange(orphans);
             priceListEntry.Extras =
@@ -313,7 +313,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             AddMasterCatalogData(priceListEntry, dcProduct);
             AddReferenceProductCatalogInfo(priceListEntry, dcProduct);
-            var productExtras = await GetProductTypeAttributesAsync((fqn, val) => (decimal?)null, dcProduct);
+            var productExtras = await GetProductTypeAttributesAsync((fqn, val) => null as decimal?, dcProduct);
 
             priceListEntry.Extras =
                 productExtras.OrderByDescending(x => x.CatalogPrice).ToList();
@@ -347,10 +347,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<List<PriceListEntryExtra>> GetProductTypeAttributesAsync(Func<string, string, decimal?> getOverridePrice, DC.Product dcProduct)
         {
-            var result = new List<PriceListEntryExtra>();
+            var overrides = new List<PriceListEntryExtra>();
             DC.ProductType prodType =
                 (await _productTypeWebApiClient.GetProductType(dcProduct.ProductTypeId, responseFields: "extras")).ReadAsSync();
-            return _priceListExtraEntryHelper.MergeExtraEntries(getOverridePrice, dcProduct.Extras, prodType, result);
+            return _priceListExtraEntryHelper.MergeExtraEntries(getOverridePrice, dcProduct.Extras, prodType, overrides);
         }
 
         /// <summary>
