@@ -35,39 +35,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                     attrLookup.Add(extra.AttributeFQN + "-", new PriceListEntryExtra
                     {
                         AttributeFQN = extra.AttributeFQN,
-                        AttributeCode = extra.AttributeDetail.AttributeCode,
-                        AttributeName = extra.AttributeDetail.AdminName,
+                        AttributeCode = extra.AttributeDetail?.AttributeCode,
+                        AttributeName = extra.AttributeDetail?.AdminName,
                         Value = "",
-                        DisplayValue = extra.AttributeDetail.Content.Name
+                        DisplayValue = extra.AttributeDetail?.Content?.Name
                     });
                     continue;
                 }
                 foreach (var vocabValue in extra.VocabularyValues)
                 {
-                    attrLookup.Add(extra.AttributeFQN + "-" + ToStringOrEmpty(vocabValue.Value), new PriceListEntryExtra
+                    attrLookup.Add(FormatEntryKey(extra.AttributeFQN, vocabValue.Value), new PriceListEntryExtra
                     {
                         AttributeFQN = extra.AttributeFQN,
-                        AttributeCode = extra.AttributeDetail.AttributeCode,
-                        AttributeName = extra.AttributeDetail.AdminName,
+                        AttributeCode = extra.AttributeDetail?.AttributeCode,
+                        AttributeName = extra.AttributeDetail?.AdminName,
                         Value = ToStringOrEmpty(vocabValue.Value),
                         DisplayValue =
-                            (vocabValue.VocabularyValueDetail != null && vocabValue.VocabularyValueDetail.Content != null)
+                            (vocabValue.VocabularyValueDetail?.Content != null)
                                 ? vocabValue.VocabularyValueDetail.Content.StringValue
                                 : ToStringOrEmpty(vocabValue.Value)
                     });
                 }
             }
 
-            var extras = dcProductExtras.Select(extra => extra.Values.Select(x => new PriceListEntryExtra
+            var extras = dcProductExtras.Where(dc => dc.Values != null)
+                                        .Select(extra => extra.Values.Select(x => new PriceListEntryExtra
             {
                 AttributeFQN = extra.AttributeFQN,
-                AttributeCode = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeCode,
-                AttributeName = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].AttributeName,
-                CatalogPrice = x.DeltaPrice.DeltaPrice,
+                AttributeCode = LookupEntryExtra(attrLookup, extra.AttributeFQN, x.Value, ac => ac.AttributeCode),
+                AttributeName = LookupEntryExtra(attrLookup, extra.AttributeFQN, x.Value, ac => ac.AttributeName),
+                CatalogPrice = x.DeltaPrice?.DeltaPrice,
                 OverridePrice = getOverridePrice(extra.AttributeFQN, ToStringOrEmpty(x.Value)),
-                DisplayValue = attrLookup[extra.AttributeFQN + "-" + ToStringOrEmpty(x.Value)].DisplayValue,
+                DisplayValue = LookupEntryExtra(attrLookup, extra.AttributeFQN, x.Value, ac => ac.DisplayValue),
                 Value = ToStringOrEmpty(x.Value)
             }));
+
+            if (overrides == null)
+            {
+                overrides = new List<PriceListEntryExtra>();
+            }
 
             foreach (var extra in extras)
             {
@@ -76,9 +82,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
             return overrides;
         }
 
+        private string LookupEntryExtra(Dictionary<string, PriceListEntryExtra> attrLookup, string attributeFqn, object value, Func<PriceListEntryExtra, string> getProperty)
+        {
+            PriceListEntryExtra entry;
+            var key = FormatEntryKey(attributeFqn, value);
+            return attrLookup.TryGetValue(key, out entry) 
+                ? getProperty(entry) 
+                : null;
+        }
+
+        private string FormatEntryKey(string attributeFqn, object value)
+        {
+            return $"{attributeFqn}-{ToStringOrEmpty(value)}";
+        }
+
         private string ToStringOrEmpty(object value)
         {
-            return (value != null) ? value.ToString() : "";
+            return value?.ToString() ?? "";
         }
     }
 }
