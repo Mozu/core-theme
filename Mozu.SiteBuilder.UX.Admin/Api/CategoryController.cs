@@ -325,7 +325,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "tree-for-open-nodes/?showInactive={showInactive}")]
-        public async Task<Response<Models.Category.CategoryNode>> GetPartialCategoryTreeForOpenNodes(List<int> parentIds, bool? showInactive = null)
+        public async Task<Response<Models.Category.CategoryNode>> GetPartialCategoryTreeForOpenNodes([FromUri]List<int> parentIds, bool? showInactive = null)
         {
             var tree = (await _categoriesClient.GetCategoryTreeFromNodes(parentIds, showInactive)).ReadAsSync();
             var retVal = Mapper.Map<Models.Category.CategoryNode>(tree);
