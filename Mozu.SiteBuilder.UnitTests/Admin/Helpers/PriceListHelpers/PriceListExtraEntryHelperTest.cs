@@ -62,6 +62,132 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.PriceListHelpers
             Assert.That(actual.Count, Is.GreaterThanOrEqualTo(1), "overrides should not be empty");
         }
 
+        [Test]
+        public void ShouldHandleTextBoxExtrasWithoutValues()
+        {
+            //setup
+            var prodType = CreateProductType();
+            List<DC.ProductExtra> dcProductExtras = new List<DC.ProductExtra>
+            {
+                new DC.ProductExtra
+                {
+                    AttributeFQN ="tenant~extra-list-text",
+                    IsRequired = true,
+                    Values = null
+                }
+            };
+            var overridenEntries = CreateExistingPriceListEntries();
+            var lookup = (overridenEntries.IsNullOrEmpty())
+                ? new Dictionary<string, PriceListEntryExtra>()
+                : overridenEntries.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
+
+
+            var sut = new PriceListExtraEntryHelper();
+
+            //execute
+            var actual = sut.MergeExtraEntries(
+                ((attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+                    ? lookup[attrFqn + "-" + attrValue].OverridePrice
+                    : (decimal?)null), 
+                dcProductExtras, prodType, overridenEntries);
+
+            //assert
+            Assert.That(actual.Count, Is.GreaterThanOrEqualTo(1), "overrides should not be empty");
+        }
+
+        [Test]
+        public void ShouldHandleExtrasWithoutValuesAndOverrides()
+        {
+            //setup
+            var prodType = CreateProductType();
+            List<DC.ProductExtra> dcProductExtras = new List<DC.ProductExtra>
+            {
+                new DC.ProductExtra
+                {
+                    AttributeFQN ="tenant~extra-list-text",
+                    IsRequired = true,
+                    Values = null
+                }
+            };
+            var overridenEntries = CreateExistingPriceListEntries();
+            var lookup = (overridenEntries.IsNullOrEmpty())
+                ? new Dictionary<string, PriceListEntryExtra>()
+                : overridenEntries.ToDictionary(x => x.AttributeFQN + "-" + x.Value);
+
+            List<PriceListEntryExtra> emptyOverriddenEntries = null;
+            var sut = new PriceListExtraEntryHelper();
+
+            //execute
+            var actual = sut.MergeExtraEntries(
+                ((attrFqn, attrValue) => lookup.ContainsKey(attrFqn + "-" + attrValue)
+                    ? lookup[attrFqn + "-" + attrValue].OverridePrice
+                    : (decimal?)null), 
+                dcProductExtras, prodType, emptyOverriddenEntries);
+
+            //assert
+            Assert.That(actual.Count, Is.EqualTo(0), "overrides should be empty");
+        }
+
+        [Test]
+        public void ShouldHandlePriceListTemplateForProduct()
+        {
+            //setup
+            var prodType = CreateProductType();
+            List<DC.ProductExtra> dcProductExtras = new List<DC.ProductExtra>
+            {
+                new DC.ProductExtra
+                {
+                    AttributeFQN ="tenant~extra-list-text",
+                    IsRequired = true,
+                    Values = null
+                }
+            };
+            List<PriceListEntryExtra> emptyOverriddenEntries = null;
+            var sut = new PriceListExtraEntryHelper();
+
+            //execute
+            var actual = sut.MergeExtraEntries(
+                (attrFqn, attrValue) => (decimal?)null, 
+                dcProductExtras, prodType, emptyOverriddenEntries);
+
+            //assert
+            Assert.That(actual.Count, Is.EqualTo(0), "overrides should be empty");
+        }
+
+        [Test]
+        public void ShouldHandleExtrasWithoutDeltaPrice()
+        {
+            //setup
+            var prodType = CreateProductType();
+            List<DC.ProductExtra> dcProductExtras = new List<DC.ProductExtra>
+            {
+                new DC.ProductExtra
+                {
+                    AttributeFQN ="tenant~extra-list-text",
+                    IsRequired = true,
+                    Values = new List<DC.ProductExtraValue>
+                    {
+                        new DC.ProductExtraValue
+                        {
+                            DeltaPrice = null,
+                            DeltaWeight = 0.0M,
+                            IsDefaulted = false,
+                            Value = string.Empty,
+                            Quantity = null
+                        }
+                    }
+                }
+            };
+            List<PriceListEntryExtra> emptyOverriddenEntries = null;
+            var sut = new PriceListExtraEntryHelper();
+            //execute
+            var actual = sut.MergeExtraEntries(
+                (attrFqn, attrValue) => (decimal?)null,
+                dcProductExtras, prodType, emptyOverriddenEntries);
+            //assert
+            Assert.That(actual.Count, Is.EqualTo(1), "merged values should not blow up due to null delta price.");
+        }
+
         private List<DC.ProductExtra> CreateProductExtras()
         {
             return new List<DC.ProductExtra>
