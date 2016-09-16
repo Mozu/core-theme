@@ -26,7 +26,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 text: "Available",
                 stateId: 'stockAvailable',
                 dataIndex: 'stockAvailable',
-                sortable: false
+                sortable: true
             }, {
                 width: 100,
                 text: 'On Reserve',
@@ -43,7 +43,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
                 text: 'On Hand',
-                sortable: false,
+                sortable: true,
                 editor: {
                     emptyText: "add",
                     msgTarget: "qtip",
@@ -82,6 +82,12 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                         }
                     }
                 }
+            }, {
+                width: 150,
+                text: "On Backorder",
+                stateId: 'stockOnBackOrder',
+                dataIndex: 'stockOnBackOrder',
+                sortable: true
             }
         ];
     },

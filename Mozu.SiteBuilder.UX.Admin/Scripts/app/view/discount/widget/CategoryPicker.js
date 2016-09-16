@@ -70,14 +70,16 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                     var cl = this.categoryList;
                     cl.store.clearFilter(cl.customFilter);
                     cl.store.filter(cl.customFilter);
+                    cl.inputEl.focus();
                     return true;
                 },
                 scope: this
             },
             customFilter: new Ext.util.Filter({
                 filterFn: function(item) {
-                    var searchValue = me.categoryList.inputEl.getValue() || '',
-                        name = item.get('name'),
+                    var searchValue = me.categoryList.inputEl.getValue() || '';
+                    searchValue = searchValue.toLowerCase();
+                    var name = item.get('name'),
                         categoryCode = item.get('categoryCode'),
                         id = item.get('id'),
                         matchesName = name.toLowerCase().indexOf(searchValue) == 0,

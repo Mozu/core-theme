@@ -402,19 +402,88 @@ Ext.define('Taco.view.website.Tree', {
         });
     },
     deletePage: function (record) {
-        var me = this,
-            cmsDoc = Ext.create('Taco.model.CmsDocument', {
-                //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
-                id: record.get('originalId'),
-                listFQN: record.get('originalDocumentListName')
-            });
-        cmsDoc.destroy({
-            success: function () {
-                record.destroy();
-                me.fireEvent('navigationchange', me);
-            },
-            scope: this
+
+        var me = this;
+
+        var dialog = Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            closeAction: 'destroy',
+            scale: 'small',
+            title: 'Delete Page',
+            primaryText: 'Delete',
+            items: [{
+                xtype: 'container',
+                layout: { 
+                    type: 'hbox' 
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: 'Are you sure you want to delete ' + record.get('name') + '? This action cannot be undone'
+                    })
+                ]
+            }],
+            listeners: {
+
+                beforesave: function () {
+
+                    var cmsDoc = Ext.create('Taco.model.CmsDocument', {
+                        //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
+                        id: record.get('originalId'),
+                        listFQN: record.get('originalDocumentListName')
+                    });
+
+                    var destroy = function() {
+                        cmsDoc.destroy({
+                            success: function () {
+                                record.destroy();
+                                me.fireEvent('navigationchange', me);
+                            },
+                            scope: me
+                        });
+                    }
+
+                    var request = {
+                        url: '/admin/app/entities/read?list=pages@mozu&entityType=cms&id=' + record.get('originalId'),
+                        method: 'GET',
+                        success: function(operation, res) {
+
+                            var pubRecord = JSON.parse(operation.responseText);
+                            pubRecord = pubRecord.items && pubRecord.items[0] ? pubRecord.items[0] : null;
+
+                            if (pubRecord && pubRecord.publishState === 'draft') {
+                                pubRecord = Ext.create('Taco.model.Entity', pubRecord);
+                                pubRecord.publish();
+                            }
+
+                            destroy();
+
+                        },
+                        failure: function() {
+                            destroy();
+                        }
+                    };
+
+                    Ext.Ajax.request(request);
+
+                }
+                
+            }
         });
+
+        // var me = this,
+        //     cmsDoc = Ext.create('Taco.model.CmsDocument', {
+        //         //uniqueId: record.get('originalDocumentListName') + '_' + record.get('originalId'),
+        //         id: record.get('originalId'),
+        //         listFQN: record.get('originalDocumentListName')
+        //     });
+        // cmsDoc.destroy({
+        //     success: function () {
+        //         record.destroy();
+        //         me.fireEvent('navigationchange', me);
+        //     },
+        //     scope: this
+        // });
     },
     onRename: function (record) {
         this.cellEditor.allowEdit = true;
