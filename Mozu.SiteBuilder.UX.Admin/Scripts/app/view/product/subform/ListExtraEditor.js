@@ -253,7 +253,14 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
         if (!prodIds.length) {
             return;
         }
-        productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
+        productStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ProductComboBox',
+            createOnly: true,
+            autoLoad: false
+        });
+        var proxy = productStore.getProxy();
+        proxy.extraParams.showProductUsages = "Standard,Configurable,Component";
+
         productStore.load({
             limit:200,
             filters: [
