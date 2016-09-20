@@ -6,10 +6,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 {
     internal static class CategorySortExtensions
     {
-        private const string PARENT_ID = "parentcategoryid";
-        private const string ID = "id";
-        private const string SEQUENCE = "sequence";
         private const string CATEGORY_CODE = "categorycode";
+        private const string ID = "id";
+        private const string PARENT_ID = "parentcategoryid";
+        private const string CAT_NAME = "content.name";
+        private const string SEO_SLUG = "content.slug";
+        private const string STATUS = "isactive";
+        private const string DISPLAY = "isdisplayed";
+        private const string CAT_TYPE = "categorytype";
+
+        private const string SEQUENCE = "sequence";
+
         private const string CREATE_DATE = "createdate";
         private const string UPDATE_DATE = "updatedate";
 
@@ -39,6 +46,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return CATEGORY_CODE;
                 case "parentcode":
                     return PARENT_ID;
+                case "name":
+                    return CAT_NAME;
+                case "slug":
+                    return SEO_SLUG;
+                case "isactive":
+                    return STATUS;
+                case "ishidden":
+                    return DISPLAY;
+                case "categorytype":
+                    return CAT_TYPE;
                 case "sequence":
                     return SEQUENCE;
                 case "createdate":

@@ -55,11 +55,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return allFilter + ")";
                     
                 case "categorycode":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
                 case "categorycodes":
                     var codes = filter.escapedValue.ToString().Split(',');
-                    var codeList = codes.Select(x => string.Format("{0} eq {1}", CATEGORY_CODE, x)).ToArray();
+                    var codeList = codes.Select(x => string.Format("{0} eq \"{1}\"", CATEGORY_CODE, x)).ToArray();
                     return String.Join(" or ", codeList);
 
                 // dc contract is isDisplay, mvc & js is isHidden, therefore have to switch comparison.
@@ -70,11 +70,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                             : "eq"), 
                         IS_DISPLAYED);
 
+                case "hiddenonstorefront":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "yes":
+                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
+                        case "no":
+                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
+                        default:
+                            return "";
+                    }
+
                 case "catalogid":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATALOG_ID);
 
                 case "type":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_TYPE);
+                    return String.Format("{2} {1} \"{0}\"", filter.value, filter.comparison, CATEGORY_TYPE);
 
                 case "isactive":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE);
@@ -93,22 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                         default:
                             return "";
                     }
-
-                case "hiddenonstorefront":
-                    if (filter.value == null)
-                    {
-                        return "";
-                    }
-                    switch (filter.value.ToString().ToLowerInvariant())
-                    {
-                        case "yes":
-                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
-                        case "no":
-                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
-                        default:
-                            return "";
-                    }
-
+                    
                 case "createdfrom":
                     return $"{CREATE_DATE} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
                 case "createdto":
@@ -121,10 +121,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                         $"{UPDATE_DATE} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
   
                 case "createby":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CREATE_BY);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, CREATE_BY);
 
                 case "updateby":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, UPDATE_BY);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, UPDATE_BY);
 
                 default:
                     return "";
