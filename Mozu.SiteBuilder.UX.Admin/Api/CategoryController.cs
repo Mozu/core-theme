@@ -124,6 +124,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 sort = "sequence asc";
             }
+
+            var filter = filterCollection.ToFilterString();
+
+            // have to look at collection in case "all" is passed.
+            if (!(filterCollection.Any(x => x.property == "status")))
+            {
+                filter = AppendIsActiveDefault(true, filter);
+            }
+
             var responseFields = (isPicker)
                 ? "items(id, categoryCode, isActive, content(name)"
                 : _listResponseFields;
@@ -131,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
                 pageSize: pagingParams.pageSize,
                 sortBy: sort,
-                filter: filterCollection.ToFilterString(),
+                filter: filter,
                 responseFields: responseFields
                 )).ReadAsSync();
             return List2(Mapper.Map<List<Category>>(cats.Items));
