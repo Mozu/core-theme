@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICategoryHelper _categoryHelper;
         private readonly ICategoryWebApiClient  _categoriesClient;
-        private const string _listResponseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name,slug),auditInfo)";
+        private const string _listResponseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,parentCategoryCode,parentCategoryName,catalogId,categoryType,content(name,slug),auditInfo)";
 
         public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper)
         {

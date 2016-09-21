@@ -27,6 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
+                .ForMember(dest => dest.ParentName, op => op.ResolveUsing(c => c.ParentCategoryName))
+                .ForMember(dest => dest.ParentCode, op => op.ResolveUsing(c => c.ParentCategoryCode))
+
                 .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
                 .ForMember(dest => dest.Name, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Name : null)))
                 .ForMember(dest => dest.Description, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Description : null)))
@@ -41,7 +44,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
                 .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
-
 
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
@@ -72,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dest => dest.Items, opt => opt.Ignore())
                 .ForMember(dest => dest.leaf, opt => opt.Ignore())
+            
                 ;
 
             Mapper.CreateMap<Category, DC.Category>()
@@ -94,6 +97,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentCategoryName, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentCategoryCode, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()
