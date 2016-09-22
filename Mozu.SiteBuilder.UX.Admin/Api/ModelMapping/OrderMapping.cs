@@ -1255,7 +1255,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                   .ForMember(dc => dc.Data, op => op.Ignore())
                   .ForMember(dc => dc.DutyAmount, op => op.Ignore())
-            
+                  .ForMember(x => x.ShippingAmountBeforeDiscountsAndAdjustments, opt => opt.Ignore())
+
                   ;
         }
 
