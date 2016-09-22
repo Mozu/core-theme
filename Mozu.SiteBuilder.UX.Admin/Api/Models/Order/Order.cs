@@ -321,6 +321,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal? LineItemSubtotalWithOrderAdjustments { get; set; }
 
+        public decimal? ShippingAmountBeforeDiscountsAndAdjustments { get; set; }
+
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<HandlingDiscount> HandlingDiscounts { get; set; }
 
@@ -346,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         {
             get
             {
-                return ShippingTotal + HandlingAmount + LineItemHandlingFees.Sum(f => f.Fee);
+                return ShippingTotal + HandlingTotal;
             }
         }
         
@@ -373,22 +375,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                     .OrderBy(i => i.LineId)
                     .Select(i => new LineIdFee { LineId = i.LineId, Fee = i.ActiveShippingDiscount.Total, Name = i.ActiveShippingDiscount.Description })
                     .ToList();
-
-                return result;
-            }
-        }
-
-        // This is only temporary. The actual field should be exposed from order.
-        public decimal? HandlingFee
-        {
-            get
-            {
-                var result = HandlingAmount;
-                if (HandlingDiscounts != null && HandlingDiscounts.Count > 0)
-                {
-                    var discount = HandlingDiscounts.Where(d => d.IsActive).Sum(d => d.Total);
-                    result += discount;
-                }
 
                 return result;
             }

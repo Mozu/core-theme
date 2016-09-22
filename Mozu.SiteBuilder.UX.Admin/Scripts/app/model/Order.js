@@ -728,6 +728,12 @@ Ext.define('Taco.model.Order', {
             type: 'auto',
             persist: false,
             useNull: true
+        },
+        {
+            name: 'shippingAmountBeforeDiscountsAndAdjustments',
+            type: 'float',
+            persist: false,
+            useNull: true
         }
     ],
 

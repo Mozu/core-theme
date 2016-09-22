@@ -358,7 +358,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '<tr class="shipping-handling-item">',
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}"><div class="{tdInnerCls}">Order Handling Fee</div></td>',
-                    '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingFee)]}</div></td>',
+                    '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingAmount)]}</div></td>',
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}"></td>',
                 '</tr>',
@@ -478,7 +478,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     subTpl_8: new Ext.XTemplate(
 
-        '<tpl if="shippingSubtotal &gt; 0 || shippingDiscounts.length &gt; 0 || lineItemShippingDiscounts.length &gt; 0 || shippingAdjustment.amount !== 0">',
+        '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0 || shippingDiscounts.length &gt; 0 || lineItemShippingDiscounts.length &gt; 0 || shippingAdjustment.amount !== 0">',
             '<tr class="shipping-handling-item row-group-start">',
                 '<td class="{tdCls}"></td>',
                 '<td class="{tdCls} sub-heading"><div class="{tdInnerCls}">Shipping</div></td>',
@@ -487,11 +487,11 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '<td class="{tdCls}"></td>',
             '</tr>',
 
-            '<tpl if="shippingSubtotal &gt; 0">',
+            '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0">',
                 '<tr class="shipping-handling-item">',
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}" colspan=><div class="{tdInnerCls}">Order Shipping Fee<tpl if="values.shippingMethodName">: {shippingMethodName}</tpl></div></td>',
-                    '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div></td>',
+                    '<td class="{tdCls}"><div class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAmountBeforeDiscountsAndAdjustments)]}</div></td>',
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}"></td>',
                 '</tr>',
