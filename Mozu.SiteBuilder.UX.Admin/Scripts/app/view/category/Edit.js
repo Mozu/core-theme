@@ -11,7 +11,7 @@ Ext.define('Taco.view.category.Edit', {
     enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Categories',
-        controller: 'categories'
+        controller: 'category'
     },
     doCreate: function () {
         var controller = "category",
