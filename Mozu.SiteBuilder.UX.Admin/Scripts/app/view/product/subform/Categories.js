@@ -37,39 +37,12 @@ Ext.define('Taco.view.product.subform.Categories', {
             getStore: function () {
                 return listStore;
             },
-            queryMode: 'local',
-            lastQuery: '',
-            triggerOnClick: false,
-            forceSelection: true,
-            typeAhead: true,
             displayField: 'nameAndCodeAndStatus',
-            value: this.record.get('categoryIds'),
             valueField: 'id',
-            style: {
-                display: 'inline-table',
-                verticalAlign: 'bottom'
-            },
-            listeners: {
-                beforequery: function(queryPlan) {
-                    list.store.clearFilter(list.customFilter);
-                    list.store.filter(list.customFilter);
-                    return true;
-                }
-            },
-            customFilter: new Ext.util.Filter({
-                filterFn: function(item) {
-                    var searchValue = list.inputEl.getValue() || '';
-                    searchValue = searchValue.toLowerCase();
-                    var name = item.get('name'),
-                        categoryCode = item.get('categoryCode'),
-                        id = item.get('id'),
-                        matchesName = name.toLowerCase().indexOf(searchValue) == 0,
-                        matchesCode = categoryCode.toLowerCase().indexOf(searchValue) == 0,
-                        matchesId = id.toString().indexOf(searchValue) == 0;
-
-                    return matchesName || matchesCode || matchesId;
-                }
-            })
+            lastQuery: "",
+            value: this.record.get('categoryIds'),
+            queryMode: 'local',
+            enableKeyEvents: true
         });
 
         this.listStore = listStore;

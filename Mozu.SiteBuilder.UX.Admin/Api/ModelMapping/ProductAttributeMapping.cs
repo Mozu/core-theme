@@ -38,11 +38,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Content != null && !string.IsNullOrEmpty( x.Content.Value)
+                .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => !string.IsNullOrEmpty( x.Content?.Value)
                     ? x.Content.Value :  x.Value))
-                .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => (x.Value != null ? x.Value.ToString() : null)))
-                .ForMember(x => x.AttributeFQN, opt => opt.Ignore())
+                .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => x.Value))
+                .ForMember(x => x.LocaleCode, op => op.ResolveUsing(dc => dc.Content?.LocaleCode))
+                .ForMember(x => x.IsOverriden, op => op.ResolveUsing(dc => dc.Content != null))
                 .ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.Sequence))
+
+                .ForMember(x => x.AttributeFQN, opt => opt.Ignore())
+                .ForMember(x => x.OptionalValue, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<Attribute, DC.Attribute>()

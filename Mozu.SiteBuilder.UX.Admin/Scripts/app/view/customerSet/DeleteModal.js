@@ -35,7 +35,7 @@ Ext.define('Taco.view.customerset.DeleteModal', {
         me.items = [
             {
                 xtype: 'box',
-                html: me.record.get('name') + ' is currently assigned to ' + me.record.raw.sites.length + ' Sites(s) and ' + me.record.raw.aggregateInfo.customerCount + ' Customer(s)'
+                html: me.record.get('name') + ' is currently assigned to ' + me.record.raw.sites.length + ' Site(s) and ' + me.record.raw.aggregateInfo.customerCount + ' Customer(s)'
             },
             {
                 xtype: 'box',

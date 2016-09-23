@@ -261,9 +261,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return FailureList2<ProductType>("Invalid id parameter passed." + e.ToString());
             }
 
-            var resultSingle = await _productTypeClient.GetProductType(id);
-            DC.ProductType prod = resultSingle.ReadAsAsync().Result;
-
+            var prod = (await _productTypeClient.GetProductType(id)).ReadAsSync();
+            
             return List2(Mapper.Map<ProductType>(prod));
         }
     }

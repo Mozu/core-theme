@@ -45,7 +45,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             displayField: 'value',
             emptyText: 'Add Value',
             queryMode: 'local',
-            minWidth:200,
+            width: 400,
             listeners: {
                 beforequery: function (qp) {
                     qp.forceAll = true;
@@ -235,14 +235,13 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
     //    this.productExtra.getValues().commitChanges();
     //},
     loadProductExtraData: function () {
-
+        var me = this;
         var dataType = this.productTypeAttribute.get('dataType').toLowerCase(),
             values = this.productExtra.getValues();
 
         if (dataType != 'productcode') {
             return;
         }
-
 
         var prodIds = [], productStore;
         values.each(function (record) {
@@ -251,11 +250,17 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             }
         });
 
-
         if (!prodIds.length) {
             return;
         }
-        productStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductComboBox');
+        productStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ProductComboBox',
+            createOnly: true,
+            autoLoad: false
+        });
+        var proxy = productStore.getProxy();
+        proxy.extraParams.showProductUsages = "Standard,Configurable,Component";
+
         productStore.load({
             limit:200,
             filters: [
@@ -269,9 +274,16 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                     return;
                 }
                 Ext.Array.each(products, function (prod) {
-                    var valRec = values.getById(prod.getId());
+                    var valRec = values.getById(prod.getId()),
+                      attrVal;
+
                     if (valRec) {
-                        valRec.set('productName', prod.get('productName'));
+                        attrVal = Ext.Array.findBy(me.productTypeAttribute.get('selectedValues'), function (item) {
+                            return item.id === valRec.get('value');
+                        });
+                        valRec.set('productName', attrVal
+                          ? attrVal.value
+                          : prod.get('productName'));
                         valRec.set('price', prod.get('price'));
                         valRec.set('salePrice', prod.get('salePrice'));
                         valRec.commit();

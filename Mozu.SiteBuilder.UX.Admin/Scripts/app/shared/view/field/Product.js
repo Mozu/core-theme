@@ -13,7 +13,7 @@ Ext.define('Taco.shared.view.field.Product', {
     minChars: 3,
     triggerOnClick: false,
     typeAhead: true,
-
+    excludeBase: false,
     displayField: 'productName',
     fieldLabel: 'Select Products',
     queryMode: 'remote',
@@ -28,7 +28,19 @@ Ext.define('Taco.shared.view.field.Product', {
         };
         if (this.showVariations) {
             storeCfg.extraParams.responseGroups = "Min,Price,VariationOptions";
-            storeCfg.extraParams.showVariations = true;
+            if (!this.excludeBase) {
+                storeCfg.extraParams.showVariations = true;
+                storeCfg.extraParams.advancedSearch = Ext.JSON.encodeValue({"includevariations": true});
+            } else {
+                storeCfg.extraParams.advancedSearch = Ext.JSON.encodeValue({"excludebase": true});
+            }
+            this.listConfig.getInnerTpl = function () {
+                return "<span class='product-name'>{productName}</span> "
+                  + "<span class='product-code'>{productCode}</span> "
+                  + '<tpl if="values.hasConfigurableOptions && values.variationOptions.length" >'
+                  +   "<span class='product-code'>({[Ext.Array.map(values.variationOptions, function(opt) { return opt.attributeFQN.split('~')[1] + ': ' + opt.value;}).join(', ')]})</span>"
+                  + "</tpl>";
+            };
         }
         if (this.showProductUsages) storeCfg.extraParams.showProductUsages = this.showProductUsages;
         this.store = Taco.core.data.StoreManager.getOrCreate(storeCfg);
