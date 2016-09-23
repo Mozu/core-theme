@@ -490,7 +490,12 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     sortable: false,
                     align: 'right',
                     
-                    renderer: function (value) {
+                    renderer: function (value, metadata, record) {
+                        // if there is an item level discount, then the discount row will show the total.
+                        if (record.data.activeDiscount) {
+                            return '';
+                        }
+
                         return me.record.formatCurrency(value);
                     },
                     dataIndex: 'displaySubtotal'

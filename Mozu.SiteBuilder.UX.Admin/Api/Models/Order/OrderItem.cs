@@ -267,7 +267,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                     (WeightedOrderHandlingFee ?? 0) +
                     (HandlingAmount ?? 0) +
                     (WeightedOrderShippingManualAdjustment ?? 0) +
-                    (WeightedOrderHandlingFeeTax ?? 0)
+                    (WeightedOrderHandlingFeeTax ?? 0) +
+                    (WeightedOrderHandlingFeeDiscount != null? -WeightedOrderHandlingFeeDiscount : 0)
                     ;
             }
         }
