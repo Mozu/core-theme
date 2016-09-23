@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get
             {
-                return ((bool?)_state.Value.GetValue("enableBetaAdmin")).GetValueOrDefault(false);
+                return true;
             }
         }
 
