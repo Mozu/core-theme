@@ -9,67 +9,66 @@ Ext.define('Taco.model.CustomerSet', {
         update: 42,
         destroy: 43
     },
-    idProperty:'code',
+    idProperty: 'code',
     fields: [
          {
-            name: 'code',
-            type: 'string'
-        },        
+             name: 'code',
+             type: 'string'
+         },
         {
             name: 'name',
-            type: 'string'        
+            type: 'string'
         },
         {
             name: 'description',
             type: 'string'
         },
         {
-          name:'isDefault',
-          type:'boolean'
+            name: 'isDefault',
+            type: 'boolean'
         },
         {
-          name:'customerCount',
-          convert: function (v,record) {
-            if (record && record.raw && record.raw.aggregateInfo) {
-              return record.raw.aggregateInfo.customerCount;
+            name: 'customerCount',
+            convert: function (v, record) {
+                if (record && record.raw && record.raw.aggregateInfo) {
+                    return record.raw.aggregateInfo.customerCount;
+                }
+                return v;
             }
-            return v;
-          }
         },
         {
-          name: 'replacementCode',
-          type: 'string'
+            name: 'replacementCode',
+            type: 'string'
         },
         {
-          name: 'sites',
-          type: 'auto',
-           convert: function (v,record) {
-             
-             if (v && v.length && v[0].siteId) {
-               return v.map(function (x) { return x.siteId });
-             }
-             return v;
-           },
-           serialize: function (v, record) {
-             if (v && v.length && !v[0].siteId)
-             {
-               return v.map(function (x) {
-                 return {
-                   siteId: x,
-                   customerSetCode: record.get('code')
-                 };
-               });
-             }
-             return v;
-           }
+            name: 'sites',
+            type: 'auto',
+            convert: function (v, record) {
+
+                if (v && v.length && v[0].siteId) {
+                    return v.map(function (x) { return x.siteId });
+                }
+                return v;
+            },
+            serialize: function (v, record) {
+                if (v && v.length && !v[0].siteId) {
+                    return v.map(function (x) {
+                        return {
+                            siteId: x,
+                            customerSetCode: record.get('code')
+                        };
+                    });
+                }
+                return v;
+            }
         }
-    ],    
-   
-   
+    ],
+
+
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read:   '/admin/app/customer/customersets/list',
+            read: '/admin/app/customer/customersets/list',
             create: '/admin/app/customer/customersets/create',
             update: '/admin/app/customer/customersets/edit',
             destroy: '/admin/app/customer/customersets/delete'
@@ -79,7 +78,7 @@ Ext.define('Taco.model.CustomerSet', {
             root: 'items',
             successProperty: 'success',
             messageProperty: 'message'
-           
+
         },
         writer: {
             allowSingle: false,

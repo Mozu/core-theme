@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICategoryHelper _categoryHelper;
         private readonly ICategoryWebApiClient  _categoriesClient;
+        private const string _listResponseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,parentCategoryCode,parentCategoryName,catalogId,categoryType,content(name,slug),auditInfo)";
 
         public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper)
         {
@@ -38,87 +39,118 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (id.HasValue && id != 666)
             {
-                var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
-                var retList = new List<Category> {Mapper.Map<Category>(cat)};
-                return List2(retList);
+                return await GetSingleCategory(id);
             }
             //getting rid of server filtering for now.  all filtering done on the client.
-           if (pagingParams.id == null || 1==1)
+            
+            int start = 0;
+            var ctxLevel = TargetContextLevelType.MasterCatalog;
+
+            int siteId = -1;
+            ICategoryWebApiClient catClient = _categoriesClient;
+            if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
             {
-                int start = 0;
-                var ctxLevel = TargetContextLevelType.MasterCatalog;
-                
-                int siteId = -1;
-                ICategoryWebApiClient catClient = _categoriesClient;
-                if (nodeQuery.HasValue && filterCollection.TryGetValue("SiteId", out siteId))
-                {
-                    ctxLevel = TargetContextLevelType.Site;
-                    catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
+                ctxLevel = TargetContextLevelType.Site;
+                catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
 
-                }
-                List<Category> categories = new List<Category>();
-                var client = _categoriesClient.CloneWithApiContext(x =>
-                {
-                    x.CatalogId = null;
-                    x.SiteId = null;
-                });
-                var extFilter = filterCollection.ToFilterString();
-                
-                if (isActive.HasValue && !(filterCollection.Any(x => x.property == "status")))
-                {
-                    extFilter = AppendIsActiveDefault(isActive, extFilter);
-                }
-                const string responseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,catalogId,categoryType,content(name))";
+            }
+            List<Category> categories = new List<Category>();
+            var client = _categoriesClient.CloneWithApiContext(x =>
+            {
+                x.CatalogId = null;
+                x.SiteId = null;
+            });
+            var extFilter = filterCollection.ToFilterString();
 
-                while (true)
+            if (isActive.HasValue && !(filterCollection.Any(x => x.property == "status")))
+            {
+                extFilter = AppendIsActiveDefault(isActive, extFilter);
+            }
+            
+            while (true)
+            {
+                var cats = (await client.GetCategories(startIndex: start,
+                    pageSize: 200, //current API maximum is 200 - May 2016
+                    sortBy: "sequence asc",
+                    filter: extFilter,
+                    responseFields: _listResponseFields
+                    )).ReadAsSync();
+                categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
+                start = cats.PageSize + cats.StartIndex;
+                if (cats.TotalCount <= start)
                 {
-                    var cats = (await client.GetCategories(startIndex: start,
-                        pageSize: 200, //current API maximum is 200 - May 2016
-                        sortBy: "sequence asc",
-                        filter: extFilter,
-                        responseFields: responseFields
-                        )).ReadAsSync();
-                    categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
-                    start = cats.PageSize + cats.StartIndex;
-                    if (cats.TotalCount <= start )
+                    break;
+                }
+            }
+            foreach (var category1 in categories)
+            {
+                if (category1.ParentId.GetValueOrDefault(-1) > -1)
+                {
+                    category1.Parent = categories.FirstOrDefault(x => x.Id == category1.ParentId.Value);
+                }
+            }
+            var ancestory = new List<Category>();
+            foreach (var category1 in categories.Where(x => x.Parent != null))
+            {
+                ancestory.Clear();
+                var parent = category1.Parent;
+
+                do
+                {
+                    if (ancestory.Contains(parent))
                     {
                         break;
                     }
-                }
-                foreach (var category1 in categories)
-                {
-                    if (category1.ParentId.GetValueOrDefault(-1) > -1)
-                    {
-                        category1.Parent = categories.FirstOrDefault(x => x.Id == category1.ParentId.Value);
-                    }
-                }
-                var ancestory = new List<Category>();
-                foreach (var category1 in categories.Where(x => x.Parent != null))
-                {
-                    ancestory.Clear();
-                    var parent = category1.Parent;
+                    ancestory.Add(parent);
+                    parent = parent.Parent;
 
-                    do
-                    {
-                        if (ancestory.Contains(parent))
-                        {
-                            break;
-                        }
-                        ancestory.Add(parent);
-                        parent = parent.Parent;
+                } while (parent != null);
+                ancestory.Reverse();
+                category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
 
-                    } while (parent != null);
-                    ancestory.Reverse();
-                    category1.Path = string.Join("/", ancestory.Select(x => x.Id).ToArray());
+            }
+            return List2(categories);
+        }
 
-                }
-
-                return List2(categories);
+        [HttpGetRoute(UriTemplate = "list")]
+        public async Task<Response<List<Category>>> GetCategoryList([FromUri]PagingParamaters pagingParams, [FromUri] FilterCollection filterCollection, [FromUri] bool isPicker = false)
+        {
+            if (!string.IsNullOrEmpty(pagingParams.id))
+            {
+                return await GetSingleCategory(pagingParams.NumericId);
+            }
+            var sort = pagingParams.sort.ToSortString();
+            if (string.IsNullOrEmpty(sort))
+            {
+                sort = "sequence asc";
             }
 
-            var category = (await _categoriesClient.GetCategory(pagingParams.NumericId)).ReadAsSync();
-             
-            return List2(Mapper.Map<Category>(category));
+            var filter = filterCollection.ToFilterString();
+
+            // have to look at collection in case "all" is passed.
+            if (!(filterCollection.Any(x => x.property == "status")))
+            {
+                filter = AppendIsActiveDefault(true, filter);
+            }
+
+            var responseFields = (isPicker)
+                ? "items(id, categoryCode, isActive, content(name)"
+                : _listResponseFields;
+            //getting rid of server filtering for now.  all filtering done on the client.
+            var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize,
+                sortBy: sort,
+                filter: filter,
+                responseFields: responseFields
+                )).ReadAsSync();
+            return List2(Mapper.Map<List<Category>>(cats.Items), cats.TotalCount);
+        }
+
+        private async Task<Response<List<Category>>> GetSingleCategory(int? id)
+        {
+            var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
+            var retList = new List<Category> { Mapper.Map<Category>(cat) };
+            return List2(retList, total:1);
         }
 
         private static string AppendIsActiveDefault(bool? isActive, string extFilter)
@@ -248,10 +280,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2( ret);
         }
 
-        [HttpPostRoute(UriTemplate = "delete/?force={force}")]
-        public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool force = true)
+        [HttpPostRoute(UriTemplate = "delete/?cascadeDelete={cascadeDelete}")]
+        public async Task<Response<List<Category>>> DeleteCategory(List<Category> categories, [FromUri]bool cascadeDelete = false)
         {
-            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, category.CascadeDelete, forceDelete: force, reassignToParent: !category.CascadeDelete)).ToList();
+            var tasks = categories.Select(category => _categoriesClient.DeleteCategoryById(category.Id, cascadeDelete, forceDelete: true, reassignToParent: !cascadeDelete)).ToList();
             await Task.WhenAll(tasks);
             AnyExceptionsThenThrow(tasks);
 
@@ -263,8 +295,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var originalCategory = _categoriesClient.GetCategory(id).Result.ReadAsAsync().Result;
             originalCategory.Id = -1;
-            //originalCategory.Content.CategoryId = -1;
-            //originalCategory.CategoryCode += "-COPY";
             originalCategory.Content.Name += "-COPY";
 
             var newCategory = (await _categoriesClient.AddCategory(originalCategory)).ReadAsSync();
@@ -293,6 +323,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         .ReadAsSync();  //.Result.ReadAsAsync().Result ;
                 return Single2(Mapper.Map<Models.Category.DynamicExpression>(validatedExpression));
             }
+        }
+
+        [HttpGetRoute(UriTemplate = "node/{id}?showInactive={showInactive}&isDisplayed={isDisplayed}")]
+        public async Task<Response<Models.Category.CategoryNode>> GetCategoryNode(int? id=0, bool? showInactive = null, bool? isDisplayed = null)
+        {
+            var cat = (await _categoriesClient.GetCategoryTreeNode(id, showInactive, isDisplayed)).ReadAsSync();
+            var retList = Mapper.Map<Models.Category.CategoryNode>(cat) ;
+            return Single2(retList);
+        }
+
+        [HttpPostRoute(UriTemplate = "tree-for-open-nodes?showInactive={showInactive}")]
+        public async Task<Response<Models.Category.CategoryNode>> GetPartialCategoryTreeForOpenNodes(List<int> parentIds, [FromUri]bool? showInactive = null)
+        {
+            var tree = (await _categoriesClient.GetCategoryTreeFromNodes(parentIds, showInactive)).ReadAsSync();
+            var retVal = Mapper.Map<Models.Category.CategoryNode>(tree);
+            return Single2(retVal);
         }
     }
 }

@@ -67,7 +67,7 @@ Ext.define('Taco.view.category.Index', {
                                 return;
                             }
 
-                            var url = (menuItem.getItemId() == "Dynamic") ? 'categories/createdynamic' : 'categories/create';
+                            var url = (menuItem.getItemId() == "Dynamic") ? 'category/createdynamic' : 'category/create';
                             Taco.core.StateManager.attemptNavigate(url);
                         },
                         scope: me,
@@ -239,7 +239,7 @@ Ext.define('Taco.view.category.Index', {
                     var record = eventData.record;
                     Ext.defer(function () {
                         me.addRecordToBrowserHistory(record);
-                        Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+                        Taco.core.StateManager.attemptNavigate('category/edit/' + record.getId(), { complexMetaData: { record: record } });
                     }, 1, this);
 
                 }
@@ -255,7 +255,7 @@ Ext.define('Taco.view.category.Index', {
                         metaData = {
                             id: record.getId()
                         };
-                    Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                    Taco.app.StateManager.attemptNavigate('category/duplicate/' + record.getId(), metaData);
                 }
             }, {
                 text: 'Delete',
@@ -365,7 +365,7 @@ Ext.define('Taco.view.category.Index', {
 
     addRecordToBrowserHistory: function(record) {
 
-        var URIStem = '/categories?view=';
+        var URIStem = '/category?view=';
         var id = record.get('id');
 
         if (!id) {
@@ -495,7 +495,7 @@ Ext.define('Taco.view.category.Index', {
 
     launchEditor: function (record) {
         Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+            Taco.core.StateManager.attemptNavigate('category/edit/' + record.getId(), { complexMetaData: { record: record } });
             }, 1, this);
         return;
     },

@@ -11,13 +11,13 @@ Ext.define('Taco.view.category.Edit', {
     enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Categories',
-        controller: 'categories'
+        controller: 'category'
     },
     doCreate: function () {
-        var controller = "categories",
+        var controller = "category",
             url;
 
-        url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create'
+        url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create';
 
         Taco.app.StateManager.attemptNavigate(url);
     },
@@ -54,7 +54,7 @@ Ext.define('Taco.view.category.Edit', {
                         model: 'Taco.model.Category',
                         behavior: 'create'
                     },
-                    handler: function (item, eventData) {
+                    handler: function () {
 
                         var record = me.record,
                             metaData = {
@@ -62,7 +62,7 @@ Ext.define('Taco.view.category.Edit', {
                                 id: record.getId()
                             };
                         
-                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                        Taco.app.StateManager.attemptNavigate('category/duplicate/' + record.getId(), metaData);
                     }
                 }
                 ],
@@ -77,8 +77,8 @@ Ext.define('Taco.view.category.Edit', {
 
                     
                         if (me.record.phantom) {
-                            liveItems.disable()
-                            previewItem.disable()
+                            liveItems.disable();
+                            previewItem.disable();
                             return; 
                         }
 
@@ -130,8 +130,7 @@ Ext.define('Taco.view.category.Edit', {
 
     },
     viewInSite: function(site, env, noPrompt) {
-        var me = this,
-            url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
+        var url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
 
         if (noPrompt || !this.getForm().isDirty()) {
             window.open(url);

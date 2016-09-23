@@ -505,7 +505,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var mapped = Mapper.Map<SynonymDefinition>(singleSynonymDef);
             return List2(mapped);
         }
+
+        #endregion
     }
 }
-
-#endregion
