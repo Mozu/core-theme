@@ -143,14 +143,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter: filter,
                 responseFields: responseFields
                 )).ReadAsSync();
-            return List2(Mapper.Map<List<Category>>(cats.Items));
+            return List2(Mapper.Map<List<Category>>(cats.Items), cats.TotalCount);
         }
 
         private async Task<Response<List<Category>>> GetSingleCategory(int? id)
         {
             var cat = (await _categoriesClient.GetCategory(id)).ReadAsSync();
             var retList = new List<Category> { Mapper.Map<Category>(cat) };
-            return List2(retList);
+            return List2(retList, total:1);
         }
 
         private static string AppendIsActiveDefault(bool? isActive, string extFilter)
