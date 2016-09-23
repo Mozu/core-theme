@@ -107,8 +107,7 @@ Ext.define('Taco.model.Category', {
         {
             name: 'isActive',
             type: 'boolean',
-            useNull: true,
-            defaultValue: true
+            useNull: true
         },
         {
             "name": "description",
