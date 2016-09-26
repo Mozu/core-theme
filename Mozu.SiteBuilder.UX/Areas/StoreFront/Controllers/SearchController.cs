@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     categoryId = tmpInt;
                 }
                 res = bindingContext.ValueProvider.GetValue("categoryCode");
-                if ( categoryId == null && res != null )
+                if ( categoryId == null && res?.RawValue != null)
                 {
                     var categoryCode = res.RawValue.ToString();
                     categoryId = actionContext.Request.Resolve<ICategoryTreeProvider>().GetAllCategories().Result.FindByCode(categoryCode)?.Id;
