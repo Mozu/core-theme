@@ -1,17 +1,17 @@
 ﻿/**
- * @class Taco.view.categories.Index
+ * @class Taco.view.betacategories.Index
  */
 
-Ext.define('Taco.view.categories.Index', {
+Ext.define('Taco.view.betacategories.Index', {
     extend: 'Taco.view.react.Index',
-    alias: 'widget.taco.index.category',
+    alias: 'widget.taco.index.betacategories',
 
     initComponent: function () {
         this.callParent(arguments);
     },
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.categories.AdvancedSearchForm',
+        advancedFormCls: 'Taco.view.category.AdvancedSearchForm',
         emptySearchText: 'Search'
     },
     

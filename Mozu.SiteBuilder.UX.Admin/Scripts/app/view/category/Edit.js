@@ -11,10 +11,10 @@ Ext.define('Taco.view.category.Edit', {
     enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Categories',
-        controller: 'category'
+        controller: 'categories'
     },
     doCreate: function () {
-        var controller = "category",
+        var controller = "categories",
             url;
 
         url = (this.record.get("categoryType") != "Static") ? controller + '/createdynamic' : controller + '/create';
@@ -62,7 +62,7 @@ Ext.define('Taco.view.category.Edit', {
                                 id: record.getId()
                             };
                         
-                        Taco.app.StateManager.attemptNavigate('category/duplicate/' + record.getId(), metaData);
+                        Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                     }
                 }
                 ],
