@@ -14,6 +14,11 @@ Ext.define('Taco.view.categories.Index', {
         advancedFormCls: 'Taco.view.categories.AdvancedSearchForm',
         emptySearchText: 'Search'
     },
+
+    contextConfig: {
+        supportedLevels: ['c'],
+        requiresContextOfType: ['c']
+    },
     
     allowCreate: function() {
         return false;
