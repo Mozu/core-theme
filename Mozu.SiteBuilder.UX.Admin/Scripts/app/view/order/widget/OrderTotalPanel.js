@@ -100,6 +100,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
         me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
         me.initToggleButton(".tax-summary", me.toggleTaxDetails);
+        me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
 
     },
 
@@ -146,6 +147,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     toggleShippingDetails: function (btn, e) {
 
         this.handleToggle(btn, '.shipping');
+
+    },
+
+    toggleHandlingDetails: function (btn, e) {
+
+        this.handleToggle(btn, '.handling');
 
     },
 
@@ -346,14 +353,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
         '<tpl if="handlingTotal !== 0">',
 
-            '<tr class="shipping-handling-item row-group-start">',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls} sub-heading"><div class="{tdInnerCls}">Handling</div></td>',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls}"></td>',
-            '</tr>',
-
             '<tpl if="handlingAmount !== 0">',
                 '<tr class="shipping-handling-item">',
                     '<td class="{tdCls}"></td>',
@@ -472,20 +471,19 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     subTpl_7: new Ext.XTemplate(
         
-        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingAndHandlingTotal)]}</div>'
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div>'
+
+    ),
+
+    subTpl_10: new Ext.XTemplate(
+
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.handlingTotal)]}</div>'
 
     ),
 
     subTpl_8: new Ext.XTemplate(
 
         '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0 || shippingDiscounts.length &gt; 0 || lineItemShippingDiscounts.length &gt; 0 || shippingAdjustment.amount !== 0">',
-            '<tr class="shipping-handling-item row-group-start">',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls} sub-heading"><div class="{tdInnerCls}">Shipping</div></td>',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls}"></td>',
-                '<td class="{tdCls}"></td>',
-            '</tr>',
 
             '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0">',
                 '<tr class="shipping-handling-item">',
@@ -606,13 +604,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '</table>',
 
-            // shipping and handling
+            // shipping
             '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipping"})]}',
 
             '<thead>',
                 '<tr class="subtotalrow">',
                     '<th><div class="{[ (values.shippingAndHandlingTotal != 0 || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
-                    '<th class="summary"><div class="{tdInnerCls}">Shipping & Handling</div></th>',
+                    '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
                     '<th></th>',
 
                     '<th class="summary-price" itemId="taco-subTpl_7">',
@@ -639,12 +637,34 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 '</tpl>',
             '</tbody>',
 
+            '</table>',
+
             // handling template - output class level subTemplate 2.  Note: this will contain extjs xTemplates and will render with each change 
+
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable handling"})]}',
+
+            '<thead>',
+                '<tr class="subtotalrow">',
+                    '<th><div class="{[ (values.shippingAndHandlingTotal != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
+                    '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
+                    '<th></th>',
+
+                    '<th class="summary-price" itemId="taco-subTpl_10">',
+                        '{[this.getSubTpl("subTpl_10", values)]}',
+                    '</th>',
+
+                    '<th></th>',
+                '</tr>',
+            '</thead>',
+
+
             '<tbody itemId="taco-subTpl_2">',
                 '{[this.getSubTpl("subTpl_2", values)]}',
             '</tbody>',
 
-            // Tax
+            '</table>',
+
+            // Tax & Duty
             '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
 
             '<thead itemId="taco-subTpl_4">',
