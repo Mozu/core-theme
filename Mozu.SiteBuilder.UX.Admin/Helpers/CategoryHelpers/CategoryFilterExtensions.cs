@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
         private const string UPDATE_BY = "updateby";
-        
+
         /// <summary>
         /// Converts a FilterCollection for Attribute to a mozu services-compatible filter string.
         /// </summary>
@@ -125,6 +125,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 
                 case "updateby":
                     return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, UPDATE_BY);
+
+                case "sitebuilder":
+                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.escapedValue);
 
                 default:
                     return "";

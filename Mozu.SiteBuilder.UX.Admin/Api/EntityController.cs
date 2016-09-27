@@ -34,6 +34,10 @@ using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.Core.Collections;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
+using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.SiteBuilder;
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     [WebApi("app/entities", SuppressDescriptorGeneration = true)]
@@ -47,11 +51,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
        readonly IEntityListsWebApiClient _entityListsWebApiClient;
        readonly IDocumentTypeWebApiClient _documentTypeWebApiClient;
        readonly IThemeContentRetriever _contentRetriever;
+       readonly ICategoryWebApiClient _categoryClient;
        readonly bool shouldGetInactiveDocumnents;
        readonly CmsHelper _cmsHelper;
 
         //   private const string TBD = "duno";
-        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever, ISiteBuilderApiContext sbApiContext, CmsHelper cmsHelper)
+        public EntityControllerController(IDocumentListWebApiClient documentListWebApiClient, IEntityListsWebApiClient entityListsWebApiClient, IDocumentTypeWebApiClient documentTypeWebApiClient, IThemeContentRetriever contentRetriever, ISiteBuilderApiContext sbApiContext, CmsHelper cmsHelper, ICategoryWebApiClient categoryClient)
 
         {
             _documentListWebApiClient = documentListWebApiClient;
@@ -60,6 +65,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _contentRetriever = contentRetriever;
             shouldGetInactiveDocumnents = sbApiContext.UserClaims != null && sbApiContext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly());
             _cmsHelper = cmsHelper;
+            _categoryClient = categoryClient;
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
@@ -174,6 +180,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
             }
+        }
+
+        [HttpGetRoute(UriTemplate = "sitebuilder/search")]
+        public async Task<Response<List<SearchItem>>> GetSearchItems(PagingParamaters pagingParams, FilterCollection extFilter)
+        {
+            var CMSFilter = extFilter.ToContentFilterString();
+            var catFilter = extFilter.ToFilterString();
+            var cmstask = _documentListWebApiClient.GetDocuments("pages@mozu", CMSFilter, responseFields: "items(id, name, listFQN, properties( link_title ) )");
+            var catTask = _categoryClient.GetCategories(filter: catFilter);
+            var items = new List<SearchItem>();
+
+            await Task.WhenAll(cmstask, catTask).ConfigureAwait(false);
+                
+            if (!cmstask.Result.HasException && cmstask.Result != null)
+            {
+                var docs = cmstask.Result.ReadAsSync();
+                if (docs.TotalCount > 0)
+                {
+                    items.AddRange(docs.Items.Select(Mapper.Map<SearchItem>));
+                };
+            }
+
+            if (!catTask.Result.HasException && catTask.Result != null)
+            {
+                var cats = catTask.Result.ReadAsSync();
+                if (cats.TotalCount > 0)
+                {
+                    items.AddRange(cats.Items.Select(Mapper.Map<SearchItem>));
+                }
+            }
+
+            return this.List2(items, items.Count);
         }
 
         [HttpGetRoute(UriTemplate = "documentTypes/read")]
