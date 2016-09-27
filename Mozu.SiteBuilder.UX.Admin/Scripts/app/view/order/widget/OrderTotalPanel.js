@@ -322,7 +322,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<colgroup><col class="" style="width:30px;text-align:left"></colgroup>',
         '<colgroup><col class="" style="text-align:left"></colgroup>',
         '<colgroup><col class="" style="width:100px;text-align:right"></colgroup>',
-        '<colgroup><col class="" style="width:100px;text-align:right"></colgroup>',
+        '<colgroup><col class="" style="width:165px;text-align:right"></colgroup>',
         '<colgroup><col class="" style="width:{actionColumnWidth}px;"></colgroup>'
     ),
 
