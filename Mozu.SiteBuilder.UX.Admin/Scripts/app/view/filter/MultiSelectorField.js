@@ -106,9 +106,9 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                         var attribute = me.parentForm.attributePickerField.getValue();
                         me.store.model.load(attribute, {
                             scope: me.store,
-                            success: function(record) {
+                            success: function(attribute) {
 
-                                var values = record.get('values');
+                                var values = attribute.get('values');
 
                                 var records = me.store.data.items;
                                 Ext.Array.each(records, function(record) {
@@ -116,8 +116,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                                     var property = Ext.Array.findBy(values, function(value) {
                                         return value.id === record.get('id');
                                     });
-
-                                    var model = me.store.findRecord('id', record.get('id'));
+                                    var index = me.store.findExact('id', record.get('id'));
+                                    var model = me.store.getAt(index);
                                     model.set(property);
                                 });
                             }
