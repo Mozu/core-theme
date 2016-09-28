@@ -483,9 +483,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     subTpl_8: new Ext.XTemplate(
 
-        '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0 || shippingDiscounts.length &gt; 0 || lineItemShippingDiscounts.length &gt; 0 || shippingAdjustment.amount !== 0">',
+        '<tpl if="shippingMethodName || shippingDiscounts.length &gt; 0 || lineItemShippingDiscounts.length &gt; 0 || shippingAdjustment.amount !== 0">',
 
-            '<tpl if="shippingAmountBeforeDiscountsAndAdjustments &gt; 0">',
+            '<tpl if="shippingMethodName">',
                 '<tr class="shipping-handling-item">',
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}" colspan=><div class="{tdInnerCls}">Order Shipping Fee<tpl if="values.shippingMethodName">: {shippingMethodName}</tpl></div></td>',
@@ -562,7 +562,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '<thead>',
                 '<tr>',
-                    '<th><div class="{[ (values.orderAdjustment.amount != 0 || ' + isEditable + ') ? "adjustment-summary" : "" ]}"></div></th>',
+                    '<th><div class="{[ (values.orderAdjustment.amount != 0 || (values.orderDiscounts && values.orderDiscounts.length > 0) || ' + isEditable + ') ? "adjustment-summary" : "" ]}"></div></th>',
                     '<th class="summary">Order Adjustments</th>',
                     '<th></th>',
 
