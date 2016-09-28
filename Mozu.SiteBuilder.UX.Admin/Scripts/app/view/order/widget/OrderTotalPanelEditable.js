@@ -727,7 +727,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             this["subTpl_7"].overwrite(subTpl_7_el, data);
             this["subTpl_8"].overwrite(subTpl_8_el, data);
             this["subTpl_9"].overwrite(subTpl_9_el, data);
-            this["subTpl_10"].overwrite(subTpl_9_el, data);
+            this["subTpl_10"].overwrite(subTpl_10_el, data);
             // update the ext components
             this.updateShippingMethodButton(record);
             // need to hide the coupon error unless the hide was deferred. This happens because the record updates after the application of the error.

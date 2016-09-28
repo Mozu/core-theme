@@ -609,7 +609,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '<thead>',
                 '<tr class="subtotalrow">',
-                    '<th><div class="{[ (values.shippingAndHandlingTotal != 0 || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
+                    '<th><div class="{[ (values.shippingTotal != 0 || values.shippingMethodName || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
                     '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
                     '<th></th>',
 
@@ -645,7 +645,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '<thead>',
                 '<tr class="subtotalrow">',
-                    '<th><div class="{[ (values.shippingAndHandlingTotal != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
+                    '<th><div class="{[ (values.handlingTotal != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
                     '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
                     '<th></th>',
 
