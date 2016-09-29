@@ -481,8 +481,8 @@ Ext.define('Taco.view.website.Index', {
                                 columns: [
                                     {
                                         dataIndex: 'name',
-                                        flex: 1,
                                         text: 'Name',
+                                        flex: 8,
                                         renderer: function(val, x, rec) {
                                             if (rec.data.isCategory) {
                                                 return '<span class="taco-tree-icon cat"></span>' + val;
@@ -495,6 +495,7 @@ Ext.define('Taco.view.website.Index', {
                                     },
                                     {      
                                         xtype: 'taco.menucolumn',
+                                        flex: 1,
                                         menuItems: [
                                             // {
                                             //     itemId: 'rename',
