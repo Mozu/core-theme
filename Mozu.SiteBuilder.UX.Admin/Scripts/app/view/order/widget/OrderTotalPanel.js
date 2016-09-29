@@ -71,24 +71,26 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     initToggleButton: function (selector, handler) {
         var me = this;
 
-        var summary = me.el.down(selector);
+        if (me.el) {
+            var summary = me.el.down(selector);
 
-        if (summary && summary.dom.children.length <= 0) {
+            if (summary && summary.dom.children.length <= 0) {
 
-            Ext.widget({
-                xtype: "button",
-                cls: 'summary-toggle',
-                padding: '6px 0px 5px 6px',
-                renderTo: summary,
-                width: 30,
-                // right arrow
-                glyph: "XE927@mozicons",
-                ui: 'action',
-                scale: 'small',
-                handler: handler,
-                scope: me
-            });
+                Ext.widget({
+                    xtype: "button",
+                    cls: 'summary-toggle',
+                    padding: '6px 0px 5px 6px',
+                    renderTo: summary,
+                    width: 30,
+                    // right arrow
+                    glyph: "XE927@mozicons",
+                    ui: 'action',
+                    scale: 'small',
+                    handler: handler,
+                    scope: me
+                });
 
+            }
         }
 
     },
