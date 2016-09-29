@@ -27,7 +27,6 @@
  * @requires Taco.controller.Customers
  * @requires Taco.controller.BetaCategories
  * @requires Taco.controller.Categories
- * @requires Taco.controller.Category
  * @requires Taco.controller.Products
  * @requires Taco.controller.PendingChanges
  * @requires Taco.controller.Inventory
@@ -153,7 +152,6 @@ Ext.define('Taco.Application', {
         'CustomerAttributes',
         'BetaCategories',
         'Categories',
-        'Category',
         'Products',
         //'PendingChanges',
         'Inventory',

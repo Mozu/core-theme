@@ -210,7 +210,7 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'products',
                     'behaviorIds': [4]
                 }, {
-                    'id': 'category',
+                    'id': 'categories',
                     'label': 'Categories',
                     'address': 'categories',
                     'behaviorIds': [16]
