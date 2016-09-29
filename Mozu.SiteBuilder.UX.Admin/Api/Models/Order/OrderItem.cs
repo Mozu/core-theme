@@ -224,6 +224,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal? DiscountedTotal { get; set; }
 
+        public decimal? ShippingAmountBeforeDiscountsAndAdjustments { get; set; }
+
         public decimal? BasePrice
         {
             get
@@ -256,11 +258,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
             }
         }
 
-        public decimal? TotalShippingAndHandling
+        public decimal? ShippingAndHandlingTotal
         {
             get
             {
-                return  ((ShippingTotal.HasValue && ShippingTotal > 0) ?  ShippingTotal.Value :  (WeightedOrderShipping ?? 0)) +
+                return  (ShippingAmountBeforeDiscountsAndAdjustments ?? 0) +
                     (-WeightedOrderShippingDiscount ?? 0) +
                     (ActiveShippingDiscount != null ? -ActiveShippingDiscount.Total : 0) +
                     (ShippingTaxTotal.HasValue ? ShippingTaxTotal.Value : (WeightedOrderShippingTax ?? 0)) +
@@ -270,6 +272,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                     (WeightedOrderHandlingFeeTax ?? 0) +
                     (WeightedOrderHandlingFeeDiscount != null? -WeightedOrderHandlingFeeDiscount : 0)
                     ;
+            }
+        }
+
+        public decimal? ShippingTotalWithDiscounts
+        {
+            get
+            {
+                return (ShippingAmountBeforeDiscountsAndAdjustments ?? 0) +
+                    (-WeightedOrderShippingDiscount ?? 0) +
+                    (ActiveShippingDiscount != null ? -ActiveShippingDiscount.Total : 0) +
+                    (ShippingTaxTotal.HasValue ? ShippingTaxTotal.Value : (WeightedOrderShippingTax ?? 0)) +
+                    (WeightedOrderShippingManualAdjustment ?? 0)
+                    ;
+            }
+        }
+
+        public decimal? HandlingTotalWithDiscounts
+        {
+            get
+            {
+                return (WeightedOrderHandlingFee ?? 0) +
+                    (HandlingAmount ?? 0) +
+                    (WeightedOrderHandlingFeeTax ?? 0) +
+                    (WeightedOrderHandlingFeeDiscount != null ? -WeightedOrderHandlingFeeDiscount : 0)
+                    ;
+            }
+        }
+
+        public decimal? TaxAndDutyTotal
+        {
+            get
+            {
+                return (ItemTaxTotal ?? 0) +
+                    (DutyAmount ?? 0);
+
             }
         }
     }
