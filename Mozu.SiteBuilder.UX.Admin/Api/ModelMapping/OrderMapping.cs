@@ -174,7 +174,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ShippingAndHandlingTotal, op => op.Ignore())
                 .ForMember(x => x.AdjustmentTotal, op => op.Ignore())
                 .ForMember(x => x.LineItemShippingDiscounts, op => op.Ignore())
-            
+                .ForMember(x => x.ShippingAmountBeforeDiscountsAndAdjustments, op => op.ResolveUsing(dc => dc.ShippingAmountBeforeDiscountsAndAdjustments ?? dc.ShippingSubTotal))
+
                 .AfterMap(MapAvailableBulkActions)
                 .AfterMap(InterpolateRefundsIntoPaymentInteractions)
                 .AfterMap((dc, order) =>
@@ -731,7 +732,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsPackagedStandAlone , op => op.ResolveUsing((OrdersDC.OrderItem dc) => (dc.Product==null)? false : dc.Product.IsPackagedStandAlone))
                 // handled by after mapper, this needs to be aggregated!
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.Product.FulfillmentStatus))
-                  
 
                 .AfterMap((dc, orderItem) =>
                 {
