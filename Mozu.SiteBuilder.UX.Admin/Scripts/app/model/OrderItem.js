@@ -196,8 +196,62 @@ Ext.define('Taco.model.OrderItem', {
         {
             "name": "handlingAmount",
             "type": "auto" 
+        },
+        {
+            "name": "weightedOrderAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderDiscount",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderTaxableSubtotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "totalWithoutWeightedShippingAndHandling",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderTax",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderShipping",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderShippingDiscount",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderShippingManualAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "weightedOrderShippingTax",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "totalWithWeightedShippingAndHandling",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "discountedTotal",
+            "type": "float",
+            "useNull": true
         }
-
     ],
 
     associations: [

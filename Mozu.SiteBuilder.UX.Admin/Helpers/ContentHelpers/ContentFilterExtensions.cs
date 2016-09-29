@@ -39,6 +39,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers
                 case "all":
                 case "name":
                     return String.Format("( {1} sw \"{0}\" )", filter.escapedValue, CONTENT_NAME);
+                case "sitebuilder":
+                    //return String.Format("( {1} sw \"{0}\" )", filter.escapedValue, CONTENT_NAME);
+                   // filtering on properties.link_title sw is not supported yet
+                    return String.Format("((properties.link_title sw {0}) or (name sw {0}))", filter.escapedValue);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);

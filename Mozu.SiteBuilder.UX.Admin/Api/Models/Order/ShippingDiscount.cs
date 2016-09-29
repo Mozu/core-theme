@@ -17,5 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string CouponCode { get; set; }
 
         public bool IsActive { get; set; }
+
+        public int? ItemLineId { get; set; }
     }
 }

@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
     <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Api\Models\Reports\Report.cs" />
     <Compile Include="Api\Models\Reports\ReportParams.cs" />
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
+    <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -1557,6 +1559,7 @@
     <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
     <Content Include="Scripts\sass\src\view\order\modal\Refund.scss" />
     <Content Include="Scripts\sass\src\view\order\modal\AddPurchaseOrder.scss" />
+    <Content Include="Scripts\sass\src\view\navigation\SecondaryMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

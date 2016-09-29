@@ -276,7 +276,7 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
             priceListStore: me.priceListStore,
             priceListName: me.priceListName,
             totalColumnWidth: me.getRowTotalColumnWidth(),
-            actionColumnWidth: me.actionColumnWidth,
+            actionColumnWidth: 94,
             listeners: {
                 'save': {
                     fn: function () {

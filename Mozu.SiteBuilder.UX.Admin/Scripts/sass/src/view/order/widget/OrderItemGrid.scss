@@ -185,6 +185,15 @@
     .isSuppressed{    
         text-decoration:line-through;
     }	
+    
+    .itemDetail-button {
+        @include icon-font($glyph-magnifying-glass, 16px, $color-neutral-70);
+    }
+
+    .additional-fee{
+        color:$color-neutral-60;
+        font-style: italic;
+    }
 }
 
 
