@@ -455,7 +455,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
     subTpl_5: new Ext.XTemplate(
         
-        '<div class="{tdInnerCls} {[ (values.orderAdjustment.amount < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.adjustmentTotal)]}</div>'
+        '<div class="{tdInnerCls} {[ (values.adjustmentTotal < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.adjustmentTotal)]}</div>'
 
     ),
 
