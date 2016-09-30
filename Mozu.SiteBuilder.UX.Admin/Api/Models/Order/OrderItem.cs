@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Mozu.CommerceRuntime.Contracts.Discounts;
 using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Products;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
-  
+
     public class BundledProduct
     {
         public string ProductCode { get; set; }
@@ -20,7 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public bool IsPackagedStandAlone { get; set; }
 
         public int? ProductReservationId { get; set; }
-     
+
         public decimal? UnitWeight { get; set; }
 
         /// <summary>
@@ -53,12 +54,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string FulfillmentStatus { get; set; }
 
-        
+        /// <summary>
+        /// Only populated for extras
+        /// </summary>
+        public decimal? DeltaPrice { get; set; }
+
     }
 
 
 
-    
     public class OrderItem
     {
 
@@ -79,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public int LineId { get; set; }
 
         public string ProductCode { get; set; }
-        
+
         // public string OriginalCartItemId { get; set; }
 
         public List<DC.ProductOption> Options { get; set; }
@@ -104,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         //todo: Added to pass mapping unit test, need to review - Greg Murray on 2014-05-19 
         public AppliedProductDiscount ProductDiscount { get; set; }
-       
+
         public ShippingDiscount ActiveShippingDiscount { get; set; }
 
         public List<ShippingDiscount> ShippingDiscounts { get; set; }
@@ -127,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         #region Fulfillment shizzle
         public string FulfillmentLocationCode { get; set; }
-        
+
         public string FulfillmentMethod { get; set; }
 
         public string FulfillmentStatus { get; set; }
@@ -138,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ParentProductCode { get; set; }
 
         public decimal? DutyAmount { get; set; }
-        
+
         /// <summary>
         /// Pricelist code for the product
         /// </summary>
@@ -152,5 +156,158 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// 3. Simple:   
         /// </summary>
         public string PriceListEntryMode { get; set; }
+
+        /// <summary>
+        /// Order Level Manual Adjustment applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderAdjustment { get; set; }
+
+        /// <summary>
+        /// Order Level Discount applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderDiscount { get; set; }
+
+        /// <summary>
+        /// Order Level taxable sub total
+        /// </summary>
+        public decimal? AdjustedLineItemSubtotal { get; set; }
+
+        /// <summary>
+        /// Taxable Subtotal including Weighted Order amounts
+        /// </summary>
+        public decimal? TotalWithoutWeightedShippingAndHandling { get; set; }
+
+        /// <summary>
+        /// Order Level tax applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderTax { get; set; }
+
+        /// <summary>
+        /// Order Level Shipping applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderShipping { get; set; }
+
+        /// <summary>
+        /// Order Level Shipping discount applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderShippingDiscount { get; set; }
+
+        /// <summary>
+        /// Order Level Shipping Manual Adjustment applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderShippingManualAdjustment { get; set; }
+
+        /// <summary>
+        /// Order Level Shipping Tax applied to this Item
+        /// </summary>
+        public decimal? WeightedOrderShippingTax { get; set; }
+
+
+        public decimal? WeightedOrderHandlingFee { get; set; }
+
+        public decimal? WeightedOrderHandlingFeeTax { get; set; }
+
+        public decimal? WeightedOrderHandlingFeeDiscount { get; set; }
+
+        public decimal? ShippingTaxTotal { get; set; }
+
+        public decimal? ShippingTotal { get; set; }
+
+        public decimal? WeightedOrderDuty { get; set; }
+
+        /// <summary>
+        /// Line item total with line item, Tax, Weighted Tax with Weighted shipping and handling costs
+        /// </summary>
+        public decimal? TotalWithWeightedShippingAndHandling { get; set; }
+
+        public decimal? ItemTaxTotal { get; set; }
+
+        public decimal? DiscountedTotal { get; set; }
+
+        public decimal? ShippingAmountBeforeDiscountsAndAdjustments { get; set; }
+
+        public decimal? BasePrice
+        {
+            get
+            {
+                if (ProductUsage != "Bundle")
+                {
+                    return ListPrice - BundledProducts.Sum(p => (p.DeltaPrice ?? 0));
+                }
+
+                return ListPrice;
+            }
+        }
+
+        public decimal? ManualPriceAdjustment
+        {
+            get
+            {
+                return ListPrice - UnitPrice;
+            }
+        }
+
+        public decimal? AdjustmentTotal
+        {
+            get
+            {
+                return (WeightedOrderAdjustment ?? 0 ) +
+                    (WeightedOrderDiscount != null ? -WeightedOrderDiscount.Value : 0) +
+                    ((ActiveDiscount != null) ? (-ActiveDiscount.Total) : 0)
+                    ;
+            }
+        }
+
+        public decimal? ShippingAndHandlingTotal
+        {
+            get
+            {
+                return  (ShippingAmountBeforeDiscountsAndAdjustments ?? 0) +
+                    (-WeightedOrderShippingDiscount ?? 0) +
+                    (ActiveShippingDiscount != null ? -ActiveShippingDiscount.Total : 0) +
+                    (ShippingTaxTotal.HasValue ? ShippingTaxTotal.Value : (WeightedOrderShippingTax ?? 0)) +
+                    (WeightedOrderHandlingFee ?? 0) +
+                    (HandlingAmount ?? 0) +
+                    (WeightedOrderShippingManualAdjustment ?? 0) +
+                    (WeightedOrderHandlingFeeTax ?? 0) +
+                    (WeightedOrderHandlingFeeDiscount != null? -WeightedOrderHandlingFeeDiscount : 0)
+                    ;
+            }
+        }
+
+        public decimal? ShippingTotalWithDiscounts
+        {
+            get
+            {
+                return (ShippingAmountBeforeDiscountsAndAdjustments ?? 0) +
+                    (-WeightedOrderShippingDiscount ?? 0) +
+                    (ActiveShippingDiscount != null ? -ActiveShippingDiscount.Total : 0) +
+                    (ShippingTaxTotal.HasValue ? ShippingTaxTotal.Value : (WeightedOrderShippingTax ?? 0)) +
+                    (WeightedOrderShippingManualAdjustment ?? 0)
+                    ;
+            }
+        }
+
+        public decimal? HandlingTotalWithDiscounts
+        {
+            get
+            {
+                return (WeightedOrderHandlingFee ?? 0) +
+                    (HandlingAmount ?? 0) +
+                    (WeightedOrderHandlingFeeTax ?? 0) +
+                    (WeightedOrderHandlingFeeDiscount != null ? -WeightedOrderHandlingFeeDiscount : 0)
+                    ;
+            }
+        }
+
+        public decimal? TaxAndDutyTotal
+        {
+            get
+            {
+                return (ItemTaxTotal ?? 0) +
+                    (DutyAmount ?? 0);
+
+            }
+        }
     }
 }

@@ -5,8 +5,8 @@
  */
 
 Ext.define('Taco.controller.CustomerSets', {
-  extend: 'Taco.core.Controller',
-  alias: ['Taco.controller.Customersets'],
+    extend: 'Taco.core.Controller',
+    alias: ['Taco.controller.Customersets'],
     requires: [
         'Taco.view.customerSet.Index'
     ],

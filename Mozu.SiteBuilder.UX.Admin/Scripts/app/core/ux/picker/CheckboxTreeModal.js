@@ -1,5 +1,5 @@
 ﻿/**
- * @class Taco.view.category.Modal
+ * @class Taco.core.ux.picker.CheckboxTreeModal',
  */
 
 Ext.define('Taco.core.ux.picker.CheckboxTreeModal', {

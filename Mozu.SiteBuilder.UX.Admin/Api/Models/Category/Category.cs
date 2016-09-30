@@ -36,6 +36,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public int? ParentId { get; set; }
 
+        public string ParentCode { get; set; }
+
+        public string ParentName { get; set; }
+
         public int? Index { get; set; }
 
         public int? ProductCount { get; set; }
@@ -69,6 +73,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public List<CategoryImage> CategoryImages { get; set; }
 
+        public string CreateBy { get; set; }
+
+        public DateTime? CreateDate { get; set; }
+
+        [JsonProperty(PropertyName = "lastModifiedBy")]
+        public string UpdateBy { get; set; }
+
+        [JsonProperty(PropertyName = "lastModifiedDate")]
+        public DateTime? UpdateDate { get; set; }
     }
 
     

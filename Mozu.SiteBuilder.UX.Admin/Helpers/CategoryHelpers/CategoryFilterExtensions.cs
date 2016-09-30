@@ -15,6 +15,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         private const string CATALOG_ID = "catalogid";
         private const string CATEGORY_TYPE = "categorytype";
         private const string IS_ACTIVE = "isactive";
+        private const string NAME = "content.name";
+        private const string SLUG = "content.slug";
+        private const string DESCRIPTION = "content.description";
+
         private const string CREATE_DATE = "createdate";
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
@@ -35,21 +39,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         {
             switch (filter.property.ToLowerInvariant())
             {
-                case "parentid":
+                case "parent":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, PARENT_ID);
 
                 case "id":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ID);
 
                 case "all":
-                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.escapedValue);
-
+                    var allFilter = $"({NAME} cont \"{filter.escapedValue}\" or {SLUG} cont \"{filter.escapedValue}\" or {DESCRIPTION} cont  \"{filter.escapedValue}\" or {CATEGORY_CODE} eq \"{filter.escapedValue}\"";
+                    int catId;
+                    if (int.TryParse(filter.escapedValue.ToString(), out catId))
+                    {
+                        allFilter += $" or {ID} eq {catId}";
+                    }
+                    return allFilter + ")";
+                    
                 case "categorycode":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CATEGORY_CODE);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, CATEGORY_CODE);
 
                 case "categorycodes":
                     var codes = filter.escapedValue.ToString().Split(',');
-                    var codeList = codes.Select(x => string.Format("{0} eq {1}", CATEGORY_CODE, x)).ToArray();
+                    var codeList = codes.Select(x => string.Format("{0} eq \"{1}\"", CATEGORY_CODE, x)).ToArray();
                     return String.Join(" or ", codeList);
 
                 // dc contract is isDisplay, mvc & js is isHidden, therefore have to switch comparison.
@@ -60,11 +70,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                             : "eq"), 
                         IS_DISPLAYED);
 
+                case "hiddenonstorefront":
+                    if (filter.value == null)
+                    {
+                        return "";
+                    }
+                    switch (filter.value.ToString().ToLowerInvariant())
+                    {
+                        case "yes":
+                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
+                        case "no":
+                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
+                        default:
+                            return "";
+                    }
+
                 case "catalogid":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATALOG_ID);
 
-                case "categorytype":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATEGORY_TYPE);
+                case "type":
+                    return String.Format("{2} {1} \"{0}\"", filter.value, filter.comparison, CATEGORY_TYPE);
 
                 case "isactive":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, IS_ACTIVE);
@@ -83,33 +108,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                         default:
                             return "";
                     }
-
-                case "hiddenonstorefront":
-                    if (filter.value == null)
-                    {
-                        return "";
-                    }
-                    switch (filter.value.ToString().ToLowerInvariant())
-                    {
-                        case "yes":
-                            return String.Format("{0} eq \"false\"", IS_DISPLAYED);
-                        case "no":
-                            return String.Format("{0} eq \"true\"", IS_DISPLAYED);
-                        default:
-                            return "";
-                    }
-
-                case "createdate":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, CREATE_DATE);
-
-                case "updatedate":
-                    return String.Format("{2} {1} {0}", filter.value, filter.comparison, UPDATE_DATE);
-
+                    
+                case "createdfrom":
+                    return $"{CREATE_DATE} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
+                case "createdto":
+                    return
+                        $"{CREATE_DATE} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
+                case "modifiedfrom":
+                    return $"{UPDATE_DATE} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
+                case "modifiedto":
+                    return
+                        $"{UPDATE_DATE} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
+  
                 case "createby":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, CREATE_BY);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, CREATE_BY);
 
                 case "updateby":
-                    return String.Format("{2} {1} {0}", filter.escapedValue, filter.comparison, UPDATE_BY);
+                    return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, UPDATE_BY);
 
                 default:
                     return "";

@@ -2,6 +2,7 @@
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using DC = Mozu.ProductAdmin.Contracts;
 using System.Linq;
+using Mozu.Core.Api.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -26,6 +27,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1 ))
+                .ForMember(dest => dest.ParentName, op => op.ResolveUsing(c => c.ParentCategoryName))
+                .ForMember(dest => dest.ParentCode, op => op.ResolveUsing(c => c.ParentCategoryCode))
+
                 .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
                 .ForMember(dest => dest.Name, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Name : null)))
                 .ForMember(dest => dest.Description, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Description : null)))
@@ -36,13 +40,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Slug, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Slug : null)))
                 .ForMember(dest => dest.CategoryImages, opt => opt.ResolveUsing(c => (c.Content != null ? c.Content.CategoryImages : null)))
                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(dc => dc.ChildCount.GetValueOrDefault() == 0))
-            
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
+
                 //ignores
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Parent, opt => opt.Ignore())
                 .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
                 ;
+
+            Mapper.CreateMap<DC.CategoryNode, CategoryNode>()
+                 .ForMember(dest => dest.IsHidden, opt => opt.ResolveUsing(c => !c.IsDisplayed))
+                 .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1))
+                .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
+                .ForMember(dest => dest.Name, opt => opt.ResolveUsing(c => ((c.Content != null) ? c.Content.Name : null)))
+                 .ForMember(dest => dest.IsLeaf, op => op.ResolveUsing(s => s.Children != null ? s.Children.Count <= 0 : true))
+                .ForMember(d=> d.Description, o=>o.ResolveUsing(s=>(s.Content != null) ? s.Content.Description : null ))
+                .ForMember(d=>d.Code, o=>o.ResolveUsing(s=>s.CategoryCode))
+                .ForMember(x=>x.IsLeaf, o=>o.ResolveUsing(s=> s.IsLeafNode))
+                 ;
 
             Mapper.CreateMap<DC.Category, CategoryTreeNode>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
@@ -55,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(dest => dest.Items, opt => opt.Ignore())
                 .ForMember(dest => dest.leaf, opt => opt.Ignore())
+            
                 ;
 
             Mapper.CreateMap<Category, DC.Category>()
@@ -67,10 +87,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Content, opt => opt.ResolveUsing((Category c) => c))
                 .ForMember(dest => dest.IsDisplayed, opt => opt.ResolveUsing(c => !c.IsHidden))
                 .ForMember(dest => dest.CategoryType, opt => opt.ResolveUsing(c => c.CategoryType))
+                .ForMember(dc => dc.AuditInfo, op => op.ResolveUsing(x => new AuditInfo
+                {
+                    CreateBy = x.CreateBy,
+                    CreateDate = x.CreateDate,
+                    UpdateBy = x.UpdateBy,
+                    UpdateDate = x.UpdateDate
+                }))
 
                 //ignores
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
-                .ForMember(dest => dest.AuditInfo, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentCategoryName, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentCategoryCode, opt => opt.Ignore())
                 ;
 
             Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()

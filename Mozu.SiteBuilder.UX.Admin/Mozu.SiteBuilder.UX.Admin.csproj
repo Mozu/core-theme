@@ -178,6 +178,7 @@
     <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
+    <Compile Include="Api\Models\Category\CategoryNode.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />
@@ -434,6 +435,7 @@
     <Compile Include="Helpers\AttributeHelpers\AttributeSortExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryFilterExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\CategoryHelper.cs" />
+    <Compile Include="Helpers\CategoryHelpers\CategorySortExtensions.cs" />
     <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
@@ -512,13 +514,13 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\Category.js" />
     <Content Include="Scripts\app\controller\CustomerSets.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
     <Content Include="Scripts\app\controller\PriceLists.js" />
     <Content Include="Scripts\app\controller\StoreFrontProducts.js" />
     <Content Include="Scripts\app\controller\ProductRankings.js" />
     <Content Include="Scripts\app\controller\CouponSets.js" />
-    <Content Include="Scripts\app\controller\Entities.js" />
     <Content Include="Scripts\app\controller\Localization.js" />
     <Content Include="Scripts\app\controller\BusinessIntelligence.js" />
     <Content Include="Scripts\app\controller\Shipping.js" />
@@ -796,6 +798,7 @@
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
     <Content Include="Scripts\app\view\capability\Index.js" />
+    <Content Include="Scripts\app\view\categories\Index.js" />
     <Content Include="Scripts\app\view\customerSet\DeleteModal.js" />
     <Content Include="Scripts\app\view\customerSet\Index.js" />
     <Content Include="Scripts\app\view\category\AdvancedSearchForm.js" />
@@ -931,6 +934,7 @@
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Panel.js" />
+    <Content Include="Scripts\app\view\synonyms\Index.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
@@ -1553,6 +1557,7 @@
     <Content Include="Scripts\sass\src\view\order\widget\PriceListMenu.scss" />
     <Content Include="Scripts\sass\src\view\order\modal\Refund.scss" />
     <Content Include="Scripts\sass\src\view\order\modal\AddPurchaseOrder.scss" />
+    <Content Include="Scripts\sass\src\view\navigation\SecondaryMenu.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />

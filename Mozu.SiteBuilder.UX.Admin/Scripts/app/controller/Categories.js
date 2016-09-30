@@ -1,16 +1,16 @@
 /**
 * @class Taco.controller.Categories
 * @author Jason Cochran
-* The Category controller
+* The Categories controller
 */
 Ext.define('Taco.controller.Categories', {
     extend: 'Taco.core.Controller',
     requires: ['Taco.view.category.Edit'],
     editorView: 'Taco.view.category.Edit',
     listView: null,
-    models: ['Category'],
+    models: ['Taco.model.Category'],
+    stores: ['Taco.store.Categories'],
     views: ['category.Index'],
-    stores: ['Categories'],
     modelName: 'Category',
 
     createdynamic: function(id, additionalParams, appState) {
@@ -145,5 +145,5 @@ Ext.define('Taco.controller.Categories', {
                 scope: this
             });
         }
-    },
+    }
 });

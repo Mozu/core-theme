@@ -144,6 +144,13 @@ Ext.define("Taco.view.category.Form", {
                     me.isActive.enable();
                 }
             },
+            render: function(cmp) {
+                var store = cmp.getStore();
+                store.on('load', function() {
+                    var parent = store.getById(cmp.getValue());
+                    me.isActive.setDisabled(!parent.get('isActive'));
+                })
+            },
             scope: me
         });
 

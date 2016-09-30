@@ -278,11 +278,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Final cost of taxes plus the duty fees of the order.
         /// </summary>
         public decimal TaxDutyTotal {
-            get {
-                if (DutyTotal > 0) {
-                    return DutyTotal + TaxTotal;
-                }
-                return 0;
+            get
+            {
+                return DutyTotal + TaxTotal;
             }
         }
 
@@ -312,5 +310,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// 
         /// </summary>
         public string PriceListCode { get; set; }
+
+        public decimal HandlingAmount { get; set; }
+
+        public decimal? ItemTaxTotal { get; set; }
+
+        public decimal? HandlingTaxTotal { get; set; }
+
+        public decimal? ShippingTaxTotal { get; set; }
+
+        public decimal? LineItemSubtotalWithOrderAdjustments { get; set; }
+
+        public decimal? ShippingAmountBeforeDiscountsAndAdjustments { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<HandlingDiscount> HandlingDiscounts { get; set; }
+
+        public decimal? AdjustmentTotal
+        {
+            get
+            {
+                return (OrderAdjustment != null ? OrderAdjustment.Amount : 0) +
+                    (ActiveOrderDiscount != null ? (-ActiveOrderDiscount.Total) : 0)
+                    ;
+            }
+        }
+
+        public decimal? DiscountedTotalWithAdjustment
+        { 
+            get
+            {
+                return DiscountedTotal + (OrderAdjustment != null ? OrderAdjustment.Amount : 0);
+            }
+        }
+
+        public decimal ShippingAndHandlingTotal
+        {
+            get
+            {
+                return ShippingTotal + HandlingTotal;
+            }
+        }
+        
+        public List<LineIdFee> LineItemHandlingFees
+        {
+            get
+            {
+                var result = Items
+                    .Where(i => i.HandlingAmount.HasValue)
+                    .OrderBy(i => i.LineId)
+                    .Select(i => new LineIdFee { LineId = i.LineId, Fee = i.HandlingAmount.Value })
+                    .ToList();
+
+                return result;
+            }
+        }
+
+        public List<LineIdFee> LineItemShippingDiscounts
+        {
+            get
+            {
+                var result = Items
+                    .Where(i => i.ActiveShippingDiscount != null)
+                    .OrderBy(i => i.LineId)
+                    .Select(i => new LineIdFee { LineId = i.LineId, Fee = i.ActiveShippingDiscount.Total, Name = i.ActiveShippingDiscount.Description })
+                    .ToList();
+
+                return result;
+            }
+        }
+    }
+
+    public class LineIdFee
+    {
+        public int LineId { get; set; }
+        public decimal Fee { get; set; }
+        public string Name { get; set; }
     }
 }
