@@ -2,6 +2,7 @@
 using System.Linq;
 using Magnum.Extensions;
 using Mozu.Core.Collections.Filtering;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
@@ -89,6 +90,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATALOG_ID);
 
                 case "type":
+                    if (filter.value == null || filter.value.ToString().EqualsIgnoreCase("all"))
+                    {
+                        return string.Empty;
+                    }
                     return String.Format("{2} {1} \"{0}\"", filter.value, filter.comparison, CATEGORY_TYPE);
 
                 case "isactive":
@@ -97,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "status":
                     if (filter.value == null)
                     {
-                        return "";
+                        return string.Empty;
                     }
                     switch (filter.value.ToString().ToLowerInvariant())
                     {
