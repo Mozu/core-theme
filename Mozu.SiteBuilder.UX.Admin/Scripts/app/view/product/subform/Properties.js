@@ -74,7 +74,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                             minHeight: 70,
                             store: Ext.create('Ext.data.Store', {
                                 fields: [
-                                    {name: 'id', type: 'string'},
+                                    {name: 'id', type: ptAttribute.get('dataType') === 'Number' ? 'number' : 'string'},
                                     {name: 'value', type: 'string'}
                                 ],
                                 data: ptAttribute.get('selectedValues')
@@ -104,7 +104,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                             minHeight: 70,
                             store: Ext.create('Ext.data.Store', {
                                 fields: [
-                                    {name: 'id', type: 'string'},
+                                    {name: 'id', type: ptAttribute.get('dataType') === 'Number' ? 'number' : 'string'},
                                     {name: 'value', type: 'string'}
                                 ],
                                 data: ptAttribute.get('selectedValues')
