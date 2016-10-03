@@ -518,14 +518,37 @@ Ext.define('Taco.view.website.Index', {
                                                     var id = item.record.data.id;
                                                     var tree = me.tree;
 
-                                                    Taco.model.NavigationTreeNode.load('page^^pages@mozu^^' + id, {
-                                                        success: function(rec) {
-                                                            rec.destroy({
-                                                                success: function() {
-                                                                    searchItemStore.reload();
-                                                                    tree.store.reload();
-                                                                } 
-                                                            });
+                                                     Ext.create('Taco.core.ux.window.Modal', {
+                                                        autoShow: true,
+                                                        closeAction: 'destroy',
+                                                        scale: 'small',
+                                                        title: 'Delete Page',
+                                                        primaryText: 'Delete',
+                                                        items: [{
+                                                            xtype: 'container',
+                                                            layout: { 
+                                                                type: 'hbox' 
+                                                            },
+                                                            items: [
+                                                                Ext.create('Ext.panel.Panel', {
+                                                                    width: '100%',
+                                                                    html: 'Are you sure you want to delete ' + item.record.get('name') + '? This action cannot be undone'
+                                                                })
+                                                            ]
+                                                        }],
+                                                        listeners: {
+                                                            beforesave: function () {
+                                                                Taco.model.NavigationTreeNode.load('page^^pages@mozu^^' + id, {
+                                                                    success: function(rec) {
+                                                                        rec.destroy({
+                                                                            success: function() {
+                                                                                searchItemStore.reload();
+                                                                                tree.store.reload();
+                                                                            } 
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
                                                         }
                                                     });
                                                 }
@@ -574,7 +597,7 @@ Ext.define('Taco.view.website.Index', {
                             this.CALIENTE_TREE_BUTTONS,
                             {
                                 xtype: 'taco-quickfilter',
-                                emptyText: 'Search Categories and Pages',
+                                emptyText: 'Search',
                                 triggerCls: 'x-form-search-trigger',
                                 cls: 'taco-quickfilter-bar website',
                                 flex:1,
