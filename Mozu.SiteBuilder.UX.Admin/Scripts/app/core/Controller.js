@@ -421,8 +421,10 @@ Ext.define('Taco.core.Controller', {
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'c')) {
             if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0].catalogs[0];
-            } else if (context.contextType == 'm') {
+            } else if (context.contextType === 'm') {
                 newContext = context.catalogs[0];
+            } else if (context.contextType === 's') {
+                newContext = context.catalog;
             }
         }
         if (!newContext && Ext.Array.contains(requiresContextOfType, 's')) {
