@@ -65,6 +65,14 @@ Ext.define('Taco.view.order.subform.Payment', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Refund',
+                requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'paymentUpdate'
+                            }],
                 margin: '0 10 0 0',
                 handler: function () {
                     Ext.create('Taco.view.order.modal.Refund', {
@@ -76,6 +84,14 @@ Ext.define('Taco.view.order.subform.Payment', {
             me.addPaymentButton = Ext.widget('splitbutton', {
                 menuAlign: 'tr-br?',
                 text: 'Add Payment',
+                requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'paymentCreate'
+                            }],
                 itemId: 'paymentSplitButton',
                 handler: function () {
                     var action = me.paymentActions.addCreditCard;

@@ -226,7 +226,16 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
                 selectOnFocus: true,
                 allowBlank: true,
                 minValue: 0,
-                maxValue: 100000
+                maxValue: 100000,
+                requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update',
+                                            disable: true
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
             },
             dataIndex: 'quantity'
         });
@@ -245,7 +254,15 @@ Ext.define('Taco.view.order.subform.fulfillment.Grid', {
             items: ['->'],
             style: {
                 backgroundColor: 'transparent'
-            }
+            },
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                      {
+                                          model: 'Taco.model.Order',
+                                          behavior: 'fulfill'
+                                      }]
         };
 
         if (!this.isShippedPackage || true) {

@@ -32,7 +32,15 @@ Ext.define('Taco.model.Order', {
         destroy: 76,
         fulfill: 77,
         cancel: 78,
-        applypayment: 79
+        applypayment: 79,
+        paymentCreate: 66,
+        paymentUpdate: 67,
+        updateItem: 242,
+        updatePrice: 243,
+        updateDiscount: 244,
+        updateAttribute: 245,
+        manualAdjustment: 246,
+        createCustomer: 44
     },
     fields: [{
         name: 'id',

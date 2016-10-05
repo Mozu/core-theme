@@ -127,6 +127,14 @@ Ext.define('Taco.view.order.Header', {
                 ui: 'link',
                 text: 'Change Address',
                 itemId: "changeLink",
+                requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'fulfill'
+                           }],
                 handler: this.changeAddress,
                 scope: this
             }]
@@ -415,7 +423,11 @@ Ext.define('Taco.view.order.Header', {
                     itemId: "createNewCustomerButton",
                     text: 'Create New Customer',
                     handler: this.createCustomer,
-                    scope: this
+                    scope: this,
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'createCustomer'
+                    }]
                 }
             ]
         });

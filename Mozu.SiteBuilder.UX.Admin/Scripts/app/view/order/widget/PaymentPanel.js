@@ -197,6 +197,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     ui: 'action',
                     scale: 'medium',
                     text: 'Authorize',
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'paymentUpdate'
+                                }],
                     width: 77,
                     itemId: 'authorizeButton',
                     handler: function () {
@@ -273,7 +281,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
                         me.order.markAsInvoiced(cfg);
                     },
-                    disabled: !canCapture || pendingReview
+                    disabled: !canCapture || pendingReview,
+                    requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'paymentUpdate'
+                            }]
                 };
                 buttonRight = {
                     xtype: 'button',
@@ -285,7 +301,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
                     },
-                    disabled: !canCapture || pendingReview
+                    disabled: !canCapture || pendingReview,
+                    requiredBehaviors: [{
+                                    model: 'Taco.model.Order',
+                                    behavior: 'update'
+                                },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'paymentUpdate'
+                                }]
                 };
             } else if (me.record.data.status === 'Invoiced') {
                 buttonLeft = {
@@ -293,6 +317,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     ui: 'action',
                     scale: 'medium',
                     text: 'Capture',
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'paymentUpdate'
+                                }],
                     width: 70,
                     itemId: 'captureButton',
                     handler: function () {
@@ -310,6 +342,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Capture',
+                requiredBehaviors: [{
+                    model: 'Taco.model.Order',
+                    behavior: 'update'
+                },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'paymentUpdate'
+                                }],
                 width: 70,
                 itemId: 'captureButton',
                 handler: function () {
@@ -356,6 +396,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 {
                     xtype: 'button',
                     ui: 'action',
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'paymentUpdate'
+                                }],
                     scale: 'medium',
                     menuAlign: 'tr-br?',
                     cls: 'payments-actions',

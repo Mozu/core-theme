@@ -41,6 +41,32 @@ Ext.define('Taco.view.order.subform.Detail', {
         itemId: "orderDetails"
 
     },
+    orderUpdateBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateDiscount'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateAttribute'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }
+
+                            ],
 
 
 // width of the actionColumn. used to align the grid total container
@@ -531,6 +557,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 scale: 'medium',
                 text: 'Accept Order',
                 itemId: 'acceptOrderButton',
+                requiredBehaviors: me.orderUpdateBehaviors,
                 handler: function () {
                     this.detailGrid.acceptOrder();
                 },
@@ -545,10 +572,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 margin: {
                     right:2
                 },
-                requiredBehaviors: {
-                    model: 'Taco.model.Order',
-                    behavior: 'cancel'
-                },
+                requiredBehaviors: me.orderUpdateBehaviors,
                 handler: function () {
                     this.detailGrid.cancelOrder();
                 },
@@ -559,6 +583,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Print Order',
+                requiredBehaviors: me.orderUpdateBehaviors,
                 margin: {
                     right: 2
                 },
@@ -568,11 +593,12 @@ Ext.define('Taco.view.order.subform.Detail', {
                 xtype: 'resendemailbutton',
                 itemId: "resendEmailButton",
                 margin: '0 0 0 10',
+                requiredBehaviors: me.orderUpdateBehaviors,
                 emailUrl: '/admin/app/order/resendconfirmationemail',
                 jsonData: {
                     orderId: this.record.getId()
                 },
-                hidden: !canSendEmail
+                disabled: !canSendEmail
             },{
                 text: 'Edit Details',
                 xtype: "button",
@@ -580,6 +606,10 @@ Ext.define('Taco.view.order.subform.Detail', {
                 itemId: "editOrderButton",
                 scale: "medium",
                 handler: this.editOrder,
+                requiredBehaviors: me.orderUpdateBehaviors.concat([{
+                    model: 'Taco.model.Order',
+                    behavior: 'fulfill'
+                }]),
                 scope: me,
                 disabled: !canEdit
             },
@@ -592,6 +622,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 handler: function (){
                     Taco.core.StateManager.attemptNavigate('/orders/storefront/' + me.record.get('customerId') +'/' + me.record.getId());
                 },
+                requiredBehaviors: me.orderUpdateBehaviors,
                 scope: me,
                 disabled: !canEditInStoreFront,
                 hidden: !Taco.tenantSettings.enableOrderEditInStorefront

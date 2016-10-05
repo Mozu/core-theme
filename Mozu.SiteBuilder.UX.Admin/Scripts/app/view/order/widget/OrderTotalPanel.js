@@ -257,6 +257,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 xtype: 'button',
                 ui: "action",
                 scale: "medium",
+                requiredBehaviors: [{
+                    model: 'Taco.model.Order',
+                    behavior: 'update',
+                    disable: true
+                },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'fulfill'
+                           }],
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
                 disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
                 text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",

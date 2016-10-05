@@ -26,6 +26,14 @@ Ext.define('Taco.view.order.subform.Attributes', {
             ui: 'action',
             scale: 'medium',
             text: 'Edit',
+            requiredBehaviors: [{
+                               model: 'Taco.model.Order',
+                               behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateAttribute'
+                            }],
             scope: this,
             handler: this.openAttributesDialog
         }];

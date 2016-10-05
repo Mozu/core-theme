@@ -124,6 +124,15 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             ],            
             width: this.gridColumns[2].width,
             flex: 1,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            }],
             style: 'padding:5px',
             fieldBodyCls: 'order-addproducttoolbar-cell',
             pageSize: me.getProductsPerPage(),
@@ -252,7 +261,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
                     },
                     scope: me
                 },
-                
+
                 beforeselect: {
                     fn: function (combo, record, index, e) {
                         var fulfillmentMethod = record.get('fulfillmentMethod'),

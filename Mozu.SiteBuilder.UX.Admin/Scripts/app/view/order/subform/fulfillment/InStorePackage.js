@@ -56,15 +56,39 @@ Ext.define('Taco.view.order.subform.fulfillment.InStorePackage', {
         this.actions = [{
             text: 'Cancel',
             handler: this.handleCancel,
-            hidden: this.packageData.status === 'Fulfilled'
+            hidden: this.packageData.status === 'Fulfilled',
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }, {
             text: 'Mark as Ready',
             handler: this.handleReady,
-            hidden: true
+            hidden: true,
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }, {
             text: 'Mark as Fulfilled',
             handler: this.handleFulfilled,
-            hidden: this.packageData.status === 'Fulfilled'
+            hidden: this.packageData.status === 'Fulfilled',
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }];
 
         this.collapsedInfo = {

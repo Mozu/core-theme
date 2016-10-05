@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     defaults: { xtype: "component" },
 
     config: {
-        /**
+        /** 
          * width of the row total column in the associated order item grid. this keeps the labels and values aligned with the associate gdrid;
          */
         totalColumnWidth: 100,
@@ -90,6 +90,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             //cls:"order-adjusment-menu",
             //style: "font-size: 1.4rem;",
             menuAlign: 'tr-br?',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }],
             text: me.getShippingAdjustmentText(this.record.get("shippingAdjustmentIsNegative")),
             menu: {
                 plain: true,
@@ -133,6 +142,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             //cls: "order-adjusment-menu",
             //style: "font-size: 1.4rem;",
             menuAlign: 'tr-br?',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }],
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
             menu: {
                 plain: true,
@@ -182,7 +200,16 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             minValue:0,
             forcePrecision:true,
             renderTo: orderAdjustmentField,
-            value: orderAdjustmentValue
+            value: orderAdjustmentValue,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                readOnly: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }]
         });
 
         me.mon(me.orderAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
@@ -207,7 +234,16 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             minValue: 0,
             forcePrecision:true,
             renderTo: shippingAdjustmentField,
-            value: shippingAdjustmentValue
+            value: shippingAdjustmentValue,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                readOnly: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }]
         });
 
         me.mon(me.shippingAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
@@ -501,6 +537,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             store: me.priceListStore,
             orderSiteId: me.record.get('siteId'),
             value: me.record.get('priceListCode'),
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            }],
             listeners: {
                 select: {
                     fn: function (combo, records, opts) {
@@ -564,6 +609,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }),
             pageSize: me.discountsPerPage,
             displayField: 'couponCode',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateDiscount'
+                            }],
             listeners: {
                 beforeselect: {
                     fn: function (combo, record, index, e) {
@@ -591,6 +645,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             scale: 'medium',
             text: 'Apply',
             disabled: true,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'updateDiscount'
+                           }],
             handler: function() {
                 tryToApplyCoupon(me.couponCombo.getValue());
             }

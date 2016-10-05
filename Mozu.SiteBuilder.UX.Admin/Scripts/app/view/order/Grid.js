@@ -67,6 +67,32 @@ Ext.define('Taco.view.order.Grid', {
 
     stateful: true,
     stateId: 'statefulOrderGrid',
+    orderUpdateBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateDiscount'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateAttribute'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }
+
+                            ],
 
     statics: {
         bulkActionResponses: {
@@ -107,6 +133,7 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Accept',
                     disabled: true,
                     scope: this,
+                    requiredBehaviors: this.orderUpdateBehaviors,
                     handler: function () {
                         this.doBulkAction('AcceptOrder');
                     }
@@ -116,10 +143,7 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Cancel',
                     disabled: true,
                     scope: this,
-                    requiredBehaviors: {
-                        model: 'Taco.model.Order',
-                        behavior: 'cancel'
-                    },
+                    requiredBehaviors: this.orderUpdateBehaviors,
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
@@ -129,6 +153,14 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Capture',
                     disabled: true,
                     scope: this,
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                    {
+                        model: 'Taco.model.Order',
+                        behavior: 'paymentUpdate'
+                    }],
                     handler: function () {
                         this.doBulkAction('CapturePayment');
                     }
@@ -138,6 +170,14 @@ Ext.define('Taco.view.order.Grid', {
                     text: 'Ship',
                     disabled: true,
                     scope: this,
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                    {
+                        model: 'Taco.model.Order',
+                        behavior: 'fulfill'
+                    }],
                     handler: function () {
                         this.doBulkAction('Ship');
                     }
@@ -507,10 +547,7 @@ Ext.define('Taco.view.order.Grid', {
                     menuItems: [
                         {
                             text: 'Edit',
-                            requiredBehaviors: {
-                                model: 'Taco.model.Category',
-                                behavior: 'update'
-                            },
+                            requiredBehaviors: me.orderUpdateBehaviors,
                             menuColumnHandler: function (item, eventData) {
                                 var page = eventData.grid.getParentPage(),
                                     record = eventData.record,
@@ -522,6 +559,14 @@ Ext.define('Taco.view.order.Grid', {
                         }, {
                             text: 'Capture Payment',
                             itemId: 'capturePaymentAction',
+                            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'paymentUpdate'
+                            }],
                             menuColumnHandler: function (item, eventData) {
                                 var me = this,
                                     record = eventData.record,
@@ -558,10 +603,7 @@ Ext.define('Taco.view.order.Grid', {
                             }
                         }, {
                             text: 'Cancel Order',
-                            requiredBehaviors: {
-                                model: 'Taco.model.Order',
-                                behavior: 'cancel'
-                            },
+                            requiredBehaviors: me.orderUpdateBehaviors,
                             itemId: "cancelAction",
                             menuColumnHandler: function (item, eventData) {
                                 var me = this,
@@ -680,6 +722,10 @@ Ext.define('Taco.view.order.Grid', {
         var createButtonConfig=  {
             xtype: 'button',
             text: me.createButtonText,
+            requiredBehaviors: {
+                model: 'Taco.model.Order',
+                behavior: 'create'
+            },
             margin: "0 0 0 10",
             ui: 'action-primary',
             scale: 'medium',

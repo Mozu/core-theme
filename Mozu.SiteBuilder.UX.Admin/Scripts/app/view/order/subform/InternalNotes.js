@@ -15,7 +15,31 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
     cls: 'taco-grid-hide-more-btn', // this hides the combobox that is used to show/hide columns
 
     layout: 'card',
-
+    orderUpdateBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateDiscount'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateAttribute'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }
+            ],
     initComponent: function () {
         var me = this;
 
@@ -32,6 +56,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
             scale: 'medium',
             text: 'Add Note',
             scope: this.grid,
+            requiredBehaviors: this.orderUpdateBehaviors,
             handler: function () {
                 this.changeCards(1);
                 this.grid.onRowEditorCreate();
