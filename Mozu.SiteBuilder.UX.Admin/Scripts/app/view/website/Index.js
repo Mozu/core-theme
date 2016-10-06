@@ -332,6 +332,14 @@ Ext.define('Taco.view.website.Index', {
                     enableToggle: true,
                     cls: 'taco-link-button',
                     handler: function() {
+                        // check for search, if exists, nav to search
+                        var search = me.down('#taco-search-item-field').getValue();
+
+                        if (search) {
+                            this.sideBar.getLayout().setActiveItem(this.searchItemGrid);
+                            return;
+                        }
+
                         this.sideBar.getLayout().setActiveItem(0);
                     }
 
@@ -597,6 +605,7 @@ Ext.define('Taco.view.website.Index', {
                             this.CALIENTE_TREE_BUTTONS,
                             {
                                 xtype: 'taco-quickfilter',
+                                itemId: 'taco-search-item-field',
                                 emptyText: 'Search',
                                 triggerCls: 'x-form-search-trigger',
                                 cls: 'taco-quickfilter-bar website',
