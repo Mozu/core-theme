@@ -1,0 +1,13 @@
+<div id="mz-printReturnLabelView">
+	<div class="printViewContent">
+		{% for package in model.packages %}
+			<div class="return-label">
+				<img src="{{ package.labelImageSrc }}" alt="Return Label Image"/>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="printView-opitions-bar print-hide">
+		<button class="mz-button" onclick="printLabelHandler()">{{labels.printWindowPrintButton}}</button>
+		<button class="mz-button" onclick="cancelHandler()">{{labels.printWindowCancelButton}}</button>
+	</div>
+</div> 
