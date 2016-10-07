@@ -10,7 +10,6 @@ define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules
             $.cookie('mozustocknotify', existing.concat(productCode).join(','), { path: '/', expires: 365 });
         }
 
-        var user = require.mozuData('user'),
             InstockReqView = Backbone.MozuView.extend({
                 templateName: 'modules/product/product-instock-request',
                 clearError: function() {

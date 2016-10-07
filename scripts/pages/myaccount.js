@@ -178,7 +178,8 @@
                     self.render();
                 });
             }
-        }
+        },
+
     }),
 
     ReturnHistoryView = Backbone.MozuView.extend({
@@ -191,6 +192,61 @@
                 if ($retView.length === 0) $retView = self.$el;
                 $retView.ScrollTo({ axis: 'y' });
             });
+        },
+        printReturnLabel :function(e) {
+            console.log('Print Return Label')
+             var self= this, 
+             $target = $(e.currentTarget),
+
+             //Get Whatever Info we need to our shipping label
+             returnId = $target.data('mzReturnId');
+
+             //We get the order"Return" id of the selected refund, 
+             returnId = $target.data('mzReturnid');
+             var returnObj = self.model.get('items').where({ id: returnId });
+
+             //Here you will need to make API CAll to get Shipping label. ON Successful return create and render PrintView
+             var printReturnLabelView =  new PrintView({
+               model: returnObj[0]
+            });
+            printReturnLabelView.render();
+            printReturnLabelView.loadPrintWindow();
+        }
+    });
+
+    var PrintView = Backbone.MozuView.extend({
+        templateName: "modules/my-account/my-account-print-window",
+        el: $('#mz-printReturnLabelView'),
+        initialize: function () {
+        },
+        afterRender: function () {
+            this.createReturnLabelWindow();
+        },
+        loadPrintWindow: function(){
+             var host = HyprLiveContext.locals.siteContext.cdnPrefix,
+                printScript = host + "/scripts/modules/print-window.js",
+                printStyles = host + "/stylesheets/modules/my-account/print-window.css";
+
+            var my_window,
+            self = this;
+
+            width = window.screen.width - (window.screen.width / 2),
+            height = window.screen.height - (window.screen.height / 2),
+            offsetTop = 200,
+            offset = window.screen.availWidth * .25;
+
+           
+            my_window = window.open("", 'mywindow' + Math.random() + ' ','width=' + width + ',height=' + height + ',top=' + offsetTop + ',left=' + offset + ',status=1');
+            my_window.document.write('<html><head>');
+            my_window.document.write('<link rel="stylesheet" href="' + printStyles +'" type="text/css">');
+            my_window.document.write('</head>');
+
+            my_window.document.write('<body>');
+            my_window.document.write($('#mz-printReturnLabelView').html());
+            
+            my_window.document.write('<script src="' + printScript + '"></script>');
+
+            my_window.document.write('</body></html>');
         }
     });
 
