@@ -145,11 +145,13 @@ Ext.define("Taco.view.category.Form", {
                 }
             },
             render: function(cmp) {
-                var store = cmp.getStore();
-                store.on('load', function() {
-                    var parent = store.getById(cmp.getValue());
-                    me.isActive.setDisabled(!parent.get('isActive'));
-                })
+                if (cmp.getValue()) {
+                    var store = cmp.getStore();
+                    store.on('load', function() {
+                        var parent = store.getById(cmp.getValue());
+                        me.isActive.setDisabled(!parent.get('isActive'));
+                    });
+                }
             },
             scope: me
         });

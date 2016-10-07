@@ -42,7 +42,7 @@
                     },
                     dragover: function (e) {
                         fnCheckDropAllowances.call(this, e);
-                        e.stopPropagation();
+                        // e.stopPropagation();
                         e.preventDefault();
 
                         window.clearInterval(interval);
@@ -64,7 +64,7 @@
                     },
                     drop: function (e) {
                         fnCheckDropAllowances.call(this, e);
-                        e.stopPropagation();
+                        // e.stopPropagation();
                         e.preventDefault();
                         app.fireEvent('drop')
                     },

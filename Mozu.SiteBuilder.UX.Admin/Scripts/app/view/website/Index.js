@@ -38,6 +38,7 @@ Ext.define('Taco.view.website.Index', {
         'Taco.view.customSchema.DynamicFormContainer',
         'Taco.store.EntityEditors',
         'Taco.store.PageTypeDefinitions',
+        'Taco.store.SiteBuilderSearch',
         'Ext.ux.IFrame',
         'Taco.core.ux.DraftIcon',
         'Taco.view.publishing.modal.PublishSetPicker',
@@ -84,7 +85,7 @@ Ext.define('Taco.view.website.Index', {
 
     initComponent: function () {
         var navStore,
-            productStore,
+            searchItemStore,
             me = this;
 
         // if (this && this.options && this.options.DO_NOT_RENDER) {
@@ -306,7 +307,7 @@ Ext.define('Taco.view.website.Index', {
 
         navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.NavigationTreeNodes');
 
-        productStore = Ext.create('Taco.store.ProductComboBox', {
+        searchItemStore = Ext.create('Taco.store.SiteBuilderSearch', {
             autoLoad: false
         });
 
@@ -331,6 +332,14 @@ Ext.define('Taco.view.website.Index', {
                     enableToggle: true,
                     cls: 'taco-link-button',
                     handler: function() {
+                        // check for search, if exists, nav to search
+                        var search = me.down('#taco-search-item-field').getValue();
+
+                        if (search) {
+                            this.sideBar.getLayout().setActiveItem(this.searchItemGrid);
+                            return;
+                        }
+
                         this.sideBar.getLayout().setActiveItem(0);
                     }
 
@@ -475,47 +484,128 @@ Ext.define('Taco.view.website.Index', {
                             },
                             {
                                 xtype: 'gridpanel',
-                                title: 'Results',
-                                store: productStore,
+                                store: searchItemStore,
+                                cls: 'taco-search-item-grid',
                                 columns: [
                                     {
-                                        dataIndex: 'productCode',
-                                        text: 'Product Code',
-                                        width: 100
-                                    }, {
-                                        dataIndex: 'productName',
+                                        dataIndex: 'name',
                                         text: 'Name',
-                                        flex: 1
+                                        flex: 8,
+                                        renderer: function(val, x, rec) {
+                                            if (rec.data.isCategory) {
+                                                return '<span class="taco-tree-icon cat"></span>' + val;
+                                            }
+                                            else if (rec.data.isDocument) {
+                                                return '<span class="taco-tree-icon doc"></span>' + val;
+                                            }
+                                        }
+
+                                    },
+                                    {      
+                                        xtype: 'taco.menucolumn',
+                                        flex: 1,
+                                        menuItems: [
+                                            // {
+                                            //     itemId: 'rename',
+                                            //     text: 'Rename',
+                                            //     menuColumnHandler: function(menu, item) {
+                                            //         var id = item.record.data.id;
+
+                                            //         Taco.model.NavigationTreeNode.load('page^^pages@mozu^^' + id, {
+                                            //             success: function(rec) {
+                                            //                 debugger;
+                                            //             }
+                                            //         });
+                                            //     }
+
+                                            // },
+                                            {
+                                                itemId: 'delete',
+                                                text: 'Delete',
+                                                menuColumnHandler: function(menu, item) {
+                                                    var id = item.record.data.id;
+                                                    var tree = me.tree;
+
+                                                     Ext.create('Taco.core.ux.window.Modal', {
+                                                        autoShow: true,
+                                                        closeAction: 'destroy',
+                                                        scale: 'small',
+                                                        title: 'Delete Page',
+                                                        primaryText: 'Delete',
+                                                        items: [{
+                                                            xtype: 'container',
+                                                            layout: { 
+                                                                type: 'hbox' 
+                                                            },
+                                                            items: [
+                                                                Ext.create('Ext.panel.Panel', {
+                                                                    width: '100%',
+                                                                    html: 'Are you sure you want to delete ' + item.record.get('name') + '? This action cannot be undone'
+                                                                })
+                                                            ]
+                                                        }],
+                                                        listeners: {
+                                                            beforesave: function () {
+                                                                Taco.model.NavigationTreeNode.load('page^^pages@mozu^^' + id, {
+                                                                    success: function(rec) {
+                                                                        rec.destroy({
+                                                                            success: function() {
+                                                                                searchItemStore.reload();
+                                                                                tree.store.reload();
+                                                                            } 
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        ],
+                                        onMenuShow: function(menu, row) {
+
+                                            if (row 
+                                                    && row.record 
+                                                    && row.record.data 
+                                                    && row.record.data.isCategory) {
+
+                                                var rename = menu.down('#rename');
+                                                var del = menu.down('#delete');
+
+                                                if (rename) {
+                                                    rename.disable();
+                                                }
+
+                                                if (del) {
+                                                    del.disable();
+                                                }
+                                            }
+                                        }
                                     }
+
                                 ],
                                 listeners: {
                                     itemclick: {
                                         scope: this,
-                                        fn: 'onGridProductItemClick'
+                                        fn: 'onSearchItemClick'
                                     }
                                 },
-                                dockedItems: [
-                                    {
-                                        xtype: 'pagingtoolbar',
-                                        store: productStore, // same store GridPanel is using
-                                        dock: 'bottom',
-                                        displayInfo: true
-                                    }, {
-                                        dock: 'top',
-                                        xtype: 'button',
-                                        text: '← back',
-                                        scope: this,
-                                        handler: function () {
-                                            this.sideBar.getLayout().setActiveItem(0);
-                                        }
-                                    }
-                                ]
+
+                                // dockedItems: [
+                                //     {
+                                //         xtype: 'pagingtoolbar',
+                                //         store: searchItemStore, // same store GridPanel is using
+                                //         dock: 'bottom',
+                                //         displayInfo: true
+                                //     }
+                                // ]
                             }
                         ],
                         dockedItems: [
                             this.CALIENTE_TREE_BUTTONS,
                             {
                                 xtype: 'taco-quickfilter',
+                                itemId: 'taco-search-item-field',
                                 emptyText: 'Search',
                                 triggerCls: 'x-form-search-trigger',
                                 cls: 'taco-quickfilter-bar website',
@@ -556,7 +646,7 @@ Ext.define('Taco.view.website.Index', {
         this.iframe = this.down('#iframe');
         this.pageSettings = this.down('#pageSettings');
         this.tree = this.down('taco-website-tree');
-        this.productGrid = this.down('gridpanel');
+        this.searchItemGrid = this.down('gridpanel');
         this.sideBar = this.down('#sideBar');
         this.container = this.down('.taco-website-holder');
         this.titleDraftContainer = this.navHeader.down('#titleDraftContainer');
@@ -568,7 +658,7 @@ Ext.define('Taco.view.website.Index', {
         this.mon(this.controller, 'widgetedit', this.onWidgetEdit, this);
         this.mon(this.controller, 'pagedirtychange', this.onDirtyChange, this);
 
-        this.tree.on('showproducts', this.onShowProducts, this);
+        this.tree.on('showproducts', this.onShowSearchItems, this);
         this.tree.on('pagecreate', this.onPageCreate, this);
         this.tree.on('urlclick', this.onTreeUrlClick, this);
         this.tree.on('contentlistclick', this.onContentListClick, this);
@@ -1448,47 +1538,56 @@ Ext.define('Taco.view.website.Index', {
     },
 
     onSearchTextChange: function (field, newValue) {
-        var store = this.productGrid.store;
+        var store = this.searchItemGrid.store;
 
         if (!newValue) {
             this.sideBar.getLayout().setActiveItem(0);
             return;
         }
 
-        if (this.sideBar.getLayout().getActiveItem() !== this.productGrid) {
-            store.extraFilters.clear();
+
+        if (this.sideBar.getLayout().getActiveItem() !== this.searchItemGrid) {
+            store.clearFilter(true);
         }
 
-        this.sideBar.getLayout().setActiveItem(this.productGrid);
-        store.extraFilters.clear();
+        this.sideBar.getLayout().setActiveItem(this.searchItemGrid);
+        
+        store.clearFilter(true);
+
+        // addFilter fires the request for records
         store.addFilter([
             {
-                id: 'all',
-                property: 'all',
+                property: 'sitebuilder',
                 value: newValue
             }
         ]);
-        // store.extraFilters.add({ id: "categoryids", property: 'categoryids', value: navRecord.get('originalId') });
-        store.load();
     },
 
-    onGridProductItemClick: function (grid, record) {
-        this.navigate({
-            url: '/p/' + record.getId()
-        });
+    onSearchItemClick: function (grid, record, item, index, e, eOpts) {
+
+        var isAction = e.target 
+            && e.target.className.indexOf('x-action-col-icon ') !== -1;
+
+        if (isAction) {
+            return;
+        }
+
+        if (record && record.get('isDocument')) {
+            this.navigate({
+                url: '/cms/pages@mozu/' + record.get('url')
+            });
+        }
+
+        else if (record && record.get('isCategory')) {
+            this.navigate({
+                url: '/c/' + record.get('url')
+            });
+        }
+
     },
 
-    onShowProducts: function (navRecord) {
-        var store = this.productGrid.store;
-
-        this.sideBar.getLayout().setActiveItem(this.productGrid);
-        store.extraFilters.clear();
-        store.extraFilters.add({
-            id: 'categoryids',
-            property: 'categoryids',
-            value: navRecord.get('originalId')
-        });
-        store.load();
+    onShowSearchItems: function (navRecord) {
+        this.sideBar.getLayout().setActiveItem(this.searchItemGrid);
     },
 
     onTreeUrlClick: function (tree, url, record) {

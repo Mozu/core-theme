@@ -2,6 +2,7 @@
 using System.Linq;
 using Magnum.Extensions;
 using Mozu.Core.Collections.Filtering;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
@@ -23,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
         private const string UPDATE_DATE = "updatedate";
         private const string CREATE_BY = "createby";
         private const string UPDATE_BY = "updateby";
-        
+
         /// <summary>
         /// Converts a FilterCollection for Attribute to a mozu services-compatible filter string.
         /// </summary>
@@ -89,6 +90,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, CATALOG_ID);
 
                 case "type":
+                    if (filter.value == null || filter.value.ToString().EqualsIgnoreCase("all"))
+                    {
+                        return string.Empty;
+                    }
                     return String.Format("{2} {1} \"{0}\"", filter.value, filter.comparison, CATEGORY_TYPE);
 
                 case "isactive":
@@ -97,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "status":
                     if (filter.value == null)
                     {
-                        return "";
+                        return string.Empty;
                     }
                     switch (filter.value.ToString().ToLowerInvariant())
                     {
@@ -125,6 +130,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
 
                 case "updateby":
                     return String.Format("{2} {1} \"{0}\"", filter.escapedValue, filter.comparison, UPDATE_BY);
+
+                case "sitebuilder":
+                    return String.Format("( content.name cont \"{0}\" or content.slug cont \"{0}\" or categorycode eq \"{0}\")", filter.escapedValue);
 
                 default:
                     return "";
