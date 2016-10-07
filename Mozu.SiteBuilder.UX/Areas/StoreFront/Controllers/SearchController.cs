@@ -182,7 +182,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if ( categoryId != null)
                 {
                     avp.filter = $"categoryId req {categoryId}";
-                    avp.searchTuningRuleCode = $"categoryId:{categoryId}";
+                    avp.searchTuningRuleContext = $"categoryId:{categoryId}";
                 }
 
                 pc.Search.CategoryId = categoryId;
