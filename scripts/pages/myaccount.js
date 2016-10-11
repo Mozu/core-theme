@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+﻿define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -203,16 +203,70 @@
 
              //We get the order"Return" id of the selected refund, 
              returnId = $target.data('mzReturnid');
-             var returnObj = self.model.get('items').where({ id: returnId });
+             var returnObj = self.model.get('items').findWhere({ id: returnId });
+
+             var printReturnLabelView =  new PrintView({
+               model: returnObj
+             });
+             //{returnID}/packages/{packageId}/label
+
+
+             
+                _.each(returnObj.get('packages'), function(value, key, list){
+                console.log('Api Action Return' + returnId + value.id);
+                 
+                accountModel.apiGetReturnLabel({'returnId': returnId, 'packageId': packageId}).than(function(data){
+                    console.log(data);
+                })
+
+
+                $.ajax({
+                    url: HyprLiveContext.locals.pageContext.secureHost + '/api/commerce/returns/'+ returnId + '/packages/' + value.id + '/label',
+                    type: 'GET',
+                    headers: Api.context.asHeaders()
+                })
+                .done(function(data) {
+                    console.log("success");
+                    var imgBase64 = b64EncodeUnicode(data);
+                    value['labelImageSrc'] = 'data:image/png;base64,' + imgBase64;
+
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    printReturnLabelView.render();
+                    printReturnLabelView.loadPrintWindow();
+                })
+
+               
+
+                // Api.request('GET', 'api/commerce/returns/'+ returnId + '/packages/' + value.id + '/label').then(function(data) {
+                //     var imgBase64 = hexToBase64(data);
+
+                //    value.set('labelURL', 'data:image/jpeg;base64,' + imgBase64);
+                //    console.log('Api Action Return Complete');
+                //    console.log(imgBase64);
+                // });
+                // Once SDK Call is Added
+                // Api.action('rma', 'getPackageLabel', {'returnId': returnId, 'packageId': value.id}).then(function (data) {
+                //     console.log('Api Action Return Complete');
+                //     console.log(data);
+                // })
+             });
 
              //Here you will need to make API CAll to get Shipping label. ON Successful return create and render PrintView
-             var printReturnLabelView =  new PrintView({
-               model: returnObj[0]
-            });
-            printReturnLabelView.render();
-            printReturnLabelView.loadPrintWindow();
-        }
+            
+        },
+
+       
     });
+
+    function b64EncodeUnicode(str) {
+     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+     }));
+    }
 
     var PrintView = Backbone.MozuView.extend({
         templateName: "modules/my-account/my-account-print-window",
