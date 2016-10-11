@@ -145,7 +145,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 distinctCodes.Add(catCode);
             }
-            var catNameLookup = await GetCategoryNamesByCodes(distinctCodes.ToArray());
+            var codeList = distinctCodes.ToArray();
+            if (codeList.Length == 0)
+            {
+                return;
+            }
+            var catNameLookup = await GetCategoryNamesByCodes(codeList);
             foreach (var searchRule in searchTuningRules)
             {
                 searchRule.CategoryNames =
@@ -162,8 +167,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <returns></returns>
         private async Task<Dictionary<string, string>> GetCategoryNamesByCodes(string[] categoryCodes)
         {
-            //var filter = $"categorycode in [{string.Join("\",\"", categoryCodes) }]";
-            var filter = $"categoryCode eq \"{categoryCodes[0]}\"";
+            var filter = $"categorycode in [\"{string.Join("\",\"", categoryCodes) }\"]";
 
             ProductAdmin.Contracts.CategoryPagedCollection catPagedCollection = (await _categoryWebApiClient.Value
                 .GetCategories(startIndex: 0,
