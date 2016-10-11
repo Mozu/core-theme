@@ -1,4 +1,5 @@
 ﻿<div class="mz-orderlisting" data-mz-id="{{ model.id }}">
+
     <div class="mz-orderlisting-detail">
       <h3 class="mz-orderlisting-date">
         {% if model.submittedDate %}
@@ -34,6 +35,38 @@
             {% endif %}
             {% endblock order-shipped-to %}
         </dl>
+
+        {% block attributes %}
+        {% for attribute in model.attributes %}
+        {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
+            {% if attDef %}
+                {% with attribute.values|first as attributeVal %}
+                    <div class="mz-orderlisting-attribute">
+                        <span>{{ attDef.content.value }}</span>
+                        <div>
+                            {% if attDef.dataType === "DateTime" %}
+                                {{ attributeVal|date("F j, Y") }}
+                            {% else %}
+                                {% if attDef.dataType === "Bool" %}
+                                    
+                                    {% if attributeVal == "True" %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                {% else %}
+                                    {{ attributeVal }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
+
+        {% endblock attributes %}
+
         {% endblock order-details %}
     </div>
     <div class="mz-orderlisting-items">
