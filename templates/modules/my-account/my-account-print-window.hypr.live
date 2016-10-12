@@ -1,14 +1,8 @@
 <div id="mz-printReturnLabelView">
 	<div class="printViewContent">
-		{%dump model%}
-
 		{% for package in model.packages %}
 			<div class="return-label">
-				{{package.id}}
 				<img src="{{ package.labelImageSrc }}" alt="Return Label Image"/>
-			</div>
-			<div class="return-label">
-				{{package.id}}
 			</div>
 		{% endfor %}
 	</div>

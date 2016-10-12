@@ -178,11 +178,10 @@
                     self.render();
                 });
             }
-        },
+        }
+    });
 
-    }),
-
-    ReturnHistoryView = Backbone.MozuView.extend({
+    var ReturnHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/return-history-list",
         initialize: function () {
             var self = this;
@@ -194,87 +193,37 @@
             });
         },
         printReturnLabel :function(e) {
-            console.log('Print Return Label')
              var self= this, 
-             $target = $(e.currentTarget),
+             $target = $(e.currentTarget);
 
              //Get Whatever Info we need to our shipping label
-             returnId = $target.data('mzReturnId');
-
-             //We get the order"Return" id of the selected refund, 
-             returnId = $target.data('mzReturnid');
-             var returnObj = self.model.get('items').findWhere({ id: returnId });
+             var returnId = $target.data('mzReturnid'),
+                 returnObj = self.model.get('items').findWhere({ id: returnId });
 
              var printReturnLabelView =  new PrintView({
                model: returnObj
              });
-             //{returnID}/packages/{packageId}/label
 
-
-             
-                _.each(returnObj.get('packages'), function(value, key, list){
-                console.log('Api Action Return' + returnId + value.id);
-                 
-                accountModel.apiGetReturnLabel({'returnId': returnId, 'packageId': packageId}).than(function(data){
-                    console.log(data);
-                })
-
-
-                $.ajax({
-                    url: HyprLiveContext.locals.pageContext.secureHost + '/api/commerce/returns/'+ returnId + '/packages/' + value.id + '/label',
-                    type: 'GET',
-                    headers: Api.context.asHeaders()
-                })
-                .done(function(data) {
-                    console.log("success");
-                    var imgBase64 = b64EncodeUnicode(data);
-                    value['labelImageSrc'] = 'data:image/png;base64,' + imgBase64;
-
-                })
-                .fail(function() {
-                    console.log("error");
-                })
-                .always(function() {
-                    printReturnLabelView.render();
-                    printReturnLabelView.loadPrintWindow();
-                })
-
-               
-
-                // Api.request('GET', 'api/commerce/returns/'+ returnId + '/packages/' + value.id + '/label').then(function(data) {
-                //     var imgBase64 = hexToBase64(data);
-
-                //    value.set('labelURL', 'data:image/jpeg;base64,' + imgBase64);
-                //    console.log('Api Action Return Complete');
-                //    console.log(imgBase64);
-                // });
-                // Once SDK Call is Added
-                // Api.action('rma', 'getPackageLabel', {'returnId': returnId, 'packageId': value.id}).then(function (data) {
-                //     console.log('Api Action Return Complete');
-                //     console.log(data);
-                // })
-             });
-
-             //Here you will need to make API CAll to get Shipping label. ON Successful return create and render PrintView
+            var _totalRequestCompleted = 0;
+          
+            _.each(returnObj.get('packages'), function(value, key, list){
+                window.accountModel.apiGetReturnLabel({'returnId': returnId, 'packageId': value.id, 'returnBase64': true}).then(function(data){
+                    value.labelImageSrc = 'data:image/png;base64,' + data;
+                    _totalRequestCompleted++;
+                    if(_totalRequestCompleted == list.length) {
+                        printReturnLabelView.render();
+                        printReturnLabelView.loadPrintWindow();
+                    }
+                });
+            });
             
-        },
-
-       
+        } 
     });
-
-    function b64EncodeUnicode(str) {
-     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-        return String.fromCharCode('0x' + p1);
-     }));
-    }
 
     var PrintView = Backbone.MozuView.extend({
         templateName: "modules/my-account/my-account-print-window",
         el: $('#mz-printReturnLabelView'),
         initialize: function () {
-        },
-        afterRender: function () {
-            this.createReturnLabelWindow();
         },
         loadPrintWindow: function(){
              var host = HyprLiveContext.locals.siteContext.cdnPrefix,
@@ -282,12 +231,11 @@
                 printStyles = host + "/stylesheets/modules/my-account/print-window.css";
 
             var my_window,
-            self = this;
-
+            self = this,
             width = window.screen.width - (window.screen.width / 2),
             height = window.screen.height - (window.screen.height / 2),
             offsetTop = 200,
-            offset = window.screen.availWidth * .25;
+            offset = window.screen.width * 0.25;
 
            
             my_window = window.open("", 'mywindow' + Math.random() + ' ','width=' + width + ',height=' + height + ',top=' + offsetTop + ',left=' + offset + ',status=1');
