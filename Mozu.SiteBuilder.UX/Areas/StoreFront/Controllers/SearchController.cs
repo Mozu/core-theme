@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         avp.facetTemplate = "categoryId:" + categoryId;
                         avp.facetHierValue = "categoryId:" + categoryId;
                     }
-                    avp.facetValueFilter = pc.Search.ToFacetValueFilter();
+
                 }
                 bindingContext.Model = avp;
                 return true;
