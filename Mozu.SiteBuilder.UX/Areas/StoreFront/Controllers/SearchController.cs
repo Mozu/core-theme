@@ -139,9 +139,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
                 avp.pageSize = pc.Search.PageSize;
                 avp.startIndex = pc.Search.StartIndex;
+                avp.sortBy = pc.Search.SortBy;
 
-                object tmp;
-                var query = (string)null; ;
+                var query = (string)null;
                 var res = bindingContext.ValueProvider.GetValue("query");
                 if (res != null)
                 {
@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 pc.CategoryId = categoryId;
 
                 avp.responseOptions =  isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
-
+                avp.facetValueFilter = pc.Search.ToFacetValueFilter();
                 if ( includeFacets.GetValueOrDefault(true) )
                 {
                     avp.facet = "categoryId";
