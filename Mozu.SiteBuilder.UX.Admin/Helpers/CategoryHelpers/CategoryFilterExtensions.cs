@@ -33,7 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
             if (extFilter == null || extFilter.Count == 0)
                 return null;
 
-            return String.Join(" and ", extFilter.Select(GetFilter));
+            return String.Join(" and ", extFilter.Select(GetFilter)
+                                                 .Where(x => !string.IsNullOrEmpty(x)));
         }
 
         private static string GetFilter(FilterCollectionItem filter)

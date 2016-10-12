@@ -18,7 +18,6 @@ Ext.define('Taco.shared.view.field.CategoryPickerField', {
     // hide the paging toolbar when there is less than a single page of results;
     autoHidePagingToolbar: true,
 
-    recordsPerPage: 10,
     checkChangeBuffer: 5000,
     minChars: 4,
     displayField: 'name',
@@ -35,7 +34,7 @@ Ext.define('Taco.shared.view.field.CategoryPickerField', {
         emptyText: '<div style="padding:20px; 10px; ">No matching categories found.</div>',
         // Custom rendering template for each item
         getInnerTpl: function () {
-            return "<span class='product-name'>{name}</span> <span class='product-code'>{categoryCode}</span>"
+            return "<span class='product-name'>{nameAndCodeAndStatus}</span>"
         },
 
         // this is an override that hides the paging toolbar when the list only contains a single page of results;
@@ -108,7 +107,7 @@ Ext.define('Taco.shared.view.field.CategoryPickerField', {
         var me = this;
         if (!me.store) {
             me.store = Taco.core.data.StoreManager.getOrCreate({
-                pageSize: me.recordsPerPage,
+                pageSize: me.pageSize,
                 type: 'Taco.store.CategoryPicker'
             });
         }

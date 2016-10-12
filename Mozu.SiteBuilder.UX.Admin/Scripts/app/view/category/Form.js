@@ -131,6 +131,16 @@ Ext.define("Taco.view.category.Form", {
             minChars: 2,
             emptyText: 'Search for categories',
             valueField: 'id',
+            displayField: 'nameAndCode',
+            defaultFilters: [{
+                    property:'status',
+                    value:'all'
+                }, {
+                    property:'type',
+                    value:'static'
+                }
+            ],
+            // excludedIds: [this.record.get("categoryCode")],
             listeners: {
                 afterrender: function (cmp) {
                     if (!me.record || me.record.phantom || me.record.get('parentId') === -1) {
@@ -142,6 +152,12 @@ Ext.define("Taco.view.category.Form", {
                         name: me.record.get('parentName')
                     });
                     cmp.setValue(parentCat);
+                },
+                select: function (cmp, records) {
+                    if (records && records.length > 0 && records[0].get('id') === me.record.get('parentId')) {
+                        Taco.app.fireEvent('setmessage', 'Recursive Loop detected', 'warning');
+                        cmp.setValue('');
+                    }
                 },
                 scope: this
             }
