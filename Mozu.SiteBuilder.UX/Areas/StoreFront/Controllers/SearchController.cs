@@ -139,9 +139,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 
                 avp.pageSize = pc.Search.PageSize;
                 avp.startIndex = pc.Search.StartIndex;
-                avp.sortBy = pc.Search.SortBy;
 
-                var query = (string)null;
+                object tmp;
+                var query = (string)null; ;
                 var res = bindingContext.ValueProvider.GetValue("query");
                 if (res != null)
                 {
