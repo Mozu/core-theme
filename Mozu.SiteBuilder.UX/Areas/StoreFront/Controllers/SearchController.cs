@@ -46,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _searchClient = searchClient;
             _customRouteHandler = customRouteHandler;
         }
+        
 
         [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
@@ -59,16 +60,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string w = null,
             [FromUri]AdvancedSearchParamaters searchParams = null)
         {
+            var _ = searchParams;
+
+            //commenting out until bluefly can change their arc actions.
             //nulled out in asp model binder  ... should only be set if done in arcjs
-            if (query != null)
-            {
-                searchParams.query = query;
-            }
-           
+            //if (query != null)
+            //{
+            //    searchParams.query = query;
+            //}
+            
+            //set back for post actions
+            this.ActionContext.ActionArguments["query"] = query ?? _.query;
+            this.ActionContext.ActionArguments["categoryId"] = categoryId ?? this.PageContext.Search.CategoryId;
+
+
 
             PageContext.PageType = "search";
 
-            var _ = searchParams;
+            
             var searchResponse = (await _searchClient.Search(
                 query: _.query,
                 filter: _.filter,
@@ -123,22 +132,44 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
             {
                 //null out action arguments so that we can detect if they were modified in arcjs
-                actionContext.ActionArguments["query"] = null;
-                actionContext.ActionArguments["categoryId"] = null;
+              
                 actionContext.ActionArguments["categoryCode"] = null;
                 actionContext.ActionArguments["page"] = null;
                 actionContext.ActionArguments["w"] = null;
-                
+                // commenting out till we can change blue fly actions
+                // actionContext.ActionArguments["query"] = null;
+                //  actionContext.ActionArguments["categoryId"] = null;
+
                 AdvancedSearchParamaters avp = new AdvancedSearchParamaters();
              
                 var sc = actionContext.Request.Resolve<ISiteContext>();
                 var pc = actionContext.Request.Resolve<IPageContext>();
                 var includeFacets = ((bool?)(JToken)sc.ThemeSettings["showCategoryFacets"]);
                 var isVolumePricingBandsEnabled = ((bool?)(JToken)sc.ThemeSettings["listVolumePricing"]);
+                var  pageStr = bindingContext.ValueProvider.GetValue("page");
+                int pageInt = 0;
+                if (! int.TryParse(pageStr?.ToString(), out pageInt))
+                {
+                    pageInt = 0;
+                }
 
-                
                 avp.pageSize = pc.Search.PageSize;
                 avp.startIndex = pc.Search.StartIndex;
+
+                if ( avp.pageSize == null )
+                {
+                    avp.pageSize = pc.Search.PageSize = ((int?)(JToken)sc.ThemeSettings["defaultPageSize"]) ?? 20;
+                }
+
+
+                if (avp.startIndex == null && pageInt > 0)
+                {
+                    avp.startIndex = pc.Search.StartIndex = (pageInt - 1) * avp.pageSize;
+                }
+
+
+
+
                 avp.sortBy = pc.Search.SortBy;
 
                 var query = (string)null;
