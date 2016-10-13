@@ -47,6 +47,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers
                 case "id":
                     return String.Format("{2} {1} {0}", filter.value, filter.comparison, ID);
 
+                case "not-id":
+                    return $"{ID} ne {filter.value}";
+
                 case "all":
                     var allFilter = $"({NAME} cont \"{filter.escapedValue}\" or {SLUG} cont \"{filter.escapedValue}\" or {DESCRIPTION} cont  \"{filter.escapedValue}\" or {CATEGORY_CODE} eq \"{filter.escapedValue}\"";
                     int catId;

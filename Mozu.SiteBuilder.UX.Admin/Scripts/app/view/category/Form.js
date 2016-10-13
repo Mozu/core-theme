@@ -27,7 +27,15 @@ Ext.define("Taco.view.category.Form", {
 
     initComponent: function() {
         var me = this,
-            categoryType = this.record.get("categoryType");
+            categoryType = this.record.get("categoryType"),
+            parentDefaultFilters = [{
+                    property:'status',
+                    value:'all'
+                }, {
+                    property:'type',
+                    value:'static'
+                }
+            ];
 
         this.title = this.record.data.name;
 
@@ -123,6 +131,13 @@ Ext.define("Taco.view.category.Form", {
             }
         });
 
+        if (!me.record.phantom && me.record.get('id')) {
+            parentDefaultFilters.push({
+                property: 'not-id',
+                value: me.record.get('id')
+            });
+        }
+
         me.parentCategoryPicker = Ext.create('Taco.shared.view.field.CategoryPickerField', {
             name: "parentCatId",
             fieldLabel: "Parent Category",
@@ -132,15 +147,7 @@ Ext.define("Taco.view.category.Form", {
             emptyText: 'Search for categories',
             valueField: 'id',
             displayField: 'nameAndCodeAndStatus',
-            defaultFilters: [{
-                    property:'status',
-                    value:'all'
-                }, {
-                    property:'type',
-                    value:'static'
-                }
-            ],
-            // excludedIds: [this.record.get("categoryCode")],
+            defaultFilters: parentDefaultFilters,
             listeners: {
                 afterrender: function (cmp) {
                     if (!me.record || me.record.phantom || me.record.get('parentId') === -1) {
@@ -153,12 +160,6 @@ Ext.define("Taco.view.category.Form", {
                         isActive: me.record.get('parentIsActive')
                     });
                     cmp.setValue(parentCat);
-                },
-                select: function (cmp, records) {
-                    if (records && records.length > 0 && records[0].get('id') === me.record.get('parentId')) {
-                        Taco.app.fireEvent('setmessage', 'Recursive Loop detected', 'warning');
-                        cmp.setValue('');
-                    }
                 },
                 scope: this
             }
