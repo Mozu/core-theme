@@ -131,7 +131,7 @@ Ext.define("Taco.view.category.Form", {
             minChars: 2,
             emptyText: 'Search for categories',
             valueField: 'id',
-            displayField: 'nameAndCode',
+            displayField: 'nameAndCodeAndStatus',
             defaultFilters: [{
                     property:'status',
                     value:'all'
@@ -149,7 +149,8 @@ Ext.define("Taco.view.category.Form", {
                     var parentCat = Ext.create('Taco.model.Category', {
                         id: me.record.get('parentId'),
                         categoryCode: me.record.get('parentCode'),
-                        name: me.record.get('parentName')
+                        name: me.record.get('parentName'),
+                        isActive: me.record.get('parentIsActive')
                     });
                     cmp.setValue(parentCat);
                 },

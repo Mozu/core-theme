@@ -99,6 +99,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryName, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryCode, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentIsActive, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()
