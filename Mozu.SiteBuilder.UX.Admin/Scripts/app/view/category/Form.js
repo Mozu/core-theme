@@ -115,6 +115,9 @@ Ext.define("Taco.view.category.Form", {
             flex: 1,
             editable: false,
             allowBlank: false,
+            disabled: (! me.record.phantom
+                && me.record.get('parentIsActive') !== null
+                && !me.record.get('parentIsActive')),
             store: [[
                 true,
                 'Active'
@@ -160,6 +163,21 @@ Ext.define("Taco.view.category.Form", {
                         isActive: me.record.get('parentIsActive')
                     });
                     cmp.setValue(parentCat);
+                },
+                select: function (cmp, records) {
+                    if (!records || records.length === 0) {
+                        return;
+                    }
+                    if (!records[0].get('isActive')) {
+                        me.isActive.setValue(false).disable();
+                    } else if (me.isActive.isDisabled()) {
+                        me.isActive.enable();
+                    }
+                },
+                blur: function (cmp) {
+                    if (!cmp.getValue() && me.isActive.isDisabled()) {
+                        me.isActive.enable();
+                    }
                 },
                 scope: this
             }
