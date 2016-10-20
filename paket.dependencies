@@ -30,7 +30,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts < 1.20
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts prerelease
+nuget Mozu.CommerceRuntime.Contracts >= 1.1638
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging < 1.20
 nuget Mozu.Core.Messaging.Contracts 1.19.2
@@ -41,11 +41,11 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts < 1.20
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts 1.1638.4-f1610131845prod-ra
+nuget Mozu.ProductAdmin.Contracts >= 1.1641
 nuget Mozu.ProductRuntime.Contracts > 1.1635
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
-nuget Mozu.ShippingAdmin.Contracts 1.1617.1
+nuget Mozu.ShippingAdmin.Contracts >= 1.1617
 nuget Mozu.SiteSettings.General.Contracts
 nuget Mozu.SiteSettings.Order.Contracts > 1.1624
 nuget protobuf-net 2.0.0.668 
