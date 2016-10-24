@@ -226,6 +226,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal? ShippingAmountBeforeDiscountsAndAdjustments { get; set; }
 
+        public decimal? WeightedOrderHandlingAdjustment { get; set; }
+
         public decimal? BasePrice
         {
             get
@@ -283,7 +285,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                     (-WeightedOrderShippingDiscount ?? 0) +
                     (ActiveShippingDiscount != null ? -ActiveShippingDiscount.Total : 0) +
                     (ShippingTaxTotal.HasValue ? ShippingTaxTotal.Value : (WeightedOrderShippingTax ?? 0)) +
-                    (WeightedOrderShippingManualAdjustment ?? 0)
+                    (WeightedOrderShippingManualAdjustment ?? 0) +
+                    (WeightedOrderShipping ?? 0)
                     ;
             }
         }
@@ -295,7 +298,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                 return (WeightedOrderHandlingFee ?? 0) +
                     (HandlingAmount ?? 0) +
                     (WeightedOrderHandlingFeeTax ?? 0) +
-                    (WeightedOrderHandlingFeeDiscount != null ? -WeightedOrderHandlingFeeDiscount : 0)
+                    (WeightedOrderHandlingFeeDiscount != null ? -WeightedOrderHandlingFeeDiscount : 0) +
+                    (WeightedOrderHandlingAdjustment.HasValue ? WeightedOrderHandlingAdjustment.Value : 0)
                     ;
             }
         }

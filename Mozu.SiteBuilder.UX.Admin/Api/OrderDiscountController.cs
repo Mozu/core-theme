@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public Adjustment OrderAdjustment { get; set; }
             public Adjustment ShippingAdjustment { get; set; }
+            public Adjustment HandlingAdjustment { get; set; }
         }
         [HttpPostRoute(UriTemplate = "adjustment")]
         public async Task<Response<Order>> AddOrUpdateAdjustment(UpdateAdjustmentArgs args, [FromUri] bool draft = false)
@@ -43,6 +44,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dcOrder = (await _orderWebApiClient.RemoveShippingAdjustment(args.OrderId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
                 else
                     dcOrder = (await _orderWebApiClient.ApplyShippingAdjustment(args.OrderId, args.ShippingAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+            }
+            if(args.HandlingAdjustment != null && args.HandlingAdjustment.Amount.HasValue)
+            {
+                if (args.HandlingAdjustment.Amount == 0)
+                    dcOrder = (await _orderWebApiClient.RemoveHandlingAdjustment(args.OrderId, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+                else
+                    dcOrder = (await _orderWebApiClient.ApplyHandlingAdjustment(args.OrderId, args.HandlingAdjustment.Map<Mozu.CommerceRuntime.Contracts.Commerce.Adjustment>(), draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             if (dcOrder != null)

@@ -317,7 +317,32 @@ Ext.define('Taco.model.Order', {
             }
         },
 
+        {
+            name: 'handlingAdjustment',
+            type: 'object',
+            defaultValue: {
+                amount: 0,
+                description: '',
+                internalComment: ''
+            }
+        },
 
+        {
+            name: 'handlingAdjustmentIsNegative',
+            type: 'boolean',
+            persist: false,
+            convert: function (value, record) {
+                // if set explicitly use the value
+                if (Ext.isBoolean(value)) {
+                    return value;
+                }
+                var adj = record.get('handlingAdjustment');
+                if (adj && adj.amount && adj.amount > 0) {
+                    return false;
+                }
+                return true;
+            }
+        },
 
     // deprecated?
         {

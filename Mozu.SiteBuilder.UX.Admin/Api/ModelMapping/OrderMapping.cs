@@ -809,6 +809,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
                 .ForMember(dc => dc.WeightedOrderDuty, op => op.Ignore())
                 .ForMember(dc => dc.ShippingAmountBeforeDiscountsAndAdjustments, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderHandlingAdjustment, op => op.Ignore())
 
 
                 //                             ProductCode = orderItem.ProductCode,

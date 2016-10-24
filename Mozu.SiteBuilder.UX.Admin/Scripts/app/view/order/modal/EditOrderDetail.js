@@ -336,6 +336,18 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     },
                     scope: me
                 },
+                "clearHandlingAdjustment": {
+                    fn: function () {
+                        me.detailGrid.updateOrderAdjustment({
+                            data: {
+                                handlingAdjustment: {
+                                    amount: 0
+                                }
+                            }
+                        });
+                    },
+                    scope: me
+                },
                 "processDiscount": {
                     fn: function (data) {
                         if (data.isActive === true || data.isActive.toLowerCase() === "true") {

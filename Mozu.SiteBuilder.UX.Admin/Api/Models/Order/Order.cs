@@ -206,6 +206,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Adjustment ShippingAdjustment { get; set; }
 
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Adjustment HandlingAdjustment { get; set; }
+
         /// <summary>
         /// Is this record a draft order.
         /// </summary>

@@ -251,6 +251,11 @@ Ext.define('Taco.model.OrderItem', {
             "name": "discountedTotal",
             "type": "float",
             "useNull": true
+        },
+        {
+            "name": "weightedOrderHandlingAdjustment",
+            "type": "float",
+            "useNull": true
         }
     ],
 
