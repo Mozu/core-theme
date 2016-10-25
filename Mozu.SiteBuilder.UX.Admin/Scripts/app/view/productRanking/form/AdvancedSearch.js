@@ -80,6 +80,16 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
                     fieldLabel: 'Category',
                     valueField: 'id',
                     displayField: 'nameAndCode',
+                    defaultFilters: [
+                        {
+                            property:'status',
+                            value:'all'
+                        }, 
+                        {
+                            property:'type',
+                            value:'static'
+                        }
+                    ],
                     editable: true,
                     forceSelection: true,
                     listeners: {
