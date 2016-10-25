@@ -84,10 +84,6 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
                         {
                             property:'status',
                             value:'all'
-                        }, 
-                        {
-                            property:'type',
-                            value:'static'
                         }
                     ],
                     editable: true,
