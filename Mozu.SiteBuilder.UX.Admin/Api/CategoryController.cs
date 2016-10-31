@@ -232,7 +232,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(retList);
         }
-        
+
+        [HttpPostRoute(UriTemplate = "update/category")]
+        public async Task<Response<List<Category>>> UpdateCategories(List<Category> categories)
+        {
+            var c = _categoryHelper.GetCategorySequenceCollection(categories);
+            var res = await _categoriesClient.UpdateCategoryTree(c);
+
+            if (res.HasException)
+            {
+                throw new System.Exception("Error Updating Category");
+            }
+
+            var cats = res.ReadAsSync();
+
+            return List2(Mapper.Map<List<Category>>(cats.Items), cats.TotalCount);
+        }
+
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<Category>>> UpdateCategory(List<Category> categories)
         {

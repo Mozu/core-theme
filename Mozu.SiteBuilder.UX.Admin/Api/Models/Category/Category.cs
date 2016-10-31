@@ -56,6 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public int? Sequence { get; set; }
 
+        public int? PreviousSiblingCategoryId { get; set; }
+
         public string PageTitle { get; set; }
         public string MetaTitle { get; set; }
         public string MetaDescription { get; set; }
