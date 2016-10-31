@@ -404,7 +404,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                  _themeSelection = _generalSettings.DesktopTheme;
             }
 
-            if (_themeSelection == null)
+            if ( string.IsNullOrEmpty(_themeSelection?.Id  ))
             {
                 _themeSelection = ThemeRepository.DefaultThemeSelection;
             }

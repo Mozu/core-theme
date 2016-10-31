@@ -73,6 +73,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 val = ((JValue)val).Value;
             }
+            if ( val is Int64)
+            {
+                val = Convert.ToInt32(val);
+            }
             if ( val is int)
             {
                 return (int)val;
@@ -100,7 +104,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 object value;
                 if (InnerDictionary.TryGetValue(id, out value))
                 {
-                    
+                    if (value is Int64)
+                    {
+                        return Convert.ToInt32(value);
+                    }
                     if (value is JValue)
                     {
                         return ((JValue)value).Value;
