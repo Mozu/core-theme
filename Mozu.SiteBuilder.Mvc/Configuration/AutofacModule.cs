@@ -24,6 +24,7 @@ using NDjango.FiltersCS;
 using Module = Autofac.Module;
 using Mozu.SiteBuilder.Mvc.Logging;
 using NDjango.Interfaces;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<StorefrontCache>().As<IStorefrontCache>().InstancePerRequest();
             builder.RegisterType<ThemeCache>().As<IThemeCache>().SingleInstance();
-            
+            builder.RegisterType<SitebuilderContextCacheRepository>().As<ISitebuilderContextCacheRepository>().SingleInstance();
         }
 
       

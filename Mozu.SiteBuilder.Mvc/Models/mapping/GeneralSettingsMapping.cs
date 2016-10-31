@@ -186,7 +186,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             Mapper.CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
-        static ThemeSelection  Deserialize(string val)
+        public static ThemeSelection  Deserialize(string val)
         {
             if (string.IsNullOrEmpty(val))
             {

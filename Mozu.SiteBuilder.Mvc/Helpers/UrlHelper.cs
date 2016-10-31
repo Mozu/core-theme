@@ -304,7 +304,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             var searchContext = _pageContext.Search;
 
 
-            int defaultPageSize = ((int?)(JToken)this._siteContext.ThemeSettings["defaultPageSize"]) ?? 20;
+            int defaultPageSize = this._siteContext.ThemeSettings.Get<int>("defaultPageSize", 20);
             int pageSize = _resolver.ResolveMemberOrDefault<int>(productCollection, "PageSize", defaultPageSize);
 
             int currentStartIndex = _resolver.ResolveMemberOrDefault<int>(productCollection, "StartIndex", 0);

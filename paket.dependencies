@@ -28,12 +28,12 @@ nuget Microsoft.Owin.SelfHost 2.1.0
 nuget Microsoft.Owin.StaticFiles 2.1.0 
 nuget morelinq 1.0.16006 
 nuget Mozu.AdminUser.Contracts < 1.20
-nuget Mozu.AppDev.Contracts < 1.20
+nuget Mozu.AppDev.Contracts 
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
 nuget Mozu.CommerceRuntime.Contracts >= 1.1638
 nuget mozu.Content.Contracts < 1.20 
-nuget Mozu.Core.Messaging < 1.20
-nuget Mozu.Core.Messaging.Contracts 1.19.2
+nuget Mozu.Core.Messaging
+nuget Mozu.Core.Messaging.Contracts
 nuget Mozu.Core.Test < 1.20 
 nuget Mozu.Customer.Contracts > 1.1624
 nuget Mozu.DeployWeb
@@ -41,7 +41,7 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts < 1.20
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts >= 1.1641
+nuget Mozu.ProductAdmin.Contracts > 1.1641
 nuget Mozu.ProductRuntime.Contracts > 1.1635
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20

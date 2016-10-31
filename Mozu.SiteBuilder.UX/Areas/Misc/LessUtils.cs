@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
 {
@@ -104,10 +105,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         public ResourceController Controller { get; set; }
         public IMozuVirtualPathProvider PathProvider { get; set; }
 
-        public Stream Transform(Stream str, string stem)
+        public async Task<Stream> Transform(Stream str, string stem)
         {
             var sr = new StreamReader(str);
-            string template = sr.ReadToEnd();
+            string template = await sr.ReadToEndAsync().ConfigureAwait(false);
             Exception debuggableException = null;
 
             template = ProcessSettingsVariables(template, stem);

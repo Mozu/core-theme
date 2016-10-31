@@ -18,22 +18,22 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// <summary>
     /// Repository to access the navigation metadocument in CMS.
     /// </summary>
+    /// 
     internal class NavigationRepository : INavigationRepository
     {
         private const string NAVIGATION_CONTENT_COLLECTION = "siteSettings@mozu";
         private const string NAVIGATION_FILE_NAME = "navigation";
 
         private ICmsServiceWrapper _cmsService;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
+      
         private ILogger _log;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ISiteBuilderApiContext siteBuilderApiContext, ILogger log)
+        public NavigationRepository(IDocumentListWebApiClient docWebApiClient, ICmsServiceWrapper cmsService, ILogger log)
         {
             _cmsService = cmsService;
-            _siteBuilderApiContext = siteBuilderApiContext;
             _log = log;
 
             // TaskExtensions;
@@ -42,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Gets the navigation set stored for the current site.
         /// </summary>
-        public Task<IList<INavigationNode>> GetNavigationSetAsync()
+        public Task<NavigationSet> GetNavigationSetAsync()
         {
             return _cmsService.GetByPath2(NAVIGATION_CONTENT_COLLECTION, NAVIGATION_FILE_NAME)
                 .ContinueWith(docResultIntermediate =>
@@ -62,11 +62,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     return docResultIntermediate;
                 })
                 .Unwrap()
-                .ContinueWith<IList<INavigationNode>>(docResult =>
+                .ContinueWith<NavigationSet>(docResult =>
                 {
                     var res = docResult.Result;
                     var doc = res.ReadAsSync();
-                    var etag = doc.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks.ToString();
+                   
 
                     // first try to retrieve it as a JObject
                     // if that fails, try to retrieve it as a string
@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         try
                         {
                             var toReturn =  docAsJObject.ToObject<NavigationSet>() ?? new NavigationSet();
-                            toReturn.ETag = etag;
+                            toReturn.TimeStamp = doc.UpdateDate?? doc.InsertDate;
                             return toReturn;
                         }
                         catch
@@ -149,4 +149,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         }
 
     }
+
+
+    
 }

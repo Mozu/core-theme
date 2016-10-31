@@ -183,8 +183,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
-        public HttpResponseMessage HyprContextAction(string dv = null)
+        public async Task<HttpResponseMessage> HyprContextAction(string dv = null)
         {
+            await SiteContext.Init();
             SbApiContext.SetDataMode(Convert(dv));
             var ctx = new Dictionary<string, object>();
             var locals = new Dictionary<string, object>();
@@ -320,7 +321,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 _contentRetriever = contentRetriever;
             }
 
-            public Func<Stream, string, Stream> Transform { get; set; }
+            public Func<Stream, string, Task<Stream>> Transform { get; set; }
 
             protected override void WriteFile(HttpResponseBase response)
             {
@@ -334,7 +335,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var source = stream;
                     if (Transform != null)
                     {
-                        source = Transform(stream, _file.VirtualPath);
+                        source = Transform(stream, _file.VirtualPath).Result;
                     }
                     source.CopyTo(outputStream);
                 }
@@ -347,9 +348,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var source = stream;
                     if (Transform != null)
                     {
-                        source = Transform(stream, _file.VirtualPath);
+                        source = await Transform(stream, _file.VirtualPath).ConfigureAwait(false);
                     }
-                    await source.CopyToAsync(response.OutputStream);
+                    await source.CopyToAsync(response.OutputStream).ConfigureAwait(false);
                 }
             }
         }

@@ -9,6 +9,7 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.Catalog
 {
@@ -20,8 +21,8 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public AdminCategoryTreeProvider(IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient, ILogger logger)
-            : base(productCategoryRuntimeWebApiClient, logger, new ApiContext(), new AdminStorefrontCache())
+        public AdminCategoryTreeProvider(ISiteBuilderContextProvider provider)
+            : base(provider)
         {
         }
 

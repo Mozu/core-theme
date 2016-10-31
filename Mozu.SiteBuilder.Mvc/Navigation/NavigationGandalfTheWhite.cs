@@ -24,6 +24,7 @@ using System.Threading;
 using Autofac;
 using System.Net.Http;
 using System.Web;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -34,12 +35,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     public sealed class NavigationGandalfTheWhite : INavigationGandalf
     {
         readonly ICategoryTreeProvider _categoryProvider;
-        readonly IDocumentListWebApiClient _documentClient;
+        // readonly IDocumentListWebApiClient _documentClient;
         readonly INavigationRepository _navRepo;
         readonly ILogger _logger;
         readonly MD5 _md5;
         readonly IStorefrontCache _cache;
         readonly ICustomRouteHandler _customRouteHandler;
+        readonly ISiteBuilderContextProvider _contextProvider;
         readonly NavigationNodeIndexComparer _navigationNodeIndexComparer = new NavigationNodeIndexComparer();
         readonly bool _shouldRequestInactiveDocuments;
         readonly UrlHelper _urlHelper;
@@ -63,11 +65,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public NavigationGandalfTheWhite(IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope= null,
+        public NavigationGandalfTheWhite(ISiteBuilderContextProvider contextProvider,
+            IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope = null,
             Lazy<ISiteContext> siteContext = null)
         {
+            _contextProvider = contextProvider;
             _categoryProvider = categoryProvider;
-            _documentClient = documentClient.CloneWithoutUserClaims();
+            //  _documentClient = documentClient.CloneWithoutUserClaims();
             _navRepo = navRepo;
             _logger = logger;
             _md5 = MD5.Create();
@@ -77,11 +81,11 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             _lifetimeScope = lifetimeScope;
             _priceListCode = apicontext.PriceListCode;
             _shouldRequestInactiveDocuments = pageContext.IsEditMode || (apicontext.UserClaims != null && apicontext.UserClaims.ScopeType.EqualsIgnoreCase(UserScopeType.Tenant.ToStringQuickly())); // if tenant admin or edit mode...
-            _primaryDomain =new Lazy<string>( ()=> siteContext.Value?.Domains?.Primary?.DomainName);
+            _primaryDomain = new Lazy<string>(() => siteContext.Value?.Domains?.Primary?.DomainName);
         }
 
 
-       
+
 
         /// <summary>
         /// Gets all navigation nodes in a flat list.
@@ -90,9 +94,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         public async Task<List<ITreeNavigationNode>> GetFlatList()
         {
             return (await GetSuperNavList().ConfigureAwait(false)).FlatList;
-            
+
         }
-        
+
         /// <summary>
         /// Get navigation as a tree. This is used by themes in storefront.
         /// </summary>
@@ -104,24 +108,23 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         }
 
 
-        async Task<SuperNavigationNodeList> GetSuperNavList(bool isCacheRefreshCallback= false)
+        async Task<SuperNavigationNodeList> GetSuperNavList()
         {
-            var data = await GetListData().ConfigureAwait(false);
+            var ctxData = await _contextProvider.GetContextData().ConfigureAwait(false);
+            // get the list of categories
+            var categoryTree = await _categoryProvider.GetAllCategories().ConfigureAwait(false);
 
-            if (isCacheRefreshCallback)
-            {
-                return ProccessNavData(data);
-            }
 
-           
-            var cacheKey = GetCacheKey(data.Etag, _priceListCode );
+
+
+            var cacheKey = GetCacheKey(ctxData.Hash, _priceListCode);
             var retVal = GetFromCache(cacheKey);
 
             if (retVal != null)
             {
                 return retVal;
             }
-            
+
             lock (cacheKey)
             {
                 retVal = GetFromCache(cacheKey);
@@ -129,26 +132,21 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     return retVal;
                 }
-                retVal = ProccessNavData(data);
+                retVal = ProccessNavData(ctxData, categoryTree);
                 _cache.Set(cacheKey,
                     retVal,
                     CacheScope.Site,
-                    StorefrontCacheTypes.Default,
-                    new CacheCallBacker<INavigationGandalf>(_lifetimeScope, (nav, obj) => ((NavigationGandalfTheWhite)nav).GetSuperNavList(true).Result).CacheCallBack
-                    );
+                    StorefrontCacheTypes.Default);
                 return retVal;
             }
 
         }
 
-
-
-        
-
+     
 
         private static string GetCacheKey(string etag, string priceListCode)
         {
-            return string.Intern(NAVIGATION_LIST_INTERNAL_CACHE_KEY  + etag);
+            return string.Intern(NAVIGATION_LIST_INTERNAL_CACHE_KEY + etag + priceListCode);
         }
 
         private SuperNavigationNodeList GetFromCache(string cachekey)
@@ -161,66 +159,23 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             public string ETag { get; set; }
 
             public List<IRuntimeNavigationNode> TreeList { get; set; }
-            public List<ITreeNavigationNode> FlatList {get;set;}
+            public List<ITreeNavigationNode> FlatList { get; set; }
 
             public SuperNavigationNodeList(int capacity) : base(capacity) { }
         }
-        class NavData
-        {
-            public CategoryTree CatTree { get; set; }
-            public DocumentCollection Pages { get; set; }
-            public IList<INavigationNode> NavRepoResult { get; set; }
-          
-            public string Etag { get; set; }
-            public string PagesEtag { get; internal set; }
-        }
-        private Task<NavData> GetListData()
-        {
-            // get the list of categories
-            var catTask = _categoryProvider.GetAllCategories();
-
-            // get the list of pages
-            var pageTask = _documentClient.GetDocuments(documentListName: "pages@mozu", pageSize: 2000, includeInactive: _shouldRequestInactiveDocuments, responseFields: "items(id, name, listFQN, properties( link_title ) )");
-
-            // get the list of blogs   .. ha ha ha haa  haaa ahha   aaahhhh:)
-            // var blogTask = _cmsService.GetList2(contentCollection: "blogs", pageSize: 1, filter: "DocumentTypeFQN eq blog" );
-
-            // get our navigation data authority
-            var navTask = _navRepo.GetNavigationSetAsync();
-            var compTask = Task.WhenAll(catTask, pageTask, navTask);
+       
+        
             
-            var cts = new CancellationTokenSource(30000);
-            return compTask.ContinueWith((tasks) =>
-            {
-                return pageTask.Result.ReadAsAsync().ContinueWith(docCollectionTask =>
-                {
-                    var navsetEtag = navTask.Result is NavigationSet ? (navTask.Result as NavigationSet).ETag : null;
-                    return new NavData()
-                    {
-                        CatTree = catTask.Result,
-                        Pages = docCollectionTask.Result,
-                        PagesEtag = pageTask.Result.ETag(),
-                        NavRepoResult = navTask.Result,
-                        Etag = CompositeETag(catTask.Result.ETag, pageTask.Result.ETag(), navsetEtag)
-                    };
-                });
-            }, cts.Token).Unwrap();
-           
-
-            
-            
-           
-        }
-        private SuperNavigationNodeList ProccessNavData(NavData navData)
+        private SuperNavigationNodeList ProccessNavData(SiteBuilderContextData ctxData, CategoryTree categoryTree)
         {
 
-            var pages = navData.Pages;
-          
-            var categoryTree = navData.CatTree;
-            var navset = navData.NavRepoResult;
+            var pages = ctxData.NavWebPages;
 
 
-            string etag = CompositeETag(categoryTree.ETag, navData.PagesEtag, navData.Etag);
+            var navset = ctxData.NavigationSet;
+
+
+            string etag = ctxData.Hash;
 
 
             var cacheKey = GetCacheKey(etag, _priceListCode);

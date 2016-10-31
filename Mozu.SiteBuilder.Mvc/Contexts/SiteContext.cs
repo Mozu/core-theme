@@ -16,6 +16,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Mozu.Location.Contracts;
 using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Settings;
@@ -35,7 +36,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         bool SiteExists { get; set; }
         int TenantId { get; }
         int SiteId { get; }
-        byte[] Hash { get; }
+    
         string HashString { get; }
         Dictionary<string, string> Labels { get; set; }
         string ThemeId { get; }
@@ -57,20 +58,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         public const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
         internal const string COOKIENAME = "SBCONTEXT";
-        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-      //  private readonly ICookieProvider _cookieProvider;
-        private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
-        private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
+        ISiteBuilderContextProvider _siteBuilderContextDataProvider;
+        private readonly ICookieProvider _cookieProvider;
+        ISiteBuilderApiContext _siteBuilderApiContext;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly ISettings _settings;
-        private readonly ISitesWebApiClient _sitesWebApiClient;
-        private readonly ISiteBuilderApiContext _siteBuilderApiContext;
-        private readonly IThemeRepository _themeRepository;
+        private readonly Lazy<IThemeRepository> _themeRepository;
         private readonly Lazy<IThemeSettingsRepository> _themeSettingsRepository;
         private CheckoutSettings _checkoutSettings;
         private GeneralSettings _generalSettings;
-        private byte[] _hash;
-        private string _hashString;
+        private string _hash;
+        
 
         public bool SiteExists { get; set; }
 
@@ -83,26 +81,26 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private ThemeSelection _themeSelection;
         private ThemeRuntimeSettingsCollection _themeRuntimeSettingsCollection;
         private string _themeOverrideId = null;
-        public SiteContext(IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<IThemeSettingsRepository> themeSettingsRepository, IThemeRepository themeRepository, IMobileDetectionProvider mobileDetectionProvider, ICookieProvider cookieProvider, ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, ISiteBuilderApiContext siteBuilderApiContext, ISettings settings, ILocationSettingsWebApiClient locationSettingsWebApiClient, Mozu.Tenant.Contracts.Clients.ISitesWebApiClient sitesWebApiClient,  HttpRequestMessage requestMessage)
+
+
+        public SiteContext(HttpRequestMessage requestMessage ,
+            ISiteBuilderApiContext siteBuilderApiContext,
+            ISiteBuilderContextProvider siteBuilderContextDataProvider , 
+            IMobileDetectionProvider mobileDetectionProvider,
+            ICookieProvider cookieProvider,
+            Lazy<IThemeRepository> themeRepository,
+            Lazy<IThemeSettingsRepository> themeSettingsRepository,
+            ISettings settings)
         {
-            SiteExists = true;
-            _generalSettingsWebApiClient = generalSettingsWebApiClient.CloneWithoutUserClaims();
-            _themeSettingsRepository = themeSettingsRepository;
-            _themeRepository = themeRepository;
+            _siteBuilderContextDataProvider = siteBuilderContextDataProvider;
             _mobileDetectionProvider = mobileDetectionProvider;
-           // _cookieProvider = cookieProvider;
-            _siteBuilderApiContext = siteBuilderApiContext;
-            _locationSettingsWebApiClient = locationSettingsWebApiClient.CloneWithoutUserClaims();
+            _cookieProvider = cookieProvider;
             _settings = settings;
-            _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
-            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithoutUserClaims();
-            _checkoutSettingsWebApiClient.Options.TimeoutMilliseconds = _sitesWebApiClient.Options.TimeoutMilliseconds = _locationSettingsWebApiClient.Options.TimeoutMilliseconds = _generalSettingsWebApiClient.Options.TimeoutMilliseconds =  5000;
-
-
-
+            _siteBuilderApiContext = siteBuilderApiContext;
+            _themeRepository = themeRepository;
+            _themeSettingsRepository = themeSettingsRepository;
             _themeOverrideId = ProcessThemeOverride(requestMessage, cookieProvider);
-
-
+            SiteExists = siteBuilderApiContext.SiteId.HasValue;
             string url = requestMessage.RequestUri.ToString();
             
             IEnumerable<string> values;
@@ -122,7 +120,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? secure : _currentHost;
             
             Mozu.Core.Money.CurrencyCode cc;
-            if (Mozu.Core.Money.CurrencyCode.TryParse(siteBuilderApiContext.CurrencyCode, out cc))
+            if (Mozu.Core.Money.CurrencyCode.TryParse(_siteBuilderApiContext.CurrencyCode, out cc))
             {
                 this.CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
 
@@ -134,6 +132,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             
         }
+
+       
 
         private string ProcessThemeOverride(HttpRequestMessage requestMessage, ICookieProvider cookieProvider)
         {
@@ -163,7 +163,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get { return _siteBuilderApiContext.SiteId.GetValueOrDefault(-1); }
         }
-        public byte[] Hash
+        
+        public string HashString
         {
             get
             {
@@ -175,19 +176,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _hash;
             }
             set { _hash = value; }
-        }
-
-        public string HashString
-        {
-            get
-            {
-                if (_hashString == null)
-                {
-                    byte[] hash = Hash;
-                    _hashString = Convert.ToBase64String(hash);
-                }
-                return _hashString;
-            }
         }
 
 
@@ -279,17 +267,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set { _theme = value; }
         }
-
-        //Task<Mozu.SiteSettings.Order.Contracts.CheckoutSettings> GetCheckoutSettings()
-        //{
-        //    return _checkoutSettingsWebApiClient.GetCheckoutSettings().ContinueWith(x => x.Result.ReadAsSync());
-        //}
-        //Task<Mozu.SiteSettings.General.Contracts.GeneralSettings> GetGeneralSettings()
-        //{
-        //    return _generalSettingsWebApiClient.GetGeneralSettings().ContinueWith(x => x.Result.ReadAsSync());
-        //}
-
-
+        
         public bool IsEditMode { get; set; }
 
         string _cdnPrefix;
@@ -385,156 +363,67 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
-        public Task Init()
+        
+       
+        public  Task Init()
         {
-            if (_initTask == null)
+            return _initTask = _initTask ?? DoInit();
+        }
+        private async Task DoInit()
+        { 
+            if (!_siteBuilderApiContext.SiteId.HasValue)
             {
-                var genSettingsTask = _generalSettingsWebApiClient.GetGeneralSettings();
-                var checkoutSettingsTask = _checkoutSettingsWebApiClient.GetCheckoutSettings();
-                var locSettingsTask = _locationSettingsWebApiClient.GetLocationUsages();
-                var siteTask = _sitesWebApiClient.GetSite(_siteBuilderApiContext.SiteId, false);
-                Task settingsServiceTasks = Task.WhenAll(genSettingsTask, checkoutSettingsTask, locSettingsTask, siteTask);
+                return;
+            }
+            var data = _siteBuilderContextDataProvider.GetContextData().Result;
+            _domains = new SiteDomains(_currentHost, data.GetMappedSiteDomains());
+            _generalSettings  = data.GetMappedGeneralSettings();
+            _checkoutSettings = data.GetMappedCheckoutSettings();
 
-                Task<Task<SiteContext>> initTask = settingsServiceTasks.ContinueWith(task =>
-                {
-                    
-                    if (siteTask.Result.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        this.SiteExists = false;
-                        return  Task<SiteContext>.FromResult(this);
-                    }
-                    MD5 md5 = new MD5CryptoServiceProvider();
-                    md5.TransformBlock(AssemblyHash, 0, AssemblyHash.Length, AssemblyHash, 0);
-
-                    var sitesDc = siteTask.Result.ReadAsSync();
-                    this.Domains = new SiteDomains(_currentHost, Mapper.Map<List<SiteDomain>>(sitesDc.Domains));
-                
-                    var genSettingsDC = genSettingsTask.Result.ReadAsSync();
-                    var checkoutSettingsDC = checkoutSettingsTask.GetResultOrDefault(FalloverCheckoutSettings);
-                    _generalSettings = Mapper.Map<GeneralSettings>(genSettingsDC);
-                    _checkoutSettings = Mapper.Map<CheckoutSettings>(checkoutSettingsDC, opt => opt.Items["countryCode"] = sitesDc.CountryCode);
-                    md5.HashAuditInfo(genSettingsDC.AuditInfo).
-                        HashAuditInfo(checkoutSettingsDC.CustomerCheckoutSettings.AuditInfo).
-                        HashAuditInfo(checkoutSettingsDC.OrderProcessingSettings.AuditInfo).
-                        HashAuditInfo(checkoutSettingsDC.PaymentSettings.AuditInfo);
-                        //HashAuditInfo(sitesDc.Domains);
-
-                    if (locSettingsTask.Result.ResponseMessage.IsSuccessStatusCode)
-                    {
-                        LocationUsageCollection locSettingsDc = locSettingsTask.Result.ReadAsSync();
-                        //todo hash audit info.
-                        if (locSettingsDc.Items != null)
-                        {
-                            locSettingsDc.Items.ForEach(x => md5.HashAuditInfo(x.AuditInfo));
-
-                            SupportsInStorePickup = locSettingsDc.Items.Any(x => x.LocationUsageTypeCode == "SP" && x.LocationTypeCodes != null && x.LocationTypeCodes.Any());
-                        }
-                        
-
-                        
-                    }
-
-                    
-                    if (!string.IsNullOrEmpty(_themeOverrideId) )
-                    {
-                        _themeSelection = new ThemeSelection() {Id = _themeOverrideId};
-                    } 
-                    else if (_mobileDetectionProvider.IsCurrentRequestMobile && ( _generalSettings.MobileTheme != null && !string.IsNullOrEmpty(_generalSettings.MobileTheme.Id )))
-                    {
-                        _themeSelection = _generalSettings.MobileTheme;
-                    }
-                    else if (_mobileDetectionProvider.IsCurrentRequestTablet && ( _generalSettings.TabletTheme != null && !string.IsNullOrEmpty(_generalSettings.TabletTheme.Id )))
-                    {
-                        _themeSelection = _generalSettings.TabletTheme;
-                    }
-                    else
-                    {
-#pragma warning disable 612
-                        _themeSelection = _generalSettings.DesktopTheme;
-                    }
-
-                    if (_themeSelection == null)
-                    {
-                        _themeSelection = ThemeRepository.DefaultThemeSelection;
-                    }
-                    _theme = _themeRepository.GetThemeOrDefault(_themeSelection);
-
-                    return _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ContinueWith(task2 =>
-                    {
-                        _themeRuntimeSettingsCollection = task2.Result;
-                        var themeSettingsTimeStamp = BitConverter.GetBytes(_themeRuntimeSettingsCollection.TimeStamp.Ticks);
-                        md5.TransformBlock(themeSettingsTimeStamp, 0, themeSettingsTimeStamp.Length, themeSettingsTimeStamp, 0);
-                        var themeTimeStamp = BitConverter.GetBytes(_theme.TimeStamp.Ticks);
-                        md5.TransformBlock(themeTimeStamp, 0, themeTimeStamp.Length, themeTimeStamp, 0);
-                        byte[] tid = Encoding.UTF8.GetBytes(_themeSelection.Id  ?? "");
-                        md5.TransformFinalBlock(tid, 0, tid.Length);
-                        Hash = md5.Hash;
-                        //not ready for prime time
-                        //var tmp = ThemeSettings[ThemeSettingsRepository.ADDONKEY] as IEnumerable;
-                        //if (tmp != null)
-                        //{
-                        //    var ot = Theme;
-                        //    var addonsIds = tmp.Cast<object>().Select(x => x.ToString()).ToArray();
-                        //    Theme = _themeRepository.ApplyAddons(Theme, addonsIds);
-                        //    Theme.Name = ot.Name;
-                        //}
-                        return this;
-                    });
-                });
-
-
-                _initTask = initTask.Unwrap();
+            if (data.LocationUsages?.Items != null)
+            {
+                SupportsInStorePickup = data.LocationUsages.Items.Any(x => x.LocationUsageTypeCode == "SP" && x.LocationTypeCodes != null && x.LocationTypeCodes.Any());
             }
 
-
-            return _initTask;
-        }
-
-        private static SiteSettings.Order.Contracts.CheckoutSettings _falloverCheckoutSettings;
-        static SiteSettings.Order.Contracts.CheckoutSettings FalloverCheckoutSettings
-        {
-            get
+            
+            if (!string.IsNullOrEmpty(_themeOverrideId))
             {
-                return _falloverCheckoutSettings = _falloverCheckoutSettings ?? new SiteSettings.Order.Contracts.CheckoutSettings()
-                                                                         {
-                                                                             CustomerCheckoutSettings = new CustomerCheckoutSettings()
-                                                                                                        {
-                                                                                                            AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
-                                                                                                            {
-                                                                                                                CreateDate = DateTime.Now,
-                                                                                                                UpdateDate = DateTime.Now
-                                                                                                            },
-                                                                                                            CustomerCheckoutType = ""
-                                                                                                        },
-                                                                             OrderProcessingSettings = new OrderProcessingSettings()
-                                                                                                       {
-                                                                                                           AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
-                                                                                                           {
-                                                                                                               CreateDate = DateTime.Now,
-                                                                                                               UpdateDate = DateTime.Now
-                                                                                                           },
-                                                                                                           PaymentProcessingFlowType = "",
-                                                                                                          
-                                                                                                       },
-                                                                             PaymentSettings = new PaymentSettings()
-                                                                                               {
-                                                                                                   AuditInfo = new Mozu.Core.Api.Contracts.AuditInfo()
-                                                                                                               {
-                                                                                                                   CreateDate = DateTime.Now,
-                                                                                                                   UpdateDate = DateTime.Now
-                                                                                                               },
-                                                                                                               ExternalPaymentWorkflowDefinitions = new List<ExternalPaymentWorkflowDefinition>(),
-                                                                                                               Gateways = new List<Gateway>(),
-                                                                                                               PayByMail = false
-                                                                                               }
-
-                                                                         };
-                 
+                _themeSelection = new ThemeSelection() { Id = _themeOverrideId };
+               
             }
+            else if (_mobileDetectionProvider.IsCurrentRequestMobile && (_generalSettings.MobileTheme != null && !string.IsNullOrEmpty(_generalSettings.MobileTheme.Id)))
+            {
+                _themeSelection = _generalSettings.MobileTheme;
+            }
+            else if (_mobileDetectionProvider.IsCurrentRequestTablet && (_generalSettings.TabletTheme != null && !string.IsNullOrEmpty(_generalSettings.TabletTheme.Id)))
+            {
+               _themeSelection = _generalSettings.TabletTheme;
+            }
+            else
+            {
+                 _themeSelection = _generalSettings.DesktopTheme;
+            }
+
+            if (_themeSelection == null)
+            {
+                _themeSelection = ThemeRepository.DefaultThemeSelection;
+            }
+            Tuple<Theme, ThemeRuntimeSettingsCollection> entry;
+            if (data.Themes.TryGetValue(_themeSelection.Id, out entry))
+            {
+                _theme = entry.Item1;
+                _themeRuntimeSettingsCollection = entry.Item2 ?? ((entry.Item1 == null) ? null : new ThemeRuntimeSettingsCollection());
+            }
+            //for theme override... eg preview
+            _theme = _theme ?? _themeRepository.Value.GetThemeOrDefault(_themeSelection);
+            _themeRuntimeSettingsCollection = _themeRuntimeSettingsCollection ?? await _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ConfigureAwait(false);
+           
+            HashString = data.Hash + _themeOverrideId;
         }
 
+      
 
-
+        
         public Core.Money.Currency CurrencyInfo { get; set; }
 
         [Newtonsoft.Json.JsonIgnore()]

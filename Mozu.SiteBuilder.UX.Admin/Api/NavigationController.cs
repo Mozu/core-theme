@@ -651,7 +651,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int categoryId = Convert.ToInt32(change.OriginalId);
 
-            Task<IList<INavigationNode>> navTask = _navRepo.GetNavigationSetAsync();
+            Task<NavigationSet> navTask = _navRepo.GetNavigationSetAsync();
             Task<ServiceClientResponse<DC.Category>> catTask = _catClient.GetCategory(categoryId);
             Task<List<ITreeNavigationNode>> listTask = GetFlatList(false);
 

@@ -10,8 +10,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// </summary>
     public interface INavigationRepository
     {
-        Task<IList<INavigationNode>> GetNavigationSetAsync();
+        Task<NavigationSet> GetNavigationSetAsync();
 
         Task SaveSetAsync(IList<INavigationNode> set);
     }
+  
 }

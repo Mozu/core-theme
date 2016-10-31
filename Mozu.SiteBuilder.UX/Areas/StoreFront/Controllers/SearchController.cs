@@ -144,8 +144,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              
                 var sc = actionContext.Request.Resolve<ISiteContext>();
                 var pc = actionContext.Request.Resolve<IPageContext>();
-                var includeFacets = ((bool?)(JToken)sc.ThemeSettings["showCategoryFacets"]);
-                var isVolumePricingBandsEnabled = ((bool?)(JToken)sc.ThemeSettings["listVolumePricing"]);
+                var includeFacets = ((bool?)sc.ThemeSettings["showCategoryFacets"]);
+                var isVolumePricingBandsEnabled = ((bool?)sc.ThemeSettings["listVolumePricing"]);
                 var  pageStr = bindingContext.ValueProvider.GetValue("page");
                 int pageInt = 0;
                 if (! int.TryParse(pageStr?.ToString(), out pageInt))
@@ -158,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 if ( avp.pageSize == null )
                 {
-                    avp.pageSize = pc.Search.PageSize = ((int?)(JToken)sc.ThemeSettings["defaultPageSize"]) ?? 20;
+                    avp.pageSize = pc.Search.PageSize = ((int?)sc.ThemeSettings["defaultPageSize"]) ?? 20;
                 }
 
 
