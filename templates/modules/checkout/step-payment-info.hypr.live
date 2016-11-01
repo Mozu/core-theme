@@ -5,7 +5,10 @@
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
         {% for payment in model.activePayments %}
-        {% if payment.billingInfo.paymentType == "Check" %}
+        {% if payment.billingInfo.paymentType == "StoreCredit" %}
+        <h4 class="mz-checkout-nopaymentrequired mz-checkoutform">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
+        {% endif %}
+        {% if payment.billingInfo.paymentType == "Check" and model.nonStoreCreditTotal > 0 %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
             <div class="mz-l-stack-section mz-checkout-current-payment">{{ labels.checkByMail }}</div>
             <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-billingaddress">
@@ -16,8 +19,13 @@
             </div>
         </div>
         {% endif %}
-        {% if payment.billingInfo.paymentType == "CreditCard" %}
+        {% if payment.billingInfo.paymentType == "CreditCard" and model.nonStoreCreditTotal > 0  %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
+            {% if payment.paymentWorkflow == "VisaCheckout" %}
+            <div>
+                <span><img alt="This Payment Using Visa Checkout" src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+            </div>
+            {% endif %}
             <div class="mz-l-stack-section mz-checkout-current-payment">
                 <p>{{ model.card.paymentOrCardType }} {{ model.card.cardNumberPartOrMask }}
                 <br/>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>
@@ -30,7 +38,7 @@
             </div>
         </div>
         {% endif %}
-        {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
+        {% if payment.billingInfo.paymentType == "PurchaseOrder" and model.nonStoreCreditTotal > 0  %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
             <div class="mz-l-stack-section mz-checkout-current-payment">
             <!--
