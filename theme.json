@@ -1,6 +1,6 @@
 {
     "about": {
-        "author": "Volusion",
+        "author": "Mozu",
         "defaultLanguage": "en-US",
         "extends": null,
         "isDesktop": true,
@@ -351,6 +351,13 @@
             "template": "forgot-password",
             "title": "Forgot Password",
             "userCreatable": false
+        },
+        {
+            "entityType": "orderStatus",
+            "id": "orderStatus",
+            "template": "order-status",
+            "title": "Order Status",
+            "userCreatable": false
         }
     ],
     "settings": {
@@ -393,6 +400,7 @@
         "itemListingThumbSize": 80,
         "listProductCode": true,
         "listProductShortDesc": true,
+        "listVolumePricing": false,
         "listProductThumbSize": 160,
         "maxProductImageThumbnailSize": 50,
         "maxProductSummaryWords": 40,

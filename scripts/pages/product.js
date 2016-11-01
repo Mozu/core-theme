@@ -2,10 +2,11 @@
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail',
-        autoUpdate: ['quantity'],
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange"
+            "blur [data-mz-product-option]": "onOptionChange",
+            "change [data-mz-value='quantity']": "onQuantityChange",
+            "keyup input[data-mz-value='quantity']": "onQuantityChange"
         },
         render: function () {
             var me = this;
@@ -17,6 +18,13 @@
         onOptionChange: function (e) {
             return this.configure($(e.currentTarget));
         },
+        onQuantityChange: _.debounce(function (e) {
+            var $qField = $(e.currentTarget),
+              newQuantity = parseInt($qField.val(), 10);
+            if (!isNaN(newQuantity)) {
+                this.model.updateQuantity(newQuantity);
+            }
+        },500),
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
                 oldValue,
@@ -95,21 +103,20 @@
             $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
         });
 
+        var productImagesView = new ProductImageViews.ProductPageImagesView({
+            el: $('[data-mz-productimages]'),
+            model: product
+        });
+
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
             messagesEl: $('[data-mz-message-bar]')
         });
 
-        var productImagesView = new ProductImageViews.ProductPageImagesView({
-            el: $('[data-mz-productimages]'),
-            model: product
-        });
-
         window.productView = productView;
 
         productView.render();
-
 
     });
 

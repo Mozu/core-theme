@@ -19,6 +19,9 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             };
         },
         ButtonHandler = function(selector) {
+            if (!selector) {
+                return;
+            }
             this.handler = $(selector);
             this.urlBar = $('#mz-url-copy');
         },
@@ -103,12 +106,12 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         }).bind(this));
         
         $(document).on('click', (function(eventData){
-
-            if (eventData.target.className.indexOf('pricelist') !== -1) {
+            
+            if (!this.changedValue || eventData.target.className.indexOf('pricelist') !== -1) {
                 return;
             }
             if (!this.picker.isShow()) {
-                if (this.dateHasChanged.call(this)) location.search = this.getQueryString(this.sanitizeDate());   
+                if (this.dateHasChanged.call(this)) location.search = this.getQueryString(this.sanitizeDate());
             }
 
         }).bind(this));
@@ -195,8 +198,6 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         this.handler.on('change', (function(){
             this.changedValue = true;
         }).bind(this));
-
-        //this.handler.val(this.getQueryStringValue());
     };
 
     PriceListPicker.prototype.getQueryStringValue = function() {

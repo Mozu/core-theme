@@ -298,6 +298,8 @@
                             var billingInfo = me.parent.get('billingInfo');
                             if (billingInfo) {
                                 billingInfo.loadCustomerDigitalCredits();
+                                // This should happen only when order doesn't have payments..
+                                billingInfo.updatePurchaseOrderAmount();
                             }
                         })
                         .ensure(function() {
@@ -339,7 +341,8 @@
             relations: {
                 billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCardWithCVV,
-                check: PaymentMethods.Check
+                check: PaymentMethods.Check,
+                purchaseOrder: PaymentMethods.PurchaseOrder
             },
             validatePaymentType: function(value, attr) {
                 var order = this.getOrder();
@@ -371,6 +374,9 @@
                 return order.apiVoidPayment(currentPayment.id).then(function() {
                     self.clear();
                     self.stepStatus('incomplete');
+                    // need to re-enable purchase order information if purchase order is available.
+                    self.setPurchaseOrderInfo();
+                    // Set the defualt payment method for the customer.
                     self.setDefaultPaymentType(self);
                 });
             },
@@ -464,7 +470,6 @@
                     return order.update();
                 });
             },
-
             // digital
 
             onCreditAmountChanged: function(digCredit, amt) {
@@ -547,6 +552,8 @@
                     order.get('billingInfo').clear();
                     order.set(updatedOrder, { silent: true });
                 }
+                self.setPurchaseOrderInfo();
+                self.setDefaultPaymentType(self);
                 self.trigger('orderPayment', updatedOrder, self);
 
             },
@@ -597,6 +604,8 @@
                         if (creditAmountToApply === 0) {
                             return order.apiVoidPayment(sameCreditPayment.id).then(function(o) {
                                 order.set(o.data);
+                                self.setPurchaseOrderInfo();
+                                self.setDefaultPaymentType(self);
                                 self.trigger('orderPayment', o.data, self);
                                 return o;
                             });
@@ -814,24 +823,176 @@
                     currentPaymentType = currentPayment && currentPayment.billingInfo.paymentType,
                     currentPaymentWorkflow = currentPayment && currentPayment.billingInfo.paymentWorkflow,
                     currentBillingContact = currentPayment && currentPayment.billingInfo.billingContact,
-                    currentCard = currentPayment && currentPayment.billingInfo.card;
+                    currentCard = currentPayment && currentPayment.billingInfo.card,
+                    currentPurchaseOrder = currentPayment && currentPayment.billingInfo.purchaseorder,
+                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
+                    purchaseOrderCustomerSettings = this.getOrder().get('customer').get('purchaseOrder') ? 
+                        this.getOrder().get('customer').get('purchaseOrder').isEnabled : false;
+
+                if(purchaseOrderSiteSettings && purchaseOrderCustomerSettings && !currentPayment) {
+                    currentPaymentType = 'PurchaseOrder';
+                }
 
                 if (currentPaymentType && (currentPaymentType !== billingInfoPaymentType || currentPaymentWorkflow !== billingInfoPaymentWorkflow)) {
                     this.set('paymentType', currentPaymentType, { silent: true });
                     this.set('paymentWorkflow', currentPaymentWorkflow, { silent: true });
                     this.set('card', currentCard, { silent: true });
                     this.set('billingContact', currentBillingContact, { silent: true });
+                    this.set('purchaseOrder', currentPurchaseOrder, { silent: true });
                 }
             },
             edit: function () {
                 this.getPaymentTypeFromCurrentPayment();
                 CheckoutStep.prototype.edit.apply(this, arguments);
             },
+            updatePurchaseOrderAmount: function() {
+
+                var me = this,
+                    order = me.getOrder(),
+                    currentPurchaseOrder = this.get('purchaseOrder'),
+                    pOAvailableBalance = currentPurchaseOrder.get('totalAvailableBalance'),
+                    orderAmountRemaining = order.get('amountRemainingForPayment'),
+                    amount = pOAvailableBalance > orderAmountRemaining ?
+                        orderAmountRemaining : pOAvailableBalance;
+
+                if((!this.get('purchaseOrder').get('isEnabled') && this.get('purchaseOrder').selected) || order.get('payments').length > 0) {
+                    return;
+                }
+
+
+                currentPurchaseOrder.set('amount', amount);
+                if(amount < orderAmountRemaining) {
+                    currentPurchaseOrder.set('splitPayment', true);
+                }
+
+                //refresh ui when split payment is working?
+                me.trigger('stepstatuschange'); // trigger a rerender
+            },
+            isPurchaseOrderEnabled: function() {
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrderInfo = order ?  order.get('customer').get('purchaseOrder') : null,
+                    purchaseOrderSiteSettings = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder ?
+                        HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled : false,
+                    purchaseOrderCustomerEnabled = purchaseOrderInfo ? purchaseOrderInfo.isEnabled : false,
+                    customerAvailableBalance = purchaseOrderCustomerEnabled ? purchaseOrderInfo.totalAvailableBalance > 0 : false,
+                    purchaseOrderEnabled = purchaseOrderSiteSettings && purchaseOrderCustomerEnabled && customerAvailableBalance;
+
+                return purchaseOrderEnabled;
+            },
+            resetPOInfo: function() {
+                var me = this,
+                    currentPurchaseOrder = me.get('purchaseOrder');
+
+                currentPurchaseOrder.get('paymentTermOptions').reset();
+                currentPurchaseOrder.get('customFields').reset();
+                currentPurchaseOrder.get('paymentTerm').clear();
+
+                this.setPurchaseOrderInfo();
+            },
+            setPurchaseOrderInfo: function() {
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrderInfo = order ? order.get('customer').get('purchaseOrder') : null,
+                    purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
+                    currentPurchaseOrder = me.get('purchaseOrder'),
+                    siteId = require.mozuData('checkout').siteId,
+                    currentPurchaseOrderAmount = currentPurchaseOrder.get('amount');
+
+                currentPurchaseOrder.set('isEnabled', purchaseOrderEnabled);
+                if(!purchaseOrderEnabled) {
+                    // if purchase order isn't enabled, don't populate stuff!
+                    return;
+                }
+
+                // Breaks the custom field array into individual items, and makes the value
+                //  field a first class item against the purchase order model. Also populates the field if the
+                //  custom field has a value.
+                currentPurchaseOrder.deflateCustomFields();
+                // Update models-checkout validation with flat purchaseOrderCustom fields for validation.
+                for(var validateField in currentPurchaseOrder.validation) {
+                    if(!this.validation['purchaseOrder.'+validateField]) {
+                        this.validation['purchaseOrder.'+validateField] = currentPurchaseOrder.validation[validateField];
+                    }
+                    // Is this level needed?
+                    if(!this.parent.validation['billingInfo.purchaseOrder.'+validateField]) {
+                        this.parent.validation['billingInfo.purchaseOrder.'+validateField] =
+                            currentPurchaseOrder.validation[validateField];
+                    }
+                }
+
+                // Set information, only if the current purchase order does not have it:
+                var amount = purchaseOrderInfo.totalAvailableBalance > order.get('amountRemainingForPayment') ?
+                        order.get('amountRemainingForPayment') : purchaseOrderInfo.totalAvailableBalance;
+
+                currentPurchaseOrder.set('amount', amount);
+
+                currentPurchaseOrder.set('totalAvailableBalance', purchaseOrderInfo.totalAvailableBalance);
+                currentPurchaseOrder.set('availableBalance', purchaseOrderInfo.availableBalance);
+                currentPurchaseOrder.set('creditLimit', purchaseOrderInfo.creditLimit);
+
+                if(purchaseOrderInfo.totalAvailableBalance < order.get('amountRemainingForPayment')) {
+                    currentPurchaseOrder.set('splitPayment', true);
+                }
+                
+                var paymentTerms = [];
+                purchaseOrderInfo.paymentTerms.forEach(function(term) {
+                    if(term.siteId === siteId) {
+                        var newTerm = {};
+                        newTerm.code = term.code;
+                        newTerm.description = term.description;
+                        paymentTerms.push(term);
+                    }
+                });
+                currentPurchaseOrder.set('paymentTermOptions', paymentTerms, {silent: true});
+
+                var paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
+                if(paymentTermOptions.length === 1) {
+                    var paymentTerm = {};
+                    paymentTerm.code = paymentTermOptions.models[0].get('code');
+                    paymentTerm.description = paymentTermOptions.models[0].get('description');
+                    currentPurchaseOrder.set('paymentTerm', paymentTerm);
+                }
+
+                this.setPurchaseOrderBillingInfo();
+            },
+            setPurchaseOrderBillingInfo: function() {
+                var me = this,
+                    order = me.getOrder(),
+                    purchaseOrderEnabled = this.isPurchaseOrderEnabled(),
+                    currentPurchaseOrder = me.get('purchaseOrder'),
+                    contacts = order ? order.get('customer').get('contacts') : null;
+                if(purchaseOrderEnabled) {
+                    if(currentPurchaseOrder.selected && contacts.length > 0) {
+                        var foundBillingContact = contacts.models.find(function(item){
+                            return item.get('isPrimaryBillingContact');
+                                
+                        });
+
+                        if(foundBillingContact) {
+                            this.set('billingContact', foundBillingContact, {silent: true});
+                            currentPurchaseOrder.set('usingBillingContact', true);
+                        }
+                    }
+                }
+            },
+            setPurchaseOrderPaymentTerm: function(termCode) {
+                var currentPurchaseOrder = this.get('purchaseOrder'),
+                    paymentTermOptions = currentPurchaseOrder.get('paymentTermOptions');
+                    var foundTerm = paymentTermOptions.find(function(term) {
+                        return term.get('code') === termCode;
+                    });
+                    currentPurchaseOrder.set('paymentTerm', foundTerm, {silent: true});
+            },
             initialize: function () {
                 var me = this;
 
                 _.defer(function () {
+                    //set purchaseOrder defaults here.
+                    me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
+
                     var savedCardId = me.get('card.paymentServiceCardId');
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
@@ -870,11 +1031,21 @@
                 }
                 me.get('check').selected = newPaymentType === 'Check';
                 me.get('card').selected = newPaymentType === 'CreditCard';
+                me.get('purchaseOrder').selected = newPaymentType === 'PurchaseOrder';
+                if(newPaymentType === 'PurchaseOrder') {
+                    me.setPurchaseOrderBillingInfo();
+                }
             },
             setDefaultPaymentType: function(me) {
-                me.set('paymentType', 'CreditCard');
-                if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
-                    me.set('usingSavedCard', true);
+                if(me.isPurchaseOrderEnabled()) {
+                    me.set('paymentType', 'PurchaseOrder');
+                    me.selectPaymentType(me, 'PurchaseOrder');
+                } else {
+                    me.set('paymentType', 'CreditCard');
+                    me.selectPaymentType(me, 'CreditCard');
+                    if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
+                        me.set('usingSavedCard', true);
+                    }
                 }
             },
             calculateStepStatus: function () {
@@ -894,6 +1065,7 @@
             },
             hasPaymentChanged: function(payment) {
 
+                // fix this for purchase orders, currently it constantly voids, then re-applys the payment even if nothing changes.
                 function normalizeBillingInfos(obj) {
                     return {
                         paymentType: obj.paymentType,
@@ -912,7 +1084,7 @@
                                 'postalOrZipCode',
                                 'stateOrProvince') : {}
                         }),
-                        card: _.extend(_.pick(obj.card,
+                        card: obj.card ? _.extend(_.pick(obj.card,
                             'expireMonth',
                             'expireYear',
                             'nameOnCard',
@@ -922,7 +1094,8 @@
                             cardNumber: obj.card.cardNumberPartOrMask || obj.card.cardNumberPart || obj.card.cardNumber,
                             id: obj.card.paymentServiceCardId || obj.card.id,
                             isCardInfoSaved: obj.card.isCardInfoSaved || false
-                        }),
+                        }) : {},
+                        purchaseOrder: obj.purchaseOrder || {},
                         check: obj.check || {}
                     };
                 }
@@ -972,6 +1145,9 @@
                 }
 
                 var card = this.get('card');
+                if(this.get('paymentType').toLowerCase() === "purchaseorder") {
+                    this.get('purchaseOrder').inflateCustomFields();
+                }
 
                 if (!currentPayment) {
                     return this.applyPayment();
@@ -1019,14 +1195,14 @@
                     this.markComplete();
                 }
             },
+
             markComplete: function () {
                 this.stepStatus('complete');
                 this.isLoading(false);
                 var order = this.getOrder();
-                _.defer(function() {
-                    order.isReady(true);    
+                _.defer(function() { 
+                    order.isReady(true);   
                 });
-                
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
@@ -1067,6 +1243,23 @@
             };
         }
 
+        var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+        if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0){
+
+            var requiredAttributes = _.filter(storefrontOrderAttributes, 
+                function(attr) { return attr.isRequired && attr.isVisible && attr.valueType !== 'AdminEntered' ;  });
+            requiredAttributes.forEach(function(attr) {
+                if(attr.isRequired) {
+
+                    checkoutPageValidation['orderAttribute-' + attr.attributeFQN] = 
+                    {
+                        required: true,
+                        msg: attr.content.value + " " + Hypr.getLabel('missing')
+                    };
+                }
+            }, this);
+        }
+
         var CheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
             handlesMessages: true,
@@ -1088,6 +1281,7 @@
                     user = require.mozuData('user');
 
                 _.defer(function() {
+
                     var latestPayment = self.apiModel.getCurrentPayment(),
                         activePayments = self.apiModel.getActivePayments(),
                         fulfillmentInfo = self.get('fulfillmentInfo'),
@@ -1144,6 +1338,8 @@
                     var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
 
+                    self.applyAttributes();
+
                 });
                 if (user.isAuthenticated) {
                     this.set('customer', { id: user.accountId });
@@ -1152,11 +1348,19 @@
                 if (data.acceptsMarketing === null) {
                     self.set('acceptsMarketing', true);
                 }
-                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard',/* 'finalPaymentReconcile', */'apiCheckout', 'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
-
+                _.bindAll(this, 'update', 'onCheckoutSuccess', 'onCheckoutError', 'addNewCustomer', 'saveCustomerCard', 'apiCheckout', 
+                    'addDigitalCreditToCustomerAccount', 'addCustomerContact', 'addBillingContact', 'addShippingContact', 'addShippingAndBillingContact');
 
             },
+
+            applyAttributes: function() {
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    this.set('orderAttributes', storefrontOrderAttributes);
+                }
+            },
+
             processDigitalWallet: function(digitalWalletType, payment) {
                 var me = this;
                 me.runForAllSteps(function() {
@@ -1246,6 +1450,8 @@
                     else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
+                    // only do this when there isn't a payment on the order...
+                    me.get('billingInfo').updatePurchaseOrderAmount();
                     me.isLoading(false);
                 });
             },
@@ -1277,13 +1483,7 @@
                     }
                 });
 
-                //on an error, if the card is declined -- and the service returns no card data, lets unset the model.card
-                this.apiGet().then(function(res) {
-                    if (res.data.billingInfo && !res.data.billingInfo.card) {
-                         order.unset('billingInfo.card', {silent: true});
-                    }
-                    order.trigger('error', error);
-                });
+                this.trigger('error', error);
 
                 if (!errorHandled) order.messages.reset(error.items);
                 order.isSubmitting = false;
@@ -1480,6 +1680,20 @@
                 return this.get('createAccount') && !this.customerCreated;
             },
 
+            validateReviewCheckoutFields: function(){
+                var validationResults = [];
+                for (var field in checkoutPageValidation) {
+                    if(checkoutPageValidation.hasOwnProperty(field)) {
+                        var result = this.validate(field);
+                        if(result) {
+                            validationResults.push(result);
+                        }
+                    }
+                }
+
+                return validationResults.length > 0;
+            },
+
             submit: function () {
                 var order = this,
                     billingInfo = this.get('billingInfo'),
@@ -1498,6 +1712,28 @@
                         });
                     }];
 
+                var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
+                if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
+                    var updateAttrs = [];
+                    storefrontOrderAttributes.forEach(function(attr){
+                        var attrVal = order.get('orderAttribute-' + attr.attributeFQN);
+                        if(attrVal) {
+                            updateAttrs.push({
+                                'fullyQualifiedName': attr.attributeFQN,
+                                'values': [ attrVal ]
+                            });
+                        }
+                    });
+
+                    if(updateAttrs.length > 0){
+                        process.push(function(){
+                            return order.apiUpdateAttributes(updateAttrs);
+                        }, function() {
+                            return order.apiGet();
+                        });
+                    }
+                }
+
                 if (this.isSubmitting) return;
 
                 this.isSubmitting = true;
@@ -1505,17 +1741,19 @@
                 if (requiresBillingInfo && !billingContact.isValid()) {
                     // reconcile the empty address after we got back from paypal and possibly other situations.
                     // also happens with visacheckout ..
-                    var billingInfoFromPayment = this.apiModel.getCurrentPayment().billingInfo;
+                    var billingInfoFromPayment = (this.apiModel.getCurrentPayment() || {}).billingInfo;
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
                 this.syncBillingAndCustomerEmail();
                 this.setFulfillmentContactEmail();
 
-                if (nonStoreCreditTotal > 0 && this.validate()) {
+                // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
+                if ((nonStoreCreditTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) {
                     this.isSubmitting = false;
                     return false;
-                }
+                } 
+
                 this.isLoading(true);
 
                 if (isSavingNewCustomer) {
