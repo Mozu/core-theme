@@ -246,7 +246,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var cats = res.ReadAsSync();
 
-            return List2(Mapper.Map<List<Category>>(cats.Items), cats.TotalCount);
+            return List2(Mapper.Map<List<Category>>(cats), cats?.Count);
         }
 
         [HttpPostRoute(UriTemplate = "update")]
