@@ -139,7 +139,8 @@ Ext.define('Taco.core.StateManager', {
         var NOT_VIEWS =[
             'customerset',
             'categories/edit',
-            'categories/create'
+            'categories/create',
+            'categories/createDynamic'
         ];
 
         if (this.REACT_VIEWS
