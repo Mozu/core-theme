@@ -187,7 +187,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             {
                 dataIndex: 'returnType',
-                text: 'Resolusion',
+                text: 'Resolution',
                 draggable: false,
                 sortable: false,
                 resizable: false,
