@@ -50,13 +50,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
         Core.Mongo.MongoDatabaseProvider _mdbProvider;
         bool _ensureIndexes = false;
         Task _ensureIndexTask;
-        Timer _timer;
+        Timer _backgroundBuildTimer;
+        Timer _backgroundJobCleanTimer;
         ISettings _settings;
         string _machineId;
         Autofac.ILifetimeScope _globalScope;
         const string CacheName = "Sitebuilder.ContextBuilder";
         const int TimerInterval = 15 * 1000;
         public const string CacheVersion = "1";
+        const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
+        const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
+        const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
+
 
         ILogger _logger;
         public SitebuilderContextCacheRepository(ICacheProvider cacheProvider, Mozu.Core.Settings.ISettings settings, ILifetimeScope globalScope)
@@ -67,12 +72,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _machineId = System.Environment.MachineName + "-" + Guid.NewGuid().ToString();
             _settings = settings;
             _logger = LoggingService.LoggerFor<SitebuilderContextCacheRepository>();
-            _timer = new Timer(BuildCallback, null, TimerInterval, Timeout.Infinite);
+            _backgroundBuildTimer = new Timer(BuildCallback, null, TimerInterval, Timeout.Infinite);
+            bool isSandBox = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
+            if ( _settings.AppSettingsAsNullableBool(EnableCleanJobConfigKey).GetValueOrDefault(isSandBox))
+            {
+                _backgroundJobCleanTimer = new Timer(CleanJobQueuCallback, null, GetNextCleanInterval(), Timeout.Infinite);
+            }
+            
             _globalScope = ((Autofac.Core.ISharingLifetimeScope)globalScope).RootLifetimeScope; 
         }
         TimeSpan GetNextBuildTime()
         {
-            int intervalInMinutes = _settings.AppSettingsAsNullableInt("sitebuilder:context.buildinterval").GetValueOrDefault( 5);
+            int intervalInMinutes = _settings.AppSettingsAsNullableInt(BuildIntervalConfigKey).GetValueOrDefault( 5);
             var now = DateTime.Now;
             var modMins = now.Minute % intervalInMinutes;
             if (modMins == 0)
@@ -82,6 +93,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             var secs = DateTime.Now.Second % 60;
             return new TimeSpan(0, 0, modMins, now.Second % 60, now.Millisecond % 1000);
+        }
+
+        int GetNextCleanInterval()
+        {
+            return _settings.AppSettingsAsNullableInt(CleanJobIntervalConfigKey).GetValueOrDefault(120) * 60 * 1000;
         }
 
 
@@ -97,10 +113,25 @@ namespace Mozu.SiteBuilder.Mvc.Context
             {
                 _logger.Error(ex);
             }
-            _timer.Change(TimerInterval, Timeout.Infinite);
+            _backgroundBuildTimer.Change(TimerInterval, Timeout.Infinite);
 
         }
 
+        void CleanJobQueuCallback(object state)
+        {
+            try
+            {
+                Task.Run(() => CleanOldJobs()).Wait();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+            }
+
+            _backgroundJobCleanTimer.Change(GetNextCleanInterval(), Timeout.Infinite);
+        }
+
+       
         async Task DoBuilds ()
         {
             while ( true)
@@ -117,10 +148,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 var ctxData = await ProcessWork(work, apiContext).ConfigureAwait(false);
 
                 await ((ISitebuilderContextCacheRepository)this).PutAsync(ctxData, apiContext).ConfigureAwait(false);
-
-               
+     
             }
-
         }
         SiteBuilderApiContext ToApiContext(SiteBuilderContextWorkItem work )
         {
@@ -149,6 +178,24 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
                 return await serviceAggregator.Aggregate(existing).ConfigureAwait(false);
             }
+        }
+
+        async Task CleanOldJobs()
+        {
+            var fBuilder = Builders<SiteBuilderContextWorkItem>.Filter;
+            var filter = fBuilder.Gt(x => x.TimeStamp, DateTime.UtcNow.AddHours(-2));
+            var col = GetCollection();
+            var cursor = await (col.FindAsync(filter).ConfigureAwait(false));
+            var workItems = await cursor.ToListAsync().ConfigureAwait(false);
+
+            filter = fBuilder.Or(workItems.Select(x => fBuilder.Eq(_ => _.Id, x.Id)));
+            await col.DeleteManyAsync(filter).ConfigureAwait(false);
+            var cache = _cacheProvider.GetCache(CacheName);
+            workItems.ForEach(_ =>
+            {
+                var tags = GetTags(_.TenantId, _.MasterCatalogId, _.CatalogId, _.SiteId, DataViewModeType.Live);
+                cache.InvalidateItemsByTags(tags, TagQueryType.Any);
+            });
         }
 
         Task<SiteBuilderContextWorkItem> GetWork()
@@ -190,27 +237,42 @@ namespace Mozu.SiteBuilder.Mvc.Context
             if (!_ensureIndexes)
             {
                 var colleciton = GetCollection();
-                var name = "SiteBuilderContextWorker_primary_index";
+                var newWorkIdxName = "newWork_Idx";
+                var oldWorkIxdName = "oldWork_Ixd";
+                var builder = Builders<SiteBuilderContextWorkItem>.IndexKeys;
                 using (var cursor = await colleciton.Indexes.ListAsync().ConfigureAwait(false))
                 {
                     var indexes = await cursor.ToListAsync().ConfigureAwait(false);
-                    if (!indexes.Any(index => index["name"] == name))
-                            {
-                        var keys = Builders<SiteBuilderContextWorkItem>.IndexKeys
-                            .Ascending(x => x.SiteId)
-                            .Descending(x => x.TimeStamp);
-                        await colleciton.Indexes.CreateOneAsync(keys,
-                            new CreateIndexOptions()
-                            {
-                                Background = true,
-                                Name = name,
-                            }).ConfigureAwait(false);
-                    }
-
+                    await EnsureIndex(colleciton,  indexes , newWorkIdxName, builder.Ascending(x => x.SchedualedBuildTime).Ascending(x => x.Worker));
+                    await EnsureIndex(colleciton, indexes, oldWorkIxdName, builder.Ascending(x => x.TimeStamp));
                 }
                 _ensureIndexes = true;
             }
         }
+
+        private async Task EnsureIndex(IMongoCollection<SiteBuilderContextWorkItem> colleciton,  
+            List<MongoDB.Bson.BsonDocument> indexes , 
+            string indexName ,
+            IndexKeysDefinition<SiteBuilderContextWorkItem> keys)
+        {
+            if (!indexes.Any(index => index["name"] == indexName))
+            {
+                try
+                {
+                    await colleciton.Indexes.CreateOneAsync(keys,
+                        new CreateIndexOptions()
+                        {
+                            Background = true,
+                            Name = indexName,
+                        }).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    _logger.Warn(e);
+                }
+            }
+        }
+
         string GetCacheKey(ISiteBuilderApiContext apiContext)
         {
             
@@ -272,7 +334,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var isSb =_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
             var policy = new CachePolicy()
             {
-                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5): DateTimeOffset.MaxValue
+                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
             };
 
             await _cacheProvider.GetCache(CacheName).PutAsync(item, cacheKey, tags, policy).ConfigureAwait(false);
