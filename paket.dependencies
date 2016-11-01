@@ -45,7 +45,7 @@ nuget Mozu.ProductAdmin.Contracts
 nuget Mozu.ProductRuntime.Contracts > 1.1635
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
-nuget Mozu.ShippingAdmin.Contracts >= 1.1617
+nuget Mozu.ShippingAdmin.Contracts >= 1.1643
 nuget Mozu.SiteSettings.General.Contracts
 nuget Mozu.SiteSettings.Order.Contracts > 1.1624
 nuget protobuf-net 2.0.0.668 

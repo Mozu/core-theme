@@ -69,6 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                {
                                    id = x.Id,
                                    Enabled = x.Enabled,
+                                   EnabledForReturns = x.EnabledForReturns,
                                    Settings = new JObject(),
                                    IsConfigured = true
                                };
