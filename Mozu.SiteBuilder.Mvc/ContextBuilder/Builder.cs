@@ -31,7 +31,8 @@ using MongoDB.Driver;
 using Mozu.Core.Settings;
 using System.Security.Cryptography;
 using Mozu.SiteBuilder.Mvc.Extensions;
-using SBCategory = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category ;
+using SBCategory = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
+using Mozu.Core.EnsureThat;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -268,9 +269,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             var cacheKey = GetCacheKey(apiContext);
             var tags = GetTags(apiContext.TenantId, apiContext.MasterCatalogId.GetValueOrDefault(-1), apiContext.CatalogId.GetValueOrDefault(-1), apiContext.SiteId, apiContext.DataViewMode);
+            var isSb =_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
             var policy = new CachePolicy()
             {
-                AbsoluteExpiration = DateTimeOffset.MaxValue
+                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5): DateTimeOffset.MaxValue
             };
 
             await _cacheProvider.GetCache(CacheName).PutAsync(item, cacheKey, tags, policy).ConfigureAwait(false);
@@ -552,6 +554,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
             catch (Exception ex)
             {
+                if ( _apiContext.DataViewMode == DataViewModeType.Pending )
+                {
+                    throw ex;
+                }
                 _logger.Warn(ex);
             }
 
@@ -571,14 +577,24 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 }
                 catch (Exception ex)
                 {
+                    if (_apiContext.DataViewMode == DataViewModeType.Pending)
+                    {
+                        throw ex;
+                    }
                     _logger.Warn(ex);
                 }
 
             }
+            if (_apiContext.SiteId.HasValue)
+            {
+                Ensure.That(ret.CheckoutSettings, "CheckoutSettings").IsNotNull();
+                Ensure.That(ret.GeneralSettings, "GeneralSettings").IsNotNull();
+                Ensure.That(ret.RootCategoryTree, "CategoryTree").IsNotNull();
+                Ensure.That(ret.TenantInfo, "TenantInfo").IsNotNull();
+            }
+
             ret.Hash = Hash(ret);
-
-
-
+            
             return ret;
 
         }
@@ -620,7 +636,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 data.LocationUsages?.Items?.ForEach(_ =>
                 {
                     w.Write(_.LocationUsageTypeCode??string.Empty);
-                    w.Write((_.AuditInfo.UpdateDate ?? DateTime.MinValue).Ticks);
+                    w.Write((_.AuditInfo?.UpdateDate ?? DateTime.MinValue).Ticks);
                 });
                 data.NavWebPages?.Items?.ForEach(_ =>
                 {
@@ -784,11 +800,23 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             if (responseTask.IsFaulted || !responseTask.IsCompleted)
             {
+                if ( responseTask.Exception != null)
+                {
+                    if (_apiContext.DataViewMode == DataViewModeType.Pending)
+                    {
+                        throw responseTask.Exception;
+                    }
+                    _logger.Warn(responseTask.Exception);
+                }
                 return default(T);
             }
             var response = responseTask.Result;
             if (response.HasException)
             {
+                if (_apiContext.DataViewMode == DataViewModeType.Pending)
+                {
+                    throw response.ReadException();
+                }
                 _logger.Warn(response.ReadException());
                 return default(T);
             }
