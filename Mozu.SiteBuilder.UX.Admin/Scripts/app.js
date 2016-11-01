@@ -18,7 +18,6 @@ Ext.application({
     controllers: [
         'Analytics',
         'Account',
-        'BetaCategories',
         'Capability',
         'Dashboard',
         'Reports',
