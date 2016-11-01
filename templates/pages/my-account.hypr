@@ -69,6 +69,8 @@
             {% include "modules/my-account/my-account-storecredit" %}
         </div>
 
+        {% include "modules/my-account/my-account-print-window" %}
+
 		{% dropzone "my-account-bottom" scope="template" %}
 
     </div>
