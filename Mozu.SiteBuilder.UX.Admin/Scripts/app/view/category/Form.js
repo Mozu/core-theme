@@ -406,7 +406,7 @@ Ext.define("Taco.view.category.Form", {
             autoShow: true,
             closeAction: 'destroy',
             scale: 'small',
-            title: 'Are You Sure You\'d like to Proceed',
+            title: 'This will Impact ' + total + ' Products',
             primaryText: 'Proceed',
             items: [{
                 xtype: 'container',
@@ -416,7 +416,7 @@ Ext.define("Taco.view.category.Form", {
                 items: [
                     Ext.create('Ext.panel.Panel', {
                         width: '100%',
-                        html: 'This dynamic precomputed category will contain ' + total + ' products. This may delay products appearing in this category, and could cause system degradation. To avoid this, ensure your category contains less than 5,000 products.'
+                        html: 'This dynamic precomputed category will contain <b>' + total + '</b> products. This may delay products appearing in this category, and could cause system degradation. To avoid this, ensure your category contains less than 10,000 products.'
                     })
                 ]
             }],
@@ -437,7 +437,7 @@ Ext.define("Taco.view.category.Form", {
         return new Promise(function(resolve) {
             me.getCategoryPreviewTotal().then(function(total) {
 
-                if (total > 5000) {
+                if (total > 10000) {
                     me.showWarningModal(total, function(doSave) {
                         if (doSave) {
                             me.updateRecord();
