@@ -197,6 +197,12 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             if (document == null)
                 return;
             var widgetRawArray = document.Get<JArray>(CmsConstants.Documents.widget_prop);
+
+            if ( widgetRawArray == null)
+            {
+                return;
+            }
+
             // get build prop
             // check for existence
             // switch between caliente and chorizo based on value.
