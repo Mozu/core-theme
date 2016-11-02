@@ -139,6 +139,7 @@ Ext.define('Taco.core.StateManager', {
         var NOT_VIEWS =[
             'customerset',
             'categories/edit',
+            'categories/duplicate',
             'categories/create',
             'categories/createDynamic'
         ];
