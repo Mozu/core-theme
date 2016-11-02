@@ -374,15 +374,101 @@ Ext.define("Taco.view.category.Form", {
         this.callParent(arguments);
     },
 
+    getCategoryPreviewTotal: function() {
+        var record = this.record;
+
+        return new Promise(function(resolve, error) {
+
+            // dont make the preview call unless this is a DynamicRealTime call
+            if (record.get('categoryType') !== 'DynamicPreComputed') {
+                return resolve(0);
+            }
+
+            Ext.Ajax.request({
+                url: '/admin/app/productruntime/preview',
+                method: 'POST',
+                params: {
+                    expression: record.get('dynamicExpression').text,
+                    limit: 0,
+                    dataViewMode: 'Live',
+                    siteId: Taco.app.context.getCurrentContext().getSiteId()
+                },
+                success: function (response) {
+                    var amount = JSON.parse(response.responseText);
+                    resolve(amount.total);
+                }
+            }, this);
+        });
+    },
+
+    showWarningModal: function(total, cb) {
+        Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            closeAction: 'destroy',
+            scale: 'small',
+            title: 'Are You Sure You\'d like to Proceed',
+            primaryText: 'Proceed',
+            items: [{
+                xtype: 'container',
+                layout: { 
+                    type: 'hbox' 
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: 'This dynamic precomputed category will contain ' + total + ' products. This may delay products appearing in this category, and could cause system degradation. To avoid this, ensure your category contains less than 5,000 products.'
+                    })
+                ]
+            }],
+            listeners: {
+                beforesave: function () {
+                    cb(true);
+                },
+                beforecancel: function() {
+                    cb(false);
+                }
+            }
+        });
+    },
+
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
-    beforeSave: function() {
+    beforeAsyncSave: function() {
+        var me = this;
+        return new Promise(function(resolve) {
+            me.getCategoryPreviewTotal().then(function(total) {
+
+                if (total > 5000) {
+                    me.showWarningModal(total, function(doSave) {
+                        if (doSave) {
+                            me.updateRecord();
+                            resolve(true);
+                        }
+                        else {
+                            resolve(false);
+                            me.fireEvent('savecomplete')
+                        }
+                    });
+                }
+
+                else {
+                    me.updateRecord();
+                    resolve(true);
+                }
+
+            });
+
+        });
+    },
+
+    // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+    updateRecord: function() {
         var uploadedImages = [],
             form = this.getForm(),
             categoryImagesField = form.findField("categoryImages");
 
         if (categoryImagesField) {
             uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
-                return img.isUploaded;
+                resolve(img.isUploaded);
             });
         }
 
@@ -399,8 +485,6 @@ Ext.define("Taco.view.category.Form", {
             };
             this.record.set("dynamicExpression", expressionData);
         }
-
-        return true;
     },
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
