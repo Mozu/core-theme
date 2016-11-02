@@ -468,7 +468,7 @@ Ext.define("Taco.view.category.Form", {
 
         if (categoryImagesField) {
             uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
-                resolve(img.isUploaded);
+                return img.isUploaded;
             });
         }
 
