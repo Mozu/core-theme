@@ -384,6 +384,9 @@ Ext.define("Taco.view.category.Form", {
                 return resolve(0);
             }
 
+            var sites = Taco.app.context.getCurrentContext().sites;
+            var siteId = sites && sites[0] ? sites[0].id : null;
+
             Ext.Ajax.request({
                 url: '/admin/app/productruntime/preview',
                 method: 'POST',
@@ -391,7 +394,7 @@ Ext.define("Taco.view.category.Form", {
                     expression: record.get('dynamicExpression').text,
                     limit: 0,
                     dataViewMode: 'Live',
-                    siteId: Taco.app.context.getCurrentContext().getSiteId()
+                    siteId: siteId
                 },
                 success: function (response) {
                     var amount = JSON.parse(response.responseText);
