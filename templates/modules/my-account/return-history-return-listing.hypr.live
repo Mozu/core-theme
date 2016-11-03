@@ -10,14 +10,16 @@
     </dl>
 
     {% if model.status == "Authorized" %}
-        <div class="">
-           <button id="print-return-label" class="mz-button" data-mz-action="printReturnLabel" data-mz-returnId="{{model.id}}">
-                {{labels.returnPrintLabelButton}}
-           </button>
-        </div>
-
+        {% with model.packages|findwhere("hasLabel", "true") as packageWithLabel %}
+            {% if packageWithLabel %}
+                <div>
+                   <button id="print-return-label" class="mz-button" data-mz-action="printReturnLabel" data-mz-returnId="{{model.id}}">
+                        {{labels.returnPrintLabelButton}}
+                   </button>
+                </div>
+            {% endif %}
+        {% endwith %}
     {% endif %}
-
 
 {% endblock order-details %}
 {% block order-items %}
