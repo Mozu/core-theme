@@ -157,6 +157,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             newContext.TenantId = work.TenantId;
             newContext.MasterCatalogId = work.MasterCatalogId;
             newContext.CatalogId = work.CatalogId;
+            newContext.MozuInstanceId = work.InstanceId;
             newContext.SiteId = work.SiteId;
             newContext.PriceListCode = work.PriceList;
             newContext.LocaleCode = work.LocaleCode;
@@ -370,6 +371,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 TenantId = apiContext.TenantId,
                 MasterCatalogId = apiContext.MasterCatalogId.Value,
                 CatalogId = apiContext.CatalogId.Value,
+                InstanceId = apiContext.MozuInstanceId ,
                 SiteId = apiContext.SiteId.Value,
                 LocaleCode = apiContext.LocaleCode,
                 CurrencyCode = apiContext.CurrencyCode,
@@ -397,6 +399,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public int TenantId { get; set; }
         public int MasterCatalogId { get; set; }
         public int CatalogId { get; set; }
+
+        public string InstanceId { get; set; }
 
         public int SiteId { get; set; }
 
