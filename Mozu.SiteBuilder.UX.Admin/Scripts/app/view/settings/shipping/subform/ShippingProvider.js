@@ -5,7 +5,10 @@
 
 Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
     extend: 'Taco.core.ux.form.Form',
-    requires: ['Taco.store.Countries'],
+    requires: [
+        'Taco.store.Countries',
+        'Taco.core.ux.content.Tooltip'
+    ],
     title: 'base Provider',
     layout: {
         type: 'card',
@@ -35,6 +38,17 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
 
         });
 
+        this.on('beforeShow', function() {
+            this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: "shippingForReturns",
+                hoverTarget: 'boxLabelEl',
+                messageKey: 'shipping.enableForReturns',
+                offsetLeft: -5,
+                offsetTop: 90,
+                delay: 100
+            })
+        })
+
         this.configFields.getForm().setValues(this.record.get("settings") || {});
 
         var isFedex = this.record.get('id') === 'fedex';
@@ -54,7 +68,8 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             optionItems.push({
                 xtype: 'checkbox',  
                 name: 'enabledForReturns', 
-                boxLabel: 'Enable for Returns'
+                boxLabel: 'Enable for Returns',
+                itemId: 'shippingForReturns'
             });
         }
 
