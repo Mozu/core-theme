@@ -441,7 +441,7 @@ Ext.define("Taco.view.category.Form", {
             me.updateRecord().then(function() {
                 me.getCategoryPreviewTotal().then(function(total) {
 
-                    if (total > 10000) {
+                    if (total >= 10000) {
                         me.showWarningModal(total, function(doSave) {
                             if (doSave) {
                                 resolve(true);
