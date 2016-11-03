@@ -666,7 +666,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             if (!string.IsNullOrEmpty(themeId))
             {
                 var tid = ToThemeSelection(themeId);
-                if (!ret.Themes.ContainsKey(tid.Id))
+                if (!string.IsNullOrEmpty(tid?.Id) && !ret.Themes.ContainsKey(tid.Id))
                 {
                     ret.Themes[tid.Id]  = existing?.Themes?.ContainsKey(tid.Id) == true ? existing?.Themes?[tid.Id] : new Tuple<Theme, ThemeRuntimeSettingsCollection>(null, null);
                     tasks.Add(Task.Run(() => _themeRepository.GetTheme(tid))
