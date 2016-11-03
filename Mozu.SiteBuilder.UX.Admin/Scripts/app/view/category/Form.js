@@ -438,56 +438,66 @@ Ext.define("Taco.view.category.Form", {
     beforeAsyncSave: function() {
         var me = this;
         return new Promise(function(resolve) {
-            me.getCategoryPreviewTotal().then(function(total) {
+            me.updateRecord().then(function() {
+                me.getCategoryPreviewTotal().then(function(total) {
 
-                if (total > 10000) {
-                    me.showWarningModal(total, function(doSave) {
-                        if (doSave) {
-                            me.updateRecord();
-                            resolve(true);
-                        }
-                        else {
-                            resolve(false);
-                            me.fireEvent('savecomplete')
-                        }
-                    });
-                }
+                    if (total > 10000) {
+                        me.showWarningModal(total, function(doSave) {
+                            if (doSave) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                                me.fireEvent('savecomplete')
+                            }
+                        });
+                    }
 
-                else {
-                    me.updateRecord();
-                    resolve(true);
-                }
+                    else {
+                        resolve(true);
+                    }
 
-            });
-
+                });
+            
+            })
         });
     },
 
     // need to update the record manually. form.Form does not extract the value from the imageField automatically.
     updateRecord: function() {
-        var uploadedImages = [],
-            form = this.getForm(),
-            categoryImagesField = form.findField("categoryImages");
+        var me = this;
+        return new Promise(function(resolve, reject) {
+            var uploadedImages = [],
+                form = me.getForm(),
+                categoryImagesField = form.findField("categoryImages");
 
-        if (categoryImagesField) {
-            uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
-                return img.isUploaded;
-            });
-        }
+            if (categoryImagesField) {
+                uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
+                    return img.isUploaded;
+                });
+            }
 
-        // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-        this.record.set("categoryImages", uploadedImages);
+            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+            me.record.set("categoryImages", uploadedImages);
 
-        this.record.set('parentId', this.parentCategoryPicker.getValue());
+            me.record.set('parentId', me.parentCategoryPicker.getValue());
 
-        if (this.expressionTreePanel) {
-            var treeData = this.expressionTreePanel.getValue();
+            if (!me.expressionTreePanel) {
+                return resolve()
+            }
+
+            var treeData = me.expressionTreePanel.getValue();
             var expressionData = {
                 tree: treeData,
-                type: this.record.get("categoryType")
+                type: me.record.get("categoryType")
             };
-            this.record.set("dynamicExpression", expressionData);
-        }
+            
+            me.expressionTreePanel.getExpressionText(expressionData, function(text) {
+                expressionData.text = text;
+                me.record.set("dynamicExpression", expressionData);
+                resolve();
+            });
+        });
     },
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
