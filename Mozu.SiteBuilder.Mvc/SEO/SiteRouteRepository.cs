@@ -500,18 +500,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (kvp.Key == null)
                     {
                         constaintName = "_" + facet;
-                        if (_validators.ContainsKey(constaintName))
+                        if (!_validators.ContainsKey(constaintName))
                         {
-                            continue;
+                            var constraint =
+                                _customRouteConstraintFactory.BuildConstraint(constaintName, new Validator()
+                                {
+                                    type = ConstraintFactory.SearchFacetConstraintType,
+                                    attributeFQN = facet
+                                });
+                            _validators[constaintName] = constraint;
                         }
-
-                        var constraint =
-                            _customRouteConstraintFactory.BuildConstraint(constaintName, new Validator()
-                            {
-                                type = ConstraintFactory.SearchFacetConstraintType,
-                                attributeFQN = facet
-                            });
-                        _validators[constaintName] = constraint;
                     }
                     else
                     {
@@ -544,19 +542,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (mappingKvp.Key == null)
                     {
                         mappingName = "_" + facet;
-                        if (_mappings.ContainsKey(mappingName))
+                        if (!_mappings.ContainsKey(mappingName))
                         {
-                            continue;
+                            var mapping =
+                                _routeDataMappingFactory.BuildMapping(null, new Mapping()
+                                {
+                                    type = Mapping.TypeConst.facet,
+                                    facetId = facet,
+                                    mapTo = "facetValueFilter"
+                                });
+                            _mappings[mappingName] = mapping;
                         }
-
-                        var mapping =
-                            _routeDataMappingFactory.BuildMapping(null, new Mapping()
-                            {
-                                type = Mapping.TypeConst.facet,
-                                facetId = facet,
-                                mapTo = "facetValueFilter"
-                            });
-                        _mappings[mappingName] = mapping;
                     }
                     else
                     {
