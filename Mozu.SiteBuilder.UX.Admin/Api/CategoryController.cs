@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var responseFields = (isPicker)
-                ? "items(id, categoryCode, isActive, content(name)"
+                ? "items(id, categoryCode, childCount, isActive, content(name)"
                 : _listResponseFields;
             //getting rid of server filtering for now.  all filtering done on the client.
             var cats = (await _categoriesClient.GetCategories(startIndex: pagingParams.startIndex,
