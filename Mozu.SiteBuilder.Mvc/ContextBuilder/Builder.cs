@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         ISettings _settings;
         string _machineId;
         Autofac.ILifetimeScope _globalScope;
-        const string CacheName = "Sitebuilder.ContextBuilder";
+        const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         const int TimerInterval = 15 * 1000;
         public const string CacheVersion = "1";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
