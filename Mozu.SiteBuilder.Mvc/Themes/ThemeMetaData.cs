@@ -30,7 +30,33 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     public class ThemeFileSystemInfoCollection
     {
 
-      
+        public void UnionWith(ThemeFileSystemInfoCollection set )
+        {
+            
+            if (set._allFiles == this._allFiles ||  set._allFiles == null)
+            {
+                return;
+            }
+
+            var total = new Dictionary<string, ThemeFileSystemInfo>( StringComparer.OrdinalIgnoreCase);
+            if ( _allFiles != null)
+            {
+                foreach (var kvp in this._allFiles)
+                {
+                    total[kvp.Key] = kvp.Value;
+                }
+            }
+
+            foreach (var kvp in set._allFiles)
+            {
+                if (!total.ContainsKey(kvp.Key))
+                {
+                    total.Add(kvp.Key, kvp.Value);
+                }
+            }
+            this._allFiles = total;
+               
+        }
         public class ThemeFileSystemInfoCollectionJsonConverter : JsonConverter
         {
 

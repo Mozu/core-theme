@@ -20,6 +20,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     //[JsonConverter(typeof(Theme.ThemeJsonConverter))]
     public  class Theme
     {
+
+
+        [OnSerializing]
+        private void SetValuesOnSerializing(StreamingContext context)
+        {
+            if ( (this.Stack?.Count).GetValueOrDefault(0) ==0 )
+            {
+                return;
+            }
+            foreach ( var t in Stack)
+            {
+                this.FileListing?.UnionWith(t.FileListing);
+            }
+
+        }
+
+
+
         /// <summary>
         /// Id. Returns this theme's Id.
         /// </summary>
