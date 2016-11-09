@@ -98,12 +98,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             var lst = infos.ToList();
             var files = lst.Where(x => x.IsFile).ToList();
-            _allFiles = files.ToDictionary(x => x.VirtualPath, StringComparer.OrdinalIgnoreCase);
-            _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt).ToDictionary(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
+            _allFiles = files.ToDictionar2y(x => x.VirtualPath,y=> y, StringComparer.OrdinalIgnoreCase);
+            _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt,StringComparer.OrdinalIgnoreCase).ToDictionar2y(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
             LiveTemplates = files.Where(x => x.FullPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
             TimeStamp = timeStamp ??  (files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp));
             Hash = Hash ?? LegacyHash(files);
         }
+      
         string LegacyHash (IEnumerable<ThemeFileSystemInfo> files  )
         {
             if ( files == null)
