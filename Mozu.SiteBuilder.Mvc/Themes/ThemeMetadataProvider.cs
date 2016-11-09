@@ -409,7 +409,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
             if ( manifest != null )
             {
-                var tf = manifest.Files.Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
+                var tf = manifest.Files.Where( _=> !(_.IsFolder == false && _.SizeInBytes == 0 ))
+                    .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
+                    .ToList();
                 return new ThemeFileSystemInfoCollection(tf,  manifest.LastModifiedDate, manifest.MD5);
             }
 
