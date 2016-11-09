@@ -124,8 +124,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
         public async Task<Response<Dictionary<string, object>>> SaveInstance(string themeId, Dictionary<string,object> values)
         {
-            var existingValues = (IDictionary<string, JToken>) await _themeSettingsRepository.GetInstanceValues(themeId);
-            var valueDic = (IDictionary<string, JToken>) values;
+            var existingValues = (IDictionary<string, Object>) await _themeSettingsRepository.GetInstanceValues(themeId);
+            var valueDic = (IDictionary<string, Object>) values;
             if (existingValues != null)
             {
 
