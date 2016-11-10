@@ -377,7 +377,7 @@ Ext.define("Taco.view.category.Form", {
     getCategoryPreviewTotal: function() {
         var record = this.record;
 
-        return new Promise(function(resolve, error) {
+        return new Promise(function(resolve, reject) {
 
             // dont make the preview call unless this is a DynamicRealTime call
             if (record.get('categoryType') !== 'DynamicPreComputed') {
@@ -399,6 +399,9 @@ Ext.define("Taco.view.category.Form", {
                 success: function (response) {
                     var amount = JSON.parse(response.responseText);
                     resolve(amount.total);
+                },
+                failure: function () {
+                    reject();
                 }
             }, this);
         });
@@ -457,6 +460,9 @@ Ext.define("Taco.view.category.Form", {
                         resolve(true);
                     }
 
+                }).catch(function () {
+                    // if the categoryPreviewTotal fails, just continue
+                    resolve(true);
                 });
             
             })
