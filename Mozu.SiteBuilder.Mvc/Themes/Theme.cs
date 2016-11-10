@@ -10,6 +10,7 @@ using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -35,13 +36,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
 
         }
+        [OnDeserialized]
+        void OnDeserializedMethod(StreamingContext context)
+        {
+            this.MergedLabels = MergedLabels.ToDictionar2y(x => x.Key, y => y.Value, StringComparer.OrdinalIgnoreCase);
+            this.Settings = this.Settings.ToDictionar2y(x => x.Key, y => y.Value, StringComparer.OrdinalIgnoreCase);
+
+        }
 
 
 
-        /// <summary>
-        /// Id. Returns this theme's Id.
-        /// </summary>
-        [DataMember(Name="id")]
+    /// <summary>
+    /// Id. Returns this theme's Id.
+    /// </summary>
+    [DataMember(Name="id")]
         public string Id { get; set; }
 
        

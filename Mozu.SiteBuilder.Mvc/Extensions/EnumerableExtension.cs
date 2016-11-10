@@ -49,7 +49,10 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
         public static Dictionary<TKey, TElement> ToDictionar2y<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
         {
-           
+           if ( source == null )
+            {
+                return null;
+            }
             Dictionary<TKey, TElement> dictionary = new Dictionary<TKey, TElement>(comparer);
             foreach (TSource source1 in source)
             {
