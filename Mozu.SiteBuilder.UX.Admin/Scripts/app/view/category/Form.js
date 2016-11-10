@@ -1,4 +1,5 @@
-﻿/**
+﻿/* globals Promise */
+/**
  * @class  Taco.view.category.Form
  * category form
  * @extends Taco,core.ux.form.form
