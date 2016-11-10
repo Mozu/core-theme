@@ -194,7 +194,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ctx.Add("templates", LiveTemplates().Result);
             ctx.Add("locals", locals);
 
-            locals.Add("themeSettings", SiteContext.ThemeSettings);
+            var setting = JObject.FromObject(SiteContext.ThemeSettings);
+
+            locals.Add("themeSettings", setting);// SiteContext.ThemeSettings);
             locals.Add("labels", SiteContext.Labels);
             locals.Add("siteContext", siteContext);
 
@@ -205,6 +207,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("secureHost", SiteContext.SecureHost);
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
             siteContext.Add("currencyInfo", SiteContext.CurrencyInfo);
+
+
+           
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
