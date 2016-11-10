@@ -461,7 +461,7 @@ Ext.define("Taco.view.category.Form", {
                         resolve(true);
                     }
 
-                }).catch(function () {
+                })['catch'](function () {
                     // if the categoryPreviewTotal fails, just continue
                     resolve(true);
                 });
