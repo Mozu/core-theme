@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 object o = null;
                 if (!values.TryGetValue(setting.Id, out o))
                 {
-                    var jToken =   JToken.FromObject(setting.DefaultValue);
+                    var jToken = setting.DefaultValue == null ? null : JToken.FromObject(setting.DefaultValue);
                     values.Add(setting.Id, jToken);
                 }
             }
