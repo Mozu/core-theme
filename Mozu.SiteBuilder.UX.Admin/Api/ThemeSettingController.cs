@@ -90,8 +90,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 values.Add("MozuDocumentId", cmsDocId);
                 values.Add("MozuPublishingEnabled", isPublishingEnabled);
             }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, values);
+            var jobj = values == null ? null : JObject.FromObject(values);
+            return this.Request.CreateResponse(HttpStatusCode.OK, jobj);
         }
 
         [HttpGetRoute(UriTemplate = "ui/read/{themeId}")]
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
-        public async Task<Response<Dictionary<string, object>>> SaveInstance(string themeId, Dictionary<string,object> values)
+        public async Task<Response<JObject>> SaveInstance(string themeId, Dictionary<string,object> values)
         {
             var existingValues = (IDictionary<string, Object>) await _themeSettingsRepository.GetInstanceValues(themeId);
             var valueDic = (IDictionary<string, Object>) values;
@@ -141,7 +141,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             
             var retval = await _themeSettingsRepository.SaveInstanceValues(values, themeId);
-            return Single2(retval);
+            var jobj = retval == null ? null : JObject.FromObject(retval);
+            return Single2(jobj);
         }
     }
 }
