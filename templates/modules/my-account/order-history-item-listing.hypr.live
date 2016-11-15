@@ -8,10 +8,10 @@
     <span class="mz-itemlisting-action" data-mz-tracking-number="{{ item.trackingNumber }}" data-mx-shipping-code="{{ item.shippingMethodCode }}" data-mx-shipping-name="{{ item.shippingMethodName }}">{{ labels.trackingNumber }}: {{ item.trackingNumber }}</span>
     {% endfor %}
     {% if returning == model.id %}
-    {% include "modules/common/item-return-form" %}
+        {% include "modules/common/item-return-form" %}
     {% else %}
-    {% if item.product.fulfillmentStatus == "Fulfilled" and themeSettings.allowCustomerInitiatedReturns %}
-    <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="startReturnItem" data-mz-order-id="{{ order.id }}" data-mz-start-return="{{ model.id }}">{{ labels.returnOrReplace }}</a>
+        {% if item.product.fulfillmentStatus == "Fulfilled" or item.product.fulfillmentStatus == "PartiallyReturned" and themeSettings.allowCustomerInitiatedReturns %}
+        <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="startReturnItem" data-mz-order-id="{{ order.id }}" data-mz-start-return="{{ model.id }}">{{ labels.returnOrReplace }}</a>
     {% endif %}
     {% endif %}
 {% endblock item-listing-actions %}
