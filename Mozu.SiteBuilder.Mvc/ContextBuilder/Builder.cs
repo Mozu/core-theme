@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         }
         TimeSpan GetNextBuildTime()
         {
-            int intervalInMinutes = _settings.AppSettingsAsNullableInt(BuildIntervalConfigKey).GetValueOrDefault( 5);
+            int intervalInMinutes = _settings.AppSettingsAsNullableInt(BuildIntervalConfigKey).GetValueOrDefault(10);
             var now = DateTime.Now;
             var modMins = now.Minute % intervalInMinutes;
             if (modMins == 0)
@@ -331,14 +331,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
         async Task ISitebuilderContextCacheRepository.PutAsync(SiteBuilderContextData item, ISiteBuilderApiContext apiContext)
         {
             var cacheKey = GetCacheKey(apiContext);
-            var tags = GetTags(apiContext.TenantId, apiContext.MasterCatalogId.GetValueOrDefault(-1), apiContext.CatalogId.GetValueOrDefault(-1), apiContext.SiteId, apiContext.DataViewMode);
-            var isSb =_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
-            var policy = new CachePolicy()
+            var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
+            if (existing?.Hash != item.Hash)
             {
-                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
-            };
+                var tags = GetTags(apiContext.TenantId, apiContext.MasterCatalogId.GetValueOrDefault(-1), apiContext.CatalogId.GetValueOrDefault(-1), apiContext.SiteId, apiContext.DataViewMode);
+                var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
+                var policy = new CachePolicy()
+                {
+                    AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
+                };
 
-            await _cacheProvider.GetCache(CacheName).PutAsync(item, cacheKey, tags, policy).ConfigureAwait(false);
+                await _cacheProvider.GetCache(CacheName).PutAsync(item, cacheKey, tags, policy).ConfigureAwait(false);
+            }
             await UpsertWorkQueue(apiContext).ConfigureAwait(false);
         }
 

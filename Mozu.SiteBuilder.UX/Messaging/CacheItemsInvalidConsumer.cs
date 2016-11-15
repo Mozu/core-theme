@@ -16,13 +16,7 @@ using System;
 namespace Mozu.SiteBuilder.UX.Messaging
 {
     public class SiteBuilderContextInvalidatorConsumer : LoggingConsumer,
-        Consumes<IProductEvent>.All,
         Consumes<ICategoryEvent>.All,
-        Consumes<IDiscountEvent>.All,
-        Consumes<ISearchIndexUpdated>.All,
-        Consumes<IFacetEvent>.All,
-        Consumes<ISearchTuningRuleEvent>.All,
-        Consumes<ISearchSettingsEvent>.All,
         Consumes<IDocumentChanged>.All,
         Consumes<IGeneralSettingsUpdated>.All,
         Consumes<ICheckoutSettingsUpdated>.All
@@ -175,8 +169,17 @@ namespace Mozu.SiteBuilder.UX.Messaging
             {
                 mode = DataViewModeType.Pending;
             }
-           
-            InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.None, mode);
+
+            if (
+                 string.IsNullOrEmpty(message.DocumentListName) ||
+                 string.Equals(message.DocumentListName, "pages@mozu", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(message.DocumentListName, "siteSettings@mozu", StringComparison.OrdinalIgnoreCase)
+                 )
+            {
+                InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.None, mode);
+            }
+
+            
         }
 
         public void Consume(IGeneralSettingsUpdated message)

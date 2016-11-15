@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var templates = await _templateGetter.GetAndExpandTemplates().ConfigureAwait(false);
             var jobj = new JObject();
-            jobj.AddRange(templates.Select(x => new JProperty(x.key, x.scrubbedContent)));
+            jobj.AddRange(templates.Select(x => new JProperty(x.key?.ToLowerInvariant(), x.scrubbedContent)));
             return jobj;
         }
 
@@ -190,8 +190,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var ctx = new Dictionary<string, object>();
             var locals = new Dictionary<string, object>();
             var siteContext = new Dictionary<string, object>();
-
-            ctx.Add("templates", LiveTemplates().Result);
+            var templates = await LiveTemplates().ConfigureAwait(false);
+            ctx.Add("templates", templates);
             ctx.Add("locals", locals);
 
             var setting = JObject.FromObject(SiteContext.ThemeSettings);
