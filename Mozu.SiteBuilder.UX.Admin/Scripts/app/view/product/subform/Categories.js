@@ -7,7 +7,8 @@
 Ext.define('Taco.view.product.subform.Categories', {
     extend: 'Taco.view.product.subform.Subform',
     requires: [
-        'Taco.core.ux.form.field.MultiSelect'
+        'Taco.core.ux.form.field.MultiSelect',
+        'Taco.model.Category'
     ],
     alias: 'widget.productcategoriessubform',
 
@@ -30,7 +31,7 @@ Ext.define('Taco.view.product.subform.Categories', {
         listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
-        list = Ext.create('Ext.ux.form.field.BoxSelect', {
+        this.list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
             store: listStore,
             flex: 1,
@@ -38,27 +39,90 @@ Ext.define('Taco.view.product.subform.Categories', {
                 return listStore;
             },
             displayField: 'nameAndCodeAndStatus',
+            fieldLabel: 'Assigned Categories',
             valueField: 'id',
             lastQuery: "",
             value: this.record.get('categoryIds'),
             queryMode: 'local',
-            enableKeyEvents: true
+            enableKeyEvents: true,
+            listeners: {
+                change: this.updatePrimaryCategory,
+                scope: this
+            }
+        });
+
+        this.selectedCategoryStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.Category',
+            data: []
+        });
+
+        this.primaryCategory = Ext.widget({
+            xtype: 'combobox',
+            fieldLabel: 'Primary Category',
+            name: 'primaryCategoryId',
+            allowBlank: true,
+            valueField: 'id',
+            displayField: 'nameAndCodeAndStatus',
+            store: this.selectedCategoryStore,
+            queryMode: 'local',
+            enableKeyEvents: true,
+            listeners: {
+                change: function(category, categoryId) {
+                    this.record.set('primaryCategoryId', categoryId);
+                },
+                scope: this
+            }
         });
 
         this.listStore = listStore;
-        list.parentThing = this;
 
-        this.items = [list];
+        this.items = [this.list, this.primaryCategory];
 
         this.callParent(arguments);
 
         this.mon(listStore, 'load', function () {
-            me.listStore.addFilter({
+            this.listStore.addFilter({
                 property: 'categoryType',
                 value: 'Static'
             });
-            list.resetOriginalValue();
+            this.list.resetOriginalValue();
         }, this);
+
+        listStore.whenLoaded(this.updatePrimaryCategory, this);
+    },
+
+    updatePrimaryCategory: function () {
+        if (this.listStore.isLoading()) {
+            return;
+        }
+
+        this.selectedCategoryStore.removeAll();
+
+        var assignedCategoryIds = this.list.getValue() || [];
+
+        if (!assignedCategoryIds.length) {
+            this.primaryCategory.setValue(null);
+            this.primaryCategory.setDisabled(true);
+            this.record.set('primaryCategoryId', null);
+            return;
+        }
+
+        this.primaryCategory.setDisabled(false);
+
+        var possibleCategories = this.listStore.data.items.filter(function (record) {
+            return assignedCategoryIds.indexOf(record.getId()) > -1;
+        });
+
+        var primaryCategoryId = this.primaryCategory.getValue();
+
+        if (assignedCategoryIds.indexOf(primaryCategoryId) === -1) {
+            this.primaryCategory.setValue(null);
+            primaryCategoryId = null;
+            this.record.set('primaryCategoryId', null);
+        }
+
+        this.selectedCategoryStore.add(possibleCategories);
+        this.primaryCategory.setValue(primaryCategoryId);
     },
 
     /**

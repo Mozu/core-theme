@@ -1224,14 +1224,10 @@ Ext.define('Taco.view.product.subform.General', {
             });
         }
 
-
-        
-        
         var dateFirstAvailableInCatalog = this.findField("dateFirstAvailableInCatalog");
         if (this.productInCatalogInfo) {
             this.productInCatalogInfo.set('dateFirstAvailableInCatalog', dateFirstAvailableInCatalog.getValue());
         }
-        
 
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
         this.record.set("productImages", uploadedImages);

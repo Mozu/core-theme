@@ -300,6 +300,4 @@ Ext.define('Taco.view.product.Form', {
             this.goGoCatalogSwitch();
         }, this);
     }
-
-
 });

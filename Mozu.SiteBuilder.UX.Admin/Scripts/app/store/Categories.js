@@ -22,7 +22,7 @@ Ext.define('Taco.store.Categories', {
         }
         options = Ext.apply({
             catalogId: Taco.app.context.getCatalogId(),
-            bypassCache: true
+            bypassCache: false
         }, options);
         return me.callParent([options]);
     },
@@ -33,8 +33,7 @@ Ext.define('Taco.store.Categories', {
         if (typeof options == 'function') {
             options = {
                 callback: options,
-                bypassCache: true
-                , bypassCache: true
+                bypassCache: false
             };
         }
         options = Ext.apply({

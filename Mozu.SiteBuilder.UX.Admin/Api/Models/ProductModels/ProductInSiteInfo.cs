@@ -41,6 +41,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         public DateTime? ActiveEndDate { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? PrimaryCategoryId { get; set; }
+
         #region Content
         /// <summary>
         /// Represents whether the content information is overridden from the global data.

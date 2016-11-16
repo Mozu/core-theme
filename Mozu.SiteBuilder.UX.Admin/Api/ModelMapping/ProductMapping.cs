@@ -430,7 +430,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
                 .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null))
                 .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null))
-
+                .ForMember(z=> z.PrimaryCategoryId, op => op.ResolveUsing(c => c.PrimaryProductCategory?.CategoryId))
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 .ForMember(x => x.ListPrice, op => op.Ignore())
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
@@ -487,6 +487,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                 ))
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                .ForMember(dc => dc.PrimaryProductCategory, op => op.ResolveUsing(c =>
+                    new DC.ProductCategory
+                    { 
+                        CategoryId = c.PrimaryCategoryId ?? 0
+                    }
+                ))
                 .AfterMap((info, catalogInfo) =>
                 {
                     if (catalogInfo != null && catalogInfo.Content != null && catalogInfo.Content.ProductImages != null)

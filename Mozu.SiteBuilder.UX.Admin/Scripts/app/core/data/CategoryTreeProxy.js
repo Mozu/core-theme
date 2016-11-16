@@ -1,7 +1,7 @@
 ﻿/**
 * @author Jason Cochran
 * The Mozu Ajax Proxy is a subclass of {@link Ext.data.proxy.Ajax}, preconfigured for the most common Mozu settings, and enhanced with logging and caching.
-* 
+*
 */
 
 
@@ -25,20 +25,20 @@ Ext.define('Taco.core.data.CategoryTreeProxy', {
 
             var cbw,
                 me = this,
-                data, // removed to not use cache for duplication calls - Brandon // = me.getData(),
+                skipCacheWrite = operation.id,
+                data = skipCacheWrite || operation.bypassCache !== false ? null :  me.getData(),
                 filters = operation.filters;
-
-            if (!data || operation.bypassCache) {
+            if (!data ) {
 
                 cbw = function(op, success, response) {
 
-                    if (op.wasSuccessful()) {
+                    if (op.wasSuccessful() && !skipCacheWrite ) {
                         me.setData(op.response.responseText);
                     }
                     operation.filters = filters;
                     if (callback) {
 
-                        me.read2(op.response && op.response.responseText ? op.response.responseText : null, operation, callback, scope);
+                        me.read2(op.response &&op.response.responseText ? op.response.responseText : null, operation, callback, scope);
                     }
                 };
                 delete operation.filters;

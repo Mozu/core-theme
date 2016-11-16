@@ -505,20 +505,6 @@ Ext.define('Taco.view.website.Index', {
                                         xtype: 'taco.menucolumn',
                                         flex: 1,
                                         menuItems: [
-                                            // {
-                                            //     itemId: 'rename',
-                                            //     text: 'Rename',
-                                            //     menuColumnHandler: function(menu, item) {
-                                            //         var id = item.record.data.id;
-
-                                            //         Taco.model.NavigationTreeNode.load('page^^pages@mozu^^' + id, {
-                                            //             success: function(rec) {
-                                            //                 debugger;
-                                            //             }
-                                            //         });
-                                            //     }
-
-                                            // },
                                             {
                                                 itemId: 'delete',
                                                 text: 'Delete',

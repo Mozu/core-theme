@@ -135,6 +135,11 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
             "type": "int"
         },
         {
+            "name": "primaryCategoryId",
+            "type": "int",
+            "useNull": true
+        },
+        {
             "name": "catalog",
             "type": "auto",
             persist: false,
