@@ -45,7 +45,6 @@ using Mozu.SiteBuilder.Mvc.Caching;
 using System.Linq;
 
 using Mozu.Core.Api.Contracts.Caching;
-using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 {
@@ -156,9 +155,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("GoodCases")]
         public void FactoryCanMakeMappings(Mapping mapping, Type expectedType)
         {
-            var entityListClient = Substitute.For<ISiteBuilderContextProvider>();
+            var entityListClient = Substitute.For<IEntityListsWebApiClient>();
             var factory = new RouteMappingFactory(entityListClient);
-            var made = factory.BuildMapping(null, mapping);
+            var made = factory.BuildMapping(mapping);
             made.GetType().ShouldEqual(expectedType);
         }
         static IEnumerable<object[]> GoodCases()
@@ -173,14 +172,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new object[] { mapping3, typeof(MZDBMap) };
         }
 
-        //[TestCaseSource("MalformedCases")]
-        //public void MalformedMappingsBreak(MappingTest test)
-        //{
-        //    var entityListClient = Substitute.For<ISiteBuilderContextProvider>();
-        //    var factory = new RouteMappingFactory(entityListClient);
-        //    Assert.Throws<ArgumentException>(() => factory.BuildMapping(null,test.Mapping));
+        [TestCaseSource("MalformedCases")]
+        public void MalformedMappingsBreak(MappingTest test)
+        {
+            var entityListClient = Substitute.For<IEntityListsWebApiClient>();
+            var factory = new RouteMappingFactory(entityListClient);
+            Assert.Throws<ArgumentException>(() => factory.BuildMapping(test.Mapping));
 
-        //}
+        }
         public class MappingTest
         {
             public Mapping Mapping;
@@ -480,9 +479,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var entityClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
             ((ICloneable)entityClient).Clone().Returns(entityClient);
             entityClient.Handler.Returns(new TestHandler());
-            
-            var fact = new ConstraintFactory(Substitute.For<ISiteBuilderContextProvider>(), Substitute.For<IApiContext>());
-            fact.BuildConstraint(null, validator).GetType().ShouldEqual(expectedType);
+
+            var fact = new ConstraintFactory(entityClient, Substitute.For<IAttributeWebApiClient>(), Substitute.For<IProductSearchWebApiClient>(), Substitute.For<IApiContext>());
+            fact.BuildConstraint(validator).GetType().ShouldEqual(expectedType);
         }
 
         static IEnumerable<object[]> ConstraintFactory()
@@ -526,21 +525,30 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
 
             var sbapiContext = Substitute.For<ISiteBuilderApiContext>();
             var logger = Substitute.For<ILogger>();
-          
+            var cache = new MemoryCache("testcache");
+            var mozuApiContext = (object)new ApiContext();
+            var entityListClient = Substitute.For<IEntityListsWebApiClient, ICloneable>();
+            entityListClient.Handler.Returns(new TestHandler());
+            (entityListClient as ICloneable).Clone().Returns(entityListClient);
+            entityListClient.Handler.ReturnsForAnyArgs(new TestHandler());
+            var attrClient = Substitute.For<IAttributeWebApiClient, ICloneable>();
+            (attrClient as ICloneable).Clone().Returns(attrClient);
+            attrClient.Handler.ReturnsForAnyArgs(new TestHandler());
+            var searchClient = Substitute.For<IProductSearchWebApiClient, ICloneable>();
+            (searchClient as ICloneable).Clone().Returns(searchClient);
+            searchClient.Handler.ReturnsForAnyArgs(new TestHandler());
 
-
-            var contextProvider = Substitute.For<ISiteBuilderContextProvider>();
-            var apiContext = Substitute.For<ISiteBuilderApiContext>();
-
-            var sbcd = new SiteBuilderContextData()
-            {
-                GeneralSettings = gensettings
-            };
-
-            contextProvider.GetContextData().Returns(Task.FromResult(sbcd));
-            var constraintFactory = new ConstraintFactory(contextProvider, apiContext);
-            var mappingFactory = new RouteMappingFactory(contextProvider);
-            var repo = new CustomRouteRepository(apiContext,logger,contextProvider,  constraintFactory, mappingFactory);
+            var siteSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
+            (siteSettingsClient as ICloneable).Clone().Returns(siteSettingsClient);
+            siteSettingsClient.Handler.ReturnsForAnyArgs(new TestHandler());
+            siteSettingsClient.GetGeneralSettings().Returns(ctx => Task.FromResult(Response(gensettings)));
+            siteSettingsClient.Handler.Returns(new TestHandler());
+            var docListClient = Substitute.For<IDocumentListWebApiClient, ICloneable>();
+            (docListClient as ICloneable).Clone().Returns(docListClient);
+            docListClient.Handler.Returns(new TestHandler());
+            var constraintFactory = new ConstraintFactory(entityListClient, attrClient, searchClient, sbapiContext);
+            var mappingFactory = new RouteMappingFactory(entityListClient);
+            var repo = new CustomRouteRepository(sbapiContext, logger, DummyStorefrontCache.Default, constraintFactory, mappingFactory, siteSettingsClient, docListClient);
 
             var collection = await (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
@@ -867,7 +875,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             docClient.Handler.ReturnsForAnyArgs(new TestHandler());
             subber.Provide<IDocumentListWebApiClient>(docClient);
            
-            
+
+
+
 
 
             var genSettingsClient = Substitute.For<IGeneralSettingsWebApiClient, ICloneable>();
@@ -876,15 +886,6 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             subber.Provide<IGeneralSettingsWebApiClient>(genSettingsClient);
             var genSettings = GetResource<SiteSettings.General.Contracts.GeneralSettings>("IGeneralSettingsWebApiClient.GetGeneralSettings");
             genSettingsClient.GetGeneralSettings(Arg.Any<string>(), Arg.Any<TargetContextLevelType>()).ReturnsForAnyArgs(Task.FromResult(Response(genSettings)));
-
-
-            
-            subber.Provide<IContextServiceAggregator, ContextServiceAggregator>(); ;
-            subber.Provide<Lazy<IContextServiceAggregator>>(new Lazy<IContextServiceAggregator>(() => subber.Resolve<ContextServiceAggregator>()));
-            //subber.Provide < IContextServiceAggregator ,ContextServiceAggregator>();
-            subber.Provide<ISiteBuilderContextDataRepository, SiteBuilderContextDataRepository>();
-
-            subber.Provide<ISiteBuilderContextProvider, SiteBuilderContextProvider>();
 
         }
 

@@ -25,15 +25,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     
         private readonly ISitesWebApiClient _sitesWebApi;
 
-        private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
+        private readonly IProductRuntimeWebApiClient _productSearchWebApiClient;
         private INavigationGandalf _gandalf;
         private const int PageSize = 2000;
         ICategoryTreeProvider _categoryTreeProvider = null;
-        IProductSearchWebApiClient _productSearchWebApiClient;
         UrlHelper _urlHelper;
         const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productRuntimeWebApiClient,
-            Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
+        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productSearchWebApiClient, 
             UrlHelper urlHelper,
             ICategoryTreeProvider categoryTreeProvider)
         {
@@ -42,7 +40,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _urlHelper = urlHelper;
             _sitesWebApi = sitesWebApiClient;
             _productSearchWebApiClient = productSearchWebApiClient;
-            _productRuntimeWebApiClient = productRuntimeWebApiClient;
             _categoryTreeProvider = categoryTreeProvider;
         }
 
@@ -50,12 +47,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Index()
         {
 
-        
-            var cursor = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetRandomAccessCursor(pageSize: 2000).ConfigureAwait(false)).ReadAsSync();
-            
-            
+            var prods = (await _productSearchWebApiClient.GetProducts( pageSize: 0)).ReadAsSync();
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
-          
+            int pages = (int)Math.Ceiling((decimal)prods.TotalCount/(decimal)PageSize);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
             var nakedDomain = GetNakedSitePrimaryDomain();
            
@@ -69,20 +63,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
 
-            foreach ( var cursorMark in cursor.CursorMarks)
+
+            for (int i = 0; i < pages; i++)
             {
                 writer.WriteStartElement("sitemap", NS);
-                writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/productBatch/" + System.Web.HttpUtility.UrlPathEncode(cursorMark));
+                writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/products/" + i);
                 writer.WriteEndElement();
             }
-           
             writer.WriteEndElement();
             writer.Flush();
             return resp;
         }
-
-
-        
 
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Categories()
@@ -124,48 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return resp;
         }
 
-
-        [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> ProductBatch(string page)
-        {
-            var prefixDomain = GetPrefixedSitePrimaryDomain();
-            var nakedDomain = GetNakedSitePrimaryDomain();
-
-            var resp = this.Request.CreateResponse(HttpStatusCode.OK);
-            var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
-            // resp.Content.
-            this.HttpContext.Response.ContentType = "text/xml";
-            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
-            writer.WriteStartElement("urlset", NS);
-           
-            //initialize the category Tree for later.
-            await _categoryTreeProvider.GetAllCategories();
-
-            while (true)
-            {
-                var prods = (await _productRuntimeWebApiClient.CloneWithoutUserClaims()
-                    .CloneWithConfigOptions(cfg => cfg.TimeoutMilliseconds = 60000)
-                    .GetProducts(pageSize: PageSize, cursorMark: page,  responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
-
-
-                var vm = Mapper.Map<ProductCollection>(prods);
-                vm.Init(false, PageContext.Search);
-                WriteProducts(vm, writer, prefixDomain, nakedDomain, _urlHelper);
-                break;
-                //startIndex = startIndex + prods.PageSize;
-                //if (startIndex >= (page + 1) * PageSize || startIndex >= prods.TotalCount || prods.PageCount == 0)
-                //{
-                //    break;
-                //}
-
-            }
-            writer.WriteEndElement();
-            writer.Flush();
-            return resp;
-
-        }
-
-[System.Web.Http.HttpGet]
+         [System.Web.Http.HttpGet]
            public async Task<HttpResponseMessage> Products(int page)
            {
                var prefixDomain =  GetPrefixedSitePrimaryDomain();
@@ -185,7 +135,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             while (true)
              {
-                var prods = (await _productRuntimeWebApiClient.CloneWithoutUserClaims()
+                var prods = (await _productSearchWebApiClient.CloneWithoutUserClaims()
                     .CloneWithConfigOptions(cfg=>cfg.TimeoutMilliseconds = 60000)
                     .GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
                 

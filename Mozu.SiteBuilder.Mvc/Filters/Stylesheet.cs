@@ -56,8 +56,6 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             var theme = ctx.Theme.Id;
             var themeSettingsTs = context.Resolve<IThemeSettingsRepository>().GetTimeStamp(theme).Result;
             var themeTs = ctx.Theme.TimeStamp;
-            //todo integrateHash;//
-            var hash = ctx.Theme.Hash;
             var cdn = ctx.CdnPrefix;
             var apiContext = context.Resolve<ISiteBuilderApiContext>();
 

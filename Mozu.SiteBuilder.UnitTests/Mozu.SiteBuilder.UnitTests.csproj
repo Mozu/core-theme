@@ -199,9 +199,7 @@
   <ItemGroup>
     <None Include="Admin\Api\cdProductCodeUpdate.cd" />
     <None Include="Admin\Api\cdProductVariations.cd" />
-    <None Include="app.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="app.config" />
     <None Include="App1.config" />
     <None Include="Diagrams\Admin\Api\cdCapabilities.cd" />
     <None Include="Diagrams\Admin\Api\cdLocalizedContent.cd" />

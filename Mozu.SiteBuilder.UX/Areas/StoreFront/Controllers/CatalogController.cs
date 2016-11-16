@@ -200,7 +200,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //todo do i need to replace recurese
             // recurse: recurse,
 
-            var isVolumePricingBandsEnabled = ((bool?)SiteContext.ThemeSettings["listVolumePricing"]);
+            var isVolumePricingBandsEnabled = ((bool?)(JToken)SiteContext.ThemeSettings["listVolumePricing"]);
             string responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
 
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
@@ -243,14 +243,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return false;
             }
-            var defaultPageSize = SiteContext.ThemeSettings.GetInt("defaultPageSize");
+            var defaultPageSize = ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]);
 
             if (PageContext.Search.PageSize.HasValue && defaultPageSize.GetValueOrDefault(0) != PageContext.Search.PageSize.Value)
             { 
                 return false;
             }
 
-            var defaultSortOrder = ((string)SiteContext.ThemeSettings["defaultSort"]);
+            var defaultSortOrder = ((string)(JToken)SiteContext.ThemeSettings["defaultSort"]);
             if (!string.IsNullOrEmpty(PageContext.Search.SortBy) && !string.Equals(defaultSortOrder, PageContext.Search.SortBy))
             { 
                 return false;
@@ -278,7 +278,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
             var pageLimit = DeepPagingLimitingRequestHandler.GetPageLimit(Mozu.Core.Settings.MozuConfigurationManager.Settings);
-            var defaultPageSize = this.PageContext.Search.PageSize  ??  SiteContext.ThemeSettings.GetInt("defaultPageSize") ?? 15;
+            var defaultPageSize = this.PageContext.Search.PageSize  ??  ((int?)(JToken)SiteContext.ThemeSettings["defaultPageSize"]) ?? 15;
             var currentIdx = this.PageContext.Search.StartIndex.GetValueOrDefault(0);
 
 

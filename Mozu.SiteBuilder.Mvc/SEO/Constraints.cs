@@ -24,34 +24,36 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Category = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
-using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 {
     public class ConstraintFactory : ICustomRouteConstraintFactory
     {
-  
+        readonly IAttributeWebApiClient _attributeClient;
+        private readonly IProductSearchWebApiClient _productSearchWebApiClient;
         readonly IApiContext _context;
-        ISiteBuilderContextProvider _contextProvider;
+        readonly IEntityListsWebApiClient _entityListClient;
         public const string SearchFacetConstraintType = "searchfacetconstrainttype";
-        public ConstraintFactory(
-            ISiteBuilderContextProvider contextProvider,
-
+        public ConstraintFactory(IEntityListsWebApiClient entityListClient, 
+            IAttributeWebApiClient attributeClient,
+            ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
             IApiContext context)
         {
-            _contextProvider = contextProvider;
+            _entityListClient = entityListClient;
+            _attributeClient = attributeClient;
+            _productSearchWebApiClient = productSearchWebApiClient;
             _context = context;
         }
         
-        public ICustomRouteConstraint BuildConstraint(string key, Validator validator)
+        public ICustomRouteConstraint BuildConstraint(Validator validator)
         {
-            
+         
             switch (validator.type.ToLowerInvariant())
             {
                 case Validator.TypeConst.attribute:
-                    return new ProductAttributeRouteConstraint(key, _contextProvider);
+                    return new ProductAttributeRouteConstraint(_attributeClient, _productSearchWebApiClient, _context, validator.attributeFQN);
                 case SearchFacetConstraintType:
-                    return new ProductAttributeRouteConstraint(key, _contextProvider);
+                    return new ProductAttributeRouteConstraint(null, _productSearchWebApiClient, _context, validator.attributeFQN);
                 case Validator.TypeConst.categoryCode:
                 case Validator.TypeConst.categorySlug:
                 case Validator.TypeConst.categorySlugPath:
@@ -61,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 case Validator.TypeConst.list:
                     return new StringListRouteConstraint(validator.values);
                 case Validator.TypeConst.mzdb:
-                    return new MzdbRouteConstraint(key, _contextProvider);
+                    return new MzdbRouteConstraint(_entityListClient, validator.listFqn,validator.docId, validator.field);
                 case Validator.TypeConst.regex:
                     return new RegexRouteConstraint(validator.pattern);
                 case QueryStringConstraint.TypeName:
@@ -79,18 +81,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         public abstract Task<bool> Initialize();
         public abstract bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection);
 
-        public ISiteBuilderContextProvider ContextProvider { get; set; }
-        public string Key { get; set; }
-        public Dictionary<string, object> Values { get; set; }
-        public async Task<bool> InitializeFromContextData()
-        {
-            var data = await ContextProvider.GetContextData().ConfigureAwait(false);
-            this.Values = data.RouteValidatorData.ContainsKey(this.Key) ?
-                data.RouteValidatorData[this.Key] :
-                new Dictionary<string, object>();
-            return true;
-        }
-    
         public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             if ( routeDirection == HttpRouteDirection.UriGeneration)
@@ -537,7 +527,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         readonly Func<Task<ServiceClientResponse<List<AttributeVocabularyValue>>>> attFn;
         Func<Task<ServiceClientResponse<ProductSearchResult>>> searchFn;
         private string _localeCode;
-      
         IDictionary<string, AttributeVocabularyValue> _attributeValues { get; set; }
         IDictionary<string, FacetValue> _facetValues { get; set; }
        
@@ -555,12 +544,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             _localeCode = context.LocaleCode;
         }
 
-        public ProductAttributeRouteConstraint(string key,  ISiteBuilderContextProvider _contextProvider)
-        {
-            this.Key = key;
-            this.ContextProvider = _contextProvider;
-        }
-
         static Task<ServiceClientResponse<List<AttributeVocabularyValue>>> CreateNullAttTask()
         {
             var resp = new  ServiceClientResponse<List<AttributeVocabularyValue>>();
@@ -573,11 +556,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         public string AttributeCode { get; set; }
         public override async Task<bool> Initialize()
         {
-
-            if (ContextProvider != null )
-            {
-                return await InitializeFromContextData().ConfigureAwait(false);
-            }
             var attTask = attFn();
             var searchTask = searchFn();
             await Task.WhenAll(attTask, searchTask).ConfigureAwait(false);
@@ -614,22 +592,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
             _facetValues = dict2;
             _attributeValues = dict;
-            Values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-            foreach( var kvp in dict2)
-            {
-                Values[kvp.Key] = kvp.Value;
-            }
-            foreach (var kvp in dict)
-            {
-                Values[kvp.Key] = kvp.Value;
-            }
-
-
             return true;
         }
 
-       
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
         {
             
@@ -648,7 +613,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
            
             var curRouteValue = routeValue.ToString();
 
-            if (!Values.ContainsKey(curRouteValue))
+            if (!_attributeValues.ContainsKey(curRouteValue) && !_facetValues.ContainsKey(curRouteValue))
             {
                 return false;
             }
@@ -680,9 +645,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
         readonly Func<Task<ServiceClientResponse<JObject>>> _getDosFunc;
         readonly Func<JObject, IEnumerable<string>> _fieldGetter;
         HashSet<string> _values;
-      
-       
-       
+
         public MzdbRouteConstraint(IEntityListsWebApiClient mzdbClient, string listId, string docId, string fieldId)
         {
             if (listId.IsNullOrEmpty()) throw new ArgumentException("listId");
@@ -701,12 +664,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             _fieldGetter = o => FlattenFieldValues(o, fieldId);
         }
 
-        public MzdbRouteConstraint(string key, ISiteBuilderContextProvider _contextProvider)
-        {
-            this.Key = key;
-            this.ContextProvider = _contextProvider;
-        }
-
         static IEnumerable<string> FlattenFieldValues(JObject o, string field)
         {
             JToken t;
@@ -719,10 +676,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
         public override async Task<bool> Initialize()
         {
-            if ( ContextProvider != null)
-            {
-                return await InitializeFromContextData().ConfigureAwait(false) ;
-            }
             if (_getDocsFunc != null)
             {
                 var mzdbDocResponse = await _getDocsFunc(0, 50).ConfigureAwait(false);
@@ -737,13 +690,6 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             {
                 _values = new HashSet<string>(_fieldGetter((await _getDosFunc()).ReadAsSync()), StringComparer.OrdinalIgnoreCase);
             }
-            var vals = new Dictionary<string, object>();
-            foreach( var x in _values)
-            {
-                vals[x] = x;
-            }
-            this.Values = vals;
-
             return true;
         }
 

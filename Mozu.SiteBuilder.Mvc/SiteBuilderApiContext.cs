@@ -52,14 +52,6 @@ namespace Mozu.SiteBuilder.Mvc
             PreviewDate = GetNowValue();
            
         }
-        private SiteBuilderApiContext() { }
-        public static SiteBuilderApiContext Create()
-        {
-            return new SiteBuilderApiContext()
-            {
-
-            };
-        }
 
         private void SetDebugMode()
         {
