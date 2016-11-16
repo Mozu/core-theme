@@ -165,10 +165,12 @@ namespace Mozu.SiteBuilder.UX.Messaging
         public void Consume(IDocumentChanged message)
         {
             var mode =DataViewModeType.NoneSet;
-            if ( message.DataViewMode == DataViewModeType.Pending.ToString())
-            {
-                mode = DataViewModeType.Pending;
-            }
+
+            //bug in content sends pending for live edits.   uncomment when fixed.
+            //if ( message.DataViewMode == DataViewModeType.Pending.ToString())
+            //{
+            //    mode = DataViewModeType.Pending;
+            //}
 
             if (
                  string.IsNullOrEmpty(message.DocumentListName) ||
