@@ -296,7 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 {
                     pos = indexedMatches.Item1;
                     var isFound = true;
-                    if (candidate.AdditionalWildcardSegments != null)
+                    if (candidate.AdditionalWildcardSegments?.Any() == true)
                     {
                         foreach (var segment in candidate.AdditionalWildcardSegments)
                         {
@@ -308,8 +308,17 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                             }
                             pos = nextPos + segment.Length;
                         }
+                        if (!isFound || 
+                            (
+                                !candidate.Redirect.Source.EndsWith("*") &&
+                                !stem.EndsWith(candidate.AdditionalWildcardSegments.Last(), StringComparison.OrdinalIgnoreCase)
+                            ) )
+                        {
+                            continue;
+                        }
+                       
                     }
-                    if (!isFound) continue;
+                    
 
                     if (candidate.Query != null)
                     {
