@@ -925,7 +925,6 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                             '<td><span class="label">Replace Status:<span><span class="x-column-content-pill x-column-content-pill-true">{[Taco.core.util.Common.camelToSpace(values.replaceStatus)]}</span></span></span></td>',
                         '</tpl>',
                         '<td><span class="label">Total Price & Tax:<span>{[Taco.app.context.getCurrent().formatCurrency(values.productTotal)]}</span></span></td>',
-                        '<td><span class="label">Created:<span>{createDate:date("m/d/Y g:ia")}</span></span></td>',
                         '<td><span class="label">Loss:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.items, "productLossAmount")))]}</span></span></td>',
                 '</tbody></table>', {
                     getUnitPriceTotal: function (items) {
@@ -962,7 +961,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 '<tplelse>',
                     '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill x-column-content-pill-false">{status}</span></span></span>',
                 '</tpl>',
-                '<span class="label">Time:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
+                '<span class="label">Created:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
                 '<span class="label">Amount Refunded:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
                 '<span class="label">Items:<span>{[values.items.length]}</span></span>'
             ]
