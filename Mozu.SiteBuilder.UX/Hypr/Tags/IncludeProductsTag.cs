@@ -18,6 +18,7 @@ using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Newtonsoft.Json.Linq;
 using Mozu.Core.Settings;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
 {
@@ -233,7 +234,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             if (pc == null)
             {
-                var res = await productSearchWebApiClient.Search(
+                var res = await productSearchWebApiClient.CloneWithoutUserClaims().Search(
                     query: searchQueryString,
                     filter: filter,
                     facetHierValue: facetHierValue,
