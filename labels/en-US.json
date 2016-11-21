@@ -446,5 +446,9 @@
   "volumePriceMinMaxQty"                  : "{0} - {1}",
   "volumePriceMinOnlyQty"                 : "{0}+",
   "mapPrice"                              : "add to cart to see final price",
-  "additionalInformation"                 : "Additional Information"
+  "additionalInformation"                 : "Additional Information",
+  "printWindowPrintButton"                 : "Print",
+  "printWindowCancelButton"               : "Cancel",
+  "returnPrintLabelButton"                : "Print"
+
 }

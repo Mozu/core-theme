@@ -21,6 +21,11 @@
         {% endif %}
         {% if payment.billingInfo.paymentType == "CreditCard" and model.nonStoreCreditTotal > 0  %}
         <div class="mz-l-stack-section mz-checkout-payment  mz-checkoutform">
+            {% if payment.paymentWorkflow == "VisaCheckout" %}
+            <div>
+                <span><img alt="This Payment Using Visa Checkout" src="{{pageContext.visaCheckoutButtonUrl}}?size=154&amp;color=neutral&amp;cardBrands={{ payment.card.paymentOrCardType }}"/></span>
+            </div>
+            {% endif %}
             <div class="mz-l-stack-section mz-checkout-current-payment">
                 <p>{{ model.card.paymentOrCardType }} {{ model.card.cardNumberPartOrMask }}
                 <br/>{{ labels.expires }} {{ model.card.expireMonth }}/{{ model.card.expireYear }}</p>

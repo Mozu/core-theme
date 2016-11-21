@@ -7,7 +7,20 @@
         <dd>{{ model.returnNumber }}</dd>
         <dt>{{ labels.returnTotal }}</dt>
         <dd>{{ model.refundAmount|currency }}</dd>
-    </dt>
+    </dl>
+
+    {% if model.status == "Authorized" %}
+        {% with model.packages|findwhere("hasLabel", "true") as packageWithLabel %}
+            {% if packageWithLabel %}
+                <div>
+                   <button id="print-return-label" class="mz-button" data-mz-action="printReturnLabel" data-mz-returnId="{{model.id}}">
+                        {{labels.returnPrintLabelButton}}
+                   </button>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+
 {% endblock order-details %}
 {% block order-items %}
     {% for item in model.items %}
