@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         /// Updates the current dependency scope with current HTTP request message.
         /// </summary>
         /// <param name="request">The HTTP request message.</param>
-        public  static void UpdateScopeWithHttpRequestMessage(HttpRequestMessage request)
+        internal static void UpdateScopeWithHttpRequestMessage(HttpRequestMessage request)
         {
             var scope = request.GetDependencyScope();
             var requestScope = scope.GetRequestLifetimeScope();

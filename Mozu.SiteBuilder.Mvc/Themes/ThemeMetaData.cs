@@ -1,10 +1,6 @@
-﻿using Mozu.SiteBuilder.Mvc.Extensions;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -24,113 +20,22 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public ThemeFileSystemInfoCollection FileListing { get; set; }
 
         public DateTime TimeStamp { get; set; }
-        public string Hash { get; set; }
     }
-    [JsonConverter(typeof(ThemeFileSystemInfoCollection.ThemeFileSystemInfoCollectionJsonConverter))]
+
     public class ThemeFileSystemInfoCollection
     {
-
-        public void UnionWith(ThemeFileSystemInfoCollection set )
-        {
-            
-            if (set._allFiles == this._allFiles ||  set._allFiles == null)
-            {
-                return;
-            }
-
-            var total = new Dictionary<string, ThemeFileSystemInfo>( StringComparer.OrdinalIgnoreCase);
-            if ( _allFiles != null)
-            {
-                foreach (var kvp in this._allFiles)
-                {
-                    total[kvp.Key] = kvp.Value;
-                }
-            }
-
-            foreach (var kvp in set._allFiles)
-            {
-                if (!total.ContainsKey(kvp.Key))
-                {
-                    total.Add(kvp.Key, kvp.Value);
-                }
-            }
-            this._allFiles = total;
-               
-        }
-        public class ThemeFileSystemInfoCollectionJsonConverter : JsonConverter
-        {
-
-            public override bool CanConvert(Type objectType)
-            {
-                return true;
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                var data = serializer.Deserialize<DataAccssModel>(reader);
-                return new ThemeFileSystemInfoCollection(data.Files, data.TimeStamp, data.Hash);
-
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                var tfsic = (ThemeFileSystemInfoCollection)value;
-                var dam = new DataAccssModel()
-                {
-                    Files = tfsic._allFiles.Values.ToList(),
-                    Hash = tfsic.Hash,
-                    TimeStamp = tfsic.TimeStamp
-                };
-                serializer.Serialize(writer, dam);
-            }
-        }
-        public class DataAccssModel
-        {
-            public List<ThemeFileSystemInfo> Files { get; set; }
-            public string Hash { get; set; }
-            public DateTime? TimeStamp { get; set; }
-        }
-
         private Dictionary<string, ThemeFileSystemInfo> _allFiles;
         private Dictionary<string, ThemeFileSystemInfo[]> _allFilesNoExt;
        // private ThemeFileSystemInfo[] _liveFileSystemInfos;
-        public ThemeFileSystemInfoCollection(IEnumerable<ThemeFileSystemInfo> infos, DateTime? timeStamp, string Hash)
+        public ThemeFileSystemInfoCollection(IEnumerable<ThemeFileSystemInfo> infos)
         {
             var lst = infos.ToList();
             var files = lst.Where(x => x.IsFile).ToList();
-            _allFiles = files.ToDictionar2y(x => x.VirtualPath,y=> y, StringComparer.OrdinalIgnoreCase);
-            _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt,StringComparer.OrdinalIgnoreCase).ToDictionar2y(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
+            _allFiles = files.ToDictionary(x => x.VirtualPath, StringComparer.OrdinalIgnoreCase);
+            _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt).ToDictionary(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
             LiveTemplates = files.Where(x => x.FullPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
-            TimeStamp = timeStamp ??  (files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp));
-            Hash = Hash ?? LegacyHash(files);
+            TimeStamp = files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp);
         }
-      
-        string LegacyHash (IEnumerable<ThemeFileSystemInfo> files  )
-        {
-            if ( files == null)
-            {
-                return string.Empty;
-            }
-
-
-            using (var md5 = MD5.Create())
-            using (var stream = new MemoryStream())
-            using (var w = new BinaryWriter(stream))
-            {
-                files.ToList().ForEach(_ =>
-                {
-                    w.Write(_.VirtualPath ?? string.Empty);
-                    w.Write(_.TimsStamp.Ticks );
-                });
-                w.Flush();
-                stream.Position = 0;
-                var hash = md5.ComputeHash(stream);
-                return hash.ToHexString();
-            }
-           
-        }
-
-       
 
         public DateTime TimeStamp
         {
@@ -138,10 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             get;
             private set;
         }
-        public string Hash
-        { get; set; }
-
-
+       
 
         public ThemeFileSystemInfo GetFileInfo(string virtualPath, bool withExt)
         {
@@ -174,6 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public IEnumerable<ThemeFileSystemInfo> LiveTemplates
         {
+            //.Values ).Where(x => x.FullPath.EndsWith(".live")
             get;
             private set;
         }

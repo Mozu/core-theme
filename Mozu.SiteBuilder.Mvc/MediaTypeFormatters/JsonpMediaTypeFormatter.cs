@@ -26,11 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 throw new ArgumentNullException("jsonMediaTypeFormatter");
             if (callbackQueryParameter == null)
                 throw new ArgumentNullException("callbackQueryParameter");
-
-
-
-            var bing = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
-
+           
             this._jsonMediaTypeFormatter = jsonMediaTypeFormatter;
             this._callbackQueryParameter = callbackQueryParameter;
             this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));

@@ -3,47 +3,7 @@
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
-using System;
-using Newtonsoft.Json;
 
-namespace Mozu.SiteBuilder.Mvc
-{
-    // [JsonConverter(typeof(CaseInsensitiveDictionaryJsonConverter))]
-    //public class CaseInsensitiveDictionary<TValue> : System.Collections.Generic.Dictionary<string,TValue>
-    //{
-    //    public CaseInsensitiveDictionary() : base(StringComparer.OrdinalIgnoreCase)
-    //    { }
-    //    public CaseInsensitiveDictionary(int capacity) : base(capacity, StringComparer.OrdinalIgnoreCase)
-    //    { }
-    //}
-    //public class JsonHelper
-    //{
-    //    static JsonSerializer _ser1;
-
-    //}
-
-    public class CaseInsensitiveDictionaryJsonConverter<TValue> : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
-            //return objectType == typeof( System.Collections.Generic.Dictionary)
-            //return  (objectType.IsGenericType && objectType.GetGenericTypeDefinition() == typeof(System.Collections.Generic.Dictionary<,>) && objectType.GetGenericArguments()[0] == typeof(string)) ;
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var dic = new System.Collections.Generic.Dictionary<string, TValue>(StringComparer.OrdinalIgnoreCase);
-            serializer.Populate(reader, dic);
-            return dic;
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
-    }
-}
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
     using System;

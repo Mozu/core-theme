@@ -183,9 +183,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
-        public async Task<HttpResponseMessage> HyprContextAction(string dv = null)
+        public HttpResponseMessage HyprContextAction(string dv = null)
         {
-            await SiteContext.Init();
             SbApiContext.SetDataMode(Convert(dv));
             var ctx = new Dictionary<string, object>();
             var locals = new Dictionary<string, object>();
@@ -194,9 +193,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ctx.Add("templates", LiveTemplates().Result);
             ctx.Add("locals", locals);
 
-            var setting = JObject.FromObject(SiteContext.ThemeSettings);
-
-            locals.Add("themeSettings", setting);// SiteContext.ThemeSettings);
+            locals.Add("themeSettings", SiteContext.ThemeSettings);
             locals.Add("labels", SiteContext.Labels);
             locals.Add("siteContext", siteContext);
 
@@ -207,9 +204,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("secureHost", SiteContext.SecureHost);
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
             siteContext.Add("currencyInfo", SiteContext.CurrencyInfo);
-
-
-           
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }
@@ -326,7 +320,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 _contentRetriever = contentRetriever;
             }
 
-            public Func<Stream, string, Task<Stream>> Transform { get; set; }
+            public Func<Stream, string, Stream> Transform { get; set; }
 
             protected override void WriteFile(HttpResponseBase response)
             {
@@ -340,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var source = stream;
                     if (Transform != null)
                     {
-                        source = Transform(stream, _file.VirtualPath).Result;
+                        source = Transform(stream, _file.VirtualPath);
                     }
                     source.CopyTo(outputStream);
                 }
@@ -353,9 +347,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     var source = stream;
                     if (Transform != null)
                     {
-                        source = await Transform(stream, _file.VirtualPath).ConfigureAwait(false);
+                        source = Transform(stream, _file.VirtualPath);
                     }
-                    await source.CopyToAsync(response.OutputStream).ConfigureAwait(false);
+                    await source.CopyToAsync(response.OutputStream);
                 }
             }
         }

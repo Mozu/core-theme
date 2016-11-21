@@ -29,23 +29,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         {
             _apiContext = apiContext;
             _docRepo = docRepo;
-            
-            if ( _apiContext != null)
-            {
-                if (_apiContext.UserClaims != null && _apiContext.UserClaims.ScopeType != Mozu.Core.ContextLevelType.Tenant.ToString())
-                {
-                    _docRepo = _docRepo.CloneWithoutUserClaims();
-                }
 
-                if (apiContext.DataViewMode == Core.DataViewModeType.Pending)
-                {
-                    _docRepo.Options.DisableCache = true;
-                }
+            if (_apiContext.UserClaims != null && _apiContext.UserClaims.ScopeType != Mozu.Core.ContextLevelType.Tenant.ToString())
+            {
+                _docRepo = _docRepo.CloneWithoutUserClaims();
             }
+
+            if(apiContext.DataViewMode == Core.DataViewModeType.Pending)
+            {
+                _docRepo.Options.DisableCache = true;
+            }
+
             _lifetimescope = lifetimescope;
         }
-
-       
 
         private Task<ServiceClientResponse<DC.Document>> CreateInternal(DC.Document doc)
         {

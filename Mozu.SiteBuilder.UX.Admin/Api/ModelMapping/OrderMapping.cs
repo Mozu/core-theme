@@ -348,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ReturnableItems =
                         (   
                             from item in order.Items
-                            where !item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
+                            where string.IsNullOrEmpty(item.ProductUsage) || !item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
                             select new OrderReturnableItem
                             {
                                 OrderItemId = item.Id,
@@ -365,7 +365,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         (
                             from item in order.Items
                             // TODO: Ignoring product extras from non-bundle products since they're included with the parent product.
-                            where item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
+                            where !string.IsNullOrEmpty(item.ProductUsage) && item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
                             from bp in item.BundledProducts
                             select new OrderReturnableItem
                             {

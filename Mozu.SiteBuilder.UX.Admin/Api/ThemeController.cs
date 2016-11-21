@@ -491,7 +491,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var resp = _themeSettingsRepository.GetInstanceValues(id).Result;
 
-                if (resp?.Count  > 0)
+                if (resp == null || !resp.HasValues)
                 {
                     var oldValues = _themeSettingsRepository.GetInstanceValues(lastTheme).Result;
                     await _themeSettingsRepository.SaveInstanceValues(oldValues, id);

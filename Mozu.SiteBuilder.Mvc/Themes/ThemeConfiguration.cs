@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public ThemeAbout About { get; set; }
 
         [DataMember(Name="settings")]
-        public Dictionary<string,object> Settings { get; set; }
+        public List<ThemeSetting> Settings { get; set; }
 
         [DataMember(Name = "pageTypes")]
         public List<PageTypeDefinition> PageTypes { get; set; }
