@@ -6,7 +6,8 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
     requires: [
         'Taco.core.ux.form.field.AdminUser',
         'Ext.form.FieldContainer',
-        'Taco.core.ux.form.DateTime'
+        'Taco.core.ux.form.DateTime',
+        'Taco.shared.view.field.CategoryPickerField'
     ],
 
     defaults: {
@@ -70,24 +71,30 @@ Ext.define('Taco.view.productRanking.form.AdvancedSearch', {
         ];
 
         if (!me.isCatalogLevel) {
-            this.items.push({
-                xtype: 'combo',
-                store: { type: 'Taco.store.Categories' },
-                flex:1,
-                name: 'categoryCode',
-                fieldLabel: 'Category',
-                valueField: 'id',
-                displayField: 'nameAndCode',
-                queryMode: 'local',
-                valueNotFoundText: 'not found',
-                editable: true,
-                forceSelection: true,
-                listeners: {
-                    added: function (cmp) {
-                        cmp.hidden = !Taco.app.context.getCurrent().getSiteId();
+            this.items.push(
+                Ext.create('Taco.shared.view.field.CategoryPickerField', {
+                    flex: 1,
+                    minChars: 2,
+                    name: 'categoryCode',
+                    padding: '25 0',
+                    fieldLabel: 'Category',
+                    valueField: 'id',
+                    displayField: 'nameAndCode',
+                    defaultFilters: [
+                        {
+                            property:'status',
+                            value:'all'
+                        }
+                    ],
+                    editable: true,
+                    forceSelection: true,
+                    listeners: {
+                        added: function (cmp) {
+                            cmp.hidden = !Taco.app.context.getCurrent().getSiteId();
+                        }
                     }
-                }
-            });
+                })
+            );
         }
         else {
             siteStore = Ext.create('Ext.data.Store', {

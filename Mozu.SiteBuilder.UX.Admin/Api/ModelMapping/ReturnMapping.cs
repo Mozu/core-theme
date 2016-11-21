@@ -7,6 +7,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -21,8 +22,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Map_DcReturn_to_Return();
             Map_DcReturnItem_to_ReturnItem();
+            Map_DcOrderNote_to_OrderNote();
+            Map_DcProductOption_to_ProductOption();
             Map_Return_to_DcReturn();
             Map_ReturnItem_to_DcReturnItem();
+            Map_OrderNote_to_DcOrderNote();
+        }
+
+        private static decimal GetItemProductTotal(ReturnsDC.ReturnItem item)
+        {
+            return item.TotalWithoutWeightedShippingAndHandling.HasValue
+                ? item.TotalWithoutWeightedShippingAndHandling.GetValueOrDefault()
+                : item.ProductLossAmount.GetValueOrDefault() + item.ProductLossTaxAmount.GetValueOrDefault();
+        }
+
+        private static decimal GetItemShippingAndHandlingTotal(ReturnsDC.ReturnItem item)
+        {
+            return item.TotalWithWeightedShippingAndHandling.HasValue
+                ? item.TotalWithWeightedShippingAndHandling.GetValueOrDefault() - item.TotalWithoutWeightedShippingAndHandling.GetValueOrDefault()
+                : item.ShippingLossAmount.GetValueOrDefault() + item.ShippingLossTaxAmount.GetValueOrDefault();
         }
 
         private void Map_DcReturn_to_Return()
@@ -32,8 +50,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
             .ForMember(x => x.ReturnNumber, op => op.ResolveUsing(dc => dc.ReturnNumber))
             .ForMember(x => x.OriginalOrderId, op => op.ResolveUsing(dc => dc.OriginalOrderId))
+            .ForMember(x => x.OriginalOrderNumber, op => op.ResolveUsing(dc => dc.OriginalOrderNumber))
             .ForMember(x => x.ReturnOrderId, op => op.ResolveUsing(dc => dc.ReturnOrderId))
             .ForMember(x => x.Status, op => op.ResolveUsing(dc => dc.Status))
+            .ForMember(x => x.ReceiveStatus, op => op.ResolveUsing(dc => dc.ReceiveStatus))
+            .ForMember(x => x.RefundStatus, op => op.ResolveUsing(dc => dc.RefundStatus))
+            .ForMember(x => x.ReplaceStatus, op => op.ResolveUsing(dc => dc.ReplaceStatus))
             .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
             .ForMember(x => x.RMADeadline, op => op.ResolveUsing(dc => dc.RMADeadline))
             .ForMember(x => x.ReturnType, op => op.ResolveUsing(dc => dc.ReturnType))
@@ -42,14 +64,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.TenantId, op => op.ResolveUsing(dc => dc.TenantId))
             .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
             .ForMember(x => x.UserId, op => op.ResolveUsing(dc => dc.UserId))
-            .ForMember(x => x.CreateDate, op => op.ResolveUsing(x => (x.AuditInfo != null) ? x.AuditInfo.CreateDate : null))
-            .ForMember(x => x.UpdateDate, op => op.ResolveUsing(x => (x.AuditInfo != null) ? x.AuditInfo.UpdateDate : null))
-            .ForMember(x => x.RmaNote, op => op.ResolveUsing(dc => (dc.Notes != null && dc.Notes.Any()) ? dc.Notes.First().Text : String.Empty))
-
+            .ForMember(x => x.ChannelCode, op => op.ResolveUsing(dc => dc.ChannelCode))
+            .ForMember(x => x.CreateDate, op => op.ResolveUsing(x => x.AuditInfo?.CreateDate))
+            .ForMember(x => x.UpdateDate, op => op.ResolveUsing(x => x.AuditInfo?.UpdateDate))
+            .ForMember(x => x.Notes, op => op.ResolveUsing(dc => dc.Notes))
             .ForMember(x => x.ProductLossAmount, op => op.ResolveUsing(dc => dc.ProductLossTotal))
             .ForMember(x => x.ShippingLossAmount, op => op.ResolveUsing(dc => dc.ShippingLossTotal))
             .ForMember(x => x.TotalLossAmount, op => op.ResolveUsing(dc => dc.LossTotal))
+            .ForMember(x => x.ProductTotal, op => op.ResolveUsing(dc => dc.Items.Sum(item => GetItemProductTotal(item))))
+            .ForMember(x => x.CustomerAccountId, op => op.ResolveUsing(dc => dc.CustomerAccountId))
+            .ForMember(x => x.Contact, op => op.ResolveUsing(dc => dc.Contact))
+            .ForMember(x => x.CustomerFirstName, op => op.ResolveUsing(dc => dc.Contact?.FirstName))
+            .ForMember(x => x.CustomerLastName, op => op.ResolveUsing(dc => dc.Contact?.LastNameOrSurname))
+            .ForMember(x => x.CustomerEmail, op => op.ResolveUsing(dc => dc.Contact?.Email))
+            .ForMember(x => x.UpdatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
+            .ForMember(x => x.CreatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+            .ForMember(x => x.ReturnOrders, op => op.Ignore())
+            .ForMember(x => x.CustomerNotes, op => op.Ignore())
+            .ForMember(x => x.ChannelName, op => op.Ignore())
+            .ForMember(x => x.TotalItemsToRefund, op => op.Ignore())
+            .ForMember(x => x.TotalItemsToReplace, op => op.Ignore())
+            .ForMember(x => x.ItemsRefunded, op => op.Ignore())
+            .ForMember(x => x.ItemsReplaced, op => op.Ignore())
             ;
+        }
+
+        private void Map_DcOrderNote_to_OrderNote()
+        {
+            Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
+                .ForMember(x => x.NoteId, op => op.ResolveUsing(dc => dc.Id))
+                .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateDate))
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateBy))
+                .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateDate))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.UpdateBy))
+                .ForMember(x => x.OrderId, op => op.Ignore())
+                ;
         }
 
         private void Map_DcReturnItem_to_ReturnItem()
@@ -58,17 +107,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
             .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product == null ? null : (!string.IsNullOrWhiteSpace(dc.Product.VariationProductCode) ? dc.Product.VariationProductCode : dc.Product.ProductCode)))
+            .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Product?.Name))
+            .ForMember(x => x.ImageAlternateText, op => op.ResolveUsing(dc => dc.Product?.ImageAlternateText))
+            .ForMember(x => x.ImageUrl, op => op.ResolveUsing(dc => dc.Product?.ImageUrl))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
+            .ForMember(x => x.Notes, op => op.ResolveUsing(dc => dc.Notes))
             .ForMember(x => x.ReturnReason, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Reason : null))
-            .ForMember(x => x.RmaNote, op => op.ResolveUsing(dc => (dc.Notes != null && dc.Notes.Any()) ? dc.Notes.First().Text : String.Empty))
+            .ForMember(x => x.ReturnType, op => op.ResolveUsing(dc => dc.ReturnType))
+            .ForMember(x => x.ReturnNotRequired, op => op.ResolveUsing(dc => dc.ReturnNotRequired))
             .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Quantity : 0))
             .ForMember(x => x.QuantityReceived, op => op.ResolveUsing(dc => dc.QuantityReceived))
+            .ForMember(x => x.ReceiveStatus, op => op.ResolveUsing(dc => dc.ReceiveStatus))
             .ForMember(x => x.QuantityRestockable, op => op.ResolveUsing(dc => dc.QuantityRestockable))
             .ForMember(x => x.QuantityShipped, op => op.ResolveUsing(dc => dc.QuantityShipped))
+            .ForMember(x => x.RefundAmount, op => op.ResolveUsing(dc => dc.RefundAmount))
+            .ForMember(x => x.RefundStatus, op => op.ResolveUsing(dc => dc.RefundStatus))
+            .ForMember(x => x.QuantityReplaced, op => op.ResolveUsing(dc => dc.QuantityReplaced))
+            .ForMember(x => x.ReplaceStatus, op => op.ResolveUsing(dc => dc.ReplaceStatus))
             .ForMember(x => x.ProductLossAmount, op => op.ResolveUsing(dc => dc.ProductLossAmount))
             .ForMember(x => x.ProductLossTaxAmount, op => op.ResolveUsing(dc => dc.ProductLossTaxAmount))
             .ForMember(x => x.ShippingLossAmount, op => op.ResolveUsing(dc => dc.ShippingLossAmount))
             .ForMember(x => x.ShippingLossTaxAmount, op => op.ResolveUsing(dc => dc.ShippingLossTaxAmount))
+            .ForMember(x => x.ProductTotal, op => op.ResolveUsing(dc => GetItemProductTotal(dc)))
+            .ForMember(x => x.ShippingAndHandlingTotal, op => op.ResolveUsing(dc => GetItemShippingAndHandlingTotal(dc)))
             .ForMember(x => x.OrderLineId, op => op.ResolveUsing(dc => dc.OrderLineId))
             .ForMember(x => x.OrderItemOptionAttributeFQN, op => op.ResolveUsing(dc => dc.OrderItemOptionAttributeFQN))
             .AfterMap((dc, x) => {
@@ -77,6 +138,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 x.QuantityShipped = Math.Max(x.QuantityShipped, x.Quantity);
             })
             ;
+        }
+
+        private void Map_DcProductOption_to_ProductOption()
+        {
+            Mapper.CreateMap<ProductsDC.ProductOption, ProductOption>();
         }
 
         private void Map_Return_to_DcReturn()
@@ -96,8 +162,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.TenantId, op => op.ResolveUsing(x => x.TenantId))
             .ForMember(dc => dc.SiteId, op => op.ResolveUsing(x => x.SiteId))
             .ForMember(dc => dc.UserId, op => op.ResolveUsing(x => x.UserId))
-            .ForMember(dc => dc.Notes, op => op.ResolveUsing(x => !String.IsNullOrEmpty(x.RmaNote) ? new List<OrdersDC.OrderNote> { new OrdersDC.OrderNote { Text = x.RmaNote } } : null))
-
             .ForMember(dc => dc.ProductLossTotal, op => op.ResolveUsing(x => x.ProductLossAmount))
             .ForMember(dc => dc.ShippingLossTotal, op => op.ResolveUsing(x => x.ShippingLossAmount))
             .ForMember(dc => dc.LossTotal, op => op.ResolveUsing(x => x.TotalLossAmount))
@@ -119,29 +183,55 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(dc => dc.ShippingLossTaxTotal, op => op.Ignore())
             .ForMember(dc => dc.ChannelCode, op => op.Ignore())
             .ForMember(dc => dc.ChangeMessages, op => op.Ignore())
+            .ForMember(dc => dc.Notes, op => op.Ignore())
             ;
+        }
+
+        private void Map_OrderNote_to_DcOrderNote()
+        {
+            Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>()
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.NoteId))
+                // Ignore
+                .ForMember(dc => dc.AuditInfo, op => op.Ignore())
+                ;
         }
 
         private void Map_ReturnItem_to_DcReturnItem()
         {
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
-            .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
-            .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => String.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
-            .ForMember(dc => dc.Product, op => op.ResolveUsing(x => x.ProductCode == null ? null : new ProductsDC.Product { ProductCode = x.ProductCode }))
-            .ForMember(dc => dc.Reasons, op => op.ResolveUsing(x => new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Quantity = x.Quantity, Reason = x.ReturnReason } }))
-            .ForMember(dc => dc.Notes, op => op.ResolveUsing(x => !String.IsNullOrEmpty(x.RmaNote) ? new List<OrdersDC.OrderNote> { new OrdersDC.OrderNote { Text = x.RmaNote } } : null))
-            .ForMember(dc => dc.QuantityReceived, op => op.ResolveUsing(x => x.QuantityReceived))
-            .ForMember(dc => dc.QuantityRestockable, op => op.ResolveUsing(x => x.QuantityRestockable))
-            .ForMember(dc => dc.QuantityShipped, op => op.ResolveUsing(x => x.QuantityShipped))
-            .ForMember(dc => dc.ProductLossAmount, op => op.ResolveUsing(x => x.ProductLossAmount))
-            .ForMember(dc => dc.ProductLossTaxAmount, op => op.ResolveUsing(x => x.ProductLossTaxAmount))
-            .ForMember(dc => dc.ShippingLossAmount, op => op.ResolveUsing(x => x.ShippingLossAmount))
-            .ForMember(dc => dc.ShippingLossTaxAmount, op => op.ResolveUsing(x => x.ShippingLossTaxAmount))
-            .ForMember(dc => dc.OrderLineId, op => op.ResolveUsing(x => x.OrderLineId))
-            .ForMember(dc => dc.OrderItemOptionAttributeFQN, op => op.Ignore())
-            //ignores
-            .ForMember(dc => dc.BundledProducts, op => op.Ignore());
-            ;
+                .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
+                .ForMember(dc => dc.OrderItemId,
+                    op => op.ResolveUsing(x => String.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
+                .ForMember(dc => dc.Product,
+                    op =>
+                        op.ResolveUsing(
+                            x => x.ProductCode == null ? null : new ProductsDC.Product {ProductCode = x.ProductCode}))
+                .ForMember(dc => dc.Reasons,
+                    op =>
+                        op.ResolveUsing(
+                            x =>
+                                new List<ReturnsDC.ReturnReason>
+                                {
+                                    new ReturnsDC.ReturnReason {Quantity = x.Quantity, Reason = x.ReturnReason}
+                                }))
+                .ForMember(dc => dc.ReturnType, op => op.ResolveUsing(x => x.ReturnType))
+                .ForMember(dc => dc.ReturnNotRequired, op => op.ResolveUsing(x => x.ReturnNotRequired))
+                .ForMember(dc => dc.QuantityReceived, op => op.ResolveUsing(x => x.QuantityReceived))
+                .ForMember(dc => dc.QuantityRestockable, op => op.ResolveUsing(x => x.QuantityRestockable))
+                .ForMember(dc => dc.QuantityShipped, op => op.ResolveUsing(x => x.QuantityShipped))
+                .ForMember(dc => dc.RefundAmount, op => op.ResolveUsing(x => x.RefundAmount))
+                .ForMember(dc => dc.QuantityReplaced, op => op.ResolveUsing(x => x.QuantityReplaced))
+                .ForMember(dc => dc.ProductLossAmount, op => op.ResolveUsing(x => x.ProductLossAmount))
+                .ForMember(dc => dc.ProductLossTaxAmount, op => op.ResolveUsing(x => x.ProductLossTaxAmount))
+                .ForMember(dc => dc.ShippingLossAmount, op => op.ResolveUsing(x => x.ShippingLossAmount))
+                .ForMember(dc => dc.ShippingLossTaxAmount, op => op.ResolveUsing(x => x.ShippingLossTaxAmount))
+                .ForMember(dc => dc.OrderLineId, op => op.ResolveUsing(x => x.OrderLineId))
+                .ForMember(dc => dc.OrderItemOptionAttributeFQN, op => op.Ignore())
+                //ignores
+                .ForMember(dc => dc.BundledProducts, op => op.Ignore())
+                .ForMember(dc => dc.Notes, op => op.Ignore())
+                .ForMember(dc => dc.TotalWithoutWeightedShippingAndHandling, op => op.Ignore())
+                .ForMember(dc => dc.TotalWithWeightedShippingAndHandling, op => op.Ignore());
         }
     }
 }

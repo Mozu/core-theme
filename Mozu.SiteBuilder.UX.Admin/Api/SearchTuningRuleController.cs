@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using AutoMapper;
-using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core;
-using Mozu.Core.Api.Routing;
-using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Search;
-using DC = Mozu.ProductAdmin.Contracts.Search;
 using System.Text;
+using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Mozu.Core;
 using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Routing;
+using Mozu.Core.Api.Client.Exceptions;
+//using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
-using Mozu.ProductAdmin.Contracts;
+
+using Mozu.ProductAdmin.Contracts.Clients;
+using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.ProductAdmin.Contracts.Search;
+
+using SearchTuningRule = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SearchTuningRule;
+using SimpleSearchProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SimpleSearchProduct;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -131,17 +137,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task AddCategoryNames(List<SearchTuningRule> searchTuningRules)
         {
-            var cats = await GetAllCategories();
-
-            if (!cats.Any())
-                return;
-
-            var catLookup = cats.ToDictionary(x => x.CategoryCode, y => y.Content.Name);
-            foreach (var rule in searchTuningRules)
+            var distinctCodes = new HashSet<string>();
+            foreach (var catCode in searchTuningRules.SelectMany(rule => rule.Filters
+                                .Where(x => x.Key == "categoryCode")
+                                .Select(y => y.Value)
+                                .Where(catCode => !distinctCodes.Contains(catCode))))
             {
-                rule.CategoryNames = rule.Filters
-                    .Where(x => x.Key == "categoryCode" && catLookup.ContainsKey(x.Value))
-                    .Select(y => catLookup[y.Value]).OrderBy(z => z).ToArray();
+                distinctCodes.Add(catCode);
+            }
+            var codeList = distinctCodes.ToArray();
+            if (codeList.Length == 0)
+            {
+                return;
+            }
+            var catNameLookup = await GetCategoryNamesByCodes(codeList);
+            foreach (var searchRule in searchTuningRules)
+            {
+                searchRule.CategoryNames =
+                    searchRule.Filters
+                        .Where(x => x.Key == "categoryCode" && catNameLookup.ContainsKey(x.Value))
+                        .Select(y => catNameLookup[y.Value])
+                        .ToArray();
             }
         }
 
@@ -149,27 +165,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ///     Get all categories, using paging if required
         /// </summary>
         /// <returns></returns>
-        private async Task<List<Category>> GetAllCategories()
+        private async Task<Dictionary<string, string>> GetCategoryNamesByCodes(string[] categoryCodes)
         {
-            int start = 0;
-            var categories = new List<Category>();
+            var filter = $"categorycode in [\"{string.Join("\",\"", categoryCodes) }\"]";
 
-            while (true)
-            {
-                var cats = (await _categoryWebApiClient.Value
-                    .GetCategories(startIndex: start,
-                        pageSize: 200, //current API maximum is 200 - May 2016
-                        responseFields: "items(categoryCode,content(name)"
-                    ))
-                    .ReadAsSync();
-                categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
-                start = cats.PageSize + cats.StartIndex;
-                if (cats.TotalCount <= start)
-                {
-                    break;
-                }
-            }
-            return categories;
+            ProductAdmin.Contracts.CategoryPagedCollection catPagedCollection = (await _categoryWebApiClient.Value
+                .GetCategories(startIndex: 0,
+                    pageSize: 200,
+                    responseFields: "items(categoryCode,content(name)",
+                    filter: filter
+                )).ReadAsSync();
+
+            return catPagedCollection.Items.ToDictionary(x => x.CategoryCode, x => x.Content.Name);
         }
 
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
@@ -321,7 +328,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var searchRule in searchTuningRules)
             {
-                var dc = Mapper.Map<DC.SearchTuningRule>(searchRule);
+                var dc = Mapper.Map<DC.Search.SearchTuningRule>(searchRule);
 
                 try
                 {
@@ -349,7 +356,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var searchRule in searchTuningRules)
             {
-                var dc = Mapper.Map<DC.SearchTuningRule>(searchRule);
+                var dc = Mapper.Map<DC.Search.SearchTuningRule>(searchRule);
                 var searchClient = GetSearchClientForSite(searchRule.SiteId.GetValueOrDefault());
                 var res = (await searchClient.UpdateSearchTuningRule(dc.SearchTuningRuleCode, dc)).ReadAsSync();
                 retList.Add(Mapper.Map<SearchTuningRule>(res));
@@ -442,7 +449,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var searchRule in synonymDefinitions)
             {
-                var dc = Mapper.Map<DC.SynonymDefinition>(searchRule);
+                var dc = Mapper.Map<SynonymDefinition>(searchRule);
 
                 try
                 {
@@ -469,7 +476,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var synonymDef in synonymDefinitions)
             {
-                var dc = Mapper.Map<DC.SynonymDefinition>(synonymDef);
+                var dc = Mapper.Map<SynonymDefinition>(synonymDef);
                
                 var updatedDef = (await searchClient.UpdateSynonymDefinition(dc, dc.SynonymId)).ReadAsSync();
                 result.Add(Mapper.Map<SynonymDefinition>(updatedDef));

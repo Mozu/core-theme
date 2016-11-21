@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-07-18
+ * Mozu JavaScript SDK - v0.3.0 - 2016-10-11
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -4092,9 +4092,14 @@ module.exports=
         }
     },
     "rma": {
-        "create": {
-            "verb": "POST",
-            "template": "{+returnService}"
+      "create": {
+        "verb": "POST",
+        "template": "{+returnService}"
+      },
+      "get-return-label": {
+          "verb": "GET",
+          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64}",
+          "returnType": "string"
         }
     },
     "rmas": {
@@ -4779,6 +4784,14 @@ module.exports = (function () {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
             return credit.associateToShopper();
+        },
+        getReturnLabel: function (data) {
+            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64': true }).then(function (label) {
+                //var imgBase64 = b64EncodeUnicode(data);
+                return label;
+            }, function (reason) {
+                errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
+            });
         },
         // as of 12/30/2013 partial updates on customer will
         // blank out these values unless they are included

@@ -17,7 +17,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     defaults: { xtype: "component" },
 
     config: {
-        /**
+        /** 
          * width of the row total column in the associated order item grid. this keeps the labels and values aligned with the associate gdrid;
          */
         totalColumnWidth: 100,
@@ -60,6 +60,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                                 case "orderAdjustment":
                                     me.fireEvent("clearOrderAdjustment");
                                     break;
+                                case "handlingAdjustment":
+                                    me.fireEvent("clearHandlingAdjustment");
+                                    break;
                                 case "processDiscount":
                                     me.fireEvent("processDiscount", {
                                         isActive: t.getAttribute("isActive"),
@@ -78,18 +81,30 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     initTableComponents : function () {
         var me = this;
 
+        // need to hard code the field with for numberfield because there is a bug in Extjs sizing logic that sets this to a minimum of 150 px;
+        var fieldWidth = 96;
+
+        // Shipping Adjustment
+
         var shippingAdjustmentLabel = this.masterTable.el.down("[itemId = shippingAdjustmentLabel]");
         shippingAdjustmentLabel.update("");
 
         var shippingAdjustment = this.record.data.shippingAdjustment.amount;
-        var orderAdjustment = this.record.data.orderAdjustment.amount;
-
         this.shippingAdjustmentLabelButton = new Ext.button.Button({
             ui: "action",
             scale: "medium",
             //cls:"order-adjusment-menu",
             //style: "font-size: 1.4rem;",
             menuAlign: 'tr-br?',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }],
             text: me.getShippingAdjustmentText(this.record.get("shippingAdjustmentIsNegative")),
             menu: {
                 plain: true,
@@ -120,9 +135,39 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             renderTo: shippingAdjustmentLabel
         });
 
+        var shippingAdjustmentField = this.masterTable.el.down("[itemId = shippingAdjustmentField]");
+        shippingAdjustmentField.update("");
+        var shippingAdjustmentValue = Math.abs(this.record.data.shippingAdjustment.amount);
+        shippingAdjustmentValue = Ext.util.Format.number(shippingAdjustmentValue, ",0.00");
+
+        this.shippingAdjustmentFieldInput = Ext.widget({
+            currencyCode: this.record.getCurrencyCode(),
+            xtype: "currencyfield",
+            spinUpEnabled: false,
+            spinDownEnabled: false,
+            width: fieldWidth,
+            selectOnFocus: true,
+            minValue: 0,
+            forcePrecision: true,
+            renderTo: shippingAdjustmentField,
+            value: shippingAdjustmentValue
+        });
+
+        me.mon(me.shippingAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
+        me.mon(me.shippingAdjustmentFieldInput, 'specialkey', function (field, e) {
+            if (e.getKey() == e.ENTER) {
+                me.onOrderAdjustmentChange();
+            }
+        }, me);
+
+
+        // Order Adjustment
+
         var orderAdjustmentLabel = this.masterTable.el.down("[itemId = orderAdjustmentLabel]");
         // remove the read only version of the text label
         orderAdjustmentLabel.update("");
+
+        var orderAdjustment = this.record.data.orderAdjustment.amount;
         
         var subtractOrderLabelText = "Subtract from Order Subtotal";
         var addOrderLabelText = "Add to Order Total";
@@ -133,6 +178,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             //cls: "order-adjusment-menu",
             //style: "font-size: 1.4rem;",
             menuAlign: 'tr-br?',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }],
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
             menu: {
                 plain: true,
@@ -163,8 +217,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             renderTo: orderAdjustmentLabel
         });
 
-        // need to hard code the field with for numberfield because there is a bug in Extjs sizing logic that sets this to a minimum of 150 px;
-        var fieldWidth = 96;
 
         var orderAdjustmentField = this.masterTable.el.down("[itemId = orderAdjustmentField]");
         orderAdjustmentField.update("");
@@ -182,7 +234,16 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             minValue:0,
             forcePrecision:true,
             renderTo: orderAdjustmentField,
-            value: orderAdjustmentValue
+            value: orderAdjustmentValue,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                readOnly: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }]
         });
 
         me.mon(me.orderAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
@@ -192,31 +253,82 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }
         }, me);
 
-        var shippingAdjustmentField = this.masterTable.el.down("[itemId = shippingAdjustmentField]");
-        shippingAdjustmentField.update("");
-        var shippingAdjustmentValue = Math.abs(this.record.data.shippingAdjustment.amount);
-        shippingAdjustmentValue = Ext.util.Format.number(shippingAdjustmentValue, ",0.00");
+        // Handling Adjustment
 
-        this.shippingAdjustmentFieldInput = Ext.widget({
-            currencyCode : this.record.getCurrencyCode(),
+        var handlingAdjustmentLabel = this.masterTable.el.down("[itemId = handlingAdjustmentLabel]");
+        handlingAdjustmentLabel.update("");
+
+        var handlingAdjustment = this.record.data.handlingAdjustment.amount;
+        this.handlingAdjustmentLabelButton = new Ext.button.Button({
+            ui: "action",
+            scale: "medium",
+            //cls:"order-adjusment-menu",
+            //style: "font-size: 1.4rem;",
+            menuAlign: 'tr-br?',
+            text: me.getHandlingAdjustmentText(this.record.get("handlingAdjustmentIsNegative")),
+            menu: {
+                plain: true,
+                listeners: {
+                    click: {
+                        fn: function (menu, item, e, eOpts) {
+                            if (item && item.type) {
+                                me.handleNegativeAdjustmentChange(item.type, item.value);
+                            }
+                        },
+                        scope: me,
+                        delegate: "x-menu-item-link"
+                    }
+                },
+                items: [
+                    {
+                        text: me.getHandlingAdjustmentText(true),
+                        type: "handlingAdjustmentIsNegative",
+                        value: true
+                    },
+                    {
+                        text: me.getHandlingAdjustmentText(false),
+                        type: "handlingAdjustmentIsNegative",
+                        value: false
+                    }
+                ]
+            },
+            renderTo: handlingAdjustmentLabel
+        });
+
+        var handlingAdjustmentField = this.masterTable.el.down("[itemId = handlingAdjustmentField]");
+        handlingAdjustmentField.update("");
+        var handlingAdjustmentValue = Math.abs(this.record.data.handlingAdjustment.amount);
+        handlingAdjustmentValue = Ext.util.Format.number(handlingAdjustmentValue, ",0.00");
+
+        this.handlingAdjustmentFieldInput = Ext.widget({
+            currencyCode: this.record.getCurrencyCode(),
             xtype: "currencyfield",
             spinUpEnabled: false,
             spinDownEnabled: false,
             width: fieldWidth,
             selectOnFocus: true,
             minValue: 0,
-            forcePrecision:true,
-            renderTo: shippingAdjustmentField,
-            value: shippingAdjustmentValue
+            forcePrecision: true,
+            renderTo: handlingAdjustmentField,
+            value: handlingAdjustmentValue,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                readOnly: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'manualAdjustment'
+                            }]
         });
 
-        me.mon(me.shippingAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
-
-        me.mon(me.shippingAdjustmentFieldInput, 'specialkey', function (field, e) {
+        me.mon(me.handlingAdjustmentFieldInput, 'blur', me.onOrderAdjustmentChange, me);
+        me.mon(me.handlingAdjustmentFieldInput, 'specialkey', function (field, e) {
             if (e.getKey() == e.ENTER) {
                 me.onOrderAdjustmentChange();
             }
         }, me);
+
     },
 
     onOrderAdjustmentChange: function () {
@@ -226,6 +338,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             shippingAdjustment = (Math.abs(parseFloat(this.shippingAdjustmentFieldInput.getValue())) * shippingAdjustmentSign),
             orderAdjustmentSign = (me.record.get("orderAdjustmentIsNegative")) ? -1 : 1,
             orderAdjustment = (Math.abs(parseFloat(this.orderAdjustmentFieldInput.getValue())) * orderAdjustmentSign),
+            handlingAdjustmentSign = (me.record.get("handlingAdjustmentIsNegative")) ? -1 : 1,
+            handlingAdjustment = (Math.abs(parseFloat(this.handlingAdjustmentFieldInput.getValue())) * handlingAdjustmentSign),
             isDirty = false
         
         if (me.record.get("orderAdjustment").amount != orderAdjustment ){
@@ -234,6 +348,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         
         if (me.record.get("shippingAdjustment").amount != shippingAdjustment ){
             isDirty =true;
+        }
+
+        if (me.record.get("handlingAdjustment").amount != handlingAdjustment) {
+            isDirty = true;
         }
         // one of the adjustmentFields or the sign combos has changed and needs to be persisted;
         if (isDirty) {
@@ -244,6 +362,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                     },
                     orderAdjustment: {
                         amount: orderAdjustment
+                    },
+                    handlingAdjustment: {
+                        amount: handlingAdjustment
                     }
                 }
             });
@@ -262,6 +383,12 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         return (value) ? subtractLabelText : addLabelText;
     },
 
+    getHandlingAdjustmentText: function (value) {
+        var subtractLabelText = "Subtract from Handling Total";
+        var addLabelText = "Add to Handling Total";
+        return (value) ? subtractLabelText : addLabelText;
+    },
+
     handleNegativeAdjustmentChange: function (name, newValue) {
         var me = this,
             oldValue = me.record.get(name),
@@ -276,10 +403,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             // update the button text
             this.orderAdjustmentLabelButton.setText(me.getOrderAdjustmentText(newValue));
             fieldValue = parseFloat(this.orderAdjustmentFieldInput.getValue());
-        } else {
+        } else if (name == "shippingAdjustmentIsNegative") {
             // update the button text
             this.shippingAdjustmentLabelButton.setText(me.getShippingAdjustmentText(newValue));
             fieldValue = parseFloat(this.shippingAdjustmentFieldInput.getValue());
+        } else {
+            // update the button text
+            this.handlingAdjustmentLabelButton.setText(me.getHandlingAdjustmentText(newValue));
+            fieldValue = parseFloat(this.handlingAdjustmentFieldInput.getValue());
         }
         
         // Check to see if this change relates to a field value that needs to be persisted. If the value == 0 then this change has no impact.
@@ -296,7 +427,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             jsonData = {
                 orderId: this.record.get('id'),
                 orderAdjustment: Ext.clone(this.record.get("orderAdjustment")),
-                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment"))
+                shippingAdjustment: Ext.clone(this.record.get("shippingAdjustment")),
+                handlingAdjustment: Ext.clone(this.record.get("handlingAdjustment"))
             };
 
         // override the json data with passed in data
@@ -306,6 +438,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
         if (config.data.shippingAdjustment) {
             Ext.apply(jsonData.shippingAdjustment, config.data.shippingAdjustment);
+        }
+
+        if (config.data.handlingAdjustment) {
+            Ext.apply(jsonData.handlingAdjustment, config.data.handlingAdjustment);
         }
 
         this.fireEvent('save');
@@ -326,6 +462,8 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 
                 // need to reset the fields so that they don't show as dirty after the save
                 this.orderAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.orderAdjustmentFieldInput.getValue(), "0.00");
+
+                this.handlingAdjustmentFieldInput.originalValue = Ext.util.Format.number(this.handlingAdjustmentFieldInput.getValue(), "0.00");
 
                 this.fireEvent('savesuccess', json);
             },
@@ -501,6 +639,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             store: me.priceListStore,
             orderSiteId: me.record.get('siteId'),
             value: me.record.get('priceListCode'),
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            }],
             listeners: {
                 select: {
                     fn: function (combo, records, opts) {
@@ -564,6 +711,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }),
             pageSize: me.discountsPerPage,
             displayField: 'couponCode',
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateDiscount'
+                            }],
             listeners: {
                 beforeselect: {
                     fn: function (combo, record, index, e) {
@@ -591,6 +747,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             scale: 'medium',
             text: 'Apply',
             disabled: true,
+            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'updateDiscount'
+                           }],
             handler: function() {
                 tryToApplyCoupon(me.couponCombo.getValue());
             }
@@ -757,6 +921,10 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         }
 
         if (me.shippingAdjustmentFieldInput.getValue() != me.shippingAdjustmentFieldInput.originalValue) {
+            return true;
+        }
+
+        if (me.handlingAdjustmentFieldInput.getValue() != me.handlingAdjustmentFieldInput.originalValue) {
             return true;
         }
 

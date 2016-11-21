@@ -74,6 +74,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     scale: 'medium',
                     html: 'Shipping Method:',
                     cls: 'label label-link',
+                    requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update',
+                                            disable: true
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
                     hidden: !!this.packageData.shipmentId,
                     listeners: {
                         menushow: function (button, menu) {
@@ -124,7 +133,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                         ui: 'link',
                         hidden: !!this.packageData.shipmentId,
                         handler: this.handleOverrideWeight,
-                        scope: this
+                        scope: this,
+                        requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update'
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
                     }]
                 }]
             }, {
@@ -144,6 +161,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     scale: 'medium',
                     cls: 'label label-link',
                     hidden: !!this.packageData.shipmentId,
+                    requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update',
+                                            disable: true
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
                     listeners: {
                         menushow: function (button, menu) {
                             menu.removeAll();
@@ -180,7 +206,16 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                     text: this.packageData.trackingNumber || '(Add)',
                     handler: this.handleAddTrackingNumber,
                     hidden: !!this.packageData.shipmentId,
-                    scope: this
+                    scope: this,
+                    requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update',
+                                            disable: this.packageData.trackingNumber ? true : false
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
                 }, {
                     xtype: 'component',
                     html: this.packageData.trackingNumber || '(n/a)',
@@ -191,23 +226,63 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
 
         this.actions = [{
             text: 'Print Packing Slip',
-            handler: this.handlePrintPackingSlip
+            handler: this.handlePrintPackingSlip,
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }, {
             text: 'View Shipping Label',
             hidden: !this.packageData.shipmentId,
             disabled: !this.packageData.hasLabel,
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
             handler: this.handleViewShippingLabel
         }, {
             text: 'Get Shipping Label',
             hidden: !!this.packageData.shipmentId,
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
             handler: this.handleGetShippingLabel
         }, {
             text: 'Cancel',
             hidden: this.packageData.status === 'Fulfilled',
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
             handler: this.handleCancel
         }, {
             text: 'Mark as Shipped',
             hidden: this.packageData.status === 'Fulfilled',
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
             handler: this.handleMarkAsShipped
         }, {
             xtype: 'resendemailbutton',
@@ -217,6 +292,14 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 orderId: this.record.getId(),
                 packageId: this.packageData.id
             },
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }],
             hidden: this.packageData.status !== 'Fulfilled'
         }];
 
@@ -240,7 +323,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
             ui: 'action',
             scale: 'medium',
             text: 'Print Packing Slip',
-            handler: this.handlePrintPackingSlip
+            handler: this.handlePrintPackingSlip,
+            requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update'
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }, {
             xtype: 'resendemailbutton',
             ui: 'action',
@@ -251,7 +342,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DirectShipPackage', {
                 orderId: this.record.getId(),
                 packageId: this.packageData.id
             },
-            hidden: this.packageData.status !== 'Fulfilled'
+            disabled: this.packageData.status !== 'Fulfilled',
+            requiredBehaviors: [{
+                                            model: 'Taco.model.Order',
+                                            behavior: 'update'
+                                        },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }];
 
         this.callParent(arguments);

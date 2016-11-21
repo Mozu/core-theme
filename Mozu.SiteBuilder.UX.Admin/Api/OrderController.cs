@@ -67,45 +67,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Order>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft = false)
         {
             var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
-            int? startIndex = pagingParams.startIndex;
-            int? pageSize = pagingParams.pageSize ?? 20;
-            string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
 
             // get single order
-            if (!string.IsNullOrEmpty(pagingParams.id))
+            if (!string.IsNullOrEmpty(pagingParams?.id))
             {
-                var order = (await orderWebApiClient.GetOrder(pagingParams.id, draft)).ReadAsSync();
-
-                if (order != null)
-                {
-                    var single = order.Map<Order>();
-                    if (single.CustomerId.HasValue)
-                    {
-                        try
-                        {
-                            var custTask = await customerController.List(new PagingParamaters() { id = single.CustomerId.Value.ToString() }, new FilterCollection());
-                            if (custTask.Success)
-                            {
-                                single.Customer = custTask.Items.FirstOrDefault();
-                            }
-                        }
-                        catch
-                        {
-                        }
-
-                    }
-                    return List2<Order>(single);
-                }
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return await GetSingleOrder(orderWebApiClient, pagingParams.id, draft);
             }
+
             // get list of orders
+            int? startIndex = pagingParams?.startIndex;
+            int? pageSize = pagingParams?.pageSize ?? 20;
+            string sort = pagingParams?.sort?.ToSortString();
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
             int? qLimit = q == null ? (int?)null : 26;
             var responseGroups = "header,payment,packageheaders,availableactions";
-            var dcOrders = (await orderWebApiClient.CloneWithApiContext(x => x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: pagingParams.sort.ToSortString(), filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
+            var dcOrders = (await orderWebApiClient.CloneWithApiContext(x => x.SiteId = null).GetOrders(startIndex: startIndex, pageSize: pageSize, sortBy: sort, filter: filter, q: q, qLimit: qLimit, responseGroups: responseGroups)).ReadAsSync();
 
             return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
+        }
+
+        private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft)
+        {
+            var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
+
+            if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var single = order.Map<Order>();
+            if (single.CustomerId.HasValue)
+            {
+                try
+                {
+                    var custTask = await customerController.List(new PagingParamaters { id = single.CustomerId.Value.ToString() }, new FilterCollection());
+                    if (custTask.Success)
+                    {
+                        single.Customer = custTask.Items.FirstOrDefault();
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            return List2<Order>(single);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
@@ -395,7 +399,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
                 (_apiContext as ApiContext).PriceListCode = priceListCode;
-                dcOrder = (await _orderWebApiClient.ChangeOrderPriceList(args.OrderId, priceListCode, APPLY_TO_ORIGINAL)).ReadAsSync();
+                var orderWebApiClient = _orderWebApiClient.CloneWithoutUserClaims();
+                dcOrder = (await orderWebApiClient.ChangeOrderPriceList(args.OrderId, priceListCode, APPLY_TO_ORIGINAL)).ReadAsSync();
             }
 
             dcOrder.CustomerAccountId = args.CustomerAccountId;

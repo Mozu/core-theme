@@ -79,7 +79,6 @@ Ext.define('Taco.view.order.Form', {
         Taco.model.CheckoutSettings.load(123, {
             scope: this,
             failure: function () {
-                console.log('you failed')
             },
             success: function (record) {
             },
@@ -93,11 +92,52 @@ Ext.define('Taco.view.order.Form', {
             me.onRecordChange();
         }, me);
 
+        // TODO: remove this when the returns editor is live.
+        me.on({
+            // This will switch to the return panel if there is a return id present.
+            boxready: function() {
+                var queryables = Ext.Object.fromQueryString(window.location.search);
+                if (me.isEdit() && me.isHeaderDataComplete && (queryables && queryables.returnId)) {
+                    Taco.app.context.setCurrentSite(me.record.get('siteId'));
+                    var foundReturnPanel = null;
+                    Ext.each(me.getEl().query('li.taco-link-button'), function(dom) {
+                        if (dom.textContent === 'Returns') {
+                            foundReturnPanel = dom;
+                        }
+                    });
+                    var returnRecord = me.navStore.getAt(me.navStore.findExact('title', 'Returns'));
+                    me.onNavClick(me, returnRecord, foundReturnPanel);
+                    Ext.Function.defer(function () {
+                        //var scrollToItem = me.getEl().query('#' + queryables.returnId);
+                        location.href = "#" + queryables.returnId;
+                    }, 3000, me);
+                }
+            }
+        });
+
         me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+            
             // set order price list on the ajax call!
             // This should be called before the TaContext...find settings.
             var priceListHeader = {};
             priceListHeader['x-vol-pricelist'] = me.record.get('priceListCode');
+
+            // TODO: remove this when the returns editor is live.
+            if (options && options.headers && !options.headers['x-vol-site']) {
+                var queryables = Ext.Object.fromQueryString(window.location.search);
+                if (me.isEdit() && me.isHeaderDataComplete && (queryables && queryables.returnId)) {
+                    var siteId;
+                    if (me.record) {
+                        siteId = me.record.get('siteId');
+                    }
+
+                    if (siteId) {
+                        Taco.app.context.setCurrentSite(siteId);
+                    }
+
+                    priceListHeader['x-vol-site'] = siteId;
+                }
+            }
 
             if (options && options.headers) {
                 Ext.applyIf(options.headers, priceListHeader);

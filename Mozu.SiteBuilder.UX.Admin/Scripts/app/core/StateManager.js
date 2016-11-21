@@ -133,9 +133,16 @@ Ext.define('Taco.core.StateManager', {
             'customers',
             'orderattributes',
             'synonyms',
-            'betacategories'
+            'categories',
+            'returns'
         ];
-        var NOT_VIEWS =[ 'customerset'];
+        var NOT_VIEWS =[
+            'customerset',
+            'categories/edit',
+            'categories/duplicate',
+            'categories/create',
+            'categories/createDynamic'
+        ];
 
         if (this.REACT_VIEWS
             && Array.isArray(this.REACT_VIEWS)
@@ -143,13 +150,24 @@ Ext.define('Taco.core.StateManager', {
             return true;
         }
 
-        for (var i =0; i < VIEWS.length; i++) {
-            var route = VIEWS[i];
+        var normalizedRoute = uriOrState.toLowerCase();
 
-            if (uriOrState.toLowerCase().indexOf(route) !== -1 ) {
-                return uriOrState.toLowerCase().indexOf('customerset') ==-1;
-            }
-        };
+        for (var i = 0; i < VIEWS.length; i++) {
+
+            var isReactView = normalizedRoute.indexOf(VIEWS[i]) !== -1;
+
+            if (isReactView) {
+                for (var z = 0; z < NOT_VIEWS.length; z++) {
+                    var isOverrideView = normalizedRoute.indexOf(NOT_VIEWS[z]) !== -1;
+
+                    if (isOverrideView) {
+                        return false;
+                    }
+
+                }
+                return true; 
+            }   
+        }
 
 
         return false;

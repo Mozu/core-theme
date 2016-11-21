@@ -76,14 +76,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (extFilter.ContainsProperty("locationcode"))
             {
                 string locationCode = extFilter.PopValue<string>("locationcode");
+
+                string statusFilterFunction = SbApiContext.CatalogId.HasValue
+                    ? GetStatusFilterFunction(extFilter)
+                    : null;
+
                 string filterString = extFilter.ToFilterString();
-                inventories = (await _locationInventoryClient.GetLocationInventories(locationCode: locationCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString, sortBy: sortBy)).ReadAsSync();
+                inventories = (await _locationInventoryClient.GetLocationInventories(
+                    locationCode: locationCode,
+                    startIndex: pagingParams.startIndex,
+                    pageSize: pagingParams.pageSize,
+                    filter: filterString,
+                    filterFunctions: statusFilterFunction,
+                    sortBy: sortBy)).ReadAsSync();
             }
             else if (extFilter.ContainsProperty("productcode"))
             {
                 string productCode = extFilter.PopValue<string>("productcode");
                 string filterString = extFilter.ToFilterString();
-                inventories = (await _productClient.GetLocationInventories(productCode: productCode, startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString, sortBy: sortBy)).ReadAsSync();
+                inventories = (await _productClient.GetLocationInventories(
+                    productCode: productCode,
+                    startIndex: pagingParams.startIndex,
+                    pageSize: pagingParams.pageSize,
+                    filter: filterString,
+                    sortBy: sortBy)).ReadAsSync();
 
                 if (inventories.TotalCount == 0)
                 {
@@ -108,6 +124,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return this.Request.CreateResponse(HttpStatusCode.OK, List2<DC.LocationInventory>(inventories.Items, (int)inventories.TotalCount));
+        }
+
+        private static string GetStatusFilterFunction(FilterCollection extFilter)
+        {
+            if (!extFilter.ContainsProperty("productStatus"))
+            {
+                // default to active
+                return "catalog.Isactive(true)";
+            }
+
+            string prodStatus = extFilter.PopValue<string>("productStatus");
+            switch (prodStatus.ToLowerInvariant())
+            {
+                case "active":
+                    return "catalog.Isactive(true)";
+                case "disabled":
+                    return "catalog.Isactive(false)";
+                default:
+                    return null;
+            }
         }
 
         private async Task<HttpResponseMessage> GetIndividualLocationInventory(FilterCollection extFilter)

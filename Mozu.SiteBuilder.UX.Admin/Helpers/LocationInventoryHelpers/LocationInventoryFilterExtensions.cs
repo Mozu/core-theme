@@ -9,6 +9,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
         private const string PRODUCT_NAME = "productname";
         private const string BASE_PRODUCT_CODE = "baseproductcode";
         private const string PRODUCT_CODE = "productcode";
+        private const string PRODUCT_CAT_STATUS = "catalog.isactive";
         private const string LOCATION_CODE = "locationcode";
         private const string STOCK_ON_HAND = "stockonhand";
         private const string STOCK_AVAILABLE = "stockavailable";
@@ -43,6 +44,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                     return string.Format("({1} {2} {0})", filter.value, PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
                 case "productcodefilter":
                     return $"({PRODUCT_CODE} sw \"{filter.value}\" or {BASE_PRODUCT_CODE} eq \"{filter.value}\")";
+                case "productstatus":
+                    if (filter.value == null)
+                        return string.Empty;
+                    var status = filter.value.ToString().ToLower();
+                    if (status.Equals("active"))
+                    {
+                        return $"({PRODUCT_CAT_STATUS} eq true)";
+                    }
+                    if (status.Equals("disabled"))
+                    {
+                        return $"({PRODUCT_CAT_STATUS} eq false)";
+                    }
+                    return string.Empty;   
+
                 case "locationcode":
                     return string.Format("({1} {2} {0})", filter.value, LOCATION_CODE, filter.comparison == "sw" ? "sw" : "eq");
 

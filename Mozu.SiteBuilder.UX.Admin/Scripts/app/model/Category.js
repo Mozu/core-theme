@@ -61,8 +61,19 @@ Ext.define('Taco.model.Category', {
             "name": "parentId",
             "type": "int",
             "useNull": true
-        },
-        {
+        }, {
+            "name": "parentCode",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "parentName",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "parentIsActive",
+            "type": "boolean",
+            "useNull": true
+        }, {
             "name": "index",
             "type": "int",
             "useNull": false

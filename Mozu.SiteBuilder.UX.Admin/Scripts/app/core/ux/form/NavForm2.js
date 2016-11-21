@@ -35,6 +35,8 @@ Ext.define('Taco.core.ux.form.NavForm2', {
         var excludedItems = [];
 
         Ext.Array.each(this.items, function (item, index) {
+            if (!item) return;
+
             if (item.excludeFromNavigation) {
                 excludedItems.push(item);
             } else {

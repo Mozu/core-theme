@@ -215,11 +215,6 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'categories',
                     'behaviorIds': [16]
                 }, {
-                    'id': 'betaCategories',
-                    'label': '(Beta)',
-                    'address': 'betaCategories',
-                    'behaviorIds': [16]
-                }, {
                     'id': 'inventory',
                     'label': 'Inventory',
                     'address': 'inventory',
@@ -326,6 +321,11 @@ Ext.define('Taco.store.Navigation', {
                         'id': 'orders',
                         'label': 'Orders',
                         'address': 'orders',
+                        'behaviorIds': [73]
+                    }, {
+                        'id': 'returns',
+                        'label': 'Returns',
+                        'address': 'returns',
                         'behaviorIds': [73]
                     }, {
                         'id': 'locations-inventory',

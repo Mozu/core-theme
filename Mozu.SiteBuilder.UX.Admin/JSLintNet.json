@@ -7,6 +7,7 @@
     "predef": {
       "Ext": false,
       "Taco": false,
+      "Promise": false,
       "Class": false,
       "setTimeout": false,
       "Siesta": false,

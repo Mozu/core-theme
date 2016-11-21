@@ -6,6 +6,21 @@
         }
     }
 
+    .return-end-menu {
+        .x-btn-split-right {
+            &::after {
+                border-left-color: rgba(63,63,63,0.19);
+                content: "\E60B";
+                color: #7c7c7c;
+                font-size: 7px;
+                padding-top: 12px;
+                right: -12px;
+                text-align: center;
+                width: 21px;
+            }
+        }
+    }
+
     .return-summary {
         .label {
             font-weight: bold;

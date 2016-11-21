@@ -21,7 +21,6 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingCarrierSettings');
 
-
         this.custom = Ext.create('Taco.view.settings.shipping.subform.Custom', {
             record: this.record
         });
@@ -58,7 +57,6 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
 
         this.fedex = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
             record: store.getById('fedex'),
-
             title: 'FedEx',
             providerId: 'fedex',
             configureCopy: '<img src="http://images.fedex.com/images/c/t1/gh/logo-header-fedex.png"/> <div style="margin-top:15px">Please provide your FedEx account credentials.</div><div style="margin-top:50px; font-size: 85%">The FedEx service marks are owned by Federal Express Corporation and are used by permission.</div>',

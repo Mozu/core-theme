@@ -10,6 +10,7 @@ Ext.define('Taco.model.ShippingCarrierSetting', {
         { name: 'rates', type: 'auto', defaultValue: [] },
         { name: 'isConfigured', type: 'boolean' },
         { name: 'enabled', type: 'boolean' ,defaultvalue:false},
+        { name: 'enabledForReturns', type: 'boolean' ,defaultvalue:false},
         { name: 'configuredCountries', type:'auto', defaultValue: [] },
         { name: 'areCredentialsSet', type: 'boolean', defaultvalue: false }
     ],

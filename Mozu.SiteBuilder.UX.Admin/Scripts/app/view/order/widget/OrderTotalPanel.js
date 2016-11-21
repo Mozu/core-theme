@@ -257,6 +257,15 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                 xtype: 'button',
                 ui: "action",
                 scale: "medium",
+                requiredBehaviors: [{
+                    model: 'Taco.model.Order',
+                    behavior: 'update',
+                    disable: true
+                },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'fulfill'
+                           }],
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
                 disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
                 text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
@@ -336,7 +345,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         '<tpl for="orderDiscounts">',
             '<tr class="adjustment-item discount ', '<tpl if="!isActive">suppressed<tpl else>active</tpl>', '">',
                 '<td class="{parent.tdCls}"></td>',
-                '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Order Discount: {description}</div></td>',
+                '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Order Discount: {description}</div></td>',
                 '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
                 '<td class="{parent.tdCls}"></td>',
                 '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
@@ -352,9 +361,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
      *   The second section of XTemplate that is after the order adjustment row and before the shipping adjustment row;
     */
     subTpl_2: new Ext.XTemplate(
-
-        '<tpl if="handlingTotal !== 0">',
-
+        
             '<tpl if="handlingAmount !== 0">',
                 '<tr class="shipping-handling-item">',
                     '<td class="{tdCls}"></td>',
@@ -383,9 +390,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}"></td>',
                 '</tr>',
-            '</tpl>',
-
-        '</tpl>'
+            '</tpl>'
     ),
 
     /**
@@ -502,7 +507,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<tpl if="!isActive">suppressed<tpl else>active</tpl>',
                 '">',
                     '<td class="{tdCls}"></td>',
-                    '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Shipping Discount: {description}</div></td>',
+                    '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount: {description}</div></td>',
                     '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
                     '<td class="{parent.tdCls}"></td>',
                     '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
@@ -647,7 +652,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '<thead>',
                 '<tr class="subtotalrow">',
-                    '<th><div class="{[ (values.handlingTotal != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
+                    '<th><div class="{[ (values.handlingAmount != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
                     '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
                     '<th></th>',
 
@@ -662,6 +667,18 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
 
             '<tbody itemId="taco-subTpl_2">',
                 '{[this.getSubTpl("subTpl_2", values)]}',
+            '</tbody>',
+
+            '<tbody>',
+                '<tpl if="' + isEditable + ' || handlingAdjustment.amount !== 0">',
+                    '<tr class="shipping-handling-item">',
+                        '<td class="{tdCls}"></td>',
+                        '<td class="{tdCls}"><div itemId="handlingAdjustmentLabel" class="{tdInnerCls}">Manual Handling Adjustment</div></td>',
+                        '<td class="{tdCls}"><div itemId="handlingAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.handlingAdjustment.amount < 0) ? "negative-currency" : "" ]}">{[ this.getCurrencyFormat(values.handlingAdjustment.amount)]}</div></td>',
+                        '<td class="{tdCls}"></td>',
+                        '<td class="{tdCls}"></td>',
+                    '</tr>',
+                '</tpl>',
             '</tbody>',
 
             '</table>',

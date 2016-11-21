@@ -72,12 +72,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.InvalidCoupons, op => op.ResolveUsing(dc => dc.InvalidCoupons))
                 .ForMember(x => x.CouponCodes, op => op.ResolveUsing(dc => dc.CouponCodes))
                 .ForMember(x => x.ParentOrderId, op => op.ResolveUsing(dc => dc.ParentOrderId))
+                .ForMember(x => x.ParentOrderNumber, op => op.ResolveUsing(dc => dc.ParentOrderNumber))
                 .ForMember(x => x.ParentReturnId, op => op.ResolveUsing(dc => dc.ParentReturnId))
+                .ForMember(x => x.ParentReturnNumber, op => op.ResolveUsing(dc => dc.ParentReturnNumber))
                 .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
 
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateBy : null))
                 .ForMember(x => x.UpdateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateDate : null))
+                .ForMember(x => x.UpdateBy, op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.UpdateBy : null))
                 .ForMember(x => x.SubmittedDate, op => op.ResolveUsing(dc => dc.SubmittedDate))
                 .ForMember(x => x.CustomerId, op => op.ResolveUsing(dc => dc.CustomerAccountId))
                 .ForMember(x => x.BillingContact, op => op.ResolveUsing(dc => dc.BillingInfo != null && dc.BillingInfo.BillingContact != null 
@@ -344,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     order.ReturnableItems =
                         (   
                             from item in order.Items
-                            where item.ProductUsage != "Bundle"
+                            where string.IsNullOrEmpty(item.ProductUsage) || !item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
                             select new OrderReturnableItem
                             {
                                 OrderItemId = item.Id,
@@ -357,9 +361,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                 FulfillmentStatus = item.FulfillmentStatus
                             }
                         )
-                        .Union
+                        .Union  // Grab bundle items.
                         (
                             from item in order.Items
+                            // TODO: Ignoring product extras from non-bundle products since they're included with the parent product.
+                            where !string.IsNullOrEmpty(item.ProductUsage) && item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
                             from bp in item.BundledProducts
                             select new OrderReturnableItem
                             {
@@ -809,6 +815,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingTotal, op => op.Ignore())
                 .ForMember(dc => dc.WeightedOrderDuty, op => op.Ignore())
                 .ForMember(dc => dc.ShippingAmountBeforeDiscountsAndAdjustments, op => op.Ignore())
+                .ForMember(dc => dc.WeightedOrderHandlingAdjustment, op => op.Ignore())
 
 
                 //                             ProductCode = orderItem.ProductCode,

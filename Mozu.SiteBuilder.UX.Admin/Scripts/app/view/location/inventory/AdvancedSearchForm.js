@@ -13,6 +13,7 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
         xtype: 'textfield'
     },
     initComponent: function () {
+
         this.items = [
             {
                 name: 'keyword',
@@ -21,9 +22,52 @@ Ext.define('Taco.view.location.inventory.AdvancedSearchForm', {
                 name: 'productName',
                 fieldLabel: 'Product Name'
             }, {
-                fieldLabel: "Product Code",
-                name: 'productCodeFilter'
-            }, {
+                xtype: 'fieldcontainer',
+                layout: {
+                    type: 'hbox',
+                    align: 'left'
+                },
+                items: [{
+                    xtype: "textfield",
+                    fieldLabel: "Product Code",
+                    name: 'productCodeFilter',
+                    flex: 1,
+                    margin: { right: 20 }
+                }, {
+                    xtype: 'combobox',
+                    name: 'productStatus',
+                    disabled: (Taco.app.context.getCurrentContext().contextType !== 'c'),
+                    fieldLabel: 'Product Catalog Status',
+                    flex: 1,
+                    valueField: 'id',
+                    displayField: 'name',
+                    queryMode: 'local',
+                    valueNotFoundText: 'not found',
+                    editable: false,
+                    forceSelection: true,
+                    initialValue: "Active",
+                    trigger2Cls: 'x-form-clear-trigger',
+                    onTrigger2Click: function () {
+                        this.clearValue();
+                    },
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['id', "name"],
+                        data: [
+                            {
+                                name: "Active",
+                                id: "Active"
+                            }, {
+                                name: "Disabled",
+                                id: "Disabled"
+                            }, {
+                                name: "All",
+                                id: "All"
+                            }
+                        ]
+                    })
+                }]
+            },
+            {
                 xtype: 'panel',
                 layout: "column",
                 items: [

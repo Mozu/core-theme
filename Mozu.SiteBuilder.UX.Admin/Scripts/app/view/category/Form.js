@@ -1,4 +1,5 @@
-﻿/**
+﻿/* globals Promise */
+/**
  * @class  Taco.view.category.Form
  * category form
  * @extends Taco,core.ux.form.form
@@ -12,7 +13,8 @@ Ext.define("Taco.view.category.Form", {
         "Taco.view.filter.ExpressionTreePanel",
         "Taco.view.filter.Schema",
         "Taco.view.filter.OperatorField",
-        "Taco.view.productRanking.Grid"
+        "Taco.view.productRanking.Grid",
+        "Taco.shared.view.field.CategoryPickerField"
     ],
 
     itemId: 'taco-category-form',
@@ -26,7 +28,15 @@ Ext.define("Taco.view.category.Form", {
 
     initComponent: function() {
         var me = this,
-            categoryType = this.record.get("categoryType");
+            categoryType = this.record.get("categoryType"),
+            parentDefaultFilters = [{
+                    property:'status',
+                    value:'all'
+                }, {
+                    property:'type',
+                    value:'static'
+                }
+            ];
 
         this.title = this.record.data.name;
 
@@ -73,7 +83,7 @@ Ext.define("Taco.view.category.Form", {
                 }),
                 listeners: {
                     scope: me,
-                    'change': function(field, newValue, oldValue, e) {
+                    'change': function(field, newValue) {
                         var type = "DynamicPreComputed";
                         if (newValue == "no") {
                             type = "DynamicRealTime";
@@ -106,6 +116,9 @@ Ext.define("Taco.view.category.Form", {
             flex: 1,
             editable: false,
             allowBlank: false,
+            disabled: (! me.record.phantom
+                && me.record.get('parentIsActive') !== null
+                && !me.record.get('parentIsActive')),
             store: [[
                 true,
                 'Active'
@@ -115,50 +128,65 @@ Ext.define("Taco.view.category.Form", {
             ]],
             listeners: {
                 scope: me,
-                change: function(cmp, newValue, oldValue, eOpts) {
+                change: function(cmp, newValue) {
                     me.optionsContainer.setVisible(newValue);
                     //me.hiddenOnStorefront.setVisible(newValue); //if more options are added
                 }
             }
         });
 
-        me.parentCategory = Ext.create('Taco.core.ux.CategoryComboBox', {
-            xtype: "taco-categorycombobox",
-            name: "parentId",
+        if (!me.record.phantom && me.record.get('id')) {
+            parentDefaultFilters.push({
+                property: 'not-id',
+                value: me.record.get('id')
+            });
+        }
+
+        me.parentCategoryPicker = Ext.create('Taco.shared.view.field.CategoryPickerField', {
+            name: "parentCatId",
             fieldLabel: "Parent Category",
+            hideLabel: false,
             flex: 1,
-            showDynamicRealTime: false,
-            showDynamicPreComputed: false,
-            excludedIds: [this.record.get("categoryCode")]
-        });
-
-        me.parentCategory.on({ // so it doesn't overwrite the listeners handler in the class
-            change: function(cmp, newValue, oldValue, eOpts) {
-                var store = cmp.getStore(),
-                    parent = store.getById(newValue);
-
-                if (parent && !parent.get('isActive')) {
-                    me.isActive.setValue(false).disable();
-                }
-                else {
-                    me.isActive.enable();
-                }
-            },
-            render: function(cmp) {
-                if (cmp.getValue()) {
-                    var store = cmp.getStore();
-                    store.on('load', function() {
-                        var parent = store.getById(cmp.getValue());
-                        me.isActive.setDisabled(!parent.get('isActive'));
+            minChars: 2,
+            emptyText: 'Search for categories',
+            valueField: 'id',
+            displayField: 'nameAndCodeAndStatus',
+            defaultFilters: parentDefaultFilters,
+            listeners: {
+                afterrender: function (cmp) {
+                    if (!me.record || me.record.phantom || me.record.get('parentId') === -1) {
+                        return;
+                    }
+                    var parentCat = Ext.create('Taco.model.Category', {
+                        id: me.record.get('parentId'),
+                        categoryCode: me.record.get('parentCode'),
+                        name: me.record.get('parentName'),
+                        isActive: me.record.get('parentIsActive')
                     });
-                }
-            },
-            scope: me
+                    cmp.setValue(parentCat);
+                },
+                select: function (cmp, records) {
+                    if (!records || records.length === 0) {
+                        return;
+                    }
+                    if (!records[0].get('isActive')) {
+                        me.isActive.setValue(false).disable();
+                    } else if (me.isActive.isDisabled()) {
+                        me.isActive.enable();
+                    }
+                },
+                blur: function (cmp) {
+                    if (!cmp.getValue() && me.isActive.isDisabled()) {
+                        me.isActive.enable();
+                    }
+                },
+                scope: this
+            }
         });
 
         var secondRowItems = [
             me.isActive,
-            me.parentCategory
+            me.parentCategoryPicker
         ];
 
         if (categoryType !== "Static") {
@@ -214,8 +242,7 @@ Ext.define("Taco.view.category.Form", {
                                 change: function(cmp, newValue) {
                                     cmp.slugField = cmp.slugField || cmp.up("formform").down("[name=\"slug\"]");
                                     var previous = cmp.slugField.onNameChangeValue,
-                                        current = cmp.slugField.getValue(),
-                                        newValue;
+                                        current = cmp.slugField.getValue();
                                     if (current && previous != current) {
                                         return;
                                     }
@@ -348,31 +375,136 @@ Ext.define("Taco.view.category.Form", {
         this.callParent(arguments);
     },
 
+    getCategoryPreviewTotal: function() {
+        var record = this.record;
+
+        return new Promise(function(resolve, reject) {
+
+            // dont make the preview call unless this is a DynamicRealTime call
+            if (record.get('categoryType') !== 'DynamicPreComputed') {
+                return resolve(0);
+            }
+
+            var sites = Taco.app.context.getCurrentContext().sites;
+            var siteId = sites && sites[0] ? sites[0].id : null;
+
+            Ext.Ajax.request({
+                url: '/admin/app/productruntime/preview',
+                method: 'POST',
+                params: {
+                    expression: record.get('dynamicExpression').text,
+                    limit: 0,
+                    dataViewMode: 'Live',
+                    siteId: siteId
+                },
+                success: function (response) {
+                    var amount = JSON.parse(response.responseText);
+                    resolve(amount.total);
+                },
+                failure: function () {
+                    reject();
+                }
+            }, this);
+        });
+    },
+
+    showWarningModal: function(total, cb) {
+        Ext.create('Taco.core.ux.window.Modal', {
+            autoShow: true,
+            closeAction: 'destroy',
+            scale: 'small',
+            title: 'This will Impact ' + total + ' Products',
+            primaryText: 'Proceed',
+            items: [{
+                xtype: 'container',
+                layout: { 
+                    type: 'hbox' 
+                },
+                items: [
+                    Ext.create('Ext.panel.Panel', {
+                        width: '100%',
+                        html: 'This dynamic precomputed category will contain <b>' + total + '</b> products. This may delay products appearing in this category, and could cause system degradation. To avoid this, ensure your category contains less than 10,000 products.'
+                    })
+                ]
+            }],
+            listeners: {
+                beforesave: function () {
+                    cb(true);
+                },
+                beforecancel: function() {
+                    cb(false);
+                }
+            }
+        });
+    },
+
     // Called before the updateTask of Taco.core.ux.form.Form is executed; Return false to cancel the save; Can be used to manipulate the record data prior to saving;
-    beforeSave: function() {
-        var uploadedImages = [],
-            form = this.getForm(),
-            categoryImagesField = form.findField("categoryImages");
+    beforeAsyncSave: function() {
+        var me = this;
+        return new Promise(function(resolve) {
+            me.updateRecord().then(function() {
+                me.getCategoryPreviewTotal().then(function(total) {
 
-        if (categoryImagesField) {
-            uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
-                return img.isUploaded;
-            });
-        }
+                    if (total >= 10000) {
+                        me.showWarningModal(total, function(doSave) {
+                            if (doSave) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                                me.fireEvent('savecomplete')
+                            }
+                        });
+                    }
 
-        // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-        this.record.set("categoryImages", uploadedImages);
+                    else {
+                        resolve(true);
+                    }
 
-        if (this.expressionTreePanel) {
-            var treeData = this.expressionTreePanel.getValue();
+                })['catch'](function () {
+                    // if the categoryPreviewTotal fails, just continue
+                    resolve(true);
+                });
+            
+            })
+        });
+    },
+
+    // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+    updateRecord: function() {
+        var me = this;
+        return new Promise(function(resolve, reject) {
+            var uploadedImages = [],
+                form = me.getForm(),
+                categoryImagesField = form.findField("categoryImages");
+
+            if (categoryImagesField) {
+                uploadedImages = Ext.Array.filter(categoryImagesField.getValue(), function(img) {
+                    return img.isUploaded;
+                });
+            }
+
+            // need to update the record manually. form.Form does not extract the value from the imageField automatically.
+            me.record.set("categoryImages", uploadedImages);
+
+            me.record.set('parentId', me.parentCategoryPicker.getValue());
+
+            if (!me.expressionTreePanel) {
+                return resolve()
+            }
+
+            var treeData = me.expressionTreePanel.getValue();
             var expressionData = {
                 tree: treeData,
-                type: this.record.get("categoryType")
+                type: me.record.get("categoryType")
             };
-            this.record.set("dynamicExpression", expressionData);
-        }
-
-        return true;
+            
+            me.expressionTreePanel.getExpressionText(expressionData, function(text) {
+                expressionData.text = text;
+                me.record.set("dynamicExpression", expressionData);
+                resolve();
+            });
+        });
     },
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     

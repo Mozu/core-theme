@@ -40,6 +40,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
 
         public string ParentName { get; set; }
 
+        public bool? ParentIsActive { get; set; }
+
         public int? Index { get; set; }
 
         public int? ProductCount { get; set; }
@@ -53,6 +55,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Category
         public string Description { get; set; }
 
         public int? Sequence { get; set; }
+
+        public int? PreviousSiblingCategoryId { get; set; }
 
         public string PageTitle { get; set; }
         public string MetaTitle { get; set; }

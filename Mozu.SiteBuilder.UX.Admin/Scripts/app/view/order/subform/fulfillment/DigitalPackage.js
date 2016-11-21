@@ -32,7 +32,15 @@ Ext.define('Taco.view.order.subform.fulfillment.DigitalPackage', {
 
         this.actions = [{
             text: 'Resend Email',
-            handler: this.handleResendEmail
+            handler: this.handleResendEmail,
+            requiredBehaviors: [{
+                model: 'Taco.model.Order',
+                behavior: 'update'
+            },
+                                       {
+                                           model: 'Taco.model.Order',
+                                           behavior: 'fulfill'
+                                       }]
         }];
 
         this.collapsedInfo = {

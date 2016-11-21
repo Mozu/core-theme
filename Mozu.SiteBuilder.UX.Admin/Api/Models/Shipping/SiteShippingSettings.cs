@@ -58,6 +58,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
 
         public bool Enabled { get; set; }
 
+        public bool EnabledForReturns { get; set; }
+
         public bool AreCredentialsSet { get; set; }
 
     }

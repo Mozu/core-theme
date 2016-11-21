@@ -4,7 +4,6 @@
 Ext.define('Taco.view.order.subform.Return', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
-        'Taco.view.order.widget.CreateReturnPanel',
         'Taco.view.order.widget.ProcessReturnPanel',
         'Taco.view.order.widget.ReturnableItemGrid',
         'Taco.core.ux.PanelHeaderStat',
@@ -26,6 +25,7 @@ Ext.define('Taco.view.order.subform.Return', {
         var store = this.record.getReturnsStore();
 
         store.load(function () {
+            me.returnPanels.removeAll(true);
             me.initProcessReturnPanels(store);
             me.initHeader();
             me.setLoading(false);
@@ -41,13 +41,6 @@ Ext.define('Taco.view.order.subform.Return', {
 
     initComponent: function () {
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-returns';
-
-        // activate is not called when using the new scroll spy. see 75656
-        // initialize and tear down the ui when the view becomes active;
-        //this.mon(this, {
-        //    'activate': this.initUI,
-        //    'deactivate': this.destroyUI
-        //}, this);
         this.initUI();
         this.callParent(arguments);
     },
@@ -142,6 +135,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnPanels.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
             order: this.record,
             record: record,
+            returnId: record.get('id'),
             listeners: {
                 'refresh-returnable-items': this.refreshReturnableItemsGrid,
                 scope: this
@@ -151,9 +145,6 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     initHeader: function () {
-        //var returnsStore = this.getReturnsStore();
-        //var returnCount = returnsStore ? Ext.valueFrom(returnsStore.count(), 0) : 0;
-        //var returnStatus = (returnCount ? returnCount : 'No') + ' Return' + (returnCount === 1 ? '' : 's');
         var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
         this.setHeaderTitleStatus('Returns', returnStatus);
     },
@@ -162,20 +153,6 @@ Ext.define('Taco.view.order.subform.Return', {
         var orderStatus = this.record.get('orderStatus');
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled'));
-
-
-        /*
-        // disable the create button if we have no returnable items;
-        this.mon(this.returnableItems, 'viewready', function () {
-            if (!this.returnableItems.store.count()) {
-                this.createButton.disable();
-            } else {
-                this.createButton.enable();
-            }
-        }, me);
-
-        */
-
 
         this.createButton.setDisabled(!enabled);
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
@@ -186,14 +163,6 @@ Ext.define('Taco.view.order.subform.Return', {
         Ext.Array.each(store.data.items, this.addProcessReturnPanel, this, true);
         Ext.resumeLayouts(true);
     },
-
-    /*
-    onOrderChange: function () {
-        Ext.suspendLayouts();
-        //this.initCreateButton();
-        Ext.resumeLayouts(true);
-    },
-    */
 
     createReturn: function (type, items) {
         return this.getReturnsStore().add({
@@ -206,8 +175,8 @@ Ext.define('Taco.view.order.subform.Return', {
                     productCode: item.get('orderItemId') ? null : item.get('productCode'), // only provide product code when there is no orderItemId
                     quantity: item.get('quantity'),
                     returnReason: item.get('reason'),
-                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
-                    rmaNote: item.get('reason') === 'Other' ? 'Other' : null
+                    returnType: item.get('returnType'),
+                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN')
                 };
             })
         })[0];
@@ -218,19 +187,12 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.returnableItemsErrorEl.setError('');
         var returnsStore = this.getReturnsStore();
-        var records = [],
-
-            refundItems = [],
-
-            replaceItems = [],
-
-            erroredReturns = [],
-
+        var erroredReturns = [],
             selected = this.returnableItems.getSelectionModel().getSelection();
 
         if (selected.length === 0) {
             this.returnableItemsErrorEl.setError('Please select items to return.');
-            return false;
+            return;
         }
 
         if (Ext.Array.some(selected, function (item) {
@@ -240,7 +202,7 @@ Ext.define('Taco.view.order.subform.Return', {
             return (item.get('quantity') > (qf - qr));
         })) {
             this.returnableItemsErrorEl.setError('Item \'Quantity to Return\' exceeds \'Quantity Fulfilled\'..');
-            return false;
+            return;
         }
 
         // if any items are checked for return, but have quantity == 0, reject this call.
@@ -248,25 +210,19 @@ Ext.define('Taco.view.order.subform.Return', {
             return !item.get('quantity');
         })) {
             this.returnableItemsErrorEl.setError('Please add a return quantity to all selected items.');
-            return false;
+            return;
         }
 
         erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('reason') === 'Select'; });
         if (erroredReturns.length > 0) {
             this.returnableItemsErrorEl.setError('Please choose a return reason.');
-            return false;
+            return;
         }
 
-        replaceItems = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Replace'; } );
-        refundItems  = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Refund'; } );
-
-        if (refundItems.length > 0) records.push(this.createReturn("Refund", refundItems));
-        if (replaceItems.length > 0) records.push(this.createReturn("Replace", replaceItems));
-        
-        if (records.length === 0) {
-            this.returnableItemsErrorEl.setError('Sorry, an unknown error occurred. There were no items of return type "Replace" or "Refund".');
-            return false;
-        }
+        // Adds a return to the store. Need to sync the store to save it.
+        // The Return.ReturnType is deprecated in favor of specifying return type at the item level.
+        // Use "Replace" for backward compatibility since it provided the most flexibility in the old return state machine.
+        var newReturnRecord = this.createReturn("Replace", selected);
 
         this.setLoading(true);
         returnsStore.sync({
@@ -275,7 +231,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 this.createButton.setDisabled(false);
             },
             success: function () {
-                Ext.Array.each(records, this.addProcessReturnPanel, this, true);
+                this.addProcessReturnPanel(newReturnRecord);
                 // after we add the new return we need to reload the order and regenerate the returnable items grid store
                 this.record.reload({
                     success: me.refreshReturnableItemsGrid,
@@ -283,7 +239,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 });
             },
             failure: function (batch) {
-                returnsStore.remove(records);
+                returnsStore.remove(newReturnRecord);
                 var msg = batch.exceptions && batch.exceptions.length && batch.exceptions[0].error && batch.exceptions[0].error.remoteException ? batch.exceptions[0].error.remoteException.data.message : 'Error Creating the Return';
                 Taco.app.fireEvent('setmessage', msg, 'error');
             },
@@ -291,10 +247,7 @@ Ext.define('Taco.view.order.subform.Return', {
         });
     },
 
-
     onDestroy: function () {
-        //this.mun(this.record, 'aftercommit', this.onOrderChange, this);
-
         this.callParent(arguments);
     }
 });

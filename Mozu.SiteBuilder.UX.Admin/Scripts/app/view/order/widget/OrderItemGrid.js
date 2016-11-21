@@ -274,7 +274,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     //tdCls:'taco-product-column',
                     sortable: false,
                     resizable: false,
-                    menuDisabled: true,                                       
+                    menuDisabled: true,
                     tpl: new Ext.XTemplate(
                         '<tpl if="isDeleted">',
                         '<span class="product-link-disabled" productCode="{productCode}">{productName}</span>',
@@ -358,7 +358,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                                 var editMode = view.ownerCt.editMode,
                                     fulfillmentMethod = e.target.getAttribute('fulfillmentMethod'),
                                     orderRecord = me.record
-
+                                
                                 
 
                                 // if user clicks the fulfillment method link. open the fulfillment Method Selector;
@@ -433,7 +433,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                             ' ({fulfillmentLocationCode})',
                         '</tpl>'
                     ],
-                    editor : (this.getEditMode()) ? me.fulfillmentFieldComboEditor : null
+                    //75- order update, 242-update Item, 77-fulfill
+                    editor: (this.getEditMode() && (Ext.Array.contains(Taco.user.behaviors, 75) || Ext.Array.contains(Taco.user.behaviors, 242) || Ext.Array.contains(Taco.user.behaviors, 77))) ? me.fulfillmentFieldComboEditor : null
                 }, {
                     text: 'Amount',
                     draggable: false,
@@ -458,7 +459,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         //unitAtEnd: false,
                         allowBlank: true,
                         minValue: 0,
-                        maxValue: 100000
+                        maxValue: 100000,
+                        requiredBehaviors: [{
+                            model: 'Taco.model.Order',
+                            behavior: 'update',
+                            disable: true
+                        },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updatePrice'
+                            }]
                     } : null,
                     dataIndex: 'unitPrice'
                 }, {
@@ -477,7 +487,16 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         allowBlank: true,
                         hideTrigger:true,
                         minValue: 1,
-                        maxValue: 100000
+                        maxValue: 100000,
+                        requiredBehaviors: [{
+                            model: 'Taco.model.Order',
+                            behavior: 'update',
+                            disable: true
+                        },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            }]
                     },
                     dataIndex: 'quantity'
                 },
@@ -515,7 +534,8 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         var key = record.get('id');
                         var config = { metadata: { order: order, orderItem: orderItem } };
 
-                        globalModalEmitter.emit('open', {
+                        // This is coming from mozu-adminui
+                        window.globalModalEmitter.emit('open', {
                             modalType: 'OrderItemDetailModal',
                             key: key,
                             config: config
@@ -531,6 +551,15 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     resizable: false,
                     menuDisabled: true,
                     text: '',
+                    requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update',
+                                disable: true
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'updateItem'
+                            }],
                     width: this.actionColumnWidth,
                     // note: 'x-action-col-icon' is required for the action column to call the handler;
                     //innerCls: 'x-grid-cell-inner-action-col x-action-col-icon',

@@ -197,10 +197,16 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             if (document == null)
                 return;
             var widgetRawArray = document.Get<JArray>(CmsConstants.Documents.widget_prop);
-            var first = widgetRawArray != null && widgetRawArray.Count() > 0 ? widgetRawArray[0].Value<JObject>() : null;
             // get build prop
             // check for existence
             // switch between caliente and chorizo based on value.
+
+
+
+            if (widgetRawArray == null)
+            {
+                return;
+            }
 
             var src = new DocumentRequest
             {
@@ -208,38 +214,42 @@ namespace Mozu.SiteBuilder.Mvc.CMS
                 ListFQN = document.ListFQN
             };
 
-            var property = first != null ? first["build"] : null;
-            var buildType = property == null || property.Value<string>().EqualsIgnoreCase(CmsPageContext.LayoutTypeConstants.Chorizo) ? CmsPageContext.LayoutTypeConstants.Chorizo : CmsPageContext.LayoutTypeConstants.Caliente;
-            
-            switch (buildType.ToUpperInvariant()) {
+            foreach (JObject item in widgetRawArray)
+            {
+                var property = item != null ? item["build"] : null;
+                var buildType = property == null || property.Value<string>().EqualsIgnoreCase(CmsPageContext.LayoutTypeConstants.Chorizo) ? CmsPageContext.LayoutTypeConstants.Chorizo : CmsPageContext.LayoutTypeConstants.Caliente;
 
-                case "CHORIZO":
-                    {
-                        List<Chorizo.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Chorizo.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Chorizo.ZoneRuntimeData>>();
+                switch (buildType.ToUpperInvariant())
+                {
 
-                        zoneData.ForEach(x =>
+                    case "CHORIZO":
                         {
-                            x.Source = src;
-                            x.Scope = scope;
-                        });
-                        cmsPageContext.RuntimeData.AddRange(zoneData);
+                            List<Chorizo.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Chorizo.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Chorizo.ZoneRuntimeData>>();
 
-                        break;
-                    }
-                case "CALIENTE":
-                    {
-                        List<Caliente.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Caliente.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Caliente.ZoneRuntimeData>>();
+                            zoneData.ForEach(x =>
+                            {
+                                x.Source = src;
+                                x.Scope = scope;
+                            });
+                            cmsPageContext.RuntimeData.AddRange(zoneData);
 
-                        zoneData.ForEach(x =>
+                            break;
+                        }
+                    case "CALIENTE":
                         {
-                            x.Source = src;
-                            x.Scope = scope;
-                        });
-                        cmsPageContext.CalienteRuntimeData.AddRange(zoneData);
-                   
-                        break;
-                    }
-            }
+                            List<Caliente.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Caliente.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Caliente.ZoneRuntimeData>>();
+
+                            zoneData.ForEach(x =>
+                            {
+                                x.Source = src;
+                                x.Scope = scope;
+                            });
+                            cmsPageContext.CalienteRuntimeData.AddRange(zoneData);
+
+                            break;
+                        }
+                }
+            };
 
         }
 

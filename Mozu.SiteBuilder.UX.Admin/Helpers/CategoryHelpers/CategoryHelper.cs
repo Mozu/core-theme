@@ -27,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers {
             {
                 CategoryId = c.Id.GetValueOrDefault(),
                 ParentCategoryId = (c.ParentId < 0) ? null : c.ParentId,
-                Sequence = c.Sequence.GetValueOrDefault(999999)
+                PreviousSiblingCategoryId = c.PreviousSiblingCategoryId
             }).ToList();
             return categorySequenceCollection;
         }

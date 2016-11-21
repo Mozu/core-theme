@@ -594,9 +594,14 @@
         }
     },
     "rma": {
-        "create": {
-            "verb": "POST",
-            "template": "{+returnService}"
+      "create": {
+        "verb": "POST",
+        "template": "{+returnService}"
+      },
+      "get-return-label": {
+          "verb": "GET",
+          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64}",
+          "returnType": "string"
         }
     },
     "rmas": {

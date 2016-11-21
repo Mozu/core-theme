@@ -49,6 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.Path, opt => opt.Ignore())
                 .ForMember(dest => dest.Code, opt => opt.Ignore())
                 .ForMember(dest => dest.Parent, opt => opt.Ignore())
+                .ForMember(dest => dest.PreviousSiblingCategoryId, opt => opt.Ignore())
                 .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
                 ;
 
@@ -99,6 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryName, opt => opt.Ignore())
                 .ForMember(dest => dest.ParentCategoryCode, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentIsActive, op => op.Ignore())
                 ;
 
             Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()

@@ -208,7 +208,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             // This modal needs to be loading!
             this.isLoading = true;
             // pull the parent order, get its payments, add those payments to the this.currentPayments store.;
-            this.retrieveOrderPaymentDataAjax(this.recrod.get('parentOrderId'));
+            this.retrieveOrderPaymentDataAjax(this.record.get('parentOrderId'));
         } else if (this.record.get('parentReturnId') && this.record.get('parentReturnId').length > 0) {
             // This modal needs to be loading!
             this.isLoading = true;

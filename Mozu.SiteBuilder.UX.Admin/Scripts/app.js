@@ -18,7 +18,6 @@ Ext.application({
     controllers: [
         'Analytics',
         'Account',
-        'BetaCategories',
         'Capability',
         'Dashboard',
         'Reports',
@@ -52,6 +51,7 @@ Ext.application({
         'Tests',
         'Orders',
         'OrderAttributes',
+        'Returns',
         'Errors',
         'Roles',
         'ProductTypes',

@@ -127,6 +127,14 @@ Ext.define('Taco.view.order.Header', {
                 ui: 'link',
                 text: 'Change Address',
                 itemId: "changeLink",
+                requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                           {
+                               model: 'Taco.model.Order',
+                               behavior: 'fulfill'
+                           }],
                 handler: this.changeAddress,
                 scope: this
             }]
@@ -139,7 +147,7 @@ Ext.define('Taco.view.order.Header', {
             hidden: !(this.record.get('parentOrderId') || this.record.get('externalId')),
             tpl: [
                 '<tpl if="parentOrderId">',
-                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderId}</a></div>',
+                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderNumber}</a></div>',
                 '</tpl>',
                 '<tpl if="externalId">',
                     '<div class="external-order"><span class="label">External Order #:</span>{externalId}</div>',
@@ -290,9 +298,14 @@ Ext.define('Taco.view.order.Header', {
                     '<td><span class="label label-light">Offline Order</span></td>',
                 '</tpl>',
                 '</tr>',
+                '<tpl if="parentReturnId">',
+                '<tr>',
+                '<td>','<span class="label label-light">Parent Return Id:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{parentOrderId}?returnId={parentReturnId}">{parentReturnNumber}</a></span>','</td>',
+                '</tr>',
+                '</tpl>',
                 '</table>'
             ],
-            data: Ext.apply( { channelName: this.record.getChannelName() }, this.record.getData())
+            data: Ext.apply( { channelName: this.record.getChannelName(), parentReturnNumber: this.parentReturnNumber }, this.record.getData())
         });
 
         this.addressesCmp = Ext.widget({
@@ -415,7 +428,11 @@ Ext.define('Taco.view.order.Header', {
                     itemId: "createNewCustomerButton",
                     text: 'Create New Customer',
                     handler: this.createCustomer,
-                    scope: this
+                    scope: this,
+                    requiredBehaviors: [{
+                        model: 'Taco.model.Order',
+                        behavior: 'createCustomer'
+                    }]
                 }
             ]
         });

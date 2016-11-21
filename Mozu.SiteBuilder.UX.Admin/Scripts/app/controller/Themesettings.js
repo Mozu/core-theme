@@ -38,14 +38,10 @@ Ext.define('Taco.controller.Themesettings', {
                             }
                         });
                     },
-                    failure: function (r) {
-                        Taco.app.fireEvent('setmessage', 'Error retrieving theme settings configuration.', 'error');
-                    }
+                    failure: me.checkResponseError
                 });
             },
-            failure: function (response) {
-                Taco.app.fireEvent('setmessage', 'Error retrieving theme settings configuration.', 'error');
-            }
+            failure: me.checkResponseError
         });
     },
     addons: function (id, additionalParams, appState) {
@@ -71,5 +67,18 @@ Ext.define('Taco.controller.Themesettings', {
                 Taco.app.setLoading(false);
             }
         });
+    },
+    checkResponseError: function (response) {
+        var message = 'Error loading theme settings configuration.';
+
+        try {
+            var extra = JSON.parse(response.responseText).message;
+            message = message += '<br />' + extra;
+        }
+        catch (e) {
+            
+        }
+
+        Taco.app.fireEvent('setmessage', message, 'error');
     }
 });

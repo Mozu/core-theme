@@ -65,16 +65,25 @@ Ext.define('Taco.core.util.Common', {
         }
         return l;
     },
-    camelToSpace: (function(re, cache, decamelLower, decamelUpper) {
-        return function(s, lower) {
-            return cache[s] || (cache[s] = s.replace(re, lower ? decamelLower : decamelUpper))
-        };
-    })(/([a-z])([A-Z])/g, {}, function decamelLower(match, p1, p2) {
-        return p1 + ' ' + p2.toLowerCase();
-    },
-    function decamelUpper(match, p1, p2) {
-        return p1 + ' ' + p2;
-    }),
+
+    camelToSpace: (function() {
+        // Private stuff via closure.
+        var pattern = /([a-z])([A-Z])/g;
+        var cache = {};
+
+        function decamelLower(match, p1, p2) {
+            return p1 + ' ' + p2.toLowerCase();
+        }
+
+        function decamelUpper(match, p1, p2) {
+            return p1 + ' ' + p2;
+        }
+
+        // Public stuff. This is the actual camelToSpace function.
+        return function(input, shouldLower) {
+            return cache[input] || (cache[input] = input.replace(pattern, shouldLower ? decamelLower : decamelUpper));
+        }
+    })(), // Execute anonymous function to initialize the closure.
 
     /**
      * Gets user firstName lastName for given field id.

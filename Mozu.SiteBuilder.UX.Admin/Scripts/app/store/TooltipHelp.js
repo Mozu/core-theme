@@ -14,6 +14,10 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'The Product Membership field controls the dynamic category type and its behaviors. Select Precomputed if you want the category to be available as a discount target. Select Realtime if you don\'t plan on targeting this category in discounts and your expression needs to reference precomputed dynamic categories, post-discount pricing information, or sale types. <a target="_blank" class="taco-help-link" href=\'https://mozu.com/docs/admin/help/Catalog/Dynamic_Category_Expressions.htm\'>Learn more</a>'
         },
         {
+            key: 'shipping.enableForReturns',
+            value: '<p>Checking this box sets this shipping method as the method to use for all returns.</p><p>There can be only 1 shipping method enabled for returns.</p><p>Enabling this shipping method for returns will disable this setting on any other shipping method</p>'
+        },
+        {
             key: 'category.confirmDelete.deleteCategory',
             value: 'Subcategory will move one level up in the category tree.'
         }, {

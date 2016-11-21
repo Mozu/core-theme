@@ -223,8 +223,12 @@ Ext.define('Taco.Application', {
 
         Ext.override(Ext.Component, {
             beforeRender: function () {
-                var me = this,
-                    visable;
+                var me = this;
+                var readOnlyControl = false;
+                var disableControl = false;
+                var userHasRequiredBehavior = false;
+
+                //The user should have access to this control if he has one of the required behavior
                 if (me.requiredBehaviors) {
                     if (!Ext.isArray(me.requiredBehaviors)) {
                         me.requiredBehaviors = [me.requiredBehaviors];
@@ -232,21 +236,34 @@ Ext.define('Taco.Application', {
                     Ext.each(me.requiredBehaviors, function (reqBeh) {
                         var model;
                         if (Ext.isNumber(reqBeh)) {
-                            if (!Ext.Array.contains(Taco.user.behaviors, reqBeh)) {
-                                me.hidden = true;
+                            if (Ext.Array.contains(Taco.user.behaviors, reqBeh)) {
+                                userHasRequiredBehavior = true;
                             }
                         }
                         if (Ext.isObject(reqBeh)) {
                             model = Ext.ModelManager.getModel(reqBeh.model);
-                            if (!model.allowMethod(reqBeh.behavior)) {
-                                if (reqBeh.disable) {
-                                    me.disabled = true;
-                                } else {
-                                    me.hidden = true;
-                                }
+                            if (reqBeh.readOnly) {
+                                readOnlyControl = true;
+                            }
+                            if (reqBeh.disable) {
+                                disableControl = true;
+                            }
+                            if (model.allowMethod(reqBeh.behavior)) {
+                                userHasRequiredBehavior = true;
                             }
                         }
                     });
+                    if (!userHasRequiredBehavior) {
+                       
+                        if (readOnlyControl) {
+                            me.readOnly = true;
+                        }
+                        else if (disableControl) {
+                            me.disabled = true;
+                        } else {
+                            me.hidden = true;
+                        }
+                    }
                 }
                 me.callParent(arguments);
             }
