@@ -35,12 +35,15 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 align: 'stretch'
             },
             items: me.customFileds
-
         });
+
+        var key = 'shippingForReturns' + this.record.get('id');
+        var isEnabled = this.record.get('enabledForReturns');
+
 
         this.on('beforeShow', function() {
             this.tooltip = Ext.create('Taco.core.ux.content.Tooltip', {
-                elementId: "shippingForReturns",
+                elementId: key,
                 hoverTarget: 'boxLabelEl',
                 messageKey: 'shipping.enableForReturns',
                 offsetLeft: -5,
@@ -51,7 +54,8 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
 
         this.configFields.getForm().setValues(this.record.get("settings") || {});
 
-        var isFedex = this.record.get('id') === 'fedex';
+        var enableForReturns = this.record.get('id') === 'fedex' 
+            || this.record.get('id') === 'usps';
 
         var optionItems = [].concat(
             this.configFields, 
@@ -64,37 +68,163 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             ]
         );
 
-        if (isFedex) {
+        if (enableForReturns) {
             optionItems.push({
                 xtype: 'checkbox',  
                 name: 'enabledForReturns', 
                 boxLabel: 'Enable for Returns',
-                itemId: 'shippingForReturns'
+                itemId: key,
+                listeners: {
+                    change: function(cmp) {
+                        var checked = cmp.checked;
+                        me.down('#returnForm')[checked ? 'show' : 'hide']();
+                    }
+                }
             });
         }
+
+        if (this.record.get('id') === 'usps') {
+            this.returnItems = Ext.widget({
+                xtype: 'formform',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch'
+                },
+                hidden: !isEnabled,
+                width: 800,
+                itemId: 'returnForm',
+                items: [
+                    {
+                        xtype: 'panel',
+                        title: 'Permit Information',
+                        width: 400,
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        padding: '0 30 0 0',
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'permitnumber',
+                                fieldLabel: 'Permit Number'
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'permitissuingcity',
+                                fieldLabel: 'Permit issuing PO City'  
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'permitissuingstate',
+                                fieldLabel: 'Permit issuing PO State'
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'permitissuingzip5',
+                                fieldLabel: 'Permit issuing PO Zip',
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'panel',
+                        title: 'Postage Due Unit (PDU) Information',
+                        width: 400,
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'pduPOBox',
+                                fieldLabel: 'PDU PO Box'
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'pduCity',
+                                fieldLabel: 'PDU City'  
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'pduState',
+                                fieldLabel: 'PDU State'
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'pduzip4',
+                                fieldLabel: 'PDU Zip',
+                            },
+                            {
+                                xtype: 'textfield',
+                                name: 'pduzip5',
+                                fieldLabel: 'PDU Zip',
+                            }
+                        ]
+                    }
+                ]
+            })
+                    // {
+                    //     xtype: 'container',
+                    //     width: '50%',
+                    //     items: [
+                    //         {
+                    //             xtype: 'textfield',
+                    //             name: 'pduPOBox',
+                    //             fieldLabel: 'PDU PO Box'
+                    //         },
+                    //         {
+                    //             xtype: 'textfield',
+                    //             name: 'pduCity',
+                    //             fieldLabel: 'PDU City'  
+                    //         },
+                    //         {
+                    //             xtype: 'textfield',
+                    //             name: 'pduState',
+                    //             fieldLabel: 'PDU State'
+                    //         },
+                    //         {
+                    //             xtype: 'textfield',
+                    //             name: 'pduZip',
+                    //             fieldLabel: 'PDU Zip',
+                    //         }
+                    //     ]
+                    // }
+                // ]
+            // });
+
+            this.returnItems.getForm().setValues(this.record.get("settings") || {});
+        }
+
 
         this.configContainer = Ext.widget({
             xtype: 'formform',
             autoScroll: true,
             layout: {
-                type: 'hbox'
+                type: 'vbox'
             },
             items: [
                 {
                     xtype:'container',
-                    items: optionItems
-                },
-                {
-                    xtype: 'container',
-                    padding: '40 40 40 40',
-                    items: [        
+                    layout: 'hbox',
+                    items: [
                         {
-                            height: 400,
-                            width: 240,
-                            html: me.configureCopy
+                            xtype: 'container',
+                            items: optionItems
+                        },
+                        {
+                            xtype: 'container',
+                            items: [        
+                                {
+                                    height: 350,
+                                    width: 240,
+                                    html: me.configureCopy
+                                }
+                            ]
                         }
                     ]
-                }
+                },
+                this.returnItems
             ]
         });
 
@@ -105,9 +235,16 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
         this.callParent(arguments);
 
     },
+
     beforeSave: function () {
         if (this.configFields.isDirty() || this.configContainer.isDirty()) {
             var settings = this.configFields.getForm().getValues(false, false, false, true);
+            
+            if (this.returnItems) {
+                var returnSettings = this.returnItems.getForm().getValues(false, false, false, true);
+                settings = Ext.apply(settings, returnSettings);
+            }
+
             this.record.set('settings', settings);
 
         }

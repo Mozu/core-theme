@@ -139,6 +139,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                     name: 'shippernumber',
                     fieldLabel: 'shipper number'
                 }
+            ],
+            returnFields: [
             ]
         });
 
