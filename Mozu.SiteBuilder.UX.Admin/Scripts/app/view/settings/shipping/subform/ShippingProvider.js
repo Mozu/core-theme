@@ -22,8 +22,6 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
     padding: '10 10 10 10',
     initComponent: function () {
         var me = this;
-        //p.getLayout().setActiveItem(1);
-
 
         this.configFields = Ext.widget({
             xtype: 'formform',
@@ -77,7 +75,10 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 listeners: {
                     change: function(cmp) {
                         var checked = cmp.checked;
-                        me.down('#returnForm')[checked ? 'show' : 'hide']();
+                        var form = me.down('#returnForm');
+                        if (form) {
+                            form[checked ? 'show' : 'hide']();
+                        }
                     }
                 }
             });
@@ -110,14 +111,28 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                                 fieldLabel: 'Permit Number'
                             },
                             {
-                                xtype: 'textfield',
-                                name: 'permitissuingcity',
-                                fieldLabel: 'Permit issuing PO City'  
-                            },
-                            {
-                                xtype: 'textfield',
-                                name: 'permitissuingstate',
-                                fieldLabel: 'Permit issuing PO State'
+                                type: 'container',
+                                width: 400,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        name: 'permitissuingcity',
+                                        fieldLabel: 'Permit issuing PO City',
+                                        padding: '0 80 0 0' 
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        name: 'permitissuingstate',
+                                        fieldLabel: 'Permit issuing PO State',
+                                        store: this.stateStore,
+                                        valueField: 'code',
+                                        displayField: 'name'
+                                    },
+                                ]
                             },
                             {
                                 xtype: 'textfield',
@@ -141,24 +156,44 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                                 fieldLabel: 'PDU PO Box'
                             },
                             {
-                                xtype: 'textfield',
-                                name: 'pduCity',
-                                fieldLabel: 'PDU City'  
+                                type: 'container',
+                                width: 400,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        name: 'pduCity',
+                                        fieldLabel: 'PDU City',
+                                        padding: '0 120 0 0'   
+                                    },
+                                    {
+                                        xtype: 'combobox',
+                                        name: 'pduState',
+                                        fieldLabel: 'PDU State',
+                                        store: this.stateStore,
+                                        valueField: 'code',
+                                        displayField: 'name'
+                                    }
+                                ]
                             },
                             {
-                                xtype: 'textfield',
-                                name: 'pduState',
-                                fieldLabel: 'PDU State'
-                            },
-                            {
-                                xtype: 'textfield',
-                                name: 'pduzip4',
-                                fieldLabel: 'PDU Zip',
-                            },
-                            {
-                                xtype: 'textfield',
-                                name: 'pduzip5',
-                                fieldLabel: 'PDU Zip',
+                                type: 'container',
+                                width: 400,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        name: 'pduzip4',
+                                        fieldLabel: 'PDU Zip',
+                                        padding: '0 10 0 0'   
+                                    }
+                                ]
                             }
                         ]
                     }

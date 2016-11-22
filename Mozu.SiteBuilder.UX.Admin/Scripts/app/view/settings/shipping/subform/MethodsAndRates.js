@@ -8,7 +8,8 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
     requires: [
         'Taco.store.ShippingCarrierSettings',
         'Taco.view.settings.shipping.subform.Custom',
-        'Taco.view.settings.shipping.subform.ShippingProvider'
+        'Taco.view.settings.shipping.subform.ShippingProvider',
+        'Taco.store.States2'
     ],
     title: 'Shipping Methods and Rates',
     margin: "0 0 20 0",
@@ -54,7 +55,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         }
     },
     onStoreLoad: function (store) {
-
+        var stateStore =  Ext.create('Taco.store.States2');
         this.fedex = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
             record: store.getById('fedex'),
             title: 'FedEx',
@@ -151,6 +152,7 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
             providerId: 'usps',
             configureCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.</div>',
             ratesCopy: '<img src="https://www.usps.com/ContentTemplates/assets/images/global/usps_logo.gif"/> <div>Please provide your USPS account credentials.</div>',
+            stateStore: stateStore,
             customFileds: [
                 {
                     xtype: 'textfield',
