@@ -49,8 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient, ICreditWebApiClient creditWebApiClient,
-                                ISettings settings, ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
-                                IChannelWebApiClient channelWebApiClient)
+            ISettings settings, ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
+            IChannelWebApiClient channelWebApiClient)
         {
             _settings = settings;
             _orderWebApiClient = orderWebApiClient;
@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Return>>> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]bool draft = false)
+        public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
         {
             // TODO: Do we need to clone the _returnWebApiClient to clear out the siteId?
 
@@ -94,12 +94,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 if (!ret.ChannelCode.IsNullOrEmpty())
                 {
-                    string channelName;
-                    var found = channelDictionary.TryGetValue(ret.ChannelCode, out channelName);
-                    if (!found)
+                    if (!channelDictionary.ContainsKey(ret.ChannelCode))
                     {
-                        var channel = (await _channelWebApiClient.GetChannel(ret.ChannelCode)).ReadAsSync();
-                        channelDictionary[channel.Code] = channel.Name;
+                        try
+                        {
+                            var channel = (await _channelWebApiClient.GetChannel(ret.ChannelCode)).ReadAsSync();
+                            channelDictionary[channel.Code] = channel.Name;
+                        }
+                        catch (MozuApplicationException appException)
+                        {
+                            if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) throw;
+
+                            // If the channel can't be found, fallback to the channel code.
+                            channelDictionary[ret.ChannelCode] = ret.ChannelCode;
+                        }
                     }
                     ret.ChannelName = channelDictionary[ret.ChannelCode];
                 }
@@ -111,24 +119,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            return List2(returns, total: (int)dcReturns.TotalCount);
+            return List2(returns, total: (int) dcReturns.TotalCount);
         }
 
         private async Task FillAdditionalInfo(Return rma)
         {
-
             // Check the customer information -- if we already know about the customer, don't requery.
-            var customerResult = (await _customerWebApiClient.GetAccount(rma.CustomerAccountId)).ReadAsSync();
             if (rma.Contact == null)
             {
-                rma.Contact = new Contact
+                var customerResult = await LookupCustomerAccount(rma.CustomerAccountId);
+                if (customerResult != null)
                 {
-                    FirstName = customerResult.FirstName,
-                    LastName = customerResult.LastName,
-                    Email = customerResult.EmailAddress
-                };
+                    rma.Contact = new Contact
+                    {
+                        FirstName = customerResult.FirstName,
+                        LastName = customerResult.LastName,
+                        Email = customerResult.EmailAddress
+                    };
+                }
             }
-            var customerName = customerResult.FirstName + " " + customerResult.LastName + " #" + rma.CustomerAccountId;
+            var customerName = rma.Contact == null ? string.Empty : $"{rma.Contact.FirstName} {rma.Contact.LastName} #{rma.CustomerAccountId}";
 
             // Check the users..we can skip the user retrieval on this return if:
             var sameUser = rma.CreatedBy == rma.UpdatedBy;
@@ -157,20 +167,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        private async Task<DCu.CustomerAccount> LookupCustomerAccount(int? customerAccountId)
+        {
+            if (customerAccountId == null) return null;
+
+            try
+            {
+                return (await _customerWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
+            }
+            catch (MozuApplicationException appException)
+            {
+                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
+
+                throw;
+            }
+        }
+
         private async Task<string> LookUpUserById(string userId)
         {
             try
             {
                 var userResult = (await _usersWebApiClient.GetUser(userId)).ReadAsSync();
 
-                if (userResult == null) return null;
-
-                return userResult.FirstName + " " + userResult.LastName;
+                return userResult == null ? null : $"{userResult.FirstName} {userResult.LastName}";
             }
             catch (MozuApplicationException appException)
             {
                 // Handle VaeItemNotFoundException
-                if (appException.ErrorCode.Equals(ErrorCodes.ITEM_NOT_FOUND)) return null;
+                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
 
                 throw;
             }
@@ -204,15 +228,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         ActionName = ReturnActions.AUTHORIZE,
                         ReturnIds = new List<string> { dcRma.Id }
                     })).ReadAsSync().Items.First();
-
-
                 }
                 retList.Add(Mapper.Map<Return>(dcRma));
             }
-
             return List2(retList);
         }
-
 
         [HttpPostRoute(UriTemplate = "action")]
         public async Task<Response<List<Return>>> PerformReturnActions(DCr.ReturnAction action)
