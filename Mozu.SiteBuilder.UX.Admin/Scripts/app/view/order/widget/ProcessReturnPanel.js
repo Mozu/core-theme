@@ -5,7 +5,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     extend: 'Ext.panel.Panel',
     requires: [
         'Taco.view.order.modal.AddRefund',
-        'Taco.view.order.widget.ReturnInternalNotesGrid'
+        'Taco.view.order.widget.ReturnInternalNotesGrid',
+        'Taco.view.order.widget.ReturnReplacementGrid'
     ],
 
     ui: 'subform-section-child',

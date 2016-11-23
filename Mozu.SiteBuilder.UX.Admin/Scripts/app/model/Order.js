@@ -143,9 +143,8 @@ Ext.define('Taco.model.Order', {
             type: "string",
             useNull: true,
             persist: false,
-            convert: function location(v, record) {
-                return '';
-                // return record.getCreatorUserName(v, record);
+            convert: function(v, record) {
+                return record.getCreatorUserName(v, record);
             }
         }, {
             name: 'updateDate',
