@@ -573,7 +573,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
     addInternalNoteDialog: function(callbackFn, callbackArgs) {
         var me = this;
 
-        if (this.internalNotesDialog) {
+        if (this.internalNotesDialog && !this.internalNotesDialog.isDestroyed) {
             this.internalNotesDialog.show();
         } else {
             this.internalNotesDialog = Ext.create('Taco.core.ux.window.Modal', {
