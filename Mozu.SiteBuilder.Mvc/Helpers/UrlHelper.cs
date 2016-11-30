@@ -651,7 +651,11 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         string MakeCategoryUrlAndClearFacets( SearchContext searchContext)
         {
-            return searchContext.ToClearUrl(_customRouteHandler);
+            if (searchContext.Facets.Count > 0)
+            {
+                searchContext.Facets = new System.Collections.Specialized.NameValueCollection();
+            }
+            return searchContext.ToClearUrl(_customRouteHandler, searchContext);
         }
 
         static string ClearFacetsFromUrl(string url, SearchContext context)
