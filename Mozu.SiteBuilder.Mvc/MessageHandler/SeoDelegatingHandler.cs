@@ -42,7 +42,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 return (await base.SendAsync(request, cancellationToken).ConfigureAwait(false));
             }
-
+            var siteContext = request.Resolve<ISiteContext>();
+            await siteContext.Init().ConfigureAwait(false);
+            var pageContext = request.Resolve<PageContext>();
             // try redirects
             var redirect = await Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri).ConfigureAwait(false);
             if (redirect != null)
@@ -69,16 +71,15 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             if (request.GetRouteData().Route is NonSystemRoute)
             {
                 var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
-                return await HandleReroutedRequest(rerouted, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
+                return await HandleReroutedRequest(rerouted, pageContext, siteContext, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
             }
 
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
+        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, IPageContext pageContext, ISiteContext siteContext,  CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
         {
-            var pageContext = rerouted.Resolve<PageContext>();
-            var siteContext = rerouted.Resolve<ISiteContext>();
+          
             if (rerouted.Method != HttpMethod.Get || 
                 pageContext.IsEditMode || 
                 !pageContext.HandledByProxy ||

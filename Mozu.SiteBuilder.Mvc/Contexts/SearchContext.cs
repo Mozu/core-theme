@@ -212,11 +212,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
 
-        public string ToClearUrl(ICustomRouteHandler routeHandler)
+        public string ToClearUrl(ICustomRouteHandler routeHandler, SearchContext searchContext)
         {
             var routeData = this._request.GetRouteData();
-            int catId = -1; ;
-        
+            int catId = searchContext.CategoryId != null ? (int)searchContext.CategoryId : -1;
+
             object tmp;
             bool isSearchRoute = routeData.Values.TryGetValue("controller", out tmp) && string.Equals(tmp as string, "search", StringComparison.OrdinalIgnoreCase);
             var routeType = isSearchRoute ? FancyRoute.Search : FancyRoute.Category;
