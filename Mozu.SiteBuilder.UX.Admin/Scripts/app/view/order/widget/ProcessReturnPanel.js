@@ -337,6 +337,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 flex: 1,
                 minWidth: 120,
                 renderer: function (value, meta, record) {
+                    // Why are we getting the order item if we have a product code?
                     var productCode = record.get('productCode'),
                         oItem = productCode ? me.orderItemsStore.getById(record.get('orderItemId')) : null;
 
@@ -354,6 +355,8 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 flex: 1,
                 minWidth: 120,
                 renderer: function (value, meta, record) {
+                    // This all seems a bit overly complex. The return item has the product name from the API, just need to add a field for it.
+                    // This was using the order item product name. Why would that not exist but the return item product name would?
                     var productCode = record.get('productCode'),
                         orderItemId = record.get('orderItemId'),
                         oItem = orderItemId ? me.orderItemsStore.getById(orderItemId) : null,

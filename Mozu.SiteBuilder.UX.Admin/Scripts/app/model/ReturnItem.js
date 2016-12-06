@@ -43,6 +43,11 @@ Ext.define('Taco.model.ReturnItem', {
             "useNull": true
         },
         {
+            "name": "productName",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "returnType",
             "type": "string",
             "useNull": true,
