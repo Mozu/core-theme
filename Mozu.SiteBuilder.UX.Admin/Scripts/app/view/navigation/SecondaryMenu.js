@@ -6,13 +6,14 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     alias: 'widget.secondarymenu',
     requires: ['Taco.view.navigation.GlobalSearchBox'],
 
-    cls: Taco.baseCSSPrefix + 'secondary-nav',
     layout: {
         type: 'hbox',
         align: 'middle',
         pack: 'end',
         defaultMargins: '0 0 0 0'
     },
+
+    cls: Taco.baseCSSPrefix + 'secondary-nav',
 
     initComponent: function () {
 
@@ -33,7 +34,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     searchButtonContent = searchButton.el.dom.innerHTML;
                 }
 
-                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons;">&#xe903;</span>';
+                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons; color:#f8f8f8;position:relative;left:-4px;top:2px">&#xe903;</span>';
                 searchButton.on('click', function () {
                     searchBox.inputEl.dom.value = '';
                     this.el.dom.innerHTML = searchButtonContent;
@@ -63,6 +64,30 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             xtype: 'component',
             cls: 'tenant-name',
             html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
+        },
+        {
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
+            cls: 'search-button',
+            text: '',
+            handler: Ext.bind(function (btn) {
+                this.searchBox.show();
+                searchButton = btn;
+                this.searchBox.focus();
+            }, this)
+        },
+        this.searchBox,
+        {
+            xtype: 'button',
+            cls: 'help-button',
+            ui: 'link',
+            scale: 'medium',
+            text: 'Help',
+            hidden: Taco.siteBuilderHelperToggle !== 'on',
+            handler: function () {
+                window.open(Taco.neWadminHelpLink);
+            }
         },
         {
             xtype: 'userbutton',
@@ -100,30 +125,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 ]
             }
         },
-        {
-            xtype: 'button',
-            cls: 'help-button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Help',
-            hidden: Taco.siteBuilderHelperToggle !== 'on',
-            handler: function () {
-                window.open(Taco.neWadminHelpLink);
-            }
-        },
-        {
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            cls: 'search-button',
-            text: '',
-            handler: Ext.bind(function (btn) {
-                this.searchBox.show();
-                searchButton = btn;
-                this.searchBox.focus();
-            }, this)
-        },
-            this.searchBox
         ];
 
         this.navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');

@@ -3,8 +3,12 @@
  * The dark first bar
  */
 
+.#{$vprefix}viewport-header {
+    background-color: $kibo-black;
+    color: $kibo-white;
+}
+
 .#{$vprefix}masthead {
-    background-color: $color-neutral-white;
     border-bottom: 1px solid $card-button-press-bg;
     font-size: px-to-rem(12);
     font-weight: 400;
@@ -12,19 +16,27 @@
     line-height: 1.0;
     position: absolute;
 
+    .#{$vprefix}kibo-text {
+        color: white;
+        font-size: 20px;
+        left: -6px;
+        margin-left: -35px;
+        position: relative;
+        text-decoration: none;
+        top: 1px;
+    }
+
     .#{$vprefix}mozulogo {
+        background-image: url("images/kibo-icon.jpg");
+        background-size: 40%;
+        background-repeat: no-repeat;
         display: block;
         overflow: hidden;
-        @include icon-font($glyph-mozulogo, 18px, $color-theme-base);
         width: 68px;
-
-        &::after {
-            left: auto;
-            right: 0px;
-            text-align: right;
-            top: 1px;
-            width: 100%;
-        }
+        height: 35px;
+        top: 4px !important;
+        left: -2px !important;
+        position: relative;
     }
 
     .#{$prefix}btn-link-medium {
@@ -43,7 +55,6 @@
         margin-top: 1px;
         font-size: 12px;
         font-weight: 400;
-        color: $gray-text-dark;
     }
 
     .user-initials-container {
@@ -63,6 +74,14 @@
 
     .username-button {
         padding-left: 0;
+    }
+}
+
+
+.help-button.x-btn {
+    background-color: $kibo-black !important;
+    .#{$prefix}btn-inner-center {
+        color: $kibo-white;
     }
 }
 
