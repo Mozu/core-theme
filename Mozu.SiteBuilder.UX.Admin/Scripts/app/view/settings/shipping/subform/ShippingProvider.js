@@ -152,7 +152,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                         items: [
                             {
                                 xtype: 'textfield',
-                                name: 'pduPOBox',
+                                name: 'pdupobox',
                                 fieldLabel: 'PDU PO Box'
                             },
                             {
@@ -165,13 +165,13 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                                 items: [
                                     {
                                         xtype: 'textfield',
-                                        name: 'pduCity',
+                                        name: 'pducity',
                                         fieldLabel: 'PDU City',
                                         padding: '0 120 0 0'   
                                     },
                                     {
                                         xtype: 'combobox',
-                                        name: 'pduState',
+                                        name: 'pdustate',
                                         fieldLabel: 'PDU State',
                                         store: this.stateStore,
                                         valueField: 'code',
@@ -189,7 +189,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                                 items: [
                                     {
                                         xtype: 'textfield',
-                                        name: 'pduzip4',
+                                        name: 'pduzip5',
                                         fieldLabel: 'PDU Zip',
                                         padding: '0 10 0 0'   
                                     }
