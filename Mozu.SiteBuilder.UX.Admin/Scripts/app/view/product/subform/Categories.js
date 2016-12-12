@@ -100,7 +100,7 @@ Ext.define('Taco.view.product.subform.Categories', {
     },
 
     updatePrimaryCategory: function () {
-        if (this.listStore.isLoading()) {
+        if (!this.listStore || this.listStore.isLoading()) {
             return;
         }
 
