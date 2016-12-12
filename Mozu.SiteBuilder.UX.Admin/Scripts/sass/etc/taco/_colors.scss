@@ -86,10 +86,13 @@ $textarea-color:                lighten($black-color, 20);                      
 $html-editor-toolbar:           rgb(119, 119, 119);                                 /* #777777 --> #787878  120, 120, 120 */
                                 /* lighten($black-color, 47); */
 
-$valid-green:                   rgb(52, 174, 144);                                  /* #34ae90 --> #34ac8e  052, 174, 144 */
+$valid-green:                   rgb(46, 161, 149);                                  /* #34ae90 --> #34ac8e  052, 174, 144 */
                                 /* adjust_hue(saturate(lighten($black-color, 44), 54), 165); */
 
-$valid-green-active:            rgb(48, 182, 149);                                  /* #30b695 --> #26b954  048, 182, 149 */
+$valid-green-hover:             rgb(66, 170, 159);
+
+
+$valid-green-active:            rgb(41, 144, 134);                           /* #30b695 --> #26b954  048, 182, 149 */
                                 /* adjust_hue(saturate(lighten($black-color, 43), 65), 166); */
 
 $form-focus-color:              rgba($valid-green, 0.6);
@@ -105,8 +108,8 @@ $menu-btn-active-background:    rgb(44, 163, 133);                              
 
 $primary-btn-background:        $valid-green;
 $primary-btn-shadow:            rgba(0, 0, 0, 0.2);
-$primary-btn-hover-background:  $valid-green-active;
-$primary-btn-active-background: rgb(48, 165, 136);
+$primary-btn-hover-background:  $valid-green-hover;
+$primary-btn-active-background: $valid-green-active;
 $primary-btn-disabled-background: rgb(234, 234, 234);                               /* #eaeaea --> #e8e8e8  232, 232, 232 */
 $primary-btn-disabled-split-border: rgb(241, 241, 241);                             /* #f1f1f1 --> #f0f0f0  240, 240, 240 */
 $primary-btn-split-border:      rgba(0, 0, 0, 0.09);

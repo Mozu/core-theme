@@ -34,7 +34,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     searchButtonContent = searchButton.el.dom.innerHTML;
                 }
 
-                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons; color:#f8f8f8;position:relative;left:-4px;top:2px">&#xe903;</span>';
+                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons;position:relative;left:-4px;top:2px;font-size:14px;">&#xe903;</span>';
                 searchButton.on('click', function () {
                     searchBox.inputEl.dom.value = '';
                     this.el.dom.innerHTML = searchButtonContent;
@@ -43,6 +43,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             onBlur: Ext.bind(function () {
                 if (searchBox.inputEl.dom.value == '') {
                     searchButton.el.dom.innerHTML = searchButtonContent;
+                    searchButton.removeCls('is-active');
                     searchBox.hide();
                 }
             }),
@@ -75,6 +76,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                 this.searchBox.show();
                 searchButton = btn;
                 this.searchBox.focus();
+                searchButton.addClass('is-active');
             }, this)
         },
         this.searchBox,

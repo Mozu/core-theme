@@ -19,11 +19,9 @@
     .#{$vprefix}kibo-text {
         color: white;
         font-size: 20px;
-        left: -6px;
-        margin-left: -35px;
+        margin-left: -42px;
         position: relative;
         text-decoration: none;
-        top: 1px;
     }
 
     .#{$vprefix}mozulogo {
@@ -33,9 +31,9 @@
         display: block;
         overflow: hidden;
         width: 68px;
-        height: 35px;
-        top: 4px !important;
-        left: -2px !important;
+        height: 25px;
+        top: 2px !important;
+        left: -3px !important;
         position: relative;
     }
 
@@ -52,9 +50,10 @@
     }
 
     .tenant-name-container {
-        margin-top: 1px;
         font-size: 12px;
         font-weight: 400;
+        right: -12px;
+        position: relative;
     }
 
     .user-initials-container {
