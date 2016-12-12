@@ -24,6 +24,7 @@ using Should;
 using System.IO;
 using Mozu.Core;
 using Mozu.SiteBuilder.UX.Areas.Misc;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 {
@@ -70,7 +71,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         FullPath = @"c:\temp\grandparent\pages\category.hypr.live",
                         IsFile = true
                     }
-                })
+                }, null ,null)
             };
 
             var parentTheme = new Theme
@@ -88,7 +89,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         FullPath = @"c:\temp\parent\pages\category.hypr.live",
                         IsFile = true,
                     }
-                })
+                }, null , null)
             };
             var childTheme = new Theme
             {
@@ -121,7 +122,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         FullPath = @"C:\temp\child\pages\noextends.hypr.live",
                         IsFile = true,
                     },
-                })
+                }, null ,null)
             };
 
             var virtToFSIMap = new Dictionary<string, ThemeFileSystemInfo>();
@@ -134,8 +135,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var scmh = new ServiceClientMessageHandler(context, settings);
             var httprequest = new HttpRequestMessage(HttpMethod.Get, "http://sb.volusion.com/admin/resources/livetemplates");
             var cookieprovider = Substitute.For<ICookieProvider>();
-
-            var scontext = new SiteContext(new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
+            var cprov = Substitute.For<ISiteBuilderContextProvider>();
+            var data = new SiteBuilderContextData();
+            cprov.GetContextData().Returns(Task.FromResult(data));
+            var scontext = new SiteContext(httprequest , context , cprov , null, null, null, null, settings)  //new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
             {
                 Theme = childTheme
             };

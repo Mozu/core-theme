@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using Mozu.Content.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -46,8 +47,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public Response<List<ThemeSetting>> ReadConfiguration(string themeId )
         {
             //tbd send selection from ui
-            var config = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId}).MergedSettings;
-            return List2(config);
+            var config = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId}).Settings;
+
+            return List2(config.Select(x => new ThemeSetting() { Id = x.Key, DefaultValue = x.Value }).ToList());
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "instance/read/{themeId}")]
         public async Task<HttpResponseMessage> ReadInstance(string themeId)
         {
-            var values = await _themeSettingsRepository.GetInstanceValues(themeId);
+            var values = (await _themeSettingsRepository.GetInstanceValues(themeId)).ToDictionary(x => x.Key, y => y.Value);
             var docId = String.Join("", "theme_settings_", themeId); 
             var document = (await _documentListWebApiClient.GetTreeDocument(documentListName: "siteSettings@mozu", documentName: docId));
 
@@ -75,10 +77,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var setting in configSettings.Items)
             {
-                JToken o = null;
+                object o = null;
                 if (!values.TryGetValue(setting.Id, out o))
                 {
-                    var jToken =   JToken.FromObject(setting.DefaultValue);
+                    var jToken = setting.DefaultValue == null ? null : JToken.FromObject(setting.DefaultValue);
                     values.Add(setting.Id, jToken);
                 }
             }
@@ -88,8 +90,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 values.Add("MozuDocumentId", cmsDocId);
                 values.Add("MozuPublishingEnabled", isPublishingEnabled);
             }
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, values);
+            var jobj = values == null ? null : JObject.FromObject(values);
+            return this.Request.CreateResponse(HttpStatusCode.OK, jobj);
         }
 
         [HttpGetRoute(UriTemplate = "ui/read/{themeId}")]
@@ -120,10 +122,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <param name="values">Field values to persist</param>
         /// <returns>List of FieldValue></returns>
         [HttpPostRoute(UriTemplate = "instance/save/{themeId}")]
-        public async Task<Response<JObject>> SaveInstance(string themeId, JObject values)
+        public async Task<Response<JObject>> SaveInstance(string themeId, Dictionary<string,object> values)
         {
-            var existingValues = (IDictionary<string, JToken>) await _themeSettingsRepository.GetInstanceValues(themeId);
-            var valueDic = (IDictionary<string, JToken>) values;
+            var existingValues = (IDictionary<string, Object>) await _themeSettingsRepository.GetInstanceValues(themeId);
+            var valueDic = (IDictionary<string, Object>) values;
             if (existingValues != null)
             {
 
@@ -139,7 +141,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             
             var retval = await _themeSettingsRepository.SaveInstanceValues(values, themeId);
-            return Single2(retval);
+            var jobj = retval == null ? null : JObject.FromObject(retval);
+            return Single2(jobj);
         }
     }
 }

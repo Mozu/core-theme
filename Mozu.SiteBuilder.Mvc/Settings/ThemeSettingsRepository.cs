@@ -22,9 +22,9 @@ namespace Mozu.SiteBuilder.Mvc.Settings
     public interface IThemeSettingsRepository
     {
         Task<ThemeRuntimeSettingsCollection> GetRuntimeValues(string themeId);
-        Task<JObject> SaveSingleValue(string key, object value, string themeId);
-        Task<JObject> SaveInstanceValues(JObject values, string themeId);
-        Task<JObject> GetInstanceValues(string themeId);
+        Task<Dictionary<string, object>> SaveSingleValue(string key, object value, string themeId);
+        Task<Dictionary<string, object>> SaveInstanceValues(Dictionary<string, object> values, string themeId);
+        Task<Dictionary<string, object>> GetInstanceValues(string themeId);
 
 
         Task<DateTime> GetTimeStamp(string themeId);
@@ -33,11 +33,11 @@ namespace Mozu.SiteBuilder.Mvc.Settings
     public class ThemeSettingsRepository : IThemeSettingsRepository
     {
         public const string ADDONKEY = "internal-themeAddons";
-        private readonly IDocumentListWebApiClient _docWebApiClient;
-        private readonly ICmsServiceWrapper _cmsService;
+        private IDocumentListWebApiClient _docWebApiClient;
+        private  ICmsServiceWrapper _cmsService;
         private readonly SiteContext _siteContext;
         private readonly JsonSerializer  _serializer;
-   
+        Theme _theme;
      //   private readonly IStorefrontCache _cache;
       
         /// <summary>
@@ -55,45 +55,62 @@ namespace Mozu.SiteBuilder.Mvc.Settings
             _docWebApiClient = docWebApiClient;
             _cmsService = cmsService;
             _siteContext = siteContext;
-            _cache = cache;
+     
+        }
+
+        public static Task<ThemeRuntimeSettingsCollection> CreateForContextBuilder ( Theme theme , IDocumentListWebApiClient docWebApiClient)
+        {
+            var repo = new ThemeSettingsRepository()
+            {
+                _theme = theme,
+                _docWebApiClient = docWebApiClient,
+                _cmsService = new CmsServiceWrapper(docWebApiClient, null, null)
+            };
+            return repo.GetRuntimeValues(theme.Id);
+        }
+        private ThemeSettingsRepository()
+        {
+
         }
 
 
-        public Task<JObject> SaveSingleValue(string key, object value, string themeId)
+
+        Theme GetTheme()
+        {
+            return _theme ?? _siteContext?.Theme;
+        }
+
+        public Task<Dictionary<string, object>> SaveSingleValue(string key, object value, string themeId)
         {
             return GetInstanceValues(themeId)
                 .ContinueWith(t =>
                 {
-                    var values = t.Result ?? new JObject();
+                    var values = t.Result ?? new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-                    JToken jValue;
-                    if (value is JToken)
-                        jValue = (JToken)value;
-                    else if (value == null || value is string || value.GetType().IsValueType)
-                        jValue = JValue.FromObject(value);
-                    else if (value is IList)
-                        jValue = JArray.FromObject(value);
-                    else
-                        jValue = JObject.FromObject(value);
-
-                    var existingValue = values[key] as JProperty;
-                    if (existingValue != null)
-                        existingValue.Value = jValue;
-                    else
-                        values.Add(key, jValue);
+                    //JToken jValue;
+                    //if (value is JToken)
+                    //    jValue = (JToken)value;
+                    //else if (value == null || value is string || value.GetType().IsValueType)
+                    //    jValue = JValue.FromObject(value);
+                    //else if (value is IList)
+                    //    jValue = JArray.FromObject(value);
+                    //else
+                    //    jValue = JObject.FromObject(value);
+                    values[key] = value;
+                   
 
                     return UpdateSettings(values, themeId)
                         .ContinueWith(_ => values);
                 }).Unwrap();
         }
 
-        public Task<JObject> SaveInstanceValues(JObject values, string themeId)
+        public Task<Dictionary<string, object>> SaveInstanceValues(Dictionary<string, object> values, string themeId)
         {
             return UpdateSettings(values, themeId)
                 .ContinueWith(_ => values);
         }
 
-        private Task<ServiceClientResponse<Document>> UpdateSettings(JObject values, string themeId)
+        private Task<ServiceClientResponse<Document>> UpdateSettings(Dictionary<string,object> values, string themeId)
         {
             return _cmsService.GetByPath2("siteSettings@mozu", this.GetFileName(themeId))
                 .ContinueWith<Task<ServiceClientResponse<Document>>>(t =>
@@ -124,8 +141,8 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 .Unwrap();
         }
 
-        private Task<JObject> _getInstanceValues;
-        public Task<JObject> GetInstanceValues(string themeId)
+        private Task<Dictionary<string, object>> _getInstanceValues;
+        public Task<Dictionary<string,object>> GetInstanceValues(string themeId)
         {
             _getInstanceValues = _cmsService.GetByPath2("siteSettings@mozu", GetFileName(themeId)).ContinueWith(
                     res =>
@@ -147,7 +164,8 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
                         }
 
-                        return value ?? new JObject();
+                        return (value ?? new JObject()).ToObject<Dictionary<string, object>>()
+                            .ToDictionary(_kvp => _kvp.Key, _kvp => _kvp.Value, StringComparer.OrdinalIgnoreCase);
                     });
             return _getInstanceValues;
 
@@ -158,29 +176,29 @@ namespace Mozu.SiteBuilder.Mvc.Settings
         {
             if (_runtimeValues != null)
             {
-                var tcs = new TaskCompletionSource<ThemeRuntimeSettingsCollection>();
-                tcs.SetResult(_runtimeValues);
-                return tcs.Task;
+                return Task.FromResult(_runtimeValues);
             }
             else
             {
                 return GetInstanceValues(themeId).ContinueWith(task =>
                     {
 
-                        JObject values = task.Result;
-                        var dic = new Dictionary<string, ThemeRuntimeSetting>(StringComparer.OrdinalIgnoreCase);
+                        var savedValues = task.Result;
+                        var settings = GetTheme().Settings;
+                        var runtimeValues = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                      
 
-                        foreach (var setting in _siteContext.Theme.MergedSettings)
+                        foreach (var setting in settings)
                         {
-                            if (dic.ContainsKey(setting.Id))
-                                continue;
-
-                            var val = values[setting.Id] ?? setting.DefaultValue;
-
-                            dic.Add(setting.Id, new ThemeRuntimeSetting(setting, val));
+                            object val = setting.Value;
+                            if ( !savedValues.TryGetValue( setting.Key, out val))
+                            {
+                                val = setting.Value;
+                            }
+                            runtimeValues.Add(setting.Key, val);
                         }
 
-                        _runtimeValues = new ThemeRuntimeSettingsCollection(dic,  this.Etag , _ts.Value  );
+                        _runtimeValues = new ThemeRuntimeSettingsCollection(runtimeValues,  this.Etag , _ts.Value  );
                         return _runtimeValues;
 
                     });
@@ -194,7 +212,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
 
         private DateTime? _ts;
         private Task<DateTime> _getTimeStamp;
-        private readonly ILiveModeOnlyCache _cache;
+      
 
         public Task<DateTime> GetTimeStamp(string themeId)
         {

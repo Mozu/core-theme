@@ -699,6 +699,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 }
                 return _rootCategories;
             }
+            set { _rootCategories = value; }
         }
 
 

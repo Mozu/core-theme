@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -15,13 +18,44 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// Internal class implementing an IThemeInfo.
     /// </summary>
     [DataContract]
+    //[JsonConverter(typeof(Theme.ThemeJsonConverter))]
     public  class Theme
     {
-        /// <summary>
-        /// Id. Returns this theme's Id.
-        /// </summary>
-        [DataMember(Name="id")]
+
+
+        [OnSerializing]
+        private void SetValuesOnSerializing(StreamingContext context)
+        {
+            if ( (this.Stack?.Count).GetValueOrDefault(0) ==0 )
+            {
+                return;
+            }
+            foreach ( var t in Stack)
+            {
+                this.FileListing?.UnionWith(t.FileListing);
+            }
+
+        }
+        [OnDeserialized]
+        void OnDeserializedMethod(StreamingContext context)
+        {
+            this.MergedLabels = MergedLabels.ToDictionar2y(x => x.Key, y => y.Value, StringComparer.OrdinalIgnoreCase);
+            this.Settings = this.Settings.ToDictionar2y(x => x.Key, y => y.Value, StringComparer.OrdinalIgnoreCase);
+
+        }
+
+
+
+    /// <summary>
+    /// Id. Returns this theme's Id.
+    /// </summary>
+    [DataMember(Name="id")]
         public string Id { get; set; }
+
+       
+
+
+
 
         [IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore()]
@@ -74,7 +108,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// <summary>
         /// If this theme inherits from another theme, contains the inherited theme.
         /// </summary>
-        [DataMember(Name = "parent")]
+      //  [DataMember(Name = "parent")]
+        [IgnoreDataMember]
         public Theme Parent { get; set; }
 
         /// <summary>
@@ -113,7 +148,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
         }
 
-        public List<ThemeSetting> MergedSettings { get; set; }
+        public Dictionary<string,object> Settings { get; set; }
+
+        [DataMember]
         public Dictionary<string, ThemeLabelCollection> MergedLabels { get; set; }
 
         [DataMember(Name="pageTypes")]
@@ -127,19 +164,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public IEnumerable<PageTypeDefinition> BackOfficeTemplates { get; set; }
 
 
-        [IgnoreDataMember]
+        //[IgnoreDataMember]
+        [DataMember]
         public List<Models.CMS.WidgetDefinition> Widgets { get; set; }
 
 
-        [IgnoreDataMember]
+       // [IgnoreDataMember]
+        [DataMember]
         public List<EditorDefinition> Editors { get; set; }
 
-        [IgnoreDataMember]
+       // [IgnoreDataMember]
+        [DataMember]
         public List<LayoutWidgetDefinition> Layouts { get; set; }
 
-        
-        [IgnoreDataMember]
+        [DataMember(Name="fileListing")]
+       // [IgnoreDataMember]  <==TODO validate that this isnt ever serialized in hypr
         public ThemeFileSystemInfoCollection  FileListing { get; set; }
+
+        
 
         /// <summary>
         /// Internal constructor.
@@ -161,7 +203,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string DefaultLanguage { get; set; }
 
         public bool? AllowProduction { get; set; }
+        public string Hash { get;  set; }
 
+        public static implicit operator Dictionary<object, object>(Theme v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ThemeFileSystemInfo
@@ -201,42 +248,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
         {
-            //needs testing..
-            //using (System.Threading.CancellationTokenSource source = new System.Threading.CancellationTokenSource(5000))
-            //{
-
-
-            //    using (var stream = GetStream(info))
-            //    {
-            //        var sb = new StringBuilder();
-            //        byte[] buff = null;
-            //        char[] charbuff = null;
-            //        if ( !_bytePool.TryTake(out buff))
-            //        {
-            //            buff= new byte[4096];
-            //        }
-            //        if ( !_charPool.TryTake( out charbuff))
-            //        {
-            //            charbuff = new char[ System.Text.Encoding.UTF8.GetMaxCharCount(buff.Length)];
-            //        }
-                    
-                   
-            //        while (true)
-            //        {
-            //            var len = await stream.ReadAsync(buff, 0, buff.Length, source.Token).ConfigureAwait(false);
-            //            if (len == 0)
-            //            {
-            //                break;
-            //            }
-            //            var clen = System.Text.Encoding.UTF8.GetChars(buff, 0, len, charbuff,0);
-            //            sb.Append(charbuff, 0, clen);
-
-            //        }
-            //        return sb.ToString();
-
-            //    }
-            //}
-
+            
             using (var r = new StreamReader(GetStream(info)))
             {
                 return await r.ReadToEndAsync().ConfigureAwait(false);
@@ -245,7 +257,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public Stream GetStream(ThemeFileSystemInfo info)
         {
-            return File.OpenRead(info.FullPath);
+            return  new FileStream(info.FullPath,
+               FileMode.Open, 
+               FileAccess.Read, 
+               FileShare.ReadWrite,
+               bufferSize: 4096, 
+               useAsync: true);
+            
         }
+       
     }
 }

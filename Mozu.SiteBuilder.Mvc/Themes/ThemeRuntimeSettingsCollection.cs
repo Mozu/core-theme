@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Magnum.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -19,24 +20,80 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
              public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
              {
-                 throw new NotImplementedException();
+                var valueDic = serializer.Deserialize<Dictionary<string, object>>(reader).ToDictionary(x => x.Key, x => x.Value, StringComparer.OrdinalIgnoreCase);
+                
+                
+               
+                var col = new ThemeRuntimeSettingsCollection() { InnerDictionary = valueDic };
+                return col;
+               
              }
 
              public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
              {
                  var themeSettings = (ThemeRuntimeSettingsCollection) value;
-                 writer.WriteStartObject();
-                 foreach (var item in themeSettings.InnerDictionary)
-                 {
-                     writer.WritePropertyName(item.Key );
-                     serializer.Serialize(writer, item.Value.Value );
-                 }
-                 writer.WriteEndObject();
+                serializer.Serialize(writer ,themeSettings.InnerDictionary);
+                 //writer.WriteStartObject();
+                 //foreach (var item in themeSettings.InnerDictionary)
+                 //{
+                 //    writer.WritePropertyName(item.Key );
+                 //    serializer.Serialize(writer, item.Value.Value );
+                 //}
+                 //writer.WriteEndObject();
 
              }
          }
 
-        
+        public T Get<T>(string key, T fallback = default(T))
+        {
+            if ( typeof(T) == typeof(int) || typeof(T) == typeof(int?))
+            {
+                int? i = GetInt(key);
+                if ( i == null)
+                {
+                    i = (int?)(object)fallback;
+                }
+                return (T)(object)i;
+            }
+            var val = this[key];
+            if (val is JValue)
+            {
+                val = ((JValue)val).Value;
+            }
+            if (val is T)
+            {
+                return (T)val;
+            }
+            return fallback;
+        }
+        public int? GetInt( string id)
+        {
+            var val = this[id];
+            if ( val is JValue)
+            {
+                val = ((JValue)val).Value;
+            }
+            if ( val is Int64)
+            {
+                val = Convert.ToInt32(val);
+            }
+            if ( val is int)
+            {
+                return (int)val;
+            }
+            if ( val == null)
+            {
+                return null;
+            }
+            int ret;
+            if ( int.TryParse( val.ToString(), out ret ))
+            {
+                return ret;
+            }
+            return null;
+            
+
+        }
 
 
         public object this[string id]
@@ -44,10 +101,18 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             get
             {
 
-                ThemeRuntimeSetting value;
+                object value;
                 if (InnerDictionary.TryGetValue(id, out value))
                 {
-                    return value.Value;
+                    if (value is Int64)
+                    {
+                        return Convert.ToInt32(value);
+                    }
+                    if (value is JValue)
+                    {
+                        return ((JValue)value).Value;
+                    }
+                    return value;
                 }
                 return null;
             }
@@ -62,7 +127,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
          /// <summary>
          /// Public constructor
          /// </summary>
-         public ThemeRuntimeSettingsCollection(Dictionary<string, ThemeRuntimeSetting> dictionary, byte[] etagBytes, DateTime timeStamp )
+         public ThemeRuntimeSettingsCollection(Dictionary<string, object> dictionary, byte[] etagBytes, DateTime timeStamp )
          {
              InnerDictionary = dictionary;
 
@@ -76,7 +141,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
          public byte[] Etag { get; set; }
 
-        public Dictionary<string, ThemeRuntimeSetting> InnerDictionary { get; set; }
+        public Dictionary<string, object> InnerDictionary { get; set; }
 
         public DateTime TimeStamp { get; set; }
     }

@@ -12,9 +12,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
     /// TODO: fhersey Remove this class completely and put its serializer inside of NavigationRepository.
     /// </summary>
     [DataContract, Newtonsoft.Json.JsonConverter(typeof(Converter))]
-    internal class NavigationSet : List<INavigationNode>
+    public  class NavigationSet : List<INavigationNode>
     {
-        public string ETag { get; set; }
+        public DateTime? TimeStamp { get; set; }
 
         /// <summary>
         /// Custom serializer for NavigationSet
@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     writer.WriteNull();
                     return;
                 }
-
+               
                 writer.WriteStartArray();
                 
                     foreach (var item in set) {

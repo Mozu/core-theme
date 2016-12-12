@@ -16,6 +16,7 @@ using Mozu.Content.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.SEO.Constraints;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -25,13 +26,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public class CustomRouteRepository : ICustomRouteCollectionRepository
     {
-        readonly IStorefrontCache _cache;
+      
         readonly ILogger _logger;
         readonly ISiteBuilderApiContext _siteBuilderApiContext;
         readonly ICustomRouteConstraintFactory _customRouteConstraintFactory;
         readonly IRouteDataMappingFactory _routeDataMappingFactory;
-        readonly IGeneralSettingsWebApiClient _genSettingsClient;
-        readonly IDocumentListWebApiClient _documentListWebApiClient;
+  
+        Mozu.SiteBuilder.Mvc.Context.ISiteBuilderContextProvider _contextProvider;
 
         static IDictionary<FancyRoute, string> ControllerRoutes = new Dictionary<FancyRoute, string> {
             { FancyRoute.ProductDetails, "catalog" },
@@ -52,25 +53,23 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             { FancyRoute.Arcjs, null },
         };
 
-        Autofac.ILifetimeScope _lifetimescope;
+    
         public CustomRouteRepository(
             ISiteBuilderApiContext siteBuilderApiContext,
             ILogger logger,
-            IStorefrontCache  cache,
+            ISiteBuilderContextProvider contextProvider,
             ICustomRouteConstraintFactory customRouteConstraintFactory,
-            IRouteDataMappingFactory routeDataMappingFactory,
-            IGeneralSettingsWebApiClient genSettingsClient,
-            IDocumentListWebApiClient documentListWebApiClient,
-            Autofac.ILifetimeScope lifetimescope = null)
+            IRouteDataMappingFactory routeDataMappingFactory
+           
+          )
         {
             _siteBuilderApiContext = siteBuilderApiContext;
             _logger = logger;
-            _cache = cache;
+            _contextProvider = contextProvider;
             _customRouteConstraintFactory = customRouteConstraintFactory;
             _routeDataMappingFactory = routeDataMappingFactory;
-            _genSettingsClient = genSettingsClient.CloneWithoutUserClaims();
-            _documentListWebApiClient = documentListWebApiClient.CloneWithoutUserClaims();
-            _lifetimescope = lifetimescope;
+       
+            
         }
 
 
@@ -81,150 +80,34 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         }
 
 
-        //Task<HttpRouteCollectionContainer> GetHttpRouteCollectionContainer(bool isCacheCallback)
-        //{
-        //    var nullResp = Task.FromResult<HttpRouteCollectionContainer>(null);
-        //    return _genSettingsClient.GetGeneralSettings()
-        //         .ContinueWith < Task<HttpRouteCollectionContainer>>(genSettingsResponse =>
-        //        {
-        //            var genSettings = genSettingsResponse.Result.ReadAsSync();
-
-        //            if (genSettings == null) return nullResp;
-
-        //            var routes = genSettings.CustomRoutes;
-        //            var lastUpdate = genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
-        //            if (routes == null) return nullResp;
-
-
-        //            if (isCacheCallback)
-        //            {
-        //                return CreateRouteCollectionFromSettings(routes).ContinueWith(col =>
-        //                {
-        //                    new HttpRouteCollectionContainer()
-        //                    {
-        //                        RouteCollection = col.Result,
-        //                        LastUpdate = lastUpdate
-        //                    };
-        //                })l;
-
-        //            }
-
-
-        //            var key = GetType().FullName +
-        //                  ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
-        //                  _siteBuilderApiContext.SiteId; // TODO: go add auditInfo to the custom routes, or at least mirror the ones from general settings on the server-side./
-
-
-
-        //           var ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
-        //            if (ret != null && ret.LastUpdate == lastUpdate)
-        //            {
-        //                return Task.FromResult<HttpRouteCollectionContainer>(ret);
-        //            }
-
-
-        //            return CreateRouteCollectionFromSettings(routes).ContinueWith(col =>
-        //            {
-        //                ret = new HttpRouteCollectionContainer()
-        //                {
-        //                    RouteCollection = col.Result,
-        //                    LastUpdate = lastUpdate
-        //                };
-        //                _cache.Set(key,
-        //                  ret,
-        //                  CacheScope.Site,
-        //                  StorefrontCacheTypes.CatalogIndependent,
-        //                  new CacheCallBacker<ICustomRouteCollectionRepository>(_lifetimescope, (repo, obj) => ((CustomRouteRepository)repo).GetHttpRouteCollectionContainer(true).Result).CacheCallBack
-        //                  );
-        //            });
-
-
-        //        });
-
-        //}
+        
 
         static System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim> _sempDic = new System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim>();
 
 
         async Task<HttpRouteCollectionContainer> GetHttpRouteCollectionContainer(bool isCacheCallback)
         {
-            var genSettingsRequest = await _genSettingsClient.GetGeneralSettings().ConfigureAwait(false);
-            var genSettings = genSettingsRequest.ReadAsSync();
+            var contextData = await _contextProvider.GetContextData().ConfigureAwait(false);
 
-            if (genSettings == null) return null;
 
-            var routes = genSettings.CustomRoutes;
-            var lastUpdate = genSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
+            if (contextData.GeneralSettings == null) return null;
+
+            var routes = contextData.GeneralSettings.CustomRoutes;
+            var lastUpdate = contextData.GeneralSettings.AuditInfo.UpdateDate.GetValueOrDefault(DateTime.MaxValue).Ticks;
             if (routes == null) return null;
             
           
-            if (isCacheCallback)
+
+            if (contextData.RouteCollection== null)
             {
                 var col = await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false);
-                 return new HttpRouteCollectionContainer()
+                contextData.RouteCollection = new HttpRouteCollectionContainer()
                 {
                     RouteCollection = col,
                     LastUpdate = lastUpdate
                  };
             }
-
-
-            var key = GetType().FullName +
-                         ((_siteBuilderApiContext.DataViewMode == DataViewModeType.Pending) ? "1" : "0") +
-                         _siteBuilderApiContext.SiteId; 
-
-            var ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
-            if (ret != null && ret.LastUpdate == lastUpdate)
-            {
-                return ret;
-            }
-
-            var sem = _sempDic.GetOrAdd(_siteBuilderApiContext.SiteId.GetValueOrDefault(), (i) => new System.Threading.SemaphoreSlim(1, 1));
-
-            var gotLock = await sem.WaitAsync(5000).ConfigureAwait(false);
-
-            try
-            {
-                ret = _cache.Get<HttpRouteCollectionContainer>(key, CacheScope.Site, StorefrontCacheTypes.CatalogIndependent);
-
-                if (ret != null && ret.LastUpdate == lastUpdate)
-                {
-                    if (gotLock)
-                    {
-                        sem.Release();
-                        sem = null;
-                    }
-                    return ret;
-                }
-
-                ret = new HttpRouteCollectionContainer()
-                {
-                    RouteCollection = await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false),
-                    LastUpdate = lastUpdate
-                };
-                _cache.Set(key,
-                       ret,
-                       CacheScope.Site,
-                       StorefrontCacheTypes.CatalogIndependent,
-                       new CacheCallBacker<ICustomRouteCollectionRepository>(_lifetimescope, (repo, obj) => ((CustomRouteRepository)repo).GetHttpRouteCollectionContainer(true).Result).CacheCallBack
-                       );
-                return ret;
-            }
-            finally
-            {
-                if (gotLock && sem != null )
-                {
-                    sem.Release();
-                    sem = null;
-                }
-                else
-                {
-                    //could of become deadlocked...
-                    _sempDic.TryRemove(_siteBuilderApiContext.SiteId.Value, out sem);
-
-                }
-
-            }
+            return contextData.RouteCollection;
         }
         async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection( )
         {
@@ -244,6 +127,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
+
+            
             if (customSettings == null) return null;
 
             //clone as the object gets mutated
@@ -253,13 +138,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             FixCasing(customSettings);
             var constraints =
                 customSettings.Validators
-                .Select(kvp => new { kvp.Key, Constraint = _customRouteConstraintFactory.BuildConstraint(kvp.Value) })
+                .Select(kvp => new { kvp.Key, Constraint = _customRouteConstraintFactory.BuildConstraint(kvp.Key, kvp.Value) })
                 .Where(x => x.Constraint != null)
                 .ToDictionary(x => x.Key, x => x.Constraint, StringComparer.OrdinalIgnoreCase);
 
             var mappings =
                 customSettings.Mappings
-                .Select(kvp => new { kvp.Key, Mapping = _routeDataMappingFactory.BuildMapping(kvp.Value) })
+                .Select(kvp => new { kvp.Key, Mapping = _routeDataMappingFactory.BuildMapping(kvp.Key , kvp.Value) })
                 .Where(x => x.Mapping != null)
                 .ToDictionary(x => x.Key, x => x.Mapping, StringComparer.OrdinalIgnoreCase);
 
@@ -502,7 +387,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         }
 
 
-        class ImplicitConfigurationHandler
+        public class ImplicitConfigurationHandler
         {
             private readonly IDictionary<string, ICustomRouteConstraint> _validators;
             private readonly IDictionary<string, IRouteDataMapping> _mappings;
@@ -527,7 +412,56 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 RegexOptions.Singleline |
                 RegexOptions.IgnorePatternWhitespace);
 
-            
+            public static Dictionary<string,Validator> ConcatImplicitValidators(CustomRouteSettings routeSettings )
+            {
+                Dictionary<string, Validator> vals = new Dictionary<string, Validator>();
+
+                if ( routeSettings?.Routes == null)
+                {
+                    return vals;
+                }
+                
+                if (routeSettings.Validators != null)
+                {
+                    vals.AddRange(routeSettings.Validators);
+                }
+                foreach ( var routeDef in routeSettings.Routes)
+                {
+                    var matches = segmentsRe.Matches(routeDef.Template);
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            var facetSegments = match.Groups["facetSegment"].Captures;
+                            var facets = match.Groups["facet"].Captures;
+                            for (int i = 0; i < facetSegments.Count; i++)
+                            {
+                                var facetSegment = facetSegments[i].Value;
+                                var facet = facets[i].Value;
+                                var constaintName = (string)null;
+                                if ( !vals.Any(
+                                        x =>
+                                        x.Value.type == Validator.TypeConst.attribute &&
+                                        string.Equals(x.Value.attributeFQN, facet, StringComparison.OrdinalIgnoreCase)
+                                        ))
+                                {
+                                    constaintName = "_" + facet;
+                                    vals[constaintName] = new Validator()
+                                    {
+                                        attributeFQN = facet,
+                                        type = Validator.TypeConst.attribute
+                                    };
+                               }
+                                    
+                                   
+                            }
+                        }
+                    }
+                }
+                return vals;
+            }
+
             public Route ConfigureRoute(Route routeDef)
             {
 
@@ -566,18 +500,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (kvp.Key == null)
                     {
                         constaintName = "_" + facet;
-                        if (_validators.ContainsKey(constaintName))
+                        if (!_validators.ContainsKey(constaintName))
                         {
-                            continue;
+                            var constraint =
+                                _customRouteConstraintFactory.BuildConstraint(constaintName, new Validator()
+                                {
+                                    type = ConstraintFactory.SearchFacetConstraintType,
+                                    attributeFQN = facet
+                                });
+                            _validators[constaintName] = constraint;
                         }
-
-                        var constraint =
-                            _customRouteConstraintFactory.BuildConstraint(new Validator()
-                            {
-                                type = ConstraintFactory.SearchFacetConstraintType,
-                                attributeFQN = facet
-                            });
-                        _validators[constaintName] = constraint;
                     }
                     else
                     {
@@ -610,19 +542,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (mappingKvp.Key == null)
                     {
                         mappingName = "_" + facet;
-                        if (_mappings.ContainsKey(mappingName))
+                        if (!_mappings.ContainsKey(mappingName))
                         {
-                            continue;
+                            var mapping =
+                                _routeDataMappingFactory.BuildMapping(null, new Mapping()
+                                {
+                                    type = Mapping.TypeConst.facet,
+                                    facetId = facet,
+                                    mapTo = "facetValueFilter"
+                                });
+                            _mappings[mappingName] = mapping;
                         }
-
-                        var mapping =
-                            _routeDataMappingFactory.BuildMapping(new Mapping()
-                            {
-                                type = Mapping.TypeConst.facet,
-                                facetId = facet,
-                                mapTo = "facetValueFilter"
-                            });
-                        _mappings[mappingName] = mapping;
                     }
                     else
                     {

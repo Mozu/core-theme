@@ -46,5 +46,27 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
             if (partition.False.Any()) throw errorFunc(partition.False);
             return partition.True;
         }
+
+        public static Dictionary<TKey, TElement> ToDictionar2y<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
+        {
+           if ( source == null )
+            {
+                return null;
+            }
+            Dictionary<TKey, TElement> dictionary = new Dictionary<TKey, TElement>(comparer);
+            foreach (TSource source1 in source)
+            {
+                var key = keySelector(source1);
+                var val = elementSelector(source1);
+                if ( dictionary.ContainsKey( key))
+                {
+                    System.Diagnostics.Debug.WriteLine(key);
+                    continue;
+                }
+                dictionary.Add(key, val);
+            }
+                
+            return dictionary;
+        }
     }
 }

@@ -102,6 +102,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             tmd.Thumbnail = LoadThemeThumbnail(tmd.ThemePath);
             tmd.Labels = LoadThemeLabels(tmd.ThemePath);
             tmd.TimeStamp = tmd.FileListing.TimeStamp;
+            tmd.Hash = tmd.FileListing.Hash;
 
             if (tmd.Configuration == null)
                 return null;
@@ -205,6 +206,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             return null;
         }
 
+        //static Lazy<JsonSerializer> _serializer = new Lazy<JsonSerializer>(() =>
+        //{
+        //    var ser = new JsonSerializer();
+           
+        //});
+
+
         private ThemeConfiguration LoadThemeDescriptor(string themePath, string fileType )
         {
             // theme2 is the latest standard for theme files. it combines theme.xml and metada\themesettings.xml
@@ -217,6 +225,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var themecfgJsonText = File.ReadAllText(fileName);
             var themecfgJson = JObject.Parse(themecfgJsonText);
 
+            
+
             themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
             themecfg.PageTypes = themecfgJson["pageTypes"] == null ? new List<PageTypeDefinition> (): themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.EmailTemplates = themecfgJson["emailTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["emailTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
@@ -224,11 +234,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Editors = themecfgJson["editors"] == null ? new List<EditorDefinition>() : themecfgJson["editors"].ToObject<List<EditorDefinition>>();
             themecfg.Layouts = themecfgJson["layoutWidgets"] == null ? new List<LayoutWidgetDefinition>() : themecfgJson["layoutWidgets"].ToObject<List<LayoutWidgetDefinition>>();
-            themecfg.Settings =
-                (
-                from setting in ( themecfgJson["settings"] == null ? new JArray( ) : themecfgJson["settings"] ).Children<JProperty>()
-                    select new ThemeSetting { Id = setting.Name, DefaultValue = setting.Value, DeclaredInFile = fileName }
-                ).ToList();
+            themecfg.Settings = (themecfgJson["settings"].ToObject<Dictionary<string, object>>() ?? new Dictionary<string, object>()).ToDictionar2y(x => x.Key, x=>x.Value,StringComparer.OrdinalIgnoreCase);
+               
 
             return themecfg;
         }
@@ -343,6 +350,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
         }
 
+        private ThemeFileSystemInfo CreateThemeFileSystemInfo(Mozu.AppDev.Contracts.AssetFileMetadata x, string themePath, string themeId)
+        {
+            var relPath = x.Path.Replace('/', '\\');
+            var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
+            return new ThemeFileSystemInfo()
+            {
+                Name = x.Path.Split('/').Last(),
+                ThemeId = themeId,
+                FullPath = themePath + "//"+ x.Path,
+                TimsStamp = x.AuditInfo?.UpdateDate ?? DateTime.MinValue,
+                RootPath = themePath,
+                VirtualPathNoExt = relPathNoExt,
+                VirtualPath = relPath,
+                IsFile = !x.IsFolder 
+            };
+        }
+
         private ThemeFileSystemInfo CreateThemeFileSystemInfo(FileSystemInfo x, string themePath, string themeId)
         {
             var relPath = x.FullName.Substring(themePath.Length).Trim(new char[] { '\\' }).ToLowerInvariant();
@@ -367,7 +391,29 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             var dirinfo = new DirectoryInfo(themePath);
             if (!dirinfo.Exists) return null;
+            Mozu.AppDev.Contracts.PackageManifest manifest = null;
+            var pmf = Path.Combine(dirinfo.FullName, "packageManifest.json");
+            if ( File.Exists(pmf))
+            {
+                using (var str = File.OpenRead(pmf))
+                {
+                    using (var sr = new StreamReader(str))
+                    {
+                        var jtr = new JsonTextReader(sr);
+                        manifest = _jsonSerializer.Deserialize<Mozu.AppDev.Contracts.PackageManifest>(jtr);
+                    }
 
+                        
+                }
+                    
+            }
+            if ( manifest != null )
+            {
+                var tf = manifest.Files.Where( _=> !(_.IsFolder == false && _.SizeInBytes == 0 ))
+                    .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
+                    .ToList();
+                return new ThemeFileSystemInfoCollection(tf,  manifest.LastModifiedDate, manifest.MD5);
+            }
 
             var themeFiles = dirinfo.GetFiles().Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
 
@@ -378,7 +424,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
             ).ToList();
 
-            return new ThemeFileSystemInfoCollection(themeFiles.Concat(deepThemeFiles).ToList());
+            return new ThemeFileSystemInfoCollection(themeFiles.Concat(deepThemeFiles).ToList(), null , null);
         }
 
         private string DevThemePath

@@ -33,6 +33,8 @@ using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Module = Autofac.Module;
 using Mozu.SiteBuilder.UX.Areas.Misc;
+using Mozu.SiteBuilder.Mvc.Context;
+using Mozu.Core.Messaging;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
@@ -131,14 +133,13 @@ namespace Mozu.SiteBuilder.UX.Configuration
             builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
             builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
             builder.RegisterType<HttpErrorResponseGenerator>();
-           
-
             builder.RegisterType<AMDModuleProvider>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<LessLogger>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<LessTransFormer>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<MyLessFileReader>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<TemplateInheritanceHandler>().AsImplementedInterfaces().AsSelf();
             builder.RegisterType<CacheItemsInvalidConsumer>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<SiteBuilderContextInvalidatorConsumer>().SingleInstance();
             builder
               .Register(c =>
               {
@@ -148,14 +149,34 @@ namespace Mozu.SiteBuilder.UX.Configuration
                   var lifeTimeScope = c.Resolve<ILifetimeScope>();
                   var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator , ComponentRegistry= lifeTimeScope.ComponentRegistry };
                  
-                  var factory = ServiceBusFactory.New(sbc => sbc
-                  .Configure(conString, subs => subs.LoadFrom(burrowsScope))
-                  .SetConcurrentConsumerLimit(10));
+                  var factory = ServiceBusFactory.New(sbc => 
+                  sbc
+                    .Configure(conString, subs => subs.Consumer< CacheItemsInvalidConsumer>( ()=>cacheInvalidator))
+                    .SetConcurrentConsumerLimit(2)
+                  
+                  );
+               
+
                   return factory;
-              }
-              )
-               .SingleInstance()
+              })
+              
               .AutoActivate();
+            builder
+            .Register(c =>
+            {
+                var consumer = c.Resolve<SiteBuilderContextInvalidatorConsumer>();
+                var settings = c.Resolve<ISettings>();
+                return settings.CreatePublisher("SiteBuilderMessageQueue", "Mozu.Sitebuilder.Mvc", subscriptionSource =>
+                {
+                    subscriptionSource.Consumer<SiteBuilderContextInvalidatorConsumer>(() => consumer);
+                    // subscriptionSource.Consumer<>
+                },
+                new MessageBusSettings() { ConcurrentConsumerLimit = 2 });
+
+
+            }).AutoActivate(); 
+           
+
         }
 
         class BurrowsConumerScope : ILifetimeScope , IDisposer

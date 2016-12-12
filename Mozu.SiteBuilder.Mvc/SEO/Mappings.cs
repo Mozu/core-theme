@@ -16,18 +16,19 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 {
     public class RouteMappingFactory : IRouteDataMappingFactory
     {
-        readonly IEntityListsWebApiClient _entityListClient;
+        readonly ISiteBuilderContextProvider _contextProvider;
 
-        public RouteMappingFactory(IEntityListsWebApiClient entityListClient)
+        public RouteMappingFactory(ISiteBuilderContextProvider contextProvider)
         {
-            _entityListClient = entityListClient;
+            _contextProvider = contextProvider;
         }
-        public IRouteDataMapping BuildMapping(Mapping mapping)
+        public IRouteDataMapping BuildMapping(string key , Mapping mapping)
         {
             switch (mapping.type.ToLowerInvariant())
             {
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
                 case Mapping.TypeConst.facet:
                     return new FacetValueFilterMapping(mapping);
                 case Mapping.TypeConst.mzdb:
-                    return new MZDBMap(_entityListClient, mapping);
+                    return new MZDBMap(key, mapping, _contextProvider);
                 case Mapping.TypeConst.category:
                     return new CategoryMapping(mapping);
                 case Mapping.TypeConst.regex:
@@ -344,8 +345,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         readonly IEntityListsWebApiClient _client;
         readonly string _entityList;
         readonly string _docId;
-        
-        
+        private string key;
+        private Mapping mapping;
+        private ISiteBuilderContextProvider contextRepo;
+
         public MZDBMap(IEntityListsWebApiClient client, Mapping settings):base(settings)
         {
             if (settings.listFqn.IsNullOrEmpty()) throw new ArgumentException("entityList");
@@ -356,8 +359,23 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             _docId = settings.docId;
         }
 
+        public MZDBMap(string key, Mapping mapping, ISiteBuilderContextProvider contextRepo):base(mapping)
+        {
+            this.key = key;
+            this.mapping = mapping;
+            this.contextRepo = contextRepo;
+        }
+
         public async Task<bool> Initialize()
         {
+            if (contextRepo != null)
+            {
+                var data = await contextRepo.GetContextData().ConfigureAwait(false);
+                this.Mappings = data.RouteMapperData.ContainsKey(this.key) ?
+                    data.RouteMapperData[this.key] :
+                    new Dictionary<string, object>();
+                return true;
+            }
             var entityResponse = await _client.CloneWithoutUserClaims().GetEntity(_entityList, _docId).ConfigureAwait(false);
             if (entityResponse.HasException) throw entityResponse.ReadException();
 

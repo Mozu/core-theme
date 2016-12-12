@@ -24,6 +24,7 @@ using Mozu.SiteBuilder.UX.Models.Navigation;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
 using DC = Mozu.ProductAdmin.Contracts;
 using Document = Mozu.Content.Contracts.Document;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -43,11 +44,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ILogger _log;
         private readonly INavigationRepository _navRepo;
         private readonly SiteContext _siteContext;
-
+        ISitebuilderContextCacheRepository _cacheRepo;
         /// <summary>
         ///     Public constructor.
         /// </summary>
-        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, INavigationGandalf gandalf, ILogger log, SiteContext siteContext)
+        public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, INavigationGandalf gandalf, ILogger log, SiteContext siteContext,
+            ISitebuilderContextCacheRepository cacheRepo)
         {
             _navRepo = navRepo;
             _catClient = catClient;
@@ -55,6 +57,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _gandalf = gandalf;
             _log = log;
             _siteContext = siteContext;
+            _cacheRepo = cacheRepo;
         }
 
         /// <summary>
@@ -360,7 +363,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 (from n in navSet
                  where n.NodeType != null && n.NodeType.IsLink
                  let stringId = n.OriginalId
-                 let id = (stringId == null ? null : (int?) Convert.ToInt32(stringId))
+                 let id = (stringId == null ? null : (int?)Convert.ToInt32(stringId))
                  orderby id
                  select id
                 ).LastOrDefault() ?? 0;
@@ -380,8 +383,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             await _navRepo.SaveSetAsync(navSet);
-
+            await InvalidateCache().ConfigureAwait(false);
             return List2(items);
+        }
+
+        private  Task InvalidateCache()
+        {
+            return _cacheRepo.Invalidate(this.SbApiContext.TenantId,
+                           SbApiContext.MasterCatalogId.GetValueOrDefault(-1),
+                           SbApiContext.CatalogId.GetValueOrDefault(-1),
+                           SbApiContext.SiteId,
+                           SbApiContext.LocaleCode,
+                           SbApiContext.CurrencyCode,
+                           Core.DataViewModeType.Pending);
         }
 
         /// <summary>
@@ -422,6 +436,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (isDirty)
                 await _navRepo.SaveSetAsync(navSet);
+
+            await InvalidateCache().ConfigureAwait(false);
 
             return List2(items);
         }
@@ -465,7 +481,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 default:
                     throw new ArgumentException("Unexpected edit action: " + item.EditAction);
             }
-
+            await InvalidateCache().ConfigureAwait(false);
             return List2(items);
         }
 
@@ -651,7 +667,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int categoryId = Convert.ToInt32(change.OriginalId);
 
-            Task<IList<INavigationNode>> navTask = _navRepo.GetNavigationSetAsync();
+            Task<NavigationSet> navTask = _navRepo.GetNavigationSetAsync();
             Task<ServiceClientResponse<DC.Category>> catTask = _catClient.GetCategory(categoryId);
             Task<List<ITreeNavigationNode>> listTask = GetFlatList(false);
 

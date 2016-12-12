@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.Tags
             var req = new System.Net.Http.HttpRequestMessage(HttpMethod.Get, "http://localhost/foo");
             req.SetRouteData(new HttpRouteData(new HttpRoute()));
             var sc = Substitute.For<ISiteContext>();
-            sc.ThemeSettings = new SiteBuilder.Mvc.Themes.ThemeRuntimeSettingsCollection(new Dictionary<string, SiteBuilder.Mvc.Themes.ThemeRuntimeSetting>(), new byte[0] { }, DateTime.MaxValue);
+            sc.ThemeSettings = new SiteBuilder.Mvc.Themes.ThemeRuntimeSettingsCollection(new Dictionary<string, object>(), new byte[0] { }, DateTime.MaxValue);
             sc.CdnPrefix.Returns("//cdn/1-m2");
             sc.GeneralSettings = new UX.Models.Settings.GeneralSettings()
             {

@@ -142,12 +142,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public interface ICustomRouteConstraintFactory
     {
-        ICustomRouteConstraint BuildConstraint(Validator validator);
+        ICustomRouteConstraint BuildConstraint(string key, Validator validator);
     }
 
     public interface IRouteDataMappingFactory
     {
-        IRouteDataMapping BuildMapping(Mapping mapping);
+        IRouteDataMapping BuildMapping(string key,Mapping mapping);
     }
 
     public interface ICanInit

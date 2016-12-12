@@ -18,6 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 Thumbnail = tmd.Thumbnail,
                 ThemePath = tmd.ThemePath ,
                 TimeStamp = tmd.TimeStamp,
+                Hash = tmd.Hash,
                 Parent = parent,
                 DefaultLanguage = DefaultThemeLanguage,
                 MergedLabels = tmd.Labels ?? new Dictionary<string, ThemeLabelCollection>(StringComparer.OrdinalIgnoreCase){{DefaultThemeLanguage, new ThemeLabelCollection()}}, // assign default labels collection
@@ -46,7 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
 
                 if (parent == null)
                 {
-                    theme.MergedSettings = tmd.Configuration.Settings;
+                    theme.Settings = tmd.Configuration.Settings;
                     theme.PageTypes = tmd.Configuration.PageTypes;
                     theme.EmailTemplates = tmd.Configuration.EmailTemplates;
                     theme.BackOfficeTemplates = tmd.Configuration.BackOfficeTemplates;
@@ -56,7 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
                 }
                 else
                 {
-                    theme.MergedSettings = Merge(tmd.Configuration.Settings, parent.MergedSettings, setting => setting.Id).ToList();
+                    theme.Settings = Merge(tmd.Configuration.Settings, parent.Settings, StringComparer.OrdinalIgnoreCase);
                     theme.PageTypes = Merge(tmd.Configuration.PageTypes, parent.PageTypes, pt => pt.Id).ToList();
                     theme.EmailTemplates = Merge(tmd.Configuration.EmailTemplates, parent.EmailTemplates, pt => pt.Id).ToList();
                     theme.BackOfficeTemplates = Merge(tmd.Configuration.BackOfficeTemplates, parent.BackOfficeTemplates, pt => pt.Id).ToList();
@@ -106,7 +107,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes.Factories
             var output = MergeValuesPreferChild(p, t, StringComparer.OrdinalIgnoreCase);
             return output.Select(x => x.Value);
         }
-        
+        private static Dictionary<TKey, Tvalue> Merge<TKey, Tvalue>(IDictionary<TKey, Tvalue> themeValues, IDictionary<TKey, Tvalue> parentValues, IEqualityComparer<TKey> comparer)
+        {
+            var dic = new Dictionary<TKey, Tvalue>(Math.Max(themeValues.Count, parentValues.Count), comparer);
+            dic.AddRange(parentValues);
+            foreach( var kvp in themeValues)
+            {
+                dic[kvp.Key] = kvp.Value;
+            }
+            return dic;
+
+
+        }
+
         private static Dictionary<string, ThemeLabelCollection> MergeLabels(Dictionary<string, ThemeLabelCollection> themeValues, Dictionary<string, ThemeLabelCollection> parentValues)
         {
             if (themeValues == null || parentValues == null)

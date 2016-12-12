@@ -64,11 +64,9 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 catch
                 {
                 }
-
             }
             value = default(T);
             return false;
-            
         }
         
 
@@ -106,17 +104,6 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         }
         public static T Clone<T>(this object original)
         {
-
-            //IFormatter formatter = new BinaryFormatter();
-            //Stream stream = new MemoryStream();
-            //using (stream)
-            //{
-            //    formatter.Serialize(stream, original);
-            //    stream.Seek(0, SeekOrigin.Begin);
-            //    return (T)formatter.Deserialize(stream);
-            //}
-
-
             T cloned;
             using (MemoryStream stream = new MemoryStream())
             {
@@ -164,16 +151,14 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 {
                     foreach ( var subItem in subItems )
                     {
-                        if ( !list.Contains ( subItem ))
+                        if ( !list.Contains(subItem))
                         {
-                            stack.Push ( subItem );
+                            stack.Push(subItem);
                         }
                     }
                 }
             }
-
             return list;
-
         }
         public static Exception UnwrapAgg(this Exception e)
         {

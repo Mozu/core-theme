@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             int? categoryId;
             GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
 
-            var isVolumePricingBandsEnabled = ((bool?)(JToken)themeSettings["listVolumePricing"]);
+            var isVolumePricingBandsEnabled = ((bool?)themeSettings["listVolumePricing"]);
             var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
             
             var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
