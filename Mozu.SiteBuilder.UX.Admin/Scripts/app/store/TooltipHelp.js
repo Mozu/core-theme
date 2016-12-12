@@ -111,6 +111,9 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }, {
+            key: 'product.categories.primaryCategory',
+            value: 'Specifies which static category to use in the navigation breadcrumb, regardless of how shoppers navigate to the product. If not set, or if the product belongs only to dynamic categories, the default is to use the category with the smallest ID.'
+        }, {
             key: 'productRanking.form.context.header',
             value: '<ul>The context specifies when the product ranking rule triggers.<li>Specify a <b>search keyword</b>, the rule triggers when a shopper searches for the keyword.</li><li>Specify a <b>category</b>, the rule triggers when a shopper navigates to that category page.</li><li>Specify both a <b>search keyword</b> and <b>category</b>, the rule triggers when a shopper searches for the keyword within the category.</li></ul>'
         }, {

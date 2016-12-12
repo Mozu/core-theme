@@ -61,6 +61,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             fieldLabel: 'Primary Category',
             name: 'primaryCategoryId',
             allowBlank: true,
+            itemId: 'primaryCategory',
             valueField: 'id',
             displayField: 'nameAndCodeAndStatus',
             store: this.selectedCategoryStore,
@@ -71,7 +72,14 @@ Ext.define('Taco.view.product.subform.Categories', {
                     this.record.set('primaryCategoryId', categoryId);
                 },
                 scope: this
-            }
+            },
+            tooltop: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'primaryCategory',
+                hoverTarget: 'label',
+                messageKey: 'product.categories.primaryCategory',
+                offsetLeft: 43,
+                offsetTop: 70
+            })
         });
 
         this.listStore = listStore;

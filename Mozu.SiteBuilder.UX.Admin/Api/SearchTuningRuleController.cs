@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using AutoMapper;
-
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Api.Client.Exceptions;
-//using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
-
 using Mozu.ProductAdmin.Contracts.Clients;
 using DC = Mozu.ProductAdmin.Contracts;
-using Mozu.ProductAdmin.Contracts.Search;
-
 using SearchTuningRule = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SearchTuningRule;
 using SimpleSearchProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SimpleSearchProduct;
+using SynonymDefinition = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SynonymDefinition;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -449,7 +444,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var searchRule in synonymDefinitions)
             {
-                var dc = Mapper.Map<SynonymDefinition>(searchRule);
+                var dc = Mapper.Map<DC.Search.SynonymDefinition>(searchRule);
 
                 try
                 {
@@ -476,7 +471,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var synonymDef in synonymDefinitions)
             {
-                var dc = Mapper.Map<SynonymDefinition>(synonymDef);
+                var dc = Mapper.Map<DC.Search.SynonymDefinition>(synonymDef);
                
                 var updatedDef = (await searchClient.UpdateSynonymDefinition(dc, dc.SynonymId)).ReadAsSync();
                 result.Add(Mapper.Map<SynonymDefinition>(updatedDef));

@@ -216,8 +216,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             var routeData = this._request.GetRouteData();
             int catId = searchContext.CategoryId != null ? (int)searchContext.CategoryId : -1;
-
+        
             object tmp;
+
+            if (routeData.Values.TryGetValue("categoryId", out tmp))
+            {
+                int.TryParse((tmp ?? new object()).ToString(), out catId);
+            }
+
             bool isSearchRoute = routeData.Values.TryGetValue("controller", out tmp) && string.Equals(tmp as string, "search", StringComparison.OrdinalIgnoreCase);
             var routeType = isSearchRoute ? FancyRoute.Search : FancyRoute.Category;
 
@@ -238,10 +244,6 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (baseUrl == null)
             {
                 string categorySlug = null;
-                if ( routeData.Values.TryGetValue("categoryId", out tmp) ) 
-                {
-                    int.TryParse((tmp ?? new object()).ToString(), out catId);
-                }
                 if (routeData.Values.TryGetValue("categorySlug", out tmp))
                 {
                     categorySlug = tmp as string;
@@ -265,12 +267,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 
             }
-            if( isSearchRoute && catId > 0 )
+            if( isSearchRoute)
             {
                 return ToUrl(new SearchContextOverrides()
                 {
                     UrlBase = baseUrl,
-                    CategoryId = catId
+                    ClearFacets = true,
+                    //CategoryId = catId > 0 ? catId : (int?)null
                 });
             }
             return baseUrl;
