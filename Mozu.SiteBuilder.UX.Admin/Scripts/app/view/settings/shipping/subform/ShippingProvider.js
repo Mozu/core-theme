@@ -92,13 +92,13 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                     align: 'stretch'
                 },
                 hidden: !isEnabled,
-                width: 800,
+                width: 840,
                 itemId: 'returnForm',
                 items: [
                     {
                         xtype: 'panel',
                         title: 'Permit Information',
-                        width: 400,
+                        width: 420,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
@@ -144,7 +144,7 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                     {
                         xtype: 'panel',
                         title: 'Postage Due Unit (PDU) Information',
-                        width: 400,
+                        width: 420,
                         layout: {
                             type: 'vbox',
                             align: 'stretch'
