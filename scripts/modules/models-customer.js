@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -289,7 +289,7 @@
             editingContact: CustomerContact,
             wishlist: Wishlist,
             orderHistory: OrderModels.OrderCollection,
-            returnHistory: OrderModels.RMACollection
+            returnHistory: ReturnModels.RMACollection
         }, Customer.prototype.relations),
         validation: {
             password: {
