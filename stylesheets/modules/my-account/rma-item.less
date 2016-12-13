@@ -6,8 +6,18 @@
         margin-top: 0;
     }
     .mz-itemlisting-rmaitem-details {
-        margin-top: @gutter;
-        float: left;
-        clear: both;
+        margin-top: @gutter / 2;
+        .mz-propertylist {
+            dd{
+                display: block;
+                float: none;
+            }
+            dd.return-type {
+                margin-top: @gutter/2;
+            }
+        }
+    }
+    .mz-l-formfieldgroup {
+        width: 100%;
     }
 }

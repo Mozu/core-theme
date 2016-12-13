@@ -4,7 +4,7 @@
   {% block item-listing-image %}
   {% if model.product.imageUrl %}
   <div class="mz-itemlisting-thumb">
-    <img class="mz-itemlisting-thumb-img" src="{% make_url "image" model.product with max=80 as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
+    <img class="mz-itemlisting-thumb-img" src="{% make_url "image" model.product with max=70 as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
   </div>
   {% endif %}
   {% endblock item-listing-image %}
@@ -17,9 +17,6 @@
     {% block item-details %}
     <div class="mz-itemlisting-description">
       {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
-    </div>
-    <div class="mz-itemlisting-price">
-     {{labels.orderPackagePrice}} : {{ model.product.price.price|currency }}
     </div>
     {% endblock item-details %}
   </div>

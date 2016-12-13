@@ -1,16 +1,17 @@
 ﻿.mz-itemlisting {
-    min-height: @itemListingThumbSize + @gutter;
+    padding-top: @gutter;
     .clearfix();
     .mz-itemlisting-thumb {
         float: left;
         margin-right: @gutter/2;
         width: @itemListingThumbSize;
-        height: @itemListingThumbSize;
+        .mz-itemlisting-thumb-img{
+            width: 65px;
+        }
     }
     .mz-itemlisting-details {
         float: left;
         margin-right: @gutter/2;
-        max-width: 270px;
     }
     .mz-itemlisting-actions {
         float: right;
@@ -39,5 +40,10 @@
             display: inline-block;
             margin: 0 5px;
         }
+    }
+    .mz-itemlisting-select {
+        float: left;
+        margin: 0 15px;
+        margin-top: 25px;
     }
 }

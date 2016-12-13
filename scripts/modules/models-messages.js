@@ -4,6 +4,9 @@
     unexpectedErrorText = Hypr.getLabel('unexpectedError');
 
     var Message = Backbone.Model.extend({
+        defaults:{
+            autoFade : false
+        },
         toJSON: function() {
             var j = Backbone.Model.prototype.toJSON.apply(this);
             if ((!isDebugMode && j.errorCode === "UNEXPECTED_ERROR") || !j.message) j.message = unexpectedErrorText;

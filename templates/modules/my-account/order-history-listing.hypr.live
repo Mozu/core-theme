@@ -1,0 +1,52 @@
+{% extends "modules/common/order-listing" %}
+{% block order-items %}
+<div class="order-history-listing">
+    {% if model.hasFulfilledPackages or model.hasFulfilledPickups %}
+        <div class="mz-orderlisting-prompt is-warning" data-mz-message-for="noReturnableItems"></div>
+            <div class="mz-orderlisting-header">
+                {% if themeSettings.allowCustomerInitiatedReturns %}
+                    <div class="mz-orderlisting-return">
+                        <span class="mz-itemlisting-action">
+                            <button type="submit" class="mz-button" data-mz-order-id="{{ model.id }}" data-mz-action="startOrderReturn" >{{ labels.returnOrReplace }}</button>
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+    {% endif %}
+
+    {% if model.hasFulfilledPackages %}
+        <h2 class="mz-orderlisting-heading">{{labels.shipped}}</h2> 
+        <div class="data-mz-order-packages">
+            {% include "modules/my-account/order-history-package-group" with model=model packages=model.packages %}
+        </div>
+    {% endif %}
+
+    {% if model.hasFulfilledPickups %}
+        <h2 class="mz-orderlisting-heading">{{labels.orderItemsPickup}}</h2> 
+        <div class="mz-orderlisting-pickup">
+            {% include "modules/my-account/order-history-package-group" with model=model packages=model.pickups %}
+        </div>
+    {% endif %}
+
+    {% if model.hasFulfilledDigital%}
+        <h2 class="mz-orderlisting-heading">{{labels.orderDigitalItems}}</h2> 
+        <div class="mz-orderlisting-pickup">
+            {% include "modules/my-account/order-history-package-group" with model=model packages=model.digitalPackages %}
+        </div>
+    {% endif %}
+
+    {% if model.getNonShippedItems.length > 0 %}
+        <h2 class="mz-orderlisting-heading">{{labels.orderItemsNotShipped}}</h2> 
+        <div class="mz-orderlisting-nonShipped">
+        {% for item in model.getNonShippedItems %}
+            {% if item.Type == "BundleItem" %}
+                {% include "modules/my-account/my-account-product-bundle" with model=item %}
+            {% else %}
+                {% include "modules/my-account/order-history-listing-item" with model=item %}
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock order-items %}

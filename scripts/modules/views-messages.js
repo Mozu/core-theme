@@ -11,6 +11,7 @@
                 this.model.on('reset', this.render, this);
             },
             render: function() {
+                var self = this;
                 Backbone.MozuView.prototype.render.apply(this, arguments);
                 if (this.model.length > 0) {
                     this.$el.ScrollTo({
@@ -20,6 +21,15 @@
                         axis: 'y'
                     });
                 }
+
+                if(this.model.findWhere({'autoFade': true})){
+                    self.$el.show(function() {
+                        setTimeout(function(){
+                            self.$el.fadeOut(3000);
+                        }, 4000);
+                    });
+                }
+                
             }
         });
         return new MozuMessagesView(opts);

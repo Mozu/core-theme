@@ -1,22 +1,66 @@
-﻿{% extends "modules/common/item-listing" %}
-{% block module-classes %} mz-itemlisting-rmaitem {% endblock module-classes %}
-{% block item-listing-prefix %}
-<h3>{{ labels.returning }}</h3>
-{% endblock item-listing-prefix %}
-{% block item-listing-extras %}
+﻿
+<div class="mz-itemlisting mz-itemlisting-rmaitem mz-l-formfieldgroup-row"">
+
+<div class="mz-l-formfieldgroup-cell">
+{% block item-listing-image %}
+      {% if model.product.imageUrl %}
+      <div class="mz-itemlisting-thumb">
+        <img class="mz-itemlisting-thumb-img" src="{% make_url "image" model.product with max=70 as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} />
+      </div>
+      {% endif %}
+  {% endblock item-listing-image %}
+
+ {% block item-listing-details %}
+  <div class="mz-itemlisting-details">
+    {% block item-name %}
+    <a class="mz-itemlisting-title" href="{{ model.product.url }}">
+      {{ model.product.name }}</a>
+    {% endblock item-name %}
+
+
+    {% block item-details %}
+
+
+      <div class="mz-itemlisting-description">
+        {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+      </div>
+      <div class="mz-itemlisting-price">
+       {{labels.orderPackagePrice}} : {%if model.product.price.salePrice %} {{ model.product.price.salePrice|currency }} {% else %} {{ model.product.price.price|currency }} {%endif%}
+      </div>
+
+      {% if model.product.bundledProducts.length > 0 %}
+          <ul class="mz-itemlisting-bunldedProducts">
+            {% for bundle in model.product.bundledProducts %}
+              {% if bundle.optionAttributeFQN == "" %}
+              <li class="mz-itemlisting-bunldedProducts-bundle">
+                {% include "modules/my-account/my-account-product-bundle" with model=bundle %}
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+      {% endif %}
+    {% endblock item-details %}
+  </div>
+{% endblock item-listing-details %}
+</div>
+
+<div class="mz-l-formfieldgroup-cell">
     <div class="mz-itemlisting-rmaitem-details">
-    <h3>{{ labels.returnDetails }}</h3>
-    <dl class="mz-propertylist">
-        {% for r in model.reasons %}
-        <dt>{{ labels.reasonForReturn }}</dt>
-        <dd>{{ r.reason }}</dd>
-        <dt>{{ labels.quantityToReturn }}</dt>
-        <dd>{{ r.quantity }}</dd>
-        {% endfor %}
-        <dt>{{ labels.optionalComments }}</dt>
-        {% for c in model.notes %}
-        <dd>{{ c.text }}</dd>
-        {% endfor %}
-    </dl>
+        <h3>{{ labels.returnDetails }}</h3>
+        <dl class="mz-propertylist">
+            {% for r in model.reasons %}
+            <dd>{{ r.reason }}</dd>
+            {% endfor %}
+
+            {% for c in model.notes %}
+            <dd>{{ c.text }}</dd>
+            {% endfor %}
+
+            {% if model.returnType %}
+            <dd class="return-type"><strong>{{ labels.returnTypeRequested|string_format(model.returnType) }}</strong></dd>
+            {% endif %}
+        </dl>
     </div>
-{% endblock item-listing-extras %}
+</div>
+
+</div>

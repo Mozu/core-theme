@@ -1,0 +1,18 @@
+{% extends "modules/common/item-return-form" %}
+{% block item-return-quantity %}
+
+<div class="mz-l-formfieldgroup-row">
+  <div class="mz-l-formfieldgroup-cell">
+  <label class="mz-returnform-label">{{ labels.quantityToReturn }}<span class="is-required"> *</span>:</label>
+  <div class="mz-returnform-quantity mz-returnform-field">
+    <input type="number" data-mz-value="rmaQuantity" min="1" max="{{ model.quantityReturnable }}" class="mz-returnform-quantityfield" />
+    <span class="mz-returnform-quantitylabel">{{ labels.of }} {{ model.quantityReturnable }}</span>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="rmaQuantity"></span>
+  </div>
+  </div>
+</div>
+{% endblock item-return-quantity %}
+
+{% block item-return-actions %}
+
+{% endblock item-return-actions %}
