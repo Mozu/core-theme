@@ -17,7 +17,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
 
     initComponent: function () {
 
-        var searchButton,
+        var xIconHTML = '<span style="font-family: mozicons;position:relative;left:-4px;top:2px;font-size:14px;">&#xe903;</span>',
+            searchButton,
             searchBox,
             searchButtonContent;
 
@@ -25,8 +26,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             hidden: true,
             onFocus: function () {
                 searchBox = this;
+                searchButton.el.dom.innerHTML = xIconHTML;
                 if (typeof searchButtonContent == 'undefined') {
-                    searchButtonContent = searchButton.el.dom.innerHTML;
                 }
             },
             onChange: Ext.bind(function () {
@@ -34,7 +35,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     searchButtonContent = searchButton.el.dom.innerHTML;
                 }
 
-                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons;position:relative;left:-4px;top:2px;font-size:14px;">&#xe903;</span>';
+                searchButton.el.dom.innerHTML = xIconHTML;
                 searchButton.on('click', function () {
                     searchBox.inputEl.dom.value = '';
                     this.el.dom.innerHTML = searchButtonContent;
@@ -75,6 +76,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             handler: Ext.bind(function (btn) {
                 this.searchBox.show();
                 searchButton = btn;
+                searchButtonContent = searchButton.el.dom.innerHTML;
                 this.searchBox.focus();
                 searchButton.addClass('is-active');
             }, this)
