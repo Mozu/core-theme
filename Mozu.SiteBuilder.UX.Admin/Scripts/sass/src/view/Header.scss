@@ -17,7 +17,7 @@
     position: absolute;
 
     .#{$vprefix}kibo-text {
-        color: white;
+        color: $kibo-white;
         font-size: 20px;
         margin-left: -42px;
         position: relative;
