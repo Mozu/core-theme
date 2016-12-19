@@ -65,7 +65,18 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         this.items = [{
             xtype: 'component',
             cls: 'tenant-name',
-            html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
+            html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>',
+        },
+        {
+            xtype: 'button',
+            cls: 'help-button',
+            ui: 'link',
+            scale: 'medium',
+            text: 'Help',
+            hidden: Taco.siteBuilderHelperToggle !== 'on',
+            handler: function () {
+                window.open(Taco.neWadminHelpLink);
+            }
         },
         {
             xtype: 'button',
@@ -82,17 +93,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             }, this)
         },
         this.searchBox,
-        {
-            xtype: 'button',
-            cls: 'help-button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Help',
-            hidden: Taco.siteBuilderHelperToggle !== 'on',
-            handler: function () {
-                window.open(Taco.neWadminHelpLink);
-            }
-        },
         {
             xtype: 'userbutton',
             cls: 'user-initials',
@@ -128,7 +128,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     }
                 ]
             }
-        },
+        }
         ];
 
         this.navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
