@@ -4,7 +4,9 @@
 
     <div class='mz-future-date-header {% if pageContext.cookies.MZ_SHOW_FUTURE_BAR.value == false %} mz-header-hidden {% endif %}'>
         <div class='mz-content'>
-            <div class='mz-header-icon'></div>
+            <div class='mz-header-icon'>
+                <img src="/resources/images/kibo.jpg">
+            </div>
 
             <div class='mz-preview-actions'>
                 
