@@ -335,7 +335,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 builder.Host = host;
                 builder.Scheme = route.UrlScheme.HasValue ? route.UrlScheme.ToString() : (forceSsl.Value ? "https" : "http");
-
+                if (string.Equals( builder.Scheme , CustomRoute.Scheme.Https.ToString(), StringComparison.OrdinalIgnoreCase))
+                {
+                    builder.Port = 443;
+                }
                 return builder.Uri.GetComponents(UriComponents.HttpRequestUrl, UriFormat.Unescaped);
             }
             return builder.Uri.GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
