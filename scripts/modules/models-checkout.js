@@ -1018,6 +1018,10 @@
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
                         billingContact.set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
+                    } else if (billingContact) {
+                        // if they initially checked the checkbox, then later they decided to uncheck it... remove the id so that updates don't update
+                        // the original address, instead create a new contact address.
+                        billingContact.unset('id', { silent: true });
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
