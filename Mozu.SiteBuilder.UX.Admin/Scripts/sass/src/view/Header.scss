@@ -25,16 +25,23 @@
     }
 
     .#{$vprefix}mozulogo {
-        background-image: url("images/kibo-icon.jpg");
-        background-size: 40%;
+        background-image: url("images/kibo-icon.png");
+        background-position: 50% 38%;
         background-repeat: no-repeat;
         display: block;
         overflow: hidden;
-        width: 68px;
-        height: 25px;
-        top: 2px !important;
-        left: -3px !important;
+        width: 33px !important;
+        height: 33px;
+        top: 0px !important;
+        left: -6px !important;
         position: relative;
+    }
+
+    @media (min-resolution: 2dppx) {
+        .#{$vprefix}mozulogo {
+            background-image: url('./../resources/images/kibo-icon-retina.png');
+            background-size: 21px 21px;
+        }
     }
 
     .#{$prefix}btn-link-medium {

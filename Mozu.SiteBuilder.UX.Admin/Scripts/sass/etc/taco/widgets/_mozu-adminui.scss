@@ -16,6 +16,12 @@
     }
 
     .mozu-c-app-header-container__logo--icon {
-        background-image: url('./../resources/images/kibo-icon.jpg');
+        background-image: url('./../resources/images/kibo-icon.png');
+    }
+
+    @media (min-resolution: 2dppx) {
+        .mozu-c-app-header-container__logo--icon {
+            background-image: url('./../resources/images/kibo-icon-retina.png');
+        }
     }
 }
