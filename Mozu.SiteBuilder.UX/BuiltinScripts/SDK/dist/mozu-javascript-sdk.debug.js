@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-10-11
+ * Mozu JavaScript SDK - v0.3.0 - 2016-12-23
  *
  * Copyright (c) 2016 Volusion, Inc.
  *
@@ -4098,7 +4098,7 @@ module.exports=
       },
       "get-return-label": {
           "verb": "GET",
-          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64}",
+          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
           "returnType": "string"
         }
     },
@@ -4786,8 +4786,7 @@ module.exports = (function () {
             return credit.associateToShopper();
         },
         getReturnLabel: function (data) {
-            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64': true }).then(function (label) {
-                //var imgBase64 = b64EncodeUnicode(data);
+            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64Png': true }).then(function (label) {
                 return label;
             }, function (reason) {
                 errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);

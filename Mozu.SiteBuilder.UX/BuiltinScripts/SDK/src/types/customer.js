@@ -49,8 +49,7 @@ module.exports = (function () {
             return credit.associateToShopper();
         },
         getReturnLabel: function (data) {
-            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64': true }).then(function (label) {
-                //var imgBase64 = b64EncodeUnicode(data);
+            return this.api.action('rma', 'getReturnLabel', { 'returnId': data.returnId, 'packageId': data.packageId, 'returnAsBase64Png': true }).then(function (label) {
                 return label;
             }, function (reason) {
                 errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);

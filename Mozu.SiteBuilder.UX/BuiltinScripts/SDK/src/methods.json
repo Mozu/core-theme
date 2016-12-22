@@ -600,7 +600,7 @@
       },
       "get-return-label": {
           "verb": "GET",
-          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64}",
+          "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
           "returnType": "string"
         }
     },
