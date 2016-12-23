@@ -5,7 +5,7 @@
 
 .#{$vprefix}viewport-header {
     background-color: $kibo-black;
-    color: $kibo-white;
+    color: $kibo-light-gray;
 }
 
 .#{$vprefix}masthead {
@@ -17,7 +17,7 @@
     position: absolute;
 
     .#{$vprefix}kibo-text {
-        color: $kibo-white;
+        color: $kibo-light-gray;
         font-size: 20px;
         margin-left: -42px;
         position: relative;
@@ -87,7 +87,7 @@
 .help-button.x-btn {
     background-color: $kibo-black !important;
     .#{$prefix}btn-inner-center {
-        color: $kibo-white;
+        color: $kibo-light-gray;
     }
 }
 
