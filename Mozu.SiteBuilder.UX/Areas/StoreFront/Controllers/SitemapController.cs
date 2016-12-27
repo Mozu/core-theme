@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             // var primaryNavTask = _gandalf.GetTreeNavigation();
             //var domainTask = GetSitePrimaryDomain();
-            var nodes = await _gandalf.GetFlatList();
+            var nodes =  _gandalf.GetFlatList();
 
 
             var domain = GetPrefixedSitePrimaryDomain();
@@ -138,9 +138,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("urlset", NS);
            
-            //initialize the category Tree for later.
-            await _categoryTreeProvider.GetAllCategories();
-
+            
             while (true)
             {
                 var prods = (await _productRuntimeWebApiClient.CloneWithoutUserClaims()
@@ -180,8 +178,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              int offset = 0;
              var startIndex = page*PageSize;
 
-            //initialize the category Tree for later.
-            await _categoryTreeProvider.GetAllCategories();
+        
 
             while (true)
              {

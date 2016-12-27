@@ -428,7 +428,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (!string.IsNullOrWhiteSpace(faceCategoryCode) || !string.IsNullOrWhiteSpace(categoryCode))
             {
-                var catTree = context.Resolve<ICategoryTreeProvider>().GetAllCategories().Result;
+                var catTree = context.Resolve<ICategoryTreeProvider>().GetAllCategories();
                 if (!string.IsNullOrWhiteSpace(faceCategoryCode))
                 {
                     var tempCat = catTree.AllCategories.Where(x => string.Equals(faceCategoryCode, x.CategoryCode, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();

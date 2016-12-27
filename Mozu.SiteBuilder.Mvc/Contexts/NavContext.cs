@@ -26,14 +26,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _apiContext = apiContext;
         }
 
-       // private List<NavigationRuntimeNode> __navigationTree;
-
+        // private List<NavigationRuntimeNode> __navigationTree;
+        List<IRuntimeNavigationNode> _tree;
         public List<IRuntimeNavigationNode> Tree
         {
             get
             {
-                var tree = ASyncGetTree().Result;
-                return tree;
+                return _tree ?? (_tree = _navigationGandalf.GetTreeNavigation() ?? new List<IRuntimeNavigationNode>());
             }
         }
 
@@ -61,17 +60,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
 
-        private Task<List<IRuntimeNavigationNode>> _initTask;
-        public Task<List<IRuntimeNavigationNode>> ASyncGetTree()
-        {
-            if (_initTask == null)
-            {
-                _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => {
-                    return _.Result ?? new List<IRuntimeNavigationNode>();
-                });
-            }
-            return _initTask; 
-        }
+        //private Task<List<IRuntimeNavigationNode>> _initTask;
+        //public Task<List<IRuntimeNavigationNode>> ASyncGetTree()
+        //{
+        //    if (_initTask == null)
+        //    {
+        //        _initTask = _navigationGandalf.GetTreeNavigation().ContinueWith(_ => {
+        //            return _.Result ?? new List<IRuntimeNavigationNode>();
+        //        });
+        //    }
+        //    return _initTask; 
+        //}
 
 
         private List<IRuntimeNavigationNode> _rootCategoryList;

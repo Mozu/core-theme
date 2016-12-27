@@ -257,6 +257,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         domainList = Enumerable.Empty<string>();
                         break;
                     }
+                case "standalone":
+                    {
+                        viewMode = DataViewModeType.Live;
+                        domainList = Enumerable.Empty<string>();
+                        break;
+                    }
                 case "admin":
                     {
                         

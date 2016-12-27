@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
 
         public async Task<List<CustomerGroup>> GetAll(string filter, int? startIndex, int? pageSize)
         {
-            var groupCollection = await _customerSegmentWebApiClient.GetSegments( startIndex, pageSize, null, filter).Result.ReadAsAsync();
+            var groupCollection = (await _customerSegmentWebApiClient.GetSegments(startIndex, pageSize, null, filter).ConfigureAwait(false)).ReadAsSync();
 
             return groupCollection.Items.Select(g => new CustomerGroup { Id = g.Id, Name = g.Name }).ToList();
         }
@@ -33,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<CustomerGroup> Create(CustomerGroup customerGroup)
         {
             var group = Mapper.Map<Mozu.Customer.Contracts.CustomerSegment>(customerGroup);
-            var newGroup = await _customerSegmentWebApiClient.AddSegment(@group).Result.ReadAsAsync();
+            var newGroup = (await _customerSegmentWebApiClient.AddSegment(@group).ConfigureAwait(false)).ReadAsSync();
 
             return Mapper.Map<CustomerGroup>(newGroup);
         }
@@ -41,15 +41,15 @@ namespace Mozu.SiteBuilder.Mvc.Customers
         public async Task<StreamContent> Delete(CustomerGroup customerGroup)
         {
             var result = await _customerSegmentWebApiClient.DeleteSegment(customerGroup.Id).ConfigureAwait(false);
-            return result.ReadAsAsync().Result;
+            return result.ReadAsSync();
         }
 
         public async Task<CustomerGroup> AssignGroupToCustomer(int customerId, int customerGroupId)
         {
-            var group = await _customerSegmentWebApiClient.GetSegment(customerGroupId).Result.ReadAsAsync();
+            var group = (await _customerSegmentWebApiClient.GetSegment(customerGroupId).ConfigureAwait(false)).ReadAsSync();
 
             //todo: verify this is the right method? - Greg Murray on 2014-03-27 
-            await _customerSegmentWebApiClient.AddSegmentAccounts(new List<int>(customerId), customerGroupId).Result.ReadAsAsync();
+            await _customerSegmentWebApiClient.AddSegmentAccounts(new List<int>(customerId), customerGroupId).ConfigureAwait(false);
             //await _customerAccountWebApiClient.AddAccountGroup(customerId, customerGroupId).Result.ReadAsAsync();
 
             return Mapper.Map<CustomerGroup>(group);

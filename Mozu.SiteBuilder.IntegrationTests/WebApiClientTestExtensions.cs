@@ -44,6 +44,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
                 responseMessageAction(testResponse.ResponseMessage);
             }
             func(self).ReturnsForAnyArgs(testResponse.Task);
+            
             return entity;
         }
 

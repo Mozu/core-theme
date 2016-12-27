@@ -175,9 +175,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
         [HttpGet]
-        public async Task<JArray> AjaxNavigation()
+        public JArray AjaxNavigation()
         {
-            var nav = await _navGandalf.Value.GetTreeNavigation();
+            var nav =  _navGandalf.Value.GetTreeNavigation();
             return JArray.FromObject(nav);
         }
 

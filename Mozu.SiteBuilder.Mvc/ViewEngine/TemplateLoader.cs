@@ -27,7 +27,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
          
         public bool IsUpdated(string path, DateTime timestamp)
         {
-            bool isUpdated= _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime() != timestamp.ToUniversalTime();
+            var fileDate  = _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime();
+            bool isUpdated= fileDate !=  DateTime.MinValue  &&  _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime() != timestamp.ToUniversalTime();
             return isUpdated;
 
         }

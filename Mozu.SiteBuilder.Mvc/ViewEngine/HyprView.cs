@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             AddViewContextData(requestContext, viewContext);
             AddPageContextData(requestContext, pageContext);
             AddSiteContextData(requestContext, siteContext);
-            AddCategoryContextData(requestContext, catHelper.GetAllCategories().Result);
+            AddCategoryContextData(requestContext, catHelper.GetAllCategories());
             AddNavigationContextData(requestContext, navigationContext);
             AddClientApiContextData(requestContext, clientApiContext);
             
@@ -115,10 +115,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             var templateManager = viewContext.RequestMessage.Resolve<ITemplateManager>();
 
             var catTreeProvider = viewContext.RequestMessage.Resolve<ICategoryTreeProvider>();
-            if (!catTreeProvider.HasCompleted)
-            {
-                await catTreeProvider.GetAllCategories();
-            }
+            
             try
             {
                 var template = templateManager.GetTemplate(_mappedPath);

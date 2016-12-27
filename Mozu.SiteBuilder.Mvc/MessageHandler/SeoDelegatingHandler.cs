@@ -14,9 +14,26 @@ using System.Collections.Specialized;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
+    public class SiteContextInitializationHandler : DelegatingHandler
+    {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+
+            var apiContext = request.Resolve<ISiteBuilderApiContext>();
+            if (apiContext.SiteId.HasValue == false)
+            {
+                return base.SendAsync(request, cancellationToken);
+            }
+
+            var siteContext = request.Resolve<ISiteContext>();
+            return siteContext.Init().ContinueWith(_ => base.SendAsync(request, cancellationToken))
+                .Unwrap();
+        }
+    }
     public class SeoDelegatingHandler : DelegatingHandler
     {
         private IRedirectHandler _redirecter = RedirectHandler.Instance;
@@ -32,37 +49,38 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             set { _redirecter = value; }
         }
 
-      
 
-        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-          
+
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId.HasValue == false)
             {
-                return (await base.SendAsync(request, cancellationToken).ConfigureAwait(false));
+                return base.SendAsync(request, cancellationToken);
             }
+
             var siteContext = request.Resolve<ISiteContext>();
-            await siteContext.Init().ConfigureAwait(false);
+
             var pageContext = request.Resolve<PageContext>();
             // try redirects
-            var redirect = await Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri).ConfigureAwait(false);
+            var redirect = Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri);
             if (redirect != null)
             {
                 // we short-circuit the rewrite if this request has already been rewritten this go around.
                 if (redirect.IsRewrite.GetValueOrDefault(false) && request.Properties.ContainsKey(IsSeoRewrite))
                 {
-                    
+
                 }
                 else if (redirect.IsRewrite.GetValueOrDefault(false))
                 {
                     var rewritten = RewriteCurrentRequest(request, redirect.Destination);
                     request.Resolve<IRouteConfig>().RouteIncomingSystemRouteRequest(rewritten);
-                    return await SendAsync(rewritten, cancellationToken).ConfigureAwait(false);
+                    return SendAsync(rewritten, cancellationToken);
                 }
                 else if (!apiContext.IsEditMode)
                 {
-                    return RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request);
+                    return Task.FromResult(RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request));
                 }
             }
 
@@ -70,22 +88,22 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             // try any custom routes
             if (request.GetRouteData().Route is NonSystemRoute)
             {
-                var rerouted = await PerformCustomRouting(request).ConfigureAwait(false);
-                return await HandleReroutedRequest(rerouted, pageContext, siteContext, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
+                var rerouted = PerformCustomRouting(request);
+                return HandleReroutedRequest(rerouted, pageContext, siteContext, cancellationToken, () => base.SendAsync(request, cancellationToken), settings.CoreSettings.IsSSLValidationEnabled);
             }
 
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return base.SendAsync(request, cancellationToken);
         }
 
-        private async Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, IPageContext pageContext, ISiteContext siteContext,  CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
+        private Task<HttpResponseMessage> HandleReroutedRequest(HttpRequestMessage rerouted, IPageContext pageContext, ISiteContext siteContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, bool sslValidationEnabled)
         {
-          
-            if (rerouted.Method != HttpMethod.Get || 
-                pageContext.IsEditMode || 
+
+            if (rerouted.Method != HttpMethod.Get ||
+                pageContext.IsEditMode ||
                 !pageContext.HandledByProxy ||
                 !sslValidationEnabled)
             {
-                return await continuation().ConfigureAwait(false);
+                return continuation();
             }
 
             var customRoute = rerouted.GetRouteData().Route as CustomRoute;
@@ -96,32 +114,32 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 if (customRoute.UrlScheme.Value.ToStringQuickly().EqualsIgnoreCase(currentUrl.Scheme))
                 {
-                    return await continuation().ConfigureAwait(false);
+                    return continuation();
                 }
             }
             else if (!siteContext.GeneralSettings.EnforceSitewideSSL.GetValueOrDefault(false))
             {
-                return await continuation().ConfigureAwait(false);
+                return continuation();
             }
             else if (currentUrl.Scheme.EqualsIgnoreCase("https"))
             {
-                return await continuation().ConfigureAwait(false);
+                return continuation();
             }
 
             var scheme = customRoute?.UrlScheme.HasValue == true ? customRoute.UrlScheme.Value.ToStringQuickly() : "https";
 
             var builder = new UriBuilder(scheme, currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
-            builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' }); 
-            return RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted);
+            builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' });
+            return Task.FromResult(RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted));
         }
 
-        private static async Task<HttpRequestMessage> PerformCustomRouting(HttpRequestMessage request)
+        private static HttpRequestMessage PerformCustomRouting(HttpRequestMessage request)
         {
             var routeHandler = request.Resolve<ICustomRouteHandler>();
             if (routeHandler == null) return request;
 
-            var found = await routeHandler.RouteIncomingRequest().ConfigureAwait(false);
+            var found = routeHandler.RouteIncomingRequest();
             if (!found)
             {
                 request.Resolve<IRouteConfig>().RouteIncomingDefaultRouteRequest(request);
@@ -157,12 +175,12 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     }
 
 
-    public class MzUnderscoreRequestCleaner: DelegatingHandler
+    public class MzUnderscoreRequestCleaner : DelegatingHandler
     {
         static readonly Regex _reMxClean = new Regex("_mz_[^&]+&*", RegexOptions.IgnoreCase);
 
 
-        protected  override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             CleanMzQuery(request);
             return base.SendAsync(request, cancellationToken);
@@ -181,18 +199,18 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
         }
     }
-    
-    public class HomePageTransferHandler:DelegatingHandler
+
+    public class HomePageTransferHandler : DelegatingHandler
     {
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if ( request.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped) == "")
+            if (request.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped) == "")
             {
                 var apiContext = request.Resolve<ISiteBuilderApiContext>();
                 if (apiContext.SiteId.HasValue)
                 {
                     var navContext = request.Resolve<NavigationContext>();
-                    var tree = await navContext.ASyncGetTree().ConfigureAwait(false);
+                    var tree = navContext.Tree;
                     if (tree != null)
                     {
                         var homeLink = tree.FirstOrDefault(x => x.IsHomePage);
@@ -213,21 +231,21 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         }
 
 
-       
+
     }
 
     public interface IRedirectHandler
     {
-        Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri);
+        RedirectEntry GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri);
     }
 
     public class RedirectHandler : IRedirectHandler
     {
         public static readonly IRedirectHandler Instance = new RedirectHandler();
         private RedirectHandler() { }
-        public async Task<RedirectEntry> GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
+        public RedirectEntry GetRedirectForRequestUri(IRedirectRepository repo, Uri requestUri)
         {
-            var redirects = await repo.GetRuntimeRedirectEntries().ConfigureAwait(false);
+            var redirects = repo.GetRuntimeRedirectEntries();
             if (redirects == null || redirects.Simple == null)
             {
                 return null;
@@ -258,7 +276,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             {
                 return redir;
             }
-           
+
             List<RuntimeRedirectEntry> qsRedirectEntries;
             if (!redirects.QueryString.TryGetValue(stem, out qsRedirectEntries))
             {
@@ -266,7 +284,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 return MatchWildCards(redirects, stem, queryString);
             }
 
-            var matchingRedirect = 
+            var matchingRedirect =
                 qsRedirectEntries
                 .FirstOrDefault(redirectEntry => MatchesRequest(redirectEntry.Query, queryString));
 
@@ -276,9 +294,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
         private static RedirectEntry MatchWildCards(RuntimeRedirects redirects, string stem, NameValueCollection queryString)
         {
-            if ( redirects.WildCards == null)
+            if (redirects.WildCards == null)
             {
-                return null; 
+                return null;
             }
             foreach (var indexedMatches in redirects.WildCards)
             {
@@ -309,17 +327,17 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                             }
                             pos = nextPos + segment.Length;
                         }
-                        if (!isFound || 
+                        if (!isFound ||
                             (
                                 !candidate.Redirect.Source.EndsWith("*") &&
                                 !stem.EndsWith(candidate.AdditionalWildcardSegments.Last(), StringComparison.OrdinalIgnoreCase)
-                            ) )
+                            ))
                         {
                             continue;
                         }
-                       
+
                     }
-                    
+
 
                     if (candidate.Query != null)
                     {

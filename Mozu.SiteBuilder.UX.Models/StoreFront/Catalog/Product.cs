@@ -637,7 +637,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
                 return;
             }
          
-            var catTree = catTreeProvider.GetAllCategories().Result;
+            var catTree = catTreeProvider.GetAllCategories();
             this.Items.ForEach(prod =>
             {
                 for (int idx = 0; idx < prod.Categories.Count; idx++)
@@ -903,7 +903,8 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
     /// </summary>
     public interface ICategoryTreeProvider
     {
-        Task<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree> GetAllCategories();
+        Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree GetAllCategories();
+        Task<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.CategoryTree> GetAllCategoriesAsync();
         bool HasCompleted { get; }
     }
 }

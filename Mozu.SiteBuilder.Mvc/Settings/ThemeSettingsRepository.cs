@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                 _docWebApiClient = docWebApiClient,
                 _cmsService = new CmsServiceWrapper(docWebApiClient, null, null)
             };
-            return repo.GetRuntimeValues(theme.Id);
+            return repo.GetRuntimeValues(theme?.Id ?? Constants.DefaultTheme);
         }
         private ThemeSettingsRepository()
         {

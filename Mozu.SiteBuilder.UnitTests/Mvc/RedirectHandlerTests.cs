@@ -27,9 +27,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
         {
             var uri = new Uri("http://localhost/" + test.Url);
             var repo = Substitute.For<IRedirectRepository>();
-            repo.GetRuntimeRedirectEntries(Arg.Any<int?>()).Returns(ctx => Task.FromResult(test.RuntimeRedirects));
+            repo.GetRuntimeRedirectEntries(Arg.Any<int?>()).Returns(ctx => test.RuntimeRedirects);
 
-            var res = await RedirectHandler.Instance.GetRedirectForRequestUri(repo, uri);
+            var res =  RedirectHandler.Instance.GetRedirectForRequestUri(repo, uri);
             if (res == null && test.Result == null)
             {
                 return;

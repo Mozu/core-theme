@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
 
             if (catTreeProvider.HasCompleted)
             {
-                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", catTreeProvider.GetAllCategories().Result);
+                AddToActionContext<ICategoryTree>(actionContext.Request, "categoryHelper", catTreeProvider.GetAllCategories());
             }
             else
             {
@@ -128,18 +128,18 @@ namespace Mozu.SiteBuilder.Mvc.OAF
         public class CategoryHelper : ICategoryTree
         {
             private readonly ICategoryTreeProvider _provider;
-            Lazy<Task<CategoryTree>> _catTask;
+            Lazy<CategoryTree> _catTask;
             public CategoryHelper(ICategoryTreeProvider provider)
             {
                 _provider = provider;
-                _catTask = new Lazy<Task<CategoryTree>>(() => _provider.GetAllCategories());
+                _catTask = new Lazy<CategoryTree>(() => _provider.GetAllCategories());
             }
 
             public string ETag
             {
                 get
                 {
-                    return _catTask.Value.Result.ETag;
+                    return _catTask.Value.ETag;
                 }
                 set {; }
             }
@@ -147,14 +147,14 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             {
                 get
                 {
-                    return _catTask.Value.Result.RootCategories;
+                    return _catTask.Value.RootCategories;
                 }
             }
             public List<Category> AllCategories
             {
                 get
                 {
-                    return _catTask.Value.Result.AllCategories;
+                    return _catTask.Value.AllCategories;
                 }
                 set { }
             }
@@ -163,7 +163,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             {
                 get
                 {
-                    return _catTask.Value.Result.Top;
+                    return _catTask.Value.Top;
                 }
             }
 
@@ -171,24 +171,24 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             {
                 get
                 {
-                    return _catTask.Value.Result.All;
+                    return _catTask.Value.All;
                 }
             }
 
             [Microsoft.ClearScript.ScriptMember("findById")]
             public Category FindById(int? categoryId)
             {
-                return _catTask.Value.Result.FindById(categoryId);
+                return _catTask.Value.FindById(categoryId);
             }
             [Microsoft.ClearScript.ScriptMember("findByCode")]
             public Category FindByCode(string categoryCode)
             {
-                return _catTask.Value.Result.FindByCode(categoryCode);
+                return _catTask.Value.FindByCode(categoryCode);
             }
             [Microsoft.ClearScript.ScriptMember("findBySlug")]
             public IList<Category> FindBySlug(string categorySlug)
             {
-                return _catTask.Value.Result.FindBySlug(categorySlug).ToList();
+                return _catTask.Value.FindBySlug(categorySlug).ToList();
             }
         }
     }

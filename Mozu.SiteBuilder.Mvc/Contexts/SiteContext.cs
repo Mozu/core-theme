@@ -375,7 +375,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return;
             }
-            var data = _siteBuilderContextDataProvider.GetContextData().Result;
+            var data = await _siteBuilderContextDataProvider.GetContextDataAsync().ConfigureAwait(false);
             _domains = new SiteDomains(_currentHost, data.GetMappedSiteDomains());
             _generalSettings  = data.GetMappedGeneralSettings();
             _checkoutSettings = data.GetMappedCheckoutSettings();
@@ -416,6 +416,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             //for theme override... eg preview
             _theme = _theme ?? _themeRepository.Value.GetThemeOrDefault(_themeSelection);
+            
+            _themeRepository.Value.FixupPaths(_theme);
+            
             _themeRuntimeSettingsCollection = _themeRuntimeSettingsCollection ?? await _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ConfigureAwait(false);
            
             HashString = data.Hash + _themeOverrideId;

@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
        // string[] GetLocalThemePaths();
 
         string[] GetLocalThemesIds();
-       
+        void FixupPaths(Theme _theme);
     }
 
 
@@ -96,6 +96,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _themeMetaDataProvider = themeMetaDataProvider;
         }
 
+
+        public void FixupPaths(Theme _theme)
+        {
+            if (! _theme.PathsAreFixed)
+            {
+                _themeMetaDataProvider.FixPaths(_theme);
+                _theme.PathsAreFixed = true;
+            }
+            
+        }
         private Theme GetFromCache ( string key )
         {
             return _cache.Get<Theme>(key, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
@@ -133,23 +143,24 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 return System.IO.File.GetLastWriteTimeUtc(fileName);
             }
-            var theme = _themeToThemeKey.Keys.Select( GetFromCache)
-                .Where( x=> 
-                 x != null &&
-                    x.ThemePath != null
-                    && fileName.StartsWith(x.ThemePath, StringComparison.OrdinalIgnoreCase))
-                .Select(x => x).FirstOrDefault();
+            return DateTime.MinValue;
+            //var theme = _themeToThemeKey.Keys.Select( GetFromCache)
+            //    .Where( x=> 
+            //     x != null &&
+            //        x.ThemePath != null
+            //        && fileName.StartsWith(x.ThemePath, StringComparison.OrdinalIgnoreCase))
+            //    .Select(x => x).FirstOrDefault();
             
-            if (theme != null)
-            {
-                var vpath = fileName.Substring(theme.ThemePath.Length).TrimStart(new char[] { '\\' });
-                var info = theme.FileListing.GetFileInfo(vpath, true);
-                if (info != null)
-                {
-                    return info.TimsStamp;
-                }
-            }
-            return File.GetLastWriteTime(fileName);
+            //if (theme != null)
+            //{
+            //    var vpath = fileName.Substring(theme.ThemePath.Length).TrimStart(new char[] { '\\' });
+            //    var info = theme.FileListing.GetFileInfo(vpath, true);
+            //    if (info != null)
+            //    {
+            //        return info.TimsStamp;
+            //    }
+            //}
+            //return File.GetLastWriteTime(fileName);
         }
 
         /// <summary>

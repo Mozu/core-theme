@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
 
-            var baseUrl = routeHandler.GetCanonicalUrl(routeType, dicFn, false).Result;
+            var baseUrl = routeHandler.GetCanonicalUrl(routeType, dicFn, false);
             if (baseUrl == null)
             {
                 string categorySlug = null;

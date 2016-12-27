@@ -76,15 +76,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
     public abstract class ConstraintBase : ICustomRouteConstraint
     {
-        public abstract Task<bool> Initialize();
+        public abstract bool Initialize();
         public abstract bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection);
 
         public ISiteBuilderContextProvider ContextProvider { get; set; }
         public string Key { get; set; }
         public Dictionary<string, object> Values { get; set; }
-        public async Task<bool> InitializeFromContextData()
+        public bool InitializeFromContextData()
         {
-            var data = await ContextProvider.GetContextData().ConfigureAwait(false);
+            var data = ContextProvider.GetContextData();
             this.Values = data.RouteValidatorData.ContainsKey(this.Key) ?
                 data.RouteValidatorData[this.Key] :
                 new Dictionary<string, object>();
@@ -221,9 +221,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             public bool IsLiteral { get; set; }
         }
 
-       public override Task<bool> Initialize()
+       public override bool Initialize()
        {
-            return Task.FromResult(true);
+            return true;
        }
 
        public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values,
@@ -276,9 +276,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             this.Settings = settings;
         }
 
-        public override Task<bool> Initialize()
+        public override bool Initialize()
         {
-            return Task.FromResult(true);
+            return true;
         }
 
         
@@ -306,7 +306,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 return true;
             }
 
-            var tree = new Lazy<CategoryTree>(()=>request.Resolve<ICategoryTreeProvider>().GetAllCategories().Result);
+            var tree = new Lazy<CategoryTree>(()=>request.Resolve<ICategoryTreeProvider>().GetAllCategories());
             Category cat = null;
 
           
@@ -534,24 +534,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
     public class ProductAttributeRouteConstraint : ConstraintBase
     {
-        readonly Func<Task<ServiceClientResponse<List<AttributeVocabularyValue>>>> attFn;
-        Func<Task<ServiceClientResponse<ProductSearchResult>>> searchFn;
+        
         private string _localeCode;
       
         IDictionary<string, AttributeVocabularyValue> _attributeValues { get; set; }
         IDictionary<string, FacetValue> _facetValues { get; set; }
        
-        public ProductAttributeRouteConstraint(IAttributeWebApiClient attributeClient, IProductSearchWebApiClient _productSearchWebApiClient,  IApiContext context, string attributeCode)
+        public ProductAttributeRouteConstraint( IApiContext context, string attributeCode)
         {
             AttributeCode = attributeCode;
             if (attributeCode.IsNullOrEmpty()) throw new ArgumentException("attributeCode");
 
-            searchFn = () => _productSearchWebApiClient.CloneWithoutUserClaims().Search(
-                query: "*:*",
-                pageSize: 0,
-                facet: attributeCode);
-           
-            attFn = () => (attributeClient == null ? CreateNullAttTask() : attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode));
             _localeCode = context.LocaleCode;
         }
 
@@ -571,62 +564,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
 
 
         public string AttributeCode { get; set; }
-        public override async Task<bool> Initialize()
+        public override bool Initialize()
         {
 
             if (ContextProvider != null )
             {
-                return await InitializeFromContextData().ConfigureAwait(false);
+                return  InitializeFromContextData();
             }
-            var attTask = attFn();
-            var searchTask = searchFn();
-            await Task.WhenAll(attTask, searchTask).ConfigureAwait(false);
-            var attRes = attTask.Result;
-            if (attRes.HasException)
-            {
-                throw attRes.ReadException();
-            }
-            var val = attRes.ReadAsSync();
-            var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
-            foreach (var entry in val)
-            {
-                if (entry.Content != null)
-                {
-                    dict[entry.Content.StringValue] = entry;
-                }
-                
-                dict[entry.Value.ToString()] = entry;
-            }
-            var searchRes = searchTask.Result;
-
-            if (searchRes.HasException)
-            {
-                throw searchRes.ReadException();
-            }
-            var val2 = searchRes.ReadAsSync();
-            var dict2 = new Dictionary<string, FacetValue>(StringComparer.OrdinalIgnoreCase);
-            foreach (var entry in val2.Facets.SelectMany(x=> x.Values))
-            {
-                dict2[entry.Value] = entry;
-                
-            }
-
-
-            _facetValues = dict2;
-            _attributeValues = dict;
-            Values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-            foreach( var kvp in dict2)
-            {
-                Values[kvp.Key] = kvp.Value;
-            }
-            foreach (var kvp in dict)
-            {
-                Values[kvp.Key] = kvp.Value;
-            }
-
-
-            return true;
+            
+            throw new NotImplementedException();
+           
         }
 
        
@@ -672,33 +619,77 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             var content = attr.LocalizedContent == null ? attr.Content : attr.LocalizedContent.FirstOrDefault(lc => lc.LocaleCode.EqualsIgnoreCase(localeCode)) ?? attr.Content;
             return content != null ? content.StringValue : (attr.Value ?? new object()).ToString();
         }
+
+        public static  async Task<Dictionary<string, object>> BuildContextData(IAttributeWebApiClient attributeClient, IProductSearchWebApiClient _productSearchWebApiClient, IApiContext context, string attributeCode)
+        {
+            Func<Task<ServiceClientResponse<List<AttributeVocabularyValue>>>> attFn;
+            Func<Task<ServiceClientResponse<ProductSearchResult>>> searchFn;
+
+            searchFn = () => _productSearchWebApiClient.CloneWithoutUserClaims().Search(
+                query: "*:*",
+                pageSize: 0,
+                facet: attributeCode);
+
+            attFn = () => (attributeClient == null ? CreateNullAttTask() : attributeClient.CloneWithoutUserClaims().GetAttributeVocabularyValues(attributeCode));
+
+            var attTask = attFn();
+            var searchTask = searchFn();
+
+            await Task.WhenAll(attTask, searchTask).ConfigureAwait(false);
+            var attRes = attTask.Result;
+            if (attRes.HasException)
+            {
+                throw attRes.ReadException();
+            }
+            var val = attRes.ReadAsSync();
+            var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in val)
+            {
+                if (entry.Content != null)
+                {
+                    dict[entry.Content.StringValue] = entry;
+                }
+
+                dict[entry.Value.ToString()] = entry;
+            }
+            var searchRes = searchTask.Result;
+
+            if (searchRes.HasException)
+            {
+                throw searchRes.ReadException();
+            }
+            var val2 = searchRes.ReadAsSync();
+            var dict2 = new Dictionary<string, FacetValue>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in val2.Facets.SelectMany(x => x.Values))
+            {
+                dict2[entry.Value] = entry;
+
+            }
+
+
+            
+            var Values = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var kvp in dict2)
+            {
+                Values[kvp.Key] = kvp.Value;
+            }
+            foreach (var kvp in dict)
+            {
+                Values[kvp.Key] = kvp.Value;
+            }
+
+
+            return Values;
+        }
     }
 
     public class MzdbRouteConstraint : ConstraintBase
     {
-        readonly Func<int, int, Task<ServiceClientResponse<EntityCollection>>> _getDocsFunc;
-        readonly Func<Task<ServiceClientResponse<JObject>>> _getDosFunc;
-        readonly Func<JObject, IEnumerable<string>> _fieldGetter;
-        HashSet<string> _values;
-      
        
-       
-        public MzdbRouteConstraint(IEntityListsWebApiClient mzdbClient, string listId, string docId, string fieldId)
+        public MzdbRouteConstraint()
         {
-            if (listId.IsNullOrEmpty()) throw new ArgumentException("listId");
-            if (fieldId.IsNullOrEmpty()) throw new ArgumentException("fieldId");
-
-            var client = mzdbClient.CloneWithoutUserClaims();
-            if ( string.IsNullOrEmpty(docId))
-            {
-                _getDocsFunc = async (start, size) => await client.GetEntities(listId, startIndex: start, pageSize: size).ConfigureAwait(false);
-            }
-            else
-            {
-                _getDosFunc = async () => await client.GetEntity(listId, docId).ConfigureAwait(false);
-            }
-            
-            _fieldGetter = o => FlattenFieldValues(o, fieldId);
+                       
         }
 
         public MzdbRouteConstraint(string key, ISiteBuilderContextProvider _contextProvider)
@@ -717,34 +708,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return Enumerable.Empty<string>();
         }
 
-        public override async Task<bool> Initialize()
+        public override bool Initialize()
         {
             if ( ContextProvider != null)
             {
-                return await InitializeFromContextData().ConfigureAwait(false) ;
+                return  InitializeFromContextData();
             }
-            if (_getDocsFunc != null)
-            {
-                var mzdbDocResponse = await _getDocsFunc(0, 50).ConfigureAwait(false);
-                if (mzdbDocResponse.HasException) throw mzdbDocResponse.ReadException();
+            throw new NotImplementedException();
+            
 
-                var mzdbDocs = mzdbDocResponse.ReadAsSync();
-                var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
-
-                _values = new HashSet<string>(mzdbDocs.Items.Concat(otherItems).SelectMany(_fieldGetter), StringComparer.OrdinalIgnoreCase);
-            }
-            else
-            {
-                _values = new HashSet<string>(_fieldGetter((await _getDosFunc()).ReadAsSync()), StringComparer.OrdinalIgnoreCase);
-            }
-            var vals = new Dictionary<string, object>();
-            foreach( var x in _values)
-            {
-                vals[x] = x;
-            }
-            this.Values = vals;
-
-            return true;
         }
 
         private static async Task<IEnumerable<T>> Unroll<T>(Func<int, int, Task<PagedCollectionBase<T>>> getter, int totalCount, int pageSize)
@@ -764,7 +736,48 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             }
 
             var curRouteValue = temp.ToString();
-            return _values.Contains(curRouteValue);
+            return this.Values.ContainsKey(curRouteValue);
+        }
+
+        public static async Task<Dictionary<string, object>> BuildContextData(IEntityListsWebApiClient mzdbClient, string listId, string docId, string fieldId)
+        {
+            Func<int, int, Task<ServiceClientResponse<EntityCollection>>> _getDocsFunc = null;
+            Func<Task<ServiceClientResponse<JObject>>> _getDosFunc = null;
+            Func<JObject, IEnumerable<string>> _fieldGetter = null;
+
+
+            var client = mzdbClient.CloneWithoutUserClaims();
+            if (string.IsNullOrEmpty(docId))
+            {
+                _getDocsFunc = async (start, size) => await client.GetEntities(listId, startIndex: start, pageSize: size).ConfigureAwait(false);
+            }
+            else
+            {
+                _getDosFunc = async () => await client.GetEntity(listId, docId).ConfigureAwait(false);
+            }
+
+            _fieldGetter = o => FlattenFieldValues(o, fieldId);
+            HashSet<string> _values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (_getDocsFunc != null)
+            {
+                var mzdbDocResponse = await _getDocsFunc(0, 50).ConfigureAwait(false);
+                if (mzdbDocResponse.HasException) throw mzdbDocResponse.ReadException();
+
+                var mzdbDocs = mzdbDocResponse.ReadAsSync();
+                var otherItems = await Unroll<JObject>(async (start, size) => (await _getDocsFunc(start, size).ConfigureAwait(false)).ReadAsSync(), mzdbDocs.TotalCount, 50);
+
+                _values = new HashSet<string>(mzdbDocs.Items.Concat(otherItems).SelectMany(_fieldGetter), StringComparer.OrdinalIgnoreCase);
+            }
+            else
+            {
+                _values = new HashSet<string>(_fieldGetter((await _getDosFunc()).ReadAsSync()), StringComparer.OrdinalIgnoreCase);
+            }
+            var vals = new Dictionary<string, object>();
+            foreach (var x in _values)
+            {
+                vals[x] = x;
+            }
+            return vals;
         }
     }
     public class RegexRouteConstraint : ConstraintBase
@@ -805,9 +818,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             return Regex.IsMatch(curRouteValue, _pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         }
 
-        public override Task<bool> Initialize()
+        public override bool Initialize()
         {
-            return Task.FromResult(true);
+            return true;
         }
     }
     public class StringListRouteConstraint : ConstraintBase
@@ -821,9 +834,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
             _values = new HashSet<string>(values, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override Task<bool> Initialize()
+        public override bool Initialize()
         {
-            return Task.FromResult(true);
+            return true;
         }
 
         public override bool DoMatch(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)

@@ -152,7 +152,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
     public interface ICanInit
     {
-        Task<bool> Initialize();
+        bool Initialize();
     }
 
     /// <summary>
@@ -188,14 +188,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return true;
         }
 
-        Task<bool> ICanInit.Initialize()
+        bool ICanInit.Initialize()
         {
             if ( Constrains.Count ==0)
             {
-                return Constrains[0].Initialize();
+                return true;
             }
-            var tasks = Constrains.Select(x => x.Initialize());
-            return Task.WhenAll(tasks).ContinueWith( x=>  true);
+            var tasks = Constrains.Select(x => x.Initialize()).ToList();
+
+            return true;
+            //return Task.WhenAll(tasks).ContinueWith( x=>  true);
             
         }
 

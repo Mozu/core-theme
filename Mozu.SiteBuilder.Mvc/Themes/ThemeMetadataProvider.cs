@@ -45,6 +45,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
         
         string LocalAddonPath { get; }
+
+        void FixPaths(Theme fileListing);
     }
 
 
@@ -111,7 +113,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         }
 
-        private void SetThemePath( ThemeMetaData tmd)
+        private void SetThemePath(ThemeMetaData tmd)
         {
             if (string.Equals(tmd.Id, Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, StringComparison.OrdinalIgnoreCase))
             {
@@ -131,6 +133,31 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                     ThemePaths.Select(p => Path.GetFullPath(p + "//" + UnEscapeThemeId(tmd.Id)))
                         .FirstOrDefault(p => Directory.Exists(p));
             }
+        }
+
+
+        public  void FixPaths(Theme theme)
+        {
+            if ( theme?.FileListing == null)
+            {
+                return;
+            }
+            foreach (var tmd in theme.FileListing.InternalFiles)
+            {
+                if (string.Equals(tmd.ThemeId, Mozu.SiteBuilder.Mvc.Constants.DefaultTheme, StringComparison.OrdinalIgnoreCase))
+                {
+                    tmd.RootPath = this.CoreThemePath;
+                }
+                else if (tmd.ThemeId.IndexOf("core", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    string temp = this.LegacyThemePath + "//themes//" + tmd.ThemeId;
+                    if (Directory.Exists(temp))
+                    {
+                        tmd.RootPath = Path.GetFullPath(temp);
+                    }
+                }
+            }
+           
         }
 
 
@@ -358,7 +385,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 Name = x.Path.Split('/').Last(),
                 ThemeId = themeId,
-                FullPath = themePath + "//"+ x.Path,
+               // FullPath = themePath + "//"+ x.Path,
                 TimsStamp = x.AuditInfo?.UpdateDate ?? DateTime.MinValue,
                 RootPath = themePath,
                 VirtualPathNoExt = relPathNoExt,
@@ -375,7 +402,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 Name = x.Name,
                 ThemeId = themeId,
-                FullPath = x.FullName,
+                //FullPath = x.FullName,
                 TimsStamp = x.LastWriteTimeUtc,
                 RootPath = themePath,
                 VirtualPathNoExt = relPathNoExt,
@@ -419,7 +446,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
             var deepThemeFiles = 
                 dirinfo.GetDirectories()
-                .Where(subdir => !subdir.Name.EndsWith("node_modules", StringComparison.OrdinalIgnoreCase))
+                .Where(subdir => !subdir.Name.EndsWith("node_modules", StringComparison.OrdinalIgnoreCase) && !subdir.Name.StartsWith(".", StringComparison.OrdinalIgnoreCase)  )
                 .SelectMany(d => d.GetFileSystemInfos("*.*", SearchOption.AllDirectories)
                 .Select(x => CreateThemeFileSystemInfo(x, themePath, themeId))
             ).ToList();

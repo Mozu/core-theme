@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if ( categoryId == null && res?.RawValue != null)
                 {
                     var categoryCode = res.RawValue.ToString();
-                    categoryId = actionContext.Request.Resolve<ICategoryTreeProvider>().GetAllCategories().Result.FindByCode(categoryCode)?.Id;
+                    categoryId = actionContext.Request.Resolve<ICategoryTreeProvider>().GetAllCategories().FindByCode(categoryCode)?.Id;
                 }
                 if (categoryId == null)
                 {

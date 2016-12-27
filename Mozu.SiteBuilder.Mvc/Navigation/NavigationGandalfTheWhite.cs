@@ -91,9 +91,9 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Gets all navigation nodes in a flat list.
         /// Flat list is used by Admin.
         /// </summary>
-        public async Task<List<ITreeNavigationNode>> GetFlatList()
+        public  List<ITreeNavigationNode> GetFlatList()
         {
-            return (await GetSuperNavList().ConfigureAwait(false)).FlatList;
+            return GetSuperNavList().FlatList;
 
         }
 
@@ -101,45 +101,50 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Get navigation as a tree. This is used by themes in storefront.
         /// </summary>
         /// <returns></returns>
-        public async Task<List<IRuntimeNavigationNode>> GetTreeNavigation()
+        public List<IRuntimeNavigationNode> GetTreeNavigation()
         {
-            return (await GetSuperNavList().ConfigureAwait(false)).TreeList;
+            return  GetSuperNavList().TreeList;
 
         }
+        SuperNavigationNodeList _list;
 
-
-        async Task<SuperNavigationNodeList> GetSuperNavList()
+        SuperNavigationNodeList GetSuperNavList()
         {
-            var ctxData = await _contextProvider.GetContextData().ConfigureAwait(false);
-            // get the list of categories
-            var categoryTree = await _categoryProvider.GetAllCategories().ConfigureAwait(false);
-
-
-
-
-            var cacheKey = GetCacheKey(ctxData.Hash, _priceListCode);
-            var retVal = GetFromCache(cacheKey);
-
-            if (retVal != null)
+            if (_list == null)
             {
-                return retVal;
-            }
 
-            lock (cacheKey)
-            {
-                retVal = GetFromCache(cacheKey);
-                if (retVal != null)
+
+                var ctxData =  _contextProvider.GetContextData();
+                // get the list of categories
+                var categoryTree =  _categoryProvider.GetAllCategories();
+
+
+
+
+                var cacheKey = GetCacheKey(ctxData.Hash, _priceListCode);
+                _list = GetFromCache(cacheKey);
+
+                if (_list != null)
                 {
-                    return retVal;
+                    return _list;
                 }
-                retVal = ProccessNavData(ctxData, categoryTree);
-                _cache.Set(cacheKey,
-                    retVal,
-                    CacheScope.Site,
-                    StorefrontCacheTypes.Default);
-                return retVal;
-            }
 
+                //lock (cacheKey)
+                {
+                    _list = GetFromCache(cacheKey);
+                    if (_list != null)
+                    {
+                        return _list;
+                    }
+                    _list = ProccessNavData(ctxData, categoryTree);
+                    _cache.Set(cacheKey,
+                        _list,
+                        CacheScope.Site,
+                        StorefrontCacheTypes.Default);
+                    return _list;
+                }
+            }
+            return _list;
         }
 
      

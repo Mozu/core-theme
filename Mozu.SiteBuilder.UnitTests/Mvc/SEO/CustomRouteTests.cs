@@ -213,7 +213,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         [TestCaseSource("NoOpPathMappings")]
         public async Task MappersWork(MappersWorkTest test)
         {
-            await test.mapping.Initialize();
+           
+            test.mapping.Initialize();
             HttpRequestMessage reqMessage = new HttpRequestMessage(HttpMethod.Get, "http://localhost/foo"); ;
             reqMessage.SetRouteData(new HttpRouteData(new HttpRoute(), new HttpRouteValueDictionary()));
             var outputs = test.mapping.Map(reqMessage, test.inputs, "foo");
@@ -252,19 +253,24 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 new Dictionary<string, object> { { "foo", "green" } }
 
             };
+            var ctxData = new SiteBuilderContextData();
+            ctxData.RouteMapperData = new Dictionary<string, Dictionary<string, object>>();
+            ctxData.RouteMapperData["xxx"] = new Dictionary<string, object> { { "red", "green" }, { "foo1", "red" }, { "foo", "green" } };
+            var contextProvider = Substitute.For<ISiteBuilderContextProvider>();
+            contextProvider.GetContextData().Returns(ctxData);
 
             //yield return new object[] {
             //    new FacetValueFilterMapping(new Mapping(){ facetId="foo"} ),
             //    new Dictionary<string, object> { { "foo", "mauve"}, },
             //    new Dictionary<string, object> { { "foo", "mauve" }, { "facetValueFilter", "mauve" } }};
 
-            var entityClientMock = Substitute.For<IEntityListsWebApiClient, ICloneable>();
-            (entityClientMock as ICloneable).Clone().Returns(entityClientMock);
-            entityClientMock.Handler.ReturnsForAnyArgs(new TestHandler());
+            //var entityClientMock = Substitute.For<IEntityListsWebApiClient, ICloneable>();
+            //(entityClientMock as ICloneable).Clone().Returns(entityClientMock);
+            //entityClientMock.Handler.ReturnsForAnyArgs(new TestHandler());
 
-            entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"red\":\"green\"}") }));
+           // entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(new ServiceClientResponse<JObject>() { ReadAsSync = () => JObject.Parse("{\"red\":\"green\"}") }));
             yield return new object[] {
-                new MZDBMap( entityClientMock , new Mapping (){ listFqn = "list", docId ="doc"}),
+                new MZDBMap( "xxx" , new Mapping (){ listFqn = "list", docId ="doc"},contextProvider ),
                  new Dictionary<string, object> { { "foo", "red" } },
                 new Dictionary<string, object> { { "foo", "green" } }
 
@@ -304,8 +310,15 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             obj["blah"] = "foo";
 
             entityClientMock.GetEntity(Arg.Any<string>(), Arg.Any<string>()).Returns(ctx => Task.FromResult(Response(obj)));
+
+            var ctxData = new SiteBuilderContextData();
+            ctxData.RouteMapperData = new Dictionary<string, Dictionary<string, object>>();
+            ctxData.RouteMapperData["xxx"] = new Dictionary<string, object> { { "blah", "foo" } };
+            var contextProvider = Substitute.For<ISiteBuilderContextProvider>();
+            contextProvider.GetContextData().Returns(ctxData);
+
             yield return new object[] {
-                new MZDBMap(entityClientMock, new Mapping(){ listFqn = "list", docId ="doc"}),
+                new MZDBMap("xxx",  new Mapping(){ listFqn = "list", docId ="doc"}, contextProvider),
                 new Dictionary<string, object> { { "butts", "lol" } },
                 new Dictionary<string, object> { { "butts", "lol" } }
             };
@@ -316,7 +329,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         public async Task ConstraintsWork(ConstraintTest test )
         {
             var httpRoute = Substitute.For<IHttpRoute>();
-            await test.constraint.Initialize();
+            test.constraint.Initialize();
             test.constraint.DoMatch(null, null, test.parameterName, test.inputs, HttpRouteDirection.UriResolution).ShouldEqual(test.routeShouldMatch);
         }
 
@@ -387,34 +400,41 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 }
             })));
 
+            var contextData = new SiteBuilderContextData();
+            contextData.RouteValidatorData = new Dictionary<string, Dictionary<string, object>>();
+            contextData.RouteValidatorData["test3"] = new Dictionary<string, object> { { "meh", "meh" } };
+            contextData.RouteValidatorData["test4"] = new Dictionary<string, object> { { "bing", "bing" } };
+            contextData.RouteValidatorData["mzdb"] = new Dictionary<string, object> { { "value!", "value!" } };
+            var contextProvider = Substitute.For<ISiteBuilderContextProvider>();
+            contextProvider.GetContextData().Returns(contextData);
             var context = Substitute.For<IApiContext>();
             context.LocaleCode.Returns("en-US");
 
             yield return new ConstraintTest("test3", new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
+                new ProductAttributeRouteConstraint(context, "butts") { ContextProvider = contextProvider , Key= "test3"},
                 new Dictionary<string, object> { { "param", "meh" } },
                 true
             });
             yield return new ConstraintTest("test4", new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, searchClient, context, "butts"),
+                new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test4"},
                 new Dictionary<string, object> { { "param", "bing" } },
                 true
             });
             yield return new ConstraintTest("test5", new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
+                new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test5"},
                 new Dictionary<string, object> { { "param", "sure" } },
                 false
             });
             yield return new ConstraintTest("test6", new object[]
             {
                 "param",
-                new ProductAttributeRouteConstraint(attrClient, searchClient,context, "butts"),
+                new ProductAttributeRouteConstraint(context, "butts"){ ContextProvider = contextProvider , Key= "test6"},
                 new Dictionary<string, object> { },
                 false
             });
@@ -426,7 +446,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new ConstraintTest("test7", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist", null, "myfield"),
+                new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
                 new Dictionary<string, object> { {"param", "value!" } },
                 true
             });
@@ -434,14 +454,14 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             yield return new ConstraintTest("test8", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist",null, "myfield"),
+                new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
                 new Dictionary<string, object> { {"param", "sigh" } },
                 false
             });
             yield return new ConstraintTest("test9", new object[]
             {
                 "param",
-                new MzdbRouteConstraint(MakeEntityListsWebApiClient(), "mylist", null,"myfield"),
+                new MzdbRouteConstraint(){ ContextProvider = contextProvider , Key= "mzdb"},
                 new Dictionary<string, object> { },
                 false
             });
@@ -537,12 +557,12 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 GeneralSettings = gensettings
             };
 
-            contextProvider.GetContextData().Returns(Task.FromResult(sbcd));
+            contextProvider.GetContextData().Returns(sbcd);
             var constraintFactory = new ConstraintFactory(contextProvider, apiContext);
             var mappingFactory = new RouteMappingFactory(contextProvider);
             var repo = new CustomRouteRepository(apiContext,logger,contextProvider,  constraintFactory, mappingFactory);
 
-            var collection = await (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
+            var collection =  (repo as ICustomRouteCollectionRepository).GetHttpRouteCollection();
             collection.Count.ShouldEqual(numRoutes);
         }
 
@@ -639,7 +659,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
                 {
                     var otherCat = tree.FindById(32);
                     var catMap = Mapper.Map<IDictionary<string, object>>(otherCat);
-                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true).Result;
+                    var url = handler.GetCanonicalUrl(FancyRoute.Category, () => catMap, true);
                     Assert.AreEqual(url, "/sale/women/clothing/dresses");
 
                 }
@@ -768,9 +788,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             var yyy = lt.Resolve<ICategoryTreeProvider>();
 
 
+            var sbContextProvider = lt.Resolve<ISiteBuilderContextProvider>();
+            var sbCtxData = sbContextProvider.GetContextDataAsync().Result;
 
-
-            var catTree = catTreeProvider.GetAllCategories().Result;
+            var catTree = catTreeProvider.GetAllCategories();
             var customRouteRepo = subber.ResolveAndSubstituteFor<CustomRouteHandler>();
             subber.Provide<ICustomRouteHandler>(customRouteRepo);
             var urlHelper = subber.ResolveAndSubstituteFor<Mozu.SiteBuilder.Mvc.Helpers.UrlHelper>();

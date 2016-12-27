@@ -28,6 +28,7 @@ using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
+using System.Diagnostics;
 //using Mozu.SiteBuilder.UX.MessageHandlers;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -36,6 +37,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
     {
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration)
         {
+
+            var traceWriter = httpConfiguration.EnableSystemDiagnosticsTracing();
+            traceWriter.IsVerbose = true;
+            traceWriter.MinimumLevel = System.Web.Http.Tracing.TraceLevel.Debug;
+
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
             
@@ -43,9 +49,14 @@ namespace Mozu.SiteBuilder.UX.Configuration
             httpConfiguration.MessageHandlers.Add( new SessionHandler());
             
             httpConfiguration.MessageHandlers.Add(new MzUnderscoreRequestCleaner());
+            httpConfiguration.MessageHandlers.Add(new SiteContextInitializationHandler());
+
+
+
 
             httpConfiguration.MessageHandlers.Add(new HomePageTransferHandler());
             httpConfiguration.MessageHandlers.Add(new SeoDelegatingHandler());
+            
             
             httpConfiguration.MessageHandlers.Add(new FourHundredMessageHandler());
 
@@ -53,7 +64,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
 
-           
+
+            
+
+
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {

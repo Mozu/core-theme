@@ -170,12 +170,12 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         private string MakeCartUrl(string hostName)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false, hostName:hostName).Result ?? "/cart";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Cart, null, false, hostName:hostName) ?? "/cart";
         }
 
         private string MakeSearchUrl(string hostName)
         {
-            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false, hostName:hostName).Result ?? "/search";
+            return _customRouteHandler.GetCanonicalUrl(FancyRoute.Search, null, false, hostName:hostName) ?? "/search";
         }
 
         private string MakeStylesheetUrl(object obj, Dictionary<string, object> config)
@@ -232,7 +232,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
         string DoMakeDocumentUrl(Mozu.Content.Contracts.Document doc, Dictionary<string, object> config, string hostName)
         {
             return 
-                _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false, hostName:hostName).Result ??
+                _customRouteHandler.GetCanonicalUrl(FancyRoute.CmsPage, () => Mapper.Map<IDictionary<string, object>>(doc).ChainSet(config), false, hostName:hostName) ??
                 (doc.ListFQN.EqualsIgnoreCase("pages@mozu") ? // the default routes for cms documents on the UX side are the source here.
                     "/" + doc.Name : // pages have a default route of /{documentName}
                     string.Format("/cms/{0}/{1}", doc.ListFQN, doc.Name) // all other documents have a default route of /cms/{doclistFQN}/{docName}
@@ -383,7 +383,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
             var canonicalUrl = _customRouteHandler.GetCanonicalUrl(FancyRoute.ProductDetails, 
                 () => Mapper.Map<IDictionary<string, object>>(product), 
-                false, hostName).Result ?? "/p/" + product.ProductCode;
+                false, hostName) ?? "/p/" + product.ProductCode;
             return canonicalUrl + qs;
         }
 
@@ -404,7 +404,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                         () => Mapper.Map<IDictionary<string, object>>(product)
                                     .ChainSet("variant", vpc, true)
                                     .ChainSet("vpc", vpc, true),
-                        false, hostName).Result;
+                        false, hostName);
                 if (!string.IsNullOrEmpty(url))
                 {
                     return $"{url}{qsVpc}{qs}";
@@ -471,7 +471,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
 
 
-            var tree = _categoryTreeProvider.Value.GetAllCategories().Result;
+            var tree = _categoryTreeProvider.Value.GetAllCategories();
             var cat = categoryId != -1 ? tree.FindById(categoryId) : tree.FindByCode(categoryCode);
             if (cat == null)
             {
@@ -491,7 +491,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
 
             // we know we're doing a category facet, so we can kill the pagination
-            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt, hostName: hostname).Result;
+            var url = _customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => Mapper.Map<IDictionary<string, object>>(cat).ChainSet(config), includeContxt, hostName: hostname);
             if (url == null)
             {
                 url = "/c/" + cat.CategoryId;
@@ -601,7 +601,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 {
                     var dic = new Dictionary<string, object>(routeData.Values, StringComparer.OrdinalIgnoreCase);
                     dic.Remove(routeValueKey);
-                    facetUrl = _customRouteHandler.GetCanonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false).Result;
+                    facetUrl = _customRouteHandler.GetCanonicalUrl((routeData.Route as CustomRoute).InternalRoute, () => dic, false);
                 }
             }
 

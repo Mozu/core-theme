@@ -25,14 +25,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 {
     public interface ICustomRouteCollectionRepository
     {
-        Task<HttpRouteCollection> GetHttpRouteCollection();
+        HttpRouteCollection GetHttpRouteCollection();
     }
 
     public interface ICustomRouteHandler
     {
-        Task<bool> RouteIncomingRequest();
+        bool RouteIncomingRequest();
 
-        Task<bool> Init();
+       // Task<bool> Init();
 
         IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request);
 
@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="internalRoute"></param>
         /// <param name="viewDataAdditionFunc"></param>
         /// <returns></returns>
-        Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
+        HttpResponseMessage RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string,object>> viewDataAdditionFunc = null);
 
         /// <summary>
         /// Given a particular type of route that we want to canonicalize, we find all routes of that they where canonical is true, 
@@ -55,13 +55,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         /// <param name="viewDataAdditionFunc"></param>
         /// <param name="useExistingQuery"></param>
         /// <returns></returns>
-        Task<string> GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues , string hostName = null);
+        string GetCanonicalUrl( FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useExistingValues , string hostName = null);
     }
    
     public interface IRedirectRepository
     {
         Task<List<RedirectEntry>> FetchRedirectEntries(int? siteId = null);
-        Task<RuntimeRedirects> GetRuntimeRedirectEntries(int? siteId = null);
+        RuntimeRedirects GetRuntimeRedirectEntries(int? siteId = null);
         Task<List<RedirectEntry>> UpdateRedirectEntries(List<RedirectEntry> redirects, int? siteId = null);
     }
 
@@ -115,9 +115,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         }
 
-        async Task<RuntimeRedirects> IRedirectRepository.GetRuntimeRedirectEntries(int? siteId)
+        RuntimeRedirects IRedirectRepository.GetRuntimeRedirectEntries(int? siteId)
         {
-            var data = await _sbCp.GetContextData().ConfigureAwait(false);
+            var data =  _sbCp.GetContextData();
             return data.RuntimeRedirects = data.RuntimeRedirects ?? BuildRuntimeRedirects(data.Redirects);
         }
         

@@ -94,13 +94,15 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private Dictionary<string, ThemeFileSystemInfo> _allFiles;
         private Dictionary<string, ThemeFileSystemInfo[]> _allFilesNoExt;
        // private ThemeFileSystemInfo[] _liveFileSystemInfos;
+
+       internal IEnumerable<ThemeFileSystemInfo> InternalFiles { get { return _allFiles.Values; } } 
         public ThemeFileSystemInfoCollection(IEnumerable<ThemeFileSystemInfo> infos, DateTime? timeStamp, string Hash)
         {
             var lst = infos.ToList();
             var files = lst.Where(x => x.IsFile).ToList();
             _allFiles = files.ToDictionar2y(x => x.VirtualPath,y=> y, StringComparer.OrdinalIgnoreCase);
             _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt,StringComparer.OrdinalIgnoreCase).ToDictionar2y(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
-            LiveTemplates = files.Where(x => x.FullPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
+            LiveTemplates = files.Where(x => x.VirtualPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
             TimeStamp = timeStamp ??  (files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp));
             Hash = Hash ?? LegacyHash(files);
         }

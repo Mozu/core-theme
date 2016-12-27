@@ -6,6 +6,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 using NSubstitute;
 using NUnit.Framework;
 using Should;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.IntegrationTests
 {
@@ -16,6 +17,9 @@ namespace Mozu.SiteBuilder.IntegrationTests
         public void SetUp()
         {
             IMultiScopeAdminUserWebApiClient client = Substitute.For<IMultiScopeAdminUserWebApiClient, ICloneable>();
+            var handler = client.Handler;
+            handler.MozuApiContext.Returns(new ApiContext());
+            //_userWebApiClient.Handler.Returns(new ApiContext());
             _userWebApiClient = client;
             ((ICloneable) client).Clone().Returns(_userWebApiClient);
         }
@@ -42,6 +46,7 @@ namespace Mozu.SiteBuilder.IntegrationTests
         [Test]
         public void GetUser_should_return_null_if_response_is_not_successful()
         {
+            
             _userWebApiClient.WithAny(x => x.GetUser(null, null), null, msg => msg.StatusCode = HttpStatusCode.NotFound);
 
             UserHelper api = GetHelper();

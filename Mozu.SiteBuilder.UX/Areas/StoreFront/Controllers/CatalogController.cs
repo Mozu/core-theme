@@ -108,9 +108,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var product = Mapper.Map<Product>(prod);
             //todo... ugh.. too many maps.
             var redirect =
-                await
-                    _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,
-                        () => Mapper.Map<IDictionary<string, object>>(product)).ConfigureAwait(false);
+                _customRouteHandler.RedirectWithContext(Request, FancyRoute.ProductDetails,
+                        () => Mapper.Map<IDictionary<string, object>>(product));
             if (redirect != null)
             {
                 return redirect;
@@ -223,7 +222,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Store()
         {
-            CategoryTree catList = await _categoryTreeProvider.GetAllCategories();
+            CategoryTree catList =  _categoryTreeProvider.GetAllCategories();
             var cat = new Category
             {
                 Content = new CategoryContent { Name = "Store" }
@@ -272,7 +271,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var categoryDictionary = Mapper.Map<IDictionary<string, object>>(category);
 
-            var urlBase =await (_customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true).ConfigureAwait(false)) ?? category.Url;
+            var urlBase = (_customRouteHandler.GetCanonicalUrl(FancyRoute.Category, () => new Dictionary<string, object>(), true)) ?? category.Url;
 
             PageContext.CrawlerInfo.CanonicalUrl = PageContext.Search.ToUrl(new SearchContextOverrides() { UrlBase = urlBase });
 
@@ -328,14 +327,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null)
         {
 
-            var catTree = (await _categoryTreeProvider.GetAllCategories().ConfigureAwait(false));
+            var catTree = ( _categoryTreeProvider.GetAllCategories());
             var cat = catTree.FindById(categoryId) ?? catTree.FindByCode(categoryCode);
             if (cat == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat)).ConfigureAwait(false);
+            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat));
             if (redirect != null)
             {
                 return redirect;
@@ -408,7 +407,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // TODO: Sort by Date Last Modified DESC
             string sortBy = null; // "CreateDate DESC";
 
-            List<Category> catList = (await _categoryTreeProvider.GetAllCategories()).AllCategories;
+            List<Category> catList = ( _categoryTreeProvider.GetAllCategories()).AllCategories;
             Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
             if (cat == null)
             {

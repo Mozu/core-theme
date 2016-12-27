@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public async Task<List<ITreeNavigationNode>> GetFlatList(bool? showContentLists)
         {
-            List<ITreeNavigationNode> list = await _gandalf.GetFlatList();
+            List<ITreeNavigationNode> list =  _gandalf.GetFlatList();
 
 
             list.AddRange(GetPageTemplateNodes());

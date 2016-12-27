@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "grandparent",
                         VirtualPathNoExt = "templates\\pages\\category",
                         VirtualPath = "templates\\pages\\category.hypr.live",
-                        FullPath = @"c:\temp\grandparent\pages\category.hypr.live",
+                        RootPath = @"c:\temp\grandparent",
                         IsFile = true
                     }
                 }, null ,null)
@@ -86,7 +86,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "parent",
                         VirtualPathNoExt = "templates\\pages\\category",
                         VirtualPath = "templates\\pages\\category.hypr.live",
-                        FullPath = @"c:\temp\parent\pages\category.hypr.live",
+                        RootPath = @"c:\temp\parent",
                         IsFile = true,
                     }
                 }, null , null)
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "child",
                         VirtualPathNoExt = "templates\\pages\\category",
                         VirtualPath = "templates\\pages\\category.hypr.live",
-                        FullPath = @"C:\temp\child\pages\category.hypr.live",
+                        RootPath = @"C:\temp\child",
                         IsFile = true,
                     },
                     new ThemeFileSystemInfo // has extends tag, but no parent_template
@@ -111,7 +111,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "child",
                         VirtualPathNoExt = "templates\\pages\\extends",
                         VirtualPath = "templates\\pages\\extends.hypr.live",
-                        FullPath = @"C:\temp\child\pages\extends.hypr.live",
+                        RootPath = @"C:\temp\child",
                         IsFile = true,
                     },
                     new ThemeFileSystemInfo // has no extends tag
@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         ThemeId = "child",
                         VirtualPathNoExt = "templates\\pages\\noextends",
                         VirtualPath = "templates\\pages\\noextends.hypr.live",
-                        FullPath = @"C:\temp\child\pages\noextends.hypr.live",
+                        RootPath = @"C:\temp\child",
                         IsFile = true,
                     },
                 }, null ,null)
@@ -137,8 +137,8 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var cookieprovider = Substitute.For<ICookieProvider>();
             var cprov = Substitute.For<ISiteBuilderContextProvider>();
             var data = new SiteBuilderContextData();
-            cprov.GetContextData().Returns(Task.FromResult(data));
-            var scontext = new SiteContext(httprequest , context , cprov , null, null, null, null, settings)  //new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
+            cprov.GetContextData().Returns(data);
+            var scontext = new SiteContext(httprequest , context , cprov , null, cookieprovider, null, null, settings)  //new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
             {
                 Theme = childTheme
             };

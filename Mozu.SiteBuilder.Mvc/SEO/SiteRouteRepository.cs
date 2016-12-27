@@ -85,9 +85,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         static System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim> _sempDic = new System.Collections.Concurrent.ConcurrentDictionary<int, System.Threading.SemaphoreSlim>();
 
 
-        async Task<HttpRouteCollectionContainer> GetHttpRouteCollectionContainer(bool isCacheCallback)
+        HttpRouteCollectionContainer GetHttpRouteCollectionContainer(bool isCacheCallback)
         {
-            var contextData = await _contextProvider.GetContextData().ConfigureAwait(false);
+            var contextData =  _contextProvider.GetContextData();
 
 
             if (contextData.GeneralSettings == null) return null;
@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
             if (contextData.RouteCollection== null)
             {
-                var col = await CreateRouteCollectionFromSettings(routes).ConfigureAwait(false);
+                var col = CreateRouteCollectionFromSettings(routes);
                 contextData.RouteCollection = new HttpRouteCollectionContainer()
                 {
                     RouteCollection = col,
@@ -109,9 +109,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
             return contextData.RouteCollection;
         }
-        async Task<HttpRouteCollection> ICustomRouteCollectionRepository.GetHttpRouteCollection( )
+        HttpRouteCollection ICustomRouteCollectionRepository.GetHttpRouteCollection( )
         {
-            var col = await GetHttpRouteCollectionContainer(false).ConfigureAwait(false);
+            var col = GetHttpRouteCollectionContainer(false);
             if ( col != null)
             {
                 return col.RouteCollection;
@@ -125,7 +125,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
 
 
-        async Task<HttpRouteCollection> CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
+        HttpRouteCollection CreateRouteCollectionFromSettings(CustomRouteSettings customSettings)
         {
 
             
@@ -156,13 +156,12 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
 
 
-            var tasks =
-                constraints.Values.Cast<ICanInit>()
+           constraints.Values.Cast<ICanInit>()
                 .Concat(mappings.Values.Cast<ICanInit>())
                 .Where(x => x != null)
-                .Select(async x => await x.Initialize().ConfigureAwait(false));
+                .Select(x => x.Initialize()).ToList();
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            
 
             var routes = customSettings.Routes.Select(x => CreateCustomRoute(x, constraints, mappings));
 

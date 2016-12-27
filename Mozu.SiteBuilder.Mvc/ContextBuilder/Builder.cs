@@ -38,12 +38,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
 {
     public interface ISitebuilderContextCacheRepository
     {
+        Task<List<RedirectEntry>> GetRedirectsAsync(SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext);
+        Task PutAsync(List<RedirectEntry> redirects, SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext);
         Task<SiteBuilderContextData> GetAsync(ISiteBuilderApiContext apiContext );
         Task PutAsync(SiteBuilderContextData item, ISiteBuilderApiContext apiContext);
        // Task Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dataViewMode);
         Task Invalidate(int tenantId, int value1, int value2, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewModeType);
     }
-
     public class SitebuilderContextCacheRepository : ISitebuilderContextCacheRepository
     {
         Mozu.Core.Caching.ICacheProvider _cacheProvider;
@@ -55,7 +56,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
         ISettings _settings;
         string _machineId;
         Autofac.ILifetimeScope _globalScope;
-        const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
+        public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
+        public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         const int TimerInterval = 15 * 1000;
         public const string CacheVersion = "2";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
@@ -192,11 +194,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
             filter = fBuilder.Or(workItems.Select(x => fBuilder.Eq(_ => _.Id, x.Id)));
             await col.DeleteManyAsync(filter).ConfigureAwait(false);
             var cache = _cacheProvider.GetCache(CacheName);
-            workItems.ForEach(_ =>
-            {
-                var tags = GetTags(_.TenantId, _.MasterCatalogId, _.CatalogId, _.SiteId, DataViewModeType.Live);
-                cache.InvalidateItemsByTags(tags, TagQueryType.Any);
-            });
+            var tags = workItems
+                .SelectMany(_ => GetTags(_.TenantId, _.MasterCatalogId, _.CatalogId, _.SiteId, DataViewModeType.Live).Select(x => new CacheKey() { Key = x, ShardKey = _.TenantId.ToString() }))
+                .ToList();
+
+            await cache.InvalidateItemsByTagsAsync(tags).ConfigureAwait(false); 
+               
+            
         }
 
         Task<SiteBuilderContextWorkItem> GetWork()
@@ -286,19 +290,26 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             return _mdbProvider.MongoDataBase.GetCollection<SiteBuilderContextWorkItem>("SiteBuilderContextWorkItems");
         }
-        Task<SiteBuilderContextData> ISitebuilderContextCacheRepository.GetAsync(ISiteBuilderApiContext apiContext)
+        async Task<SiteBuilderContextData> ISitebuilderContextCacheRepository.GetAsync(ISiteBuilderApiContext apiContext)
         {
             var cacheKey = this.GetCacheKey(apiContext);
-            return _cacheProvider.GetCache(CacheName)
+            var sbc = await _cacheProvider.GetCache(CacheName)
                 .GetAsync<SiteBuilderContextData>(cacheKey)
-                .ContinueWith(x => x.Result?.Item);
+                .ContinueWith(x => x.Result?.Item)
+                .ConfigureAwait(false);
+            if ( sbc != null && sbc.RedirectUpdateDate .HasValue && sbc.RuntimeRedirects == null)
+            {
+                sbc.Redirects = await this.GetRedirectsAsync(sbc, apiContext).ConfigureAwait(false);
+            }
+            return sbc;
         }
 
         async Task ISitebuilderContextCacheRepository.Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewMode)
         {
             //clear staging...
-            var tags = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending);
-            _cacheProvider.GetCache(CacheName).InvalidateItemsByTags(tags, TagQueryType.Any);
+            var tags = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending)
+                .Select(_ => new CacheKey() { Key = _, ShardKey = tenantId.ToString() }).ToList();
+            await _cacheProvider.GetCache(CacheName).InvalidateItemsByTagsAsync(tags).ConfigureAwait(false);
             if ( dataViewMode == DataViewModeType.Pending)
             {
                 return;
@@ -391,6 +402,40 @@ namespace Mozu.SiteBuilder.Mvc.Context
             
 
         }
+
+        public  Task<List<RedirectEntry>> GetRedirectsAsync(SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
+        {
+            var cacheKey = apiContext.TenantId + apiContext.SiteId + apiContext.DataViewMode.ToString();
+            return _cacheProvider.GetCache(RedirectCacheName)
+                .GetAsync<List<RedirectEntry>>(cacheKey,
+                    new eTagConstraint()
+                    {
+                        Condition = eTagConstraint.eTagCondition.GetIfMatch,
+                        eTag = ctxData.RedirectUpdateDate.Value.ToString("o")
+                    }).
+                    ContinueWith(x => x.Result?.Item);
+                
+        }
+
+        public Task PutAsync(List<RedirectEntry> redirects, SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
+        {
+            var cacheKey = apiContext.TenantId + apiContext.SiteId + apiContext.DataViewMode.ToString();
+            var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
+
+            var policy = new CachePolicy()
+            {
+                AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
+            };
+
+            return _cacheProvider.GetCache(RedirectCacheName)
+                .PutAsync<List<RedirectEntry>>(
+                    redirects,
+                    cacheKey,
+                    new List<string>(),
+                    policy,
+                    ctxData.RedirectUpdateDate.Value.ToString("o")
+                    );
+        }
     }
     public class SiteBuilderContextWorkItem
     {
@@ -469,23 +514,30 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public interface ISiteBuilderContextProvider
     {
-        Task<SiteBuilderContextData> GetContextData();
+        SiteBuilderContextData GetContextData();
+        Task<SiteBuilderContextData> GetContextDataAsync();
     }
 
     public class SiteBuilderContextProvider : ISiteBuilderContextProvider
     {
         ISiteBuilderContextDataRepository _repo;
-        Task<SiteBuilderContextData> _data;
+        Task<SiteBuilderContextData> _dataTask;
+        SiteBuilderContextData _data;
         public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo)
         {
             _repo = repo;
         }
+
         // Mozu.SiteBuilder.Mvc.Contexts.ISiteContext _siteContext;
-        public Task<SiteBuilderContextData> GetContextData()
+        public SiteBuilderContextData GetContextData()
         {
-            return _data = _data ?? _repo.GetContextData();
+            return _data;
         }
 
+        public Task<SiteBuilderContextData> GetContextDataAsync()
+        {
+            return _dataTask = _dataTask ?? _repo.GetContextData().ContinueWith(_ => _data = _.Result, TaskContinuationOptions.OnlyOnRanToCompletion) ;
+        }
 
     }
 
@@ -525,11 +577,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
         Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         IThemeRepository _themeRepository;
         INavigationRepository _navigationRepository;
-        Mozu.Core.IApiContext _apiContext;
+        ISiteBuilderApiContext _apiContext;
         ILogger _logger;
-
+        ISitebuilderContextCacheRepository _cacheRepo;
         public ContextServiceAggregator(
-            Mozu.Core.IApiContext apiContext,
+            ISiteBuilderApiContext apiContext,
             Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient,
             Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient entityListsWebApiClient,
             Mozu.ProductRuntime.Contracts.Clients.IProductCategoryRuntimeWebApiClient productCategoryRuntimeWebApiClient,
@@ -540,6 +592,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient,
             INavigationRepository navigationRepository,
             IThemeRepository themeRepository,
+            ISitebuilderContextCacheRepository cacheRepo,
             ILogger logger
 
             )
@@ -557,6 +610,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _themeRepository = themeRepository;
             _navigationRepository = navigationRepository;
             _logger = logger;
+            _cacheRepo = cacheRepo;
 
         }
         public async Task<SiteBuilderContextData> Aggregate(SiteBuilderContextData existing)
@@ -600,9 +654,16 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.CheckoutSettings = x.Result ?? existing?.CheckoutSettings, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
-            tasks.Add(_documentListWebApiClient.GetTreeDocumentContent("siteSettings@mozu", "redirects.1.1")
-                .ContinueWith(RedirectDocumentContinuation)
-                .ContinueWith(x => ret.Redirects = x.Result ?? existing?.Redirects, TaskContinuationOptions.OnlyOnRanToCompletion)
+
+            //tasks.Add(_documentListWebApiClient.GetTreeDocumentContent("siteSettings@mozu", "redirects.1.1")
+            //   .ContinueWith(RedirectDocumentContinuation)
+            //   .ContinueWith(x => ret.Redirects = x.Result ?? existing?.Redirects, TaskContinuationOptions.OnlyOnRanToCompletion)
+            //   );
+
+
+            tasks.Add(_documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "redirects.1.1")
+                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(x => ret.RedirectUpdateDate  = x.Result?.ContentUpdateDate ?? x.Result?.ContentUpdateDate, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
 
@@ -637,6 +698,25 @@ namespace Mozu.SiteBuilder.Mvc.Context
             ProcessTheme(ret, tasks, ret.GeneralSettings?.Theme, existing );
             ProcessTheme(ret, tasks, ret.GeneralSettings?.MobileTheme, existing);
             ProcessTheme(ret, tasks, ret.GeneralSettings?.TabletTheme, existing);
+
+            if ( ret.RedirectUpdateDate.HasValue )
+            {
+                ret.Redirects = await _cacheRepo.GetRedirectsAsync(ret, _apiContext).ConfigureAwait(false);
+                if ( ret.Redirects == null )
+                {
+                    tasks.Add(_documentListWebApiClient.GetTreeDocumentContent("siteSettings@mozu", "redirects.1.1")
+                      .ContinueWith(RedirectDocumentContinuation)
+                      .ContinueWith(x =>
+                      {
+                          ret.Redirects = x.Result ?? existing?.Redirects;
+                         return  _cacheRepo.PutAsync(ret.Redirects, ret, _apiContext);
+                      }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                      .Unwrap()
+                       );
+                }
+
+               
+            }
 
            
             if (tasks.Count > 0)
@@ -758,7 +838,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         private Task<Tuple<Theme, ThemeRuntimeSettingsCollection>> GetThemeSettings(Task<Theme> themeTask)
         {
-            if (themeTask.IsFaulted)
+            if (themeTask.IsFaulted || themeTask.Result == null )
             {
                 return Task<Tuple<Theme, ThemeRuntimeSettingsCollection>>.FromResult(new Tuple<Theme, ThemeRuntimeSettingsCollection>(null, null));
             }
@@ -789,12 +869,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         case Mozu.SiteSettings.General.Contracts.General.Routing.Mapping.TypeConst.mzdb:
                             {
-                                var mapper = new MZDBMap(_entityListsWebApiClient, map.Value);
-                                tasks.Add(mapper.Initialize().ContinueWith(t =>
+                                tasks.Add(MZDBMap.BuildContextData(_entityListsWebApiClient, map.Value).ContinueWith(t =>
                                 {
                                     lock (contextData.RouteMapperData)
                                     {
-                                        contextData.RouteMapperData[map.Key] = mapper.Mappings;
+                                        contextData.RouteMapperData[map.Key] = t.Result;
                                     }
                                 }, TaskContinuationOptions.OnlyOnRanToCompletion)
                                 );
@@ -812,12 +891,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         case Mozu.SiteSettings.General.Contracts.General.Routing.Validator.TypeConst.attribute:
                             {
-                                var doer = new ProductAttributeRouteConstraint(null, _productSearchWebApiClient, _apiContext, validator.Value.attributeFQN);
-                                tasks.Add(doer.Initialize().ContinueWith(t =>
+                               
+                                tasks.Add(ProductAttributeRouteConstraint.BuildContextData(null, _productSearchWebApiClient, _apiContext, validator.Value.attributeFQN).ContinueWith(t =>
                                 {
                                     lock (contextData.RouteValidatorData)
                                     {
-                                        contextData.RouteValidatorData[validator.Key] = doer.Values;
+                                        contextData.RouteValidatorData[validator.Key] = t.Result;
                                     }
                                 }, TaskContinuationOptions.OnlyOnRanToCompletion));
 
@@ -825,12 +904,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
                             }
                         case ConstraintFactory.SearchFacetConstraintType:
                             {
-                                var doer = new ProductAttributeRouteConstraint(null, _productSearchWebApiClient, _apiContext, validator.Value.attributeFQN);
-                                tasks.Add(doer.Initialize().ContinueWith(t =>
+                                tasks.Add(ProductAttributeRouteConstraint.BuildContextData(null, _productSearchWebApiClient, _apiContext, validator.Value.attributeFQN)
+                                    .ContinueWith(t =>
                                 {
                                     lock (contextData.RouteValidatorData)
                                     {
-                                        contextData.RouteValidatorData[validator.Key] = doer.Values;
+                                        contextData.RouteValidatorData[validator.Key] = t.Result;
                                     }
                                 }, TaskContinuationOptions.OnlyOnRanToCompletion));
 
@@ -840,13 +919,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
                         case Mozu.SiteSettings.General.Contracts.General.Routing.Validator.TypeConst.mzdb:
                             {
-                                var doer = new MzdbRouteConstraint(_entityListsWebApiClient, validator.Value.listFqn, validator.Value.docId, validator.Value.field);
-
-                                tasks.Add(doer.Initialize().ContinueWith(t =>
+                                tasks.Add(MzdbRouteConstraint.BuildContextData(_entityListsWebApiClient, validator.Value.listFqn, validator.Value.docId, validator.Value.field).ContinueWith(t =>
                                 {
                                     lock (contextData.RouteValidatorData)
                                     {
-                                        contextData.RouteValidatorData[validator.Key] = doer.Values;
+                                        contextData.RouteValidatorData[validator.Key] = t.Result;
                                     }
                                 }, TaskContinuationOptions.OnlyOnRanToCompletion));
                                 break;
@@ -999,11 +1076,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public List<SBCategory> RootCategoryTree
         { get; set; }
 
-       
 
-        public List<RedirectEntry> Redirects { get;  set; }
-
-
+        
+        public DateTime? RedirectUpdateDate { get; set; }
+        [JsonIgnore]
+        public List<RedirectEntry> Redirects { get; set; }
         public int? SiteId { get; set; }
         public LocationUsageCollection LocationUsages { get;  set; }
         public Dictionary<string, Tuple<Theme, ThemeRuntimeSettingsCollection>> Themes { get; set; }

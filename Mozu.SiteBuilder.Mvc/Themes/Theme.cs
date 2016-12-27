@@ -204,6 +204,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public bool? AllowProduction { get; set; }
         public string Hash { get;  set; }
+        [IgnoreDataMember]
+        [JsonIgnore]
+        internal bool PathsAreFixed { get;  set; }
 
         public static implicit operator Dictionary<object, object>(Theme v)
         {
@@ -215,7 +218,19 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     {
         public string Name { get; set; }
         public bool IsFile { get; set; }
-        public string FullPath { get; set; }
+        string _filePath;
+        [JsonIgnore]
+        public string FullPath
+        {
+            get
+            {
+                return _filePath ?? (_filePath = BuildPath());
+            }
+        }
+        string BuildPath()
+        {
+            return RootPath + "//" + VirtualPath;
+        }
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }

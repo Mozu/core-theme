@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             _facetId = settings.facetId;
         }
 
-        public Task<bool> Initialize() { return Task.FromResult(true); }
+        public bool Initialize() { return true; }
 
         public IDictionary<string, object> Map(HttpRequestMessage requestMessage, IDictionary<string, object> values, string parameterName)
         {
@@ -121,9 +121,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return values;
         }
 
-        public Task<bool> Initialize()
+        public bool Initialize()
         {
-            return Task.FromResult(true); 
+            return true;
         }
     }
     //todo:depricate
@@ -153,9 +153,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             return values;
         }
 
-        public Task<bool> Initialize()
+        public bool Initialize()
         {
-            return Task.FromResult(true); 
+            return true;
         }
     }
     public class QueryStringMapping : IRouteDataMapping
@@ -167,9 +167,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             Settings = new Mapping();
         }
 
-        public Task<bool> Initialize()
+        public bool Initialize()
         {
-            return Task.FromResult<bool>(true);
+            return true;
         }
 
         public Mapping Settings { get; set; }
@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
                 if (int.TryParse(tmp.ToString(), out id))
                 {
                     var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
-                    var cat = catTreeProvider.GetAllCategories().Result.FindById(id);
+                    var cat = catTreeProvider.GetAllCategories().FindById(id);
                     if (cat != null)
                     {
                         values["categoryCode"] = cat.CategoryCode;
@@ -255,7 +255,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             if (!catFound && values.TryGetValue("categoryCode", out tmp) && !string.IsNullOrWhiteSpace(tmp as string))
             {
                 var catTreeProvider = requestMessage.Resolve<ICategoryTreeProvider>();
-                var cat = catTreeProvider.GetAllCategories().Result.FindByCode((string)tmp);
+                var cat = catTreeProvider.GetAllCategories().FindByCode((string)tmp);
                 if (cat != null)
                 {
                     values["categoryId"] = cat.Id;
@@ -292,9 +292,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
         }
 
-        public Task<bool> Initialize()
+        public bool Initialize()
         {
-            return Task.FromResult(true);
+            return true; 
         }
     }
 
@@ -335,62 +335,79 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
             this.Mappings = new Dictionary<string, object>(settings.mappings, StringComparer.OrdinalIgnoreCase);
         }
-        public Task<bool> Initialize() { return Task.FromResult(true); }
+        public bool Initialize() { return true; }
 
         
     }
 
     public class MZDBMap : DictionaryMappingBase, IRouteDataMapping
     {
-        readonly IEntityListsWebApiClient _client;
-        readonly string _entityList;
-        readonly string _docId;
         private string key;
-        private Mapping mapping;
+        
         private ISiteBuilderContextProvider contextRepo;
 
-        public MZDBMap(IEntityListsWebApiClient client, Mapping settings):base(settings)
-        {
-            if (settings.listFqn.IsNullOrEmpty()) throw new ArgumentException("entityList");
-            if (settings.docId.IsNullOrEmpty()) throw new ArgumentException("docId");
-
-            _client = client;
-            _entityList = settings.listFqn;
-            _docId = settings.docId;
-        }
+      
 
         public MZDBMap(string key, Mapping mapping, ISiteBuilderContextProvider contextRepo):base(mapping)
         {
             this.key = key;
-            this.mapping = mapping;
+           
             this.contextRepo = contextRepo;
         }
 
-        public async Task<bool> Initialize()
+        public static async Task<Dictionary<string, object>> BuildContextData(IEntityListsWebApiClient client, Mapping settings)
+        {
+            IEntityListsWebApiClient _client;
+            string _entityList;
+            string _docId;
+            _client = client;
+            _entityList = settings.listFqn;
+            _docId = settings.docId;
+
+
+            var entityResponse = await _client.CloneWithoutUserClaims().GetEntity(_entityList, _docId).ConfigureAwait(false);
+            if (entityResponse.HasException) throw entityResponse.ReadException();
+
+            var entity = entityResponse.ReadAsSync();
+
+
+            var Mappings = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var prop in entity.Properties().Where(x => x.Value is JValue))
+            {
+                var val = ((JValue)prop.Value).Value;
+                Mappings[prop.Name] = val;
+            }
+
+            return Mappings;
+        }
+
+        public  bool Initialize()
         {
             if (contextRepo != null)
             {
-                var data = await contextRepo.GetContextData().ConfigureAwait(false);
+                var data =  contextRepo.GetContextData();
                 this.Mappings = data.RouteMapperData.ContainsKey(this.key) ?
                     data.RouteMapperData[this.key] :
                     new Dictionary<string, object>();
                 return true;
             }
-            var entityResponse = await _client.CloneWithoutUserClaims().GetEntity(_entityList, _docId).ConfigureAwait(false);
-            if (entityResponse.HasException) throw entityResponse.ReadException();
+            throw new NotImplementedException();
+            //var entityResponse = await _client.CloneWithoutUserClaims().GetEntity(_entityList, _docId).ConfigureAwait(false);
+            //if (entityResponse.HasException) throw entityResponse.ReadException();
 
-            var entity = entityResponse.ReadAsSync();
+            //var entity = entityResponse.ReadAsSync();
         
                 
-            this.Mappings = new Dictionary<string,object>( StringComparer.OrdinalIgnoreCase );
+            //this.Mappings = new Dictionary<string,object>( StringComparer.OrdinalIgnoreCase );
 
-            foreach( var prop in entity.Properties().Where(x=> x.Value is JValue))
-            {
-                var val = ((JValue)prop.Value).Value;
-                this.Mappings[prop.Name] = val;
-            }
+            //foreach( var prop in entity.Properties().Where(x=> x.Value is JValue))
+            //{
+            //    var val = ((JValue)prop.Value).Value;
+            //    this.Mappings[prop.Name] = val;
+            //}
                
-            return true;
+            //return true;
         }
 
         

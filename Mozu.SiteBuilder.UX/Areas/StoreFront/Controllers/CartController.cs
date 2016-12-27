@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
+            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
             if (redirect != null) return redirect;
 
             var pc = this.PageContext;

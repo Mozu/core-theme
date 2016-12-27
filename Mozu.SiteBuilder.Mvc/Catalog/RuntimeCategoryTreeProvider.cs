@@ -32,24 +32,34 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         public RuntimeCategoryTreeProvider(ISiteBuilderContextProvider contextProvider)
         {
             _contextProvider = contextProvider;
+           
         }
 
         public bool HasCompleted
         {
             get
             {
-                return _categoryTreeTask != null && _categoryTreeTask.IsCompleted;
+                return true;
             }
         }
-       
-        public Task<CategoryTree> GetAllCategories()
+        CategoryTree _catTree;
+        public CategoryTree GetAllCategories()
         {
-            return _categoryTreeTask ?? (_categoryTreeTask = GetAllCategoriesImpl());
+            return _catTree ?? (_catTree = GetAllCategoriesImpl());
+        }
+        public Task<CategoryTree> GetAllCategoriesAsync()
+        {
+            return _categoryTreeTask ?? (_categoryTreeTask = Task.FromResult(GetAllCategoriesImpl()));
         }
 
-        Task<CategoryTree> GetAllCategoriesImpl()
+        CategoryTree GetAllCategoriesImpl()
         {
-            return _contextProvider.GetContextData().ContinueWith(task => new CategoryTree() { AllCategories = task.Result.GetFlatCategoryList(), RootCategories = task.Result.GetCategoryTree(), ETag = task.Result.Hash });
+            var data = _contextProvider.GetContextData();
+            return new CategoryTree() {
+                AllCategories = data.GetFlatCategoryList(),
+                RootCategories = data.GetCategoryTree(),
+                ETag = data.Hash
+            };
         }
 
         

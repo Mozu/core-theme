@@ -103,28 +103,28 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 if (_httpRouteCollection == null)
                 {
-                    _httpRouteCollection = _customRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false).GetAwaiter().GetResult() ?? new object();
+                    _httpRouteCollection = _customRouteRepository.Value.GetHttpRouteCollection() ?? new object();
                 }
                 return _httpRouteCollection as HttpRouteCollection;
             }
         }
 
-        public async Task<bool> Init()
-        {
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+        //public async Task<bool> Init()
+        //{
+        //    var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
             
-            return routeCollection == null;
-        }
+        //    return routeCollection == null;
+        //}
 
-        public async Task<bool> RouteIncomingRequest()
+        public bool RouteIncomingRequest()
         {
             var path = _requestMessage.RequestUri.AbsolutePath;
             if ( path.Contains( "=") || path.Contains("?"))
             {
                 return false;
             }
-            
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+
+            var routeCollection =  GetRouteCollection();
             if (routeCollection == null)
             {
                 return false;
@@ -143,10 +143,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return true;
         }
 
-        async Task<HttpRouteCollection> GetRouteCollectionAsync()
+        HttpRouteCollection GetRouteCollection()
         {
-            _httpRouteCollection = _httpRouteCollection ??  (_httpRouteCollection = (await _customRouteRepository.Value.GetHttpRouteCollection().ConfigureAwait(false)) ?? new object());
-            return _httpRouteCollection as HttpRouteCollection;
+            _httpRouteCollection = _httpRouteCollection ?? _customRouteRepository.Value.GetHttpRouteCollection();
+            return _customRouteRepository.Value.GetHttpRouteCollection();
         }
 
         System.Collections.Concurrent.ConcurrentDictionary<FancyRoute,Tuple<HttpRouteCollection, List<CustomRoute>>> _canonicalCache = new System.Collections.Concurrent.ConcurrentDictionary<FancyRoute, Tuple<System.Web.Http.HttpRouteCollection, List<CustomRoute>>>();
@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return new Tuple<HttpRouteCollection, List<CustomRoute>>(routeCollection, routes);
         }
 
-        public async Task<HttpResponseMessage> RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
+        public HttpResponseMessage RedirectWithContext(HttpRequestMessage request, FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc)
         {
             if (_siteBuilderApiContext.Value.IsEditMode || _siteBuilderApiContext.Value.IsAdminMode)
             {
@@ -192,7 +192,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             }
 
             var currentRouteData  = request.GetRouteData();
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+            var routeCollection =  GetRouteCollection();
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
@@ -281,9 +281,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return incomingPort;
         }
 
-        public async Task<string> GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext, string hostName = null)
+        public string GetCanonicalUrl(FancyRoute internalRoute, Func<IDictionary<string, object>> viewDataAdditionFunc, bool useContext, string hostName = null)
         {
-            var routeCollection = await GetRouteCollectionAsync().ConfigureAwait(false);
+            var routeCollection =  GetRouteCollection();
             var routes = GetCanonicalRouteList(internalRoute, routeCollection, _routeconfig);
             if (!routes.Any()) return null; // no canonical route that matches, or current route is canonical? then no redirect!
 
@@ -346,7 +346,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public IHttpRouteData GetRouteData(string virtualPathRoot, HttpRequestMessage request)
         {
-            var routeCollection = GetRouteCollectionAsync().Result;
+            var routeCollection = GetRouteCollection();
             if (routeCollection == null) return null;
 
             return  routeCollection.GetRouteData(_requestMessage);

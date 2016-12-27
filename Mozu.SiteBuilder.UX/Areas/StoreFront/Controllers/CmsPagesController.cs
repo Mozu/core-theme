@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { { "listName", documentListName }, { "listView", listView } });
+            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { { "listName", documentListName }, { "listView", listView } });
 
             if (redirect != null)
             {
@@ -155,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
             }
 
-            var redirect = await _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document)).ConfigureAwait(false);
+            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document));
             if (redirect != null)
             {
                 return redirect;
