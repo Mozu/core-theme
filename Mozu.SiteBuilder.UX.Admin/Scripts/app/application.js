@@ -131,6 +131,7 @@ Ext.define('Taco.Application', {
         'Ext.layout.container.Column',
         'Ext.layout.container.Accordion',
         'Ext.layout.container.Absolute',
+        'Ext.data.proxy.JsonP',
         'Ext.form.field.Radio',
         'Taco.core.ux.form.field.SingleImageField',
         'Ext.ux.form.MultiSelect',
