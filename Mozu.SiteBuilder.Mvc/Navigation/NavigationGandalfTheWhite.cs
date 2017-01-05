@@ -104,28 +104,29 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         }
 
 
-        async Task<SuperNavigationNodeList> GetSuperNavList(bool isCacheRefreshCallback= false)
+        async Task<SuperNavigationNodeList> GetSuperNavList(bool isCacheRefreshCallback = false, string cacheRefreshCacheKey = null)
         {
-            var data = await GetListData().ConfigureAwait(false);
+             var data = await GetListData().ConfigureAwait(false);
+            var cacheKey = GetCacheKey(data.Etag, _priceListCode);
 
-            if (isCacheRefreshCallback)
+            if (isCacheRefreshCallback && cacheRefreshCacheKey == cacheKey)
             {
                 return ProccessNavData(data);
             }
 
-           
-            var cacheKey = GetCacheKey(data.Etag, _priceListCode );
+
+
             var retVal = GetFromCache(cacheKey);
 
-            if (retVal != null)
+            if (retVal != null && !isCacheRefreshCallback )
             {
                 return retVal;
             }
-            
+
             lock (cacheKey)
             {
                 retVal = GetFromCache(cacheKey);
-                if (retVal != null)
+                if (retVal != null && !isCacheRefreshCallback)
                 {
                     return retVal;
                 }
@@ -134,8 +135,13 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                     retVal,
                     CacheScope.Site,
                     StorefrontCacheTypes.Default,
-                    new CacheCallBacker<INavigationGandalf>(_lifetimeScope, (nav, obj) => ((NavigationGandalfTheWhite)nav).GetSuperNavList(true).Result).CacheCallBack
+                    new CacheCallBacker<INavigationGandalf>(_lifetimeScope, (nav, obj) => ((NavigationGandalfTheWhite)nav).GetSuperNavList(true, cacheKey).Result).CacheCallBack
                     );
+               
+                if (isCacheRefreshCallback)
+                {
+                    return null;
+                }
                 return retVal;
             }
 
@@ -143,7 +149,6 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
 
 
 
-        
 
 
         private static string GetCacheKey(string etag, string priceListCode)

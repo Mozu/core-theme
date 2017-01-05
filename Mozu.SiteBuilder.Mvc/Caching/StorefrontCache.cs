@@ -272,26 +272,51 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
     public class CacheCallBacker
     {
+        class DependencyScope : System.Web.Http.Dependencies.IDependencyScope
+        {
+            public ILifetimeScope Scope { get; set; }
+            public void Dispose()
+            {
 
-        ILifetimeScope _scope;
+            }
+
+            public object GetService(Type serviceType)
+            {
+                return Scope.Resolve(serviceType);
+            }
+
+            public IEnumerable<object> GetServices(Type serviceType)
+            {
+                return new object[] { Scope.Resolve(serviceType) };
+            }
+        }
+
+        Func<ILifetimeScope> _scopeFn;
         Func<ILifetimeScope, object, object> _handler;
         public CacheCallBacker(ILifetimeScope existingScope, Func<ILifetimeScope, object, object> handler)
         {
             _handler = handler;
-            try {
+            try
+            {
                 var apiContext = existingScope.Resolve<ISiteBuilderApiContext>();
                 var siteContext = existingScope.Resolve<ISiteContext>();
 
                 var pageContext = existingScope.Resolve<IPageContext>();
-                var request = existingScope.Resolve<HttpRequestMessage>();
+                // var request = existingScope.Resolve<HttpRequestMessage>();
                 var httpContext = existingScope.Resolve<HttpContextBase>();
                 var cookieProvider = existingScope.Resolve<ICookieProvider>();
-                _scope = existingScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cb =>
+                var globalScope = ((Autofac.Core.ISharingLifetimeScope)existingScope).RootLifetimeScope;
+                _scopeFn = () => globalScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cb =>
                 {
-                    cb.Register(c => apiContext).As<IApiContext>().As<ISiteBuilderApiContext>();
+                    var req = new HttpRequestMessage();
+                    var ctx = (ISiteBuilderApiContext)apiContext.Clone();
+                    ctx.RequestCancellationToken = new System.Threading.CancellationTokenSource(60000).Token;
+                    cb.Register(c => ctx)
+                    .As<IApiContext>()
+                    .As<ISiteBuilderApiContext>();
                     cb.Register(c => siteContext).As<ISiteContext>();
                     cb.Register(c => pageContext).As<IPageContext>();
-                    cb.Register(c => request).As<HttpRequestMessage>();
+                    cb.Register(c => req).As<HttpRequestMessage>();
                     cb.Register(c => httpContext).As<HttpContextBase>();
                     cb.Register(c => cookieProvider).As<ICookieProvider>();
                     if (siteContext is SiteContext)
@@ -317,10 +342,14 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public object CacheCallBack(object oldCacheValue)
         {
-            return _handler(_scope, oldCacheValue);
+            using (var scope = _scopeFn())
+            {
+                scope.Resolve<HttpRequestMessage>().Properties[System.Web.Http.Hosting.HttpPropertyKeys.DependencyScope] = new DependencyScope() { Scope = scope };
+                return _handler(scope, oldCacheValue);
+            }
         }
 
-        
+
 
 
     }
