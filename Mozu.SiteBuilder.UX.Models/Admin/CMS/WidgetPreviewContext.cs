@@ -119,7 +119,31 @@ namespace Mozu.SiteBuilder.Mvc.Models.CMS.Admin
         public class ZoneRuntimeData
         {
             public string Id { get; set; }
-            public List<ZoneRowRuntimeData> Rows { get; set; }
+            public JToken Json { get; set; }
+
+            List<ZoneRowRuntimeData> _rows;
+            public List<ZoneRowRuntimeData> Rows
+            {
+                get
+                {
+                    if (_rows == null)
+                    {
+                        try
+                        {
+                            _rows = Json.ToObject<List<ZoneRowRuntimeData>>() ?? new List<ZoneRowRuntimeData>();
+                        }
+                        catch( Exception )
+                        {
+                            _rows = new List<ZoneRowRuntimeData>();
+                        }
+                    }
+                    return _rows;
+                }
+                set
+                {
+                    _rows = value;
+                }
+            }
             public DocumentRequest Source { get; set; }
             [Newtonsoft.Json.JsonIgnore]
             public ZoneScope Scope { get; set; }

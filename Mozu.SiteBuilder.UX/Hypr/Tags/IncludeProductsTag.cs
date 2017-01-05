@@ -86,6 +86,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true);
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
+            var responseGroups = arguments.GetValueOrDefault<string>("responseGroups");
             var facet = arguments.GetValueOrDefault<string>("facet");
             var searchTuningRuleCode = arguments.GetValueOrDefault<string>("searchTuningRuleCode");
             var enableSearchTuningRules = arguments.GetValueOrDefault<bool?>("enableSearchTuningRules");
@@ -154,7 +155,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 sbAPIContext.PriceListCode,
                 facetPrefix,
                 responseOptions,
-                suppressErrors
+                suppressErrors,
+                responseGroups
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -202,7 +204,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string priceList,
             string facetPrefix,
             string responseOptions,
-            bool suppressErrors
+            bool suppressErrors,
+            string responseGroups
             )
         {
             string cacheKey = null;
@@ -228,6 +231,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append (priceList)
                     .Append(facetPrefix)
                     .Append(responseOptions)
+                    .Append(responseGroups)
                     .ToString();
 
                 pc = cache.Get<ProductSearchResult>(cacheKey, scope:CacheScope.Site , cacheType:StorefrontCacheTypes.ProductSearch);
@@ -247,6 +251,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     sortBy: sortBy.sortValue,
                     responseFields: responseFields,
                     responseOptions: responseOptions,
+                    responseGroups: responseGroups,
                     pageSize: pageSize,
                     searchTuningRuleCode: searchTuningRuleCode,
                     enableSearchTuningRules: enableSearchTuningRules,
