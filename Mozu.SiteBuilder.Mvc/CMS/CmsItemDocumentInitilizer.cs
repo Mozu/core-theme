@@ -224,27 +224,32 @@ namespace Mozu.SiteBuilder.Mvc.CMS
 
                     case "CHORIZO":
                         {
-                            List<Chorizo.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Chorizo.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Chorizo.ZoneRuntimeData>>();
-
-                            zoneData.ForEach(x =>
+                            var chorizoItem = item.ToObject<Chorizo.ZoneRuntimeData>();
+                            if (chorizoItem != null)
                             {
-                                x.Source = src;
-                                x.Scope = scope;
-                            });
-                            cmsPageContext.RuntimeData.AddRange(zoneData);
+                                chorizoItem.Source = src;
+                                chorizoItem.Scope = scope;
+                                cmsPageContext.RuntimeData.Add(chorizoItem);
+                            }
+                            
 
                             break;
                         }
                     case "CALIENTE":
                         {
-                            List<Caliente.ZoneRuntimeData> zoneData = widgetRawArray == null ? new List<Caliente.ZoneRuntimeData>() : widgetRawArray.ToObject<List<Caliente.ZoneRuntimeData>>();
 
-                            zoneData.ForEach(x =>
+                            var calienteItem = new Caliente.ZoneRuntimeData();
+
+                            calienteItem.Source = src;
+                            calienteItem.Scope = scope;
+                            calienteItem.Json = item.GetValue("rows", StringComparison.OrdinalIgnoreCase) as JArray;
+                            calienteItem.Id = (string)item.GetValue("id", StringComparison.OrdinalIgnoreCase);
+                            calienteItem.Build = "CALIENTE";
+                            if (!string.IsNullOrEmpty(calienteItem.Id))
                             {
-                                x.Source = src;
-                                x.Scope = scope;
-                            });
-                            cmsPageContext.CalienteRuntimeData.AddRange(zoneData);
+                                cmsPageContext.CalienteRuntimeData.Add(calienteItem);
+                            }
+
 
                             break;
                         }
@@ -252,7 +257,6 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             };
 
         }
-
         public void CreateTemplate_deleteme(DocumentRequest req, out Task<ServiceClientResponse<Document>> task)
         {
             if (req.Path == null)

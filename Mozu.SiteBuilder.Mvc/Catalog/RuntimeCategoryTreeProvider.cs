@@ -125,6 +125,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
 
             public CategoryTree GetSync(object origVal)
             {
+                Client = Client.CloneWithApiContext(ctx => ctx.RequestCancellationToken = new CancellationTokenSource(60000).Token);
                 return GetAsyc(origVal).Result;
             }
 
