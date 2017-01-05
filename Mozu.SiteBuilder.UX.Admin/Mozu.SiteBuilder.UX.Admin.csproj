@@ -442,6 +442,7 @@
     <Compile Include="Helpers\CategoryHelpers\ICategoryHelper.cs" />
     <Compile Include="Helpers\ChannelHelpers\ChannelFilterExtensions.cs" />
     <Compile Include="Helpers\CollectionTaskUnMapper.cs" />
+    <Compile Include="Helpers\CompareHelper.cs" />
     <Compile Include="Helpers\ContentHelpers\ContentFilterExtensions.cs" />
     <Compile Include="Helpers\ContentHelpers\ContentSortExtensions.cs" />
     <Compile Include="Helpers\CouponCodeHelpers\CouponCodeFilterExtensions.cs" />

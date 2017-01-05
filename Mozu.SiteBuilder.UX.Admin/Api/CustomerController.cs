@@ -24,6 +24,7 @@ using Credit = Mozu.SiteBuilder.UX.Admin.Api.Models.Credit;
 using DC = Mozu.Customer.Contracts;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Behaviors;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -534,6 +535,56 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        private class ContactUpdateComparer : IEqualityComparer<DC.CustomerContact>
+        {
+            // If the Id's are same but any other field is different, then return true, to indicate there is an update.
+            public bool Equals(DC.CustomerContact c1, DC.CustomerContact c2)
+            {
+                var result = c1 != null && c2 != null && c1.AccountId == c2.AccountId && c1.Id == c2.Id;
+                if (result)
+                {
+                    if (!CompareHelper.AreSame<Core.Api.Contracts.Address>(c1.Address, c2.Address))
+                        return true;
+
+                    if (!CompareHelper.AreSame<Core.Api.Contracts.Phone>(c1.PhoneNumbers, c2.PhoneNumbers))
+                        return true;
+
+                    if (!ContactFieldCompare(c1, c2, (c) => c.Email))
+                        return true;
+
+                    if (!ContactFieldCompare(c1, c2, (c) => c.FirstName))
+                        return true;
+
+                    if (!ContactFieldCompare(c1, c2, (c) => c.LastNameOrSurname))
+                        return true;
+
+                    if (!ContactFieldCompare(c1, c2, (c) => c.FaxNumber))
+                        return true;
+
+                    if ((c1.Types == null && c2.Types != null)
+                        || (c1.Types != null && c2.Types == null) || c1.Types.Count != c2.Types.Count)
+                        return true;
+                    
+                    if (!c1.Types.All(c => c2.Types.Any(t => CompareHelper.AreSame<DC.ContactType>(c, t))))
+                        return true;
+                    
+                    return false;
+                }
+
+                return false;
+            }
+
+            private static bool ContactFieldCompare(DC.CustomerContact contact1, DC.CustomerContact contact2, Func<DC.CustomerContact, string> field)
+            {
+                return String.Equals(field(contact1), field(contact2), StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(DC.CustomerContact c)
+            {
+                return c.Id;
+            }
+        }
+
         private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
 
@@ -562,7 +613,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
             {
                 var comparer = new ContactIdEqualityComparer();
-                var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, comparer).ToList();
+                var updateComparer = new ContactUpdateComparer();
+                var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, updateComparer).ToList();
                 var contactsToAdd = dcCustomer.Contacts.Except(dcExistingCustomer.Contacts, comparer).ToList();
                 var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
 
@@ -575,6 +627,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var deleteResults = Task.WhenAll(contactDeleteTasks);
             return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
         }
+        
 
         /// <summary>
         /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
