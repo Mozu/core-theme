@@ -14,7 +14,6 @@ seismic-audio/
 lib/
 *.orig
 user.app.config
-core-kibo-theme
 mozu.config.json
 
 *ncrunch*

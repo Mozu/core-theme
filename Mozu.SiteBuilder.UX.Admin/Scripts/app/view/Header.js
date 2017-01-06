@@ -16,7 +16,7 @@ Ext.define('Taco.view.Header', {
         tag: 'header'
     },
     componentCls: Taco.baseCSSPrefix + 'viewport-header',
-    height: 33,
+    height: 36,
     hideMode: 'offsets',
     layout: {
         type: 'vbox',
@@ -67,9 +67,9 @@ Ext.define('Taco.view.Header', {
         this.items = [{
             xtype: 'container',
             anchor: '100%',
-            height: 33,
+            height: 36,
             cls: Taco.baseCSSPrefix + 'masthead',
-            padding: '0 6 0 5',
+            padding: '0 10 0 10',
             layout: {
                 type: 'hbox',
                 align: 'middle'
@@ -78,23 +78,7 @@ Ext.define('Taco.view.Header', {
                 {
                     xtype: 'contentlogo',
                     width: 68
-                }, 
-                {
-                    xtype: 'component',
-                    html: '<a href="/admin" class="taco-kibo-text">Kibo eCommerce</a>',
-                    listeners: {
-                        click: {
-                            element: 'el', //bind to the underlying el property on the panel
-                            fn: function (e) {
-                                e.preventDefault();
-                                // Taco.app.context.setCurrentContext(Taco.app.context);
-                                Taco.core.StateManager.attemptNavigate(Taco.app.context.urlToken);
-
-                            }
-                        }
-                    }
-                },
-                {
+                }, {
                     xtype: 'secondarymenu',
                     flex: 1
                 }

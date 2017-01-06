@@ -6,6 +6,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
     alias: 'widget.secondarymenu',
     requires: ['Taco.view.navigation.GlobalSearchBox'],
 
+    cls: Taco.baseCSSPrefix + 'secondary-nav',
     layout: {
         type: 'hbox',
         align: 'middle',
@@ -13,12 +14,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         defaultMargins: '0 0 0 0'
     },
 
-    cls: Taco.baseCSSPrefix + 'secondary-nav',
-
     initComponent: function () {
 
-        var xIconHTML = '<span style="font-family: mozicons;position:relative;left:-4px;top:2px;font-size:14px;">&#xe903;</span>',
-            searchButton,
+        var searchButton,
             searchBox,
             searchButtonContent;
 
@@ -26,8 +24,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             hidden: true,
             onFocus: function () {
                 searchBox = this;
-                searchButton.el.dom.innerHTML = xIconHTML;
                 if (typeof searchButtonContent == 'undefined') {
+                    searchButtonContent = searchButton.el.dom.innerHTML;
                 }
             },
             onChange: Ext.bind(function () {
@@ -35,7 +33,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     searchButtonContent = searchButton.el.dom.innerHTML;
                 }
 
-                searchButton.el.dom.innerHTML = xIconHTML;
+                searchButton.el.dom.innerHTML = '<span style="font-family: mozicons;">&#xe903;</span>';
                 searchButton.on('click', function () {
                     searchBox.inputEl.dom.value = '';
                     this.el.dom.innerHTML = searchButtonContent;
@@ -44,7 +42,6 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             onBlur: Ext.bind(function () {
                 if (searchBox.inputEl.dom.value == '') {
                     searchButton.el.dom.innerHTML = searchButtonContent;
-                    searchButton.removeCls('is-active');
                     searchBox.hide();
                 }
             }),
@@ -65,34 +62,8 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         this.items = [{
             xtype: 'component',
             cls: 'tenant-name',
-            html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>',
+            html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>'
         },
-        {
-            xtype: 'button',
-            cls: 'help-button',
-            ui: 'link',
-            scale: 'medium',
-            text: 'Help',
-            hidden: Taco.siteBuilderHelperToggle !== 'on',
-            handler: function () {
-                window.open(Taco.neWadminHelpLink);
-            }
-        },
-        {
-            xtype: 'button',
-            ui: 'link',
-            scale: 'medium',
-            cls: 'search-button',
-            text: '',
-            handler: Ext.bind(function (btn) {
-                this.searchBox.show();
-                searchButton = btn;
-                searchButtonContent = searchButton.el.dom.innerHTML;
-                this.searchBox.focus();
-                searchButton.addClass('is-active');
-            }, this)
-        },
-        this.searchBox,
         {
             xtype: 'userbutton',
             cls: 'user-initials',
@@ -128,7 +99,31 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
                     }
                 ]
             }
-        }
+        },
+        {
+            xtype: 'button',
+            cls: 'help-button',
+            ui: 'link',
+            scale: 'medium',
+            text: 'Help',
+            hidden: Taco.siteBuilderHelperToggle !== 'on',
+            handler: function () {
+                window.open(Taco.neWadminHelpLink);
+            }
+        },
+        {
+            xtype: 'button',
+            ui: 'link',
+            scale: 'medium',
+            cls: 'search-button',
+            text: '',
+            handler: Ext.bind(function (btn) {
+                this.searchBox.show();
+                searchButton = btn;
+                this.searchBox.focus();
+            }, this)
+        },
+            this.searchBox
         ];
 
         this.navStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.Navigation');
