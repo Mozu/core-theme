@@ -1,0 +1,72 @@
+ body {
+ 	margin: 0px;
+ }
+ .page-break {
+ 	display: none;
+ }
+
+ .printView-opitions-bar{
+    padding: 0px 4%;
+    text-align: right;
+    position: fixed;
+    bottom: 0px;
+    width: 92%;
+    border-top: 1px solid #ccc;
+    height: 10%;
+}
+
+.printView-opitions-bar button {
+	-webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    background-color: #eeeeee;
+    padding: 6.25px 12.5px;
+    min-width: 64px;
+    border: 1px solid #a7a7a7;
+    margin-top: 15px;
+}
+
+.printView-opitions-bar button:hover {
+    background-color: #e3e3e3;
+    cursor: pointer;
+}
+
+.printViewContent {
+	overflow-y: scroll;
+    position: relative;
+    height: 90%;
+}
+
+.printViewContent .return-label {
+	margin: 20px 2%;
+	border: 1px dashed #000;
+	display: inline-block;
+	width: 44%
+}
+
+.printViewContent .return-label img{
+	width: 100%
+}
+
+@media print {
+	.print-hide {
+		display: none;
+	}
+
+	.page-break	{ display: block; page-break-before: always; }
+
+	.printViewContent {
+		overflow: hidden;
+		height: inherit;
+		margin: 0px 2%;
+		height: inherit;
+	}
+	.printViewContent .return-label {
+		margin:20px 0px;
+		width:95%;
+		overflow: hidden;
+	}
+}

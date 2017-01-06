@@ -292,7 +292,7 @@
     "optionalComments"   : "Kommentare (Optional)",
     "returnType"   : "Rückgabetyp",
     "returnInfo"   : "Bitte füllen Sie dieses Formular aus, um eine Rückkehr zu beantragen. Versandkosten werden pro Artikel angefordert, und nicht pro Bestellung oder Lieferung. Sehen Sie sich die <HTML Link> um mehr zu erfahren.",
-    "returnTotal"   : "Zurück Gesamt",
+    "returnTotal"   : "Betrag Zurückerstattet",
     "returning"   : "Rückkehr",
     "returnDetails"   : "Angaben zur Rückkehr",
     "returnNumber"   : "RMA #",

@@ -316,7 +316,7 @@
   "optionalComments"                      : "Comments (Optional)",
   "returnType"                            : "Return Type",
   "returnInfo"                            : "Please fill out this form to request a return. Returns are requested per item, rather than per order or shipment. View the <a href=\"/returnpolicy\" target=\"_blank\">Return Policy</a> to learn more.",
-  "returnTotal"                           : "Return Total",
+  "returnTotal"                           : "Amount Refunded",
   "returning"                             : "Returning",
   "returnDetails"                         : "Return Details",
   "returnNumber"                          : "RMA #",
@@ -446,5 +446,9 @@
   "volumePriceMinMaxQty"                  : "{0} - {1}",
   "volumePriceMinOnlyQty"                 : "{0}+",
   "mapPrice"                              : "add to cart to see final price",
-  "additionalInformation"                 : "Additional Information"
+  "additionalInformation"                 : "Additional Information",
+  "printWindowPrintButton"                 : "Print",
+  "printWindowCancelButton"               : "Cancel",
+  "returnPrintLabelButton"                : "Print"
+
 }

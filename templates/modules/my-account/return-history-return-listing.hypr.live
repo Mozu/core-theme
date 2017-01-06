@@ -7,7 +7,18 @@
         <dd>{{ model.returnNumber }}</dd>
         <dt>{{ labels.returnTotal }}</dt>
         <dd>{{ model.refundAmount|currency }}</dd>
-    </dt>
+    </dl>
+
+    {% if model.status == "Authorized" %}
+        <div class="">
+           <button id="print-return-label" class="mz-button" data-mz-action="printReturnLabel" data-mz-returnId="{{model.id}}">
+                {{labels.returnPrintLabelButton}}
+           </button>
+        </div>
+
+    {% endif %}
+
+
 {% endblock order-details %}
 {% block order-items %}
     {% for item in model.items %}
