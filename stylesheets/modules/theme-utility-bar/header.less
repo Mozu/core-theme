@@ -4,7 +4,7 @@
 }
 
 .mz-future-bar-indicator {
-    background-color: @mozuBackgroundColor;
+    background-color: @kiboBackgroundColor;
     border-radius: 15px;
     bottom: 0;
     color: #FFFFFF;
@@ -84,14 +84,13 @@
             margin: 15px;
 
             &.mz-header-icon {
-                color: #df3018;
                 float: left;
-                font-size: 24px;
-                margin-top: 21px;
-
-                &::after {
-                    content: "\E037"; 
-                    font-family: mozicons;
+                
+                > img {
+                    height: 85px;
+                    position: relative;
+                    top: -19px;
+                    left: -24px;
                 }
             }
 
@@ -150,7 +149,7 @@
                 margin-top:21px;
 
                 .mz-preview-button {
-                    background-color: @mozuBackgroundColor;
+                    background-color: @kiboBackgroundColor;
                     border-radius: @pillButtonBorderRadius;
                     border: none;
                     color: white;
