@@ -212,7 +212,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
 
-        public string ToClearUrl(ICustomRouteHandler routeHandler, SearchContext searchContext)
+        public string ToClearUrl(ICustomRouteHandler routeHandler, SearchContext searchContext, bool clearFacets = false)
         {
             var routeData = this._request.GetRouteData();
             int catId = searchContext.CategoryId != null ? (int)searchContext.CategoryId : -1;
@@ -267,7 +267,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 
             }
-            if( isSearchRoute)
+            if( isSearchRoute || clearFacets )
             {
                 return ToUrl(new SearchContextOverrides()
                 {
@@ -276,6 +276,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     //CategoryId = catId > 0 ? catId : (int?)null
                 });
             }
+            
             return baseUrl;
             
 
