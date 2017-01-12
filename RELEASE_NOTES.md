@@ -1,6 +1,9 @@
 # What's New
 
 ### July 7, 2016
+* Added a Print dialog window accessible from the My Account page that enables shoppers to print RMA shipping labels - [Pull Request](https://github.com/Mozu/core-theme/pull/41)
+
+### July 7, 2016
 * Added support for purchase order as a payment method - [Pull Request](https://github.com/Mozu/core-theme/pull/37)
 * Added support for volume pricing - [Pull Request](https://github.com/Mozu/core-theme/pull/39)
 
