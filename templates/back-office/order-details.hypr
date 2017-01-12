@@ -58,10 +58,14 @@
                 <th class="currency-column">Item Total</th>
             </tr></thead>
             <tfoot class="order-totals-breakdown">
-                <tr>
-                    <td colspan="5">Subtotal</td>
-                    <td>{{ model.discountedSubtotal|currency }}</td>
-                </tr>
+               
+                {% if model.adjustment and model.adjustment.amount != 0 %}
+                    <tr>
+                        <td colspan="5">Adjustments</td>
+                        <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
+                    </tr>
+                {% endif %}
+
                 {% for discount in model.orderDiscounts %}
                     {% if not discount.excluded %}
                     <tr>
@@ -70,13 +74,12 @@
                     </tr>
                     {% endif %}
                 {% endfor %}
-                {% if model.storeCredit and model.storeCredit > 0 %}
-                    <tr>
-                        <td colspan="5">Store Credit</td>
-                        <td>({{ model.storeCredit|currency }})</td>
-                    </tr>
-                {% endif %}
 
+                <tr>
+                    <td colspan="5">Subtotal</td>
+                    <td>{{ model.lineItemSubtotalWithOrderAdjustments|currency }}</td>
+                </tr>
+                
                 {% if model.dutyTotal > 0 %}
                 <tr>
                     <td colspan="5">Duties and Taxes</td>
@@ -93,6 +96,7 @@
                     <td colspan="5">Shipping ({{ model.fulfillmentInfo.shippingMethodName }})</td>
                     <td>{{ model.shippingSubTotal|currency }}</td>
                 </tr>
+
                 {% for shippingDiscount in model.shippingDiscounts %}
 					{% if not shippingDiscount.excluded %}
 						<tr>
@@ -101,6 +105,13 @@
 						</tr>
 					{% endif %}
                 {% endfor %}
+               
+                {% if model.shippingAdjustment and model.shippingAdjustment.amount != 0 %}
+                    <tr>
+                        <td colspan="5">Shipping Adjustments</td>
+                        <td>{% if model.shippingAdjustment %}{{ model.shippingAdjustment.amount|currency }}{% endif %}</td>
+                    </tr>
+                {% endif %}
 
                 {% if model.handlingTotal > 0 %}
                     <tr>
@@ -112,12 +123,6 @@
                     <tr>
                         <td colspan="5">Fees</td>
                         <td>{{ model.feeTotal|currency }}</td>
-                    </tr>
-                {% endif %}
-                {% if model.adjustment and model.adjustment.amount != 0 %}
-                    <tr>
-                        <td colspan="5">Adjustments</td>
-                        <td>{% if model.adjustment %}{{ model.adjustment.amount|currency }}{% endif %}</td>
                     </tr>
                 {% endif %}
                 <tr>

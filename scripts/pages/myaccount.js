@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+﻿define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -179,9 +179,9 @@
                 });
             }
         }
-    }),
+    });
 
-    ReturnHistoryView = Backbone.MozuView.extend({
+    var ReturnHistoryView = Backbone.MozuView.extend({
         templateName: "modules/my-account/return-history-list",
         initialize: function () {
             var self = this;
@@ -191,6 +191,64 @@
                 if ($retView.length === 0) $retView = self.$el;
                 $retView.ScrollTo({ axis: 'y' });
             });
+        },
+        printReturnLabel :function(e) {
+             var self= this, 
+             $target = $(e.currentTarget);
+
+             //Get Whatever Info we need to our shipping label
+             var returnId = $target.data('mzReturnid'),
+                 returnObj = self.model.get('items').findWhere({ id: returnId });
+
+             var printReturnLabelView =  new PrintView({
+               model: returnObj
+             });
+
+            var _totalRequestCompleted = 0;
+          
+            _.each(returnObj.get('packages'), function(value, key, list){
+                window.accountModel.apiGetReturnLabel({'returnId': returnId, 'packageId': value.id, 'returnAsBase64Png': true}).then(function(data){
+                    value.labelImageSrc = 'data:image/png;base64,' + data;
+                    _totalRequestCompleted++;
+                    if(_totalRequestCompleted == list.length) {
+                        printReturnLabelView.render();
+                        printReturnLabelView.loadPrintWindow();
+                    }
+                });
+            });
+            
+        } 
+    });
+
+    var PrintView = Backbone.MozuView.extend({
+        templateName: "modules/my-account/my-account-print-window",
+        el: $('#mz-printReturnLabelView'),
+        initialize: function () {
+        },
+        loadPrintWindow: function(){
+             var host = HyprLiveContext.locals.siteContext.cdnPrefix,
+                printScript = host + "/scripts/modules/print-window.js",
+                printStyles = host + "/stylesheets/modules/my-account/print-window.css";
+
+            var my_window,
+            self = this,
+            width = window.screen.width - (window.screen.width / 2),
+            height = window.screen.height - (window.screen.height / 2),
+            offsetTop = 200,
+            offset = window.screen.width * 0.25;
+
+           
+            my_window = window.open("", 'mywindow' + Math.random() + ' ','width=' + width + ',height=' + height + ',top=' + offsetTop + ',left=' + offset + ',status=1');
+            my_window.document.write('<html><head>');
+            my_window.document.write('<link rel="stylesheet" href="' + printStyles +'" type="text/css">');
+            my_window.document.write('</head>');
+
+            my_window.document.write('<body>');
+            my_window.document.write($('#mz-printReturnLabelView').html());
+            
+            my_window.document.write('<script src="' + printScript + '"></script>');
+
+            my_window.document.write('</body></html>');
         }
     });
 

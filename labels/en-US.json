@@ -26,7 +26,7 @@
   "save"                                  : "Save",
   "add"                                   : "Add",
   "allRightsReserved"                     : "All rights reserved.",
-  "poweredBy"                             : "Powered by Mozu",
+  "poweredBy"                             : "Kibo Software, Inc.",
   "product"                               : "Product",
   "item"                                  : "Item",
   "price"                                 : "Price",
@@ -159,12 +159,12 @@
 
   "checkout"                              : "Checkout",
   "orderSummary"                          : "Order Summary",
-  "shippingInformation"                   : "Ship To",
+  "shippingInformation"                   : "Shipping",
   "noFulfillmentInfoRequired"             : "No shipping information is required since all items will be picked up in the store or digitally fulfilled.",
   "selectValidAddress"                    : "Select an address from these alternatives:",
   "addressValidationError"                : "We could not validate this address. Please check the address you entered and try again.",
   "suggestionNum"                         : "Suggestion #{0}",
-  "shippingMethod"                        : "Ship Method",
+  "shippingMethod"                        : "Shipping Method",
   "noShippingMethods"                     : "Sorry, no shipping methods are available.",
   "digitalFulfillmentContact"             : "Digital Gift Card",
   "paymentInformation"                    : "Payment",
@@ -251,7 +251,7 @@
   "applyCredit"                           : "Apply Credit",
 
   "mailCheckTo"                           : "Mail check to",
-  "shipTo"                                : "Ship to",
+  "shipTo"                                : "Ship To",
   "shippedTo"                             : "Shipped to",
   "giftMessage"                           : "Gift Message",
   "customerAlreadyExists"                 : "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
@@ -316,7 +316,7 @@
   "optionalComments"                      : "Comments (Optional)",
   "returnType"                            : "Return Type",
   "returnInfo"                            : "Please fill out this form to request a return. Returns are requested per item, rather than per order or shipment. View the <a href=\"/returnpolicy\" target=\"_blank\">Return Policy</a> to learn more.",
-  "returnTotal"                           : "Return Total",
+  "returnTotal"                           : "Amount Refunded",
   "returning"                             : "Returning",
   "returnDetails"                         : "Return Details",
   "returnNumber"                          : "RMA #",
@@ -445,5 +445,10 @@
   "volumePriceSavings"                    : "Savings",
   "volumePriceMinMaxQty"                  : "{0} - {1}",
   "volumePriceMinOnlyQty"                 : "{0}+",
-  "mapPrice"                              : "add to cart to see final price"
+  "mapPrice"                              : "add to cart to see final price",
+  "additionalInformation"                 : "Additional Information",
+  "printWindowPrintButton"                 : "Print",
+  "printWindowCancelButton"               : "Cancel",
+  "returnPrintLabelButton"                : "Print"
+
 }
