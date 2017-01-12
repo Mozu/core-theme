@@ -1,6 +1,6 @@
 # What's New
 
-### July 7, 2016
+### January 12, 2017
 * Added a Print dialog window accessible from the My Account page that enables shoppers to print RMA shipping labels - [Pull Request](https://github.com/Mozu/core-theme/pull/41)
 
 ### July 7, 2016
