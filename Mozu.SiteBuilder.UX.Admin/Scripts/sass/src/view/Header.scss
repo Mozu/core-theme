@@ -3,8 +3,12 @@
  * The dark first bar
  */
 
+.#{$vprefix}viewport-header {
+    background-color: $kibo-black;
+    color: $kibo-light-gray;
+}
+
 .#{$vprefix}masthead {
-    background-color: $color-neutral-white;
     border-bottom: 1px solid $card-button-press-bg;
     font-size: px-to-rem(12);
     font-weight: 400;
@@ -12,18 +16,31 @@
     line-height: 1.0;
     position: absolute;
 
+    .#{$vprefix}kibo-text {
+        color: $kibo-light-gray;
+        font-size: 20px;
+        margin-left: -42px;
+        position: relative;
+        text-decoration: none;
+    }
+
     .#{$vprefix}mozulogo {
+        background-image: url("images/kibo-icon.png");
+        background-position: 50% 38%;
+        background-repeat: no-repeat;
         display: block;
         overflow: hidden;
-        @include icon-font($glyph-mozulogo, 18px, $color-theme-base);
-        width: 68px;
+        width: 33px !important;
+        height: 33px;
+        top: 0px !important;
+        left: -6px !important;
+        position: relative;
+    }
 
-        &::after {
-            left: auto;
-            right: 0px;
-            text-align: right;
-            top: 1px;
-            width: 100%;
+    @media (min-resolution: 2dppx) {
+        .#{$vprefix}mozulogo {
+            background-image: url('./../resources/images/kibo-icon-retina.png');
+            background-size: 21px 21px;
         }
     }
 
@@ -40,10 +57,10 @@
     }
 
     .tenant-name-container {
-        margin-top: 1px;
         font-size: 12px;
         font-weight: 400;
-        color: $gray-text-dark;
+        right: -12px;
+        position: relative;
     }
 
     .user-initials-container {
@@ -63,6 +80,14 @@
 
     .username-button {
         padding-left: 0;
+    }
+}
+
+
+.help-button.x-btn {
+    background-color: $kibo-black !important;
+    .#{$prefix}btn-inner-center {
+        color: $kibo-light-gray;
     }
 }
 

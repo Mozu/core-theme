@@ -14,4 +14,14 @@
     .mozu-c-input__input:checked ~ .mozu-c-input__check-box-image {
         background-image: url('./../resources/images/icons/checkbox-checked.png')
     }
+
+    .mozu-c-app-header-container__logo--icon {
+        background-image: url('./../resources/images/kibo-icon.png');
+    }
+
+    @media (min-resolution: 2dppx) {
+        .mozu-c-app-header-container__logo--icon {
+            background-image: url('./../resources/images/kibo-icon-retina.png');
+        }
+    }
 }

@@ -4,20 +4,51 @@
         background-color: $white-color;
     }
     .tenant-name {
+        top: 10px !important;
         margin-right: 10px;
+        z-index: 1
     }
     .help-button {
-        padding: 10px 10px 8px;
+        padding: 10px 11px 8px;
+        top: -2px !important; //override EXT JS positioning
         .#{$prefix}btn-inner {
+            color: $kibo-light-gray;
             padding-right: 0;
+            position: relative;
+            left: 1px;
         }
     }
+    .global-search-box .x-form-field {
+        border: 0px !important;
+    }
+
     .search-button {
-        .#{$prefix}btn-wrap {
-            @include icon-font($glyph-magnifying-glass, 16px, $color-neutral-70);
+        background-color: $kibo-black;
+        top: 1px !important;
+        height: 30px;
+        width: 30px;
+
+        &:active {
+            background-color: $kibo-black;
         }
-        &.#{$prefix}btn-over .#{$prefix}btn-wrap::after {
-            color: $glyph-icon-color;
+
+        &.is-active {
+            background-color: $white-color;
+            border-radius: 0px;
+            margin-left: 5px !important;
+
+            .#{$prefix}btn-wrap::after {
+                color: $kibo-black;
+                left: -1px;
+            }
+        }
+        
+        .#{$prefix}btn-wrap {
+            @include icon-font($glyph-magnifying-glass, 16px, $kibo-light-gray);
+            &::after {
+                left: -6px;
+                top: 0px;
+            }
         }
     }
 }

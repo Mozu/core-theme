@@ -12,7 +12,7 @@ Ext.define('Taco.core.ux.action.UserButton', {
             '<div id="{id}-userbutton-dropdown-toggle" class="{baseCls}-dropdown-toggle">',
                 '<div id="{id}-userbutton-avatar" class="{baseCls}-user-avatar">{initials}</div>',
                 '<div id="{id}-userbutton-username" class="{baseCls}-username">{userName}</div>',
-                '<div id="{id}-userbutton-arrow" class="{baseCls}-arrow"></div>',
+                // '<div id="{id}-userbutton-arrow" class="{baseCls}-arrow"></div>',
             '</div>',
         '</div>'
     ],

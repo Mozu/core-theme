@@ -1,10 +1,8 @@
 ﻿.#{$vprefix}userbutton {
     cursor: pointer;
+    margin-left: -5px;
+    margin-top: -2px;
 
-    &.#{$vprefix}userbutton-menu-active {
-        background-color: $card-button-press-bg;
-    }
-    
     .#{$vprefix}userbutton-wrapper {
         position: relative;
         text-align: left;
@@ -20,9 +18,9 @@
                 width: 23px;
                 height: 23px;
                 padding-top: 2px;
-                border: 1px solid $light-bg-gray;
+                border: 1px solid $kibo-light-gray;
                 border-radius: 100px;
-                background-color: $light-bg-gray;
+                background-color: $kibo-light-gray;
                 color: $dark-color;
                 font-size: 11px;
                 line-height: 18px;
@@ -32,16 +30,16 @@
                 display: inline-block;
                 margin-left: 7px;
                 line-height: 32px;
-                color: $gray-text-dark;
+                color: $kibo-light-gray;
                 &:hover {
-                    color: $dark-color;
+                    // color: $dark-color;
                 }
             }
             .#{$vprefix}userbutton-arrow {
                 display: inline-block;
                 left: 4px;
                 margin-right: 10px;
-                @include icon-font($glyph-chevrondown, 8px, $gray-text-dark);
+                @include icon-font($glyph-chevrondown, 8px, $kibo-light-gray);
             }
         }
     }
