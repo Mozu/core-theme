@@ -20,6 +20,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class OrderMapping : Profile
     {
+        private const string PAYMENT_INTERACTION_TYPE_CREDIT = "Credit";
+        private const string PAYMENT_INTERACTION_TYPE_REFUND = "Refund";
+
         public override string ProfileName
         {
             get { return GetType().FullName; }
@@ -399,7 +402,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             totalQuantityFulfilled -= numToMarkFulfilled;
                         });
                     });
-                });
+                })
+                ;
         }
 
         static bool MatchBundledProduct(AbstractOrderPackageItem item, BundledProduct bundledProduct, int lineId)
@@ -628,25 +632,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         /// </summary>
         private void InterpolateRefundsIntoPaymentInteractions(OrdersDC.Order dc, Order order)
         {
-            foreach (var p in order.Payments)
+            foreach (var payment in order.Payments)
             {
-                var correspondingRefunds = dc.Refunds.Where(r => r.Payment != null && r.Payment.Id == p.Id);
-                if (correspondingRefunds.Count() == 0) continue;
+                foreach (var interaction in payment.Interactions)
+                {
+                    if (interaction.InteractionType != PAYMENT_INTERACTION_TYPE_CREDIT) continue;
 
-                var uncopiedInteractions = correspondingRefunds.SelectMany(r => r.Payment.Interactions).Where(i => !p.Interactions.Any(pi => pi.Id == i.Id)).ToList();
+                    if (!string.IsNullOrEmpty(interaction.RefundId)|| !string.IsNullOrEmpty(interaction.ReturnId))
+                    {
+                        interaction.InteractionType = PAYMENT_INTERACTION_TYPE_REFUND;
+                        payment.AmountRefunded += interaction.Amount ?? 0;
+                    }
+                }
+
+                // Begin backwards compatability code -- 
+                // This is becuase prior to this change, the order payments did not have the refund.payment interactions.
+                // leaving in place to maintin backwards compatibility.
+
+                var correspondingRefunds = dc.Refunds.Where(r => r.Payment != null && r.Payment.Id == payment.Id);
+                if (correspondingRefunds.Count() == 0) continue;
+                var uncopiedInteractions = correspondingRefunds
+                                            .SelectMany(r => r.Payment.Interactions)
+                                            .Where(i => !payment.Interactions.Any(pi => pi.Id == i.Id))
+                                            .ToList();
                 if (uncopiedInteractions.Count == 0) continue;
 
                 foreach (var refundInteraction in uncopiedInteractions)
                 {
                     var riMapped = Mapper.Map<PaymentInteraction>(refundInteraction);
-                    if (riMapped.InteractionType == "Credit")
+                    if (riMapped.InteractionType == PAYMENT_INTERACTION_TYPE_CREDIT)
                     {
-                        riMapped.InteractionType = "Refund";
+                        riMapped.InteractionType = PAYMENT_INTERACTION_TYPE_REFUND;
                     }
-                    var indexToInsertAt = p.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
-                    p.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
-                    p.AmountRefunded += riMapped.Status.Equals("Credited") ? riMapped.Amount.GetValueOrDefault() : 0;
+                    var indexToInsertAt = payment.Interactions.FindIndex(i => i.CreateDate < riMapped.CreateDate);
+                    payment.Interactions.Insert(Math.Max(indexToInsertAt, 0), riMapped);
+                    payment.AmountRefunded += riMapped.Status.Equals("Credited") ? riMapped.Amount.GetValueOrDefault() : 0;
                 }
+                // end of backwards compatiblity.
+
             }
         }
 
@@ -943,9 +966,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => (dc.AuditInfo != null) 
                     ? dc.AuditInfo.CreateDate : null))
+
+                .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => {
+
+                    // the createby in the Audit Info is the GUID .. on the other hand the change messages has the name for that user. So replace it with that if we find the user in the change messages.
+                    var result = dc.AuditInfo.CreateBy;
+
+                    var changeMessage = dc.ChangeMessages.FirstOrDefault(c => string.Equals(c.UserId, result, StringComparison.OrdinalIgnoreCase));
+                    if(changeMessage != null)
+                    {
+                        result = $"{ changeMessage.UserFirstName } { changeMessage.UserLastName }";
+                    }
+
+                    return result;
+
+                }))
+
                 //ignores
                 .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
                 .ForMember(x => x.AmountRefunded, op => op.Ignore()) // calculated field
+                .ForMember(x => x.AmountTotalCreditAndRefund, op => op.Ignore())
                 .AfterMap((dc, payment) =>
                 {
                     if (payment == null || payment.PaymentType == PaymentsDC.PaymentTypeConst.CHECK)
@@ -998,6 +1038,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo != null ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.PaymentId, op => op.ResolveUsing(dc => dc.PaymentId))
                 .ForMember(x => x.IsManual, op => op.ResolveUsing(dc => dc.IsManual))
+                .ForMember(x => x.ReturnId, op => op.ResolveUsing(dc => dc.ReturnId))
+                .ForMember(x => x.RefundId, op => op.ResolveUsing(dc => dc.RefundId))
                 //ignores
                 .ForMember(x => x.CanEdit, op => op.Ignore()) //calc field returns IsManual
                 .ForMember(x => x.CanDelete, op => op.Ignore()) //ditto

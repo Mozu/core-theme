@@ -694,7 +694,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                 menuDisabled: true,
                 flex: 1
             }, {
-                dataIndex: 'amountCredited',
+                dataIndex: 'amountRefunded',
                 text: 'Amount Credited',
                 draggable: false,
                 sortable: false,
@@ -966,7 +966,7 @@ Ext.define('Taco.view.order.widget.ProcessReturnPanel', {
                     '<span class="label">Return ID:<span>Return #{returnNumber} <span class="x-column-content-pill x-column-content-pill-false">{status}</span></span></span>',
                 '</tpl>',
                 '<span class="label">Created:<span>{createDate:date("m/d/Y g:ia")}</span></span>',
-                '<span class="label">Amount Refunded:<span>{[Taco.app.context.getCurrent().formatCurrency(Ext.Array.sum(Ext.Array.pluck(values.payments, "amountCredited")))]}</span></span>',
+                '<span class="label">Amount Refunded:<span>{[Taco.app.context.getCurrent().formatCurrency(values.refundAmount)]}</span></span>',
                 '<span class="label">Items:<span>{[values.items.length]}</span></span>'
             ]
         });

@@ -8,6 +8,7 @@ using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
 using ProductsDC = Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using static Mozu.CommerceRuntime.Contracts.Payments.PaymentInteraction;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
@@ -86,7 +87,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.TotalItemsToReplace, op => op.Ignore())
             .ForMember(x => x.ItemsRefunded, op => op.Ignore())
             .ForMember(x => x.ItemsReplaced, op => op.Ignore())
+            .AfterMap(SetRefundAmountForReturnOnPayment)
             ;
+        }
+
+        private void SetRefundAmountForReturnOnPayment(ReturnsDC.Return dcReturn, Return ret)
+        {
+            foreach(var payment in ret.Payments)
+            {
+                payment.AmountRefunded = payment.Interactions
+                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && i.Amount.HasValue)
+                    .Sum(i => i.Amount.Value);
+
+                payment.AmountTotalCreditAndRefund = payment.Interactions
+                    .Where(i => i.InteractionType == InteractionTypeConst.CREDIT && i.Amount.HasValue)
+                    .Sum(i => i.Amount.Value);
+            }
         }
 
         private void Map_DcOrderNote_to_OrderNote()

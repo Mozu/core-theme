@@ -70,6 +70,11 @@ Ext.define('Taco.model.OrderPayment', {
             useNull: false
         },
         {
+            name: 'amountTotalCreditAndRefund',
+            type: 'float',
+            useNull: false
+        },
+        {
             // effective amount: how much was requested/authorized/captured based on payment state.
             // important for totaling how much still has to be paid on an order.
             name: 'effectiveAmount',

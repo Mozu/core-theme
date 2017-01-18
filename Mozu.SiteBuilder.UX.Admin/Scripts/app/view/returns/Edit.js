@@ -10,6 +10,12 @@ Ext.define('Taco.view.returns.Edit', {
         title: 'Return',
         controller: 'returns'
     },
+
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
+    
     initComponent: function () {
         this.callParent(arguments);
     }

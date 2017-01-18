@@ -23,6 +23,7 @@ using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
+using Mozu.CommerceRuntime.Contracts.Refunds;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -37,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IApiContext _apiContext;
         ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
+        private readonly IReturnWebApiClient _returnWebApiClient;
         /*
          * All order item operations have an updateMode attribute.
          * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
@@ -49,8 +51,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Public constructor.
         /// </summary>
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient
-            , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext,
-            ICartWebApiClient cartWebApiClient, ICustomerSetWebApiClient customerSetWebApiClient
+            , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext
+            , ICartWebApiClient cartWebApiClient, ICustomerSetWebApiClient customerSetWebApiClient, IReturnWebApiClient returnWebApiClient
             )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -61,6 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _apiContext = apiContext;
             _cartWebApiClient = cartWebApiClient;
             _customerSetWebApiClient = customerSetWebApiClient;
+            _returnWebApiClient = returnWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -92,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
+            
             var single = order.Map<Order>();
             if (single.CustomerId.HasValue)
             {
@@ -109,9 +112,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     // ignored
                 }
             }
+
             return List2<Order>(single);
         }
-
+        
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()
         {

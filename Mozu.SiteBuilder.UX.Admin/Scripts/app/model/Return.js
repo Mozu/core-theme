@@ -209,7 +209,7 @@ Ext.define('Taco.model.Return', {
         });
         store.filter({
             filterFn: function (payment) {
-                return 'New' !== payment.get("status");
+                return 'New' !== payment.get("status") && payment.get("amountRefunded") > 0;
             }
         });
         return store;

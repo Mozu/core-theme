@@ -39,6 +39,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal AmountRefunded { get; set; }
 
+        public decimal AmountTotalCreditAndRefund { get; set; }
+
         public List<PaymentInteraction> Interactions { get; set; }
 
 
@@ -109,5 +111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         #endregion
 
         public DateTime CreateDate { get; set; }
+
+        public string CreateBy { get; set; }
     }
 }

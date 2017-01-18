@@ -87,6 +87,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// True if the user can delete this interaction.
         /// </summary>
         public bool CanDelete { get { return IsManual; } set { } }
+
+        /// <summary>
+        /// If the interaction was a credit and it was for a return, then the return Id.
+        /// </summary>
+        public string ReturnId { get; set; }
+
+        public string RefundId { get; set; }
     }
 
 
