@@ -364,8 +364,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         .Union  // Grab bundle items.
                         (
                             from item in order.Items
-                            // TODO: Ignoring product extras from non-bundle products since they're included with the parent product.
-                            where !string.IsNullOrEmpty(item.ProductUsage) && item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
                             from bp in item.BundledProducts
                             select new OrderReturnableItem
                             {
