@@ -50,27 +50,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
             string productCodes = string.Join("\",\"", vocabularyValues.Select(x => x.Value));
             string isVariation = "(IsVariation eq true or IsVariation eq false)";
             string filter = $"(productCode in [\"{productCodes}\"]) and {isVariation}";
-            var products =
-                (await _productWebApiClient.GetProducts(
-                    startIndex: 0, 
-                    pageSize: 200, 
-                    responseGroups: "Min,Price,VariationOptions",
-                    filter: filter, 
+
+            var allProducts = new List<DC.Product>();
+            var start = 0;
+            while (true)
+            {
+                var productBatch = (await _productWebApiClient.GetProducts(
+                    start,
+                    200, //current API maximum is 200 - May 2016
+                    filter: filter,
                     responseFields: responseFields)
-                 )
-                 .ReadAsSync();
-            var result = from vv in vocabularyValues
-                join p in products.Items on vv.Value equals p.ProductCode
-                select new AttributeValue
-                {
-                    Id = vv.Value,
-                    AttributeFQN = attrFqn,
-                    LocaleCode = vv.Content?.LocaleCode,
-                    Value = (vv.Content != null) ? vv.Content.StringValue : p.Content.ProductName,
-                    IsOverriden = (vv.Content != null),
-                    OptionalValue = p.Content.ProductName
-                };
-            return result.ToList();
+                    ).ReadAsSync();
+                allProducts.AddRange(Mapper.Map<List<Contracts.Product>>(productBatch.Items));
+                start = productBatch.PageSize + productBatch.StartIndex;
+                if (productBatch.TotalCount <= start)
+                    break;
+            }
+
+            var finalResult = vocabularyValues
+                .Join(allProducts, vocabVal => vocabVal.Value, prod => prod.ProductCode,
+                    (v, p) => new AttributeValue
+                    {
+                        Id = v.Value,
+                        AttributeFQN = attrFqn,
+                        LocaleCode = v.Content?.LocaleCode,
+                        Value = v.Content?.StringValue ?? p.Content.ProductName,
+                        IsOverriden = (v.Content != null),
+                        OptionalValue = p.Content.ProductName
+                    }).ToList();
+            
+            return  finalResult;
         }
 
         public async Task<IEnumerable<Attribute>> GetAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
