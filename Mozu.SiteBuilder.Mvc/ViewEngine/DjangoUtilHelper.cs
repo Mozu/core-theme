@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Themes;
+using System.Collections.Generic;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -15,9 +16,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             if (paths == null)
             {
                 var tr = new ThemeMetadataProvider(Core.Settings.MozuConfigurationManager.Settings);
-                paths = _paths = tr.ThemePaths.Union(tr.AddonPaths).ToArray();
-
+                paths = _paths = tr.ThemePaths.Union(new List<string> { tr.CoreThemePath, tr.LegacyThemePath }).ToArray();
             }
+
+            
             if (string.IsNullOrEmpty(fullPath)) return "n/a";
 
             var root = paths.FirstOrDefault(x => fullPath.StartsWith(x, StringComparison.OrdinalIgnoreCase));

@@ -231,10 +231,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             return RootPath + "//" + VirtualPath;
         }
+        [JsonIgnore]
         public string RootPath { get; set; }
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }
         public DateTime TimsStamp { get; set; }
+        public bool IsCertified { get; set; }
 
         public string ThemeId { get; set; }
     }

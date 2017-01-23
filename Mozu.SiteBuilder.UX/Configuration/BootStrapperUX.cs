@@ -38,9 +38,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
         protected override void AddMessageHandlers(HttpConfiguration httpConfiguration)
         {
 
-            var traceWriter = httpConfiguration.EnableSystemDiagnosticsTracing();
-            traceWriter.IsVerbose = true;
-            traceWriter.MinimumLevel = System.Web.Http.Tracing.TraceLevel.Debug;
+            if (System.Configuration.ConfigurationManager.AppSettings["sitebuilder.EnableSystemDiagnosticsTracing"] == "true")
+            {
+                var traceWriter = httpConfiguration.EnableSystemDiagnosticsTracing();
+                traceWriter.IsVerbose = true;
+                traceWriter.MinimumLevel = System.Web.Http.Tracing.TraceLevel.Debug;
+            }
 
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());

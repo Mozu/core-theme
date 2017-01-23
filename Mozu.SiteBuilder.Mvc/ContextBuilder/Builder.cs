@@ -164,6 +164,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             newContext.PriceListCode = work.PriceList;
             newContext.LocaleCode = work.LocaleCode;
             newContext.CurrencyCode = work.CurrencyCode;
+            newContext.DataViewMode = DataViewModeType.Live;
             return newContext;
         }
 
@@ -495,6 +496,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
           
             if ( ctxData != null )
             {
+                if (ctxData != null && ctxData.RedirectUpdateDate.HasValue && ctxData.RuntimeRedirects == null)
+                {
+                    ctxData.Redirects = await _contextServiceAggregator.Value.ProcessRedirets(ctxData).ConfigureAwait(false);
+                }
                 return ctxData;
             }
             var data = await BuildContextData(ctxData).ConfigureAwait(false);
@@ -536,7 +541,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         public Task<SiteBuilderContextData> GetContextDataAsync()
         {
-            return _dataTask = _dataTask ?? _repo.GetContextData().ContinueWith(_ => _data = _.Result, TaskContinuationOptions.OnlyOnRanToCompletion) ;
+            return _dataTask = _dataTask ?? _repo.GetContextData().ContinueWith(_ =>
+            {
+                _data = _.Result;
+                return _data;
+            }) ;
         }
 
     }
@@ -563,6 +572,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
     public interface IContextServiceAggregator
     {
         Task<SiteBuilderContextData> Aggregate(SiteBuilderContextData existing);
+        Task<List<RedirectEntry>> ProcessRedirets(SiteBuilderContextData existing);
     }
 
     public class ContextServiceAggregator : IContextServiceAggregator
@@ -662,7 +672,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
 
             tasks.Add(_documentListWebApiClient.GetTreeDocument("siteSettings@mozu", "redirects.1.1")
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.RedirectUpdateDate  = x.Result?.ContentUpdateDate ?? x.Result?.ContentUpdateDate, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
@@ -699,24 +709,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             ProcessTheme(ret, tasks, ret.GeneralSettings?.MobileTheme, existing);
             ProcessTheme(ret, tasks, ret.GeneralSettings?.TabletTheme, existing);
 
-            if ( ret.RedirectUpdateDate.HasValue )
-            {
-                ret.Redirects = await _cacheRepo.GetRedirectsAsync(ret, _apiContext).ConfigureAwait(false);
-                if ( ret.Redirects == null )
-                {
-                    tasks.Add(_documentListWebApiClient.GetTreeDocumentContent("siteSettings@mozu", "redirects.1.1")
-                      .ContinueWith(RedirectDocumentContinuation)
-                      .ContinueWith(x =>
-                      {
-                          ret.Redirects = x.Result ?? existing?.Redirects;
-                         return  _cacheRepo.PutAsync(ret.Redirects, ret, _apiContext);
-                      }, TaskContinuationOptions.OnlyOnRanToCompletion)
-                      .Unwrap()
-                       );
-                }
-
-               
-            }
+            await ProcessRedirets(ret, tasks).ConfigureAwait(false);
 
            
             if (tasks.Count > 0)
@@ -749,6 +742,41 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
+        async Task<SiteBuilderContextData> ProcessRedirets(SiteBuilderContextData data, List<Task> tasks)
+        {
+           
+            if (data.RedirectUpdateDate.HasValue)
+            {
+                data.Redirects = await _cacheRepo.GetRedirectsAsync(data, _apiContext).ConfigureAwait(false);
+                if (data.Redirects == null)
+                {
+                    tasks.Add(_documentListWebApiClient.GetTreeDocumentContent("siteSettings@mozu", "redirects.1.1")
+                      .ContinueWith(RedirectDocumentContinuation)
+                      .ContinueWith(x =>
+                      {
+                          data.Redirects = x.Result ?? data?.Redirects;
+                          return _cacheRepo.PutAsync(data.Redirects, data, _apiContext);
+                      }, TaskContinuationOptions.OnlyOnRanToCompletion)
+                      .Unwrap()
+                       );
+                }
+
+
+            }
+            return data;
+        }
+
+        public async Task<List<RedirectEntry>> ProcessRedirets(SiteBuilderContextData data )
+        {
+            List<Task> tasks = new List<Task>();
+            await ProcessRedirets(data, tasks).ConfigureAwait(false);
+            if (tasks.Count > 0)
+            {
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+            }
+            return data.Redirects;
+        }
+
         private void ProcessTheme(SiteBuilderContextData ret, List<Task> tasks, string themeId, SiteBuilderContextData existing)
         {
             if (!string.IsNullOrEmpty(themeId))
@@ -773,9 +801,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
             using (var stream = new MemoryStream())
             using ( var w = new BinaryWriter(stream))
             {
-                data.GetFlatCategoryList()?.ForEach(_ =>
+                data.GetFlatCategoryList()?.OrderBy(_=>_.CategoryId).ToList().ForEach(_ =>
                 {
                     w.Write(_.CategoryId);
+                    w.Write(_.IsDisplayed);
                     w.Write(_.Sequence.GetValueOrDefault(-1));
                     w.Write(_.ParentCategoryId.GetValueOrDefault(-1));
                 });
@@ -805,6 +834,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 });
 
                 w.Write(data.NavigationSet?.TimeStamp?.Ticks ?? 0);
+
+                w.Write(data.RedirectUpdateDate?.Ticks ?? 0);
 
                 data.RouteValidatorData?.ToList().ForEach(_ =>
                 {
@@ -942,8 +973,15 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return list;
         }
 
-
         T GenericServiceContinuation<T>(Task<ServiceClientResponse<T>> responseTask)
+        {
+            return GenericServiceContinuatioImpl(responseTask, false);
+        }
+        T GenericServiceContinuationAllow404<T>(Task<ServiceClientResponse<T>> responseTask)
+        {
+            return GenericServiceContinuatioImpl(responseTask, true);
+        }
+        T GenericServiceContinuatioImpl<T>(Task<ServiceClientResponse<T>> responseTask, bool allow404)
         {
             if (responseTask.IsFaulted || !responseTask.IsCompleted)
             {
@@ -960,6 +998,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var response = responseTask.Result;
             if (response.HasException)
             {
+                if ( allow404 && (int)response.ResponseMessage.StatusCode < 500)
+                {
+                    return default(T);
+                }
                 if (_apiContext.DataViewMode == DataViewModeType.Pending)
                 {
                     throw response.ReadException();

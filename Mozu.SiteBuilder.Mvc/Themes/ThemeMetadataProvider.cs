@@ -151,10 +151,14 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 else if (tmd.ThemeId.IndexOf("core", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     string temp = this.LegacyThemePath + "//themes//" + tmd.ThemeId;
-                    if (Directory.Exists(temp))
-                    {
-                        tmd.RootPath = Path.GetFullPath(temp);
-                    }
+                    tmd.RootPath = Path.GetFullPath(temp);
+                }
+                else if ( tmd.IsCertified )
+                {
+                    tmd.RootPath = this.CertifiedThemePath + "//" + UnEscapeThemeId( tmd.ThemeId);
+                }else
+                {
+                    tmd.RootPath = this.DevThemePath + "//" + UnEscapeThemeId(tmd.ThemeId);
                 }
             }
            
@@ -390,6 +394,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 RootPath = themePath,
                 VirtualPathNoExt = relPathNoExt,
                 VirtualPath = relPath,
+                IsCertified = themePath.IndexOf( CertifiedThemePath, StringComparison.OrdinalIgnoreCase) > -1,
                 IsFile = !x.IsFolder 
             };
         }
@@ -407,6 +412,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 RootPath = themePath,
                 VirtualPathNoExt = relPathNoExt,
                 VirtualPath = relPath,
+                IsCertified = themePath.IndexOf(CertifiedThemePath, StringComparison.OrdinalIgnoreCase) > -1,
                 IsFile = !x.Attributes.HasFlag(FileAttributes.Directory)
             };
         }

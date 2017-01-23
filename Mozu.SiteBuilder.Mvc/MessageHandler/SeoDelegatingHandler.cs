@@ -30,8 +30,13 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
 
             var siteContext = request.Resolve<ISiteContext>();
-            return siteContext.Init().ContinueWith(_ => base.SendAsync(request, cancellationToken))
-                .Unwrap();
+            var tt = siteContext.Init().ContinueWith(_ =>
+            {
+                return base.SendAsync(request, cancellationToken);
+            });
+            var t = tt.Unwrap();
+            return t;
+               
         }
     }
     public class SeoDelegatingHandler : DelegatingHandler

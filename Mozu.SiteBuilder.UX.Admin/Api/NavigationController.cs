@@ -45,11 +45,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly INavigationRepository _navRepo;
         private readonly SiteContext _siteContext;
         ISitebuilderContextCacheRepository _cacheRepo;
+        ISiteBuilderContextProvider _contextProvider;
         /// <summary>
         ///     Public constructor.
         /// </summary>
         public NavigationController(INavigationRepository navRepo, ICategoryWebApiClient catClient, ICmsServiceWrapper cmsService, INavigationGandalf gandalf, ILogger log, SiteContext siteContext,
-            ISitebuilderContextCacheRepository cacheRepo)
+            ISitebuilderContextCacheRepository cacheRepo, ISiteBuilderContextProvider contextProvider)
         {
             _navRepo = navRepo;
             _catClient = catClient;
@@ -58,7 +59,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _log = log;
             _siteContext = siteContext;
             _cacheRepo = cacheRepo;
+            _contextProvider = contextProvider;
         }
+
+        
+
 
         /// <summary>
         ///     Returns the combined navigation tree.
@@ -66,6 +71,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage > List(bool showContentLists )
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             _log.Debug("Generating list.");
             List<ITreeNavigationNode> list = await GetFlatList(showContentLists);
             bool needsFixup = false;
@@ -115,6 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [HttpPostRoute(UriTemplate = "fixup")]
         public async Task<HttpResponseMessage> Fixup()
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             var categories = new List<Mozu.ProductAdmin.Contracts.Category >();
 
             int start = 0;
@@ -165,6 +172,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public async Task<List<ITreeNavigationNode>> GetFlatList(bool? showContentLists)
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             List<ITreeNavigationNode> list =  _gandalf.GetFlatList();
 
 
@@ -357,6 +365,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<NavigationTreeNode>>> Create(List<NavigationTreeNode> items)
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             IList<INavigationNode> navSet = await _navRepo.GetNavigationSetAsync();
 
             int currentHighestLinkIndex =
@@ -404,6 +413,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<NavigationTreeNode>>> Delete(List<NavigationTreeNode> items)
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             IList<INavigationNode> navSet = await _navRepo.GetNavigationSetAsync();
             bool isDirty = false;
 
@@ -448,6 +458,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "update")]
         public async Task<Response<List<NavigationTreeNode>>> Edit(List<NavigationTreeNode> items)
         {
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
             if (items.Count > 1)
                 throw new ArgumentException("Unexpected number of updates: " + items.Count);
 
