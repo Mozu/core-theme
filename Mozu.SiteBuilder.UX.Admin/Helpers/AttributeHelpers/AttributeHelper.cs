@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -33,53 +32,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         public async Task<Attribute> GetAttribute(string attributeFQN)
         {
             var attribute = (await _attributeWebApiClient.GetAttribute(attributeFQN)).ReadAsSync();
-            if (attribute.DataType != "ProductCode")
-            {
-                return Mapper.Map<Attribute>(attribute);
-            }
-            var productVocabularyValues = await PopulateProductNames(attribute.VocabularyValues, attribute.AttributeFQN);
-            attribute.VocabularyValues = new List<Contracts.AttributeVocabularyValue>();
-            var mapped = Mapper.Map<Attribute>(attribute);
-            mapped.Values = productVocabularyValues;
-            return mapped;
-        }
+            var returnAttribute = Mapper.Map<Attribute>(attribute);
 
-        private async Task<List<AttributeValue>> PopulateProductNames(List<Contracts.AttributeVocabularyValue> vocabularyValues, string attrFqn)
-        {
-            string responseFields = "items(ProductCode,Content(ProductName))";
-            string productCodes = string.Join("\",\"", vocabularyValues.Select(x => x.Value));
-            string isVariation = "(IsVariation eq true or IsVariation eq false)";
-            string filter = $"(productCode in [\"{productCodes}\"]) and {isVariation}";
-
-            var allProducts = new List<DC.Product>();
-            var start = 0;
-            while (true)
-            {
-                var productBatch = (await _productWebApiClient.GetProducts(
-                    start,
-                    200, //current API maximum is 200 - May 2016
-                    filter: filter,
-                    responseFields: responseFields)
-                    ).ReadAsSync();
-                allProducts.AddRange(Mapper.Map<List<Contracts.Product>>(productBatch.Items));
-                start = productBatch.PageSize + productBatch.StartIndex;
-                if (productBatch.TotalCount <= start)
-                    break;
-            }
-
-            var finalResult = vocabularyValues
-                .Join(allProducts, vocabVal => vocabVal.Value, prod => prod.ProductCode,
-                    (v, p) => new AttributeValue
-                    {
-                        Id = v.Value,
-                        AttributeFQN = attrFqn,
-                        LocaleCode = v.Content?.LocaleCode,
-                        Value = v.Content?.StringValue ?? p.Content.ProductName,
-                        IsOverriden = (v.Content != null),
-                        OptionalValue = p.Content.ProductName
-                    }).ToList();
-            
-            return  finalResult;
+            return returnAttribute;
         }
 
         public async Task<IEnumerable<Attribute>> GetAttributes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)

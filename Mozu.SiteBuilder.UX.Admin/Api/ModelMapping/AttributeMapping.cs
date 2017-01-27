@@ -165,9 +165,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DisplayOrder, op => op.Ignore());
 
             Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
-                .ForMember(x => x.Value, opt => opt.ResolveUsing(dc => !string.IsNullOrEmpty(dc.Content?.StringValue) 
-                    ? dc.Content.StringValue 
-                    : dc.Value))
+                .ForMember(x => x.Value, opt =>
+                    opt.ResolveUsing(dc => !string.IsNullOrEmpty(dc.Content?.StringValue)
+                        ? dc.Content.StringValue
+                        : dc.ProductName ?? dc.Value)) //use productname if we have it
                 .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => x.Value?.ToString()))
                 .ForMember(x => x.AttributeFQN, op => op.Ignore())
                 .ForMember(x => x.OptionalValue, op => op.Ignore())
