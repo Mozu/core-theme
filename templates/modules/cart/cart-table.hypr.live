@@ -98,7 +98,7 @@
     <td class="mz-carttable-total-wrap" colspan="4">
       {{ labels.orderTotal }}:
         <span id="mz-carttable-total" class="mz-carttable-total">
-          <strong>{{ model.discountedTotal|currency }}</strong>
+          <strong>{{ model.total|currency }}</strong>
         </span>
     </td>
     <td></td>
