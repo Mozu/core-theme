@@ -2743,13 +2743,13 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="AutoMapper.Net4">
-          <HintPath>..\packages\AutoMapper\lib\net40\AutoMapper.Net4.dll</HintPath>
+        <Reference Include="AutoMapper">
+          <HintPath>..\packages\AutoMapper\lib\net40\AutoMapper.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="AutoMapper">
-          <HintPath>..\packages\AutoMapper\lib\net40\AutoMapper.dll</HintPath>
+        <Reference Include="AutoMapper.Net4">
+          <HintPath>..\packages\AutoMapper\lib\net40\AutoMapper.Net4.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -2847,13 +2847,13 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Jolt.Testing.GeneratedTypes">
-          <HintPath>..\packages\Jolt\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
+        <Reference Include="Jolt">
+          <HintPath>..\packages\Jolt\lib\net40\Jolt.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Jolt">
-          <HintPath>..\packages\Jolt\lib\net40\Jolt.dll</HintPath>
+        <Reference Include="Jolt.Testing.GeneratedTypes">
+          <HintPath>..\packages\Jolt\lib\net40\Jolt.Testing.GeneratedTypes.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -2972,6 +2972,11 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+        <Reference Include="System.Web.WebPages">
+          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="System.Web.WebPages.Deployment">
           <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
           <Private>True</Private>
@@ -2979,11 +2984,6 @@
         </Reference>
         <Reference Include="System.Web.WebPages.Razor">
           <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Web.WebPages">
-          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3147,8 +3147,18 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
       <ItemGroup>
+        <Reference Include="Mozu.Core">
+          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="Mozu.Core.Actions">
           <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.Actions.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Mozu.Core.Api">
+          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.Api.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3159,11 +3169,6 @@
         </Reference>
         <Reference Include="Mozu.Core.Api.Contracts">
           <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.Api.Contracts.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mozu.Core.Api">
-          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.Api.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3187,6 +3192,11 @@
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
+        <Reference Include="Mozu.Core.ThirdParty">
+          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
         <Reference Include="Mozu.Core.ThirdParty.Contracts">
           <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.ThirdParty.Contracts.dll</HintPath>
           <Private>True</Private>
@@ -3194,16 +3204,6 @@
         </Reference>
         <Reference Include="Mozu.Core.ThirdParty.Mapping">
           <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.ThirdParty.Mapping.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mozu.Core.ThirdParty">
-          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.ThirdParty.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="Mozu.Core">
-          <HintPath>..\packages\Mozu.Core.Prime\lib\net451\Mozu.Core.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -3361,13 +3361,13 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="Mozu.ShippingRuntime.Contracts.Constants">
-          <HintPath>..\packages\Mozu.ShippingRuntime.Contracts\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
+        <Reference Include="Mozu.ShippingRuntime.Contracts">
+          <HintPath>..\packages\Mozu.ShippingRuntime.Contracts\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
-        <Reference Include="Mozu.ShippingRuntime.Contracts">
-          <HintPath>..\packages\Mozu.ShippingRuntime.Contracts\lib\Mozu.ShippingRuntime.Contracts.dll</HintPath>
+        <Reference Include="Mozu.ShippingRuntime.Contracts.Constants">
+          <HintPath>..\packages\Mozu.ShippingRuntime.Contracts\lib\Mozu.ShippingRuntime.Contracts.Constants.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
