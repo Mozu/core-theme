@@ -228,8 +228,8 @@ Ext.define('Taco.model.Return', {
         api: {
             // read: '/admin/Scripts/app/mocks/orders.json',
             read: '/admin/app/return/list',
-            create: '/admin/app/return/create',
-            update: '/admin/app/return/edit'
+            create: '/admin/app/return/createmulti',
+            update: '/admin/app/return/editmulti'
         },
         reader: {
             type: 'json',

@@ -119,7 +119,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            return List2(returns, total: (int) dcReturns.TotalCount);
+            return List2(returns, total: (int)dcReturns.TotalCount);
         }
 
         private async Task FillAdditionalInfo(Return rma)
@@ -213,8 +213,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(sbReturn);
         }
 
-        [HttpPostRoute(UriTemplate = "create")]
-        public async Task<Response<List<Return>>> Create(List<Return> returns)
+        // This handles a list of returns because the ExtJS Return Proxy expects to work with a list of returns.
+        [HttpPostRoute(UriTemplate = "createmulti")]
+        public async Task<Response<List<Return>>> CreateMulti(List<Return> returns)
         {
             var retList = new List<Return>();
             foreach (var rma in returns)
@@ -285,23 +286,60 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(Mapper.Map<List<Return>>(new List<DCr.Return> { dcRma }));
         }
 
-        public class ReturnIdArgs
+        public class ReplaceItemsArgs
         {
+            /// <summary>
+            /// The Id of the return you're performing the action upon
+            /// </summary>
             public string ReturnId { get; set; }
+            /// <summary>
+            /// Pairings of ReturnItem IDs with the corresponding quantity to replace
+            /// If empty or missing, assumes all items.
+            /// </summary>
+            public Dictionary<string, int> ItemReplacements { get; set; }
+            /// <summary>
+            /// An optional note to save when performing a replacement
+            /// </summary>
+            public string Note { get; set; }
         }
 
         [HttpPostRoute(UriTemplate = "createReplacementOrder")]
-        public async Task<Response<Order>> CreateReplacementOrder(ReturnIdArgs args)
+        public async Task<Response<Order>> CreateReplacementOrder(ReplaceItemsArgs args)
         {
-            var childOrder = (await _returnWebApiClient.CreateReturnShippingOrder(args.ReturnId)).ReadAsSync();
+            if (string.IsNullOrEmpty(args.ReturnId))
+            {
+                throw new VaeValidationConflictException($"{nameof(args.ReturnId)} not specified.");
+            }
+
+            var specifiers = args.ItemReplacements?.Select(x => new DCr.ReturnItemSpecifier {ReturnItemId = x.Key, Quantity = x.Value}).ToList();
+
+            var childOrder = (await _returnWebApiClient.CreateReturnShippingOrder(args.ReturnId, specifiers)).ReadAsSync();
+
+            if (!string.IsNullOrEmpty(args.Note))
+            {
+                (await _returnWebApiClient.CreateReturnNote(args.ReturnId, new OrderNote { Text = args.Note })).ReadAsSync();
+            }
+
             return Single2(Mapper.Map<Order>(childOrder));
         }
 
         public class RefundPaymentsArgs
         {
+            /// <summary>
+            /// The Id of the return you're performing the action upon
+            /// </summary>
             public string ReturnId { get; set; }
+            /// <summary>
+            /// The payments to apply the refund to
+            /// </summary>
             public List<RefundPaymentAction> Refunds { get; set; }
+            /// <summary>
+            /// Pairings of ReturnItem IDs with the corresponding amount to refund for that item
+            /// </summary>
             public Dictionary<string, decimal> ItemRefundAmounts { get; set; }
+            /// <summary>
+            /// An optional note to save when performing a refund
+            /// </summary>
             public string Note { get; set; }
 
             public class RefundPaymentAction
@@ -315,6 +353,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "refundPayments")]
         public async Task<Response<Return>> RefundPayments(RefundPaymentsArgs args)
         {
+            if (string.IsNullOrEmpty(args.ReturnId))
+            {
+                throw new VaeValidationConflictException($"{nameof(args.ReturnId)} not specified.");
+            }
             if (args.ItemRefundAmounts == null || !args.ItemRefundAmounts.Any())
             {
                 throw new VaeValidationConflictException($"{nameof(args.ItemRefundAmounts)} not specified.");
@@ -416,8 +458,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(Mapper.Map<Return>(dcReturn));
         }
 
-        [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<Response<List<Return>>> Edit(List<Return> returns)
+        // This handles a list of returns because the ExtJS Return Proxy expects to work with a list of returns.
+        [HttpPostRoute(UriTemplate = "editmulti")]
+        public async Task<Response<List<Return>>> EditMulti(List<Return> returns)
         {
             var retList = new List<Return>();
             foreach (var rma in returns)
@@ -429,6 +472,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return List2(retList);
+        }
+
+        public class EditReturnArgs
+        {
+            /// <summary>
+            /// The modified return.
+            /// </summary>
+            public Return Return { get; set; }
+            /// <summary>
+            /// An optional note to save when editing the return.
+            /// </summary>
+            public string Note { get; set; }
+        }
+
+        // The endpoint used for the react/redux return editor.
+        [HttpPostRoute(UriTemplate = "edit")]
+        public async Task<Response<Return>> Edit(EditReturnArgs args)
+        {
+            var dcRma = Mapper.Map<DCr.Return>(args.Return);
+            dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
+
+            if (!string.IsNullOrEmpty(args.Note))
+            {
+                (await _returnWebApiClient.CreateReturnNote(args.Return.Id, new OrderNote { Text = args.Note })).ReadAsSync();
+                dcRma = (await _returnWebApiClient.GetReturn(args.Return.Id)).ReadAsSync();
+            }
+
+            return Single2(Mapper.Map<Return>(dcRma));
         }
 
         [HttpPostRoute(UriTemplate = "resendemail")]
