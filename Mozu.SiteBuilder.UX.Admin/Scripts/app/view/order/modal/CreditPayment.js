@@ -13,7 +13,8 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
         var amountCollected = this.record.get('amountCollected'),
             amountCredited = this.record.get('amountCredited'),
             amountRefunded = this.record.get('amountRefunded'),
-            availableForCredit = Math.max(amountCollected - amountCredited - amountRefunded, 0),
+            // JavaScript is terrible at maintaining proper precision with floating point math, e.g. 0.1 + 0.2 = 0.30000000000000004
+            availableForCredit = Math.max(0, Ext.Number.correctFloat(amountCollected - amountCredited - amountRefunded)),
             poCheckbox = this.record.get('paymentType') === 'PurchaseOrder'
                          ? {
                                 xtype: 'checkbox',
