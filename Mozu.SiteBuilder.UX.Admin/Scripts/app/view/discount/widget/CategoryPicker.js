@@ -88,7 +88,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
                     return matchesName || matchesCode || matchesId;
                 }
             })
-            
+
         });
 
         this.items = [
@@ -121,7 +121,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
     setValue: function(newVal) {
         this.categoryList.setValue(newVal);
     },
-    
+
     /**
      * Opens a modal with a TreePanel.
      * @private
@@ -159,7 +159,7 @@ Ext.define('Taco.view.discount.widget.CategoryPicker', {
             },
             scope: this
         });
-    },    
+    },
 
     reloadStore: function (list) {
         var store = list.store,

@@ -27,7 +27,6 @@ Ext.define('Taco.view.product.subform.Categories', {
         // categories are not global, we're only operating on the productInCatalogInfo
         this.record = this.productInCatalogInfo;
 
-
         listStore = this.record.getUnfilteredCategoryStore();
 
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
@@ -84,7 +83,30 @@ Ext.define('Taco.view.product.subform.Categories', {
 
         this.listStore = listStore;
 
-        this.items = [this.list, this.primaryCategory];
+        this.items = [
+            {
+                layout: 'hbox',
+                items: [
+                    this.list,
+                    {
+                        xtype: 'button',
+                        scale: 'medium',
+                        ui: 'action',
+                        text: 'Add',
+                        margin: '34 0 0 10',
+                        width: 70,
+                        style: {
+                            verticalAlign: 'bottom'
+                        },
+                        handler: function() {
+                            this.launchCategoryModal(me.list)
+                        },
+                        scope: this
+                    }
+                ]
+            },
+            this.primaryCategory
+        ];
 
         this.callParent(arguments);
 
@@ -177,5 +199,40 @@ Ext.define('Taco.view.product.subform.Categories', {
 
         list.setValue(value);
         var bing = list.getValue();
+    },
+
+    launchCategoryModal: function (list) {
+        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        
+        treeStore.on({
+            load: function () {
+                treeStore.filterBy(function (record) {
+                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
+                    return (!isRealTime);
+                });
+            },
+            beforeexpand: function (node, opts) {
+                node.childNodes = node.childNodes.filter(function (childNode) {
+                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
+                    return !isRealtime;
+                });
+            },
+            scope: this
+        });
+
+        this.modal = Ext.create('Taco.view.category.Modal', {
+            store: treeStore
+        });
+
+        this.modal.on({
+            savesuccess: function (modal, values) {
+                list.addValue(values);
+//                this.reloadStore(list);
+            },
+            aftercancelclose: function () {
+  //              this.reloadStore(list);
+            },
+            scope: this
+        });
     }
 });
