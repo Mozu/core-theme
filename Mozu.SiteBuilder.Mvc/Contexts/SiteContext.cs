@@ -420,8 +420,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _themeRepository.Value.FixupPaths(_theme);
             
             _themeRuntimeSettingsCollection = _themeRuntimeSettingsCollection ?? await _themeSettingsRepository.Value.GetRuntimeValues(_theme.Id).ConfigureAwait(false);
-           
-            HashString = data.Hash + _themeOverrideId;
+
+
+            bool isSandBox = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
+            var hash = data.Hash;
+            if (isSandBox && _theme != null)
+            {
+                _themeRepository.Value.ValidateLatest(_theme);
+                hash += _theme.Hash;
+            }
+
+
+            HashString = hash + _themeOverrideId;
         }
 
       
