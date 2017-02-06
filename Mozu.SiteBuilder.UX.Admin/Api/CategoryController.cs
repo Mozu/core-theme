@@ -17,6 +17,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Category;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers;
 using Category = Mozu.SiteBuilder.UX.Admin.Api.Models.Category.Category;
 using DC = Mozu.ProductAdmin.Contracts;
+using Mozu.SiteBuilder.UX.Admin.Misc;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -26,12 +27,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICategoryHelper _categoryHelper;
         private readonly ICategoryWebApiClient  _categoriesClient;
         private const string _listResponseFields = "items(id,categoryCode,isDisplayed,isActive,sequence,childCount,parentCategoryId,parentCategoryCode,parentCategoryName,catalogId,categoryType,content(name,slug),auditInfo)";
-
-        public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper)
+        AdminCache _adminCache;
+        public CategoryController(ICategoryWebApiClient categoriesClient, ICategoryHelper categoryHelper, AdminCache adminCache)
         {
             _categoryHelper = categoryHelper;
 
             _categoriesClient = categoriesClient.CloneWithApiContext(x => x.SiteId = null);
+            _adminCache = adminCache;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -54,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 catClient = _categoriesClient.CloneWithApiContext(x => x.SiteId = siteId);
 
             }
-            List<Category> categories = new List<Category>();
+           
             var client = _categoriesClient.CloneWithApiContext(x =>
             {
                 x.CatalogId = null;
@@ -66,21 +68,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 extFilter = AppendIsActiveDefault(isActive, extFilter);
             }
-            
-            while (true)
+
+
+            var key = $"category-{extFilter}-{_listResponseFields}-{SbApiContext.CatalogId}";
+            var categories = _adminCache.Get(SbApiContext.TenantId, key) as List<Category>;
+            if (categories == null)
             {
-                var cats = (await client.GetCategories(startIndex: start,
-                    pageSize: 200, //current API maximum is 200 - May 2016
-                    sortBy: "sequence asc",
-                    filter: extFilter,
-                    responseFields: _listResponseFields
-                    )).ReadAsSync();
-                categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
-                start = cats.PageSize + cats.StartIndex;
-                if (cats.TotalCount <= start)
+                categories = new List<Category>();
+
+                while (true)
                 {
-                    break;
+                    var cats = (await client.GetCategories(startIndex: start,
+                        pageSize: 60000, //current API maximum is 200 - May 2016
+                        sortBy: "sequence asc",
+                        filter: extFilter,
+                        responseFields: _listResponseFields
+                        )).ReadAsSync();
+                    categories.AddRange(Mapper.Map<List<Category>>(cats.Items));
+                    start = cats.PageSize + cats.StartIndex;
+                    if (cats.TotalCount <= start)
+                    {
+                        break;
+                    }
                 }
+                AdminCache.Instace.Add(SbApiContext.TenantId, key, categories);
             }
             foreach (var category1 in categories)
             {

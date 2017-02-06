@@ -500,6 +500,7 @@
     <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedirectController.cs" />
+    <Compile Include="Util\AdminCache.cs" />
     <Content Include="PostDeploy.ps1">
     </Content>
     <Content Include="PreDeploy.ps1">
