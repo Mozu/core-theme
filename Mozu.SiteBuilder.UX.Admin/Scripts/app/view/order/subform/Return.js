@@ -5,13 +5,14 @@ Ext.define('Taco.view.order.subform.Return', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.view.order.widget.ProcessReturnPanel',
+        'Taco.view.order.widget.OrderReturns',
         'Taco.view.order.widget.ReturnableItemGrid',
         'Taco.core.ux.PanelHeaderStat',
         'Taco.model.Order'
     ],
 
-    itemId: 'orderReturn',
     title: 'Returns',
+    itemId: 'orderReturn',
 
     config: {
         originalRecord: null,
@@ -21,17 +22,22 @@ Ext.define('Taco.view.order.subform.Return', {
 
     beforeShow: function () {
         var me = this;
+        var header = this.getHeader();
+        var container = header.el.dom.parentElement.childNodes[1];
+
+        header.el.dom.style.display = 'none';
+
+        // Offset top style added by ext to container
+        var container = document.getElementsByClassName('taco-orderform-returns')[0].children[1];
+        container.style.marginTop = '-25px';
+
         this.setLoading(true);
         var store = this.record.getReturnsStore();
 
         store.load(function () {
-            me.returnPanels.removeAll(true);
-            me.initProcessReturnPanels(store);
-            me.initHeader();
             me.setLoading(false);
         });
 
-        this.returnPanels.removeAll(true);
         this.initCreateButton();
     },
 
@@ -47,14 +53,12 @@ Ext.define('Taco.view.order.subform.Return', {
 
     destroyUI: function () {
         this.removeAll();
-        this.createButton = this.returnableItemsErrorEl = this.returnableItems = this.returnPanels = null;
+        this.createButton = this.returnableItemsErrorEl = this.returnableItems = null;
     },
 
-    initUI: function () {
+    initUI: function () {        
         var me = this,
             record = this.record;
-
-        this.initHeader();
 
         var store = record.getReturnsStore();
         this.setReturnsStore(store);
@@ -63,8 +67,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
         // if (returnStatus && returnStatus !== 'None') {
         store.load(function () {
-            me.initProcessReturnPanels(store);
-            me.initHeader();
+            me.orderReturns.store.loadData(arguments[0]);
             me.setLoading(false);
         });
 
@@ -74,7 +77,7 @@ Ext.define('Taco.view.order.subform.Return', {
             text: 'Create Return',
             scope: this,
             handler: this.handleCreateClick,
-            margin: '0 0 0 20px'
+            margin: '0',
         });
 
         this.returnableItemsErrorEl = Ext.widget({
@@ -97,56 +100,39 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.initCreateButton();
 
-
         this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
             order: this.record,
-            returnsStore: store
+            returnsStore: store,
+            margin: '-15px 0 10px 0'
         });
 
-        // container for holding all of the return panels
-        this.returnPanels = Ext.widget({
-            xtype: 'container',
-            title: "return panels here"
+        this.orderReturns = Ext.create('Taco.view.order.widget.OrderReturns', {
+            store: store
         });
 
         this.items = [
-            this.returnableItems, {
+            {
                 xtype: 'container',
-                margin: '10px 0 20px 0',
+                margin: '10px 0 -25px 0',
                 layout: {
                     type: 'hbox',
                     align: 'stretch',
                     pack: 'end'
                 },
-                items: [this.returnableItemsErrorEl, this.createButton]
+                items: [this.createButton]
             },
-            this.returnPanels
+            this.returnableItems, {
+                xtype: 'container',
+                margin: '10px 0 0 0',
+                layout: {
+                    type: 'hbox',
+                    align: 'stretch',
+                    pack: 'end'
+                },
+                items: [this.returnableItemsErrorEl]
+            },
+            this.orderReturns
         ];
-
-    },
-
-    refreshReturnableItemsGrid: function () {
-        this.returnableItems.reload();
-        this.initHeader();
-    },
-
-    addProcessReturnPanel: function (record) {
-        var status = record.get('status');
-        this.returnPanels.add(Ext.create('Taco.view.order.widget.ProcessReturnPanel', {
-            order: this.record,
-            record: record,
-            returnId: record.get('id'),
-            listeners: {
-                'refresh-returnable-items': this.refreshReturnableItemsGrid,
-                scope: this
-            },
-            collapsed: status === Taco.model.Return.constants.statuses.CANCELLED || status === Taco.model.Return.constants.statuses.REJECTED || status === Taco.model.Return.constants.statuses.CLOSED
-        }));
-    },
-
-    initHeader: function () {
-        var returnStatus = Taco.core.util.Common.camelToSpace(this.record.get('returnStatus'));
-        this.setHeaderTitleStatus('Returns', returnStatus);
     },
 
     initCreateButton: function () {
@@ -158,10 +144,8 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
 
-    initProcessReturnPanels: function (store) {
-        Ext.suspendLayouts();
-        Ext.Array.each(store.data.items, this.addProcessReturnPanel, this, true);
-        Ext.resumeLayouts(true);
+    refreshReturnableItemsGrid: function () {
+        this.returnableItems.reload();
     },
 
     createReturn: function (type, items) {
@@ -219,6 +203,12 @@ Ext.define('Taco.view.order.subform.Return', {
             return;
         }
 
+        erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Select'; });
+        if (erroredReturns.length > 0) {
+            this.returnableItemsErrorEl.setError('Please choose a return resolution.');
+            return;
+        }
+
         // Adds a return to the store. Need to sync the store to save it.
         // The Return.ReturnType is deprecated in favor of specifying return type at the item level.
         // Use "Replace" for backward compatibility since it provided the most flexibility in the old return state machine.
@@ -231,7 +221,6 @@ Ext.define('Taco.view.order.subform.Return', {
                 this.createButton.setDisabled(false);
             },
             success: function () {
-                this.addProcessReturnPanel(newReturnRecord);
                 // after we add the new return we need to reload the order and regenerate the returnable items grid store
                 this.record.reload({
                     success: me.refreshReturnableItemsGrid,
@@ -249,5 +238,5 @@ Ext.define('Taco.view.order.subform.Return', {
 
     onDestroy: function () {
         this.callParent(arguments);
-    }
+    },
 });

@@ -826,6 +826,7 @@
     <Content Include="Scripts\app\view\location\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
+    <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnReplacementGrid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
