@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
        // private ThemeFileSystemInfo[] _liveFileSystemInfos;
 
        internal IEnumerable<ThemeFileSystemInfo> InternalFiles { get { return _allFiles.Values; } } 
-        public ThemeFileSystemInfoCollection(IEnumerable<ThemeFileSystemInfo> infos, DateTime? timeStamp, string Hash)
+        public ThemeFileSystemInfoCollection(IEnumerable<ThemeFileSystemInfo> infos, DateTime? timeStamp, string hash)
         {
             var lst = infos.ToList();
             var files = lst.Where(x => x.IsFile).ToList();
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             _allFilesNoExt = files.GroupBy(x => x.VirtualPathNoExt,StringComparer.OrdinalIgnoreCase).ToDictionar2y(x => x.Key, y => y.ToArray(), StringComparer.OrdinalIgnoreCase);
             LiveTemplates = files.Where(x => x.VirtualPath.EndsWith(".live", StringComparison.OrdinalIgnoreCase)).ToArray();
             TimeStamp = timeStamp ??  (files.Count == 0 ? DateTime.MaxValue : files.Max(x => x.TimsStamp));
-            Hash = Hash ?? LegacyHash(files);
+            Hash = hash ?? LegacyHash(files);
         }
       
         string LegacyHash (IEnumerable<ThemeFileSystemInfo> files  )

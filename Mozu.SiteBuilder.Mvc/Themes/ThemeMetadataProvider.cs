@@ -47,6 +47,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         string LocalAddonPath { get; }
 
         void FixPaths(Theme fileListing);
+
+        ThemeFileSystemInfoCollection GetThemeFileListing(string themePath, string themeId);
     }
 
 
@@ -417,10 +419,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             };
         }
 
+        public  ThemeFileSystemInfoCollection GetThemeFileListing(string themePath, string themeId)
+        {
+            return LoadThemeFileListing( themePath,  themeId, false);
+        }
+
+
         /// <summary>
         /// Gather info on all files contained within the theme and save them for later access.
         /// </summary>
-        private ThemeFileSystemInfoCollection LoadThemeFileListing(string themePath, string themeId)
+        private ThemeFileSystemInfoCollection LoadThemeFileListing(string themePath, string themeId, bool allowFallback = true)
         {
             var dirinfo = new DirectoryInfo(themePath);
             if (!dirinfo.Exists) return null;
@@ -447,7 +455,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                     .ToList();
                 return new ThemeFileSystemInfoCollection(tf,  manifest.LastModifiedDate, manifest.MD5);
             }
-
+            if (!allowFallback )
+            {
+                return null;
+            }
             var themeFiles = dirinfo.GetFiles().Select(x => CreateThemeFileSystemInfo(x, themePath, themeId)).ToList();
 
             var deepThemeFiles = 

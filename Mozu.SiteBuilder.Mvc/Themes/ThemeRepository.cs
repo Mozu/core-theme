@@ -40,7 +40,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
        // string[] GetLocalThemePaths();
 
         string[] GetLocalThemesIds();
-        void FixupPaths(Theme _theme);
+        void FixupPaths(Theme theme);
+
+        void ValidateLatest(Theme theme);
     }
 
 
@@ -106,6 +108,29 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
             
         }
+
+        public void ValidateLatest(Theme theme)
+        {
+            var themeJson = theme.FileListing.GetFileInfo("theme.json", true);
+            if ( themeJson == null)
+            {
+                return;
+            }
+            var themePath = new FileInfo(themeJson.FullPath).Directory.FullName;
+            var fileListings = _themeMetaDataProvider.GetThemeFileListing(themePath, theme.Id);
+            if ( fileListings == null )
+            {
+                return;
+            }
+            if (fileListings.Hash != theme.Hash)
+            {
+                theme.FileListing = fileListings;
+                theme.TimeStamp = fileListings.TimeStamp;
+                theme.Hash = fileListings.Hash;
+            }
+            
+        }
+
         private Theme GetFromCache ( string key )
         {
             return _cache.Get<Theme>(key, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent);
