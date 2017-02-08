@@ -239,7 +239,8 @@ Ext.define('Taco.core.data.StoreManager', {
             id: 'Taco.store.CategoriesTree-' + catalogId,
             createOnly: true,
             catalogId: catalogId,
-            autoLoad: false
+            autoLoad: false,
+            bypassCache: false
         };
         if (isActive) {
             storeConfig.isActive = true;
