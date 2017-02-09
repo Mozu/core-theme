@@ -109,12 +109,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             try
             {
                 var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
-                redirectUrl = CreateRedirectUrl("/checkout/" + order.Id);
+                redirectUrl = CreateRedirectUrl( this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
             }
             catch (Exception e)
             {
                 UpdateCartWithExceptionMessage(id, e);
-                redirectUrl = CreateRedirectUrl("/cart/");
+                redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/cart/");
             }
             var req = this.Request.CreateResponse(HttpStatusCode.Redirect);
             req.Headers.Location = redirectUrl;
@@ -176,7 +176,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             pc.PageType = "checkout";
             //var id = OrderId;
             var id = orderId;
-            if (string.IsNullOrWhiteSpace(id)) return Redirect("/cart");
+            if (string.IsNullOrWhiteSpace(id)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
             Order model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
@@ -200,8 +200,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             catch
             {
             }
-            if (model == null) return Redirect("/cart");
-            if (CompletedOrderStates.Contains(model.Status)) return Redirect("/checkout/" + model.Id + "/confirmation");
+            if (model == null) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+            if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
             var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
@@ -218,7 +218,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
                     // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
                     // Dump them back to the cart to fix the problem. The error message should show on the cart page.
-                    return Redirect("/cart");
+                    return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
                 }
                 else
                 {
@@ -425,9 +425,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
 
             if (order == null)
-                return Redirect("/");
+                return Redirect(this.SiteContext.SiteSubdirectory + "/");
 
-            if (!CompletedOrderStates.Contains(order.Status)) return Redirect("/checkout/" + order.Id);
+            if (!CompletedOrderStates.Contains(order.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
 
             if (order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))

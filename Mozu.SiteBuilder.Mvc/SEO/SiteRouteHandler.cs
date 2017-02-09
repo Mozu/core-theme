@@ -83,14 +83,17 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         private readonly Lazy<ICustomRouteCollectionRepository> _customRouteRepository;
         private object _httpRouteCollection;
         Lazy<bool> _forceSSL;
+        Uri _origionalUri;
 
-        public CustomRouteHandler(HttpRequestMessage request, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext, IRouteConfig routeconfig)
+        public CustomRouteHandler(HttpRequestMessage request, Lazy<ICustomRouteCollectionRepository> customRouteRepository, Lazy<ISiteBuilderApiContext> siteBuilderApiContext, IRouteConfig routeconfig, IRequestUrlFinderOuter requestUrlHelper)
         {
             _requestMessage = request;
             _customRouteRepository = customRouteRepository;
             _siteBuilderApiContext = siteBuilderApiContext;
             _routeconfig = routeconfig;
             _forceSSL = new Lazy<bool>(() => request.Resolve<ISiteContext>().GeneralSettings?.EnforceSitewideSSL == true, LazyThreadSafetyMode.None);
+            var origUrl = requestUrlHelper.GetRequestUrl();
+            _origionalUri = string.IsNullOrEmpty(origUrl) ? _requestMessage.RequestUri : new Uri(origUrl);
         }
 
         public void Reset ()
@@ -118,7 +121,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
 
         public bool RouteIncomingRequest()
         {
-            var path = _requestMessage.RequestUri.AbsolutePath;
+            
+            var path = _origionalUri.AbsolutePath;
             if ( path.Contains( "=") || path.Contains("?"))
             {
                 return false;
@@ -210,6 +214,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 newReq.Properties[rp.Key]= rp.Value;
             }
 
+            
             foreach (var route in routes)
             {
                 
@@ -221,7 +226,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     //only redirect if stem is different
                     if (!string.Equals(
                         uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
-                        _requestMessage.RequestUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        _origionalUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
                         StringComparison.OrdinalIgnoreCase))
                     {
                         if (!IsValidForExistingContext(request , uri, routeCollection, _routeconfig.DefaultRoutes))

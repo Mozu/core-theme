@@ -48,6 +48,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string CdnPrefix { get; }
         string SecureHost { get; set; }
         bool SupportsInStorePickup { get; set; }
+
+        string SiteSubdirectory { get; set; }
         SiteDomains Domains { get; set; }
         Core.Money.Currency CurrencyInfo { get; set; }
         NumberFormatInfo NumberFormat { get; set; }
@@ -109,6 +111,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 url = values.FirstOrDefault();
             }
 
+           
 
             var uriBuilder = new UriBuilder(url);
 
@@ -377,6 +380,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             var data = await _siteBuilderContextDataProvider.GetContextDataAsync().ConfigureAwait(false);
             _domains = new SiteDomains(_currentHost, data.GetMappedSiteDomains());
+            this.SiteSubdirectory = data.GetSiteSubDirectory();
             _generalSettings  = data.GetMappedGeneralSettings();
             _checkoutSettings = data.GetMappedCheckoutSettings();
 
@@ -441,5 +445,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         [Newtonsoft.Json.JsonIgnore()]
         public NumberFormatInfo NumberFormat { get; set; }
+
+        public string SiteSubdirectory
+        {
+            get;set;
+        }
     }
 }

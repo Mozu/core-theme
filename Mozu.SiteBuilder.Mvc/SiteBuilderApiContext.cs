@@ -227,8 +227,14 @@ namespace Mozu.SiteBuilder.Mvc
             }
             if (ScopeType == UserScopeType.Shopper && (!this.UserClaims.Bag.TryGetValue("SiteId", out bagVal) || !int.TryParse(bagVal, out tmpInt) || tmpInt != this.SiteId))
             {
-                this.UserClaims = null;
-                return false;
+                if (this.SiteId.HasValue)
+                {
+                    this.UserClaims.Bag["SiteId"] = this.SiteId.ToString();
+                    this.UserClaims.Bag["SiteId"] = this.SiteId.ToString();
+                }
+                
+                //this.UserClaims = null;
+                //return false;
             }
             return true;
         }

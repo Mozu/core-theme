@@ -15,6 +15,8 @@ using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.SiteBuilder.Mvc.Context;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -23,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         INavigationRepository _nav;
     
-        private readonly ISitesWebApiClient _sitesWebApi;
+        
 
         private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
         private INavigationGandalf _gandalf;
@@ -31,19 +33,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         ICategoryTreeProvider _categoryTreeProvider = null;
         IProductSearchWebApiClient _productSearchWebApiClient;
         UrlHelper _urlHelper;
+        ISiteBuilderContextProvider _siteBuilderContextDataProvider;
         const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        public SitemapController(INavigationRepository navigationRepository,ISitesWebApiClient sitesWebApiClient , INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productRuntimeWebApiClient,
+        ISiteContext _siteContext;
+        public SitemapController(INavigationRepository navigationRepository,
+            INavigationGandalf gandalf,  Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productRuntimeWebApiClient,
             Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
             UrlHelper urlHelper,
-            ICategoryTreeProvider categoryTreeProvider)
+            ICategoryTreeProvider categoryTreeProvider,
+            ISiteBuilderContextProvider siteBuilderContextDataProvider,
+            ISiteContext siteContext)
         {
             _nav = navigationRepository;
             _gandalf = gandalf;
             _urlHelper = urlHelper;
-            _sitesWebApi = sitesWebApiClient;
+           
             _productSearchWebApiClient = productSearchWebApiClient;
             _productRuntimeWebApiClient = productRuntimeWebApiClient;
             _categoryTreeProvider = categoryTreeProvider;
+            _siteBuilderContextDataProvider = siteBuilderContextDataProvider;
+            _siteContext = siteContext;
         }
 
            [System.Web.Http.HttpGet]
@@ -60,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var nakedDomain = GetNakedSitePrimaryDomain();
            
             var scheme = PageContext.IsSecure ? "https://" : "http://";
-            var prefixedDomain = scheme + nakedDomain;
+            var prefixedDomain = scheme + nakedDomain + _siteContext.SiteSubdirectory;
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("sitemapindex", NS);
@@ -68,6 +77,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteStartElement("sitemap", NS);
             writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
+
+            foreach( var subDirecotry in this.GetSubDirectorySitePaths())
+            {
+                writer.WriteElementString("loc", NS, prefixedDomain + subDirecotry + "/sitemap.xml");
+            }
 
             foreach ( var cursorMark in cursor.CursorMarks)
             {
@@ -82,7 +96,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        
+        List<string> GetSubDirectorySitePaths()
+        {
+            var tenant = _siteBuilderContextDataProvider.GetContextData().TenantInfo;
+            var site = tenant.Sites.First(x => x.Id == this.SbApiContext.SiteId);
+            List<string> ret = new List<string>();
+            var routeSlug = site.Attributes?.Where(x => string.Equals(x.Name, "mozu.reverseproxy.subdirectoryrewrites")).Select(x => x.Value).FirstOrDefault() as string;
+            if ( routeSlug == null)
+            {
+                return ret;
+            }
+            var routeSlugPairs = System.Web.HttpUtility.ParseQueryString(routeSlug);
+            foreach (string key in routeSlugPairs.Keys)
+            {
+                int siteId;
+                if ( int.TryParse(routeSlugPairs[key], out siteId) && siteId != this.SbApiContext.SiteId )
+                { 
+                    var stem = key.StartsWith("/") ? key : "/" + key;
+                    ret.Add(stem);
+                }
+                
+            }
+            return ret;
+        }
 
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Categories()

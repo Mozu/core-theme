@@ -207,9 +207,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             siteContext.Add("secureHost", SiteContext.SecureHost);
             siteContext.Add("supportsInStorePickup", SiteContext.SupportsInStorePickup);
             siteContext.Add("currencyInfo", SiteContext.CurrencyInfo);
+            siteContext.Add("siteSubdirectory", SiteContext.SiteSubdirectory);
 
 
-           
 
             return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
         }

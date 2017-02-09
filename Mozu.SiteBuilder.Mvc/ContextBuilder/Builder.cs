@@ -1108,6 +1108,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
     //navigation
     public class SiteBuilderContextData
     {
+        const string SubDirRewriteAttributeName = "mozu.reverseproxy.subdirectoryrewrites";
         public DocumentCollection NavWebPages { get; set; }
       
         public GeneralSettings GeneralSettings { get; set; }
@@ -1152,19 +1153,65 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return _mappedCheckoutSettings = _mappedCheckoutSettings ?? Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings>(CheckoutSettings, opt => opt.Items["countryCode"] = this.TenantInfo.Sites.First(x => x.Id == SiteId).CountryCode);
         }
         List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> _mappedSiteDomains;
+
+        string _siteSubDirectory = null;
         public List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> GetMappedSiteDomains()
         {
             if (_mappedSiteDomains == null)
             {
-                var data = this.TenantInfo;
-
-
-                var siteDc = this.TenantInfo.Sites?.First(x => x.Id == SiteId);
-
-                _mappedSiteDomains = Mapper.Map<List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>>(siteDc.Domains);
-
+                PostProcessSiteInfo();
             }
             return _mappedSiteDomains;
+        }
+        public string GetSiteSubDirectory ()
+        {
+            if (_siteSubDirectory == null )
+            {
+                PostProcessSiteInfo();
+            }
+            return _siteSubDirectory;
+        }
+        void PostProcessSiteInfo()
+        {
+            if (_mappedSiteDomains != null)
+            {
+                return;
+            }
+            var siteDc = this.TenantInfo.Sites?.First(x => x.Id == SiteId);
+
+            var mappedSubDomains = Mapper.Map<List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>>(siteDc.Domains);
+
+            
+            //process siteSubDir
+            foreach (var site in TenantInfo.Sites ?? Enumerable.Empty<Mozu.Tenant.Contracts.Site>())
+            {
+                var attVal = site.Attributes?.Where(x => string.Equals(x.Name, SubDirRewriteAttributeName)).Select(x => x.Value).FirstOrDefault() as string;
+                if (attVal != null)
+                {
+                    var nvc = System.Web.HttpUtility.ParseQueryString(attVal);
+                    foreach (var subdirSlug in nvc.AllKeys)
+                    {
+                        var siteIdString = nvc[subdirSlug];
+                        if (string.Equals(siteIdString, this.SiteId.ToString()))
+                        {
+                            _siteSubDirectory = subdirSlug.StartsWith("/") ? subdirSlug : ("/" + subdirSlug);
+
+                            var subDirPrimary = site.Domains.Where(x => x.IsPrimary)
+                                .Select(y => Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>(y))
+                                .FirstOrDefault();
+                            if (subDirPrimary != null)
+                            {
+                                mappedSubDomains.ForEach(x => x.IsPrimary = false);
+                                subDirPrimary.IsPrimary = true;
+                                mappedSubDomains.Insert(0, subDirPrimary);
+                            }
+                        }
+                    }
+
+                }
+            }
+            _mappedSiteDomains = mappedSubDomains;
+
         }
 
         public List<SBCategory> GetFlatCategoryList()
