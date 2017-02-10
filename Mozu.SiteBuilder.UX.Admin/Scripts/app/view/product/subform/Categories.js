@@ -202,7 +202,9 @@ Ext.define('Taco.view.product.subform.Categories', {
     },
 
     launchCategoryModal: function (list) {
-        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog();
+        var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog(
+            this.record.get('catalogId')
+        );
         
         treeStore.on({
             load: function () {
