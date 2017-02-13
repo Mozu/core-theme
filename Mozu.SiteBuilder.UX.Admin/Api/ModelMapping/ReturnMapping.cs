@@ -93,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void SetRefundAmountForReturnOnPayment(ReturnsDC.Return dcReturn, Return ret)
         {
-            foreach(var payment in ret.Payments)
+            foreach (var payment in ret.Payments)
             {
                 payment.AmountRefunded = payment.Interactions
                     .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && i.Amount.HasValue)
@@ -148,7 +148,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.ShippingAndHandlingTotal, op => op.ResolveUsing(dc => GetItemShippingAndHandlingTotal(dc)))
             .ForMember(x => x.OrderLineId, op => op.ResolveUsing(dc => dc.OrderLineId))
             .ForMember(x => x.OrderItemOptionAttributeFQN, op => op.ResolveUsing(dc => dc.OrderItemOptionAttributeFQN))
-            .AfterMap((dc, x) => {
+            .ForMember(x => x.ExcludeProductExtras, op => op.ResolveUsing(dc => dc.ExcludeProductExtras))
+            .AfterMap((dc, x) =>
+            {
                 // for some reason, the service expects us to tell it how many of this item have been fulfilled. 
                 // since you can't have created a return that exceeds the # shipped, we should default this field to the quantity.
                 x.QuantityShipped = Math.Max(x.QuantityShipped, x.Quantity);
@@ -216,20 +218,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
-                .ForMember(dc => dc.OrderItemId,
-                    op => op.ResolveUsing(x => String.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
-                .ForMember(dc => dc.Product,
-                    op =>
-                        op.ResolveUsing(
-                            x => x.ProductCode == null ? null : new ProductsDC.Product {ProductCode = x.ProductCode}))
-                .ForMember(dc => dc.Reasons,
-                    op =>
-                        op.ResolveUsing(
-                            x =>
-                                new List<ReturnsDC.ReturnReason>
-                                {
-                                    new ReturnsDC.ReturnReason {Quantity = x.Quantity, Reason = x.ReturnReason}
-                                }))
+                .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
+                .ForMember(dc => dc.Product, op => op.ResolveUsing(x => x.ProductCode == null ? null : new ProductsDC.Product { ProductCode = x.ProductCode }))
+                .ForMember(dc => dc.Reasons, op => op.ResolveUsing(x => new List<ReturnsDC.ReturnReason> { new ReturnsDC.ReturnReason { Quantity = x.Quantity, Reason = x.ReturnReason } }))
                 .ForMember(dc => dc.ReturnType, op => op.ResolveUsing(x => x.ReturnType))
                 .ForMember(dc => dc.ReturnNotRequired, op => op.ResolveUsing(x => x.ReturnNotRequired))
                 .ForMember(dc => dc.QuantityReceived, op => op.ResolveUsing(x => x.QuantityReceived))
@@ -242,7 +233,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingLossAmount, op => op.ResolveUsing(x => x.ShippingLossAmount))
                 .ForMember(dc => dc.ShippingLossTaxAmount, op => op.ResolveUsing(x => x.ShippingLossTaxAmount))
                 .ForMember(dc => dc.OrderLineId, op => op.ResolveUsing(x => x.OrderLineId))
-                .ForMember(dc => dc.OrderItemOptionAttributeFQN, op => op.Ignore())
+                .ForMember(dc => dc.OrderItemOptionAttributeFQN, op => op.ResolveUsing(x => x.OrderItemOptionAttributeFQN))
+                .ForMember(dc => dc.ExcludeProductExtras, op => op.ResolveUsing(x => x.ExcludeProductExtras))
                 //ignores
                 .ForMember(dc => dc.BundledProducts, op => op.Ignore())
                 .ForMember(dc => dc.Notes, op => op.Ignore())

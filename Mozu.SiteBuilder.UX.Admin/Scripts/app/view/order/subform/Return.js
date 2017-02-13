@@ -151,7 +151,8 @@ Ext.define('Taco.view.order.subform.Return', {
                     quantity: item.get('quantity'),
                     returnReason: item.get('reason'),
                     returnType: item.get('returnType'),
-                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN')
+                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
+                    excludeProductExtras: true
                 };
             })
         })[0];

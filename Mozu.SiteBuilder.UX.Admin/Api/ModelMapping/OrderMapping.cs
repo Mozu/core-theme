@@ -347,9 +347,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     // one fulfilled in each line item.
                     // Now it is grouped by OrderLineId.
                     // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
-                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => new { ri.OrderLineId, ri.ProductCode}), group =>
+                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => new { ri.OrderLineId, ri.ProductCode, OptionAttribute = ri.OrderItemOptionAttributeFQN ?? string.Empty}), group =>
                     {
-                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key.OrderLineId, group.Key.ProductCode);
+                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key.OrderLineId, group.Key.ProductCode, group.Key.OptionAttribute);
                         EnumerableExtensions.Each(@group, returnItem =>
                         {
                             int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);

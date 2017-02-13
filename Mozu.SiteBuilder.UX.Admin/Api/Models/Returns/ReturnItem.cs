@@ -72,6 +72,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string ReturnReason { get; set; }
 
         /// <summary>
+        /// If this return item refers to a product/bundle that has product extras, this specifies whether those child items should be included or excluded.
+        /// For backward compatibility, a null value will be treated as false, i.e. include the extras.
+        /// </summary>
+        public bool? ExcludeProductExtras { get; set; }
+
+        /// <summary>
         /// Specifies whether the requested resolution for this item is Refund or Replace.
         /// </summary>
         public string ReturnType { get; set; }
