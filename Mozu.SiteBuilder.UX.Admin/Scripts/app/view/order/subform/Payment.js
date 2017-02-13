@@ -136,20 +136,6 @@ Ext.define('Taco.view.order.subform.Payment', {
                 deferEmptyText: false
             },
             store: this.record.refunds(),
-            tools: [{
-                itemId: 'refundsRefundButton',
-                xtype: 'button',
-                ui: 'action',
-                scale: 'medium',
-                text: 'Refund',
-                margin: '0 0 10 10',
-                handler: function () {
-                    Ext.create('Taco.view.order.modal.Refund', {
-                        order: record
-                    });
-                },
-                disabled: isUnpaid
-            }],
             columns: [{
                 xtype: 'datecolumn',
                 dataIndex: 'createDate',

@@ -76,8 +76,7 @@ Ext.define('Taco.view.order.subform.Return', {
             scale: 'medium',
             text: 'Create Return',
             scope: this,
-            handler: this.handleCreateClick,
-            margin: '0',
+            handler: this.handleCreateClick
         });
 
         this.returnableItemsErrorEl = Ext.widget({
@@ -103,7 +102,9 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
             order: this.record,
             returnsStore: store,
-            margin: '-15px 0 10px 0'
+            tools: [this.createButton],
+            margin: '10px 0 10px 0',
+            padding: '0 1px 0 0'
         });
 
         this.orderReturns = Ext.create('Taco.view.order.widget.OrderReturns', {
@@ -111,16 +112,6 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.items = [
-            {
-                xtype: 'container',
-                margin: '10px 0 -25px 0',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch',
-                    pack: 'end'
-                },
-                items: [this.createButton]
-            },
             this.returnableItems, {
                 xtype: 'container',
                 margin: '10px 0 0 0',
@@ -238,5 +229,5 @@ Ext.define('Taco.view.order.subform.Return', {
 
     onDestroy: function () {
         this.callParent(arguments);
-    },
+    }
 });
