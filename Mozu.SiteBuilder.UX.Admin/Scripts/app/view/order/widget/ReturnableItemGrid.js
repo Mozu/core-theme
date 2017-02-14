@@ -2,6 +2,7 @@
  * @class Taco.view.order.widget.ReturnableItemGrid
  */
 
+// TODO: This has been deprecated by the ReturnableItemTree. Need to remove this file.
 Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     extend: 'Ext.grid.Panel',
     requires: ['Taco.model.Return',

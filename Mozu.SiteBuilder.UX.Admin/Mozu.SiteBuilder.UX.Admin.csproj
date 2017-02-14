@@ -826,6 +826,7 @@
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
+    <Content Include="Scripts\app\view\order\widget\ReturnableItemTree.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnReplacementGrid.js" />
     <Content Include="Scripts\app\view\preview\ExpressionPreviewDrawer.js" />
     <Content Include="Scripts\app\view\priceList\Edit.js" />

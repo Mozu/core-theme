@@ -7,6 +7,7 @@ Ext.define('Taco.view.order.subform.Return', {
         'Taco.view.order.widget.ProcessReturnPanel',
         'Taco.view.order.widget.OrderReturns',
         'Taco.view.order.widget.ReturnableItemGrid',
+        'Taco.view.order.widget.ReturnableItemTree',
         'Taco.core.ux.PanelHeaderStat',
         'Taco.model.Order'
     ],
@@ -99,7 +100,15 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.initCreateButton();
 
-        this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
+        //this.returnableItemsGrid = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
+        //    order: this.record,
+        //    returnsStore: store,
+        //    //tools: [this.createButton],
+        //    margin: '10px 0 10px 0',
+        //    padding: '0 1px 0 0'
+        //});
+        
+        this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemTree', {
             order: this.record,
             returnsStore: store,
             tools: [this.createButton],
@@ -112,7 +121,9 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.items = [
-            this.returnableItems, {
+            //this.returnableItemsGrid,
+            this.returnableItems,
+            {
                 xtype: 'container',
                 margin: '10px 0 0 0',
                 layout: {
@@ -152,7 +163,7 @@ Ext.define('Taco.view.order.subform.Return', {
                     returnReason: item.get('reason'),
                     returnType: item.get('returnType'),
                     orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
-                    excludeProductExtras: true
+                    excludeProductExtras: item.get('excludeProductExtras')
                 };
             })
         })[0];
@@ -177,7 +188,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
             return (item.get('quantity') > (qf - qr));
         })) {
-            this.returnableItemsErrorEl.setError('Item \'Quantity to Return\' exceeds \'Quantity Fulfilled\'..');
+            this.returnableItemsErrorEl.setError('Item \'Quantity to Return\' exceeds \'Quantity Fulfilled\'.');
             return;
         }
 
