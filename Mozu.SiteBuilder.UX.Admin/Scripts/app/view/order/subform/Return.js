@@ -147,7 +147,7 @@ Ext.define('Taco.view.order.subform.Return', {
                 return {
                     orderItemId: item.get('orderItemId'),
                     orderLineId: item.get('orderLineId'),
-                    productCode: item.get('orderItemId') ? null : item.get('productCode'), // only provide product code when there is no orderItemId
+                    productCode: item.get('productCode'),
                     quantity: item.get('quantity'),
                     returnReason: item.get('reason'),
                     returnType: item.get('returnType'),

@@ -173,6 +173,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ModelMapping\OrderReturnableItemMapping.cs" />
     <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
@@ -398,9 +399,6 @@
     <Compile Include="Api\OpeationHandlers\PagingParamatersRequestHandlers.cs" />
     <Compile Include="Api\PageTypeDefinitionController.cs" />
     <Compile Include="Api\CheckoutSettingsController.cs" />
-    <Compile Include="Api\ProductInSiteInfoController.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Api\RolesController.cs" />
     <Compile Include="Api\PermissionsController.cs" />
     <Compile Include="Api\AccountController.cs" />

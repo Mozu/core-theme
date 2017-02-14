@@ -24,7 +24,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         order: null,
         record: null
     },
-    
+
     initComponent: function () {
         this.store = this.getReturnableItemsStore();
 
@@ -164,6 +164,15 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 sortable: false,
                 resizable: false,
                 menuDisabled: true,
+                width: 100
+            },
+            {
+                dataIndex: 'quantityReturnable',
+                text: 'Qty Returnable',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: true,
                 width: 110
             },
             {
@@ -235,13 +244,25 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     },
 
     addReturnableItems: function (store, returns) {
+        var me = this;
         var ineligibleStatuses = [
             Taco.model.Return.constants.statuses.CANCELLED,
             Taco.model.Return.constants.statuses.REJECTED
         ];
 
-        var returnableItems = this.order.get('returnableItems');
+        this.store.load();
+        //var returnableItems = this.order.get('returnableItems');
+        //var returnableItems = this.order.getReturnableItems({
+        //    success: function(response) {
+        //        me.store.loadData(response.responseText);
+        //        var derp = 1;
+        //    },
+        //    failure: function(response) {
+                
+        //    }
+        //});
 
+/**
         // list of items and their qty currently added to active returns
         var returnedItemQuantities = {};
         
@@ -252,12 +273,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             returnableItem.quantityReturned = 0 // returnedItemQuantities[returnableItem.orderItemId];
         });
 
+        // TODO: Move this logic to the MVC layer.
         // build a list of items already added to a return and determine the qty of each that has already been added;
         Ext.Array.each(returns, function (ret) {
             // ignore any records that have been cancelled or rejected;
             if (!Ext.Array.contains(ineligibleStatuses, ret.get('status'))) {
 
                 // for each item in the return, find the returnable item and update its returnedQuantity.
+                // TODO: Account for parent with product extras.
                 Ext.Array.each(ret.get('items'), function (item) {
                     var i, matchingReturnableItems, returnableItem;
 
@@ -284,26 +307,46 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             return returnableItem.quantityOrdered > returnableItem.quantityReturned;
         });
         this.store.loadData(returnableItemsFiltered);
+*/
     },
 
     getReturnableItemsStore: function () {
         return Ext.create('Ext.data.Store', {
             fields: [
+                { type: 'string',  name: 'orderItemId' },
+                { type: 'int',     name: 'orderLineId' },
                 { type: 'string',  name: 'productCode' },
-                { type: 'string',  name: 'productName' },
-                { type: 'string',  name: 'parentBundleName' },
+                {
+                    type: 'string', name: 'productName',
+                    convert: function(value, record) {
+                        var excludeExtras = record.get('excludeProductExtras');
+                        var isChild = record.get('parentItemId');
+                        var extra = isChild ? '' : excludeExtras ? ' (stand alone)' : ' (with extras)';
+                        return value + extra;
+                    }
+                },
+                { type: 'string',  name: 'orderItemOptionAttributeFQN' },
+                { type: 'boolean', name: 'excludeProductExtras' },
                 { type: 'float',   name: 'unitPrice' },
-                { type: 'string',  name: 'returnType', defaultValue: 'Select' },
-                { type: 'string',  name: 'reason', defaultValue: 'Select' },
-                { type: 'number',  name: 'quantity', defaultValue: 0 },
                 { type: 'number',  name: 'quantityOrdered' },
                 { type: 'number',  name: 'quantityFulfilled' },
-                { type: 'number',  name: 'quantityReturned', defaultValue: 0 },
-                { type: 'string', name: 'orderItemId' },
-                { type: 'string', name: 'parentItemId' },
-                { type: 'int', name: 'orderLineId' },
-                { type: 'string', name: 'fulfillmentStatus' },
-                { type: 'string', name: 'orderItemOptionAttributeFQN' }
+                { type: 'number',  name: 'quantityDirectlyReturned' },
+                { type: 'number',  name: 'quantityIndirectlyReturned' },
+                {
+                    type: 'number', name: 'quantityReturned',
+                    convert: function(value, record) {
+                        return record.get('quantityDirectlyReturned') + record.get('quantityIndirectlyReturned');
+                    }
+                },
+                { type: 'number',  name: 'quantityReturnable' },
+                { type: 'number',  name: 'unitQuantity' },
+                { type: 'string',  name: 'parentItemId' },
+                { type: 'string',  name: 'parentProductCode' },
+                { type: 'string',  name: 'parentProductName' },
+                { type: 'string',  name: 'fulfillmentStatus' },
+                { type: 'string',  name: 'returnType', defaultValue: 'Select' },
+                { type: 'string',  name: 'reason', defaultValue: 'Select' },
+                { type: 'number',  name: 'quantity', defaultValue: 0 }
             ],
             data: [],
             sorters: [{
@@ -313,7 +356,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     }
                     return (a.get('orderLineId') < b.get('orderLineId') ? -1 : 1);
                 }
-            }]
+            }],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/order/returnableitems',
+                extraParams: {
+                    'orderId': this.order.get('id')
+                },
+                reader: {
+                    type: 'json'
+                }
+            }
         });
     },
 

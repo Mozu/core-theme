@@ -24,6 +24,7 @@ using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.CommerceRuntime.Contracts.Refunds;
+using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -36,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly CustomerController customerController;
         private readonly IPriceListRuntimeWebApiClient _priceListRuntimeWebApiClient;
         private readonly IApiContext _apiContext;
-        ICartWebApiClient _cartWebApiClient;
+        private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
         /*
@@ -477,6 +478,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             PriceList defaultPriceList =  (await _priceListRuntimeWebApiClient.GetDefaultPriceList()).ReadAsSync();
             return defaultPriceList != null ? defaultPriceList.PriceListCode : null;
             
+        }
+
+        [HttpGetRoute(UriTemplate = "returnableitems")]
+        public async Task<List<OrderReturnableItem>> GetReturnableItems([FromUri] string orderId)
+        {
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
+            var order = (await orderWebApiClient.GetOrder(orderId, false)).ReadAsSync();
+            if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var returnWebApiClient = _returnWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
+            var liveReturns = (await returnWebApiClient.GetReturns(filter: $"originalorderid eq {order.Id} AND status ne cancelled AND status ne rejected")).ReadAsSync();
+
+            var returnableItems = new OrderReturnableItemMapping().GetReturnableItems(order, liveReturns.Items);
+            return returnableItems;
         }
     }
 }
