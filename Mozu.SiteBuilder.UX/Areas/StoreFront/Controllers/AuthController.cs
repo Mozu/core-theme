@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 returnUrl = Request.Headers.Referrer.ToString();
                 if (string.IsNullOrEmpty(returnUrl))
                 {
-                    return new Uri("/", UriKind.Relative);
+                    return new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative);
                 }
                 else
                 {
@@ -296,7 +296,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
                 if (string.IsNullOrEmpty(returnUrl))
                 {
-                    returnUrl = "/myaccount";
+                    returnUrl = this.SiteContext.SiteSubdirectory + "/myaccount";
                 }
                 redir.Headers.Location = MakeRedirectUri(returnUrl);
                 return redir;
@@ -487,7 +487,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (this.PageContext != null && this.PageContext.User != null && this.PageContext.User.IsAuthenticated)
             {
-                return new RedirectResult("/");
+                return new RedirectResult(string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory) ? "/" : this.SiteContext.SiteSubdirectory);
             }
 
             var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
