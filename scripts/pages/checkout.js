@@ -1,5 +1,6 @@
 require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements) {
 
+
     var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
@@ -55,7 +56,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
 
         editCart: function () {
-            window.location = "/cart";
+            window.location =  (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
         },
         
         onOrderCreditChanged: function (order, scope) {
@@ -543,7 +544,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
-            window.location = "/checkout/" + checkoutModel.get('id') + "/confirmation";
+            window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
         var $reviewPanel = $('#step-review');
@@ -552,7 +553,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
             }
         });
-
+ 
         _.invoke(checkoutViews.steps, 'initStepView');
 
         $checkoutView.noFlickerFadeIn();

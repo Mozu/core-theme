@@ -1,4 +1,6 @@
-﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+﻿define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api",
+    "hyprlivecontext"], function($, _, Backbone, Hypr, PriceModels, api,
+        HyprLiveContext) {
 
     function zeroPad(str, len) {
         str = str.toString();
@@ -270,7 +272,7 @@
                 }
             }
             this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
-            this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
+            this.set({ url: (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + (slug ? "/" + slug : "") +  "/p/" + this.get("productCode")});
             this.lastConfiguration = [];
             this.calculateHasPriceRange(conf);
             this.on('sync', this.calculateHasPriceRange);

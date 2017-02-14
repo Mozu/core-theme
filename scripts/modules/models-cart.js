@@ -1,4 +1,7 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api"], function (_, Backbone, Hypr, api) {
+﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api",
+    "hyprlivecontext"
+    ], function (_, Backbone, Hypr, api,
+        HyprLiveContext) {
 
     var CartItemProduct = Backbone.MozuModel.extend({
         helpers: ['mainImage'],
@@ -9,7 +12,7 @@
             return img || { ImageUrl: imgurl, imageUrl: imgurl }; // to support case insensitivity
         },
         initialize: function() {
-            var url = "/product/" + this.get("productCode");
+            var url = (HyprLiveContext.locals.siteContext.siteSubdirectory || '')  + "/product/" + this.get("productCode");
             this.set({ Url: url, url: url });
         }
     }),
