@@ -39,7 +39,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
     },
 
     initComponent: function() {
-        this.store = this.getReturnableItemsStore(),
+        this.store = this.getReturnableItemsStore();
 
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
