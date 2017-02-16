@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (this.PageContext.User == null || this.PageContext.User.AccountId == null)
             {
                 var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-                redir.Headers.Location = new Uri(this.SiteContext.SiteSubdirectory+ "/user/login", UriKind.Relative);
+                redir.Headers.Location = new Uri("/user/login", UriKind.Relative);
                 return redir;
             }
 

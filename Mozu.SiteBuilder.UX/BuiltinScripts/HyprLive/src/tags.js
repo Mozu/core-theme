@@ -304,12 +304,7 @@ var util = {
         return '&_mzCb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
     },
     urlScrub: function(url) {
-        var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');
-        if ( stem.length > 0 && stem[0] === '/')
-        {
-            stem = HyprLiveContext.locals.siteContext.siteSubdirectory + stem;
-        }
-        return stem
+        return url.replace(/(&$)|(\?$)/g,'').replace(/\?&/, '?').replace(/&+/g, '&');
     }
 };
 

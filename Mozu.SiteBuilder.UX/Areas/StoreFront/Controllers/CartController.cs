@@ -249,7 +249,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return await RenderCartViewWithMessage(error);
             }
             
-            return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
+            return Redirect(CreateRedirectUrl("/checkout/" + order.Id).ToString());
         }
 
         private Uri CreateRedirectUrl(string path)
