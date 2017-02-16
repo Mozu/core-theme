@@ -406,13 +406,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         public  Task<List<RedirectEntry>> GetRedirectsAsync(SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
         {
-            var cacheKey = apiContext.TenantId + apiContext.SiteId + apiContext.DataViewMode.ToString();
+            var cacheKey = apiContext.TenantId + "|" + apiContext.SiteId + apiContext.DataViewMode.ToString();
             return _cacheProvider.GetCache(RedirectCacheName)
                 .GetAsync<List<RedirectEntry>>(cacheKey,
                     new eTagConstraint()
                     {
                         Condition = eTagConstraint.eTagCondition.GetIfMatch,
-                        eTag = ctxData.RedirectUpdateDate.Value.ToString("o")
+                        eTag = ctxData.RedirectUpdateDate.Value.ToString("o").ToLower()
                     }).
                     ContinueWith(x => x.Result?.Item);
                 
@@ -420,7 +420,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         public Task PutAsync(List<RedirectEntry> redirects, SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
         {
-            var cacheKey = apiContext.TenantId + apiContext.SiteId + apiContext.DataViewMode.ToString();
+            var cacheKey = apiContext.TenantId +"|"+ apiContext.SiteId + apiContext.DataViewMode.ToString();
             var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
 
             var policy = new CachePolicy()
@@ -430,13 +430,14 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             return _cacheProvider.GetCache(RedirectCacheName)
                 .PutAsync<List<RedirectEntry>>(
-                    redirects,
-                    cacheKey,
-                    new List<string>(),
-                    policy,
-                    ctxData.RedirectUpdateDate.Value.ToString("o")
+                    item:redirects,
+                    key: new CacheKey() { Key = cacheKey },
+                    tags:new List<CacheKey>(),
+                    policy:policy,
+                    eTag:ctxData.RedirectUpdateDate.Value.ToString("o").ToLower()
                     );
         }
+        
     }
     public class SiteBuilderContextWorkItem
     {
