@@ -46,6 +46,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
             )]
         public string BccEmailAddressOverride { get; set; }
 
+        [JsonProperty(
+            DefaultValueHandling = DefaultValueHandling.Include,
+            NullValueHandling = NullValueHandling.Include
+            )]
+        public bool? OnlyOnApiRequest { get; set; }
+
 
     }
     public enum EmailTypes

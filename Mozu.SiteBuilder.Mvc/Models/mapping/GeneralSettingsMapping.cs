@@ -91,7 +91,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
 
             Mapper.CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
-                .ForMember(m => m.Enabled, op => op.Ignore());
+                .ForMember(m => m.Enabled, op => op.Ignore())
+                .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
+                
             Mapper.CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())

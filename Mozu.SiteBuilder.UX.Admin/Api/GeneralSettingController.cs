@@ -121,8 +121,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 foreach (var emailEntry in convertedTypes)
                 {
                     var prop = props.FirstOrDefault(x => x.Name.Equals(emailEntry.Id));
-                    var supporessed = (bool?) prop.GetValue(results.SupressedEmailTransactions);
-                    emailEntry.Enabled = !supporessed.GetValueOrDefault(false);
+
+                    var suppressed = (bool?) prop.GetValue(results.SupressedEmailTransactions);
+                    emailEntry.Enabled = !suppressed.GetValueOrDefault(false);
+
+                    var onlyOnApiRequest = (bool?)prop.GetValue(results.EmailTransactionsOnlyOnRequest);
+                    emailEntry.OnlyOnApiRequest = onlyOnApiRequest.GetValueOrDefault(false);
+
                     dic[emailEntry.Id] = emailEntry;
                 }
             }
@@ -153,8 +158,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 existing.EmailTypes.Remove(
                     existing.EmailTypes.FirstOrDefault(x => x.Id.Equals(update.Id, StringComparison.OrdinalIgnoreCase)));
                 existing.EmailTypes.Add(Mapper.Map<Mozu.SiteSettings.General.Contracts.EmailTypeSetting>(update));
+
                 var prop = props.First(x => x.Name.Equals(update.Id, StringComparison.OrdinalIgnoreCase));
                 prop.SetValue(existing.SupressedEmailTransactions, !update.Enabled.GetValueOrDefault(false));
+                prop.SetValue(existing.EmailTransactionsOnlyOnRequest, update.OnlyOnApiRequest.GetValueOrDefault(false));
             }
         }
     }

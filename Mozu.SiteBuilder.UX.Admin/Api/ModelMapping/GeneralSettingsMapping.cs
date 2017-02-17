@@ -22,7 +22,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.EmailTypeSetting, EmailTypeSettingVM>()
-                .ForMember(x => x.Enabled, OP => OP.Ignore());
+                .ForMember(x => x.Enabled, OP => OP.Ignore())
+                .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
             Mapper.CreateMap<EmailTypeSettingVM, Mozu.SiteSettings.General.Contracts.EmailTypeSetting>();
            
 
