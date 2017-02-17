@@ -132,7 +132,7 @@ namespace Mozu.SiteBuilder.Mvc.Settings
                                       Properties = new JObject(
                                           new JProperty("theme", themeId),
                                           new JProperty("tags", new JArray(new object[] {"something"})),
-                                          new JProperty("data", values)
+                                          new JProperty("data", JObject.FromObject( values))
                                           )
                                   };
                         return _cmsService.RawCreate2(doc);
