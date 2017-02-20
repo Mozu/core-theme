@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         },
         concat: {
             test: {
-                src: ['src/wrap_header.tpl', 'bower_components/swig/dist/swig.js', 'src/loader.js', 'src/env.js', 'src/tags.js', 'src/filters.js', 'src/wrap_footer.tpl'],
+                src: ['src/wrap_header.tpl', 'node_modules/swig/dist/swig.js', 'src/loader.js', 'src/env.js', 'src/tags.js', 'src/filters.js', 'src/wrap_footer.tpl'],
                 dest: '<%= testPlatform %>'
             },
             dist: {
