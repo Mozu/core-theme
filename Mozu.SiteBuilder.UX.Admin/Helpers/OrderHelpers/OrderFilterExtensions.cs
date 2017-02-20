@@ -102,9 +102,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 {
                     return "returnStatus eq " + filter.value;
                 }
+                // TODO: Remove this filter
+                // The Order Grid allows you to search orders by child return number. This was a stop-gap until we had the Returns Grid in place.
+                // The service-side implementation for this is hackish and should probably be removed at some point.
                 case "returnnumber":
                 {
                     return "returnNumber eq " + filter.value;
+                }
+                case "parentreturnid":
+                {
+                    return $"parentReturnId eq {filter.value}";
                 }
                 case "id":
                 {

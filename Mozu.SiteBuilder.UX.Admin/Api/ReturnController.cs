@@ -161,9 +161,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // TODO: Fix this when we have multiple orders
             if (!rma.ReturnOrderId.IsNullOrEmpty())
             {
-                var dcOrder = (await _orderWebApiClient.GetOrder(rma.ReturnOrderId)).ReadAsSync();
-                var sbOrder = Mapper.Map<Order>(dcOrder);
-                rma.ReturnOrders = new List<Order> { sbOrder };
+                // TenantId and SiteId are automatically added via ApiContext on the back end.
+                var filter = $"parentReturnId eq {rma.Id}";
+                // TODO: Do we really want the Header responseGroup? It reduces payload, but money values are goofed up, though total seems ok.
+                var dcOrders = (await _orderWebApiClient.GetOrders(filter: filter, responseGroups: "Header")).ReadAsSync();
+                var sbOrders = Mapper.Map<List<Order>>(dcOrders.Items);
+                rma.ReturnOrders = sbOrders;
             }
         }
 
