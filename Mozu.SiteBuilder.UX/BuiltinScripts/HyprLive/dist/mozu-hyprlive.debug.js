@@ -5945,12 +5945,12 @@ var util = {
         return '&_mzCb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
     },
     urlScrub: function(url) {
-        return url.replace(/(&$)|(\?$)/g,'').replace(/\?&/, '?').replace(/&+/g, '&');
-       // var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');
-       /* if (stem.length > 0 && stem[0] === '/') {
-            stem = ( HyprLiveContext.locals.siteContext.siteSubdirectory || '') + stem;
-        }*/
-        //return stem
+        var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');
+        if ( stem.length > 0 && stem[0] === '/')
+        {
+            stem = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + stem;
+        }
+        return stem
     }
 };
 

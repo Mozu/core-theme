@@ -306,7 +306,6 @@
     <Content Include="BuiltinScripts\SDK\src\banner.tpl" />
     <Content Include="BuiltinScripts\HyprLive\src\wrap_footer.tpl" />
     <Content Include="BuiltinScripts\HyprLive\src\wrap_header.tpl" />
-    <Content Include="BuiltinScripts\HyprLive\bower.json" />
     <Content Include="BuiltinScripts\HyprLive\src\banner.tpl" />
     <Content Include="BuiltinScripts\HyprLive\README.md" />
     <Content Include="BuiltinScripts\RequireJS\package.json" />
