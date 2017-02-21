@@ -300,7 +300,7 @@ Ext.define('Taco.view.order.Header', {
                 '</tr>',
                 '<tpl if="parentReturnId">',
                 '<tr>',
-                '<td>','<span class="label label-light">Parent Return Id:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/orders/edit/{parentOrderId}?returnId={parentReturnId}">{parentReturnNumber}</a></span>','</td>',
+                '<td>','<span class="label label-light">Parent Return:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/returns/edit/{parentReturnId}">{parentReturnNumber}</a></span>','</td>',
                 '</tr>',
                 '</tpl>',
                 '</table>'
