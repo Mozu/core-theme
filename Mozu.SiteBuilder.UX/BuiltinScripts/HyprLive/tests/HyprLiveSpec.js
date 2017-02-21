@@ -106,8 +106,8 @@
             expect(Hypr.engine.render('{% make_url "product" model with variant="small-green" as_parameter %}', { locals: { model: { productCode: 'something-code-12' } } }))
               .to.equal('/p/something-code-12/v/small-green');
         });
-
-
+        
+       
         it('has a tag {% make_url "category" %} that produces a valid Category url', function() {
             expect(Hypr.engine.render('{% make_url "category" 1234 %}'))
                 .to.equal('/c/1234');
@@ -185,7 +185,20 @@
             // allow user to change pageSize
             expect(Hypr.engine.render('{% make_url "paging" productCollection with pageSize=30 as_parameter %}', data)).to.equal('?pageSize=30&a=1&b=21&startIndex=20');
         });
+
+        describe('siteSubdirecotry', function () {
+            before(function () {
+                HyprLiveContext.locals.siteContext.siteSubdirectory = '/foo';
+            });
+            it('make_url prepends siteSubDir', function () {
+                expect(Hypr.engine.render("{% make_url 'product' 'food' %}")).to.equal('/foo/p/food');
+            });
+            after(function () {
+                HyprLiveContext.locals.siteContext.siteSubdirectory = null;
+            });
+        });
     });
+    
     describe('custom filters', function() {
         before(function () {
             history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>");
