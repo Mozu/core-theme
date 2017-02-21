@@ -1,16 +1,11 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2016-07-21
+ * Mozu Hypr Live - v1.0.0 - 2017-02-20
  *
- * Copyright (c) 2016 Volusion, Inc.
+ * Copyright (c) 2017 Volusion, Inc.
  *
  */
 
- (function(root) {
-
-	/* IE8 polyfills */
-
-
-	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
@@ -20,8 +15,7 @@
         'isPrototypeOf',
         'propertyIsEnumerable'
     ],
-    dontEnumsLength = dontEnums.length;
-	(function() {
+    dontEnumsLength = dontEnums.length;	(function() {
     var _slice = Array.prototype.slice;
 
     try {
@@ -355,9 +349,7 @@
 	}
 
 
-})();
-
-	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+})();	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
     // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
@@ -2460,8 +2452,8 @@ exports.parse = function (source, opts, tags, filters) {
 
     // Is a comment?
     if ((!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) || !inRaw && utils.startsWith(chunk, inlineCmtOpen) && utils.endsWith(chunk, inlineCmtClose)) {
-        // do nuthin and keep going!
-        return;
+      // do nuthin and keep going!
+      return;
     }
     // Is a variable?
     if (!inRaw && utils.startsWith(chunk, varOpen) && utils.endsWith(chunk, varClose)) {
@@ -5721,7 +5713,7 @@ var WithTag = {
         var asEncountered = false;
         parser.on('*', function(token) {
             if (!asEncountered) return true;
-        })
+        });
         parser.on(types.VAR, function(token) {
             if (token.match === WithTag.as) {
                 if (asEncountered) throw new Error("Error on line " + line + ": " + WithTag.asError);
@@ -5954,6 +5946,11 @@ var util = {
     },
     urlScrub: function(url) {
         return url.replace(/(&$)|(\?$)/g,'').replace(/\?&/, '?').replace(/&+/g, '&');
+       // var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');
+       /* if (stem.length > 0 && stem[0] === '/') {
+            stem = ( HyprLiveContext.locals.siteContext.siteSubdirectory || '') + stem;
+        }*/
+        //return stem
     }
 };
 
@@ -6287,7 +6284,7 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
             humanized: memo.humanized + space + strPart,
             elemsCount: elemsCount
         };
-    }
+    };
 
     function timeBetween(date, laterDate) {
         if (!date || !laterDate) return "0 minutes";

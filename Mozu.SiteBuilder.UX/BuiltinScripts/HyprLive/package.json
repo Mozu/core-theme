@@ -14,7 +14,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "swig": "zetlen/swig"
+    "swig": "git+http://gitlab.dev.volusion.com/mozu-github/swig.git"
   },
   "devDependencies": {
     "chai": "^1.9.2",
