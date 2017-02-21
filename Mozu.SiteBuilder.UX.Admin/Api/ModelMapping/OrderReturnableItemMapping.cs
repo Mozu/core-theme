@@ -19,6 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             UpdateQuantityFulfilled(order, returnableItemMappings);
             UpdateQuantityReturned(liveReturns, returnableItemMappings);
             UpdateQuantityReturnable(order, liveReturns, returnableItemMappings);
+            FixItemWithExtrasFulfillmentStatus(returnableItemMappings);
             return returnableItemMappings.SelectMany(x => x.Value).ToList();
         }
 
@@ -266,7 +267,51 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         : parentReturnableCount;
                 }
             }
+        }
 
+        // The fulfillment status coming from CommerceRuntime for parent items does not account for extras, nor should it.
+        // Here we make the distinction between with and without extras. Fix the fulfillment status for parent with extras.
+        // TODO: Do we have some constants we can pull the fulfillment status values from?
+        private void FixItemWithExtrasFulfillmentStatus(Dictionary<OrderItem, List<API.OrderReturnableItem>> returnableItemMappings)
+        {
+            foreach (var mapping in returnableItemMappings)
+            {
+                var returnableItems = mapping.Value;
+
+                var parentWithExtras = returnableItems.First(x => string.IsNullOrEmpty(x.ParentItemId) && !x.ExcludeProductExtras);
+                var items = returnableItems.Except(new[] { parentWithExtras }).ToList();
+                if (!items.Any()) continue;
+
+                // Code pulled from CommerceRuntime SetFulfillmentStatusForProductVisitor
+                if (items.All(p => p.FulfillmentStatus == "Returned"))
+                {
+                    parentWithExtras.FulfillmentStatus = "Returned";
+                }
+                else if (items.Any(p => p.FulfillmentStatus == "Returned" || p.FulfillmentStatus == "PartiallyReturned"))
+                {
+                    parentWithExtras.FulfillmentStatus = "PartiallyReturned";
+                }
+                else if (items.All(p => p.FulfillmentStatus == "Fulfilled"))
+                {
+                    parentWithExtras.FulfillmentStatus = "Fulfilled";
+                }
+                else if (items.Any(p => p.FulfillmentStatus == "Fulfilled" || p.FulfillmentStatus == "PartiallyFulfilled"))
+                {
+                    parentWithExtras.FulfillmentStatus = "PartiallyFulfilled";
+                }
+                else if (items.All(p => p.FulfillmentStatus == "Packaged"))
+                {
+                    parentWithExtras.FulfillmentStatus = "Packaged";
+                }
+                else if (items.Any(p => p.FulfillmentStatus == "Packaged" || p.FulfillmentStatus == "PartiallyPackaged"))
+                {
+                    parentWithExtras.FulfillmentStatus = "PartiallyPackaged";
+                }
+                else
+                {
+                    parentWithExtras.FulfillmentStatus = "PendingFulfillment";
+                }
+            }
         }
     }
 }

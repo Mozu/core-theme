@@ -100,14 +100,6 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.initCreateButton();
 
-        //this.returnableItemsGrid = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
-        //    order: this.record,
-        //    returnsStore: store,
-        //    //tools: [this.createButton],
-        //    margin: '10px 0 10px 0',
-        //    padding: '0 1px 0 0'
-        //});
-        
         this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemTree', {
             order: this.record,
             returnsStore: store,
@@ -121,7 +113,6 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.items = [
-            //this.returnableItemsGrid,
             this.returnableItems,
             {
                 xtype: 'container',
@@ -146,8 +137,8 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
 
-    refreshReturnableItemsGrid: function () {
-        this.returnableItems.reload();
+    refreshReturnableItems: function () {
+        this.returnableItems.loadReturnableItemsData();
     },
 
     createReturn: function (type, items) {
@@ -220,15 +211,18 @@ Ext.define('Taco.view.order.subform.Return', {
         this.setLoading(true);
         returnsStore.sync({
             callback: function () {
+                // Interesting note... callback is called AFTER success/failure.
                 this.setLoading(false);
                 this.createButton.setDisabled(false);
             },
             success: function () {
+                // Once the new return is created, navigate to it.
+                Taco.core.StateManager.attemptNavigate('/returns/edit/' + newReturnRecord.data.id);
                 // after we add the new return we need to reload the order and regenerate the returnable items grid store
-                this.record.reload({
-                    success: me.refreshReturnableItemsGrid,
-                    scope: me
-                });
+                //this.record.reload({
+                //    success: me.refreshReturnableItems,
+                //    scope: me
+                //});
             },
             failure: function (batch) {
                 returnsStore.remove(newReturnRecord);
