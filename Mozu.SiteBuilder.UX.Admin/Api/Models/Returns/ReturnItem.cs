@@ -51,6 +51,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public List<ProductOption> ProductOptions { get; set; }
 
         /// <summary>
+        /// Bundle items.
+        /// </summary>
+        public List<BundledProduct> BundleItems { get; set; }
+
+        /// <summary>
+        /// Extras.
+        /// </summary>
+        public List<BundledProduct> Extras { get; set; }
+
+        /// <summary>
         /// Notes from the storefront.
         /// </summary>
         public List<OrderNote> Notes { get; set; } 

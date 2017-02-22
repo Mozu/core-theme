@@ -149,6 +149,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.OrderLineId, op => op.ResolveUsing(dc => dc.OrderLineId))
             .ForMember(x => x.OrderItemOptionAttributeFQN, op => op.ResolveUsing(dc => dc.OrderItemOptionAttributeFQN))
             .ForMember(x => x.ExcludeProductExtras, op => op.ResolveUsing(dc => dc.ExcludeProductExtras))
+            .ForMember(x => x.BundleItems, op => op.ResolveUsing(dc => dc.Product?.BundledProducts.Where(x => string.IsNullOrEmpty(x.OptionAttributeFQN)).ToList()))
+            .ForMember(x => x.Extras, op => op.ResolveUsing(dc => dc.Product?.BundledProducts.Where(x => !string.IsNullOrEmpty(x.OptionAttributeFQN)).ToList()))
             ;
         }
 
