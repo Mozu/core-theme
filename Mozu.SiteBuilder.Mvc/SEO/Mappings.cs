@@ -97,6 +97,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
 
     public class RegexMapping : IRouteDataMapping
     {
+        Regex _regex;
+        Exception _ex;
         public Mapping Settings
         {
             get;
@@ -106,6 +108,14 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
         public RegexMapping(Mapping settings)
         {
             Settings = settings;
+            try
+            {
+                _regex = new Regex(Settings.pattern, RegexOptions.IgnoreCase, matchTimeout:TimeSpan.FromSeconds(2));
+            }
+            catch( Exception ex)
+            {
+                _ex = new Exception($"bad pattern: { settings.pattern} ", ex);
+            }
         }
 
 
@@ -114,9 +124,13 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Mappings
             object obj;
             if (values.TryGetValue(parameterName, out obj) && obj!= null)
             {
+                if (_ex!= null)
+                {
+                    throw _ex;
+                }
                 var parameterValue = Convert.ToString(obj);
                 var key = string.IsNullOrWhiteSpace(Settings.mapTo) ? parameterName : Settings.mapTo;
-                values[key] = Regex.Replace(parameterValue, Settings.pattern, Settings.replacement??string.Empty, RegexOptions.IgnoreCase);
+                values[key] = _regex.Replace(parameterValue, Settings.replacement??string.Empty);
             }
             return values;
         }

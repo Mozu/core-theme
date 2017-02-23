@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "2";
+        public const string CacheVersion = "3";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -136,21 +136,23 @@ namespace Mozu.SiteBuilder.Mvc.Context
        
         async Task DoBuilds ()
         {
+            var lastWorkId = default(string);
             while ( true)
             {
                 var work = await GetWork().ConfigureAwait(false);
 
-                if ( work == null)
+                if (work == null || work.Id == lastWorkId)
                 {
                     return;
                 }
+                
 
                 var apiContext = ToApiContext(work);
                 
                 var ctxData = await ProcessWork(work, apiContext).ConfigureAwait(false);
 
                 await ((ISitebuilderContextCacheRepository)this).PutAsync(ctxData, apiContext).ConfigureAwait(false);
-     
+                lastWorkId = work.Id;
             }
         }
         SiteBuilderApiContext ToApiContext(SiteBuilderContextWorkItem work )
@@ -212,7 +214,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             var newWork = fBuilder.And(
                 fBuilder.Lt(x => x.SchedualedBuildTime, DateTime.UtcNow),
-                 fBuilder.Eq(x => x.Worker, null));
+                 fBuilder.Eq(x => x.Worker, null),
+                 fBuilder.Eq(x => x.Version, SitebuilderContextCacheRepository.CacheVersion));
 
             var erroredWork = fBuilder.Lt(x => x.WorkStarted, DateTime.UtcNow.AddMinutes(-4));
 
@@ -243,13 +246,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
             if (!_ensureIndexes)
             {
                 var colleciton = GetCollection();
-                var newWorkIdxName = "newWork_Idx";
+                var newWorkIdxName = "newWork_withVer_Idx";
                 var oldWorkIxdName = "oldWork_Ixd";
                 var builder = Builders<SiteBuilderContextWorkItem>.IndexKeys;
                 using (var cursor = await colleciton.Indexes.ListAsync().ConfigureAwait(false))
                 {
                     var indexes = await cursor.ToListAsync().ConfigureAwait(false);
-                    await EnsureIndex(colleciton,  indexes , newWorkIdxName, builder.Ascending(x => x.SchedualedBuildTime).Ascending(x => x.Worker));
+                    await EnsureIndex(colleciton,  indexes , newWorkIdxName, builder.Ascending(x => x.Version).Ascending(x => x.SchedualedBuildTime).Ascending(x => x.Worker));
                     await EnsureIndex(colleciton, indexes, oldWorkIxdName, builder.Ascending(x => x.TimeStamp));
                 }
                 _ensureIndexes = true;
@@ -353,7 +356,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
                 };
 
-                await _cacheProvider.GetCache(CacheName).PutAsync(item, cacheKey, tags, policy).ConfigureAwait(false);
+                await _cacheProvider.GetCache(CacheName).PutAsync(
+                    item: item, 
+                    key: new CacheKey() { Key = cacheKey }, 
+                    tags: tags.Select( _=> new CacheKey() { Key = _ }).ToList(), 
+                    policy:policy,
+                    eTag: item.Hash.ToLower()
+                    ).ConfigureAwait(false);
             }
             await UpsertWorkQueue(apiContext).ConfigureAwait(false);
         }
@@ -404,9 +413,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
+        string GetRedirectsCacheKey(ISiteBuilderApiContext apiContext )
+        {
+            return apiContext.TenantId + "|" + apiContext.SiteId + (apiContext.DataViewMode == DataViewModeType.Pending ? "p" : "l");
+        }
         public  Task<List<RedirectEntry>> GetRedirectsAsync(SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
         {
-            var cacheKey = apiContext.TenantId + "|" + apiContext.SiteId + apiContext.DataViewMode.ToString();
+            var cacheKey = GetRedirectsCacheKey(apiContext);
             return _cacheProvider.GetCache(RedirectCacheName)
                 .GetAsync<List<RedirectEntry>>(cacheKey,
                     new eTagConstraint()
@@ -417,10 +430,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     ContinueWith(x => x.Result?.Item);
                 
         }
-
+       
         public Task PutAsync(List<RedirectEntry> redirects, SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
         {
-            var cacheKey = apiContext.TenantId +"|"+ apiContext.SiteId + apiContext.DataViewMode.ToString();
+            var cacheKey = GetRedirectsCacheKey(apiContext);
             var isSb = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
 
             var policy = new CachePolicy()
@@ -463,7 +476,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public string Worker { get; set; }
         public string CurrencyCode { get;  set; }
         public string LocaleCode { get;  set; }
-        
+
+        public string  Version
+        {
+            get { return SitebuilderContextCacheRepository.CacheVersion; }
+            set { }
+        }
+
     }
     public interface ISiteBuilderContextDataRepository
     {
@@ -796,13 +815,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-        private string Hash (SiteBuilderContextData data )
+        public static string Hash (SiteBuilderContextData data )
         {
             using (var md5 = MD5.Create())
             using (var stream = new MemoryStream())
             using ( var w = new BinaryWriter(stream))
             {
-                data.GetFlatCategoryList()?.OrderBy(_=>_.CategoryId).ToList().ForEach(_ =>
+                data.GetFlatCategoryList()?.OrderBy(_=>_.CategoryId).ToList()?.ForEach(_ =>
                 {
                     w.Write(_.CategoryId);
                     w.Write(_.IsDisplayed);
@@ -813,20 +832,20 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 w.Write(data.CheckoutSettings?.OrderProcessingSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
                 w.Write(data.CheckoutSettings?.PaymentSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0 );
                 w.Write(data.GeneralSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
-                data.LocationUsages?.Items?.ForEach(_ =>
+                data.LocationUsages?.Items?.OrderBy(x=> x.LocationUsageTypeCode )?.ToList().ForEach(_ =>
                 {
                     w.Write(_.LocationUsageTypeCode??string.Empty);
                     w.Write((_.AuditInfo?.UpdateDate ?? DateTime.MinValue).Ticks);
                 });
-                data.NavWebPages?.Items?.ForEach(_ =>
+                data.NavWebPages?.Items?.OrderBy(_=> _.Id)?.ToList()?.ForEach(_ =>
                 {
                     w.Write(_.Id);
                     w.Write(((_.UpdateDate ?? _.InsertDate) ?? DateTime.MinValue).Ticks);
                 });
-                data.RouteMapperData?.ToList().ForEach(_ =>
+                data.RouteMapperData?.OrderBy(_ => _.Key)?.ToList().ForEach(_ =>
                 {
                     w.Write(_.Key);
-                    _.Value?.All(entry =>
+                    _.Value?.OrderBy(x=>x.Key)?.All(entry =>
                     {
                         w.Write(entry.Key);
                         w.Write(entry.Value?.ToString());
@@ -838,10 +857,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
                 w.Write(data.RedirectUpdateDate?.Ticks ?? 0);
 
-                data.RouteValidatorData?.ToList().ForEach(_ =>
+                data.RouteValidatorData?.OrderBy(_ => _.Key)?.ToList().ForEach(_ =>
                 {
                     w.Write(_.Key);
-                    _.Value?.All(entry =>
+                    _.Value?.OrderBy(x => x.Key)?.All(entry =>
                     {
                         w.Write(entry.Key);
                         w.Write(entry.Value?.ToString());
@@ -849,7 +868,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     });
                 });
 
-                data.Themes?.Keys?.All(_ =>
+                data.Themes?.Keys?.OrderBy(_ => _)?.All(_ =>
                 {
                     var tup = data.Themes[_];
                     w.Write(tup.Item1?.Id ?? string.Empty);

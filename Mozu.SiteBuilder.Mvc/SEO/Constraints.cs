@@ -642,15 +642,16 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 throw attRes.ReadException();
             }
             var val = attRes.ReadAsSync();
-            var dict = new Dictionary<string, AttributeVocabularyValue>(StringComparer.OrdinalIgnoreCase);
+            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in val)
             {
+                var dicVal = entry.Content?.StringValue ?? entry.Value?.ToString();
                 if (entry.Content != null)
                 {
-                    dict[entry.Content.StringValue] = entry;
+                    dict[entry.Content.StringValue] = dicVal; 
                 }
 
-                dict[entry.Value.ToString()] = entry;
+                dict[entry.Value.ToString()] = dicVal;
             }
             var searchRes = searchTask.Result;
 
@@ -659,10 +660,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO.Constraints
                 throw searchRes.ReadException();
             }
             var val2 = searchRes.ReadAsSync();
-            var dict2 = new Dictionary<string, FacetValue>(StringComparer.OrdinalIgnoreCase);
+            var dict2 = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var entry in val2.Facets.SelectMany(x => x.Values))
             {
-                dict2[entry.Value] = entry;
+                dict2[entry.Value] = string.IsNullOrEmpty(entry.Label) ? entry.Value : entry.Label;
 
             }
 
