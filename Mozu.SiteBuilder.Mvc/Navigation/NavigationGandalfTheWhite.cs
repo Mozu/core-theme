@@ -128,8 +128,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                 {
                     return _list;
                 }
-
-                //lock (cacheKey)
+                var atomicString = string.Intern(cacheKey);
+                lock (atomicString)
                 {
                     _list = GetFromCache(cacheKey);
                     if (_list != null)
