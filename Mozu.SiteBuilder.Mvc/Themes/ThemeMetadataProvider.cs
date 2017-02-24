@@ -267,7 +267,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             themecfg.Widgets = themecfgJson["widgets"] == null ? new List<WidgetDefinition> (): themecfgJson["widgets"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.WidgetDefinition>>();
             themecfg.Editors = themecfgJson["editors"] == null ? new List<EditorDefinition>() : themecfgJson["editors"].ToObject<List<EditorDefinition>>();
             themecfg.Layouts = themecfgJson["layoutWidgets"] == null ? new List<LayoutWidgetDefinition>() : themecfgJson["layoutWidgets"].ToObject<List<LayoutWidgetDefinition>>();
-            themecfg.Settings = (themecfgJson["settings"].ToObject<Dictionary<string, object>>() ?? new Dictionary<string, object>()).ToDictionar2y(x => x.Key, x=>x.Value,StringComparer.OrdinalIgnoreCase);
+            themecfg.Settings = (themecfgJson["settings"]?.ToObject<Dictionary<string, object>>() ?? new Dictionary<string, object>()).ToDictionar2y(x => x.Key, x=>x.Value,StringComparer.OrdinalIgnoreCase);
                
 
             return themecfg;
