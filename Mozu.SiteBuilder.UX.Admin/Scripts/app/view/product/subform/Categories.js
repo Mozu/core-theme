@@ -205,18 +205,17 @@ Ext.define('Taco.view.product.subform.Categories', {
         var treeStore = Taco.core.data.StoreManager.getCategoryTreeByCatalog(
             this.record.get('catalogId')
         );
-        
-        treeStore.on({
+
+
+        this.mon(treeStore, {
             load: function () {
                 treeStore.filterBy(function (record) {
-                    var isRealTime = record.get("categoryType") === "DynamicRealTime";
-                    return (!isRealTime);
+                    return record.get("categoryType") === "Static";
                 });
             },
             beforeexpand: function (node, opts) {
                 node.childNodes = node.childNodes.filter(function (childNode) {
-                    var isRealtime = childNode.data.categoryType === "DynamicRealTime";
-                    return !isRealtime;
+                    return childNode.data.categoryType === "Static";
                 });
             },
             scope: this
@@ -229,10 +228,6 @@ Ext.define('Taco.view.product.subform.Categories', {
         this.modal.on({
             savesuccess: function (modal, values) {
                 list.addValue(values);
-//                this.reloadStore(list);
-            },
-            aftercancelclose: function () {
-  //              this.reloadStore(list);
             },
             scope: this
         });
