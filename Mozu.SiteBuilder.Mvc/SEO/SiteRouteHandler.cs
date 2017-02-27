@@ -227,6 +227,10 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (!string.Equals(
                         uri.GetComponents(UriComponents.Path , UriFormat.Unescaped),
                         _origionalUri.GetComponents(UriComponents.Path , UriFormat.Unescaped), 
+                        StringComparison.OrdinalIgnoreCase)  &&
+                        !string.Equals(
+                        uri.GetComponents(UriComponents.Path, UriFormat.Unescaped),
+                        _requestMessage.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped),
                         StringComparison.OrdinalIgnoreCase))
                     {
                         if (!IsValidForExistingContext(request , uri, routeCollection, _routeconfig.DefaultRoutes))
