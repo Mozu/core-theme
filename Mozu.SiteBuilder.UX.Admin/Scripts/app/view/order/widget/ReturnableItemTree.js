@@ -160,7 +160,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 text: 'Fulfilled',
                 draggable: false,
                 sortable: false,
-                //resizable: false,
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
@@ -171,7 +170,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 text: 'Returned',
                 draggable: false,
                 sortable: false,
-                //resizable: false,
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
@@ -182,7 +180,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 text: 'Returnable',
                 draggable: false,
                 sortable: false,
-                //resizable: false,
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 90,
@@ -262,7 +259,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         var data = Ext.decode(response.responseText);
 
         //create the new structure
-        var tree = this.createTree(data);
+        var tree = this.createTree(data.items);
 
         this.store.setRootNode(tree);
     },
@@ -278,20 +275,20 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         var wholes = [];
         entriesByLine.forEach(function(entry) {
             var whole = entry.find(function(item) {
-                return !item.parentItemId && !item.excludeProductExtras;
+                return !item.parentProductCode && !item.excludeProductExtras;
             });
             var bundle = entry.find(function(item) {
-                return !item.parentItemId && item.excludeProductExtras;
+                return !item.parentProductCode && item.excludeProductExtras;
             });
             var products = entry.reduce(function(collection, item) {
-                if (item.parentItemId && !item.orderItemOptionAttributeFQN) {
+                if (item.parentProductCode && !item.orderItemOptionAttributeFQN) {
                     item.leaf = true;
                     collection.push(item);
                 }
                 return collection;
             }, []);
             var extras = entry.reduce(function(collection, item) {
-                if (item.parentItemId && item.orderItemOptionAttributeFQN) {
+                if (item.parentProductCode && item.orderItemOptionAttributeFQN) {
                     item.leaf = true;
                     collection.push(item);
                 }
@@ -333,7 +330,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 { type: 'string', name: 'orderItemOptionAttributeFQN' },
                 { type: 'boolean', name: 'hasExtras' },
                 { type: 'boolean', name: 'excludeProductExtras' },
-                { type: 'float', name: 'unitPrice' },
                 { type: 'number', name: 'quantityOrdered' },
                 { type: 'number', name: 'quantityFulfilled' },
                 { type: 'number', name: 'quantityDirectlyReturned' },
@@ -346,13 +342,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 },
                 { type: 'number', name: 'quantityReturnable' },
                 { type: 'number', name: 'unitQuantity' },
-                { type: 'string', name: 'parentItemId' },
                 { type: 'string', name: 'parentProductCode' },
                 { type: 'string', name: 'parentProductName' },
-                { type: 'string', name: 'fulfillmentStatus' },
-                { type: 'string', name: 'returnType', defaultValue: 'Select' },
-                { type: 'string', name: 'reason', defaultValue: 'Select' },
-                { type: 'number', name: 'quantity', defaultValue: 0 }
+                { type: 'string', name: 'fulfillmentStatus' }
             ],
             data: [],
             sorters: [{

@@ -31,6 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             Map_DcOrder_to_Order();
             Map_DcOrderItem_to_OrderItem();
+            Map_DcOrderReturnableItem_to_OrderReturnableItem();
             Map_BundledProduct_to_OrderItem();
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
             Map_DcShippingDiscount_to_ShippingDiscount();
@@ -160,7 +161,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemsDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.ItemsNotDigitallyFulfilled, op => op.Ignore())
                 .ForMember(x => x.TaxDutyTotal, op => op.Ignore())
-                .ForMember(x => x.ReturnableItems, op => op.Ignore())
                 .ForMember(x => x.LineItemHandlingFees, op => op.Ignore())
                 .ForMember(x => x.ShippingAndHandlingTotal, op => op.Ignore())
                 .ForMember(x => x.AdjustmentTotal, op => op.Ignore())
@@ -299,64 +299,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         order.InternalNotes.ForEach(x => x.OrderId = order.Id);
                     }
-                })
-                .AfterMap((dc, order) =>
-                {
-                    // 1. create returnable items list.
-                    order.ReturnableItems =
-                    (
-                        from item in order.Items
-                        where string.IsNullOrEmpty(item.ProductUsage) || !item.ProductUsage.Equals("Bundle", StringComparison.OrdinalIgnoreCase)
-                        select new OrderReturnableItem
-                        {
-                            OrderItemId = item.Id,
-                            ProductCode = item.ProductCode,
-                            ProductName = item.ProductName,
-                            QuantityOrdered = item.Quantity,
-                            UnitPrice = item.UnitPrice,
-                            Key = item.Id,
-                            OrderLineId = item.LineId,
-                            FulfillmentStatus = item.FulfillmentStatus
-                        }
-                    )
-                    .Union  // Grab bundle items.
-                    (
-                        from item in order.Items
-                        from bp in item.BundledProducts
-                        select new OrderReturnableItem
-                        {
-                            OrderItemId = null,
-                            ProductCode = bp.ProductCode,
-                            ProductName = bp.Name,
-                            QuantityOrdered = item.Quantity * bp.Quantity,
-                            UnitPrice = null,
-                            ParentItemId = item.Id,
-                            ParentProductCode = item.ProductCode,
-                            ParentProductName = item.ProductName,
-                            Key = item.Id + "-" + bp.ProductCode,
-                            OrderLineId = item.LineId,
-                            FulfillmentStatus = bp.FulfillmentStatus,
-                            OrderItemOptionAttributeFQN = bp.OptionAttributeFQN
-                        }
-                    )
-                    .ToList();
-
-                    // 2. Count the number of items already fulfilled.
-                    // we have to do some backflips in case line items were split:
-                    // we don't want to count one item being fulfilled as 
-                    // one fulfilled in each line item.
-                    // Now it is grouped by OrderLineId.
-                    // TODO (JK): NEED TO REVIEW! This may be messed up by line id now!
-                    EnumerableExtensions.Each(order.ReturnableItems.GroupBy(ri => new { ri.OrderLineId, ri.ProductCode, OptionAttribute = ri.OrderItemOptionAttributeFQN ?? string.Empty}), group =>
-                    {
-                        int totalQuantityFulfilled = order.GetFulfilledItemCount(group.Key.OrderLineId, group.Key.ProductCode, group.Key.OptionAttribute);
-                        EnumerableExtensions.Each(@group, returnItem =>
-                        {
-                            int numToMarkFulfilled = Math.Min(returnItem.QuantityOrdered, totalQuantityFulfilled);
-                            returnItem.QuantityFulfilled = numToMarkFulfilled;
-                            totalQuantityFulfilled -= numToMarkFulfilled;
-                        });
-                    });
                 });
         }
 
@@ -714,6 +656,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 });
             // TODO: shopper entered values
+        }
+
+        private void Map_DcOrderReturnableItem_to_OrderReturnableItem()
+        {
+            Mapper.CreateMap<OrdersDC.OrderReturnableItem, OrderReturnableItem>();
         }
 
         /// <summary>

@@ -481,17 +481,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "returnableitems")]
-        public async Task<List<OrderReturnableItem>> GetReturnableItems([FromUri] string orderId)
+        public async Task<Response<List<OrderReturnableItem>>> GetReturnableItems([FromUri] string orderId)
         {
             var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
-            var order = (await orderWebApiClient.GetOrder(orderId, false)).ReadAsSync();
-            if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            var returnWebApiClient = _returnWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
-            var liveReturns = (await returnWebApiClient.GetReturns(filter: $"originalorderid eq {order.Id} AND status ne cancelled AND status ne rejected")).ReadAsSync();
-
-            var returnableItems = new OrderReturnableItemMapping().GetReturnableItems(order, liveReturns.Items);
-            return returnableItems;
+            var returnableItems = (await orderWebApiClient.GetOrderReturnableItems(orderId)).ReadAsSync();
+            return List2(Mapper.Map<List<OrderReturnableItem>>(returnableItems.Items), (int)returnableItems.TotalCount);
         }
     }
 }

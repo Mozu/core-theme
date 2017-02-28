@@ -173,7 +173,6 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
-    <Compile Include="Api\ModelMapping\OrderReturnableItemMapping.cs" />
     <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />

@@ -151,7 +151,6 @@
     <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductExtraMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\CustomerContactMappingTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Localization\LocalizedProductVariantMappingTest.cs" />
-    <Compile Include="Admin\Api\ModelMapping\OrderReturnableItemMappingTests.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperMapFromPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperMapFromWithoutNullChecksPerfTest.cs" />
     <Compile Include="Admin\Api\ModelMapping\Perf\AutomapperResolveUsingPerfTest.cs" />
