@@ -586,11 +586,17 @@
             "returnType": "orderattribute"
         },
         "update-attributes": {
-            "verb": "PUT",
-            "includeSelf": true,
-            "template": "{+orderService}{id}/attributes{?removeMissing}",
-            "shortcutParam": "removeMissing",
-            "returnType": "orderattributes"
+          "verb": "PUT",
+          "includeSelf": true,
+          "template": "{+orderService}{id}/attributes{?removeMissing}",
+          "shortcutParam": "removeMissing",
+          "returnType": "orderattributes"
+        },
+        "get-returnable-items": {
+          "verb": "GET",
+          "includeSelf": true,
+          "template": "{+orderService}{id}/returnableitems",
+          "returnType":  "json"
         }
     },
     "rma": {

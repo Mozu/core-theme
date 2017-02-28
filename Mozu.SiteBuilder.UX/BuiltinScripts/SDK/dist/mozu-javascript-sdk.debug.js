@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2016-12-23
+ * Mozu JavaScript SDK - v0.3.0 - 2017-02-28
  *
- * Copyright (c) 2016 Volusion, Inc.
+ * Copyright (c) 2017 Volusion, Inc.
  *
  */
 
@@ -4084,11 +4084,17 @@ module.exports=
             "returnType": "orderattribute"
         },
         "update-attributes": {
-            "verb": "PUT",
-            "includeSelf": true,
-            "template": "{+orderService}{id}/attributes{?removeMissing}",
-            "shortcutParam": "removeMissing",
-            "returnType": "orderattributes"
+          "verb": "PUT",
+          "includeSelf": true,
+          "template": "{+orderService}{id}/attributes{?removeMissing}",
+          "shortcutParam": "removeMissing",
+          "returnType": "orderattributes"
+        },
+        "get-returnable-items": {
+          "verb": "GET",
+          "includeSelf": true,
+          "template": "{+orderService}{id}/returnableitems",
+          "returnType":  "json"
         }
     },
     "rma": {
