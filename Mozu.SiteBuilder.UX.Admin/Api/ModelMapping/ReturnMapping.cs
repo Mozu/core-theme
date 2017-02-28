@@ -128,10 +128,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.ImageUrl, op => op.ResolveUsing(dc => dc.Product?.ImageUrl))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
             .ForMember(x => x.Notes, op => op.ResolveUsing(dc => dc.Notes))
+            // TODO: Going through the API, you can have multiple return reasons, each with their own quantity.
             .ForMember(x => x.ReturnReason, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Reason : null))
             .ForMember(x => x.ReturnType, op => op.ResolveUsing(dc => dc.ReturnType))
             .ForMember(x => x.ReturnNotRequired, op => op.ResolveUsing(dc => dc.ReturnNotRequired))
-            .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Quantity : 0))
+            .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Reasons?.Sum(x => x.Quantity) ?? 0))
             .ForMember(x => x.QuantityReceived, op => op.ResolveUsing(dc => dc.QuantityReceived))
             .ForMember(x => x.ReceiveStatus, op => op.ResolveUsing(dc => dc.ReceiveStatus))
             .ForMember(x => x.QuantityRestockable, op => op.ResolveUsing(dc => dc.QuantityRestockable))
