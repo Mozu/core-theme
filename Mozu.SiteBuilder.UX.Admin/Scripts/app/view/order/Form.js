@@ -252,8 +252,10 @@ Ext.define('Taco.view.order.Form', {
 
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
 
+        var isOnlineOrder = me.record.get("orderType") === "Online";
+
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
-        if ((me.record.get("orderType")=="Online") || me.isHeaderDataComplete()) {
+        if (isOnlineOrder || me.isHeaderDataComplete()) {
             items.push(this.orderDetailPanel);
         }
 
@@ -262,17 +264,17 @@ Ext.define('Taco.view.order.Form', {
         }
 
         // we always show for online orders and conditionaly show for offline orders
-        if ((me.record.get("orderType") == "Online") || (me.isHeaderDataComplete() && this.record.get("items").length)) {
+        if (isOnlineOrder || (me.isHeaderDataComplete() && this.record.get("items").length)) {
             items.push(this.paymentPanel);
         }
 
         // adding the header data check here because there are instances of old data that lack shipping and billing contact.
-        if (this.isEdit() && me.isHeaderDataComplete()) {
+        if (this.isEdit() && (isOnlineOrder || me.isHeaderDataComplete())) {
             items.push(Ext.create('Taco.view.order.subform.Return', subformCfg));
         }
 
         // we always show for online orders. for offline orders we need hide the audit panel until the header is filled out.
-        if ((me.record.get("orderType") == "Online") || me.isHeaderDataComplete()) {
+        if (isOnlineOrder || me.isHeaderDataComplete()) {
             items.push(this.auditLogPanel);
         }
 
