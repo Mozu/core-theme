@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             int? startIndex = pagingParams?.startIndex;
             int? pageSize = pagingParams?.pageSize ?? 20;
-            var sort = pagingParams?.sort.ToSortString();
+            var sort = pagingParams?.sort.ToSortString() ?? "returnNumber desc";
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
             // TODO: Should we do this other stuff used by the OrderController?
