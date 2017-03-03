@@ -698,7 +698,14 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
 
 
-            tasks.Add(_documentListWebApiClient.GetDocuments(documentListName: "pages@mozu", pageSize: 2000, includeInactive: false, responseFields: "items(id, name, listFQN, properties( link_title ) )")
+            tasks.Add(_documentListWebApiClient.GetDocuments(documentListName: "pages@mozu", 
+                pageSize: 2000, 
+                includeInactive: false, 
+                responseFields: "items(id, name, listFQN, properties( link_title ) )",
+                filter: "properties.hidden ne true"
+
+
+                )
                  .ContinueWith(GenericServiceContinuation)
                  .ContinueWith(x => ret.NavWebPages = x.Result ?? existing?.NavWebPages, TaskContinuationOptions.OnlyOnRanToCompletion)
                  );
