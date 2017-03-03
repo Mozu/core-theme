@@ -301,7 +301,7 @@ var util = {
         return str.join('&');
     },
     getCdnCacheBust: function() {
-        return '&_mzCb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
+        return '&_mzcb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
     },
     urlScrub: function(url) {
         var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');

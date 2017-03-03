@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2017-02-21
+ * Mozu Hypr Live - v1.0.0 - 2017-03-03
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -5942,7 +5942,7 @@ var util = {
         return str.join('&');
     },
     getCdnCacheBust: function() {
-        return '&_mzCb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
+        return '&_mzcb=' + HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey;
     },
     urlScrub: function(url) {
         var stem = url.replace(/(&$)|(\?$)/g, '').replace(/\?&/, '?').replace(/&+/g, '&');

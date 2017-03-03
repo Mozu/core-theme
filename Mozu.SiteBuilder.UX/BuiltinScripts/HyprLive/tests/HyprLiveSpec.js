@@ -78,11 +78,11 @@
         it('has a tag {% make_url "image" %} that produces a valid Image url', function() {
             var data = { locals: { image: { imageUrl: '//cdn.mozu.com/img.jpg' } } };
             expect(Hypr.engine.render('{% make_url "image" image %}', data))
-                .to.equal('//cdn.mozu.com/img.jpg?_mzCb=1234');
+                .to.equal('//cdn.mozu.com/img.jpg?_mzcb=1234');
             expect(Hypr.engine.render('{% make_url "image" image with max=themeSettings.listProductThumbSize as_parameter %}', data))
-                .to.equal('//cdn.mozu.com/img.jpg?max=150&_mzCb=1234');
+                .to.equal('//cdn.mozu.com/img.jpg?max=150&_mzcb=1234');
             expect(Hypr.engine.render('{% make_url "image" image with max=themeSettings.listProductThumbSize size=1 as_parameter %}', data))
-                .to.equal('//cdn.mozu.com/img.jpg?max=150&size=1&_mzCb=1234');
+                .to.equal('//cdn.mozu.com/img.jpg?max=150&size=1&_mzcb=1234');
         });
 
         it('has a tag {% make_url "product" %} that produces a valid Product url', function () {
@@ -155,7 +155,7 @@
 
         it('has a tag {% make_url "cdn" %} that produces a valid CDN url with cache busting support', function() {
             expect(Hypr.engine.render('{% make_url "cdn" "/files/video.mp4" %}'))
-                .to.equal('//cdn.mozu-perf.volusion.com/9795-9865/files/video.mp4?_mzCb=1234');
+                .to.equal('//cdn.mozu-perf.volusion.com/9795-9865/files/video.mp4?_mzcb=1234');
         });
 
         it('has a tag {% make_url "paging" %} that produces a valid Paging url', function() {
