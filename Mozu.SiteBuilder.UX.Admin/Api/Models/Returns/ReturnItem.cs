@@ -184,5 +184,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// The total cost of shipping and handling, including weighted values from the order, discounts and tax.
         /// </summary>
         public decimal? ShippingAndHandlingTotal { get; set; }
+
+        /// <summary>
+        /// The quantity that is returnable now.
+        /// </summary>
+        public int? QuantityReturnable { get; set; }
     }
 }
