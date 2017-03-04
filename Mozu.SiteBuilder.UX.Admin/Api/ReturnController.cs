@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,7 +8,6 @@ using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Api.Routing;
-using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
@@ -15,7 +15,6 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCr = Mozu.CommerceRuntime.Contracts.Returns;
-using DCu = Mozu.Customer.Contracts;
 using ReturnActions = Mozu.CommerceRuntime.Contracts.Returns.ReturnAction.ReturnActionNameConst;
 using PaymentActions = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 using PaymentTypes = Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst;
@@ -28,38 +27,167 @@ using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
 
-// TODO Write return filter and search helpers! (See CustomerController)
-
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
-
     [WebApi("app/return", SuppressDescriptorGeneration = true)]
     public partial class ReturnController : BaseController
     {
-        private readonly ISettings _settings;
-        private IOrderWebApiClient _orderWebApiClient;
+        private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
-        private readonly ICreditWebApiClient _creditWebApiClient;
         private readonly IChannelWebApiClient _channelWebApiClient;
 
         private readonly ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly IMultiScopeAdminUserWebApiClient _usersWebApiClient;
 
+        private readonly ConcurrentDictionary<string, string> channelCache = new ConcurrentDictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> userCache = new ConcurrentDictionary<string, string>();
+
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient, ICreditWebApiClient creditWebApiClient,
-            ISettings settings, ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
+        public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient,
+            ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
             IChannelWebApiClient channelWebApiClient)
         {
-            _settings = settings;
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
-            _creditWebApiClient = creditWebApiClient;
             _customerWebApiClient = customerWebApiClient;
             _usersWebApiClient = userWebApiClient;
             _channelWebApiClient = channelWebApiClient;
         }
+
+        /// <summary>
+        /// Use this for getting returns for the grid.
+        /// </summary>
+        /// <param name="dcRmas">The contract returns to conver</param>
+        /// <returns>The converted API returns</returns>
+        private async Task<List<Return>> MultiMapFromContract(List<DCr.Return> dcRmas)
+        {
+            var rmas = Mapper.Map<List<Return>>(dcRmas);
+            foreach (var rma in rmas)
+            {
+                rma.ChannelName = await GetChannelName(rma.ChannelCode);
+            }
+            return rmas;
+        }
+
+        /// <summary>
+        /// Use this for a single order. Does additional API calls to fill out more info.
+        /// Do not use this for bulk calls.
+        /// </summary>
+        /// <param name="dcRma">The contract return to convert</param>
+        /// <returns>The converted API return</returns>
+        private async Task<Return> SingleMapFromContract(DCr.Return dcRma)
+        {
+            var rma = Mapper.Map<Return>(dcRma);
+
+            rma.ChannelName = await GetChannelName(rma.ChannelCode);
+            if (rma.Contact == null)
+            {
+                rma.Contact = await GetCustomerContact(rma.CustomerAccountId);
+            }
+
+            var customerName = rma.Contact == null ? string.Empty : $"{rma.Contact.FirstName} {rma.Contact.LastName} #{rma.CustomerAccountId}";
+            rma.CreatedBy = await GetUserNameById(rma.CreatedBy) ?? customerName;
+            rma.UpdatedBy = await GetUserNameById(rma.UpdatedBy) ?? customerName;
+
+            if (!rma.ReturnOrderId.IsNullOrEmpty())
+            {
+                // TenantId and SiteId are automatically added via ApiContext on the back end.
+                var filter = $"parentReturnId eq {rma.Id}";
+                // TODO: Do we really want the Header responseGroup? It reduces payload, but money values are goofed up, though total seems ok.
+                var dcOrders = (await _orderWebApiClient.GetOrders(filter: filter, responseGroups: "Header")).ReadAsSync();
+                var sbOrders = Mapper.Map<List<Order>>(dcOrders.Items);
+                rma.ReturnOrders = sbOrders;
+            }
+
+            // Internal notes should only be created by "admin" users, not shoppers.
+            // These are found in React code by looking into the Context > Tenant > Users
+
+            foreach (var customerNote in rma.CustomerNotes)
+            {
+                customerNote.CreateBy = await GetUserNameById(customerNote.CreateBy) ?? customerName;
+                customerNote.UpdateBy = await GetUserNameById(customerNote.UpdateBy) ?? customerName;
+            }
+
+            return rma;
+        }
+
+        /// <summary>
+        /// Looks up a channel name for a given channel code. Results are cached for the current lifetime (request).
+        /// </summary>
+        /// <param name="channelCode">The channel code to look up</param>
+        /// <returns>The corresponding channel name, or the code if not found</returns>
+        private async Task<string> GetChannelName(string channelCode)
+        {
+            if (channelCode.IsNullOrEmpty()) return string.Empty;
+
+            if (!channelCache.ContainsKey(channelCode))
+            {
+                try
+                {
+                    var channel = (await _channelWebApiClient.GetChannel(channelCode)).ReadAsSync();
+                    channelCache[channelCode] = channel.Name;
+                }
+                catch (MozuApplicationException appException)
+                {
+                    if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) throw;
+
+                    // If the channel can't be found, fallback to the channel code.
+                    channelCache[channelCode] = channelCode;
+                }
+            }
+            return channelCache[channelCode];
+        }
+
+        private async Task<Contact> GetCustomerContact(int? customerAccountId)
+        {
+            if (customerAccountId == null) return null;
+
+            try
+            {
+                var account = (await _customerWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
+                if (account == null) return null;
+
+                return new Contact
+                {
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    Email = account.EmailAddress
+                };
+            }
+            catch (MozuApplicationException appException)
+            {
+                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
+
+                throw;
+            }
+        }
+
+        private async Task<string> GetUserNameById(string userId)
+        {
+            if (!userCache.ContainsKey(userId))
+            {
+                try
+                {
+                    var userResult = (await _usersWebApiClient.GetUser(userId)).ReadAsSync();
+                    userCache[userId] = userResult == null ? null : $"{userResult.FirstName} {userResult.LastName}";
+                }
+                catch (MozuApplicationException appException)
+                {
+                    if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode))
+                    {
+                        userCache[userId] = null;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return userCache[userId];
+        }
+
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
@@ -83,124 +211,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcReturns = (await _returnWebApiClient.GetReturns(startIndex: startIndex, pageSize: pageSize, sortBy: sort, filter: filter, q: q)).ReadAsSync();
 
-            var returns = Mapper.Map<List<Return>>(dcReturns.Items);
-
-            // Loop through the returns and get the channel code if it isn't in the dictionary below.
-            // Remove this when we remove ext returns, this is checking for a return call from ext:
-            var extReturn = filter.Contains("originalorderid");
-
-            var channelDictionary = new Dictionary<string, string>();
-            foreach (var ret in returns)
-            {
-                if (!ret.ChannelCode.IsNullOrEmpty())
-                {
-                    if (!channelDictionary.ContainsKey(ret.ChannelCode))
-                    {
-                        try
-                        {
-                            var channel = (await _channelWebApiClient.GetChannel(ret.ChannelCode)).ReadAsSync();
-                            channelDictionary[channel.Code] = channel.Name;
-                        }
-                        catch (MozuApplicationException appException)
-                        {
-                            if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) throw;
-
-                            // If the channel can't be found, fallback to the channel code.
-                            channelDictionary[ret.ChannelCode] = ret.ChannelCode;
-                        }
-                    }
-                    ret.ChannelName = channelDictionary[ret.ChannelCode];
-                }
-
-                // If this is a return call from Ext, then we need the additional info!
-                if (extReturn)
-                {
-                    await FillAdditionalInfo(ret);
-                }
-            }
+            var returns = await MultiMapFromContract(dcReturns.Items);
 
             return List2(returns, total: (int)dcReturns.TotalCount);
-        }
-
-        private async Task FillAdditionalInfo(Return rma)
-        {
-            // Check the customer information -- if we already know about the customer, don't requery.
-            if (rma.Contact == null)
-            {
-                var customerResult = await LookupCustomerAccount(rma.CustomerAccountId);
-                if (customerResult != null)
-                {
-                    rma.Contact = new Contact
-                    {
-                        FirstName = customerResult.FirstName,
-                        LastName = customerResult.LastName,
-                        Email = customerResult.EmailAddress
-                    };
-                }
-            }
-            var customerName = rma.Contact == null ? string.Empty : $"{rma.Contact.FirstName} {rma.Contact.LastName} #{rma.CustomerAccountId}";
-
-            // Check the users..we can skip the user retrieval on this return if:
-            var sameUser = rma.CreatedBy == rma.UpdatedBy;
-
-            rma.CreatedBy = await LookUpUserById(rma.CreatedBy) ?? customerName;
-
-            rma.UpdatedBy = !sameUser ? await LookUpUserById(rma.UpdatedBy) ?? customerName : rma.CreatedBy;
-
-            // I want to sum all the items where the return was required.
-            rma.TotalItemsToReplace = rma.Items.Where(x => x.ReturnType == "Replace").Sum(x => x.Quantity);
-            rma.ItemsReplaced = rma.Items.Sum(x => x.QuantityReplaced.GetValueOrDefault(0));
-
-            rma.TotalItemsToRefund = rma.Items.Where(x => x.ReturnType == "Refund").Sum(x => x.Quantity);
-            rma.ItemsRefunded = rma.Items.Where(x => x.RefundAmount > 0).Sum(x => x.Quantity);
-
-            // Run through all the return items and place them all into one single list at the parent return level.
-            // TODO: Remap this to keep the notes at the item level.
-            rma.CustomerNotes = rma.Items.Where(x => !x.Notes.IsNullOrEmpty()).Select(x => x.Notes).ToList().FirstOrDefault();
-
-            // TODO: Fix this when we have multiple orders
-            if (!rma.ReturnOrderId.IsNullOrEmpty())
-            {
-                // TenantId and SiteId are automatically added via ApiContext on the back end.
-                var filter = $"parentReturnId eq {rma.Id}";
-                // TODO: Do we really want the Header responseGroup? It reduces payload, but money values are goofed up, though total seems ok.
-                var dcOrders = (await _orderWebApiClient.GetOrders(filter: filter, responseGroups: "Header")).ReadAsSync();
-                var sbOrders = Mapper.Map<List<Order>>(dcOrders.Items);
-                rma.ReturnOrders = sbOrders;
-            }
-        }
-
-        private async Task<DCu.CustomerAccount> LookupCustomerAccount(int? customerAccountId)
-        {
-            if (customerAccountId == null) return null;
-
-            try
-            {
-                return (await _customerWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
-            }
-            catch (MozuApplicationException appException)
-            {
-                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
-
-                throw;
-            }
-        }
-
-        private async Task<string> LookUpUserById(string userId)
-        {
-            try
-            {
-                var userResult = (await _usersWebApiClient.GetUser(userId)).ReadAsSync();
-
-                return userResult == null ? null : $"{userResult.FirstName} {userResult.LastName}";
-            }
-            catch (MozuApplicationException appException)
-            {
-                // Handle VaeItemNotFoundException
-                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
-
-                throw;
-            }
         }
 
         private async Task<Response<List<Return>>> GetSingleReturn(string returnId)
@@ -209,9 +222,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var sbReturn = Mapper.Map<Return>(dcReturn);
-
-            await FillAdditionalInfo(sbReturn);
+            var sbReturn = await SingleMapFromContract(dcReturn);
 
             return List2(sbReturn);
         }
@@ -233,7 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         ReturnIds = new List<string> { dcRma.Id }
                     })).ReadAsSync().Items.First();
                 }
-                retList.Add(Mapper.Map<Return>(dcRma));
+                retList.Add(await SingleMapFromContract(dcRma));
             }
             return List2(retList);
         }
@@ -241,9 +252,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "action")]
         public async Task<Response<List<Return>>> PerformReturnActions(DCr.ReturnAction action)
         {
-            var dcRma = (await _returnWebApiClient.PerformReturnActions(action)).ReadAsSync().Items;
+            var dcRmas = (await _returnWebApiClient.PerformReturnActions(action)).ReadAsSync().Items;
+            var rmas = await MultiMapFromContract(dcRmas);
 
-            return List2(Mapper.Map<List<Return>>(dcRma));
+            return List2(rmas);
         }
 
         public class PaymentActionDTO
@@ -286,7 +298,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcRma.RefundAmount = dcRma.Payments.Sum(x => x.AmountCredited);
             dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
-            return List2(Mapper.Map<List<Return>>(new List<DCr.Return> { dcRma }));
+            var rma = await SingleMapFromContract(dcRma);
+            return List2(new List<Return> { rma });
         }
 
         public class ReplaceItemsArgs
@@ -314,7 +327,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new VaeValidationConflictException($"{nameof(args.ReturnId)} not specified.");
             }
 
-            var specifiers = args.ItemReplacements?.Select(x => new DCr.ReturnItemSpecifier {ReturnItemId = x.Key, Quantity = x.Value}).ToList();
+            var specifiers = args.ItemReplacements?.Select(x => new DCr.ReturnItemSpecifier { ReturnItemId = x.Key, Quantity = x.Value }).ToList();
 
             var childOrder = (await _returnWebApiClient.CreateReturnShippingOrder(args.ReturnId, specifiers)).ReadAsSync();
 
@@ -434,7 +447,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var dcReturn = (await _returnWebApiClient.GetReturn(args.ReturnId)).ReadAsSync();
 
-            return Single2(Mapper.Map<Return>(dcReturn));
+            return Single2(await SingleMapFromContract(dcReturn));
         }
 
 
@@ -458,7 +471,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             var dcReturn = (await _returnWebApiClient.CreatePaymentActionForReturn(args.ReturnId, dcPaymentAction)).ReadAsSync();
-            return Single2(Mapper.Map<Return>(dcReturn));
+            return Single2(await SingleMapFromContract(dcReturn));
         }
 
         // This handles a list of returns because the ExtJS Return Proxy expects to work with a list of returns.
@@ -471,7 +484,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var dcRma = Mapper.Map<DCr.Return>(rma);
                 dcRma = (await _returnWebApiClient.UpdateReturn(dcRma.Id, dcRma)).ReadAsSync();
 
-                retList.Add(Mapper.Map<Return>(dcRma));
+                retList.Add(await SingleMapFromContract(dcRma));
             }
 
             return List2(retList);
@@ -502,7 +515,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 dcRma = (await _returnWebApiClient.GetReturn(args.Return.Id)).ReadAsSync();
             }
 
-            return Single2(Mapper.Map<Return>(dcRma));
+            return Single2(await SingleMapFromContract(dcRma));
         }
 
         [HttpPostRoute(UriTemplate = "resendemail")]
@@ -510,7 +523,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             await (await _returnWebApiClient.ResendReturnEmail(action)).ReadAsAsync();
 
-            return this.EmptySingle2<Return>();
+            // Why don't we just change the method signature?
+            return EmptySingle2<Return>();
         }
 
         [HttpGetRoute(UriTemplate = "shipping/package/label")]

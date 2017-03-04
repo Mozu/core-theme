@@ -80,13 +80,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CustomerEmail, op => op.ResolveUsing(dc => dc.Contact?.Email))
             .ForMember(x => x.UpdatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
             .ForMember(x => x.CreatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
+            .ForMember(x => x.TotalItemsToRefund, op => op.ResolveUsing(dc => dc.Items.Where(x => x.ReturnType == "Refund").Sum(x => x.Reasons?.Sum(y => y.Quantity) ?? 0)))
+            .ForMember(x => x.TotalItemsToReplace, op => op.ResolveUsing(dc => dc.Items.Where(x => x.ReturnType == "Replace").Sum(x => x.Reasons?.Sum(y => y.Quantity) ?? 0)))
+            .ForMember(x => x.ItemsRefunded, op => op.ResolveUsing(dc => dc.Items.Where(x => x.RefundAmount > 0).Sum(x => x.Reasons?.Sum(y => y.Quantity) ?? 0)))
+            .ForMember(x => x.ItemsReplaced, op => op.ResolveUsing(dc => dc.Items.Sum(x => x.QuantityReplaced)))
+            // Customer notes are provided on the items, but the admin shows them all aggregated into a single list.
+            .ForMember(x => x.CustomerNotes, op => op.ResolveUsing(dc => dc.Items.SelectMany(x => x.Notes).Where(x => x != null).ToList()))
             .ForMember(x => x.ReturnOrders, op => op.Ignore())
-            .ForMember(x => x.CustomerNotes, op => op.Ignore())
             .ForMember(x => x.ChannelName, op => op.Ignore())
-            .ForMember(x => x.TotalItemsToRefund, op => op.Ignore())
-            .ForMember(x => x.TotalItemsToReplace, op => op.Ignore())
-            .ForMember(x => x.ItemsRefunded, op => op.Ignore())
-            .ForMember(x => x.ItemsReplaced, op => op.Ignore())
             .AfterMap(SetRefundAmountForReturnOnPayment)
             ;
         }
@@ -126,7 +127,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Product?.Name))
             .ForMember(x => x.ImageAlternateText, op => op.ResolveUsing(dc => dc.Product?.ImageAlternateText))
             .ForMember(x => x.ImageUrl, op => op.ResolveUsing(dc => dc.Product?.ImageUrl))
-            .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
             .ForMember(x => x.Notes, op => op.ResolveUsing(dc => dc.Notes))
             // TODO: Going through the API, you can have multiple return reasons, each with their own quantity.
             .ForMember(x => x.ReturnReason, op => op.ResolveUsing(dc => dc.Reasons != null && dc.Reasons.Any() ? dc.Reasons.First().Reason : null))
