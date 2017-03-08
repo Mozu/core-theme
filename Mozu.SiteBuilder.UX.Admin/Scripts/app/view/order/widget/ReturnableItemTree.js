@@ -59,14 +59,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 {
                     name: 'id',
                     type: 'string',
-                    convert: function (value, record) {
+                    convert: function(value, record) {
                         return record.raw;
                     }
                 },
                 {
                     name: 'name',
                     type: 'string',
-                    convert: function (value, record) {
+                    convert: function(value, record) {
                         return Taco.core.util.Common.camelToSpace(record.raw);
                     }
                 }
@@ -96,7 +96,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             }
         });
 
-        this.loadReturnableItemsData();
+        // Loading should be kicked off by the parent Return subform.
+        //this.loadReturnableItemsData();
     },
 
     getColumnConfig: function() {
@@ -358,9 +359,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         });
     },
 
-    handleSelect: function (selModel, record, index) {
+    handleSelect: function(selModel, record, index) {
         var unreturned = record.get('quantityFulfilled') - record.get('quantityReturned');
-        
+
         if (!record.get('quantity') && unreturned > 0) {
             record.set('quantity', 1);
         }
