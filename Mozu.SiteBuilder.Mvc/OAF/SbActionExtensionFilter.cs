@@ -16,6 +16,13 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
+using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Api.Client;
+using Mozu.Core;
+using Mozu.SiteBuilder.Mvc.Security;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.Mvc.OAF
 {
@@ -76,7 +83,31 @@ namespace Mozu.SiteBuilder.Mvc.OAF
         public   ApiActionExtensionFilterContext CreateFunctionContextExternal(HttpActionContext actionContext)
         {
             InitSBActionContext(actionContext);
-            return base.CreateFunctionContext(actionContext);
+            var ctx = new SbiActionExtensionFilterContext(this.ResourceFactory, actionContext);
+            ctx.ExecFactory = _ => new SbExecs(_, actionContext);
+            return ctx;
+        }
+        //return new ApiActionExtensionFilterContext(this.ResourceFactory, actionContext);
+
+
+        public class SbiActionExtensionFilterContext : ApiActionExtensionFilterContext
+        {
+            public SbiActionExtensionFilterContext(Func<HttpActionContext, Tuple<object, System.Net.HttpStatusCode>> resourceFactory, HttpActionContext actionContext):
+                base(resourceFactory, actionContext)
+            {
+
+            }
+
+          
+         
+            [JsonIgnore]
+            public new SbExecs exec
+            {
+                get
+                {
+                    return (SbExecs)base.exec;
+                }
+            }
         }
 
         public static void InitSBActionContext (HttpActionContext actionContext )
@@ -192,4 +223,124 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             }
         }
     }
+    public class SbExecs : ApiActionExtensionFilterContext.Execs
+    {
+        HttpActionContext _actionContext;
+        public SbExecs(ApiActionExtensionFilterContext ctx, HttpActionContext actionContext) : base(ctx)
+        {
+            _actionContext = actionContext;
+        }
+
+        [Microsoft.ClearScript.ScriptMember("loginUser")]
+        public void logOut()
+        {
+            var apiContext = _actionContext.Request.Resolve<ISiteBuilderApiContext>();
+            var user = LightweightUserClaims.CreateForAnonymousShopper(apiContext.TenantId, apiContext.SiteId.Value);
+            var authHelper = _actionContext.Request.Resolve<IAuthenticationHelper>();
+            authHelper.ClearStorefrontTokens();
+            authHelper.SaveStoreFrontAccessToken(user.ToAccessToken(), null);
+            apiContext.SetUser(user);
+        }
+
+        [Microsoft.ClearScript.ScriptMember("loginUser")]
+        public void loginUser(object config, Microsoft.ClearScript.V8.IV8ScriptItem callback)
+        {
+            bool? rememberUser = null;
+            if (config == null || callback == null)
+            {
+                throw new InvalidOperationException("config and callback praramters required");
+            }
+            int? customerId = null;
+            string userName = config as string;
+            if (userName == null)
+            {
+                if (config is int)
+                {
+                    customerId = (int?)config;
+                }
+                else
+                {
+                    var jConfig = JToken.FromObject(config) as JObject;
+
+                    customerId = (int?)jConfig["customerId"];
+                    userName = (string)jConfig["userName"];
+                    rememberUser = (bool?)jConfig["rememberUser"];
+                }
+
+            }
+
+            if (!customerId.HasValue && string.IsNullOrEmpty(userName))
+            {
+                throw new InvalidOperationException("missing userName or userId");
+            }
+            Task.Run(() => ProcessCustomerLogin(customerId, userName, rememberUser, callback));
+
+
+
+        } 
+
+        async Task ProcessCustomerLogin(int? customerid, string userName, bool? rememberUser, Microsoft.ClearScript.V8.IV8ScriptItem callback)
+        {
+            var authClient = _actionContext.Request.Resolve<Mozu.Customer.Contracts.Clients.IAuthTicketWebApiClient>().CloneWithoutUserClaims();
+            if (!customerid.HasValue)
+            {
+                var custClient = _actionContext.Request.Resolve<Mozu.Customer.Contracts.Clients.ICustomerAccountWebApiClient>().CloneWithoutUserClaims();
+                var custRes = await custClient.GetAccounts(filter: $"username eq \"{userName}\"").ConfigureAwait(false);
+                if (custRes.HasException)
+                {
+                    callback.Invoke(new object[] { custRes.ReadException() }, false);
+                    return;
+                }
+
+                var customer = custRes.ReadAsSync().Items.FirstOrDefault();
+                if (customer == null)
+                {
+                    callback.Invoke(new object[] { new Exception($"username {userName} not found") }, false);
+                    return;
+                }
+                customerid = customer.Id;
+            }
+            var ticketRes = await authClient.CreateImpersonatedAuthTicket(customerid.Value).ConfigureAwait(false);
+            if (ticketRes.HasException)
+            {
+                callback.Invoke(new object[] { ticketRes.ReadException() }, false);
+                return;
+            }
+
+
+            var authTicket = ticketRes.ReadAsSync();
+            var cust = authTicket.CustomerAccount;
+            var profile = new UserProfile()
+            {
+                EmailAddress = cust.EmailAddress,
+                FirstName = cust.FirstName,
+                LastName = cust.LastName,
+                UserId = cust.UserId,
+                UserName = cust.UserName,
+            };
+
+
+
+            //todo move this into a common module to share with the storefront.
+            var authHelper = _actionContext.Request.Resolve<IAuthenticationHelper>();
+            authHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
+            var exp = (rememberUser == false) ? (DateTime?)null : authTicket.RefreshTokenExpiration ;
+            authHelper.SaveStoreFrontRefreshToken(authTicket.RefreshToken, exp);
+            var userClaim = LightweightUserClaims.Parse(authTicket.AccessToken);
+            var pageContext = _actionContext.Request.Resolve<PageContext>();
+            var visitPub = _actionContext.Request.Resolve<UX.Messaging.IVisitEventPublisher>();
+            _actionContext.Request.Resolve<ISiteBuilderApiContext>().SetUser(userClaim);
+            if (pageContext.Visit?.IsTracked == true)
+            {
+                pageContext.Visit.UserId = userClaim.UserId;
+                pageContext.Visit.IsUserTracked = true;
+                visitPub.PublishVisit(pageContext.Visit);
+            }
+
+            callback.Invoke(new object[] { null, userClaim }, false);
+
+        }
+
+    }
+
 }

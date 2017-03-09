@@ -106,7 +106,11 @@ namespace Mozu.SiteBuilder.Mvc.Security
             var cookie = new HttpCookie(StoreFrontRefershCookieName);
 
             cookie.Value = token;
-            cookie.Expires = expiryTime.HasValue ? expiryTime.Value.ToLocalTime() : DateTime.Now.AddDays(1);
+            if (expiryTime.HasValue)
+            {
+                cookie.Expires = expiryTime.Value.ToLocalTime();
+            }
+            //cookie.Expires = expiryTime.HasValue ? expiryTime.Value.ToLocalTime() : DateTime.Now.AddDays(1);
             cookie.Secure = this.ForceSSL;
             cookie.HttpOnly = true;
             CookieProvider.SaveResponseCookie(StoreFrontRefershCookieName, cookie);

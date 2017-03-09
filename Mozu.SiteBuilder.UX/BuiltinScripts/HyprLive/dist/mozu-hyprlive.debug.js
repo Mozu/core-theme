@@ -5,7 +5,12 @@
  *
  */
 
- (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {
+
+	/* IE8 polyfills */
+
+
+	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
@@ -15,7 +20,8 @@
         'isPrototypeOf',
         'propertyIsEnumerable'
     ],
-    dontEnumsLength = dontEnums.length;	(function() {
+    dontEnumsLength = dontEnums.length;
+	(function() {
     var _slice = Array.prototype.slice;
 
     try {
@@ -349,7 +355,9 @@
 	}
 
 
-})();	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+})();
+
+	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
     // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.

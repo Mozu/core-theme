@@ -372,6 +372,7 @@
     <Compile Include="ViewEngine\MozuVirtualPathProvider.cs" />
     <Compile Include="ViewEngine\MozuVirtualFile.cs" />
     <Compile Include="ViewEngine\TemplateLoader.cs" />
+    <Compile Include="VisitEventPublisher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
