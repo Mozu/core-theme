@@ -13,7 +13,7 @@ Ext.define('Taco.store.EntityLists', {
         },
         constructor: function (cfg) {
             if (!cfg.entityType) {
-                Ext.log('bad EntitiesStore Config', { level: 'error' });
+                Ext.log('bad EntityLists Store Config', { level: 'error' });
             }
             this.callParent(arguments);
         },

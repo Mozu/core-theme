@@ -18,7 +18,11 @@ Ext.define('Taco.model.EntityList', {
         'supportsActiveDateRanges',
         'supportsPublishing'
     ],
-
+    statics: {
+        loadByCopositeId: function (entityType, listFQN, cfg) {
+            return Taco.model.EntityList.load(entityType + '-' + listFQN, cfg);
+        }
+    },
 
 
   

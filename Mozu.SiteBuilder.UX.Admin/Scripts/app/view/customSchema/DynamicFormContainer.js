@@ -83,10 +83,21 @@
             }
         }
 
+        if (this.record.data.documentTypeFQN === "") {
+            this.store = Ext.create('Taco.store.EntityLists', {
+                entityType: this.record.data.entityType,
+                autoLoad: false,
+                remoteFilter: true
+            });
 
-                
-
-
+            Taco.model.EntityList.loadByCopositeId(this.record.data.entityType, this.record.data.listFQN, {
+                scope: this,
+                success: function (record) {
+                    this.listMetaData = record;
+                    this.record.data.documentTypeFQN = record.data.documentTypes[0];
+                }
+            });
+        }
 
         this.dynamicForm.data = this.data;
         //this makes cms ugly
@@ -185,6 +196,10 @@
         if (containerData) {
             delete containerData.item;
             delete containerData.properties;
+
+            if (containerData.documentTypeFQN === "") {
+                delete containerData.documentTypeFQN;
+            }
             this.record.set(containerData);
         }
     },

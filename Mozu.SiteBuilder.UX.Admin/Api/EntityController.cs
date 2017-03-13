@@ -318,8 +318,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "lists/read")]
-        public async Task<Response<List<JObject>>> ReadLists (PagingParamaters pagingParams, FilterCollection extFilter, string entityType, string usages = null)
+        public async Task<Response<List<JObject>>> ReadLists(PagingParamaters pagingParams, FilterCollection extFilter, string entityType = null, string usages = null)
         {
+            if (pagingParams.id != null)
+            {
+                var idParts = pagingParams.id.Split('-');
+                entityType = idParts[0];
+            }
             var usagesArray = usages == null ? null : usages.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             var usageFilter = new Func<IEnumerable<string>, bool>(listUsages =>
             {
@@ -341,7 +346,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (entityType == "cms")
             {
-                DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(pageSize: pagingParams.pageSize, startIndex: pagingParams.startIndex)).ReadAsSync();
+                DC.DocumentListCollection res = (await _documentListWebApiClient.GetDocumentLists(
+                    pageSize: pagingParams.pageSize,
+                    startIndex: pagingParams.startIndex
+                    )).ReadAsSync();
 
                 var items = res.Items.Where(x => usageFilter(x.Usages)).ToList().Select(x => JObject.FromObject(x, JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings())))
                     .Select(x =>
@@ -350,7 +358,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         x["uniqueId"] = x.Value<string>("entityType") + "-" + x.Value<string>("listFQN");
                         return x;
 
-                    }).ToList();
+                    })
+                    .Where(x => pagingParams.id == null || (string)x["uniqueId"] == pagingParams.id)
+                    .ToList();
                 return this.List2(items, res.TotalCount);
             }
             else if (entityType == "mzdb")
@@ -364,7 +374,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         x["uniqueId"] = x.Value<string>("entityType") + "-" + x.Value<string>("listFQN");
                         return x;
 
-                    }).ToList();
+                    })
+                    .Where(x => pagingParams.id == null || (string)x["uniqueId"] == pagingParams.id)
+                    .ToList();
                 return this.List2(items, res.TotalCount);
             }
             throw new NotImplementedException("unknown entity type-"+ entityType);
