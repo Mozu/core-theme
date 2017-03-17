@@ -12,14 +12,14 @@ Ext.define('Taco.store.PublishSetItems', {
     pageSize: 25,
     autoLoad: true,
     remoteSort: true,
-    filterByCatalog: true,
+    filterByCatalog: false,
     //    sorters: {
     //        property: 'name',
     //        direction: 'ASC'
     //    },
     constructor: function (cfg) {
         if (!cfg.code || !cfg.type) {
-            Ext.log('bad EntitiesStore Config', { level: 'error' });
+            Ext.log('bad PublishSetItems Store Config', { level: 'error' });
         }
         this.callParent(arguments);
     },
@@ -35,7 +35,7 @@ Ext.define('Taco.store.PublishSetItems', {
     load: function (options) {
 
         //use initialized values or override if in options...
-        
+
         options = options || {};
         this.code = options.code || this.code;
         this.type = options.type || this.type;
