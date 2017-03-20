@@ -153,12 +153,21 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     standardProducts = self.filter(function(item) {
                         return !item.has('optionAttributeFQN');
                     }),
-                    productExtraGroup = _.groupBy(productExtras, function(item) {
-                        return item.uniqueProductCode();
-                    }),
                     standardProductsGroup = _.groupBy(standardProducts, function(item) {
                         return item.uniqueProductCode();
+                    }),
+                    productExtraGroup = {};
+                _.each(productExtras, function(extra, extraKey) {
+                    var key = extra.uniqueProductCode() + '_' + extra.get('optionAttributeFQN');
+                    var duplicateItem = _.find(productExtraGroup, function(groupedItem) {
+                        return (extra.uniqueProductCode() === groupedItem[0].uniqueProductCode() && extra.get('optionAttributeFQN') === groupedItem[0].get('optionAttributeFQN'));
                     });
+                    if (duplicateItem) {
+                        productExtraGroup[key].add(extra);
+                        return false;
+                    }
+                    productExtraGroup[key] = [extra];
+                });
 
                 function combineAndAddToGroupBits(type, grouping) {
                     _.each(grouping, function(group, key) {
@@ -214,7 +223,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 });
             }
         }),
-
         ReturnableItem = Backbone.MozuModel.extend({
             relations: {
                 product: ProductModels.Product
@@ -258,10 +266,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 var productCode = self.uniqueProductCode();
 
                 var orderItem = self.collection.parent.get('items').find(function(item) {
-                    if (self.get('type') === "BundleItem") {
-                        return item.get('lineId') === self.get('parentLineId');
-                    }
-                    return item.get('lineId') === self.get('lineId');
+                    return item.get('lineId') === self.get('orderLineId');
                 });
                 return orderItem;
             },
@@ -302,7 +307,6 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             handlesMessages: true,
             helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
             _nonShippedItems: {},
-            _returnableItems: [],
             initialize: function() {
                 var self = this;
                 var pageContext = require.mozuData('pagecontext'),
@@ -348,13 +352,11 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return hasfulfilledPackage;
             },
             getReturnableItems: function() {
-                var filteredReturnItems = this.get('returnableItems').toJSON();
-                filteredReturnItems = filteredReturnItems.filter(function(item) {
-                    var type = (item.parent) ? item.parent.goodsType : item.goodsType;
-                    return type !== "DigitalCredit";
+                var filteredReturnItems = this.get('returnableItems').filter(function(item) {
+                    var method = item.getOrderItem().get('fulfillmentMethod');
+                    return method !== "Digital";
                 });
-
-                return filteredReturnItems;
+                return _.invoke(filteredReturnItems, 'toJSON');
             },
             getInStorePickups: function() {
                 var filteredItems = _.filter(this._nonShippedItems, function(item) {
@@ -372,7 +374,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
              * [getCollectionOfPackageCodes]
              * @return {[Array]}
              */
-            getCollectionOfPackageCodes: function() {
+            getCollectionOfPackages: function() {
                 var self = this,
                     packageCodes = [],
                     groupedCodes = {
@@ -388,7 +390,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                                     var quan = packageItem.get('quantity');
                                     var type = (packageItem.get('optionAttributeFQN') && packageItem.get('optionAttributeFQN') !== "") ? "productExtra" : "standardProduct";
                                     for (var i = 0; i < quan; i++) {
-                                        groupedCodes[type].push(packageItem.get('productCode'));
+                                        groupedCodes[type].push(packageItem);
                                     }
                                 });
                             }
@@ -414,14 +416,17 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
 
                 if (self.get('items')) {
                     //Get collections of both packaged Codes and exploded order items
-                    var packageCodes = this.getCollectionOfPackageCodes();
+                    var packages = this.getCollectionOfPackages();
                     groupedItems = this.get('explodedItems').getGroupedCollection();
 
                     //Update quanity of items by comparing with packaged items
-                    _.each(packageCodes, function(type, typeKey, typeList) {
-                        _.each(type, function(code, key, list) {
+                    _.each(packages, function(type, typeKey, typeList) {
+                        _.each(type, function(myPackage, key, list) {
                             _.each(groupedItems[typeKey], function(item, key) {
-                                if (item.uniqueProductCode() === code) {
+                                if (item.uniqueProductCode() === myPackage.get('productCode')) {
+                                    if (item.get('optionAttributeFQN') && item.get('optionAttributeFQN') != myPackage.get('optionAttributeFQN')) {
+                                        return false;
+                                    }
                                     if (item.get('quantity') === 1) {
                                         groupedItems[typeKey].splice(key, 1);
                                         return false;
@@ -477,7 +482,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     // If an OrderItem has extras, there will be 2 entries for the parent, one with extras, one without.
                     // Find the one without extras (standalone parent) if available.
                     var returnableParents = _.filter(grouping, function(item) {
-                        return (item.parentProductCode) ? false : true;
+                        return !item.parentProductCode;
                     });
 
                     var returnableParent = returnableParents.length > 1 ?
@@ -567,13 +572,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 rma.toJSON();
                 rma.syncApiModel();
                 op = rma.apiCreate();
-                if (op) return op.then(function(rma) {
-                    self.isLoading(false);
-                    self.clearReturn();
-                    return rma;
-                }, function() {
-                    self.isLoading(false);
-                });
+                if (op) return op;
             }
         }),
         OrderCollection = Backbone.MozuPagedCollection.extend({

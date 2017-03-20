@@ -226,12 +226,11 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                     el: self.el,
                     model: self.model
                 });
-            }
-
-            this.views().returnView.on('renderMessage', this.renderMessage, this);
-            this.views().returnView.on('returnCancel', this.returnCancel, this);
-            this.views().returnView.on('returnSuccess', this.returnSuccess, this);
-            this.views().returnView.on('returnFailure', this.returnFailure, this);
+                this.views().returnView.on('renderMessage', this.renderMessage, this);
+                this.views().returnView.on('returnCancel', this.returnCancel, this);
+                this.views().returnView.on('returnSuccess', this.returnSuccess, this);
+                this.views().returnView.on('returnFailure', this.returnFailure, this);
+            }   
         },
         renderMessage: function(message) {
             var self = this;
@@ -285,6 +284,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             }
         },
         startOrderReturn: function(e) {
+            this.model.clearReturn();
             this.views().returnView.render();
         }
     });
@@ -306,7 +306,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
             self.model.fetchReturnableItems().then(function(data) {
                 var returnableItems = self.model.returnableItems(data.items);
-                if (returnableItems.length < 1) {
+                if (self.model.getReturnableItems().length < 1) {
                     self.trigger('renderMessage', {
                         messageType: 'noReturnableItems'
                     });
@@ -319,7 +319,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                     var packageItem = returnableItems.find(function(model) {
                         if($(val).data('mzOrderLineId') === model.get('orderLineId')){
                             if ($(val).data('mzOptionAttributeFqn')) {
-                                return (model.get('orderItemOptionAttributeFQN') === $(val).data('mzOptionAttributeFqn'));
+                                return (model.get('orderItemOptionAttributeFQN') === $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() === $(val).data('mzProductCode'));
                             }
                             return (model.uniqueProductCode() === $(val).data('mzProductCode'));
                         }
@@ -339,12 +339,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         },
         clearOrderReturn: function() {
             this.model.clearReturn();
-            var selectedItems = this.model.get('items').find(function(model) {
-                return model.get('isSelectedForReturn') === true;
-            });
-            if (selectedItems) {
-                selectedItems.set('isSelectedForReturn', false);
-            }
+            this.$el.find('[data-mz-value="isSelectedForReturn"]:checked').click();
         },
         cancelOrderReturn: function() {
             this.clearOrderReturn();
@@ -355,13 +350,12 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 op = this.model.finishReturn();
             if (op) {
                 return op.then(function(data) {
+                    self.model.isLoading(false);
                     self.clearOrderReturn();
                     self.trigger('returnSuccess');
-                    //this.trigger('returnFailed');
-                    //     var order = data.apiGet();
-                    // order.then(function() {
-                    // });
                 }, function() {
+                    self.model.isLoading(false);
+                    self.clearOrderReturn();
                     this.trigger('returnFailure');
                 });
             }
