@@ -1021,7 +1021,9 @@
                     } else if (billingContact) {
                         // if they initially checked the checkbox, then later they decided to uncheck it... remove the id so that updates don't update
                         // the original address, instead create a new contact address.
+                        // We also unset contactId to prevent id from getting reset later.
                         billingContact.unset('id', { silent: true });
+                        billingContact.unset('contactId', { silent: true });
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
