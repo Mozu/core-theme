@@ -389,6 +389,7 @@
         ],
         "defaultPageSize": 15,
         "defaultSort": "createDate asc",
+        "disableEditOfSavedCreditCard": true,
         "enablePartialCaching": true,
         "loadGoogleFonts": [
             "Source Sans Pro"
