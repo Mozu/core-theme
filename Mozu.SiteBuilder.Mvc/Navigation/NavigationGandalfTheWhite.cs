@@ -347,6 +347,8 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
             if (inputList == null)
                 return null;
 
+            var nextNullInt = 10000;
+
             List<SuperNavigationNode> returnList = new List<SuperNavigationNode>(inputList.Count * 2);
             foreach (var cat in inputList)
             {
@@ -366,7 +368,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
                         // category "Sequence" is 1-indexed, but our navigation list is 0-indexed.. so we subtract 1.
                         // actually, "Sequence" does not appear to follow any rules, so sometimes it's zero indexed.
                         // we have to do a Math.Max to guard against negative numbers.
-                        Index = cat.Sequence.GetValueOrDefault(99),
+                        Index = cat.Sequence.GetValueOrDefault(nextNullInt++),
                         IsHidden = !cat.IsDisplayed,
                         IsEmpty = !cat.Count.HasValue || cat.Count.Value <= 0
                     });

@@ -121,53 +121,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [HttpPostRoute(UriTemplate = "fixup")]
         public async Task<HttpResponseMessage> Fixup()
         {
-            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
-            var categories = new List<Mozu.ProductAdmin.Contracts.Category >();
-
-            int start = 0;
-
-            while (true)
-            {
-                var cats = (await _catClient.GetCategories(startIndex: start, pageSize: 600)).ReadAsSync();
-                categories.AddRange(cats.Items);
-                start = cats.PageSize + cats.StartIndex;
-                if (cats.TotalCount <= start)
-                {
-                    break;
-                }
-            }
-
-
-                var updatedCats = new HashSet<Mozu.ProductAdmin.Contracts.Category>(new CatCompare());
-
-
-            foreach (var parentGroup in categories.GroupBy(x => x.ParentCategoryId))
-            {
-                var duplicates = parentGroup.GroupBy(i => i.Sequence ).Where(g => g.Count() > 1).Select(g => g.Key);
-
-                if (!duplicates.Any())
-                {
-                    continue;
-                }
-
-                var sortedItems = parentGroup.OrderBy(x => x.Sequence.GetValueOrDefault(int.MaxValue)).ToList();
-
-                var seed = 0;
-
-                sortedItems.ForEach(x=> x.Sequence = ++seed );
-
-                updatedCats.AddRange(sortedItems);
-
-           
-            }
-            if (updatedCats.Count > 0)
-            {
-                var updateTasks = updatedCats.Select(x => _catClient.UpdateCategory(x, x.Id )).ToList();
-                await Task.WhenAll(updateTasks);
-                return this.Request.CreateResponse(HttpStatusCode.OK, true);
-            }
+            await _catClient.FixCategoryTreeSequences();
             return this.Request.CreateResponse(HttpStatusCode.OK, false);
-
         }
 
         public async Task<List<ITreeNavigationNode>> GetFlatList(bool? showContentLists)
