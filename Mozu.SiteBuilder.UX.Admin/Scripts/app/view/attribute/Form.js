@@ -824,19 +824,15 @@ Ext.define('Taco.view.attribute.Form', {
                 allowOnlyWhitespace: false,
                 emptyText: 'Enter a label for the attribute',
                 width: 300,
-                maxLength: 30,
+                maxLength: 100,
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field) {
                         var adminName = this.findField('adminName'),
                             attributeCode = this.findField('code');
 
-                        if (!adminName.getValue() || (!this.record.get('adminName') && !field.hadKeyEvent)) {
-                            adminName.setValue(field.getValue());
-                        }
-                        if (!attributeCode.getValue() || (!this.record.get('code') && !field.hadKeyEvent)) {
-                            attributeCode.setValue(field.getValue());
-                        }
+                        this.copyToField(field, adminName);
+                        this.copyToField(field, attributeCode);
                     },
                     scope: this
                 }
@@ -846,6 +842,7 @@ Ext.define('Taco.view.attribute.Form', {
                 allowOnlyWhitespace: false,
                 emptyText: 'Enter an attribute name',
                 width: 300,
+                maxLength: 50,
                 enableKeyEvents: true,
                 listeners: {
                     keyup: function (field) {
@@ -860,6 +857,7 @@ Ext.define('Taco.view.attribute.Form', {
                 readOnly:!this.record.phantom,
                 emptyText: 'Enter a unique attribute code',
                 width: 300,
+                maxLength: 30,
                 xtype: this.record.phantom
                     ? 'taco-slugfield'
                     : 'textfield',      //display as-is for existing records
@@ -958,6 +956,20 @@ Ext.define('Taco.view.attribute.Form', {
             });
         }
 
+    },
+
+    copyToField: function (fromField, toField) {
+        var toFieldValue = toField.getValue();
+
+        if (!toFieldValue) {
+            toField.hadKeyEvent = false;
+        }
+
+        if (!toFieldValue
+            || (!this.record.get(toField.name) && !toField.hadKeyEvent)) {
+
+            toField.setValue(fromField.getValue());
+        }
     },
 
     onInputTypeChange: function (input, value) {
