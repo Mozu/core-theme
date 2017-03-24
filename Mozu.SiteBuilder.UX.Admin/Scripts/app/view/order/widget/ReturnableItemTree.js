@@ -25,7 +25,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
 
     viewConfig: {
         deferEmptyText: false,
-        emptyText: "No items availabe to return",
+        emptyText: "No items available to return",
         getRowClass: function(record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
         }
@@ -37,6 +37,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         order: null,
         record: null
     },
+
+    allSelected: false,
 
     initComponent: function() {
         this.store = this.getReturnableItemsStore();
@@ -50,7 +52,105 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             injectCheckbox: 'last',
             headerWidth: 37,
             checkOnly: true,
-            showHeaderCheckbox: true
+            showHeaderCheckbox: true,
+
+            setup: function() {
+                this.maxSelections = 0;
+                var selections = this.store.getRange();
+
+                for (var key in selections) {
+                    if (selections[key].data.quantityReturnable !== 0) {
+                        this.maxSelections++;
+                    }
+                }
+
+                this.isSetup = true;
+            },
+
+            setHeader: function(header) {
+                this.checkallBox = header;
+            },
+
+            setErrorEl: function(el) {
+                this.errorEl = el;
+            },
+
+            checkSelected: function() {
+                if (!this.isSetup) this.setup();
+
+                if (this.getSelection().length === this.maxSelections && this.maxSelections !== 0) {
+                    this.allSelected = true;
+                    this.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+
+                    var me = this;
+                    setTimeout(function() {
+                        if (me.getSelection().length === 0) return;
+                        me.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+                    }, 100);
+                } else {
+                    this.allSelected = false;
+                    this.checkallBox.el.removeCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+                }
+            },
+
+            selectAll: function(suppressEvent, header) {
+                if (!this.allSelected) {
+                    this.allSelected = true;
+                    var selections = this.store.getRange();
+                    var returnableItems = [];
+
+                    for (var key in selections) {
+                        if (selections[key].data.quantityReturnable !== 0) {
+                            returnableItems.push(selections[key]);
+                        }
+                    }
+
+                    var len = returnableItems.length;
+                    for (var i = 0; i < len; i++) {
+                        this.doSelect(returnableItems[i], true, suppressEvent);
+
+                        var unreturned = returnableItems[i].get('quantityFulfilled') - returnableItems[i].get('quantityReturned');
+
+                        if (!returnableItems[i].get('quantity') && unreturned > 0) {
+                            returnableItems[i].set('quantity', 1);
+                        }
+                    }
+
+                    if (this.getSelection().length !== 0) {
+                        header.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+                    } else {
+                        this.errorEl.setError('All items have already been returned');
+                        this.allSelected = false;
+                        return;
+                    }
+                } else {
+                    this.allSelected = false;
+                    this.deselectAll(suppressEvent);
+                }
+
+                this.errorEl.setError('');
+            },
+
+            onHeaderClick: function (headerCt, header, e) {
+                if (!header.isCheckerHd) {
+                    return;
+                }
+
+                e.stopEvent();
+                this.selectAll(true, header);
+            },
+
+            listeners: {
+                deselect: function(grid, record) {
+                    this.checkSelected();
+                    this.errorEl.setError('');
+                },
+
+                select: function(grid, record) {
+                    this.checkSelected();
+                    this.errorEl.setError('');
+                }
+            }
         });
 
         this.reasonStore = Ext.create('Ext.data.Store', {
@@ -263,6 +363,19 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         var tree = this.createTree(data.items);
 
         this.store.setRootNode(tree);
+
+        var i = 0;
+        while (true) {
+            var header = this.headerCt.getHeaderAtIndex(i);
+
+            if (!header) {
+                break;
+            } else if (header.isCheckerHd) {
+                this.getSelectionModel().setHeader(header);
+                break;
+            }
+            i++;
+        }
     },
 
     createTree: function(data) {

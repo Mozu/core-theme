@@ -119,6 +119,39 @@ Ext.define('Taco.view.order.subform.Return', {
             padding: '0 1px 0 0'
         });
 
+        this.returnableItems.on({
+            beforeedit: function(editor, e) {
+                if (e.record.get('quantityReturnable') === 0) {
+                    if (e.record.get('quantityReturned') > 0) {
+                        me.returnableItemsErrorEl.setError('That item has already been returned');
+                    }
+                    return false;
+                } else {
+                    me.returnableItemsErrorEl.setError('');
+                    return true;
+                }
+            },
+            scope: me
+        });
+
+        this.returnableItems.on({
+            beforeselect: function(row, model, index) {
+                if (model.data.quantityReturnable === 0) {
+                    if (model.data.quantityReturned > 0) {
+                        me.returnableItemsErrorEl.setError('That item has already been returned');
+                    }
+                    this.returnableItems.getSelectionModel().checkSelected();
+                    return false;
+                } else {
+                    me.returnableItemsErrorEl.setError('');
+                    return true;
+                }
+            },
+            scope: me
+        });
+
+        this.returnableItems.getSelectionModel().setErrorEl(this.returnableItemsErrorEl);
+
         this.orderReturns = Ext.create('Taco.view.order.widget.OrderReturns', {
             store: store
         });
