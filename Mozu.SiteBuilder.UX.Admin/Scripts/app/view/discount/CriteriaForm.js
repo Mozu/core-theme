@@ -151,7 +151,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                 xtype: 'checkbox',
                 hidden: true,
                 name: 'appliesToMostExpensiveProductsFirst',
-                value: (this.isEdit()) ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
+                value: this.isEdit() ? !this.record.get('appliesToLeastExpensiveProductsFirst') : false,
                 itemId: 'apply-to-highest-priced-product',
                 boxLabel: 'Apply discount to highest-priced qualifying product(s) first',
                 tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
@@ -161,13 +161,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
                     offsetLeft: -20,
                     offsetTop: 60,
                     arrowPosition: 'bottom'
-                }),
-                listeners: {
-                    change: function(self, newValue) {
-                        this.record.set('appliesToLeastExpensiveProductsFirst', !newValue)
-                    },
-                    scope: me
-                }
+                })
             }
         );
 
@@ -982,6 +976,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             me.categoryList.setValue('');
             me.record.set("categories", []);
         }
+
+        this.record.set("appliesToLeastExpensiveProductsFirst", !me.applyDiscountTo.getValue())
 
         this.record.set("maximumQuantityPerRedemption", me.maximumQuantityPerRedemptionTB.getValue());
 
