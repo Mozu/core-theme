@@ -4,18 +4,95 @@
     border: 1px solid #999;
     min-height: @orderDetailWidth;
     .mz-orderlisting-detail {
-        position: absolute;
+        position: block;
+        display: table;
+        width: 100%;
         box-sizing: border-box;
         height: 100%;
-        width: @leftWidth;
         padding: @gutter/2;
         background-color: #eee;
+        .mz-orderlisting-details-list {
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+            display: table-row;
+        }
+        .mz-orderlisting-details-item {
+            display: table-cell;
+            .mz-propertylist-order {
+                margin:0px;
+                dd, dt {
+                    display: block;
+                    float: none;
+
+                }
+                dd {
+                    margin-left: 0px;
+                }
+                dt {
+
+                }
+            }
+
+        }
     }
     .mz-orderlisting-items {
-        margin-left: @leftWidth;
-        padding: @gutter/2;
+        width: 96%;
+        padding: 0 2% @gutter/2 2%;
+    }
+    .mz-orderlisting-footer{
+        text-align: right;
     }
     .mz-orderlisting-date {
         margin: @gutter/4 0;
+    }
+}
+
+.mz-orderlisting {
+    .mz-orderlisting-prompt{
+        display: none;
+        text-align: center;
+        margin: 0 -@gutter/2
+    }
+
+    .mz-orderlisting-nonShipped {
+        margin-bottom: @gutter/2;
+    }
+    .mz-order-history-return-status {
+        text-align: center;
+        padding: @gutter/4;
+        margin: 0 -@gutter/2;
+        background: limegreen; 
+    }
+    .mz-order-packages {
+        & > div.mz-order-package {
+            margin: @gutter/2 0;
+            padding: @gutter/2 0;
+            border-bottom: 1px solid #999
+        }
+        & > div.mz-order-package:last-child {
+            border-bottom: 0px
+        }
+    }
+    .mz-order-history-package {
+        overflow: hidden;
+        .mz-order-package-items {
+            width: 75%;
+            float: left;
+            input {
+                display: inline-block;
+                margin: 25px 10px;
+                float: left;
+            }
+        }
+
+        .mz-order-package-actions {
+            width: 25%;
+            float: right;
+            .mz-itemlisting-action {
+                display: inline-block;
+                width: 100%;
+            }
+        }
     }
 }

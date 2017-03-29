@@ -1,0 +1,41 @@
+<div class="mz-order-history-package" data-mz-order-id="{{ order.id }}" data-mz-package-id="{{ model.id }}">
+	{% block order-package-header %}
+		
+	{% endblock order-package-header %}
+
+	<div class="mz-order-package-status">
+		{% block order-package-status %}
+				{% if model.status == "Fulfilled" %}
+					<h3 class="mz-package-status-heading">{{ labels.orderPackageFulfilled|string_format(model.formatedFulfillmentDate) }}</h3>
+					{% if model.trackingNumber %}
+						<div class="mz-package-status-tracking">
+							<span class="mz-package-status-tracking" data-mz-tracking-number="{{ item.trackingNumber }}" data-mx-shipping-code="{{ item.shippingMethodCode }}" data-mx-shipping-name="{{ item.shippingMethodName }}">{{ labels.trackingNumber }}: {{ model.trackingNumber }}</span>
+						</div>
+					{% endif %}
+				{% endif %}
+		{% endblock order-package-status %} 
+	</div>
+
+
+	
+	<div class="mz-order-package-items">
+		{% block order-package-items %}
+			{% for packageItem in model.items %}
+				{% include "modules/my-account/order-history-package-item" with model=packageItem %}
+			{% endfor %}
+		{% endblock order-package-items %}
+	</div>
+	
+
+	<div class="mz-order-package-actions">
+		{% block order-package-actions %}
+				
+	    {% endblock order-package-actions %}	
+	</div>
+	
+
+	{% block order-package-footer %}
+		
+	{% endblock order-package-footer %}
+	
+</div>

@@ -1,0 +1,20 @@
+﻿﻿{% extends "modules/common/item-listing" %}
+{% block item-details %}
+    <div class="mz-itemlisting-description">
+      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+    </div>
+    <div class="mz-itemlisting-price">
+     {{labels.orderPackagePrice}} : {%if model.product.price.tenantOverridePrice %} {{ model.product.price.tenantOverridePrice|currency }} {% else %} {%if model.product.price.salePrice %} {{ model.product.price.salePrice|currency }} {% else %} {{ model.product.price.price|currency }} {%endif%}{%endif%}
+    </div>
+    <div class="mz-itemlisting-quantity">
+     {{labels.orderPackageQuantity}} : {%if packageItem %} {{ packageItem.quantity}} {% else %} {{ model.quantity}} {% endif %} 
+    </div>  
+{% endblock item-details %}
+{% block item-listing-actions %}
+   
+{% endblock item-listing-actions %}
+{% block item-listing-extras %}
+{% if returning == model.id %}
+<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+{% endif %}
+{% endblock item-listing-extras %}

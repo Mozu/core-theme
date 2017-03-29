@@ -1,0 +1,19 @@
+<div data-mz-order-package-item data-mz-product-code="{{ model.productCode }}">
+		{% block order-package-item-header %}
+			
+		{% endblock order-package-item-header %}
+
+		{% block order-package-item %}
+			{% if model.getProductDetails.Type == "BundleItem" %}
+				{% include "modules/my-account/my-account-product-bundle" with model=model.getProductDetails packageItem=model %}
+			{% else %}
+				{% include "modules/my-account/order-history-listing-item" with model=model.getProductDetails packageItem=model %}
+			{% endif %}
+
+		{% endblock order-package-item %}	
+		
+
+		{% block order-package-item-footer%}
+
+		{% endblock order-package-item-footer %}
+</div>

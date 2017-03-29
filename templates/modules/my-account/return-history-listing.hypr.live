@@ -1,0 +1,43 @@
+{% extends "modules/common/order-listing" %}
+{% block order-details %}
+<ul class="mz-orderlisting-details-list">
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.returnCreated }}</dt>
+                    <dd>{{ model.auditInfo.createDate|date("F j, Y") }}</dd>
+                </dl>
+            </li>
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.returnNumber }}</dt>
+                    <dd>{{ model.returnNumber }}</dd>
+                </dl>
+            </li>
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.status }}</dt>
+                    <dd>{{ model.status }}</dd>
+                </dl>
+            </li>
+        
+<li class="mz-orderlisting-details-item">
+    {% if model.status == "Authorized" %}
+        {% with model.packages|findwhere("hasLabel", "true") as packageWithLabel %}
+            {% if packageWithLabel %}
+                <div>
+                   <button id="print-return-label" class="mz-button" data-mz-action="printReturnLabel" data-mz-returnId="{{model.id}}">
+                        {{labels.returnPrintLabelButton}}
+                   </button>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+    </li>
+</ul>
+
+{% endblock order-details %}
+{% block order-items %}
+    {% for item in model.items %}
+    {% include "modules/my-account/return-history-item-listing" with model=item %}
+    {% endfor %}
+{% endblock order-items %}

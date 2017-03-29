@@ -2,7 +2,7 @@
   "name": "mozu-core-theme",
   "author": "Volusion, Inc.",
   "description": "The core storefront theme for Mozu.",
-  "version": "9.5.3",
+  "version": "9.6.0",
   "scripts": {
     "clean": "rm -rf compiled",
     "ci": "grunt",

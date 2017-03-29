@@ -1,0 +1,32 @@
+<div class="mz-itemlisting {% block module-classes %}{% endblock module-classes %}">
+  {% block product-bunle-image %}
+  
+  <div class="mz-itemlisting-thumb">
+    <img class="mz-itemlisting-thumb-img" src="/resources/images/placeholder.png" {% if model.imageAlternateText %}alt="{{ model.imageAlternateText }}"{% endif %} />
+  </div>
+
+  {% endblock product-bunle-image %}
+
+  {% block product-bunle-details %}
+  <div class="mz-itemlisting-details">
+    <span class="mz-itemlisting-title">{{ model.name }}</span>
+    <div class="mz-itemlisting-quantity">
+      {{labels.orderPackageQuantity}} : {%if packageItem %} {{ packageItem.quantity}} {% else %} {{ model.quantity}} {% endif %} 
+    </div> 
+    <div class="mz-itemlisting-price">
+     {% if model.parentProduct %}
+       {% if model.optionAttributeFQN %} 
+        {{ labels.bundleExtraPartOf|string_format(model.parentProduct.url, model.parentProduct.name)|safe }}
+       {% else %}
+        {{ labels.bundlePartOf|string_format(model.parentProduct.url, model.parentProduct.name)|safe }}
+       {% endif %}
+     {% endif %}
+    </div>
+  </div>
+  {% endblock product-bunle-details %}
+  <div class="mz-itemlisting-actions">
+  {% block product-bunle-actions %}
+    
+  {% endblock product-bunle-actions %}
+  </div>
+</div>

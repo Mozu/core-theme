@@ -195,6 +195,7 @@
                 } else {
                     if (!addr.get('candidateValidatedAddresses')) {
                         var methodToUse = allowInvalidAddresses ? 'validateAddressLenient' : 'validateAddress';
+                        addr.syncApiModel();
                         addr.apiModel[methodToUse]().then(function (resp) {
                             if (resp.data && resp.data.addressCandidates && resp.data.addressCandidates.length) {
                                 if (_.find(resp.data.addressCandidates, addr.is, addr)) {
@@ -1021,7 +1022,9 @@
                     } else if (billingContact) {
                         // if they initially checked the checkbox, then later they decided to uncheck it... remove the id so that updates don't update
                         // the original address, instead create a new contact address.
+                        // We also unset contactId to prevent id from getting reset later.
                         billingContact.unset('id', { silent: true });
+                        billingContact.unset('contactId', { silent: true });
                     }
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);

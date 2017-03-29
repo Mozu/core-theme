@@ -1,0 +1,75 @@
+{% extends "modules/common/item-listing" %}
+
+{% block module-classes %}
+mz-l-formfieldgroup
+{% endblock module-classes %}
+
+{% block item-listing-prefix %}
+<div class="mz-l-formfieldgroup-row">
+<div class="mz-l-formfieldgroup-cell">
+<div class="mz-itemlisting-select">
+  <input type="checkbox" data-mz-value="isSelectedForReturn" data-mz-product-code="{{ model.productCode }}" data-mz-item-id="{{ model.getProductDetails.id }}"  value="true" {% if model.isSelectedForReturn %}checked="checked"{% endif %} data-mz-action="startReturnItem"/>
+</div>
+</div>
+{% endblock item-listing-prefix %}
+
+{% block item-listing-image %}
+<div class="mz-l-formfieldgroup-cell">
+    <div class="mz-itemlisting-thumb">
+  {% if model.product.imageUrl %}
+      <img class="mz-itemlisting-thumb-img" src="{% make_url "image" model.product with max=70 as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% endif %} /> 
+  {% else %}
+      <img class="mz-itemlisting-thumb-img" src="/resources/images/placeholder.png" {% if model.imageAlternateText %}alt="{{ model.imageAlternateText }}"{% endif %} />
+  {% endif %}
+  </div>
+</div>
+  
+  <div class="mz-l-formfieldgroup-cell">
+{% endblock item-listing-image %}
+
+{% block item-details %}
+    <div class="mz-itemlisting-description">
+      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+    </div>
+    {% if model.product.price.price %}
+      <div class="mz-itemlisting-price">
+       {{labels.orderPackagePrice}} : {%if model.product.price.tenantOverridePrice %} {{ model.product.price.tenantOverridePrice|currency }} {% else %} {%if model.product.price.salePrice %} {{ model.product.price.salePrice|currency }} {% else %} {{ model.product.price.price|currency }} {%endif%}{%endif%}
+      </div>
+    {%endif%}
+    <div class="mz-itemlisting-quantity">
+     {{labels.orderPackageQuantity}} : {{ model.quantityReturnable }}
+    </div>
+
+    {% if model.product.bundledProducts.length > 0 %}
+    <ul class="mz-itemlisting-bunldedProducts">
+      {% for bundle in model.product.bundledProducts %}
+        {% if bundle.optionAttributeFQN == "" %}
+        <li class="mz-itemlisting-bunldedProducts-bundle">
+          {% include "modules/my-account/my-account-product-bundle" with model=bundle %}
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+
+    {% endblock item-details %}
+
+{% block item-listing-actions %}
+   <div data-mz-package-item-return-form class="mz-itemlisting-return">
+  	{% if model.isSelectedForReturn %}
+  	
+  		<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+  		{% include "modules/my-account/package-item-return-form" with model=model %}
+  	
+  	{% endif %}
+  </div>
+</div>
+{% endblock item-listing-actions %}
+
+{% block item-listing-extras %} 
+</div>
+
+
+
+{% endblock item-listing-extras %}

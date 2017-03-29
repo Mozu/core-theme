@@ -25,6 +25,9 @@
         <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
             {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
         </div>
+
+        {% include "modules/my-account/my-account-print-window" %}
+
     </div>
 </div>
 {% endblock body-content %}

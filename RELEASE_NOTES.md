@@ -1,5 +1,13 @@
 # What's New
 
+### March 29, 2017
+The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)
+
+* Shoppers can now return multiple items on an order within the same RMA.
+* Order history now displays by product item rather than by order item. For example, if a shopper orders a bundle, each bundle item displays in the order history, rather than the entire bundle showing as one entry.
+* Product items are now grouped by fulfillment status. Unfulfilled items display under a *Shipping Soon* section, while fulfilled items display alongside their corresponding fulfillment unit (for example, a package).
+* Return history now displays child items (for example, product extras under a parent product or bundle items within a bundle).
+
 ### January 12, 2017
 * Added a Print dialog window accessible from the My Account page that enables shoppers to print RMA shipping labels - [Pull Request](https://github.com/Mozu/core-theme/pull/41)
 
