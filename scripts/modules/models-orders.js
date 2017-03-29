@@ -281,11 +281,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             },
             cancelReturn: function() {
                 var rmas = this.collection.parent.get('rma');
-                var item = this.getOrderItem();
-                if (item) {
-                    item = item.toJSON();
-                    rmas.get('items').remove(item);
-                }
+                    rmas.get('items').remove(this);
             }
         }),
 

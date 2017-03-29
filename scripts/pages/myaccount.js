@@ -338,7 +338,6 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
         },
         clearOrderReturn: function() {
-            this.model.clearReturn();
             this.$el.find('[data-mz-value="isSelectedForReturn"]:checked').click();
         },
         cancelOrderReturn: function() {
