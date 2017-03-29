@@ -1,4 +1,6 @@
-﻿define(['shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'modules/api'], function($, Hypr, api) {
+﻿define(['shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'modules/api',
+      'hyprlivecontext'], function($, Hypr, api,
+        HyprLiveContext) {
 
     // bundled typeahead saves a lot of space but exports bloodhound to the root object, let's lose it
     var Bloodhound = window.Bloodhound.noConflict();
@@ -107,7 +109,7 @@
         }, dataSetConfigs).data('ttTypeahead');
         // user hits enter key while menu item is selected;
         $field.on('typeahead:selected', function (e, data, set) {
-            if (data.suggestion.productCode) window.location = "/p/" + data.suggestion.productCode;
+            if (data.suggestion.productCode) window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/p/" + data.suggestion.productCode;
         });
     });
 

@@ -170,7 +170,7 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu', 'modules/m
 
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
-            window.location = "/checkout/" + order.prop('id');
+            window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + '/checkout/' + order.prop('id');
         });
 
         cartModel.on('sync', function() {
