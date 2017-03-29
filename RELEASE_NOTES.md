@@ -1,75 +1,12 @@
 # What's New
 
-### March 30, 2017
-* Significant changes to myAccount order history and returns
-   - Updates the UI for order history and return history grids.
-   - Order history UI groups all order items by fulfillment type, status ,and package. Providing a display of what and when individual items are fulfilled.
-   - Order history UI splits product bundles and addons into individual order items.
-   - Added functionality and UI to return multiple order items at a time.
-   - Return history UI allows separate returns of product bundles and addons.
-   - The Following files were edited/added for these changes:
-     - labels/en-US.json
+### March 29, 2017
+The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)
 
-     - scripts/modules/models-order.js
-     - scripts/pages/myaccount.js
-     - scripts/modules/models-customer.js
-     - scripts/modules/models-messages.js
-     - scripts/modules/views-messages.js
-     - scripts//modules/models-returns.js
-
-     - templates/modules/common/message-bar.hypr.live
-     - templates/modules/common/item-listing-order.hypr.live
-     - templates/modules/common/item-listing.hypr.live
-     - templates/modules/common/item-return-form.hypr.live
-     - templates/modules/common/order-listing.hypr.live
-
-     - templates/modules/my-account/order-history-list.hypr.live
-     - templates/modules/my-account/order-history-listing.hypr.live
-     - templates/modules/my-account/order-history-listing-item.hypr.live
-     - templates/modules/my-account/order-history-listing-return-item.hypr.live
-     - templates/modules/my-account/order-history-listing-return.hypr.live
-
-     - templates/modules/my-account/order-history-package.hypr.live
-     - templates/modules/my-account/order-history-package-group.hypr.live
-     - templates/modules/my-account/order-history-package-item.hypr.live
-    
-     - templates/modules/my-account/my-account-returnhistory.hypr.live
-     - templates/modules/my-account/return-history-item-listing.hypr.live
-     - templates/modules/my-account/return-history-list.hypr.live
-     - templates/modules/my-account/return-history-listing.hypr.live
-
-     - templates/modules/my-account/my-account-product-bundle.hypr.live
-     - templates/modules/my-account/package-item-return-form.hypr.live
-
-     - stylesheets/storefront.less
-     - stylesheets/modules/common/item-listing.less
-     - stylesheets/modules/common/order-list.less
-     - stylesheets/modules/common/order-listing.less
-     - stylesheets/modules/my-account/account-orderhistory.less
-     - stylesheets/modules/my-account/rma-item.less
-* Appened optional site subdirectory property on siteContext on links to maintain site state.
-   - 
-   - The Following files were edited/added for these changes:
-      - scripts/modules/login-links.js
-      - scripts/modules/models-cart.js
-      - scripts/modules/models-product.js
-      - scripts/modules/search-autocomplete.js
-      - scripts/pages/cart.js
-      - scripts/pages/checkout.js
-      - scripts/pages/location.js
-      - scripts/pages/product.js
-
-      - templates/modules/checkout/checkout-order-summary.hypr.live
-      - templates/modules/page-header/search-box.hypr
-      - templates/modules/page-header/store-branding.hypr
-      - templates/modules/page-header/utility-nav.hypr
-      - templates/modules/product/product-detail.hypr.live
-      - templates/modules/search/autocomplete-listing-product.hypr.live
-      - templates/pages/cart.hypr
-* Use total instead of discountedSubTotal to display total in cart
-   - Corrects cart page order total display:
-   - The Following files were edited/added for these changes:
-      - templates/modules/cart/cart-table.hypr.live
+* Shoppers can now return multiple items on an order within the same RMA.
+* Order history now displays by product item rather than by order item. For example, if a shopper orders a bundle, each bundle item displays in the order history, rather than the entire bundle showing as one entry.
+* Product items are now grouped by fulfillment status. Unfulfilled items display under a *Shipping Soon* section, while fulfilled items display alongside their corresponding fulfillment unit (for example, a package).
+* Return history now displays child items (for example, product extras under a parent product or bundle items within a bundle).
 
 ### January 12, 2017
 * Added a Print dialog window accessible from the My Account page that enables shoppers to print RMA shipping labels - [Pull Request](https://github.com/Mozu/core-theme/pull/41)
