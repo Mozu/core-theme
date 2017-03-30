@@ -329,7 +329,8 @@
                 if (!me.validate()) {
                     me.apiAddToWishlist({
                         customerAccountId: require.mozuData('user').accountId,
-                        quantity: me.get("quantity")
+                        quantity: me.get("quantity"),
+                        options: me.getConfiguredOptions()
                     }).then(function(item) {
                         me.trigger('addedtowishlist', item);
                     });
