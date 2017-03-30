@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-02-28
+ * Mozu JavaScript SDK - v0.3.0 - 2017-03-30
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -5243,7 +5243,11 @@ module.exports = {
                 quantity: payload.quantity,
                 currencyCode: payload.currencyCode || self.api.context.Currency(),
                 localeCode: payload.localeCode || self.api.context.Locale(),
-                product: self.data
+                product: {
+                    productCode: self.data.productCode,
+                    variationProductCode: self.data.variationProductCode,
+                    options: payload.options || self.data.options
+                }
             });
         });
     },

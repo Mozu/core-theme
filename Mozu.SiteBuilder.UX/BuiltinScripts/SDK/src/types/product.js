@@ -36,7 +36,11 @@ module.exports = {
                 quantity: payload.quantity,
                 currencyCode: payload.currencyCode || self.api.context.Currency(),
                 localeCode: payload.localeCode || self.api.context.Locale(),
-                product: self.data
+                product: {
+                    productCode: self.data.productCode,
+                    variationProductCode: self.data.variationProductCode,
+                    options: payload.options || self.data.options
+                }
             });
         });
     },
