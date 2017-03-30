@@ -486,15 +486,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     settings.MobileTheme = null;
                 }
             }
-
+            
+            // copy the values over from the last theme if the current theme settings are empty.
             if (lastTheme != null && method)
             {
-                var resp = _themeSettingsRepository.GetInstanceValues(id).Result;
-
-                if (resp?.Count  > 0)
+                //get the current values
+                var resp = await _themeSettingsRepository.GetInstanceValues(id).ConfigureAwait(false);
+                //if none found go ahead and copy over the old ones
+                if (resp?.Count  ==  0)
                 {
-                    var oldValues = _themeSettingsRepository.GetInstanceValues(lastTheme).Result;
-                    await _themeSettingsRepository.SaveInstanceValues(oldValues, id);
+                    var oldValues = await _themeSettingsRepository.GetInstanceValues(lastTheme).ConfigureAwait(false);
+                    if (oldValues?.Count > 0)
+                    {
+                        await _themeSettingsRepository.SaveInstanceValues(oldValues, id).ConfigureAwait(false);
+                    }
                 }
 
             }
