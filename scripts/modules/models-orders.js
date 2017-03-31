@@ -163,7 +163,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         return (extra.uniqueProductCode() === groupedItem[0].uniqueProductCode() && extra.get('optionAttributeFQN') === groupedItem[0].get('optionAttributeFQN'));
                     });
                     if (duplicateItem) {
-                        productExtraGroup[key].add(extra);
+                        productExtraGroup[key].push(extra);
                         return false;
                     }
                     productExtraGroup[key] = [extra];
