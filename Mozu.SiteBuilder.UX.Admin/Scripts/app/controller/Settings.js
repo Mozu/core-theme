@@ -3,6 +3,7 @@
     requires: [
         'Taco.view.settings.paymentTypes.Edit',
         'Taco.view.settings.paymentGateways.Index',
+        'Taco.view.settings.paymentGateways.Edit',
         'Taco.view.settings.tax.Edit',
         'Taco.view.settings.shipping.Edit',
         'Taco.model.SiteShippingSettings',
@@ -12,11 +13,6 @@
     models: [
         'Taco.model.CheckoutSettings',
         'Taco.model.PaymentGateway',
-    ],
-    stores: ['Taco.store.PaymentGateways'],
-
-    views: [
-        'Taco.view.settings.paymentGateways.Edit'
     ],
 
     paymentTypes: function () {
