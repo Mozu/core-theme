@@ -231,7 +231,7 @@ namespace Mozu.SiteBuilder.Mvc.OAF
             _actionContext = actionContext;
         }
 
-        [Microsoft.ClearScript.ScriptMember("loginUser")]
+        [Microsoft.ClearScript.ScriptMember("logOut")]
         public void logOut()
         {
             var apiContext = _actionContext.Request.Resolve<ISiteBuilderApiContext>();
