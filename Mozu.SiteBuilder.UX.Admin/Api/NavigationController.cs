@@ -538,95 +538,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         ///     Handles a move or reorder of something in the navigation document.
         /// </summary>
-        private Task HandleNavigationMove(NavigationTreeNode change)
+        private async Task HandleNavigationMove(NavigationTreeNode change)
         {
-            return _navRepo.GetNavigationSetAsync()
-                .ContinueWith(t => {
-                    IList<INavigationNode> navSet = t.Result;
+            var navSet = await _navRepo.GetNavigationSetAsync().ConfigureAwait(false) ?? new NavigationSet();
+            await _contextProvider.GetContextDataAsync().ConfigureAwait(false);
+            var navLIst  = _gandalf.GetFlatList();
+            var sibblings = navLIst.Where(x => x.ParentId == change.ParentId && x.Id != change.Id  ).OrderBy(x => x.Index).ToList();
+            
+            navSet.RemoveAll(x => x.Id == change.Id);
+            navSet.Add(change);
 
-                    INavigationNode original = navSet.FirstOrDefault(n => n.Id == change.Id);
-                    if (original == null)
+            var lastIndex = -1;
+            var insertIndex = change.Index;
+            for( int i =0; i <sibblings.Count;i++)
+            {
+                
+                if ( i == insertIndex)
+                {
+                    lastIndex = change.Index = lastIndex + 1;
+                }
+                if (i >= insertIndex && sibblings[i].Index < lastIndex + 1)
+                {
+
+                    sibblings[i].Index = lastIndex + 1;
+                    var changeSibbling = navLIst.FirstOrDefault(x => x.Id == sibblings[i].Id);
+                    if (changeSibbling != null)
                     {
-                        original = change;
-                        navSet.Add(original);
+                        changeSibbling.Index = sibblings[i].Index;
                     }
 
-                    // reorder within same parent
-                    if (original.ParentId == change.ParentId)
-                    {
-                        IEnumerable<INavigationNode> siblings =
-                            from n in navSet
-                            where n.ParentId == change.ParentId
-                            where n.Id != change.Id
-                            select n;
+                }
+                lastIndex = sibblings[i].Index;
+            }
 
-                        // if new value is closer to the bottom of the list, then some displaced items need to decrease in index.
-                        if (change.Index > original.Index)
-                        {
-                            siblings.Where(n => n.Index > original.Index && n.Index <= change.Index).ToList().ForEach(n => n.Index--);
-                        }
-                            // if new value is closer to the top of the list, then some displaced items need to increase in index.
-                        else if (change.Index < original.Index)
-                        {
-                            siblings.Where(n => n.Index >= change.Index && n.Index < original.Index).ToList().ForEach(n => n.Index++);
-                        }
-                        //validate that we dont have multiple items with the same index
-                       
-                        // set the index
-                        original.Index = change.Index;
-                    }
-                        // change of parent
-                    else
-                    {
-                        IEnumerable<INavigationNode> oldSiblings =
-                            from n in navSet
-                            where n.ParentId == original.ParentId
-                            where n.Id != change.Id
-                            select n;
-
-                        IEnumerable<INavigationNode> newSiblings =
-                            from n in navSet
-                            where n.ParentId == change.ParentId
-                            where n.Id != change.Id
-                            select n;
-
-                        // any old siblings that came after this node need to move closer to the top.
-                        oldSiblings.Where(n => n.Index > original.Index).ToList().ForEach(n =>n.Index--);
-
-                        // any new siblings that will be displaced by this node need to move closer to the bottom.
-                        newSiblings.Where(n => n.Index <= change.Index).ToList().ForEach(n =>  n.Index++);
-
-                        // set the index and parent
-                        original.Index = change.Index;
-                        original.ParentId = change.ParentId;
-                    }
-
-                    //validate the children all have unique indexes.
-                    foreach (var grounp in navSet.GroupBy(x => x.ParentId))
-                    {
-                        var orderedChildren = grounp.OrderBy(x => x.Index);
-                        var seen = new HashSet<int>();
-                        var offset = 0;
-                        foreach (var child in orderedChildren)
-                        {
-                            child.Index += offset;
-                            if (seen.Contains(child.Index))
-                            {
-                                child.Index += ++offset;
-                            }
-                            seen.Add(child.Index);
-                        }
-                    }
-                  
-                   
-
-
-
-                    // finally, save the document.
-                    return _navRepo.SaveSetAsync(navSet);
-                })
-                .Unwrap()
-                ;
+            await _navRepo.SaveSetAsync(navSet).ConfigureAwait(false);
+            return;
         }
 
         private Task HandleCategoryMove(NavigationTreeNode change)
