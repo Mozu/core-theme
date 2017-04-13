@@ -317,11 +317,11 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
                 $.each(self.$el.find('[data-mz-order-history-listing-return-item]'), function(index, val) {
                     var packageItem = returnableItems.find(function(model) {
-                        if($(val).data('mzOrderLineId') === model.get('orderLineId')){
+                        if($(val).data('mzOrderLineId') == model.get('orderLineId')){
                             if ($(val).data('mzOptionAttributeFqn')) {
-                                return (model.get('orderItemOptionAttributeFQN') === $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() === $(val).data('mzProductCode'));
+                                return (model.get('orderItemOptionAttributeFQN') == $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() == $(val).data('mzProductCode'));
                             }
-                            return (model.uniqueProductCode() === $(val).data('mzProductCode'));
+                            return (model.uniqueProductCode() == $(val).data('mzProductCode'));
                         }
                         return false;
                     });
