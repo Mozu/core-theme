@@ -188,6 +188,32 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PreviousUrl { get; set; }
         public bool? NoIndex { get; set; }
     }
+    public interface IIpAddressFinderOuter
+    {
+        string IpAddress { get; set; }
+    }
+    public class IpAddressFinderOuter: IIpAddressFinderOuter
+    {
+        public IpAddressFinderOuter(HttpRequestMessage request)
+        {
+            if (request != null)
+            {
+                IEnumerable<string> val = null;
+                if ( request?.Headers.TryGetValues("x-forwarded-for", out val) == false || !val?.Any()== false)
+                {
+                    val = new string[] { ((System.Web.HttpContextWrapper)request?.Properties["MS_HttpContext"])?.Request?.ServerVariables["REMOTE_ADDR"] };
+                }
+                IpAddress =  val?.FirstOrDefault()?.Split(',')?.FirstOrDefault().Trim();
+               
+                if ( !IpAddress.IsIPAddressValid())
+                {
+                    IpAddress = "127.0.0.1";
+                }
+            }
+        }
+        public string IpAddress { get; set; }
+    }
+    
 
     public class PageContext : IEditableContext, IPageContext
     {
@@ -198,7 +224,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
 
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider)
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
+            , IIpAddressFinderOuter ipAddressFinderOuter)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
@@ -223,6 +250,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             DataViewMode = apiContext.DataViewMode;
             _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
+            IpAddress = ipAddressFinderOuter.IpAddress;
+        }
+
+        public string IpAddress
+        {
+            get;
+            set;
         }
 
         static UserProfile CreateProfileFromToken(LightweightUserClaims userClaims, IAuthenticationHelper _authenticationHelper)

@@ -32,6 +32,7 @@ using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Client;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -41,12 +42,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ITenantsWebApiClient _tenantsWebApiClient;
         private readonly IGeneralSettingsWebApiClient _siteSettingsApiClient;
         private readonly IApiContext _apiContext;
+        string _ipaddress;
 
-        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, IGeneralSettingsWebApiClient siteSettingsApiClient, IApiContext apiContext)
+        public IpBlockingController(Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient, IGeneralSettingsWebApiClient siteSettingsApiClient, IApiContext apiContext
+            , IIpAddressFinderOuter ipAddressFinderOuter)
         {
             _tenantsWebApiClient = tenantsWebApiClient;
             _siteSettingsApiClient = siteSettingsApiClient;
             _apiContext = apiContext;
+            _ipaddress = ipAddressFinderOuter.IpAddress;
         }
 
         //
@@ -58,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var resp = (await _siteSettingsApiClient.GetIPBlockSettings()).ReadAsSync();
             var model = resp != null ? Mapper.Map<IpBlockingSettings>(resp) : new IpBlockingSettings();
 
-            model.IpAddress = GetIPAddress(Request);
+            model.IpAddress = _ipaddress;
 
             return model;
         }
@@ -108,26 +112,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return response;
         }
 
-        private static string GetIPAddress(HttpRequestMessage request)
-        {
-            string ipstring = "Ip Address could not be determined";
-
-            if (request.Properties.ContainsKey("MS_HttpContext"))
-            {
-                var ctx = request.Properties["MS_HttpContext"] as HttpContextWrapper;
-
-                if (ctx != null)
-                {
-                    var ipStr = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
-                    IPAddress ipaddress;
-                    if (IPAddress.TryParse(ipStr, out ipaddress))
-                    {
-                        ipstring = ipStr;
-                    }
-                }
-            }
-
-            return ipstring;
-        }
+       
     }
 }

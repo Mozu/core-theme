@@ -287,14 +287,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             }
-            var ipAddress = this.HttpContext.Request.Headers["x-forwarded-for"] ?? this.HttpContext.Request.ServerVariables["REMOTE_ADDR"];
-            //  System.Net.IPAddress ipAddressStruct;
-            if (!ipAddress.IsIPAddressValid())
-            {
-                ipAddress = "127.0.0.1";
-            }
+            
 
-            model.IPAddress = ipAddress;
+            model.IPAddress = PageContext.IpAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();

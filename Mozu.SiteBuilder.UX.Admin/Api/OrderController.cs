@@ -25,6 +25,7 @@ using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.CommerceRuntime.Contracts.Refunds;
 using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
+using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -40,6 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
+        string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
          * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
@@ -54,7 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public OrderController(IOrderWebApiClient orderWebApiClient, ICustomerAccountWebApiClient customerAccountWebApiClient, ICreditWebApiClient creditWebApiClient
             , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext
             , ICartWebApiClient cartWebApiClient, ICustomerSetWebApiClient customerSetWebApiClient, IReturnWebApiClient returnWebApiClient
-            )
+            , IIpAddressFinderOuter ipAddressFinderOuter)
+            
         {
             _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
@@ -65,6 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _cartWebApiClient = cartWebApiClient;
             _customerSetWebApiClient = customerSetWebApiClient;
             _returnWebApiClient = returnWebApiClient;
+            _ipAddress = ipAddressFinderOuter.IpAddress;
         }
 
         [HttpGetRoute(UriTemplate = "list")]
@@ -124,22 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             // specify that order is an offline order.
             emptyOrder.Type = DCo.Order.OrderTypeConst.OFFLINE;
-
-            // fill in order ip address
-            if (Request.Properties.ContainsKey("MS_HttpContext"))
-            {
-                var ctx = Request.Properties["MS_HttpContext"] as HttpContextWrapper;
-                if (ctx != null)
-                {
-                    var ipStr = ctx.Request.Headers["X-Forwarded-For"] ?? ctx.Request.UserHostAddress;
-                    if (ipStr.IsIPAddressValid())
-                    {
-                        emptyOrder.IPAddress = ipStr;
-                    }
-
-                }
-
-            }
+            emptyOrder.IPAddress = _ipAddress;
 
             var order = (await _orderWebApiClient.CreateOrder(emptyOrder)).ReadAsSync();
 
