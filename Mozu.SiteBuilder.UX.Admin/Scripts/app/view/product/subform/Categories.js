@@ -39,6 +39,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             },
             displayField: 'nameAndCodeAndStatus',
             fieldLabel: 'Assigned Categories',
+            itemId: 'assignedCategory',
             valueField: 'id',
             lastQuery: "",
             value: this.record.get('categoryIds'),

@@ -6,7 +6,7 @@
 
 Ext.define('Taco.model.Category', {
     extend: 'Taco.core.data.Model',
-    requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy', 'Taco.model.FacetSet' ],//, 'Taco.model.Facetable'],
+    requires: ['Taco.model.Product','Taco.core.data.CategoryTreeProxy', 'Taco.model.FacetSet', 'Taco.data.CategoryReader' ],//, 'Taco.model.Facetable'],
     //fields: ['id', 'name', 'description', 'sequence', 'isDisplayed'],
     behaviors: {
         read: 16,
@@ -113,6 +113,11 @@ Ext.define('Taco.model.Category', {
                 result += record.get('isActive') ? '' : ' (disabled)';
                 return result;
             },
+            persist: false
+        },
+        {
+            name: 'fullPath',
+            type: 'string',
             persist: false
         },
         {
@@ -244,7 +249,7 @@ Ext.define('Taco.model.Category', {
         },
         url: '/admin/Scripts/app/mocks/categories.json',
         reader: {
-            type: 'json',
+            type: 'taco.data.categoryreader',
             root: 'items',
             successProperty: 'success'
         },

@@ -70,7 +70,7 @@ Ext.define('Taco.core.ux.CategoryComboBox', {
                 me.dynamicFilter
             ]
         });
-    
+
         me.store.load();
 
         this.callParent(arguments);

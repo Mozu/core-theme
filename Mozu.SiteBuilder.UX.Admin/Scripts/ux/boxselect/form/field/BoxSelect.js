@@ -1062,10 +1062,13 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
             '<tpl if="this.isSelected(values.'+ me.valueField + ')">',
             ' selected',
             '</tpl>',
-            '" qtip="{[typeof values === "string" ? values : values.' + me.displayField + ']}">' ,
+            '" ',
+            '<tpl if=me.itemId = "assignedCategory">',
+            'title="{[values.fullPath]}">',
+            '</tpl>',
             '<div class="x-boxselect-item-text">{[typeof values === "string" ? values : this.getItemLabel(values)]}</div>',
             '<div class="x-tab-close-btn x-boxselect-item-close"></div>' ,
-            '</li>' ,
+            '</li>',
             '</tpl>',
             {
                 compile: true,
@@ -1080,8 +1083,7 @@ Ext.define('Ext.ux.form.field.BoxSelect', {
                 getItemLabel: function(values) {
                     return me.getTpl('labelTpl').apply(values);
                 }
-            }
-            ];
+            }];
         }
 
         return this.getTpl('multiSelectItemTpl').apply(Ext.Array.pluck(this.valueStore.getRange(), 'data'));
