@@ -43,8 +43,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<RedirectEntry>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
         {
             var list = await _redirectRepository.FetchRedirectEntries();
-            var tot = list.Count;
-            var retlist = list.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
+            string filter;
+            List<RedirectEntry> filteredList = new List<RedirectEntry>();
+            int tot;
+            List<RedirectEntry> retlist;
+
+            filter = extFilter.Count >= 1 ? extFilter[0].value.ToString() : "";
+
+            if (filter.IsNullOrEmpty())
+            {
+                tot = list.Count;
+                retlist = list.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
+            }
+            else
+            {
+                foreach (RedirectEntry redirect in list)
+                {
+                    if (redirect.Source.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                        || redirect.Destination.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                    {
+                        filteredList.Add(redirect);
+                    }
+                }
+                tot = filteredList.Count;
+                retlist = filteredList.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
+            }
+
             return List2(retlist, tot);
         }
 
