@@ -57,17 +57,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                foreach (RedirectEntry redirect in list)
-                {
-                    if (redirect.Source.Contains(filter, StringComparison.OrdinalIgnoreCase)
-                        || redirect.Destination.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                    {
-                        filteredList.Add(redirect);
-                    }
-                }
-                tot = filteredList.Count;
-                retlist = filteredList.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
-            }
+                retlist = list.Where(redirect => redirect.Source.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                       || redirect.Destination.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                        ).ToList();
+                tot = retlist.Count;
+
+                retlist = retlist.Skip((int)pagingParams.startIndex).Take(pagingParams.pageSize.Value).ToList();
+           }
 
             return List2(retlist, tot);
         }
