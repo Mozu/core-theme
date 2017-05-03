@@ -7,7 +7,7 @@
         model: 'Taco.model.TargetRule',
         remoteFilter: false,
         remoteSort: false,
-        pageSize: 200,
+        pageSize: 50,
         storeManagerConfig: {
             clearFilters: true,
             contextLevel: 'mc',

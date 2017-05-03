@@ -204,9 +204,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             stateCodes.Select(sc => new State{ Code = sc, Name = sc}))
                 }
             };
-
         }
-
 
         [HttpGetRoute(UriTemplate = "rules/read")]
         public async Task<Response<List<DC.TargetRule>>> RuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string domain= null)
@@ -215,14 +213,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var single = ((await _targetRulesWebApiClient.GetTargetRule(pagingParams.id)).ReadAsSync());
                 return this.List2(single);
-
             }
-            //todo:uncomment when service supports filtering
-            //var resp = ((await _targetRulesWebApiClient.GetTargetRules(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: "domain eq \"" + domain+"\"")).ReadAsSync());
-            var resp = ((await _targetRulesWebApiClient.GetTargetRules(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync());
-            var items = resp.Items.Where(x => x.Domain == domain).ToList();
-            return this.List2(items, resp.TotalCount);
 
+            var resp = ((await _targetRulesWebApiClient.GetTargetRules(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: $"domain eq \"{domain}\"")).ReadAsSync());
+            return List2(resp.Items, resp.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "rules/edit")]
@@ -233,10 +227,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             targets.Clear();
             targets = tasks.Select(x => x.Result.ReadAsSync()).ToList();
             return this.List2(targets);
-
         }
-
-
 
         [HttpPostRoute(UriTemplate = "rules/delete")]
         public async Task<Response<List<bool>>> RuleDelete(List<DC.TargetRule> targets)
