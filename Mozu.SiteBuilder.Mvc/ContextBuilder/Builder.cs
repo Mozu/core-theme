@@ -548,6 +548,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         ISiteBuilderContextDataRepository _repo;
         Task<SiteBuilderContextData> _dataTask;
         SiteBuilderContextData _data;
+        Exception _ex;
         public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo)
         {
             _repo = repo;
@@ -556,6 +557,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
         // Mozu.SiteBuilder.Mvc.Contexts.ISiteContext _siteContext;
         public SiteBuilderContextData GetContextData()
         {
+            if (_ex != null )
+            {
+                throw _ex;
+            }
             return _data;
         }
 
@@ -563,6 +568,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
         {
             return _dataTask = _dataTask ?? _repo.GetContextData().ContinueWith(_ =>
             {
+                if (_.IsFaulted)
+                {
+                    _ex = _.Exception;
+                }
                 _data = _.Result;
                 return _data;
             }) ;
