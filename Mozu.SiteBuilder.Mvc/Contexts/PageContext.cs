@@ -203,8 +203,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 {
                     val = new string[] { ((System.Web.HttpContextWrapper)request?.Properties["MS_HttpContext"])?.Request?.ServerVariables["REMOTE_ADDR"] };
                 }
-                IpAddress =  val?.FirstOrDefault()?.Split(',')?.FirstOrDefault().Trim();
-               
+                IpAddress = val?.SelectMany( _ => _.Split(',')).Select(_ => _.Trim()).Where(_ => _.IsIPAddressValid()).FirstOrDefault();
+                
                 if ( !IpAddress.IsIPAddressValid())
                 {
                     IpAddress = "127.0.0.1";
