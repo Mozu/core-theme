@@ -21,7 +21,7 @@ nuget OctoPack 2.1.3
 nuget RabbitMQ.Client 3.3.5
 nuget Burrows.Autofac 0.3.3.0 
 nuget Burrows.Log4Net 0.3.3.0 
-nuget dotless 
+nuget dotless 1.4.0.0 
 nuget JsonValue 0.6.0 
 nuget Microsoft.AspNet.Razor 3.2.2
 nuget Microsoft.Owin 3.0.0

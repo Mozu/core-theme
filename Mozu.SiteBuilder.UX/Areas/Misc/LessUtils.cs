@@ -114,11 +114,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             template = ProcessSettingsVariables(template, stem);
             var reader = new MyLessFileReader(this, _contentRetriever);
 
-            var importer = new Importer(reader);
-            importer.ImportAllFilesAsLess = false;
-            importer.InlineCssFiles = false;
-            importer.IsUrlRewritingDisabled = true;
-            var parser = new Parser(new dotless.Core.Stylizers.PlainStylizer(), importer,_debug);
+
+            var parser = new Parser
+            {
+                Importer = new Importer(reader, true, false, false)
+            };
 
             Ruleset tree = null;
             try
@@ -141,7 +141,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
 
 
-            var env = new Env(parser) { Compress = !_debug, Debug = _debug };
+            var env = new Env { Compress = !_debug, Debug = _debug };
 
 
             var mlp = new ProbeForThemeVariablesPlugin()
@@ -201,15 +201,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         }
         public string ProcessSettingsVariables(string template, string fileName)
         {
-            if (template.Contains(": ;"))
-            {
-                template = template.Replace(": ;", ";");
-            }
             if (template.IndexOf("{{") > -0)
             {
                 try
                 {
-                    template = g_regex.Replace(template, Evaluator);
+                    return g_regex.Replace(template, Evaluator);
                 }
                 catch (ParsingException par)
                 {
