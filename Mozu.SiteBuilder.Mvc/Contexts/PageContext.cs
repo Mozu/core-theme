@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (request != null)
             {
                 IEnumerable<string> val = null;
-                if ( request?.Headers.TryGetValues("x-forwarded-for", out val) == false || !val?.Any()== false)
+                if ( request?.Headers.TryGetValues("x-forwarded-for", out val) == false || val?.Any()== false)
                 {
                     val = new string[] { ((System.Web.HttpContextWrapper)request?.Properties["MS_HttpContext"])?.Request?.ServerVariables["REMOTE_ADDR"] };
                 }
