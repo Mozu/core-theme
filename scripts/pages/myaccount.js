@@ -230,7 +230,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 this.views().returnView.on('returnCancel', this.returnCancel, this);
                 this.views().returnView.on('returnSuccess', this.returnSuccess, this);
                 this.views().returnView.on('returnFailure', this.returnFailure, this);
-            }   
+            }
         },
         renderMessage: function(message) {
             var self = this;
