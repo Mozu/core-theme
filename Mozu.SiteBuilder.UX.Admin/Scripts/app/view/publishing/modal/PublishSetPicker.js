@@ -150,7 +150,11 @@ Ext.define('Taco.view.publishing.modal.PublishSetPicker', {
             includeCounts: false,
             autoLoad: false,
             remoteFilter: false,
-            remoteSort: false,
+            remoteSort: true,
+            sorters: [{
+                property: "updateDate",
+                direction: "DESC"
+            }],
             // gonna remove pagesize, when we create the paginated modal in 1.19
             pageSize: 200,
             listeners: {
