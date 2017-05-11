@@ -955,24 +955,6 @@ Ext.define('Taco.view.product.subform.General', {
                     me.mon(Taco.app, 'bundle-item-catalog-added', me.updatePriceUI, me);
                 }
             }
-
-            var existingImages = me.record.get('productImages');
-            var els = document.getElementsByClassName('image-name');
-
-            for (var i = 0; i < els.length; ++i) {
-                var img = existingImages[i];
-                els[i].innerHTML = img.cmsId;
-            }
-
-            var uploadedImages = [],
-            form = this.getForm(),
-            productImagesField = form.findField("productImages");
-
-            if (productImagesField) {
-                uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
-                    return img.isUploaded;
-                });
-            }
         }, this, {single:true, delay:1});
 
 
@@ -1250,7 +1232,5 @@ Ext.define('Taco.view.product.subform.General', {
         this.record.set("productImages", uploadedImages);
         return true;
     }
-
-
 });
 
