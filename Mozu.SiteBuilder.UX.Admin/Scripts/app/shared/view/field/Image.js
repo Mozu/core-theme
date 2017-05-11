@@ -480,7 +480,6 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.selectedImages.each(function (record) {
-            console.log(record);
             value.push({ name: record.get('name'), url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
 
@@ -523,6 +522,7 @@ Ext.define('Taco.shared.view.field.Image', {
     },
     
     getValue:function () {
+        console.log('GET VALUE');
         var val = this.mixins.field.getValue.apply(this, arguments);
         if (this.allowMulti === false) {
             if (Ext.isEmpty(val)) {

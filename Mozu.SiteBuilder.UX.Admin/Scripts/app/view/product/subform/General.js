@@ -504,7 +504,7 @@ Ext.define('Taco.view.product.subform.General', {
                 return result;
             }()
         };
-
+        
         this.activeStartDateField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'Active Start Date',
@@ -956,6 +956,23 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             }
 
+            var existingImages = me.record.get('productImages');
+            var els = document.getElementsByClassName('image-name');
+
+            for (var i = 0; i < els.length; ++i) {
+                var img = existingImages[i];
+                els[i].innerHTML = img.cmsId;
+            }
+
+            var uploadedImages = [],
+            form = this.getForm(),
+            productImagesField = form.findField("productImages");
+
+            if (productImagesField) {
+                uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
+                    return img.isUploaded;
+                });
+            }
         }, this, {single:true, delay:1});
 
 

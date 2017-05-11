@@ -114,7 +114,6 @@ Ext.define('Taco.core.util.UploadManager', function () {
         },
 
         requestUpload: function (config) {
-            console.log('CONFIG', config);
             var me = this,
                 document = config.document,
                 file = config.file,
