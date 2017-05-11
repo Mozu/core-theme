@@ -288,6 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 await GetBundleItemCatalogInfo(productModel);
             }
+            await AppendCmsImageNames(productModel).ConfigureAwait(false);
 
             if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
                 return List2(productModel);
@@ -303,17 +304,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 _logger.Error(string.Format("Error trying to find Publish-Set [{0}]", prod.PublishingInfo.PublishSetCode), ex.Message);
             }
 
-            await AppendCmsImageNames(productModel).ConfigureAwait(false);
+            
             return List2(productModel);
         }
 
         async Task AppendCmsImageNames (Product product)
         {
 
-            var filter = string.Join(" or ", product?.ProductImages.Where(_ => !string.IsNullOrEmpty(_.CmsId)).Select(_ => " id eq " + _.CmsId));
+            var filter = string.Join(" or ", product?.ProductImages.Where(_ => !string.IsNullOrEmpty(_.CmsId)).Select(_ => $"id eq \"{_.CmsId}\""));
             if (filter.Length > 0)
             {
-                var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "id,name").ConfigureAwait(false)).ReadAsSync()?.Items;
+                var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)").ConfigureAwait(false)).ReadAsSync()?.Items;
                 if (cmsImages == null)
                 {
                     return ;
