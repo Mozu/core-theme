@@ -425,8 +425,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.MAP, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAP))
                 .ForMember(x => x.MAPStartDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPStartDate))
                 .ForMember(x => x.MAPEndDate, op => op.ResolveUsing(dc => (dc.Price ?? NULLPRICE).MAPEndDate))
-
-
                 .ForMember(x => x.DateFirstAvailableInCatalog, op => op.ResolveUsing(dc => (dc.DateFirstAvailableInCatalog ?? null)))
                 .ForMember(x => x.ActiveStartDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null))
                 .ForMember(x => x.ActiveEndDate, op => op.ResolveUsing(x => (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null))
@@ -436,13 +434,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
                 ;
 
+            Mapper.CreateMap<DC.ProductLocalizedImage, ProductLocalizedImage>()
+              .ForMember(c => c.ImageName, op => op.Ignore())
+              ;
+
             Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
                 .ForMember(dc => dc.CatalogId, op => op.ResolveUsing(pisi => pisi.CatalogId))
-
-
                 .ForMember(dc => dc.DateFirstAvailableInCatalog, op => op.ResolveUsing(pisi => pisi.DateFirstAvailableInCatalog))
-                
-
                 .ForMember(x => x.ProductCategories, op => op.ResolveUsing(pisi => pisi.ProductCategories != null
                     ? pisi.ProductCategories.Select(catid => new DC.ProductCategory() { CategoryId = catid }).ToArray()
                     : null))
@@ -455,7 +453,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     EndDate = x.ActiveEndDate
                 }))
                 .ForMember(dc => dc.Content, op => op.ResolveUsing(pisi => {
-                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages );
+                    List<DC.ProductLocalizedImage> images = Mapper.Map<List<DC.ProductLocalizedImage>>(pisi.ProductImages);
                     return new DC.ProductLocalizedContent
                     {
                         ProductName = pisi.ProductName,
