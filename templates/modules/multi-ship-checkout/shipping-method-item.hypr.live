@@ -1,0 +1,43 @@
+    <div class="mz-shipping-method-address">
+        <div class="mz-l-formfieldgroup-row mz-shipping-method">
+            <div class="mz-l-formfieldgroup-cell">
+                {{lables.shippingMethodsAddresssLabel}} :
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <div>{{model.fulfillmentContact.firstName}} {{model.fulfillmentContact.lastNameOrSurname}}</div>
+                <div>{{model.fulfillmentContact.phoneNumbers.home}}</div>
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <div>{{model.fulfillmentContact.address.address1}}</div>
+                <div>{{model.fulfillmentContact.address.address2}}</div>
+                <div>{{model.fulfillmentContact.address.cityOrTown}} {{model.fulfillmentContact.address.stateOrProvince}} {{model.fulfillmentContact.address.postalOrZipCode}} {{model.contact.address.countryCode}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mz-shipping-method-order-items">
+    </div>
+
+    <div class="mz-shipping-method-section">
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                {{labels.shippingMethodSelector}}
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                {% if model.requiresFulfillmentInfo %}
+                    {% if model.availableShippingMethods.length %}
+                        <select id="mz-shipping-method-selector" name="shippingMethodSelector" class="mz-shipping-method-selector-dd" data-mz-fulfillment-method data-mz-value="fulfillmentMethodCode">
+                            {% for method in model.availableShippingMethods %}
+                                <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if model.fulfillmentMethodCode == method.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodCode }} - {{ method.price|currency }}</option>
+                            {% endfor %}
+                        </select>
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="shippingMethodSelector"></span>
+                    {% else %}
+                        <p>{{ labels.noShippingMethods }}</p>
+                    {% endif %}
+                {% else %}
+                    {{ labels.noFulfillmentInfoRequired }}
+                {% endif %}
+            </div>
+        </div>
+    </div>

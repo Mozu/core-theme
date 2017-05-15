@@ -1,0 +1,20 @@
+{% extends "modules/my-account/order-history-package" %}
+<div class="mz-order-history-package" data-mz-order-id="{{ model.id }}" data-mz-package-id="{{ package.id }}">
+
+{% block order-package-status %}
+	<div class="mz-order-package-header mz-order-package-return-status"><h3>Create a Return</h3></div>
+{% endblock order-package-status %}
+
+{% block order-package-actions %}
+		
+{% endblock order-package-actions %}	
+
+
+{% block order-package-footer %}
+	<div class="mz-order-package-footer">
+        <button class="mz-button" data-mz-action="finishPackageReturn">{{ labels.submit }}</button>
+        <button class="mz-button" data-mz-action="cancelPackageReturn">{{ labels.cancel }}</button>
+	</div>
+{% endblock order-package-footer %}
+
+</div>

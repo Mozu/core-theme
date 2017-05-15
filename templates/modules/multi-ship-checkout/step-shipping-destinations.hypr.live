@@ -1,0 +1,36 @@
+  <h3 class="mz-formstep-header mz-checkoutform-header">
+      {{ labels.shippingInformation }}
+      {% if model.requiresFulfillmentInfo || model.requiresDigitalFulfillmentContact %}
+        <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
+      {% endif %}
+  </h3>
+  
+{% if model.requiresFulfillmentInfo || model.requiresDigitalFulfillmentContact %}
+      
+      
+  <div class="mz-formstep-body" mz-shipping-destination-view>
+    {% if model.requiresDigitalFulfillmentContact %}
+      <div data-mz-gift-card-destination>
+          {% include "modules/multi-ship-checkout/gift-card-destination" %}
+      </div>
+    {% endif %}
+
+    <div class="mz-checkoutform-section">
+      {% if model.requiresFulfillmentInfo %}
+        {% if model.isMultiShipMode %}
+        	{% include "modules/multi-ship-checkout/shipping-destinations" %}
+        {% else %}
+        	{% include "modules/multi-ship-checkout/shipping-destination-single" %}
+        {% endif %}
+      {% endif %}
+
+      <div class="mz-formstep-next">
+        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+      </div>
+    </div>
+</div>
+
+{% else %}
+  {{ labels.noFulfillmentInfoRequired }}
+{% endif %}
+

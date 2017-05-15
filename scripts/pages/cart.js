@@ -7,8 +7,9 @@ define(['modules/api',
         'hyprlivecontext',
         'hyprlive',
         'modules/preserve-element-through-render',
-        'modules/modal-dialog'
-      ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog) {
+        'modules/modal-dialog',
+        'modules/xpress-paypal'
+      ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal) {
 
 
     var CartView = Backbone.MozuView.extend({
@@ -430,7 +431,7 @@ define(['modules/api',
     });
 
   function renderVisaCheckout(model) {
-    
+
     var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
     var apiKey = visaCheckoutSettings.apiKey;
     var clientId = visaCheckoutSettings.clientId;
@@ -456,7 +457,7 @@ define(['modules/api',
     }
 
     initVisa();
-    
+
   }
     /* begin visa checkout */
     function initVisaCheckout () {
@@ -521,6 +522,7 @@ define(['modules/api',
         _.invoke(cartViews, 'render');
 
         renderVisaCheckout(cartModel);
+        paypal.loadScript();
     });
 
 });

@@ -1,0 +1,69 @@
+<div class="mz-checkout-payment mz-confirmation-container">
+    <h4 class="mz-checkout-paymenttitle">
+      <strong>
+        {% if model.amountCollected > 0 %}
+        {{ model.amountCollected|currency }}
+        {% else %}
+        {{ model.amountRequested|currency }}
+        {% endif %}</strong> &mdash; {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }} {% endif %}{% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}{% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}{% if model.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %} {% if model.billingInfo.paymentType|lower == "paypalexpress2" %} {{ labels.payPal }} {% endif %}</h4>
+
+  <div style="display:inline-flex;justify-content:space-around;width:100%">
+    {% if model.billingInfo.billingContact.email %}
+        <div class="mz-l-stack-item">
+            <small>{{ labels.billingEmail }}</small>
+            <div>{{ model.billingInfo.billingContact.email }}</div>
+        </div>
+    {% endif %}
+    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" %}
+        <div class="mz-l-stack-item">
+          {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}
+              <div>
+                  <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
+              </div>
+          {% else %}
+            <small>{{ labels.digitalCreditCode }}</small>
+            <div>{{ model.billingInfo.storeCreditCode }}</div>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="mz-l-stack-item">
+            <small>{{ labels.billingName }}</small>
+            <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
+        </div>
+        <div class="mz-l-stack-item">
+            <small>{{ labels.billingAddress }}</small>
+            <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</div>
+        </div>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "PurchaseOrder" %}
+        <div class="mz-l-stack-item">
+          <small>{{ labels.purchaseOrderPaymentTerm }}</small>
+          <div> {{model.billingInfo.purchaseOrder.paymentTerm.code }} </div>
+        </div>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "CreditCard" %}
+        <div class="mz-l-stack-item">
+            <small>{{ labels.cardtype }}</small>
+            <div>{{ model.billingInfo.card.paymentOrCardtype }}</div>
+        </div>
+        <div class="mz-l-stack-item">
+            <small>{{ labels.cardNumber }}</small>
+            <div>{{ model.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
+        </div>
+        {% endif %}
+        {% if model.billingInfo.paymentType == "Check" %}
+        <!--
+        <small>{{ labels.checkNumber }}</small>
+        <div>{{ model.billingInfo.check.checkNumber }}</div>
+        -->
+        <div class="mz-l-stack-item">
+            <small>{{ labels.mailCheckTo }}:</small>
+            <div class="mz-addresssummary">
+                <span>{{ mailCheckTo.shippingOriginContact.firstName}} {{ mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                <span>{{ mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                {% include "modules/common/address-summary" with model=mailCheckTo %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+</div>

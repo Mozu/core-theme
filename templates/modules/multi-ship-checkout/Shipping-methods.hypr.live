@@ -1,0 +1,9 @@
+
+{% for group in model.groupings %}
+    <div data-mz-shipping-method-item data-mz-id="{{ group.id }}">
+    	{% if group.fulfillmentMethod == "Ship" %}
+			{% include "modules/multi-ship-checkout/shipping-grouping" with model=group isLoading=model.isLoading %}
+		{% endif %}
+    </div>
+{%endfor%}
+

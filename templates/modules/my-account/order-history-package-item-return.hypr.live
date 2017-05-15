@@ -1,0 +1,18 @@
+{% extends "modules/my-account/order-history-package-item" %}
+
+	{% block order-package-item-header %}
+		<input type="checkbox" data-mz-value="isSelectedForReturn" data-mz-product-code="{{ model.productCode }}" data-mz-item-id="{{ model.productDetails.id }}"  value="true" {% if model.isSelectedForReturn %}checked="checked"{% endif %} data-mz-action="startReturnItem"/>
+	{% endblock order-package-item-header %}
+
+	{% block order-package-item-footer%}
+
+<div data-mz-package-item-return-form >
+	{% if model.isSelectedForReturn %}
+	
+		<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+		{% include "modules/my-account/package-item-return-form" with model=model %}
+	
+	{% endif %}
+</div>
+	{% endblock order-package-item-footer %}
+

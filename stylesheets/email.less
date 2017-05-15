@@ -1,6 +1,6 @@
-﻿/*!
+/*!
  * Core Theme v0.4
- * 
+ *
  * Copyright 2013 Volusion, Inc
  * All rights are reserved.
  */
@@ -129,4 +129,117 @@
 dl.mz-orderheader {
     dt { margin: 0; float: left; clear: left; width: 150px; }
     dd { margin: 0; -webkit-margin-start: 150px; margin-start: 150px; padding-bottom: 0.5em }
+}
+
+.mz-multiship-email{
+  width: 75%;
+
+  // Styles only applying to the multiship email confirmation.
+  .mz-table-header{
+    background-color: #666;
+    padding: @gutter/2;
+    color: #fff;
+  }
+  .mz-email-section{
+    h1, h2, h3, h4 {
+      border-bottom: 1px solid #ddd;
+      padding: @gutter/2;
+    }
+
+//Container for a 'grouping', holds a table of items.
+    .mz-container-header {
+      background-color: #666;
+      padding: @gutter/2;
+      color: #fff;
+      a {
+        color: #ddd;
+      }
+      a:hover {
+        color: #fff;
+      }
+    }
+    .mz-email-summary-container{
+      padding: @gutter/4 @gutter/2 @gutter/4 @gutter/2;
+      margin: 0 0 @gutter/2 0;
+      border: 1px solid #ddd;
+    }
+
+//Table containing item details
+    .mz-ordersummary-email {
+      width: 100%;
+      border-bottom: 1px solid #ddd;
+
+      th {
+          text-align: right;
+          padding: @gutter/2 @gutter/2;
+          border-bottom: 1px solid #ddd;
+          &.mz-ordersummary-header-product {
+              text-align: left;
+          }
+        }
+        td {
+            text-align: right;
+            padding: @gutter/2 @gutter/2;
+            &.mz-ordersummary-item-product, &.mz-addresssummary {
+                text-align: left;
+            }
+        }
+        tr:last-child {
+          border-bottom: 1px solid #ddd;
+        }
+
+        .mz-email-fulfillment-info {
+          border-top: 1px solid #ddd;
+          border-bottom: 1px solid #ddd;
+        }
+
+
+        .mz-item-rowtotal, .mz-ordersummary-grandtotal {
+          color: #ae1231;
+        }
+
+        .mz-ordersummary-totals {
+            float: right;
+            td:last-child {
+                padding-right: 0;
+            }
+        }
+        .mz-ordersummary-totalname {
+            display: inline-block;
+            padding-right: @gutter;
+        }
+        .mz-ordersummary-grandtotal {
+            font-size: @fontSizeLarge;
+        }
+        .mz-ordersummary-totalvalue, .mz-ordersummary-itemtotal {
+            font-weight: bold;
+        }
+
+            .mz-item-discount {
+            font-weight: bold;
+
+            .mz-item-discountamt {
+                color: #900;
+            }
+        }
+
+    }
+
+//Price summary
+
+.mz-confirmation-price-summary {
+  background-color: #f7f7f7;
+  width: 100%;
+  padding: @gutter/4 @gutter/2 @gutter/4 @gutter/2;
+  margin: @gutter/2 0 @gutter/2 0;
+  box-sizing: border-box;
+
+
+   .mz-ordersummary-confirmation {
+     border-bottom: 0px;
+   }
+
+
+}
+  }
 }

@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+{% extends "page" %}
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.orderConfirmation %} - {% parent %}{% endblock title-tag-content %}
 
@@ -13,7 +13,6 @@
 <div id="confirmation-container">
   {% include "modules/confirmation/confirmation-detail" %}
 </div>
-
 {% endblock body-content %}
 
 {% block trailing-scripts %}
