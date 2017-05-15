@@ -51,6 +51,10 @@
                     width: $thumbnail-size;
                 }
 
+                .image-name {
+                    font-size: 14px;
+                }
+
                 &.active {
                     border: 1px solid red;
 

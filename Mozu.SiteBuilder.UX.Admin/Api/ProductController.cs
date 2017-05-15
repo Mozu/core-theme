@@ -18,6 +18,8 @@ using Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers;
 using Mozu.Core.Logging;
 using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
+using Mozu.Content.Contracts.Clients;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -33,12 +35,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IPublishSetWebApiClient _publishSetClient;
         private readonly ILogger _logger;
         private readonly IBundleItemCatalogHelper _bundleItemCatalogHelper;
-
+        IDocumentListWebApiClient _documentListWebApiClient;
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger, IBundleItemCatalogHelper bundleItemCatalogHelper)
+        public ProductController(IProductWebApiClient productClient, IProductTypeWebApiClient productTypeWebApiClient, IPublishSetWebApiClient publishSetClient, ILogger logger, IBundleItemCatalogHelper bundleItemCatalogHelper
+            , IDocumentListWebApiClient documentListWebApiClient)
         {
+            _documentListWebApiClient = documentListWebApiClient;
             _productClient = productClient;
             _productTypeWebApiClient = productTypeWebApiClient;
             _publishSetClient = publishSetClient;
@@ -284,6 +288,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 await GetBundleItemCatalogInfo(productModel);
             }
+            await AppendCmsImageNames(productModel).ConfigureAwait(false);
 
             if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
                 return List2(productModel);
@@ -298,7 +303,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 //TODO: We should set the RoodProduct.PublishSetCode to null at some point
                 _logger.Error(string.Format("Error trying to find Publish-Set [{0}]", prod.PublishingInfo.PublishSetCode), ex.Message);
             }
+
+            
             return List2(productModel);
+        }
+
+        async Task AppendCmsImageNames (Product product)
+        {
+
+            var filter = string.Join(" or ", product?.ProductImages.Where(_ => !string.IsNullOrEmpty(_.CmsId)).Select(_ => $"id eq \"{_.CmsId}\""));
+            if (filter.Length > 0)
+            {
+                var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)").ConfigureAwait(false)).ReadAsSync()?.Items;
+                if (cmsImages == null)
+                {
+                    return ;
+                }
+                foreach (var image in product.ProductImages.Where( _=> !string.IsNullOrEmpty(_.CmsId)))
+                {
+                    image.ImageName = cmsImages.Where(cmsImage => string.Equals(image.CmsId, cmsImage.Id, StringComparison.OrdinalIgnoreCase)).Select(cmsImage => cmsImage.Name).FirstOrDefault();
+
+                }
+                   
+            }
+            return ;
+
         }
 
         private async Task<ProductCollection> GetBundleItems(string productCodes)

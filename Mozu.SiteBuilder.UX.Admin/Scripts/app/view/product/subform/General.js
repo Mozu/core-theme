@@ -504,7 +504,7 @@ Ext.define('Taco.view.product.subform.General', {
                 return result;
             }()
         };
-
+        
         this.activeStartDateField = Ext.widget({
             xtype: 'datetime',
             fieldLabel: 'Active Start Date',
@@ -955,7 +955,6 @@ Ext.define('Taco.view.product.subform.General', {
                     me.mon(Taco.app, 'bundle-item-catalog-added', me.updatePriceUI, me);
                 }
             }
-
         }, this, {single:true, delay:1});
 
 
@@ -1233,7 +1232,5 @@ Ext.define('Taco.view.product.subform.General', {
         this.record.set("productImages", uploadedImages);
         return true;
     }
-
-
 });
 

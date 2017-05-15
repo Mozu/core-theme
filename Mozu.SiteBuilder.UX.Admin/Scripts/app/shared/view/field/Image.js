@@ -104,6 +104,8 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
+                                '<div class="image-name">{imageName}</div>',
+                                '<div class="image-name">{name}</div>',
                                 '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
@@ -469,6 +471,7 @@ Ext.define('Taco.shared.view.field.Image', {
                     if (imgMeta.cmsId === selectImg.get('cmsId') || imgMeta.cmsId === selectImg.get('name')) {
                         if (!selectImg.get('isMerged')) {
                             selectImg.set('alt', imgMeta.alt);
+                            selectImg.set('imageName', imgMeta.imageName);
                             selectImg.set('isMerged', true);
                         }
                         return false;
@@ -479,7 +482,7 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.selectedImages.each(function (record) {
-            value.push({ url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
+            value.push({ name: record.get('name'), imageName: record.get('imageName'), url: record.get('url'), cmsId: record.get('cmsId'), alt: record.get('alt'), isUploaded: record.get('isUploaded'), isMerged: record.get('isMerged') });
         }, this);
 
         if (value.length > 0) {
