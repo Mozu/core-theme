@@ -53,6 +53,7 @@
 
                 .image-name {
                     font-size: 14px;
+                    margin-bottom: 2px;
                 }
 
                 &.active {
@@ -76,6 +77,7 @@
                     padding-top: px-to-rem(30);
                     background-position: center px-to-rem(50);
                     background-size: 68px 70px;
+                    margin-top: 15px;
 
                     &:before {
                         width: $thumbnail-size;
