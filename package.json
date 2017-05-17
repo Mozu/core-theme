@@ -39,7 +39,8 @@
       "js/affix.js",
       "js/popover.js",
       "js/tooltip.js",
-      "js/scrollspy.js"
+      "js/scrollspy.js",
+      "js/modal.js"
     ]
   },
   "license": "ISC"
