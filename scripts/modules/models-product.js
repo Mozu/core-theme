@@ -338,12 +338,13 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 }
             });
         },
-        addToCartForPickup: function(locationCode, quantity) {
+        addToCartForPickup: function(locationCode, locationName, quantity) {
             var me = this;
             this.whenReady(function() {
                 return me.apiAddToCartForPickup({
                     fulfillmentLocationCode: locationCode,
                     fulfillmentMethod: Product.Constants.FulfillmentMethods.PICKUP,
+                    fulfillmentLocationName: locationName,
                     quantity: quantity || 1
                 }).then(function(item) {
                     me.trigger('addedtocart', item);

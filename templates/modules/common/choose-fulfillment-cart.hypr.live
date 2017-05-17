@@ -1,0 +1,20 @@
+<ul class="mz-fulfillment-options">
+  <li>
+    <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Ship" id="shipping-radio-{{ item.id }}" {% if item.fulfillmentMethod=="Ship" %} checked {% endif %} />
+    <label for="shipping-radio-{{ item.id }}">{{ labels.shipItems }}</label>
+
+    </br>
+    <p class="fulfillment-unavailable-message"></p>
+  </li>
+  <li>
+    <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Pickup" id="pickup-radio-{{ item.id }}" {% if item.fulfillmentMethod=="Pickup" %} checked {% endif %} />
+    <label for="pickup-radio-{{ item.id }}">{{ labels.inStorePickup }}</label><span class="fulfillmentLocationName" id="fulfillmentLocationName-{{ item.id }}"></span>
+
+    <p class="fulfillment-unavailable-message"></p>
+
+    <div id="pickup-option-links-{{ item.id }}" {% if item.fulfillmentMethod !="Pickup" %} style="display: none" {% endif %}>
+      <a href="#" data-mz-action="changeStore" data-mz-cart-item="{{ item.id }}" style="margin-left:30px"> {{ labels.changeStore }}</a>
+    </div>
+
+  </li>
+</ul>
