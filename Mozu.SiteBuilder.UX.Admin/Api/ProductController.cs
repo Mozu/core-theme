@@ -308,26 +308,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(productModel);
         }
 
-        async Task AppendCmsImageNames (Product product)
+        private async Task AppendCmsImageNames(Product product)
         {
+            var images = product?.ProductImages?
+                .Where(_ => !string.IsNullOrEmpty(_.CmsId))?
+                .Select(_ => $"id eq \"{_.CmsId}\"")?.ToList();
 
-            var filter = string.Join(" or ", product?.ProductImages.Where(_ => !string.IsNullOrEmpty(_.CmsId)).Select(_ => $"id eq \"{_.CmsId}\""));
-            if (filter.Length > 0)
+            if (images == null || !images.Any())
             {
-                var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)").ConfigureAwait(false)).ReadAsSync()?.Items;
-                if (cmsImages == null)
-                {
-                    return ;
-                }
-                foreach (var image in product.ProductImages.Where( _=> !string.IsNullOrEmpty(_.CmsId)))
-                {
-                    image.ImageName = cmsImages.Where(cmsImage => string.Equals(image.CmsId, cmsImage.Id, StringComparison.OrdinalIgnoreCase)).Select(cmsImage => cmsImage.Name).FirstOrDefault();
-
-                }
-                   
+                return;
             }
-            return ;
 
+            var filter = string.Join(" or ", images);
+            var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)").ConfigureAwait(false)).ReadAsSync()?.Items;
+
+            if (cmsImages == null)
+            {
+                return ;
+            }
+            foreach (var image in product.ProductImages.Where( _=> !string.IsNullOrEmpty(_.CmsId)))
+            {
+                image.ImageName = cmsImages.Where(cmsImage => string.Equals(image.CmsId, cmsImage.Id, StringComparison.OrdinalIgnoreCase)).Select(cmsImage => cmsImage.Name).FirstOrDefault();
+            }
         }
 
         private async Task<ProductCollection> GetBundleItems(string productCodes)
