@@ -142,6 +142,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             });
             Guid guid;
+
             ServiceClientResponse<StreamContent> result = null;
             if (Request.Headers.IfModifiedSince.HasValue || shouldRedirectToCdn)
             {
@@ -159,6 +160,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 if (result.HasException) throw result.ReadException();
                 if (shouldRedirectToCdn && !isRewrite && result.ResponseMessage.Content.Headers.LastModified.HasValue) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
                 if (Request.Headers.IfModifiedSince.GetValueOrDefault(DateTime.MinValue) >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
+            }
+
+            var range = Request.Headers.Range?.Ranges?.FirstOrDefault();
+            if (range?.From.HasValue == true && string.Equals(Request.Headers.Range.Unit, "bytes", StringComparison.OrdinalIgnoreCase))
+            {
+                _docRepo.Options.AdditionalHeaders = _docRepo.Options.AdditionalHeaders ?? new System.Collections.Specialized.NameValueCollection();
+                _docRepo.Options.AdditionalHeaders["Range"] = Request.Headers.Range.ToString();
             }
             
             _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
@@ -231,7 +239,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 ct = "image/jpeg";
             }
             return new MyFileStreamResult(result.ResponseMessage.Content.ReadAsStreamAsync().Result, ct, null,
-                result.ResponseMessage.Content.Headers.LastModified);
+                result.ResponseMessage.Content.Headers.LastModified,
+                range: result.ResponseMessage.Content.Headers.ContentRange?.ToString());
         }
 
         private async Task<ServiceClientResponse<StreamContent>> ProcessNotFound(
@@ -401,12 +410,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             private readonly string _fileName;
 
-            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? lastModifiedDate, string fileName = null)
+            public MyFileStreamResult(Stream stream, string contentType, string etag, DateTimeOffset? lastModifiedDate, string fileName = null, string range = null)
                 : base(stream, contentType)
             {
                 _fileName = fileName;
                 Etag = etag;
                 LastModifiedDate = lastModifiedDate;
+                Range = range;
             }
 
             protected override void WriteFile(HttpResponseBase response)

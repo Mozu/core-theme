@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             }
             ContentType = contentType;
         }
-
+        public string Range { get; set; }
         // Properties
         public string ContentType { get; private set; }
 
@@ -39,33 +39,20 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-
             HttpResponseBase response = requestMessage.HttpContext().Response;
-            response.ContentType = ContentType;
-            if (!string.IsNullOrEmpty(Etag))
-            {
-                response.AddHeader("ETag", Etag);
-            }
-            if (LastModifiedDate.HasValue)
-            {
-                response.AddHeader("Last-Modified", LastModifiedDate.Value.ToUniversalTime().ToString("r"));
-            }
-            if (!string.IsNullOrEmpty(FileDownloadName))
-            {
-                string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
-                response.AddHeader("Content-Disposition", headerValue);
-            }
-            
-
-          
-
+            WriteHeaders(response);
             WriteFile(response);
         }
 
         public  Task ExecuteResultAsync(HttpRequestMessage requestMessage)
         {
             HttpResponseBase response = requestMessage.HttpContext().Response;
+            WriteHeaders(response);
+            return WriteFileAsync(response);
+        }
 
+        private void WriteHeaders(HttpResponseBase response)
+        {
             response.ContentType = ContentType;
 
             if (!string.IsNullOrEmpty(Etag))
@@ -81,9 +68,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                 string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
                 response.AddHeader("Content-Disposition", headerValue);
             }
-            return WriteFileAsync(response);
+            if (!string.IsNullOrEmpty(Range))
+            {
+                response.AddHeader("Content-Range", Range);
+                response.StatusCode = 206;
+            }
         }
-
 
         protected abstract void WriteFile(HttpResponseBase response);
 
