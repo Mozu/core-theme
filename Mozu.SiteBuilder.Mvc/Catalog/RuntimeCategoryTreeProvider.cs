@@ -57,7 +57,6 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
             var data = _contextProvider.GetContextData();
             return new CategoryTree() {
                 AllCategories = data.GetFlatCategoryList(),
-                RootCategories = data.GetCategoryTree(),
                 ETag = data.Hash
             };
         }

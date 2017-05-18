@@ -1255,11 +1255,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             ProcessCategoryTree();
             return _flatCategories;
         }
-        public List<SBCategory> GetCategoryTree()
-        {
-            ProcessCategoryTree();
-            return _flatCategories;
-        }
+
         List<SBCategory> _flatCategories;
         public void ProcessCategoryTree()
         {
