@@ -103,8 +103,6 @@
 
         var me = this;
 
-
-
         this.publishingButton = {
             xtype: 'publishbutton',
             height: 40,
@@ -350,6 +348,9 @@
 
                   me.publishButton.disable();   
                 }
+
+                Taco.core.StateManager.setDirtyState(isDirty);
+
                 me.requiresSave = isDirty;
             }, me);
 
