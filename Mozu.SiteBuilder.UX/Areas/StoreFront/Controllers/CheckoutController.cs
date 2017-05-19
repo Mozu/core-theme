@@ -34,6 +34,7 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.ProductRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -54,22 +55,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
-
+        private readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
 
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, ICookieProvider cookieProvider, 
-            ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, 
+        public CheckoutController(IAuthenticationHelper authHelper, 
+            ICookieProvider cookieProvider, 
+            ICustomerAccountWebApiClient customerAccountWebApiClient, 
+            IOrderWebApiClient orderWebApiClient, 
             Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, 
-            ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient 
-            cartWebApiClient, ISettings settings)
+            ICreditWebApiClient creditWebApiClient, 
+            ICartWebApiClient cartWebApiClient,
+            Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
+            ISettings settings)
         {
 
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
-
+            _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
             _orderWebApiClient = orderWebApiClient;
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
@@ -204,7 +209,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
-            var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
+            var priceListChanged = await HasPriceListChanged(model.PriceListCode).ConfigureAwait(false);
             List<Product> productsRemoved = null;
 
             // TODO: Is this the right context (out of like 9) to check for PriceListCode?
@@ -377,7 +382,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("checkout", jOrder);
         }
 
+        async Task<bool> HasPriceListChanged(string priceListCode)
+        {
+            if (this.SbApiContext.PriceListCode.EqualsIgnoreCase(priceListCode))
+            {
+                return false;
+            }
+            //filter out condition when default pricelist is explictly set.
+            if (string.IsNullOrEmpty(this.SbApiContext.PriceListCode) || string.IsNullOrEmpty(priceListCode))
+            {
+                var nonEmptyPriceListCode = string.IsNullOrEmpty(this.SbApiContext.PriceListCode) ? priceListCode : this.SbApiContext.PriceListCode;
 
+                var defaultPriceListRes = await _priceListRuntimeWebApiClient.Value.CloneWithoutUserClaims().GetDefaultPriceList().ConfigureAwait(false);
+                if (!defaultPriceListRes.HasException)
+                {
+                    return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
+                }
+
+                
+            }
+            return true;
+        }
+        
         public class CheckoutPciSettings
         {
             public string apiBase { get; set; }
