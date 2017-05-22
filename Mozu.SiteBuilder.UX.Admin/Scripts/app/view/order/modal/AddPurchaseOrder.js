@@ -124,9 +124,13 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             billingContact: {
                 email: billingAddress.email,
                 firstName: billingAddress.firstName,
+                middleName: billingAddress.middleName,
                 lastNameOrSurname: billingAddress.lastName,
+                companyOrOrganization: billingAddress.companyOrOrganization,
                 phoneNumbers: {
-                    home: billingAddress.homePhone
+                    home: billingAddress.homePhone,
+                    mobile: billingAddress.mobilePhone,
+                    work: billingAddress.workPhone
                 },
                 address: {
                     address1: billingAddress.address1,
@@ -508,6 +512,7 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
         contactInfo = {
             email: billingInfo.billingContact.email,
             firstName: billingInfo.billingContact.firstName,
+            middleName: billingInfo.billingContact.middleName,
             lastName: billingInfo.billingContact.lastNameOrSurname,
             address1: billingInfo.billingContact.address.address1,
             address2: billingInfo.billingContact.address.address2,
@@ -517,7 +522,10 @@ Ext.define('Taco.view.order.modal.AddPurchaseOrder', {
             countryCode: billingInfo.billingContact.address.countryCode,
             postalOrZipCode: billingInfo.billingContact.address.postalOrZipCode,
             stateOrProvince: billingInfo.billingContact.address.stateOrProvince,
-            homePhone: billingInfo.billingContact.phoneNumbers.home
+            companyOrOrganization: billingInfo.billingContact.companyOrOrganization,
+            homePhone: billingInfo.billingContact.phoneNumbers.home,
+            mobilePhone: billingInfo.billingContact.phoneNumbers.mobile,
+            workPhone: billingInfo.billingContact.phoneNumbers.work
         };
 
         return {
