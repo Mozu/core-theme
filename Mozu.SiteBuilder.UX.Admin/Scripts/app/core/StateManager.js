@@ -25,8 +25,6 @@ Ext.define('Taco.core.StateManager', {
 
         me.statestack = [];
         me.stateindex = -1;
-        me.isDirty = false;
-        me.isNavInProgress = false;
 
         me.callParent(arguments);
         me.addEvents(
@@ -233,38 +231,6 @@ Ext.define('Taco.core.StateManager', {
         // notify new state it's now current state
         newState.fireEvent('activate');
 
-    },
-
-    /**
-     * Sets dirty state. Called by forms that require a save prompt before navigation.
-     * @param {Boolean} isDirty Denotes whether app state is dirty
-     */
-    setDirtyState: function (isDirty) {
-        this.isDirty = isDirty;
-    },
-
-    /**
-     * Get dirty state. Used to check whether navigation prompt should be shown.
-     * @return {Boolean} Whether the state is dirty
-     */
-    getDirtyState: function () {
-        return this.isDirty;
-    },
-
-    /**
-     * Sets navigation in progress.
-     * @param {Boolean} inProgress Denotes whether navigation is currently in progress 
-     */
-    setNavInProgress: function (inProgress) {
-        this.isNavInProgress = inProgress;
-    },
-
-    /**
-     * Returns true if navigation is in progress, false otherwise.
-     * @return {Boolean} Whether navigation is in progress
-     */
-    getNavInProgress: function () {
-        return this.isNavInProgress;
     },
 
     // private methods under here

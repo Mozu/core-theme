@@ -36,7 +36,7 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "templateSiteId", "type": "integer", "useNull": true },
         { "name": "siteTimeFormat", "type": "string", "useNull": true },
         { "name": "siteTimeZone", "type": "string", "useNull": true },
-        { "name": "websiteName", "type": "string", "useNull": true },
+        { "name": "websiteName", "type": "string", "useNull": true }, 
         { "name": "missingImageSubstitute", "type": "string", "useNull": true,
             convert: function (value, record) {
                     if ( value && Ext.isString(value)){
