@@ -36,6 +36,8 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
                 {
                     xtype: 'boxselect',
                     name: 'shippingTargetRuleCodes',
+                    pageSize: 50,
+                    minChars: 3,
                     valueField: 'code',
                     displayField: 'code',
                     fieldLabel: 'Shipping Zones',
@@ -45,6 +47,8 @@ Ext.define('Taco.view.settings.shipping.ShippingMethodEditor', {
                     xtype: 'boxselect',
                     name: 'productTargetRuleCodes',
                     valueField: 'code',
+                    pageSize: 50,
+                    minChars: 3,
                     displayField: 'code',
                     fieldLabel: 'Product Rules',
                     store: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductRules')
