@@ -2183,6 +2183,9 @@ Ext.define('Taco.model.Order', {
             params: {
                 'draft': me.get('isDraft')
             },
+            headers: {
+                'x-vol-dataview-mode': 'Live'
+            },
             method: 'POST'
         });
 
