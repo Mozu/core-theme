@@ -5,7 +5,7 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
     extend: 'Taco.core.ux.form.FullEditor',
     alias: 'widget.handlingfeeeditor',
     requires: [
-        'Ext.ux.form.field.BoxSelect'
+        'Ext.ux.form.field.BoxSelect',
     ],
     formCls: 'Taco.core.ux.form.Form',
     //editorName: 'Taco.view.discount.Edit',
@@ -39,6 +39,8 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
                 {
                     xtype: 'boxselect',
                     name: 'shippingTargetRuleCodes',
+                    pageSize: 50,
+                    minChars: 3,
                     valueField: 'code',
                     displayField: 'code',
                     fieldLabel: 'Shipping Zones',
@@ -48,6 +50,8 @@ Ext.define('Taco.view.settings.shipping.HandlingFeeEditor', {
                     xtype: 'boxselect',
                     name: 'productTargetRuleCodes',
                     valueField: 'code',
+                    pageSize: 50,
+                    minChars: 3,
                     displayField: 'code',
                     fieldLabel: 'Product Rules',
                     store: Taco.core.data.StoreManager.getOrCreate('Taco.store.ProductRules')

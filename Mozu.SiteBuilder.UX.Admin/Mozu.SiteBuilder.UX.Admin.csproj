@@ -712,7 +712,9 @@
     <Content Include="Scripts\app\shared\view\field\ProductPickerField.js" />
     <Content Include="Scripts\app\shared\view\field\AttributePickerField.js" />
     <Content Include="Scripts\app\shared\view\field\DiscountPickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\ProductRule.js" />
     <Content Include="Scripts\app\shared\view\field\ProductTypePickerField.js" />
+    <Content Include="Scripts\app\shared\view\field\ShippingZone.js" />
     <Content Include="Scripts\app\shared\view\form\ExtensibleAttribute.js" />
     <Content Include="Scripts\app\shared\view\modal\StoreCredit.js" />
     <Content Include="Scripts\app\shared\view\modal\ImageMetadata.js" />

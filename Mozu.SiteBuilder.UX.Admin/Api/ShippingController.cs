@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private const string SHIPPING_PERCENT_HANDLING_FEE = "percentage_appliesToShippingRate";
 
         private readonly ICarrierConfigurationWebApiClient _carrierConfigurationWebApiClient;
-       // private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
+        // private readonly IShippingSettingsWebApiClient _siteShippingSettingsClient;
         private readonly ICarrierConfigurationGlobalWebApiClient _carrierConfigurationGlobalWebApiClient;
         private readonly ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         private readonly ITargetRulesWebApiClient _targetRulesWebApiClient;
@@ -56,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             FeatureDic[DC.Constants.Ups.CarrierId] = "upsrates";
             FeatureDic[DC.Constants.Usps.CarrierId] = "uspsrates";
 
-            
-      
+
+
         }
 
 
@@ -72,16 +72,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        public ShippingController(IApiContext apiCtx, ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient, 
-            ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient, 
-             ILocationSettingsWebApiClient locationSettingsWebApiClient, 
-            ITargetRulesWebApiClient targetRulesWebApiClient, 
-            IShippingProfileWebApiClient shippingProfileWebApiClient, 
+        public ShippingController(IApiContext apiCtx, ICarrierConfigurationWebApiClient carrierConfigurationWebApiClient,
+            ICarrierConfigurationGlobalWebApiClient carrierConfigurationGlobalWebApiClient,
+             ILocationSettingsWebApiClient locationSettingsWebApiClient,
+            ITargetRulesWebApiClient targetRulesWebApiClient,
+            IShippingProfileWebApiClient shippingProfileWebApiClient,
             IShippingAdminProvisioningWebApiClient shippingAdminProvisioningWebApiClient
             )
         {
             _carrierConfigurationWebApiClient = carrierConfigurationWebApiClient;
-          
+
             _carrierConfigurationGlobalWebApiClient = carrierConfigurationGlobalWebApiClient;
             _locationSettingsWebApiClient = locationSettingsWebApiClient;
             _targetRulesWebApiClient = targetRulesWebApiClient;
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<SiteShippingSettings>> GetSettings()
         {
 
-           
+
             var locRes = (await _locationSettingsWebApiClient.GetLocationUsages()).ReadAsSync();
             DC.CarrierConfiguration custSettings = null;
             try
@@ -138,10 +138,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(settings.ShippingLocationCode))
             {
                 var ret1 = await _locationSettingsWebApiClient.UpdateLocationUsage("DS", new LocationUsage()
-                                                                                         {
-                                                                                             LocationUsageTypeCode = "DS",
-                                                                                             LocationCodes = new List<string> {settings.ShippingLocationCode}
-                                                                                         });
+                {
+                    LocationUsageTypeCode = "DS",
+                    LocationCodes = new List<string> { settings.ShippingLocationCode }
+                });
                 if (ret1.HasException)
                 {
                     throw ret1.ReadException();
@@ -149,15 +149,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var ret2 = await _locationSettingsWebApiClient.UpdateLocationUsage("SP", new LocationUsage()
-                                                                                     {
-                                                                                         LocationUsageTypeCode = "SP",
-                                                                                         LocationTypeCodes = settings.EnableInStorePickup == true ? settings.StorePickupLocationTypeCodes : new List<string>()
-                                                                                     });
+            {
+                LocationUsageTypeCode = "SP",
+                LocationTypeCodes = settings.EnableInStorePickup == true ? settings.StorePickupLocationTypeCodes : new List<string>()
+            });
             if (ret2.HasException)
             {
                 throw ret2.ReadException();
             }
-          
+
             var carrierConfiguration = (await _carrierConfigurationWebApiClient.GetConfiguration(DC.Constants.Custom.CarrierId)).ReadAsSync();
             carrierConfiguration.CustomTableRates = Mapper.Map<List<DC.CustomTableRate>>(settings.CustomRates);
 
@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw (res.ReadException());
             }
 
-           
+
             var profileCode = await GetProfileCode();
             var statesResponse = await _shippingProfileWebApiClient.UpdateStates(profileCode,
                 ToShippingStates(settings.EnabledStates));
@@ -207,7 +207,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "rules/read")]
-        public async Task<Response<List<DC.TargetRule>>> RuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string domain= null)
+        public async Task<Response<List<DC.TargetRule>>> RuleRead([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string domain = null,[FromUri] string query = null)
         {
             if (!string.IsNullOrEmpty(pagingParams.id))
             {
@@ -215,7 +215,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return this.List2(single);
             }
 
-            var resp = ((await _targetRulesWebApiClient.GetTargetRules(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: $"domain eq \"{domain}\"")).ReadAsSync());
+            string filterString;
+
+            //if a code is entered use it in the filter query
+            if(!string.IsNullOrEmpty(query))
+            {
+                filterString = $"domain eq \"{domain}\" and code cont \"{query}\"";
+            }
+            else
+            {
+                filterString = $"domain eq \"{domain}\"";
+            }
+
+            var resp = ((await _targetRulesWebApiClient.GetTargetRules(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize, filter: filterString)).ReadAsSync());
             return List2(resp.Items, resp.TotalCount);
         }
 
