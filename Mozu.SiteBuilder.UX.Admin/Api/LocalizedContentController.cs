@@ -151,7 +151,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var localizedProp = jObject.ToObject<LocalizedProductProperty>();
             var localizedContent = (from supportedLocale in localizedProp.SupportedLocales
                                     let localizedName = (string)jObject["value_" + supportedLocale]
-                                    where !string.IsNullOrEmpty(localizedName)
+                                    where localizedName != null
                                     select new DC.ProductPropertyValueLocalizedContent
                                     {
                                         LocaleCode = supportedLocale,
