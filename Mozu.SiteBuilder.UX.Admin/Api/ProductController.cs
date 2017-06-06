@@ -288,7 +288,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 await GetBundleItemCatalogInfo(productModel);
             }
-            await AppendCmsImageNames(productModel).ConfigureAwait(false);
+            try
+            {
+                await AppendCmsImageNames(productModel).ConfigureAwait(false);
+            }
+            catch( Exception ex )
+            {
+                _logger.Warn($"error fetching productCode:{productModel.ProductCode}", ex);
+            }
+            
 
             if (prod.PublishingInfo == null || string.IsNullOrEmpty(prod.PublishingInfo.PublishSetCode)) {
                 return List2(productModel);
@@ -310,9 +318,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task AppendCmsImageNames(Product product)
         {
+            Guid g;
             var images = product?.ProductImages?
                 .Where(_ => !string.IsNullOrEmpty(_.CmsId))?
-                .Select(_ => $"id eq \"{_.CmsId}\"")?.ToList();
+                .Select(_ =>                   
+                    Guid.TryParse(_.CmsId, out g)?
+                    $"id eq \"{_.CmsId}\"":
+                    $"name eq \"{_.CmsId}\""
+                    )?.ToList();
 
             if (images == null || !images.Any())
             {
