@@ -111,8 +111,12 @@ Ext.define('Taco.view.order.modal.EditOrderDetail', {
                     ? options.jsonData.priceListCode
                     : me.record.get('priceListCode');
 
+                var dataViewModeHeader = {
+                    'x-vol-dataview-mode' : 'Live'
+                };
+
                 if (options && options.headers) {
-                    Ext.apply(options.headers, priceListHeader);
+                    Ext.apply(options.headers, priceListHeader, dataViewModeHeader);
                 }
 
                 //if (options && options.operation && options.operation.headers) {

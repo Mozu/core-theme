@@ -568,9 +568,6 @@ Ext.define('Taco.model.Product', {
         var me = this,
             options = Ext.apply({}, {
                 url: '/admin/app/productruntime/read?productCode=' + this.getId(),
-                headers: {
-                    'x-vol-dataview-mode': 'Live'
-                },
                 success: function (response) {
                     var res = Ext.JSON.decode(response.responseText) || {};
                     if (cfg.callback) {
@@ -659,9 +656,6 @@ Ext.define('Taco.model.Product', {
             options = Ext.apply(
             {
                 method: 'POST',
-                headers: {
-                    'x-vol-dataview-mode': 'Live'
-                },
                 url: '/admin/app/productruntime/configure?productCode=' + this.getId() + qtyParam,
                 success: function (response) {
                     var res = Ext.JSON.decode(response.responseText) || {};
