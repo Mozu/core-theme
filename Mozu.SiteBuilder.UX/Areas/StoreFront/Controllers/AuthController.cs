@@ -500,7 +500,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 validationToken = t,
             };
 
-
             var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
 
 
@@ -539,6 +538,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 redir.Headers.Location = MakeRedirectUri();
                 return redir;
             }
+
+            var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
+
+            PageContext.CmsContext = new CmsPageContext()
+            {
+                Template = new DocumentRequest()
+                {
+                    Path = template,
+                    DocumentTypeFQN = "pageTemplateContent@mozu"
+                }
+            };
 
             // compare the password and passwordConfirm, if they don't match, throw an error!
             if (!info.password.Equals(info.passwordConfirm))
