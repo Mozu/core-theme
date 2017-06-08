@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         private const string PAYMENT_INTERACTION_TYPE_CREDIT = "Credit";
         private const string PAYMENT_INTERACTION_TYPE_REFUND = "Refund";
+        private const string PAYMENT_INTERACTION_STATUS_FAILED = "Failed";
 
         public override string ProfileName
         {
@@ -106,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))
                 .ForMember(x => x.PaymentStatus, op => op.ResolveUsing(dc => dc.PaymentStatus))
                 .ForMember(x => x.Payments, op => op.ResolveUsing(dc => dc.Payments?.OrderByDescending(p => p.AuditInfo.CreateDate)))
-                .ForMember(x => x.Refunds, op => op.ResolveUsing(dc => dc.Refunds))
+                .ForMember(x => x.Refunds, op => op.ResolveUsing(dc => dc.Refunds?.Where(x => x.Amount>0).ToList()))
                 .ForMember(x => x.Packages, op => op.ResolveUsing(dc => dc.Packages))
                 .ForMember(x => x.Pickups, op => op.ResolveUsing(dc => dc.Pickups))
                 .ForMember(x => x.DigitalPackages, op => op.ResolveUsing(dc => dc.DigitalPackages ?? new List<ShippingDC.DigitalPackage>()))
@@ -532,7 +533,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             {
                 foreach (var interaction in payment.Interactions)
                 {
-                    if (interaction.InteractionType != PAYMENT_INTERACTION_TYPE_CREDIT) continue;
+                    if ((interaction.InteractionType != PAYMENT_INTERACTION_TYPE_CREDIT)||interaction.Status.EqualsIgnoreCase(PAYMENT_INTERACTION_STATUS_FAILED)) continue;
 
                     if (!string.IsNullOrEmpty(interaction.RefundId) || !string.IsNullOrEmpty(interaction.ReturnId))
                     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AutoMapper;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
 using ReturnsDC = Mozu.CommerceRuntime.Contracts.Returns;
 using OrdersDC = Mozu.CommerceRuntime.Contracts.Orders;
@@ -97,11 +98,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             foreach (var payment in ret.Payments)
             {
                 payment.AmountRefunded = payment.Interactions
-                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && i.Amount.HasValue)
+                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && i.Amount.HasValue && !i.Status.EqualsIgnoreCase("FAILED"))
                     .Sum(i => i.Amount.Value);
 
                 payment.AmountTotalCreditAndRefund = payment.Interactions
-                    .Where(i => i.InteractionType == InteractionTypeConst.CREDIT && i.Amount.HasValue)
+                    .Where(i => i.InteractionType == InteractionTypeConst.CREDIT && i.Amount.HasValue && !i.Status.EqualsIgnoreCase("FAILED"))
                     .Sum(i => i.Amount.Value);
             }
         }
