@@ -166,6 +166,13 @@ Ext.define('Taco.core.ux.form.field.BaseImageField', {
         return ret;
 
     },
+    isEqual: function (value1, value2) {
+        if (Ext.isObject(value1)) {
+            return Taco.core.util.Common.isEqual({ data: value1, template: value2 });
+        } else {
+            return String(value1) === String(value2);
+        }
+    },
     setValueInternal: function(value) {
         var me = this,
             data,
