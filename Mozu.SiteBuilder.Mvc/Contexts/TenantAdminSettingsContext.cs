@@ -20,6 +20,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         bool EntityManagerVisible { get; }
 
         bool SiteBuilderContentListsVisible { get; }
+        
+
         bool CustomRoutesVisible { get; }
         string BetaControlVersion { get; }
         Task<ITenantAdminSettingsContext> AsyncGet();
@@ -122,6 +124,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get
             {
                 return ((bool?)_state.Value.GetValue("enableOrderEditInStorefront")).GetValueOrDefault(false);
+            }
+        }
+
+        public bool IsSavePromptEnabled
+        {
+            get
+            {
+                return ((bool?)_state.Value.GetValue("isSavePromptEnabled")).GetValueOrDefault(false);
             }
         }
 

@@ -697,8 +697,89 @@ Ext.define('Taco.Application', {
         contextData = Taco.view.navigation.SubNavLinkContainer.getContextHash(contextData);
         Taco.view.navigation.SubNavLinkContainer.launchExtensionWindow(subNavLink, contextData);
     },
-    doTheNeedful: function (state) {
 
+    /**
+     * Determine whether save prompt should be shown by checking settings and
+     * current page.
+     */
+    shouldShowNavigatePrompt: function (state, newState) {
+        // Check if save prompt is enabled in tenant settings
+        if (!Taco.tenantSettings.isSavePromptEnabled) {
+            return false;
+        }
+
+        // Don't show prompt again if navigation has already been initiated
+        if (Taco.core.StateManager.getNavInProgress()) {
+            return false;
+        }
+
+        // Check to prevent redundant prompts (navigating to these pages already triggers the prompt)
+        if (newState.controller === 'inventory' && newState.action === 'index') {
+            return false;
+        }
+
+        // Check for dirty state
+        if (Taco.core.StateManager.getDirtyState()) {
+            // Check for pages that prompt should be shown
+            if (state.controller === 'products' && (state.action === 'edit' || state.action === 'create')) {
+                return true;
+            } else if (state.controller === 'categories' && (state.action === 'edit' || state.action === 'create')) {
+                return true;
+            }
+        }
+
+        return false;
+    },
+
+    /**
+     * Initialize the save prompt
+     */
+    initNavPrompt: function () {
+        var me = this;
+
+        Taco.core.StateManager.on({
+            beforenavigate: function (state) {
+                var currentState = Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex].metaData;
+
+                // Check if navigation prompt should be shown
+                if (!me.shouldShowNavigatePrompt(currentState, state.metaData)) {
+                    // Use default navigation handler
+                    return true;
+                }
+
+                // Show the navigation prompt
+                Ext.MessageBox.show({
+                    title: 'Leaving Page',
+                    // pushes the buttons to the right to be consistant with our dialog ux.
+                    rightJustifyButtons: true,
+                    // reverses the order of the buttons
+                    reverseOrder: true,
+                    msg: 'Are you sure you want to leave this page? Any unsaved changes will be lost!',
+                    closable: true,
+                    buttons: Ext.Msg.OKCANCEL,
+                    fn: function (rec) {
+                        if (rec === 'ok') {
+                            // Set navigation in progress
+                            Taco.core.StateManager.setNavInProgress(true);
+
+                            // Continue navigation
+                            Taco.core.StateManager.attemptNavigate(state.uri);
+                        }
+                    }
+                });
+
+                // Ignore default navigation handler
+                return false;
+            },
+            statechange: function (state) {
+                // Reset fields after successful navigation to re-enable nav prompt
+                Taco.core.StateManager.setNavInProgress(false);
+                Taco.core.StateManager.setDirtyState(false);
+            }
+        });
+    },
+
+    doTheNeedful: function (state) {
 
         if (Taco.showViewPort === false) {
             //return;
@@ -710,6 +791,7 @@ Ext.define('Taco.Application', {
         this.initDocumentDragAndDrop();
         this.initPrimaryMenu();
         this.initDeepExtensionLinks();
+        this.initNavPrompt();
 
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {
