@@ -3244,6 +3244,7 @@ var ContentWidget = (function () {
             if (on) {
                 content.contentEditable = true;
                 block.classList.add(_constants.EDITING_STATE_CLASS);
+                content.focus();
             } else {
                 content.contentEditable = false;
                 block.classList.remove(_constants.EDITING_STATE_CLASS);
