@@ -15,7 +15,7 @@
 Ext.define('Taco.view.order.widget.ReturnableItemTree', {
     extend: 'Ext.tree.Panel',
     requires: ['Taco.model.Return',
-               'Ext.data.Store'],
+        'Ext.data.Store'],
 
     title: 'Returnable Items',
     rootVisible: false,
@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
     viewConfig: {
         deferEmptyText: false,
         emptyText: "No items available to return",
-        getRowClass: function(record) {
+        getRowClass: function (record) {
             return record.get('parentBundleName') && "taco-returnableitem-bundled" || '';
         }
     },
@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
 
     allSelected: false,
 
-    initComponent: function() {
+    initComponent: function () {
         this.store = this.getReturnableItemsStore();
 
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
@@ -53,8 +53,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             headerWidth: 37,
             checkOnly: true,
             showHeaderCheckbox: true,
-
-            setup: function() {
+            setup: function () {
                 this.maxSelections = 0;
                 var selections = this.store.getRange();
 
@@ -67,15 +66,15 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 this.isSetup = true;
             },
 
-            setHeader: function(header) {
+            setHeader: function (header) {
                 this.checkallBox = header;
             },
 
-            setErrorEl: function(el) {
+            setErrorEl: function (el) {
                 this.errorEl = el;
             },
 
-            checkSelected: function() {
+            checkSelected: function () {
                 if (!this.isSetup) this.setup();
 
                 if (this.getSelection().length === this.maxSelections && this.maxSelections !== 0) {
@@ -83,7 +82,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                     this.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
 
                     var me = this;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         if (me.getSelection().length === 0) return;
                         me.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
                     }, 100);
@@ -93,7 +92,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 }
             },
 
-            selectAll: function(suppressEvent, header) {
+            selectAll: function (suppressEvent, header) {
                 if (!this.allSelected) {
                     this.allSelected = true;
                     var selections = this.store.getRange();
@@ -141,15 +140,21 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             },
 
             listeners: {
-                deselect: function(grid, record) {
+                deselect: function (grid, record) {
                     this.checkSelected();
                     this.errorEl.setError('');
                 },
 
-                select: function(grid, record) {
+                select: function (grid, record) {
                     this.checkSelected();
                     this.errorEl.setError('');
                 }
+            },
+
+            renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
+                var baseCSSPrefix = Ext.baseCSSPrefix;
+                metaData.tdCls = baseCSSPrefix + 'grid-cell-special ' + baseCSSPrefix + 'grid-cell-row-checker';
+                return record.get('quantityReturnable') === 0 ? '<div class="' + baseCSSPrefix + 'grid-row-checker disabled-return-checkbox"> </div>' : '<div class="' + baseCSSPrefix + 'grid-row-checker"> </div>';
             }
         });
 
@@ -159,14 +164,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 {
                     name: 'id',
                     type: 'string',
-                    convert: function(value, record) {
+                    convert: function (value, record) {
                         return record.raw;
                     }
                 },
                 {
                     name: 'name',
                     type: 'string',
-                    convert: function(value, record) {
+                    convert: function (value, record) {
                         return Taco.core.util.Common.camelToSpace(record.raw);
                     }
                 }
@@ -192,7 +197,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             },
             boxready: {
                 scope: this,
-                fn: function() { this.addCls('returnable-items-grid'); }
+                fn: function () { this.addCls('returnable-items-grid'); }
             }
         });
 
@@ -200,7 +205,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         //this.loadReturnableItemsData();
     },
 
-    getColumnConfig: function() {
+    getColumnConfig: function () {
         return [
             {
                 dataIndex: 'orderLineId',
@@ -303,6 +308,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                     valueField: 'name',
                     displayField: 'name',
                     store: this.reasonStore
+                },
+                renderer: function (value, meta, record) {
+                    if (record.get('quantityReturnable') > 0) {
+                        return value;
+                    } else {
+                        meta.tdCls = meta.tdCls + ' disabled-return-input';
+                        return 'N/A';
+                    }
                 }
             },
             {
@@ -320,7 +333,15 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                     showBorder: true,
                     forceSelection: true,
                     store: ['Replace', 'Refund']
-                }
+                },
+                renderer: function (value, meta, record) {
+                    if (record.get('quantityReturnable') > 0) {
+                        return value;
+                    } else {
+                        meta.tdCls = meta.tdCls + ' disabled-return-input';
+                        return 'N/A';
+                    }
+                },
             },
             {
                 dataIndex: 'quantity',
@@ -337,14 +358,19 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                     minValue: 0,
                     msgTarget: 'qtip'
                 },
-                renderer: function(value) {
-                    return value || 0;
+                renderer: function (value, meta, record) {
+                    if (record.get('quantityReturnable') > 0) {
+                        return value;
+                    } else {
+                        meta.tdCls = meta.tdCls + ' disabled-return-input';
+                        return 0;
+                    }
                 }
             }
         ];
     },
 
-    loadReturnableItemsData: function() {
+    loadReturnableItemsData: function () {
         Ext.Ajax.request({
             url: '/admin/app/order/returnableitems',
             method: 'GET',
@@ -356,7 +382,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         });
     },
 
-    processresponse: function(response, options) {
+    processresponse: function (response, options) {
         var data = Ext.decode(response.responseText);
 
         //create the new structure
@@ -378,30 +404,30 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         }
     },
 
-    createTree: function(data) {
+    createTree: function (data) {
         var entriesByLine = [];
-        data.reduce(function(collection, item) {
+        data.reduce(function (collection, item) {
             collection[item.orderLineId] = collection[item.orderLineId] || [];
             collection[item.orderLineId].push(item);
             return collection;
         }, entriesByLine);
 
         var wholes = [];
-        entriesByLine.forEach(function(entry) {
-            var whole = entry.find(function(item) {
+        entriesByLine.forEach(function (entry) {
+            var whole = entry.find(function (item) {
                 return !item.parentProductCode && !item.excludeProductExtras;
             });
-            var bundle = entry.find(function(item) {
+            var bundle = entry.find(function (item) {
                 return !item.parentProductCode && item.excludeProductExtras;
             });
-            var products = entry.reduce(function(collection, item) {
+            var products = entry.reduce(function (collection, item) {
                 if (item.parentProductCode && !item.orderItemOptionAttributeFQN) {
                     item.leaf = true;
                     collection.push(item);
                 }
                 return collection;
             }, []);
-            var extras = entry.reduce(function(collection, item) {
+            var extras = entry.reduce(function (collection, item) {
                 if (item.parentProductCode && item.orderItemOptionAttributeFQN) {
                     item.leaf = true;
                     collection.push(item);
@@ -427,7 +453,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         return { children: wholes };
     },
 
-    getReturnableItemsStore: function() {
+    getReturnableItemsStore: function () {
         return Ext.create('Ext.data.TreeStore', {
             fields: [
                 { type: 'string', name: 'orderItemId' },
@@ -435,7 +461,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 { type: 'string', name: 'productCode' },
                 {
                     type: 'string', name: 'productName',
-                    convert: function(value, record) {
+                    convert: function (value, record) {
                         var hasExtras = record.get('hasExtras');
                         var extra = hasExtras ? ' (with extras)' : '';
                         return value + extra;
@@ -450,7 +476,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 { type: 'number', name: 'quantityIndirectlyReturned' },
                 {
                     type: 'number', name: 'quantityReturned',
-                    convert: function(value, record) {
+                    convert: function (value, record) {
                         return record.get('quantityDirectlyReturned') + record.get('quantityIndirectlyReturned');
                     }
                 },
@@ -462,7 +488,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
             ],
             data: [],
             sorters: [{
-                sorterFn: function(a, b) {
+                sorterFn: function (a, b) {
                     if (a.get('orderLineId') === b.get('orderLineId')) {
                         return 0;
                     }
@@ -472,7 +498,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
         });
     },
 
-    handleSelect: function(selModel, record, index) {
+    handleSelect: function (selModel, record, index) {
         var unreturned = record.get('quantityFulfilled') - record.get('quantityReturned');
 
         if (!record.get('quantity') && unreturned > 0) {
