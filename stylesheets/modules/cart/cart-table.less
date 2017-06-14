@@ -5,7 +5,7 @@
         margin: 0 @gutter/4 @gutter/4 0;
     }
 
-    .mz-carttable-header-price, .mz-carttable-header-total,
+    .mz-carttable-header-price, .mz-carttable-header-fulfillment, .mz-carttable-header-total,
     .mz-carttable-item-price, .mz-carttable-item-total,
     .mz-carttable-shipping-row td, .mz-carttable-total-row td,
     .mz-carttable-checkout-row td {
@@ -78,11 +78,42 @@
     }
 
     .mz-carttable-checkout-couponcode{
-        float:left; 
+        float:left;
         text-align:left;
     }
 }
 
 .mz-carttable-button-active {
     width: 230px;
+}
+
+.fulfillment-unavailable-message {
+  color: #ccc;
+}
+
+.location-select-option{
+  border-bottom: 1px solid #ccc;
+  padding-bottom: @gutter/2;
+}
+
+.mz-fulfillment-options {
+  list-style: none;
+
+  input {
+    margin: 0 @gutter/2 @gutter/2 0;
+  }
+
+  input:disabled{
+    cursor: default;
+  }
+
+  label, span {
+    font-size: 16px;
+  }
+
+  input:disabled+label{
+    color: #ccc;
+    cursor: default;
+  }
+
 }

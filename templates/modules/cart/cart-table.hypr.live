@@ -1,6 +1,7 @@
 <thead>
   <tr>
     <th class="mz-carttable-header-product">{{ labels.product }}</th>
+    <th class="mz-carttable-header-fulfillment"></th>
     <th class="mz-carttable-header-price">{{ labels.price }}</th>
     <th class="mz-carttable-header-qty">{{ labels.qty }}</th>
     <th class="mz-carttable-header-total">{{ labels.itemTotal }}</th>
@@ -9,6 +10,7 @@
 </thead>
 <tbody class="mz-table-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
   {% if not model.isEmpty %}
+
   {% for item in model.items %}
   <tr class="mz-carttable-item">
     <td class="mz-carttable-item-product">
@@ -42,13 +44,21 @@
         <span class="mz-carttable-item-code">
           {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
         </span>
+        {% comment %}
         {% if item.fulfillmentMethod == 'Pickup' %}
         <span class="mz-carttable-item-pickuplocation">
             {{ labels.storePickupAt|string_format(item.fulfillmentLocationName)|safe }}
         </span>
         {% endif %}
+        {% endcomment %}
       </div>
     </td>
+
+    <td class="mz-carttable-item-fulfillment">
+      {% if item.fulfillmentMethod != "Digital" %}
+      {% include "modules/common/choose-fulfillment-cart" with item as item %}
+      {% endif %}
+  </td>
     <td class="mz-carttable-item-price">
       {% include "modules/common/item-price" %}
     </td>
@@ -107,7 +117,7 @@
     <td colspan="4">
       <div class="mz-carttable-checkout-couponcode" id="coupon-code-field" >
         {% include "modules/common/coupon-code-field" %}
-      </div>   
+      </div>
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
       <button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
@@ -115,7 +125,7 @@
       <div>
         <p>or checkout with</p>
         <img alt="Visa Checkout" class="v-button" role="button"
-          src="{{pageContext.visaCheckoutButtonUrl}}"/>       
+          src="{{pageContext.visaCheckoutButtonUrl}}"/>
       </div>
       {% endif %}
     </td>

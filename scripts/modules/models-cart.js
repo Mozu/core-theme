@@ -1,9 +1,9 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api",
+﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modules/models-product",
     "hyprlivecontext"
-    ], function (_, Backbone, Hypr, api,
+  ], function (_, Backbone, Hypr, api, ProductModels,
         HyprLiveContext) {
 
-    var CartItemProduct = Backbone.MozuModel.extend({
+    var CartItemProduct = ProductModels.Product.extend({
         helpers: ['mainImage'],
         mainImage: function() {
             var imgs = this.get("productImages"),
@@ -59,7 +59,7 @@
                 model: CartItem
             })
         },
-        
+
         initialize: function() {
             this.get("items").on('sync remove', this.fetch, this)
                              .on('loadingchange', this.isLoading, this);
