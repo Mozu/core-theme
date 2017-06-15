@@ -32,6 +32,8 @@ Ext.define('Taco.view.product.subform.Categories', {
         // MultiSelect is the most optimal Field that uses BoundList without a trigger
         this.list = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'categoryIds',
+            grow: false,
+            growToLongestValue: false,
             store: listStore,
             flex: 1,
             getStore: function () {
@@ -61,6 +63,8 @@ Ext.define('Taco.view.product.subform.Categories', {
             fieldLabel: 'Primary Category',
             name: 'primaryCategoryId',
             allowBlank: true,
+            grow: false,
+            growToLongestValue: false,
             itemId: 'primaryCategory',
             valueField: 'id',
             displayField: 'nameAndCodeAndStatus',
@@ -123,10 +127,13 @@ Ext.define('Taco.view.product.subform.Categories', {
     },
 
     updatePrimaryCategory: function () {
+        if (this.rendered && this.value && this.value.length > 1) {
+            this.grow = true;
+        }
         if (!this.listStore || this.listStore.isLoading()) {
             return;
         }
-
+        
         this.selectedCategoryStore.removeAll();
 
         var assignedCategoryIds = this.list.getValue() || [];

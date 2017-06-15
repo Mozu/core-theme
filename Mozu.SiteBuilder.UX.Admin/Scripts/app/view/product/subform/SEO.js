@@ -15,7 +15,7 @@ Ext.define('Taco.view.product.subform.SEO', {
     initComponent: function () {
      
 
-        this.delayItems = [
+        this.items = [
             {
                 width : '100%',
                 product : this.product,
@@ -65,7 +65,7 @@ Ext.define('Taco.view.product.subform.SEO', {
 
         this.callParent(arguments);
         this.on('afterrender', function () {
-            this.add(this.delayItems);
+            
             this.productForm = this.up('productform');
             this.slugField = this.getForm().findField('slug');
             this.metaTitle = this.getForm().findField('metaTitle');

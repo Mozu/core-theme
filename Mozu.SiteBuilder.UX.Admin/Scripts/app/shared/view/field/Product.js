@@ -8,7 +8,7 @@ Ext.define('Taco.shared.view.field.Product', {
     requires: [
         'Taco.store.ProductComboBox'
     ],
-
+    growToLongestValue: false,
     forceSelection: true,
     minChars: 3,
     triggerOnClick: false,

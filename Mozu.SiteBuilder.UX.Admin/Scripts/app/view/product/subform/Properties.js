@@ -65,6 +65,15 @@ Ext.define('Taco.view.product.subform.Properties', {
                     return [
                         Ext.create('Ext.ux.form.field.BoxSelect',{
                             name: this.getFieldName(ptAttribute),
+                            grow: false,
+                            growToLongestValue: false,
+                            listeners: {
+                                change: function (ctrl) {
+                                    if (ctrl.rendered && ctrl.value && ctrl.value.length > 1) {
+                                        ctrl.grow = true;
+                                    }
+                                }
+                            },
                             fieldLabel: ptAttribute.get('adminName'),
                             displayField: 'value',
                             valueField: 'id',
@@ -94,6 +103,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                     return [
                         {
                             xtype: 'combobox',
+                            grow: false,
+                            growToLongestValue: false,                            
                             name: this.getFieldName(ptAttribute),
                             fieldLabel: ptAttribute.get('adminName'),
                             displayField: 'value',
@@ -117,6 +128,8 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [
                     {
                         xtype: 'textfield',
+                        grow: false,
+                        growToLongestValue: false,
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
@@ -129,6 +142,15 @@ Ext.define('Taco.view.product.subform.Properties', {
                 return [
                     {
                         xtype: 'taco.field.product',
+                        grow: false,
+                        growToLongestValue: false,
+                        listeners: {
+                            change: function (ctrl) {
+                                if (ctrl.rendered && ctrl.value && ctrl.value.length > 1) {
+                                    ctrl.grow = true;
+                                }
+                            }
+                        },
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
@@ -142,12 +164,9 @@ Ext.define('Taco.view.product.subform.Properties', {
     },
 
     initComponent: function () {
-
         this.items = [this.getEmptyComponent()];
-
-        this.callParent(arguments);
-
         this.loadByProductTypeId();
+        this.callParent(arguments);
     },
 
     convertDate: function (v) {
@@ -238,9 +257,14 @@ Ext.define('Taco.view.product.subform.Properties', {
         if (!items.length) {
             items.push(this.getEmptyComponent());
         }
-
-        this.removeAll();
-        this.add(items);
+        if (this.items.add)
+        {
+            this.removeAll();
+            this.add(items);
+        } else {
+            this.items = items;
+        }
+        
     },
 
     getEmptyComponent: function () {
