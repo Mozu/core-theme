@@ -121,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         StringValue = localizedName
                                     }).ToList();
 
-            var updatedResults = (await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContents(attrLocalizedContent, localizedAttrValue.AttributeFQN, 
+            var updatedResults = (await _attributeWebApiClient.UpdateAttributeVocabularyValueLocalizedContentsQS(attrLocalizedContent, localizedAttrValue.AttributeFQN, 
                 localizedAttrValue.AttributeName, responseFields: null, targetContextLevel: TargetContextLevel)).ReadAsSync();
 
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, updatedResults, (property, locales) => property.SupportedLocales = locales,
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                         LocaleCode = supportedLocale,
                                         StringValue = localizedName,
                                     }).ToList();
-            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContents(localizedContent, productCode: localizedProp.ProductCode, attributeFQN: localizedProp.AttributeFQN,
+            var updatedResults = (await _productWebApiClient.UpdatePropertyValueLocalizedContentsQS(localizedContent, productCode: localizedProp.ProductCode, attributeFQN: localizedProp.AttributeFQN,
                 value: localizedProp.CanonicalValue, targetContextLevel: TargetContextLevel)).ReadAsSync();
             var jResult = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedProp, updatedResults, (property, locales) => property.SupportedLocales = locales,
                 rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue, localizedProp.LocaleCode, localizedProp.SupportedLocales);

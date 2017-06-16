@@ -3,7 +3,6 @@ CONTENT: NONE
 FRAMEWORK: NET45, NET451
 NUGET
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
-  specs:
     51Degrees.mobi (3.2.8.1) - content: none
       Microsoft.Web.Infrastructure (>= 1.0)
     dotless (1.4.0.0)
@@ -92,7 +91,7 @@ NUGET
     Mozu.PaymentService.Contracts (1.9.13)
     Mozu.PricingRuntime.Contracts (1.1625.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductAdmin.Contracts (1.1704.1)
+    Mozu.ProductAdmin.Contracts (1.1724.1)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.1643.1)
       Mozu.Core.Prime (>= 1.18)
@@ -118,7 +117,6 @@ NUGET
     protobuf-net (2.0.0.668)
     RabbitMQ.Client (3.3.5)
   remote: http://nuget-external.corp.volusion.com:8201/api/odata
-  specs:
     Autofac (3.5.2)
     Autofac.WebApi2 (3.4.0)
       Autofac (>= 3.5 < 4.0)
