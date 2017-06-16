@@ -9,6 +9,8 @@ define(['modules/api',
         'modules/preserve-element-through-render',
         'modules/modal-dialog'
       ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog) {
+
+
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
@@ -114,10 +116,8 @@ define(['modules/api',
           //if the dialog is closed before a store is picked.
 
           $('.modal-header').on('click', '.close', function(){
-            // var cartModelItems = require.mozuData('cart').items;
             var cartModelItems = window.cartView.cartView.model.get("items");
             cartModelItems.forEach(function(item){
-              console.log(item);
               if (item.attributes.fulfillmentMethod == "Ship"){
                 $('input[type=radio]#shipping-radio-'+item.attributes.id).prop('checked', 'checked');
                 $('#pickup-option-links-'+item.attributes.id).css('display', 'none');
@@ -186,6 +186,7 @@ define(['modules/api',
         },
         changeFulfillmentMethod: function(e){
           //Called when a radio button is clicked.
+
           var me = this;
           var cartModel = require.mozuData('cart');
           var $radioButton = $(e.currentTarget),
@@ -193,13 +194,20 @@ define(['modules/api',
               value = $radioButton.val(),
               cartItem = this.model.get("items").get(cartItemId);
 
+              if (cartItem.get('fulfillmentMethod')==value){
+                //The user clicked the radio button for the fulfillment type that
+                //was already selected so we can just quit.
+                return 0;
+              }
+
               if (value=="Ship"){
                 $('#fulfillmentLocationName-'+cartItemId).css("display", "none");
                 $('#pickup-option-links-'+cartItemId).css("display", "none");
                 cartItem.set('fulfillmentMethod', value);
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
-                cartItem.apiUpdate().then(me.validateFulfillmentMethods());
+                // cartItem.apiUpdate().then(me.validateFulfillmentMethods());
+                cartItem.apiUpdate();
 
 
               } else if (value=="Pickup"){
@@ -281,12 +289,11 @@ define(['modules/api',
 
           var storeSelectData = JSON.parse(jsonStoreSelectData);
           var cartItem = this.model.get("items").get(storeSelectData.cartItemId);
-          console.log("cartItem from assignPickupLocation");
-          console.log(cartItem);
           cartItem.set('fulfillmentMethod', 'Pickup');
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
           cartItem.apiUpdate().then(me.validateFulfillmentMethods());
+          // cartItem.apiUpdate();
 
 
           $('#fulfillmentLocationName-'+storeSelectData.cartItemId).css("display", "inline");
@@ -318,6 +325,7 @@ define(['modules/api',
 
             var $shipRadio = $('#shipping-radio-'+item.id);
             var $pickupRadio = $('#pickup-radio-'+item.id);
+            console.log(fulfillmentTypesSupported);
 
             if (!fulfillmentTypesSupported.includes("DirectShip")){
               $shipRadio.attr('disabled', 'disabled');
