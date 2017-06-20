@@ -10,70 +10,10 @@
 </thead>
 <tbody class="mz-table-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
   {% if not model.isEmpty %}
-
-  {% for item in model.items %}
-  <tr class="mz-carttable-item">
-    <td class="mz-carttable-item-product">
-      {% if item.product.imageUrl and themeSettings.showCartItemImage %}
-          <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% endif %} />
-      {% endif %}
-      <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
-        <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
-        {% if item.product.options and themeSettings.showCartItemOptions %}
-        <dl class="mz-propertylist">
-          {% for option in item.product.options %}
-          <dt>{{ option.name }}</dt>&nbsp;
-          <dd>
-            {% if option.value %}
-                  {{ option.value }}
-            {% else %}
-                  {{ option.shopperEnteredValue }}
-            {% endif %}
-          </dd>
-          {% endfor %}
-        </dl>
-        {% endif %}
-        {% if item.product.productUsage == 'Bundle' %}
-        <dl class="mz-propertylist">
-          {% for bundledProduct in item.product.bundledProducts %}
-          <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-          <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-          {% endfor %}
-        </dl>
-        {% endif %}
-        <span class="mz-carttable-item-code">
-          {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
-        </span>
-        {% comment %}
-        {% if item.fulfillmentMethod == 'Pickup' %}
-        <span class="mz-carttable-item-pickuplocation">
-            {{ labels.storePickupAt|string_format(item.fulfillmentLocationName)|safe }}
-        </span>
-        {% endif %}
-        {% endcomment %}
-      </div>
-    </td>
-
-    <td class="mz-carttable-item-fulfillment">
-      {% if item.fulfillmentMethod != "Digital" %}
-      {% include "modules/common/choose-fulfillment-cart" with item as item %}
-      {% endif %}
-  </td>
-    <td class="mz-carttable-item-price">
-      {% include "modules/common/item-price" %}
-    </td>
-    <td class="mz-carttable-item-qty">
-      <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />
-    </td>
-    <td class="mz-carttable-item-total">
-        {% include "modules/common/item-total" %}
-    </td>
-    <td class="mz-carttable-item-remove">
-      <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
-    </td>
-  </tr>
-{% endfor %}
-{% else %}
+    {% for item in model.items %}
+      {% include "modules/cart/cart-table-item" with item as item %}
+    {% endfor %}
+  {% else %}
   <tr class="mz-carttable-noitems">
     <td colspan="5">
         {{ labels.cartEmpty }}
@@ -105,7 +45,7 @@
 
 
   <tr class="mz-carttable-total-row">
-    <td class="mz-carttable-total-wrap" colspan="4">
+    <td class="mz-carttable-total-wrap" colspan="5">
       {{ labels.orderTotal }}:
         <span id="mz-carttable-total" class="mz-carttable-total">
           <strong>{{ model.total|currency }}</strong>
@@ -114,7 +54,7 @@
     <td></td>
   </tr>
   <tr class="mz-carttable-checkout-row">
-    <td colspan="4">
+    <td colspan="5">
       <div class="mz-carttable-checkout-couponcode" id="coupon-code-field" >
         {% include "modules/common/coupon-code-field" %}
       </div>

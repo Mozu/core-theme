@@ -19,6 +19,10 @@ define(['modules/api',
 
             //setup coupon code text box enter.
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
+            this.listenTo(this, 'addedNewItem', function(){
+              console.log("listened!");
+              me.render();
+            }, this);
             this.codeEntered = !!this.model.get('couponCode');
             this.$el.on('keypress', 'input', function (e) {
                 if (e.which === 13) {
@@ -42,9 +46,9 @@ define(['modules/api',
 
         },
         render: function() {
+          console.log("GOT CALLED");
           var preserveList = [];
           preserveList.push('.v-button');
-
           this.model.get('items').forEach(function(item){
             preserveList.push('#fulfillmentLocationName-'+item.id);
           });
@@ -52,7 +56,7 @@ define(['modules/api',
             preserveElement(this, preserveList, function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
-            // this.validateFulfillmentMethods();
+             this.validateFulfillmentMethods();
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -292,8 +296,8 @@ define(['modules/api',
           cartItem.set('fulfillmentMethod', 'Pickup');
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
-          cartItem.apiUpdate().then(me.validateFulfillmentMethods());
-          // cartItem.apiUpdate();
+          // cartItem.apiUpdate().then(me.validateFulfillmentMethods());
+          cartItem.apiUpdate();
 
 
           $('#fulfillmentLocationName-'+storeSelectData.cartItemId).css("display", "inline");
@@ -310,22 +314,26 @@ define(['modules/api',
           var cartItemId = $(e.currentTarget).data('mz-cart-item');
           var cartItem = this.model.get("items").get(cartItemId);
           var cartModel = require.mozuData('cart');
+
           var newItem = {"product":{"productCode":"33344","options":[]},"quantity":4,"fulfillmentLocationCode":"","fulfillmentMethod":"Pickup"};
           this.model.apiAddProduct(newItem).then(function(e){
-            me.model.apiModel.addProduct(newItem);
-
+            var newCartItem = new CartModels.CartItem(e.data);
+            //Adding here is what allows cart to render?
+            me.model.get('items').add(newCartItem);
+            me.trigger('addedNewItem');
           });
 
 
         },
         validateFulfillmentMethods: function(){
+          console.log("validate got called");
+          console.log(this.model.get('items'));
 
           this.model.get('items').forEach(function(item){
             var fulfillmentTypesSupported = item.apiModel.data.product.fulfillmentTypesSupported;
 
             var $shipRadio = $('#shipping-radio-'+item.id);
             var $pickupRadio = $('#pickup-radio-'+item.id);
-            console.log(fulfillmentTypesSupported);
 
             if (!fulfillmentTypesSupported.includes("DirectShip")){
               $shipRadio.attr('disabled', 'disabled');
@@ -341,8 +349,12 @@ define(['modules/api',
 
 
 
+
+
+
             if (item.get('fulfillmentMethod')=="Pickup"){
-              $('#fulfillmentLocationName-'+item.id).html(': <strong>'+item.get('fulfillmentLocationName')+'</strong>');
+              console.log(item.attributes.fulfillmentLocationName);
+              $('#fulfillmentLocationName-'+item.id).html(': <strong>'+item.attributes.fulfillmentLocationName+'</strong>');
             } else {
                 $('#fulfillmentLocationName-'+item.id).html('');
             }
