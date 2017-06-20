@@ -6,8 +6,6 @@
     </br>
     <span class="fulfillment-unavailable-message"></span>
   </li>
-
-
   <li>
     <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Pickup" id="pickup-radio-{{ item.id }}" {% if item.fulfillmentMethod=="Pickup" %} checked {% endif %} />
     <label for="pickup-radio-{{ item.id }}">{{ labels.inStorePickup }}</label><span class="fulfillmentLocationName" id="fulfillmentLocationName-{{ item.id }}"></span>

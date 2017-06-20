@@ -14,15 +14,12 @@ define(['modules/api',
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
+            console.log(this.model);
             this.pickerDialog = this.initializeStorePickerDialog();
             var me = this;
 
             //setup coupon code text box enter.
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
-            this.listenTo(this, 'addedNewItem', function(){
-              console.log("listened!");
-              me.render();
-            }, this);
             this.codeEntered = !!this.model.get('couponCode');
             this.$el.on('keypress', 'input', function (e) {
                 if (e.which === 13) {
@@ -46,7 +43,6 @@ define(['modules/api',
 
         },
         render: function() {
-          console.log("GOT CALLED");
           var preserveList = [];
           preserveList.push('.v-button');
           this.model.get('items').forEach(function(item){
@@ -166,8 +162,7 @@ define(['modules/api',
                   if (i==inv.items.length-1){
                     //We're in the midst of asynchrony, but we want this dialog
                     //to go ahead and open right away if we're at the end of the
-                    //for loop. If we put the following code outside of the for loop,
-                    //it may run before the for loop is complete.
+                    //for loop.
                     var $bodyElement = $('#mz-location-selector').find('.modal-body');
                     me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
                     me.pickerDialog.show();
@@ -192,7 +187,6 @@ define(['modules/api',
           //Called when a radio button is clicked.
 
           var me = this;
-          var cartModel = require.mozuData('cart');
           var $radioButton = $(e.currentTarget),
               cartItemId = $radioButton.data('mz-cart-item'),
               value = $radioButton.val(),
@@ -205,8 +199,6 @@ define(['modules/api',
               }
 
               if (value=="Ship"){
-                $('#fulfillmentLocationName-'+cartItemId).css("display", "none");
-                $('#pickup-option-links-'+cartItemId).css("display", "none");
                 cartItem.set('fulfillmentMethod', value);
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
@@ -215,11 +207,10 @@ define(['modules/api',
 
 
               } else if (value=="Pickup"){
-                $('#fulfillmentLocationName-'+cartItemId).css("display", "inline");
-                $('#pickup-option-links-'+cartItemId).css("display", "");
                   //first we get the correct product code for this item.
                   //If the product is a variation, we want to pass that when searching for inventory.
                   var productCode = cartItem.apiModel.data.product.variationProductCode || cartItem.apiModel.data.product.productCode;
+                  //pickStore function makes api calls, then builds/launches modal dialog
                   this.pickStore(productCode, cartItemId);
               }
 
@@ -248,6 +239,7 @@ define(['modules/api',
             var stockLevel = matchedInventory[0].stockAvailable;
             var allowsBackorder = location.data.allowFulfillmentWithNoStock;
 
+            //Piece together UI for a single location listing
             var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex" });
             var leftSideDiv = $('<div>', {"style": "flex:1"});
             var rightSideDiv = $('<div>', {"style": "flex:1"});
@@ -267,7 +259,7 @@ define(['modules/api',
           leftSideDiv.append($('<div>'+address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode+'</div>'));
             var $selectButton;
             if (stockLevel>0 || allowsBackorder){
-                leftSideDiv.append("<p class='mz-locationselect-available'>Product Available</p>");
+                leftSideDiv.append("<p class='mz-locationselect-available'>"+Hypr.getLabel("availableNow")+"</p>");
                 var buttonData = {
                   locationCode: location.data.code,
                   locationName: location.data.name,
@@ -276,14 +268,14 @@ define(['modules/api',
                   //TODO
                   //labels
                 $selectButton = $("<button>", {"type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
-                $selectButton.text("Select Store");
+                $selectButton.text(Hypr.getLabel("selectStore"));
                 rightSideDiv.append($selectButton);
 
 
               } else {
-                leftSideDiv.append("<p class='mz-locationselect-unavailable'>Out of Stock</p>");
+                leftSideDiv.append("<p class='mz-locationselect-unavailable'>"+Hypr.getLabel("outOfStock")+"</p>");
                 $selectButton = $("<button>", {"type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled":"disabled", "style": "margin:25% 0 0 25%"});
-                $selectButton.text("Select Store");
+                $selectButton.text(Hypr.getLabel("selectStore"));
                 rightSideDiv.append($selectButton);
               }
 
@@ -303,70 +295,21 @@ define(['modules/api',
           var me = this;
           this.pickerDialog.hide();
 
-
-
           var storeSelectData = JSON.parse(jsonStoreSelectData);
           var cartItem = this.model.get("items").get(storeSelectData.cartItemId);
           cartItem.set('fulfillmentMethod', 'Pickup');
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
-          // cartItem.apiUpdate().then(me.validateFulfillmentMethods());
           cartItem.apiUpdate();
 
 
-          $('#fulfillmentLocationName-'+storeSelectData.cartItemId).css("display", "inline");
-          $('#fulfillmentLocationName-'+storeSelectData.cartItemId).html(": <strong>"+cartItem.get('fulfillmentLocationName')+"</strong>");
-          $('#pickup-option-links-'+storeSelectData.cartItemId).css("display", "");
-
-
-        },
-        splitHandler: function(e){
-
-
-
-          var me = this;
-          console.log("spleet");
-
-
-          // make new cart item
-          // add it to cart
-
-          var cartItemId = $(e.currentTarget).data('mz-cart-item');
-          var cartItem = this.model.get("items").get(cartItemId);
-          var cartModel = require.mozuData('cart');
-
-          //new item attribute gathering
-          var productCode = cartItem.apiModel.data.product.productCode;
-          var variationProductCode = cartItem.apiModel.data.product.variationProductCode || "";
-          var options = cartItem.apiModel.data.product.options;
-          var quantity = 1;
-
-          var newItem = {
-            "product":{
-              "productCode":productCode,
-              "variationProductCode":variationProductCode,
-              "options":options
-            },
-              "quantity":quantity,
-              "fulfillmentLocationCode":"",
-              "fulfillmentMethod":"Pickup"
-            };
-
-          this.model.apiAddProduct(newItem).then(function(e){
-            var newCartItem = new CartModels.CartItem(e.data);
-            //Adding here is what allows cart to render?
-            me.model.get('items').add(newCartItem);
-            console.log(newCartItem);
-            me.trigger('addedNewItem');
-
-          });
+          // $('#fulfillmentLocationName-'+storeSelectData.cartItemId).css("display", "inline");
+          // $('#fulfillmentLocationName-'+storeSelectData.cartItemId).html(": <strong>"+cartItem.get('fulfillmentLocationName')+"</strong>");
+          // $('#pickup-option-links-'+storeSelectData.cartItemId).css("display", "");
 
 
         },
         validateFulfillmentMethods: function(){
-          console.log("validate got called");
-          console.log(this.model.get('items'));
-
           this.model.get('items').forEach(function(item){
             var fulfillmentTypesSupported = item.apiModel.data.product.fulfillmentTypesSupported;
 
@@ -374,32 +317,24 @@ define(['modules/api',
             var $pickupRadio = $('#pickup-radio-'+item.id);
 
             if (!fulfillmentTypesSupported.includes("DirectShip")){
-              $shipRadio.attr('disabled', 'disabled');
+              $shipRadio.attr('disabled', 'true');
               var $shipUnavailableMessage = $shipRadio.parent().find('.fulfillment-unavailable-message');
               $shipUnavailableMessage.html(Hypr.getLabel("inStoreOnly"));
             }
 
             if (!fulfillmentTypesSupported.includes("InStorePickup")){
-              $pickupRadio.attr('disabled', 'disabled');
+              $pickupRadio.attr('disabled', 'true');
               var $pickupUnavailableMessage = $pickupRadio.parent().find('.fulfillment-unavailable-message');
               $pickupUnavailableMessage.html(Hypr.getLabel("unavailableForThisItem"));
             }
 
-
             if (item.get('fulfillmentMethod')=="Pickup"){
-              console.log(item.attributes.fulfillmentLocationName);
               $('#fulfillmentLocationName-'+item.id).html(': <strong>'+item.attributes.fulfillmentLocationName+'</strong>');
             } else {
                 $('#fulfillmentLocationName-'+item.id).html('');
             }
 
           });
-
-
-          //get current fulfillment method
-          //if pickup, list pickup location name
-          //if not, clear it
-
 
         },
         proceedToCheckout: function () {
