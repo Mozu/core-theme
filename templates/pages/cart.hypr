@@ -18,7 +18,6 @@
 {% require_script "pages/cart" %}
 
 {% preload_json model "cart" %}
-...
 <div class="modal fade" id="mz-location-selector">
 	{% include 'modules/cart/cart-location-select' %}
 </div>

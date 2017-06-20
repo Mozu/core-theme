@@ -248,34 +248,48 @@ define(['modules/api',
             var stockLevel = matchedInventory[0].stockAvailable;
             var allowsBackorder = location.data.allowFulfillmentWithNoStock;
 
-            var locationSelectDiv = $('<div>', { "class": "location-select-option" });
-            locationSelectDiv.append('<h4>'+location.data.name+'</h4>');
+            var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex" });
+            var leftSideDiv = $('<div>', {"style": "flex:1"});
+            var rightSideDiv = $('<div>', {"style": "flex:1"});
+            leftSideDiv.append('<h4 style="margin: 6.25px 0 6.25px">'+location.data.name+'</h4>');
             //If there is enough stock or the store allows backorder,
             //we'll let the user click the select button.
             //Even if these two conditions are met, the user could still be
             //halted upon trying to proceed to checkout if
             //the product isn't configured to allow for backorder.
 
+          var address = location.data.address;
+
+          leftSideDiv.append($('<div>'+address.address1+'</div>'));
+          if(address.address2){leftSideDiv.append($('<div>'+address.address2+'</div>'));}
+          if(address.address3){leftSideDiv.append($('<div>'+address.address3+'</div>'));}
+          if(address.address4){leftSideDiv.append($('<div>'+address.address4+'</div>'));}
+          leftSideDiv.append($('<div>'+address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode+'</div>'));
             var $selectButton;
             if (stockLevel>0 || allowsBackorder){
-                locationSelectDiv.append("<p>Product Available</p>");
+                leftSideDiv.append("<p class='mz-locationselect-available'>Product Available</p>");
                 var buttonData = {
                   locationCode: location.data.code,
                   locationName: location.data.name,
                   cartItemId: cartItemId
                 };
-
-                $selectButton = $("<button>", {"type": "button", "class": "mz-button mz-store-select-button", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
+                  //TODO
+                  //labels
+                $selectButton = $("<button>", {"type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
                 $selectButton.text("Select Store");
-                locationSelectDiv.append($selectButton);
-                body+=locationSelectDiv.prop('outerHTML');
+                rightSideDiv.append($selectButton);
+
 
               } else {
-                $selectButton = $("<button>", {"type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled":"disabled"});
-                $selectButton.text("Out of Stock");
-                locationSelectDiv.append($selectButton);
-                body+=locationSelectDiv.prop('outerHTML');
+                leftSideDiv.append("<p class='mz-locationselect-unavailable'>Out of Stock</p>");
+                $selectButton = $("<button>", {"type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled":"disabled", "style": "margin:25% 0 0 25%"});
+                $selectButton.text("Select Store");
+                rightSideDiv.append($selectButton);
               }
+
+              locationSelectDiv.append(leftSideDiv);
+              locationSelectDiv.append(rightSideDiv);
+              body+=locationSelectDiv.prop('outerHTML');
 
           });
 
@@ -307,20 +321,44 @@ define(['modules/api',
 
         },
         splitHandler: function(e){
+
+
+
           var me = this;
-          //make new cart item
-          //add it to cart
-          //
+          console.log("spleet");
+
+
+          // make new cart item
+          // add it to cart
+
           var cartItemId = $(e.currentTarget).data('mz-cart-item');
           var cartItem = this.model.get("items").get(cartItemId);
           var cartModel = require.mozuData('cart');
 
-          var newItem = {"product":{"productCode":"33344","options":[]},"quantity":4,"fulfillmentLocationCode":"","fulfillmentMethod":"Pickup"};
+          //new item attribute gathering
+          var productCode = cartItem.apiModel.data.product.productCode;
+          var variationProductCode = cartItem.apiModel.data.product.variationProductCode || "";
+          var options = cartItem.apiModel.data.product.options;
+          var quantity = 1;
+
+          var newItem = {
+            "product":{
+              "productCode":productCode,
+              "variationProductCode":variationProductCode,
+              "options":options
+            },
+              "quantity":quantity,
+              "fulfillmentLocationCode":"",
+              "fulfillmentMethod":"Pickup"
+            };
+
           this.model.apiAddProduct(newItem).then(function(e){
             var newCartItem = new CartModels.CartItem(e.data);
             //Adding here is what allows cart to render?
             me.model.get('items').add(newCartItem);
+            console.log(newCartItem);
             me.trigger('addedNewItem');
+
           });
 
 
@@ -346,10 +384,6 @@ define(['modules/api',
               var $pickupUnavailableMessage = $pickupRadio.parent().find('.fulfillment-unavailable-message');
               $pickupUnavailableMessage.html(Hypr.getLabel("unavailableForThisItem"));
             }
-
-
-
-
 
 
             if (item.get('fulfillmentMethod')=="Pickup"){
