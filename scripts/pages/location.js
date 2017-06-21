@@ -60,7 +60,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
             },
             addToCartForPickup: function (e) {
                 var $target = $(e.currentTarget),
-                    loc = $target.data('mzLocation');
+                    loc = $target.data('mzLocation'),
                     name = $target.data('mzName');
                 $target.parent().addClass('is-loading');
                 this.product.addToCartForPickup(loc, name, this.product.get('quantity'));
