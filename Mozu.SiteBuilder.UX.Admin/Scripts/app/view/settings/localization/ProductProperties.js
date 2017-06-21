@@ -69,6 +69,9 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                     msgTarget: "qtip",
                     selectOnFocus: true,
                     allowBlank: true
+                },
+                renderer: function (value) {
+                    return Ext.String.htmlEncode(value);
                 }
             };
             if (locale !== mc.localeCode) {
