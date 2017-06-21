@@ -71,7 +71,9 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
                     allowBlank: true
                 }
             };
-            columns.push(col);
+            if (locale !== mc.localeCode) {
+                columns.push(col);
+            }
         });
         return columns;
     },
