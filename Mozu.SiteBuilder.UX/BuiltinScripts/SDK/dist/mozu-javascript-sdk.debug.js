@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-03-30
+ * Mozu JavaScript SDK - v0.3.0 - 2017-06-20
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -2627,7 +2627,9 @@ module.exports = {
             var existingAffiliateString = docCookies.getItem(cookieName);
             var existingAffiliates = JSON.parse(existingAffiliateString) || [];
 
-            var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function(memo, param) {
+            var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function (memo, param) {
+                param = parm.trim();
+
                 if (param && queryParams[param]) {
                     memo.push({
                         key: param,
@@ -5231,6 +5233,7 @@ module.exports = {
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
+            fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
         });
     },
