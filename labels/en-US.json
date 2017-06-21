@@ -162,6 +162,9 @@
   "shipItems"                             : "Ship Items",
   "inStoreOnly"                           : "This item is available in-store only.",
   "changeStore"                           : "Change store",
+  "digitalDeliveryOnly"                   : "This item is available via digital delivery only.",
+  "selectStore"                           : "Select Store",
+
 
   "checkout"                              : "Checkout",
   "orderSummary"                          : "Order Summary",

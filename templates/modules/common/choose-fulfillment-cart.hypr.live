@@ -6,8 +6,6 @@
     </br>
     <span class="fulfillment-unavailable-message"></span>
   </li>
-
-
   <li>
     <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Pickup" id="pickup-radio-{{ item.id }}" {% if item.fulfillmentMethod=="Pickup" %} checked {% endif %} />
     <label for="pickup-radio-{{ item.id }}">{{ labels.inStorePickup }}</label><span class="fulfillmentLocationName" id="fulfillmentLocationName-{{ item.id }}"></span>
@@ -17,10 +15,6 @@
 
     <div id="pickup-option-links-{{ item.id }}" {% if item.fulfillmentMethod !="Pickup" %} style="display: none" {% endif %}>
       <a href="#" data-mz-action="changeStore" data-mz-cart-item="{{ item.id }}" style="margin-left:30px"> {{ labels.changeStore }}</a>
-      {% comment %}
-       {% if item.quantity > 1 %}
-      <a href="#" style="margin-left:20px" data-mz-action="splitHandler" data-mz-cart-item="{{ item.id }}">Pick up at Multiple Stores</a> {% endif %}
-      {% endcomment %}
     </div>
 
   </li>
