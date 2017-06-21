@@ -47,7 +47,7 @@ define(['modules/api',
               var dataObject = {
                 cartItemId: item.id,
                 locations: []
-              }
+              };
               me.fulfillmentInfoCache.push(dataObject);
 
             });
@@ -149,7 +149,6 @@ define(['modules/api',
           information.
           */
           var me = this;
-
           var listOfLocations = [];
 
           //before we get inventory data, we'll see if it's cached
@@ -159,11 +158,20 @@ define(['modules/api',
           });
           var index = this.fulfillmentInfoCache.indexOf(cachedItemInvData[0]);
 
-          if(cachedItemInvData[0].locations.length==0){
+          if(cachedItemInvData[0].locations.length===0){
             //The cache doesn't contain any data about the fulfillment
             //locations for this item. We'll do api calls to get that data
             //and update the cache.
             me.getInventoryData(cartItemId, productCode).then(function(inv){
+              if (inv.totalCount===0){
+                //Something went wrong with getting inventory data.
+                var $bodyElement = $('#mz-location-selector').find('.modal-body');
+                me.pickerDialog.setBody("Something went wrong with getting the inventory data for this product.");
+                $bodyElement.attr('mz-cart-item', cartItemId);
+                me.pickerDialog.show();
+
+
+              } else {
               inv.items.forEach(function(invItem, i){
                   me.handleInventoryData(invItem).then(function(handled){
                     listOfLocations.push(handled);
@@ -185,6 +193,7 @@ define(['modules/api',
                     }
                   });
                 });
+              }
               });
 
 
@@ -337,7 +346,6 @@ define(['modules/api',
           // cartItem.apiUpdate({fulfillmentLocationName: storeSelectData.locationName});
           cartItem.apiUpdate();
 
-
           // $('#fulfillmentLocationName-'+storeSelectData.cartItemId).css("display", "inline");
           // $('#fulfillmentLocationName-'+storeSelectData.cartItemId).html(": <strong>"+cartItem.get('fulfillmentLocationName')+"</strong>");
           // $('#pickup-option-links-'+storeSelectData.cartItemId).css("display", "");
@@ -351,7 +359,6 @@ define(['modules/api',
           }
 
           items.forEach(function(item){
-            console.log(item);
             var fulfillmentTypesSupported = item.apiModel.data.product.fulfillmentTypesSupported;
 
             var $shipRadio = $('#shipping-radio-'+item.id);
@@ -373,20 +380,10 @@ define(['modules/api',
               $('input[type=radio]#pickup-radio-'+item.attributes.id).prop('checked', 'checked');
               $('#fulfillmentLocationName-'+item.id).html(': <strong>'+item.attributes.fulfillmentLocationName+'</strong>');
             } else if(item.get('fulfillmentMethod')=="Ship") {
+
                 $('input[type=radio]#shipping-radio-'+item.attributes.id).prop('checked', 'checked');
                 $('#fulfillmentLocationName-'+item.id).html('');
             }
-
-            // cartModelItems.forEach(function(item){
-            //   if (item.attributes.fulfillmentMethod == "Ship"){
-            //     $('#pickup-option-links-'+item.attributes.id).css('display', 'none');
-            //     $('#fulfillmentLocationName-'+item.attributes.id).css('display', 'none');
-            //
-            //   } else if (item.attributes.fulfillmentMethod == "Pickup"){
-            //     $('#fulfillmentLocationName-'+item.attributes.id).html(': <strong>'+item.attributes.fulfillmentLocationName+'</strong>');
-            //     $('#pickup-option-links-'+item.attributes.id).css('display', '');
-            //   }
-            // });
 
           });
 
