@@ -245,6 +245,7 @@ Ext.define('Taco.core.StateManager', {
 
     /**
      * Get dirty state. Used to check whether navigation prompt should be shown.
+     *
      * @return {Boolean} Whether the state is dirty
      */
     getDirtyState: function () {
@@ -253,6 +254,7 @@ Ext.define('Taco.core.StateManager', {
 
     /**
      * Sets navigation in progress.
+     *
      * @param {Boolean} inProgress Denotes whether navigation is currently in progress 
      */
     setNavInProgress: function (inProgress) {
@@ -261,6 +263,7 @@ Ext.define('Taco.core.StateManager', {
 
     /**
      * Returns true if navigation is in progress, false otherwise.
+     *
      * @return {Boolean} Whether navigation is in progress
      */
     getNavInProgress: function () {
