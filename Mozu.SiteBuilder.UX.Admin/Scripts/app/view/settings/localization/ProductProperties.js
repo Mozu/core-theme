@@ -21,7 +21,8 @@ Ext.define('Taco.view.settings.localization.ProductProperties', {
 
     getColumnConfig: function () {
         var mc = Taco.app.context.getMasterCatalog(),
-            supportedLocales = [],
+            excludeDefaultLocale = true,
+            supportedLocales = (!mc) ? [] : mc.getSupportedLocales(excludeDefaultLocale),
             mcName = (!mc) ? '' : ': ' + mc.name,
             mcLocale = (!mc) ? '' : mc.localeCode + ' ',
             columns = [
