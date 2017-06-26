@@ -2713,7 +2713,7 @@ module.exports = {
 
     }
 }
-},{"./utils":36}],14:[function(_dereq_,module,exports){
+},{"./utils":37}],14:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/collection.js
@@ -2841,7 +2841,7 @@ var ApiObject = _dereq_('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":29,"./utils":36}],15:[function(_dereq_,module,exports){
+},{"./object":23,"./types/locations":30,"./utils":37}],15:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/constants/default.js
@@ -2999,7 +2999,7 @@ module.exports = ApiContextConstructor;
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utils":36,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
+},{"./interface":21,"./reference":24,"./utils":37,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/errors.js
@@ -3051,7 +3051,7 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":36}],18:[function(_dereq_,module,exports){
+},{"./utils":37}],18:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/iframexhr.js
@@ -3218,7 +3218,7 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":36}],19:[function(_dereq_,module,exports){
+},{"./utils":37}],19:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init.js
@@ -3260,7 +3260,7 @@ _init.ApiObject.prototype.inspect = function () {
 _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":36}],21:[function(_dereq_,module,exports){
+},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":37}],21:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/interface.js
@@ -3319,7 +3319,9 @@ ApiInterfaceConstructor.prototype = {
         var deferred = me.defer();
 
         var data;
-        if (requestConf.overridePostData) {
+        if (requestConf.postdata) {
+            data = requestConf.postdata;
+        } else if (requestConf.overridePostData) {
             data = requestConf.overridePostData;
         } else if (conf && !requestConf.noBody) {
             data = conf instanceof ApiObject ? conf.data : conf;
@@ -3492,7 +3494,7 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":36}],22:[function(_dereq_,module,exports){
+},{"./object":23,"./reference":24,"./utils":37}],22:[function(_dereq_,module,exports){
 module.exports=
 
 //# sourceUrl=src/methods.json
@@ -3716,10 +3718,17 @@ module.exports=
             "verb": "DELETE",
             "template": "{+cartService}current/extendedproperties"
         },
-        "checkout": {
+      "checkout": {
+        "verb": "POST",
+        "template": "{+orderService}?cartId={id}",
+        "returnType": "order",
+        "noBody": true,
+        "includeSelf": true
+      },
+      "checkout2": {
             "verb": "POST",
-            "template": "{+orderService}?cartId={id}",
-            "returnType": "order",
+            "template": "{+checkoutService}?cartId={id}",
+            "returnType": "checkout",
             "noBody": true,
             "includeSelf": true
         },
@@ -4231,11 +4240,200 @@ module.exports=
     "wishlists": {
         "collectionOf": "wishlist"
     },
-    "instockrequest": {
-        "create": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
+  "instockrequest": {
+    "create": {
+      "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
+      "verb": "POST",
+      "template": "{+inStockNotificationService}"
+    }
+  },
+    "destination": {
+        "template": "{+checkoutService}{id}/destinations/{destinationId}",
+        "includeSelf": true
+    },
+  "destinations": {
+    "collectionOf": "destination"
+  },
+  "toCheckout": {
             "verb": "POST",
-            "template": "{+inStockNotificationService}"
+            "template": "{+checkoutService}?cartId={id}",
+            "returnType": "checkout",
+            "noBody": true,
+            "includeSelf": true
+    },
+   "checkout": {
+        "template": "{+checkoutService}{id}",
+        "includeSelf": true,
+    "create-from-cart": {
+      "template": "{+checkoutService}{?cartId*}",
+      "shortcutParam": "cartId",
+      "method": "POST",
+      "noBody": true
+    },
+    "get-shipping-destinations": {
+      "template": "{+checkoutService}{id}/destinations",
+      "returnType": "destinations"
+    },
+    "add-shipping-destination": {
+      "template": "{+checkoutService}{id}/destinations",
+      "verb": "POST",
+      "returnType": "destination",
+      "includeSelf": true
+    },
+    "update-shipping-destination": {
+      "template": "{+checkoutService}{checkoutId}/destinations/{destinationId}",
+      "verb": "PUT",
+      "returnType": "destination"
+    },
+    "remove-shipping-destination": {
+      "template": "{+checkoutService}{id}/destinations/{destinationId}",
+      "verb": "DELETE"
+    },
+    "get-checkout-items": {
+      "template": "{+checkoutService}{id}/items"
+    },
+    "get-checkout-item": {
+      "template": "{+checkoutService}{id}/items{itemId}"
+    },
+    "split-checkout-item": {
+      "template": "{+checkoutService}{id}/items/{itemId}/split?quantity={quantity}",
+      "verb": "POST"
+
+    },
+    "update-checkout-item-destination": {
+      "template": "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
+      "verb": "POST"
+    },
+    "update-checkout-item-destination-bulk": {
+      "template": "{+checkoutService}{id}/items/destinations",
+      "verb": "POST",
+      "specifyPostData" : true
+    },
+    "update-checkout": {
+      "template": "{+checkoutService}{id}",
+      "verb": "POST",
+      "includeSelf": true
+    },
+    "get-avaiable-shipping-methods": {
+      "template": "{+checkoutService}{id}/shipments/methods",
+      "verb": "GET",
+      "returnType": "shippingmethods"
+    },
+    "update-checkout-item-fulfillment": {
+      "template": "{+checkoutService}{id}/items/{itemId}/fulfillment",
+      "verb": "PUT",
+      "returnType": "shipment",
+      "includeSelf": true
+    },
+     "set-shipping-methods": {
+      "template": "{+checkoutService}{id}/shippingMethods",
+      "verb": "POST", 
+      "specifyPostData" : true
+    },
+        "get-shipping-methods": {
+            "template": "{+checkoutService}{id}/shipments/methods",
+            "returnType": "shippingmethods"
+        },
+        "set-user-id": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/users",
+            "noBody": true,
+            "includeSelf": true,
+            "returnType": "user"
+        },
+        "create-payment": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/payments/actions",
+            "includeSelf": true
+        },
+        "perform-payment-action": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/payments/{paymentId}/actions",
+            "includeSelf": true,
+            "shortcutParam": "paymentId",
+            "returnType": "string"
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/coupons",
+            "includeSelf": true
+        },
+        "get-available-actions": {
+            "template": "{+checkoutService}{id}/actions",
+            "includeSelf": true,
+            "returnType": "checkoutactions"
+        },
+        "perform-checkout-action": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/actions",
+            "shortcutParam": "actionName",
+            "overridePostData": [
+                "actionName"
+            ],
+            "includeSelf": true
+        },
+        "add-checkout-note": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/notes",
+            "includeSelf": true,
+            "returnType": "checkoutnote"
+        },
+        "get-extended-properties": {
+            "template": "{+checkoutService}{id}/extendedproperties",
+            "returnType":  "json"
+        },
+        "add-extended-properties": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "update-extended-properties": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "process-digital-wallet": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/digitalWallet/VisaCheckout",
+            "includeSelf": true,
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        },
+        "get-attribute-definitions": {
+            "template": "{+checkoutAttributeDefService}",
+            "returnType": "checkoutattribute"
+        },
+        "update-attributes": {
+          "verb": "PUT",
+          "includeSelf": true,
+          "template": "{+checkoutService}{id}/attributes{?removeMissing}",
+          "shortcutParam": "removeMissing",
+          "returnType": "checkoutattributes"
+        },
+        "get-returnable-items": {
+          "verb": "GET",
+          "includeSelf": true,
+          "template": "{+checkoutService}{id}/returnableitems",
+          "returnType":  "json"
         }
     }
 }
@@ -4289,6 +4487,7 @@ ApiObjectConstructor.types = {
     customer: _dereq_('./types/customer'),
     login: _dereq_('./types/login'),
     order: _dereq_('./types/order'),
+    checkout: _dereq_('./types/checkout'),
     product: _dereq_('./types/product'),
     shipment: _dereq_('./types/shipment'),
     user: _dereq_('./types/user'),
@@ -4333,7 +4532,7 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/creditcard":27,"./types/customer":28,"./types/login":30,"./types/order":31,"./types/product":32,"./types/shipment":33,"./types/user":34,"./types/wishlist":35,"./utils":36}],24:[function(_dereq_,module,exports){
+},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/user":35,"./types/wishlist":36,"./utils":37}],24:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/reference.js
@@ -4377,6 +4576,7 @@ var reservedWords = {
     includeSelf: true,
     collectionOf: true,
     overridePostData: true,
+    specifyPostData: true,
     useIframeTransport: true,
     construct: true,
     postconstruct: true,
@@ -4487,7 +4687,11 @@ var ApiReference = {
             if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
             returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
         }
-        if (oType.overridePostData) {
+        if (oType.specifyPostData) {
+            if (tptData.postdata) {
+                returnObj.postdata = tptData.postdata;
+            }
+        } else if (oType.overridePostData) {
             var overriddenData;
             if (utils.getType(oType.overridePostData) == "Array") {
                 overriddenData = {};
@@ -4513,7 +4717,7 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":36}],25:[function(_dereq_,module,exports){
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":37}],25:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cart.js
@@ -4573,7 +4777,7 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":36}],26:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":37}],26:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
@@ -4584,7 +4788,380 @@ module.exports = {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":36}],27:[function(_dereq_,module,exports){
+},{"../utils":37}],27:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=src/types/checkout.js
+
+﻿var errors = _dereq_('../errors');
+var CONSTANTS = _dereq_('../constants/default');
+var utils = _dereq_('../utils');
+var ApiReference;
+module.exports = (function () {
+
+    errors.register({
+        'BILLING_INFO_MISSING': 'Billing info missing.',
+        'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED': 'Payment type missing or unrecognized.',
+        'PAYMENT_MISSING': 'Sorry, something went wrong: Expected a payment to exist on this checkout and one did not.',
+        'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
+        'checkout_CANNOT_SUBMIT': 'Sorry, this checkout cannot be submitted. Please refresh the page and try again, or contact Support.',
+        'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
+        //'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
+        'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}',
+        'SPLIT_ORDER_ITEM_FAILED': 'Split Order Item Failed',
+        'SET_SHIPPING_METHODS_FAILED': 'Set Shipping Methods Failed',
+        'UNSET_DESTINATIONS_FAILED': 'Unset Destinations Failed'
+    });
+
+    var checkoutStatus2IsComplete = {};
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PROCESSING] = true;
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ERRORED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
+
+    var checkoutStatus2IsReady = {};
+    checkoutStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_checkout] = true;
+    checkoutStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_checkout] = true;
+
+    function getPaymentDate(p) {
+        return new Date(p.auditInfo.createDate);
+    }
+
+    var PaymentStrategies = {
+        "PaypalExpress": function (checkout, billingInfo) {
+            if (!ApiReference) ApiReference = _dereq_('../reference');
+            return checkout.createPayment({
+                returnUrl: billingInfo.paypalReturnUrl,
+                cancelUrl: billingInfo.paypalCancelUrl
+            }).ensure(function () {
+                var payment = checkout.getCurrentPayment();
+                if (!payment) errors.throwOnObject(checkout, 'PAYMENT_MISSING');
+                if (!payment.paymentServiceTransactionId) errors.throwOnObject(checkout, 'PAYPAL_TRANSACTION_ID_MISSING');
+                window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
+            });
+        },
+        "Purchasecheckout": function (checkout, billingInfo) {
+            return checkout.addPurchasecheckout(billingInfo);
+        },
+        "CreditCard": function (checkout, billingInfo) {
+            var card = checkout.api.createSync('creditcard', billingInfo.card);
+            errors.passFrom(card, checkout);
+            return card.save().then(function (card) {
+                billingInfo.card = card.getCheckoutData();
+                checkout.prop('billingInfo', billingInfo);
+                return checkout.createPayment();
+            });
+        },
+        "Check": function (checkout, billingInfo) {
+            return checkout.createPayment();
+        }
+    };
+
+    return {
+        splitCheckoutItem: function (params) {
+            var self = this;
+            params.quantity = params.quantity || 1;
+
+            return this.api.action('checkout', 'splitCheckoutItem', { 'id': self.data.id, 'itemId': params.itemId, 'quantity': params.quantity }).then(function (checkout) {
+                //checkout.data = utils.clone(checkout.data)
+                var data = utils.clone(checkout.data);
+                var newItem = data.items[data.items.length - 1]
+                if (newItem.destinationId) {
+                    delete newItem.destinationId;
+                }
+                self.fire('sync', data, self.data);
+                return data;
+            }, function (reason) {
+                return errors.throwOnObject(self, 'SPLIT_ORDER_ITEM_FAILED', reason.message);
+            });
+        },
+        setShippingMethod: function (params) {
+            var self = this;
+            var payloadCollection = {};
+            payloadCollection['postdata'] = [];
+            payloadCollection['id'] = self.data.id;
+
+            if (params.groupId && params.shippingRate) {
+                payloadCollection.postdata.push({
+                    groupingId: params.groupId,
+                    shippingRate: params.shippingRate
+                });
+            }
+
+            return this.api.action('checkout', 'setShippingMethods', payloadCollection).then(function (checkout) {
+                //checkout.data = utils.clone(checkout.data)
+                var data = utils.clone(checkout.data);
+                self.fire('sync', data, self.data);
+                return data;
+            }, function (reason) {
+                return errors.throwOnObject(self, 'SET_SHIPPING_METHODS_FAILED', reason.message);
+            });
+        },
+        setShippingMethods : function(params){
+            var self = this;
+            var id = this.data.id;
+            var payloadCollection = {};
+            payloadCollection['postdata'] = [];
+            payloadCollection['id'] = self.data.id;
+
+            for (i = 0; i < self.data.groupings.length; i++) {
+                if (self.data.groupings[i].shippingMethodCode && self.data.groupings[i].shippingMethod == "Ship") {
+                    payloadCollection.postdata.push({
+                        groupingId: self.data.groupings[i].id,
+                        shippingRate: self.data.groupings[i].shippingRate
+                    });
+                }
+            }
+
+            return this.api.action('checkout', 'setShippingMethods', payloadCollection).then(function (checkout) {
+                //checkout.data = utils.clone(checkout.data)
+                var data = utils.clone(checkout.data);
+                self.fire('sync', data, self.data);
+                return data;
+            }, function (reason) {
+                return errors.throwOnObject(self, 'SET_SHIPPING_METHODS_FAILED', reason.message);
+            });
+        },
+
+        unsetAllShippingDestinations: function (params) {
+            var self = this;
+            var id = this.data.id;
+            var items = utils.clone(this.data.items);
+            var payloadCollection = {
+                id: id,
+                postdata: [{
+                    destinationId: "",
+                    itemIds: []
+                }]
+            }
+
+            for (i = 0; i < items.length; i++) {
+                if (items[i].destinationId) {
+                    payloadCollection.postdata[0].itemIds.push(items[i].id)
+                }
+            }
+
+            return this.api.action('checkout', 'updateCheckoutItemDestinationBulk', payloadCollection).then(function (checkout) {
+                //checkout.data = utils.clone(checkout.data)
+                var data = utils.clone(checkout.data);
+                self.fire('sync', data, self.data);
+                return data;
+            }, function (reason) {
+                return errors.throwOnObject(self, 'UNSET_DESTINATIONS_FAILED', reason.message);
+            });
+        },
+        setAllShippingDestinations: function (params) {
+            var self = this;
+            var id = this.data.id;
+            var items = utils.clone(this.data.items);
+            var payloadCollection = {
+                id: id,
+                postdata: [{
+                    destinationId: params.destinationId,
+                    itemIds: []
+                }]
+            }
+
+            for (i = 0; i < items.length; i++) {
+                payloadCollection.postdata[0].itemIds.push(items[i].id)
+            }
+
+            return this.api.action('checkout', 'updateCheckoutItemDestinationBulk', payloadCollection).then(function (checkout) {
+                //checkout.data = utils.clone(checkout.data)
+                var data = utils.clone(checkout.data);
+                self.fire('sync', data, self.data);
+                return data;
+            }, function (reason) {
+                return errors.throwOnObject(self, 'UNSET_DESTINATIONS_FAILED', reason.message);
+            });
+        },
+        getShippingMethodsFromContacts: function () {
+            var self = this;
+            var fulfillmentInfo = utils.clone(self.prop('fulfillmentInfo'));
+
+            var invalidAddressState = function (contact) {
+                if (contact.address && !contact.address.stateOrProvince) {
+                    return true
+                }
+                return false
+            };
+
+            var hasInvalidAddressStates = function () {
+                var valid = false
+                if (fulfillmentInfo instanceof Array) {
+                    for (i = 0; i < fulfillmentInfo.length; i++) {
+                        if (invalidAddressState(fulfillmentInfo[i].fulfillmentContact)) {
+                            fulfillmentInfo[i].fulfillmentContact.address.stateOrProvince = "n/a";
+                            valid = true;
+                        }
+                    }
+                } else {
+                    if (invalidAddressState(fulfillmentInfo.fulfillmentContact)) {
+                        fulfillmentInfo.fulfillmentContact.address.stateOrProvince = "n/a"
+                        valid = true;
+                    }
+                }
+                return valid;
+            }
+
+            if (hasInvalidAddressStates()) {
+                return self.update({ fulfillmentInfo: fulfillmentInfo }).then(function () {
+                    return self.getShippingMethods();
+                });
+            } else {
+                return self.getShippingMethods();
+            }
+
+        },
+        addCoupon: function (couponCode) {
+            var self = this;
+            return this.applyCoupon(couponCode).then(function () {
+                return self.get();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
+            });
+        },
+        addNewCustomer: function (newCustomerPayload) {
+            var self = this;
+            return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
+                return self.setUserId();
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
+            });
+        },
+        createPayment: function (extraProps) {
+            var self = this;
+
+            return self.api.action(self, 'createPayment', utils.extend({
+                currencyCode: self.api.context.Currency().toUpperCase(),
+                amount: self.prop('amountRemainingForPayment'),
+                newBillingInfo: self.prop('billingInfo')
+            }, extraProps || {}));
+
+        },
+        addStoreCredit: function (payment) {
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'StoreCredit',
+                    storeCreditCode: payment.storeCreditCode,
+                    billingContact: {
+                        email: payment.email
+                    }
+                }
+            });
+        },
+        addPayment: function (payment) {
+            var billingInfo = payment || this.prop('billingInfo');
+            if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
+            if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
+            return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
+        },
+        addPurchasecheckout: function (payment) {
+            // add purchase checkout stuff as the 'extraProps' call.
+            return this.createPayment({
+                amount: payment.amount,
+                newBillingInfo: {
+                    paymentType: 'Purchasecheckout',
+                    billingContact: payment.billingContact,
+                    purchasecheckout: payment.purchasecheckout
+                }
+            });
+        },
+        getActivePayments: function () {
+            var payments = this.prop('payments'),
+                activePayments = [];
+            if (payments && payments.length !== 0) {
+                for (var i = payments.length - 1; i >= 0; i--) {
+                    if (payments[i].status === CONSTANTS.PAYMENT_STATUSES.NEW)
+                        activePayments.push(utils.clone(payments[i]))
+                }
+            }
+            return activePayments;
+        },
+        getCurrentPayment: function () {
+            var activePayments = this.getActivePayments();
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType !== "StoreCredit" && activePayments[i].paymentType !== 'GiftCard') return activePayments[i];
+            }
+        },
+        getActiveStoreCredits: function () {
+            var activePayments = this.getActivePayments(),
+                credits = [];
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType === "StoreCredit" || activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+            }
+            return credits;
+        },
+        voidPayment: function (id) {
+            var obj = this;
+            return this.performPaymentAction({
+                paymentId: id,
+                actionName: CONSTANTS.PAYMENT_ACTIONS.VOID
+            }).then(function (rawJSON) {
+                if (rawJSON || rawJSON === 0 || rawJSON === false) {
+                    delete rawJSON.billingInfo;
+                    obj.data = utils.clone(rawJSON);
+                }
+                delete obj.unsynced;
+                obj.fire('sync', rawJSON, obj.data);
+                obj.api.fire('sync', obj, rawJSON, obj.data);
+                return obj;
+            });
+        },
+        checkout: function () {
+            var self = this,
+                availableActions = this.prop('availableActions');
+            if (!this.isComplete()) {
+                for (var i = availableActions.length - 1; i >= 0; i--) {
+                    if (availableActions[i] in checkoutStatus2IsReady) return this.performcheckoutAction(availableActions[i]).otherwise(function (e) {
+                        return self.get().ensure(function () {
+                            throw e;
+                        });
+                    });
+                }
+            }
+            errors.throwOnObject(this, 'checkout_CANNOT_SUBMIT');
+        },
+        isComplete: function () {
+            return !!checkoutStatus2IsComplete[this.prop('status')];
+        },
+
+        addExtendedProperty: function (extendedProperty) {
+            // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperty) {
+                errors.throwOnObject(this, '');
+            }
+
+            return this.api.action(this, 'addExtendedProperty', {
+                // Fill in the data from extendedProperty here!
+                'key': extendedProperty.key,
+                'value': extendedProperty.value
+            });
+        },
+
+        addExtendedProperties: function (extendedProperties) {
+            // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedProperties) {
+                extendedProperties = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedProperties);
+        },
+
+        removeExtendedProperties: function (extendedPropertyKeys) {
+            // Expect extendedPropertyKeys to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
+            if (!extendedPropertyKeys) {
+                extendedPropertyKeys = [];
+            }
+
+            return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
+        }
+    };
+}());
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],28:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/creditcard.js
@@ -4739,11 +5316,23 @@ module.exports = (function() {
                 expireMonth: this.data.expireMonth,
                 expireYear: this.data.expireYear
             }
+        },
+        getCheckoutData: function () {
+            return {
+                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
+                cvv: this.data.cvv,
+                nameOnCard: this.data.nameOnCard,
+                paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
+                paymentServiceCardId: this.data.paymentServiceCardId || this.data.cardId,
+                isCardInfoSaved: this.data.isCardInfoSaved || this.data.persistCard,
+                expireMonth: this.data.expireMonth,
+                expireYear: this.data.expireYear
+            }
         }
     };
 
 }());
-},{"../errors":17,"../utils":36}],28:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":37}],29:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/customer.js
@@ -4820,7 +5409,7 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":36}],29:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":37}],30:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/locations.js
@@ -4926,7 +5515,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":36}],30:[function(_dereq_,module,exports){
+},{"../utils":37}],31:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/login.js
@@ -4945,7 +5534,7 @@ module.exports = {
         }
     }
 };
-},{}],31:[function(_dereq_,module,exports){
+},{}],32:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/order.js
@@ -5207,7 +5796,7 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":36}],32:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],33:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/product.js
@@ -5238,7 +5827,6 @@ module.exports = {
             },
             quantity: payload.quantity || 1,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
-            fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
         });
     },
@@ -5265,7 +5853,7 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":36}],33:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../utils":37}],34:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/shipment.js
@@ -5282,7 +5870,7 @@ module.exports = {
         });
     }
 };
-},{"../utils":36}],34:[function(_dereq_,module,exports){
+},{"../utils":37}],35:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/user.js
@@ -5323,7 +5911,7 @@ module.exports = {
         });
     }
 };
-},{}],35:[function(_dereq_,module,exports){
+},{}],36:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/wishlist.js
@@ -5380,7 +5968,7 @@ module.exports = (function() {
         }
     };
 }());
-},{"../errors":17,"../utils":36}],36:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":37}],37:[function(_dereq_,module,exports){
 (function (process){
 
 

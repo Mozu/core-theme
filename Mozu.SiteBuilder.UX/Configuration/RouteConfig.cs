@@ -209,8 +209,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "StoreFront_checkout",
                "checkout/{orderId}/{action}",
                new { controller = "Checkout", action = "Index", orderId = RouteParameter.Optional });
+            routes.MapHttpRoute(
+               "StoreFront_checkoutv2",
+               "checkoutv2/{checkoutId}/{action}",
+               new { controller = "CheckoutV2", action = "Index", checkoutId = RouteParameter.Optional });
 
-            
+
 
 
             routes.MapHttpRoute(

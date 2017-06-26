@@ -37,6 +37,7 @@ var reservedWords = {
     includeSelf: true,
     collectionOf: true,
     overridePostData: true,
+    specifyPostData: true,
     useIframeTransport: true,
     construct: true,
     postconstruct: true,
@@ -147,7 +148,11 @@ var ApiReference = {
             if (typeof oType.useIframeTransport === "string") oType.useIframeTransport = utils.uritemplate.parse(oType.useIframeTransport);
             returnObj.iframeTransportUrl = oType.useIframeTransport.expand(fullTptContext);
         }
-        if (oType.overridePostData) {
+        if (oType.specifyPostData) {
+            if (tptData.postdata) {
+                returnObj.postdata = tptData.postdata;
+            }
+        } else if (oType.overridePostData) {
             var overriddenData;
             if (utils.getType(oType.overridePostData) == "Array") {
                 overriddenData = {};

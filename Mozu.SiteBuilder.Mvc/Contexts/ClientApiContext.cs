@@ -288,7 +288,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "LocationAttributeDefService",
                             InternalUrl = settings.Urls("service-url-LocationAttributeDefinitionWebApi"),
                             RequiresSsl = true
+                        },
+                         new ServiceInfo
+                        {
+                            Id = "CheckoutService",
+                            InternalUrl = settings.Urls("service-url-CheckoutWebApi"),
+                            RequiresSsl = true
                         }
+
 
 
                     };

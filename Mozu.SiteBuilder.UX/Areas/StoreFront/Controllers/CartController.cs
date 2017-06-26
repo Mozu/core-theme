@@ -7,6 +7,7 @@ using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.CommerceRuntime.Contracts.Checkouts;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Exceptions;
@@ -47,10 +48,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         readonly ICookieProvider _cookieProvider;
         readonly ILocationRuntimeWebApiClient _locationClient;
         readonly ISettings _settings;
+        readonly ICheckoutWebApiClient _checkoutWebApiClient;
         Lazy<JsonSerializerSettings> _cartSerializer = new Lazy<JsonSerializerSettings>(() => new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
         readonly ICustomRouteHandler _customRouteHandler;
 
-        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings, ICustomRouteHandler customRouteHandler)
+        public CartController(ICartWebApiClient cartClient, IOrderWebApiClient orderWebApiClient, ICookieProvider cookieProvider, ILocationRuntimeWebApiClient locationClient, ISettings settings, ICustomRouteHandler customRouteHandler, ICheckoutWebApiClient checkoutWebApiClient)
         {
             if(cartClient == null)
             {
@@ -64,6 +66,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationClient = locationClient;
             _settings = settings;
             _customRouteHandler = customRouteHandler;
+            _checkoutWebApiClient = checkoutWebApiClient;
         }
 
         private string BuildLocationsFilter(IEnumerable<string> locationCodes)
@@ -186,6 +189,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Cart cart = null;
             Exception error = null;
             CommerceRuntime.Contracts.Orders.Order order = null;
+            CommerceRuntime.Contracts.Checkouts.Checkout checkout = null;
             if (model == null || string.IsNullOrEmpty(model.Id))
             {
                 cart = (await _cartClient.GetOrCreateCart()).ReadAsSync();
@@ -194,21 +198,52 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             try
             {
-                // add visit id to UserClaims bag for this call.
-                var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext => {
-                    apiContext.UserClaims = apiContext.UserClaims.Copy();
-                    apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
-                });
-                
-                if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
+                //TO-DO: Is multiSHip Var
+                //var isMultiShip = this.SiteContext.GeneralSettings;
+
+                if (true /*isMultiship*/)
                 {
-                    order = (await orderWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType, 
-                                                            new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id}
-                                                            )).ReadAsSync();
+                    // add visit id to UserClaims bag for this call.
+                    var checkoutWebApiClient = _checkoutWebApiClient.CloneWithApiContext(apiContext =>
+                    {
+                        apiContext.UserClaims = apiContext.UserClaims.Copy();
+                        apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
+                    });
+
+                    if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
+                    {
+                        /*checkout = (await checkoutWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
+                                                                new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id }
+                                                                )).ReadAsSync();
+                                                                */
+                    }
+                    else
+                    {
+                        checkout = (await checkoutWebApiClient.CreateCheckoutFromCart(model.Id)).ReadAsSync();
+                    }
+                    return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id).ToString());
                 }
                 else
                 {
-                    order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
+
+                    // add visit id to UserClaims bag for this call.
+                    var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(apiContext =>
+                    {
+                        apiContext.UserClaims = apiContext.UserClaims.Copy();
+                        apiContext.UserClaims.Bag["VisitId"] = this.PageContext.Visit != null ? this.PageContext.Visit.VisitId : null;
+                    });
+
+                    if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
+                    {
+                        order = (await orderWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
+                                                                new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id }
+                                                                )).ReadAsSync();
+                    }
+                    else
+                    {
+                        order = (await orderWebApiClient.CreateOrderFromCart(model.Id)).ReadAsSync();
+                    }
+                    return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
                 }
             }
             catch (Exception e)
@@ -248,7 +283,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 return await RenderCartViewWithMessage(error);
             }
-            
+
             return Redirect(CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id).ToString());
         }
 

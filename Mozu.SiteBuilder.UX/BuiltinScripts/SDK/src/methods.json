@@ -217,10 +217,17 @@
             "verb": "DELETE",
             "template": "{+cartService}current/extendedproperties"
         },
-        "checkout": {
+      "checkout": {
+        "verb": "POST",
+        "template": "{+orderService}?cartId={id}",
+        "returnType": "order",
+        "noBody": true,
+        "includeSelf": true
+      },
+      "checkout2": {
             "verb": "POST",
-            "template": "{+orderService}?cartId={id}",
-            "returnType": "order",
+            "template": "{+checkoutService}?cartId={id}",
+            "returnType": "checkout",
             "noBody": true,
             "includeSelf": true
         },
@@ -732,11 +739,200 @@
     "wishlists": {
         "collectionOf": "wishlist"
     },
-    "instockrequest": {
-        "create": {
-            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
+  "instockrequest": {
+    "create": {
+      "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}",
+      "verb": "POST",
+      "template": "{+inStockNotificationService}"
+    }
+  },
+    "destination": {
+        "template": "{+checkoutService}{id}/destinations/{destinationId}",
+        "includeSelf": true
+    },
+  "destinations": {
+    "collectionOf": "destination"
+  },
+  "toCheckout": {
             "verb": "POST",
-            "template": "{+inStockNotificationService}"
+            "template": "{+checkoutService}?cartId={id}",
+            "returnType": "checkout",
+            "noBody": true,
+            "includeSelf": true
+    },
+   "checkout": {
+        "template": "{+checkoutService}{id}",
+        "includeSelf": true,
+    "create-from-cart": {
+      "template": "{+checkoutService}{?cartId*}",
+      "shortcutParam": "cartId",
+      "method": "POST",
+      "noBody": true
+    },
+    "get-shipping-destinations": {
+      "template": "{+checkoutService}{id}/destinations",
+      "returnType": "destinations"
+    },
+    "add-shipping-destination": {
+      "template": "{+checkoutService}{id}/destinations",
+      "verb": "POST",
+      "returnType": "destination",
+      "includeSelf": true
+    },
+    "update-shipping-destination": {
+      "template": "{+checkoutService}{checkoutId}/destinations/{destinationId}",
+      "verb": "PUT",
+      "returnType": "destination"
+    },
+    "remove-shipping-destination": {
+      "template": "{+checkoutService}{id}/destinations/{destinationId}",
+      "verb": "DELETE"
+    },
+    "get-checkout-items": {
+      "template": "{+checkoutService}{id}/items"
+    },
+    "get-checkout-item": {
+      "template": "{+checkoutService}{id}/items{itemId}"
+    },
+    "split-checkout-item": {
+      "template": "{+checkoutService}{id}/items/{itemId}/split?quantity={quantity}",
+      "verb": "POST"
+
+    },
+    "update-checkout-item-destination": {
+      "template": "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
+      "verb": "POST"
+    },
+    "update-checkout-item-destination-bulk": {
+      "template": "{+checkoutService}{id}/items/destinations",
+      "verb": "POST",
+      "specifyPostData" : true
+    },
+    "update-checkout": {
+      "template": "{+checkoutService}{id}",
+      "verb": "POST",
+      "includeSelf": true
+    },
+    "get-avaiable-shipping-methods": {
+      "template": "{+checkoutService}{id}/shipments/methods",
+      "verb": "GET",
+      "returnType": "shippingmethods"
+    },
+    "update-checkout-item-fulfillment": {
+      "template": "{+checkoutService}{id}/items/{itemId}/fulfillment",
+      "verb": "PUT",
+      "returnType": "shipment",
+      "includeSelf": true
+    },
+     "set-shipping-methods": {
+      "template": "{+checkoutService}{id}/shippingMethods",
+      "verb": "POST", 
+      "specifyPostData" : true
+    },
+        "get-shipping-methods": {
+            "template": "{+checkoutService}{id}/shipments/methods",
+            "returnType": "shippingmethods"
+        },
+        "set-user-id": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/users",
+            "noBody": true,
+            "includeSelf": true,
+            "returnType": "user"
+        },
+        "create-payment": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/payments/actions",
+            "includeSelf": true
+        },
+        "perform-payment-action": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/payments/{paymentId}/actions",
+            "includeSelf": true,
+            "shortcutParam": "paymentId",
+            "returnType": "string"
+        },
+        "apply-coupon": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true,
+            "noBody": true,
+            "returnType": "coupon"
+        },
+        "remove-coupon": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/coupons/{couponCode}",
+            "shortcutParam": "couponCode",
+            "includeSelf": true
+        },
+        "remove-all-coupons": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/coupons",
+            "includeSelf": true
+        },
+        "get-available-actions": {
+            "template": "{+checkoutService}{id}/actions",
+            "includeSelf": true,
+            "returnType": "checkoutactions"
+        },
+        "perform-checkout-action": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/actions",
+            "shortcutParam": "actionName",
+            "overridePostData": [
+                "actionName"
+            ],
+            "includeSelf": true
+        },
+        "add-checkout-note": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/notes",
+            "includeSelf": true,
+            "returnType": "checkoutnote"
+        },
+        "get-extended-properties": {
+            "template": "{+checkoutService}{id}/extendedproperties",
+            "returnType":  "json"
+        },
+        "add-extended-properties": {
+            "verb": "POST",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "update-extended-properties": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "remove-extended-property": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/extendedproperties/{key}"
+        },
+        "remove-extended-properties": {
+            "verb": "DELETE",
+            "template": "{+checkoutService}{id}/extendedproperties"
+        },
+        "process-digital-wallet": {
+            "verb": "PUT",
+            "template": "{+checkoutService}{id}/digitalWallet/VisaCheckout",
+            "includeSelf": true,
+            "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+        },
+        "get-attribute-definitions": {
+            "template": "{+checkoutAttributeDefService}",
+            "returnType": "checkoutattribute"
+        },
+        "update-attributes": {
+          "verb": "PUT",
+          "includeSelf": true,
+          "template": "{+checkoutService}{id}/attributes{?removeMissing}",
+          "shortcutParam": "removeMissing",
+          "returnType": "checkoutattributes"
+        },
+        "get-returnable-items": {
+          "verb": "GET",
+          "includeSelf": true,
+          "template": "{+checkoutService}{id}/returnableitems",
+          "returnType":  "json"
         }
     }
 }

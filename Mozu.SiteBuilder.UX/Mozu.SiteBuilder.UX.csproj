@@ -167,6 +167,7 @@
     <Compile Include="Areas\Misc\Models\TemplateInfo.cs" />
     <Compile Include="Areas\Misc\TemplateInheritanceHandler.cs" />
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\CheckoutV2Controller.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="Hypr\Tags\InlineStyle.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BuiltinScripts\SDK\src\types\checkout.js" />
     <Content Include="foo.aspx" />
     <Content Include="PostDeploy.ps1">
     </Content>
@@ -316,6 +318,7 @@
   <ItemGroup>
     <Folder Include="Areas\Misc\ModelMapping\" />
     <Folder Include="Areas\Misc\Views\Shared\" />
+    <Folder Include="Areas\StoreFront\Views\Checkout_V2\" />
     <Folder Include="Areas\StoreFront\Views\Shared\" />
     <Folder Include="Hypr\Et\" />
     <Folder Include="MessageHandlers\" />

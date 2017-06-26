@@ -4,6 +4,7 @@ using Mozu.CommerceRuntime.Contracts.Discounts;
 using Newtonsoft.Json;
 using DC = Mozu.CommerceRuntime.Contracts.Products;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -48,6 +49,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Value of the LineId
         /// </summary>
         public int LineId { get; set; }
+        
+
 
         /// <summary>
         /// FulfillmentStatus of the BundledProduct

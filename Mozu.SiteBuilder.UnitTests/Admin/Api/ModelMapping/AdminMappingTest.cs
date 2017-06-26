@@ -36,6 +36,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Mapper.AddProfile<TenantMapping>();
             Mapper.AddProfile<UserMapping>();
             Mapper.AddProfile<LocalizationMapping>();
+            Mapper.AddProfile<CheckoutMapping>();
 
             //replace with?
             //List<Type> types = _containerFactory.AssembliesToScan.SelectMany(assy => assy.GetTypes())

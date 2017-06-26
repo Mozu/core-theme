@@ -148,6 +148,18 @@ module.exports = (function() {
                 expireMonth: this.data.expireMonth,
                 expireYear: this.data.expireYear
             }
+        },
+        getCheckoutData: function () {
+            return {
+                cardNumberPartOrMask: this.maskedCardNumber || this.data.cardNumberPartOrMask || this.data.cardNumberPart || this.data.cardNumber,
+                cvv: this.data.cvv,
+                nameOnCard: this.data.nameOnCard,
+                paymentOrCardType: this.data.paymentOrCardType || this.data.cardType,
+                paymentServiceCardId: this.data.paymentServiceCardId || this.data.cardId,
+                isCardInfoSaved: this.data.isCardInfoSaved || this.data.persistCard,
+                expireMonth: this.data.expireMonth,
+                expireYear: this.data.expireYear
+            }
         }
     };
 

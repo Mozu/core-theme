@@ -52,7 +52,9 @@ ApiInterfaceConstructor.prototype = {
         var deferred = me.defer();
 
         var data;
-        if (requestConf.overridePostData) {
+        if (requestConf.postdata) {
+            data = requestConf.postdata;
+        } else if (requestConf.overridePostData) {
             data = requestConf.overridePostData;
         } else if (conf && !requestConf.noBody) {
             data = conf instanceof ApiObject ? conf.data : conf;

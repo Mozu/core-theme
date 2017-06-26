@@ -43,6 +43,7 @@ ApiObjectConstructor.types = {
     customer: require('./types/customer'),
     login: require('./types/login'),
     order: require('./types/order'),
+    checkout: require('./types/checkout'),
     product: require('./types/product'),
     shipment: require('./types/shipment'),
     user: require('./types/user'),

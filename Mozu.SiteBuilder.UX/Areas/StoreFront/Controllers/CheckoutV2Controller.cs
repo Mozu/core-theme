@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -35,7 +35,6 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Customers;
-using Mozu.ProductRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -45,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [DataViewModeEnforcement]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
     [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
-    public class CheckoutController : BaseApiController
+    public class CheckoutV2Controller : BaseApiController
     {
 
         private readonly IAuthenticationHelper _authHelper;
@@ -56,28 +55,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
-        private readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
         private readonly ICheckoutWebApiClient _checkoutWebApiClient;
+
 
 
         //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, 
-            ICookieProvider cookieProvider, 
-            ICustomerAccountWebApiClient customerAccountWebApiClient, 
-            IOrderWebApiClient orderWebApiClient, 
-            Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, 
-            ICreditWebApiClient creditWebApiClient, 
-            ICartWebApiClient cartWebApiClient,
-            Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
-            ISettings settings,
-            ICheckoutWebApiClient checkoutWebApiClient)
+        public CheckoutV2Controller(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,
+            ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient,
+            Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient
+            cartWebApiClient, ISettings settings, ICheckoutWebApiClient checkoutWebApiClient)
         {
 
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
-            _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
+
             _orderWebApiClient = orderWebApiClient;
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
@@ -108,7 +102,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpPost]
         public async Task<HttpResponseMessage> Index(string id = null, HttpRequestMessage requestMessage = null)
         {
-
             if (id == null)
             {
                 var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
@@ -118,20 +111,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Uri redirectUrl = null;
             try
             {
-                //TO-DO: Is multiSHip Var
-                //var isMultiShip = this.SiteContext.GeneralSettings;
-
-                if (true /*isMultiship*/)
+                //TO-DO: Check if genernal settings has multi ship to selected
+                if (true)
                 {
                     var checkout = (await _checkoutWebApiClient.CreateCheckoutFromCart(id)).ReadAsSync();
-                    redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout_V2/" + checkout.Id);
+                    redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id);
                 }
-                else
-                {
+                else {
                     var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
                 }
-    
             }
             catch (Exception e)
             {
@@ -184,20 +173,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
-        public async Task<ActionResult> Index(string orderId)
+        public async Task<ActionResult> Index(string checkoutId)
         {
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
                 {
-                    Path = "checkout"
+                    Path = "checkoutv2"
                 }
 
             };
-            pc.PageType = "checkout";
+            pc.PageType = "checkoutv2";
             //var id = OrderId;
-            var id = orderId;
+            var id = checkoutId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
             Checkout model = null;
             Customer.Contracts.CustomerAccount account = null;
@@ -227,7 +216,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
-
             //var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
             List<Product> productsRemoved = null;
 
@@ -420,28 +408,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return View("checkout", jOrder);
         }
 
-        async Task<bool> HasPriceListChanged(string priceListCode)
-        {
-            if (this.SbApiContext.PriceListCode.EqualsIgnoreCase(priceListCode))
-            {
-                return false;
-            }
-            //filter out condition when default pricelist is explictly set.
-            if (string.IsNullOrEmpty(this.SbApiContext.PriceListCode) || string.IsNullOrEmpty(priceListCode))
-            {
-                var nonEmptyPriceListCode = string.IsNullOrEmpty(this.SbApiContext.PriceListCode) ? priceListCode : this.SbApiContext.PriceListCode;
 
-                var defaultPriceListRes = await _priceListRuntimeWebApiClient.Value.CloneWithoutUserClaims().GetDefaultPriceList().ConfigureAwait(false);
-                if (!defaultPriceListRes.HasException)
-                {
-                    return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
-                }
-
-                
-            }
-            return true;
-        }
-        
         public class CheckoutPciSettings
         {
             public string apiBase { get; set; }

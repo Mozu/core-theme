@@ -641,6 +641,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing((OrdersDC.OrderItem dc) => dc.Product?.IsPackagedStandAlone ?? false))
                 // handled by after mapper, this needs to be aggregated!
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.Product?.FulfillmentStatus))
+                
 
                 .AfterMap((dc, orderItem) =>
                 {
@@ -1153,6 +1154,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.ProductDiscount, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-28 
                   .ForMember(dc => dc.Data, op => op.Ignore())
                   .ForMember(dc => dc.DutyAmount, op => op.Ignore())
+                  .ForMember(dc => dc.DestinationId, op => op.Ignore())
+                  .ForMember(dc => dc.TaxData, op => op.Ignore())
                   ;
         }
 
