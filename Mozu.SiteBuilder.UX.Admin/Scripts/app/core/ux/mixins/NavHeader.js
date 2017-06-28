@@ -508,7 +508,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     margin: "0 0 0 10",
                     ui: 'link',
                     scale: 'medium',
-                    hidden: !me.cancelButtonVisible || this.cancelHidden || !this.allowCreate(),
+                    hidden: !me.cancelButtonVisible || this.cancelHidden || !(me.allowCreate() || me.allowUpdate()),
                     itemId: 'cancelActionButton',
                     handler: me.cancelActionHandler,
                     scope: me
@@ -521,7 +521,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     me.footerActions.push(me.cancelActionButton);
                 }
             }
-            
+
             if (me.saveButtonEnabled) {
 
                 var saveButtonCfg = Ext.apply({}, me.saveButtonCfg, {
@@ -531,7 +531,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     margin: "0 0 0 10",
                     ui: 'action-primary',
                     scale: 'medium',
-                    hidden: me.saveHidden || !me.saveButtonVisible || !me.allowCreate(),
+                    hidden: me.saveHidden || !me.saveButtonVisible || !(me.allowCreate() || me.allowUpdate()) ,
                     itemId: 'saveActionButton',
                     allowDepress: false,
                     enableToggle: me.enableSaveActionToggle,
@@ -545,8 +545,9 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     saveButtonCfg.menu = [{
                         text: "Save and Create New",
                         handler: me.saveAndCreate,
-                        scope:me
-                    }]
+                        scope: me,
+                        hidden: !(me.allowUpdate() || me.allowCreate())
+                    }];
                 }
 
                 if (saveButtonCfg.xtype === 'splitbutton') {
@@ -567,7 +568,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }
                 
             }
-
+            
             if (me.createButtonEnabled) {
                 me.createButton = Ext.create('Ext.button.Button', Ext.apply({}, me.createButtonCfg, {
                     height: 40,
@@ -575,7 +576,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     margin: "0 0 0 10",
                     ui: 'action-primary',
                     scale: 'medium',
-                    hidden: !me.createButtonVisible,
+                    hidden: !me.createButtonVisible || !me.allowCreate(),
                     itemId: 'createActionButton',
                     handler: me.createActionHandler,
                     scope: me
@@ -686,7 +687,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     saveAndCreate: function () {
         var me = this;
-        
+
         if (me.saveInProgress) {
             return;
         }
