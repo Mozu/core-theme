@@ -33,18 +33,18 @@ Ext.define('Taco.view.customSchema.Grid', {
         disableAdvancedSearch: true
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.editors = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityEditors');
 
-        var getDefaultView = function(list) {
+        var getDefaultView = function (list) {
 
             var views = list
                 ? list.views
                 : [];
 
-            if (!views || !Array.isArray(views) || views.length < 1) { 
+            if (!views || !Array.isArray(views) || views.length < 1) {
                 return null;
             }
 
@@ -77,7 +77,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         me.callParent(arguments);
     },
 
-    createRecord: function(data) {
+    createRecord: function (data) {
         this.record = Ext.create('Taco.model.EntityList', {
             entityType: data.entityType,
             autoLoad: true,
@@ -86,7 +86,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         });
     },
 
-    applyViewConfig: function() {
+    applyViewConfig: function () {
         this.enableNavHeader = true;
 
         this.record = Ext.create('Taco.model.EntityList', {
@@ -101,9 +101,9 @@ Ext.define('Taco.view.customSchema.Grid', {
         this.initListView(this.record, true);
     },
 
-    getStateFulId: function(rec) {
+    getStateFulId: function (rec) {
 
-        var fields = rec 
+        var fields = rec
             ? rec.fields
             : [];
 
@@ -111,10 +111,10 @@ Ext.define('Taco.view.customSchema.Grid', {
             return 'customSchema-grid';
         }
 
-        var start = 
+        var start =
                 this.listMetaData.get ?
-                    this.listMetaData.get('entityType') 
-                        + this.listMetaData.get('name')  
+                    this.listMetaData.get('entityType')
+                        + this.listMetaData.get('name')
                         + this.listMetaData.get('listFQN')
                     : this.listMetaData.entityType
                         + this.listMetaData.name
@@ -125,12 +125,12 @@ Ext.define('Taco.view.customSchema.Grid', {
         if (!fields.length || fields.length === 0) return start;
 
         else {
-            var key = fields.map(function(rec) { return rec.name; }).join(',');
+            var key = fields.map(function (rec) { return rec.name; }).join(',');
             return start + key;
         }
     },
 
-    initListView: function(record, isSinglePage, view) {
+    initListView: function (record, isSinglePage, view) {
 
         var me = this,
             metaData = this.buildColumns(record, null, view);
@@ -147,19 +147,19 @@ Ext.define('Taco.view.customSchema.Grid', {
         me.on('cellclick', me.onCellClick, me);
     },
 
-    updatePagerToolbar: function(record, isSinglePage) {
+    updatePagerToolbar: function (record, isSinglePage) {
+        var exisitingMenu = this.down('#taco-view-menu');
 
         if (record.get('views').length > 0) {
 
             var menu = Ext.widget('menu'),
-                exisitingMenu = this.down('#taco-view-menu'),
                 me = this;
 
-            Ext.Array.each(record.get('views'), function(view) {
+            Ext.Array.each(record.get('views'), function (view) {
                 menu.add({
                     text: view.name,
                     view: view,
-                    handler: function(cmp) {
+                    handler: function (cmp) {
                         me.initListView(record, null, cmp.view);
                     }
                 });
@@ -175,14 +175,25 @@ Ext.define('Taco.view.customSchema.Grid', {
             };
 
             if (exisitingMenu) {
+                Ext.suspendLayouts();
                 exisitingMenu.destroy();
                 this.gridPager.insert(this.gridPager.items.getCount() - 2, this.viewMenu);
+                Ext.resumeLayouts(true);
             }
 
             else {
                 if ((me.gridPager && isSinglePage) || this.siteBuilderList) {
-                    me.gridPager.on('change', function() {
-                        me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
+                    me.gridPager.on('change', function () {
+                        var exisitingMenu = this.down('#taco-view-menu');
+                        if (exisitingMenu) {
+                            Ext.suspendLayouts();
+                            exisitingMenu.destroy();
+                            me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
+                            Ext.resumeLayouts(true);
+                        }
+                        else {
+                            me.gridPager.insert(me.gridPager.items.getCount() - 2, me.viewMenu);
+                        }
                     })
                 }
 
@@ -191,9 +202,12 @@ Ext.define('Taco.view.customSchema.Grid', {
                 }
             }
         }
+        if ((record.get('views').length === 0 || record.get('views').length === undefined) && exisitingMenu) {
+            exisitingMenu.destroy();
+        }
     },
 
-    buildColumns: function(record, ignoreStore, view) {
+    buildColumns: function (record, ignoreStore, view) {
 
         var me = this;
         var split = me.up('entity-split');
@@ -207,7 +221,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.data.name;
                 },
                 text: 'Document Name',
@@ -224,7 +238,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         else {
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.data.id;
                 },
                 text: 'Id',
@@ -239,11 +253,11 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         view = view || { fields: [] };
 
-        Ext.Array.each(view.fields || [], function(viewField) {
+        Ext.Array.each(view.fields || [], function (viewField) {
             columns.push({
                 xtype: 'gridcolumn',
                 dataIndex: viewField.name,
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     var fields = record.getFields();
                     if (fields) {
                         return fields[viewField.name];
@@ -263,7 +277,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.data.documentTypeFQN;
                 },
                 text: 'Content Type',
@@ -277,7 +291,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.get('publishState') ? record.get('publishState') : 'Live';
                 },
                 text: 'Status',
@@ -291,7 +305,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.get('startDate') ? record.get('startDate') : 'Now';
                 },
                 text: 'Start Date',
@@ -306,7 +320,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
             columns.push({
                 xtype: 'gridcolumn',
-                renderer: function(value, metaData, record) {
+                renderer: function (value, metaData, record) {
                     return record.get('endDate') ? record.get('endDate') : 'Never';
                 },
                 text: 'End Date',
@@ -322,7 +336,7 @@ Ext.define('Taco.view.customSchema.Grid', {
 
         columns.push({
             xtype: 'taco.menucolumn',
-            onMenuShow: function(cmp, item) {
+            onMenuShow: function (cmp, item) {
                 var isPublishable = item.record.get('publishState') === 'draft';
                 cmp.down('#publish-handler')[isPublishable ? 'enable' : 'disable']();
             },
@@ -330,7 +344,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                 {
                     text: 'Edit',
                     hideOnClick: false,
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
                         if (split) {
                             split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData);
                         }
@@ -338,7 +352,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                         else if (eventData.grid.siteBuilderList) {
 
                             eventData.record.reload({
-                                success: function() {
+                                success: function () {
                                     me.record = eventData.record;
                                     me.saveButton.show();
                                     me.viewContainer.removeAll();
@@ -365,7 +379,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                 {
                     text: 'Delete',
                     hideOnClick: false,
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
                         me.deleteRecordFromStore(eventData.record);
                     }
                 },
@@ -373,13 +387,13 @@ Ext.define('Taco.view.customSchema.Grid', {
                     text: 'Publish',
                     hideOnClick: false,
                     itemId: 'publish-handler',
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
                         var record = eventData.record;
 
                         record.publish({
-                            success: function() {
-                                 Taco.app.fireEvent('setmessage', 'Published', 'success');
-                                 eventData.grid.store.reload();
+                            success: function () {
+                                Taco.app.fireEvent('setmessage', 'Published', 'success');
+                                eventData.grid.store.reload();
                             }
                         });
                     }
@@ -391,7 +405,7 @@ Ext.define('Taco.view.customSchema.Grid', {
             columns[columns.length - 1].menuItems.push({
                 text: 'Edit Raw',
                 hideOnClick: false,
-                menuColumnHandler: function(item, eventData) {
+                menuColumnHandler: function (item, eventData) {
                     if (split) {
                         split.onItemEdit(eventData.grid, eventData.record, eventData.grid.listMetaData, {
                             editMode: 'raw'
@@ -401,7 +415,7 @@ Ext.define('Taco.view.customSchema.Grid', {
                     else if (eventData.grid.siteBuilderList) {
 
                         eventData.record.reload({
-                            success: function() {
+                            success: function () {
                                 me.record = eventData.record;
                                 me.viewContainer.removeAll();
                                 me.saveButton.show();
@@ -446,7 +460,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         };
     },
 
-    navigateToEdit: function(record) {
+    navigateToEdit: function (record) {
         var me = this;
 
         if (record) {
@@ -463,26 +477,26 @@ Ext.define('Taco.view.customSchema.Grid', {
                 }
             });
 
-            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN , record.raw);
+            Taco.core.StateManager.attemptNavigate('customschema/edit?type=' + this.entityType + '&list=' + this.listFQN, record.raw);
         }
     },
 
-    deleteRecordFromStore: function(record) {
+    deleteRecordFromStore: function (record) {
         record.destroy({
-            success: function() {
+            success: function () {
                 Taco.app.fireEvent('setmessage', 'Successfully deleted', 'success');
             },
-            failure: function() {
+            failure: function () {
                 Taco.app.fireEvent('setmessage', 'An error occurred while trying to delete this record', 'error');
             }
         });
     },
 
-    doCreate: function() {
+    doCreate: function () {
         this.navigateToEdit();
     },
 
-    onCellClick: function(view, td, cellIndex, record, tr, rowIndex, e) {
+    onCellClick: function (view, td, cellIndex, record, tr, rowIndex, e) {
 
         //sigh, if we click a context menu, ignore it
         if (td.querySelector('.taco-grid-row-menu-trigger')) {
@@ -500,7 +514,7 @@ Ext.define('Taco.view.customSchema.Grid', {
         else if (eventData.grid.siteBuilderList) {
 
             record.reload({
-                success: function() {
+                success: function () {
                     me.record = record;
                     me.saveButton.show();
                     me.viewContainer.removeAll();

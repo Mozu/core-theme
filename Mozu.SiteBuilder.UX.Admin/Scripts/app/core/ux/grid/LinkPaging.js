@@ -1,6 +1,11 @@
 ﻿/**
  * Extension of PagingToolbar to replace paging controls with a set of link buttons
  */
+var MOVE_NEXT = 'MOVE_NEXT';
+var MOVE_PREVIOUS = 'MOVE_PREVIOUS';
+var MOVE_FIRST = 'MOVE_FIRST'
+var MOVE_LAST = 'MOVE_LAST';
+
 Ext.define('Taco.core.ux.grid.LinkPaging', {
     extend: 'Ext.toolbar.Paging',
     alias: 'widget.taco.linkpagingtoolbar',
@@ -20,13 +25,13 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         var lastPage = pageData.pageCount;
         var lastDisplayed;
         var firstDisplayed;
-        var arrowLeftCls = currPage === 1 ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
-        var arrowRightCls = currPage === lastPage ? this.getClsName('tbar-page-link ', 'arrow-disabled') : this.getClsName('tbar-page-link');
+        var arrowLeftCls = currPage === 1 ? this.getClsName('tbar-page-link', 'arrow-disabled') : this.getClsName('tbar-page-link');
+        var arrowRightCls = currPage === lastPage ? this.getClsName('tbar-page-link', 'arrow-disabled') : this.getClsName('tbar-page-link');
         var refreshCls = this.getClsName('refresh-btn');
         var refreshBtn = {
             itemId: 'refresh',
             cls: refreshCls,
-            handler: function() {
+            handler: function () {
                 this.store.reload();
             },
             text: '',
@@ -43,7 +48,9 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'prev',
                 cls: arrowLeftCls + ' paginationArrows pagination-arrow-left',
-                handler: me.movePrevious,
+                handler: function () {
+                    return me.handlePagerAction(MOVE_PREVIOUS)
+                },
                 text: '',
                 scope: me,
             });
@@ -54,7 +61,9 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'first',
                 cls: this.getClsName('tbar-page-link'),
-                handler: me.moveFirst,
+                handler: function () {
+                    return me.handlePagerAction(MOVE_FIRST)
+                },
                 text: "1",
                 scope: me,
             });
@@ -75,7 +84,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
         for (var pageNumber = firstDisplayed; pageNumber <= lastDisplayed; pageNumber++) {
 
-            var cls = (function() {
+            var cls = (function () {
 
                 var iconCls = pageNumber == currPage ? this.getClsName('tbar-page-link-current', 'tbar-page-link') : this.getClsName('tbar-page-link');
 
@@ -120,7 +129,9 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'last',
                 cls: this.getClsName('tbar-page-link'),
-                handler: me.moveLast,
+                handler: function () {
+                    return me.handlePagerAction(MOVE_LAST)
+                },
                 text: lastPage,
                 scope: me,
             });
@@ -131,7 +142,9 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageNumberItems.push({
                 itemId: 'next',
                 cls: arrowRightCls + ' paginationArrows pagination-arrow-right',
-                handler: me.moveNext,
+                handler: function () {
+                    return me.handlePagerAction(MOVE_NEXT)
+                },
                 text: '',
                 scope: me,
             });
@@ -162,7 +175,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
         me.callParent();
     },
 
-    onReconfigure: function(grid, store) {
+    onReconfigure: function (grid, store) {
         if (!store) {
             return;
         }
@@ -182,21 +195,18 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
             pageData = me.getPageData();
         }
 
-        me.removeAll();
-        me.add(me.getPagingItems());
-        me.updateInfo();
+        me.syncPager();
 
         if (me.rendered) {
             me.fireEvent('change', me, pageData);
         }
     },
 
-    getClsName: function() {
+    getClsName: function () {
         var prefix = Ext.baseCSSPrefix;
         var args = Array.prototype.slice.call(arguments);
 
-        return args.map(function(str) { return prefix + str + ' '});
-
+        return args.map(function (str) { return prefix + str + ' ' });
     },
 
     onPageClicked: function () {
@@ -205,7 +215,52 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
 
         if (me.fireEvent('beforechange', me, idx) !== false) {
             me.store.loadPage(idx);
+            me.syncPager();
         }
+    },
+
+    handlePagerAction: function (action) {
+        var me = this;
+
+        switch (action) {
+            case MOVE_NEXT:
+                me.moveNext();
+                break;
+            case MOVE_PREVIOUS:
+                me.movePrevious();
+                break;
+            case MOVE_FIRST:
+                me.moveFirst();
+                break;
+            case MOVE_LAST:
+                me.moveLast();
+                break;
+            default:
+                return;
+        }
+        me.syncPager();
+    },
+
+    syncPager: function () {
+        var me = this;
+        var viewmenu = me.getComponent('taco-view-menu');
+
+        for (var i = 0; me.items.items.length > i;) {
+            if (me.items.items[i] === viewmenu) {
+                i++
+            }
+            else {
+                me.remove(me.items.items[i]);
+            }
+        }
+
+        var pagingItems = me.getPagingItems();
+        pagingItems = viewmenu
+            ? Ext.Array.insert(pagingItems, pagingItems.length - 2, [viewmenu])
+            : pagingItems;
+
+        me.add(pagingItems);
+        me.updateInfo();
     },
 
     onChoosePage: function () {
@@ -239,7 +294,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                             listeners: {
                                 specialkey: {
                                     scope: me,
-                                    fn: function(cmp, e) {
+                                    fn: function (cmp, e) {
                                         if (e.keyCode === 13) {
                                             Ext.ComponentQuery.query("#go-to-page")[0].handler();
                                         }
@@ -260,6 +315,7 @@ Ext.define('Taco.core.ux.grid.LinkPaging', {
                                     pageNum = Math.min(Math.max(1, pageNum), pageData.pageCount);
                                     if (me.fireEvent('beforechange', me, pageNum) !== false) {
                                         me.store.loadPage(pageNum);
+                                        me.syncPager();
                                     }
                                 }
                                 me.pageChooser.hide();
