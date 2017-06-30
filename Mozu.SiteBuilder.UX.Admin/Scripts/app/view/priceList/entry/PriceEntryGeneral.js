@@ -65,6 +65,16 @@ Ext.define('Taco.view.priceList.entry.PriceEntryGeneral', {
                 return (!this.getValue()) ? ["This field is required"] : [];
             },
             listeners: {
+                afterrender: {
+                    fn: function(cmp) {
+                        if (!this.isCreateMode) {
+                            Ext.each(cmp.triggerEl.elements, function(el) {
+                                el.dom.style.display = 'none'
+                            });
+                        }
+                    },
+                    scope: me
+                },
                 change: {
                     fn: function(cmp, newVal) {
 

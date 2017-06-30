@@ -65,6 +65,11 @@ Ext.define('Taco.model.PriceListEntry', {
             type: 'string',
             defaultValue: 'Simple'
         }, {
+            name: 'priceListEntryTypeCode',
+            type: 'string',
+            defaultValue: null,
+            useNull: true
+        }, {
             name: 'basicListPrice',
             type: 'float',
             persist: false,
@@ -104,7 +109,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? 'Overridden' : 'UseCatalog';
+                return (val && val !== 'UseCatalog') ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'msrp',
@@ -118,7 +123,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? 'Overridden' : 'UseCatalog';
+                return (val && val !== 'UseCatalog') ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'map',
@@ -142,7 +147,7 @@ Ext.define('Taco.model.PriceListEntry', {
                 return val !== 'UseCatalog';
             },
             serialize: function(val) {
-                return val ? 'Overridden' : 'UseCatalog';
+                return (val && val !== 'UseCatalog') ? 'Overridden' : 'UseCatalog';
             }
         }, {
             name: 'cost',

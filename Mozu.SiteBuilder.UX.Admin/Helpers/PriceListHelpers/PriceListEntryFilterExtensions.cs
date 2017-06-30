@@ -13,12 +13,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
     internal static class PriceListEntryFilterExtensions
     {
         private const string CODE_PROPERTY = "priceListcode";
-
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string CURRENCY_CODE_PROPERTY = "currencyCode";
         private const string START_DATE_PROPERTY = "startDate";
         private const string END_DATE_PROPERTY = "endDate";
-
+        private const string ENTRY_TYPE_PROPERTY = "entryType";
         private const string CREATE_DATE_PROPERTY = "auditinfo.createdate";
         private const string MODIFIED_DATE_PROPERTY = "auditinfo.updatedate";
         private const string CREATE_BY_PROPERTY = "auditinfo.createby";
@@ -32,8 +31,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
             if (extFilter == null || extFilter.Count == 0)
                 return null;
 
-            StringBuilder sb = new StringBuilder();
-            foreach (var filter in extFilter.Where(x => x.value != null && !string.IsNullOrEmpty(x.value.ToString())))
+            var sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(x => !string.IsNullOrEmpty(x.value?.ToString())))
             {
 
                 var filterString = GetFilter(filter.value, filter);
@@ -63,36 +62,35 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                 case "all":
                     var str = "";
                     str += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(searchString => string.Format("({0} cont \"{1}\")", PRODUCT_CODE_PROPERTY, searchString)));
+                        .Select(searchString => $"({PRODUCT_CODE_PROPERTY} cont \"{searchString}\")"));
                     return str;
                 case "code":
                 case "productname":
-                    return String.Format("{0} cont \"{1}\"", PRODUCT_CODE_PROPERTY, filter.escapedValue);
-                
+                    return $"{PRODUCT_CODE_PROPERTY} cont \"{filter.escapedValue}\"";
                 case "currencycode":
-                    return String.Format("{0} eq \"{1}\"", CURRENCY_CODE_PROPERTY, filter.value);
+                    return $"{CURRENCY_CODE_PROPERTY} eq \"{filter.value}\"";
+                case "entrytype":
+                    return $"{ENTRY_TYPE_PROPERTY} eq \"{filter.value}\"";
                 case "startdatefrom":
-                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{START_DATE_PROPERTY} ge \"{((DateTime)filter.value).ToUniversalTime().ToString("o")}\"";
                 case "startdateto":
-                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{START_DATE_PROPERTY} le \"{((DateTime)filter.value).ToUniversalTime().ToString("o")}\"";
                 case "enddatefrom":
-                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{END_DATE_PROPERTY} ge \"{((DateTime)filter.value).ToUniversalTime().ToString("o")}\"";
                 case "enddateto":
-                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
-
+                    return $"{END_DATE_PROPERTY} le \"{((DateTime)filter.value).ToUniversalTime().ToString("o")}\"";
                 case "modifiedby":
                     return string.Format("(createby eq \"{0}\" or updateby eq \"{0}\")", filter.value);
-
                 case "modifiedfrom":
-                    return string.Format("updatedate ge {0}", ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"updatedate ge {((DateTime)filter.value).ToUniversalTime().ToString("o")}";
                 case "modifiedto":
-                    return string.Format("updatedate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                    return
+                        $"updatedate le {((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
 
-                
                 default:
-                    {
-                        throw new NotImplementedException("unable to filter on property " + filter.property);
-                    }
+                {
+                    throw new NotImplementedException("unable to filter on property " + filter.property);
+                }
             }
         }
 

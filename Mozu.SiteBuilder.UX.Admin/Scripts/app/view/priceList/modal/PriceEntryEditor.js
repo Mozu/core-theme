@@ -130,7 +130,8 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
 
         me.generalPanel = Ext.create('Taco.view.priceList.entry.PriceEntryGeneral', {
             record: me.record,
-            parentContainer: me
+            parentContainer: me,
+            isCreateMode: me.isCreateMode
         });
 
         me.pricePanel = Ext.create('Taco.view.priceList.entry.PriceEntryPrice', {
@@ -187,6 +188,14 @@ Ext.define('Taco.view.priceList.modal.PriceEntryEditor', {
         }
 
         this.record.set('priceListEntryMode', isBulk ? 'Bulk' : 'Simple');
+
+        var priceListEntryTypeCode = null;
+
+        if (data.priceListEntryTypeCode) {
+            priceListEntryTypeCode = data.priceListEntryTypeCode;
+        }
+
+        this.record.set('priceListEntryTypeCode', priceListEntryTypeCode);
 
         entries.each(function(entry) {
             priceEntries.push(entry.getValues());

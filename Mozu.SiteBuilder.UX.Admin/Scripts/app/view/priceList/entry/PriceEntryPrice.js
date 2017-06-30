@@ -191,7 +191,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         me.discountRestriction = Ext.widget('combobox', {
             fieldLabel: 'Discounts Restriction',
             name: 'discountsRestricted',
-            displayFeild: 'text',
+            displayField: 'text',
             valueField: 'value',
             editable: false,
             forceSelection: true,
@@ -269,6 +269,47 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 me.mapOverride,
                 me.mapStartDate,
                 me.mapEndDate
+            ]
+        });
+
+        me.entryTypePicker = Ext.create('Ext.form.ComboBox', {
+            name: 'priceListEntryTypeCode',
+            fieldLabel: 'Entry Type',
+            width: '50%',
+            padding: '0 0 0 30',
+            valueField: 'id',
+            displayField: 'id',
+            readOnly: false,
+            queryMode: 'local',
+            editable: true,
+            forceSelection: false,
+            emptyText: 'None',
+            defaultValue: 'None',
+            trigger2Cls: 'x-form-clear-trigger',
+            onTrigger2Click: function () {
+                this.setValue('');
+            },
+            store: {
+                fields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'value', type: 'string' }
+                ]
+            }
+        });
+
+        Taco.model.Attribute.load('system~price-list-entry-type', {
+            success: function(attribute) {
+                me.entryTypePicker.store.loadData(attribute.get('values'))
+            }
+        });
+
+        me.entryTypeRow = Ext.widget('panel', {
+            layout: {
+                type: 'hbox'
+            },
+            margin: '0 0 20 0',
+            items: [
+                me.entryTypePicker
             ]
         });
 
@@ -407,6 +448,7 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
                 }
             },
             items: [
+                me.entryTypeRow,
                 {
                     items: [
                         me.msrpOverride,
@@ -651,6 +693,12 @@ Ext.define('Taco.view.priceList.entry.PriceEntryPrice', {
         this.updateExtras(record.get('extras'));
         this.injectExtrasTab(record);
         this.populatePricingTable(record);
+
+        var entryType = record.data.priceListEntryTypeCode;
+
+        if (entryType) {
+            this.entryTypePicker.setValue(entryType);
+        }
     },
 
     formatCurrency: function (value, currency) {

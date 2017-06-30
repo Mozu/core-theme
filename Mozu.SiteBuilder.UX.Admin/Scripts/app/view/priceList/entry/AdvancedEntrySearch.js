@@ -102,7 +102,46 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             }
         });
         
+        me.entryTypePicker = Ext.create('Ext.form.ComboBox', {
+            name: 'entrytype',
+            fieldLabel: 'Entry Type',
+            width: '100%',
+            valueField: 'id',
+            displayField: 'id',
+            readOnly: false,
+            queryMode: 'local',
+            editable: true,
+            forceSelection: false,
+            emptyText: 'None',
+            defaultValue: 'None',
+            trigger2Cls: 'x-form-clear-trigger',
+            onTrigger2Click: function () {
+                this.setValue('');
+            },
+            store: {
+                fields: [
+                    { name: 'id', type: 'string' },
+                    { name: 'value', type: 'string' }
+                ]
+            }
+        });
+
+        Taco.model.Attribute.load('system~price-list-entry-type', {
+            success: function(attribute) {
+                me.entryTypePicker.store.loadData(attribute.get('values'))
+            }
+        });
+
         this.items = [
+            {
+                xtype: 'panel',
+                layout: {
+                    type: 'hbox'
+                },
+                items: [
+                    me.productPickerField
+                ]
+            },
             {
                 xtype: 'panel',
                 layout: {
@@ -110,7 +149,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
                     align: 'stretch'
                 },
                 items: [
-                    me.productPickerField
+                    me.entryTypePicker
                 ]
             },
             {
@@ -183,7 +222,7 @@ Ext.define('Taco.view.priceList.entry.AdvancedEntrySearch', {
             },
             {
                 xtype: 'fieldcontainer',
-                fieldLabel: 'Modfied Range',
+                fieldLabel: 'Modified Range',
                 layout: {
                     type: 'hbox',
                     align: 'middle'

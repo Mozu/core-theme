@@ -165,16 +165,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            if (extFilter != null && extFilter.Any())
             {
                 filter = extFilter.ToFilterEntryString();
             }
-            string sortBy = pagingParams.sort.ToSortString();
+            var sortBy = pagingParams.sort.ToSortString();
 
             //const string responseFields = "items(id,name,PriceListCode,couponCodeType,status,canBeDeleted,maxRedemptionsPerUser,maxRedemptionsPerCouponCode,startDate,endDate,redemptionCount,setSize,assignedDiscountCount)";
-            //try
-            //{
-            var entries = (await _priceListWebClient.GetPriceListEntries(priceListCode: priceListCode, startIndex: pagingParams.startIndex,
+            var entries = (await _priceListWebClient.GetPriceListEntries(priceListCode: priceListCode, 
+                startIndex: pagingParams.startIndex,
                 pageSize: pagingParams.pageSize,
                 sortBy: sortBy,
                 filter: filter

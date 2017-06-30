@@ -27,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists
 
         public List<ProductOption> Options { get; set; }
 
+        public string PriceListEntryTypeCode { get; set; }
+
         public string PriceListEntryMode { get; set; }
 
         public int PriceListEntrySequence { get; set; }
