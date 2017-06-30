@@ -37,15 +37,15 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
         {
             var fileToContentMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                {"C:\\temp\\grandparent\\pages\\category.hypr.live", @"{% extends ""pages/category"" %}"},
-                {"C:\\temp\\parent\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
-                {"C:\\temp\\child\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
-                {"C:\\temp\\child\\pages\\extends.hypr.live", @"{% extends ""pages/extends"" %}"},
-                {"C:\\temp\\child\\pages\\noextends.hypr.live", @"wut"},
+                {"C:\\temp\\grandparent\\templates\\pages\\category.hypr.live", @"{% extends ""pages/category"" %}"},
+                {"C:\\temp\\parent\\templates\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
+                {"C:\\temp\\child\\templates\\pages\\category.hypr.live", @"{% extends ""pages/category""|parent_template %}"},
+                {"C:\\temp\\child\\templates\\pages\\extends.hypr.live", @"{% extends ""pages/extends"" %}"},
+                {"C:\\temp\\child\\templates\\pages\\noextends.hypr.live", @"wut"},
             };
 
             // setup file structure
-            var dirs = new List<string>{"c:/temp", "c:/temp/parent", "c:/temp/parent/pages", "c:/temp/child", "c:/temp/child/pages", "c:/temp/grandparent", "c:/temp/grandparent/pages"};
+            var dirs = new List<string> { "C:\\temp\\child\\templates\\pages", "C:\\temp\\parent\\templates\\pages\\", "C:\\temp\\grandparent\\templates\\pages\\" };
             foreach (var dir in dirs.Where(x => !Directory.Exists(x)))
             {
                 Directory.CreateDirectory(dir);
@@ -71,7 +71,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         RootPath = @"c:\temp\grandparent",
                         IsFile = true
                     }
-                }, null ,null)
+                }, null, null)
             };
 
             var parentTheme = new Theme
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         RootPath = @"c:\temp\parent",
                         IsFile = true,
                     }
-                }, null , null)
+                }, null, null)
             };
             var childTheme = new Theme
             {
@@ -122,11 +122,11 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                         RootPath = @"C:\temp\child",
                         IsFile = true,
                     },
-                }, null ,null)
+                }, null, null)
             };
 
             var virtToFSIMap = new Dictionary<string, ThemeFileSystemInfo>();
-            virtToFSIMap.AddRange(childTheme.FileListing.LiveTemplates.Select(x => new KeyValuePair<string, ThemeFileSystemInfo>(string.Format("templates/{0}",x.VirtualPathNoExt), x)));
+            virtToFSIMap.AddRange(childTheme.FileListing.LiveTemplates.Select(x => new KeyValuePair<string, ThemeFileSystemInfo>(string.Format("templates/{0}", x.VirtualPathNoExt), x)));
             var context = Substitute.For<ISiteBuilderApiContext>();
             var settings = Substitute.For<ISettings>();
             settings.AppSettings("SSLValidationEnabled").Returns("true");
@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var cprov = Substitute.For<ISiteBuilderContextProvider>();
             var data = new SiteBuilderContextData();
             cprov.GetContextData().Returns(data);
-            var scontext = new SiteContext(httprequest , context , cprov , null, cookieprovider, null, null, settings)  //new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
+            var scontext = new SiteContext(httprequest, context, cprov, null, cookieprovider, null, null, settings)  //new GeneralSettingsWebApiClient(scmh), null, null, null, cookieprovider, new CheckoutSettingsWebApiClient(scmh), context, settings, new LocationSettingsWebApiClient(scmh), new SitesWebApiClient(scmh), httprequest)
             {
                 Theme = childTheme
             };
@@ -149,10 +149,10 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
             var logger = Substitute.For<ILogger>();
             var ApiContext = Substitute.For<IApiContext>();
             var templateGetter = new TemplateInheritanceHandler(vpp, contentRetriever, logger);
-            var resourceController = new ResourceController(new Lazy<IMozuVirtualPathProvider> ( ()=>vpp), new Lazy<INavigationGandalf> (()=>nav), new Lazy<IThemeContentRetriever>(()=>contentRetriever), logger, settings, ApiContext, templateGetter, null);
+            var resourceController = new ResourceController(new Lazy<IMozuVirtualPathProvider>(() => vpp), new Lazy<INavigationGandalf>(() => nav), new Lazy<IThemeContentRetriever>(() => contentRetriever), logger, settings, ApiContext, templateGetter, null);
             var results = await resourceController.LiveTemplates();
             results.Count.ShouldEqual(5);
-            
+
         }
 
         public class TestFileContentRetriver : IThemeContentRetriever
@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 
             public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
             {
-                return _fileToContentMap[info.FullPath];
+                return _fileToContentMap[info.FullPath.Replace("/", "\\").Replace("\\\\", "\\")];
             }
 
             public Stream GetStream(ThemeFileSystemInfo info)
