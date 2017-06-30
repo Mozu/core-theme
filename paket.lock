@@ -1,6 +1,6 @@
 REDIRECTS: ON
 CONTENT: NONE
-FRAMEWORK: NET45, NET451
+RESTRICTION: || (== net45) (== net451)
 NUGET
   remote: http://nuget-internal.corp.volusion.com:8200/api/odata
     51Degrees.mobi (3.2.8.1) - content: none
@@ -91,8 +91,6 @@ NUGET
     Mozu.PaymentService.Contracts (1.9.13)
     Mozu.PricingRuntime.Contracts (1.1625.1)
       Mozu.Core.Prime (>= 1.18.1)
-    Mozu.ProductAdmin.Contracts (1.1702.1-f1706081703NGCAT-8)
-      Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.1643.1)
       Mozu.Core.Prime (>= 1.18)
     Mozu.Provisioning.Contracts (1.17.5)
@@ -181,3 +179,6 @@ NUGET
     Sprache (2.0.0.45)
     Stact (1.1.2)
       Magnum (>= 2.1.2)
+  remote: http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-ng-internal
+    Mozu.ProductAdmin.Contracts (1.1726.2)
+      Mozu.Core.Prime (>= 1.18.1)

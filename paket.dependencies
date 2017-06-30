@@ -4,6 +4,8 @@ framework: net45, net451
 redirects: on
 source http://nuget-internal.corp.volusion.com:8200/api/odata
 source http://nuget-external.corp.volusion.com:8201/api/odata
+source http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-ng-internal/
+source http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-external/
 
 nuget 51Degrees.mobi 3.2.8.1 content: none
 nuget JWT 1.3.4
@@ -42,7 +44,7 @@ nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts < 1.20
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts 1.1702.1-f1706081703NGCAT-8
+nuget Mozu.ProductAdmin.Contracts
 nuget Mozu.ProductRuntime.Contracts 
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
