@@ -443,6 +443,10 @@ Ext.define('Taco.model.Order', {
             type: 'string',
             useNull: true
         }, {
+            name: 'giftMessage',
+            type: 'string',
+            useNull: true
+        }, {
             name: 'internalNotes',
             type: 'auto',
             defaultValue: [],
@@ -2589,7 +2593,15 @@ Ext.define('Taco.model.Order', {
         this.addErrorHandling(config);
         Ext.Ajax.request(config);
     },
-
+    setGiftMessage: function (config) {
+        Ext.applyIf(config, {
+            url: '/admin/app/order/setgiftmessage',
+            method: 'POST'
+        });
+        config.errorMsg = config.errorMsg || 'Error saving gift message';
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
 
     setCustomer: function (config) {
         Ext.apply(config, {

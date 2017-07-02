@@ -117,6 +117,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string CustomerNote { get; set; }
 
         /// <summary>
+        /// gift message entered by shopper, if any.
+        /// </summary>
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string GiftMessage { get; set; }
+
+        /// <summary>
         /// Internal notes that a merchant may add to the order. Maximum 250 characters.
         /// </summary>
         public List<OrderNote> InternalNotes { get; set; }

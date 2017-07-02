@@ -101,6 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ActiveShippingDiscount, op => op.ResolveUsing(dc => dc.ShippingDiscounts?.FirstOrDefault(d => d.Discount.Excluded.HasValue && !d.Discount.Excluded.Value)))
                 .ForMember(x => x.ShippingDiscounts, op => op.ResolveUsing(dc => dc.ShippingDiscounts))
                 .ForMember(x => x.CustomerNote, op => op.ResolveUsing(dc => dc.ShopperNotes?.Comments))
+                .ForMember(x => x.GiftMessage, op => op.ResolveUsing(dc => dc.ShopperNotes?.GiftMessage))
                 .ForMember(x => x.InternalNotes, op => op.ResolveUsing(dc => dc.Notes))
                 .ForMember(x => x.OrderStatus, op => op.ResolveUsing(dc => dc.Status))
                 .ForMember(x => x.FulfillmentStatus, op => op.ResolveUsing(dc => dc.FulfillmentStatus))

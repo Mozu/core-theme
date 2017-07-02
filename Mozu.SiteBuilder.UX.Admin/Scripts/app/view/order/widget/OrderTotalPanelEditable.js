@@ -536,6 +536,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         me.leftPanel.add(me.couponError);
 
         var customerNotesText = me.record.get("customerNote");
+        var giftMessageText = me.record.get("giftMessage");
         // todo: refactor editableDisplayField to allow for placeholder text
         var placeholder = "";
         if (!(this.record.get("orderStatus") == "Pending") && me.record.get("customerNote") == "") {
@@ -560,7 +561,23 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             }
         });
 
+        me.giftMessageField = Ext.widget({
+            //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
+            xtype: "textarea",
+            fieldLabel: "Gift Message",
+            value: giftMessageText,
+            placeholder: placeholder,
+            disabled: !(this.record.get("orderStatus") == "Pending"),
+            listeners: {
+                blur: {
+                    fn: me.ongiftMessageChange,
+                    scope: me
+                }
+            }
+        });
+
         me.leftPanel.add(me.customerNoteField);
+        me.leftPanel.add(me.giftMessageField);
     },
 
     initPriceListCombo: function () {
@@ -675,6 +692,32 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
 
                     // reset the orginal value of the field so that the isDirty flag is accurate;
                     this.customerNoteField.originalValue = this.customerNoteField.getValue();
+                    this.fireEvent('saveSuccess', json);
+                },
+                failure: function(response) {
+                    this.fireEvent('saveFailure');
+                },
+                scope: this
+            });
+        }
+    },
+
+    ongiftMessageChange: function (field, e, eOpts) {
+        if (field.isDirty()) {
+            this.record.setGiftMessage({
+                jsonData: {
+                    orderId: this.record.getId(),
+                    note: this.giftMessageField.getValue()
+                },
+                success: function(response) {
+                    // success handling here
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        return;
+                    }
+
+                    // reset the orginal value of the field so that the isDirty flag is accurate;
+                    this.giftMessageField.originalValue = this.giftMessageField.getValue();
                     this.fireEvent('saveSuccess', json);
                 },
                 failure: function(response) {
