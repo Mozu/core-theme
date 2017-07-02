@@ -243,6 +243,24 @@ Ext.define('Taco.view.order.subform.Detail', {
             data: this.record.getData()
         });
 
+        this.giftMessageRow = Ext.create('Ext.panel.Panel', {
+            //cls: "orderform-detail-customerNotesRow",
+            ui: "subform-section",
+            title: "Gift Message",
+            margin: "0 0 20px 0 ",
+            bodyStyle: "padding:20px 0px 40px 0px ",
+            tpl: [
+                '<div class="customerNote">',
+                '<tpl if="values.giftMessage">',
+                '{giftMessage:htmlEncode}',
+                '<tpl else>',
+                '<span class="order-no-content">N/A</span>',
+                '</tpl>',
+                '</div>'
+            ],
+            data: this.record.getData()
+        });
+
         me.internalNoteRow = Ext.create('Taco.view.order.subform.InternalNotes', {
             record: this.record,
             orderForm: this
@@ -282,6 +300,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 },
                 this.orderAttrGrid,
                 this.customerNoteRow,
+                this.giftMessageRow,
                 this.internalNoteRow
             ]
         });

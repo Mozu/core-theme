@@ -214,14 +214,39 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public string Note { get; set; }
         }
+
         [HttpPostRoute(UriTemplate = "setcustomernote")]
         public async Task<Response<Order>> SetCustomerNote(SetCustomerNoteArgs args)
         {
             DCo.Order order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
-            order.ShopperNotes = new DCo.ShopperNotes
+            if (order.ShopperNotes == null)
             {
-                Comments = args.Note
-            };
+                order.ShopperNotes = new DCo.ShopperNotes
+                {
+                    Comments = args.Note
+                };
+            }
+            else
+                order.ShopperNotes.Comments = args.Note;
+
+            order = (await _orderWebApiClient.UpdateOrder(args.OrderId, order)).ReadAsSync();
+
+            return Single2(order.Map<Order>());
+        }
+
+        [HttpPostRoute(UriTemplate = "setgiftmessage")]
+        public async Task<Response<Order>> SetGiftMessage(SetCustomerNoteArgs args)
+        {
+            DCo.Order order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+            if (order.ShopperNotes == null)
+            {
+                order.ShopperNotes = new DCo.ShopperNotes
+                {
+                    GiftMessage = args.Note
+                };
+            }
+            else
+                order.ShopperNotes.GiftMessage = args.Note;
 
             order = (await _orderWebApiClient.UpdateOrder(args.OrderId, order)).ReadAsSync();
 
