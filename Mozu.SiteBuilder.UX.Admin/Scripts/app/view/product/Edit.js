@@ -349,6 +349,8 @@
                   me.publishButton.disable();   
                 }
 
+                Taco.core.StateManager.setDirtyState(isDirty);
+
                 me.requiresSave = isDirty;
             }, me);
 
