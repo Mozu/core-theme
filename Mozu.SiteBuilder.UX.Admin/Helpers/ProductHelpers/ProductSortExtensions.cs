@@ -23,7 +23,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PUBLISH_SET_CODE = "code";
         private const string PUBLISH_DATE = "publishDate";
         private const string PUBLISH_STATUS = "status";
-        
+        private const string PUBLISHED_STATE = "publishedState";
+
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -72,6 +73,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return PUBLISH_SET_CODE;
                 case "publishdate":
                     return PUBLISH_DATE;
+                case "publishedstate":
+                    return PUBLISHED_STATE;
                 case "status":
                     return PUBLISH_STATUS;
                 default:

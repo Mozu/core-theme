@@ -191,10 +191,10 @@ Ext.define('Taco.view.product.Index', {
 
         this.columns = [
             {
-                    stateId: 'productCode',
-                    dataIndex: 'productCode',
-                    text: 'Code',
-                    flex: 4
+                stateId: 'productCode',
+                dataIndex: 'productCode',
+                text: 'Code',
+                flex: 4
             },
             {
                 stateId: 'productName',
@@ -203,7 +203,18 @@ Ext.define('Taco.view.product.Index', {
                 flex: 8,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('productName');
-
+                }
+            },
+            {
+                stateId: 'publishedState',
+                dataIndex: 'publishedState',
+                text: 'Status',
+                flex: 2,
+                renderer: function (value, metaData, record) {
+                    var status = record.get('publishedState');
+                    var cssClass = 'x-column-content-pill ';
+                    cssClass += (status === 'Live') ? 'x-column-content-pill-true' : 'x-column-content-pill-false';
+                    return '<span class="' + cssClass + '">' + status + '</span>';
                 }
             },
             {

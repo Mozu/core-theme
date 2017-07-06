@@ -203,6 +203,39 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                     flex: 1
                 }
             ]
-        }
+        }, {
+            xtype:'container',
+            layout: 'hbox',
+           
+            items: [
+                {
+                    xtype: 'combobox',
+                    name: 'publishedStateFilter',
+                    fieldLabel: 'Status',
+                    flex: 1,
+                    valueField: 'id',
+                    displayField: 'name',
+                    queryMode: 'local',
+                    valueNotFoundText: 'not found',
+                    editable: true,
+                    forceSelection: true,
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['id', "name"],
+                        data: [
+                            {
+                                name: "Live",
+                                id: "Live"
+                            }, {
+                                name: "Draft",
+                                id: "Draft"
+                            }, {
+                                name: "New",
+                                id: "New"
+                            }
+                        ]
+                    })
+                }
+            ]
+        },
     ]
 });

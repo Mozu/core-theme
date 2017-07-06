@@ -187,15 +187,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<Response<List<Product>>> SearchProducts(PagingParamaters pagingParams, string filter, string q,
             string responseGroups, bool isSearchTypeGlobal, bool useLiveMode)
         {
-            string sort = pagingParams.sort.ToSortString();
-            int? qLimit = isSearchTypeGlobal ? (int?)3 : (int?)null;
+            var sort = pagingParams.sort.ToSortString();
+            int? qLimit = isSearchTypeGlobal ? 3 : (int?)null;
             if (useLiveMode)
             {
                 SbApiContext.SetDataMode(DataViewModeType.Live);
             }
 
-            string responseFields = "items(productCode,productTypeId,productUsage,isVariation,baseProductCode," +
+            var responseFields = "items(productCode,productTypeId,productUsage,isVariation,baseProductCode," +
                    "price(price,salePrice)," +
+                   "publishingInfo(publishedState)" +
                    "productInCatalogs(catalogId,isContentOverridden,content(productName),price(price,salePrice))," +
                    "auditInfo(updateDate)," +
                    "content(productName)";
@@ -206,9 +207,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             responseFields += ")";
 
-
-            var prodCollection = (await _productClient.GetProducts(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize,
-                        sortBy: sort, responseGroups: responseGroups, filter: filter, q: q, qLimit: qLimit, responseFields:responseFields)).ReadAsSync();
+            var prodCollection = (await _productClient.GetProducts(
+                startIndex: pagingParams.startIndex, 
+                pageSize: pagingParams.pageSize,
+                sortBy: sort,
+                responseGroups: responseGroups, 
+                filter: filter, 
+                q: q, 
+                qLimit: qLimit, 
+                responseFields:responseFields)).ReadAsSync();
 
             if (prodCollection.TotalCount == 0)
             {
@@ -257,7 +264,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (product.ProductTypeId.HasValue && ptLookUp.TryGetValue(product.ProductTypeId, out productName))
                 {
                     product.ProductTypeName = productName;
-                };
+                }
             }
 
             return List2(mapped, prodCollection.TotalCount);

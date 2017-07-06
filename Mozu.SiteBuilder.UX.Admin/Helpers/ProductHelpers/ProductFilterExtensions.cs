@@ -6,9 +6,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 {
-    public static class     ProductFilterExtensions
-    {
-        
+    public static class ProductFilterExtensions
+    {       
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
         private const string PRICE_PROPERTY = "productsincatalog.price.price";
@@ -44,20 +43,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
             if (!string.IsNullOrWhiteSpace(extFilter.QueryString["productCode"]))
             {
                 extFilter.Add(new FilterCollectionItem()
-                                  {
-                                      comparison ="eq", 
-                                      property  ="productCode", 
-                                      value = extFilter.QueryString["productCode"]
-                                  });
+                {
+                    comparison ="eq", 
+                    property  ="productCode", 
+                    value = extFilter.QueryString["productCode"]
+                });
             }
-            ;
 
-
-            
-
-
-            if ( extFilter.Count == 0)
+            if (extFilter.Count == 0)
+            {
                 return null;
+            }
 
             if (withVariations.GetValueOrDefault(false))
             {
@@ -69,23 +65,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 }
             }
 
+            var sb = new StringBuilder();
 
-
-            StringBuilder sb = new StringBuilder();
             foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
-            {
-               
-                    var filterString = GetFilter(filter.value, filter);
-                    if (!string.IsNullOrWhiteSpace(filterString))
+            {             
+                var filterString = GetFilter(filter.value, filter);
+                if (!string.IsNullOrWhiteSpace(filterString))
+                {
+                    if (sb.Length > 1)
                     {
-                        if (sb.Length > 1)
-                        {
-                            sb.Append(" and ");
-                        }
-                        sb.Append(filterString);
-                        
+                        sb.Append(" and ");
                     }
-               
+                    sb.Append(filterString);                      
+                }            
             }
 
             return sb.ToString().Trim();
@@ -144,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 {
                     if (!(value is string ) && value is IEnumerable)
                     {
-                        string[] filters = ((IEnumerable)value).Cast<object>().Select(v => "productUsage eq " + v).ToArray();
+                        var filters = ((IEnumerable)value).Cast<object>().Select(v => "productUsage eq " + v).ToArray();
                         return "(" + String.Join(" or ", filters) + ")";
                     }
                     else
@@ -165,7 +157,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                 case "siteid":
                     return string.Format("{1} eq {0}", filter.value, SITE_ID_PROPERTY);
                 case "publishedstate":
-                    return String.Format("{1} ne Live", filter.value, PRODUCT_PUBLISHED_STATE);
+                    return string.Format("{1} ne Live", filter.value, PRODUCT_PUBLISHED_STATE);
+                case "publishedstatefilter":
+                    return string.Format("{1} eq {0}", filter.value, PRODUCT_PUBLISHED_STATE);
                 case "upc":
                     return string.Format("{1} eq \"{0}\"", filter.value, PRODUCT_UPC_PROPERTY);
                 case "mfgpartnumber":
