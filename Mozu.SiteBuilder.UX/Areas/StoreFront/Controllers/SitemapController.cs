@@ -78,9 +78,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
 
-            foreach( var subDirecotry in this.GetSubDirectorySitePaths())
+            var isOnSiteDomain = this.SiteContext.Domains?.All.Any(_ => string.Equals(_.DomainName, nakedDomain, StringComparison.OrdinalIgnoreCase));
+            if (isOnSiteDomain.GetValueOrDefault(false))
             {
-                writer.WriteElementString("loc", NS, prefixedDomain + subDirecotry + "/sitemap.xml");
+                foreach (var subDirecotry in this.GetSubDirectorySitePaths())
+                {
+                    writer.WriteStartElement("sitemap", NS);
+                    writer.WriteElementString("loc", NS, scheme + nakedDomain + subDirecotry + "/sitemap.xml");
+                    writer.WriteEndElement();
+                }
             }
 
             foreach ( var cursorMark in cursor.CursorMarks)
@@ -274,7 +280,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         private string GetNakedSitePrimaryDomain()
         {
-            return SiteContext.Domains.Primary?.DomainName;
+            var primary = SiteContext.Domains.Primary?.DomainName;
+            Uri uri;
+            if (Uri.TryCreate(this.PageContext.Url, UriKind.Absolute, out uri))
+            {
+                if (this.SiteContext.Domains?.All.Any(_ => string.Equals(_.DomainName, uri.Host, StringComparison.OrdinalIgnoreCase)) == false)
+                {
+                    return uri.Host;
+                }
+            }
+            return primary;
         }
 
 
