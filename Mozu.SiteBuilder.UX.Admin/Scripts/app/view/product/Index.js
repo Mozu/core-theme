@@ -44,7 +44,8 @@ Ext.define('Taco.view.product.Index', {
             rowBodyTpl: new Ext.XTemplate(
                 '<tpl for="productInCatalogs"><tr class="x-grid-row-body">',
                 '<td colspan="2" class="x-grid-subcell"><div class="x-grid-cell-inner"></div></td>',
-                '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>',
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="taco-launch-editor" data-catalog-id="{catalogId}">{productName}</span></div></td>', 
+                '<td class="x-grid-subcell"><div class="x-grid-cell-inner"><span class="x-column-content-pill-false"> </span></div></td>', 
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.price,values.catalogId)]}</div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{[this.formatPrice(values.salePricem,values.catalogId)]}</div></td>',
                 '<td class="x-grid-subcell"><div class="x-grid-cell-inner">{catalogId:this.toCatalogName}</div></td>',
@@ -224,7 +225,6 @@ Ext.define('Taco.view.product.Index', {
                 flex: 3,
                 renderer: function (value, metaData, record) {
                     return record.getContextualValue('price', true) || '<span class="taco-empty-cell">N/A</span>';
-
                 }
             },
             {
