@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool IsSystemAssigned { get; set; }
 
         public bool IsDomainManaged { get; set; }
-
+        public int SiteId { get; set; }
     }
    
     public class CheckoutSettings
