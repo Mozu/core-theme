@@ -1216,8 +1216,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var siteDc = this.TenantInfo.Sites?.First(x => x.Id == SiteId);
 
             var mappedSubDomains = Mapper.Map<List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>>(siteDc.Domains);
+            mappedSubDomains.ForEach(_ => _.SiteId = SiteId.GetValueOrDefault(-1));
 
-            
+
+
             //process siteSubDir
             foreach (var site in TenantInfo.Sites ?? Enumerable.Empty<Mozu.Tenant.Contracts.Site>())
             {
@@ -1232,13 +1234,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
                         {
                             _siteSubDirectory = subdirSlug.StartsWith("/") ? subdirSlug : ("/" + subdirSlug);
 
-                            var subDirPrimary = site.Domains.Where(x => x.IsPrimary)
+                            var subDirPrimary = site.Domains.Where(x => x.IsPrimary && !x.IsSystemAssigned && !x.IsInfrastructureRecord)
                                 .Select(y => Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain>(y))
                                 .FirstOrDefault();
                             if (subDirPrimary != null)
                             {
-                                mappedSubDomains.ForEach(x => x.IsPrimary = false);
-                                subDirPrimary.IsPrimary = true;
+                                subDirPrimary.SiteId = site.Id;
+                                mappedSubDomains.Where(x => x.IsSystemAssigned).ToList().ForEach(x => x.IsPrimary = false);
                                 mappedSubDomains.Insert(0, subDirPrimary);
                             }
                         }
@@ -1249,6 +1251,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _mappedSiteDomains = mappedSubDomains;
 
         }
+
 
         public List<SBCategory> GetFlatCategoryList()
         {
