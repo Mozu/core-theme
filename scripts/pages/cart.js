@@ -150,12 +150,31 @@ define(['modules/api',
 
           //before we get inventory data, we'll see if it's cached
 
-          var cachedItemInvData = this.fulfillmentInfoCache.filter(function(item){
+          var filtered = this.fulfillmentInfoCache.filter(function(item){
             return item.cartItemId == cartItemId;
           });
-          var index = this.fulfillmentInfoCache.indexOf(cachedItemInvData[0]);
+          var cachedItemInvData;
 
-          if(cachedItemInvData[0].locations.length===0){
+          if (filtered.length!==0){
+            cachedItemInvData = filtered[0];
+          } else {
+            //NGCOM-344
+            //If the filtered array is empty, it means the item we're checkoutSettings
+            // was added to the cart some time after page load, probably during a BOGO
+            //sale re-rendering.
+            //Let's go ahead and add it to the cache, then stick it in our
+            //cachedItemInvData variable.
+            var newCacheData = {
+              cartItemId: cartItemId,
+              locations: []
+            };
+            me.fulfillmentInfoCache.push(newCacheData);
+            cachedItemInvData = newCacheData;
+          }
+
+          var index = this.fulfillmentInfoCache.indexOf(cachedItemInvData);
+
+          if(cachedItemInvData.locations.length===0){
             //The cache doesn't contain any data about the fulfillment
             //locations for this item. We'll do api calls to get that data
             //and update the cache.
