@@ -169,6 +169,7 @@ define(['modules/api',
 
 
               } else {
+                var invItemsLength = inv.items.length;
               inv.items.forEach(function(invItem, i){
                   me.handleInventoryData(invItem).then(function(handled){
                     listOfLocations.push(handled);
@@ -179,7 +180,7 @@ define(['modules/api',
                       inventoryData: invItem
                     });
 
-                    if (i==inv.items.length-1){
+                    if (i==invItemsLength-1){
                       //We're in the midst of asynchrony, but we want this dialog
                       //to go ahead and open right away if we're at the end of the
                       //for loop.
@@ -188,7 +189,23 @@ define(['modules/api',
                       $bodyElement.attr('mz-cart-item', cartItemId);
                       me.pickerDialog.show();
                     }
-                  });
+                  },
+                function(error){
+                  //NGCOM-337
+                  //If the item had inventory information for a location that
+                  //doesn't exist anymore or was disabled, we end up here.
+                  //The only reason we would need to take any action here is if
+                  //the errored location happened to be at the end of the list,
+                  //and the above if statement gets skipped -
+                  //We need to make sure the dialog gets opened anyways.
+                  if (i==invItemsLength-1){
+                    var $bodyElement = $('#mz-location-selector').find('.modal-body');
+                    me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
+                    $bodyElement.attr('mz-cart-item', cartItemId);
+                    me.pickerDialog.show();
+                  }
+
+                });
                 });
               }
               });
