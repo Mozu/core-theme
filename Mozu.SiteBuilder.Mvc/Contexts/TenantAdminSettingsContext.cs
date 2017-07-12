@@ -127,5 +127,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
+        public bool IsSavePromptEnabled
+        {
+            get
+            {
+                return ((bool?)_state.Value.GetValue("isSavePromptEnabled")).GetValueOrDefault(false);
+            }
+        }
     }
 }
