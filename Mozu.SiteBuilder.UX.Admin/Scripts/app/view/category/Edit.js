@@ -152,5 +152,13 @@ Ext.define('Taco.view.category.Edit', {
                 }
             });
         }
+    },
+    onBeforeRender: function () {
+        var me = this;
+        this.callParent(arguments);
+
+        me.mon(me.form, 'dirtychange', function (form, isDirty) {
+            Taco.core.StateManager.setDirtyState(isDirty);
+        }, me);
     }
 });
