@@ -739,6 +739,7 @@ Ext.define('Taco.Application', {
 
         Taco.core.StateManager.on({
             beforenavigate: function (state) {
+                // Get current state
                 var currentState = Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex].metaData;
 
                 // Check if navigation prompt should be shown
