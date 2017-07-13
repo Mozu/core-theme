@@ -3,6 +3,7 @@
  */
 Ext.define('Taco.model.NavigationTreeNode', {
     extend: 'Taco.core.data.Model',
+    requires: ['Taco.data.NavigationTreeNodeReader'],
 
     fields: [
     {
@@ -125,7 +126,7 @@ Ext.define('Taco.model.NavigationTreeNode', {
         },
 
         reader: {
-            type: 'json',
+            type: 'taco.data.navigationtreenodereader',
             root: 'items',
             successProperty: 'success',
             messageProperty: 'message'

@@ -603,6 +603,7 @@
     <Content Include="Scripts\app\core\ux\window\MessageBox.js" />
     <Content Include="Scripts\app\core\ux\window\Modal.js" />
     <Content Include="Scripts\app\data\CategoryReader.js" />
+    <Content Include="Scripts\app\data\NavigationTreeNodeReader.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />

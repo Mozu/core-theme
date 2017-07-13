@@ -260,7 +260,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
 
             var model = await Convert(notification.Payload, emailTypeInfo);
-            
+
             try
             {
                 _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), model);
@@ -269,13 +269,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 _logger.Error(ex);
             }
-            
+
             var renderedTemplate = await GetRenderedTemplate(notification, emailTemplate, model, cmdContent, user, site);
             if (renderedTemplate.IsNullOrEmpty()) return null;
 
+            var subjectFromVrModel =  (string) ((Mozu.Content.Contracts.Document)vr?.Model)?.Properties["subject"];
+
             var response = new EmailResponse
             {
-                Subject = emailTemplate.Title ?? notification.Topic,
+                Subject = !string.IsNullOrWhiteSpace(subjectFromVrModel) ? subjectFromVrModel : (emailTemplate.Title ?? notification.Topic),
                 Body = renderedTemplate
             };
 
