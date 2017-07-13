@@ -178,6 +178,7 @@ define(['modules/api',
             //The cache doesn't contain any data about the fulfillment
             //locations for this item. We'll do api calls to get that data
             //and update the cache.
+
             me.getInventoryData(cartItemId, productCode).then(function(inv){
               if (inv.totalCount===0){
                 //Something went wrong with getting inventory data.
@@ -185,7 +186,6 @@ define(['modules/api',
                 me.pickerDialog.setBody(Hypr.getLabel("noNearbyLocationsProd"));
                 $bodyElement.attr('mz-cart-item', cartItemId);
                 me.pickerDialog.show();
-
 
               } else {
                 var invItemsLength = inv.items.length;
@@ -270,10 +270,20 @@ define(['modules/api',
               }
 
               if (value=="Ship"){
+                var oldFulfillmentMethod = cartItem.get('fulfillmentMethod');
+                var oldPickupLocation = cartItem.get('fulfillmentLocationName');
+                var oldLocationCode = cartItem.get('fulfillmentLocationCode');
+
                 cartItem.set('fulfillmentMethod', value);
                 cartItem.set('fulfillmentLocationName', '');
                 cartItem.set('fulfillmentLocationCode', '');
-                cartItem.apiUpdate();
+
+                cartItem.apiUpdate().then(function(success){}, function(error){
+                  cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
+                  cartItem.set('fulfillmentLocationName', oldPickupLocation);
+                  cartItem.set('fulfillmentLocationCode', oldLocationCode);
+                  me.validateFulfillmentMethods();
+                });
 
 
               } else if (value=="Pickup"){
@@ -295,7 +305,9 @@ define(['modules/api',
           locationList should be a list of fulfillment locations with complete
           location data (what we need is the name). locationInventoryInfo will
           contain stock levels for the current product(cartItemId) by location code.
+
           */
+
           var me = this;
 
           var body = "";
@@ -366,10 +378,22 @@ define(['modules/api',
 
           var storeSelectData = JSON.parse(jsonStoreSelectData);
           var cartItem = this.model.get("items").get(storeSelectData.cartItemId);
+          //in case there is an error with the api call, we want to get all of the
+          //current data for the cartItem before we change it so that we can
+          //change it back if we need to.
+          var oldFulfillmentMethod = cartItem.get('fulfillmentMethod');
+          var oldPickupLocation = cartItem.get('fulfillmentLocationName');
+          var oldLocationCode = cartItem.get('fulfillmentLocationCode');
+
           cartItem.set('fulfillmentMethod', 'Pickup');
           cartItem.set('fulfillmentLocationName', storeSelectData.locationName);
           cartItem.set('fulfillmentLocationCode', storeSelectData.locationCode);
-          cartItem.apiUpdate();
+          cartItem.apiUpdate().then(function(success){}, function(error){
+            cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
+            cartItem.set('fulfillmentLocationName', oldPickupLocation);
+            cartItem.set('fulfillmentLocationCode', oldLocationCode);
+            me.validateFulfillmentMethods();
+          });
 
 
         },
@@ -440,9 +464,6 @@ define(['modules/api',
             this.addCoupon();
         }
     });
-
-
-
 
 
     /* begin visa checkout */
