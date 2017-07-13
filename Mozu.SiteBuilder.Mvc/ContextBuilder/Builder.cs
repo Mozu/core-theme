@@ -196,14 +196,13 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             filter = fBuilder.Or(workItems.Select(x => fBuilder.Eq(_ => _.Id, x.Id)));
             await col.DeleteManyAsync(filter).ConfigureAwait(false);
-            var cache = _cacheProvider.GetCache(CacheName);
-            var tags = workItems
-                .SelectMany(_ => GetTags(_.TenantId, _.MasterCatalogId, _.CatalogId, _.SiteId, DataViewModeType.Live).Select(x => new CacheKey() { Key = x, ShardKey = _.TenantId.ToString() }))
-                .ToList();
-
-            await cache.InvalidateItemsByTagsAsync(tags).ConfigureAwait(false); 
-               
-            
+        
+            foreach ( var work in workItems)
+            {
+                var cache = _cacheProvider.GetCache(CacheName, this.ToApiContext(work));
+                var tags = GetTags(work.TenantId, work.MasterCatalogId, work.CatalogId, work.SiteId, DataViewModeType.Live);
+                await cache.InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any).ConfigureAwait(false);
+            }
         }
 
         Task<SiteBuilderContextWorkItem> GetWork()
@@ -297,7 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         async Task<SiteBuilderContextData> ISitebuilderContextCacheRepository.GetAsync(ISiteBuilderApiContext apiContext)
         {
             var cacheKey = this.GetCacheKey(apiContext);
-            var sbc = await _cacheProvider.GetCache(CacheName)
+            var sbc = await _cacheProvider.GetCache(CacheName, apiContext)
                 .GetAsync<SiteBuilderContextData>(cacheKey)
                 .ContinueWith(x => x.Result?.Item)
                 .ConfigureAwait(false);
@@ -311,9 +310,14 @@ namespace Mozu.SiteBuilder.Mvc.Context
         async Task ISitebuilderContextCacheRepository.Invalidate(int tenantId, int masterCatalogId, int catalogId, int? siteId, string localeCode, string currencyCode, DataViewModeType dataViewMode)
         {
             //clear staging...
-            var tags = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending)
-                .Select(_ => new CacheKey() { Key = _, ShardKey = tenantId.ToString() }).ToList();
-            await _cacheProvider.GetCache(CacheName).InvalidateItemsByTagsAsync(tags).ConfigureAwait(false);
+            var tags = GetTags(tenantId, masterCatalogId, catalogId, siteId, DataViewModeType.Pending).ToList();
+            var apiContext = new Mozu.Core.ApiContext() {
+                TenantId = tenantId,
+                MasterCatalogId = masterCatalogId,
+                CatalogId = catalogId,
+                SiteId = siteId
+            };
+            await _cacheProvider.GetCache(CacheName, apiContext).InvalidateItemsByTagsAsync(tags, tagQueryType:TagQueryType.Any).ConfigureAwait(false);
             if ( dataViewMode == DataViewModeType.Pending)
             {
                 return;
@@ -356,10 +360,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
                 };
 
-                await _cacheProvider.GetCache(CacheName).PutAsync(
+                await _cacheProvider.GetCache(CacheName, apiContext).PutAsync(
                     item: item, 
-                    key: new CacheKey() { Key = cacheKey }, 
-                    tags: tags.Select( _=> new CacheKey() { Key = _ }).ToList(), 
+                    key: cacheKey , 
+                    tags: tags,
                     policy:policy,
                     eTag: item.Hash.ToLower()
                     ).ConfigureAwait(false);
@@ -420,7 +424,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public  Task<List<RedirectEntry>> GetRedirectsAsync(SiteBuilderContextData ctxData, ISiteBuilderApiContext apiContext)
         {
             var cacheKey = GetRedirectsCacheKey(apiContext);
-            return _cacheProvider.GetCache(RedirectCacheName)
+            return _cacheProvider.GetCache(RedirectCacheName, apiContext)
                 .GetAsync<List<RedirectEntry>>(cacheKey,
                     new eTagConstraint()
                     {
@@ -441,11 +445,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 AbsoluteExpiration = isSb ? DateTimeOffset.UtcNow.AddMinutes(5) : DateTimeOffset.UtcNow.AddDays(2)
             };
 
-            return _cacheProvider.GetCache(RedirectCacheName)
+            return _cacheProvider.GetCache(RedirectCacheName, apiContext)
                 .PutAsync<List<RedirectEntry>>(
                     item:redirects,
-                    key: new CacheKey() { Key = cacheKey },
-                    tags:new List<CacheKey>(),
+                    key: cacheKey ,
+                    tags:new List<string>(),
                     policy:policy,
                     eTag:ctxData.RedirectUpdateDate.Value.ToString("o").ToLower()
                     );
