@@ -14,7 +14,6 @@ define(['modules/api',
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
-            this.validateFulfillmentMethods();
             this.pickerDialog = this.initializeStorePickerDialog();
             var me = this;
 
@@ -56,7 +55,6 @@ define(['modules/api',
             preserveElement(this, ['.v-button'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
-             this.validateFulfillmentMethods();
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -123,7 +121,6 @@ define(['modules/api',
             var cartModelItems = window.cartView.cartView.model.get("items");
             var cartItemId = $(this).parent().parent().find('.modal-body').attr('mz-cart-item');
             var cartItem = me.model.get("items").get(cartItemId);
-            me.validateFulfillmentMethods([cartItem]);
 
           });
 
@@ -188,6 +185,7 @@ define(['modules/api',
                 me.pickerDialog.show();
 
               } else {
+                //TO-DO: Make 1 call with GetLocations
                 var invItemsLength = inv.items.length;
               inv.items.forEach(function(invItem, i){
                   me.handleInventoryData(invItem).then(function(handled){
@@ -198,6 +196,8 @@ define(['modules/api',
                       locationData: handled,
                       inventoryData: invItem
                     });
+
+                    me.model.get('storeLocationsCache').addLocation(handled.data);
 
                     if (i==invItemsLength-1){
                       //We're in the midst of asynchrony, but we want this dialog
@@ -282,7 +282,6 @@ define(['modules/api',
                   cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
                   cartItem.set('fulfillmentLocationName', oldPickupLocation);
                   cartItem.set('fulfillmentLocationCode', oldLocationCode);
-                  me.validateFulfillmentMethods();
                 });
 
 
@@ -392,45 +391,8 @@ define(['modules/api',
             cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
             cartItem.set('fulfillmentLocationName', oldPickupLocation);
             cartItem.set('fulfillmentLocationCode', oldLocationCode);
-            me.validateFulfillmentMethods();
           });
 
-
-        },
-        validateFulfillmentMethods: function(items){
-
-          if (items===undefined){
-            items = this.model.get('items');
-          }
-
-          items.forEach(function(item){
-            var fulfillmentTypesSupported = item.apiModel.data.product.fulfillmentTypesSupported;
-
-            var $shipRadio = $('#shipping-radio-'+item.id);
-            var $pickupRadio = $('#pickup-radio-'+item.id);
-
-            if (!fulfillmentTypesSupported.includes("DirectShip")){
-              $shipRadio.attr('disabled', 'true');
-              var $shipUnavailableMessage = $shipRadio.parent().find('.fulfillment-unavailable-message');
-              $shipUnavailableMessage.html(Hypr.getLabel("inStoreOnly"));
-            }
-
-            if (!fulfillmentTypesSupported.includes("InStorePickup")){
-              $pickupRadio.attr('disabled', 'true');
-              var $pickupUnavailableMessage = $pickupRadio.parent().find('.fulfillment-unavailable-message');
-              $pickupUnavailableMessage.html(Hypr.getLabel("unavailableForThisItem"));
-            }
-
-            if (item.get('fulfillmentMethod')=="Pickup"){
-              $('input[type=radio]#pickup-radio-'+item.attributes.id).prop('checked', 'checked');
-              $('#fulfillmentLocationName-'+item.id).html(': <strong>'+item.attributes.fulfillmentLocationName+'</strong>');
-            } else if(item.get('fulfillmentMethod')=="Ship") {
-
-                $('input[type=radio]#shipping-radio-'+item.attributes.id).prop('checked', 'checked');
-                $('#fulfillmentLocationName-'+item.id).html('');
-            }
-
-          });
 
         },
         proceedToCheckout: function () {
@@ -475,14 +437,16 @@ define(['modules/api',
 
         // if this function is being called on init rather than after updating cart total
         if (!model) {
-            model = CartModels.Cart.fromCurrent();
-            subtotal = model.get('subtotal');
+            
             delay = 0;
 
             if (!window.V) {
                 //console.warn( 'visa checkout has not been initilized properly');
                 return false;
             }
+
+            model = CartModels.Cart.fromCurrent();
+            subtotal = model.get('subtotal');
             // on success, attach the encoded payment data to the window
             // then turn the cart into an order and advance to checkout
             window.V.on("payment.success", function(payment) {
@@ -548,6 +512,8 @@ define(['modules/api',
         window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
+
+        _.invoke(cartViews, 'render');
     });
 
 });
