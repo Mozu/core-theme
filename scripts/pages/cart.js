@@ -427,63 +427,66 @@ define(['modules/api',
         }
     });
 
+  function renderVisaCheckout(model) {
+    
+    var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
+    var apiKey = visaCheckoutSettings.apiKey;
+    var clientId = visaCheckoutSettings.clientId;
 
-    /* begin visa checkout */
-    function initVisaCheckout (model, subtotal) {
-        var delay = 500;
-        var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
-        var apiKey = visaCheckoutSettings.apiKey;
-        var clientId = visaCheckoutSettings.clientId;
+    //In case for some reason a model is not passed
+    if(!model) {
+      model = CartModels.Cart.fromCurrent();
+    }
 
-        // if this function is being called on init rather than after updating cart total
-        if (!model) {
-            
-            delay = 0;
-
-            if (!window.V) {
-                //console.warn( 'visa checkout has not been initilized properly');
-                return false;
-            }
-
-            model = CartModels.Cart.fromCurrent();
-            subtotal = model.get('subtotal');
-            // on success, attach the encoded payment data to the window
-            // then turn the cart into an order and advance to checkout
-            window.V.on("payment.success", function(payment) {
-                // payment here is an object, not a string. we'll stringify it later
-                var $form = $('#cartform');
-
-                _.each({
-
-                    digitalWalletData: JSON.stringify(payment),
-                    digitalWalletType: "VisaCheckout"
-
-                }, function(value, key) {
-
-                    $form.append($('<input />', {
-                        type: 'hidden',
-                        name: key,
-                        value: value
-                    }));
-
-                });
-
-                $form.submit();
-
-            });
-
-        }
-
-        // delay V.init() while we wait for MozuView to re-render
-        // we could probably listen for a "render" event instead
-        _.delay(window.V.init, delay, {
+    function initVisa(){
+      var delay = 200;
+      if(window.V) {
+          window.V.init({
             apikey: apiKey,
             clientId: clientId,
             paymentRequest: {
                 currencyCode: model ? model.get('currencyCode') : 'USD',
-                subtotal: "" + subtotal
-            }
-        });
+                subtotal: "" + model.get('subtotal')
+            }});
+          return;
+        }
+        _.delay(initVisa, delay);
+    }
+
+    initVisa();
+    
+  }
+    /* begin visa checkout */
+    function initVisaCheckout () {
+      if (!window.V) {
+          //console.warn( 'visa checkout has not been initilized properly');
+          return false;
+      }
+
+      // on success, attach the encoded payment data to the window
+      // then turn the cart into an order and advance to checkout
+      window.V.on("payment.success", function(payment) {
+          // payment here is an object, not a string. we'll stringify it later
+          var $form = $('#cartform');
+
+          _.each({
+
+              digitalWalletData: JSON.stringify(payment),
+              digitalWalletType: "VisaCheckout"
+
+          }, function(value, key) {
+
+              $form.append($('<input />', {
+                  type: 'hidden',
+                  name: key,
+                  value: value
+              }));
+
+          });
+
+          $form.submit();
+
+      });
     }
     /* end visa checkout */
 
@@ -514,6 +517,8 @@ define(['modules/api',
         CartMonitor.setCount(cartModel.count());
 
         _.invoke(cartViews, 'render');
+
+        renderVisaCheckout(cartModel);
     });
 
 });

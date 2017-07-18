@@ -19,7 +19,7 @@
 
 {% preload_json model "cart" %}
 <div class="modal fade" id="mz-location-selector">
-	{% include 'modules/cart/cart-location-select' %}
+	{% include "modules/cart/cart-location-select" %}
 </div>
 <div class="mz-l-container">
 	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
