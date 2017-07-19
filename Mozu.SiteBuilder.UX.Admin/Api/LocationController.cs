@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/location", SuppressDescriptorGeneration = true)]
     public class LocationController : BaseController
     {
-        private ILocationAdminWebApiClient _locationWebApiClient;
+        private readonly ILocationAdminWebApiClient _locationWebApiClient;
 
         /// <summary>
         /// Constructor.
@@ -26,6 +26,27 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             _locationWebApiClient = locationWebApiClient;
         }
+
+        [HttpGetRoute(UriTemplate = "{locationCode}/enable")]
+        public async Task<HttpResponseMessage> Enable(string locationCode)
+        {
+            var location = (await _locationWebApiClient.GetLocation(locationCode)).ReadAsSync();
+            location.IsDisabled = false;
+
+            await _locationWebApiClient.UpdateLocation(locationCode, location).ConfigureAwait(false);
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpGetRoute(UriTemplate = "{locationCode}/disable")]
+        public async Task<HttpResponseMessage> Disable(string locationCode)
+        {
+            var location = (await _locationWebApiClient.GetLocation(locationCode)).ReadAsSync();
+            location.IsDisabled = true;
+
+            await _locationWebApiClient.UpdateLocation(locationCode, location).ConfigureAwait(false);
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)

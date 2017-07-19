@@ -42,7 +42,7 @@ nuget Mozu.Customer.Contracts > 1.1624
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango
 nuget Mozu.InstalledApps.Contracts < 1.20
-nuget Mozu.Location.Contracts < 1.20
+nuget Mozu.Location.Contracts >= 1.1731
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.ProductAdmin.Contracts
 nuget Mozu.ProductRuntime.Contracts 

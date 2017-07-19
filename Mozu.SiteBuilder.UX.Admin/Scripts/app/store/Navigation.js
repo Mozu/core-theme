@@ -434,6 +434,10 @@ Ext.define('Taco.store.Navigation', {
                     'label': 'Location Types',
                     'address': 'locationTypes'
                 }, {
+                    'id': 'locationAttributes',
+                    'label': 'Location Attributes',
+                    'address': 'locationattributes'
+                }, {
                     'id': 'customSchema',
                     'label': 'Custom Schema',
                     'address': 'customSchema'

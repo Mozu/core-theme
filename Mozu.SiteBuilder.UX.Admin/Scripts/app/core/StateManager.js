@@ -83,7 +83,6 @@ Ext.define('Taco.core.StateManager', {
 
                 // dont do a navigate, if the new uri is registered with the React State Manager
                 if (this.isReactView(uriOrState)) {
-
                     // since the react app relies on the primary menu, if it hasnt been initialized
                     // initialize it once so it can be called upon via those views
                     if (!Taco.app.PrimaryMenu) {
@@ -134,6 +133,8 @@ Ext.define('Taco.core.StateManager', {
             'generalsettings',
             'customers',
             'orderattributes',
+            'locationattributes',
+            'locations',
             'synonyms',
             'categories',
             'returns'

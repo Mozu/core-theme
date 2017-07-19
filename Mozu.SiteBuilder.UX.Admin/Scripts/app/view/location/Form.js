@@ -2,44 +2,47 @@
  * @class Taco.view.location.Form
  */
 Ext.define('Taco.view.location.Form', {
-    extend: 'Taco.core.ux.form.NavForm2',
+    extend: 'Taco.view.react.Index',
 
-    topOffset: 38,
+    // no longer an EXT view
 
-    requires: [
-        'Taco.view.location.subform.Location',
-        'Taco.view.location.subform.StoreHours'
-    ],
+    //topOffset: 38,
 
-    model: 'Taco.model.Location',
-    createTitle: 'Create New Location',
-    editTitle: 'Edit Location',
+    //requires: [
+    //    'Taco.view.location.subform.Location',
+    //    'Taco.view.location.subform.StoreHours'
+    //],
 
-    config: {
-        customer: null
-    },
+    //model: 'Taco.model.Location',
+    //createTitle: 'Create New Location',
+    //editTitle: 'Edit Location',
+
+    //config: {
+    //    customer: null
+    //},
 
     // XTemplate config that will automatically get applied with {record:this.record};
-    editTitle: [
-        '{record.data.name}'
-    ],
+    //editTitle: [
+    //    '{record.data.name}'
+    //],
 
     initComponent: function () {
         var me = this;
-        this.buildForm();
-        this.callParent(arguments);
-        this.loadNavItems();
+        me.items = [];
+        me.callParent(arguments);
+        //this.buildForm();
+        //this.loadNavItems();
     },
 
-    buildForm: function () {
-        var subformCfg = {
-            record: this.record,
-        };
+    //buildForm: function () {
+    //    var subformCfg = {
+    //        record: this.record,
+    //    };
         
-        this.items = [
-            Ext.create('Taco.view.location.subform.Location', subformCfg),
-            Ext.create('Taco.view.location.subform.StoreHours', subformCfg)
-        ];
+    //    this.items = [
+    //        Ext.create('Taco.view.location.subform.Location', subformCfg),
+    //        Ext.create('Taco.view.location.subform.StoreHours', subformCfg)
+    //    ];
 
-    }
+    //}
 })

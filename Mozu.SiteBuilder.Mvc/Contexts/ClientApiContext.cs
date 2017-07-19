@@ -281,9 +281,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "OrderAttributeDefService",
                             InternalUrl = settings.Urls("service-url-OrderAttributeWebApi"),
                             RequiresSsl = true
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "LocationAttributeDefService",
+                            InternalUrl = settings.Urls("service-url-LocationAttributeDefinitionWebApi"),
+                            RequiresSsl = true
                         }
 
-                        
+
                     };
                 foreach (ServiceInfo si in sis)
                 {

@@ -4,79 +4,81 @@
 
 
 Ext.define('Taco.view.location.Edit', {
-    extend: 'Taco.core.ux.form.FullEditor',
-    requires: [
-        'Taco.view.location.Form'
-    ],
+    extend: 'Taco.view.react.Index',
 
-    formCls: 'Taco.view.location.Form',
+    // no longer an EXT view
 
-    parentTitleCfg: {
-        title: 'Locations',
-        controller: 'locations'
-    },
+    //requires: [
+    //    'Taco.view.location.Form'
+    //],
+
+    //formCls: 'Taco.view.location.Form',
+
+    //parentTitleCfg: {
+    //    title: 'Locations',
+    //    controller: 'locations'
+    //},
     
     initComponent: function () {
         var me = this;
-        this.moreButtonCfg = {
-            xtype: 'button',
-            height: 40,
-            itemId: 'moreButton',
-            ui: 'action',
-            scale: 'medium',
-            text: '',
-            menuAlign: 'tr-br?',
-            menu: {
-                plain: true,
-                shadow: false,
-                items: [{
-                    text: 'Duplicate',
-                    disabled: me.record.phantom,
-                    requiredBehaviors: {
-                        model: 'Taco.model.Location',
-                        behavior: 'create'
-                    },
-                    handler: function (item) {
-                        var record = me.record,
-                            metaData = {
-                                id: record.getId()
-                            };
+        me.callParent(arguments);
+        //this.moreButtonCfg = {
+        //    xtype: 'button',
+        //    height: 40,
+        //    itemId: 'moreButton',
+        //    ui: 'action',
+        //    scale: 'medium',
+        //    text: '',
+        //    menuAlign: 'tr-br?',
+        //    menu: {
+        //        plain: true,
+        //        shadow: false,
+        //        items: [{
+        //            text: 'Duplicate',
+        //            disabled: me.record.phantom,
+        //            requiredBehaviors: {
+        //                model: 'Taco.model.Location',
+        //                behavior: 'create'
+        //            },
+        //            handler: function (item) {
+        //                var record = me.record,
+        //                    metaData = {
+        //                        id: record.getId()
+        //                    };
 
-                        Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
-                    }
-                }]
-            }
-        };
+        //                Taco.app.StateManager.attemptNavigate('locations/duplicate/' + record.getId(), metaData);
+        //            }
+        //        }]
+        //    }
+        //};
 
-        this.callParent(arguments);
+        //this.form.on('dirtychange', function () {
+        //    var isValid = false;
+        //    me.requiresSave = me.form.isDirty();
 
-        this.form.on('dirtychange', function () {
-            var isValid = false;
-            me.requiresSave = me.form.isDirty();
+        //    isValid = me.requiresSave && !me.form.hasInvalidField();
+        //    if (isValid) {
+        //        me.saveActionButton.setDisabled(false);
+        //    } else {
+        //        me.saveActionButton.setDisabled(true);
+        //    }
+        //}, me);
 
-            isValid = me.requiresSave && !me.form.hasInvalidField();
-            if (isValid) {
-                me.saveActionButton.setDisabled(false);
-            } else {
-                me.saveActionButton.setDisabled(true);
-            }
-        }, me);
-
-        this.form.on('savesuccess', function() {
+        //this.form.on('savesuccess', function() {
             
-        });
+        //});
     },
 
-    afterDuplicate: function () {
-        Taco.app.fireEvent('setmessage', "Please enter a code.", 'info');
+    //afterDuplicate: function () {
+    //    Taco.app.fireEvent('setmessage', "Please enter a code.", 'info');
         
-        this.mon(this, 'afterrender', function () {
+    //    this.mon(this, 'afterrender', function () {
 
-            var codeField = this.form.findField("code");
-            if (codeField) {
-                codeField.validate();
-            }
+    //        var codeField = this.form.findField("code");
+    //        if (codeField) {
+    //            codeField.validate();
+    //        }
 
-        }, this);
-        }
+    //    }, this);
+    //    }
 });
