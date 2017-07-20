@@ -92,9 +92,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             PageContext.PageType = "cart";
 
-            this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
-            this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
-
             var viewResult = await RenderCartViewWithMessage(null);
             return Request.CreateResponse(HttpStatusCode.OK, viewResult);
         }
@@ -151,7 +148,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
             {
                 this.HttpContext.Response.AddHeader("X-Frame-Options", "SAMEORIGIN");
+                this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
+                this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
             }
+
 
             return View("cart", jCart);
         }
