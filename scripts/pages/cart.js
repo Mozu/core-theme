@@ -122,6 +122,7 @@ define(['modules/api',
             var cartModelItems = window.cartView.cartView.model.get("items");
             var cartItemId = $(this).parent().parent().find('.modal-body').attr('mz-cart-item');
             var cartItem = me.model.get("items").get(cartItemId);
+            me.render();
           });
 
           return modalDialog.init(options);
@@ -391,7 +392,7 @@ define(['modules/api',
             cartItem.set('fulfillmentMethod', oldFulfillmentMethod);
             cartItem.set('fulfillmentLocationName', oldPickupLocation);
             cartItem.set('fulfillmentLocationCode', oldLocationCode);
-
+            me.render();
           });
 
 
