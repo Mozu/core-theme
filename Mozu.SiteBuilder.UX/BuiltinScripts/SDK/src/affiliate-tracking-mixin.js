@@ -121,7 +121,6 @@ module.exports = {
             var existingAffiliates = JSON.parse(existingAffiliateString) || [];
 
             var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function (memo, param) {
-                param = parm.trim();
 
                 if (param && queryParams[param]) {
                     memo.push({

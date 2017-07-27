@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-06-20
+ * Mozu JavaScript SDK - v0.3.0 - 2017-07-27
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -2628,7 +2628,6 @@ module.exports = {
             var existingAffiliates = JSON.parse(existingAffiliateString) || [];
 
             var updatedAffiliates = mergeOnKey(existingAffiliates, utils.reduce(params, function (memo, param) {
-                param = parm.trim();
 
                 if (param && queryParams[param]) {
                     memo.push({
