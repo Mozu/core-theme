@@ -146,7 +146,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         growToLongestValue: false,
                         listeners: {
                             change: function (ctrl) {
-                                if (ctrl.rendered && ctrl.value && ctrl.value.length > 1) {
+                                if (ctrl.rendered && ctrl.value && ctrl.value.length > 0) {
                                     ctrl.grow = true;
                                 }
                             }
