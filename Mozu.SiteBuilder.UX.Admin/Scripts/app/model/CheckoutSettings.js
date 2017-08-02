@@ -7,6 +7,7 @@ Ext.define('Taco.model.CheckoutSettings', {
     fields: [
         { name: "id", type: "string" },
         { name: "customerCheckoutType", type: "string" },
+        { name: "isMultiShipToEnabled", type: "boolean" },
         { name: "externalPaymentWorkflows", type: "any", defaultValue: {} },
         { name: "cardGatewayMap", type: "any", defaultValue: {} },
         { name: "payByMail", type: "boolean" },

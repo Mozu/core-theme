@@ -97,6 +97,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public VisaCheckoutSettings VisaCheckout { get; set; }
 
         public List<ExternalPaymentWorkflowSettings> ExternalPaymentWorkflowSettings { get; set; }
+
+        public bool? IsMultiShipToEnabled { get; set; }
     }
 
     public class ExternalPaymentWorkflowSettings
@@ -276,7 +278,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember]
         public string BccEmailAddress { get; set; }
 
-
         [DataMember/*(Name = "replyToEmail")*/]
         public string ReplyToEmailAddress { get; set; }
 
@@ -295,45 +296,20 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember(EmitDefaultValue = false/*, Name = "favIconPath"*/)]
         public string FavIconPath { get; set; }
 
-
-
-        
-
         //[DataMember(Name = "themeStr")]
-       // [Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
-        public string ThemeStr
-        {
-            get; set;
-        }
+        //[Obsolete("Theme doesn't mean what it used to mean. You probably want DesktopTheme.")]
+        public string ThemeStr { get; set; }
 
-
-
-     
-            
         [DataMember/*(Name = "mobileThemeStr")*/]
-        public string MobileThemeStr
-        {
-            get; set;
-        }
+        public string MobileThemeStr { get; set; }
 
+        public ThemeSelection MobileTheme { get; set; }
 
-        public ThemeSelection MobileTheme
-        {
-            get; set;
-        }
         [DataMember/*(Name = "desktopTheme")*/]
-        public ThemeSelection DesktopTheme
-        {
-            get;
-            set;
-        }
-        
+        public ThemeSelection DesktopTheme { get; set; }
+
         [DataMember/*(Name = "tabletTheme")*/]
-        public ThemeSelection TabletTheme
-        {
-            get;
-            set;
-        }
+        public ThemeSelection TabletTheme { get; set; }
 
         [DataMember/*(Name = "googleAnalyticsId")*/]
         public string GoogleAnalyticsCode { get; set; }
@@ -355,17 +331,21 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public bool? IsRequiredLoginForLiveEnabled { get; set; }
+
         [DataMember]
         public bool? IsRequiredLoginForStagingEnabled { get; set; }
+
          [DataMember]
         public string CustomCdnHostName { get; set; }
+        
         [DataMember]
         public List<EmailTypeSettingVM> EmailTypes { get; set; }
+
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
 
-        //public ViewModeToggles ViewModeToggles { get; set; }
-
+        [DataMember]
+        public bool IsMultiShipToEnabled { get; set; }
     }
 
     public class ViewModeToggles {
@@ -373,7 +353,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool? EnforceSitewideSSL { get; set; }
         [DataMember]
         public bool IsRequiredLoginForLiveEnabled { get; set; }
-
         [DataMember]
         public bool IsRequiredLoginForStagingEnabled { get; set; }
     }
@@ -382,7 +361,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         public string Id { get; set; }
         public string Location { get; set; }
-
         public List<string> Addons { get; set; }
     }
 }

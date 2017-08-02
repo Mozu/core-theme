@@ -12,8 +12,12 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using Newtonsoft.Json.Linq;
 using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteSettings.Order.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -22,12 +26,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly IGeneralSettingWrapper _wrapper;
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        private readonly Lazy<ICheckoutSettingsWebApiClient> _checkoutSettingsWebApiClient;
         private readonly IChannelWebApiClient _channelWebApiClient;
 
-        public GeneralSettingController(IGeneralSettingWrapper wrapper, Mozu.CommerceRuntime.Contracts.Clients.IChannelWebApiClient channelWebApiClient, Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient generalSettingsWebApiClient)
+        public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient)
         {
             _wrapper = wrapper;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _channelWebApiClient = channelWebApiClient.CloneWithoutUserClaims();
         }
 
@@ -38,6 +44,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var channelsTask = _channelWebApiClient.GetChannels(pageSize: 200);
             await Task.WhenAll(settingsTask, channelsTask);
             var settings = settingsTask.Result;
+
+            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+            settings.IsMultiShipToEnabled = orderProcessingSettings.IsMultiShipToEnabled.GetValueOrDefault(false);
+
             var channels = channelsTask.Result.ReadAsSync().Items;
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
@@ -61,7 +71,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var previousSettings = (await _wrapper.ReadSettings());
             var cdnCacheKey = previousSettings.CdnCacheBustKey;
             settingsToSave.CdnCacheBustKey = cdnCacheKey;
-            
+
+            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+            if (orderProcessingSettings.IsMultiShipToEnabled != settingsToSave.IsMultiShipToEnabled)
+            {
+                orderProcessingSettings.IsMultiShipToEnabled = settingsToSave.IsMultiShipToEnabled;
+                if (orderProcessingSettings.IsMultiShipToEnabled.GetValueOrDefault(false))
+                    orderProcessingSettings.PaymentProcessingFlowType = "AuthorizeOnOrderPlacementAndCaptureOnOrderShipment";
+                var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
+            }
+
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
             if (settingsToSave.ChannelId != null)
             {
@@ -79,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await this.SaveEmailTypes(settingsToSave.EmailTypes);
             
 
-            return Single2((await  this.GetSettings()).Items.First());
+            return Single2((await this.GetSettings()).Items.First());
         }
 
 		[HttpGetRoute(UriTemplate = "timezones/read")]

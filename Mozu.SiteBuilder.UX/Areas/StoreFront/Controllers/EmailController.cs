@@ -42,6 +42,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Mozu.CommerceRuntime.Contracts.Checkouts;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -105,6 +106,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (Order),
                                                Topic = Topics.RefundCreated
                                            },
+                                       new EmailTypeInfo
+                                       {
+                                           ModelType = typeof (Checkout),
+                                           Topic = Topics.CheckoutEmailTopic
+                                       },
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
@@ -430,6 +436,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string PasswordReset = "user.passwordreset";
             public const string NewUserCreated = "user.created";
             public const string OrderEmailTopic = "order.changed";
+            public const string CheckoutEmailTopic = "checkout.changed";
             public const string OrderShippedTopic = "order.shipped";
             public const string ReturnChanged = "return.changed";
             public const string ReturnCreated = "return.created";

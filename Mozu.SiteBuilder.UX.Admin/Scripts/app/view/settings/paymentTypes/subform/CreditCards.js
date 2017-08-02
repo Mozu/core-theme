@@ -152,11 +152,11 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                 columns: 1,
                 vertical: true,
                 items: [
-                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
+                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement', disabled: me.record.get('isMultiShipToEnabled') },
                     { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
                 ]
             });
-        ;
+
         me.items.push(me.supportedCardsGrid, me.paymentProcessingFlowTypeRg);
 
         me.callParent(arguments);
