@@ -161,6 +161,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
                "google{hash}.html",
                new { controller = "Home", action = "GoogleSiteVerification" });
 
+            routes.MapHttpRoute(
+               "mzActions",
+               "_mzActions/{action}",
+               new { controller = "MiscActions",  });
+
+
 
             routes.MapHttpRoute(
                 "order details (back office)",

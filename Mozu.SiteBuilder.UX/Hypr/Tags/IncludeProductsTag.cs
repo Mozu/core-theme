@@ -153,6 +153,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 searchTuningRuleContext ,
                 facetTemplateExclude,
                 sbAPIContext.PriceListCode,
+                sbAPIContext.LocationCode,
                 facetPrefix,
                 responseOptions,
                 suppressErrors,
@@ -202,6 +203,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string searchTuningRuleContext,
             string facetTemplateExclude,
             string priceList,
+            string locationCode,
             string facetPrefix,
             string responseOptions,
             bool suppressErrors,
@@ -229,6 +231,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     .Append(searchTuningRuleContext)
                     .Append(facetTemplateExclude)
                     .Append (priceList)
+                    .Append(locationCode)
                     .Append(facetPrefix)
                     .Append(responseOptions)
                     .Append(responseGroups)

@@ -161,6 +161,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         EditModes? EditMode { get; set; }
         UX.Models.Customers.User User { get; set; }
         UserProfile UserProfile { get; }
+        LocationInfo Location { get; }
         string ProductCode { get; set; }
         string FeedUrl { get; set; }
         string ListName { get; set; }
@@ -223,6 +224,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISettings _settings;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
+        LocationInfo _location;
 
         public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
             , IIpAddressFinderOuter ipAddressFinderOuter)
@@ -249,6 +251,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
             DataViewMode = apiContext.DataViewMode;
             _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
+            _location = string.IsNullOrWhiteSpace(apiContext.LocationCode) ? null : new LocationInfo() { Code = apiContext.LocationCode };
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
         }
@@ -505,6 +508,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _userProfile.Value;
             }
         }
+        public LocationInfo Location
+        {
+            get
+            {
+                return _location;
+            }
+        }
+
 
         public string ProductCode { get; set; }
 
@@ -544,5 +555,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _crawlerInfo;
             }
         }
+
+        
     }
+    public class LocationInfo
+    {
+        public string Code { get; set; }
+    }
+
+
+
 }
