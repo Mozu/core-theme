@@ -14,6 +14,7 @@
                 i.src = img.imageUrl + '?max=' + Hypr.getThemeSetting('productImagesContainerWidth') + '&_mzCb=' + cacheKey;
                 if (img.altText) {
                     i.alt = img.altText;
+                    i.title = img.altText;
                 }
                 imageCache[img.sequence.toString()] = i;
             });
@@ -28,6 +29,7 @@
             if (this.imageCache[this.selectedImageIx]) {
                 this.$('[data-mz-productimage-main]')
                     .prop('src', this.imageCache[this.selectedImageIx].src)
+                    .prop('title', this.imageCache[this.selectedImageIx].title)
                     .prop('alt', this.imageCache[this.selectedImageIx].alt);
             }
         },
