@@ -150,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteElementString("priority", NS, "1");
             writer.WriteEndElement();
 
-            foreach (var node in nodes.Where(x => !x.IsHidden && !string.IsNullOrEmpty(x.Url)))
+            foreach (var node in nodes.Where(x => !x.IsHidden && !string.IsNullOrEmpty(x.Url) && !x.IsHomePage))
             {
                 var url = (node as SuperNavigationNode)?.FqUrl ?? node.Url;
                 writer.WriteStartElement("url", NS);
