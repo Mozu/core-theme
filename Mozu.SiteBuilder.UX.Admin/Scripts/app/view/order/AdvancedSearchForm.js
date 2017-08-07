@@ -252,6 +252,14 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
+            },
+            {
+                name: 'orderReferenceNumber',
+                fieldLabel: 'Order Reference Number',
+                xtype: 'numberfield',
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
             }];
         this.callParent(arguments);
     },

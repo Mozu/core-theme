@@ -271,6 +271,34 @@
 
 }
 
+.order-detail-parentCheckoutId-container {
+    display: inline-block;
+    height: 31px;
+    width: 30%;
+    color: #0b807a;
+    float: right;
+    text-align: right;
+}
+
+.order-detail-parentCheckoutId-text {
+    width: 50%;
+    display: inline-block;
+    flex-wrap: wrap;
+    line-height: 15px;
+    font-size: 13px;
+    overflow-wrap: normal;
+    overflow: auto;
+    white-space: normal;
+}
+
+.parentCheckoutTooltip {
+    float: right;
+    width: 5%;
+}
+
+.x-panel-header-subform .x-panel-header-text-container {
+    width: 98%;
+}
 
     
 

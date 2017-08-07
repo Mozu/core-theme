@@ -78,6 +78,16 @@ Ext.define('Taco.model.Order', {
         useNull: true
     },
     {
+        name: 'parentCheckoutId',
+        type: 'string',
+        useNull: true
+    },
+    {
+        name: 'parentCheckoutNumber',
+        type: 'string',
+        useNull: true
+    },
+    {
         name: 'externalId',
         type: 'string',
         useNull: true

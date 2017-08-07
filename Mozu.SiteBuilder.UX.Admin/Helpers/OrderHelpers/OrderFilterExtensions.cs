@@ -113,6 +113,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 {
                     return $"parentReturnId eq {filter.value}";
                 }
+                case "orderreferencenumber":
+                {
+                    return "parentCheckoutNumber eq " + filter.value;
+                }
                 case "id":
                 {
                     return "id eq " + filter.value; ;

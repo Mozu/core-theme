@@ -302,7 +302,17 @@ Ext.define('Taco.view.order.Grid', {
                 flex: 1,
                 minWidth: 100,
                 width: 100
-            }, {
+            },
+            {
+                stateId: 'parentCheckoutNumber',
+                dataIndex: 'parentCheckoutNumber',
+                text: 'Order Reference Number',
+                flex: 1,
+                minWidth: 100,
+                width: 100,
+                hidden: true
+            },
+            {
                 stateId: 'submittedDate',
                 dataIndex: 'submittedDate',
                 text: 'Submitted Date',

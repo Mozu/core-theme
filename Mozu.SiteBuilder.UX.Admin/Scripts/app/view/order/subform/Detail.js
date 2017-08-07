@@ -79,7 +79,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         var me = this;
 
         this.titleTemplate = new Ext.XTemplate(
-            'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>'
+            'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>' +
+            '<tpl if="parentCheckoutAvail"><div class="order-detail-parentCheckoutId-container"><div class="order-detail-parentCheckoutId-text">This order is a part of order reference number: {parentCheckoutNumber}</div><i class="parentCheckoutTooltip mozu-c-tooltip__icon mozu-c-tooltip__icon--switch mozu-c-tooltip__icon--dense mozu-c-tooltip__icon--left"></i></div></tpl>'
         );
 
         // Create the PriceListStore.
@@ -286,7 +287,9 @@ Ext.define('Taco.view.order.subform.Detail', {
         return this.titleTemplate.apply({
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
             priceListAvail: me.record && me.record.get('priceListCode').length > 0 ? true : false,
-            priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode')
+            priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode'),
+            parentCheckoutAvail: me.record && me.record.get('parentCheckoutId').length > 0 ? true : false,
+            parentCheckoutNumber: me.parentCheckoutNumber && me.parentCheckoutNumber.length > 0 ? me.parentCheckoutNumber : me.record.get('parentCheckoutNumber')
         });
     },
 
