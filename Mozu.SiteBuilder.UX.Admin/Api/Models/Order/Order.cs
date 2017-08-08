@@ -35,6 +35,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int? ParentReturnNumber { get; set; }
 
+        public string ParentCheckoutId { get; set; }
+        
+        public int? ParentCheckoutNumber { get; set; }
+
         /// <summary>
         /// An order number to link this order to an external system
         /// </summary>
