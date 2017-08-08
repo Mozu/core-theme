@@ -70,13 +70,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> GetSegments([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter)
         {
             // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
-            var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pagingParameters.pageSize)).ReadAsSync();
-            for (int currentPage = 1; segments.TotalCount > (currentPage * pagingParameters.pageSize); currentPage++)
+            var pageSize = pagingParameters.pageSize <= 200 ? pagingParameters.pageSize : 200;
+            var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pageSize)).ReadAsSync();
+            if (pageSize >= 200)
             {
-                segments.Items = segments.Items.Concat(
-                    (await _customerSegmentWebApiClient.GetSegments(startIndex: (currentPage * pagingParameters.pageSize), pageSize: (pagingParameters.pageSize))).ReadAsSync().Items
-                ).ToList();
+                for (int currentPage = 1; segments.TotalCount > (currentPage * pageSize); currentPage++)
+                {
+                    var segment = (await _customerSegmentWebApiClient.GetSegments(startIndex: (currentPage * pageSize), pageSize: pageSize)).ReadAsSync();
+                    segments.Items.AddRange(segment.Items);
+                }
             }
+
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(segments.Items, (int)segments.TotalCount));
         }
 
