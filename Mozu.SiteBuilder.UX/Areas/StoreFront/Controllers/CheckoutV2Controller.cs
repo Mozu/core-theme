@@ -417,17 +417,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> Confirmation(string orderId)
+        public async Task<ActionResult> Confirmation(string checkoutId)
         {
             var locTask = _locationRuntimeWebApiClient.GetDirectShipLocation();
-            var orderTask = _orderWebApiClient.GetOrder(orderId);
-            Order order = null;
-            await Task.WhenAll(locTask, orderTask);
-            if (orderTask.Result.ResponseMessage.IsSuccessStatusCode)
+            var checkoutTask = _checkoutWebApiClient.GetCheckout(checkoutId);
+            Checkout checkout = null;
+            await Task.WhenAll(locTask, checkoutTask);
+            if (checkoutTask.Result.ResponseMessage.IsSuccessStatusCode)
             {
                 try
                 {
-                    order = orderTask.Result.ReadAsSync();
+                    checkout = checkoutTask.Result.ReadAsSync();
                 }
                 catch
                 {
@@ -439,50 +439,60 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 Template = new DocumentRequest()
                 {
-                    Path = "confirmation"
+                    Path = "confirmationv2"
                 }
 
             };
-            pc.PageType = "confirmation";
+            pc.PageType = "confirmationv2";
 
 
             var shopperOrderAttributesTask = GetShopperOrderAttributes();
 
             this.PageContext.StorefrontOrderAttributes = shopperOrderAttributesTask.Result;
 
-            if (order == null)
+            if (checkout == null)
                 return Redirect(this.SiteContext.SiteSubdirectory + "/");
 
-            if (!CompletedOrderStates.Contains(order.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
+           // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
 
-            if (order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+            if (checkout.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
                 //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
-                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", checkout.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
 
                 locations = locationsTask.ReadAsSync();
             }
 
-            var jOrder = order.ToJObject();
+            var jOrder = checkout.ToJObject();
 
-            jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
+            //jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
 
+            //Add array of fulfillmentLocationCodes
+            // Array will map fulfillmentCode to location info
+            //Return [ { id: <String> fulfillmentCode, locationInfo: <Object> LocationInfo} ]
             if (locations != null)
             {
-                var jItems = (JArray)jOrder["items"];
+                
+                var jFulfillmentLocations = new JArray();
 
-                for (int i = 0; i < order.Items.Count; i++)
-                {
-                    if (order.Items[i].FulfillmentMethod == FulfillmentMethodConst.SHIP)
-                    {
-                        var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
-                        if (location != null)
-                        {
-                            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
-                        }
-                    }
-                }
+                locations.Items.ForEach(x => jFulfillmentLocations.Add(new JObject(
+                    new JProperty("id", x.Code),
+                    new JProperty("locationInfo", new JObject(x)))));
+
+                jOrder.Add("fulfillmentLocations", jFulfillmentLocations);
+
+                //for (int i = 0; i < order.Items.Count; i++)
+                //{
+                //    if (order.Items[i].FulfillmentMethod == FulfillmentMethodConst.SHIP)
+                //    {
+                //        var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
+                //        if (location != null)
+                //        {
+                //            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
+                //        }
+                //    }
+                //}
             }
             this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
             return View("confirmation", jOrder);
