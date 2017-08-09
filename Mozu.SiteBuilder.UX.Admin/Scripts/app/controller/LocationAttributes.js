@@ -1,6 +1,6 @@
 /**
- * @class Taco.controller.CustomerAttributes
- * The Customers controller.
+ * @class Taco.controller.LocationAttributes
+ * The Location controller.
  */
 Ext.define('Taco.controller.LocationAttributes', {
     extend: 'Taco.core.Controller',
