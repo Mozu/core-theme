@@ -175,12 +175,12 @@ Ext.define('Taco.core.StateManager', {
 
         return false;
     },
-
+   
     //allows for late loading of controller... speeds up dev mode
     initController: function (params) {
         var controller, idx, name;
         try {
-            idx = Taco.app.controllers.findIndex('id', params.controller);
+            idx = Taco.app.controllers.findIndex('id',  new RegExp( '^' + params.controller +'$', 'i'));
             if (idx) {
                 controller = Taco.app.controllers.getAt(idx);
             }
@@ -395,7 +395,7 @@ Ext.define('Taco.core.StateManager', {
     dispatchController: function (params) {
         var controller, idx, ret;
         try {
-            idx = Taco.app.controllers.findIndex('id', params.controller);
+            idx = Taco.app.controllers.findIndex('id', new RegExp( '^' + params.controller +'$', 'i'));
             if (idx) {
                 controller = Taco.app.controllers.getAt(idx);
             }

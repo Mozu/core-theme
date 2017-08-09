@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.controller.Customers', {
     extend: 'Taco.core.Controller',
+    alias: ['Taco.controller.Customer'],
     modelName: 'CustomerAccount',
     requires: ['Taco.model.CustomerAccount', 'Taco.view.customers.Index', 'Taco.view.customers.Edit', 'Taco.view.customers.Segments.Index'],
     views: ['customers.Index'],
