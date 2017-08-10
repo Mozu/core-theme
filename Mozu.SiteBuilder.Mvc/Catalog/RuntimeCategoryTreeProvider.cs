@@ -47,6 +47,7 @@ namespace Mozu.SiteBuilder.Mvc.Catalog
         {
             return _catTree ?? (_catTree = GetAllCategoriesImpl());
         }
+		
         public Task<CategoryTree> GetAllCategoriesAsync()
         {
             return _categoryTreeTask ?? (_categoryTreeTask = Task.FromResult(GetAllCategoriesImpl()));
