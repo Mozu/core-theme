@@ -797,7 +797,10 @@
     "split-checkout-item": {
       "template": "{+checkoutService}{id}/items/{itemId}/split?quantity={quantity}",
       "verb": "POST"
-
+    },
+    "merge-duplicate-checkout-items": {
+      "template": "{+checkoutService}{id}/items/mergeDuplicateItems",
+      "verb": "POST"
     },
     "update-checkout-item-destination": {
       "template": "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",

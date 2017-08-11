@@ -36,6 +36,7 @@ using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Customers;
 
+
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [SslOnlyActionFilter]
@@ -185,9 +186,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             };
             pc.PageType = "checkoutv2";
-            //var id = OrderId;
-            var id = checkoutId;
-            if (string.IsNullOrWhiteSpace(id)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+
+            if (string.IsNullOrWhiteSpace(checkoutId)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
             Checkout model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
@@ -201,8 +201,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var billStateTask = GetUSBillingStates();
             var shopperOrderAttributesTask = GetShopperOrderAttributes();
 
-            //var orderTask = _orderWebApiClient.GetOrder(id);
-            var checkoutTask = _checkoutWebApiClient.GetCheckout(id);
+            var checkoutTask = _checkoutWebApiClient.GetCheckout(checkoutId);
             await Task.WhenAll(shipTask, billTask, checkoutTask, shipStateTask, billStateTask).ConfigureAwait(false);
 
             try
@@ -269,55 +268,57 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
-                Contact primaryShippingContact = null;
-                //CustomerContact primaryBillingContact = null;
+                CustomerContact primaryShippingContact = null;
+                CustomerContact primaryBillingContact = null;
 
 
                 //TO-DO : Do we have the idea of primary shipping contact in Checkout?
                 try
                 {
-                    //primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
-                    //primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
+                    primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
+                    primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
                 }
                 catch (NullReferenceException)
                 {
                 }
 
 
-                //TO-DO : Should we even do this here?
-                if (!account.Contacts.IsEmpty())
+                // If a primary shipping address exists
+                // Add the address as a destination
+                // Then set all orderitems to that destination
+
+                if (primaryShippingContact != null)
                 {
-                    if (model.Destinations == null)
+
+                    var primaryDestination = model.Destinations.Find(destination => 
+                    destination.DestinationContact.Address.Address1 == primaryShippingContact.Address.Address1 &&
+                    destination.DestinationContact.Address.Address2 == primaryShippingContact.Address.Address2 &&
+                    destination.DestinationContact.Address.StateOrProvince == primaryShippingContact.Address.StateOrProvince &&
+                    destination.DestinationContact.Address.CityOrTown == primaryShippingContact.Address.CityOrTown &&
+                    destination.DestinationContact.Address.PostalOrZipCode == primaryShippingContact.Address.PostalOrZipCode);
+
+                    if (primaryDestination == null)
                     {
-                        foreach (var contact in account.Contacts)
+                        primaryDestination = (await _checkoutWebApiClient.AddDestination(model.Id, new Destination
                         {
-                            var destinationItem = new Destination()
-                            {
-                                DestinationContact = contact
-                            };
-                            model.Destinations.Add(destinationItem);
-                        }
-
+                            DestinationContact = primaryShippingContact
+                        })).ReadAsSync();
                     }
+
+                    List<ItemsForDestination> itemsFordestination = new List<ItemsForDestination>()
+                    {
+                        new ItemsForDestination() { DestinationId = primaryDestination.Id }
+                    };
+
+                    var itemIds = new List<string>();
+                    model.Items.ForEach(x => itemIds.Add(x.Id));
+
+                    itemsFordestination[0].ItemIds = itemIds;
+
+                    await _checkoutWebApiClient.BulkUpdateItemDestinations(model.Id, itemsFordestination);
+                    
+                    addedPrimaryShippingContactToOrderJustNow = true;
                 }
-
-                //if (primaryShippingContact != null)
-                //{
-                //    if (model.Destinations == null)
-                //    {
-                //        model.Destinations = new Destination()
-                //        {
-                //            DestinationContact = primaryShippingContact
-                //        };
-                //        addedPrimaryShippingContactToOrderJustNow = true;
-                //    }
-                //    if (model.FulfillmentInfo.FulfillmentContact == null)
-                //    {
-                //        model.FulfillmentInfo.FulfillmentContact = primaryShippingContact;
-                //    }
-                //    addedPrimaryShippingContactToOrderJustNow = true;
-                //}
-
             }
 
 
@@ -367,37 +368,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("customer", accountJson);
             }
 
-            if (!model.Destinations.IsEmpty())
+            if (addedPrimaryShippingContactToOrderJustNow)
             {
-                //if (addedPrimaryShippingContactToOrderJustNow)
-                //{
-                //    try
-                //    {
-                //        model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
-                //    }
-                //    catch { } // it's really okay if this doesn't work
+                List<CheckoutGroupRates> methods = null;
+                if (isFulfillmentInfoRequired)
+                {
+                    var resp = await _checkoutWebApiClient.GetAvailableShipmentMethods(checkoutId);
+                    if (resp.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        methods = resp.ReadAsSync();
+                    }
+                    else
+                    {
+                        var message = resp.ReadException().Message;
+                        var messageType = "error";
+                        jOrder.Add("messages", new JArray(new { message, messageType }.ToJObject()));
+                    }
+                }
 
-                //}
-
-                // List<ShippingRate> methods = null;
-                //if (isFulfillmentInfoRequired)
-                //{
-                //    var resp = await _orderWebApiClient.GetAvailableShipmentMethods(id);
-                //    if (resp.ResponseMessage.IsSuccessStatusCode)
-                //    {
-                //        methods = resp.ReadAsSync();
-                //    }
-                //    else
-                //    {
-                //        var message = resp.ReadException().Message;
-                //        var messageType = "error";
-                //        jOrder.Add("messages", new JArray(new { message, messageType }.ToJObject()));
-                //    }
-                //}
-
-                //var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
-                //JObject si = (JObject)jOrder["fulfillmentInfo"];
-                //si.Add("availableShippingMethods", asm);
+                var asm = (methods ?? new List<CheckoutGroupRates>(0)).ToJArray();
+                jOrder.Add("shippingMethods", asm);
             }
 
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
@@ -478,7 +468,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 locations.Items.ForEach(x => jFulfillmentLocations.Add(new JObject(
                     new JProperty("id", x.Code),
-                    new JProperty("locationInfo", new JObject(x)))));
+                    new JProperty("locationInfo", x.ToJObject()))));
 
                 jOrder.Add("fulfillmentLocations", jFulfillmentLocations);
 

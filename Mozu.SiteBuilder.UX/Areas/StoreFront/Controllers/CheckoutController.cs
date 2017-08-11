@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            Checkout model = null;
+            Order model = null;
             Customer.Contracts.CustomerAccount account = null;
             CardCollection cards = null;
             Customer.Contracts.Credit.CreditCollection credits = null;
@@ -212,55 +212,53 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var billStateTask = GetUSBillingStates();
             var shopperOrderAttributesTask = GetShopperOrderAttributes();
 
-            //var orderTask = _orderWebApiClient.GetOrder(id);
-            var checkoutTask = _checkoutWebApiClient.GetCheckout(id);
-            await Task.WhenAll(shipTask, billTask, checkoutTask, shipStateTask, billStateTask).ConfigureAwait(false);
+            var orderTask = _orderWebApiClient.GetOrder(id);
+            await Task.WhenAll(shipTask, billTask, orderTask, shipStateTask, billStateTask).ConfigureAwait(false);
 
             try
             {
-                model = checkoutTask.Result.ReadAsAsync().Result;
+                model = orderTask.Result.ReadAsAsync().Result;
             }
             catch
             {
             }
             if (model == null) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            //if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
+            if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
-
-            //var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
+            var priceListChanged = await HasPriceListChanged(model.PriceListCode).ConfigureAwait(false);
             List<Product> productsRemoved = null;
 
             // TODO: Is this the right context (out of like 9) to check for PriceListCode?
             // TODO: Null checks needed between these two values?
-            //if (false)
-            //{
-            //    var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
-            //    if (updateResponse.HasException)
-            //    {
-            //        // Changing pricelist could cause odd things to happen. For example:
-            //        // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
-            //        // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
-            //        // Dump them back to the cart to fix the problem. The error message should show on the cart page.
-            //        return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            //    }
-            //    else
-            //    {
-            //        var newModel = updateResponse.ReadAsSync();
+            if (priceListChanged)
+            {
+                var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
+                if (updateResponse.HasException)
+                {
+                    // Changing pricelist could cause odd things to happen. For example:
+                    // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
+                    // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
+                    // Dump them back to the cart to fix the problem. The error message should show on the cart page.
+                    return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+                }
+                else
+                {
+                    var newModel = updateResponse.ReadAsSync();
 
-            //        // See if any items were dropped due to changing to an exclusive price list.
-            //        if (model.Items.Count != newModel.Items.Count)
-            //        {
-            //            var newProductCodes = newModel.Items.Select(x => x.Product).Select(getProductCode).ToList();
-            //            var uniqueProducts = model.Items // Previous order items
-            //                .Select(x => x.Product)      // Get products
-            //                .GroupBy(getProductCode)     // Group by product code
-            //                .Select(x => x.First()); // Grab first product from each group
-            //            productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
-            //        }
-            //        model = newModel;
-            //    }
-            //}
+                    // See if any items were dropped due to changing to an exclusive price list.
+                    if (model.Items.Count != newModel.Items.Count)
+                    {
+                        var newProductCodes = newModel.Items.Select(x => x.Product).Select(getProductCode).ToList();
+                        var uniqueProducts = model.Items // Previous order items
+                            .Select(x => x.Product)      // Get products
+                            .GroupBy(getProductCode)     // Group by product code
+                            .Select(x => x.First()); // Grab first product from each group
+                        productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
+                    }
+                    model = newModel;
+                }
+            }
 
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
@@ -281,72 +279,52 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
-                Contact primaryShippingContact = null;
+                CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 
-
-                //TO-DO : Do we have the idea of primary shipping contact in Checkout?
                 try
                 {
-                    //primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
+                    primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
                     //primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
                 }
                 catch (NullReferenceException)
                 {
                 }
 
-
-                //TO-DO : Should we even do this here?
-                if (!account.Contacts.IsEmpty())
+                if (primaryShippingContact != null)
                 {
-                    if (model.Destinations == null)
+                    if (model.FulfillmentInfo == null)
                     {
-                        foreach (var contact in account.Contacts)
+                        model.FulfillmentInfo = new FulfillmentInfo()
                         {
-                            var destinationItem = new Destination()
-                            {
-                                DestinationContact = contact
-                            };
-                            model.Destinations.Add(destinationItem);
-                        }
-
+                            FulfillmentContact = primaryShippingContact
+                        };
+                        addedPrimaryShippingContactToOrderJustNow = true;
                     }
+                    if (model.FulfillmentInfo.FulfillmentContact == null)
+                    {
+                        model.FulfillmentInfo.FulfillmentContact = primaryShippingContact;
+                    }
+                    addedPrimaryShippingContactToOrderJustNow = true;
                 }
-
-                //if (primaryShippingContact != null)
-                //{
-                //    if (model.Destinations == null)
-                //    {
-                //        model.Destinations = new Destination()
-                //        {
-                //            DestinationContact = primaryShippingContact
-                //        };
-                //        addedPrimaryShippingContactToOrderJustNow = true;
-                //    }
-                //    if (model.FulfillmentInfo.FulfillmentContact == null)
-                //    {
-                //        model.FulfillmentInfo.FulfillmentContact = primaryShippingContact;
-                //    }
-                //    addedPrimaryShippingContactToOrderJustNow = true;
-                //}
 
             }
 
 
-            //model.IPAddress = PageContext.IpAddress;
+            model.IPAddress = PageContext.IpAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();
 
-            //if (priceListChanged)
-            //{
-            //    // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
-            //    var message = productsRemoved != null
-            //        ? "Please note, items not available for purchase have been removed."
-            //        : "You are now eligible for special pricing.";
-            //    var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
-            //    jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
-            //}
+            if (priceListChanged)
+            {
+                // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
+                var message = productsRemoved != null
+                    ? "Please note, items not available for purchase have been removed."
+                    : "You are now eligible for special pricing.";
+                var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
+                jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
+            }
 
             var isFulfillmentInfoRequired = model.Items.Exists(
                     x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
@@ -379,37 +357,38 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("customer", accountJson);
             }
 
-            if (!model.Destinations.IsEmpty())
+            if (model.FulfillmentInfo != null && model.FulfillmentInfo.FulfillmentContact != null
+                && model.FulfillmentInfo.FulfillmentContact.Address != null)
             {
-                //if (addedPrimaryShippingContactToOrderJustNow)
-                //{
-                //    try
-                //    {
-                //        model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
-                //    }
-                //    catch { } // it's really okay if this doesn't work
+                if (addedPrimaryShippingContactToOrderJustNow)
+                {
+                    try
+                    {
+                        model = (await _orderWebApiClient.UpdateOrder(id, model)).ReadAsSync();
+                    }
+                    catch { } // it's really okay if this doesn't work
 
-                //}
+                }
 
-                // List<ShippingRate> methods = null;
-                //if (isFulfillmentInfoRequired)
-                //{
-                //    var resp = await _orderWebApiClient.GetAvailableShipmentMethods(id);
-                //    if (resp.ResponseMessage.IsSuccessStatusCode)
-                //    {
-                //        methods = resp.ReadAsSync();
-                //    }
-                //    else
-                //    {
-                //        var message = resp.ReadException().Message;
-                //        var messageType = "error";
-                //        jOrder.Add("messages", new JArray(new { message, messageType }.ToJObject()));
-                //    }
-                //}
+                List<ShippingRate> methods = null;
+                if (isFulfillmentInfoRequired)
+                {
+                    var resp = await _orderWebApiClient.GetAvailableShipmentMethods(id);
+                    if (resp.ResponseMessage.IsSuccessStatusCode)
+                    {
+                        methods = resp.ReadAsSync();
+                    }
+                    else
+                    {
+                        var message = resp.ReadException().Message;
+                        var messageType = "error";
+                        jOrder.Add("messages", new JArray(new { message, messageType }.ToJObject()));
+                    }
+                }
 
-                //var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
-                //JObject si = (JObject)jOrder["fulfillmentInfo"];
-                //si.Add("availableShippingMethods", asm);
+                var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
+                JObject si = (JObject)jOrder["fulfillmentInfo"];
+                si.Add("availableShippingMethods", asm);
             }
 
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
@@ -419,6 +398,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             return View("checkout", jOrder);
         }
+
 
         async Task<bool> HasPriceListChanged(string priceListCode)
         {

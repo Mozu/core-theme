@@ -104,31 +104,7 @@ module.exports = (function () {
                 return errors.throwOnObject(self, 'SET_SHIPPING_METHODS_FAILED', reason.message);
             });
         },
-        setShippingMethods : function(params){
-            var self = this;
-            var id = this.data.id;
-            var payloadCollection = {};
-            payloadCollection['postdata'] = [];
-            payloadCollection['id'] = self.data.id;
-
-            for (i = 0; i < self.data.groupings.length; i++) {
-                if (self.data.groupings[i].shippingMethodCode && self.data.groupings[i].shippingMethod == "Ship") {
-                    payloadCollection.postdata.push({
-                        groupingId: self.data.groupings[i].id,
-                        shippingRate: self.data.groupings[i].shippingRate
-                    });
-                }
-            }
-
-            return this.api.action('checkout', 'setShippingMethods', payloadCollection).then(function (checkout) {
-                //checkout.data = utils.clone(checkout.data)
-                var data = utils.clone(checkout.data);
-                self.fire('sync', data, self.data);
-                return data;
-            }, function (reason) {
-                return errors.throwOnObject(self, 'SET_SHIPPING_METHODS_FAILED', reason.message);
-            });
-        },
+        
 
         unsetAllShippingDestinations: function (params) {
             var self = this;
