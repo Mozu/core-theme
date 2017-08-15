@@ -16,9 +16,9 @@
  * @requires Taco.view.Header
  * @requires Ext.state.CookieProvider
  * @requires Ext.draw.Component
- * @requires Ext.layout.container.Form 
- * @requires Ext.layout.container.Column 
- * @requires Ext.layout.container.Accordion 
+ * @requires Ext.layout.container.Form
+ * @requires Ext.layout.container.Column
+ * @requires Ext.layout.container.Accordion
  * @requires Ext.layout.container.Absolute
  * @requires Ext.form.field.Radio
  * @requires Taco.controller.Analytics
@@ -36,24 +36,24 @@
  * @requires Taco.controller.Testing
  * @requires Taco.controller.FileManager
  * @requires Taco.controller.Discounts
- * @requires Taco.controller.CouponSets 
+ * @requires Taco.controller.CouponSets
  * @requires Taco.controller.ProductRankings
  * @requires Taco.controller.PriceLists
  * @requires Taco.controller.PriceListEntries
  * @requires Taco.controller.StoreFrontProducts
  * @requires Taco.controller.Settings
- 
+
  * @requires Taco.controller.Themes
  * @requires Taco.controller.Themesettings
  * @requires Taco.controller.Account
  * @requires Taco.controller.GeneralSettings
  * @requires Taco.controller.Localization
- 
+
  * @requires Taco.controller.BusinessIntelligence
- 
+
  * @requires Taco.controller.Orders
  * @requires Taco.controller.PhoneOrders
- 
+
  * @requires Taco.controller.Errors
  * The Taco namespace contains all extensions written for Taco (Mozu, if you're nasty.)
  */

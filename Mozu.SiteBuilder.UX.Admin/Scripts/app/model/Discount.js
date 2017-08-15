@@ -92,19 +92,17 @@ Ext.define('Taco.model.Discount', {
             type: 'auto',
             defaultValue: []
         },
-         {
-             name: 'shippingZones',
-             type: 'auto',
-             defaultValue: []
-         },
-        
+        {
+            name: 'shippingZones',
+            type: 'auto',
+            defaultValue: []
+        },
         {
             name: 'minimumOrderAmount',
             type: 'float',
             useNull: true,
             defaultValue: null
         },
-        
         {
             name: "doesNotApplyToSalePrice",
             type: 'bool'
@@ -121,7 +119,6 @@ Ext.define('Taco.model.Discount', {
             name: "excludeItemsWithExistingProductDiscounts",
             type: 'bool'
         },
-
         {
             name: "excludeItemsWithExistingShippingDiscounts",
             type: 'bool'
@@ -145,7 +142,8 @@ Ext.define('Taco.model.Discount', {
             name: 'maxRedemptionCount',
             type: 'int',
             useNull: true
-        },{
+        },
+        {
             name: 'maximumRedemptionsPerOrder',
             type: 'int',
             useNull: true
@@ -161,6 +159,12 @@ Ext.define('Taco.model.Discount', {
             type: 'int',
             useNull: true,
             defaultValue: null
+        },
+        {
+            name: 'doesNotApplyToMultiShipToOrders',
+            type: 'boolean',
+            useNull: true,
+            defaultValue: false
         },
         {
             name: 'minimumLifetimeValueAmount',

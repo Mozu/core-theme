@@ -5,13 +5,14 @@
  */
 Ext.define('Taco.view.discount.LimitationsForm', {
     requires: [
-        
         'Ext.data.UuidGenerator',
         'Ext.ux.form.field.BoxSelect',
+        'Taco.store.GeneralSettings',
         'Taco.core.ux.form.CurrencyField',
         'Taco.core.util.Validation',
         'Taco.core.ux.TooltipLabel',
         'Taco.model.FilterField',
+        'Taco.model.CheckoutSettings',
         'Taco.view.discount.widget.CouponSetSelector',
         'Taco.shared.view.field.CouponSetPickerField'
     ],
@@ -120,7 +121,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                     flex: 1,
                     cls: 'taco-readonly-display',
                     margin: "0px 20px 0px 0px",
-                    text: "Already redeemed: " + this.record.get('currentRedemptionCount') 
+                    text: "Already redeemed: " + this.record.get('currentRedemptionCount')
                 }
             ]
         });
@@ -143,11 +144,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         //    }
         //});
 
-
         this.couponSetStore = this.record.getCouponSetStore();
-
-
-
 
         this.noCouponCodeRadio = Ext.widget({
             xtype: 'radio',
@@ -195,7 +192,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             boxLabel: 'Multiple Codes',
             inputValue: "couponSet",
             width: 300,
-            checked: (this.couponSetStore.count()), 
+            checked: (this.couponSetStore.count()),
             listeners: {
                 afterchange: function (cmp, newValue) {
                     if (newValue) {
@@ -206,9 +203,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             }
         });
 
-
-
-
         this.couponCodeInput = Ext.create('Ext.form.field.Text', {
             name: 'couponCode',
             allowBlank: false,
@@ -217,8 +211,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             disabled: !(this.record.get('couponCode')),
             validator: Taco.core.util.Validation.validateQueryString
         });
-
-        
 
         this.couponCodeBox = Ext.create('Ext.form.FieldContainer', {
             layout: {
@@ -247,8 +239,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             ]
         });
 
-        
-
         var fieldRecord = Ext.create('Taco.model.FilterField', {
             id: "productcode",
             field: "ProductCode",
@@ -258,7 +248,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             supportedOperators: ["eq", "ne", "in"],
             editorCfg: {
                 xtype: "taco-couponsetpickerfield",
-                
                 //tells the valueField that we need a multiSelectorGrid to display the selected value since the id we save isn't particularly useful information to users
                 isPickerField: true
             },
@@ -300,6 +289,19 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             })
         });
 
+        this.multiShipToOrders = Ext.create('Ext.form.field.Checkbox', {
+            name: 'doesNotApplyToMultiShipToOrders',
+            boxLabel: 'Discount will not apply on multi ship orders',
+            checked: this.record.get('doesNotApplyToMultiShipToOrders'),
+            itemId: 'multi-ship-to-orders-check',
+            listeners: {
+                change: function(cb, newValue) {
+                    this.record.set('doesNotApplyToMultiShipToOrders', newValue ? 1 : null);
+                },
+                scope: this
+            }
+        });
+
         this.items = [
             {
                 xtype: 'component',
@@ -318,7 +320,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 },
                 items: [this.maxDiscountLineItemValue, this.maxDiscountOrderValue]
             },
-            this.redemptionContainer,            
+            this.redemptionContainer,
             this.redemptionCountContainer,
             //this.requiresCouponInput,
             this.noCouponCodeRadio,
@@ -326,9 +328,9 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             this.couponSetRadio,
             this.couponCodeBox,
             this.couponSetBox,
-            this.oneTimeUsePerShopper
+            this.oneTimeUsePerShopper,
+            this.multiShipToOrders
         ];
-
 
         this.callParent(arguments);
     },
@@ -343,9 +345,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             orderMaxLabel,
             orderMaxLabelWhenOrder = "Max Discount Value",
             orderMaxLabelWhenInline = "Max Discount Value (Per Order)";
-
-
-
 
         if ((!isLineItem && !isOrder) || !targetType) {
             this.setVisible(false);
@@ -372,7 +371,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             } else if (discountType == "Amount") {
                 orderMaxVisible = false;
                 lineItemMaxVisible = false;
-            } 
+            }
         }
 
         // need to update the label since it will be visible. the line item max never gets a label change. 
@@ -398,7 +397,16 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             me.maxRedemptionsPerOrder.setValue(null);
         }
 
-        
+        Taco.model.CheckoutSettings.load(123, {
+            success: function (record) {
+                var isMultiShipToEnabled = record.get('isMultiShipToEnabled') || false;
+                me.multiShipToOrders.setVisible(!isMultiShipToEnabled);
+            },
+            failure: function () {
+                me.multiShipToOrders.setVisible(false);
+            },
+            scope: this
+        });
     },
 
     onCouponChange: function (value) {
@@ -419,12 +427,10 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                     break;
             }
 
-            
-
             me.couponCodeInput.setDisabled(!showCouponCode);
 
             me.couponCodeBox.setVisible(showCouponCode);
-            
+
             me.couponCodeInput.validate();
 
             this.couponSetBox.setVisible(showCouponSet);
@@ -443,7 +449,7 @@ Ext.define('Taco.view.discount.LimitationsForm', {
                 couponSetData.push(record.data);
             });
         }
-        
+
         this.record.set("couponSets", couponSetData);
 
         if (!this.couponCodeRadio.checked) {
@@ -454,7 +460,6 @@ Ext.define('Taco.view.discount.LimitationsForm', {
         this.callParent(arguments);
     },
 
-    
     onDestroy: function () {
         var me = this;
 
@@ -462,8 +467,4 @@ Ext.define('Taco.view.discount.LimitationsForm', {
 
         this.callParent(arguments);
     }
-
-    
-
-   
 });

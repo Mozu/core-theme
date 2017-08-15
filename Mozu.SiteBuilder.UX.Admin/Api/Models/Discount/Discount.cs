@@ -152,6 +152,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public int? MaximumUsesPerUser { get; set; }
 
+        public bool? DoesNotApplyToMultiShipToOrders { get; set; }
+
         public bool RequiresCoupon { get; set; }
 
         public string CouponCode { get; set; }
