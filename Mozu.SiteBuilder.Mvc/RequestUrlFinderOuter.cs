@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc
                 //ssl has been terminated before rp.. need to reset
                 if (request.Headers.TryGetValues(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, out values))
                 {
-                    url = "https" + url.Substring(4);
+                    url = "https:" + url.Substring(url.IndexOf("//"));
                 }
                 return url;
             }

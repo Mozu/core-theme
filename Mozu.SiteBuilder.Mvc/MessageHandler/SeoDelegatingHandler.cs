@@ -85,7 +85,16 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
                 else if (!apiContext.IsEditMode)
                 {
-                    return Task.FromResult(RedirectTo(redirect.Destination, redirect.IsTemporary.GetValueOrDefault(false), request));
+                    return Task.FromResult(
+                        RedirectTo(
+                            redirect.Destination,
+                            redirect.IsTemporary.GetValueOrDefault(false),
+                            siteContext?.GeneralSettings?.EnforceSitewideSSL.GetValueOrDefault(false) == true,
+                            pageContext.IsSecure,
+                            pageContext.SecureHost,
+                            request
+                        )
+                    );
                 }
             }
 
@@ -136,7 +145,16 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var builder = new UriBuilder(scheme, currentUrl.Host);
             builder.Path = currentUrl.AbsolutePath;
             builder.Query = currentUrl.Query?.TrimStart(new char[] { '?' });
-            return Task.FromResult(RedirectTo(builder.Uri.ToString(), isTemporary: false, request: rerouted));
+            return Task.FromResult(
+                RedirectTo(
+                    builder.Uri.ToString(),
+                    isTemporary: false,
+                    enforceSsl: false,
+                    isSecureRequest: pageContext.IsSecure,
+                    secureHost: pageContext.SecureHost,
+                    request: rerouted
+                )
+           );
         }
 
         private static HttpRequestMessage PerformCustomRouting(HttpRequestMessage request)
@@ -152,15 +170,25 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             return request;
         }
 
-        private static HttpResponseMessage RedirectTo(string location, bool isTemporary, HttpRequestMessage request)
+        private static HttpResponseMessage RedirectTo(string location, bool isTemporary, bool enforceSsl, bool isSecureRequest, string secureHost, HttpRequestMessage request)
         {
             HttpResponseMessage resp = request.CreateResponse(isTemporary ? HttpStatusCode.Redirect : HttpStatusCode.MovedPermanently);
-            var uri = new Uri(location, UriKind.RelativeOrAbsolute);
-            if (!uri.IsAbsoluteUri && !location.StartsWith("/"))
+            var redirectUri = new Uri(location, UriKind.RelativeOrAbsolute);
+            if (!redirectUri.IsAbsoluteUri)
             {
-                uri = new Uri("/" + location, UriKind.RelativeOrAbsolute);
+                if (!location.StartsWith("/"))
+                {
+                    location = "/" + location;
+                    redirectUri = new Uri(location, UriKind.RelativeOrAbsolute);
+                }
+
+                if (enforceSsl && !isSecureRequest)
+                {
+                    redirectUri = new Uri(secureHost + location);
+                }
             }
-            resp.Headers.Location = uri;
+
+            resp.Headers.Location = redirectUri;
             return resp;
         }
 
