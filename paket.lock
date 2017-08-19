@@ -52,7 +52,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1642.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1732.0-checkout-search-11)
+    Mozu.CommerceRuntime.Contracts (1.1733.0-checkout-12)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -122,6 +122,11 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
+    Mozu.SiteSettings.General.Contracts (1.1734.0-v314-gen-settings-7)
+      Mozu.Core.Prime (>= 1.17)
+    Mozu.SiteSettings.Order.Contracts (1.1630.3)
+      Mozu.Core.Prime (>= 1.17)
+      Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.1706.1)
       Mozu.Core.Prime
     Mozu.VS.PowerShell (1.17.1)
@@ -132,13 +137,6 @@ NUGET
       System.Dynamic.Runtime (>= 4.0.11)
       System.Globalization (>= 4.0.11)
       System.IO (>= 4.1)
-	Mozu.PricingRuntime.Contracts (1.1727.0-cingImprovements-9)
-      Mozu.Core.Prime (>= 1.18.1)
-	Mozu.SiteSettings.General.Contracts (1.1731.0-ngcom-314-6)
-      Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.1731.0-ngcom-314-6)
-      Mozu.Core.Prime (>= 1.17)
-      Mozu.PaymentService.Contracts (>= 1.9.6)
       System.Linq (>= 4.1)
       System.Linq.Expressions (>= 4.1)
       System.ObjectModel (>= 4.0.12)

@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using Mozu.Core.Api.Descriptor;
-using Mozu.Core.Extensions;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
@@ -22,10 +19,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         private SiteDomain _current;
         private string _currenthostAndPrefix;
 
-
         public SiteDomains(string currenthostAndPrefix, List<SiteDomain> all)
         {
-         
             this._currenthostAndPrefix = currenthostAndPrefix;
             this.All = all;
         }
@@ -37,7 +32,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
                 if (_current == null)
                 {
                     var currentHost = new Uri(_currenthostAndPrefix).Host;
-                    _current = All.FirstOrDefault(x => string.Equals(_currenthostAndPrefix, x.DomainName , StringComparison.OrdinalIgnoreCase ));
+                    _current = All.FirstOrDefault(x => string.Equals(_currenthostAndPrefix, x.DomainName, StringComparison.OrdinalIgnoreCase));
                     if (_current == null)
                     {
                         _current = Primary;
@@ -61,23 +56,22 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
                 return _primary;
             }
         }
-        public List<SiteDomain> All { get; set; } 
+        public List<SiteDomain> All { get; set; }
     }
+
     public class SiteDomain
     {
         public string DomainName { get; set; }
 
-
         public bool IsPrimary { get; set; }
-
-
 
         public bool IsSystemAssigned { get; set; }
 
         public bool IsDomainManaged { get; set; }
+
         public int SiteId { get; set; }
     }
-   
+
     public class CheckoutSettings
     {
         public string CustomerCheckoutType { get; set; }
@@ -87,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public bool PayByMail { get; set; }
 
         public bool UseOverridePriceToCalculateDiscounts { get; set; }
-    
+
         public bool IsPayPalEnabled { get; set; }
 
         public PurchaseOrderSettings PurchaseOrder { get; set; }
@@ -97,8 +91,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public VisaCheckoutSettings VisaCheckout { get; set; }
 
         public List<ExternalPaymentWorkflowSettings> ExternalPaymentWorkflowSettings { get; set; }
-
-        public bool? IsMultiShipToEnabled { get; set; }
     }
 
     public class ExternalPaymentWorkflowSettings
@@ -137,8 +129,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     {
         public bool IsEnabled { get; set; }
         public bool AllowSplitPayment { get; set; }
-        public List<CustomField> CustomFields { get; set; } 
-        public List<PaymentTerm> PaymentTerms { get; set; } 
+        public List<CustomField> CustomFields { get; set; }
+        public List<PaymentTerm> PaymentTerms { get; set; }
     }
 
     public class CustomField
@@ -166,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string ClientId { get; set; }
         public string ApiKey { get; set; }
     }
-   
+
     public class EmailTransactionSettings
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
@@ -230,7 +222,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     [DataContract]
     public class GeneralSettings
     {
-
         public GeneralSettings()
         {
             //ViewModeToggles = new ViewModeToggles();
@@ -257,14 +248,11 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "allowAllIps")*/]
         public bool AllowAllIPs { get; set; }
 
-
         [DataMember/*(Name = "senderEmail")*/]
         public string SenderEmailAddress { get; set; }
 
-
         [DataMember/*(Name = "senderEmailAlias")*/]
         public string SenderEmailAlias { get; set; }
-
 
         [DataMember/*(Name = "channelId")*/]
         public string ChannelId { get; set; }
@@ -323,6 +311,9 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember/*(Name = "isWishlistCreationEnabled")*/]
         public bool? IsWishlistCreationEnabled { get; set; }
 
+        [DataMember/*(Name = "IsMultishipEnabled")*/]
+        public bool? IsMultishipEnabled { get; set; }
+
         [DataMember/*(Name = "allowInvalidAddresses")*/]
         public bool? AllowInvalidAddresses { get; set; }
 
@@ -335,20 +326,18 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [DataMember]
         public bool? IsRequiredLoginForStagingEnabled { get; set; }
 
-         [DataMember]
+        [DataMember]
         public string CustomCdnHostName { get; set; }
-        
+
         [DataMember]
         public List<EmailTypeSettingVM> EmailTypes { get; set; }
 
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
-
-        [DataMember]
-        public bool IsMultiShipToEnabled { get; set; }
     }
 
-    public class ViewModeToggles {
+    public class ViewModeToggles
+    {
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
         [DataMember]

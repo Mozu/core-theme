@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
@@ -12,12 +10,9 @@ using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using Mozu.SiteSettings.Order.Contracts.Clients;
-using Newtonsoft.Json.Linq;
-using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
-using Mozu.SiteBuilder.Mvc.Contexts;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteSettings.Order.Contracts;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,9 +40,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await Task.WhenAll(settingsTask, channelsTask);
             var settings = settingsTask.Result;
 
-            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
-            settings.IsMultiShipToEnabled = orderProcessingSettings.IsMultiShipToEnabled.GetValueOrDefault(false);
-
             var channels = channelsTask.Result.ReadAsSync().Items;
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
@@ -72,12 +64,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var cdnCacheKey = previousSettings.CdnCacheBustKey;
             settingsToSave.CdnCacheBustKey = cdnCacheKey;
 
-            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
-            if (orderProcessingSettings.IsMultiShipToEnabled != settingsToSave.IsMultiShipToEnabled)
+            if (!previousSettings.IsMultishipEnabled.GetValueOrDefault() && settingsToSave.IsMultishipEnabled.GetValueOrDefault())
             {
-                orderProcessingSettings.IsMultiShipToEnabled = settingsToSave.IsMultiShipToEnabled;
-                if (orderProcessingSettings.IsMultiShipToEnabled.GetValueOrDefault(false))
-                    orderProcessingSettings.PaymentProcessingFlowType = "AuthorizeOnOrderPlacementAndCaptureOnOrderShipment";
+                var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+                orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
                 var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
             }
 
@@ -96,12 +86,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
             await this.SaveEmailTypes(settingsToSave.EmailTypes);
-            
 
             return Single2((await this.GetSettings()).Items.First());
         }
 
-		[HttpGetRoute(UriTemplate = "timezones/read")]
+        [HttpGetRoute(UriTemplate = "timezones/read")]
         public Response<List<TimeZone>> GetTimeZones([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = _wrapper.GetTimeZones().ToList();
@@ -109,25 +98,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(results);
         }
 
-
-
-
         [HttpGetRoute(UriTemplate = "emailTypes/read")]
-        public async Task< Response<List<EmailTypeSettingVM>>> GetEmailTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<EmailTypeSettingVM>>> GetEmailTypes([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             var results = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
-            
+
             var emailTypes = ToEmailTypeSettingVms(results);
 
             return List2(emailTypes);
         }
 
-        private static List< EmailTypeSettingVM> ToEmailTypeSettingVms(SiteSettings.General.Contracts.GeneralSettings results)
+        private static List<EmailTypeSettingVM> ToEmailTypeSettingVms(SiteSettings.General.Contracts.GeneralSettings results)
         {
             var convertedTypes = Mapper.Map<List<EmailTypeSettingVM>>(results.EmailTypes);
-            var props = typeof (Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
+            var props = typeof(Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
             var dic = new Dictionary<string, EmailTypeSettingVM>(StringComparer.OrdinalIgnoreCase);
-            foreach (string name in Enum.GetNames(typeof (EmailTypes)))
+            foreach (string name in Enum.GetNames(typeof(EmailTypes)))
             {
                 dic[name] = new EmailTypeSettingVM()
                 {
@@ -141,7 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 {
                     var prop = props.FirstOrDefault(x => x.Name.Equals(emailEntry.Id));
 
-                    var suppressed = (bool?) prop.GetValue(results.SupressedEmailTransactions);
+                    var suppressed = (bool?)prop.GetValue(results.SupressedEmailTransactions);
                     emailEntry.Enabled = !suppressed.GetValueOrDefault(false);
 
                     var onlyOnApiRequest = (bool?)prop.GetValue(results.EmailTransactionsOnlyOnRequest);
@@ -153,15 +139,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return dic.Values.ToList();
         }
 
-
         [HttpPostRoute(UriTemplate = "emailTypes/edit")]
         public async Task<Response<List<EmailTypeSettingVM>>> SaveEmailTypes(List<EmailTypeSettingVM> updates)
         {
             var existing = (await _generalSettingsWebApiClient.GetGeneralSettings()).ReadAsSync();
             AddEmailSettings(updates, existing);
 
-            var res =await _generalSettingsWebApiClient.UpdateGeneralSettings(existing);
-            if ( res.HasException)
+            var res = await _generalSettingsWebApiClient.UpdateGeneralSettings(existing);
+            if (res.HasException)
             {
                 throw res.ReadException();
             }
@@ -171,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private static void AddEmailSettings(List<EmailTypeSettingVM> updates, SiteSettings.General.Contracts.GeneralSettings existing)
         {
-            var props = typeof (Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
+            var props = typeof(Mozu.SiteSettings.General.Contracts.EmailTransactionSettings).GetProperties();
             foreach (var update in updates)
             {
                 existing.EmailTypes.Remove(

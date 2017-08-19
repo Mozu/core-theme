@@ -85,7 +85,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                 }))
                 .ForMember(x => x.PurchaseOrder, op => op.ResolveUsing(dc => dc.PaymentSettings.PurchaseOrder))
-                .ForMember(x => x.IsMultiShipToEnabled, op => op.ResolveUsing(dc => dc.OrderProcessingSettings.IsMultiShipToEnabled))
                 //TODO: remove when old admin goes away.
                 .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)

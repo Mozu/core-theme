@@ -198,10 +198,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             try
             {
-                //TO-DO: Is multiSHip Var
-                //var isMultiShip = this.SiteContext.GeneralSettings;
+                //TO-DO: isMultiShip var
+                var isMultiShip = SiteContext.GeneralSettings.IsMultishipEnabled.GetValueOrDefault();
 
-                if (true /*isMultiship*/)
+                // Multiship flag is jacked right now.
+                if (isMultiShip)
                 {
                     // add visit id to UserClaims bag for this call.
                     var checkoutWebApiClient = _checkoutWebApiClient.CloneWithApiContext(apiContext =>
@@ -212,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                     if (!model.DigitalWalletData.IsNullOrEmpty() && !model.DigitalWalletType.IsNullOrEmpty())
                     {
-                        /*checkout = (await checkoutWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
+                       /* checkout = (await checkoutWebApiClient.ProcessDigitalWallet(model.Id, model.DigitalWalletType,
                                                                 new DigitalWallet { DigitalWalletData = model.DigitalWalletData, CartId = model.Id }
                                                                 )).ReadAsSync();
                                                                 */

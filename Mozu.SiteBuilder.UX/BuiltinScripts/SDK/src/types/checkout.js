@@ -19,16 +19,16 @@ module.exports = (function () {
     });
 
     var checkoutStatus2IsComplete = {};
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.SUBMITTED] = true;
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ACCEPTED] = true;
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PENDING_REVIEW] = true;
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.PROCESSING] = true;
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.ERRORED] = true;
-    checkoutStatus2IsComplete[CONSTANTS.ORDER_STATUSES.COMPLETED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.SUBMITTED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.ACCEPTED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.PENDING_REVIEW] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.PROCESSING] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.ERRORED] = true;
+    checkoutStatus2IsComplete[CONSTANTS.CHECKOUT_STATUSES.COMPLETED] = true;
 
     var checkoutStatus2IsReady = {};
-    checkoutStatus2IsReady[CONSTANTS.ORDER_ACTIONS.SUBMIT_checkout] = true;
-    checkoutStatus2IsReady[CONSTANTS.ORDER_ACTIONS.ACCEPT_checkout] = true;
+    checkoutStatus2IsReady[CONSTANTS.CHECKOUT_ACTIONS.SUBMIT_CHECKOUT] = true;
+    checkoutStatus2IsReady[CONSTANTS.CHECKOUT_ACTIONS.ACCEPT_CHECKOUT] = true;
 
     function getPaymentDate(p) {
         return new Date(p.auditInfo.createDate);
@@ -47,8 +47,8 @@ module.exports = (function () {
                 window.location = ApiReference.urls.paypalExpress + (ApiReference.urls.paypalExpress.indexOf('?') === -1 ? '?' : '&') + "token=" + payment.paymentServiceTransactionId; //utils.formatString(CONSTANTS.BASE_PAYPAL_URL, payment.paymentServiceTransactionId);
             });
         },
-        "Purchasecheckout": function (checkout, billingInfo) {
-            return checkout.addPurchasecheckout(billingInfo);
+        "PurchaseOrder": function (checkout, billingInfo) {
+            return checkout.addPurchaseOrder(billingInfo);
         },
         "CreditCard": function (checkout, billingInfo) {
             var card = checkout.api.createSync('creditcard', billingInfo.card);
@@ -240,14 +240,14 @@ module.exports = (function () {
             if (!billingInfo.paymentType || !(billingInfo.paymentType in PaymentStrategies)) errors.throwOnObject(this, 'PAYMENT_TYPE_MISSING_OR_UNRECOGNIZED');
             return PaymentStrategies[billingInfo.paymentType](this, billingInfo);
         },
-        addPurchasecheckout: function (payment) {
+        addPurchaseOrder: function (payment) {
             // add purchase checkout stuff as the 'extraProps' call.
             return this.createPayment({
                 amount: payment.amount,
                 newBillingInfo: {
-                    paymentType: 'Purchasecheckout',
+                    paymentType: 'PurchaseOrder',
                     billingContact: payment.billingContact,
-                    purchasecheckout: payment.purchasecheckout
+                    purchaseOrder: payment.purchaseOrder
                 }
             });
         },
@@ -294,17 +294,17 @@ module.exports = (function () {
         },
         checkout: function () {
             var self = this,
-                availableActions = this.prop('availableActions');
+                availableActions = ['SubmitCheckout'];
             if (!this.isComplete()) {
                 for (var i = availableActions.length - 1; i >= 0; i--) {
-                    if (availableActions[i] in checkoutStatus2IsReady) return this.performcheckoutAction(availableActions[i]).otherwise(function (e) {
+                    if (availableActions[i] in checkoutStatus2IsReady) return this.performCheckoutAction(availableActions[i]).otherwise(function (e) {
                         return self.get().ensure(function () {
                             throw e;
                         });
                     });
                 }
             }
-            errors.throwOnObject(this, 'checkout_CANNOT_SUBMIT');
+            errors.throwOnObject(this, 'CHECKOUT_CANNOT_SUBMIT');
         },
         isComplete: function () {
             return !!checkoutStatus2IsComplete[this.prop('status')];

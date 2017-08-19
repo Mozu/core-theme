@@ -399,15 +399,15 @@
             },
             "returnType": "accountcard"
         },
-        "delete-card": {
-            "verb": "DELETE",
-            "template": "{+customerService}{customer.id}/cards/{id}",
-            "shortcutParam": "id",
-            "includeSelf": {
-                "asProperty": "customer"
-            },
-            "returnType": "accountcard"
+      "delete-card": {
+        "verb": "DELETE",
+        "template": "{+customerService}{customer.id}/cards/{id}",
+        "shortcutParam": "id",
+        "includeSelf": {
+          "asProperty": "customer"
         },
+        "returnType": "accountcard"
+      },
         "add-contact": {
             "verb": "POST",
             "template": "{+customerService}{id}/contacts",
@@ -438,12 +438,17 @@
             "template": "{+creditService}",
             "returnType": "storecredits"
         },
-        "get-credit": {
-            "verb": "GET",
-            "template": "{+creditService}/{id}",
-            "includeSelf": true,
-            "returnType": "storecredit"
-        }
+      "get-credit": {
+        "verb": "GET",
+        "template": "{+creditService}/{id}",
+        "includeSelf": true,
+        "returnType": "storecredit"
+      },
+      "update-customer-contacts": {
+        "verb": "POST",
+        "template": "{+customerService}{id}/{accountId}/contactslist",
+         "returnType": "contacts"
+      }
     },
     "storecredit": {
         "associate-to-shopper": {

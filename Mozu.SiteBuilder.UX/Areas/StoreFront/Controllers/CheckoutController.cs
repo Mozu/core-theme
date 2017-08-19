@@ -118,10 +118,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Uri redirectUrl = null;
             try
             {
-                //TO-DO: Is multiSHip Var
-                //var isMultiShip = this.SiteContext.GeneralSettings;
 
-                if (true /*isMultiship*/)
+                var isMultiShip = SiteContext.GeneralSettings.IsMultishipEnabled.GetValueOrDefault();
+
+                if (isMultiShip)
                 {
                     var checkout = (await _checkoutWebApiClient.CreateCheckoutFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout_V2/" + checkout.Id);

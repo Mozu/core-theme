@@ -90,14 +90,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }*/
 
 
-        private static List<string> CompletedOrderStates = new List<string>{
-            Order.OrderStatusConst.SUBMITTED,
-            Order.OrderStatusConst.ACCEPTED,
-            Order.OrderStatusConst.PENDING_REVIEW,
-            Order.OrderStatusConst.PROCESSING,
-            Order.OrderStatusConst.COMPLETED,
-            Order.OrderStatusConst.ERRORED
-        };
+        //private static List<string> CompletedOrderStates = new List<string>{
+        //    Order.OrderStatusConst.SUBMITTED,
+        //    Order.OrderStatusConst.ACCEPTED,
+        //    Order.OrderStatusConst.PENDING_REVIEW,
+        //    Order.OrderStatusConst.PROCESSING,
+        //    Order.OrderStatusConst.COMPLETED,
+        //    Order.OrderStatusConst.ERRORED
+        //};
 
 
         [System.Web.Http.HttpPost]
@@ -112,8 +112,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Uri redirectUrl = null;
             try
             {
-                //TO-DO: Check if genernal settings has multi ship to selected
-                if (true)
+                var isMultiShip = SiteContext.GeneralSettings.IsMultishipEnabled.GetValueOrDefault();
+
+                if (isMultiShip)
                 {
                     var checkout = (await _checkoutWebApiClient.CreateCheckoutFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id);
@@ -212,42 +213,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
             }
             if (model == null) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            //if (CompletedOrderStates.Contains(model.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + model.Id + "/confirmation");
+            if (model.SubmittedDate.HasValue) return Redirect(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
-            //var priceListChanged = !this.SbApiContext.PriceListCode.EqualsIgnoreCase(model.PriceListCode);
-            List<Product> productsRemoved = null;
 
-            // TODO: Is this the right context (out of like 9) to check for PriceListCode?
-            // TODO: Null checks needed between these two values?
-            //if (false)
-            //{
-            //    var updateResponse = await _orderWebApiClient.ChangeOrderPriceList(model.Id, null);
-            //    if (updateResponse.HasException)
-            //    {
-            //        // Changing pricelist could cause odd things to happen. For example:
-            //        // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
-            //        // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
-            //        // Dump them back to the cart to fix the problem. The error message should show on the cart page.
-            //        return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
-            //    }
-            //    else
-            //    {
-            //        var newModel = updateResponse.ReadAsSync();
-
-            //        // See if any items were dropped due to changing to an exclusive price list.
-            //        if (model.Items.Count != newModel.Items.Count)
-            //        {
-            //            var newProductCodes = newModel.Items.Select(x => x.Product).Select(getProductCode).ToList();
-            //            var uniqueProducts = model.Items // Previous order items
-            //                .Select(x => x.Product)      // Get products
-            //                .GroupBy(getProductCode)     // Group by product code
-            //                .Select(x => x.First()); // Grab first product from each group
-            //            productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
-            //        }
-            //        model = newModel;
-            //    }
-            //}
 
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
@@ -322,20 +291,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
 
-            //model.IPAddress = PageContext.IpAddress;
+            model.IPAddress = PageContext.IpAddress;
 
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();
 
-            //if (priceListChanged)
-            //{
-            //    // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
-            //    var message = productsRemoved != null
-            //        ? "Please note, items not available for purchase have been removed."
-            //        : "You are now eligible for special pricing.";
-            //    var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
-            //    jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
-            //}
 
             var isFulfillmentInfoRequired = model.Items.Exists(
                     x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
@@ -395,7 +355,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 this.HttpContext.Response.AddHeader("X-Frame-Options", "sameorigin");
             }
 
-            return View("checkout", jOrder);
+            return View("checkoutv2", jOrder);
         }
 
 
@@ -448,7 +408,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (checkout.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
-                //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
                 var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", checkout.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
 
                 locations = locationsTask.ReadAsSync();
@@ -456,11 +415,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var jOrder = checkout.ToJObject();
 
-            //jOrder.Add("hasDirectShip", order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.SHIP));
-
-            //Add array of fulfillmentLocationCodes
-            // Array will map fulfillmentCode to location info
-            //Return [ { id: <String> fulfillmentCode, locationInfo: <Object> LocationInfo} ]
             if (locations != null)
             {
                 
@@ -472,20 +426,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 jOrder.Add("fulfillmentLocations", jFulfillmentLocations);
 
-                //for (int i = 0; i < order.Items.Count; i++)
-                //{
-                //    if (order.Items[i].FulfillmentMethod == FulfillmentMethodConst.SHIP)
-                //    {
-                //        var location = locations.Items.Find(x => x.Code == order.Items[i].FulfillmentLocationCode);
-                //        if (location != null)
-                //        {
-                //            ((JObject)jItems[i]).Add("fulfillmentLocationName", location.Name);
-                //        }
-                //    }
-                //}
             }
+
             this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
-            return View("confirmation", jOrder);
+            return View("confirmationv2", jOrder);
         }
     }
 }

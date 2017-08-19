@@ -33,7 +33,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts 
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts 1.1732.0-checkout-search-11
+nuget Mozu.CommerceRuntime.Contracts 1.1733.0-checkout-12
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
@@ -49,8 +49,9 @@ nuget Mozu.ProductRuntime.Contracts
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
-nuget Mozu.SiteSettings.General.Contracts >= 1.1731.0-ngcom-314-6
-nuget Mozu.SiteSettings.Order.Contracts >= 1.1731.0-ngcom-314-6
+nuget Mozu.PricingRuntime.Contracts 1.1734.0-multishipto-19
+nuget Mozu.SiteSettings.General.Contracts >= 1.1734.0-v314-gen-settings-7
+nuget Mozu.SiteSettings.Order.Contracts >= 1.1624
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703

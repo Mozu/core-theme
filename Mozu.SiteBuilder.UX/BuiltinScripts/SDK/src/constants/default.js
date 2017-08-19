@@ -28,6 +28,28 @@ module.exports = {
         CANCEL_ORDER: "CancelOrder",
         REOPEN_ORDER: "ReopenOrder"
     },
+    CHECKOUT_STATUSES: {
+        ABANDONED: "Abandoned",
+        ACCEPTED: "Accepted",
+        CANCELLED: "Cancelled",
+        COMPLETED: "Completed",
+        CREATED: "Created",
+        PENDING_REVIEW: "PendingReview",
+        PROCESSING: "Processing",
+        ERRORED: "Errored",
+        SUBMITTED: "Submitted",
+        VALIDATED: "Validated"
+    },
+    CHECKOUT_ACTIONS: {
+        CREATE_CHECKOUT: "CreateCheckout",
+        SUBMIT_CHECKOUT: "SubmitCheckout",
+        ACCEPT_CHECKOUT: "AcceptCheckout",
+        VALIDATE_CHECKOUT: "ValidateCheckout",
+        SET_CHECKOUT_AS_PROCESSING: "SetCheckoutAsProcessing",
+        COMPLETE_CHECKOUT: "CompleteCheckout",
+        CANCEL_CHECKOUT: "CancelCheckout",
+        REOPEN_CHECKOUT: "ReopenCheckout"
+    },
     COMMERCE_FULFILLMENT_METHODS: {
         SHIP: "Ship",
         PICKUP: "Pickup",

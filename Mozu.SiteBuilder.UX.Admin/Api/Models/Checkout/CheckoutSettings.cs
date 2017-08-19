@@ -67,11 +67,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to PaymentSettings.PurchaseOrder
         /// </summary>
         public DC.PurchaseOrderPaymentDefinition PurchaseOrder { get; set; }
-
-        /// <summary>
-        /// Corresponds to OrderProcessingSettings.IsMultiShipToEnabled
-        /// </summary>
-        public bool IsMultiShipToEnabled { get; set; }
     }
 
     public class CardGateway

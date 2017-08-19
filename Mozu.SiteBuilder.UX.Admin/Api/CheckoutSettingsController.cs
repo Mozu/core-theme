@@ -199,14 +199,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCheckoutSettings = Mapper.Map<DC.CustomerCheckoutSettings>(settingReq);
             var dcOrderProcessingSettings = Mapper.Map<DC.OrderProcessingSettings>(settingReq);
 
-            var previousOrderProcessingSettings = (await _checkoutSettingsWebApiClient.GetOrderProcessingSettings()).ReadAsSync();
-            if (previousOrderProcessingSettings.IsMultiShipToEnabled.GetValueOrDefault(false) &&
-                !dcOrderProcessingSettings.PaymentProcessingFlowType.Equals("AuthorizeOnOrderPlacementAndCaptureOnOrderShipment"))
-            {
-                throw new Mozu.Core.Exceptions.VaeForbiddenException("While MultiShip is enabled, you must use " +
-                    "\"Authorize On Order Placement And Capture On Order Shipment\"!");
-            }
-
             //TODO: remove - to keep old admin working.
             if (!_tenantAdminSettingsContext.EnableBetaAdmin)
             {
