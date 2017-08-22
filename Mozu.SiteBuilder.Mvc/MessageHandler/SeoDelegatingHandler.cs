@@ -43,6 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     {
         private IRedirectHandler _redirecter = RedirectHandler.Instance;
         public const string IsSeoRewrite = "IsSeoRewrite";
+        public const string OriginalUri = "OriginalUri";
         public const string MzPreCleanedUri = "MzPreCleanedUri";
         // look in the source code for HttpRoute.cs in asp.net for this.  it's internal there, so we can't just use it.
         internal const string MS_HTTP_RoutingContextKey = "MS_RoutingContext";
@@ -68,8 +69,18 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             var siteContext = request.Resolve<ISiteContext>();
 
             var pageContext = request.Resolve<PageContext>();
+            Uri requestUri;
+            object temp;
+            if (request.Properties.TryGetValue(OriginalUri, out temp))
+            {
+                requestUri = (Uri)temp;
+            }
+            else
+            {
+                requestUri = request.RequestUri;
+            }
             // try redirects
-            var redirect = Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), request.RequestUri);
+            var redirect = Redirecter.GetRedirectForRequestUri(request.Resolve<IRedirectRepository>(), requestUri);
             if (redirect != null)
             {
                 // we short-circuit the rewrite if this request has already been rewritten this go around.
@@ -235,6 +246,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 
     public class HomePageTransferHandler : DelegatingHandler
     {
+
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (request.RequestUri.GetComponents(UriComponents.Path, UriFormat.Unescaped) == "")
@@ -255,7 +267,9 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                             {
                                 newUri = new Uri(request.RequestUri, newUri);
                             }
+                            var originalUri = request.RequestUri;
                             request.RequestUri = newUri;
+                            request.Properties[SeoDelegatingHandler.OriginalUri] = originalUri;
                         }
                     }
                 }
