@@ -21,6 +21,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CheckoutSettingsController : BaseController
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
+        private readonly Lazy<IGeneralSettingWrapper> _generalSettingWrapper;
         private readonly IApiContext _context;
         private readonly ITenantsWebApiClient _tenantClient;
         private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
@@ -29,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Constructor.
         /// </summary>
         public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
+            , Lazy<IGeneralSettingWrapper> generalSettingWrapper
             , ITenantsWebApiClient tenantClient
             , IApiContext context
             , ITenantAdminSettingsContext tenantAdminSettingsContext
@@ -36,6 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             )
         {
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _generalSettingWrapper = generalSettingWrapper;
             _context = context;
             _tenantClient = tenantClient.CloneWithoutUserClaims();
             _aggregateSiteSettingsWebApiClient = aggregateSiteSettingsWebApiClient.CloneWithoutUserClaims();
@@ -66,6 +69,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
+
+            var generalSettings = await _generalSettingWrapper.Value.ReadSettings();
+            ret.IsMultishipEnabled = generalSettings.IsMultishipEnabled.GetValueOrDefault(false);
+
             return Single2(ret);
         }
 
