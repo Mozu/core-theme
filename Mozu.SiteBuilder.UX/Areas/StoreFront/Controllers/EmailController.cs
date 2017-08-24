@@ -51,6 +51,7 @@ using Newtonsoft.Json.Serialization;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -60,7 +61,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public bool isMock { get; set; }
         public Mozu.CommerceRuntime.Contracts.Orders.Order order { get; set; }
     }
-    
+
+    public class CheckoutEmail : Mozu.CommerceRuntime.Contracts.Checkouts.Checkout
+    {
+        public List<Order> Orders { get; set; }
+        public List<Location.Contracts.Location>  Locations { get; set; }
+    }
+
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -69,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILogger _logger;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
+        private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
         private IOrderWebApiClient _orderWebApiClient;
 
@@ -108,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo
                                        {
-                                           ModelType = typeof (Checkout),
+                                           ModelType = typeof (CheckoutEmail),
                                            Topic = Topics.CheckoutEmailTopic
                                        },
                                        new EmailTypeInfo
@@ -145,6 +153,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
+            ILocationAdminWebApiClient locationAdminWebApi,
              UrlHelper urlhelper
             )
             : base(docRepo, docTypeRepo, cmsService,
@@ -155,6 +164,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _customerAccountWebApiClient = customerAccountWebApiClient;
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
         }
 
         //
@@ -418,11 +428,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             }
-          
+
+
+            if (obj is CheckoutEmail)
+            {
+                var checkoutEmail = (CheckoutEmail) obj;
+
+                var checkoutOrderSearch = (await _orderWebApiClient.GetOrders(filter: $"parentCheckoutId eq {checkoutEmail.Id}")).ReadAsSync();
+                checkoutEmail.Orders = checkoutOrderSearch.Items;
+
+                var locations = checkoutEmail.Items.Where(x=>!string.IsNullOrEmpty(x.FulfillmentLocationCode)).Select(x=>$"code eq {x.FulfillmentLocationCode}");
+                if (locations.SafeAny())
+                {
+                    var filter = locations.Aggregate((x, y) => x + " or " + y);
+                   checkoutEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
+                }
+
+
+            }
             return obj;
         }
 
-        public class MyPackageItem : PackageItem
+        public class MyPackageItem : PackageItem    
         {
             public object Product { get; set; }
         }
