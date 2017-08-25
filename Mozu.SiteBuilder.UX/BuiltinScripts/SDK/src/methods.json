@@ -445,9 +445,10 @@
         "returnType": "storecredit"
       },
       "update-customer-contacts": {
-        "verb": "POST",
-        "template": "{+customerService}{id}/{accountId}/contactslist",
-         "returnType": "contacts"
+        "verb": "PUT",
+        "template": "{+customerService}{id}/contacts",
+        "returnType": "contacts",
+        "specifyPostData" : true
       }
     },
     "storecredit": {
