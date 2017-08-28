@@ -39,6 +39,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         
         public int? ParentCheckoutNumber { get; set; }
 
+        public int? PartialOrderNumber { get; set; }
+
+        public int? PartialOrderCount { get; set; }
+
         /// <summary>
         /// An order number to link this order to an external system
         /// </summary>

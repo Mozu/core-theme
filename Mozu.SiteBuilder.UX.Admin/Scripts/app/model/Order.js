@@ -88,6 +88,16 @@ Ext.define('Taco.model.Order', {
         useNull: true
     },
     {
+        name: 'partialOrderNumber',
+        type: 'string',
+        useNull: true
+    },
+    {
+        name: 'partialOrderCount',
+        type: 'string',
+        useNull: true
+    },
+    {
         name: 'externalId',
         type: 'string',
         useNull: true

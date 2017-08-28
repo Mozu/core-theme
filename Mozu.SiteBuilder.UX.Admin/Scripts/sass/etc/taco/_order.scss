@@ -275,34 +275,39 @@
     display: inline-block;
     height: 31px;
     width: 30%;
-    color: #0b807a;
+    color: $valid-green;
     float: right;
     text-align: right;
 }
 
 .order-detail-parentCheckoutId-text {
-    width: 50%;
+    width: 75%;
     display: inline-block;
     flex-wrap: wrap;
     line-height: 15px;
-    font-size: 13px;
+    font-size: 14px;
     overflow-wrap: normal;
     overflow: auto;
     white-space: normal;
+    padding: 1%;
 }
 
+.order-reference-top-line{
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom:4px;
+}
+.order-reference-bottom-line{
+    font-size: 10px;
+}
 .parentCheckoutTooltip {
     float: right;
     width: 5%;
+}   
+
+div[id^="taco-orderdetail-"][id$="_header_hd"]{
+    width: 100%;
 }
-
-.x-panel-header-subform .x-panel-header-text-container {
-    width: 98%;
-}
-
-    
-
-
 
 //Not sure if this is still used;
 

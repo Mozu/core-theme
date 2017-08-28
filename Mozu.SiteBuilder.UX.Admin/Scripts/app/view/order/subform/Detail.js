@@ -15,7 +15,8 @@ Ext.define('Taco.view.order.subform.Detail', {
         'Taco.view.order.modal.EditOrderDetail',
         'Taco.shared.view.form.ExtensibleAttribute',
         'Taco.view.order.subform.InternalNotes',
-        'Taco.core.ux.form.ResendEmailButton'
+        'Taco.core.ux.form.ResendEmailButton',
+        'Ext.tip.QuickTipManager'
     ],
     alias: 'widget.taco-orderdetail',
     itemId: 'orderDetailPanel',
@@ -70,18 +71,23 @@ Ext.define('Taco.view.order.subform.Detail', {
 
 
 // width of the actionColumn. used to align the grid total container
-    actionColumnWidth: 30,
-
+    actionColumnWidth: 120,
     priceListStore: null,
     priceListName: '',
 
     initComponent: function(eOpts) {
         var me = this;
-
         this.titleTemplate = new Ext.XTemplate(
             'Order Details<tpl if="priceListAvail"> | {priceListName} Pricing</tpl>' +
-            '<tpl if="parentCheckoutAvail"><div class="order-detail-parentCheckoutId-container"><div class="order-detail-parentCheckoutId-text">This order is a part of order reference number: {parentCheckoutNumber}</div><i class="parentCheckoutTooltip mozu-c-tooltip__icon mozu-c-tooltip__icon--switch mozu-c-tooltip__icon--dense mozu-c-tooltip__icon--left"></i></div></tpl>'
+            '<tpl if="parentCheckoutAvail">' +
+                '<div class="order-detail-parentCheckoutId-container">' +
+                    '<div class="order-detail-parentCheckoutId-text">This order is a part of order reference number: {parentCheckoutNumber}</div>' +
+                    '<i id="order-reference-tool-tip-icon" data-qtip="<p class=order-reference-top-line > This is part {partialOrderNumber} of {partialOrderCount} for order reference number {parentCheckoutNumber}</p><p class=order-reference-bottom-line > This order is displayed in parts because it contains items shipping to multiple addresses</p>" class="parentCheckoutTooltip mozu-c-tooltip__icon mozu-c-tooltip__icon--switch mozu-c-tooltip__icon--dense mozu-c-tooltip__icon--left">' +
+                    '</i>' +
+                '</div>' +
+            '</tpl>'
         );
+        Ext.tip.QuickTipManager.init();
 
         // Create the PriceListStore.
         this.priceListStore = Taco.core.data.StoreManager.getOrCreate({
@@ -95,6 +101,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             remoteSort: false,
             sorters: [{ property: 'name' }]
         });
+
         this.priceListStore.load(
             {
                 callback: function(records, operation, success) {
@@ -278,10 +285,9 @@ Ext.define('Taco.view.order.subform.Detail', {
                 this.internalNoteRow
             ]
         });
-
+        
         this.callParent(arguments);
     },
-
     constructTitle: function () {
         var me = this;
         return this.titleTemplate.apply({
@@ -289,7 +295,10 @@ Ext.define('Taco.view.order.subform.Detail', {
             priceListAvail: me.record && me.record.get('priceListCode').length > 0 ? true : false,
             priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode'),
             parentCheckoutAvail: me.record && me.record.get('parentCheckoutId').length > 0 ? true : false,
-            parentCheckoutNumber: me.parentCheckoutNumber && me.parentCheckoutNumber.length > 0 ? me.parentCheckoutNumber : me.record.get('parentCheckoutNumber')
+            parentCheckoutNumber: me.parentCheckoutNumber && me.parentCheckoutNumber.length > 0 ? me.parentCheckoutNumber : me.record.get('parentCheckoutNumber'),
+            partialOrderNumber: me.record.get('partialOrderNumber'),
+            partialOrderCount: me.record.get('partialOrderCount'),
+            parentOrderNumber: me.parentOrderNumber && me.parentOrderNumber.length > 0 ? me.parentOrderNumber : me.record.get('parentOrderNumber')
         });
     },
 
@@ -301,7 +310,6 @@ Ext.define('Taco.view.order.subform.Detail', {
             me.priceListName = foundRecord.get('name');
         }
     },
-    
     editOrder: function (focusAfterCloseCmp) {
         var me = this,
             isDraft = me.orderForm.isEdit(),
@@ -512,10 +520,11 @@ Ext.define('Taco.view.order.subform.Detail', {
     // update whether the buttons are enabled or disabled with every update of the record;
     updateButtonActions: function () {
         var me = this,
+            partialOrderCount = me.record.get('partialOrderCount') || 0,
             availableActions = me.record.get("availableActions"),
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')),
+            canEdit = !Ext.Array.contains(['Completed', 'Cancelled'], me.record.get('orderStatus')) && partialOrderCount< 2,
             canSendEmail = !Ext.Array.contains(['Pending'], me.record.get('orderStatus')),
             acceptOrderButton = this.down("#acceptOrderButton"),
             cancelOrderButton = this.down("#cancelOrderButton"),
@@ -545,10 +554,11 @@ Ext.define('Taco.view.order.subform.Detail', {
 
     getButtonActions: function () {
         var me = this,
+            partialOrderCount = me.record.get('partialOrderCount') || 0,
             availableActions = me.record.get("availableActions"),
             canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
             canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-            canEdit = !Ext.Array.contains(['Completed', 'Cancelled', 'Abandoned'], me.record.get('orderStatus')),
+            canEdit = !Ext.Array.contains(['Completed', 'Cancelled', 'Abandoned'], me.record.get('orderStatus')) && partialOrderCount < 2,
             canSendEmail = !Ext.Array.contains(['Pending', 'Abandoned'], me.record.get('orderStatus')),
             canEditInStoreFront = !(me.record.get('items') && me.record.get('items').length ),
             buttons;

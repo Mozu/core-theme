@@ -81,6 +81,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ParentCheckoutId, op => op.ResolveUsing(dc => dc.ParentCheckoutId))
                 .ForMember(x => x.ParentCheckoutNumber, op => op.ResolveUsing(dc => dc.ParentCheckoutNumber))
                 .ForMember(x => x.ParentReturnNumber, op => op.ResolveUsing(dc => dc.ParentReturnNumber))
+                .ForMember(x => x.PartialOrderNumber, op => op.ResolveUsing(dc => dc.PartialOrderNumber))
+                .ForMember(x => x.PartialOrderCount, op => op.ResolveUsing(dc => dc.PartialOrderCount))
                 .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
 
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
