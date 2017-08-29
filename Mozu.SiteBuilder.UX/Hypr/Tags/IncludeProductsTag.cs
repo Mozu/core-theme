@@ -94,6 +94,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var facetTemplateExclude = arguments.GetValueOrDefault<string>("facetTemplateExclude");
             var suppressErrors = arguments.GetValueOrDefault<bool>("suppressErrors", MozuConfigurationManager.Settings.AppSettingsAsNullableBool("sitebuilder_includeproducttag_suppressErrors").GetValueOrDefault(false));
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
+            var includeUserClaims = arguments.GetValueOrDefault<bool>("includeUserClaims", false);
             int? facetCategoryId;
             int? categoryId;
             GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
@@ -157,7 +158,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 facetPrefix,
                 responseOptions,
                 suppressErrors,
-                responseGroups
+                responseGroups,
+                includeUserClaims
              ).ConfigureAwait(false);
 
             var dict = new Dictionary<string, object> { { "model", pc } };
@@ -207,7 +209,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             string facetPrefix,
             string responseOptions,
             bool suppressErrors,
-            string responseGroups
+            string responseGroups,
+            bool includeUserClaims
             )
         {
             string cacheKey = null;
@@ -241,24 +244,44 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             if (pc == null)
             {
-                var res = await productSearchWebApiClient.CloneWithoutUserClaims().Search(
-                    query: searchQueryString,
-                    filter: filter,
-                    facetHierValue: facetHierValue,
-                    facetTemplate: facetTemplate,
-                    facetHierDepth: facetHierDepth,
-                    facetValueFilter: facetValueFilter,
-                    facet: facet,
-                    facetPrefix: facetPrefix,
-                    startIndex: startIndex,
-                    sortBy: sortBy.sortValue,
-                    responseFields: responseFields,
-                    responseOptions: responseOptions,
-                    responseGroups: responseGroups,
-                    pageSize: pageSize,
-                    searchTuningRuleCode: searchTuningRuleCode,
-                    enableSearchTuningRules: enableSearchTuningRules,
-                    searchTuningRuleContext: searchTuningRuleContext
+                var res = includeUserClaims ?
+                    await productSearchWebApiClient.Search(
+                        query: searchQueryString,
+                        filter: filter,
+                        facetHierValue: facetHierValue,
+                        facetTemplate: facetTemplate,
+                        facetHierDepth: facetHierDepth,
+                        facetValueFilter: facetValueFilter,
+                        facet: facet,
+                        facetPrefix: facetPrefix,
+                        startIndex: startIndex,
+                        sortBy: sortBy.sortValue,
+                        responseFields: responseFields,
+                        responseOptions: responseOptions,
+                        responseGroups: responseGroups,
+                        pageSize: pageSize,
+                        searchTuningRuleCode: searchTuningRuleCode,
+                        enableSearchTuningRules: enableSearchTuningRules,
+                        searchTuningRuleContext: searchTuningRuleContext
+                    ).ConfigureAwait(false)
+                    : await productSearchWebApiClient.CloneWithoutUserClaims().Search(
+                        query: searchQueryString,
+                        filter: filter,
+                        facetHierValue: facetHierValue,
+                        facetTemplate: facetTemplate,
+                        facetHierDepth: facetHierDepth,
+                        facetValueFilter: facetValueFilter,
+                        facet: facet,
+                        facetPrefix: facetPrefix,
+                        startIndex: startIndex,
+                        sortBy: sortBy.sortValue,
+                        responseFields: responseFields,
+                        responseOptions: responseOptions,
+                        responseGroups: responseGroups,
+                        pageSize: pageSize,
+                        searchTuningRuleCode: searchTuningRuleCode,
+                        enableSearchTuningRules: enableSearchTuningRules,
+                        searchTuningRuleContext: searchTuningRuleContext
                     ).ConfigureAwait(false);
 
 
