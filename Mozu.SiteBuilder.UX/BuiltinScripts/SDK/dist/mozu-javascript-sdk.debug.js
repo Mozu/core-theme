@@ -4841,7 +4841,8 @@ module.exports = (function () {
         'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}',
         'SPLIT_ORDER_ITEM_FAILED': 'Split Order Item Failed',
         'SET_SHIPPING_METHODS_FAILED': 'Set Shipping Methods Failed',
-        'UNSET_DESTINATIONS_FAILED': 'Unset Destinations Failed'
+        'UNSET_DESTINATIONS_FAILED': 'Sorry, something went wrong: Unsetting all shipping destinations failed',
+        'SET_DESTINATIONS_FAILED': "Sorry, something went wrong: Setting all shipping destinations failed"
     });
 
     var checkoutStatus2IsComplete = {};
@@ -4974,7 +4975,9 @@ module.exports = (function () {
             }
 
             for (i = 0; i < items.length; i++) {
-                payloadCollection.postdata[0].itemIds.push(items[i].id)
+                if (items[i].fulfillmentMethod === "Ship") {
+                    payloadCollection.postdata[0].itemIds.push(items[i].id);
+                }
             }
 
             return this.api.action('checkout', 'updateCheckoutItemDestinationBulk', payloadCollection).then(function (checkout) {
@@ -4983,7 +4986,7 @@ module.exports = (function () {
                 self.fire('sync', data, self.data);
                 return data;
             }, function (reason) {
-                return errors.throwOnObject(self, 'UNSET_DESTINATIONS_FAILED', reason.message);
+                return errors.throwOnObject(self, 'SET_DESTINATIONS_FAILED', reason.message);
             });
         },
         getShippingMethodsFromContacts: function () {
