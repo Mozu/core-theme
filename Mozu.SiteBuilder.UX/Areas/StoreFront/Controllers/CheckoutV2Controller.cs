@@ -237,40 +237,47 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
-                CustomerContact primaryShippingContact = null;
-                CustomerContact primaryBillingContact = null;
+                CustomerContact defaultShippingContact = null;
 
 
                 //TO-DO : Do we have the idea of primary shipping contact in Checkout?
                 try
                 {
-                    primaryShippingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.SHIPPING && y.IsPrimary));
-                    primaryBillingContact = account.Contacts.Find(x => x.Types.Exists(y => y.Name == ContactTypeConst.BILLING && y.IsPrimary));
+                    defaultShippingContact = account.Contacts.FirstOrDefault(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING && addressType.IsPrimary));
                 }
                 catch (NullReferenceException)
                 {
                 }
 
+                if (defaultShippingContact == null)
+                {
+                    var shippingAddresses = account.Contacts.Where(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING)).ToList();
+                    if (shippingAddresses.Count > 1)
+                    {
+                        //consider the only existing shipping address as default
+                        defaultShippingContact = shippingAddresses.First();
+                    }
+                }
 
                 // If a primary shipping address exists
                 // Add the address as a destination
                 // Then set all orderitems to that destination
 
-                if (primaryShippingContact != null)
+                if (defaultShippingContact != null)
                 {
 
                     var primaryDestination = model.Destinations.Find(destination => 
-                    destination.DestinationContact.Address.Address1 == primaryShippingContact.Address.Address1 &&
-                    destination.DestinationContact.Address.Address2 == primaryShippingContact.Address.Address2 &&
-                    destination.DestinationContact.Address.StateOrProvince == primaryShippingContact.Address.StateOrProvince &&
-                    destination.DestinationContact.Address.CityOrTown == primaryShippingContact.Address.CityOrTown &&
-                    destination.DestinationContact.Address.PostalOrZipCode == primaryShippingContact.Address.PostalOrZipCode);
+                    destination.DestinationContact.Address.Address1 == defaultShippingContact.Address.Address1 &&
+                    destination.DestinationContact.Address.Address2 == defaultShippingContact.Address.Address2 &&
+                    destination.DestinationContact.Address.StateOrProvince == defaultShippingContact.Address.StateOrProvince &&
+                    destination.DestinationContact.Address.CityOrTown == defaultShippingContact.Address.CityOrTown &&
+                    destination.DestinationContact.Address.PostalOrZipCode == defaultShippingContact.Address.PostalOrZipCode);
 
                     if (primaryDestination == null)
                     {
                         primaryDestination = (await _checkoutWebApiClient.AddDestination(model.Id, new Destination
                         {
-                            DestinationContact = primaryShippingContact
+                            DestinationContact = defaultShippingContact
                         })).ReadAsSync();
                     }
 
@@ -280,7 +287,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     };
 
                     var itemIds = new List<string>();
-                    model.Items.ForEach(x => itemIds.Add(x.Id));
+                    model.Items.ForEach(x => { if (x.DestinationId.IsNullOrEmpty()) { itemIds.Add(x.Id);  } });
 
                     itemsFordestination[0].ItemIds = itemIds;
 

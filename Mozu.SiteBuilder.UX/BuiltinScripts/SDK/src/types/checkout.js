@@ -120,7 +120,9 @@ module.exports = (function () {
 
             for (i = 0; i < items.length; i++) {
                 if (items[i].destinationId) {
-                    payloadCollection.postdata[0].itemIds.push(items[i].id)
+                    if (items[i].fulfillmentMethod === "Ship") {
+                        payloadCollection.postdata[0].itemIds.push(items[i].id);
+                    }
                 }
             }
 
