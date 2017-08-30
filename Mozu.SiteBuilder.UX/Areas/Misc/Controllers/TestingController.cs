@@ -105,11 +105,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public Task<HttpResponseMessage> Api(string url)
         {
             var service = _settings.Resources.FirstOrDefault(x => url.IndexOf(x.Path, StringComparison.OrdinalIgnoreCase) == 0);
-            _client = _client ?? new HttpClient() {MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0)};
+            _client = _client ?? new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
 
             this.Request.RequestUri = new Uri(service.BaseUrl + this.Request.RequestUri.PathAndQuery.Substring(4));
             IEnumerable<string> vals;
-            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out vals)&& vals.Count()>0)
+            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out vals) && vals.Count() > 0)
             {
                 this.Request.Method = new HttpMethod(vals.First());
             }
@@ -118,8 +118,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 this.Request.Content = null;
             }
-            return _client.SendAsync(this.Request);
 
+            this.Request.Headers.Host = this.Request.RequestUri.Host;
+            return _client.SendAsync(this.Request);
         }
 
 
