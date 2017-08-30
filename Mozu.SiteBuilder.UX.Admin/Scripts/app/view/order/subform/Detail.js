@@ -294,7 +294,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             orderNumber: me.record ? me.record.get('orderNumber') : '<New>',
             priceListAvail: me.record && me.record.get('priceListCode').length > 0 ? true : false,
             priceListName: me.priceListName && me.priceListName.length > 0 ? me.priceListName : me.record.get('priceListCode'),
-            parentCheckoutAvail: me.record && me.record.get('parentCheckoutId').length > 0 ? true : false,
+            parentCheckoutAvail: me.record && me.record.get('partialOrderCount') > 1 ? true : false,
             parentCheckoutNumber: me.parentCheckoutNumber && me.parentCheckoutNumber.length > 0 ? me.parentCheckoutNumber : me.record.get('parentCheckoutNumber'),
             partialOrderNumber: me.record.get('partialOrderNumber'),
             partialOrderCount: me.record.get('partialOrderCount'),
