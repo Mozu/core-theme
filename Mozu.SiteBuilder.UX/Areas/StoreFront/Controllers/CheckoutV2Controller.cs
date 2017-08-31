@@ -252,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 if (defaultShippingContact == null)
                 {
                     var shippingAddresses = account.Contacts.Where(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING)).ToList();
-                    if (shippingAddresses.Count > 1)
+                    if (shippingAddresses.Count == 1)
                     {
                         //consider the only existing shipping address as default
                         defaultShippingContact = shippingAddresses.First();

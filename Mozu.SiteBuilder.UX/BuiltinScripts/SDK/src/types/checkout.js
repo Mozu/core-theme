@@ -203,8 +203,9 @@ module.exports = (function () {
         },
         addCoupon: function (couponCode) {
             var self = this;
-            return this.applyCoupon(couponCode).then(function () {
-                return self.get();
+            return this.applyCoupon(couponCode).then(function (data) {
+                self.fire('sync', data, self.data);
+                return data;
             }, function (reason) {
                 errors.throwOnObject(self, 'ADD_COUPON_FAILED', reason.message);
             });
