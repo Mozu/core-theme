@@ -5039,7 +5039,7 @@ module.exports = (function () {
         addNewCustomer: function (newCustomerPayload) {
             var self = this;
             return self.api.action('customer', 'createStorefront', newCustomerPayload).then(function (customer) {
-                return self.setUserId();
+                return customer;
             }, function (reason) {
                 errors.throwOnObject(self, 'ADD_CUSTOMER_FAILED', reason.message);
             });
