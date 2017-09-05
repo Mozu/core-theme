@@ -130,6 +130,14 @@ module.exports = (function () {
             return this.api.action('checkout', 'updateCheckoutItemDestinationBulk', payloadCollection).then(function (checkout) {
                 //checkout.data = utils.clone(checkout.data)
                 var data = utils.clone(checkout.data);
+
+                //In order to support Digital Gift Card as a destination and persit our gift card email 
+                // This is bad, need to rework.
+                //for (i = 0; i < self.data.destinations.length; i++) {
+                //    if (self.data.destinations[i].isGiftCardDestination && !self.data.destinations[i].id) {
+                //        data.destinations.push(self.data.destinations[i]);
+                //    }
+                //}
                 self.fire('sync', data, self.data);
                 return data;
             }, function (reason) {
