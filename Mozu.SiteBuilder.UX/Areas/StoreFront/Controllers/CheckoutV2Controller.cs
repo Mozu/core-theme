@@ -243,7 +243,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //TO-DO : Do we have the idea of primary shipping contact in Checkout?
                 try
                 {
-                    defaultShippingContact = account.Contacts.FirstOrDefault(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING && addressType.IsPrimary));
+                    defaultShippingContact = account.Contacts.First(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING && addressType.IsPrimary));
                 }
                 catch (NullReferenceException)
                 {
@@ -291,7 +291,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                     itemsFordestination[0].ItemIds = itemIds;
 
-                    await _checkoutWebApiClient.BulkUpdateItemDestinations(model.Id, itemsFordestination);
+                    model = (await _checkoutWebApiClient.BulkUpdateItemDestinations(model.Id, itemsFordestination)).ReadAsSync();
                     
                     addedPrimaryShippingContactToOrderJustNow = true;
                 }
