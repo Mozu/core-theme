@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null) 
                     ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions 
                     : null))
-                ;
+                .ForMember(x => x.IsMultishipEnabled, op => op.Ignore());
 
 
             Mapper.CreateMap<DCss.Gateway, Gateway>()

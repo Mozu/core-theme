@@ -498,6 +498,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
             this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
+            jOrder.Add("mailCheckTo", locTask.Result.ReadAsSync().ToJObject());
             return View("confirmation", jOrder);
         }
     }

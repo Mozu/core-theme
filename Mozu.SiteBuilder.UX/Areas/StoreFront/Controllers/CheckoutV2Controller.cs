@@ -241,13 +241,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
                 //TO-DO : Do we have the idea of primary shipping contact in Checkout?
-                try
-                {
-                    defaultShippingContact = account.Contacts.First(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING && addressType.IsPrimary));
-                }
-                catch (NullReferenceException)
-                {
-                }
+
+                defaultShippingContact = account.Contacts.FirstOrDefault(data => data.Types.Exists(addressType => addressType.Name == ContactTypeConst.SHIPPING && addressType.IsPrimary));
+
 
                 if (defaultShippingContact == null)
                 {
@@ -263,10 +259,33 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 // Add the address as a destination
                 // Then set all orderitems to that destination
 
-                if (defaultShippingContact != null)
+                //var itemsByDestination = model.Items.GroupBy(item => item.DestinationId);
+
+                Func<Boolean> ExpressCheckoutNeed = () =>
+                {
+                    //if(itemsByDestination.FirstOrDefault(item => item.Key == null) != null)
+                    //{
+                    //    if(model.Destinations.Count > 1) {
+                    //        if(itemsByDestination.Count() == 2 && itemsByDestination.FirstOrDefault(item => item.Key == primaryDestination.Id) != null)
+                    //        {
+                    //            return true;
+                    //        }
+                    //        return false;
+                    //    }
+                    //    return true;
+                    //}
+                    //return false;
+                    if(model.Destinations.Count() > 0)
+                    {
+                        return false;
+                    }
+                    return true;
+                };
+
+                if (defaultShippingContact != null && ExpressCheckoutNeed())
                 {
 
-                    var primaryDestination = model.Destinations.Find(destination => 
+                    var primaryDestination = model.Destinations.Find(destination =>
                     destination.DestinationContact.Address.Address1 == defaultShippingContact.Address.Address1 &&
                     destination.DestinationContact.Address.Address2 == defaultShippingContact.Address.Address2 &&
                     destination.DestinationContact.Address.StateOrProvince == defaultShippingContact.Address.StateOrProvince &&
@@ -412,10 +431,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
            // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
-
-            if (checkout.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
+            var pickUpItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP);
+            if (pickUpItems.NotIsNullOrEmpty())
             {
-                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", checkout.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", pickUpItems.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
 
                 locations = locationsTask.ReadAsSync();
             }
@@ -434,8 +453,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jOrder.Add("fulfillmentLocations", jFulfillmentLocations);
 
             }
-
-            this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
+            jOrder.Add("mailCheckTo",locTask.Result.ReadAsSync().ToJObject());
+            //this.ViewData["mailCheckTo"] = locTask.Result.ReadAsSync();
             return View("confirmationv2", jOrder);
         }
     }

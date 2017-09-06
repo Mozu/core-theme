@@ -300,7 +300,7 @@ module.exports = (function () {
         },
         checkout: function () {
             var self = this,
-                availableActions = ['SubmitCheckout'];
+                availableActions = this.prop('availableActions');
             if (!this.isComplete()) {
                 for (var i = availableActions.length - 1; i >= 0; i--) {
                     if (availableActions[i] in checkoutStatus2IsReady) return this.performCheckoutAction(availableActions[i]).otherwise(function (e) {
