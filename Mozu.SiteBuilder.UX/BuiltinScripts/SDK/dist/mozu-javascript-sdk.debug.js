@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-07-27
+ * Mozu JavaScript SDK - v0.3.0 - 2017-09-11
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -3666,15 +3666,21 @@ module.exports=
     },
     "locations": {
         "defaultParams": {
-            "pageSize": 15
+          "pageSize": 15
         },
         "collectionOf": "location",
-        "get": {
-            "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}"
+      "get": {
+        "defaultParams": {
+          "includeAttributeDefinition": true
         },
-        "get-by-lat-long": {
-            "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}"
-        }
+        "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition}"
+      },
+      "get-by-lat-long": {
+        "defaultParams": {
+          "includeAttributeDefinition": true
+        },
+        "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+      }
     },
     "cartsummary": "{+cartService}summary",
     "cart": {
