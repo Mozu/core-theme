@@ -42,8 +42,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
         private PageContext _pageContext;
         private VisitEventPublisher _visitPublisher;
+        ISiteContext _siteContext;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher)
+        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher,
+            ISiteContext siteContext)
         {
             if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
             if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
@@ -56,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext = apiContext;
             _pageContext = pageContext;
             _visitPublisher = visitPublisher;
+            _siteContext = siteContext;
         }
        
         protected void DoLogout(bool? saveUserId = false) 
@@ -304,6 +307,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return LoginFailed(email);
         }
 
+        string GetLabel(string id, string defaultValue)
+        {
+            string val = null;
+            if (_siteContext.Labels.TryGetValue(id, out val))
+            {
+                return val;
+            }
+            return defaultValue;
+        }
+
+
+
         private HttpResponseMessage LoginFailed(string email = null)
         {
             var errorMsg = GetLoginFailureMessage(email);
@@ -311,11 +326,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 View("Login", new { email, Messages = new List<object> { new { Message = errorMsg } } }));
         }
 
-        private static string GetLoginFailureMessage(string email)
+        private string GetLoginFailureMessage(string email, string errorCode = null)
         {
+            if (errorCode == "USER_LOCKED")
+            {
+                return GetLabel(
+                    "userLockedError",
+                    "The User account is locked for security purposes. To unlock the user account please secure it by resetting your password now."
+                );
+            }
             return (email != null)
-                ? $"Login as {HttpUtility.HtmlEncode(email)} failed. Please try again."
-                : "Login failed. Please specify a user.";
+                ? string.Format(GetLabel(
+                    "loginFailedErrorWithEmail",
+                    "Login as {0} failed. Please try again."
+                ), HttpUtility.HtmlEncode(email))
+                : GetLabel(
+                    "loginFailedError",
+                    "Login failed. Please specify a user."
+                );
         }
 
         [HttpPost]
@@ -337,12 +365,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Message = $"Logged in as {HttpUtility.HtmlEncode(email)}."
                 };
             }
-            return AjaxLoginFailure(email);
+            var errorCode = default(string);
+            var ex = res.ReadException() as Mozu.Core.Api.Client.Exceptions.ApiWebClientException;
+            if ( ex != null)
+            {
+                errorCode = ex.ErrorCode;
+            }
+            
+            return AjaxLoginFailure(email, errorCode);
         }
 
-        private object AjaxLoginFailure(string email=null)
+        private object AjaxLoginFailure(string email=null, string errorCode = null)
         {
-            var errorMsg = GetLoginFailureMessage(email);
+
+            var errorMsg = GetLoginFailureMessage(email, errorCode);
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
             {
                 Message = errorMsg
