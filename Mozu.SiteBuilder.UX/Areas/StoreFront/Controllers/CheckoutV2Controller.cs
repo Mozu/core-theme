@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
-using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.CommerceRuntime.Contracts.Checkouts;
 using Mozu.Core.Api.Client;
@@ -20,7 +17,6 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -30,12 +26,11 @@ using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Models.Customers;
-
+using Mozu.ProductRuntime.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -56,23 +51,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ISettings _settings;
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
+        private readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
         private readonly ICheckoutWebApiClient _checkoutWebApiClient;
-
-
-
-        //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutV2Controller(IAuthenticationHelper authHelper, ICookieProvider cookieProvider,
-            ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient,
-            Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
-            ICreditWebApiClient creditWebApiClient, Mozu.CommerceRuntime.Contracts.Clients.ICartWebApiClient
-            cartWebApiClient, ISettings settings, ICheckoutWebApiClient checkoutWebApiClient)
+        public CheckoutV2Controller(
+            IAuthenticationHelper authHelper,
+            ICookieProvider cookieProvider,
+            ICustomerAccountWebApiClient customerAccountWebApiClient,
+            IOrderWebApiClient orderWebApiClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            ICreditWebApiClient creditWebApiClient,
+            ICartWebApiClient cartWebApiClient,
+            Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
+            ISettings settings,
+            ICheckoutWebApiClient checkoutWebApiClient)
         {
 
             _authHelper = authHelper;
             _cookieProvider = cookieProvider;
-
+            _priceListRuntimeWebApiClient = priceListRuntimeWebApiClient;
             _orderWebApiClient = orderWebApiClient;
             _cartWebApiClient = cartWebApiClient;
             _settings = settings;
@@ -81,13 +79,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _checkoutWebApiClient = checkoutWebApiClient;
         }
-
-
-
-        /*public string MerchantId
-        {
-            get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
-        }*/
 
 
         //private static List<string> CompletedOrderStates = new List<string>{
@@ -119,7 +110,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var checkout = (await _checkoutWebApiClient.CreateCheckoutFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + checkout.Id);
                 }
-                else {
+                else
+                {
                     var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
                 }
@@ -144,9 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var badCart = (_cartWebApiClient.GetCart(cartId)).Result.ReadAsSync();
             badCart.ChangeMessages.Add(new ChangeMessage()
             {
-                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
-                    ? " : " + e.InnerException.Message
-                    : string.Empty),
+                Message = $"{e.Message}{(e.InnerException != null ? " : " + e.InnerException.Message : string.Empty)}",
                 Success = false,
                 SubjectType = "Product",
             });
@@ -216,7 +206,39 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (model.SubmittedDate.HasValue) return Redirect(this.SiteContext.SiteSubdirectory + "/checkoutv2/" + model.Id + "/confirmation");
 
             Func<Product, string> getProductCode = x => !string.IsNullOrEmpty(x.VariationProductCode) ? x.VariationProductCode : x.ProductCode;
+            var priceListChanged = await HasPriceListChanged(model.PriceListCode).ConfigureAwait(false);
+            List<Product> productsRemoved = null;
 
+            // TODO: Is this the right context (out of like 9) to check for PriceListCode?
+            // TODO: Null checks needed between these two values?
+            if (priceListChanged)
+            {
+                var updateResponse = await _checkoutWebApiClient.ChangeCheckoutPriceList(model.Id, null);
+                if (updateResponse.HasException)
+                {
+                    // Changing pricelist could cause odd things to happen. For example:
+                    // - An exclusive pricelist is applied and all items are removed, resulting in an empty order.
+                    // - An item now has volume pricing applied but an item doesn't meet minimum quantity.
+                    // Dump them back to the cart to fix the problem. The error message should show on the cart page.
+                    return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
+                }
+                else
+                {
+                    var newModel = updateResponse.ReadAsSync();
+
+                    // See if any items were dropped due to changing to an exclusive price list.
+                    if (model.Items.Count != newModel.Items.Count)
+                    {
+                        var newProductCodes = newModel.Items.Select(x => x.Product).Select(getProductCode).ToList();
+                        var uniqueProducts = model.Items // Previous order items
+                            .Select(x => x.Product)      // Get products
+                            .GroupBy(getProductCode)     // Group by product code
+                            .Select(x => x.First()); // Grab first product from each group
+                        productsRemoved = uniqueProducts.Where(x => !newProductCodes.Contains(getProductCode(x))).ToList();
+                    }
+                    model = newModel;
+                }
+            }
 
             bool addedPrimaryShippingContactToOrderJustNow = false;
 
@@ -306,12 +328,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     };
 
                     var itemIds = new List<string>();
-                    model.Items.ForEach(x => { if (x.DestinationId.IsNullOrEmpty()) { itemIds.Add(x.Id);  } });
+                    model.Items.ForEach(x => { if (x.DestinationId.IsNullOrEmpty()) { itemIds.Add(x.Id); } });
 
                     itemsFordestination[0].ItemIds = itemIds;
 
                     model = (await _checkoutWebApiClient.BulkUpdateItemDestinations(model.Id, itemsFordestination)).ReadAsSync();
-                    
+
                     addedPrimaryShippingContactToOrderJustNow = true;
                 }
             }
@@ -322,6 +344,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var jSerializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
             var jOrder = model.ToJObject();
 
+            if (priceListChanged)
+            {
+                // TODO: These "magic strings" should be constants somewhere. They're currently used in the hypr message-bar template.
+                var message = productsRemoved != null
+                    ? "Please note, items not available for purchase have been removed."
+                    : "You are now eligible for special pricing.";
+                var messageType = productsRemoved != null ? "exclusivePricelist" : "newPricelist";
+                jOrder.Add("messages", new JArray(new { message, messageType, productsRemoved }.ToJObject()));
+            }
 
             var isFulfillmentInfoRequired = model.Items.Exists(
                     x => x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.SHIP);
@@ -385,6 +416,28 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
+        async Task<bool> HasPriceListChanged(string priceListCode)
+        {
+            if (this.SbApiContext.PriceListCode.EqualsIgnoreCase(priceListCode))
+            {
+                return false;
+            }
+            //filter out condition when default pricelist is explictly set.
+            if (string.IsNullOrEmpty(this.SbApiContext.PriceListCode) || string.IsNullOrEmpty(priceListCode))
+            {
+                var nonEmptyPriceListCode = string.IsNullOrEmpty(this.SbApiContext.PriceListCode) ? priceListCode : this.SbApiContext.PriceListCode;
+
+                var defaultPriceListRes = await _priceListRuntimeWebApiClient.Value.CloneWithoutUserClaims().GetDefaultPriceList().ConfigureAwait(false);
+                if (!defaultPriceListRes.HasException)
+                {
+                    return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
+                }
+
+
+            }
+            return true;
+        }
+
         public class CheckoutPciSettings
         {
             public string apiBase { get; set; }
@@ -429,7 +482,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (checkout == null)
                 return Redirect(this.SiteContext.SiteSubdirectory + "/");
 
-           // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
+            // if (!CompletedOrderStates.Contains(checkout.Status)) return Redirect(this.SiteContext.SiteSubdirectory + "/checkout/" + checkout.Id);
             Mozu.Location.Contracts.LocationCollection locations = null;
             var pickUpItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP);
             if (pickUpItems.NotIsNullOrEmpty())
@@ -443,7 +496,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (locations != null)
             {
-                
+
                 var jFulfillmentLocations = new JArray();
 
                 locations.Items.ForEach(x => jFulfillmentLocations.Add(new JObject(

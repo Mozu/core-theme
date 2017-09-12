@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Commerce;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.CommerceRuntime.Contracts.Products;
-using Mozu.CommerceRuntime.Contracts.Checkouts;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts;
@@ -20,7 +17,6 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -30,7 +26,6 @@ using Newtonsoft.Json.Serialization;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.OAF;
 using AutoMapper;
@@ -58,17 +53,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICreditWebApiClient _creditWebApiClient;
         private readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
         private readonly ICheckoutWebApiClient _checkoutWebApiClient;
-
-
-        //private static string _merchantId;
         private const string CookieName = "order";
 
-        public CheckoutController(IAuthenticationHelper authHelper, 
-            ICookieProvider cookieProvider, 
-            ICustomerAccountWebApiClient customerAccountWebApiClient, 
-            IOrderWebApiClient orderWebApiClient, 
-            Mozu.Location.Contracts.Clients.ILocationRuntimeWebApiClient locationRuntimeWebApiClient, 
-            ICreditWebApiClient creditWebApiClient, 
+        public CheckoutController(
+            IAuthenticationHelper authHelper,
+            ICookieProvider cookieProvider,
+            ICustomerAccountWebApiClient customerAccountWebApiClient,
+            IOrderWebApiClient orderWebApiClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
+            ICreditWebApiClient creditWebApiClient,
             ICartWebApiClient cartWebApiClient,
             Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
             ISettings settings,
@@ -88,13 +81,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-
-        /*public string MerchantId
-        {
-            get { return _merchantId ?? (_merchantId = _orderService.GetMerchantId()); }
-        }*/
-
-
         private static List<string> CompletedOrderStates = new List<string>{
             Order.OrderStatusConst.SUBMITTED,
             Order.OrderStatusConst.ACCEPTED,
@@ -108,7 +94,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpPost]
         public async Task<HttpResponseMessage> Index(string id = null, HttpRequestMessage requestMessage = null)
         {
-
             if (id == null)
             {
                 var cart = (await _cartWebApiClient.GetOrCreateCart()).ReadAsSync();
@@ -118,7 +103,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             Uri redirectUrl = null;
             try
             {
-
                 var isMultiShip = SiteContext.GeneralSettings.IsMultishipEnabled.GetValueOrDefault();
 
                 if (isMultiShip)
@@ -131,7 +115,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var order = (await _orderWebApiClient.CreateOrderFromCart(id)).ReadAsSync();
                     redirectUrl = CreateRedirectUrl(this.SiteContext.SiteSubdirectory + "/checkout/" + order.Id);
                 }
-    
             }
             catch (Exception e)
             {
@@ -153,9 +136,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var badCart = (_cartWebApiClient.GetCart(cartId)).Result.ReadAsSync();
             badCart.ChangeMessages.Add(new ChangeMessage()
             {
-                Message = string.Format("{0}{1}", e.Message, (e.InnerException != null)
-                    ? " : " + e.InnerException.Message
-                    : string.Empty),
+                Message = $"{e.Message}{(e.InnerException != null ? " : " + e.InnerException.Message : string.Empty)}",
                 Success = false,
                 SubjectType = "Product",
             });
@@ -196,7 +177,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             };
             pc.PageType = "checkout";
-            //var id = OrderId;
             var id = orderId;
             if (string.IsNullOrWhiteSpace(id)) return Redirect(this.SiteContext.SiteSubdirectory + "/cart");
             Order model = null;
@@ -307,7 +287,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                     addedPrimaryShippingContactToOrderJustNow = true;
                 }
-
             }
 
 
@@ -417,11 +396,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     return !string.Equals(defaultPriceListRes.ReadAsSync()?.PriceListCode, nonEmptyPriceListCode);
                 }
 
-                
+
             }
             return true;
         }
-        
+
         public class CheckoutPciSettings
         {
             public string apiBase { get; set; }
@@ -471,8 +450,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (order.Items.Exists(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP))
             {
-                //var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => "Code eq " + x.FulfillmentLocationCode).Distinct().ToList())));
-                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", order.Items.Select(x => $"Code eq \"{x.FulfillmentLocationCode}\"").Distinct().ToList())));
 
                 locations = locationsTask.ReadAsSync();
             }
