@@ -145,18 +145,18 @@ Ext.define('Taco.view.order.Form', {
 
     isHeaderDataComplete: function () {
         var me = this,
-            fulfillmentContact = me.record.get("fulfillmentContact"),
-            isValid = true;
+            fulfillmentContact = me.record.get("fulfillmentContact");
 
         // BillingContact is no longer checked here. See issue #70588 for details.
 
-        // if we have a fulfillment contact and its not an empty object
-        if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact)) {
-            isValid = false;
-        }
-        return isValid;
-    },
+        // Pickup-only orders don't require fulfillment info.
+        if (me.record.isPickupOnlyOrder()) return true;
 
+        // If we have a fulfillment contact and its not an empty object
+        if (!fulfillmentContact || Ext.Object.isEmpty(fulfillmentContact)) return false;
+
+        return true;
+    },
 
     updatePanelVisibility: function () {
         var me = this,
@@ -293,10 +293,11 @@ Ext.define('Taco.view.order.Form', {
     isValid: function () {
         var me = this,
             isValid = true,
-           errors = [];
+            errors = [];
 
         if (this.isErrored()) return true;
-        
+
+        var isPickupOnly = this.record.isPickupOnlyOrder();
         var isShippable = this.record.isShippable();
         // Only validate when in create mode
         if (this.isEdit()) isValid = false;
@@ -304,10 +305,10 @@ Ext.define('Taco.view.order.Form', {
         if (!this.record.get("customerId")) {
             isValid = false;
             errors.push("A customer must be created or selected before submitting this order");
-        } else if (Ext.Object.isEmpty(this.record.get("fulfillmentContact"))) {
+        } else if (!isPickupOnly && Ext.Object.isEmpty(this.record.get("fulfillmentContact"))) {
             isValid = false;
             errors.push("Shipping Address must be added before submitting this order.");
-        } else if (!this.record.get("fulfillmentContact").email) {
+        } else if (!isPickupOnly && !this.record.get("fulfillmentContact").email) {
             isValid = false;
             errors.push("Shipping Address must contain an email address.");
         } else if (Ext.Object.isEmpty(this.record.get("billingContact"))) {

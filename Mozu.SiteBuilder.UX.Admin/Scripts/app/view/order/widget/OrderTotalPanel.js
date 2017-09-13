@@ -315,7 +315,9 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     },
     
     getShippingLabelText : function (){         
-        return (Ext.Object.isEmpty(this.record.data.fulfillmentContact)) ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>" : "Shipping Method";
+        return (!this.record.isPickupOnlyOrder() && Ext.Object.isEmpty(this.record.data.fulfillmentContact))
+            ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>"
+            : "Shipping Method";
     },
 
     // update the shipping method label based on the presence of a shipping Address Contact

@@ -824,6 +824,21 @@ Ext.define('Taco.model.Order', {
         return this.get('unpackagedItems').length || this.get('unShippedPackages').length;
     },
 
+    /**
+     * Checks to see if this order only has pickup items.
+     * @returns {Boolean} True if the order only contains pickup items, otherwise False. 
+     */
+    isPickupOnlyOrder: function() {
+        var items = this.get("items");
+        if (items && items.length) {
+            var allPickups = Ext.Array.every(items, function(item) {
+                    return item.fulfillmentMethod === "Pickup";
+                });
+
+            if (allPickups) return true;
+        }
+        return false;
+    },
 
     getChannelName: function () {
         var channelCode = this.get('channelCode'),
@@ -1125,10 +1140,10 @@ Ext.define('Taco.model.Order', {
     },
 
     /**
- * service call to add a new authorized payment transaction for an order     
- * @param {Object} config  A configuration object     
- * config object:
- * 
+     * service call to add a new authorized payment transaction for an order     
+     * @param {Object} config  A configuration object     
+     * config object:
+     * 
     {
         jsonData: {
             orderId: '987654321',
@@ -1148,9 +1163,7 @@ Ext.define('Taco.model.Order', {
         },
         scope: this
     }
-
- *
- */
+     */
     getCreatorUserName: function (v, record) {
         var userStore, cache = this.statics().userCache, user = cache[record.data.createBy];
         if (v) {
@@ -2535,17 +2548,11 @@ Ext.define('Taco.model.Order', {
     //    {
     //        jsonData: {
     //            orderId: '987654321', // optional
-
     //            confirmSuccess: false, // suppress the automatic confirmation
-
     //            confirmTpl: null, // optionaly pass in alternate confirmation XTemplate
-
     //            confirmData: null,  // optionaly pass in alternate confirmation data;  order record applied by default;
-
     //            success: Ext.emptyFn, // optionaly pass in success callback
-
     //            failure: Ext.emptyFn, // optionaly pass in failure callback
-
     //            // required for reseding shipment notifications.                   
     //            type:"shipment",
     //            packageId: 'asdf' 
@@ -2598,24 +2605,4 @@ Ext.define('Taco.model.Order', {
         this.addErrorHandling(config);            
         Ext.Ajax.request(config);
     }
-
-
-    //,
-
-    // service call to resend the 
-    // @param {Object} config  A configuration object     
-    // config object:
-    // {
-    //     jsonData: {   
-    //         refundId: '987654321'
-    //     }
-    // }
-    //resendRefundEmail: function(config) {
-    //    Ext.apply(config, {
-    //        url: '/admin/app/order/refunds/resendemail',
-    //        method: 'POST'
-    //    });
-
-    //    Ext.Ajax.request(config);
-    //}
 });
