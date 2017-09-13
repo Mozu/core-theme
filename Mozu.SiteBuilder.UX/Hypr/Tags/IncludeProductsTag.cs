@@ -103,8 +103,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
             
             var productSearchWebApiClient = context.Resolve<IProductSearchWebApiClient>();
-          
-            
+
+            if (includeUserClaims == true && cacheResults == true)
+            {
+                throw new NDjango.Interfaces.RenderingError("If includeUserClaims is true then cacheResults must be set to false", Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+            }
+
             string facetTemplate = null;
 
             string facetValueFilter = null;
