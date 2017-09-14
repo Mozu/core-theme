@@ -8,13 +8,17 @@
             {% for attr in model.attributes %}
                 <div>
                     <span>{{ attr.attributeDefinition.content.value}}:&nbsp;</span>
-                    {% for idx, value in attr.values %}
-                        {% if idx !== attr.values.length-1 %}
-                            <span>{{ value }},&nbsp;</span>
-                        {% else %}
-                            <span>{{ value }}</span>
-                        {% endif %}
-                    {% endfor %}
+                    {% if attr.attributeDefinition.inputType === 'Date' %}
+                        <span>{{ attr.values[0]|date("n/j/Y") }}</span>
+                    {% else %}
+                        {% for idx, value in attr.values %}
+                            {% if idx !== attr.values.length-1 %}
+                                <span>{{ value }},&nbsp;</span>
+                            {% else %}
+                                <span>{{ value }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
