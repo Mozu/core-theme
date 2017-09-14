@@ -54,3 +54,4 @@ nuget Mozu.SiteSettings.Order.Contracts > 1.1624
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703
+nuget Mozu.Log4net.Gelf

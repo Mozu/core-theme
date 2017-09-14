@@ -23,3 +23,4 @@ Mozu.SiteSettings.Order.Contracts
 protobuf-net
 OctoPack
 Microsoft.AspNet.WebApi.Tracing
+Mozu.Log4net.Gelf
