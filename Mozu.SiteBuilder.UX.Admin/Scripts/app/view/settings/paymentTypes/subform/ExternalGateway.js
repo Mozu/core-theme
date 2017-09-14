@@ -21,6 +21,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
         var credOriginalValues = [];
         var description = null;
         var isEnabled = false;
+        var isMultishipEnabled = this.record.get('isMultishipEnabled');
         this.fqn = this.externalPayment.get('fullyQualifiedName');
         
         this.items = [];
@@ -68,7 +69,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
                 }
             });
 
-            var credField = this.getCredentialFieldConfig(fieldDef, value);
+            var credField = this.getCredentialFieldConfig(fieldDef, value, isMultishipEnabled);
             this.credFields.push(credField);
             this.credPanel.add(credField);
         }, this);
@@ -87,7 +88,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
             this.credPanel.hide();
         }
     },
-    getCredentialFieldConfig: function (fieldDef, value) {
+    getCredentialFieldConfig: function (fieldDef, value, isMultishipEnabled) {
         if (fieldDef.inputType === 'YesNo') {
             return Ext.widget(
             {
@@ -102,6 +103,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
 
             var fqn = this.fqn;
             var radioButtonItems = [];
+            console.log(fieldDef.vocabularyValues);
             Ext.each(fieldDef.vocabularyValues, function (val) {
                 if (val.contents[0]) {
                     radioButtonItems.push({
@@ -109,7 +111,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
                         name: fieldDef.apiName,
                         inputValue: val.key,
                         id: fqn + '-' + val.key,
-                        checked: val.key == value
+                        checked: val.key == value,
+                        disabled: (val.key == "AuthAndCaptureOnOrderPlacement" && isMultishipEnabled)
                     });
                 }
             });

@@ -437,7 +437,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 var checkoutOrderSearch = (await _orderWebApiClient.GetOrders(filter: $"parentCheckoutId eq {checkoutEmail.Id}")).ReadAsSync();
                 checkoutEmail.Orders = checkoutOrderSearch.Items;
 
-                var locations = checkoutEmail.Items.Where(x=>!string.IsNullOrEmpty(x.FulfillmentLocationCode)).Select(x=>$"code eq {x.FulfillmentLocationCode}");
+                var locations = checkoutEmail.Items.Where(x=>!string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == Mozu.CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x=>$"code eq {x.FulfillmentLocationCode}");
                 if (locations.SafeAny())
                 {
                     var filter = locations.Aggregate((x, y) => x + " or " + y);

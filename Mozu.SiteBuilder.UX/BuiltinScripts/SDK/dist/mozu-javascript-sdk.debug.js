@@ -4342,7 +4342,7 @@ module.exports=
     },
     "update-checkout-item-destination": {
       "template": "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
-      "verb": "POST"
+      "verb": "PUT"
     },
     "update-checkout-item-destination-bulk": {
       "template": "{+checkoutService}{id}/items/destinations",
@@ -4355,7 +4355,7 @@ module.exports=
       "includeSelf": true
     },
     "get-avaiable-shipping-methods": {
-      "template": "{+checkoutService}{id}/shipments/methods",
+      "template": "{+checkoutService}{id}/shippingMethods",
       "verb": "GET",
       "returnType": "shippingmethods"
     },
@@ -4431,26 +4431,6 @@ module.exports=
       "template": "{+checkoutService}{id}/notes",
       "includeSelf": true,
       "returnType": "checkoutnote"
-    },
-    "get-extended-properties": {
-      "template": "{+checkoutService}{id}/extendedproperties",
-      "returnType": "json"
-    },
-    "add-extended-properties": {
-      "verb": "POST",
-      "template": "{+checkoutService}{id}/extendedproperties"
-    },
-    "update-extended-properties": {
-      "verb": "PUT",
-      "template": "{+checkoutService}{id}/extendedproperties"
-    },
-    "remove-extended-property": {
-      "verb": "DELETE",
-      "template": "{+checkoutService}{id}/extendedproperties/{key}"
-    },
-    "remove-extended-properties": {
-      "verb": "DELETE",
-      "template": "{+checkoutService}{id}/extendedproperties"
     },
     "process-digital-wallet": {
       "verb": "PUT",
@@ -4870,6 +4850,10 @@ module.exports = (function () {
         return new Date(p.auditInfo.createDate);
     }
 
+    var PaymentStatusTypes = function () {
+        return CONSTANTS.PAYMENT_STATUSES;
+    }
+
     var PaymentStrategies = {
         "PaypalExpress": function (checkout, billingInfo) {
             if (!ApiReference) ApiReference = _dereq_('../reference');
@@ -5135,7 +5119,7 @@ module.exports = (function () {
         },
         checkout: function () {
             var self = this,
-                availableActions = ['SubmitCheckout'];
+                availableActions = this.prop('availableActions');
             if (!this.isComplete()) {
                 for (var i = availableActions.length - 1; i >= 0; i--) {
                     if (availableActions[i] in checkoutStatus2IsReady) return this.performCheckoutAction(availableActions[i]).otherwise(function (e) {
@@ -5151,36 +5135,6 @@ module.exports = (function () {
             return !!checkoutStatus2IsComplete[this.prop('status')];
         },
 
-        addExtendedProperty: function (extendedProperty) {
-            // Expect extendedPropert to contain a key/value pair, if it doesn't we need to fail with incorrect data.
-            if (!extendedProperty) {
-                errors.throwOnObject(this, '');
-            }
-
-            return this.api.action(this, 'addExtendedProperty', {
-                // Fill in the data from extendedProperty here!
-                'key': extendedProperty.key,
-                'value': extendedProperty.value
-            });
-        },
-
-        addExtendedProperties: function (extendedProperties) {
-            // Expect extendedProperties to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
-            if (!extendedProperties) {
-                extendedProperties = [];
-            }
-
-            return this.api.action(this, 'addExtendedProperties', extendedProperties);
-        },
-
-        removeExtendedProperties: function (extendedPropertyKeys) {
-            // Expect extendedPropertyKeys to contain a list of key/value pair, if it doesn't we need to fail with incorrect data.
-            if (!extendedPropertyKeys) {
-                extendedPropertyKeys = [];
-            }
-
-            return this.api.action(this, 'addExtendedProperties', extendedPropertyKeys);
-        }
     };
 }());
 },{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],28:[function(_dereq_,module,exports){

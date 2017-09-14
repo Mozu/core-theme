@@ -819,7 +819,7 @@
     },
     "update-checkout-item-destination": {
       "template": "{+checkoutService}{id}/items/{itemId}/destination/{destinationId}",
-      "verb": "POST"
+      "verb": "PUT"
     },
     "update-checkout-item-destination-bulk": {
       "template": "{+checkoutService}{id}/items/destinations",
@@ -832,7 +832,7 @@
       "includeSelf": true
     },
     "get-avaiable-shipping-methods": {
-      "template": "{+checkoutService}{id}/shipments/methods",
+      "template": "{+checkoutService}{id}/shippingMethods",
       "verb": "GET",
       "returnType": "shippingmethods"
     },
@@ -908,26 +908,6 @@
       "template": "{+checkoutService}{id}/notes",
       "includeSelf": true,
       "returnType": "checkoutnote"
-    },
-    "get-extended-properties": {
-      "template": "{+checkoutService}{id}/extendedproperties",
-      "returnType": "json"
-    },
-    "add-extended-properties": {
-      "verb": "POST",
-      "template": "{+checkoutService}{id}/extendedproperties"
-    },
-    "update-extended-properties": {
-      "verb": "PUT",
-      "template": "{+checkoutService}{id}/extendedproperties"
-    },
-    "remove-extended-property": {
-      "verb": "DELETE",
-      "template": "{+checkoutService}{id}/extendedproperties/{key}"
-    },
-    "remove-extended-properties": {
-      "verb": "DELETE",
-      "template": "{+checkoutService}{id}/extendedproperties"
     },
     "process-digital-wallet": {
       "verb": "PUT",
