@@ -3,19 +3,39 @@
  */
 Ext.define('Taco.model.InternalNote', {
     extend: 'Taco.core.data.Model',
-    fields: [{
-        "name": "noteId",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "orderId",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "text",
-        "type": "string",
-        "useNull": true
-    }],
+    fields: [
+        {
+            "name": "noteId",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            "name": "orderId",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            "name": "text",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            name: 'createBy',
+            type: 'string',
+            useNull: true
+        },
+        {
+            name: 'createByUser',
+            type: 'string',
+            convert: Taco.core.util.Common.getCreateByUser,
+            persist: false
+        },
+        {
+            name: 'createDate',
+            type: 'date',
+            useNull: true
+        }
+    ],
     idProperty: 'noteId',
     proxy: {
         type: 'ajaxproxy',

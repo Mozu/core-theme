@@ -19,21 +19,38 @@ Ext.define('Taco.view.order.widget.InternalNotesGrid', {
     // need to have a minHeight for autoHeight grids that use a row editor. TODO: create override to fix the rowEditor so it can escape the autoHeight grid;
     minHeight: 110,
 
-    columns: [{
-        dataIndex: 'text',
-        text: 'Comment',
-        flex: 4,
-        nowrap: false,
-        editor: {
-            xtype: 'textfield',
-            maxLength: 250,
-            enforceMaxLength: true
+    columns: [
+        {
+            dataIndex: 'createDate',
+            text: 'Created Date',
+            flex: 2,
+            nowrap: false,
+            renderer: function (value) {
+                return Ext.Date.format(value, 'M j Y g:i a');
+            }
         },
-        renderer: function (value, meta) {
-            meta.style = 'white-space: normal';
-            return Ext.util.Format.htmlEncode(value);
+        {
+            dataIndex: 'createByUser',
+            text: 'Created By',
+            flex: 2,
+            nowrap: false
+        },
+        {
+            dataIndex: 'text',
+            text: 'Notes',
+            flex: 8,
+            nowrap: false,
+            editor: {
+                xtype: 'textfield',
+                maxLength: 500,
+                enforceMaxLength: true
+            },
+            renderer: function (value, meta) {
+                meta.style = 'white-space: normal';
+                return Ext.util.Format.htmlEncode(value);
+            }
         }
-    }],
+    ],
 
     initComponent: function () {
         this.mixins.rowEditable.constructor.apply(this);

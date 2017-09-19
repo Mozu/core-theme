@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
             xtype: 'button',
             ui: 'action',
             scale: 'medium',
-            text: 'Add Note',
+            text: 'Add Internal Notes',
             scope: this.grid,
             requiredBehaviors: this.orderUpdateBehaviors,
             handler: function () {
