@@ -63,6 +63,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string GatewayResponseText { get; set; }
 
         /// <summary>
+        ///Gateway AVS Response Code.
+        /// </summary>
+        public string GatewayAVSResponse { get; set; }
+
+        /// <summary>
+        ///Gateway CVV2 Response Code.
+        /// </summary>
+        public string GatewayCVV2Response { get; set; }
+
+        /// <summary>
         /// Amount of funds to withdraw to pay for this order.
         /// </summary>        
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
