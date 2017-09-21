@@ -362,12 +362,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task GetBundleItemCatalogInfo(Product productModel)
         {
-            var bundleItemProductCodes = productModel.BundledProducts.Select(x => x.ProductCode).Join(",");
-            var bundleItemData = await GetBundleItems(bundleItemProductCodes);
+            if (productModel.BundledProducts.Any())
+            {
+                var bundleItemProductCodes = productModel.BundledProducts.Select(x => x.ProductCode).Join(",");
+                var bundleItemData = await GetBundleItems(bundleItemProductCodes);
 
-            productModel.ProductInCatalogs =
-                _bundleItemCatalogHelper.MergeBundleItemsAndCatalogInfo(productModel.BundledProducts,
-                    productModel.ProductInCatalogs, bundleItemData.Items);
+                productModel.ProductInCatalogs =
+                    _bundleItemCatalogHelper.MergeBundleItemsAndCatalogInfo(productModel.BundledProducts,
+                        productModel.ProductInCatalogs, bundleItemData.Items);
+            }
         }
     }
 }
