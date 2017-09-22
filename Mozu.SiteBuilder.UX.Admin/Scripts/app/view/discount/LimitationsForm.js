@@ -397,10 +397,16 @@ Ext.define('Taco.view.discount.LimitationsForm', {
             me.maxRedemptionsPerOrder.setValue(null);
         }
 
+        var appliesToProduct = targetType === "Product";
+
         Taco.model.CheckoutSettings.load(123, {
             success: function (record) {
                 var isMultiShipToEnabled = record.get('isMultiShipToEnabled') || false;
-                me.multiShipToOrders.setVisible(!isMultiShipToEnabled);
+                me.multiShipToOrders.setVisible(!isMultiShipToEnabled && !appliesToProduct);
+
+                if (!appliesToProduct) {
+                    me.multiShipToOrders.setValue(false);
+                }
             },
             failure: function () {
                 me.multiShipToOrders.setVisible(false);
