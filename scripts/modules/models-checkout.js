@@ -1071,7 +1071,8 @@
                 if(me.isPurchaseOrderEnabled()) {
                     me.set('paymentType', 'PurchaseOrder');
                     me.selectPaymentType(me, 'PurchaseOrder');
-                } else {
+                } else if(!me.get('paymentType', 'check')) {
+
                     me.set('paymentType', 'CreditCard');
                     me.selectPaymentType(me, 'CreditCard');
                     if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
