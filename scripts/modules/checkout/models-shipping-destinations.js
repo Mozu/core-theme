@@ -109,11 +109,16 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CustomerModels, CheckoutSt
         },
         newGiftCardDestination : function(){
             var self = this;
+            var user = require.mozuData('user');
             var destination = {destinationContact : new CustomerModels.Contact({})};
             var giftCardDestination = new ShippingDestination(destination);
 
             giftCardDestination.validation = giftCardDestination.validationDigitalDestination;
             giftCardDestination.set('isGiftCardDestination', true);
+
+            if (user.isAuthenticated) {
+                giftCardDestination.get('destinationContact').set('email', user.email);
+            }
 
             self.add(giftCardDestination);
             return giftCardDestination;
