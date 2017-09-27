@@ -24,7 +24,6 @@
 <div class="mz-l-container">
 	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
 	<form method="post" action="{{ siteContext.secureHost }}{{siteContext.siteSubdirectory}}/cart/checkout" id="cartform">
-	
 		{% dropzone "cart-top" scope="template" %}
 		<input type="hidden" name="id" value="{{model.id}}" />
         {% include "modules/common/message-bar" with model=model.messages %}
