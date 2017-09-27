@@ -33,7 +33,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts 
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts 1.1737.0-pdate-pricelist-22
+nuget Mozu.CommerceRuntime.Contracts >= 1.1738.2
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
@@ -44,13 +44,13 @@ nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1731
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts >= 1.1733.0-multishipadmin-5
+nuget Mozu.ProductAdmin.Contracts >= 1.1738.5
 nuget Mozu.ProductRuntime.Contracts 
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
-nuget Mozu.PricingRuntime.Contracts 1.1734.0-multishipto-19
-nuget Mozu.SiteSettings.General.Contracts >= 1.1734.0-v314-gen-settings-7
+nuget Mozu.PricingRuntime.Contracts >= 1.1738.5
+nuget Mozu.SiteSettings.General.Contracts >= 1.1738.2
 nuget Mozu.SiteSettings.Order.Contracts >= 1.1624
 nuget protobuf-net 2.0.0.668 
 nuget FAKE
