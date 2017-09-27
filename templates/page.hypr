@@ -134,7 +134,6 @@
         {% include "modules/trailing-scripts" %}
         {% endblock trailing-scripts %}
 
-        
         {% visitor_tracking_pixel %}
 
     </body>
