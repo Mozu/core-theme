@@ -390,7 +390,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 List<CheckoutGroupRates> methods = null;
                 if (isFulfillmentInfoRequired)
                 {
-                    var resp = await _checkoutWebApiClient.GetAvailableShipmentMethods(checkoutId);
+                    var resp = await _checkoutWebApiClient.GetAvailableShippingMethods(checkoutId);
                     if (resp.ResponseMessage.IsSuccessStatusCode)
                     {
                         methods = resp.ReadAsSync();
