@@ -32,14 +32,15 @@
     "jquery-colorbox": "1.5.15",
     "jquery.cookie": "1.4.1",
     "typeahead.js": "0.10.5",
-    "underscore": "1.6.0"
+    "underscore": "1.8.3"
   },
   "exportsOverride": {
     "bootstrap": [
       "js/affix.js",
       "js/popover.js",
       "js/tooltip.js",
-      "js/scrollspy.js"
+      "js/scrollspy.js",
+      "js/modal.js"
     ]
   },
   "license": "ISC"

@@ -75,7 +75,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 selectedForReturn: Backbone.MozuModel.DataTypes.Boolean
             },
             helpers: ['formatedFulfillmentDate'],
-            //To-Do: Double Check for useage
+            //TODO: Double Check for useage
             getOrder: function() {
                 return this.collection.parent;
             },
@@ -163,7 +163,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         return (extra.uniqueProductCode() === groupedItem[0].uniqueProductCode() && extra.get('optionAttributeFQN') === groupedItem[0].get('optionAttributeFQN'));
                     });
                     if (duplicateItem) {
-                        productExtraGroup[key].add(extra);
+                        productExtraGroup[key].push(extra);
                         return false;
                     }
                     productExtraGroup[key] = [extra];
@@ -281,11 +281,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             },
             cancelReturn: function() {
                 var rmas = this.collection.parent.get('rma');
-                var item = this.getOrderItem();
-                if (item) {
-                    item = item.toJSON();
-                    rmas.get('items').remove(item);
-                }
+                    rmas.get('items').remove(this);
             }
         }),
 
@@ -369,7 +365,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return _.invoke(this._nonShippedItems, 'toJSON');
             },
             /**
-             * Creates a list package codes from all package types to be used to determine shipped and nonShipped items.
+             * Creates a list of package codes from all package types that will be used to determine shipped and nonShipped items.
              * 
              * [getCollectionOfPackageCodes]
              * @return {[Array]}
@@ -405,7 +401,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 return groupedCodes;
             },
             /**
-             * Creates a list of nonShipped items by comparing fulfilled packages items with Order Items
+             * Creates a list of nonShipped items by comparing fulfilled package items with Order Items
              * 
              * [setNonShippedItems]
              * @return {[Array]}
@@ -422,19 +418,19 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                     //Update quanity of items by comparing with packaged items
                     _.each(packages, function(type, typeKey, typeList) {
                         _.each(type, function(myPackage, key, list) {
-                            _.each(groupedItems[typeKey], function(item, key) {
-                                if (item.uniqueProductCode() === myPackage.get('productCode')) {
-                                    if (item.get('optionAttributeFQN') && item.get('optionAttributeFQN') != myPackage.get('optionAttributeFQN')) {
+                            for (var i = 0; i < groupedItems[typeKey].length; i++) {
+                                if (groupedItems[typeKey][i].uniqueProductCode() === myPackage.get('productCode')) {
+                                    if (groupedItems[typeKey][i].get('optionAttributeFQN') && groupedItems[typeKey][i].get('optionAttributeFQN') != myPackage.get('optionAttributeFQN')) {
                                         return false;
                                     }
-                                    if (item.get('quantity') === 1) {
-                                        groupedItems[typeKey].splice(key, 1);
+                                    if (groupedItems[typeKey][i].get('quantity') === 1) {
+                                        groupedItems[typeKey].splice(i, 1);
                                         return false;
                                     }
-                                    item.set('quantity', item.get('quantity') - 1);
+                                    groupedItems[typeKey][i].set('quantity', groupedItems[typeKey][i].get('quantity') - 1);
                                     return false;
                                 }
-                            });
+                            }
                         });
                     });
 
@@ -461,8 +457,8 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             },
             /**
              * Used to create a list of returnable items from the return of apiGetReturnableItems and Order Items
-             * This is primary to get product detial information and ensure Product bundles are returned as a whole
-             * while product extras, within a bundle or not, are returned separately. 
+             * This is primarily used to get product detial information and ensure Product bundles are returned as a whole
+             * while product extras, bundle or otherwise, are returned separately. 
              * 
              * [returnableItems]
              * @return {[Array]}

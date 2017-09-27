@@ -1,0 +1,7 @@
+
+{% for fulfillment in model.items %}
+    <div data-mz-shipping-method-item data-mz-id="{{ fulfillemnt.id }}">
+        {% include "modules/multi-ship-checkout/shipping-method-item" with model=fulfillment %}
+    </div> 
+{%endfor%}
+

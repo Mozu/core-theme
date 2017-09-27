@@ -1,10 +1,10 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api",
-    "hyprlivecontext"
-    ], function (_, Backbone, Hypr, api,
-        HyprLiveContext) {
+define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modules/models-product",
+    "hyprlivecontext", 'modules/models-location'
+  ], function (_, Backbone, Hypr, api, ProductModels,
+        HyprLiveContext, LocationModels) {
 
-    var CartItemProduct = Backbone.MozuModel.extend({
-        helpers: ['mainImage'],
+    var CartItemProduct = ProductModels.Product.extend({
+        helpers: ['mainImage','directShipSupported', 'inStorePickupSupported'],
         mainImage: function() {
             var imgs = this.get("productImages"),
                 img = imgs && imgs[0],
@@ -14,12 +14,19 @@
         initialize: function() {
             var url = (HyprLiveContext.locals.siteContext.siteSubdirectory || '')  + "/product/" + this.get("productCode");
             this.set({ Url: url, url: url });
+        },
+        directShipSupported: function(){
+            return (_.indexOf(this.get('fulfillmentTypesSupported'), "DirectShip") !== -1) ? true : false;
+        },
+        inStorePickupSupported: function(){
+            return (_.indexOf(this.get('fulfillmentTypesSupported'), "InStorePickup") !== -1) ? true : false;
         }
     }),
 
     CartItem = Backbone.MozuModel.extend({
         relations: {
             product: CartItemProduct
+
         },
         validation: {
             quantity: {
@@ -31,7 +38,7 @@
         },
         mozuType: 'cartitem',
         handlesMessages: true,
-        helpers: ['priceIsModified'],
+        helpers: ['priceIsModified', 'storeLocation'],
         priceIsModified: function() {
             var price = this.get('unitPrice');
             return price.baseAmount != price.discountedAmount;
@@ -47,6 +54,27 @@
                         self.trigger("quantityupdatefailed", self, oldQuantity);
                     });
             }
+        },
+        storeLocation : function(){
+            var self = this;
+            if(self.get('fulfillmentLocationCode')) {
+                return self.collection.parent.get('storeLocationsCache').getLocationByCode(self.get('fulfillmentLocationCode'));
+            }
+            return;
+        }
+
+    }),
+    StoreLocationsCache = Backbone.Collection.extend({
+        addLocation : function(location){
+            this.add(new LocationModels.Location(location), {merge: true});
+        },
+        getLocations : function(){
+            return this.toJSON();
+        },
+        getLocationByCode : function(code){
+            if(this.get(code)){
+                return this.get(code).toJSON();
+            }
         }
     }),
 
@@ -57,12 +85,23 @@
         relations: {
             items: Backbone.Collection.extend({
                 model: CartItem
-            })
+            }),
+            storeLocationsCache : StoreLocationsCache
         },
-        
+
         initialize: function() {
+            var self = this;
             this.get("items").on('sync remove', this.fetch, this)
                              .on('loadingchange', this.isLoading, this);
+
+            this.get("items").each(function(item, el) {
+                if(item.get('fulfillmentLocationCode') && item.get('fulfillmentLocationName')) {
+                    self.get('storeLocationsCache').addLocation({
+                        code: item.get('fulfillmentLocationCode'),
+                        name: item.get('fulfillmentLocationName')
+                    });
+                }
+            });
         },
         isEmpty: function() {
             return this.get("items").length < 1;
@@ -75,6 +114,12 @@
             var me = this;
             me.apiCheckout().then(function(order) {
                 me.trigger('ordercreated', order);
+            });
+        },
+        toCheckout: function() {
+            var me = this;
+            me.apiCheckout2().then(function(checkout) {
+                me.trigger('checkoutcreated', checkout);
             });
         },
         removeItem: function (id) {
@@ -115,12 +160,16 @@
                 }
 
                 var couponIsNotApplied = (!allDiscounts || !_.find(allDiscounts, function(d) {
-                    return d.couponCode.toLowerCase() === lowerCode;
+                    return d.couponCode && d.couponCode.toLowerCase() === lowerCode;
                 }));
                 me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
 
                 me.isLoading(false);
             });
+        },
+        toJSON: function(options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            return j;
         }
     });
 

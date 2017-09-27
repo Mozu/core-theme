@@ -10,7 +10,8 @@
       paths: {
         jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery{% if not debugMode %}.min{% endif %}",
 		underscore: "vendor/underscore/underscore",
-		backbone: "vendor/backbone/backbone"
+		backbone: "vendor/backbone/backbone",
+    waitSeconds : 30
       }
   });
   {% if debugMode %}

@@ -171,7 +171,7 @@
                     }
 
                     options._parent = this;
-
+                    
                     if (!(val instanceof this.relations[attr])) val = new this.relations[attr](val, options);
                     val.parent = this;
                 }

@@ -1,0 +1,17 @@
+{% comment %}
+Similar to address-summary.hypr, but expects the 'destination' format of address
+in multi-ship-to groupings as its model
+{% endcomment %}
+<span>{{ model.destinationContact.firstName }} {{ model.destinationContact.lastNameOrSurname }}</span>
+    <span>{{ model.address.address1 }}</span>
+    {% if model.address.address2 %}
+        <span>{{ model.address.address2 }}</span>
+    {% endif %}
+    {% if model.address.address3 %}
+        <span>{{ model.address.address3 }}</span>
+    {% endif %}
+    <span>{{ model.address.cityOrTown }}, {{ model.address.stateOrProvince }} {{ model.address.postalOrZipCode }}</span>
+    <span>{{ model.address.countryCode }}</span>
+    {% if model.destinationContact.phoneNumbers %}
+        <span>{{ model.destinationContact.phoneNumbers.home }}</span>
+    {% endif %}

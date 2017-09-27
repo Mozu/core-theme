@@ -20,6 +20,6 @@
     </div>
     {% endif %}
     <div class="mz-locationlisting-actions">
-        <button class="mz-button" {% if model.quantity == 0 %}disabled="disabled"{% endif %} data-mz-action="addToCartForPickup" data-mz-location="{{ model.code }}">{{ labels.addToCart }}</button>
+        <button class="mz-button" {% if model.quantity == 0 %}disabled="disabled"{% endif %} data-mz-action="addToCartForPickup" data-mz-location="{{ model.code }}" data-mz-name="{{ model.name }}">{{ labels.addToCart }}</button>
     </div>
 </div>

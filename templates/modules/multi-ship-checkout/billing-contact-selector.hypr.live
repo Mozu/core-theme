@@ -1,0 +1,14 @@
+<div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
+
+  {% if model.selectableDestinations.length > 1 %}
+      {% include "modules/multi-ship-checkout/checkout-billing-contact-selector" with model=model.selectableDestinations destinationId=model.selectedBillingDestination.id customerContactType=model.selectedBillingDestination.customerContactType isLoading=model.isLoading%}
+  {% else %}
+  <div class="mz-l-formfieldgroup mz-l-formfieldgroup-address">
+  	{% include "modules/multi-ship-checkout/billing-address-selector" %}
+  </div>
+  {% endif %}
+</div>
+
+<div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
+    {% include "modules/common/address-summary" with model=model.billingContact %}
+</div>

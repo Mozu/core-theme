@@ -1,0 +1,58 @@
+
+<div class="mz-shipping-method-items">
+    <h4>{{labels.shippingTo}}:</h4>
+</div>
+<div class="mz-l-formfieldgroup-row mz-shipping-method-address">
+        <div class="mz-l-formfieldgroup-cell" style="border-right: 1px solid #CCC;">
+            <div>{{model.groupingDestinationInfo.destinationContact.firstName}} {{model.groupingDestinationInfo.destinationContact.lastNameOrSurname}}</div>
+            <div>{{model.groupingDestinationInfo.destinationContact.phoneNumbers.home}}</div>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <div>{{model.groupingDestinationInfo.destinationContact.address.address1}}, {{model.groupingDestinationInfo.destinationContact.address.address2}}</div>
+            <div>{{model.groupingDestinationInfo.destinationContact.address.cityOrTown}} {{model.groupingDestinationInfo.destinationContact.address.stateOrProvince}} {{model.groupingDestinationInfo.destinationContact.address.postalOrZipCode}} {{model.groupingDestinationInfo.destinationContact.address.countryCode}}</div>
+        </div>
+    </div>
+
+    <br />
+<div class="mz-shipping-method-items">
+    {% for group in model.groupingItemInfo %}
+    <div>
+        <span class="shipping-method-items-qty">{{ labels.shippingMethodsQuantity }} {{ group.quantity }}<span>
+        <span class="shipping-method-items-name">{{ group.product.name }}</span>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="mz-shipping-method-section">
+    <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+            {{labels.shippingMethodSelector}}
+        </div>
+
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-active">
+         <div class="mz-l-formfieldgroup-cell">
+         {% if isLoading %}
+            <span class="loading"> Loading...</span>
+         {% else %}
+            {% if model.groupingShippingMethods.length %}
+                <select id="mz-shipping-method-selector" name="shippingMethodSelector" class="mz-shipping-method-selector-dd" data-mz-shipping-method data-mz-grouping-id="{{ model.id }}">
+                <option class="mz-shipping-method-selector-option" value=""></option>
+                    {% for method in model.groupingShippingMethods %}
+                        <option class="mz-shipping-method-selector-option" value="{{ method.shippingMethodCode }}" {% if method.shippingMethodCode == model.shippingMethodCode %} selected="selected" {% endif %}>{{ method.shippingMethodName }} - {{ method.price|currency }}</option>
+                    {% endfor %}
+                </select>
+                <span class="mz-validationmessage" data-mz-validationmessage-for="shippingMethodSelector"></span>
+            {% else %}
+                <p>{{ labels.noShippingMethods }}</p>
+            {% endif %}
+            {% endif %}
+        </div>
+      </div>
+      <div class="mz-formstep-summary mz-checkoutform-active">
+        <div class="mz-l-formfieldgroup-cell">
+            {{ model.shippingMethodName }}
+        </div>
+      </div>
+
+    </div>
+</div>

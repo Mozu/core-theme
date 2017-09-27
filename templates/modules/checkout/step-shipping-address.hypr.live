@@ -1,39 +1,41 @@
-﻿    <h3 class="mz-formstep-header mz-checkoutform-header">
+ <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.shippingInformation }}
+        {% if model.requiresFulfillmentInfo %}
         <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
+        {% endif %}
     </h3>
     <div class="mz-formstep-body">
         {% if model.requiresFulfillmentInfo or model.requiresDigitalFulfillmentContact %}
         {% endif %}
-        {% if not model.address.candidateValidatedAddresses %}
-        <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
-        {% if model.requiresFulfillmentInfo %}
-          {% include "modules/common/address-summary" %}      
-        {% else %}
-          {{ labels.noFulfillmentInfoRequired }}
+      {% if not model.address.candidateValidatedAddresses %}
+          <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
+          {% if model.requiresFulfillmentInfo %}
+            {% include "modules/common/address-summary" %}
+          {% else %}
+            {{ labels.noFulfillmentInfoRequired }}
+          {% endif %}
+        </div>
+        {% if model.requiresFulfillmentInfo  %}
+        <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-section mz-checkoutform-active">
+          {% if model.contacts %}
+            {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
+          {% else %}
+            {% include "modules/common/address-form" with countries=pageContext.shippingCountries states=pageContext.shippingStates %}
+          {% endif %}
+        </div>
         {% endif %}
-      </div>
-      {% if model.requiresFulfillmentInfo  %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
-        {% if model.contacts %}
-        {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
-        {% else %}
-        {% include "modules/common/address-form" with countries=pageContext.shippingCountries states=pageContext.shippingStates %}
+        {% comment %} Not sure if this is necessary....{% endcomment %}
+        {% if model.requiresDigitalFulfillmentContact %}
+        <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-active">
+          {% include "modules/checkout/checkout-digital-fulfillment" with editingContact=model %}
+        </div>
+        <div class="mz-formstep-summary mz-addresssummary mz-checkoutform-active">
+          <span>Gift Card Email: {{ model.email }}</span>
+        </div>
         {% endif %}
-      </div>
-      {% endif %}
-      
-      {% if model.requiresDigitalFulfillmentContact %}
-      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-active">
-        {% include "modules/checkout/checkout-digital-fulfillment" with editingContact=model %}
-      </div>
-      <div class="mz-formstep-summary mz-addresssummary mz-checkoutform-active">
-        <span>Gift Card Email: {{ model.email }}</span>
-      </div>
-      {% endif %}
       {% else %}
 
-      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-active">
+      <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-section mz-checkoutform-active">
         {{ labels.selectValidAddress }}
 
         {% for addr in model.address.candidateValidatedAddresses %}
@@ -71,4 +73,4 @@
     <div class="mz-formstep-next">
         <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
     </div>
-    </div>    
+    </div>

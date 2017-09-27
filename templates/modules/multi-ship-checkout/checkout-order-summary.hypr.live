@@ -1,0 +1,22 @@
+<div class="mz-ordersummary-checkout">
+    <h3 class="mz-formstep-header mz-checkoutform-header">
+        {{ labels.orderSummary }}
+        <a style="margin-top:10px" href="{{siteContext.siteSubdirectory}}/cart" class="mz-formstep-edit" data-mz-action="editCart">{{ labels.change }}</a>
+    </h3>
+    <div class="mz-formstep-body">
+      {% if model.items|findwhere('fulfillmentMethod', 'Ship') %}
+        {% include "modules/multi-ship-checkout/checkout-order-summary-details" with fulfillmentMethod="Ship" items=model.items %}
+      {% endif %}
+
+      {% if model.items|findwhere('fulfillmentMethod', 'Digital') %}
+        {% include "modules/multi-ship-checkout/checkout-order-summary-details" with fulfillmentMethod="Digital" items=model.items %}
+      {% endif %}
+
+      {% if model.items|findwhere('fulfillmentMethod', 'Pickup') %}
+        {% include "modules/multi-ship-checkout/checkout-order-summary-details" with fulfillmentMethod="Pickup" items=model.items %}
+      {% endif %}
+
+      {% include "modules/multi-ship-checkout/checkout-order-price-summary" %}
+
+    </div><!-- #order-summary -->
+</div>
