@@ -186,7 +186,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             //login links box.
 
             var returnUrl = "";
-            var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl');
+            var returnUrlParam = new URLSearchParams(window.location.search).get('returnUrl'); // jshint ignore:line
             if (returnUrlParam && !this.$parent.find('input[name=returnUrl]').val()){
               returnUrl = returnUrlParam;
             } else {
@@ -196,9 +196,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             api.action('customer', 'loginStorefront', {
                 email: this.$parent.find('[data-mz-login-email]').val(),
-                password: this.$parent.find('[data-mz-login-password]').val(),
+                password: this.$parent.find('[data-mz-login-password]').val()
             }).then(this.handleLoginComplete.bind(this, returnUrl), this.displayApiMessage);
-          
+
         },
         anonymousorder: function() {
             var email = "";
