@@ -713,14 +713,15 @@ define([
                     me.setPurchaseOrderInfo();
                     me.getPaymentTypeFromCurrentPayment();
 
-                    var savedCardId = me.get('card.paymentServiceCardId') ?
-                        me.get('card.paymentServiceCardId')
+                    var currentCardId = me.get('card.paymentServiceCardId');
+                    var savedCardId = currentCardId ?
+                        currentCardId
                         : me.getPrimarySavedCard(me) ? me.getPrimarySavedCard(me).id : undefined;
 
                     me.set('savedPaymentMethodId', savedCardId, { silent: true });
                     me.setSavedPaymentMethod(savedCardId);
 
-                    if (!savedCardId) {
+                    if (!currentCardId) {
                         me.setDefaultPaymentType(me);
                     }
 
@@ -783,7 +784,7 @@ define([
                 if(me.isPurchaseOrderEnabled()) {
                     me.set('paymentType', 'PurchaseOrder');
                     me.selectPaymentType(me, 'PurchaseOrder');
-                } else {
+                } else if(!me.get('paymentType', 'check')) {
                     me.set('paymentType', 'CreditCard');
                     me.selectPaymentType(me, 'CreditCard');
                     if (me.savedPaymentMethods() && me.savedPaymentMethods().length > 0) {
@@ -812,6 +813,7 @@ define([
                 if (paymentTypeIsCard && !Hypr.getThemeSetting('isCvvSuppressed')) return this.stepStatus('incomplete'); // initial state for CVV entry
 
                 if(!billingContactEmail) return this.stepStatus("incomplete");
+
 
                 if (thereAreActivePayments && (balanceNotPositive || (this.get('paymentType') === 'PaypalExpress' && window.location.href.indexOf('PaypalExpress=complete') !== -1))) return this.stepStatus('complete');
                 return this.stepStatus('incomplete');
