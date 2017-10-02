@@ -225,11 +225,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
             var directShipItems = this.get('items').where({fulfillmentMethod: "Ship"});
             var destinationCount = [];
              _.each(directShipItems, function(item){
-                var id = item.get('destinationId');
-                if(id){
-                    if(destinationCount.indexOf(id) === -1) {
-                        destinationCount.push(id);
-                    }
+                var id = item.get('destinationId') ? item.get('destinationId') : 0;
+                if(destinationCount.indexOf(id) === -1) {
+                    destinationCount.push(id);
                 }
              });
 

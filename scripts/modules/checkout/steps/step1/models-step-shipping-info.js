@@ -408,22 +408,6 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CheckoutStep, ShippingDest
 
                 checkout.messages.reset();
                 checkout.syncApiModel();
-
-                // checkout.apiModel.mergeDuplicateCheckoutItems().then(function(){
-                //     checkout.get('shippingInfo').updateShippingMethods().then(function() {
-                //         self.stepStatus('complete');
-                //     }).ensure(function(){
-                //         checkout.trigger('sync');
-                //         self.isLoading(false);
-                //         checkout.get('shippingInfo').isLoading(false);
-                //         checkout.get('shippingInfo').calculateStepStatus();
-                //     });
-                // }, function(){
-                //     self.isLoading(false);
-                //     checkout.get('shippingInfo').isLoading(false);
-                // });
-                //
-                //
                 
                 if (self.requiresDigitalFulfillmentContact()) {
                     if(!self.saveDigitalGiftCard()) {
