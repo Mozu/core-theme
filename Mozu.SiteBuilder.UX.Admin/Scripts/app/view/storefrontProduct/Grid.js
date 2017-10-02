@@ -92,7 +92,15 @@ Ext.define('Taco.view.storefrontProduct.Grid', {
 
             var params = Ext.apply(this.store.proxy.extraParams, config);
             if (typeof params.siteId !== 'undefined' && typeof params.dataViewMode !== 'undefined' && typeof params.expression !== 'undefined') {
-                me.store.load();
+                me.store.load({
+                    callback: function(records, operation, success) {
+                        if (operation.error) {
+                            var errorText = 'Unable to preview results for dynamic expression';
+                            Taco.app.fireEvent('setmessage', errorText, "error")
+                            me.getView().refresh();
+                        }
+                    }
+                });
             }
         }, me);
 
