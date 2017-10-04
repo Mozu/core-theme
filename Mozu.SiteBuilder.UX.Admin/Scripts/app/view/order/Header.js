@@ -319,56 +319,53 @@ Ext.define('Taco.view.order.Header', {
             tpl: [
                 '<table class="order-addresses-table"><tr><td><span class="label-light">Billing Address</span></td><td><span class="label-light">Shipping Address</span></td></tr>',
 
-
                 '<tr><td>',
 
-                '<tpl if="billingContact && billingContact.address1">',
+                '<tpl if="billingContact && billingContact.lastName">',
 
-                '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
+                    '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
 
-                '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
+                    '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
 
-                '{billingContact.address1:htmlEncode}<br>',
-
-                '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
-
-                '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
-
-                '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
-
-                '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
+                    '<tpl if="billingContact.address1">',
+                        '{billingContact.address1:htmlEncode}<br>',
+                        '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
+                        '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
+                        '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
+                        '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
+                    '</tpl>',
 
                 '<tpl if="billingContact.homePhone">{billingContact.homePhone:phone}<br></tpl>',
 
                 '<tplelse>',
 
-                '<div data-handle="order-header-no-billing">n/a</div>',
+                    '<div data-handle="order-header-no-billing">n/a</div>',
 
                 '</tpl>',
 
                 '</td><td>',
 
-                '<tpl if="fulfillmentContact && fulfillmentContact.address1">',
+                '<tpl if="fulfillmentContact && (fulfillmentContact.lastName || fulfillmentContact.email || fulfillmentContact.address1)">',
 
-                '<span class="label">{fulfillmentContact.firstName:htmlEncode}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:htmlEncode}</tpl> {fulfillmentContact.lastName:htmlEncode}</span><br>',
+                    '<tpl if="fulfillmentContact.lastName">',
+                        '<span class="label">{fulfillmentContact.firstName:htmlEncode}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:htmlEncode}</tpl> {fulfillmentContact.lastName:htmlEncode}</span><br>',
+                    '</tpl>',
 
-                '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
+                    '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
 
-                '{fulfillmentContact.address1:htmlEncode}<br>',
-
-                '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',
-
-                '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:htmlEncode}<br></tpl>',
-
-                '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
-
-                '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
+                    '<tpl if="fulfillmentContact.address1">',
+                        '{fulfillmentContact.address1:htmlEncode}<br>',
+                        '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',
+                        '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:htmlEncode}<br></tpl>',
+                        '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
+                        '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
+                    '</tpl>',
 
                 '<tpl if="fulfillmentContact.homePhone">{fulfillmentContact.homePhone:phone}<br></tpl>',
 
                 '<tplelse>',
 
-                '<div data-handle="order-header-no-fulfillment">n/a</div>',
+                    '<div data-handle="order-header-no-fulfillment">n/a</div>',
 
                 '</tpl>',
 
