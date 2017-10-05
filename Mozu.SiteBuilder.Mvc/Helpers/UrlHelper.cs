@@ -251,8 +251,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             }
             if (str[0] != '/' && str.IndexOf("http", StringComparison.OrdinalIgnoreCase) != 0)
             {
-                str = '/' + str;
-                sb.Insert(0, str);
+                sb.Insert(0, '/');
             }
             var qs = AddQueryString(config, hasQuestionMark: str.Contains("?"));
             if (qs.Length > 0)

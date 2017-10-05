@@ -292,7 +292,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
                     if (_settings.AppSettings("disableCDN") == "true")
                     {
-                        _cdnPrefix = ""; ;
+                        _cdnPrefix = "";
                     }
                    
                 }
