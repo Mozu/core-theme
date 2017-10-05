@@ -286,10 +286,9 @@ Ext.define('Taco.view.account.Users', {
                             });
                             break;
                         case 'roll':
-
                             var childIds = [],
-                                userid = item.scope.treelist.getSelectionModel().getSelection()[0].parentNode.get('id'),
-                                deleteRecId = item.scope.treelist.getSelectionModel().getSelection()[0].get('id');
+                                userid = selection.parentNode.get('id'),
+                                deleteRecId = selection.get('id');
 
                             selection.parentNode.childNodes.forEach(function (child) {
                                 if (deleteRecId != child.get('id')) {
@@ -297,15 +296,14 @@ Ext.define('Taco.view.account.Users', {
                                 }
                             });
 
+                            selection.destroy();
+
                             Ext.Ajax.request({
                                 url: "/admin/app/account/users/updaterole",
                                 method: 'post',
                                 jsonData: {
                                     userId: userid,
                                     roles: childIds
-                                },
-                                success: function () {
-                                    treeview.reload();
                                 },
                                 failure: function (resp) {
                                     var json = Ext.decode(resp.responseText, true);
