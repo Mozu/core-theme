@@ -37,7 +37,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             , IAggregateSiteSettingsWebApiClient aggregateSiteSettingsWebApiClient
             )
         {
-            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithConfigOptions(config => config.EnableDirtyCacheRead = false);
             _generalSettingWrapper = generalSettingWrapper;
             _context = context;
             _tenantClient = tenantClient.CloneWithoutUserClaims();
@@ -121,6 +121,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var ret = Mapper.Map<List<Gateway>>(gateways);
             return List2(ret);
         }
+
+        [HttpGetRoute(UriTemplate = "gateway/{id}/read")]
+        public async Task<Response<Gateway>> GetGateway(string id)
+        {
+            var resp = await (await _checkoutSettingsWebApiClient.GetTenantGateway(id)).ReadAsAsync();
+
+            var ret = Mapper.Map<Gateway>(resp);
+            return Single2(ret);
+        }
+
 
         [HttpPostRoute(UriTemplate = "gateways/create")]
         public async Task<Response<Gateway>> CreateGateway(Gateway gateway)
@@ -327,6 +337,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var workflows = (await _checkoutSettingsWebApiClient.GetThirdPartyPaymentWorkflows()).ReadAsSync();
 
             return List2(workflows);
+        }
+
+        [HttpPutRoute(UriTemplate = "gateway/{id}/binmatches/update")]
+        public async Task<Response<Gateway>> UpdateGatewayBinMatches(string id, List<string> binPatterns)
+        {
+            var resp = await (await _checkoutSettingsWebApiClient.UpdateGatewayBinMatches(id, binPatterns)).ReadAsAsync();
+
+            var ret = Mapper.Map<Gateway>(resp);
+            return Single2(ret);
         }
     }
 }

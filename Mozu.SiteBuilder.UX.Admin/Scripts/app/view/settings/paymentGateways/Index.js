@@ -3,7 +3,7 @@
  */
 
 Ext.define('Taco.view.settings.paymentGateways.Index', {
-    extend: 'Taco.core.ux.browser.SearchList',
+    extend: 'Taco.view.react.Index',
    
     requires: [
         'Taco.model.PaymentGateway',
@@ -17,84 +17,84 @@ Ext.define('Taco.view.settings.paymentGateways.Index', {
     },
 
     title: 'Payment Gateways',
-    createButtonText: 'Add New Gateway',
-    createRoute: 'settings/paymentgatewayscreate',
-    editorRoute: 'settings/paymentgatewaysedit',
+    //createButtonText: 'Add New Gateway',
+    //createRoute: 'settings/paymentgatewayscreate',
+    //editorRoute: 'settings/paymentgatewaysedit',
 
-    addContentViewPadding: true,
+    //addContentViewPadding: true,
 
-    enableNavHeader: true,
+    //enableNavHeader: true,
     
-    createButtonEnabled: true,
+    //createButtonEnabled: true,
 
-    cancelButtonEnabled: false,
+   // cancelButtonEnabled: false,
 
-    saveButtonEnabled: false,
+    //saveButtonEnabled: false,
 
-    launchEditorOnClick: true,
+    //launchEditorOnClick: true,
 
-    hideSearchToolbar: true,
+    //hideSearchToolbar: true,
 
-    enableSearchBarInHeader: false,
+    //enableSearchBarInHeader: false,
 
-    advancedSearchConfig: {
-        emptySearch: 'Search'
-    },
+    //advancedSearchConfig: {
+    //    emptySearch: 'Search'
+    //},
 
-    stateful: true,
-    stateId: 'paymentGatewaysGrid',
+    //stateful: true,
+    //stateId: 'paymentGatewaysGrid',
 
-    onCreate: function () {
-        return Taco.core.StateManager.attemptNavigate(this.createRoute);
-    },
+    //onCreate: function () {
+    //    return Taco.core.StateManager.attemptNavigate(this.createRoute);
+    //},
 
     initComponent: function () {
         var me = this;
 
-        this.columns = me.getColumnConfig();
+        //this.columns = me.getColumnConfig();
 
         me.callParent(arguments);
 
     },
 
-    launchLoadedEditor: function (record, options) {
-        var complexMetaData = { record: record, options: options };
+    //launchLoadedEditor: function (record, options) {
+    //    var complexMetaData = { record: record, options: options };
         
-        Ext.defer(function () {
-            Taco.core.StateManager.attemptNavigate(this.editorRoute + '/' + record.getId(), complexMetaData);
-        }, 1, this);
-    },
+    //    Ext.defer(function () {
+    //        Taco.core.StateManager.attemptNavigate(this.editorRoute + '/' + record.getId(), complexMetaData);
+    //    }, 1, this);
+    //},
 
-    deleteItemMsg: 'Are you sure you want to delete this payment gateway? Please update Payment Types settings for any sites that are currently using this gateway.',
+    //deleteItemMsg: 'Are you sure you want to delete this payment gateway? Please update Payment Types settings for any sites that are currently using this gateway.',
 
-    getColumnConfig : function() {
-        var me = this;
+    //getColumnConfig : function() {
+    //    var me = this;
         
-        return [{
-            dataIndex: 'name',
-            stateId: 'name',
-            text: 'Nickname',
-            flex: 1,
-            minWidth: 120
-        }, {
-            dataIndex: 'gatewayDefinitionName',
-            stateId: 'gatewayDefinitionName',
-            text: 'Gateway',
-            flex: 1,
-            minWidth: 120
-        }, {
-            xtype: 'taco.menucolumn',
-            menuItems: [{
-                text: 'Edit',
-                menuColumnHandler: function (item, eventData) {
-                    me.launchLoadedEditor(eventData.record);
-                }
-            }, {
-                text: 'Delete',
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }]
-        }];
-    }
+    //    return [{
+    //        dataIndex: 'name',
+    //        stateId: 'name',
+    //        text: 'Nickname',
+    //        flex: 1,
+    //        minWidth: 120
+    //    }, {
+    //        dataIndex: 'gatewayDefinitionName',
+    //        stateId: 'gatewayDefinitionName',
+    //        text: 'Gateway',
+    //        flex: 1,
+    //        minWidth: 120
+    //    }, {
+    //        xtype: 'taco.menucolumn',
+    //        menuItems: [{
+    //            text: 'Edit',
+    //            menuColumnHandler: function (item, eventData) {
+    //                me.launchLoadedEditor(eventData.record);
+    //            }
+    //        }, {
+    //            text: 'Delete',
+    //            menuColumnHandler: 'destroyMenuColumnHandler'
+    //        }]
+    //    }];
+    //}
     
  
 })

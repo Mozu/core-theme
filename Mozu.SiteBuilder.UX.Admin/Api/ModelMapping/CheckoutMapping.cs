@@ -108,6 +108,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SupportedCards, op => op.ResolveUsing(dc => dc.SupportedCards))
                 .ForMember(x => x.CountryCode, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) ? dc.GatewayAccount.CountryCode : null))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) ? dc.GatewayAccount.Id : null))
+                .ForMember(x => x.BinPatterns, op => op.ResolveUsing(dc => (dc.GatewayAccount != null)
+                    ? dc.GatewayAccount.BinPatterns
+                    : null))
                 .ForMember(x => x.GatewayDefinitionId, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) 
                     ? dc.GatewayAccount.GatewayDefinitionId 
                     : null))
@@ -227,6 +230,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                     return creds;
                 }))
+                .ForMember(x => x.BinPatterns, op => op.ResolveUsing(dc => (dc.GatewayAccount != null)
+                    ? dc.GatewayAccount.BinPatterns
+                    : null))
                 .ForMember(x => x.GatewayDefinitionName, 
                     op => op.ResolveUsing(dc => (dc.GatewayDefinition != null) ? dc.GatewayDefinition.Name : null))
 

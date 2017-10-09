@@ -58,6 +58,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Friendly name for the gateway definition.
         /// </summary>
         public string GatewayDefinitionName { get; set; }
+
+        /// <summary>
+        /// Friendly name for the gateway definition.
+        /// </summary>
+        public GatewayDefinition GatewayDefinition { get; set; }
+
+        public List<string> BinPatterns { get; set; }
     }
 
 }
