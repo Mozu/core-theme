@@ -1566,7 +1566,7 @@ Ext.define('Taco.view.website.Index', {
 
         else if (record && record.get('isCategory')) {
             this.navigate({
-                url: '/c/' + record.get('url')
+                url: '/c/' + record.get('id')
             });
         }
 
