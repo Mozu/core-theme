@@ -9,7 +9,7 @@
             if (config && config.imageClickAction === 'lightbox') {
                 var cacheKey = HyprLiveContext.locals.siteContext.generalSettings.cdnCacheBustKey || '';
                 imageUrl = config.imageSource === 'file' ?
-                            '/cms/files/' + config.imageFileId + '?_mzCb=' + cacheKey : 
+                            '/cms/files/' + config.imageFileId + '?_mzCb=' + cacheKey :
                             config.imageExternalUrl;
 
                 ci.on('click', function (event) {
@@ -30,7 +30,7 @@
                                 $('#cboxClose').html('<span style="display: inline-block">X</span>');
                             }
                         });
-                        
+
                     }
 
                 });
