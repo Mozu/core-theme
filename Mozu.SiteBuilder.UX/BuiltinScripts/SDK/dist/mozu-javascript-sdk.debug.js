@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-09-28
+ * Mozu JavaScript SDK - v0.3.0 - 2017-10-11
  *
  * Copyright (c) 2017 Volusion, Inc.
  *
@@ -3694,10 +3694,16 @@ module.exports=
     },
     "collectionOf": "location",
     "get": {
-      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter}"
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition}"
     },
     "get-by-lat-long": {
-      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize}"
+      "defaultParams": {
+        "includeAttributeDefinition": true
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
   "cartsummary": "{+cartService}summary",
@@ -3718,23 +3724,9 @@ module.exports=
       "template": "{+cartService}current/extendedproperties",
       "returnType": "json"
     },
-    "locations": {
-        "defaultParams": {
-          "pageSize": 15
-        },
-        "collectionOf": "location",
-      "get": {
-        "defaultParams": {
-          "includeAttributeDefinition": true
-        },
-        "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition}"
-      },
-      "get-by-lat-long": {
-        "defaultParams": {
-          "includeAttributeDefinition": true
-        },
-        "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
-      }
+    "add-extended-properties": {
+      "verb": "POST",
+      "template": "{+cartService}current/extendedproperties"
     },
     "update-extended-properties": {
       "verb": "PUT",
