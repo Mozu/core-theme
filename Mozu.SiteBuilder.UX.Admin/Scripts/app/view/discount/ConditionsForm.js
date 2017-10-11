@@ -263,6 +263,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'conditionalProducts',
+            hoverField: 'productCode',
             flex: 1,
             margin: 0,
             store: productStore,

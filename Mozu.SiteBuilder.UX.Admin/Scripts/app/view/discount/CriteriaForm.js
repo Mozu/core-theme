@@ -320,6 +320,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.productList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'products',
+            hoverField: 'productCode',
             width: 520,
             margin: 0,
             allowBlank:false,
@@ -380,6 +381,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
         this.productExcludeList = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'excludedProducts',
+            hoverField: 'productCode',
             width: 520,
             margin: 0,
             store: productStore,

@@ -41,6 +41,7 @@ Ext.define('Taco.view.product.subform.Categories', {
             },
             displayField: 'nameAndCodeAndStatus',
             fieldLabel: 'Assigned Categories',
+            hoverField: 'fullPath',
             itemId: 'assignedCategory',
             valueField: 'id',
             lastQuery: "",
