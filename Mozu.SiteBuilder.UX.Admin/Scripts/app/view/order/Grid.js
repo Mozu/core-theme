@@ -552,7 +552,7 @@ Ext.define('Taco.view.order.Grid', {
         // add the actions column if required
         if (me.showActionsColumn) {
             columns.push(
-                {                    
+                {
                     xtype: 'taco.menucolumn',
                     menuItems: [
                         {
@@ -563,8 +563,7 @@ Ext.define('Taco.view.order.Grid', {
                                     record = eventData.record,
                                     metaData = { id: record.getId() };
 
-                                me.launchEditor(record, metaData);
-
+                                Taco.core.StateManager.attemptNavigate('/admin/orders/edit/' + record.getId());
                             }
                         }, {
                             text: 'Capture Payment',
