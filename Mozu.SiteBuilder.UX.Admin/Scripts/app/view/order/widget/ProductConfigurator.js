@@ -194,7 +194,7 @@
                     '<tpl if="PriceRange.Lower.SalePrice">',
                         '<span class="price-value">{PriceRange.Lower.SalePrice:currency}</span>',
                     '</tpl>',
-                    
+
                     ' - <span class="price-value',
                     '<tpl if="PriceRange.Upper.SalePrice">',
                         ' onsale',
@@ -260,22 +260,7 @@
         ];
 
         this.loadProduct();
-
         this.callParent(arguments);
-
-        var form = this.getForm();
-        // Before we override the hasInvalidField method, let's provide an alternate hook to the original.
-        form.hasInvalidFieldOriginal = form.hasInvalidField;
-        Ext.override(form, {
-            // Used to disable Save button until model is loaded or while updating product configuration.
-            // Default ExtJS form logic only takes field validation into account when updating buttons with formBind=true (e.g. Save)
-            // Inject our own logic into the form (Ext.form.Panel is a panel which contains a form)
-            hasInvalidField: function() {
-                if (!me.isValid() || me.isUpdating) return true;
-
-                return this.callParent(arguments);
-            }
-        });
     },
 
     areAllFieldsStatisfied: function() {
@@ -318,7 +303,7 @@
 
     loadProduct: function (record) {
         if (record) this.record = record;
-        
+
         if (!this.record) {
             Taco.model.Product.load(this.productCode, {
                 success: function (record) {
@@ -347,7 +332,7 @@
                 }
                 this.fireEvent('viewReady',this);
             },
-            
+
             failure: function (response) {
                 // error handling here
                 var json = Ext.decode(response.responseText, true),
@@ -374,7 +359,7 @@
         } else {
             description = longDescription;
         }
-        
+
         // check to see if the product has a description.
         if (!description.length) {
             this.description.hide();
@@ -387,11 +372,7 @@
         this.runtimeData = data;
         this.buildOptions(this.runtimeData.Options);
         this.setLoading(false);
-
-        // All done loading. If all fields are currently satisfied, see if we can save as-is.
-        if (!this.getForm().hasInvalidFieldOriginal()) {
-            this.postOptions();
-        }
+        this.postOptions();
     },
 
     buildImages: function () {
@@ -400,10 +381,10 @@
 
     buildOptions: function (options) {
         var items = [];
-        
+
         this.optionsHeading.show();
         this.optionsContainer.removeAll();
-        
+
         if (options && options.length) {
             Ext.each(options, function (option) {
                 items.push(this.buildOption(option));
@@ -432,20 +413,21 @@
         return Ext.apply(builds['Default'](option), builds[inputType](option), {
             listeners: {
                 change: function (field, value) {
+                    this.getForm().checkValidity();
+
                     Ext.each(this.runtimeData.Options, function (option) {
                         if (option.AttributeFQN !== field.name) return;
-                        
+
                         option.Value = saves[inputType] ? saves[inputType](value) : value;
-                        
+
                         if (option.AttributeDetail.UsageType === 'Option') {
                             this.lastUpdatedOption = option;
                         }
+
                         return false;
                     }, this);
 
                     //if ( === 'List') this.lastUpdatedOption
-
-                    this.postOptions();
                 },
                 buffer: 400,
                 scope: this
@@ -469,20 +451,19 @@
             if (!value.StringValue) value.StringValue = value.Value;
             if (value.IsSelected) option.Value = value.ShopperEnteredValue || value.Value;
             if (value.IsSelected) option.ShopperEnteredValue = value.ShopperEnteredValue || value.Value;
-            
 
             if (currentValue === value.Value && !value.IsEnabled) {
                 if (this.lastUpdatedOption.AttributeFQN === option.AttributeFQN) {
                     repostOptions = true;
                 } else {
                     delete option.Value;
-                    delete option.ShopperEnteredValue; 
+                    delete option.ShopperEnteredValue;
                 }
             }
         }, this);
 
         if (updates[field.optionInputType]) updates[field.optionInputType](option, field);
-        
+
         field.setValue(option.Value);
 
         field.suspendCheckChange--;
@@ -490,7 +471,7 @@
         if (repostOptions) this.postOptions();
     },
 
-    postOptions: function () {
+    postOptions: function (callback) {
         var me = this;
         var request = { Options: [] };
 
@@ -538,6 +519,20 @@
                     this.setLoading(false);
                     this.isUpdating = false;
                     this.getForm().checkValidity();
+
+                    if (callback) {
+                        callback();
+                    }
+                },
+                failure: function(response) {
+                    this.setLoading(false);
+                    this.isUpdating = false;
+
+                    var error = JSON.parse(response.responseText);
+
+                    if (callback) {
+                        callback(error)
+                    }
                 },
                 scope: me
             }, quantity || 1);

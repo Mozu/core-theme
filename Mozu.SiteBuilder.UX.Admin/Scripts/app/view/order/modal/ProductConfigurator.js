@@ -26,22 +26,40 @@
 
         this.callParent(arguments);
     },
-    
 
     /*
     * overriding the onSave method of the base class to pass custom arguments to the savesuccess;
     */
     doSave: function () {
-        var data = Ext.clone(this.form.getData())
         // for this base class we assume that the save is not delegated to the child components.
         // if the extensions of this class need to handle the save and want to wait for a successful service response,
         // they should override the onSave method with their own;
-        this.saveSuccess(data);
+        var me = this;
+
+        var callback = function(error) {
+            if (error) {
+                var errorMessage = error.message || 'Something went wrong';
+                Taco.app.fireEvent("setmessage", errorMessage, "error");
+                return;
+            }
+
+            if (me.form.runtimeData.PurchasableState.IsPurchasable) {
+                var data = Ext.clone(me.form.getData())
+                me.saveSuccess(data);
+                return;
+            }
+
+            Ext.each(me.form.runtimeData.PurchasableState.Messages, function (msg) {
+                Taco.app.fireEvent("setmessage", msg.Message, "error");
+            });
+        }
+
+        this.form.postOptions(callback);
     },
 
     destroy: function () {
-        this.form.destroy();        
-        this.callParent(arguments);        
+        this.form.destroy();
+        this.callParent(arguments);
         this.form = null;
     }
 });
