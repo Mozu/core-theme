@@ -161,7 +161,8 @@ Ext.define('Taco.view.role.Index', {
                 {
                     text: 'Delete',
                     handler: function (item, event) {
-                        me.deleteRecord(item, event);
+                        var rec = grid.getSelectionModel().getSelection()[0];
+                        me.deleteRecord(rec, event);
                     },
                     scope: me
                 }
@@ -197,7 +198,7 @@ Ext.define('Taco.view.role.Index', {
             menu.showAt(evt.getXY());
         }
     },
-    deleteRecord: function (item, event) {
+    deleteRecord: function (rec, event) {
         Ext.MessageBox.show({
             title: 'Warning',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -209,7 +210,16 @@ Ext.define('Taco.view.role.Index', {
             buttons: Ext.Msg.OKCANCEL,
             fn: function (val) {
                 if (val === 'ok') {
-                    item.scope.gridPanel.getSelectionModel().getSelection()[0].destroy();
+                    rec.destroy({
+                        failure: function(rec, data) {
+                            if (data.error && data.error.status) {
+                                if (data.error.status === 500) {
+                                    var msg = 'Role is currently in use';
+                                    Taco.app.fireEvent('setmessage', msg, 'error');
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -246,5 +256,5 @@ Ext.define('Taco.view.role.Index', {
         this.launchEditor(null, 'create');
     },
     onDeleteRole: function (view, index, idx, action, e, record) {
-    },
+    }
 });
