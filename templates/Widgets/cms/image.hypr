@@ -7,12 +7,12 @@
 {% endif %}
 
 {% if Model.config.imageSize == 'maintain' %}
-    
-    {% if Model.config.imageClickAction == 'url' %}
-        <a 
+
+    {% if Model.config.imageClickAction == 'url' and pageContext.isEditMode != 'true' %}
+        <a
             target="_blank"
             title="{{Model.config.imageAltText}}"
-            
+
             {% if Model.config.linkSource == 'externalUrl' %}
                 href="{{Model.config.linkExternalUrl}}"
             {% endif %}
@@ -29,17 +29,17 @@
 
     {% endif %}
 
-    <img 
+    <img
         class="mz-cms-image-maintain"
         alt="{{Model.config.imageAltText}}"
-        
+
         style="
-          border-width: {{Model.config.borderWidth}}; 
+          border-width: {{Model.config.borderWidth}};
           border-style: {{Model.config.borderStyle}};
           border-color: {{Model.config.borderColor}};
           box-sizing: border-box;
         "
-         
+
         {% if Model.config.imageSource == 'externalUrl' %}
             src="{{Model.config.imageExternalUrl}}"
         {% endif %}
@@ -50,16 +50,16 @@
         {% endif %}
          >
 
-    {% if Model.config.imageClickAction == 'url' %}
+    {% if Model.config.imageClickAction == 'url' and pageContext.isEditMode != 'true' %}
         </a>
     {% endif %}
 
 {% else %}
-    <{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}
+    <{% if Model.config.imageClickAction == 'url' and pageContext.isEditMode != 'true' %}a{% else %}div{% endif %}
         class="mz-cms-image-cover"
         title="{{Model.config.imageAltText}}"
         alt="{{Model.config.imageAltText}}"
-        
+
         {% if Model.config.imageClickAction == 'url' %}
             target="_blank"
             {% if Model.config.linkSource == 'externalUrl' %}
@@ -85,13 +85,13 @@
                 {% endif %}
             {% endif %}
         );
-        border-width: {{Model.config.borderWidth}}; 
+        border-width: {{Model.config.borderWidth}};
         border-style: {{Model.config.borderStyle}};
         border-color: {{Model.config.borderColor}};
         box-sizing: border-box;
         background-position: {{Model.config.positionHorizontal}} {{Model.config.positionVertical}};"
         >
-        </{% if Model.config.imageClickAction == 'url' %}a{% else %}div{% endif %}>
+        </{% if Model.config.imageClickAction == 'url' and pageContext.isEditMode != 'true' %}a{% else %}div{% endif %}>
 
 {% endif %}
 </div>
