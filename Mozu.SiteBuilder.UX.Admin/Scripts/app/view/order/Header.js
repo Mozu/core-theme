@@ -27,6 +27,11 @@ Ext.define('Taco.view.order.Header', {
     navigation: false,
 
     initComponent: function () {
+        Ext.util.Format.phone = function(value) {
+            return value.length === 10
+                ? value.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3')
+                : value
+        }
 
         this.addEvents([
             /**
@@ -333,6 +338,8 @@ Ext.define('Taco.view.order.Header', {
 
                 '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
 
+                '<tpl if="billingContact.homePhone">{billingContact.homePhone:phone}<br></tpl>',
+
                 '<tplelse>',
 
                 '<div data-handle="order-header-no-billing">n/a</div>',
@@ -356,6 +363,8 @@ Ext.define('Taco.view.order.Header', {
                 '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
 
                 '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
+
+                '<tpl if="fulfillmentContact.homePhone">{fulfillmentContact.homePhone:phone}<br></tpl>',
 
                 '<tplelse>',
 
