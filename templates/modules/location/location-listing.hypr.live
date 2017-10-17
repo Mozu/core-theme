@@ -6,6 +6,7 @@
         </div>
         <div style="margin-top: 20px">
             {% for attr in model.attributes %}
+                {% if attr.attributeDefinition %}
                 <div>
                     <span>{{ attr.attributeDefinition.content.value}}:&nbsp;</span>
                     {% if attr.attributeDefinition.inputType === 'Date' %}
@@ -20,6 +21,7 @@
                         {% endfor %}
                     {% endif %}
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
