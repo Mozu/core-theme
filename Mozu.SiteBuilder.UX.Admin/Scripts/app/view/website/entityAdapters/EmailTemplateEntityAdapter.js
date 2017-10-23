@@ -5,7 +5,6 @@
 Ext.define('Taco.view.website.entityAdapters.EmailTemplateEntityAdapter', {
     extend: 'Taco.view.website.entityAdapters.BaseEntityAdapter',
  
-    
     showNameEditor: false,
     allowedActions: {
         copy: true,

@@ -27,8 +27,7 @@ Ext.define('Taco.core.ux.form.entities.EntityEditorForm', {
         this.data = data;
     },
     getData: function () {
-        var data = this.getValues(false, false, false, true);
-        return Ext.applyIf(data, this.data);
+        return this.getValues(false, false, false, true);
     }
 
 

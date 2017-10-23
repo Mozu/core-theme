@@ -136,7 +136,9 @@ Ext.define('Taco.view.customSchema.Edit', {
             me.form.saveInProgress = false;
             me.saveActionButton.stopLoading();
             me.updatePublishPill(me.record);
-            me.publishActionButton.addRecord(me.record)
+            if (me.publishActionButton) {
+                me.publishActionButton.addRecord(me.record)
+            }
         });
 
         this.callParent(arguments);
