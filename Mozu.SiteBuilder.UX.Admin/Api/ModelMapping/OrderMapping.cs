@@ -1160,6 +1160,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(dc => dc.DutyAmount, op => op.Ignore())
                   .ForMember(dc => dc.DestinationId, op => op.Ignore())
                   .ForMember(dc => dc.TaxData, op => op.Ignore())
+                  .ForMember(dc => dc.PurchaseLocation, op => op.Ignore())
                   ;
         }
 
