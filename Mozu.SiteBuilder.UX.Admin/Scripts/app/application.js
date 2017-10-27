@@ -732,9 +732,36 @@ Ext.define('Taco.Application', {
     },
 
     /**
+     * Check for default site before navigating to site editor from tenant context
+     */
+     checkForDefaultSite: function(currentState, state) {
+        if (currentState.controller === 'website' && currentState.action === 'index' && state.metaData.controller === 'website' && state.metaData.action === 'index') {
+            Ext.util.Cookies.set(Taco.app.context.id + '-currentSite', state.metaData.ctx);
+            return true;
+        }
+
+        if (state.metaData.controller === 'website' && state.metaData.action === 'index') {
+            var newUri = state.uri;
+            var currentSite = Ext.util.Cookies.get(Taco.app.context.id + '-currentSite');
+
+            if (currentSite && currentSite !== 'null') {
+                newUri = currentSite + '/website';
+            }
+
+            if (!Taco.core.StateManager.getNavInProgress()) {
+                Taco.core.StateManager.setNavInProgress(true);
+                Taco.core.StateManager.attemptNavigate(newUri);
+                return false;
+            }
+        }
+
+        return true;
+     },
+
+    /**
      * Initialize the save prompt
      */
-    initNavPrompt: function () {
+    initNavHandler: function () {
         var me = this;
 
         Taco.core.StateManager.on({
@@ -743,34 +770,33 @@ Ext.define('Taco.Application', {
                 var currentState = Taco.core.StateManager.statestack[Taco.core.StateManager.stateindex].metaData;
 
                 // Check if navigation prompt should be shown
-                if (!me.shouldShowNavigatePrompt(currentState, state.metaData)) {
-                    // Use default navigation handler
-                    return true;
-                }
+                if (me.shouldShowNavigatePrompt(currentState, state.metaData)) {
+                    // Show the navigation prompt
+                    Ext.MessageBox.show({
+                        title: 'Leaving Page',
+                        // pushes the buttons to the right to be consistant with our dialog ux.
+                        rightJustifyButtons: true,
+                        // reverses the order of the buttons
+                        reverseOrder: true,
+                        msg: 'Are you sure you want to leave this page? Any unsaved changes will be lost!',
+                        closable: true,
+                        buttons: Ext.Msg.OKCANCEL,
+                        fn: function (rec) {
+                            if (rec === 'ok') {
+                                // Set navigation in progress
+                                Taco.core.StateManager.setNavInProgress(true);
 
-                // Show the navigation prompt
-                Ext.MessageBox.show({
-                    title: 'Leaving Page',
-                    // pushes the buttons to the right to be consistant with our dialog ux.
-                    rightJustifyButtons: true,
-                    // reverses the order of the buttons
-                    reverseOrder: true,
-                    msg: 'Are you sure you want to leave this page? Any unsaved changes will be lost!',
-                    closable: true,
-                    buttons: Ext.Msg.OKCANCEL,
-                    fn: function (rec) {
-                        if (rec === 'ok') {
-                            // Set navigation in progress
-                            Taco.core.StateManager.setNavInProgress(true);
-
-                            // Continue navigation
-                            Taco.core.StateManager.attemptNavigate(state.uri);
+                                // Continue navigation
+                                Taco.core.StateManager.attemptNavigate(state.uri);
+                            }
                         }
-                    }
-                });
+                    });
 
-                // Ignore default navigation handler
-                return false;
+                    // Ignore default navigation handler
+                    return false;
+                } else {
+                    return me.checkForDefaultSite(currentState, state);
+                }
             },
             statechange: function (state) {
                 // Reset fields after successful navigation to re-enable nav prompt
@@ -792,7 +818,7 @@ Ext.define('Taco.Application', {
         this.initDocumentDragAndDrop();
         this.initPrimaryMenu();
         this.initDeepExtensionLinks();
-        this.initNavPrompt();
+        this.initNavHandler();
 
         // add some utility stuff
         Ext.apply(Ext.form.field.VTypes, {

@@ -61,7 +61,6 @@ Ext.define('Taco.controller.Website', {
             storeType = type === 'widgets' ? 'Taco.store.WidgetDefinitions' : 'Taco.store.LayoutWidgetDefinitions',
             configFunc = type === 'widgets' ? this.getWidgetObject : this.getLayoutWidgetObject;
 
-
         var widgetStore = Taco.core.data.StoreManager.getOrCreate({
                 id: storeType + themeId,
                 type: storeType,

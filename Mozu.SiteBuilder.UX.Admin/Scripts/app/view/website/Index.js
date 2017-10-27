@@ -50,7 +50,8 @@ Ext.define('Taco.view.website.Index', {
         'Taco.store.LayoutWidgetDefinitions',
         'Taco.core.ux.content.SiteViewDropdown',
         'Taco.view.navigation.ContextSwitcherSelector',
-        'Taco.core.ux.action.ProgressButton'
+        'Taco.core.ux.action.ProgressButton',
+        'Ext.util.Cookies'
     ],
     selectedTheme: '',
     itemId: 'websiteIndex',
@@ -202,7 +203,9 @@ Ext.define('Taco.view.website.Index', {
                 xtype: 'container',
                 itemId: 'titleDraftContainer',
                 flex: 1,
-                layout: 'hbox',
+                layout: {
+                    type: 'hbox',
+                },
                 items: [
                     {
                         xtype: 'component',
