@@ -9,10 +9,8 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.Threading.Tasks;
-using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
-using Mozu.Tenant.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Context;
@@ -23,34 +21,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [DataViewModeEnforcement]
     public class SitemapController : BaseApiController
     {
-        INavigationRepository _nav;
-
-
-
         private readonly IProductRuntimeWebApiClient _productRuntimeWebApiClient;
-        private INavigationGandalf _gandalf;
+        private readonly INavigationGandalf _gandalf;
         private const int PageSize = 2000;
-        ICategoryTreeProvider _categoryTreeProvider = null;
-        IProductSearchWebApiClient _productSearchWebApiClient;
-        UrlHelper _urlHelper;
-        ISiteBuilderContextProvider _siteBuilderContextDataProvider;
-        const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        ISiteContext _siteContext;
-        public SitemapController(INavigationRepository navigationRepository,
-            INavigationGandalf gandalf, Mozu.ProductRuntime.Contracts.Clients.IProductRuntimeWebApiClient productRuntimeWebApiClient,
-            Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient productSearchWebApiClient,
+        private readonly IProductSearchWebApiClient _productSearchWebApiClient;
+        private readonly UrlHelper _urlHelper;
+        private readonly ISiteBuilderContextProvider _siteBuilderContextDataProvider;
+        private const string NS = "http://www.sitemaps.org/schemas/sitemap/0.9";
+        private readonly ISiteContext _siteContext;
+
+        public SitemapController(INavigationGandalf gandalf, 
+            IProductRuntimeWebApiClient productRuntimeWebApiClient,
+            IProductSearchWebApiClient productSearchWebApiClient,
             UrlHelper urlHelper,
-            ICategoryTreeProvider categoryTreeProvider,
             ISiteBuilderContextProvider siteBuilderContextDataProvider,
             ISiteContext siteContext)
         {
-            _nav = navigationRepository;
             _gandalf = gandalf;
             _urlHelper = urlHelper;
-
             _productSearchWebApiClient = productSearchWebApiClient;
             _productRuntimeWebApiClient = productRuntimeWebApiClient;
-            _categoryTreeProvider = categoryTreeProvider;
             _siteBuilderContextDataProvider = siteBuilderContextDataProvider;
             _siteContext = siteContext;
         }
@@ -58,26 +48,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
-
-
-            var cursor = (await _productSearchWebApiClient.CloneWithoutUserClaims().GetRandomAccessCursor(pageSize: 2000).ConfigureAwait(false)).ReadAsSync();
-
+            var cursor = (await _productSearchWebApiClient
+                .CloneWithoutUserClaims()
+                .GetRandomAccessCursor(pageSize: 2000)
+                .ConfigureAwait(false))
+                .ReadAsSync();
 
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
-
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
             var nakedDomain = GetNakedSitePrimaryDomain();
-
             var scheme = PageContext.IsSecure ? "https://" : "http://";
             var prefixedDomain = scheme + nakedDomain + _siteContext.SiteSubdirectory;
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
-            writer.WriteStartElement("sitemapindex", NS);
 
+            writer.WriteStartElement("sitemapindex", NS);
             writer.WriteStartElement("sitemap", NS);
             writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/categories");
             writer.WriteEndElement();
-            var isOnSiteDomain = this.SiteContext.Domains.All.FirstOrDefault(_ => string.Equals(_.DomainName, nakedDomain, StringComparison.OrdinalIgnoreCase))?.SiteId == SiteContext.SiteId;
+
+            var isOnSiteDomain =
+                this.SiteContext.Domains.All.FirstOrDefault(sd =>
+                    string.Equals(sd.DomainName, nakedDomain, StringComparison.OrdinalIgnoreCase))?.SiteId == SiteContext.SiteId;
+
             if (isOnSiteDomain)
             {
                 foreach (var subDirecotry in this.GetSubDirectorySitePaths())
@@ -91,7 +84,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             foreach (var cursorMark in cursor.CursorMarks)
             {
                 writer.WriteStartElement("sitemap", NS);
-                writer.WriteElementString("loc", NS, prefixedDomain + "/sitemap.xml/productBatch/" + System.Web.HttpUtility.UrlPathEncode(cursorMark));
+                writer.WriteElementString("loc", NS,
+                    prefixedDomain + "/sitemap.xml/productBatch/" + System.Web.HttpUtility.UrlPathEncode(cursorMark));
                 writer.WriteEndElement();
             }
 
@@ -105,13 +99,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var tenant = _siteBuilderContextDataProvider.GetContextData().TenantInfo;
             var site = tenant.Sites.First(x => x.Id == this.SbApiContext.SiteId);
-            List<string> ret = new List<string>();
-            var routeSlug = site.Attributes?.Where(x => string.Equals(x.Name, "mozu.reverseproxy.subdirectoryrewrites")).Select(x => x.Value).FirstOrDefault() as string;
+            var ret = new List<string>();
+
+            var routeSlug = site.Attributes?
+                .Where(attr => string.Equals(attr.Name, "mozu.reverseproxy.subdirectoryrewrites"))
+                .Select(attr => attr.Value)
+                .FirstOrDefault() as string;
+
             if (routeSlug == null)
             {
                 return ret;
             }
+
             var routeSlugPairs = System.Web.HttpUtility.ParseQueryString(routeSlug);
+
             foreach (string key in routeSlugPairs.Keys)
             {
                 int siteId;
@@ -122,6 +123,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
             }
+
             return ret;
         }
 
@@ -131,18 +133,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // var primaryNavTask = _gandalf.GetTreeNavigation();
             //var domainTask = GetSitePrimaryDomain();
             var nodes = _gandalf.GetFlatList();
-
-
             var domain = GetPrefixedSitePrimaryDomain();
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
-
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("urlset", NS);
-
-
             writer.WriteStartElement("url", NS);
             writer.WriteElementString("loc", NS, domain);
             //  writer.WriteElementString("lastmod", NS, );
@@ -150,7 +148,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             writer.WriteElementString("priority", NS, "1");
             writer.WriteEndElement();
 
-            foreach (var node in nodes.Where(x => !x.IsHidden && !string.IsNullOrEmpty(x.Url) && !x.IsHomePage))
+            foreach (var node in nodes.Where(n => !n.IsHidden && !string.IsNullOrEmpty(n.Url) && !n.IsHomePage))
             {
                 var url = (node as SuperNavigationNode)?.FqUrl ?? node.Url;
                 writer.WriteStartElement("url", NS);
@@ -160,6 +158,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 writer.WriteElementString("priority", NS, ".7");
                 writer.WriteEndElement();
             }
+
             writer.WriteEndElement();
             writer.Flush();
             return resp;
@@ -171,21 +170,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();
-
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("urlset", NS);
 
-
             while (true)
             {
                 var prods = (await _productRuntimeWebApiClient.CloneWithoutUserClaims()
                     .CloneWithConfigOptions(cfg => cfg.TimeoutMilliseconds = 60000)
-                    .GetProducts(pageSize: PageSize, cursorMark: page, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
-
+                    .GetProducts(pageSize: PageSize, 
+                        cursorMark: page,
+                        responseGroups: "urlonly",
+                        responseFields: "items(productCode, categories, content(SEOFriendlyUrl))"))
+                    .ReadAsSync();
 
                 var vm = Mapper.Map<ProductCollection>(prods);
                 vm.Init(false, PageContext.Search);
@@ -196,12 +197,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //{
                 //    break;
                 //}
-
             }
+
             writer.WriteEndElement();
             writer.Flush();
             return resp;
-
         }
 
         [System.Web.Http.HttpGet]
@@ -209,9 +209,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();
-
             var resp = this.Request.CreateResponse(HttpStatusCode.OK);
             var date = DateTime.UtcNow.AddDays(1).Date.ToString("o");
+
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
@@ -219,14 +219,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             int offset = 0;
             var startIndex = page * PageSize;
 
-
-
             while (true)
             {
                 var prods = (await _productRuntimeWebApiClient.CloneWithoutUserClaims()
-                    .CloneWithConfigOptions(cfg => cfg.TimeoutMilliseconds = 60000)
-                    .GetProducts(pageSize: PageSize, startIndex: startIndex, responseGroups: "urlonly", responseFields: "items(productCode, categories, content(SEOFriendlyUrl))")).ReadAsSync();
-
+                        .CloneWithConfigOptions(cfg => cfg.TimeoutMilliseconds = 60000)
+                        .GetProducts(pageSize: PageSize,
+                            startIndex: startIndex,
+                            responseGroups: "urlonly",
+                            responseFields: "items(productCode, categories, content(SEOFriendlyUrl))"))
+                        .ReadAsSync();
 
                 var vm = Mapper.Map<ProductCollection>(prods);
                 vm.Init(false, PageContext.Search);
@@ -250,8 +251,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             foreach (var prod in vm.Items)
             {
                 writer.WriteStartElement("url", NS);
-
-
                 var url = urlHelper.MakeUrl(UrlHelper.UrlType.Product, prod, null, hostname: nakedDomain);
 
                 writer.WriteElementString("loc", NS, url.StartsWith("/") ? prefixedDomain + url : url);
@@ -265,25 +264,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string GetPrefixedSitePrimaryDomain()
         {
-
-            var primary = SiteContext.Domains.Primary;
+            var primary = this.SiteContext.Domains.Primary;
+            var isSslEnforced = this.SiteContext?.GeneralSettings?.EnforceSitewideSSL.GetValueOrDefault(false) == true;         
+            var scheme = isSslEnforced ? "https://" : "http://";
 
             if (primary != null)
             {
-                return "http://" + primary.DomainName;
+                return scheme + primary.DomainName;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
+
         private string GetNakedSitePrimaryDomain()
         {
             var primary = SiteContext.Domains.Primary?.DomainName;
             Uri uri;
             if (Uri.TryCreate(this.PageContext.Url, UriKind.Absolute, out uri))
             {
-                if (this.SiteContext.Domains?.All.Any(_ => string.Equals(_.DomainName, uri.Host, StringComparison.OrdinalIgnoreCase)) == false)
+                if (this.SiteContext.Domains?.All.Any(domain => 
+                    string.Equals(domain.DomainName, uri.Host, StringComparison.OrdinalIgnoreCase)) == false)
                 {
                     return uri.Host;
                 }
