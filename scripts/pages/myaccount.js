@@ -230,7 +230,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 this.views().returnView.on('returnCancel', this.returnCancel, this);
                 this.views().returnView.on('returnSuccess', this.returnSuccess, this);
                 this.views().returnView.on('returnFailure', this.returnFailure, this);
-            }   
+            }
         },
         renderMessage: function(message) {
             var self = this;
@@ -317,11 +317,11 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
                 $.each(self.$el.find('[data-mz-order-history-listing-return-item]'), function(index, val) {
                     var packageItem = returnableItems.find(function(model) {
-                        if($(val).data('mzOrderLineId') === model.get('orderLineId')){
+                        if($(val).data('mzOrderLineId') == model.get('orderLineId')){
                             if ($(val).data('mzOptionAttributeFqn')) {
-                                return (model.get('orderItemOptionAttributeFQN') === $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() === $(val).data('mzProductCode'));
+                                return (model.get('orderItemOptionAttributeFQN') == $(val).data('mzOptionAttributeFqn') && model.uniqueProductCode() == $(val).data('mzProductCode'));
                             }
-                            return (model.uniqueProductCode() === $(val).data('mzProductCode'));
+                            return (model.uniqueProductCode() == $(val).data('mzProductCode'));
                         }
                         return false;
                     });
@@ -338,7 +338,6 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
         },
         clearOrderReturn: function() {
-            this.model.clearReturn();
             this.$el.find('[data-mz-value="isSelectedForReturn"]:checked').click();
         },
         cancelOrderReturn: function() {

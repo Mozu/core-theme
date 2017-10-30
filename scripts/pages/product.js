@@ -31,7 +31,7 @@
                 id = $optionEl.data('mz-product-option'),
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
-                option = this.model.get('options').get(id);
+                option = this.model.get('options').findWhere({'attributeFQN':id});
             if (option) {
                 if (option.get('attributeDetail').inputType === "YesNo") {
                     option.set("value", isPicked);
@@ -86,7 +86,6 @@
     });
 
     $(document).ready(function () {
-
         var product = ProductModels.Product.fromCurrent();
 
         product.on('addedtocart', function (cartitem) {

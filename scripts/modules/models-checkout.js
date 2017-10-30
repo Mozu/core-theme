@@ -680,7 +680,7 @@
                             activationDate = creditModel.get('activationDate') ? new Date(creditModel.get('activationDate')) : null,
                             expDate = creditModel.get('expirationDate') ? new Date(creditModel.get('expirationDate')) : null;
                         if (expDate && expDate < now) {
-                            return self.deferredError(Hypr.getLabel('expiredCredit', expDate.toLocaleDateString()), self);
+                            return self.deferredError(Hypr.getLabel('digitalCreditExpired', expDate.toLocaleDateString()), self);
                         }
                         if (activationDate && activationDate > now) {
                             return self.deferredError(Hypr.getLabel('digitalCreditNotYetActive', activationDate.toLocaleDateString()), self);

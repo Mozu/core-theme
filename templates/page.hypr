@@ -20,7 +20,7 @@
         }
 
     no-js:
-    The Modernizr library we're using will replace the class "no-js" with "js" if javascript 
+    The Modernizr library we're using will replace the class "no-js" with "js" if javascript
     available. Again you can use this as a way to make sensible fallbacks if javascript
     is not available.
 {% endcomment %}
@@ -30,7 +30,7 @@
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
 <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
 <!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
-<!--[if (gt IE 9)|(!IE) ]><!--> 
+<!--[if (gt IE 9)|(!IE) ]><!-->
 <html class="no-js" lang="en">
 <!--<![endif]-->
 {%endblock open-html-tag %}
@@ -70,30 +70,30 @@
         {% block stylesheets %}
         <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
-        
+
         {% block head-tag-scripts %}
         <script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
         {% include "modules/web-fonts-loader" %}
         {% endblock head-tag-scripts %}
         {% cms_resources %}
-        
+
 
         {%header_content%}
-    
+
 
 
     </head>
     {% endblock head-tag %}
-    
+
     {% block body-tag %}
 
     {% block open-body-tag %}
     <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
     {% endblock open-body-tag %}
 
-       
+
         <div id="page-wrapper" class="mz-l-pagewrapper">
-    
+
             {% block utility-bar %}
                 {% include "modules/utility-bar/header" %}
             {% endblock utility-bar %}
@@ -105,23 +105,23 @@
             {% block site-nav %}
             {% include "modules/site-nav" %}
             {% endblock site-nav %}
-    
+
             <div role="main" id="page-content" class="mz-l-pagecontent">
-                
+
                 {% block breadcrumbs %}
                 {% if themeSettings.showBreadcrumbs %}
                 {% include "modules/breadcrumbs" %}
                 {% endif %}
                 {% endblock breadcrumbs %}
-                
+
                 {% block body-content %}
                 {% dropzone "body" scope="page" %}
                 {% endblock body-content %}
-                
+
                 {% block body-below-content %}
                 {% dropzone "body-bottom" scope="template" %}
                 {% endblock body-below-content %}
-                
+
             </div>
 
             {% block page-footer %}

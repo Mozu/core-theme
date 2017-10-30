@@ -163,7 +163,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         return (extra.uniqueProductCode() === groupedItem[0].uniqueProductCode() && extra.get('optionAttributeFQN') === groupedItem[0].get('optionAttributeFQN'));
                     });
                     if (duplicateItem) {
-                        productExtraGroup[key].add(extra);
+                        productExtraGroup[key].push(extra);
                         return false;
                     }
                     productExtraGroup[key] = [extra];
@@ -281,11 +281,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
             },
             cancelReturn: function() {
                 var rmas = this.collection.parent.get('rma');
-                var item = this.getOrderItem();
-                if (item) {
-                    item = item.toJSON();
-                    rmas.get('items').remove(item);
-                }
+                    rmas.get('items').remove(this);
             }
         }),
 

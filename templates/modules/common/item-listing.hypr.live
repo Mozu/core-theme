@@ -14,19 +14,23 @@
     <a class="mz-itemlisting-title" href="{{ model.product.url }}">
       {{ model.product.name }}</a>
     {% endblock item-name %}
+
+
     {% block item-details %}
     <div class="mz-itemlisting-description">
       {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
     </div>
     <div class="mz-itemlisting-price">
-     {{labels.orderPackagePrice}} : {{ model.product.price.price|currency }}
+     {{labels.orderPackagePrice}}: {% include "modules/common/price" with model=model.product.price %}
     </div>
     {% endblock item-details %}
+
+
   </div>
   {% endblock item-listing-details %}
   <div class="mz-itemlisting-actions">
   {% block item-listing-actions %}
-    
+
   {% endblock item-listing-actions %}
   </div>
   {% block item-listing-extras %}

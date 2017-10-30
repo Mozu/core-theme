@@ -284,11 +284,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         onEnterDigitalCreditCode: function(model, code) {
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
-                this.$el.find('button').prop('disabled', false);
+                this.$el.find('input#digital-credit-code').siblings('button').prop('disabled', false);
             }
             if (!code && this.codeEntered) {
                 this.codeEntered = false;
-                this.$el.find('button').prop('disabled', true);
+                this.$el.find('input#digital-credit-code').siblings('button').prop('disabled', true);
             }
         },
         enableDigitalCredit: function(e) {

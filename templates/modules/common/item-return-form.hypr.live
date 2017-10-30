@@ -6,9 +6,9 @@
           <label class="mz-returnform-label">{{ labels.returnType }}</label>
           <div class="mz-returnform-field">
             <label>
-              <input type="radio" value="Refund" name="rmaReturnType_{{model.productCode}}_{{model.orderLineId}}" data-mz-value="rmaReturnType" checked="checked"/> {{ labels.refund }} </label>
+              <input type="radio" value="Refund" name="rmaReturnType_{{model.orderLineId}}_{{model.productCode}}_{{model.orderItemOptionAttributeFQN}}" data-mz-value="rmaReturnType" checked="checked"/> {{ labels.refund }} </label>
             <label>
-              <input type="radio" value="Replace" name="rmaReturnType_{{model.productCode}}_{{model.orderLineId}}" data-mz-value="rmaReturnType" /> {{ labels.replace }} </label>
+              <input type="radio" value="Replace" name="rmaReturnType_{{model.orderLineId}}_{{model.productCode}}_{{model.orderItemOptionAttributeFQN}}" data-mz-value="rmaReturnType" /> {{ labels.replace }} </label>
           </div>
       </div>
 
