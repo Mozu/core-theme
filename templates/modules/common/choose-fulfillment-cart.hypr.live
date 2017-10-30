@@ -1,0 +1,31 @@
+<ul class="mz-fulfillment-options">
+  <li>
+    <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Ship" id="shipping-radio-{{ item.id }}"
+    {% if item.fulfillmentMethod == "Ship" %} checked {% endif %}
+    {% if item.product.directShipSupported == false %} disabled {% endif %}
+    />
+    <label for="shipping-radio-{{ item.id }}">{{ labels.shipItems }}</label>
+    {% if item.product.directShipSupported == false %}
+    <div class="fulfillment-unavailable-message">
+      {{ labels.inStoreOnly }}
+    </div>
+    {% endif %}
+  </li>
+  <li>
+
+    <input type="radio" name="fulfillment-options-{{ item.id }}" data-mz-action="changeFulfillmentMethod" data-mz-cart-item="{{ item.id }}" value="Pickup" id="pickup-radio-{{ item.id }}"
+    {% if item.fulfillmentMethod=="Pickup" %} checked {% endif %}
+    {% if item.product.inStorePickupSupported == false %} disabled {% endif %}
+    />
+    <label for="pickup-radio-{{ item.id }}">{{ labels.inStorePickup }}</label><span class="fulfillmentLocationName" id="fulfillmentLocationName-{{ item.id }}">{% if item.fulfillmentMethod == "Pickup" %} <strong>{{item.storeLocation.name}}</strong> {% endif %}</span>
+    {% if item.product.inStorePickupSupported == false %}
+    <div class="fulfillment-unavailable-message">
+      {{ labels.unavailableForThisItem }}
+    </div>
+    {% endif %}
+    <div id="pickup-option-links-{{ item.id }}" {% if item.fulfillmentMethod !="Pickup" %} style="display: none" {% endif %}>
+      <a href="#" data-mz-action="changeStore" data-mz-cart-item="{{ item.id }}" style="margin-left:30px"> {{ labels.changeStore }}</a>
+    </div>
+
+  </li>
+</ul>
