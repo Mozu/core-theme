@@ -1,0 +1,3 @@
+{% extends "modules/common/address-form" %}
+
+{% block id-prefix %}dialog-{% endblock id-prefix %}

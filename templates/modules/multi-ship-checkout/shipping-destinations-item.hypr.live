@@ -1,0 +1,47 @@
+{% if model.fulfillmentMethod == "Ship" %}
+<div class="mz-shipping-destination-title mz-l-formfieldgroup-row">
+{% if model.isOriginalCartItem%}
+  <h3>{{ model.product.name }}</h3>
+{%endif%}
+</div>
+
+<div class="mz-shipping-row">
+  <div class="mz-shipping-row-item">
+    {{ labels.shippingDestinationQuantityLabel }}
+    <span id="mz-shipping-destination-quantity" data-mz-destination-quantity>{{ model.quantity }}</span>
+  </div>
+  <div class="mz-shipping-row-item">
+    <div class="mz-shipping-row-item">
+      <label for="mz-shipping-destination-address">{{ labels.shippingDestinationAddressLabel }}</label>
+    </div>
+
+    <div class="mz-shipping-row-item">
+      <span class="mz-validationmessage" data-mz-validationmessage-for="shippingDestinationAddress"></span>
+      <select id="mz-shipping-destination-address" name="shippingDestinationAddress" class="mz-shipping-destination-address-dd" data-mz-fulfillment-contact data-mz-value="fulfillmentContactId" {% if model.isLoading %} disabled {% endif %} {% if model.selectableDestinations.length === 0 %} disabled {% endif %}>
+          {% if model.selectableDestinations.length === 0 %}
+            <option class="mz-shipping-destination-address" value="" disabled selected hidden>{{
+            labels.selectSavedAddress}}</option>
+          {% else %}
+            <option class="mz-shipping-destination-address" value="" disabled selected hidden>{{labels.selectSavedAddress}}</option>
+          {% endif %}
+
+          {% for destination in model.selectableDestinations %}
+          <option class="mz-shipping-destination-address-select" value="{{ destination.id }}" data-mz-customerContactId="{{destination.customerContactId}}"" {% if model.destinationId && model.destinationId == destination.id %} selected="selected" {% endif %}>{{ destination.destinationContact.address.address1 }}, {{ destination.destinationContact.address.cityOrTown }} {{ destination.destinationContact.address.stateOrProvince }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="mz-shipping-row-item">
+      <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+
+      <a class="mz-shipping-destination-edit-address-link" {% if not model.destinationId %} style="visibility:hidden" {% endif %} data-mz-action="handleEditContact" data-mz-destination-id="{{ model.destinationId }}"> | {{ labels.shippingDestinationEditAddress}}</a>
+    </div>
+
+    <div class="mz-shipping-row-item">
+      <button class="mz-button mz-shipping-destination-add-address-link mz-checkout-button-link" {% if model.quantity < 2  || model.selectableDestinations.length === 0%} style="visibility:hidden" {% endif %} data-mz-action="handleSplitOrderItem" {% if model.isLoading %} disabled {% endif %}> + {{ labels.shippingDestinationAddAddress }} </button>
+  </div>
+
+</div>
+
+{% endif %}

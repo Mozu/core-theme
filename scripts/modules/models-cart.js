@@ -1,4 +1,4 @@
-﻿define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modules/models-product",
+define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modules/models-product",
     "hyprlivecontext", 'modules/models-location'
   ], function (_, Backbone, Hypr, api, ProductModels,
         HyprLiveContext, LocationModels) {
@@ -88,6 +88,7 @@
             }),
             storeLocationsCache : StoreLocationsCache
         },
+
         initialize: function() {
             var self = this;
             this.get("items").on('sync remove', this.fetch, this)
@@ -113,6 +114,12 @@
             var me = this;
             me.apiCheckout().then(function(order) {
                 me.trigger('ordercreated', order);
+            });
+        },
+        toCheckout: function() {
+            var me = this;
+            me.apiCheckout2().then(function(checkout) {
+                me.trigger('checkoutcreated', checkout);
             });
         },
         removeItem: function (id) {
@@ -153,7 +160,7 @@
                 }
 
                 var couponIsNotApplied = (!allDiscounts || !_.find(allDiscounts, function(d) {
-                    return d.couponCode.toLowerCase() === lowerCode;
+                    return d.couponCode && d.couponCode.toLowerCase() === lowerCode;
                 }));
                 me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
 

@@ -12,7 +12,7 @@
                 <td bgcolor="#666666">
                     <font color="#FFFFFF">{{ labels.orderDetails }}</font>
                 </td>
-            </tr>   
+            </tr>
         </thead>
 
         <tbody>
@@ -31,7 +31,7 @@
                     <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                         {% if model.billingInfo.paymentType == "CreditCard" %}
                             <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
-                        {% endif %}                        
+                        {% endif %}
                         {% if model.billingInfo.paymentType == "PurchaseOrder" %}
                             <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>
                             <b>{{ labels.purchaseOrderNumber }}</b>: {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}<br>
@@ -42,6 +42,9 @@
                             {% endif %}
                             <b>{{ labels.purchaseOrderPaymentTerms }}</b>: {{ model.billingInfo.purchaseOrder.paymentTerm.description }}
                         {% endif %}
+                        {% if  model.billingInfo.paymentType|lower == "paypalexpress2"  %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
+                        {% endif %}
                 </td>
             </tr>
 
@@ -50,12 +53,12 @@
     </table>
 
     {% include "modules/common/email-order-summary" %}
-    
+
     {% if model.shopperNotes.comments %}
         <h5>{{ labels.comments }}</h5>
         <br><p>{{ model.shopperNotes.comments }}</p>
     {% endif %}
-    
+
     {% if model.shopperNotes.giftMessage %}
         <h5>{{ labels.giftMessage }}</h5>
         <br><p>{{ model.shopperNotes.giftMessage }}</p>

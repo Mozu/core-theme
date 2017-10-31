@@ -107,7 +107,10 @@ define(['modules/jquery-mozu', 'shim!vendor/bootstrap/js/modal[jquery=jQuery]'],
          //***BODY***//
          //////////////
 
-         theElement.find('.modal-body').html(body);
+         if (body){
+           theElement.find('.modal-body').html(body);
+         }
+
 
          if (scroll != 'default'){
            theElement.find('.modal-body').css('overflow', 'scroll');
@@ -119,9 +122,7 @@ define(['modules/jquery-mozu', 'shim!vendor/bootstrap/js/modal[jquery=jQuery]'],
 
          if (footer){
            theElement.find('.modal-footer').html(footer);
-         } else {
-           theElement.find('.modal-footer').hide();
-         }
+         } 
 
          if (hasCloseButton){
            var $closeButton = $("<button>", {"type": "button", "class": "mz-button", "aria-hidden": "true" });

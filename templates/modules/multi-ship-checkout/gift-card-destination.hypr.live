@@ -1,0 +1,25 @@
+<div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform mz-checkoutform-section mz-checkoutform-active">
+  <div class="mz-l-stack-section">
+    <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalFulfillmentContact }}</h4>
+    <div class="mz-l-formfieldgroup">
+      <div class="mz-l-formfieldgroup-row">
+        <div class="mz-l-formfieldgroup-cell">
+          <label for="digital-fulfillment-email">
+            {{ labels.email }}<span class="is-required"> *</span>:
+          </label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+          <input type="text" id="digital-fulfillment-email" name="digital-fulfillment-email" data-mz-value="email" value="{{ model.email }}" />
+            <span class="mz-validationmessage" data-mz-validationmessage-for="email"></span>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="mz-formstep-summary mz-addresssummary mz-checkoutform-section mz-checkoutform-active">
+  <span>Gift Card Email: {{ model.email }}</span>
+</div>
+
+
+
+

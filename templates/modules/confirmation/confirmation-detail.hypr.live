@@ -1,5 +1,3 @@
-
-
 <div class="mz-l-container">
     <h1 class="mz-pagetitle">{{ labels.orderConfirmation }} </h1>
 
@@ -7,7 +5,7 @@
 
     <p>{{ labels.yourOrderNumber|string_format(model.orderNumber)|safe }}</p>
 
-    <div class="mz-l-stack">
+  <div class="mz-l-stack">
         {% if model.hasDirectShip %}
         <div class="mz-l-stack-section">
             <h4 class="mz-l-stack-sectiontitle">{{ labels.shippingInformation }}</h4>

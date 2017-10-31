@@ -2,7 +2,7 @@
 {% block modal-header %}
 <h3 class="modal-title">Store Locator</h3>
 {% endblock modal-header %}
-
 {% block modal-body %}
-Body stuff body stuff body stuff
 {% endblock modal-body %}
+{% block modal-footer %}
+{% endblock modal-footer %}

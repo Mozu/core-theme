@@ -83,6 +83,13 @@
             "title": "Your Order Has Shipped"
         },
         {
+          "id": "checkout.changed",
+          "customEditor": "email-orderconfirmation-v2",
+          "properties": {},
+          "template": "email/order-confirmation-v2",
+          "title": "Order Confirmation V2"
+        },
+        {
             "id": "order.changed",
             "customEditor": "email-orderconfirmation",
             "properties": { },
@@ -309,6 +316,20 @@
             "id": "confirmation",
             "template": "confirmation",
             "title": "Confirmation",
+            "userCreatable": false
+        },
+        {
+          "entityType": "checkout",
+          "id": "confirmationv2",
+          "template": "confirmationv2",
+          "title": "ConfirmationV2",
+          "userCreatable": false
+        },
+        {
+            "entityType": "checkout",
+            "id": "checkoutv2",
+            "template": "checkoutv2",
+            "title": "Checkout V2",
             "userCreatable": false
         },
         {

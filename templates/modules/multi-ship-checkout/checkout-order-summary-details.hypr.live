@@ -1,0 +1,39 @@
+<table class="mz-ordersummary-ms2-checkout">
+  <thead>
+      <tr>
+          <th class="mz-ordersummary-header-product">
+            {% if fulfillmentMethod=="Ship" %}{{ labels.shippingInformation }}{% endif %}
+            {% if fulfillmentMethod=="Digital" %}{{ labels.digitalDelivery }}{% endif %}
+            {% if fulfillmentMethod=="Pickup" %}{{ labels.orderItemsPickup }}{% endif %}
+          </th>
+          <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+          <th class="mz-ordersummary-header-each">{{ labels.each }}</th>
+          <th class="mz-ordersummary-header-total">{{ labels.total }}</th>
+      </tr>
+  </thead>
+  <tbody class="mz-ordersummary-lineitems">
+    {% for item in items %}
+      {% if item.fulfillmentMethod == fulfillmentMethod %}
+        <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+              <td class="mz-ordersummary-item-product">
+                {{ item.product.name }}
+                {% if item.product.bundledProducts.length %}
+                <dl class="mz-propertylist">
+                  {% for bundledProduct in item.product.bundledProducts %}
+                  <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                  <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                  {% endfor %}
+                </dl>
+                {% endif %}
+              </td>
+              <td>{{ item.quantity }}</td>
+              <td>
+                  {% include "modules/common/item-price" %}
+              </td>
+              <td>{% include "modules/common/item-total" %}
+              </td>
+          </tr>
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>

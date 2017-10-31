@@ -1,0 +1,42 @@
+
+{% if not model.destinationContact.address.candidateValidatedAddresses %}
+
+  <div data-mz-address-form>
+    {% include "modules/common/address-form" with model=model.destinationContact countries=pageContext.shippingCountries states=pageContext.shippingStates %}
+  </div>
+{% else %}
+
+   {{ labels.selectValidAddress }}
+
+  {% for addr in model.destinationContact.address.candidateValidatedAddresses %}
+  <label class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-cell">
+      <span>{{ labels.suggestionNum|string_format(forloop.index) }}</span>
+    </div>
+    <div class="mz-l-formfieldgroup-cell">
+      <input data-mz-action="chooseCandidateAddress" name="candidateValidatedAddresses" type="radio" value="{{forloop.index0}}" />
+    </div>
+    <div class="mz-l-formfieldgroup-cell">
+      {{addr.address1}}<br />
+      {% if addr.address2 %}{{addr.address2}}<br />{% endif %}
+      {{addr.cityOrTown}}, {{addr.stateOrProvince}} {{addr.postalOrZipCode}} {{addr.countryCode}}
+    </div>
+  </label>
+  {% endfor %}
+  {% if siteContext.generalSettings.allowInvalidAddresses %}
+  <label class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-cell">
+        <span>Original</span>
+    </div>
+    <div class="mz-l-formfieldgroup-cell">
+      <input data-mz-action="chooseCandidateAddress" name="candidateValidatedAddresses" type="radio" value="-1" />
+    </div>
+    <div class="mz-l-formfieldgroup-cell">
+      {{model.destinationContact.address.address1}}<br />
+      {% if model.destinationContact.address.address2 %}{{model.destinationContact.address.address2}}<br />{% endif %}
+      {{model.destinationContact.address.cityOrTown}}, {{model.destinationContact.address.stateOrProvince}} {{model.destinationContact.address.postalOrZipCode}} {{model.destinationContact.address.countryCode}}
+    </div>
+  </label>
+  {% endif %}
+
+{% endif %}

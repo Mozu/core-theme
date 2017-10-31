@@ -7,11 +7,16 @@
             <div>{{ model.billingInfo.billingContact.email }}</div>
         </div>
     {% endif %}
-    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}
-        <div class="mz-l-stack-item">
-            <small>{{ labels.digitalCreditCode }}</small>
-            <div>{{ model.billingInfo.storeCreditCode }}</div>
-        </div>
+    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or  model.billingInfo.paymentType|lower == "paypalexpress2"%}
+        <dt>Payment Method</dt>
+        {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}
+            <dd>
+                <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
+            </dd>
+        {% else %}
+            <dt>{{ labels.digitalCreditCode }}</dt>
+            <dd>{{ model.billingInfo.storeCreditCode }}</dd>
+        {%endif%}
         {% else %}
         <div class="mz-l-stack-item">
             <small>{{ labels.billingName }}</small>

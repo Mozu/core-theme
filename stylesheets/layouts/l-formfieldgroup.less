@@ -1,4 +1,4 @@
-﻿.mz-l-formfieldgroup {
+﻿.mz-l-formfieldgroup, .mz-l-formfieldgroup-full {
     display: table;
     .mz-l-formfieldgroup-row {
         display: table-row;
@@ -44,5 +44,13 @@
     }
     &.mz-l-formfieldgroup-norows {
         margin-bottom: @gutter/2;
+    }
+}
+
+.mz-l-formfieldgroup-full {
+    width: 96%;
+    padding: 0 2%;
+    .mz-l-formfieldgroup-row {
+        width: 100%;
     }
 }

@@ -1,0 +1,127 @@
+{% extends "email/email" %}
+
+{% block body-content %}
+
+<br>
+<p>{{ labels.orderWelcome }}
+  {% with model.payments|first as payment %}
+    {{ payment.billingInfo.billingContact.firstName }} {{ payment.billingInfo.billingContact.lastNameOrSurname }}!</p>
+  {% endwith %}
+<br>
+<p>{{ labels.orderConfirmationBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}</p>
+
+
+<div class="mz-multiship-email">
+
+  <div class="mz-table-header" style="padding:15px">
+    <span style="font-size:25px">{{ labels.orderDetails }}</span>
+    <span style="font-size:15px;float:right"> {{ labels.orderNumber }}: {{ model.number }}</span>
+  </div>
+  <br/>
+  <!-- Purchase summaries -->
+
+  {% for order in model.orders %}
+    <div class="mz-email-section">
+      <div class="mz-container-header">
+        Customer Care Number: {{ order.orderNumber }} <small><a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/></small>
+      </div>
+      <div class="mz-email-summary-container">
+        {% include "modules/common/email-order-summary-v2" with items=order.items fulfillmentInfo=order.fulfillmentInfo locations=model.locations %}
+      </div>
+    </div>
+
+  {% endfor %}
+  <!-- -->
+
+  <!--- Payment details ****************** -->
+  <div class="mz-email-section">
+    <h3>{{ labels.payments }}</h3>
+    {% for payment in model.payments %}
+      {% if payment.status != "Voided" and payment.status != "Declined" %}
+        <div class="mz-checkout-payment mz-email-summary-container">
+          <h4 class="mz-checkout-paymenttitle">
+            <strong>
+              {% if payment.amountCollected > 0 %}
+              {{ payment.amountCollected|currency }} &mdash;
+              {% else %}
+              {{ payment.amountRequested|currency }}
+              {% endif %}
+            </strong>
+            {% if payment.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }}{% endif %}
+            {% if payment.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
+            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}
+            {% if payment.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
+          </h4>
+
+          <div style="display:inline-flex;justify-content:space-around;width:100%">
+            {% if payment.billingInfo.billingContact.email %}
+              <div class="mz-l-stack-item">
+                <small>{{ labels.billingEmail }}</small>
+                <div>{{ payment.billingInfo.billingContact.email }}</div>
+              </div>
+            {% endif %}
+            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" or payment.billingInfo.paymentType|lower == "paypalexpress2" %}
+              <div class="mz-l-stack-item">
+                {% if payment.billingInfo.paymentType|lower == "paypalexpress2" %}
+                  <div>
+                    <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
+                  </div>
+                {% else %}
+                  <small>{{ labels.digitalCreditCode }}</small>
+                  <div>{{ payment.billingInfo.storeCreditCode }}</div>
+                {% endif %}
+              </div>
+            {% else %}
+              <div class="mz-l-stack-item">
+                <small>{{ labels.billingName }}</small>
+                <div>{{ payment.billingInfo.billingContact.firstName }} {{ payment.billingInfo.billingContact.lastNameOrSurname }}</div>
+              </div>
+              <div class="mz-l-stack-item">
+                <small>{{ labels.billingAddress }}</small>
+                <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=payment.billingInfo.billingContact %}</div>
+              </div>
+            {% endif %}
+            {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
+            <div class="mz-l-stack-item">
+              <small>{{ labels.purchaseOrderPaymentTerm }}</small>
+              <div> {{payment.billingInfo.purchaseOrder.paymentTerm.code }} </div>
+            </div>
+            {% endif %}
+            {% if payment.billingInfo.paymentType == "CreditCard" %}
+              <div class="mz-l-stack-item">
+                <small>{{ labels.cardtype }}</small>
+                <div>{{ payment.billingInfo.card.paymentOrCardtype }}</div>
+              </div>
+              <div class="mz-l-stack-item">
+                <small>{{ labels.cardNumber }}</small>
+                <div>{{ payment.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
+              </div>
+            {% endif %}
+            {% if payment.billingInfo.paymentType == "Check" %}
+              <!--
+              <small>{{ labels.checkNumber }}</small>
+              <div>{{ payment.billingInfo.check.checkNumber }}</div>
+              -->
+              <div class="mz-l-stack-item">
+                <small><strong>{{ labels.mailCheckTo }}</strong></small>
+                <div class="mz-addresssummary">
+                  <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName }} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                  <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                  {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+    <!-- ******Price Details*******-->
+    {% include "modules/confirmationv2/confirmation-price-summary" %}
+    <!-- *************************** -->
+
+  </div>
+
+  {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+</div>
+
+{% endblock body-content %}

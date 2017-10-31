@@ -1,0 +1,25 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.orderConfirmation %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% preload_json model "checkout" %}
+{% require_script "pages/confirmationv2" %}
+
+
+<div id="confirmation-container">
+  {% include "modules/confirmationv2/confirmation-detail" %}
+</div>
+
+{% endblock body-content %}
+
+{% block trailing-scripts %}
+	{% parent %}
+	{% if siteContext.generalSettings.isGoogleAnalyticsEnabled and siteContext.generalSettings.isGoogleAnalyticsEcommerceEnabled %}
+	{% include "modules/analytics/google-analytics-ecommerce-tracking-code" %}
+	{% endif %}
+
+{% endblock trailing-scripts %}

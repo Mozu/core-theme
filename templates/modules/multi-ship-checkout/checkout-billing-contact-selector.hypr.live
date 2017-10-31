@@ -1,0 +1,23 @@
+{% extends "modules/common/contact-selector" %}
+{% block contact-selector %}
+    <div class="mz-l-formfieldgroup-cell">
+        <select id="mz--contactselector-savedcontact" data-mz-single-fulfillment-contact class="mz-contactselector" data-mz-value="{{ contactcontext }}contactId" name="contactId" {% if isLoading %} disabled {% endif %}>
+        <option value="" disabled selected hidden>{{labels.selectSavedAddress}}</option>
+            {% for destination in model %}
+                <option value="{{ destination.id }}" data-mz-customerContactId="{{destination.customerContactId}}" {% if destination.id && destination.id == destinationId %} selected {% endif %}> {% include "modules/common/address-list" with model=destination.destinationContact %}
+                </option>
+            {% endfor %}
+        </select>
+
+        <div>
+            <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+        </div>
+
+    </div>
+
+    <div class="mz-l-formfieldgroup-cell">
+        {% if destinationId and customerContactType == "Billing"%}
+            <a href="javascript:;" data-mz-destinationId="{{destinationId}}" data-mz-action="handleEditContact">{{labels.editAddress}}</a>  
+        {% endif %}
+    </div>
+{% endblock contact-selector %}

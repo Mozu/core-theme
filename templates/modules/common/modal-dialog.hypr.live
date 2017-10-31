@@ -1,17 +1,21 @@
-<div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-    {% block modal-header %}
-      <h4 class="modal-title"></h4>
-    {% endblock modal-header %}
-    </div>
-    <div class="modal-body">
-      {% block modal-body %}
-      {% endblock modal-body %}
-    </div>
-    <div class="modal-footer">
-      {% block modal-footer %}
-      {% endblock modal-footer %}
-    </div>
-  </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
+<!-- <div id="mzModalDialog" class="modal fade" tabindex="-1" role="dialog"> -->
+  <div class="modal-dialog" >
+    <div class="modal-content">
+      <div class="modal-header">
+      {% block modal-header %}
+        <h4 class="modal-title"></h4>
+      {% endblock modal-header %}
+      </div>
+      <div class="modal-body">
+        {% block modal-body %}
+        {% endblock modal-body %}
+      </div>
+      <div class="modal-footer">
+        {% block modal-footer %}
+          <button type="button" class="mz-button" data-mz-action="handleDialogCancel">Cancel</button>
+          <button type="button" class="mz-button" data-mz-action="handleDialogSave">Save</button>
+        {% endblock modal-footer %}
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+<!-- </div><!-- /.modal -->

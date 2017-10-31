@@ -139,7 +139,7 @@ module.exports = function (grunt) {
       },
       javascript: {
         files: [
-          'scripts/**/*.js'
+          'scripts/**/**/**/*.js'
         ],
         tasks: [
           'newer:jshint:develop',
