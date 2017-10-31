@@ -120,6 +120,8 @@ Ext.define('Taco.view.customers.Contacts', {
 
                         '<div class="name">{firstName:htmlEncode}<tpl if="middleName"> {middleName:htmlEncode}</tpl> {lastName:htmlEncode}</div>',
 
+                        '<tpl if="companyOrOrganization"><div>{companyOrOrganization:htmlEncode}</div></tpl>',
+
                         '<div data-handle="contact-address1">{address1:htmlEncode}</div>',
 
                         '<tpl if="address2"><div>{address2:htmlEncode}</div></tpl>',

@@ -353,6 +353,8 @@ Ext.define('Taco.view.order.Header', {
 
                     '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
 
+                    '<tpl if="fulfillmentContact.companyOrOrganization">{fulfillmentContact.companyOrOrganization:htmlEncode}<br></tpl>',
+
                     '<tpl if="fulfillmentContact.address1">',
                         '{fulfillmentContact.address1:htmlEncode}<br>',
                         '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',

@@ -564,7 +564,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     if (!ContactFieldCompare(c1, c2, (c) => c.FirstName))
                         return true;
 
+                    if (!ContactFieldCompare(c1, c2, (c) => c.MiddleNameOrInitial))
+                        return true;
+
                     if (!ContactFieldCompare(c1, c2, (c) => c.LastNameOrSurname))
+                        return true;
+
+                    if (!ContactFieldCompare(c1, c2, (c) => c.CompanyOrOrganization))
                         return true;
 
                     if (!ContactFieldCompare(c1, c2, (c) => c.FaxNumber))
