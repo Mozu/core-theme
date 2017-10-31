@@ -61,7 +61,6 @@
                     this.listenTo(model, 'change:' + prop, this.enqueueRender, this);
                 }, this);
             }
-           
             Backbone.Validation.bind(this);
             Backbone.MozuView.trigger('create', this);
 
@@ -160,9 +159,6 @@
                     this.trigger('render', newHtml);
                     Backbone.MozuView.trigger('render', this, newHtml);
                 }
-                if(this.childViews){
-                    this.renderChildViews();
-                }
             },
 
             storeDropzones: function() {
@@ -176,14 +172,6 @@
                 var dropzones = this.dropzones;
                 this.$('.mz-drop-zone').each(function() {
                     if (dropzones[this.id]) $(this).replaceWith(dropzones[this.id]);
-                });
-            },
-
-            renderChildViews: function(){
-                var self=this;
-                _.each(this.childViews.views, function(childView){
-                    childView.refresh();
-                    childView.getView().render();
                 });
             }
 

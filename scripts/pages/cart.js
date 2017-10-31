@@ -54,7 +54,7 @@ define(['modules/api',
 
         },
         render: function() {
-            preserveElement(this, ['.v-button'], function() {
+            preserveElement(this, ['.v-button', '.p-button'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
         },

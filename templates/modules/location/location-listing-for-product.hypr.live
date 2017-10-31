@@ -4,6 +4,26 @@
         <div class="mz-addresssummary">
             {% include "modules/common/address-summary" %}
         </div>
+        <div style="margin-top: 20px">
+            {% for attr in model.attributes %}
+                {% if attr.attributeDefinition %}
+                <div>
+                    <span>{{ attr.attributeDefinition.content.value}}:&nbsp;</span>
+                    {% if attr.attributeDefinition.inputType === 'Date' %}
+                        <span>{{ attr.values[0]|date("n/j/Y") }}</span>
+                    {% else %}
+                        {% for idx, value in attr.values %}
+                            {% if idx !== attr.values.length-1 %}
+                                <span>{{ value }},&nbsp;</span>
+                            {% else %}
+                                <span>{{ value }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
     <div class="mz-locationlisting-inventory">
         <p class="mz-locationlisting-inventorystatus">

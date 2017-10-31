@@ -13,6 +13,7 @@
 <div id="confirmation-container">
   {% include "modules/confirmation/confirmation-detail" %}
 </div>
+
 {% endblock body-content %}
 
 {% block trailing-scripts %}
