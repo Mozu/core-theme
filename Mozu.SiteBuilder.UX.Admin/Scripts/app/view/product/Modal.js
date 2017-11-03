@@ -28,7 +28,9 @@ Ext.define('Taco.view.product.Modal', {
             showHeaderCheckbox: true
         });
 
-        this.advancedSearchForm = Ext.create('Taco.view.product.AdvancedSearchForm');
+        this.advancedSearchForm = Ext.create('Taco.view.product.AdvancedSearchForm', {
+            excludeFilters: this.excludeFilters
+        });
 
         this.searchBox = Ext.widget({
             xtype: 'taco-filtercontainer',

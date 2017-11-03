@@ -39,7 +39,10 @@ Ext.define('Taco.model.Discount', {
         {
             name: 'products',
             type: 'auto',
-            defaultValue: []
+            defaultValue: [],
+            serialize: function(val) {
+                return Array.isArray(val) ? val : [val];
+            }
         },
         {
             name: 'excludedCategories',
@@ -184,7 +187,16 @@ Ext.define('Taco.model.Discount', {
             defaultValue:[]
         }, {
             name: 'amount',
-            type: 'float'
+            type: 'float',
+            useNull: true,
+            defaultValue: null,
+            serialize: function(val, rec) {
+                if (rec.data.amountType === 'Free' || rec.data.amountType === 'FreeAutoAdd') {
+                    return null;
+                }
+
+                return rec.data.amount;
+            }
         }, {
             name: 'amountType',
             type: 'string',

@@ -140,19 +140,23 @@ Ext.define('Taco.view.discount.Grid', {
                     renderer: function(value, metaData, record, rowIndex, colIndex, store) {
                         var retVal = "";
                         switch (value) {
-                        case "Percentage":
-                            retVal = record.get("amount") + "% OFF";
-                            break;
-                        case "Amount":
-                            retVal = Taco.app.context.getCurrent().formatCurrency(record.get("amount")) + " OFF";
-                            break;
-                        case "Free":
-                            retVal = "Free";
-                            break;
-                        case "FixedPrice":
-                            retVal = "Fixed: " + Taco.app.context.getCurrent().formatCurrency(record.get("amount"));
-                            break;
+                            case "Percentage":
+                                retVal = record.get("amount") + "% OFF";
+                                break;
+                            case "Amount":
+                                retVal = Taco.app.context.getCurrent().formatCurrency(record.get("amount")) + " OFF";
+                                break;
+                            case "Free":
+                                retVal = "Free";
+                                break;
+                            case "FixedPrice":
+                                retVal = "Fixed: " + Taco.app.context.getCurrent().formatCurrency(record.get("amount"));
+                                break;
+                            case "FreeAutoAdd":
+                                retVal = "Auto-add";
+                                break
                         }
+
 
                         return retVal;
                     }

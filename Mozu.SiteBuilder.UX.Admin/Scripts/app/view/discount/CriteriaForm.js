@@ -351,7 +351,7 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         //    emptyText: "Unlimited",
         //    hideLabel: true
         //});
-        
+
         // Note: only visible when Scope is lineItem and the specific products radio button is selected
         this.productsBox = Ext.create('Ext.form.FieldContainer', {
             layout: 'hbox',
@@ -359,7 +359,6 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             fieldLabel: 'Products',
             allowBlank:false,
             items: [
-                
                 this.productList,
                 {
                     xtype: 'button',
@@ -696,11 +695,19 @@ Ext.define('Taco.view.discount.CriteriaForm', {
             clearSort: true,
             autoLoad: true
             });
+
         gridStore.filter(true);
         gridStore.load();
 
+        var excludeFilters = [];
+
+        if (me.scopeType === 'LineItem' && me.targetType === 'Product' && me.discountType === 'FreeAutoAdd') {
+            excludeFilters = ['productUsage'];
+        }
+
         this.modal = Ext.create('Taco.view.product.Modal', {
-            store: gridStore
+            store: gridStore,
+            excludeFilters: excludeFilters
         });
 
         this.modal.on({
@@ -753,9 +760,16 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     reloadStore: function (list) {
         var store = list.getStore(),
             proxy = store.getProxy();
-        if (proxy.extraParams) {
+
+        if (this.scopeType === 'LineItem' && this.targetType === 'Product' && this.discountType === 'FreeAutoAdd') {
             proxy.extraParams = {};
+            proxy.extraParams.showProductUsages = "Standard";
+        } else {
+            if (proxy.extraParams) {
+                proxy.extraParams = {};
+            }
         }
+
         store.load();
     },
 
@@ -790,9 +804,9 @@ Ext.define('Taco.view.discount.CriteriaForm', {
 
     updateMaximumQuantityPerRedemptionField : function() {
         var me = this,
-            isLineItem = (this.scopeType === 'LineItem');
+           isLineItem  = (this.scopeType === 'LineItem');
 
-        if (isLineItem && this.hasBuyConditions) {
+        if (isLineItem && this.hasBuyConditions && this.discountType !== 'FreeAutoAdd') {
             me.maximumQuantityPerRedemptionTB.enable();
         } else {
             me.maximumQuantityPerRedemptionTB.disable();
@@ -875,7 +889,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
     setFieldVisibility: function (scopeType, targetType, discountType) {
         var appliesToShipping = (targetType == "Shipping"),
             isOrder = (scopeType === 'Order'),
-            isLineItem = (scopeType === 'LineItem');
+            isLineItem = (scopeType === 'LineItem'),
+            isProduct = (targetType === 'Product');
 
         this.scopeType = scopeType;
         this.targetType = targetType;
@@ -884,33 +899,43 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         this.appliesToShipping = appliesToShipping;
         this.isOrder = isOrder;
         this.isLineItem = isLineItem;
-        
+
         // if order or line item combo has a selection;
         if ((!isLineItem && !isOrder) || !targetType) {
             this.setVisible(false);
             return;
         } else {
-            this.setVisible(true);        
+            this.setVisible(true);
         }
 
-        
-        
-
-        this.applyDiscountTo.setVisible(this.isLineItem);
         this.appliesToSalePrice.setVisible(this.isLineItem && !appliesToShipping);
         // only enabled if the other checkbox is checked;
         this.appliesToSalePrice.setDisabled(!this.ApplyToProductsWithSalePrice.checked);
-        
+
         this.setProductCategoryContainerVisibility();
         this.updateMaximumQuantityPerRedemptionField();
         this.setShippingListVisibility();
+
+         if (isLineItem && isProduct && this.discountType === 'FreeAutoAdd') {
+            this.includeSpecificCatagoriesInput.setVisible(false);
+            this.includeAllProductsInput.setVisible(false);
+            Ext.apply(this.productList, {multiSelect: false});
+            this.applyDiscountTo.setVisible(false);
+        } else {
+            this.includeSpecificCatagoriesInput.setVisible(true);
+            this.includeAllProductsInput.setVisible(true);
+            Ext.apply(this.productList, {multiSelect: true});
+            this.applyDiscountTo.setVisible(this.isLineItem);
+        }
+
+        this.reloadStore(this.productList);
     },
 
     hideAndResetField: function (targetField, defaultVal) {
         targetField.hide();
         targetField.setValue(defaultVal);
     },
-    
+
     /**
      * Post process form after the built in form loading process is complete. init data load on fields which do not match a record data name; Set default values;
      * @private

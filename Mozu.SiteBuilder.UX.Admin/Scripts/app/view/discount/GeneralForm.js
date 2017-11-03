@@ -48,10 +48,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                         this.textareaEl._syncInited = true;
                     }
                 }
-
-
             }
-
         });
 
         Ext.tip.QuickTipManager.init();
@@ -127,16 +124,24 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 { name: "Percentage", value: "Percentage" },
                 { name: "Amount", value: "Amount" },
                 { name: "Free", value: "Free" },
-                { name: 'Fixed Price', value: 'FixedPrice' }
+                { name: 'Fixed Price', value: 'FixedPrice' },
+                { name: 'Auto Add Free Product', value: 'FreeAutoAdd' }
             ],
             filters: [
                 function (item) {
-                    return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free') ||
-                        (me.record.get('scope') === 'LineItem' || me.record.get('target') === 'Shipping');
+                    if (item.get('value') === 'FreeAutoAdd') {
+                        return me.record.get('scope') === 'LineItem' && me.record.get('target') === 'Product';
+                    }
+
+                    if (item.get('value') === 'Amount' || item.get('value') === 'Percentage') {
+                        return true;
+                    }
+
+                    return (me.record.get('scope') === 'LineItem' || me.record.get('target') === 'Shipping');
                 }
             ]
         });
-        
+
         this.amountTypeInput = Ext.create('Ext.form.field.ComboBox', {
             name: 'amountType',
             itemId: 'amountType',
@@ -147,6 +152,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             forceSelection: true,
             displayField: 'name',
             valueField: 'value',
+            emptyText: null,
             width: 295,
             store: this.discountTypeData,
             queryMode: 'local',
@@ -163,7 +169,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 arrowPosition: 'left'
             })
         });
-        
+
         var amountFieldLabel = "";
         switch (this.record.get("amountType")) {
             case "Percentage":
@@ -190,8 +196,8 @@ Ext.define('Taco.view.discount.GeneralForm', {
             unitAtEnd: this.record.get('amountType') === 'Percentage' ? true : false,
             unitString: (this.record.get('amountType') === 'Percentage') ? '%' : Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol,
             hideTrigger: true,
-            disabled: (this.record.get('amountType') === 'Free') ? true : false,
-            hidden: (this.record.get('amountType') === 'Free') ? true : false
+            disabled: (this.record.get('amountType') === 'Free' || this.record.get('amountType') === 'FreeAutoAdd') ? true : false,
+            hidden: (this.record.get('amountType') === 'Free' || this.record.get('amountType') === 'FreeAutoAdd') ? true : false
         });
 
         this.items = [
@@ -233,7 +239,7 @@ Ext.define('Taco.view.discount.GeneralForm', {
             me.amountInput.unitString = Taco.app.context.currencies[Taco.app.context.getCurrent().currencyCode.toLowerCase()].symbol;
             me.amountInput.unitAtEnd = false;
         }
-                        
+
         switch (newValue) {
             case "Percentage":
                 me.amountInput.unitString = '%';
@@ -254,25 +260,22 @@ Ext.define('Taco.view.discount.GeneralForm', {
                 amountInputLabel = "Price";
                 amountInputVisible = true;
                 break;
+            case "FreeAutoAdd":
+                amountInputVisible = false;
+                break;
         }
 
         me.amountInput.setVisible(amountInputVisible);
-        me.amountInput.setDisabled(!amountInputVisible);
         me.amountInput.setFieldLabel(amountInputLabel);
-                        
-                        
-        if  (newValue == 'Free') {
-            me.amountInput.setValue(null);
-        } else {
-            me.amountInput.setValue(this.amountInput.value);
-        }
+        me.amountInput.setAllowBlank(!amountInputVisible);
+        me.amountInput.setDisabled(!amountInputVisible);
+        me.amountInput.validate();
+        var newAmountValue = amountInputVisible ? this.amountInput.value : null;
+        me.amountInput.setValue(newAmountValue);
 
-        
-        me.amountInput.clearInvalid();
         // notify the parent form. limitations will need to adjust to the value;
         // see this.maxDiscountOrderValue
-        this.parentForm.setFieldVisibility();  
-
+        this.parentForm.setFieldVisibility();
     },
 
     isOrder: function () {
@@ -287,16 +290,45 @@ Ext.define('Taco.view.discount.GeneralForm', {
         return this.targetTypeInput.getValue() === 'Shipping';
     },
 
+    appliesToProduct: function() {
+        return this.targetTypeInput.getValue() === 'Product';
+    },
+
+    filterDiscountType: function (item) {
+        if (item.get('value') === 'FreeAutoAdd') {
+            return this.isLineItem() && this.appliesToProduct();
+        }
+
+        if (item.get('value') === 'Amount' || item.get('value') === 'Percentage') {
+            return true;
+        }
+
+        return (this.isLineItem() || this.appliesToShipping());
+    },
     filterFixedPriceOptionWhenOrderProduct: function (appliesTo, affects) {
+        var me = this;
+
         var isLineItem = appliesTo ? appliesTo === 'LineItem' : this.isLineItem(),
-            isShipping = affects ? affects === 'Shipping' : this.appliesToShipping();
-        if (isLineItem || isShipping) {
-            //add fixed price
+            isShipping = affects ? affects === 'Shipping' : this.appliesToShipping(),
+            isProduct = affects ? affects === 'Product' : this.appliesToProduct();
+
+        if (!this.appliesToProduct() || !this.isLineItem()) {
+            if (this.amountTypeInput.getValue() === 'FreeAutoAdd') {
+                this.amountTypeInput.setValue('Amount');
+            }
+        }
+
+        if (isLineItem && isProduct) {
             this.amountTypeInput.store.clearFilter(false);
+        } else if (isLineItem || isShipping) {
+            // add fixed price
+            this.amountTypeInput.store.clearFilter();
+            this.amountTypeInput.store.addFilter(this.filterDiscountType.bind(this));
         } else {
             //filter fixed price.
             this.amountTypeInput.store.filterBy(function(item) {
-                 return (item.get('value') !== 'FixedPrice' && item.get('value') !== 'Free');
+                var val = item.get('value');
+                return (val !== 'FreeAutoAdd' && val !== 'FixedPrice' && val !== 'Free');
             });
 
             if (this.amountTypeInput.getValue() === 'FixedPrice' || this.amountTypeInput.getValue() === 'Free') {

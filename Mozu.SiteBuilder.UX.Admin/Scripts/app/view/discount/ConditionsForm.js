@@ -26,7 +26,7 @@ Ext.define('Taco.view.discount.ConditionsForm', {
     initComponent: function () {
         var me = this,
             paymentWorkflowsStore = Taco.core.data.StoreManager.getOrCreate({
-                type: 'Taco.store.PaymentWorkflows', 
+                type: 'Taco.store.PaymentWorkflows',
                 clearFilters: false,
                 createOnly:true,
                 filters: [function (record) {
@@ -593,9 +593,11 @@ Ext.define('Taco.view.discount.ConditionsForm', {
 
     },
 
-    setFieldVisibility: function (scopeType, targetType) {
+    setFieldVisibility: function (scopeType, targetType, discountType) {
         var isOrder = (scopeType === 'Order'),
-            isLineItem = (scopeType === 'LineItem');
+            isLineItem = (scopeType === 'LineItem'),
+            isAutoAddFree = (discountType === 'FreeAutoAdd'),
+            isProduct = (targetType === 'Product');
 
 
         if ((!isLineItem && !isOrder) || !targetType) {
@@ -603,6 +605,14 @@ Ext.define('Taco.view.discount.ConditionsForm', {
             return;
         } else {
             this.setVisible(true);
+        }
+
+        if (isLineItem && isProduct && isAutoAddFree) {
+            this.segmentsBox.setVisible(false);
+            this.includedPaymentMethodField.setVisible(false);
+        } else {
+            this.segmentsBox.setVisible(true);
+            this.includedPaymentMethodField.setVisible(true);
         }
 
         this.minimumLifetimeValueAmount.setVisible(!isLineItem);

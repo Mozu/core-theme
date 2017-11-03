@@ -169,6 +169,9 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                             }, {
                                 name: "Fixed Price",
                                 id: "FixedPrice"
+                            }, {
+                                name: "Auto Add Free Product",
+                                id: "FreeAutoAdd"
                             }
                         ]
                     })

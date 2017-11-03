@@ -1,7 +1,7 @@
 ﻿/**
  * The discount editor view
  */
-Ext.define('Taco.view.discount.Form', {   
+Ext.define('Taco.view.discount.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
     requires: [
         'Taco.store.ConfiguredShippingRates',
@@ -23,7 +23,7 @@ Ext.define('Taco.view.discount.Form', {
 
     initComponent: function () {
 
-        // Note: the record will act as an event bus for the subForms. 
+        // Note: the record will act as an event bus for the subForms.
         // User interactions in a subform that cause changes in other forms will communicate via events on the record.
         // Each subform will listen for and react to these changes.
 
@@ -78,8 +78,7 @@ Ext.define('Taco.view.discount.Form', {
             isLineItem = this.general.isLineItem(),
             isOrder = this.general.isOrder(),
             appliesToShipping = this.general.appliesToShipping();
-            
-        
+
         // need to pass all info necessary to the subforms to control their own visibility and fields.
         this.criteria.setFieldVisibility(scopeType, targetType, discountType);
         this.conditions.setFieldVisibility(scopeType, targetType, discountType);
@@ -107,6 +106,8 @@ Ext.define('Taco.view.discount.Form', {
             });
             tooltip.applyTooltipIcon();
         }
+
+        this.setFieldVisibility();
     },
 
     onAfterRender: function () {

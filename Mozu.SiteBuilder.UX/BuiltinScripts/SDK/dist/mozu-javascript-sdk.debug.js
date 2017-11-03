@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2017-10-11
+ * Mozu JavaScript SDK - v0.3.0 - 2018-01-12
  *
- * Copyright (c) 2017 Volusion, Inc.
+ * Copyright (c) 2018 Volusion, Inc.
  *
  */
 
@@ -5794,6 +5794,7 @@ module.exports = {
                 options: payload.options || this.data.options
             },
             quantity: payload.quantity || 1,
+            autoAddDiscountId: payload.autoAddDiscountId,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
             fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)

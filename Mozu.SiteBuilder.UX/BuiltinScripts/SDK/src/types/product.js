@@ -23,6 +23,7 @@ module.exports = {
                 options: payload.options || this.data.options
             },
             quantity: payload.quantity || 1,
+            autoAddDiscountId: payload.autoAddDiscountId,
             fulfillmentLocationCode: payload.fulfillmentLocationCode,
             fulfillmentLocationName: payload.fulfillmentLocationName,
             fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
