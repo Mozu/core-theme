@@ -158,7 +158,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 searchTuningRuleContext ,
                 facetTemplateExclude,
                 sbAPIContext.PriceListCode,
-                sbAPIContext.LocationCode,
+                sbAPIContext.PurchaseLocation,
                 facetPrefix,
                 responseOptions,
                 suppressErrors,

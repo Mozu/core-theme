@@ -161,7 +161,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         EditModes? EditMode { get; set; }
         UX.Models.Customers.User User { get; set; }
         UserProfile UserProfile { get; }
-        LocationInfo Location { get; }
+        LocationInfo PurchaseLocation { get; }
         string ProductCode { get; set; }
         string FeedUrl { get; set; }
         string ListName { get; set; }
@@ -251,7 +251,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
             DataViewMode = apiContext.DataViewMode;
             _userProfile = new Lazy<UserProfile>(() => CreateProfileFromToken(_apiContext.UserClaims, _authenticationHelper));
-            _location = string.IsNullOrWhiteSpace(apiContext.LocationCode) ? null : new LocationInfo() { Code = apiContext.LocationCode };
+            _location = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
         }
@@ -508,7 +508,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _userProfile.Value;
             }
         }
-        public LocationInfo Location
+        public LocationInfo PurchaseLocation
         {
             get
             {

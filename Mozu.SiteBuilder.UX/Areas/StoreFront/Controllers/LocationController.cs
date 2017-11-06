@@ -51,7 +51,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 location = (await _locationRuntimeWebApiClient.GetLocation(code)).ReadAsSync();
             }
-            await _session.SetValueAsync(Mozu.Core.Constants.Session.LOCATION_CODE_KEY, location?.Code);
+            await _session.SetValueAsync(Mozu.Core.Constants.Session.PURCHASE_LOCATION_KEY, location?.Code);
 
             return location;
 

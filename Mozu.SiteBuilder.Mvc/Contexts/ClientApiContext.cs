@@ -134,7 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.MASTER_CATALOG] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.CATALOG] = apiContext.CatalogId.HasValue ? apiContext.CatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
-            header[APIConstants.Headers.LOCATION] = apiContext.LocationCode?.ToString();
+            header[APIConstants.Headers.PURCHASE_LOCATION] = apiContext.PurchaseLocation?.ToString();
             header[APIConstants.Headers.USER_CLAIMS] = GetUserClaims(apiContext);
 
          //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
