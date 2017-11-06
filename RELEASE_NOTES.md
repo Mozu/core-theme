@@ -1,5 +1,8 @@
 # What's New
 
+### October 31, 2017
+* Modified several files and introduced the Checkout model to enable shipments to multiple addresses. Before merging these changes, read about the [Multiple Shipments](https://www.mozu.com/docs/Guides/orders/multi-ship.htm) feature to determine whether you want to make the changes. - [Pull Request](https://github.com/Mozu/core-theme/pull/62)
+
 ### March 29, 2017
 The following updates were added to the My Account page to improve the RMA experience for shoppers. - [Pull Request](https://github.com/Mozu/core-theme/pull/45)
 
