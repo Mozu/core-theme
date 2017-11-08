@@ -40,18 +40,6 @@ define(['modules/api',
                 require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
             }
 
-
-            //cache for storing info retrieved through API calls
-            this.fulfillmentInfoCache = [];
-            this.model.get('items').forEach(function(item){
-              var dataObject = {
-                cartItemId: item.id,
-                locations: []
-              };
-              me.fulfillmentInfoCache.push(dataObject);
-
-            });
-
         },
         render: function() {
             preserveElement(this, ['.v-button', '.p-button'], function() {
@@ -108,7 +96,6 @@ define(['modules/api',
             scroll: true,
             bodyHeight: "600px",
             backdrop: "static"
-
           };
 
           //Assures that each store select button has the right behavior
@@ -118,11 +105,7 @@ define(['modules/api',
 
           //Assures that the radio buttons reflect the accurate fulfillment method
           //if the dialog is closed before a store is picked.
-
           $('.modal-header').on('click', '.close', function(){
-            var cartModelItems = window.cartView.cartView.model.get("items");
-            var cartItemId = $(this).parent().parent().find('.modal-body').attr('mz-cart-item');
-            var cartItem = me.model.get("items").get(cartItemId);
             me.render();
           });
 
@@ -137,123 +120,69 @@ define(['modules/api',
           this.pickStore(productCode, cartItemId);
         },
         pickStore: function(productCode, cartItemId){
-          /*
-          Parent function for switching from ship to pickup from within cart
-          or choosing a new pickup location from within cart. Runs a set of api
-          calls using the cartItemId and that item's product code to get
-          necessary inventory information and display a dialog containing that
-          information.
-          */
           var me = this;
-          var listOfLocations = [];
 
-          //before we get inventory data, we'll see if it's cached
+          me.getInventoryData(cartItemId, productCode).then(function(inv){
+            if (inv.totalCount===0){
+              //Something went wrong with getting inventory data.
+              var $bodyElement = $('#mz-location-selector').find('.modal-body');
+              me.pickerDialog.setBody(Hypr.getLabel("noNearbyLocationsProd"));
+              $bodyElement.attr('mz-cart-item', cartItemId);
+              me.pickerDialog.show();
 
-          var filtered = this.fulfillmentInfoCache.filter(function(item){
-            return item.cartItemId == cartItemId;
-          });
-          var cachedItemInvData;
+            } else {
+              //NGCOM-758
+           //_.after will run the function after it only it has been called
+           //inv.items.length number of times
+           //This ensures that the dialog doesn't get opened until all of
+           //the API calls have been made.
+             var openDialogAfter = _.after(inv.items.length, function() {
+               var $bodyElement = $('#mz-location-selector').find('.modal-body');
+               me.pickerDialog.setBody(me.makeLocationPickerBody(inv.items, cartItemId));
+               $bodyElement.attr('mz-cart-item', cartItemId);
+               me.pickerDialog.show();
+             });
 
-          if (filtered.length!==0){
-            cachedItemInvData = filtered[0];
-          } else {
-            //NGCOM-344
-            //If the filtered array is empty, it means the item we're checkoutSettings
-            // was added to the cart some time after page load, probably during a BOGO
-            //sale re-rendering.
-            //Let's go ahead and add it to the cache, then stick it in our
-            //cachedItemInvData variable.
-            var newCacheData = {
-              cartItemId: cartItemId,
-              locations: []
-            };
-            me.fulfillmentInfoCache.push(newCacheData);
-            cachedItemInvData = newCacheData;
-          }
+              var locationCache = me.model.get('storeLocationsCache');
 
-          var index = this.fulfillmentInfoCache.indexOf(cachedItemInvData);
+              inv.items.forEach(function(invItem){
+                //Before we launch the store picker, we want to check the status
+                //of the location cache. Our store picker depends on that cache
+                //To contain store name and address information for each
+                //Inventory item a cart item holds.
 
-          if(cachedItemInvData.locations.length===0){
-            //The cache doesn't contain any data about the fulfillment
-            //locations for this item. We'll do api calls to get that data
-            //and update the cache.
+                // Check cache to see if it contains a location that matches
+                //the current invItem's id.
 
-            me.getInventoryData(cartItemId, productCode).then(function(inv){
-              if (inv.totalCount===0){
-                //Something went wrong with getting inventory data.
-                var $bodyElement = $('#mz-location-selector').find('.modal-body');
-                me.pickerDialog.setBody(Hypr.getLabel("noNearbyLocationsProd"));
-                $bodyElement.attr('mz-cart-item', cartItemId);
-                me.pickerDialog.show();
-
-              } else {
-                //TO-DO: Make 1 call with GetLocations
-                var invItemsLength = inv.items.length;
-              inv.items.forEach(function(invItem, i){
-                  me.handleInventoryData(invItem).then(function(handled){
-                    listOfLocations.push(handled);
-                    me.fulfillmentInfoCache[index].locations.push({
-                      name: handled.data.name,
-                      code: handled.data.code,
-                      locationData: handled,
-                      inventoryData: invItem
-                    });
-                    me.model.get('storeLocationsCache').addLocation(handled.data);
-
-                    if (i==invItemsLength-1){
-                      //We're in the midst of asynchrony, but we want this dialog
-                      //to go ahead and open right away if we're at the end of the
-                      //for loop.
-                      var $bodyElement = $('#mz-location-selector').find('.modal-body');
-                      me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
-                      $bodyElement.attr('mz-cart-item', cartItemId);
-                      me.pickerDialog.show();
-                    }
-                  },
-                function(error){
-                  //NGCOM-337
-                  //If the item had inventory information for a location that
-                  //doesn't exist anymore or was disabled, we end up here.
-                  //The only reason we would need to take any action here is if
-                  //the errored location happened to be at the end of the list,
-                  //and the above if statement gets skipped -
-                  //We need to make sure the dialog gets opened anyways.
-                  if (i==invItemsLength-1){
-                    var $bodyElement = $('#mz-location-selector').find('.modal-body');
-                    me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
-                    $bodyElement.attr('mz-cart-item', cartItemId);
-                    me.pickerDialog.show();
-                  }
-
+                var filteredLocationCache = locationCache.models.filter(function(location){
+                  return location.attributes.code === invItem.locationCode;
                 });
-                });
+
+                if (filteredLocationCache.length>0){
+                  //If it does, we don't have to do anything except open the open
+                  //the dialog if we're at the end of the inventory data.
+                    openDialogAfter();
+                } else if (filteredLocationCache.length===0){
+                  me.model.get('storeLocationsCache').addLocation({code: invItem.locationCode}).then(function(){
+                    openDialogAfter();
+                  }, function(error){
+                    //NGCOM-337
+                    //If the item had inventory information for a location that
+                    //doesn't exist anymore or was disabled, we end up here.
+                    openDialogAfter();
+                  });
               }
+
               });
 
-
-          } else {
-            //This is information we've retrieved once since page load!
-            //So we're skipping the API calls.
-            var inventoryItems = [];
-            this.fulfillmentInfoCache[index].locations.forEach(function(location){
-              listOfLocations.push(location.locationData);
-              inventoryItems.push(location.inventoryData);
-            });
-            var $bodyElement = $('#mz-location-selector').find('.modal-body');
-            me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inventoryItems, cartItemId));
-            me.pickerDialog.show();
-          }
-
+            }
+          });
         },
         getInventoryData: function(id, productCode){
           //Gets basic inventory data based on product code.
           return window.cartView.cartView.model.get('items').get(id).get('product').apiGetInventory({
             productCode: productCode
           });
-        },
-        handleInventoryData: function(invItem){
-          //Uses limited inventory location from product to get inventory names.
-            return api.get('location', invItem.locationCode);
         },
         changeFulfillmentMethod: function(e){
           //Called when a radio button is clicked.
@@ -296,75 +225,68 @@ define(['modules/api',
               }
 
         },
-        makeLocationPickerBody: function(locationList, locationInventoryInfo, cartItemId){
+        makeLocationPickerBody: function(inventoryInfo, cartItemId){
           /*
-          Uses a list of locations to build HTML to stick into the
+          Uses the location cache to build HTML to stick into the
           location picker. cartItemId is added as an attribute to each select
           button so that it can be used to assign the new pickup location to the
           right cart item.
-
-          locationList should be a list of fulfillment locations with complete
-          location data (what we need is the name). locationInventoryInfo will
-          contain stock levels for the current product(cartItemId) by location code.
+          locationInventoryInfo will contain stock levels for the current product(cartItemId) by location code.
 
           */
-
           var me = this;
+          var locationCache = me.model.get('storeLocationsCache');
 
           var body = "";
-          locationList.forEach(function(location){
-            //We find the inventory data that matches the location we're focusing on.
-            var matchedInventory = locationInventoryInfo.filter(function(locationInventory){
-              return locationInventory.locationCode == location.data.code;
-            });
-            //matchedInventory should be a list of one item.
 
-            var stockLevel = matchedInventory[0].stockAvailable;
-            var allowsBackorder = location.data.allowFulfillmentWithNoStock;
+          inventoryInfo.forEach(function(inventory){
+            //Find the location model matching the inventory model we're dealing with
+
+            var location = locationCache.getLocationByCode(inventory.locationCode);
+            var stockLevel = inventory.stockAvailable;
+            var allowsBackorder = location.allowFulfillmentWithNoStock;
 
             //Piece together UI for a single location listing
-            var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex", "data-mz-cart-item":cartItemId });
+            var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex", "data-mz-cart-item": cartItemId });
             var leftSideDiv = $('<div>', {"style": "flex:1"});
             var rightSideDiv = $('<div>', {"style": "flex:1"});
-            leftSideDiv.append('<h4 style="margin: 6.25px 0 6.25px">'+location.data.name+'</h4>');
+            leftSideDiv.append('<h4 style="margin: 6.25px 0 6.25px">'+location.name+'</h4>');
             //If there is enough stock or the store allows backorder,
             //we'll let the user click the select button.
             //Even if these two conditions are met, the user could still be
             //halted upon trying to proceed to checkout if
             //the product isn't configured to allow for backorder.
 
-          var address = location.data.address;
+            var address = location.address;
 
-          leftSideDiv.append($('<div>'+address.address1+'</div>'));
-          if(address.address2){leftSideDiv.append($('<div>'+address.address2+'</div>'));}
-          if(address.address3){leftSideDiv.append($('<div>'+address.address3+'</div>'));}
-          if(address.address4){leftSideDiv.append($('<div>'+address.address4+'</div>'));}
-          leftSideDiv.append($('<div>'+address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode+'</div>'));
-            var $selectButton;
-            if (stockLevel>0 || allowsBackorder){
-                leftSideDiv.append("<p class='mz-locationselect-available'>"+Hypr.getLabel("availableNow")+"</p>");
-                var buttonData = {
-                  locationCode: location.data.code,
-                  locationName: location.data.name,
-                  cartItemId: cartItemId
-                };
+            leftSideDiv.append($('<div>'+address.address1+'</div>'));
+            if(address.address2){leftSideDiv.append($('<div>'+address.address2+'</div>'));}
+            if(address.address3){leftSideDiv.append($('<div>'+address.address3+'</div>'));}
+            if(address.address4){leftSideDiv.append($('<div>'+address.address4+'</div>'));}
+            leftSideDiv.append($('<div>'+address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode+'</div>'));
+              var $selectButton;
+              if (stockLevel>0 || allowsBackorder){
+                  leftSideDiv.append("<p class='mz-locationselect-available'>"+Hypr.getLabel("availableNow")+"</p>");
+                  var buttonData = {
+                    locationCode: location.code,
+                    locationName: location.name,
+                    cartItemId: cartItemId
+                  };
 
-                $selectButton = $("<button>", {"type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
-                $selectButton.text(Hypr.getLabel("selectStore"));
-                rightSideDiv.append($selectButton);
+                  $selectButton = $("<button>", {"type": "button", "class": "mz-button mz-store-select-button", "style": "margin:25% 0 0 25%", "aria-hidden": "true", "mz-store-select-data": JSON.stringify(buttonData) });
+                  $selectButton.text(Hypr.getLabel("selectStore"));
+                  rightSideDiv.append($selectButton);
 
+                } else {
+                  leftSideDiv.append("<p class='mz-locationselect-unavailable'>"+Hypr.getLabel("outOfStock")+"</p>");
+                  $selectButton = $("<button>", {"type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled":"disabled", "style": "margin:25% 0 0 25%"});
+                  $selectButton.text(Hypr.getLabel("selectStore"));
+                  rightSideDiv.append($selectButton);
+                }
 
-              } else {
-                leftSideDiv.append("<p class='mz-locationselect-unavailable'>"+Hypr.getLabel("outOfStock")+"</p>");
-                $selectButton = $("<button>", {"type": "button", "class": "mz-button is-disabled mz-store-select-button", "aria-hidden": "true", "disabled":"disabled", "style": "margin:25% 0 0 25%"});
-                $selectButton.text(Hypr.getLabel("selectStore"));
-                rightSideDiv.append($selectButton);
-              }
-
-              locationSelectDiv.append(leftSideDiv);
-              locationSelectDiv.append(rightSideDiv);
-              body+=locationSelectDiv.prop('outerHTML');
-
+                locationSelectDiv.append(leftSideDiv);
+                locationSelectDiv.append(rightSideDiv);
+                body+=locationSelectDiv.prop('outerHTML');
           });
 
           return body;
@@ -374,6 +296,7 @@ define(['modules/api',
           //called by Select Store button from store picker dialog.
           //Makes the actual change to the item using data held by the button
           //in the store picker.
+
           var me = this;
           this.pickerDialog.hide();
 
@@ -395,7 +318,6 @@ define(['modules/api',
             cartItem.set('fulfillmentLocationCode', oldLocationCode);
             me.render();
           });
-
 
         },
         proceedToCheckout: function () {

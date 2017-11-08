@@ -55,7 +55,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     });
             }
         },
-        storeLocation : function(){
+        storeLocation: function(){
             var self = this;
             if(self.get('fulfillmentLocationCode')) {
                 return self.collection.parent.get('storeLocationsCache').getLocationByCode(self.get('fulfillmentLocationCode'));
@@ -66,7 +66,13 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
     }),
     StoreLocationsCache = Backbone.Collection.extend({
         addLocation : function(location){
-            this.add(new LocationModels.Location(location), {merge: true});
+          var me = this;
+          if (!this.getLocationByCode(location.code)){
+            var newLocation = new LocationModels.Location(location);
+            return newLocation.fetch().then(function(){
+              me.add(newLocation, {merge: true});
+            });
+          }
         },
         getLocations : function(){
             return this.toJSON();
