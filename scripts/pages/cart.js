@@ -188,8 +188,19 @@ define(['modules/api',
 
               } else {
                 //TO-DO: Make 1 call with GetLocations
-                var invItemsLength = inv.items.length;
-              inv.items.forEach(function(invItem, i){
+
+                //NGCOM-758
+                //_.after will run the function after it only it has been called
+                //inv.items.length number of times
+                //This ensures that the dialog doesn't get opened until all of
+                //the API calls have been made.
+                var openDialogAfter = _.after(inv.items.length, function() {
+                  var $bodyElement = $('#mz-location-selector').find('.modal-body');
+                  me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
+                  $bodyElement.attr('mz-cart-item', cartItemId);
+                  me.pickerDialog.show();
+                });
+              inv.items.forEach(function(invItem){
                   me.handleInventoryData(invItem).then(function(handled){
                     listOfLocations.push(handled);
                     me.fulfillmentInfoCache[index].locations.push({
@@ -199,16 +210,7 @@ define(['modules/api',
                       inventoryData: invItem
                     });
                     me.model.get('storeLocationsCache').addLocation(handled.data);
-
-                    if (i==invItemsLength-1){
-                      //We're in the midst of asynchrony, but we want this dialog
-                      //to go ahead and open right away if we're at the end of the
-                      //for loop.
-                      var $bodyElement = $('#mz-location-selector').find('.modal-body');
-                      me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
-                      $bodyElement.attr('mz-cart-item', cartItemId);
-                      me.pickerDialog.show();
-                    }
+                    openDialogAfter();
                   },
                 function(error){
                   //NGCOM-337
@@ -218,13 +220,7 @@ define(['modules/api',
                   //the errored location happened to be at the end of the list,
                   //and the above if statement gets skipped -
                   //We need to make sure the dialog gets opened anyways.
-                  if (i==invItemsLength-1){
-                    var $bodyElement = $('#mz-location-selector').find('.modal-body');
-                    me.pickerDialog.setBody(me.makeLocationPickerBody(listOfLocations, inv.items, cartItemId));
-                    $bodyElement.attr('mz-cart-item', cartItemId);
-                    me.pickerDialog.show();
-                  }
-
+                  openDialogAfter();
                 });
                 });
               }
