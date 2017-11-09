@@ -97,9 +97,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 _secureConfigUrlHelper.BuildSecureUrl(capability, tenant, entitlement);
             }
 
-            if (pagingParams != null && !string.IsNullOrEmpty(pagingParams.id))
+
+            if (pagingParams != null && pagingParams.startIndex.HasValue && pagingParams.pageSize.HasValue)
             {
-                list = list.Where(x => x.Id == pagingParams.id).ToList();
+                list = list.Skip(pagingParams.startIndex.Value)
+                    .Take(pagingParams.pageSize.Value)
+                    .ToList();
             }
 
 	        var ret = this.List2<VM.Capability>(list);

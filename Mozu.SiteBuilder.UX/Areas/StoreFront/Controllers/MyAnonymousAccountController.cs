@@ -56,15 +56,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var userClaims = _apiContext.UserClaims;
             string orderId = null;
-            
 
+            userClaims.Bag.TryGetValue("orderId", out orderId);
             // If there isn't an orderId, cancel!
-            if (!userClaims.Bag.TryGetValue("orderId", out orderId) || string.IsNullOrWhiteSpace(orderId))
+            if (string.IsNullOrWhiteSpace(orderId) && string.IsNullOrWhiteSpace(orderId))
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
 
-            var order = (await _orderWebApiClient.GetOrder(orderId));
+            var idFilter = String.Format("id eq {0} or parentCheckoutId eq {0}", orderId);
+
+
+            var orders = (await _orderWebApiClient.GetOrders(filter: idFilter, pageSize: 200));
             // because we're an auth'd anonymous user the only returns returned are those which are associated
             // with the bag's orderid
             var returns = (await _returnApiClient.GetReturns());
@@ -84,17 +87,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
             pc.PageType = "my_anonymous_account";
 
-            var orderResult = order.ReadAsSync();
+            var orderResult = orders.ReadAsSync();
             var returnResult = returns.ReadAsSync();
 
             // TODO: remove this when we get away from needing to re-use myaccount templates which expect pagedcollection
             var pagedOrderCollection = new Mozu.CommerceRuntime.Contracts.Orders.OrderCollection
             {
-                Items = new List<Order> {orderResult},
-                PageCount = 1,
-                PageSize = 1,
+                Items = new List<Order>(orderResult.Items),
+                PageCount = orderResult.PageCount,
+                PageSize = orderResult.PageSize,
                 StartIndex = 0,
-                TotalCount = 1
+                TotalCount = orderResult.TotalCount
             };
 
             var retObject = (new Customer.Contracts.CustomerAccount()).ToJObject();

@@ -426,10 +426,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //  exception. Basic validation needed to happen here so we didn't have number parse
             //  exceptions in CommerceRuntime when the bad filter was being built.
 
-            int j; // This is required for TryParse below. We don't care about it.
+            int orderNumberInt; // This is required for TryParse below. We don't care about it.
             var idFilter = "";
-            idFilter = Int32.TryParse(orderNumber, out j)
-                ? String.Format("orderNumber eq {0} or externalId eq {1}", orderNumber, orderNumber)
+            idFilter = Int32.TryParse(orderNumber, out orderNumberInt)
+                ? String.Format("orderNumber eq {0} or externalId eq {0} or parentCheckoutNumber eq {0}", orderNumberInt)
                 : String.Format("externalId eq {0}", orderNumber);
 
             var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter: idFilter);
@@ -441,8 +441,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 });
             }
 
-            var order = res.ReadAsSync().Items.FirstOrDefault();
-            if (order == null)
+            var orders = res.ReadAsSync().Items;
+            if (orders == null || (orders != null && !orders.Any()))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, new
                 {
@@ -452,7 +452,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!string.IsNullOrEmpty(email))
             {
-                if (!order.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+                if (!orders.Any(order => order.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 {
                     return GenerateInvalidChallengeResponse();
                 }
@@ -460,15 +460,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!string.IsNullOrEmpty(billingPhoneNumber))
             {
-                if (order.BillingInfo == null || order.BillingInfo.BillingContact == null || order.BillingInfo.BillingContact.PhoneNumbers == null)
-                {
-                    return GenerateInvalidChallengeResponse();
-                }
-
                 // see if any of the phone numbers under the billing contact match the provided billingphonenumber
-                if (!order.BillingInfo.BillingContact.PhoneNumbers.Home.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase)
-                    && !order.BillingInfo.BillingContact.PhoneNumbers.Work.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase)
-                    && !order.BillingInfo.BillingContact.PhoneNumbers.Mobile.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase))
+                if (!orders.Any(order => (order.BillingInfo?.BillingContact?.PhoneNumbers?.Home?.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase) ?? false)
+                    || (order.BillingInfo?.BillingContact?.PhoneNumbers?.Work?.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase) ?? false)
+                    || (order.BillingInfo?.BillingContact?.PhoneNumbers?.Mobile?.Equals(billingPhoneNumber, StringComparison.OrdinalIgnoreCase) ?? false)
+                    ))
                 {
                     return GenerateInvalidChallengeResponse();
                 }
@@ -476,21 +472,26 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!string.IsNullOrEmpty(billingZipCode))
             {
-                if (order.BillingInfo == null || order.BillingInfo.BillingContact == null || order.BillingInfo.BillingContact.Address == null)
-                {
-                    return GenerateInvalidChallengeResponse();
-                }
 
-                if (!order.BillingInfo.BillingContact.Address.PostalOrZipCode.Equals(billingZipCode, StringComparison.OrdinalIgnoreCase))
+                if (!orders.Any(order => (order.BillingInfo?.BillingContact?.Address?.PostalOrZipCode.Equals(billingZipCode, StringComparison.OrdinalIgnoreCase)) ?? false))
                 {
                     return GenerateInvalidChallengeResponse();
                 }
             }
+
+            //Combine orderid To include parentCheckoutNumber
             var userClaims = _apiContext.UserClaims;
-            userClaims.Bag["orderId"] = order.Id;
+ 
+            var orderId = orders.FirstOrDefault(o => o.OrderNumber == orderNumberInt)?.Id ?? orders.FirstOrDefault().ParentCheckoutId;
+            userClaims.Bag["orderId"] = orderId;
+
+            if (orders.Any(order => order.ParentCheckoutNumber == orderNumberInt))
+            {
+                userClaims.Bag["orderIds"] = String.Join(",", orders.Select(order => order.Id).ToArray());
+            }
+
             var profileToken = _authenticationHelper.GetProfileToken();
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken, DateTime.Now.AddMinutes(20));
-
 
             return Request.CreateResponse(statusCode: HttpStatusCode.OK);
             
