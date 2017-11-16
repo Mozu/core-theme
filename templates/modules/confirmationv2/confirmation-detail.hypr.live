@@ -1,30 +1,59 @@
 <div class="mz-l-container">
-    <h1 class="mz-pagetitle">{{ labels.orderConfirmation }} </h1>
+  <h1 class="mz-pagetitle">{{ labels.orderConfirmation }} </h1>
 
 	<p>{{ labels.confirmationText }}</p>
+  <p>{{ labels.yourOrderNumber|string_format(model.number)|safe }}</p>
 
-    <p>{{ labels.yourOrderNumber|string_format(model.number)|safe }}</p>
+  {% with model.groupings as groupings %}
+  <div class="mz-l-stack">
 
-    {% with model.groupings as groupings %}
-    <div class="mz-l-stack">
-
-      {% if model.items|findwhere("fulfillmentMethod", "Ship") %}
-      <div class="mz-l-stack-section" id="mz-ship-section">
-          <h4 class="mz-l-stack-sectiontitle">{{ labels.shippingInformation }}</h4>
-          {% for grouping in groupings %}
-            {% if grouping.fulfillmentMethod == "Ship" %}
-              <div class="mz-confirmation-container">
-                    {% with model.items as items %}
-                      {% include "modules/confirmationv2/confirmation-order-summary" with items=items grouping=grouping %}
-                    {% endwith %}
-
-                <div style="display:-webkit-flex;margin:10px;width:100%">
-                  {% with model.destinations|findwhere("id", grouping.destinationId) as destination %}
-                  <div class="mz-addresssummary" style="width:50%"><b>{{ labels.shipTo }}</b>{% include "modules/common/address-summary" with model=destination.destinationContact %}</div>
-                  <div style="width:50%"><b>{{ labels.shippingMethod }}</b>: {{ grouping.shippingMethodName }}</div>
+    {% if model.items|findwhere("fulfillmentMethod", "Ship") %}
+    <div class="mz-l-stack-section" id="mz-ship-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.shippingInformation }}</h4>
+        {% for grouping in groupings %}
+          {% if grouping.fulfillmentMethod == "Ship" %}
+            <div class="mz-confirmation-container">
+                  {% with model.items as items %}
+                    {% include "modules/confirmationv2/confirmation-order-summary" with items=items grouping=grouping %}
                   {% endwith %}
-                </div>
 
+              <div style="display:-webkit-flex;margin:10px;width:100%">
+                {% with model.destinations|findwhere("id", grouping.destinationId) as destination %}
+                <div class="mz-addresssummary" style="width:50%"><b>{{ labels.shipTo }}</b>{% include "modules/common/address-summary" with model=destination.destinationContact %}</div>
+                <div style="width:50%"><b>{{ labels.shippingMethod }}</b>: {{ grouping.shippingMethodName }}</div>
+                {% endwith %}
+              </div>
+
+              <div class="mz-confirmation-shoppernotes">
+                {% if grouping.shopperNotes.comments %}
+                <div class="mz-l-stack-section">
+                    <div class="mz-ordercomments-header">{{ labels.comments }}</div>
+                    <p class="mz-ordercomments-body">{{ grouping.shopperNotes.comments }}</p>
+                </div>
+                {% endif %}
+                {% if grouping.shopperNotes.giftMessage %}
+                <div class="mz-l-stack-section">
+                    <div class="mz-ordercomments-header">{{ labels.giftMessage }}</div>
+                    <p class="mz-ordercomments-body">{{ grouping.shopperNotes.giftMessage }}</p>
+                </div>
+                {% endif %}
+            </div>
+            </div>
+
+          {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if groupings|findwhere('fulfillmentMethod', 'Digital') %}
+    <div class="mz-l-stack-section" id="mz-digital-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalDownload }}</h4>
+        {% for grouping in groupings %}
+          {% if grouping.fulfillmentMethod == "Digital" %}
+            <div class="mz-confirmation-container">
+                {% with model.items as items %}
+                  {% include "modules/confirmationv2/confirmation-order-summary" with items=items grouping=grouping %}
+                {% endwith %}
                 <div class="mz-confirmation-shoppernotes">
                   {% if grouping.shopperNotes.comments %}
                   <div class="mz-l-stack-section">
@@ -38,166 +67,132 @@
                       <p class="mz-ordercomments-body">{{ grouping.shopperNotes.giftMessage }}</p>
                   </div>
                   {% endif %}
-              </div>
-              </div>
-
-            {% endif %}
-          {% endfor %}
-      </div>
-      {% endif %}
-
-
-      {% if groupings|findwhere('fulfillmentMethod', 'Digital') %}
-      <div class="mz-l-stack-section" id="mz-digital-section">
-          <h4 class="mz-l-stack-sectiontitle">{{ labels.digitalDownload }}</h4>
-          {% for grouping in groupings %}
-            {% if grouping.fulfillmentMethod == "Digital" %}
-              <div class="mz-confirmation-container">
-                  {% with model.items as items %}
-                    {% include "modules/confirmationv2/confirmation-order-summary" with items=items grouping=grouping %}
-                  {% endwith %}
-                  <div class="mz-confirmation-shoppernotes">
-                    {% if grouping.shopperNotes.comments %}
-                    <div class="mz-l-stack-section">
-                        <div class="mz-ordercomments-header">{{ labels.comments }}</div>
-                        <p class="mz-ordercomments-body">{{ grouping.shopperNotes.comments }}</p>
-                    </div>
-                    {% endif %}
-                    {% if grouping.shopperNotes.giftMessage %}
-                    <div class="mz-l-stack-section">
-                        <div class="mz-ordercomments-header">{{ labels.giftMessage }}</div>
-                        <p class="mz-ordercomments-body">{{ grouping.shopperNotes.giftMessage }}</p>
-                    </div>
-                    {% endif %}
-                  </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-      </div>
-      {% endif %}
-      {% with groupings|findwhere('fulfillmentMethod', 'Pickup') as grouping %}
-      {% if grouping %}
-        <div class="mz-l-stack-section" id="mz-pickup-section">
-          <h4 class="mz-l-stack-sectiontitle">{{ labels.orderItemsPickup }}</h4>
-        {% for location in model.fulfillmentLocations %}
-          <div class="mz-confirmation-container">
-            <table class="mz-ordersummary-confirmation">
-              <thead>
-                <tr>
-                  <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
-                  <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
-                  <th class="mz-ordersummary-header-each">{{ labels.each }}</th>
-                  <th class="mz-ordersummary-header-total">{{ labels.total }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in model.items %}
-                  {% if item.fulfillmentLocationCode == location.id && item.fulfillmentMethod == "Pickup" %}
-                  <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
-                    <td class="mz-ordersummary-item-product">
-                      {{ item.product.name }} {% if item.product.bundledProducts.length %}
-                      <dl class="mz-propertylist">
-                        {% for bundledProduct in item.product.bundledProducts %}
-                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                        {% endfor %}
-                      </dl>
-                      {% endif %}
-                    </td>
-                    <td>{{ item.quantity }}</td>
-                    <td>
-                      {% include "modules/common/item-price" with item=item %}
-                    </td>
-                    <td>{% include "modules/common/item-total" with item=item %}
-                    </td>
-                  </tr>
-                  {% endif %}
-                {% endfor %}
-              </tbody>
-          </table>
-          <div style="margin:10px">
-            <b>{{ labels.pickupAt }}</b>
-            <div>
-              {% with location.locationInfo as locationInfo %}
-              <div>{{ locationInfo.name }}</div>
-              <div>{{ locationInfo.address.address1}}</div>
-              {% if locationInfo.address.address2 %}<div>{{ locationInfo.address.address2 }}</div>{% endif %}
-              {% if locationInfo.address.address3 %}<div>{{ locationInfo.address.address3 }}</div>{% endif %}
-              {% if locationInfo.address.address4 %}<div>{{ locationInfo.address.address4 }}</div>{% endif %}
-              <div>{{locationInfo.address.cityOrTown}}, {{locationInfo.address.stateOrProvince}} {{locationInfo.address.postalOrZipCode}}</div>
-             {% endwith %}
+                </div>
             </div>
+          {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% with groupings|findwhere('fulfillmentMethod', 'Pickup') as grouping %}
+    {% if grouping %}
+      <div class="mz-l-stack-section" id="mz-pickup-section">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.orderItemsPickup }}</h4>
+      {% for location in model.fulfillmentLocations %}
+        <div class="mz-confirmation-container">
+          <table class="mz-ordersummary-confirmation">
+            <thead>
+              <tr>
+                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+                <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+                <th class="mz-ordersummary-header-each">{{ labels.each }}</th>
+                <th class="mz-ordersummary-header-total">{{ labels.total }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in model.items %}
+                {% if item.fulfillmentLocationCode == location.id && item.fulfillmentMethod == "Pickup" %}
+                <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+                  <td class="mz-ordersummary-item-product">
+                    {{ item.product.name }} {% if item.product.bundledProducts.length %}
+                    <dl class="mz-propertylist">
+                      {% for bundledProduct in item.product.bundledProducts %}
+                      <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                      <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                      {% endfor %}
+                    </dl>
+                    {% endif %}
+                  </td>
+                  <td>{{ item.quantity }}</td>
+                  <td>
+                    {% include "modules/common/item-price" with item=item %}
+                  </td>
+                  <td>{% include "modules/common/item-total" with item=item %}
+                  </td>
+                </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin:10px">
+          <b>{{ labels.pickupAt }}</b>
+          <div>
+            {% with location.locationInfo as locationInfo %}
+            <div>{{ locationInfo.name }}</div>
+            <div>{{ locationInfo.address.address1}}</div>
+            {% if locationInfo.address.address2 %}<div>{{ locationInfo.address.address2 }}</div>{% endif %}
+            {% if locationInfo.address.address3 %}<div>{{ locationInfo.address.address3 }}</div>{% endif %}
+            {% if locationInfo.address.address4 %}<div>{{ locationInfo.address.address4 }}</div>{% endif %}
+            <div>{{locationInfo.address.cityOrTown}}, {{locationInfo.address.stateOrProvince}} {{locationInfo.address.postalOrZipCode}}</div>
+           {% endwith %}
           </div>
         </div>
-        {% endfor %}
       </div>
-       {% endif %}
-      {% endwith %}
+      {% endfor %}
+    </div>
+     {% endif %}
+    {% endwith %}
 
-      <div class="mz-l-stack-section" id="mz-payment-details">
-          <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
-          {% if model.total == 0 %}
-              {% with model.total|currency as total %}
-                  <h4 class="mz-confirmation-nopaymentrequired">{{ labels.noPaymentWasRequired|string_format(total) }}</h4>
-              {% endwith %}
-          {% else %}
-              {% for payment in model.payments %}
-              {% if payment.status != "Voided" and payment.status != "Declined" %}
-              {% include "modules/confirmationv2/confirmation-payment-details" with model=payment mailCheckTo=model.mailCheckTo %}
-              {% endif %}
-              {% endfor %}
-          {% endif %}
-      </div>
-
-        {% include "modules/confirmationv2/confirmation-price-summary" %}
-
-        {% if model.shopperNotes.comments %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.comments }}</h5>
-            <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
-        </div>
-        {% endif %}
-        {% if model.shopperNotes.giftMessage %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.giftMessage }}</h5>
-            <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
-        </div>
-        {% endif %}
-
-        {% if model.attributes.length > 0 %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.additionalInformation }}</h4>
-            {% for attribute in model.attributes %}
-            {% with attribute.values|first as attributeVal %}
-            {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attributeDef %}
-            {% if attributeDef %}
-                <div class="mz-l-stack-item">
-                    <small>{{ attributeDef.content.value }}</small>
-                    <div>
-                        {% if attributeDef.dataType == "DateTime" %}
-                            {{ attributeVal|date("F j, Y") }}
-                        {% else %}
-                            {% if attributeDef.dataType == "Bool" %}
-                                {% if attributeVal == "True" %}
-                                Yes
-                                {% else %}
-                                No
-                                {% endif %}
-                            {% else %}
-                                {{ attributeVal }}
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
+    <div class="mz-l-stack-section" id="mz-payment-details">
+        <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
+        {% if model.total == 0 %}
+            {% with model.total|currency as total %}
+                <h4 class="mz-confirmation-nopaymentrequired">{{ labels.noPaymentWasRequired|string_format(total) }}</h4>
+            {% endwith %}
+        {% else %}
+            {% for payment in model.payments %}
+            {% if payment.status != "Voided" and payment.status != "Declined" %}
+            {% include "modules/confirmationv2/confirmation-payment-details" with model=payment mailCheckTo=model.mailCheckTo %}
             {% endif %}
-            {% endwith %}
-            {% endwith %}
             {% endfor %}
-        </div>
         {% endif %}
-
-
     </div>
 
+      {% include "modules/confirmationv2/confirmation-price-summary" %}
 
-    {% endwith %}
+      {% if model.shopperNotes.comments %}
+      <div class="mz-l-stack-section">
+          <h4 class="mz-l-stack-sectiontitle">{{ labels.comments }}</h4>
+          <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
+      </div>
+      {% endif %}
+      {% if model.shopperNotes.giftMessage %}
+      <div class="mz-l-stack-section">
+          <h4 class="mz-l-stack-sectiontitle">{{ labels.giftMessage }}</h4>
+          <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
+      </div>
+      {% endif %}
+
+      {% if model.attributes.length > 0 %}
+      <div class="mz-l-stack-section">
+          <h4 class="mz-l-stack-sectiontitle">{{ labels.additionalInformation }}</h4>
+          {% for attribute in model.attributes %}
+          {% with attribute.values|first as attributeVal %}
+          {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attributeDef %}
+          {% if attributeDef %}
+              <div class="mz-l-stack-item">
+                  <small>{{ attributeDef.content.value }}</small>
+                  <div>
+                      {% if attributeDef.dataType == "DateTime" %}
+                          {{ attributeVal|date("F j, Y") }}
+                      {% else %}
+                          {% if attributeDef.dataType == "Bool" %}
+                              {% if attributeVal == "True" %}
+                              Yes
+                              {% else %}
+                              No
+                              {% endif %}
+                          {% else %}
+                              {{ attributeVal }}
+                          {% endif %}
+                      {% endif %}
+                  </div>
+              </div>
+          {% endif %}
+          {% endwith %}
+          {% endwith %}
+          {% endfor %}
+      </div>
+      {% endif %}
+  </div>
+  {% endwith %}
+</div>
