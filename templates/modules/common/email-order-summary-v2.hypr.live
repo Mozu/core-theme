@@ -74,7 +74,7 @@
           {% endif %}
         {% endfor %}
 
-        {% if pickupItems %}
+        {% if pickupItems and items|collection_filter(q) %}
         <tr class="mz-email-fulfillment-info">
           <td class="mz-addresssummary" colspan="4">
             <b>{{ labels.pickupAt }}</b>
