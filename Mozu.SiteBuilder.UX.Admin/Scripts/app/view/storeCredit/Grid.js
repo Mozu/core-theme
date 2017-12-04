@@ -258,7 +258,7 @@ Ext.define('Taco.view.storeCredit.Grid', {
                         itemId: 'customerMenu',
 
                         menuColumnHandler: function(event, item) {
-                            Taco.core.StateManager.attemptNavigate('customer/edit/' + item.record.get('customerId'));
+                            Taco.core.StateManager.attemptNavigate('customers/edit/' + item.record.get('customerId'));
                         }
                     }
                 ]
