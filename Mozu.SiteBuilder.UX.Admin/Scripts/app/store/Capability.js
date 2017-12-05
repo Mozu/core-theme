@@ -1,5 +1,5 @@
 Ext.define('Taco.store.Capability', {
-    extend: 'Ext.data.Store',
+    extend: 'Ext.ux.data.PagingStore',
     model: 'Taco.model.Capability',
     remoteFilter: false,
     remoteSort: false,
