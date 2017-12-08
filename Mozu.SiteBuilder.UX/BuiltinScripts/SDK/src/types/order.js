@@ -135,12 +135,14 @@ module.exports = (function () {
             })*/;
 
         },
-        addStoreCredit: function(payment) {
+        addStoreCredit: function (payment) {
             return this.createPayment({
                 amount: payment.amount,
                 newBillingInfo: {
                     paymentType: 'StoreCredit',
                     storeCreditCode: payment.storeCreditCode,
+                    storeCreditType: payment.storeCreditType,
+                    customCreditType: payment.customCreditType,
                     billingContact: {
                         email: payment.email
                     }

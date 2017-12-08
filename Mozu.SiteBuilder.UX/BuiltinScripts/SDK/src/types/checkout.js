@@ -238,6 +238,8 @@ module.exports = (function () {
                 newBillingInfo: {
                     paymentType: 'StoreCredit',
                     storeCreditCode: payment.storeCreditCode,
+                    storeCreditType: payment.storeCreditType,
+                    customCreditType: payment.customCreditType,
                     billingContact: {
                         email: payment.email
                     }

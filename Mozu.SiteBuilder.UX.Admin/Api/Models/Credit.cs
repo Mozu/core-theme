@@ -10,6 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         public DateTime? ActivationDate { get; set; }
         public string Code { get; set; }
         public string CreditType { get; set; }
+        public string CustomCreditType { get; set; }
         public string CurrencyCode { get; set; }
         public decimal InitialBalance { get; set; }
         public decimal CurrentBalance { get; set; }

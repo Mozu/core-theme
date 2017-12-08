@@ -43,36 +43,39 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
 
                     me.setLoading("Loading...");
 
-                    Taco.model.StoreCredit.load(code, {
-                        scope: me,
-                        // todo add success failure handling and loading indicators
-                        failure: function (response) {
+					me.storeCreditsStore = Taco.store.StoreCredits.createByCustomCode(code, {}, true);
+					me.storeCreditsStore.load({
+                        callback: function (records, operation, success) {
                             me.setLoading(false);
-                            if (!response) return codeField.markInvalid([codeField.invalidText]);
-                        },
-                        success: function (record) {                            
-                            me.setLoading(false);
-                            // begin validation logic
-                            var errorText;
-                            if (!record) return codeField.markInvalid([codeField.invalidText]);
-                            var now = new Date().getTime(),
-                                expDate = record.get('expirationDate'),
-                                activationDate = record.get('activationDate');
-                            if (expDate < now) errorText = "expired on " + expDate.toString();
-                            if (activationDate > now) errorText = "does not become active until " + activationDate.toString();
-                            if (record.get('currentBalance') <= 0) errorText = "has no remaining funds.";
-                            if (record.get('customerId')) errorText = "has already been claimed.";
 
-                            // check to see if the code has already been added to the store;double click on apply button.                
-                            if (me.store.getById(record.getId())) {
-                                errorText = "has already been added below";
+                            if(!success) {
+                                return codeField.markInvalid([codeField.invalidText]);
                             }
-                            if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
 
-                            // if no errorText add the gift card to the store;
-                            me.store.add(record);
-                        }
-                    });
+                            if (!records) return codeField.markInvalid([codeField.invalidText]);
+
+                            Ext.Array.each(records, function(record){
+
+                                var errorText;
+
+                                var now = new Date().getTime(),
+                                    expDate = record.get('expirationDate'),
+                                    activationDate = record.get('activationDate');
+                                if (expDate && expDate < now) errorText = "expired on " + expDate.toString();
+                                if (activationDate && activationDate > now) errorText = "does not become active until " + activationDate.toString();
+                                if (record.get('currentBalance') <= 0) errorText = "has no remaining funds.";
+                                if (record.get('customerId')) errorText = "has already been claimed.";
+
+                                // check to see if the code has already been added to the store;double click on apply button.                
+                                if (me.store.getById(record.getId())) {
+                                    errorText = "has already been added below";
+                                }
+                                if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
+
+                                me.store.insert(0, record);
+                            })
+						}
+					});
                 }
             })
         }

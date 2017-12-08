@@ -23,6 +23,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public decimal AmtToApply { get; set; }
             public decimal CurrentBalance { get; set; }
             public bool? RemainderToAccount { get; set; }
+            public string CreditType { get; set; }
+            public string CustomCreditType { get; set; }
         }
 
         public class GiftCardPaymentCollection
@@ -40,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // the service is not friendly to concurrent requests and the last one in will win, resulting in a single payment being added.
             foreach (var p in args.Payments)
             {
-                (await AddGiftCard(args.OrderId, p.Code, p.AmtToApply)).ReadAsSync();
+                (await AddGiftCard(args.OrderId, p.Code, p.AmtToApply, p.CreditType, p.CustomCreditType)).ReadAsSync();
             }
             
             // for any cards where we had selected "remainder to account", tie the card to the customer account.
@@ -58,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCard(string orderId, string code, decimal amountToApply)
+        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCard(string orderId, string code, decimal amountToApply, string creditType, string customCreditType)
         {
             var action = new DCp.PaymentAction
             {
@@ -72,7 +74,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     //    LastNameOrSurname = customer.LastName,
                     //    Email = customer.EmailAddress
                     //},
-                    StoreCreditCode = code
+                    StoreCreditCode = code,
+                    StoreCreditType = creditType,
+                    CustomCreditType = customCreditType
+
                 },
                 Amount = amountToApply
             };

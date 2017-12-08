@@ -115,6 +115,16 @@ Ext.define('Taco.model.OrderPayment', {
             useNull: true
         },
         {
+            name: 'storeCreditType',
+            type: 'string',
+            useNull: true
+        },
+        {
+            name: 'customCreditType',
+            type: 'string',
+            useNull: true
+        },
+        {
             name: 'cardType',
             type: 'string',
             useNull: true

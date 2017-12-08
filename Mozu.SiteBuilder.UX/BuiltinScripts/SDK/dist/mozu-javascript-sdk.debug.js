@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-01-12
+ * Mozu JavaScript SDK - v0.3.0 - 2018-01-19
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -3988,7 +3988,8 @@ module.exports=
     }
   },
   "storecredits": {
-    "template": "{+creditService}",
+    "verb": "GET",
+    "template": "{+creditService}{?startIndex,pageSize,sortBy,filter}",
     "collectionOf": "storecredit"
   },
   "contact": {
@@ -5045,6 +5046,8 @@ module.exports = (function () {
                 newBillingInfo: {
                     paymentType: 'StoreCredit',
                     storeCreditCode: payment.storeCreditCode,
+                    storeCreditType: payment.storeCreditType,
+                    customCreditType: payment.customCreditType,
                     billingContact: {
                         email: payment.email
                     }
@@ -5644,12 +5647,14 @@ module.exports = (function () {
             })*/;
 
         },
-        addStoreCredit: function(payment) {
+        addStoreCredit: function (payment) {
             return this.createPayment({
                 amount: payment.amount,
                 newBillingInfo: {
                     paymentType: 'StoreCredit',
                     storeCreditCode: payment.storeCreditCode,
+                    storeCreditType: payment.storeCreditType,
+                    customCreditType: payment.customCreditType,
                     billingContact: {
                         email: payment.email
                     }

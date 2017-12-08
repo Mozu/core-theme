@@ -27,6 +27,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             CreateMap<Credit, DC.Credit>()
                 .ForMember(x=> x.CurrencyCode , opt=> opt.ResolveUsing(x=> string.IsNullOrEmpty( x.CurrencyCode)?"USD" :x.CurrencyCode))
                 .ForMember(x => x.CreditType, opt => opt.ResolveUsing(x => string.IsNullOrEmpty(x.CreditType) ? "StoreCredit" : x.CreditType))
+                .ForMember(x => x.CustomCreditType, opt => opt.ResolveUsing(x => string.IsNullOrEmpty(x.CustomCreditType) ? "CustomCreditType" : x.CustomCreditType))
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
                 
             ;

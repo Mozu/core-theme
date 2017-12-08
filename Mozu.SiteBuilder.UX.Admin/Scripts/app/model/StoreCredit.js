@@ -31,6 +31,10 @@ Ext.define('Taco.model.StoreCredit', {
             defaultValue: 'StoreCredit'
         },
         {
+            name: 'customCreditType',
+            type: 'string'
+        },
+        {
             name: 'customerId',
             type: 'int',
             useNull: true,

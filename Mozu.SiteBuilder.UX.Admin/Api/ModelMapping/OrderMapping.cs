@@ -823,6 +823,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ExpireMonth, op => op.ResolveUsing(dc => dc.BillingInfo?.Card?.ExpireMonth))
                 .ForMember(x => x.ExpireYear, op => op.ResolveUsing(dc => dc.BillingInfo?.Card?.ExpireYear))
                 .ForMember(x => x.StoreCreditCode, op => op.ResolveUsing(dc => dc.BillingInfo?.StoreCreditCode))
+                .ForMember(x => x.StoreCreditType, op => op.ResolveUsing(dc => dc.BillingInfo?.StoreCreditType))
+                .ForMember(x => x.CustomCreditType, op => op.ResolveUsing(dc => dc.BillingInfo?.CustomCreditType))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))

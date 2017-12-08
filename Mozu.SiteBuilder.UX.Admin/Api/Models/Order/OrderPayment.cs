@@ -65,6 +65,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string StoreCreditCode { get; set; }
 
         /// <summary>
+        /// Store credit type used to create this payment, if it's a storecredit payment
+        /// </summary>
+        public string StoreCreditType { get; set; }
+
+        /// <summary>
+        /// Custom credit type used to create this payment, if using a custom storecredit
+        /// </summary>
+        public string CustomCreditType { get; set; }
+
+        /// <summary>
         /// Card type such as Visa, MasterCard, American Express, or Discover.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

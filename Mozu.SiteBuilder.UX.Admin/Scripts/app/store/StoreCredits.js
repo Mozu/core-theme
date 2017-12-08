@@ -1,3 +1,4 @@
+
 Ext.define('Taco.store.StoreCredits', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.StoreCredit',
@@ -50,6 +51,30 @@ Ext.define('Taco.store.StoreCredits', {
             }
 
             return store;
-        }
+		},
+		createByCustomCode: function (code, options, onlyActiveCredits) {
+			var store, proxy;
+			options || (options = {});
+			Ext.apply(options, {
+				autoLoad: false,
+				filters: [
+					
+				]
+			});
+           
+			store = Ext.create('Taco.store.StoreCredits', options);
+
+			proxy = store.getProxy();
+			proxy['extraParams'] || (proxy['extraParams'] = {});
+            proxy.extraParams.id = code;
+			if (onlyActiveCredits) {
+				proxy.extraParams.advancedSearch = Ext.JSON.encodeValue({
+					'currentlyActiveOnly': true, //Get only currently active 
+					'currentbalancefrom': 0.0001      // It still has a balance
+				});
+			}
+
+			return store;
+		}
     }
 });

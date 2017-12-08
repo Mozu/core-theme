@@ -465,7 +465,8 @@
     }
   },
   "storecredits": {
-    "template": "{+creditService}",
+    "verb": "GET",
+    "template": "{+creditService}{?startIndex,pageSize,sortBy,filter}",
     "collectionOf": "storecredit"
   },
   "contact": {

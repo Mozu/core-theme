@@ -107,6 +107,13 @@ Ext.define('Taco.view.storeCredit.Grid', {
             sortable: true,
             minWidth: 60
         }, {
+            dataIndex: 'customCreditType',
+            stateId: 'customCreditType',
+            text: 'Type',
+            sortable: true,
+            minWidth: 60,
+            hidden: true
+        }, {
             dataIndex: 'initialBalance',
             stateId: 'initialBalance',
             text: 'Issued Amount',
