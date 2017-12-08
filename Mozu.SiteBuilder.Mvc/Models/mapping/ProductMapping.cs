@@ -12,18 +12,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
     public class ProductMapping: Profile
     {
-        public override string ProfileName
+        public ProductMapping()
         {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-        
-        protected override void Configure()
-        {
-
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
+           CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
                 .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
                 {
 
@@ -36,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                     return dic;
                 });
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, IDictionary<string, object>>()
+            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, IDictionary<string, object>>()
                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product  product) =>
                {
 
@@ -67,30 +58,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
 
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
+            CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
           
      
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductOption, ProductOption>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductOption, ProductOption>();
                 //ForMember(x => x.StandardInputTypeIntention, op => op.MapFrom(x => (x.StandardInputTypeIntention == "Undefined" || x.OptionType == "Configurable")  ? "Dropdown" : x.StandardInputTypeIntention));
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductImage, ProductImage>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductImage, ProductImage>();
 
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Category, Category>();
+            CreateMap<Mozu.ProductRuntime.Contracts.Category, Category>();
               
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ConfiguredProduct, ConfiguredProduct>();
                 
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPrice, ProductPrice>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductPrice, ProductPrice>();
           
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPriceRange>();
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductVolumePrice, ProductVolumePrice>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductPriceRange, ProductPriceRange>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductVolumePrice, ProductVolumePrice>();
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
+            CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
               
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductContent, ProductContent>()
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductContent, ProductContent>()
                   .ForMember(x => x.ProductImages, op => op.ResolveUsing(x =>
                       {
                           var pic = new ProductImageCollection();
@@ -104,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
                       }));
             ;
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductCollection, ProductCollection>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductCollection, ProductCollection>();
                 //.ForMember(x => x.Items, op => op.MapFrom(x => x.Items))
                 //.ForMember(x => x.Paging, op => op.MapFrom(x =>
                 //    new PagingModel()
@@ -116,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 //    }));
                 //   // .AfterMap((x, y) => y.Paging.Init());
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
+            CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             //.ForMember(x => x.Items, op => op.MapFrom(x => x.Items))
             //.ForMember(x => x.Paging, op => op.MapFrom(x =>
             //    new PagingModel()

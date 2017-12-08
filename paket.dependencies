@@ -2,8 +2,6 @@
 content: none
 framework: net45, net451
 redirects: on
-source http://nuget-internal.corp.volusion.com:8200/api/odata
-source http://nuget-external.corp.volusion.com:8201/api/odata
 source http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-ng-internal/
 source http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-external/
 

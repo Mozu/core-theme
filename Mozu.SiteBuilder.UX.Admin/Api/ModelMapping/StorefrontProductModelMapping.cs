@@ -9,10 +9,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class StorefrontProductModelMapping : Profile
     {
-        protected override void Configure()
+        public StorefrontProductModelMapping()
         {
-            base.Configure();
-            Mapper.CreateMap<ProductRuntime.Contracts.Product, StorefrontProduct>()
+            CreateMap<ProductRuntime.Contracts.Product, StorefrontProduct>()
                 .ForMember(d=>d.Name, o=>o.ResolveUsing(s=> s.Content != null ? s.Content.ProductName : string.Empty))
                 .ForMember(d=>d.Price, o=>o.ResolveUsing(s => s.Price != null
                     ? s.Price.CatalogListPrice
@@ -23,9 +22,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        public override string ProfileName
-        {
-            get { return GetType().FullName; }
-        }
+       
     }
 }

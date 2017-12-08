@@ -68,7 +68,7 @@ NUGET
       Mozu.Core.Prime (>= 1.19)
     Mozu.Core.Messaging.Contracts (1.1643.5)
       Mozu.Core.Prime (>= 1.19)
-    Mozu.Core.Prime (1.1743.1.5)
+    Mozu.Core.Prime (1.1750.1)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 3.3)
@@ -260,7 +260,7 @@ NUGET
       System.IO (>= 4.3)
       System.Runtime (>= 4.3)
       System.Xml.ReaderWriter (>= 4.3)
-  remote: http://nuget-external.corp.volusion.com:8201/api/odata
+  remote: http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-external/
     Autofac (3.5.2)
     Autofac.WebApi2 (3.4.0)
       Autofac (>= 3.5 < 4.0)
@@ -268,7 +268,7 @@ NUGET
     AutofacContrib.NSubstitute (3.3.2)
       Autofac (>= 3.3)
       NSubstitute (>= 1.7)
-    AutoMapper (3.3.0)
+    AutoMapper (6.2.2)
     Burrows (0.3.3.0)
       Magnum (>= 2.1.2)
       Newtonsoft.Json (>= 5.0.8)

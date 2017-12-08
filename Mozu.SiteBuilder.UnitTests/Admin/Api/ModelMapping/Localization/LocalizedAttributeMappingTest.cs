@@ -17,7 +17,12 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping.Localization
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            Mapper.AddProfile<LocalizationMapping>();
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+           {
+               cfg.AddProfile<LocalizationMapping>();
+           });
+            
         }
 
         [TestFixtureTearDown]

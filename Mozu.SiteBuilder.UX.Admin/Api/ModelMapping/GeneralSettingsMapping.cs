@@ -9,45 +9,37 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class GeneralSettingsMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return GetType().FullName;
-            }
-        }
-
-        protected override void Configure()
+        public GeneralSettingsMapping()
         {
 
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.EmailTypeSetting, EmailTypeSettingVM>()
+            CreateMap<Mozu.SiteSettings.General.Contracts.EmailTypeSetting, EmailTypeSettingVM>()
                 .ForMember(x => x.Enabled, OP => OP.Ignore())
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
-            Mapper.CreateMap<EmailTypeSettingVM, Mozu.SiteSettings.General.Contracts.EmailTypeSetting>();
+            CreateMap<EmailTypeSettingVM, Mozu.SiteSettings.General.Contracts.EmailTypeSetting>();
            
 
 
-            Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
+            CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
-            Mapper.CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
+            CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
-            Mapper.CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
+            CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
-            Mapper.CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>();
+            CreateMap<Mozu.SiteSettings.General.Contracts.IPBlock, UX.Admin.Api.Models.GeneralSettings.IPBlock>();
+            CreateMap<UX.Admin.Api.Models.GeneralSettings.IPBlock, Mozu.SiteSettings.General.Contracts.IPBlock>();
 
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.IPBlockSettings, Mozu.SiteBuilder.UX.Models.Settings.IpBlockingSettings>()
+            CreateMap<Mozu.SiteSettings.General.Contracts.IPBlockSettings, Mozu.SiteBuilder.UX.Models.Settings.IpBlockingSettings>()
                 .ForMember(x => x.DownloadDate, OP => OP.ResolveUsing((Mozu.SiteSettings.General.Contracts.IPBlockSettings y) => y.AuditInfo != null ? y.AuditInfo.UpdateDate : null))
                   .ForMember(x => x.IpAddress, OP => OP.Ignore());
 
 
 
-            //Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
+            //CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>()
             //    //ignores
             //    .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
             //    .ForMember(m => m.AllowAllIPs, op => op.Ignore())
@@ -109,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //    }));
            
             // //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
-            //Mapper.CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
+            //CreateMap<UX.Models.Settings.GeneralSettings, Mozu.SiteSettings.General.Contracts.GeneralSettings>()
             //    //ignores
             //    .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
             //    .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.Ignore())

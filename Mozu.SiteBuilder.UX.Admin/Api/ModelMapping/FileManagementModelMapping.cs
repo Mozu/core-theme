@@ -12,16 +12,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class FileManagementModelMapping: Profile
     {
-        public override string ProfileName
+        public FileManagementModelMapping()
         {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-        protected override void Configure()
-        {
-            Mapper.CreateMap<Document, FileManagementFile>()
+            CreateMap<Document, FileManagementFile>()
                 .ForMember(x => x.dateModified, op => op.ResolveUsing(x => x.UpdateDate))
                 .ForMember(x => x.fileType, op => op.ResolveUsing((Document x) => DeriveMimeType(x.ContentMimeType)))
                 .ForMember(x => x.id, op => op.ResolveUsing(x => x.Id))
@@ -32,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.height, op => op.ResolveUsing(_ => _.Get<double>("height")))
                 .ForMember(x => x.fileSize, op => op.ResolveUsing(x => x.ContentLength.GetValueOrDefault(0)));
 
-            Mapper.CreateMap<FolderTree, FileManagementFolder>()
+            CreateMap<FolderTree, FileManagementFolder>()
                 .ForMember(x => x.id, op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.Id : null))
                 .ForMember(x => x.name, op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.Name : null))
                 .ForMember(x => x.parentId , op => op.ResolveUsing(x => (x.Folder != null) ? x.Folder.ParentId : null))
@@ -41,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.expanded, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<Folder, FileManagementFolder>()
+            CreateMap<Folder, FileManagementFolder>()
                 .ForMember(x => x.id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.parentId, op => op.ResolveUsing(x => x.ParentId))

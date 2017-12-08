@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Account;
 
@@ -6,18 +7,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public static class InvitationRoleMapping
     {
-        public static void Configure()
+
+      
+        public static void Configure(UserMapping userMapping)
         {
-            Mapper.CreateMap<AccountUserRole, AdminUser.Contracts.InvitationRole>()
+            userMapping.CreateMap<AccountUserRole, AdminUser.Contracts.InvitationRole>()
                 .ForMember(dest => dest.Name,
                     opt => opt.ResolveUsing(src => src.RoleName))
                 ;
 
-            Mapper.CreateMap<Mozu.AdminUser.Contracts.InvitationRole, AccountUserRole>()
+            userMapping.CreateMap<Mozu.AdminUser.Contracts.InvitationRole, AccountUserRole>()
                 .ForMember(dest => dest.RoleName,
                     opt => opt.ResolveUsing(src => src.Name))
                 ;
         }
+
 
         public static AccountUserRole ToSiteBuilderContract(this Mozu.AdminUser.Contracts.InvitationRole invitationRole)
         {
@@ -38,5 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             return Mapper.Map<List<AccountUserRole>, List<Mozu.AdminUser.Contracts.InvitationRole>>(invitationRoles);
         }
+
+        
     }
 }

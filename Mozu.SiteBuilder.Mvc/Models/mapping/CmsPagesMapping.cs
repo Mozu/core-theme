@@ -22,22 +22,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             };
         }
 
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-        protected override void Configure()
+        public CmsPagesMapping()
         {
 
-            Mapper.CreateMap<DC.Facet, VM.Facet>();
-            Mapper.CreateMap<VM.Facet, DC.Facet>();
+            CreateMap<DC.Facet, VM.Facet>();
+            CreateMap<VM.Facet, DC.Facet>();
 
             var defaultFlags = ToDict(new Models.Admin.CMS.DocListFlags { EnableActiveDateRange = false, EnablePublishing = false, SupportsActiveDateRange = false, SupportsPublishing = false });
 
-            Mapper.CreateMap<DC.Document, IDictionary<string, object>>()
+            CreateMap<DC.Document, IDictionary<string, object>>()
                .ConstructUsing((DC.Document doc) =>
                {
 
@@ -59,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                    return dic;
                });
 
-            Mapper.CreateMap<DC.Document, Models.Admin.CMS.DocumentWithListInfo>()
+            CreateMap<DC.Document, Models.Admin.CMS.DocumentWithListInfo>()
                 .ForMember(x => x.ActiveDateRange, m => m.ResolveUsing(n => n.ActiveDateRange))
                 .ForMember(x => x.ContentLength, m => m.ResolveUsing(n => n.ContentLength))
                 .ForMember(x => x.ContentMimeType, m => m.ResolveUsing(n => n.ContentMimeType))
@@ -75,10 +68,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.PublishState, m => m.ResolveUsing(n => n.PublishState))
                 .ForMember(x => x.UpdateDate, m => m.ResolveUsing(n => n.UpdateDate));
 
-            Mapper.CreateMap<JObject, JObject>().ConstructUsing(x => x);
-            Mapper.CreateMap<JContainer, JContainer>().ConstructUsing(x => x);
+            CreateMap<JObject, JObject>().ConstructUsing(x => x);
+            CreateMap<JContainer, JContainer>().ConstructUsing(x => x);
 
-            Mapper.CreateMap<Mozu.Content.Contracts.DocumentDraftSummary, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
+            CreateMap<Mozu.Content.Contracts.DocumentDraftSummary, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
                 .ForMember(d => d.Id, m => m.MapFrom(dc => dc.Id))
                 .ForMember(d => d.DraftType, m => m.ResolveUsing(dc => dc.ListFQN.ToLowerInvariant() == "pages@mozu" ? "Page" : "Other"))
                 .ForMember(d => d.ListFQN,m => m.ResolveUsing(dc => dc.ListFQN))

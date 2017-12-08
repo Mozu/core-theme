@@ -11,14 +11,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class CapabilityMapping : Profile
     {
-        public override string ProfileName
+        public CapabilityMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.Application, Application>()
+            CreateMap<DC.Application, Application>()
                 .ForMember(x => x.Capabilities, opt => opt.Ignore())
                 .ConstructUsing(app =>
                 {
@@ -105,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return a;
                 });
 
-            Mapper.CreateMap<Capability, Mozu.Core.ThirdParty.Contracts.Capability>()
+            CreateMap<Capability, Mozu.Core.ThirdParty.Contracts.Capability>()
                 //ignores
                 .ForMember(x => x.SupportedShoppingCountries, opt => opt.Ignore())
                 .ForMember(x => x.AppHashKey, op => op.Ignore())
@@ -113,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.AuditInfo, op => op.Ignore())
                   ;
 
-            // Mapper.CreateMap<Mozu.Core.ThirdParty.Contracts.Capability,Capability>();
+            // CreateMap<Mozu.Core.ThirdParty.Contracts.Capability,Capability>();
         }
     }
 }

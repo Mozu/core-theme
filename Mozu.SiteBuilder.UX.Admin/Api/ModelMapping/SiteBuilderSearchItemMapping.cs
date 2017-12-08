@@ -11,25 +11,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class SiteBuilderSearchItemMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-
-        protected override void Configure()
+        public SiteBuilderSearchItemMapping()
         {
             // Category To Search Item
-            Mapper.CreateMap<DC.Category, SearchItem>()
+            CreateMap<DC.Category, SearchItem>()
                .ForMember(x => x.Name, opt => opt.ResolveUsing(dc => dc.Content.Name))
                .ForMember(x => x.Url, opt => opt.ResolveUsing(dc => dc.CategoryCode))
                .ForMember(x => x.IsCategory, opt => opt.UseValue(true))
                .ForMember(x => x.isDocument, opt => opt.UseValue(false))
                 ;
 
-            Mapper.CreateMap<Document, SearchItem>()
+            CreateMap<Document, SearchItem>()
              .ForMember(x => x.Name, opt => opt.ResolveUsing(dc => dc.Properties.GetValue("link_title") != null ? dc.Properties.GetValue("link_title") : dc.Name))
              .ForMember(x => x.Url, opt => opt.ResolveUsing(dc => dc.Name))
              .ForMember(x => x.IsCategory, opt => opt.UseValue(false))

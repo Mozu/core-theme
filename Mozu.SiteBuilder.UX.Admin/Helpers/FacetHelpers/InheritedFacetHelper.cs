@@ -96,4 +96,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.FacetHelpers
                             || cli[i].RangeValueEnd.ToNullSafeString() != srv.RangeValueEnd.ToNullSafeString()).Any();
         }
     }
+    public static class AMExt
+    {
+        public static string ToNullSafeString( this object value)
+        {
+            return value == null ? null : value.ToString();
+        }
+       
+    }
 }

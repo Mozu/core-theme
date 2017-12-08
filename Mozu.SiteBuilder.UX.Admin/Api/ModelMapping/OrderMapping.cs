@@ -23,12 +23,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private const string PAYMENT_INTERACTION_TYPE_REFUND = "Refund";
         private const string PAYMENT_INTERACTION_STATUS_FAILED = "Failed";
 
-        public override string ProfileName
-        {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
+        public OrderMapping()
         {
             Map_DcOrder_to_Order();
             Map_DcOrderItem_to_OrderItem();
@@ -61,13 +56,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_OrderDiscount_to_DcAppliedDiscount();
 
             // cheese
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
+            CreateMap<Mozu.Core.Api.Contracts.Measurement, decimal?>()
                 .ConvertUsing(f => f == null ? null : f.Value);
         }
 
         private void Map_DcOrder_to_Order()
         {
-            Mapper.CreateMap<OrdersDC.Order, Order>()
+            CreateMap<OrdersDC.Order, Order>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.SiteId, op => op.ResolveUsing(dc => dc.SiteId))
                 .ForMember(x => x.ChannelCode, op => op.ResolveUsing(dc => dc.ChannelCode))
@@ -182,25 +177,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         order.Packages = order.Packages.OrderBy(p => p.CreateDate).ToList();
 
                         // add orderId to packages
-                        EnumerableExtensions.Each(order.Packages, p => p.OrderId = order.Id);
+                        order.Packages.ForEach( p => p.OrderId = order.Id);
 
                         // add item name, etc to packageItems
-                        EnumerableExtensions.Each(order.Packages.SelectMany(p => p.Items), packageItem => FillPackageItemDetails(packageItem, order));
+                        order.Packages.SelectMany(p => p.Items).Each( packageItem => FillPackageItemDetails(packageItem, order));
 
                         // ensure weight on all packages
-                        EnumerableExtensions.Each(order.Packages, p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
+                        order.Packages.Each( p => { if (p.Weight == null) p.Weight = p.Items.Sum(i => i.Weight.HasValue ? i.Weight : 0); });
                     }
 
                     if (!order.Pickups.IsNullOrEmpty())
                     {
                         // add item name to pickup item
-                        EnumerableExtensions.Each(order.Pickups.SelectMany(p => p.Items), pickupItem => FillPickupItemDetails(pickupItem, order));
+                        order.Pickups.SelectMany(p => p.Items).Each( pickupItem => FillPickupItemDetails(pickupItem, order));
                     }
 
                     if (!order.DigitalPackages.IsNullOrEmpty())
                     {
                         // add item name to digital items
-                        EnumerableExtensions.Each(order.DigitalPackages.SelectMany(p => p.Items), digitalItem => FillPackageItemDetails(digitalItem, order));
+                        order.DigitalPackages.SelectMany(p => p.Items).Each( digitalItem => FillPackageItemDetails(digitalItem, order));
                     }
 
                 })
@@ -575,7 +570,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcOrderItem_to_OrderItem()
         {
-            Mapper.CreateMap<ProductsDC.BundledProduct, BundledProduct>()
+            CreateMap<ProductsDC.BundledProduct, BundledProduct>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
@@ -593,7 +588,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LineId, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<BundledProduct, ProductsDC.BundledProduct>()
+            CreateMap<BundledProduct, ProductsDC.BundledProduct>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(dc => dc.Name, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(dc => dc.Description))
@@ -611,7 +606,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<OrdersDC.OrderItem, OrderItem>()
+            CreateMap<OrdersDC.OrderItem, OrderItem>()
                 .ForMember(x => x.ProductUsage, opt => opt.ResolveUsing(dc => dc.Product?.ProductUsage))
                 .ForMember(x => x.BundledProducts, op => op.ResolveUsing(dc => dc.Product?.BundledProducts))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
@@ -651,7 +646,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     if (orderItem.Discounts != null)
                     {
-                        EnumerableExtensions.Each(orderItem.Discounts, d => d.Quantity = (d.Quantity == 0)
+                        orderItem.Discounts.Each( d => d.Quantity = (d.Quantity == 0)
                             ? orderItem.Quantity : d.Quantity);
                     }
 
@@ -666,7 +661,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcOrderReturnableItem_to_OrderReturnableItem()
         {
-            Mapper.CreateMap<OrdersDC.OrderReturnableItem, OrderReturnableItem>();
+            CreateMap<OrdersDC.OrderReturnableItem, OrderReturnableItem>();
         }
 
         /// <summary>
@@ -674,7 +669,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         /// </summary>
         private void Map_BundledProduct_to_OrderItem()
         {
-            Mapper.CreateMap<BundledProduct, OrderItem>()
+            CreateMap<BundledProduct, OrderItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.UnitWeight))
@@ -737,7 +732,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcAppliedProductDiscount_to_OrderItemDiscount()
         {
-            Mapper.CreateMap<DiscountDC.AppliedProductDiscount, OrderItemDiscount>()
+            CreateMap<DiscountDC.AppliedProductDiscount, OrderItemDiscount>()
                 //todo: confirm default 0 when null Greg Murray on 2014-01-28 
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount?.Id ?? 0))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.ProductQuantity))
@@ -752,7 +747,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()
         {
-            Mapper.CreateMap<DiscountDC.AppliedDiscount, OrderDiscount>()
+            CreateMap<DiscountDC.AppliedDiscount, OrderDiscount>()
                 //todo: confirm 0 default when null Greg Murray on 2014-01-28 
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount?.Id ?? 0))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Discount?.Name))
@@ -766,7 +761,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         private void Map_DcHandlingDiscount_to_HandlingDiscount()
         {
 
-            Mapper.CreateMap<DiscountDC.AppliedDiscount, HandlingDiscount>()
+            CreateMap<DiscountDC.AppliedDiscount, HandlingDiscount>()
                 //todo: confirm 0 default when null Greg Murray on 2014-01-28 
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount?.Id ?? 0))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Discount?.Name))
@@ -779,7 +774,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcShippingDiscount_to_ShippingDiscount()
         {
-            Mapper.CreateMap<DiscountDC.AppliedLineItemShippingDiscount, ShippingDiscount>()
+            CreateMap<DiscountDC.AppliedLineItemShippingDiscount, ShippingDiscount>()
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount?.Discount?.Id ?? 0))
                 .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Discount?.Discount?.Name))
@@ -789,7 +784,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ItemLineId, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
+            CreateMap<DiscountDC.ShippingDiscount, ShippingDiscount>()
                 .ForMember(x => x.DiscountId, op => op.ResolveUsing(dc => dc.Discount?.Discount?.Id ?? 0))
                 .ForMember(x => x.MethodCode, op => op.ResolveUsing(dc => dc.MethodCode))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Discount?.Discount?.Name))
@@ -802,7 +797,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcPayment_to_OrderPayment()
         {
-            Mapper.CreateMap<PaymentsDC.Payment, OrderPayment>()
+            CreateMap<PaymentsDC.Payment, OrderPayment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
                 .ForMember(x => x.PaymentServiceTransactionId, op => op.ResolveUsing(dc => dc.PaymentServiceTransactionId))
@@ -879,14 +874,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
         private void Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment()
         {
-            Mapper.CreateMap<PaymentsDC.PurchaseOrderPayment, PurchaseOrderPayment>();
-            Mapper.CreateMap<PaymentsDC.PurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>();
-            Mapper.CreateMap<PaymentsDC.PurchaseOrderCustomField, PurchaseOrderCustomField>();
+            CreateMap<PaymentsDC.PurchaseOrderPayment, PurchaseOrderPayment>();
+            CreateMap<PaymentsDC.PurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>();
+            CreateMap<PaymentsDC.PurchaseOrderCustomField, PurchaseOrderCustomField>();
         }
 
         private void Map_DcPaymentInteraction_to_PaymentInteraction()
         {
-            Mapper.CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
+            CreateMap<PaymentsDC.PaymentInteraction, PaymentInteraction>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.GatewayTransactionId, op => op.ResolveUsing(dc => dc.GatewayTransactionId))
                 .ForMember(x => x.GatewayInteractionId, op => op.ResolveUsing(dc => dc.GatewayInteractionId))
@@ -911,7 +906,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcRefund_to_Refund()
         {
-            Mapper.CreateMap<RefundsDC.Refund, OrderRefund>()
+            CreateMap<RefundsDC.Refund, OrderRefund>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.OrderId, op => op.ResolveUsing(dc => dc.OrderId))
                 .ForMember(x => x.Reason, op => op.ResolveUsing(dc => dc.Reason))
@@ -923,7 +918,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcPackage_to_OrderPackage()
         {
-            Mapper.CreateMap<ShippingDC.Package, OrderPackage>()
+            CreateMap<ShippingDC.Package, OrderPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.HasLabel, op => op.ResolveUsing(dc => dc.HasLabel))
                 .ForMember(x => x.ShipmentId, op => op.ResolveUsing(dc => dc.ShipmentId))
@@ -951,7 +946,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcPackageItem_to_OrderPackageItem()
         {
-            Mapper.CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
+            CreateMap<ShippingDC.PackageItem, OrderPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
@@ -970,7 +965,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcPickup_to_OrderPickup()
         {
-            Mapper.CreateMap<ShippingDC.Pickup, OrderPickup>()
+            CreateMap<ShippingDC.Pickup, OrderPickup>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.FulfillmentDate, op => op.ResolveUsing(dc => dc.FulfillmentDate))
@@ -992,7 +987,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcPickupItem_to_OrderPickupItem()
         {
-            Mapper.CreateMap<ShippingDC.PickupItem, OrderPickupItem>()
+            CreateMap<ShippingDC.PickupItem, OrderPickupItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
@@ -1010,7 +1005,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcDigitalPackage_to_OrderDigitalPackage()
         {
-            Mapper.CreateMap<ShippingDC.DigitalPackage, OrderDigitalPackage>()
+            CreateMap<ShippingDC.DigitalPackage, OrderDigitalPackage>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 .ForMember(x => x.Items, op => op.ResolveUsing(dc => dc.Items))
@@ -1028,13 +1023,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcDigitalPackageItem_to_OrderDigitalPackageItem()
         {
-            Mapper.CreateMap<ShippingDC.DigitalPackageItem, OrderDigitalPackageItem>()
+            CreateMap<ShippingDC.DigitalPackageItem, OrderDigitalPackageItem>()
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.ProductCode))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
                 .ForMember(x => x.GiftCardCode, op => op.ResolveUsing(dc => dc.GiftCardCode))
                 .ForMember(x => x.LineId, op => op.ResolveUsing(dc => dc.LineId))
                 .ForMember(x => x.OptionAttributeFQN, op => op.ResolveUsing(x => x.OptionAttributeFQN))
-                .ForMember(x => x.Weight, op => op.UseValue(null))
+                .ForMember(x => x.Weight, op => op.UseValue((decimal?)null))
                 //ignores, handled in Order mapping
                 .ForMember(x => x.FulfillmentStatus, op => op.Ignore())
                 .ForMember(x => x.ProductName, op => op.Ignore())
@@ -1045,7 +1040,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcAdjustment_to_Adjustment()
         {
-            Mapper.CreateMap<CommerceDC.Adjustment, Adjustment>()
+            CreateMap<CommerceDC.Adjustment, Adjustment>()
                 .ForMember(x => x.Amount, op => op.ResolveUsing(dc => dc.Amount))
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
                 .ForMember(x => x.InternalComment, op => op.ResolveUsing(dc => dc.InternalComment))
@@ -1054,7 +1049,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderPackage_to_DcPackage()
         {
-            Mapper.CreateMap<OrderPackage, ShippingDC.Package>()
+            CreateMap<OrderPackage, ShippingDC.Package>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.Items, op => op.ResolveUsing(x => x.Items))
                 .ForMember(dc => dc.ShipmentId, op => op.ResolveUsing(x => x.ShipmentId))
@@ -1081,7 +1076,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderPackageItem_to_DcPackageItem()
         {
-            Mapper.CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
+            CreateMap<OrderPackageItem, ShippingDC.PackageItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
@@ -1092,7 +1087,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderPickup_to_DcPickup()
         {
-            Mapper.CreateMap<OrderPickup, ShippingDC.Pickup>()
+            CreateMap<OrderPickup, ShippingDC.Pickup>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.FulfillmentLocationCode, op => op.ResolveUsing(x => x.FulfillmentLocationCode))
                 .ForMember(dc => dc.FulfillmentDate, op => op.ResolveUsing(x => x.FulfillmentDate))
@@ -1104,7 +1099,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderPickupItem_to_DcPickupItem()
         {
-            Mapper.CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
+            CreateMap<OrderPickupItem, ShippingDC.PickupItem>()
                 .ForMember(dc => dc.ProductCode, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.LineId, op => op.ResolveUsing(x => x.LineId))
@@ -1116,7 +1111,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderItem_to_DcOrderItem()
         {
-            Mapper.CreateMap<OrderItem, OrdersDC.OrderItem>()
+            CreateMap<OrderItem, OrdersDC.OrderItem>()
 
                   .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                   .ForMember(dc => dc.UnitPrice, op => op.Ignore())
@@ -1166,7 +1161,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderItemDiscount_to_DcAppliedProductDiscount()
         {
-            Mapper.CreateMap<OrderItemDiscount, DiscountDC.AppliedProductDiscount>()
+            CreateMap<OrderItemDiscount, DiscountDC.AppliedProductDiscount>()
                 .ForMember(dc => dc.ProductQuantity, op => op.ResolveUsing(x => x.Quantity))
                 .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
                 {
@@ -1185,7 +1180,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderDiscount_to_DcAppliedDiscount()
         {
-            Mapper.CreateMap<OrderDiscount, DiscountDC.AppliedDiscount>()
+            CreateMap<OrderDiscount, DiscountDC.AppliedDiscount>()
                 .ForMember(dc => dc.CouponCode, op => op.ResolveUsing(x => x.CouponCode))
                 .ForMember(dc => dc.Impact, op => op.ResolveUsing(x => x.Total))
                 .ForMember(dc => dc.Excluded, op => op.ResolveUsing(x => !x.IsActive))
@@ -1203,7 +1198,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_ShippingDiscount_to_DcShippingDiscount()
         {
-            Mapper.CreateMap<ShippingDiscount, DiscountDC.ShippingDiscount>()
+            CreateMap<ShippingDiscount, DiscountDC.ShippingDiscount>()
                 .ForMember(dc => dc.MethodCode, op => op.ResolveUsing(x => x.MethodCode))
                 .ForMember(dc => dc.Discount, op => op.ResolveUsing(x =>
                 {
@@ -1224,7 +1219,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_Adjustment_to_DcAdjustment()
         {
-            Mapper.CreateMap<Adjustment, CommerceDC.Adjustment>()
+            CreateMap<Adjustment, CommerceDC.Adjustment>()
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => x.Amount))
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.InternalComment, op => op.ResolveUsing(x => x.InternalComment))
@@ -1233,7 +1228,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcOrderNote_to_OrderNote()
         {
-            Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
+            CreateMap<OrdersDC.OrderNote, OrderNote>()
                 .ForMember(x => x.NoteId, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Text, op => op.ResolveUsing(dc => dc.Text))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateDate))
@@ -1246,7 +1241,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderNote_to_DcOrderNote()
         {
-            Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>()
+            CreateMap<OrderNote, OrdersDC.OrderNote>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.NoteId))
                 .ForMember(dc => dc.Text, op => op.ResolveUsing(x => x.Text))
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())

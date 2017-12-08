@@ -11,20 +11,29 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
+    public class SuperchargedLocationInventory : DC.LocationInventory
+    {
+        [Newtonsoft.Json.JsonProperty(PropertyName = "locationName")]
+        public string LocationName { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(PropertyName = "adjustmentType")]
+        public string AdjustmentType { get; set; }
+
+        public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType = "Absolute")
+        {
+            // use some automapper magic.
+            Mapper.Map<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
+            this.LocationName = locationName;
+            this.AdjustmentType = adjustmentType;
+        }
+    }
     //todo: what if we split into methods like Order mapping? Greg Murray on 2014-01-28 
     public class ProductMapping : Profile
     {
         private const int MAX_ATTRIBUTE_VALUE_LENGTH = 50;
      //   private const string DEFAULT_CURRENCY_CODE = "USD";
 
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-        protected override void Configure()
+        public ProductMapping()
         {
 
             var NULLCONTENT = new DC.ProductLocalizedContent();
@@ -35,7 +44,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             var NULLPRODVARPRICE = new DC.ProductVariationDeltaPrice();
             var NULLCOST = new DC.ProductCost();
 
-            Mapper.CreateMap<DC.BundledProduct, BundledProduct>()
+            CreateMap<DC.BundledProduct, BundledProduct>()
                   .ForMember(x => x.SalePrice, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.SalePrice : null))
                   .ForMember(x => x.Price, opt => opt.ResolveUsing(x => (x.Price != null) ? x.Price.Price : null))
                   .ForMember(x => x.PackageWeight, op => op.ResolveUsing(dc => dc.PackageWeight == null ? null : dc.PackageWeight.Value))
@@ -46,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   .ForMember(x => x.Quantity, opt => opt.ResolveUsing(x => x.Quantity))
                   .ForMember(x => x.ProductName, opt => opt.ResolveUsing(x => x.ProductName));
 
-            Mapper.CreateMap<BundledProduct, DC.BundledProduct>()
+            CreateMap<BundledProduct, DC.BundledProduct>()
                 .ForMember(x => x.ProductCode, opt => opt.ResolveUsing(x => x.ProductCode))
                 .ForMember(x => x.Quantity, opt => opt.ResolveUsing(x => x.Quantity))
                 .ForMember(x => x.ProductName, opt => opt.ResolveUsing(x => x.ProductName))
@@ -58,7 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PackageWidth, opt => opt.Ignore());
 
 
-            Mapper.CreateMap<DC.Product, Product>()
+            CreateMap<DC.Product, Product>()
                 .ForMember(x => x.BundledProducts, opt => opt.ResolveUsing(x=>x.BundledProducts))
                 .ForMember(x => x.OutOfStockBehavior , op=> op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).OutOfStockBehavior  ))
                 .ForMember(x => x.ManageStock, op => op.ResolveUsing(dc => (dc.InventoryInfo ?? new DC.ProductInventoryInfo()).ManageStock ))
@@ -144,12 +153,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     if (y.ProductInCatalogs != null)
                     {
-                        y.ProductInCatalogs.Each(p => p.ProductCode = y.ProductCode);
+                        y.ProductInCatalogs.ForEach(p => p.ProductCode = y.ProductCode);
                     }
                 })
                 ;
 
-            Mapper.CreateMap<Product, DC.Product>()
+            CreateMap<Product, DC.Product>()
                 .ForMember(x => x.BundledProducts, opt => opt.ResolveUsing(x => x.BundledProducts))
                 .ForMember(dc => dc.InventoryInfo, op => op.ResolveUsing(p =>
                     new DC.ProductInventoryInfo()
@@ -263,7 +272,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<DC.ProductProperty, ProductProperty>()
+            CreateMap<DC.ProductProperty, ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing( x =>
                   {
@@ -285,7 +294,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       ;
 
 
-            Mapper.CreateMap<ProductProperty, DC.ProductProperty>()
+            CreateMap<ProductProperty, DC.ProductProperty>()
                 //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
@@ -323,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   }));
 
 
-            Mapper.CreateMap<DC.ProductOption , ProductProperty>()
+            CreateMap<DC.ProductOption , ProductProperty>()
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
                   {
@@ -346,7 +355,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
 
-            Mapper.CreateMap<ProductProperty, DC.ProductOption>()
+            CreateMap<ProductProperty, DC.ProductOption>()
                 //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
@@ -367,15 +376,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                       }).ToList();
                   }));
 
-            Mapper.CreateMap<ProductVariationOption, DC.ProductVariationOption>()
+            CreateMap<ProductVariationOption, DC.ProductVariationOption>()
                 //todo: confirm if need to add Content (AttributeVocabularyValueLocalizedContent) Greg Murray on 2014-01-24 
                 .ForMember(dc => dc.Content, op => op.Ignore())
                 ;
-            Mapper.CreateMap<DC.ProductVariationOption, ProductVariationOption>();
+            CreateMap<DC.ProductVariationOption, ProductVariationOption>();
 
 
 
-            //Mapper.CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
+            //CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
             //      .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
             //      .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
             //      .ForMember(x => x.Content, op => op.ResolveUsing(x =>
@@ -390,7 +399,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             //              return null;
             //          }));
 
-            //Mapper.CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
+            //CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
             //      .ForMember(x => x.Value, op => op.ResolveUsing(x => x.Value))
             //      .ForMember(x => x.LocalizedValue, op => op.ResolveUsing(x =>
             //          {
@@ -403,7 +412,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
 
-            Mapper.CreateMap<DC.ProductInCatalogInfo , ProductInCatalogInfo>()
+            CreateMap<DC.ProductInCatalogInfo , ProductInCatalogInfo>()
                 .ForMember(x => x.CatalogId, op => op.ResolveUsing(dc => dc.CatalogId ))
                 .ForMember( x=> x.ProductCategories, op=> op.ResolveUsing( dc=> dc.ProductCategories != null
                     ? dc.ProductCategories.Select( x=> x.CategoryId ).ToList() : null))
@@ -434,11 +443,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.BundledProducts, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.ProductLocalizedImage, ProductLocalizedImage>()
+            CreateMap<DC.ProductLocalizedImage, ProductLocalizedImage>()
               .ForMember(c => c.ImageName, op => op.Ignore())
               ;
 
-            Mapper.CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
+            CreateMap<ProductInCatalogInfo, DC.ProductInCatalogInfo>()
                 .ForMember(dc => dc.CatalogId, op => op.ResolveUsing(pisi => pisi.CatalogId))
                 .ForMember(dc => dc.DateFirstAvailableInCatalog, op => op.ResolveUsing(pisi => pisi.DateFirstAvailableInCatalog))
                 .ForMember(x => x.ProductCategories, op => op.ResolveUsing(pisi => pisi.ProductCategories != null
@@ -495,7 +504,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     if (catalogInfo != null && catalogInfo.Content != null && catalogInfo.Content.ProductImages != null)
                     {
-                        catalogInfo.Content.ProductImages.Each(x =>
+                        catalogInfo.Content.ProductImages.ForEach(x =>
                         {
                             if (!string.IsNullOrWhiteSpace(x.CmsId))
                             {
@@ -506,7 +515,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 })
                 ;
 
-            Mapper.CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
+            CreateMap<Models.ProductModels.ProductLocalizedImage, DC.ProductLocalizedImage>()
                 .ForMember(x => x.CmsId, opt => opt.ResolveUsing(x => x.CmsId))
                 .ForMember(x => x.ImageUrl, opt => opt.ResolveUsing(x => string.IsNullOrEmpty(x.CmsId)
                     ? x.ImageUrl : null))
@@ -522,7 +531,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 ;
 
-            Mapper.CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>()
+            CreateMap<DC.ProductLocalizedImage, Models.ProductModels.ProductLocalizedImage>()
                 .ForMember(x => x.CmsId, opt => opt.ResolveUsing(x => x.CmsId))
                 //todo: confirm 3 new mappings Greg Murray on 2014-01-24
                 .ForMember(x => x.ISOCultureCode, op => op.ResolveUsing(dc => dc.LocaleCode))
@@ -534,23 +543,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>()
+            CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>()
                 //todo: confirm unit -> symbol mappings Greg Murray on 2014-01-24 
                 .ForMember(x => x.Symbol, op => op.ResolveUsing(dc => dc.Unit))
                 .ForMember(x => x.Val, op => op.ResolveUsing(( Mozu.Core.Api.Contracts.Measurement dc) => dc.Value))
                 ;
-            Mapper.CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>()
+            CreateMap<UnitOfMeasure, Mozu.Core.Api.Contracts.Measurement>()
                 //todo: confirm Symbol -> unit mapping Greg Murray on 2014-01-24 
                 .ForMember(dc => dc.Unit, op => op.ResolveUsing(x => x.Symbol))
                 .ForMember(dc => dc.Value, op => op.ResolveUsing(x => x.Val))
                 ;
 
-            Mapper.CreateMap<ProductExtra, DC.ProductExtra>();
-            Mapper.CreateMap<DC.ProductExtra, ProductExtra>()
+            CreateMap<ProductExtra, DC.ProductExtra>();
+            CreateMap<DC.ProductExtra, ProductExtra>()
                 .ForMember(x => x.AttributeDetail, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<ProductExtraValue, DC.ProductExtraValue>()
+            CreateMap<ProductExtraValue, DC.ProductExtraValue>()
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => new DC.ProductExtraValueDeltaPrice()
                 {
             //       CurrencyCode = DEFAULT_CURRENCY_CODE,
@@ -559,11 +568,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore()) 
                 ;
 
-            Mapper.CreateMap<DC.ProductExtraValue, ProductExtraValue>()
+            CreateMap<DC.ProductExtraValue, ProductExtraValue>()
                   .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => x.DeltaPrice != null
                       ? x.DeltaPrice.DeltaPrice : 0));
 
-            Mapper.CreateMap<DC.ProductVariation, ProductVariation>()
+            CreateMap<DC.ProductVariation, ProductVariation>()
                 //.ForMember(x => x.Options, op => op.ResolveUsing(x => x.Options))
                 .ForMember(x => x.DeltaPriceValue, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).Value))
                 .ForMember(x => x.DeltaMSRP, op => op.ResolveUsing(dc => (dc.DeltaPrice ?? NULLPRODVARPRICE).MSRP))
@@ -587,7 +596,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.VariationPricingMethod, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<ProductVariation, DC.ProductVariation>()
+            CreateMap<ProductVariation, DC.ProductVariation>()
                 .ForMember(x => x.DeltaPrice, op => op.ResolveUsing(x => !string.IsNullOrEmpty(x.VariationPricingMethod) 
                         && x.VariationPricingMethod.ToLowerInvariant().Equals("delta")
                     ? new DC.ProductVariationDeltaPrice()
@@ -623,15 +632,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LocalizedDeltaPrice, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<ProductAdmin.Contracts.ProductCodeRename, ProductCodeRename>();
-            Mapper.CreateMap<ProductCodeRename, ProductAdmin.Contracts.ProductCodeRename>();
+            CreateMap<ProductAdmin.Contracts.ProductCodeRename, ProductCodeRename>();
+            CreateMap<ProductCodeRename, ProductAdmin.Contracts.ProductCodeRename>();
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
+            CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
                 .ForMember(x => x.Location, op => op.Ignore())
                 .ForMember(x => x.Fulfillment, op => op.Ignore())
                 ;
 
+            CreateMap<DC.LocationInventory, SuperchargedLocationInventory>();
+
         }
+        
 
         object OptionValuesResolver (DC.Product p)
         {

@@ -46,8 +46,13 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            Mapper.AddProfile<ContactMapping>();
-            Mapper.AddProfile<CustomerContactMapping>();
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<ContactMapping>();
+                cfg.AddProfile<CustomerContactMapping>();
+            });
+            
         }
 
         [TestFixtureTearDown]

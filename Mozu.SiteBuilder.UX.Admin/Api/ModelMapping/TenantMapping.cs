@@ -13,11 +13,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
     public class TenantMapping : Profile
     {
-        public override string ProfileName { get { return this.GetType().FullName; } }
-
-        protected override void Configure()
+        public TenantMapping()
         {
-            AutoMapper.Mapper.CreateMap<DC.Tenant, TaContext>()
+            CreateMap<DC.Tenant, TaContext>()
                       .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                       .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                       .ForMember(x => x.MasterCatalogs, op => op.ResolveUsing(x => x.MasterCatalogs))
@@ -42,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            AutoMapper.Mapper.CreateMap<DC.MasterCatalog , MasterCatalog>()
+            CreateMap<DC.MasterCatalog , MasterCatalog>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.Catalogs, op => op.ResolveUsing(x => x.Catalogs ))
@@ -54,7 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Sites, op => op.Ignore())
                 .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
                 ;
-            AutoMapper.Mapper.CreateMap<DC.Catalog, TaContextCatalog>()
+            CreateMap<DC.Catalog, TaContextCatalog>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
                 .ForMember(x => x.Locale, op => op.ResolveUsing(x => x.DefaultLocaleCode))
@@ -65,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
               //.ForMember(x => x.StagingHost, op => op.ResolveUsing(x => x.Domains == null ? null : x.Domains.Where(d => d.IsSystemAssigned).Select(d => d.DomainName).FirstOrDefault()));
 
 
-            AutoMapper.Mapper.CreateMap<DC.Site, TaContextSite>()
+            CreateMap<DC.Site, TaContextSite>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(x => x.Currency, op => op.ResolveUsing(x => x.DefaultCurrencyCode))
@@ -78,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
                 ;
 
-            AutoMapper.Mapper.CreateMap<Mozu.ProductAdmin.Contracts.MasterCatalogCollection , TaContext>()
+            CreateMap<Mozu.ProductAdmin.Contracts.MasterCatalogCollection , TaContext>()
                 .AfterMap((dc, tacontext) => {
                     // map ProductPublishingMode to each sitegroup in the collection.
                     foreach (var sitegroup in dc.Items)
@@ -92,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
 
                     // TODO: hard-coding a default value for now, in case the service doesn't always return a value.
-                    tacontext.MasterCatalogs.Each(sc =>
+                    tacontext.MasterCatalogs.ForEach(sc =>
                         {
                             if (sc.ProductPublishingMode == null) 
                                 sc.ProductPublishingMode = Mozu.ProductAdmin.Contracts.MasterCatalog.ProductPublishingModeConst.Live;

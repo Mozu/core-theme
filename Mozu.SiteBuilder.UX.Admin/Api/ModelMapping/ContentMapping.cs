@@ -41,9 +41,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
         static Dictionary<string, object> defaultFlags = ToDict(new UX.Models.Admin.CMS.DocListFlags { EnableActiveDateRange = false, EnablePublishing = false, SupportsActiveDateRange = false, SupportsPublishing = false });
 
-        protected override void Configure()
+        public ContentMapping()
         {
-            Mapper.CreateMap<UX.Models.Admin.CMS.DocumentWithListInfo, JObject>()
+            CreateMap<UX.Models.Admin.CMS.DocumentWithListInfo, JObject>()
                 .ConstructUsing((UX.Models.Admin.CMS.DocumentWithListInfo doc) =>
                     {
                         if (doc == null) return null;
@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return jobj;
                     }
                 );
-            Mapper.CreateMap<JObject, UX.Models.Admin.CMS.DocumentWithListInfo>()
+            CreateMap<JObject, UX.Models.Admin.CMS.DocumentWithListInfo>()
                 .ConstructUsing((JObject jobj) =>
                 {
                     if (jobj == null) return null;
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     };
                     return doc;
                 });
-            Mapper.CreateMap<DC.Document, JObject>()
+            CreateMap<DC.Document, JObject>()
                 .ConstructUsing((DC.Document doc) =>
                 {
                     if (doc == null)
@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     jobj["endDate"] = doc.ActiveDateRange == null ? null : doc.ActiveDateRange.EndDate;
                     return jobj;
                 }).ForAllMembers(x => x.Ignore());
-            Mapper.CreateMap<JObject, DC.Document>()
+            CreateMap<JObject, DC.Document>()
                .ConstructUsing((JObject jobj) =>
                    {
                        if ( jobj == null )

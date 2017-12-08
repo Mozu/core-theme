@@ -18,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Account
         {
             var sw = response.Output;
             sw.WriteLine("Date,Site,OrderNumber,OrderType,PoNumber,Author,TransactionDetails,Amount,Balance");
-            EnumerableExtensions.Each(CustomerPurchaseOrderTransactions, x =>
+            CustomerPurchaseOrderTransactions.ForEach( x =>
             {
                 /*var date = x.TransactionDate.ToString("G").Replace("\"", "\"\""); //Select(y => $"\"{y?.Replace("\"", "\"\"")}\"");
                 sw.Write($"\"{date}\"");*/

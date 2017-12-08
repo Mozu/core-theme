@@ -15,12 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ReturnMapping : Profile
     {
-        public override string ProfileName
-        {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
+        public ReturnMapping()
         {
             Map_DcReturn_to_Return();
             Map_DcReturnItem_to_ReturnItem();
@@ -47,7 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcReturn_to_Return()
         {
-            Mapper.CreateMap<ReturnsDC.Return, Return>()
+            CreateMap<ReturnsDC.Return, Return>()
             .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
             .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
             .ForMember(x => x.ReturnNumber, op => op.ResolveUsing(dc => dc.ReturnNumber))
@@ -109,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcOrderNote_to_OrderNote()
         {
-            Mapper.CreateMap<OrdersDC.OrderNote, OrderNote>()
+            CreateMap<OrdersDC.OrderNote, OrderNote>()
                 .ForMember(x => x.NoteId, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateDate))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo == null ? null : dc.AuditInfo.CreateBy))
@@ -121,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcReturnItem_to_ReturnItem()
         {
-            Mapper.CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
+            CreateMap<ReturnsDC.ReturnItem, ReturnItem>()
             .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
             .ForMember(x => x.OrderItemId, op => op.ResolveUsing(dc => dc.OrderItemId))
             .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product == null ? null : (!string.IsNullOrWhiteSpace(dc.Product.VariationProductCode) ? dc.Product.VariationProductCode : dc.Product.ProductCode)))
@@ -159,12 +154,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_DcProductOption_to_ProductOption()
         {
-            Mapper.CreateMap<ProductsDC.ProductOption, ProductOption>();
+            CreateMap<ProductsDC.ProductOption, ProductOption>();
         }
 
         private void Map_Return_to_DcReturn()
         {
-            Mapper.CreateMap<Return, ReturnsDC.Return>()
+            CreateMap<Return, ReturnsDC.Return>()
             .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
             .ForMember(dc => dc.AvailableActions, op => op.ResolveUsing(x => x.AvailableActions))
             .ForMember(dc => dc.ReturnNumber, op => op.ResolveUsing(x => x.ReturnNumber))
@@ -206,7 +201,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_OrderNote_to_DcOrderNote()
         {
-            Mapper.CreateMap<OrderNote, OrdersDC.OrderNote>()
+            CreateMap<OrderNote, OrdersDC.OrderNote>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.NoteId))
                 // Ignore
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
@@ -215,7 +210,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void Map_ReturnItem_to_DcReturnItem()
         {
-            Mapper.CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
+            CreateMap<ReturnItem, ReturnsDC.ReturnItem>()
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.OrderItemId, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.OrderItemId) ? null : x.OrderItemId))
                 .ForMember(dc => dc.Product, op => op.ResolveUsing(x => x.ProductCode == null ? null : new ProductsDC.Product { ProductCode = x.ProductCode }))

@@ -14,16 +14,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class LocalizationMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return GetType().FullName;
-            }
-        }
-
-
-        protected override void Configure()
+        public LocalizationMapping()
         {
             MapReportAttributeToLocalizedAttribute();
             MapReportAttributeValueToLocalizedAttributeValue();
@@ -33,22 +24,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             MapReportProductVariationToLocalizedProductVariantPrice();
         }
 
-        private static void MapReportAttributeToLocalizedAttribute()
+        private  void MapReportAttributeToLocalizedAttribute()
         {
 
-            Mapper.CreateMap<DC.ReportAttribute, LocalizedAttribute>()
+            CreateMap<DC.ReportAttribute, LocalizedAttribute>()
                 .ForMember(x => x.SupportedLocales,
                     op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
                         ? dc.LocalizedValues.Select(x => x.LocaleCode).ToList()
                         : new List<string>()))
                 ;
 
-            Mapper.CreateMap<DC.ReportAttribute, JObject>().ConvertUsing<ReportLocalizedAttributeConverter>();
+            CreateMap<DC.ReportAttribute, JObject>().ConvertUsing<ReportLocalizedAttributeConverter>();
         }
 
-        private static void MapReportAttributeValueToLocalizedAttributeValue()
+        private  void MapReportAttributeValueToLocalizedAttributeValue()
         {
-            Mapper.CreateMap<DC.ReportAttributeValue, LocalizedAttributeValue>()
+            CreateMap<DC.ReportAttributeValue, LocalizedAttributeValue>()
                 .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(dc => dc.AttributeFQN))
                 .ForMember(x => x.AdminName, op => op.ResolveUsing(dc => dc.AdminName))
                 .ForMember(x => x.AttributeName, op => op.MapFrom(dc => dc.Value as string))
@@ -60,12 +51,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         : new List<string>()))
                 ;
 
-            Mapper.CreateMap<DC.ReportAttributeValue, JObject>().ConvertUsing<ReportLocalizedAttributeValueConverter>();
+            CreateMap<DC.ReportAttributeValue, JObject>().ConvertUsing<ReportLocalizedAttributeValueConverter>();
         }
 
-        private static void MapReportProductVariationToLocalizedProductVariantPrice()
+        private  void MapReportProductVariationToLocalizedProductVariantPrice()
         {
-            Mapper.CreateMap<DC.ReportProductVariation, LocalizedProductVariantPrice>()
+            CreateMap<DC.ReportProductVariation, LocalizedProductVariantPrice>()
                 .ForMember(x => x.ParentProductCode, op => op.ResolveUsing(dc => dc.ParentProductCode))
                 .ForMember(x => x.VariantProductCode, op => op.ResolveUsing(dc => dc.VariantProductCode))
                 .ForMember(x => x.ProductName, op => op.ResolveUsing(dc => dc.ProductName))
@@ -79,24 +70,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SupportedCurrencies, op => op.Ignore())   // todo: xverify - Greg Murray on 2014-08-28
                 ;
 
-            Mapper.CreateMap<DC.ReportProductVariation, JObject>().ConvertUsing<ReportLocalizedProductVariantConverter>();
+            CreateMap<DC.ReportProductVariation, JObject>().ConvertUsing<ReportLocalizedProductVariantConverter>();
         }
 
-        private static void MapReportProductExtraToLocalizedProductExtraPrice()
+        private  void MapReportProductExtraToLocalizedProductExtraPrice()
         {
-            Mapper.CreateMap<DC.ReportProductExtra, LocalizedProductExtraPrice>()
+            CreateMap<DC.ReportProductExtra, LocalizedProductExtraPrice>()
                 .ForMember(x => x.AttributeName, op => op.MapFrom(dc => dc.Value as string))
                 .ForMember(x => x.SupportedCurrencies, op => op.ResolveUsing(dc => (dc.LocalizedDeltaPrices != null)
                     ? dc.LocalizedDeltaPrices.Select(x => x.CurrencyCode).ToList()
                     : new List<string>()))
                 ;
 
-            Mapper.CreateMap<DC.ReportProductExtra, JObject>().ConvertUsing<ReportLocalizedProductExtraConverter>();
+            CreateMap<DC.ReportProductExtra, JObject>().ConvertUsing<ReportLocalizedProductExtraConverter>();
         }
 
-        private static void MapReportProductPropertyToLocalizedProductProperty()
+        private  void MapReportProductPropertyToLocalizedProductProperty()
         {
-            Mapper.CreateMap<DC.ReportProductProperty, LocalizedProductProperty>()
+            CreateMap<DC.ReportProductProperty, LocalizedProductProperty>()
                 .ForMember(x => x.CanonicalValue, op => op.MapFrom(dc => dc.Value))
                 .ForMember(x => x.SupportedLocales,
                     op => op.ResolveUsing(dc => (dc.LocalizedValues != null && dc.LocalizedValues.Count > 0)
@@ -104,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         : new List<string>()))
                 ;
 
-            Mapper.CreateMap<DC.ReportProductProperty, JObject>().ConvertUsing<ReportLocalizedProductPropertyConverter>();
+            CreateMap<DC.ReportProductProperty, JObject>().ConvertUsing<ReportLocalizedProductPropertyConverter>();
         }
 
         
@@ -112,42 +103,44 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
     public class ReportLocalizedAttributeConverter : ITypeConverter<DC.ReportAttribute, JObject>
     {
-        public JObject Convert(ResolutionContext context)
+        
+        JObject ITypeConverter<DC.ReportAttribute, JObject>.Convert(DC.ReportAttribute source, JObject destination, ResolutionContext context)
         {
-            var attr = context.SourceValue as DC.ReportAttribute;
+            var attr = source  as DC.ReportAttribute;
             if (attr == null) return null;
 
             var localizedAttr = Mapper.Map<LocalizedAttribute>(attr);
             var jObj = ReportAttributeConverterHelper.AddLocalizedNames(localizedAttr, attr.LocalizedValues);
             return jObj;
         }
-
     }
 
     public class ReportLocalizedAttributeValueConverter : ITypeConverter<DC.ReportAttributeValue, JObject>
     {
-        public JObject Convert(ResolutionContext context)
+        
+
+        JObject ITypeConverter<DC.ReportAttributeValue, JObject>.Convert(DC.ReportAttributeValue source, JObject destination, ResolutionContext context)
         {
-            var attrValue = context.SourceValue as DC.ReportAttributeValue;
+            var attrValue = source  as DC.ReportAttributeValue;
             if (attrValue == null) return null;
 
             var localizedAttrValue = Mapper.Map<LocalizedAttributeValue>(attrValue);
             //var jObj = ReportAttributeConverterHelper.AddLocalizedNames(localizedAttr, attr.LocalizedValues);
 
-            var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, attrValue.LocalizedValues, 
+            var jObj = ReportLocalizedConverterHelper.AddLocalizedValues("value_", localizedAttrValue, attrValue.LocalizedValues,
                 (property, locales) => property.SupportedLocales = locales, rptContent => rptContent.LocaleCode, rptContent => rptContent.StringValue,
                 localizedAttrValue.LocaleCode, localizedAttrValue.SupportedLocales);
 
             return jObj;
         }
-
     }
     
     public class ReportLocalizedProductPropertyConverter : ITypeConverter<DC.ReportProductProperty, JObject>
     {
-        public JObject Convert(ResolutionContext context)
+       
+        public JObject Convert(DC.ReportProductProperty source, JObject destination, ResolutionContext context)
         {
-            var attr = context.SourceValue as DC.ReportProductProperty;
+            var attr = source as DC.ReportProductProperty;
             if (attr == null) return null;
 
             var localizedAttr = Mapper.Map<LocalizedProductProperty>(attr);
@@ -157,14 +150,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 localizedAttr.LocaleCode, localizedAttr.SupportedLocales);
             return jObj;
         }
-
     }
 
     public class ReportLocalizedProductExtraConverter : ITypeConverter<DC.ReportProductExtra, JObject>
     {
-        public JObject Convert(ResolutionContext context)
+        
+        JObject ITypeConverter<DC.ReportProductExtra, JObject>.Convert(DC.ReportProductExtra source, JObject destination, ResolutionContext context)
         {
-            var variant = context.SourceValue as DC.ReportProductExtra;
+            var variant = source as DC.ReportProductExtra;
             if (variant == null) return null;
 
             var localizedExtra = Mapper.Map<LocalizedProductExtraPrice>(variant);
@@ -175,9 +168,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     
     public class ReportLocalizedProductVariantConverter : ITypeConverter<DC.ReportProductVariation, JObject>
     {
-        public JObject Convert(ResolutionContext context)
+       
+
+        JObject ITypeConverter<DC.ReportProductVariation, JObject>.Convert(DC.ReportProductVariation source, JObject destination, ResolutionContext context)
         {
-            var variant = context.SourceValue as DC.ReportProductVariation;
+            var variant = source as DC.ReportProductVariation;
             if (variant == null) return null;
 
             var localizedVariant = Mapper.Map<LocalizedProductVariantPrice>(variant);

@@ -15,24 +15,29 @@ namespace Mozu.SiteBuilder.IntegrationTests
     {
         public MappingTestFixture()
         {
-            //AutoMapper.Mapper.AddProfile<CartMapping>();
-            Mapper.AddProfile<GeneralSettingsMapping>();
-            Mapper.AddProfile<ProductMapping>();
-            Mapper.AddProfile<DiscountMapping>();
-            Mapper.AddProfile<CustomerMapping>();
-            Mapper.AddProfile<CategoryMapping>();
-            Mapper.AddProfile<FileManagementModelMapping>();
-            Mapper.AddProfile<GeneralSettingsMapping>();
-            Mapper.AddProfile<UX.Admin.Api.ModelMapping.GeneralSettingsMapping>();
-            Mapper.AddProfile<UserMapping>();
-            Mapper.AddProfile<AttributeMapping>();
-            
-            Mapper.AddProfile<TaxMapping>();
-            Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
-            Mapper.AddProfile<UX.Admin.Api.ModelMapping.OrderMapping>();
-            Mapper.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
-            Mapper.AddProfile<CmsPagesMapping>();
-            Mapper.AddProfile<NavigationMapping>();
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+            { //AutoMapper.Mapper.AddProfile<CartMapping>();
+                cfg.AddProfile<GeneralSettingsMapping>();
+                cfg.AddProfile<ProductMapping>();
+                cfg.AddProfile<DiscountMapping>();
+                cfg.AddProfile<CustomerMapping>();
+                cfg.AddProfile<CategoryMapping>();
+                cfg.AddProfile<FileManagementModelMapping>();
+                cfg.AddProfile<GeneralSettingsMapping>();
+                cfg.AddProfile<UX.Admin.Api.ModelMapping.GeneralSettingsMapping>();
+                cfg.AddProfile<UserMapping>();
+                cfg.AddProfile<AttributeMapping>();
+
+                cfg.AddProfile<TaxMapping>();
+                cfg.AddProfile<UX.Areas.StoreFront.ModelMapping.CustomerMapping>();
+                cfg.AddProfile<UX.Admin.Api.ModelMapping.OrderMapping>();
+                cfg.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
+                cfg.AddProfile<CmsPagesMapping>();
+                cfg.AddProfile<NavigationMapping>();
+
+            });
+           
         }
     }
 
@@ -42,8 +47,13 @@ namespace Mozu.SiteBuilder.IntegrationTests
         [Test, Explicit("This test is used for troubleshooting mapping profiles.")]
         public void Mappings_should_be_valid()
         {
-            Mapper.AddProfile<UX.Admin.Api.ModelMapping.OrderMapping>();
-            Mapper.AssertConfigurationIsValid(new UX.Admin.Api.ModelMapping.OrderMapping().ProfileName);
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<UX.Admin.Api.ModelMapping.OrderMapping>();
+                
+            });
+            Mapper.AssertConfigurationIsValid();
         }
     }
 }

@@ -9,13 +9,9 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 {
     public class NavigationMapping : Profile
     {
-        public override string ProfileName  { get { return this.GetType().FullName; } }
-
-        protected override void Configure()
-        {
-
+        public NavigationMapping() { 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.ProductName))
@@ -27,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 //.ConstructUsing(product => new SimpleRuntimeNavigationNode() {OriginalId = product.ProductCode});
                 ;
 
-            Mapper.CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Content.ProductName))
@@ -37,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
               //  .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Product, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.ProductAdmin.Contracts.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Content.ProductName))
@@ -48,7 +44,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, op => op.ResolveUsing(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, op => op.ResolveUsing(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Content.ProductName))
@@ -58,7 +54,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("category", x.CategoryId)))
                 .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.CategoryId))
@@ -71,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
             //    .As<IRuntimeNavigationNode>()
                 ;
 
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.Category, SimpleTreeNavigationNode>()
+            CreateMap<Mozu.ProductAdmin.Contracts.Category, SimpleTreeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("category", x.Id)))
                 .ForMember(d => d.IsHidden, opt => opt.ResolveUsing(x => !x.IsDisplayed.GetValueOrDefault(true)))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
@@ -83,29 +79,29 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.IsLeaf, opt => opt.UseValue(false))
                 ;
 
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleTreeNavigationNode>()
+            CreateMap<Mozu.Content.Contracts.Document, SimpleTreeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
                .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.ListFQN))
-               .ForMember(d => d.ParentId, opt => opt.UseValue(null))
+               .ForMember(d => d.ParentId, opt => opt.UseValue((string)null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x =>
                    x.Get<string>("link_title").GetNullIfWhiteSpace() ?? x.Get<string>("title").GetNullIfWhiteSpace() ?? x.Name))
                    .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
-               .ForMember(d => d.Index, opt => opt.UseValue(null))
+               .ForMember(d => d.Index, opt => opt.UseValue(-1))
                .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentTypeFQN == "blog" || x.DocumentTypeFQN == "page"))
                ;
 
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            Mapper.CreateMap<Mozu.Content.Contracts.Document, SimpleRuntimeNavigationNode>()
+            CreateMap<Mozu.Content.Contracts.Document, SimpleRuntimeNavigationNode>()
                .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.Id))
                .ForMember(d => d.OriginalDocumentListName, opt => opt.ResolveUsing(x => x.ListFQN))
-               .ForMember(d => d.ParentId, opt => opt.UseValue(null))
+               .ForMember(d => d.ParentId, opt => opt.UseValue((string)null))
                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.Name))
                .ForMember(d => d.Url, opt => opt.ResolveUsing(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
                .ForMember(d => d.NodeType, opt => opt.UseValue(NavigationNodeType.Page))
-               .ForMember(d => d.Index, opt => opt.UseValue(null))
+               .ForMember(d => d.Index, opt => opt.UseValue((int)-1))
              //  .ForMember(d => d.IsLeaf, opt => opt.ResolveUsing(x => x.DocumentTypeFQN == "blog"))
               // .As<IRuntimeNavigationNode>()
                ;

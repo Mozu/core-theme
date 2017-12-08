@@ -16,12 +16,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ProductAttributeMapping : Profile
     {
-        public override string ProfileName { get { return GetType().FullName; } }
-
-        protected override void Configure()
+        public ProductAttributeMapping()
         {
 
-            Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
+            CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.ResolveUsing((AttributeValue x) =>  x.Value  is string 
                     ? new DC.AttributeValueLocalizedContent
                       {
@@ -37,7 +35,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsHidden, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
+            CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => !string.IsNullOrEmpty( x.Content?.Value)
                     ? x.Content.Value :  x.Value))
                 .ForMember(x => x.Id, op => op.ResolveUsing((DC.AttributeVocabularyValue x) => x.Value))
@@ -49,11 +47,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.OptionalValue, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<Attribute, DC.Attribute>()
+            CreateMap<Attribute, DC.Attribute>()
                 .ConvertUsing(new AttributeToContractConverter2())
                 ;
 
-            Mapper.CreateMap<DC.Attribute, Attribute>()
+            CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.AdminName, op => op.ResolveUsing(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.ResolveUsing(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.AttributeFQN))
@@ -83,23 +81,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SearchableInStorefront, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
-            Mapper.CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
+            CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
+            CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
 
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>()
+            CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>()
                 //todo: confirm sequence mapping Greg Murray on 2014-01-24
                 .ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.Sequence));
 
-            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
+            CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
                 //todo: confirm sequence Greg Murray on 2014-01-24
                 .ForMember(dc => dc.Sequence, op => op.ResolveUsing(x => x.ValueSequence))
                 .ForMember(dc => dc.IsHidden, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>()
+            CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeValueLocalizedContent>()
                 //todo: confirm stringValue -> value Greg Murray on 2014-01-24
                 .ForMember(dc => dc.Value, op => op.ResolveUsing(x => x.StringValue));
-            Mapper.CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>()
+            CreateMap<DC.AttributeValueLocalizedContent, AttributeVocabularyValueLocalizedContent>()
                 //todo: confirm value -> stringValue Greg Murray on 2014-01-24
                 .ForMember(x => x.StringValue, op => op.ResolveUsing(( DC.AttributeValueLocalizedContent dc) => dc.Value));
         }
@@ -115,10 +113,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 return default(T);
             }
 
-            public DC.Attribute Convert(ResolutionContext context)
-            {
-                var source = (Attribute)context.SourceValue;
+            DC.Attribute ITypeConverter<Attribute, DC.Attribute>.Convert(Attribute source, DC.Attribute destination, ResolutionContext context)
 
+
+            //public DC.Attribute Convert(ResolutionContext context)
+            {
+               
                 if (source == null)
                     return null;
 
@@ -211,7 +211,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                 }
 
-                var destination = new DC.Attribute
+                destination = new DC.Attribute
                 {
                     AdminName = source.AdminName,
                     IsRequired = source.IsRequired,
@@ -240,6 +240,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 return destination;
             }
+
+           
         }
         //private List<AttributeValue> MapVocabularyValueInProductTypeListToSelectedValues(List<DC.AttributeVocabularyValueInProductType> list, string attributeFQN)
         //{

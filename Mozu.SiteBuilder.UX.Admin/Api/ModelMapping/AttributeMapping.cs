@@ -28,10 +28,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             List<ProductTypeAttribute> ret = Mapper.Map<List<ProductTypeAttribute>>(dcAttributes);
 
             // add the index.
-            ret.Each(r => r.Index = dcAttributes.FindIndex(dc => dc.AttributeFQN == r.AttributeFQN));
+            ret.ForEach(r => r.Index = dcAttributes.FindIndex(dc => dc.AttributeFQN == r.AttributeFQN));
 
             // add the product type id
-            ret.Each(r => r.ProductTypeId = productTypeId);
+            ret.ForEach(r => r.ProductTypeId = productTypeId);
 
             return ret;
         }
@@ -75,10 +75,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }).ToList();
         }
 
-        protected override void Configure()
+        public AttributeMapping()
         {
             #region Product Type
-            Mapper.CreateMap<DC.ProductType, ProductType>()
+            CreateMap<DC.ProductType, ProductType>()
                 .ForMember(x => x.Id, opt => opt.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.Name, opt => opt.ResolveUsing(dc => dc.Name))
                 .ForMember(x => x.IsBase, opt => opt.ResolveUsing(dc => dc.IsBaseProductType))
@@ -89,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Extras, opt => opt.ResolveUsing(dc => MapDCAttributeToAttribute(dc.Extras, dc.Id)))
                 ;
 
-            Mapper.CreateMap<ProductType, DC.ProductType>()
+            CreateMap<ProductType, DC.ProductType>()
                 .ForMember( dc=> dc.ProductUsages, opt=> opt.ResolveUsing( x=> x.ProductUsages))
                 .ForMember(dc => dc.Id, opt => opt.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.Name, opt => opt.ResolveUsing(x => x.Name))
@@ -104,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.AttributeInProductType, ProductTypeAttribute>()
+            CreateMap<DC.AttributeInProductType, ProductTypeAttribute>()
                 .ForMember(x => x.AttributeFQN, opt => opt.ResolveUsing(dc => dc.AttributeFQN))
                 .ForMember(x => x.Index, opt => opt.ResolveUsing(dc => dc.Order))
                 .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequiredByAdmin))
@@ -128,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductTypeId, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
+            CreateMap<ProductTypeAttribute, DC.AttributeInProductType>()
                 .ForMember(dc => dc.AttributeFQN, opt => opt.ResolveUsing(dc => dc.AttributeFQN))
                 .ForMember(dc => dc.Order, opt => opt.ResolveUsing(x => x.Index))
                 .ForMember(dc => dc.AttributeDetail, opt => opt.ResolveUsing(x => new DC.Attribute
@@ -150,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.DisplayInfo, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
                 ;
 
-            Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
+            CreateMap<AttributeValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.Content, opt => opt.ResolveUsing(x => x.Value is string
                     ? new DC.AttributeVocabularyValueLocalizedContent
                     {
@@ -165,7 +165,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) 
                 .ForMember(x => x.DisplayOrder, op => op.Ignore());
 
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
+            CreateMap<DC.AttributeVocabularyValue, AttributeValue>()
                 .ForMember(x => x.Value, opt =>
                     opt.ResolveUsing(dc => !string.IsNullOrEmpty(dc.Content?.StringValue)
                         ? dc.Content.StringValue
@@ -179,7 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //.ForMember(x => x.ValueSequence, op => op.ResolveUsing(dc => dc.ValueSequence))
                 ;
 
-            Mapper.CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()
+            CreateMap<AttributeValue, DC.AttributeVocabularyValueInProductType>()
                 .ForMember(dc => dc.Value, opt => opt.ResolveUsing(x => x.Id ))
                 //ignores
                 .ForMember(dc => dc.Order, op => op.Ignore())
@@ -187,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.DisplayInfo, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
                 ;
 
-            Mapper.CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
+            CreateMap<DC.AttributeVocabularyValueInProductType, AttributeValue>()
                 .ForMember(x => x.Id , opt => opt.ResolveUsing(( DC.AttributeVocabularyValueInProductType dc) => dc.Value))
                 .ForMember(x=> x.Value , opt => opt.ResolveUsing( dc=> !string.IsNullOrEmpty(dc.VocabularyValueDetail?.Content?.StringValue) 
                     ? dc.VocabularyValueDetail.Content.StringValue 
@@ -202,9 +202,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             #endregion
 
             #region Attributes
-            Mapper.CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter());
+            CreateMap<Attribute, DC.Attribute>().ConvertUsing(new AttributeToContractConverter());
 
-            Mapper.CreateMap<DC.Attribute, Attribute>()
+            CreateMap<DC.Attribute, Attribute>()
                 .ForMember(x => x.AdminName, op => op.ResolveUsing(x => x.AdminName))
                 .ForMember(x => x.Values, opt => opt.ResolveUsing(x => x.VocabularyValues))
                 .ForMember(x => x.Id, opt => opt.ResolveUsing(x => x.AttributeFQN))
@@ -237,20 +237,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsVisible, op => op.Ignore())
                 .ForMember(x => x.DisplayGroup, op => op.Ignore());
 
-            Mapper.CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
-            Mapper.CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
+            CreateMap<DC.AttributeMetadataItem, AttributeMetadataItem>();
+            CreateMap<AttributeMetadataItem, DC.AttributeMetadataItem>();
 
 
-            Mapper.CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
+            CreateMap<DC.AttributeVocabularyValue, AttributeVocabularyValue>();
 
-            Mapper.CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
+            CreateMap<AttributeVocabularyValue, DC.AttributeVocabularyValue>()
                 .ForMember(dc => dc.LocalizedContent, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26 
                 .ForMember(x => x.ProductName, op => op.Ignore())
                 .ForMember(x => x.DisplayOrder, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeVocabularyValueLocalizedContent>();
-            Mapper.CreateMap<DC.AttributeVocabularyValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();
+            CreateMap<AttributeVocabularyValueLocalizedContent, DC.AttributeVocabularyValueLocalizedContent>();
+            CreateMap<DC.AttributeVocabularyValueLocalizedContent, AttributeVocabularyValueLocalizedContent>();
 
             #endregion
         }

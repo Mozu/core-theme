@@ -8,19 +8,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
     public class OrderMapping : Profile
     {
-        public override string ProfileName
+        public OrderMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.Fulfillment.PackageItem, DetailedPackageItem>()
+            CreateMap<DC.Fulfillment.PackageItem, DetailedPackageItem>()
                 .ForMember(x => x.AdjustedWeight, config => config.Ignore())
                 .ForMember(x => x.ProductName, config => config.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.Fulfillment.PickupItem, DetailedPickupItem>()
+            CreateMap<DC.Fulfillment.PickupItem, DetailedPickupItem>()
                 .ForMember(x => x.AdjustedWeight, config => config.Ignore())
                 .ForMember(x => x.ProductName, config => config.Ignore())
                 ;

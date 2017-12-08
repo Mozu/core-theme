@@ -10,14 +10,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class ContactMapping : Profile
     {
-        public override string ProfileName
+        public ContactMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.Contact, Contact>()
+            CreateMap<DC.Contact, Contact>()
             .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
             .ForMember(x => x.Email, op => op.ResolveUsing(dc => dc.Email))
             .ForMember(x => x.FirstName, op => op.ResolveUsing(dc => dc.FirstName))
@@ -39,7 +34,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.MobilePhone, op => op.ResolveUsing(dc => dc.PhoneNumbers != null ? dc.PhoneNumbers.Mobile : null))
             ;
 
-            Mapper.CreateMap<Contact, DC.Contact>()
+            CreateMap<Contact, DC.Contact>()
             .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
             .ForMember(dc => dc.Email, op => op.ResolveUsing(x => x.Email))
             .ForMember(dc => dc.FirstName, op => op.ResolveUsing(x => x.FirstName))

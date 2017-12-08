@@ -28,9 +28,14 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
         [SetUp]
         public void Setup()
         {
-            Mapper.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
-                .ForMember(x => x.Location, op => op.Ignore())
-                ;
+            Mapper.Reset();
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Mozu.ProductAdmin.Contracts.LocationInventory, LocationWithInventory>()
+               .ForMember(x => x.Location, op => op.Ignore())
+               ;
+            });
+           
         }
 
         [Test]

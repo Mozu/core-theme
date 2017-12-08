@@ -19,30 +19,25 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 {
     public class GeneralSettingsMapping : Profile
     {
-        public override string ProfileName
+        public GeneralSettingsMapping()
         {
-            get { return GetType().FullName; }
-        }
+            //  CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
+            CreateMap<Mozu.Tenant.Contracts.Domain , SiteDomain>();
 
-        protected override void Configure()
-        {
-          //  Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
-            Mapper.CreateMap<Mozu.Tenant.Contracts.Domain , SiteDomain>();
-
-            Mapper.CreateMap<DC.ThirdPartyCredentialField, ThirdPartyCredentialField>()
+            CreateMap<DC.ThirdPartyCredentialField, ThirdPartyCredentialField>()
                 ;
 
-            Mapper.CreateMap<DC.LocalizedContent, LocalizedContent>()
+            CreateMap<DC.LocalizedContent, LocalizedContent>()
                 ;
 
-            Mapper.CreateMap<DC.VocabularyValue, VocabularyValue>()
+            CreateMap<DC.VocabularyValue, VocabularyValue>()
                 ;
 
-            Mapper.CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
+            CreateMap<DC.ExternalPaymentWorkflowDefinition, ExternalPaymentWorkflowSettings>()
                 .ForMember(x => x.Credentials, opt => opt.MapFrom(src => src.Credentials.Where(c => c.IsSensitive.HasValue && !c.IsSensitive.Value)))
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderCustomField, CustomField>()
+            CreateMap<DC.PurchaseOrderCustomField, CustomField>()
                 .ForMember(x => x.IsEnabled, opt => opt.ResolveUsing(dc => dc.IsEnabled))
                 .ForMember(x => x.IsRequired, opt => opt.ResolveUsing(dc => dc.IsRequired))
                 .ForMember(x => x.Code, opt => opt.ResolveUsing(dc => dc.Code))
@@ -50,7 +45,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
                 ;
 
-            Mapper.CreateMap<CustomField, DC.PurchaseOrderCustomField>()
+            CreateMap<CustomField, DC.PurchaseOrderCustomField>()
                 .ForMember(dc => dc.IsEnabled, op => op.ResolveUsing(x => x.IsEnabled))
                 .ForMember(dc => dc.IsRequired, op => op.ResolveUsing(x => x.IsRequired))
                 .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
@@ -58,22 +53,22 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()
+            CreateMap<DC.PurchaseOrderPaymentTerm, PaymentTerm>()
                 .ForMember(x => x.SequenceNumber, opt => opt.ResolveUsing(dc => dc.SequenceNumber))
                 .ForMember(x => x.Description, opt => opt.ResolveUsing(dc => dc.Description))
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.Code))
                 ;
 
-            Mapper.CreateMap<PaymentTerm, DC.PurchaseOrderPaymentTerm>()
+            CreateMap<PaymentTerm, DC.PurchaseOrderPaymentTerm>()
                 .ForMember(dc => dc.SequenceNumber, opt => opt.ResolveUsing(x => x.SequenceNumber))
                 .ForMember(dc => dc.Description, opt => opt.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.Code, op => op.ResolveUsing(x => x.Code))
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()
+            CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()
                 ;
 
-            Mapper.CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
+            CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
                 .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                 .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
                 .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.ResolveUsing(GetExternalPaymentWorkflowSettings))
@@ -86,15 +81,15 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts))
                 ;
 
-            Mapper.CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
+            CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
 
-            Mapper.CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
+            CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
                 .ForMember(m => m.Enabled, op => op.Ignore())
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
                 
-            Mapper.CreateMap<GDC.GeneralSettings, GeneralSettings>()
+            CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
@@ -145,29 +140,29 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForLive))
                 .ForMember(m => m.EnforceSitewideSSL, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.EnforceSitewideSSL))
                 .ForMember(m => m.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.GeneralSettings x) => x.ViewAuthorizations.RequireAuthForPending));
-            Mapper.CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
+            CreateMap<GDC.General.ViewAuthorizations, GeneralSettings>()
                 .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
                 .ForMember(x => x.EnforceSitewideSSL, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.EnforceSitewideSSL))
                 .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
                 
-            Mapper.CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
+            CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
                  .ForMember((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL, op => op.ResolveUsing((ViewModeToggles vm) => vm.EnforceSitewideSSL))
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
 
 
-            Mapper.CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
+            CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
                 .ForMember((ViewModeToggles vm) => vm.EnforceSitewideSSL, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL))
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending));
 
-            Mapper.CreateMap<GeneralSettings, GDC.General.ViewAuthorizations>()
+            CreateMap<GeneralSettings, GDC.General.ViewAuthorizations>()
                 .ForMember(x => x.RequireAuthForLive, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForLiveEnabled))
                 .ForMember(x => x.EnforceSitewideSSL, opt => opt.ResolveUsing((GeneralSettings gs) => gs.EnforceSitewideSSL))
                 .ForMember(x => x.RequireAuthForPending, opt => opt.ResolveUsing((GeneralSettings gs) => gs.IsRequiredLoginForStagingEnabled));
 
             //   .ForMember(x => x.IPBlocks, o => o.ResolveUsing(x => x.IPBlocks != null ? x.IPBlocks.Items : new List<Mozu.SiteSettings.General.Contracts.IPBlock>()));
-            Mapper.CreateMap<GeneralSettings, GDC.GeneralSettings>()
+            CreateMap<GeneralSettings, GDC.GeneralSettings>()
                 .ForMember(m => m.CacheSettings, op => op.ResolveUsing(x => new GDC.CacheSettings() { CdnCacheBustKey = x.CdnCacheBustKey }))
                 //ignores
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
@@ -185,8 +180,8 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.ViewAuthorizations, opt => opt.ResolveUsing((GeneralSettings x) => Mapper.Map<GDC.General.ViewAuthorizations>(x)));
                 
            
-            Mapper.CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
-            Mapper.CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
+            CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
+            CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
         public static ThemeSelection  Deserialize(string val)
@@ -277,23 +272,37 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         /// Custom value resolver that respects countryCode as a mapping context option
         /// And will choose a list of supported cards from a gateway in that country only.
         /// </summary>
-        private class SupportedCardsWithCountryCodeContextResolver : IValueResolver
+        private class SupportedCardsWithCountryCodeContextResolver : IValueResolver<object,object, Dictionary<string, string>>
         {
-            /// <summary>
-            /// if we are passed a country code as a mapping option
-            /// we need to restrict the gateways to that country.
-            /// </summary>
-            public ResolutionResult Resolve(ResolutionResult ctx)
+            Dictionary<string, string> IValueResolver<object, object, Dictionary<string, string>>.Resolve(object source, object destination, Dictionary<string, string> destMember, ResolutionContext context)
             {
-                List<DC.Gateway> allGateways = ((DC.CheckoutSettings)ctx.Context.SourceValue).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
+                List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
                                                            where g.GatewayAccount != null
                                                            select g;
 
                 var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
-                return ctx.New(cards, typeof(Dictionary<string, string>));
+                return cards;
             }
+
+            /// <summary>
+            /// if we are passed a country code as a mapping option
+            /// we need to restrict the gateways to that country.
+            /// </summary>
+            //public ResolutionResult Resolve(ResolutionResult ctx)
+            //{
+            //    List<DC.Gateway> allGateways = ((DC.CheckoutSettings)ctx.Context.SourceValue).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
+            //    IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
+            //                                               where g.GatewayAccount != null
+            //                                               select g;
+
+            //    var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+
+            //    return ctx.New(cards, typeof(Dictionary<string, string>));
+            //}
+
+          
         }
     }
 }

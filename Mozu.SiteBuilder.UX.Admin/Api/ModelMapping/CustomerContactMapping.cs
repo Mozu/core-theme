@@ -10,14 +10,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class CustomerContactMapping : Profile
     {
-        public override string ProfileName
+        public CustomerContactMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.CustomerContact, CustomerContact>()
+            CreateMap<DC.CustomerContact, CustomerContact>()
                 // explicitly perform base class mapping Mozu.Core.Api.Contracts.Contact <=> Contact
                 .BeforeMap((dc, x) => { Mapper.Map<Mozu.Core.Api.Contracts.Contact, Contact>(dc, x); })
                 .ForMember(x => x.AccountId, op => op.ResolveUsing(dc => dc.AccountId))
@@ -46,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.WorkPhone, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<CustomerContact, DC.CustomerContact>()
+            CreateMap<CustomerContact, DC.CustomerContact>()
                 // explicitly perform base class mapping Contact <=> Mozu.Core.Api.Contracts.Contact
                 .BeforeMap((x, dc) => { Mapper.Map<Contact, Mozu.Core.Api.Contracts.Contact>(x, dc); })
                 .ForMember(dc => dc.AccountId, op => op.ResolveUsing(x => x.AccountId))

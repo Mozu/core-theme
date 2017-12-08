@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 await Task.WhenAll(tasks);
-                EnumerableExtensions.Each(tasks, x =>
+                tasks.Each( x =>
                 {
                     if (x.Result.HasException)
                     {
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
                 await Task.WhenAll(tasks);
-                EnumerableExtensions.Each(tasks, x =>
+                tasks.Each( x =>
                 {
                     if (x.Result.HasException)
                     {

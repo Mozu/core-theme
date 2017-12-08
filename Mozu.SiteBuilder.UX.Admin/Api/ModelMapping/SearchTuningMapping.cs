@@ -12,17 +12,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
     public class SearchTuningMapping : Profile
     {
-        public override string ProfileName
+        public SearchTuningMapping ()
         {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<SearchTuningRule, DC.SearchTuningRule>()
+            CreateMap<SearchTuningRule, DC.SearchTuningRule>()
                 .ForMember(dc => dc.SearchTuningRuleCode, op => op.ResolveUsing(x => x.Code))
                 .ForMember(dc => dc.SearchTuningRuleName, op => op.ResolveUsing(x => x.Name))
                 .ForMember(dc => dc.SearchTuningRuleDescription, op => op.ResolveUsing(x => x.Description))
@@ -49,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.SearchTuningRule, SearchTuningRule>()
+            CreateMap<DC.SearchTuningRule, SearchTuningRule>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.SearchTuningRuleCode))
                 .ForMember(x => x.Code, op => op.ResolveUsing(dc => dc.SearchTuningRuleCode))
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.SearchTuningRuleName))
@@ -87,11 +79,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CategoryNames, op => op.Ignore())
             ;
 
-            Mapper.CreateMap<DC.SynonymDefinition, SynonymDefinition>()
+            CreateMap<DC.SynonymDefinition, SynonymDefinition>()
                 .ForMember(x => x.DefinitionType,
                     op => op.ResolveUsing(dc => string.IsNullOrEmpty(dc.Key) ? "bidirectional" : "directed"));
 
-            Mapper.CreateMap<SynonymDefinition, DC.SynonymDefinition>()
+            CreateMap<SynonymDefinition, DC.SynonymDefinition>()
                 .ForMember(dc => dc.SynonymId, op => op.ResolveUsing(x => x.SynonymId.GetValueOrDefault()));
 
         }

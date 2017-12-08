@@ -9,27 +9,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class FacetMapping : Profile
     {
-        public override string ProfileName
-        {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-
-        protected override void Configure()
+        public FacetMapping()
         {
             // To model
-            Mapper.CreateMap<DC.FacetSet, FacetSet>()
+            CreateMap<DC.FacetSet, FacetSet>()
                 .ForMember(x => x.CategoryId, op => op.Ignore())
                 ;
 
             // To data contract
-            Mapper.CreateMap<FacetSet, DC.FacetSet>();
+            CreateMap<FacetSet, DC.FacetSet>();
 
 
             // To model
-            Mapper.CreateMap<DC.Facet, Facet>()
+            CreateMap<DC.Facet, Facet>()
                   .ForMember(x => x.SourceId, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Id : null))
                   .ForMember(x => x.SourceName, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Name : null))
                   .ForMember(x => x.SourceType, op => op.ResolveUsing(x => (x.Source != null) ? x.Source.Type : null))
@@ -41,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
            
             // To data contract
-            Mapper.CreateMap<Facet, DC.Facet>()
+            CreateMap<Facet, DC.Facet>()
                   .ForMember(x => x.Source, op => op.ResolveUsing(x => new DC.FacetSource {Id = x.SourceId, Name = x.SourceName, Type = x.SourceType}))
                   //.ForMember(x => x.FacetType, op => op.ResolveUsing(x => x.RangeQueries != null && x.RangeQueries.Count > 0 ? "RangeQuery" : "Value"))
                  //todo: confirm FacetValidity mapping Greg Murray on 2014-01-24
@@ -55,16 +47,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                   ;
                   
             // To model
-            Mapper.CreateMap<DC.FacetRangeQuery, FacetRangeQuery>();
+            CreateMap<DC.FacetRangeQuery, FacetRangeQuery>();
 
             // To data contract
-            Mapper.CreateMap<FacetRangeQuery, DC.FacetRangeQuery>();
+            CreateMap<FacetRangeQuery, DC.FacetRangeQuery>();
 
             // To model
-            Mapper.CreateMap<DC.FacetSource, FacetSource>();
+            CreateMap<DC.FacetSource, FacetSource>();
 
             // To data contract
-            Mapper.CreateMap<FacetSource, DC.FacetSource>()
+            CreateMap<FacetSource, DC.FacetSource>()
                 .ForMember(dc => dc.DataType, op => op.Ignore());
 
 

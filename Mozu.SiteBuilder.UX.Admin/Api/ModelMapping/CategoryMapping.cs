@@ -8,17 +8,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class CategoryMapping : Profile
     {
-        public override string ProfileName
+        public CategoryMapping()
         {
-            get
-            {
-                return this.GetType().FullName;
-            }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.Category, Category>()
+            CreateMap<DC.Category, Category>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
                 .ForMember(dest => dest.IsHidden, opt => opt.ResolveUsing(c => !c.IsDisplayed))
                 .ForMember(dest => dest.CatalogId, opt => opt.ResolveUsing(c => c.CatalogId))
@@ -53,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.CascadeDelete, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.CategoryNode, CategoryNode>()
+            CreateMap<DC.CategoryNode, CategoryNode>()
                  .ForMember(dest => dest.IsHidden, opt => opt.ResolveUsing(c => !c.IsDisplayed))
                  .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId.HasValue ? c.ParentCategoryId : -1))
                 .ForMember(dest => dest.Index, opt => opt.ResolveUsing(c => c.Sequence))
@@ -64,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x=>x.IsLeaf, o=>o.ResolveUsing(s=> s.IsLeafNode))
                  ;
 
-            Mapper.CreateMap<DC.Category, CategoryTreeNode>()
+            CreateMap<DC.Category, CategoryTreeNode>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
                 
                 .ForMember(dest => dest.ParentId, opt => opt.ResolveUsing(c => c.ParentCategoryId))
@@ -78,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             
                 ;
 
-            Mapper.CreateMap<Category, DC.Category>()
+            CreateMap<Category, DC.Category>()
                 .ForMember(dest => dest.Id, opt => opt.ResolveUsing(c => c.Id))
                 .ForMember(dest => dest.CatalogId, opt => opt.ResolveUsing(c => c.CatalogId))
                 .ForMember(dest => dest.DynamicExpression, opt => opt.ResolveUsing(c => c.DynamicExpression))
@@ -103,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dest => dest.ParentIsActive, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<Category, DC.CategoryLocalizedContent>()
+            CreateMap<Category, DC.CategoryLocalizedContent>()
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(x => x.Description))
                 .ForMember(dc => dc.Name, op => op.ResolveUsing(x => x.Name))
                 .ForMember(dc => dc.PageTitle, op => op.ResolveUsing(x => x.PageTitle))
@@ -116,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<CategoryImage, DC.CategoryLocalizedImage>()
+            CreateMap<CategoryImage, DC.CategoryLocalizedImage>()
                 .ForMember(dc => dc.ImageUrl, op => op.ResolveUsing(x => string.IsNullOrEmpty(x.CmsId) ? x.Url : null))
                 .ForMember(dc => dc.AltText, op => op.ResolveUsing(x => x.Alt))
                 .ForMember(dc => dc.CmsId, op => op.ResolveUsing(x => x.CmsId))
@@ -130,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Sequence, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.CategoryLocalizedImage, CategoryImage>()
+            CreateMap<DC.CategoryLocalizedImage, CategoryImage>()
                 .ForMember(x => x.Url, op => op.ResolveUsing(x => x.ImageUrl))
                 .ForMember(x => x.Alt, op => op.ResolveUsing(x => x.AltText))
                 .ForMember(dc => dc.CmsId, op => op.ResolveUsing(x => x.CmsId))

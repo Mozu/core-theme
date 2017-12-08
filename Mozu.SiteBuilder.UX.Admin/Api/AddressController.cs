@@ -100,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .AddressCandidates.Select(x => Mapper.Map<Models.Contact>(new Core.Api.Contracts.Contact(){ Address=x}))
                 .ToList();
 
-            list.Each(addr =>
+            list.ForEach(addr =>
             {
                 if (addr.Address2 == null) addr.Address2 = "";
                 if (addr.Address3 == null) addr.Address3 = "";

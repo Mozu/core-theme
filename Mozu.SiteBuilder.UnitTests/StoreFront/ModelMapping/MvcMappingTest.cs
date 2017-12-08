@@ -13,12 +13,14 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
         public void FixtureSetup()
         {
             Mapper.Reset();
-            Mapper.AddProfile<CartMapping>();
-            Mapper.AddProfile<CmsPagesMapping>();
-            Mapper.AddProfile<GeneralSettingsMapping>();
-            Mapper.AddProfile<NavigationMapping>();
-            Mapper.AddProfile<ProductMapping>();
-            
+            Mapper.Initialize(cfg =>
+           {
+                cfg.AddProfile<CartMapping>();
+               cfg.AddProfile<CmsPagesMapping>();
+               cfg.AddProfile<GeneralSettingsMapping>();
+               cfg.AddProfile<NavigationMapping>();
+               cfg.AddProfile<ProductMapping>();
+           });
             //Mapper.AddProfile<CustomerMapping>();
             //Mapper.AddProfile<DiscountMapping>();
             //Mapper.AddProfile<ProductAttributeMapping>();

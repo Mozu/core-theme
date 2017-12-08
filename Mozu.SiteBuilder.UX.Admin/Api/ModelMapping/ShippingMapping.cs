@@ -14,20 +14,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         private const string CUSTOM_PERCENTAGE_PER_ORDER = "CUSTOM_PERCENTAGE_PER_ORDER";
 
-        public override string ProfileName
+        public ShippingMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<MSC.CustomTableRate, CustomTableRate>()
+            CreateMap<MSC.CustomTableRate, CustomTableRate>()
                 .ForMember(x => x.Name, 
                     opt => opt.ResolveUsing(x => (x.Content != null) ? x.Content.Name : null))
                 .ForMember(x => x.Amount, 
                     opt => opt.ResolveUsing(x => x.RateType == CUSTOM_PERCENTAGE_PER_ORDER ? (x.Value*100) : x.Value));
 
-            Mapper.CreateMap<CustomTableRate, MSC.CustomTableRate>()
+            CreateMap<CustomTableRate, MSC.CustomTableRate>()
                 .ForMember(x => x.Content, opt => opt.ResolveUsing(x => new MSC.CustomTableRateContent
                                                                         {
                                                                             //LocaleCode = "??-??"
@@ -38,7 +33,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     ? (x.Amount/100) : x.Amount));
 
 
-            Mapper.CreateMap<CarrierConfiguration, MSC.CarrierConfiguration>().ConvertUsing(
+            CreateMap<CarrierConfiguration, MSC.CarrierConfiguration>().ConvertUsing(
                 x =>
                 {
                     var dest = new MSC.CarrierConfiguration
@@ -63,7 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 });
 
 
-            Mapper.CreateMap<MSC.CarrierConfiguration, CarrierConfiguration>().ConvertUsing(
+            CreateMap<MSC.CarrierConfiguration, CarrierConfiguration>().ConvertUsing(
                 x =>
                 {
                     var dest = new CarrierConfiguration
@@ -82,11 +77,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return dest;
                 });
 
-            Mapper.CreateMap<Feature, Models.Feature>();
-            Mapper.CreateMap<Models.Feature, Feature>();
+            CreateMap<Feature, Models.Feature>();
+            CreateMap<Models.Feature, Feature>();
 
 
-            Mapper.CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>();
+            CreateMap<Models.Shipping.SiteShippingSettings, SiteShippingSettings>();
         }
     }
 }

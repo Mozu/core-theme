@@ -15,55 +15,50 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     //todo: Greg Murray on 2014-01-27 is this still needed?
     public class OldCustomerMapping : Profile
     {
-        public override string ProfileName
+        public OldCustomerMapping()
         {
-            get { return GetType().FullName; }
-        }
+            CreateMap<CS.CustomerAccount, SB.CustomerAccount>();
+            CreateMap<SB.CustomerAccount, CS.CustomerAccount>();
 
-        protected override void Configure()
-        {
-            Mapper.CreateMap<CS.CustomerAccount, SB.CustomerAccount>();
-            Mapper.CreateMap<SB.CustomerAccount, CS.CustomerAccount>();
+            CreateMap<CS.CustomerContact, SB.CustomerAccountContact>();
+            CreateMap<SB.CustomerAccountContact, CS.CustomerContact>();
 
-            Mapper.CreateMap<CS.CustomerContact, SB.CustomerAccountContact>();
-            Mapper.CreateMap<SB.CustomerAccountContact, CS.CustomerContact>();
+            CreateMap<CS.CustomerNote, SB.CustomerAccountNote>();
+            CreateMap<SB.CustomerAccountNote, CS.CustomerNote>();
 
-            Mapper.CreateMap<CS.CustomerNote, SB.CustomerAccountNote>();
-            Mapper.CreateMap<SB.CustomerAccountNote, CS.CustomerNote>();
+            CreateMap<AP.Contact, SB.Contact>();
+            CreateMap<SB.Contact, AP.Contact>();
 
-            Mapper.CreateMap<AP.Contact, SB.Contact>();
-            Mapper.CreateMap<SB.Contact, AP.Contact>();
+            CreateMap<SB.CurrencyAmount, CS.CurrencyAmount>();
+            CreateMap<CS.CurrencyAmount, SB.CurrencyAmount>();
 
-            Mapper.CreateMap<SB.CurrencyAmount, CS.CurrencyAmount>();
-            Mapper.CreateMap<CS.CurrencyAmount, SB.CurrencyAmount>();
+            CreateMap<SB.Phone, AP.Phone>();
+            CreateMap<AP.Phone, SB.Phone>();
 
-            Mapper.CreateMap<SB.Phone, AP.Phone>();
-            Mapper.CreateMap<AP.Phone, SB.Phone>();
+            CreateMap<SB.CommerceSummary, CS.CommerceSummary>();
+            CreateMap<CS.CommerceSummary, SB.CommerceSummary>();
 
-            Mapper.CreateMap<SB.CommerceSummary, CS.CommerceSummary>();
-            Mapper.CreateMap<CS.CommerceSummary, SB.CommerceSummary>();
+            CreateMap<SB.Address, AP.Address>();
+            CreateMap<AP.Address, SB.Address>();
 
-            Mapper.CreateMap<SB.Address, AP.Address>();
-            Mapper.CreateMap<AP.Address, SB.Address>();
+            //CreateMap<US.PasswordInfo, AC.PasswordInfo>();
+            //CreateMap<AC.PasswordInfo, US.PasswordInfo>();
 
-            //Mapper.CreateMap<US.PasswordInfo, AC.PasswordInfo>();
-            //Mapper.CreateMap<AC.PasswordInfo, US.PasswordInfo>();
+          //  CreateMap<AC.AccountInformation, US.PasswordInfo>();
 
-          //  Mapper.CreateMap<AC.AccountInformation, US.PasswordInfo>();
-
-            Mapper.CreateMap<AP.User, AC.AccountInformation>()
+            CreateMap<AP.User, AC.AccountInformation>()
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress));
 
-            Mapper.CreateMap<AP.User, AC.User>();
-            Mapper.CreateMap<AC.User, AP.User>();
+            CreateMap<AP.User, AC.User>();
+            CreateMap<AC.User, AP.User>();
 
-            Mapper.CreateMap<AP.User, AC.LoginUser >();
-            Mapper.CreateMap<AC.LoginUser, AP.User>();
+            CreateMap<AP.User, AC.LoginUser >();
+            CreateMap<AC.LoginUser, AP.User>();
 
-            //Mapper.CreateMap<AC.Invitation, US.Invitation>();
-            //Mapper.CreateMap<US.Invitation, AC.Invitation>();
-            Mapper.CreateMap<AP.UserRole, AC.AccountUserRole>();
-            Mapper.CreateMap<AC.Invitation, AC.AccountUser>()
+            //CreateMap<AC.Invitation, US.Invitation>();
+            //CreateMap<US.Invitation, AC.Invitation>();
+            CreateMap<AP.UserRole, AC.AccountUserRole>();
+            CreateMap<AC.Invitation, AC.AccountUser>()
                 .ForMember(x => x.Activity, m => m.ResolveUsing(x => x.State))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress))
                 /*.ForMember( x=> x.Roles , m => m.ResolveUsing( x=> new List<AC.AccountUserRole >(){ new AC.AccountUserRole()
@@ -73,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                                                                                                         }}))*/
                 .ForMember(x => x.Type, m => m.ResolveUsing((AC.Invitation x) => x.GetType().Name.ToLowerInvariant()))
                 ;
-            Mapper.CreateMap<AP.User, AC.AccountUser>()
+            CreateMap<AP.User, AC.AccountUser>()
                 .ForMember( x=> x.Roles , m=> m.ResolveUsing(x=> x.Roles ))
                
                 .ForMember(x => x.Type, m => m.ResolveUsing((AP.User x) => x.GetType().Name.ToLowerInvariant()))
@@ -86,12 +81,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
                 .ForMember(x => x.Email, m => m.ResolveUsing(x => x.EmailAddress));
 
-            Mapper.CreateMap<AC.UserSystemData, AP.UserSystemData>();
-            Mapper.CreateMap<AP.UserSystemData, AC.UserSystemData>();
+            CreateMap<AC.UserSystemData, AP.UserSystemData>();
+            CreateMap<AP.UserSystemData, AC.UserSystemData>();
 
             // TODO: Consider renaming, this will probably be confusing at some point
-       //     Mapper.CreateMap<CS.CustomerGroup, SB.CustomerGroup>();
-        //    Mapper.CreateMap<SB.CustomerGroup, CS.CustomerGroup>();
+       //     CreateMap<CS.CustomerGroup, SB.CustomerGroup>();
+        //    CreateMap<SB.CustomerGroup, CS.CustomerGroup>();
         }
     }
 }

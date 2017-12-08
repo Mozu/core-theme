@@ -145,7 +145,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var sw = response.Output;
                 sw.WriteLine("source,destination,rewrite,temporary,copyQueryString,priority,active");
-                EnumerableExtensions.Each(Redirects, x =>
+                Redirects.Each( x =>
                 {
                     RedirectController.EscapeWrite(sw, x.Source);
                     sw.Write(',');

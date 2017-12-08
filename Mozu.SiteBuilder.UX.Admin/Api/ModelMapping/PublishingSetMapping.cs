@@ -14,27 +14,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class PublishingSetMapping : Profile
     {
-        public override string ProfileName
-        {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
+        public PublishingSetMapping()
         {
             // To model
 
-            Mapper.CreateMap<DC.DocumentDraftSummary, PublishSetItem>()
+            CreateMap<DC.DocumentDraftSummary, PublishSetItem>()
                 .ForMember(x => x.Type, opt => opt.UseValue("cms"))
                 .ForMember(x => x.LastPublishDate, opt => opt.ResolveUsing(d => d.ActiveUpdateDate))
                 .ForMember(x => x.LastPublishedBy, opt => opt.ResolveUsing(d => d.ActiveUpdatedBy))
                 ;
 
-            Mapper.CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
+            CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
 
-            Mapper.CreateMap<SE.PublishSet, PublishSet>();
-            Mapper.CreateMap<PublishSet, SE.PublishSet>();
+            CreateMap<SE.PublishSet, PublishSet>();
+            CreateMap<PublishSet, SE.PublishSet>();
 
-            Mapper.CreateMap<PC.Product, PublishSetItem>()
+            CreateMap<PC.Product, PublishSetItem>()
                 .ForMember(x => x.Type, opt => opt.UseValue("product"))
                 .ForMember(x => x.Name, op => op.ResolveUsing(y => y.Content.ProductName))
                 .ForMember(x => x.DraftUpdateDate, op => op.ResolveUsing(y => y.AuditInfo.UpdateDate))
@@ -45,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.LastPublishedBy, op => op.ResolveUsing(y => y.PublishingInfo.LastPublishedBy))
                 .ForMember(x => x.PublishType, op => op.ResolveUsing(y => y.PublishingInfo.PublishedState));
                 
-            Mapper.CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
+            CreateMap<PublishSetItem, DC.DocumentDraftSummary>();
         }
     }
 }

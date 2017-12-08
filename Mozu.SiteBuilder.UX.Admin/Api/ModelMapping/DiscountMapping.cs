@@ -82,15 +82,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
     public class DiscountMapping : Profile
     {
-        public override string ProfileName
-        {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
+        public DiscountMapping()
         {
             // To model
-            Mapper.CreateMap<DC.Discount, Discount>()
+            CreateMap<DC.Discount, Discount>()
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => (x.Target != null) ? x.Target.Type : null))
                 .ForMember(x => x.IncludeAllProducts, opt => opt.ResolveUsing(x => (x.Target != null)
                     ? x.Target.IncludeAllProducts
@@ -228,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             // To data contract
-            Mapper.CreateMap<Discount, DC.Discount>()
+            CreateMap<Discount, DC.Discount>()
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
                 .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))
                 
@@ -299,11 +294,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
         private void MapCouponSets()
         {
-            Mapper.CreateMap<DC.CouponSet, CouponSet>();
-            Mapper.CreateMap<CouponSet, DC.CouponSet>()
+            CreateMap<DC.CouponSet, CouponSet>();
+            CreateMap<CouponSet, DC.CouponSet>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore());
 
-            Mapper.CreateMap<DC.Coupon, Coupon>()
+            CreateMap<DC.Coupon, Coupon>()
                 .ForMember(x => x.CreateDate,
                     op => op.ResolveUsing(dc => (dc.AuditInfo != null) ? dc.AuditInfo.CreateDate : null))
                 .ForMember(x => x.CreateBy,
@@ -315,7 +310,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     
 
-            Mapper.CreateMap<Coupon, DC.Coupon>()
+            CreateMap<Coupon, DC.Coupon>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore());
 
         }

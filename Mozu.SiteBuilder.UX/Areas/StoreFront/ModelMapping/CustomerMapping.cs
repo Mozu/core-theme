@@ -16,56 +16,51 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
     public class CustomerMapping : Profile
     {
-        public override string ProfileName
+        public CustomerMapping()
         {
-            get { return GetType().FullName; }
-        }
+            CreateMap<CustomerAccount, UX.Models.Customers.CustomerAccount>();
+            CreateMap<UX.Models.Customers.CustomerAccount, CustomerAccount>();
 
-        protected override void Configure()
-        {
-            Mapper.CreateMap<CustomerAccount, UX.Models.Customers.CustomerAccount>();
-            Mapper.CreateMap<UX.Models.Customers.CustomerAccount, CustomerAccount>();
+          //  CreateMap<CustomerAccountGroup, Models.Customers.CustomerGroup>();
+       //     CreateMap<Models.Customers.CustomerGroup, CustomerAccountGroup>();
 
-          //  Mapper.CreateMap<CustomerAccountGroup, Models.Customers.CustomerGroup>();
-       //     Mapper.CreateMap<Models.Customers.CustomerGroup, CustomerAccountGroup>();
+            CreateMap<CustomerAccountContact, UX.Models.Customers.CustomerAccountContact>();
+            CreateMap<UX.Models.Customers.CustomerAccountContact, CustomerAccountContact>();
 
-            Mapper.CreateMap<CustomerAccountContact, UX.Models.Customers.CustomerAccountContact>();
-            Mapper.CreateMap<UX.Models.Customers.CustomerAccountContact, CustomerAccountContact>();
+            CreateMap<CustomerAccountNote, UX.Models.Customers.CustomerAccountNote>();
+            CreateMap<UX.Models.Customers.CustomerAccountNote, CustomerAccountNote>();
 
-            Mapper.CreateMap<CustomerAccountNote, UX.Models.Customers.CustomerAccountNote>();
-            Mapper.CreateMap<UX.Models.Customers.CustomerAccountNote, CustomerAccountNote>();
+            CreateMap<Contact, UX.Models.Customers.Contact>();
+            CreateMap<UX.Models.Customers.Contact, Contact>();
 
-            Mapper.CreateMap<Contact, UX.Models.Customers.Contact>();
-            Mapper.CreateMap<UX.Models.Customers.Contact, Contact>();
+            CreateMap<CurrencyAmount, Mozu.Customer.Contracts.CurrencyAmount>();
+            CreateMap<Mozu.Customer.Contracts.CurrencyAmount, CurrencyAmount>();
 
-            Mapper.CreateMap<CurrencyAmount, Mozu.Customer.Contracts.CurrencyAmount>();
-            Mapper.CreateMap<Mozu.Customer.Contracts.CurrencyAmount, CurrencyAmount>();
+            CreateMap<Phone, Mozu.Core.Api.Contracts.Phone>();
+            CreateMap<Mozu.Core.Api.Contracts.Phone, Phone>();
 
-            Mapper.CreateMap<Phone, Mozu.Core.Api.Contracts.Phone>();
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Phone, Phone>();
+            CreateMap<CommerceSummary, Mozu.Customer.Contracts.CommerceSummary >();
+            CreateMap<Mozu.Customer.Contracts.CommerceSummary, CommerceSummary>();
 
-            Mapper.CreateMap<CommerceSummary, Mozu.Customer.Contracts.CommerceSummary >();
-            Mapper.CreateMap<Mozu.Customer.Contracts.CommerceSummary, CommerceSummary>();
+            CreateMap<Address, Mozu.Core.Api.Contracts.Address>();
+            CreateMap<Mozu.Core.Api.Contracts.Address, Address>();
 
-            Mapper.CreateMap<Address, Mozu.Core.Api.Contracts.Address>();
-            Mapper.CreateMap<Mozu.Core.Api.Contracts.Address, Address>();
+            CreateMap<CustomerGroup, UX.Models.Customers.CustomerGroup>();
+            CreateMap<UX.Models.Customers.CustomerGroup, CustomerGroup>();
 
-            Mapper.CreateMap<CustomerGroup, UX.Models.Customers.CustomerGroup>();
-            Mapper.CreateMap<UX.Models.Customers.CustomerGroup, CustomerGroup>();
-
-            Mapper.CreateMap<PurchaseOrder, UX.Models.Customers.CustomerPurchaseOrderAccount>()
+            CreateMap<PurchaseOrder, UX.Models.Customers.CustomerPurchaseOrderAccount>()
                 .ForMember(x => x.PaymentTerms, opt => opt.ResolveUsing(dc => dc.CustomerPurchaseOrderPaymentTerms))
                 ;
-            Mapper.CreateMap<UX.Models.Customers.CustomerPurchaseOrderAccount, PurchaseOrder>()
+            CreateMap<UX.Models.Customers.CustomerPurchaseOrderAccount, PurchaseOrder>()
                 .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, opt => opt.ResolveUsing(x => x.PaymentTerms))
                 .ForMember(dc => dc.OverdraftAllowance, opt => opt.Ignore())
                 .ForMember(dc => dc.OverdraftAllowanceType, opt => opt.Ignore())
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
-            Mapper.CreateMap<CustomerPurchaseOrderPaymentTerm, UX.Models.Customers.PurchaseOrderPaymentTerm>()
+            CreateMap<CustomerPurchaseOrderPaymentTerm, UX.Models.Customers.PurchaseOrderPaymentTerm>()
                 ;
-            Mapper.CreateMap<UX.Models.Customers.PurchaseOrderPaymentTerm, CustomerPurchaseOrderPaymentTerm>()
+            CreateMap<UX.Models.Customers.PurchaseOrderPaymentTerm, CustomerPurchaseOrderPaymentTerm>()
                 .ForMember(dc => dc.AuditInfo, opt=> opt.Ignore())
                 ;
         }

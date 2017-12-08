@@ -17,6 +17,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers;
 using DC = Mozu.ProductAdmin.Contracts;
 using DCloc = Mozu.Location.Contracts;
+using Mozu.Core.Extensions;
+
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
@@ -47,22 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Monkey patch LocationName into LocationInventory (the by-product lookup needs it).
         /// </summary>
-        public class SuperchargedLocationInventory : DC.LocationInventory
-        {
-            [JsonProperty(PropertyName = "locationName")]
-            public string LocationName { get; set; }
-
-            [JsonProperty(PropertyName = "adjustmentType")]
-            public string AdjustmentType { get; set; }
-            
-            public SuperchargedLocationInventory(DC.LocationInventory locbase, string locationName, string adjustmentType="Absolute")
-            {
-                // use some automapper magic.
-                Mapper.DynamicMap<DC.LocationInventory, SuperchargedLocationInventory>(locbase, this);
-                this.LocationName = locationName;
-                this.AdjustmentType = adjustmentType;
-            }
-        }
+       
 
 		[HttpGetRoute(UriTemplate = "list")]
         public async Task<HttpResponseMessage> List([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
@@ -115,7 +102,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 inventories.Items =          
                     (from i in inventories.Items
                      join loc in locations on i.LocationCode.ToLowerInvariant() equals loc.Code.ToLowerInvariant()
-                     select new SuperchargedLocationInventory(i, loc.Name)
+                     select new Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.SuperchargedLocationInventory(i, loc.Name)
                         ).ToList<DC.LocationInventory>();
             }
             else
@@ -176,7 +163,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
-        public async Task<HttpResponseMessage> Edit(List<SuperchargedLocationInventory> locationInventories)
+        public async Task<HttpResponseMessage> Edit(List<Mozu.SiteBuilder.UX.Admin.Api.ModelMapping.SuperchargedLocationInventory> locationInventories)
         {
             var tasks = new List<Task<ServiceClientResponse<List<DC.LocationInventory>>>>();
 

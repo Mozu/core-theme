@@ -739,8 +739,13 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
         {
             //  CustomRouteHandler handler = new CustomRouteHandler();
 
-            
-            Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
+
+            Mapper.Reset();
+            Mapper.Initialize(x =>
+           {
+               x.AddProfiles("Mozu.SiteBuilder.UX");
+           });
+            //Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             var subber = new AutofacContrib.NSubstitute.AutoSubstitute();
             subber.Provide<IRouteConfig>(new RouteConfig());
             var sbapiContext = subber.ResolveAndSubstituteFor<ISiteBuilderApiContext>();

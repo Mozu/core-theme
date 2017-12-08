@@ -11,14 +11,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 {
     public class CustomerMapping : Profile
     {
-        public override string ProfileName
+        public CustomerMapping()
         {
-            get { return GetType().FullName; }
-        }
-
-        protected override void Configure()
-        {
-            Mapper.CreateMap<DC.CustomerAccount, ApiCustomer>()
+            CreateMap<DC.CustomerAccount, ApiCustomer>()
                 .ForMember(x => x.SegmentIds, op => op.ResolveUsing(dc => dc.Segments == null ? new List<int>(): dc.Segments.Select( x=> x.Id ).ToList()))
                 .ForMember(x => x.Segments, op => op.ResolveUsing(dc => dc.Segments))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
@@ -55,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             //todo: Greg Murray on 2014-01-23 redundant mappings, ex FirstName => FirstName, Remove?
-            Mapper.CreateMap<ApiCustomer, DC.CustomerAccount>()
+            CreateMap<ApiCustomer, DC.CustomerAccount>()
                 .ForMember(dc => dc.Segments, op => op.ResolveUsing(x => (x.SegmentIds ?? new List<int>()).Select(y=> new DC.CustomerSegment(){ Id=y})))
                 .ForMember(dc => dc.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(dc => dc.UserId, op => op.ResolveUsing(x => string.IsNullOrWhiteSpace(x.UserId) ? null : x.UserId))
@@ -96,36 +91,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.IsActive, op => op.ResolveUsing(x => !x.IsDisabled))
                 ;
 
-            Mapper.CreateMap<DC.CustomerPurchaseOrderAccount, CustomerPurchaseOrderAccount>()
+            CreateMap<DC.CustomerPurchaseOrderAccount, CustomerPurchaseOrderAccount>()
                 ;
-            Mapper.CreateMap<CustomerPurchaseOrderAccount, DC.CustomerPurchaseOrderAccount>()
+            CreateMap<CustomerPurchaseOrderAccount, DC.CustomerPurchaseOrderAccount>()
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
             
-            Mapper.CreateMap<DC.CustomerPurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
+            CreateMap<DC.CustomerPurchaseOrderPaymentTerm, PurchaseOrderPaymentTerm>()
                 ;
-            Mapper.CreateMap<PurchaseOrderPaymentTerm, DC.CustomerPurchaseOrderPaymentTerm>()
+            CreateMap<PurchaseOrderPaymentTerm, DC.CustomerPurchaseOrderPaymentTerm>()
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()
+            CreateMap<DC.PurchaseOrderTransaction, CustomerPurchaseOrderTransaction>()
                 .ForMember(dc=>dc.OrderNumber, opt=>opt.Ignore())
                 .ForMember(dc => dc.OrderType, opt => opt.Ignore())
                 ;
-            Mapper.CreateMap<CustomerPurchaseOrderTransaction, DC.PurchaseOrderTransaction>()
+            CreateMap<CustomerPurchaseOrderTransaction, DC.PurchaseOrderTransaction>()
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())
                 ;
 
-            Mapper.CreateMap<DC.CustomerAuditEntry, CustomerAuditEntry>();
-            Mapper.CreateMap<CustomerAuditEntry, DC.CustomerAuditEntry>();
+            CreateMap<DC.CustomerAuditEntry, CustomerAuditEntry>();
+            CreateMap<CustomerAuditEntry, DC.CustomerAuditEntry>();
 
-            Mapper.CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
+            CreateMap<Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment, DC.CustomerSegment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.AuditInfo, op => op.ResolveUsing(x => x.AuditInfo))
                 .ForMember(x => x.Code, op => op.ResolveUsing(x => x.Code))
                 .ForMember(x => x.Description, op => op.ResolveUsing(x => x.Description))
                 .ForMember(x => x.Name, op => op.ResolveUsing(x => x.Name));
-            Mapper.CreateMap<DC.CustomerSegment, Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment>()
+            CreateMap<DC.CustomerSegment, Mozu.SiteBuilder.UX.Admin.Api.Models.CustomerSegment>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(x => x.Id))
                 .ForMember(x => x.AuditInfo, op => op.ResolveUsing(x => x.AuditInfo))
                 .ForMember(x => x.Code, op => op.ResolveUsing(x => x.Code))

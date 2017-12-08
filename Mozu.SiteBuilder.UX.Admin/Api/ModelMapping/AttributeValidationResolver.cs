@@ -22,10 +22,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             return default(T);
         }
+        DC.Attribute ITypeConverter<Attribute, DC.Attribute>.Convert(Attribute source, DC.Attribute destination, ResolutionContext context)
 
-        public DC.Attribute Convert(ResolutionContext context)
+
         {
-            var source = (Attribute) context.SourceValue;
+            
 
             if (source == null)
                 return null;
@@ -119,7 +120,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }
             }
             
-            var destination = new DC.Attribute
+            destination = new DC.Attribute
             {
                 AdminName = source.AdminName ,
                 AttributeCode =  source.AttributeCode ,
@@ -178,5 +179,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     throw new ArgumentException(String.Format("A {0} input type must be a property or an extra.", Enum.GetName(typeof(AttributeInputType), source.InputType)));
             }
         }
+
+        
     }
 }

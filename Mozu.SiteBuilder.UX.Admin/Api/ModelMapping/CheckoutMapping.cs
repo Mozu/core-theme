@@ -53,9 +53,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             return result;
         }
 
-        protected override void Configure()
+        public CheckoutMapping()
         {
-            Mapper.CreateMap<DCss.CheckoutSettings, CheckoutSettings>()
+            CreateMap<DCss.CheckoutSettings, CheckoutSettings>()
                 .ForMember(x => x.Id, op => op.Ignore())
                 .ForMember(x => x.PaymentProcessingFlowType, op => op.ResolveUsing(dc => (dc.OrderProcessingSettings != null) 
                     ? dc.OrderProcessingSettings.PaymentProcessingFlowType 
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsMultishipEnabled, op => op.Ignore());
 
 
-            Mapper.CreateMap<DCss.Gateway, Gateway>()
+            CreateMap<DCss.Gateway, Gateway>()
                 .ForMember(x => x.AreGatewayCredentialFieldsSet, op => op.ResolveUsing(dc => dc.AreGatewayCredentialFieldsSet))
                 .ForMember(x => x.SupportedCards, op => op.ResolveUsing(dc => dc.SupportedCards))
                 .ForMember(x => x.CountryCode, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) ? dc.GatewayAccount.CountryCode : null))
@@ -130,13 +130,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
 
-            Mapper.CreateMap<CheckoutSettings, DCss.CheckoutSettings>()
+            CreateMap<CheckoutSettings, DCss.CheckoutSettings>()
                 .ForMember(dc => dc.CustomerCheckoutSettings, op => op.ResolveUsing(( CheckoutSettings x) => x))
                 .ForMember(dc => dc.OrderProcessingSettings, op => op.ResolveUsing( (CheckoutSettings x) => x))
                 .ForMember(dc => dc.PaymentSettings, op => op.ResolveUsing(( CheckoutSettings x) => x))
                 ;
 
-            Mapper.CreateMap<CheckoutSettings, DCss.PaymentSettings>()
+            CreateMap<CheckoutSettings, DCss.PaymentSettings>()
                 .ConvertUsing(x => {
                     var ps = new DCss.PaymentSettings
                     {
@@ -167,19 +167,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return ps;
                 });
 
-            Mapper.CreateMap<CheckoutSettings, DCss.CustomerCheckoutSettings>()
+            CreateMap<CheckoutSettings, DCss.CustomerCheckoutSettings>()
                 .ForMember(dc => dc.CustomerCheckoutType, op => op.ResolveUsing(x => x.CustomerCheckoutType))
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 ;
 
-            Mapper.CreateMap<CheckoutSettings, DCss.OrderProcessingSettings>()
+            CreateMap<CheckoutSettings, DCss.OrderProcessingSettings>()
                 .ForMember(dc => dc.PaymentProcessingFlowType, op => op.ResolveUsing(x => x.PaymentProcessingFlowType))
                 .ForMember(dc => dc.UseOverridePriceToCalculateDiscounts, op => op.Ignore())
                 .ForMember(dc => dc.AuditInfo, op => op.Ignore())
                 .ForMember(dc => dc.AbandonedOrderThresholdInMinutes, op => op.Ignore()) // todo: xverify - Greg Murray on 2014-08-26
                 ;
 
-            Mapper.CreateMap<Gateway, DCss.Gateway>()
+            CreateMap<Gateway, DCss.Gateway>()
                 .ForMember(dc => dc.AreGatewayCredentialFieldsSet, op => op.ResolveUsing(x => x.AreGatewayCredentialFieldsSet))
                 .ForMember(dc => dc.SupportedCards, op => op.ResolveUsing(x => x.SupportedCards))
                 .ForMember(dc => dc.GatewayDefinition, op => op.Ignore())
@@ -204,19 +204,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
 
             // disgusting implicit mappings.
-            Mapper.CreateMap<DCp.GatewayDefinition, GatewayDefinition>()
+            CreateMap<DCp.GatewayDefinition, GatewayDefinition>()
                 //todo: confirm KeyValuePair transformation Greg Murray on 2014-01-24 
                 .ForMember(x => x.SupportedCards, op => op.ResolveUsing(dc => (dc.SupportedCards.IsNullOrEmpty())
                     ? null
                     : dc.SupportedCards.Select(
                         x => new KeyValuePair<string, string>(x.Type, x.FriendlyName)).ToList()))
                 ;
-            Mapper.CreateMap<DCp.GatewayCredentialFieldDefinition, GatewayCredentialFieldDefinition>();
-            Mapper.CreateMap<DCp.PreAuthorizeDefinition, PreAuthorizeDefinition>();
-            Mapper.CreateMap<DCp.PreAuthorizeTransactionTypeDataContract, PreAuthorizeTransactionTypeDataContract>();
-            //            Mapper.CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
+            CreateMap<DCp.GatewayCredentialFieldDefinition, GatewayCredentialFieldDefinition>();
+            CreateMap<DCp.PreAuthorizeDefinition, PreAuthorizeDefinition>();
+            CreateMap<DCp.PreAuthorizeTransactionTypeDataContract, PreAuthorizeTransactionTypeDataContract>();
+            //            CreateMap< Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout.GatewayDefinition,GatewayDefinition>();
 
-            Mapper.CreateMap<DCss.TenantGateway, Gateway>()
+            CreateMap<DCss.TenantGateway, Gateway>()
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => (dc.GatewayAccount != null) ? dc.GatewayAccount.Id : null))
                 .ForMember(x => x.GatewayDefinitionId, op => op.ResolveUsing(dc => (dc.GatewayAccount != null)
                     ? dc.GatewayAccount.GatewayDefinitionId
@@ -242,7 +242,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.IsActive, opt => opt.Ignore())
                 ;
 
-            Mapper.CreateMap<Gateway, DCss.TenantGateway>()
+            CreateMap<Gateway, DCss.TenantGateway>()
                 .ForMember(dc => dc.GatewayAccount, op => op.ResolveUsing(x =>
                 {
                     var account = new DCp.GatewayAccount
