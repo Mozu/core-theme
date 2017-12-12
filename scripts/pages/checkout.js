@@ -193,6 +193,9 @@ require(["modules/jquery-mozu",
             this.listenTo(this.model, 'billingContactUpdate', function (order, scope) {
                     this.render();
             }, this);
+            this.listenTo(this.model, 'updateCheckoutPayment', function (order, scope) {
+                this.render();
+            }, this);
             this.listenTo(this.model, 'change:savedPaymentMethodId', function (order, scope) {
                 $('[data-mz-saved-cvv]').val('').change();
                 this.render();
@@ -445,7 +448,9 @@ require(["modules/jquery-mozu",
         if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
 
             storefrontOrderAttributes.forEach(function(attributeDef){
-                fields.push('orderAttribute-' + attributeDef.attributeFQN);
+                if (attributeDef.isVisible) {
+                    fields.push('orderAttribute-' + attributeDef.attributeFQN);
+                }
             }, this);
 
         }

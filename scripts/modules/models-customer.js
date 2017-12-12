@@ -364,11 +364,15 @@
                 returnHistory = this.get('returnHistory');
             this.get('editingContact').set('accountId', this.get('id'));
             orderHistory.lastRequest = {
-                pageSize: 5
+                pageSize: 10
             };
             returnHistory.lastRequest = {
                 pageSize: 5
             };
+            orderHistory.apiGet(orderHistory.lastRequest).then(function () { 
+                orderHistory.trigger('orderHistoryRender'); 
+            }); 
+
             orderHistory.on('returncreated', function(id) {
                 returnHistory.apiGet(returnHistory.lastRequest).then(function () {
                     returnHistory.trigger('returndisplayed', id);

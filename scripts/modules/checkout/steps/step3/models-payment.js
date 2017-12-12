@@ -225,8 +225,20 @@ define([
             convertPaymentsToDigitalCredits: function(activeCredits, customer) {
                 var me = this;
                 _.each(activeCredits, function (activeCred) {
-                    var currentCred = activeCred;
-                    return me.retrieveDigitalCredit(customer, currentCred.billingInfo.storeCreditCode, me, currentCred.amountRequested).then(function(digCredit) {
+                    var currentCredCode = activeCred.billingInfo.storeCreditCode;
+                    var currentCredAmount = activeCred.amountRequested;
+                    if (activeCred.billingInfo.customCreditType === 'PurchaseReward' && me.orderPurchaseRewardAttr()){
+                        currentCredCode = me.orderPurchaseRewardAttr().values[0];
+                    }
+                    return me.retrieveDigitalCredit(customer, currentCredCode, me, currentCredAmount).then(function(digCredit) {
+                        if(_.isArray(digCredit)){
+                            _.each(digCredit, function(credit){
+                                if (activeCred.billingInfo.storeCreditCode === credit.code){
+                                    me.applyDigitalCredit(activeCred.billingInfo.storeCreditCode, currentCredAmount, true);
+                                }
+                            });
+                            return digCredit;  
+                        }
                         me.trigger('orderPayment', me.getOrder().data, me);
                         return digCredit;
                     });
@@ -251,7 +263,7 @@ define([
                 {
                     var billingContactEmail = this.get('billingContact').get('email');
                     order.get('billingInfo').clear();
-                    order.get('billingInfo').set('email', billingContactEmail);
+                    order.get('billingInfo').get('billingContact').set('email', billingContactEmail);
                     order.set(updatedOrder, { silent: true });
                 }
                 self.getPaymentTypeFromCurrentPayment();
@@ -321,10 +333,12 @@ define([
                                 return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
                             }
                             return order.apiVoidPayment(sameCreditPayment.id).then(function (o) {
-                                order.set(o.data);
+                                order.set(o.data); 
 
                                 return order.apiAddStoreCredit({
                                     storeCreditCode: creditCode,
+                                    storeCreditType: digitalCredit.get('creditType'),
+                                    customCreditType: digitalCredit.get('customCreditType'),
                                     amount: creditAmountToApply
                                 }).then(function (o) {
                                     self.refreshBillingInfoAfterAddingStoreCredit(order, o.data);
@@ -348,6 +362,8 @@ define([
 
                 return order.apiAddStoreCredit({
                     storeCreditCode: creditCode,
+                    storeCreditType: digitalCredit.get('creditType'),
+                    customCreditType: digitalCredit.get('customCreditType'),
                     amount: creditAmountToApply,
                     email: self.get('billingContact').get('email')
                 }).then(function (o) {
@@ -371,12 +387,95 @@ define([
                 return (Math.abs(f1 - f2)) < epsilon;
             },
 
+            isPurchaseReward: function(credit){
+                if (credit.attributes) {
+                    return (credit.get('customCreditType') === 'PurchaseReward');
+                }
+                return (credit.customCreditType === 'PurchaseReward');
+            },
+            getStoreCreditPayment: function(credit){
+                var self = this;
+                var sameCreditPayment = _.find(self.activeStoreCredits(), function (cred) {
+                    return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode.toLowerCase() === credit.get('code').toLowerCase();
+                });
+                return sameCreditPayment;
+            },
+            removePurchaseRewards: function(){
+                var self = this;
+                var order = this.getOrder();
+
+                var purchaseRewardCredits = self._cachedDigitalCredits.filter(function(credit){
+                    return self.isPurchaseReward(credit);
+                });
+
+                var enabledPurchaseRewardCredits = _.filter(purchaseRewardCredits, function(credit){
+                    return  credit.get('isEnabled'); 
+                });
+
+                var orderUpdate = _.after(enabledPurchaseRewardCredits.length, order.update);
+                
+                _.each(purchaseRewardCredits, function (credit) {
+                    if (credit.get('isEnabled')) {
+                        var payment = self.getStoreCreditPayment(credit);
+                        order.apiVoidPayment(payment.id);
+                    }
+                    self._cachedDigitalCredits.remove(credit);
+                });
+            },
+            orderPurchaseRewardAttr: function(){
+                var self =this;
+                var attrs = self.getOrder().get('attributes');
+                return _.findWhere(attrs, { fullyQualifiedName: 'tenant~PurchaseRewardNumber'});
+            },
+            mapPurchaseRewardNumber: function(rewardNumber){
+                var self = this;
+                if (!rewardNumber && !self.orderPurchaseRewardAttr()) {
+                    var customerRewardAttr = self.getOrder().get('customer').get('attributes').find(function(attr){
+                        return attr.get('fullyQualifiedName') == 'tenant~purchase-reward-number';
+                    });
+                    if (customerRewardAttr) {
+                        rewardNumber = customerRewardAttr.get('values')[0];
+                    }
+                }
+                if(rewardNumber) {
+                    self.getOrder().set('orderAttribute-tenant~PurchaseRewardNumber', rewardNumber);
+                    self.updatePurchaseRewardAttr();
+                }
+            },
+            updatePurchaseRewardAttr: function() {
+                var self = this;
+                var updateAttrs = [];
+                var PurchaseRewardAttr = self.getOrder().get('orderAttribute-tenant~PurchaseRewardNumber');
+                if (PurchaseRewardAttr) {
+                    updateAttrs.push({
+                        'fullyQualifiedName': 'tenant~PurchaseRewardNumber',
+                        'values': [PurchaseRewardAttr]
+                    });
+                }
+
+                if (updateAttrs.length > 0) {
+                    return self.getOrder().apiUpdateAttributes(updateAttrs);
+                }
+            },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
-                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
-                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
-                    creditModel.set('isTiedToCustomer', false);
 
+                return api.action('storecredits', 'get', { filter: 'code eq ' + creditCode}).then(function (credits) {
+
+                    if (credits.data.items.length > 1 && _.find(credits.data.items, function (credit) { return me.isPurchaseReward(credit); })) {
+                        me.removePurchaseRewards();
+                        me.mapPurchaseRewardNumber(creditCode);
+                        var creditModels = _.each(credits.data.items, function(credit, idx){
+                            var creditModel = new PaymentMethods.DigitalCredit(credit);
+                            me._cachedDigitalCredits.add(creditModel);
+                        });
+                        self.trigger('updateCheckoutPayment');
+                        return creditModels;
+                    }
+
+                    var creditModel = new PaymentMethods.DigitalCredit(credits.data.items[0]);
+                    creditModel.set('isTiedToCustomer', false);
+                    var creditType = creditModel.get('storeCreditType');
                     var validateCredit = function() {
                         var now = new Date(),
                             activationDate = creditModel.get('activationDate') ? new Date(creditModel.get('activationDate')) : null,
@@ -408,6 +507,7 @@ define([
 
                     me._cachedDigitalCredits.push(creditModel);
                     me.applyDigitalCredit(creditCode, maxAmt, true);
+
                     me.trigger('sync', creditModel);
                     return creditModel;
                 });
@@ -418,6 +518,7 @@ define([
                     order = me.getOrder(),
                     customer = order.get('customer');
                 var creditCode = this.get('digitalCreditCode');
+                
 
                 var existingDigitalCredit = this._cachedDigitalCredits.filter(function (cred) {
                     return cred.get('code').toLowerCase() === creditCode.toLowerCase();
@@ -707,6 +808,8 @@ define([
 
             initialize: function () {
                 var me = this;
+                
+                
 
                 _.defer(function () {
                     //set purchaseOrder defaults here.
@@ -735,6 +838,7 @@ define([
                             me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
                         }
                     });
+                    me.mapPurchaseRewardNumber();
                     me.trigger('updateCheckoutPayment');
                 });
                 var billingContact = this.get('billingContact');
@@ -744,7 +848,9 @@ define([
                     if (wellIsIt) {
                          var destinations = this.selectableDestinations();
                          if(destinations.length) {
+                            var billingContactEmail = this.get('billingContact').get('email');
                             this.set('billingContact', destinations[0].destinationContact, { silent: true });
+                            this.get('billingContact').set('email', billingContactEmail);
                          }
 
                     } else if (billingContact) {

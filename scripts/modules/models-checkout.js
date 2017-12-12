@@ -692,19 +692,101 @@
                 var epsilon = 0.01; 
                 return (Math.abs(f1 - f2)) < epsilon; 
             },
+            isPurchaseReward: function (credit) {
+                if (credit.attributes) {
+                    return (credit.get('customCreditType') === 'PurchaseReward');
+                }
+                return (credit.customCreditType === 'PurchaseReward');
+            },
+            getStoreCreditPayment: function (credit) {
+                var self = this;
+                var sameCreditPayment = _.find(self.activeStoreCredits(), function (cred) {
+                    return cred.status !== 'Voided' && cred.billingInfo && cred.billingInfo.storeCreditCode.toLowerCase() === credit.get('code').toLowerCase();
+                });
+                return sameCreditPayment;
+            },
+            removePurchaseRewards: function () {
+                var self = this;
+                var order = this.getOrder();
 
+                var purchaseRewardCredits = self._cachedDigitalCredits.filter(function (credit) {
+                    return self.isPurchaseReward(credit);
+                });
+
+                var enabledPurchaseRewardCredits = _.filter(purchaseRewardCredits, function (credit) {
+                    return credit.get('isEnabled');
+                });
+
+                var orderUpdate = _.after(enabledPurchaseRewardCredits.length, order.update);
+
+                _.each(purchaseRewardCredits, function (credit) {
+                    if (credit.get('isEnabled')) {
+                        var payment = self.getStoreCreditPayment(credit);
+                        order.apiVoidPayment(payment.id);
+                    }
+                    self._cachedDigitalCredits.remove(credit);
+                });
+            },
+            orderPurchaseRewardAttr: function () {
+                var self = this;
+                var attrs = self.getOrder().get('attributes');
+                return _.findWhere(attrs, { fullyQualifiedName: 'tenant~PurchaseRewardNumber' });
+            },
+            mapPurchaseRewardNumber: function (rewardNumber) {
+                var self = this;
+                if (!rewardNumber && !self.orderPurchaseRewardAttr()) {
+                    var customerRewardAttr = self.getOrder().get('customer').get('attributes').find(function (attr) {
+                        return attr.get('fullyQualifiedName') == 'tenant~purchase-reward-number';
+                    });
+                    if (customerRewardAttr) {
+                        rewardNumber = customerRewardAttr.get('values')[0];
+                    }
+                }
+                if (rewardNumber) {
+                    self.getOrder().set('orderAttribute-tenant~PurchaseRewardNumber', rewardNumber);
+                    self.updatePurchaseRewardAttr();
+                }
+            },
+            updatePurchaseRewardAttr: function () {
+                var self = this;
+                var updateAttrs = [];
+                var PurchaseRewardAttr = self.getOrder().get('orderAttribute-tenant~PurchaseRewardNumber');
+                if (PurchaseRewardAttr) {
+                    updateAttrs.push({
+                        'fullyQualifiedName': 'tenant~PurchaseRewardNumber',
+                        'values': [PurchaseRewardAttr]
+                    });
+                }
+
+                if (updateAttrs.length > 0) {
+                    return self.getOrder().apiUpdateAttributes(updateAttrs);
+                }
+            },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
-                return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
-                    var creditModel = new PaymentMethods.DigitalCredit(credit.data);
-                    creditModel.set('isTiedToCustomer', false);
 
-                    var validateCredit = function() {
+                return api.action('storecredits', 'get', { filter: 'code eq ' + creditCode }).then(function (credits) {
+
+                    if (credits.data.items.length > 1 && _.find(credits.data.items, function (credit) { return me.isPurchaseReward(credit); })) {
+                        me.removePurchaseRewards();
+                        me.mapPurchaseRewardNumber(creditCode);
+                        var creditModels = _.each(credits.data.items, function (credit, idx) {
+                            var creditModel = new PaymentMethods.DigitalCredit(credit);
+                            me._cachedDigitalCredits.add(creditModel);
+                        });
+                        self.trigger('updateCheckoutPayment');
+                        return creditModels;
+                    }
+
+                    var creditModel = new PaymentMethods.DigitalCredit(credits.data.items[0]);
+                    creditModel.set('isTiedToCustomer', false);
+                    var creditType = creditModel.get('storeCreditType');
+                    var validateCredit = function () {
                         var now = new Date(),
                             activationDate = creditModel.get('activationDate') ? new Date(creditModel.get('activationDate')) : null,
                             expDate = creditModel.get('expirationDate') ? new Date(creditModel.get('expirationDate')) : null;
                         if (expDate && expDate < now) {
-                            return self.deferredError(Hypr.getLabel('digitalCreditExpired', expDate.toLocaleDateString()), self);
+                            return self.deferredError(Hypr.getLabel('expiredCredit', expDate.toLocaleDateString()), self);
                         }
                         if (activationDate && activationDate > now) {
                             return self.deferredError(Hypr.getLabel('digitalCreditNotYetActive', activationDate.toLocaleDateString()), self);
@@ -719,7 +801,7 @@
                     if (validate !== null) {
                         return null;
                     }
-                    
+
                     var maxAmt = me.getMaxCreditToApply(creditModel, me, amountRequested);
                     if (!!amountRequested && amountRequested < maxAmt) {
                         maxAmt = amountRequested;
@@ -730,6 +812,7 @@
 
                     me._cachedDigitalCredits.push(creditModel);
                     me.applyDigitalCredit(creditCode, maxAmt, true);
+
                     me.trigger('sync', creditModel);
                     return creditModel;
                 });
@@ -1036,6 +1119,7 @@
                             me.setSavedPaymentMethod(me.get('savedPaymentMethodId'));
                         }
                     });
+                    me.mapPurchaseRewardNumber();
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
