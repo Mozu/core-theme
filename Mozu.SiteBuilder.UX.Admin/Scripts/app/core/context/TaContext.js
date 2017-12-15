@@ -123,7 +123,7 @@ Ext.define('Taco.core.context.TaContext', {
     },
     onNavigate: function (state) {
         var ulrToken = state.metaData.ctx,
-            recordId = this.getStore().find('urlToken', ulrToken),
+            recordId = this.getStore().find('urlToken', ulrToken, 0, false, true, true),
             record = this.getStore().getAt(recordId);
         if (record) {
             this.setCurrentContext(record.raw, false);

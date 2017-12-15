@@ -275,6 +275,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 })
                 .Where(x => x.Symbol != null).ToDictionary(x => x.CurrencyCode.ToString().ToLowerInvariant());
 
+            Resort(taContext);
+
 
             ViewData["localizationValues"] = new LocalizationController(_httpContext).GetStrings();
             ViewData["taContext"] = taContext;
@@ -351,6 +353,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
           
 
             return RazorView("index");
+        }
+
+        private void Resort(TaContext taContext)
+        {
+            if ( taContext.MasterCatalogs != null)
+            {
+                taContext.MasterCatalogs = taContext.MasterCatalogs.OrderBy(x => x.Id).ToList();
+                foreach( var mc in taContext.MasterCatalogs)
+                {
+                    if (mc.Catalogs != null)
+                    {
+                        mc.Catalogs = mc.Catalogs.OrderBy(x => x.Id).ToList();
+                    }
+                    if (mc.Sites != null)
+                    {
+                        mc.Sites = mc.Sites.OrderBy(x => x.Id).ToList();
+                    }
+                }
+            }
+            
         }
 
         private async Task<List<JObject>> GetCustomSchema(Tenant.Contracts.Tenant tenant)
