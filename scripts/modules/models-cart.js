@@ -103,6 +103,36 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                 }
             });
         },
+        checkBOGA: function(){
+          //Called whenever we would need to add an additional item to the cart
+          //due to a BOGA discount (cart initialization and after application
+          // of a coupon code)
+          var me = this;
+          var suggestedDiscounts = this.get("suggestedDiscounts");
+
+          suggestedDiscounts.forEach(function(discountItem){
+            var cartHasDiscountItem = me.get('items').some(function(cartItem){
+              return discountItem.productCode === cartItem.productCode;
+            });
+
+
+            if(discountItem.autoAdd && !cartHasDiscountItem){
+              var bogaProduct = new CartItemProduct({productCode: discountItem.productCode, fulfillmentMethod: "Ship"});
+              //We fetch complete product information for validation purposes.
+              //in order for apiAddToCart to work, the product needs to know which
+              //fulfillment types it can support.
+              bogaProduct.fetch().then(function(){
+                bogaProduct.apiAddToCart().then(function(cartItem){
+                  //apiAddToCart doesn't automatically sync our cart, so we
+                  //manually add our newly acquired data to the local backbone
+                  //model before telling the cart to re-render.
+                  me.get('items').add(new CartItem(cartItem.data));
+                  me.trigger('render');
+                });
+              });
+            }
+          });
+        },
         isEmpty: function() {
             return this.get("items").length < 1;
         },
@@ -163,7 +193,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     return d.couponCode && d.couponCode.toLowerCase() === lowerCode;
                 }));
                 me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
-
+                me.checkBOGA();
                 me.isLoading(false);
             });
         },
