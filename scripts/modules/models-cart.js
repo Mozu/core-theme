@@ -47,11 +47,17 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             var self = this;
             var oldQuantity = this.previous("quantity");
             if (this.hasChanged("quantity")) {
-                this.apiUpdateQuantity(this.get("quantity"))
-                    .then(null, function() {
+                this.apiModel.updateQuantity(this.get("quantity"))
+                    .then(function(){
+                      self.collection.parent.fetch().then(function(cart){
+                        cart.checkBOGA();
+                      });
+
+                    }, function() {
                         // Quantity update failed, e.g. due to limited quantity or min. quantity not met. Roll back.
                         self.set("quantity", oldQuantity);
                         self.trigger("quantityupdatefailed", self, oldQuantity);
+
                     });
             }
         },
@@ -102,6 +108,62 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     });
                 }
             });
+        },
+        checkBOGA: function(){
+          //Called whenever we would need to add an additional item to the cart
+          //due to a BOGA discount (cart initialization and after application
+          // of a coupon code)
+          var me = this;
+          var suggestedDiscounts = this.get("suggestedDiscounts");
+
+          // First we filter our list down to
+          // just the products we know we want added.
+          var productsToAdd = [];
+          suggestedDiscounts.forEach(function(discountItem){
+            var cartHasDiscountItem = me.get('items').some(function(cartItem){
+              return discountItem.productCode === cartItem.productCode;
+            });
+
+            if (discountItem.autoAdd && !cartHasDiscountItem){
+              productsToAdd.push(discountItem);
+            }
+          });
+
+          // We now have a list of productsToAdd.
+          // We'll define a function to fetch and re render the cart after
+          // each of the product fetches have been completed.
+
+          var renderCartWhenFinished = _.after(productsToAdd.length, function(){
+            me.fetch().then(function(){
+              me.trigger('render');
+            });
+          });
+          // We define a recursive function to assure that each product code
+          // gets added to the cart sequentially.
+          var addProductsToCart = function(productIndex){
+            var totalLength = productsToAdd.length;
+            var currentIndex = productIndex || 0;
+
+            if (productsToAdd[currentIndex]){
+              var productToAdd = productsToAdd[currentIndex];
+              var bogaProduct = new CartItemProduct({productCode: productToAdd.productCode});
+              bogaProduct.fetch().then(function(){
+                bogaProduct.apiAddToCart({autoAddDiscountId: productToAdd.discountId}).then(function(cartItem){
+                  var nextProductIndex = currentIndex + 1;
+                  renderCartWhenFinished();
+                  addProductsToCart(nextProductIndex);
+                });
+              }, function(error){
+                // Something went wrong with fetching one of the products.
+                // We don't want this to halt the whole process.
+                var nextProductIndex = currentIndex + 1;
+                renderCartWhenFinished();
+                addProductsToCart(nextProductIndex);
+              });
+            }
+          };
+
+          addProductsToCart();
         },
         isEmpty: function() {
             return this.get("items").length < 1;
@@ -163,7 +225,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     return d.couponCode && d.couponCode.toLowerCase() === lowerCode;
                 }));
                 me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
-
+                me.checkBOGA();
                 me.isLoading(false);
             });
         },
