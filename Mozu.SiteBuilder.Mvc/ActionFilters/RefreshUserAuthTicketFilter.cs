@@ -29,11 +29,26 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         {
             var sbc = actionContext.Request.Resolve<ISiteBuilderApiContext>();
 
-            if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
+            if (sbc.UserClaims == null || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
             {
                 return continuation();
             }
             var authHelper = actionContext.Request.Resolve<IAuthenticationHelper>();
+
+            if (sbc.UserClaims.IsAnonymous)
+            {
+                sbc.UserClaims.Expiration = DateTime.Now.AddMonths(1);
+                var token = sbc.UserClaims.ToAccessToken();
+                var pToken = authHelper.GetProfileToken();
+                authHelper.SaveStoreFrontAccessToken(token, pToken);
+                return continuation();
+            }
+
+            if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
+            {
+                return continuation();
+            }
+           
             var rToken = authHelper.GetStoreFrontRefreshToken();
             if (rToken == null)
             {
