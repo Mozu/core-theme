@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
         public ProductMapping()
         {
            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
-                .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
+                .ConvertUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
                 {
 
                     var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 });
 
             CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, IDictionary<string, object>>()
-               .ConstructUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product  product) =>
+               .ConvertUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product  product) =>
                {
 
                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);

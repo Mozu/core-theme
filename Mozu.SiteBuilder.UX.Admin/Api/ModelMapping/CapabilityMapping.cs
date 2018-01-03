@@ -15,7 +15,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             CreateMap<DC.Application, Application>()
                 .ForMember(x => x.Capabilities, opt => opt.Ignore())
-                .ConstructUsing(app =>
+                .ConvertUsing(app =>
                 {
                     if (app.Entitlement == null)
                     {

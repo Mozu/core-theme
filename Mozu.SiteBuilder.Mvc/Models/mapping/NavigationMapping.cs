@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 //.ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
                 //   .As<IRuntimeNavigationNode>()
 
-                //.ConstructUsing(product => new SimpleRuntimeNavigationNode() {OriginalId = product.ProductCode});
+                //.ConvertUsing(product => new SimpleRuntimeNavigationNode() {OriginalId = product.ProductCode});
                 ;
 
             CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()

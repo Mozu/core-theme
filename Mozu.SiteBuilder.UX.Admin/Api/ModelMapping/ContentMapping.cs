@@ -70,7 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     return doc;
                 });
             CreateMap<DC.Document, JObject>()
-                .ConstructUsing((DC.Document doc) =>
+                .ConvertUsing((DC.Document doc) =>
                 {
                     if (doc == null)
                     {
@@ -80,9 +80,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     jobj["startDate"] = doc.ActiveDateRange == null ? null : doc.ActiveDateRange.StartDate;
                     jobj["endDate"] = doc.ActiveDateRange == null ? null : doc.ActiveDateRange.EndDate;
                     return jobj;
-                }).ForAllMembers(x => x.Ignore());
+                });
             CreateMap<JObject, DC.Document>()
-               .ConstructUsing((JObject jobj) =>
+               .ConvertUsing((JObject jobj) =>
                    {
                        if ( jobj == null )
                     {
@@ -95,7 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                            StartDate = GetDate(jobj, "startDate")
                        };
                        return doc;
-                   }).ForAllMembers(x => x.Ignore());
+                   });
                
 
            

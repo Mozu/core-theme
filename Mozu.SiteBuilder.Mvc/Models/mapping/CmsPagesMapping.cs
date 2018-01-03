@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             var defaultFlags = ToDict(new Models.Admin.CMS.DocListFlags { EnableActiveDateRange = false, EnablePublishing = false, SupportsActiveDateRange = false, SupportsPublishing = false });
 
             CreateMap<DC.Document, IDictionary<string, object>>()
-               .ConstructUsing((DC.Document doc) =>
+               .ConvertUsing((DC.Document doc) =>
                {
 
                    var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase) {
@@ -68,8 +68,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 .ForMember(x => x.PublishState, m => m.ResolveUsing(n => n.PublishState))
                 .ForMember(x => x.UpdateDate, m => m.ResolveUsing(n => n.UpdateDate));
 
-            CreateMap<JObject, JObject>().ConstructUsing(x => x);
-            CreateMap<JContainer, JContainer>().ConstructUsing(x => x);
+            CreateMap<JObject, JObject>().ConvertUsing(x => x);
+            CreateMap<JContainer, JContainer>().ConvertUsing(x => x);
 
             CreateMap<Mozu.Content.Contracts.DocumentDraftSummary, Mozu.SiteBuilder.UX.Models.Admin.CMS.DocumentDraft>()
                 .ForMember(d => d.Id, m => m.MapFrom(dc => dc.Id))
