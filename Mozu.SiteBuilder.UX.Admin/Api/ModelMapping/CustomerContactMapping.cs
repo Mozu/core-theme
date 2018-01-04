@@ -14,7 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             CreateMap<DC.CustomerContact, CustomerContact>()
                 // explicitly perform base class mapping Mozu.Core.Api.Contracts.Contact <=> Contact
-                .BeforeMap((dc, x) => { Mapper.Map<Mozu.Core.Api.Contracts.Contact, Contact>(dc, x); })
+                //.BeforeMap((dc, x) => { Mapper.Map<Mozu.Core.Api.Contracts.Contact, Contact>(dc, x); })
+                .IncludeBase<Mozu.Core.Api.Contracts.Contact, Contact>()
                 .ForMember(x => x.AccountId, op => op.ResolveUsing(dc => dc.AccountId))
                 .ForMember(x => x.FaxNumber, op => op.ResolveUsing(dc => dc.FaxNumber))
                 .ForMember(x => x.IsShipping, op => op.ResolveUsing(dc => dc.Types.Any(dct => dct.Name == DC.ContactTypeConst.SHIPPING)))
@@ -43,7 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             CreateMap<CustomerContact, DC.CustomerContact>()
                 // explicitly perform base class mapping Contact <=> Mozu.Core.Api.Contracts.Contact
-                .BeforeMap((x, dc) => { Mapper.Map<Contact, Mozu.Core.Api.Contracts.Contact>(x, dc); })
+                .IncludeBase<Contact, Mozu.Core.Api.Contracts.Contact>()                
+                //.BeforeMap((x, dc) => { Mapper.Map<Contact, Mozu.Core.Api.Contracts.Contact>(x, dc); })
                 .ForMember(dc => dc.AccountId, op => op.ResolveUsing(x => x.AccountId))
                 .ForMember(dc => dc.FaxNumber, op => op.ResolveUsing(x => x.FaxNumber))
                 .ForMember(dc => dc.Types, op => op.ResolveUsing(x => {

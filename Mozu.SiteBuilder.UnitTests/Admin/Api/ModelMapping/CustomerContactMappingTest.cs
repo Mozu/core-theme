@@ -15,10 +15,12 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
     [Category("Mapping")]
     public class CustomerContactMappingTest
     {
-        private static DC.CustomerContact dcTest = new DC.CustomerContact {
+        private static DC.CustomerContact dcTestObj = new DC.CustomerContact
+        {
             AccountId = 1100,
-            Address = new Core.Api.Contracts.Address {
-                Address1= "1835 Kramer Lane",
+            Address = new Core.Api.Contracts.Address
+            {
+                Address1 = "1835 Kramer Lane",
                 CityOrTown = "Austin",
                 StateOrProvince = "TX",
                 CountryCode = "US",
@@ -27,11 +29,12 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             },
             CompanyOrOrganization = "",
             Email = "joeblow@volusion.com",
-            FaxNumber= null,
+            FaxNumber = null,
             FirstName = "AAA",
             MiddleNameOrInitial = "",
             LastNameOrSurname = "BB",
-            PhoneNumbers = new Core.Api.Contracts.Phone {
+            PhoneNumbers = new Core.Api.Contracts.Phone
+            {
                 Home = "512-555-0000",
                 Mobile = "512-555-0000",
                 Work = ""
@@ -40,6 +43,16 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
                 new DC.ContactType { Name = DC.ContactTypeConst.SHIPPING, IsPrimary = true },
                 new DC.ContactType { Name = DC.ContactTypeConst.BILLING, IsPrimary = true },
             }
+        };
+        private static CustomerContact testObj = new CustomerContact
+        {
+            AccountId = 1100,
+            CompanyOrOrganization = "",
+            Email = "joeblow@volusion.com",
+            FaxNumber = null,
+            FirstName = "AAA",
+            IsBilling = true
+
         };
 
 
@@ -63,7 +76,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
 
         [Test]
         public void AddressType_should_map_to_sb_contract() {
-            var mapped = Mapper.Map<DC.CustomerContact, CustomerContact>(dcTest);
+            var mapped = Mapper.Map<DC.CustomerContact, CustomerContact>(dcTestObj);
             Assert.AreEqual(Core.Api.Contracts.Address.AddressTypes.Residential, mapped.AddressType);
         }
         
@@ -79,5 +92,24 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             Assert.IsTrue(mapped.Types[0].IsPrimary);
             Assert.AreEqual("Shipping", mapped.Types[0].Name);
         }
+
+        [Test]
+        public void Should_map_CustomerContact_base()
+        {
+            var mapped = Mapper.Map<CustomerContact>(dcTestObj);
+
+            Assert.AreEqual(mapped.Email, dcTestObj.Email);
+            Assert.IsTrue(mapped.Email == dcTestObj.Email);
+        }
+
+        [Test]
+        public void Should_map_CustomerContact_base_reverse()
+        {
+            var mapped = Mapper.Map<DC.CustomerContact>(testObj);
+
+            Assert.AreEqual(mapped.Email, dcTestObj.Email);
+            Assert.IsTrue(mapped.Email == dcTestObj.Email);
+        }
+
     }
 }
