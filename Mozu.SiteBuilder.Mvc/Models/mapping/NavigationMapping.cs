@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using AutoMapper;
-using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 
@@ -9,18 +7,19 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
 {
     public class NavigationMapping : Profile
     {
-        public NavigationMapping() { 
+        public NavigationMapping() {
             // this mapping is used by Mozu.SiteBuilder.Mvc.Contexts.NavContext
-            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
+            CreateMap<UX.Models.StoreFront.Catalog.Product, SimpleRuntimeNavigationNode>()
                 .ForMember(d => d.Id, opt => opt.ResolveUsing(x => JoinParts("product", x.ProductCode)))
                 .ForMember(d => d.OriginalId, opt => opt.ResolveUsing(x => x.ProductCode))
-                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => x.ProductName))
-                .ForMember(d => d.Url, opt => opt.ResolveUsing(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))
+                .ForMember(d => d.Name, opt => opt.ResolveUsing(x => (!string.IsNullOrEmpty(x.Content?.ProductName))
+                    ? x.Content.ProductName
+                    : x.ProductName))
+                .ForMember(d => d.Url,
+                    opt => opt.ResolveUsing(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl))
+                        ? "/p/" + x.ProductCode
+                        : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))
                 .ForMember(dest => dest.NodeType, opt => opt.UseValue(NavigationNodeType.Product))
-                //.ForMember(dest => dest.IsLeaf, opt => opt.UseValue(true))
-                //   .As<IRuntimeNavigationNode>()
-
-                //.ConvertUsing(product => new SimpleRuntimeNavigationNode() {OriginalId = product.ProductCode});
                 ;
 
             CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()

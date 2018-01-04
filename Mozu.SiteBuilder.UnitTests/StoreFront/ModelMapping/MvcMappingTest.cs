@@ -84,10 +84,15 @@ namespace Mozu.SiteBuilder.UnitTests.StoreFront.ModelMapping
             {
                 Mapper.AssertConfigurationIsValid();
             }
+            catch (DuplicateTypeMapConfigurationException ex)
+            {
+                Assert.Inconclusive(ex.ToString());
+            }
             catch (AutoMapperConfigurationException ex)
             {
                 Assert.Inconclusive(ex.ToString());
             }
+            
         }
 
         [Test]

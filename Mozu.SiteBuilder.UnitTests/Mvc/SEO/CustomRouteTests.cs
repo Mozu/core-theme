@@ -743,7 +743,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             Mapper.Reset();
             Mapper.Initialize(x =>
            {
-               x.AddProfiles("Mozu.SiteBuilder.UX");
+               x.AddProfile<UX.Areas.StoreFront.ModelMapping.ProductMapping>();
            });
             //Mapper.AddProfile<Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping.ProductMapping>();
             var subber = new AutofacContrib.NSubstitute.AutoSubstitute();
