@@ -441,6 +441,18 @@ var CheckoutPage = Backbone.MozuModel.extend({
                       });
                     });
 
+                    /* BOGA Check
+                      If the coupon applied was for a BOGA discount, and the
+                      additional product is valid to be autoAdded to the cart,
+                      we can skip all the validation and redirect to the cart.
+                    */
+                    var autoAddSuggestedDiscount = me.get('suggestedDiscounts').some(function(discount){
+                      return discount.autoAdd;
+                    });
+                    if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
+                      window.location =  (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
+                    }
+
                     var productDiscounts = _.flatten(me.get('items').pluck('productDiscounts'));
                     var shippingDiscounts = _.flatten(_.pluck(_.flatten(me.get('items').pluck('shippingDiscounts')), 'discount'));
                     var orderShippingDiscounts = _.flatten(_.pluck(groupingShippingDiscounts, 'discount'));
@@ -454,20 +466,22 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     };
 
                     var invalidCoupons = _.pluck(response.invalidCoupons, "couponCode");
+
+
+
                     if (_.contains(invalidCoupons, code)){
                       me.trigger('error', {
                         message: Hypr.getLabel('promoCodeInvalid', code)
                       });
 
-                    } else if (!allDiscounts || !_.find(allDiscounts, matchesCode))
+                  } else if (!allDiscounts || !_.find(allDiscounts, matchesCode))
                     {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
 
-                    }
+                    } else if (me.get('total') === 0) {
 
-                    else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
                     // only do this when there isn't a payment on the order...
