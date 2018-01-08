@@ -16,8 +16,9 @@ define(['modules/api',
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
-
+            this.model.checkBOGA();
             this.pickerDialog = this.initializeStorePickerDialog();
+
             var me = this;
 
             //setup coupon code text box enter.
