@@ -335,7 +335,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return pc;
         }
 
-        private static SortContext ProcessSortBy(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool sortWithUrl, string sort)
+        private static SortContext ProcessSortBy(Mvc.Contexts.ISiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool sortWithUrl, string sort)
         {
 
             // sortWithUrl is true in the newer instances of our sort implementation -- it will usually fall in this case, unless the searchContext.sortBy is null -- which means the default sort
@@ -419,7 +419,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
 
-        private static void ProcessPaging(Mvc.Contexts.SiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool pageWithUrl, ref int startIndex, ref int pageSize, string[] productCodesFilters)
+        private static void ProcessPaging(Mvc.Contexts.ISiteContext siteContext, Mvc.Contexts.SearchContext searchContext, bool pageWithUrl, ref int startIndex, ref int pageSize, string[] productCodesFilters)
         {
             if (pageWithUrl)
             {

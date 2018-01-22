@@ -52,9 +52,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         {
             return context.ViewContext().LifetimeScope.Resolve<PageContext>();
         }
-        public static SiteContext SiteContext(this NDjango.Interfaces.IContext context)
+        public static ISiteContext SiteContext(this NDjango.Interfaces.IContext context)
         {
-            return context.ViewContext().LifetimeScope.Resolve<SiteContext>();
+            return context.ViewContext().LifetimeScope.Resolve<ISiteContext>();
         }
         public static T Resolve<T>(this NDjango.Interfaces.IContext context)
         {

@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             return result;
         }
 
-        public async Task<bool> InitCmsPageContext(PageContext pageContext, SiteContext siteContext)
+        public async Task<bool> InitCmsPageContext(IPageContext pageContext, ISiteContext siteContext)
         {
             CmsPageContext cmsPageContext = pageContext.CmsContext;
 

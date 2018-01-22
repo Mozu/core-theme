@@ -70,6 +70,11 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             throw new NotImplementedException();
         }
 
+        public string GetBaseUrlById(string serviceId, string environment = null, string scaleUnit = null, string mozuInstanceId = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ServiceClientResponse<T>> SendAsync<T>(string verb, string relpath, string serviceId, ConfigOptions options)
         {
             throw new NotImplementedException();

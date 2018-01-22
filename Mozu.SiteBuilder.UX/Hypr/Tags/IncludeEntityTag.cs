@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (tempCol != null)
             {
                 ids = tempCol.Cast<object>().Where(x => x != null).Select(x => x.ToString()).ToList();
-                query = string.Join(", or", ids.Select(x => string.Format("Id eq \"{0}\"", x)));
+                query = string.Join(" or ", ids.Select(x => string.Format("id eq \"{0}\"", x)));
                 ;
             }
             var service = context.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
@@ -109,9 +109,9 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
             
             dynamic res;
-            if (ids != null && ids.Count == 0)
+            if (ids?.Count == 1 )
             {
-                res = await service.GetEntity(entityListFullName: list, id: ids[0]).ConfigureAwait(false);
+                res = await service.GetEntity(entityListFullName: list, id: ids.First()).ConfigureAwait(false);
             }
             else
             {
