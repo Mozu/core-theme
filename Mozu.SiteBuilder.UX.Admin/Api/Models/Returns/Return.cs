@@ -103,7 +103,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// The total product price of all items including product tax.
         /// </summary>
         public decimal? ProductTotal { get; set; }
+
+        public string CurrencyCode { get; set; }
         #endregion
+
 
         #region Dates
         public DateTime? RMADeadline { get; set; }
