@@ -29,6 +29,8 @@ using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
 using System.Diagnostics;
+using Mozu.SiteBuilder.Mvc.Themes;
+using Autofac;
 //using Mozu.SiteBuilder.UX.MessageHandlers;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -88,8 +90,8 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             FixupDisplayMode();
 
-
-
+            
+            this.Container.Resolve<INfsConnectionWarmer>().Start();
         }
 
         void FixupDisplayMode()

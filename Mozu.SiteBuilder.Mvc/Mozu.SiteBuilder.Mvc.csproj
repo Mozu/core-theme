@@ -287,6 +287,7 @@
     <Compile Include="Tags\SetTemplateVariablesTag.cs" />
     <Compile Include="Tags\PartialOutputCaching.cs" />
     <Compile Include="TestData\TestDataBroker.cs" />
+    <Compile Include="Themes\NFSConnectionWarmer.cs" />
     <Compile Include="Themes\ThemeLabel.cs" />
     <Compile Include="Themes\ThemeSetting.cs" />
     <Compile Include="Themes\ThemeMetaData.cs" />

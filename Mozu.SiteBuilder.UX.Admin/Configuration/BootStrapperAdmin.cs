@@ -28,6 +28,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers;
 using Mozu.SiteBuilder.UX.Admin.MessageHandlers;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
+using Mozu.SiteBuilder.Mvc.Themes;
 
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
@@ -87,6 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             new RouteConfig().Register( httpConfiguration.Routes );
             AddFormatters(httpConfiguration.Formatters);
             base.ApplicationStart(httpConfiguration);
+            this.Container.Resolve<INfsConnectionWarmer>().Start();
         }
 
         private void AddFormatters(MediaTypeFormatterCollection formatters )

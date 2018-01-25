@@ -80,6 +80,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<StorefrontCache>().As<IStorefrontCache>().InstancePerRequest();
             builder.RegisterType<ThemeCache>().As<IThemeCache>().SingleInstance();
             builder.RegisterType<SitebuilderContextCacheRepository>().As<ISitebuilderContextCacheRepository>().SingleInstance();
+
+            builder.RegisterType<StorageGatewayConnectionWarmer>().As<INfsConnectionWarmer>().SingleInstance();
         }
 
       
