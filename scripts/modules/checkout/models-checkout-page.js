@@ -254,6 +254,15 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     self.get('destinations').trigger('destinationsUpdate');
                 }
             },
+            checkBOGA: function(){
+              var me = this;
+              var autoAddSuggestedDiscount = me.get('suggestedDiscounts').some(function(discount){
+                return discount.autoAdd;
+              });
+              if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
+                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
+              }
+            },
             initialize: function (data) {
 
                 var self = this,
@@ -262,9 +271,11 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 this.on('sync', function(rawJSON) {
                     self.addCustomerContacts();
+                    self.checkBOGA();
                 });
 
                 self.addCustomerContacts();
+                self.checkBOGA();
 
                 _.defer(function() {
                     self.setMultiShipMode();
@@ -439,6 +450,22 @@ var CheckoutPage = Backbone.MozuModel.extend({
                       });
                     });
 
+                    /* BOGA cart redirect check -
+                      We run checkBOGA on every model sync. That means, if a
+                      BOGA coupon was applied, it's already been run and at this
+                      point we're just about to get kicked back to the cart.
+                      We don't want this validation to flash an error message
+                      before the redirect is complete, so we take the suggestedDiscounts
+                      into account when deciding whether to show that message.
+                    */
+                    var redirectToCart = false;
+                    var autoAddSuggestedDiscount = me.get('suggestedDiscounts').some(function(discount){
+                      return discount.autoAdd;
+                    });
+                    if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
+                      redirectToCart = true;
+                    }
+
                     var productDiscounts = _.flatten(me.get('items').pluck('productDiscounts'));
                     var shippingDiscounts = _.flatten(_.pluck(_.flatten(me.get('items').pluck('shippingDiscounts')), 'discount'));
                     var orderShippingDiscounts = _.flatten(_.pluck(groupingShippingDiscounts, 'discount'));
@@ -452,20 +479,22 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     };
 
                     var invalidCoupons = _.pluck(response.invalidCoupons, "couponCode");
+
+
+
                     if (_.contains(invalidCoupons, code)){
                       me.trigger('error', {
                         message: Hypr.getLabel('promoCodeInvalid', code)
                       });
 
-                    } else if (!allDiscounts || !_.find(allDiscounts, matchesCode))
+                  } else if (!redirectToCart && (!allDiscounts || !_.find(allDiscounts, matchesCode)))
                     {
                         me.trigger('error', {
                             message: Hypr.getLabel('promoCodeError', code)
                         });
 
-                    }
+                    } else if (me.get('total') === 0) {
 
-                    else if (me.get('total') === 0) {
                         me.trigger('complete');
                     }
                     // only do this when there isn't a payment on the order...
