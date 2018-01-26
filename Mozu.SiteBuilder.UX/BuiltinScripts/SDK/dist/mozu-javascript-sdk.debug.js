@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-01-19
+ * Mozu JavaScript SDK - v0.3.0 - 2018-01-29
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4364,7 +4364,7 @@ module.exports=
       "specifyPostData": true
     },
     "get-shipping-methods": {
-      "template": "{+checkoutService}{id}/shipments/methods",
+      "template": "{+checkoutService}{id}/shippingMethods",
       "returnType": "shippingmethods"
     },
     "set-user-id": {

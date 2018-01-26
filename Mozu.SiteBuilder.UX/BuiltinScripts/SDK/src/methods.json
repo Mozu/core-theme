@@ -841,7 +841,7 @@
       "specifyPostData": true
     },
     "get-shipping-methods": {
-      "template": "{+checkoutService}{id}/shipments/methods",
+      "template": "{+checkoutService}{id}/shippingMethods",
       "returnType": "shippingmethods"
     },
     "set-user-id": {
