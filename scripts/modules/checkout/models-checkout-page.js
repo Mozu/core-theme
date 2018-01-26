@@ -394,9 +394,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
             },
             updateShippingInfo: function() {
                 var me = this;
-                this.apiModel.getShippingMethods().then(function (methods) {
-                    //me.get('fulfillmentInfo').refreshShippingMethods(methods);
-                });
+                this.get('shippingInfo').updateShippingMethods();
             },
             updateVisaCheckoutBillingInfo: function() {
                 //Update the billing info with visa checkout payment
