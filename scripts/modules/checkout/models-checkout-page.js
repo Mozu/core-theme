@@ -260,7 +260,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
               var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
                 return discount.autoAdd;
               });
-              if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
+              if (suggestedDiscounts.length && autoAddSuggestedDiscount){
                 window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
               }
             },
@@ -464,7 +464,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
                       return discount.autoAdd;
                     });
-                    if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
+                    if (suggestedDiscounts.length && autoAddSuggestedDiscount){
                       redirectToCart = true;
                     }
 
