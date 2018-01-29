@@ -52,7 +52,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1642.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1803.0-ace-rewards-36)
+    Mozu.CommerceRuntime.Contracts (1.1804.2)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -91,7 +91,7 @@ NUGET
       NSubstitute (>= 1.8.1)
       NUnit (>= 2.6.4)
       Should (>= 1.1.20)
-    Mozu.Customer.Contracts (1.1802.0-aceRewards-4)
+    Mozu.Customer.Contracts (1.1804.1)
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)
