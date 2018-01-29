@@ -256,7 +256,8 @@ var CheckoutPage = Backbone.MozuModel.extend({
             },
             checkBOGA: function(){
               var me = this;
-              var autoAddSuggestedDiscount = me.get('suggestedDiscounts').some(function(discount){
+              var suggestedDiscounts = me.get('suggestedDiscounts') || [];
+              var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
                 return discount.autoAdd;
               });
               if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
@@ -459,7 +460,8 @@ var CheckoutPage = Backbone.MozuModel.extend({
                       into account when deciding whether to show that message.
                     */
                     var redirectToCart = false;
-                    var autoAddSuggestedDiscount = me.get('suggestedDiscounts').some(function(discount){
+                    var suggestedDiscounts = me.get('suggestedDiscounts') || [];
+                    var autoAddSuggestedDiscount = suggestedDiscounts.some(function(discount){
                       return discount.autoAdd;
                     });
                     if (me.get('suggestedDiscounts').length && autoAddSuggestedDiscount){
