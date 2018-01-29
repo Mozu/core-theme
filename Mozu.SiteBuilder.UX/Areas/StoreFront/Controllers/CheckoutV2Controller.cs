@@ -255,6 +255,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!this.PageContext.User.IsAnonymous)
             {
+                if (!model.CustomerAccountId.HasValue)
+                    model = (await _checkoutWebApiClient.UpdateCheckout(model.Id, model)).ReadAsSync();
+
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
