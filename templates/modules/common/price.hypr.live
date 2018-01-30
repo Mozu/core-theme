@@ -3,15 +3,19 @@
      {{model.price|currency}}
  </span>
  <span itemprop="price" class="mz-price is-saleprice">
-     {% if model.discount.discount.name %}
-     <span class="mz-price-discountname">{{model.discount.discount.name}} &ndash;</span>
-     {% endif %}
-
-     {% if model.priceType != "MAP" %}
+    {% if model.priceType != "MAP" %}
          {{model.salePrice|currency}}
-     {% else %}
+    {% else %}
          <div>{{ labels.mapPrice }}</div>
-     {% endif %}
+    {% endif %}
+
+    {% if model.discount.discounts.length %}
+        <div>
+        {% for discount in model.discount.discounts %}
+            <span class="mz-price-discountname">{{discount.name}} &ndash; {{discount.impact|currency}}</span>
+        {% endfor %}
+        </div>
+    {% endif %}
  </span>
  {% else %}
  <span itemprop="price" class="mz-price">
