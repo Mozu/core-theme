@@ -37,7 +37,7 @@
     </td>
     <td class="mz-carttable-item-total">
       <div class="mz-item-discount">
-        <span class="mz-item-discountname">  {{ discount.discount.name }}</span>
+        <span class="mz-item-discountname">  {{ discount.discount.name }}:</span>
         <span class="mz-item-discountamt"> -{{ discount.impact|currency }}</span>
       </div>
     </td>
