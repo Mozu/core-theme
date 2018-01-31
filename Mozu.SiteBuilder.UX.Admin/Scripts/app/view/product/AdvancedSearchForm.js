@@ -127,6 +127,140 @@ Ext.define('Taco.view.product.AdvancedSearchForm', {
                         })
                     }
                 ]
+            },
+            {
+                xtype: 'taco-categorycombobox',
+                store: { type: 'Taco.store.Categories' },
+                flex:1,
+                name: 'category',
+                fieldLabel: 'Category',
+                valueField: 'id',
+                displayField: 'nameAndCodeAndStatus',
+                queryMode: 'local',
+                valueNotFoundText: 'not found',
+                editable: true,
+                forceSelection: true,
+                listeners: {
+                    added: function (cmp) {
+                        cmp.hidden = !Taco.app.context.getCatalogId();
+                    }
+                }
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Price Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                        xtype: 'currencyfield',
+                        name: 'minPrice',
+                        hideTrigger: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false,
+                        flex:1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'currencyfield',
+                        name: 'maxPrice',
+                        hideTrigger: true,
+                        keyNavEnabled: false,
+                        mouseWheelEnabled: false,
+                        flex:1
+                    }]
+            },
+            {
+            xtype: 'fieldcontainer',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [{
+                    xtype: 'currencyfield',
+                    name: 'map',
+                    fieldLabel: 'MAP',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    flex:1
+                }, {
+                    xtype: 'currencyfield',
+                    name: 'msrp',
+                    fieldLabel: 'MSRP',
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    margin: '0 0 0 35',
+                    flex: 1
+                }]
+            },
+            {
+                xtype: 'taco-adminuserfield',
+                name: 'modifiedBy',
+                fieldLabel: 'Modified By',
+                flex: 1
+            },
+            {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Modfied Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [
+                    {
+                        xtype: 'datefield',
+                        name: 'modifiedFrom',
+                        altFormats: "c",
+                        flex: 1
+                    }, {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    }, {
+                        xtype: 'datefield',
+                        name: 'modifiedTo',
+                        altFormats: "c",
+                        flex: 1
+                    }
+                ]
+            },
+            {
+                xtype:'container',
+                layout: 'hbox',
+                items: [
+                    {
+                        xtype: 'combobox',
+                        name: 'publishedStateFilter',
+                        fieldLabel: 'Status',
+                        flex: 1,
+                        valueField: 'id',
+                        displayField: 'name',
+                        queryMode: 'local',
+                        valueNotFoundText: 'not found',
+                        editable: true,
+                        forceSelection: true,
+                        store: Ext.create('Ext.data.Store', {
+                            fields: ['id', "name"],
+                            data: [
+                                {
+                                    name: "Live",
+                                    id: "Live"
+                                }, {
+                                    name: "Draft",
+                                    id: "Draft"
+                                }, {
+                                    name: "New",
+                                    id: "New"
+                                }
+                            ]
+                        })
+                    }
+                ]
             }
         ]
 
