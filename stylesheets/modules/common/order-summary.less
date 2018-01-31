@@ -94,6 +94,14 @@
 
    .mz-ordersummary-ms2-checkout {
      border-bottom: 0px;
+
+     .mz-ordersummary-discount {
+       font-weight: bold;
+     }
+
+     .mz-ordersummary-discountamt {
+         color: #900;
+     }
    }
 
 
@@ -127,7 +135,7 @@
     td {
         background-color: #f7f7f7;
         text-align: right;
-        padding: @gutter/2 @gutter;
+        padding: @gutter/4 @gutter;
         &.mz-ordersummary-item-product {
             text-align: left;
         }
@@ -155,7 +163,7 @@
 
     }
     .mz-item-rowtotal{
-      color: #900;
+      color: #000;
     }
 
         .mz-item-discount {
@@ -200,7 +208,7 @@
     }
 
 
-    .mz-item-rowtotal, .mz-ordersummary-grandtotal {
+    .mz-ordersummary-grandtotal {
       color: #ae1231;
     }
 
@@ -221,10 +229,10 @@
         font-weight: bold;
     }
 
-        .mz-item-discount {
+        .mz-item-discount, .mz-ordersummary-discount {
         font-weight: bold;
 
-        .mz-item-discountamt {
+        .mz-item-discountamt, .mz-ordersummary-discountamt {
             color: #900;
         }
     }
