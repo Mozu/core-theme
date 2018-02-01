@@ -114,7 +114,8 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
           //due to a BOGA discount (cart initialization and after application
           // of a coupon code)
           var me = this;
-          var suggestedDiscounts = this.get("suggestedDiscounts");
+          var suggestedDiscounts = this.get("suggestedDiscounts") || [];
+
 
           // First we filter our list down to
           // just the products we know we want added.
