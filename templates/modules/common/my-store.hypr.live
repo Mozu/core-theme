@@ -1,0 +1,12 @@
+{% require_script "modules/my-store" %}
+<div class="mz-my-store-container">
+  <button id="mz-shop-my-store-btn" class="mz-button mz-shop-my-store-btn">
+    <span>Shop My Store</span>
+    <img src="/resources/images/location-pin.png">
+  </button>
+  <button id="mz-shopping-my-store-btn" class="mz-button mz-shopping-my-store-btn"></button>
+  <div id="mz-change-my-store-container" class="mz-change-my-store-container">
+    <img class="mz-location-pin-img" src="/resources/images/location-pin.png">
+    <div class="mz-change-my-store-link">Change Store</div>
+  </div>
+</div>

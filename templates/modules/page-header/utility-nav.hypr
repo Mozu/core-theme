@@ -11,8 +11,15 @@
         {% if not user.isAnonymous %}
         <li class="mz-utilitynav-item">
             <div id="mz-logged-in-notice">
-            Welcome, <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
-            </div> 
+                Welcome, <a href="{{siteContext.siteSubdirectory}}/myaccount" class="mz-utilitynav-link">{{user.firstName|default(user.emailAddress)}}</a>! (<a href="{{siteContext.siteSubdirectory}}/logout" data-mz-action="logout" class="mz-utilitynav-link">{{ labels.logOut }}</a>)
+                <div id="mz-my-store-header">
+                    <div id="mz-my-store-header-text"></div>
+                    <div class="mz-my-store-header-container">
+                        <div id="mz-my-store-header-change-store-link"></div>
+                        <img src="/resources/images/location-pin.png"/>
+                    </div>
+                </div>
+            </div>
         </li>
         {%else%}
         <li class="mz-utilitynav-item">

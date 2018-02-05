@@ -1,0 +1,30 @@
+{% extends "modules/common/modal-dialog" %}
+{% block modal-header %}
+<h3 class="modal-title">Store Locator</h3>
+<div class="mz-my-store-controls-container">
+	<form id="mz-store-search-form" style="display: flex">
+		<div class="mz-my-store-input-container">
+			<div class="mz-my-store-input-label">Zip</div>
+			<input type="text" id="mz-my-store-zipcode-input" class="mz-my-store-zipcode-input"></input>
+			<div class="mz-my-store-zipcode-error" id="mz-my-store-zipcode-error">Zipcode cannot be empty</div>
+		</div>
+		<div class="mz-my-store-input-container">
+			<div class="mz-my-store-input-label">Radius</div>
+			<select id="mz-my-store-radius-select" class="mz-my-store-radius-select">
+				<option value="5">5 miles</option>
+				<option value="15" selected="selected">15 miles</option>
+				<option value="30">30 miles</option>
+				<option value="50">50 miles</option>
+			</select>
+		</div>
+		<div class="mz-my-store-input-container">
+			<div class="mz-my-store-input-label"></div>
+			<button type="submit" id="mz-my-store-search-btn" class="mz-button mz-my-store-search-btn">{{ labels.search }}</button>
+		</div>
+	</form>
+</div>
+{% endblock modal-header %}
+{% block modal-body %}
+{% endblock modal-body %}
+{% block modal-footer %}
+{% endblock modal-footer %}
