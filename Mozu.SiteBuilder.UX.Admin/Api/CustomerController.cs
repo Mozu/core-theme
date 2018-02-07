@@ -337,21 +337,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId)
         {
-            var customerTask = _customerWebApiClient.GetAccount(accountId);
-            var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId);
+            var customerTask =  _customerWebApiClient.GetAccount(accountId);
+            return customerTask.Result.ResponseMessage.IsSuccessStatusCode ? customerTask.Result.ReadAsAsync() : null;
+
+            /* var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId);
 
             return Task.WhenAll(customerTask, attributeTask).ContinueWith<DC.CustomerAccount>(t =>
-            {
-                if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
-                {
-                    var customer = customerTask.Result.ReadAsSync();
-                    var attributes = attributeTask.Result.ReadAsSync();
-
-                    customer.Attributes = attributes.Items;
-                    return customer;
-                }
-                return null;
-            });
+             {
+                 if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
+                 {
+                     var customer = customerTask.Result.ReadAsSync();
+                     var attributes = attributeTask.Result.ReadAsSync();
+ 
+                     customer.Attributes = attributes.Items;
+                     return customer;
+                 }
+                 return null;
+             });*/
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -392,8 +394,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsManagementTasks = contactsTuple.Item1;
                 var contactsDeleteTasks = contactsTuple.Item2;
                 var attrTuple = ManageAttributes(dcCust, dcExistingCustomer);
-                var attrTasks = contactsTuple.Item1;
-                var attrDeleteTasks = contactsTuple.Item2;
+                var attrTasks = attrTuple.Item1;
+                var attrDeleteTasks = attrTuple.Item2;
                 var segmentTasks = ManageSegments(dcCust, dcExistingCustomer);
 
                 // on customer save, if he is no longer locked 
@@ -658,7 +660,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
             var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
-            var deleteAttributeIds = nullAttrIds.ToList();
+            var deleteAttributeIds = nullAttrIds.Intersect(existingAttrIds).ToList();
 
             if (createdAttributeIds.Count > 0)
             {
