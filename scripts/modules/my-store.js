@@ -15,22 +15,14 @@ define(['modules/api',
     var shoppingMyStoreBtn = $('#mz-shopping-my-store-btn');
     var changeMyStoreContainer = $('#mz-change-my-store-container');
 
-    function setMyStoreEnabled() {
-
-    }
-
-    function getMyStoreEnabled() {
-
-    }
+    var _myStoreLocationName;
 
     function setMyStore(data) {
       data = JSON.parse(data);
-      sessionStorage.setItem('myStoreName', data.locationName);
-      sessionStorage.setItem('myStoreCode', data.locationCode);
-
-      // todo: only if logged in
-      localStorage.setItem('myStoreName', data.locationName);
-      localStorage.setItem('myStoreCode', data.locationCode);
+      $.cookie('myStoreCode', data.locationCode);
+      $.cookie('myStoreName', data.locationName);
+      $.cookie('myStoreEnabled', true);
+      myStoreEnabled = true;
 
       shoppingMyStoreBtn.text('Shop my store - ' + data.locationName);
       shopMyStoreBtn.hide();
@@ -38,13 +30,13 @@ define(['modules/api',
       changeMyStoreContainer.css('display', 'flex');
 
       // todo: load new products with my store filter added
-      toggleMyStore();
+      shoppingMyStoreBtn.addClass('mz-shopping-my-store-enabled');
       showMyStoreHeader();
       _modal.hide();
     }
 
     function isMyStore(location) {
-      var myStoreCode = sessionStorage.getItem('myStoreCode');
+      var myStoreCode = $.cookie('myStoreCode');
 
       if (myStoreCode && myStoreCode === location.code) {
         return true;
@@ -54,38 +46,23 @@ define(['modules/api',
     }
 
     function getMyStore() {
-      var myStoreName = sessionStorage.getItem('myStoreName');
-      var myStoreCode = sessionStorage.getItem('myStoreCode');
+      var location = null;
+      var myStoreName = $.cookie('myStoreName');
+      var myStoreCode = $.cookie('myStoreCode');
+      _myStoreLocationName = myStoreName;
 
       if (myStoreName && myStoreCode) {
-        return {
+        location = {
           locationName: myStoreName,
           locationCode: myStoreCode
-        }
+        };
       }
 
-      var isLoggedIn = document.getElementById('mz-logged-in-notice') !== null;
-
-      if (isLoggedIn) {
-        if (localStorage.getItem('myStoreName')) {
-          myStoreName = localStorage.getItem('myStoreName');
-          myStoreCode = localStorage.getItem('myStoreCode');
-
-          if (myStoreName && myStoreCode) {
-            sessionStorage.setItem('myStoreName', myStoreName);
-            sessionStorage.setItem('myStoreCode', myStoreCode);
-
-            return {
-              locationName: myStoreName,
-              locationCode: myStoreCode
-            }
-          }
-        } else {
-          return null;
-        }
+      if ($.cookie('myStoreEnabled') === 'true') {
+        shoppingMyStoreBtn.addClass('mz-shopping-my-store-enabled');
       }
 
-      return null;
+      return location;
     }
 
     function toggleMyStore() {
@@ -97,6 +74,7 @@ define(['modules/api',
         shoppingMyStoreBtn.addClass('mz-shopping-my-store-enabled');
       }
 
+      $.cookie('myStoreEnabled', !myStoreEnabled);
       myStoreEnabled = !myStoreEnabled;
 
       // todo: filter/unfilter on my store
@@ -183,8 +161,10 @@ define(['modules/api',
 
       var locationsCollection = new LocationModels.LocationCollection();
 
-      // todo: search locations using zipcode and radius filter
-      locationsCollection.apiGet().then(function(collection) {
+      // Location service expects radius in meters 1mi = 1.7km
+      var meters = 1.7 * radius * 1000;
+
+      locationsCollection.apiGet({ nearZipcode: zipcode, nearZipcodeRadius: meters }).then(function(collection) {
         if (collection.length === 0) {
           _modal.setBody(Hypr.getLabel('noNearbyLocations'));
         } else {
@@ -264,7 +244,8 @@ define(['modules/api',
       });
 
       $('#mz-my-store-selector').on('click', '.mz-my-store-select-button', function() {
-        // todo: handle clicking my store button
+        var storeData = $(this).attr('mz-store-select-data');
+        setMyStore(storeData);
       });
 
       $('#mz-my-store-search-btn').click(function() {
@@ -292,7 +273,6 @@ define(['modules/api',
     }
 
     function showMyStoreHeader() {
-      var myStore = getMyStore();
       var loggedInContainer = document.getElementById('mz-logged-in-notice');
 
       if (!loggedInContainer) {
@@ -303,8 +283,8 @@ define(['modules/api',
       var changeMyStoreHeaderLink = $('#mz-my-store-header-change-store-link');
       var searchbox = $('#searchbox');
 
-      if (myStore && myStore.locationName) {
-        myStoreHeaderText.text(myStore.locationName);
+      if (_myStoreLocationName) {
+        myStoreHeaderText.text(_myStoreLocationName);
         changeMyStoreHeaderLink.text('Change Store');
         searchbox.css('top', '80px');
       } else {
@@ -324,11 +304,10 @@ define(['modules/api',
       var myStore = getMyStore();
 
       if (myStore) {
-        shoppingMyStoreBtn.addClass('mz-shopping-my-store-enabled');
         shoppingMyStoreBtn.text('Shop my store - ' + myStore.locationName);
         shoppingMyStoreBtn.show();
         changeMyStoreContainer.css('display', 'flex');
-        myStoreEnabled = true;
+        myStoreEnabled = $.cookie('myStoreEnabled') === 'true';
       } else {
         shopMyStoreBtn.show();
       }
