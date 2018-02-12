@@ -127,25 +127,25 @@ Ext.define('Taco.core.StateManager', {
     isReactView: function(uriOrState) {
 
         var VIEWS = [
-            'redirects',
-            'filemanager',
-            'ipblocking',
-            'generalsettings',
-            'customers',
-            'orderattributes',
-            'locationattributes',
-            'locations',
-            'synonyms',
-            'categories',
-            'returns',
-            'paymentgateways'
+            '/redirects',
+            '/filemanager',
+            '/ipblocking',
+            '/generalsettings',
+            '/customers',
+            '/orderattributes',
+            '/locationattributes',
+            '/locations',
+            '/synonyms',
+            '/categories',
+            '/returns',
+            '/paymentgateways'
         ];
         var NOT_VIEWS =[
-            'customerset',
-            'categories/edit',
-            'categories/duplicate',
-            'categories/create',
-            'categories/createDynamic'
+            '/customerset',
+            '/categories/edit',
+            '/categories/duplicate',
+            '/categories/create',
+            '/categories/createDynamic'
         ];
 
         if (this.REACT_VIEWS
