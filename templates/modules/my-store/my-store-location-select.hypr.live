@@ -19,7 +19,7 @@
 		</div>
 		<div class="mz-my-store-input-container">
 			<div class="mz-my-store-input-label"></div>
-			<button type="submit" id="mz-my-store-search-btn" class="mz-button mz-my-store-search-btn">{{ labels.search }}</button>
+			<button type="submit" id="mz-my-store-search-btn"  class="mz-button mz-my-store-search-btn">{{ labels.search }}</button>
 		</div>
 	</form>
 </div>

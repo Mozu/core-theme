@@ -32,9 +32,11 @@
         <div data-mz-pagesort class="mz-sortby">
             {% include "modules/common/page-sort" %}
         </div>
-        <div data-mz-my-store class="mz-my-store">
-            {% include "modules/common/my-store" %}
-        </div>
+        {% if themeSettings.allowFilterByLocationInventory %}
+            <div data-mz-my-store class="mz-my-store">
+                {% include "modules/common/my-store" %}
+            </div>
+        {% endif %}
         <div data-mz-pagenumbers class="mz-pagenumbers">
             {% include "modules/common/page-numbers" %}
         </div>
