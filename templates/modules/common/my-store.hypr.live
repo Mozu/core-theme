@@ -1,5 +1,5 @@
 {% require_script "modules/my-store" %}
-<div class="mz-my-store-container">
+<div id="mz-my-store-container" class="mz-my-store-container">
   <button id="mz-shop-my-store-btn" class="mz-button mz-shop-my-store-btn">
     <span>Shop My Store</span>
     <img src="/resources/images/location-pin.png">
@@ -21,3 +21,6 @@
     <div class="mz-change-my-store-link">Change Store</div>
   </div>
 </div>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdiG5m3PaYo_hPJusieg1GX_yNeAK8aAw">
+</script>

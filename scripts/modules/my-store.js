@@ -8,11 +8,19 @@ define(['modules/api',
         'modules/models-location'
       ], function (api, Backbone, _, $, HyprLiveContext, Hypr, modalDialog, LocationModels) {
 
+    var MyStoreView =  Backbone.MozuView.extend({
+      templateName: 'modules/common/my-store',
+      init: function() {
+        initMyStoreControls();
+        initMyStoreHeader();
+        initMyStoreHeader();
+        initLocationPicker();
+      }
+    });
+
+    var MyStoreModel = Backbone.Model.extend({});
+
     var _modal;
-    var shopMyStoreBtn = $('#mz-shop-my-store-btn');
-    var shoppingMyStoreBtn = $('#mz-shopping-my-store-btn');
-    var shoppingMyStoreBtnEnabled = $('#mz-shopping-my-store-btn-enabled');
-    var changeMyStoreContainer = $('#mz-change-my-store-container');
     var myStoreHeaderText = $('#mz-my-store-header-text');
     var changeMyStoreHeaderLink = $('#mz-my-store-header-change-store-link');
 
@@ -24,33 +32,34 @@ define(['modules/api',
       _modal.show();
     }
 
-    function filterMyStore() {
-      // todo: (after tying backbone model to view)
-    }
-
-    function showShoppingMyStore() {
-      var storeName = getMyStore().locationName;
-      shoppingMyStoreBtn.hide();
-      shoppingMyStoreBtnEnabled.text('Shop my store - ' + storeName);
-      shoppingMyStoreBtnEnabled.show();
-      shopMyStoreBtn.hide();
-      changeMyStoreContainer.css('display', 'flex');
-    }
+    // Deprecated
+    // function showShoppingMyStore() {
+    //   var storeName = getMyStore().locationName;
+    //   $('#mz-shopping-my-store-btn').hide();
+    //   $('#mz-shopping-my-store-btn-enabled').text('Shop my store - ' + storeName);
+    //   $('#mz-shopping-my-store-btn-enabled').show();
+    //   $('#mz-shop-my-store-btn').hide();
+    //   $('#mz-change-my-store-container').css('display', 'flex');
+    // }
 
     function setMyStore(data, applyFilter) {
       data = JSON.parse(data);
       $.cookie('my-store-code', data.locationCode);
       $.cookie('my-store-name', data.locationName);
 
-      showShoppingMyStore();
       updateMyStoreHeader();
       hideModal();
 
       $.post('/location/set?code=' + data.locationCode);
 
-      if (applyFilter) {
-        // todo: apply filter to products
-      }
+      var newUrl = setParam(window.location.href, 'inStockLocation', data.locationCode);
+      window.location.href = newUrl;
+    }
+
+    function setParam(uri, key, val) {
+      return uri
+        .replace(new RegExp("([?&]"+key+"(?=[=&#]|$)[^#&]*|(?=#|$))"), "&"+key+"="+encodeURIComponent(val))
+        .replace(/^([^?&]+)&/, "$1?");
     }
 
     function getMyStore() {
@@ -82,20 +91,30 @@ define(['modules/api',
       return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
-    function renderPickerBody(locations) {
+    function renderPickerBody(locations, origin) {
       var html = '';
+      var outerContainer = $('<div>');
       var myStoreDiv;
+
+      var destinations = [];
 
       locations.forEach(function(location) {
         var name = location.name;
         var address = location.address;
         var code = location.code;
 
+        var locationContainer = $('<div>', {
+          'class': 'mz-location-container',
+          "style": "display:flex;flex-direction:column;"
+        });
+
+        destinations.push(address.address1 + ' ' + address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode);
+
         var containerStyle = "flex:1;display:flex;justify-content:flex-end;align-items:center";
         var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex" });
         var leftSideDiv = $('<div>', { "style": "flex:1" });
         var rightSideDiv = $('<div>', { "style": containerStyle });
-        leftSideDiv.append('<h4 style="margin: 6.25px 0 6.25px">'+name+'</h4>');
+        leftSideDiv.append('<h4 class="mz-my-store-name">'+name+'</h4>');
 
         leftSideDiv.append($('<div>'+address.address1+'</div>'));
         if (address.address2) {
@@ -109,6 +128,13 @@ define(['modules/api',
         }
 
         leftSideDiv.append($('<div>'+address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode+'</div>'));
+
+        var seeMapToggle = $('<div>', {
+          'class': 'mz-see-map-toggle'
+        });
+
+        seeMapToggle.text('Map');
+        leftSideDiv.append(seeMapToggle);
 
         var buttonData = {
           locationCode: code,
@@ -128,7 +154,7 @@ define(['modules/api',
           $selectButton.text(Hypr.getLabel('myStore'));
           var $locationPinImg = $('<img>', { 'src': '/resources/images/location-pin.png' });
           $selectButton.prepend($locationPinImg);
-          myStoreDiv = locationSelectDiv;
+          myStoreDiv = locationContainer;
         } else {
           $selectButton = $("<button>", {
             "type": "button",
@@ -144,16 +170,65 @@ define(['modules/api',
         locationSelectDiv.append(leftSideDiv);
         locationSelectDiv.append(rightSideDiv);
 
+        var myStoreMapContainer = $('<div>', {
+          'class': 'mz-my-store-map-container',
+          'style': 'position: relative'
+        });
+
+        var myStoreMap = $('<div>', {
+          'class': 'mz-my-store-map',
+          'mz-data-address': address.cityOrTown+', ' + address.stateOrProvince + ' ' + address.postalOrZipCode
+        });
+
+        myStoreMapContainer.append(myStoreMap);
+
+        locationContainer.append(locationSelectDiv);
+        locationContainer.append(myStoreMapContainer);
+
         if (!isMyStore(location)) {
-          html += locationSelectDiv.prop('outerHTML');
+          outerContainer.append(locationContainer);
         }
       });
 
-       if (myStoreDiv) {
-        html = myStoreDiv.prop('outerHTML') + html;
-       }
+      if (myStoreDiv) {
+        outerContainer.prepend(myStoreDiv);
+      }
 
-      _modal.setBody(html);
+      function distanceCallback(response, status) {
+        // See Parsing the Results for
+        // the basics of a callback function.
+        if (status === 'OK') {
+          outerContainer.find('.mz-my-store-name').each(function(idx) {
+            var distance = response.rows[0].elements[idx].distance.text;
+            var distanceDiv = $('<div>', {
+              'class': 'mz-my-store-distance',
+              'text': distance
+            });
+
+            distanceDiv.insertAfter(this);
+          });
+
+          _modal.setBody(outerContainer.prop('innerHTML'));
+        } else {
+          _modal.setBody(outerContainer.prop('innerHTML'));
+        }
+      }
+
+      if (origin) {
+        var service = new google.maps.DistanceMatrixService();
+
+        service.getDistanceMatrix({
+          origins: [origin],
+          destinations: destinations,
+          travelMode: 'DRIVING',
+          // transitOptions: TransitOptions,
+          // drivingOptions: DrivingOptions,
+          unitSystem: google.maps.UnitSystem.IMPERIAL,
+          avoidHighways: false
+        }, distanceCallback);
+      } else {
+        _modal.setBody(outerContainer.prop('innerHTML'));
+      }
     }
 
     function setZipcodeError(error) {
@@ -200,7 +275,7 @@ define(['modules/api',
         if (collection.length === 0) {
           _modal.setBody(Hypr.getLabel('noNearbyLocations'));
         } else {
-          renderPickerBody(collection.data.items);
+          renderPickerBody(collection.data.items, zipcode);
         }
         searchBtn.removeAttr('disabled');
       }, function(err) {
@@ -284,12 +359,53 @@ define(['modules/api',
         searchLocations();
       });
 
-      shopMyStoreBtn.click(function() {
+      $('#mz-shop-my-store-btn').click(function() {
         initLocations();
       });
 
-      changeMyStoreContainer.click(function() {
+      $('#mz-change-my-store-container').click(function() {
         initLocations();
+      });
+
+      $('#mz-my-store-selector').on('click', '.mz-see-map-toggle', function() {
+        var geocoder = new google.maps.Geocoder();
+
+        var locationContainer = $(this).closest('.mz-location-container');
+        var mapContainer = locationContainer.find('.mz-my-store-map-container');
+        var mapEl = locationContainer.find('.mz-my-store-map');
+        var address = mapEl[0].getAttribute('mz-data-address');
+
+        var containerStyle = 'position:absolute;display:flex;justify-content:center;align-items:center;top:0;bottom:0;left:0;right:0;z-index:9999';
+        var loadingContainer = $('<div>', { style: containerStyle });
+        var loadingDiv = $('<img>', { src: '/resources/images/button-loading.gif' });
+        loadingContainer.append(loadingDiv);
+        mapContainer.append(loadingContainer);
+
+        mapContainer.css('display', 'flex');
+
+        var map = new google.maps.Map(mapEl[0], {
+            zoom: 13,
+            mapTypeControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
+            rotateControl: false,
+            scaleControl: false
+        });
+
+        geocoder.geocode({ 'address': address }, function (results, status) {
+          if (status == 'OK') {
+            map.setCenter(results[0].geometry.location);
+
+            var marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+            });
+
+            loadingContainer.remove();
+          } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
       });
 
       $(document).on('submit','#mz-store-search-form', function() {
@@ -315,9 +431,9 @@ define(['modules/api',
 
         btn.text('Shop my store - ' + myStore.locationName);
         btn.show();
-        changeMyStoreContainer.css('display', 'flex');
+        $('#mz-change-my-store-container').css('display', 'flex');
       } else {
-        shopMyStoreBtn.show();
+        $('#mz-shop-my-store-btn').show();
       }
     }
 
@@ -349,5 +465,12 @@ define(['modules/api',
       initMyStoreHeader();
       initMyStoreHeader();
       initLocationPicker();
+
+      var myStoreView = new MyStoreView({
+        el: $('#mz-my-store-container'),
+        model: new MyStoreModel()
+      });
+
+      window.myStoreView = myStoreView;
     });
 });

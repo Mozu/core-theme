@@ -21,6 +21,11 @@ define([
             var url = response.canonicalUrl;
             _$body.html(response.body);
             if (url) _dispatcher.replace(url);
+
+            if (window.myStoreView) {
+                window.myStoreView.init();
+            }
+
             _$body.removeClass('mz-loading');
         }
 
