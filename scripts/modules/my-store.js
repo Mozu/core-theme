@@ -34,8 +34,8 @@ define(['modules/api',
 
     function setMyStore(data, applyFilter) {
       data = JSON.parse(data);
-      $.cookie('my-store-code', data.locationCode);
-      $.cookie('my-store-name', data.locationName);
+      $.cookie('my-store-code', data.locationCode, { path: '/' });
+      $.cookie('my-store-name', data.locationName, { path: '/' });
 
       updateMyStoreHeader();
       hideModal();
@@ -206,7 +206,7 @@ define(['modules/api',
       }
 
       if (origin) {
-        var service = new google.maps.DistanceMatrixService();
+        var service = new window.google.maps.DistanceMatrixService();
 
         service.getDistanceMatrix({
           origins: [origin],
@@ -214,7 +214,7 @@ define(['modules/api',
           travelMode: 'DRIVING',
           // transitOptions: TransitOptions,
           // drivingOptions: DrivingOptions,
-          unitSystem: google.maps.UnitSystem.IMPERIAL,
+          unitSystem: window.google.maps.UnitSystem.IMPERIAL,
           avoidHighways: false
         }, distanceCallback);
       } else {
@@ -359,7 +359,7 @@ define(['modules/api',
       });
 
       $('#mz-my-store-selector').on('click', '.mz-see-map-toggle', function() {
-        var geocoder = new google.maps.Geocoder();
+        var geocoder = new window.google.maps.Geocoder();
 
         var locationContainer = $(this).closest('.mz-location-container');
         var mapContainer = locationContainer.find('.mz-my-store-map-container');
@@ -374,7 +374,7 @@ define(['modules/api',
 
         mapContainer.css('display', 'flex');
 
-        var map = new google.maps.Map(mapEl[0], {
+        var map = new window.google.maps.Map(mapEl[0], {
             zoom: 13,
             mapTypeControl: false,
             streetViewControl: false,
@@ -387,7 +387,7 @@ define(['modules/api',
           if (status == 'OK') {
             map.setCenter(results[0].geometry.location);
 
-            var marker = new google.maps.Marker({
+            var marker = new window.google.maps.Marker({
               map: map,
               position: results[0].geometry.location
             });
