@@ -127,6 +127,7 @@ Ext.define('Taco.core.StateManager', {
     isReactView: function(uriOrState) {
 
         var VIEWS = [
+            '/capability',
             '/redirects',
             '/filemanager',
             '/ipblocking',

@@ -120,7 +120,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 .UsingAssembly(Assembly.Load("Mozu.Provisioning.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.AppDev.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.ProductRuntime.Contracts"))
-                .UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc")) //typeof preferred
+				.UsingAssembly(Assembly.Load("Mozu.Event.Contracts"))
+				.UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc")) //typeof preferred
                 .UsingAssembly(Assembly.GetExecutingAssembly())
               
                 ;

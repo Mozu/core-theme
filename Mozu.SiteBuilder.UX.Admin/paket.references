@@ -27,3 +27,4 @@ Mozu.ScheduledEvent.Contracts
 OctoPack
 Microsoft.AspNet.WebApi.Client
 JWT
+Mozu.Event.Contracts

@@ -8,5 +8,10 @@ Ext.define('Taco.controller.Capability', {
     stores: ['Taco.store.Capability'],
     views: ['capability.Index'],
     modelName: 'Capability',
-    editorView: 'Taco.view.capability.Edit'
+    editorView: 'Taco.view.capability.Edit',
+    index: function () {
+       
+        this.createContentView('Taco.view.capability.Index');
+    
+    }
 });

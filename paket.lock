@@ -95,6 +95,9 @@ NUGET
       Mozu.Core.Extensible.Contracts
     Mozu.DeployWeb (2.0.4)
       OctoPack (>= 2.1.3)
+    Mozu.Event.Contracts (1.1735.1)
+      Mozu.Core.Messaging.Contracts (>= 1.17)
+      Mozu.Core.Prime (>= 1.17)
     Mozu.Hypr.NDjango (1.1731.1)
       FSharp.Core (>= 3.1.2.1)
       FSharpx.Collections (>= 1.9.6)

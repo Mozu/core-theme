@@ -144,7 +144,7 @@ Ext.define('Taco.Application', {
     ],
     controllers: [
         //'Analytics',
-        //'Capability',
+        'Capability',
         'Dashboard',
         //'Reports',
         'Navigation',

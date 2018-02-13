@@ -11,7 +11,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string CONTENT_NAME = "content.name";
         private const string ATTRIBUTE_CODE = "attributecode";
         private const string IS_ACTIVE = "isactive";
-        
+        private const string CREATE_DATE = "createDate";
+        private const string DELIVERY_STATUS = "processStatus";
+
+
 
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
@@ -43,6 +46,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                     return ATTRIBUTE_CODE;
                 case "isactive":
                     return IS_ACTIVE;
+                case "createdate":
+                    return CREATE_DATE;
+                case "executiondate":
+                    return CREATE_DATE;
+                case "deliverystatus":
+                    return DELIVERY_STATUS;
                 default:
                     throw new InvalidOperationException("unknown sort.property " + item.property);
             }
