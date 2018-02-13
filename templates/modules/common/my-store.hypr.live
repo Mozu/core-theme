@@ -21,6 +21,15 @@
     <div class="mz-change-my-store-link">Change Store</div>
   </div>
 </div>
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdiG5m3PaYo_hPJusieg1GX_yNeAK8aAw">
+<script>
+  (function() {
+    if (window.google && typeof window.google === 'object' && typeof window.google.maps === 'object') {
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDdiG5m3PaYo_hPJusieg1GX_yNeAK8aAw';
+    s.type = 'text/javascript';
+    s.async = false;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
 </script>

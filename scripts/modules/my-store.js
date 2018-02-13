@@ -32,16 +32,6 @@ define(['modules/api',
       _modal.show();
     }
 
-    // Deprecated
-    // function showShoppingMyStore() {
-    //   var storeName = getMyStore().locationName;
-    //   $('#mz-shopping-my-store-btn').hide();
-    //   $('#mz-shopping-my-store-btn-enabled').text('Shop my store - ' + storeName);
-    //   $('#mz-shopping-my-store-btn-enabled').show();
-    //   $('#mz-shop-my-store-btn').hide();
-    //   $('#mz-change-my-store-container').css('display', 'flex');
-    // }
-
     function setMyStore(data, applyFilter) {
       data = JSON.parse(data);
       $.cookie('my-store-code', data.locationCode);
@@ -108,7 +98,8 @@ define(['modules/api',
           "style": "display:flex;flex-direction:column;"
         });
 
-        destinations.push(address.address1 + ' ' + address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode);
+        var dest = address.address1 + ' ' + address.cityOrTown+', '+address.stateOrProvince+' '+address.postalOrZipCode;
+        destinations.push(dest);
 
         var containerStyle = "flex:1;display:flex;justify-content:flex-end;align-items:center";
         var locationSelectDiv = $('<div>', { "class": "location-select-option", "style": "display:flex" });
@@ -177,7 +168,7 @@ define(['modules/api',
 
         var myStoreMap = $('<div>', {
           'class': 'mz-my-store-map',
-          'mz-data-address': address.cityOrTown+', ' + address.stateOrProvince + ' ' + address.postalOrZipCode
+          'mz-data-address': dest
         });
 
         myStoreMapContainer.append(myStoreMap);
@@ -403,6 +394,7 @@ define(['modules/api',
 
             loadingContainer.remove();
           } else {
+            loadingContainer.remove();
             console.log('Geocode was not successful for the following reason: ' + status);
           }
         });
