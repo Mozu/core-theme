@@ -13,7 +13,6 @@ define(['modules/api',
       init: function() {
         initMyStoreControls();
         initMyStoreHeader();
-        initMyStoreHeader();
         initLocationPicker();
       }
     });
@@ -21,8 +20,6 @@ define(['modules/api',
     var MyStoreModel = Backbone.Model.extend({});
 
     var _modal;
-    var myStoreHeaderText = $('#mz-my-store-header-text');
-    var changeMyStoreHeaderLink = $('#mz-my-store-header-change-store-link');
 
     function hideModal() {
       _modal.hide();
@@ -36,8 +33,9 @@ define(['modules/api',
       data = JSON.parse(data);
       $.cookie('my-store-code', data.locationCode, { path: '/' });
       $.cookie('my-store-name', data.locationName, { path: '/' });
+      $.cookie('my-store-selected', true, { path: '/' });
 
-      updateMyStoreHeader();
+      updateMyStoreHeader(data.locationName);
       hideModal();
 
       $.post('/location/set?code=' + data.locationCode);
@@ -53,10 +51,14 @@ define(['modules/api',
     }
 
     function getMyStore() {
+
       var myStoreName = $.cookie('my-store-name');
       var myStoreCode = $.cookie('my-store-code');
+      var myStoreSelected = $.cookie('my-store-selected') !== "null";
 
-      if (myStoreName && myStoreCode) {
+      var purchaseLocation = require.mozuData('pagecontext').purchaseLocation;
+
+      if ((purchaseLocation || myStoreSelected) && myStoreName && myStoreCode) {
         return {
           locationName: myStoreName,
           locationCode: myStoreCode
@@ -68,7 +70,9 @@ define(['modules/api',
 
     function isMyStore(location) {
       var myStoreCode = $.cookie('my-store-code');
-      return (myStoreCode && myStoreCode === location.code);
+      var myStoreSelected = $.cookie('my-store-selected') !== "null";
+      var purchaseLocation = require.mozuData('pagecontext').purchaseLocation;
+      return ((purchaseLocation || myStoreSelected) && myStoreCode && myStoreCode === location.code);
     }
 
     function getParameterByName(name, url) {
@@ -433,23 +437,22 @@ define(['modules/api',
       var myStore = getMyStore();
 
       if (myStore) {
-        myStoreHeaderText.text(myStore.locationName);
-        changeMyStoreHeaderLink.text('Change Store');
+        $('#mz-my-store-header-text').text(myStore.locationName);
+        $('#mz-my-store-header-change-store-link').text('Change Store');
       } else {
-        changeMyStoreHeaderLink.text('Find Store');
+        $('#mz-my-store-header-change-store-link').text('Find a Store');
       }
 
-      changeMyStoreHeaderLink.click(function() {
+      $('#mz-my-store-header-change-store-link').click(function() {
         initLocations();
       });
 
-      $('#mz-my-store-header').show();
+      $('#mz-my-store-header').css('display', 'flex');
     }
 
-    function updateMyStoreHeader() {
-      var myStore = getMyStore();
-      myStoreHeaderText.text(myStore.locationName);
-      changeMyStoreHeaderLink.text('Change Store');
+    function updateMyStoreHeader(name) {
+      $('#mz-my-store-header-text').text(name);
+      $('#mz-my-store-header-change-store-link').text('Change Store');
     }
 
     $(document).ready(function() {
@@ -464,5 +467,9 @@ define(['modules/api',
       });
 
       window.myStoreView = myStoreView;
+
+       $('[data-mz-action="logout"]').click(function() {
+          $.cookie('my-store-selected', null, { path: '/' });
+       });
     });
 });
