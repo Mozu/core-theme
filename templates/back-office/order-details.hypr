@@ -149,18 +149,27 @@
                                 <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
                             </div>
                         {% endfor %}
-						{% for discount in item.productDiscounts %}
-                            <div class="discount">
-                                <span class="product-discount-label">Discount (</span>{{ discount.discount.name }}<span>)</span>
-                            </div>
-                        {% endfor %}
+						
                     </td>
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
                     <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
                     <td class="quantity-column">{{ item.quantity }}</td>
-                    <td class="currency-column">{{ item.subtotal|currency }} <br/> {% if item.discountTotal != 0 %}({{ item.discountTotal|currency }}){% endif %}
+                    <td class="currency-column">{{ item.subtotal|currency }} <br/> 
+                         
 					</td>
                 </tr>
+                 {% if item.productDiscounts.length %}
+                    {% for discount in item.productDiscounts %}
+                        <tr class="mz-discount-row">
+                            <td colspan="5" class="mz-discount-name">
+                                <span> {{ discount.discount.name }} </span>
+                            </td>
+                            <td class="mz-discount-price">
+                                <span> ({{discount.impact|currency}})</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
