@@ -399,7 +399,6 @@ define(['modules/api',
             loadingContainer.remove();
           } else {
             loadingContainer.remove();
-            console.log('Geocode was not successful for the following reason: ' + status);
           }
         });
       });
