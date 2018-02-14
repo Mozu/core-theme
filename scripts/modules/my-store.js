@@ -458,7 +458,6 @@ define(['modules/api',
     $(document).ready(function() {
       initMyStoreControls();
       initMyStoreHeader();
-      initMyStoreHeader();
       initLocationPicker();
 
       var myStoreView = new MyStoreView({
