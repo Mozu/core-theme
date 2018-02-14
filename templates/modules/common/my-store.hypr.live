@@ -1,0 +1,35 @@
+{% require_script "modules/my-store" %}
+<div id="mz-my-store-container" class="mz-my-store-container">
+  <button id="mz-shop-my-store-btn" class="mz-button mz-shop-my-store-btn">
+    <span>Shop My Store</span>
+    <img src="/resources/images/location-pin.png">
+  </button>
+  <button
+    id="mz-shopping-my-store-btn"
+    class="mz-button mz-shopping-my-store-btn"
+    data-mz-action="filterMyStore"
+    data-mz-url="{% make_url "instocklocation" model with inStockLocation=pagecontext.purchaseLocation.code %}">
+  </button>
+  <button
+    id="mz-shopping-my-store-btn-enabled"
+    class="mz-button mz-shopping-my-store-btn mz-shopping-my-store-enabled"
+    data-mz-action="filterMyStore"
+    data-mz-url="{% make_url "instocklocation" model with inStockLocation=null %}">
+  </button>
+  <div id="mz-change-my-store-container" class="mz-change-my-store-container">
+    <img class="mz-location-pin-img" src="/resources/images/location-pin.png">
+    <div class="mz-change-my-store-link">Change Store</div>
+  </div>
+</div>
+<script>
+  (function() {
+    if (window.google && typeof window.google === 'object' && typeof window.google.maps === 'object') {
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDdiG5m3PaYo_hPJusieg1GX_yNeAK8aAw';
+    s.type = 'text/javascript';
+    s.async = false;
+    document.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>
