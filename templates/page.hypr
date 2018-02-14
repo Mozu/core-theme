@@ -93,7 +93,6 @@
 
 
         <div id="page-wrapper" class="mz-l-pagewrapper">
-
             {% block utility-bar %}
                 {% include "modules/utility-bar/header" %}
             {% endblock utility-bar %}

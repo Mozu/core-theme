@@ -112,10 +112,11 @@ define(['modules/jquery-mozu', 'shim!vendor/bootstrap/js/modal[jquery=jQuery]'],
          }
 
 
-         if (scroll != 'default'){
+         if (scroll === 'auto') {
+          theElement.find('.modal-body').css('overflow', 'auto');
+         } else if (scroll != 'default'){
            theElement.find('.modal-body').css('overflow', 'scroll');
          }
-
          ////////////////
          //***FOOTER***//
          ////////////////

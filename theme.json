@@ -382,6 +382,7 @@
         }
     ],
     "settings": {
+        "allowFilterByLocationInventory": false,
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
@@ -424,6 +425,8 @@
         "listProductShortDesc": true,
         "listVolumePricing": false,
         "listProductThumbSize": 160,
+        "locationInventoryFilterText": "Shop My Store",
+        "maxFilterLocations": 50,
         "maxProductImageThumbnailSize": 50,
         "maxProductSummaryWords": 40,
         "maxTopLevelNavItems": 8,
