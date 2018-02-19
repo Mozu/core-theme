@@ -391,6 +391,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 Name = x.Path.Split('/').Last(),
                 ThemeId = themeId,
+                CheckSum = x.CheckSum,
                // FullPath = themePath + "//"+ x.Path,
                 TimsStamp = x.AuditInfo?.UpdateDate ?? DateTime.MinValue,
                 RootPath = themePath,
@@ -412,6 +413,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 //FullPath = x.FullName,
                 TimsStamp = x.LastWriteTimeUtc,
                 RootPath = themePath,
+                CheckSum = x.LastWriteTimeUtc.ToString("o"),
                 VirtualPathNoExt = relPathNoExt,
                 VirtualPath = relPath,
                 IsCertified = themePath.IndexOf(CertifiedThemePath, StringComparison.OrdinalIgnoreCase) > -1,

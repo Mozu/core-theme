@@ -241,6 +241,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public bool IsCertified { get; set; }
 
         public string ThemeId { get; set; }
+        public string CheckSum { get;  set; }
     }
 
     /// <summary>
@@ -256,19 +257,55 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
     public class FileSystemContentRetriever : IThemeContentRetriever
     {
+        
+        Lazy<Mozu.Core.Caching.Cache> _cache;
+        public FileSystemContentRetriever(Mozu.Core.Caching.ICacheProvider cacheProvider, Mozu.Core.IApiContext apiContext)
+        {
+            _cache = new Lazy<Core.Caching.Cache>(() => cacheProvider.GetCache("Sitebuilder.ThemeFiles.Compressed", apiContext));
+        }
+
         public string GetContent(ThemeFileSystemInfo info)
         {
-            return File.ReadAllText(info.FullPath);
+            if (info.FullPath.StartsWith("d:", true, System.Globalization.CultureInfo.InvariantCulture) || info.FullPath.StartsWith("c:", true, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                return GetContentInternal(info);
+            }
+
+
+            var key = info.VirtualPath + (!string.IsNullOrEmpty(info.CheckSum) ? info.CheckSum : info.TimsStamp.ToString("o"));
+            var cont = _cache.Value.GetOrSet<string>(key, (x) => new List<string>(), () => GetContentInternal(info), policy: new Core.Caching.CachePolicy() { AbsoluteExpiration = DateTime.UtcNow.AddHours(2) }).Result;
+            return cont?.Item;
+
+           
+        }
+        string GetContentInternal (ThemeFileSystemInfo info)
+        {
+            System.Diagnostics.Debug.WriteLine($"* {DateTime.Now.ToString("ss:ff")} {"     "} { info.VirtualPath}");
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            // System.Diagnostics.Debug.WriteLine("s reading " + info.FullPath);
+            sw.Start();
+            var s = File.ReadAllText(info.FullPath);
+            System.Diagnostics.Debug.WriteLine($"* {DateTime.Now.ToString("ss:ff")} {sw.ElapsedMilliseconds} { info.VirtualPath}");
+            return s;
         }
 
 
         static System.Collections.Concurrent.ConcurrentBag<byte[]> _bytePool = new System.Collections.Concurrent.ConcurrentBag<byte[]>();
         static System.Collections.Concurrent.ConcurrentBag<char[]> _charPool = new System.Collections.Concurrent.ConcurrentBag<char[]>();
 
-        public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
+        public  Task<string> GetContentAsync(ThemeFileSystemInfo info)
         {
-            
-            using (var r = new StreamReader(GetStream(info)))
+
+            if (info.FullPath.StartsWith("d:", true, System.Globalization.CultureInfo.InvariantCulture) || info.FullPath.StartsWith("c:", true, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                return GetContentAsyncInternal(info);
+            }
+            var key = info.VirtualPath + (!string.IsNullOrEmpty(info.CheckSum) ? info.CheckSum : info.TimsStamp.ToString("o"));
+            return  _cache.Value.GetOrSet<string>(key, (x) => new List<string>(), () => GetContentInternal(info), policy: new Core.Caching.CachePolicy() { AbsoluteExpiration = DateTime.UtcNow.AddHours(2) }).ContinueWith(x => x.Result?.Item); ;
+        }
+        async Task<string> GetContentAsyncInternal(ThemeFileSystemInfo info)
+        {
+             using (var r = new StreamReader(GetStream(info)))
             {
                 return await r.ReadToEndAsync().ConfigureAwait(false);
             }
