@@ -1,9 +1,9 @@
-﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}" action="{% make_url "search" %}">
+﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}{% if themeSettings.allowFilterByLocationInventory %} mz-searchbox-my-store{% endif %}" action="{% make_url "search" %}">
     <span class="mz-searchbox-field">
         <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
     </span>
-	<select class="mz-searchbox-categories" name="categoryId" 
+	<select class="mz-searchbox-categories" name="categoryId"
             data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
             data-mz-contextify-attr='selected'
             data-mz-contextify-val='selected'>
