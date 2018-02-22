@@ -200,6 +200,12 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
             case 'Order Status':
             case 'StateChange.WorkflowAction':
             case 'Order':
+                {
+                    if (curRecord.subject.indexOf('Fulfillment Info Updated') > -1) {
+                        dataContainer = this.createFulfillmentUpdate(metaData);
+                        break;
+                    }
+                }
             case 'StateChange.Order':
                 {
                     if (curRecord.subject.toLowerCase().indexOf('package updated') >= 0) {
@@ -230,6 +236,29 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
         }
 
         return dataContainer;
+    },
+
+    createFulfillmentUpdate: function (metaData) {
+        return Ext.create('Ext.container.Container', {
+            padding: '20 0 0',
+            items: [{
+                flex: 1,
+                padding: '2 2',
+                data: metaData[0],
+                tpl: [
+                    '<div>Updated Fulfillment Info</div>',
+                    '<br/>',
+                    '<tpl if="updatedFulfillment.FulfillmentContact.Address">',
+                    '<div>Update Address: <br/> {updatedFulfillment.FulfillmentContact.Address.Address1} {updatedFulfillment.FulfillmentContact.Address.Address2}</div>',
+                    '<div>{updatedFulfillment.FulfillmentContact.Address.CityOrTown} {updatedFulfillment.FulfillmentContact.Address.StateOrProvince} {updatedFulfillment.FulfillmentContact.Address.PostalOrZipCode} {updatedFulfillment.FulfillmentContact.Address.CountryCode}</div>',
+                    '</tpl>',
+                    '<br/>',
+                    '<tpl if="updatedFulfillment.ShippingMethodCode">',
+                    '<div>Update Shipping Info: <br/> {updatedFulfillment.ShippingMethodCode} - {updatedFulfillment.ShippingMethodName}</div>',
+                    '</tpl>'
+                ]
+            }]
+        });
     },
 
     createQuantityChange: function(quantityData) {
