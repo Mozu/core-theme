@@ -186,10 +186,25 @@
                         return parent.refreshShippingMethods(methods);
                     }).ensure(function () {
                         addr.set('candidateValidatedAddresses', null);
-                        me.isLoading(false);
-                        parent.isLoading(false);
-                        me.calculateStepStatus();
-                        parent.calculateStepStatus();
+                        
+                        var currentPayment = order.apiModel.getCurrentPayment();
+                        if (currentPayment && order.get('billingInfo').get('isSameBillingShippingAddress')) {
+                            order.apiVoidPayment(currentPayment.id).then(function(){
+                                    order.get('billingInfo').applyPayment().then(function(){
+                                    order.get('billingInfo').get('billingContact').set(order.get('fulfillmentInfo').get('fulfillmentContact').toJSON());
+                                }).ensure(function () {
+                                    me.isLoading(false);
+                                    parent.isLoading(false);
+                                    me.calculateStepStatus();
+                                    parent.calculateStepStatus();
+                                });
+                            });
+                        } else {
+                            me.isLoading(false);
+                            parent.isLoading(false);
+                            me.calculateStepStatus();
+                            parent.calculateStepStatus();
+                        }
                     });
                 };
 
