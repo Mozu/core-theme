@@ -19,6 +19,39 @@
         },
         {
             "xtype": "panel",
+            "title": "Filters",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "allowFilterByLocationInventory",
+                    "fieldLabel": "Allow Filter by Location Inventory"
+                },
+                                {
+                   "fieldLabel": "Max Number of Locations",
+                    "xtype": "mz-input-dropdown",
+                    "name": "maxFilterLocations",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        50,
+                        100,
+                        150,
+                        200
+                    ]
+                },
+                {
+                    "fieldLabel": "Filter Label Text (limit 30 characters)",
+                    "xtype": "mz-input-text",
+                    "name": "locationInventoryFilterText",
+                    "allowBlank": true,
+                    "allowOnlyWhitespace": true,
+                    "maxValue": 30
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Extended Properties",
             "collapsed": false,
             "items": [
@@ -216,7 +249,7 @@
                     "xtype": "mz-input-text",
                     "name": "defaultSort",
                     "allowBlank": true      ,
-                    "allowOnlyWhitespace":true           
+                    "allowOnlyWhitespace": true
                 }
             ]
         },

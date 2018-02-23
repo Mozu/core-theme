@@ -1,7 +1,7 @@
 ﻿{% if not pageContext.query.partial %}
 <script type="text/json" id="data-mz-preload-facetedproducts">
 {
-	"facets": {% json model.facets %}, 
+	"facets": {% json model.facets %},
 	"currentPage": {{ model.currentPage }},
 	"firstIndex": {{ model.firstIndex }},
 	"hasNextPage": {{ model.hasNextPage|lower }},
@@ -24,11 +24,19 @@
 </div>
 {% endif %}
 
+<div class="modal fade" id="mz-my-store-selector">
+    {% include "modules/my-store/my-store-location-select" %}
+</div>
 <div class="mz-l-paginatedlist">
     <div class="mz-l-paginatedlist-header">
         <div data-mz-pagesort class="mz-sortby">
             {% include "modules/common/page-sort" %}
         </div>
+        {% if themeSettings.allowFilterByLocationInventory %}
+            <div data-mz-my-store class="mz-my-store">
+                {% include "modules/common/my-store" %}
+            </div>
+        {% endif %}
         <div data-mz-pagenumbers class="mz-pagenumbers">
             {% include "modules/common/page-numbers" %}
         </div>
