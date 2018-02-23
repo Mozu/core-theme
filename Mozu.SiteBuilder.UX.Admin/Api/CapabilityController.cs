@@ -193,15 +193,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return this.Request.CreateResponse(HttpStatusCode.OK, subscriptions);
             }
 
-            var subscription = subscriptions.Items.Find(item => item.Topics.Count > 0 && !item.Topics.First().StartsWith("application"));
-
+            var subscribed = subscriptions.Items.FindAll(item => item.Topics.Count > 0 && !item.Topics.First().StartsWith("application"));
+            
             if (forApplication)
             {
-                subscription = subscriptions.Items.Find(item => item.Topics.Count > 0 && item.Topics.First().StartsWith("application"));
+                subscribed = subscriptions.Items.FindAll(item => item.Topics.Count > 0 && item.Topics.First().StartsWith("application"));
             }
 
+
+            var subscription = getTenantSubscription(subscribed).FirstOrDefault() ?? new Event.Contracts.Subscription();
+
             var deliveryAttempts = (await _eventSubscriptionWebAppClient.GetDeliveryAttemptSummaries(
-                    subscription.Id,
+                    subscriptionId: subscription.Id,
                     pageSize: pagingParams.pageSize ?? 20,
                     startIndex: pagingParams.startIndex ?? 0,
                     sortBy: pagingParams.sort.ToSortString() ?? "CreateDate asc",
@@ -211,20 +214,41 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, deliveryAttempts);
 		}
 
-		[HttpGetRoute(UriTemplate = "subscribingInfo")]
-		public async Task<HttpResponseMessage> SubscribingInfo([FromUri] string AppId, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
-		{
-			var filter = "AppId eq " + AppId;
-			var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
+        [HttpGetRoute(UriTemplate = "subscribingInfo")]
+        public async Task<HttpResponseMessage> SubscribingInfo([FromUri] string AppId, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        {
+            var filter = "AppId eq " + AppId;
+            var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
+
+            var resultCollection = getTenantSubscription(subscriptions.Items);
 
 
-			//var resultCollection = new List<Event.Contracts.SubscribingTenant>();
-			//Task[] deliveryAttempts = subscriptions.Items.Select(sub => _eventSubscriptionWebAppClient.GetSubscribingTenant(sub.Id, _apiContext.TenantId).ContinueWith(item => sub.IsActive = item.Result.ReadAsSync().IsActive)).ToArray();
-
-			//await Task.WhenAll(deliveryAttempts);
-
-			return this.Request.CreateResponse(HttpStatusCode.OK, subscriptions);
+            return this.Request.CreateResponse(HttpStatusCode.OK, resultCollection);
 		}
+
+        private List<Event.Contracts.Subscription> getTenantSubscription(List<Event.Contracts.Subscription> subscriptions)
+        {
+            var resultCollection = new List<Event.Contracts.Subscription>();
+
+            subscriptions.ForEach(
+                (sub) =>
+                {
+                    var tenantCall = _eventSubscriptionWebAppClient.GetSubscribingTenant(sub.Id, _apiContext.TenantId);
+                    tenantCall.Wait();
+
+                    if (!tenantCall.Result.HasException)
+                    {
+                        var tenantSub = tenantCall.Result.ReadAsSync();
+                        sub.IsActive = tenantSub.IsActive;
+                        resultCollection.Add(sub);
+                    }
+
+
+                }
+            );
+
+            return resultCollection;
+        }
 
         [HttpGetRoute(UriTemplate = "export")]
         public async Task<CapabilityCsvFileResult> Export([FromUri] string AppId, [FromUri] FilterCollection extFilter)
@@ -237,6 +261,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var totalDeliveryAttempts = 0;
 
             var results = new Event.Contracts.EventDeliverySummaryCollection() { Items = new List<Event.Contracts.EventDeliverySummary>() };
+
             Task[] deliveryAttempts = subscriptions.Items.Select(sub => _eventSubscriptionWebAppClient.GetDeliveryAttemptSummaries(
               sub.Id,
               filter: extFilter.ToFilterString()
