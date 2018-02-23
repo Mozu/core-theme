@@ -91,8 +91,14 @@ define(['modules/api',
       var myStoreDiv;
 
       var destinations = [];
+      var maxLocations = HyprLiveContext.locals.themeSettings.maxFilterLocations || 25;
 
-      locations.forEach(function(location) {
+      for (var i = 0; i < locations.length; ++i) {
+        if (i === maxLocations) {
+          break;
+        }
+
+        var location = locations[i];
         var name = location.name;
         var address = location.address;
         var code = location.code;
@@ -183,7 +189,7 @@ define(['modules/api',
         if (!isMyStore(location)) {
           outerContainer.append(locationContainer);
         }
-      });
+      }
 
       if (myStoreDiv) {
         outerContainer.prepend(myStoreDiv);
@@ -424,7 +430,8 @@ define(['modules/api',
           btn = $('#mz-shopping-my-store-btn').show();
         }
 
-        btn.text('Shop my store - ' + myStore.locationName);
+        var btnLabel = HyprLiveContext.locals.themeSettings.locationInventoryFilterText || 'Shop My Store';
+        btn.text(btnLabel + ' - ' + myStore.locationName);
         btn.show();
         $('#mz-change-my-store-container').css('display', 'flex');
       } else {
