@@ -58,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             int? page = null,
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
             string w = null,
+            string inStockLocation = null,
             [FromUri]AdvancedSearchParamaters searchParams = null)
         {
             var _ = searchParams;
@@ -72,15 +73,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //set back for post actions
             this.ActionContext.ActionArguments["query"] = query ?? _.query;
             this.ActionContext.ActionArguments["categoryId"] = categoryId ?? this.PageContext.Search.CategoryId;
-
-
-
             PageContext.PageType = "search";
 
-            
+            var parsedFilter = _.filter;
+            // use the inStockLocation - TODO: could make sure it isn't already in the _.filter already
+            if (!string.IsNullOrWhiteSpace(inStockLocation))
+            {
+                var locationFilter = $"locationsinstock eq {inStockLocation}";
+                parsedFilter = string.IsNullOrWhiteSpace(parsedFilter)
+                    ? locationFilter
+                    : $"(({_.filter}) and ({locationFilter}))";
+            }
+
+
             var searchResponse = (await _searchClient.Search(
                 query: _.query,
-                filter: _.filter,
+                filter: parsedFilter,
                 facetTemplate: _.facetTemplate,
                 facetTemplateSubset: _.facetTemplateSubset,
                 facet: _.facet,

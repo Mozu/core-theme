@@ -394,6 +394,11 @@ Ext.define('Taco.store.Navigation', {
                         'address': 'settings/paymentTypes'
                     },
                     {
+                        'id': 'discountsettings',
+                        'label': 'Discount Settings',
+                        'address': 'settings/discounts'
+                    },
+                    {
                         'id': 'tax',
                         'label': 'Tax',
                         'address': 'settings/tax'

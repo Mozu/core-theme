@@ -411,6 +411,28 @@ Ext.define('Taco.core.Controller', {
         return false;
     },
 
+    requiresCatalogContext: function() {
+        var context = Taco.app.context.getCurrentContext(),
+            newContext = null;
+
+        if (Taco.app.context.getCurrent().contextType !== 'c') {
+            if (context.contextType == 't') {
+                newContext = context.masterCatalogs[0].catalogs[0];
+            } else {
+                if (context.catalogs && Array.isArray(context.catalogs)) {
+                    newContext = context.catalogs[0];
+                } else if (context.catalog) {
+                    newContext = context.catalog;
+                }
+            }
+
+            Taco.app.context.setCurrentContext(newContext, undefined, true);
+            return true;
+        }
+
+        return false;
+    },
+
     getNewContext: function (newContext, requiresContextOfType, context) {
         if (!newContext && Ext.Array.contains(requiresContextOfType, 'm')) {
             if (context.contextType == 't') {

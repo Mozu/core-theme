@@ -502,6 +502,16 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<td class="{tdCls}"></td>',
                     '<td class="{tdCls}"></td>',
                 '</tr>',
+        '</tpl>',
+
+            '<tpl for="lineItemShippingDiscounts">',
+                '<tr class="shipping-handling-item lineitemdiscount">',
+                    '<td class="{tdCls}"></td>',
+                    '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Line {lineId} Shipping Discount: {name}</div></td>',
+                    '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.fee)]})</div></td>',
+                    '<td class="{parent.tdCls}"></td>',
+                    '<td class="{parent.tdCls}"></td>',
+                '</tr>',
             '</tpl>',
 
             '<tpl for="shippingDiscounts">',
@@ -517,16 +527,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                             'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
                         '</div>',
                     '</td>',
-                '</tr>',
-            '</tpl>',
-
-            '<tpl for="lineItemShippingDiscounts">',
-                '<tr class="shipping-handling-item lineitemdiscount">',
-                    '<td class="{tdCls}"></td>',
-                    '<td class="{parent.tdCls}"><div class="x-grid-cell-inner {parent.tdInnerCls}">Line {lineId} Shipping Discount: {name}</div></td>',
-                    '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.fee)]})</div></td>',
-                    '<td class="{parent.tdCls}"></td>',
-                    '<td class="{parent.tdCls}"></td>',
                 '</tr>',
             '</tpl>',
         '</tpl>'

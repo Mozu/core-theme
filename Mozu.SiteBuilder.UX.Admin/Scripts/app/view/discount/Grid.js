@@ -37,7 +37,7 @@ Ext.define('Taco.view.discount.Grid', {
     },
 
     launchEditorOnClick:true,
-    
+
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Discount',
 
@@ -62,10 +62,10 @@ Ext.define('Taco.view.discount.Grid', {
     enableDeleteAction: true,
 
     hideSearchToolbar: false,
-    
+
     title: "Discounts",
 
-    store: { type: 'Taco.store.DiscountGrid' },  
+    store: { type: 'Taco.store.DiscountGrid' },
 
     autoScroll: true,
 
@@ -87,7 +87,7 @@ Ext.define('Taco.view.discount.Grid', {
     stateful: false,
     stateId: null,
     statics: {},
-        
+
     initComponent: function () {
         var me = this;
 
@@ -102,10 +102,10 @@ Ext.define('Taco.view.discount.Grid', {
 
         // initialize the delete mixin
         this.mixins.deleteFromGrid.init.apply(this);
-        
+
         me.callParent(arguments);
     },
-    
+
     // override this method and adjust the columns if your need a grid with a subset of columns;
     getColumnConfig: function () {
         var me = this,
@@ -287,6 +287,16 @@ Ext.define('Taco.view.discount.Grid', {
                     flex: 1,
                     hidden: true,
                     sortable: false
+                }, {
+                    xtype: 'numbercolumn',
+                    dataIndex: 'stackingLayer',
+                    stateId: 'stackingLayer',
+                    text: 'Stacking Layer',
+                    flex: 1,
+                    format: '0',
+                    width: 80,
+                    hidden: true,
+                    sortable: true
                 }
             ];
 
@@ -313,7 +323,7 @@ Ext.define('Taco.view.discount.Grid', {
                 }
             });
         }
-        
+
         if (this.enableDuplicateAction) {
             actions.push({
                 text: 'Duplicate',
@@ -329,9 +339,9 @@ Ext.define('Taco.view.discount.Grid', {
 
                     Taco.app.StateManager.attemptNavigate('discounts/duplicate/' + record.getId(), metaData);
                 }
-            });    
+            });
         }
-        
+
         if (this.enableDeleteAction) {
             actions.push({
                 text: 'Delete',

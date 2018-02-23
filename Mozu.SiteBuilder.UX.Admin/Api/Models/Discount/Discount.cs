@@ -191,6 +191,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public List<string> IncludedPriceLists { get; set; }
 
+        /// <summary>
+        /// Indicates whether or not stacking is enabled for this discount
+        /// </summary>
+        public bool? CanBeStackedUpon { get; set; }
+
+        /// <summary>
+        /// Indicates which stacking layer this discount is a part of
+        /// </summary>
+        public int? StackingLayer { get; set; }
+
         public DateTime? CreateDate { get; set; }
 
         public string CreateBy { get; set; }

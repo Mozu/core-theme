@@ -67,6 +67,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 routeData.Values["sortBy"] = qs["sortBy"];
             }
+            if (!routeData.Values.ContainsKey("inStockLocation") && !string.IsNullOrEmpty(qs["inStockLocation"]))
+            {
+                routeData.Values["inStockLocation"] = qs["inStockLocation"];
+            }
             if (!routeData.Values.ContainsKey("query") && !string.IsNullOrEmpty(qs["query"]))
             {
                 routeData.Values["query"] = qs["query"]; 
@@ -132,6 +136,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             if (httpRouteData.Values.TryGetValue("sortBy", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
                 this.SortBy = (string)temp;
+            }
+            if (httpRouteData.Values.TryGetValue("inStockLocation", out temp) && !string.IsNullOrWhiteSpace(temp as string))
+            {
+                this.InStockLocation = (string)temp;
             }
             if (httpRouteData.Values.TryGetValue("query", out temp) && !string.IsNullOrWhiteSpace(temp as string))
             {
@@ -205,9 +213,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public int? StartIndex { get; set; }
         public string SortBy { get; set; }
         public int? PageSize { get; set; }
-
         public int? CategoryId { get; set; }
         public string Query { get; set; }
+        public string InStockLocation { get; set; }
 
         [JsonConverter(typeof(FacetJsonConverter))]
         public NameValueCollection Facets { get; set; }
@@ -288,6 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             string facetQsVal = null;
             string urlBase = overrides != null ? overrides.UrlBase : null;
             string sortBy = overrides != null && overrides.SortByOverwritten  ? overrides.SortBy : this.SortBy;
+            string inStockLocation = overrides != null && overrides.InStockLocationOverwritten ? overrides.InStockLocation : this.InStockLocation;
             var pageSize = overrides != null && overrides.PageSize.HasValue ? overrides.PageSize : this.PageSize;
             var startIndex = overrides != null && overrides.StartIndex.HasValue ? overrides.StartIndex : this.StartIndex;
             var query = overrides != null && overrides.QueryOverwritten ? overrides.Query : this.Query;
@@ -359,6 +368,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 queryCollection.Add("sortBy", sortBy);
             }
 
+            if (!string.IsNullOrEmpty(inStockLocation))
+            {
+                queryCollection.Add("inStockLocation", inStockLocation);
+            }
+
             if (!string.IsNullOrEmpty(facetQsVal))
             {
                 queryCollection.Add("facetValueFilter", facetQsVal);
@@ -417,6 +431,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 this.SortBy = Convert.ToString(sortBy);
             }
 
+            object inStockLocation;
+            if (config.TryGetValue("inStockLocation", out inStockLocation))
+            {
+                this.InStockLocation = Convert.ToString(inStockLocation);
+            }
+
             object query;
             if (config.TryGetValue("query", out query))
             {
@@ -433,7 +453,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public SearchContextOverrides() { }
 
         private string _sortBy;
-        
+
+        private string _inStockLocation;
+
         private string _query;
       
         public int? StartIndex
@@ -453,10 +475,28 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
         }
+
+        public string InStockLocation
+        {
+            get { return _inStockLocation; }
+            set
+            {
+                InStockLocationOverwritten = true;
+                _inStockLocation = value;
+            }
+
+        }
+
         public bool SortByOverwritten
         {
             get; set;
         }
+
+        public bool InStockLocationOverwritten
+        {
+            get; set;
+        }
+
         public string Query
         {
             get { return _query; }

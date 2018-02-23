@@ -181,10 +181,16 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
 var util = {
     sortingKey: 'sortBy',
     facetKey: 'facetValueFilter',
+    inStockLocationKey: 'inStockLocationKey',
     pagingKey: 'startIndex',
     imageUrl: function(object, extendedQuery) {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
+    },
+    inStockLocationUrl: function (object, extendedQuery) {
+        var query = this.parseQuery();
+        query[this.inStockLocationKey] = object;
+        return this.urlScrub(extendedQuery + '&' + this.stringify(query));
     },
     productUrl: function(object, extendedQuery, variant) {
         var code = typeof object === 'object' ? object.productCode : object;

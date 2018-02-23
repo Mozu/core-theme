@@ -511,7 +511,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     
                     renderer: function (value, metadata, record) {
                         // if there is an item level discount, then the discount row will show the total.
-                        if (record.data.activeDiscount) {
+                        if (record.data.activeDiscounts && record.data.activeDiscounts.length > 0) {
                             return '';
                         }
 

@@ -38,6 +38,17 @@ module.exports = (function () {
     })()
 
     return {
+        getByZipcode: function (opts) {
+            var self = this;
+            return this.api.action('locations', 'get-by-zipcode', {
+                zipcode: opts.zipcode,
+                radius: opts.radius
+            }).then(function (coll) {
+                var data = utils.clone(coll.data);
+                self.fire('sync', data, data);
+                return self;
+            });
+        },
 
         getByLatLong: function (opts) {
             var self = this;

@@ -259,8 +259,28 @@ Ext.define('Taco.model.Discount', {
             type: 'date',
             useNull: true,
             dateFormat: 'c'
-        }
+        }, {
+            name: 'canBeStackedUpon',
+            type: 'boolean',
+            useNull: true,
+            serialize: function (v, record) {
+                var discountType = record.data.amountType;
+                var targetType = record.data.target;
 
+                if (targetType === 'Shipping') {
+                    return null;
+                } else if (discountType === 'Free' || discountType === 'FreeAutoAdd' || discountType === 'FixedPrice') {
+                    return null;
+                }
+
+                return record.data.canBeStackedUpon;
+            }
+        }, {
+            name: 'stackingLayer',
+            type: 'int',
+            useNull: true,
+            defaultValue: 1
+        }
     ],
 
     getProductStore: function () {

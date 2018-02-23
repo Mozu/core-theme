@@ -34,6 +34,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
         private const string CREATED_BY_PROPERTY = "createby"; // str
         private const string UPDATE_DATE_PROPERTY = "updatedate"; // date
         private const string UPDATE_BY_PROPERTY = "updateby"; // str
+        private const string STACKING_LAYER_PROPERTY = "stackinglayer"; // int
+        private const string CAN_BE_STACKED_UPON_PROPERTY = "canbestackedupon"; // True, False
 
         // Target Criteria
         private const string TARGET_TYPE_PROPERTY = "target.type"; // Shipping, Product
@@ -164,8 +166,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                 var amount = match.Groups[1].Value.Trim();
                 if (!amount.IsEmpty())
                 {
-                    var parseAmount = Decimal.Parse(amount);
-                    retVal += String.Format(" or {0} eq '{1}' and {2} eq {3} ", AMOUNT_PROPERTY, parseAmount, TYPE_PROPERTY, type);
+                    var parseAmount = decimal.Parse(amount);
+                    retVal += $" or {AMOUNT_PROPERTY} eq '{parseAmount}' and {TYPE_PROPERTY} eq {type} ";
                 }
             }
 
@@ -193,7 +195,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
                     var percentPattern = GetUnitPattern(numberFormat, SymbolNames.PercentSymbol);
                     var masterPercentPattern = GetUnitPattern(masterNumberFormat, SymbolNames.PercentSymbol);
 
-                    var retVal = String.Format("{0} cont '{2}' or {1} cont '{2}'", NAME_PROPERTY, COUPON_CODE_PROPERTY, filter.escapedValue);
+                    var retVal = string.Format("{0} cont '{2}' or {1} cont '{2}'", NAME_PROPERTY, COUPON_CODE_PROPERTY, filter.escapedValue);
 
                     // Note: do not escape the value for the following currency and percent filters as the escaped version will cause propblems with the regex;
 
@@ -217,82 +219,92 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
 
                     return retVal;
                 case "discountname":
-                    return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
+                    return $"{NAME_PROPERTY} cont \"{filter.escapedValue}\"";
                 case "id":
-                    return String.Format("{0} cont \"{1}\"", ID_PROPERTY, filter.value);
+                    return $"{ID_PROPERTY} cont \"{filter.value}\"";
                 case "couponcode":
-                    return String.Format("{0} cont \"{1}\"", COUPON_CODE_PROPERTY, filter.escapedValue);
+                    return $"{COUPON_CODE_PROPERTY} cont \"{filter.escapedValue}\"";
                 case "status":
                     return SplitStatus(filter.value);
                 case "amount":
-                    return String.Format("{0} eq \"{1}\"", AMOUNT_PROPERTY, filter.value);
+                    return $"{AMOUNT_PROPERTY} eq \"{filter.value}\"";
                 case "type":
-                    return String.Format("{0} eq \"{1}\"", TYPE_PROPERTY, filter.value);
+                    return $"{TYPE_PROPERTY} eq \"{filter.value}\"";
                 case "effect":
-                    return String.Format("{0} eq \"{1}\"", TARGET_TYPE_PROPERTY, filter.value);
+                    return $"{TARGET_TYPE_PROPERTY} eq \"{filter.value}\"";
                 case "appliesto":
-                    return String.Format("{0} eq \"{1}\"", LEVEL_PROPERTY, filter.value);
+                    return $"{LEVEL_PROPERTY} eq \"{filter.value}\"";
                 case "usagecountfrom":
-                    return String.Format("{0} ge \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
+                    return $"{USAGE_COUNT_PROPERTY} ge \"{filter.value}\"";
                 case "usagecountto":
-                    return String.Format("{0} le \"{1}\"", USAGE_COUNT_PROPERTY, filter.value);
+                    return $"{USAGE_COUNT_PROPERTY} le \"{filter.value}\"";
                 case "startdatefrom":
-                    return String.Format("{0} ge \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{START_DATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "startdateto":
-                    return String.Format("{0} le \"{1}\"", START_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{START_DATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "enddatefrom":
-                    return String.Format("{0} ge \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{END_DATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "enddateto":
-                    return String.Format("{0} le \"{1}\"", END_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{END_DATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "requirecoupon":
-                    return String.Format("{0} eq {1}", REQUIRE_COUPON_PROPERTY, filter.value);
+                    return $"{REQUIRE_COUPON_PROPERTY} eq {filter.value}";
                 case "productcode":
-                    return String.Format("{0} eq \"{1}\"", TARGET_PRODUCT_CODE_PROPERTY, filter.value);
+                    return $"{TARGET_PRODUCT_CODE_PROPERTY} eq \"{filter.value}\"";
                 case "includeallproducts":
-                    return String.Format("{0} eq \"{1}\"", INCLUDE_ALL_PRODUCTS_PROPERTY, filter.value);
+                    return $"{INCLUDE_ALL_PRODUCTS_PROPERTY} eq \"{filter.value}\"";
                 case "maxredemptions":
-                    return String.Format("{0} eq \"{1}\"", MAX_REDEMPTIONS_PROPERTY, filter.value);
+                    return $"{MAX_REDEMPTIONS_PROPERTY} eq \"{filter.value}\"";
                 case "currentredemptioncount":
-                    return String.Format("{0} eq \"{1}\"", CURRENT_REDEMPTION_COUNT_PROPERTY, filter.value);
+                    return $"{CURRENT_REDEMPTION_COUNT_PROPERTY} eq \"{filter.value}\"";
                 case "createdate":
-                    return String.Format("{0} eq \"{1}\"", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{CREATE_DATE_PROPERTY} eq \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "createdfrom":
-                    return string.Format("{0} ge {1}", CREATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{CREATE_DATE_PROPERTY} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
                 case "createdto":
-                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                    return
+                        $"{UPDATE_DATE_PROPERTY} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
                 case "createby":
-                    return String.Format("{0} eq \"{1}\"", CREATED_BY_PROPERTY, filter.value);
+                    return $"{CREATED_BY_PROPERTY} eq \"{filter.value}\"";
                 case "updatedate":
-                    return String.Format("{0} eq \"{1}\"", UPDATE_DATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{UPDATE_DATE_PROPERTY} eq \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "modifiedfrom":
-                    return string.Format("{0} ge {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{UPDATE_DATE_PROPERTY} ge {((DateTime) filter.value).ToUniversalTime().ToString("o")}";
                 case "modifiedto":
-                    return string.Format("{0} le {1}", UPDATE_DATE_PROPERTY,((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
+                    return
+                        $"{UPDATE_DATE_PROPERTY} le {((DateTime) filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o")}";
                 case "updateby":
                 case "lastmodifiedby":
-                    return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
+                    return $"{UPDATE_BY_PROPERTY} eq \"{filter.value}\"";
                 case "productsid":
-                    return String.Format("{0} eq \"{1}\"", TARGET_PRODUCTS_ID_PROPERTY, filter.value);
+                    return $"{TARGET_PRODUCTS_ID_PROPERTY} eq \"{filter.value}\"";
                 case "categoriesid":
-                    return String.Format("{0} eq \"{1}\"", TARGET_CATEGORIES_ID_PROPERTY, filter.value);
+                    return $"{TARGET_CATEGORIES_ID_PROPERTY} eq \"{filter.value}\"";
                 case "minimumlifetimevalueamount":
-                    return String.Format("{0} eq \"{1}\"", TARGET_MINIMUM_LIFETIME_VALUE_AMOUNT_PROPERTY, filter.value);
+                    return $"{TARGET_MINIMUM_LIFETIME_VALUE_AMOUNT_PROPERTY} eq \"{filter.value}\"";
                 case "shippingmethodscode":
-                    return String.Format("{0} eq \"{1}\"", TARGET_SHIPPING_METHODS_CODE_PROPERTY, filter.value);
+                    return $"{TARGET_SHIPPING_METHODS_CODE_PROPERTY} eq \"{filter.value}\"";
                 case "shippingzones":
-                    return String.Format("{0} eq \"{1}\"", TARGET_SHIPPING_ZONES_PROPERTY, filter.value);
+                    return $"{TARGET_SHIPPING_ZONES_PROPERTY} eq \"{filter.value}\"";
                 case "customergroupsid":
-                    return String.Format("{0} eq \"{1}\"", TARGET_CUSTOMER_GROUPS_ID_PROPERTY, filter.value);
+                    return $"{TARGET_CUSTOMER_GROUPS_ID_PROPERTY} eq \"{filter.value}\"";
                 case "conditionsproductid":
-                    return String.Format("{0} eq \"{1}\"", CONDITIONS_PRODUCTS_PRODUCTID_PROPERTY, filter.value);
+                    return $"{CONDITIONS_PRODUCTS_PRODUCTID_PROPERTY} eq \"{filter.value}\"";
                 case "conditionscategoryid":
-                    return String.Format("{0} eq \"{1}\"", CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY, filter.value);
+                    return $"{CONDITIONS_CATEGORIES_CATEGORYID_PROPERTY} eq \"{filter.value}\"";
                 case "validondate":
-                    return String.Format("{0} le \"{2}\" and ({1} ge \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, DateTime.Parse((string)filter.value).ToUniversalTime().ToString("o"));
+                    return string.Format("{0} le \"{2}\" and ({1} ge \"{2}\" or {1} eq null)", START_DATE_PROPERTY, END_DATE_PROPERTY, DateTime.Parse((string)filter.value).ToUniversalTime().ToString("o"));
                 case "couponsetid":
-                    return String.Format("{0} eq \"{1}\"", COUPON_SET_ID_PROPERTY, filter.value);
+                    return $"{COUPON_SET_ID_PROPERTY} eq \"{filter.value}\"";
+                case "canbestackedupon":
+                    return $"{CAN_BE_STACKED_UPON_PROPERTY} eq \"{filter.value}\"";
+                case "stackinglayerfrom":
+                    return $"{STACKING_LAYER_PROPERTY} ge \"{filter.value}\"";
+                case "stackinglayerto":
+                    return
+                        $"{STACKING_LAYER_PROPERTY} le \"{filter.value}\"";
+                case "stackinglayer":
+                    return $"{STACKING_LAYER_PROPERTY} eq \"{filter.value}\"";
 
-                    
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
@@ -307,12 +319,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.DiscountHelpers
             var statuses = filterValue.ToString().Split(',');
             if (statuses.Length == 1)
             {
-                return String.Format("{0} eq {1}", STATUS_PROPERTY, statuses[0]);
+                return $"{STATUS_PROPERTY} eq {statuses[0]}";
             }
-            var statusFilter = new StringBuilder(String.Format("({0} eq {1}", STATUS_PROPERTY, statuses[0]));
+            var statusFilter = new StringBuilder($"({STATUS_PROPERTY} eq {statuses[0]}");
             for (var i = 1; i < statuses.Length; i++)
             {
-                statusFilter.Append(String.Format(" or {0} eq {1}", STATUS_PROPERTY, statuses[i]));
+                statusFilter.Append($" or {STATUS_PROPERTY} eq {statuses[i]}");
             }
             statusFilter.Append(")");
             return statusFilter.ToString();

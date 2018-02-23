@@ -173,7 +173,9 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\DiscountSettingsController.cs" />
     <Compile Include="Api\LocationAttributeController.cs" />
+    <Compile Include="Api\ModelMapping\DiscountSettingsMapping.cs" />
     <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
@@ -181,6 +183,8 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
+    <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
+    <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />

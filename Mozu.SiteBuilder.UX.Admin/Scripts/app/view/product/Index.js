@@ -158,6 +158,12 @@ Ext.define('Taco.view.product.Index', {
             me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
         }
 
+        if (me.store.proxy && me.store.proxy.extraParams) {
+            if (me.store.proxy.extraParams.showProductUsages) {
+                delete me.store.proxy.extraParams.showProductUsages;
+            }
+        }
+
         // if (Taco.app.context.getCurrent().contextType === 'm') {
         //      this.plugins = [{
         //         ptype: 'rowexpander',

@@ -159,6 +159,7 @@
     <Compile Include="Admin\Api\AccountControllerTests.cs" />
     <Compile Include="Admin\Api\ApiUtil.cs" />
     <Compile Include="Admin\Api\CmsPublishingControllerTests.cs" />
+    <Compile Include="Admin\Api\DiscountSettingsControllerTests.cs" />
     <Compile Include="Admin\Api\LocationInventoryControllerTests.cs" />
     <Compile Include="Admin\Api\Models\Attributes\AttributeValidationRangeTests.cs" />
     <Compile Include="Admin\Api\Models\Attributes\MockAttributesTests.cs" />

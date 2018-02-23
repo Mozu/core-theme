@@ -61,13 +61,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             var couponSetId = extFilter.QueryString.Get("couponsetid");
-            if (!String.IsNullOrEmpty(couponSetId))
+            if (!string.IsNullOrEmpty(couponSetId))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "couponsetid", value = couponSetId });
             }
 
             var query = extFilter.QueryString.Get("query");
-            if (!String.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(query))
             {
                 extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "all", value = query });
             }
@@ -83,14 +83,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 filter = extFilter.ToFilterString(_ctx, masterNumberFormat, _tenantClient);
             }
 
-            string sortBy = pagingParams.ToSort(_discountSortFormatter);
-            string responseFields = "items(id,content(name,friendlyDescription),amountType,amount,status,currentRedemptionCount," +
+            var sortBy = pagingParams.ToSort(_discountSortFormatter);
+            const string responseFields =
+                "items(id,content(name,friendlyDescription),amountType,amount,status,currentRedemptionCount," +
+                "stackingLayer,canBeStackedUpon," +
                 "target(categories,products,includeAllProducts,type)," +
                 "conditions(minimumOrderAmount,startDate,expirationDate,requiresCoupon,couponCode),auditInfo)";
 
             try
             {
-                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex, pagingParams.pageSize, sortBy, filter, responseFields:responseFields)).ReadAsSync();
+                var discountList = (await _discountWebClient.GetDiscounts(pagingParams.startIndex,
+                    pagingParams.pageSize, sortBy, filter, responseFields: responseFields)).ReadAsSync();
 
                 var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 

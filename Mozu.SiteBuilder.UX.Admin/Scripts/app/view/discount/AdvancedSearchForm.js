@@ -30,7 +30,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                 items: [{
                     xtype:"textfield",
                     fieldLabel: "Coupon Code",
-                    name: 'couponCode',                    
+                    name: 'couponCode',
                     flex: 1,
                     margin: { right: 40 }
                 }, {
@@ -46,7 +46,7 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     forceSelection: true,
                     initialValue: "Active",
                     trigger2Cls: 'x-form-clear-trigger',
-                    onTrigger2Click: function () {                        
+                    onTrigger2Click: function () {
                         this.clearValue();
                     },
                     store: Ext.create('Ext.data.Store', {
@@ -69,10 +69,6 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     })
                 }]
             },
-
-            
-
-
             {
                 xtype: 'fieldcontainer',
                 layout: "hbox",
@@ -181,7 +177,6 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                     fieldLabel: "Amount",
                     hideTrigger: true,
                     minValue: 0,
-                    
                     mouseWheelEnabled: true,
                     selectOnFocus: true,
                     flex: 1
@@ -327,10 +322,77 @@ Ext.define('Taco.view.discount.AdvancedSearchForm', {
                         flex: 1
                     }
                 ]
+            },
+            {
+                xtype: 'fieldcontainer',
+                layout: "hbox",
+                items: [{
+                    xtype: 'combobox',
+                    name: 'stackingLayer',
+                    fieldLabel: 'Stacking Layer',
+                    valueField: 'id',
+                    displayField: 'name',
+                    queryMode: 'local',
+                    valueNotFoundText: 'not found',
+                    editable: false,
+                    forceSelection: true,
+                    flex: 1,
+                    trigger2Cls: 'x-form-clear-trigger',
+                    onTrigger2Click: function () {
+                        this.clearValue();
+                    },
+                    store: Ext.create('Ext.data.Store', {
+                        fields: ['name', 'id'],
+                        data: [
+                            {
+                                name: 'Layer 1',
+                                id: 1
+                            },
+                            {
+                                name: 'Layer 2',
+                                id: 2
+                            },
+                            {
+                                name: 'Layer 3',
+                                id: 3
+                            }
+                        ]
+                    })
+                }]
             }
         ];
 
-            
+        Ext.Ajax.request({
+            url: '/admin/app/discountsettings/read/' + Taco.app.context.getCatalogId(),
+            method: 'GET',
+            success: function (res, status) {
+                var item = me.getForm().findField('stackingLayer');
+
+                if (!item) {
+                    return;
+                }
+
+                var data = JSON.parse(res.responseText);
+
+                if (data.items && data.items.stackingConfiguration) {
+                    var stackingEnabled = data.items.stackingConfiguration.stackingEnabled;
+                    item.setVisible(stackingEnabled);
+                    item.setDisabled(!stackingEnabled);
+                } else {
+                    item.setVisible(false);
+                    item.setDisabled(true);
+                }
+            },
+            failure: function() {
+                var item = me.getForm().findField('stackingLayer');
+
+                if (item) {
+                    item.setVisible(false);
+                    item.setDisabled(true);
+                }
+            }
+        }, this);
+
         this.callParent(arguments);
     }
 });

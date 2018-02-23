@@ -2,6 +2,7 @@
     extend: 'Taco.core.Controller',
     requires: [
         'Taco.view.settings.paymentTypes.Edit',
+        'Taco.view.settings.discounts.Index',
         'Taco.view.settings.paymentGateways.Index',
         'Taco.view.settings.paymentGateways.Edit',
         'Taco.view.settings.tax.Edit',
@@ -14,6 +15,12 @@
         'Taco.model.CheckoutSettings',
         'Taco.model.PaymentGateway',
     ],
+
+    discounts: function () {
+        if (!this.requiresCatalogContext()) {
+            this.createContentView('Taco.view.settings.discounts.Index');
+        }
+    },
 
     paymentTypes: function () {
         Taco.app.setLoading();

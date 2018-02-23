@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-01-29
+ * Mozu JavaScript SDK - v0.3.0 - 2018-02-12
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -3697,13 +3697,19 @@ module.exports=
       "defaultParams": {
         "includeAttributeDefinition": true
       },
-      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition}"
+      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
     },
     "get-by-lat-long": {
       "defaultParams": {
         "includeAttributeDefinition": true
       },
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-by-zipcode": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
   "cartsummary": "{+cartService}summary",
@@ -5425,6 +5431,17 @@ module.exports = (function () {
     })()
 
     return {
+        getByZipcode: function (opts) {
+            var self = this;
+            return this.api.action('locations', 'get-by-zipcode', {
+                zipcode: opts.zipcode,
+                radius: opts.radius
+            }).then(function (coll) {
+                var data = utils.clone(coll.data);
+                self.fire('sync', data, data);
+                return self;
+            });
+        },
 
         getByLatLong: function (opts) {
             var self = this;

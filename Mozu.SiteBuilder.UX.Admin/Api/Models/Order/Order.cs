@@ -90,7 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// Active order-level discount, if one exists.
         /// </summary>
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public OrderDiscount ActiveOrderDiscount { get; set; }
+        public List<OrderDiscount> ActiveOrderDiscounts { get; set; }
 
         /// <summary>
         /// List of all active and non-active order-level discounts.
@@ -348,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
             get
             {
                 return (OrderAdjustment != null ? OrderAdjustment.Amount : 0) +
-                    (ActiveOrderDiscount != null ? (-ActiveOrderDiscount.Total) : 0)
+                    (ActiveOrderDiscounts != null ? (-ActiveOrderDiscounts.Sum(x=>x.Total)) : 0)
                     ;
             }
         }

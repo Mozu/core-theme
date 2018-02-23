@@ -80,6 +80,7 @@ Ext.define('Taco.view.discount.Form', {
             appliesToShipping = this.general.appliesToShipping();
 
         // need to pass all info necessary to the subforms to control their own visibility and fields.
+        this.general.setFieldVisibility(scopeType, targetType, discountType);
         this.criteria.setFieldVisibility(scopeType, targetType, discountType);
         this.conditions.setFieldVisibility(scopeType, targetType, discountType);
         this.limitations.setFieldVisibility(scopeType, targetType, discountType);

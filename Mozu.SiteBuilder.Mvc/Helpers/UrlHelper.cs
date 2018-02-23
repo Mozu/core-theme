@@ -36,7 +36,8 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             CDN,
             Document,
             Search,
-            Cart
+            Cart,
+            InStockLocation
         }
 
         private readonly ISiteBuilderApiContext _apiContext;
@@ -123,6 +124,10 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
                 case UrlType.Sorting:
                     {
                         return MakeSortingUrl(obj, config);
+                    }
+                case UrlType.InStockLocation:
+                    {
+                        return MakeInStockLocationUrl(obj, config);
                     }
                 case UrlType.Image:
                     {
@@ -285,6 +290,21 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             if (config != null && config.TryGetValue("sortBy", out sortByObj) && sortByObj is string)
             {
                 return searchContext.ToUrl(new SearchContextOverrides() { SortBy = (string)sortByObj });
+            }
+            return "#";
+        }
+
+        private string MakeInStockLocationUrl(object obj, Dictionary<string, object> config)
+        {
+            var searchContext = _pageContext.Search;
+            if (obj is string)
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { InStockLocation = (string)obj });
+            }
+            object inStockLocationObj;
+            if (config != null && config.TryGetValue("inStockLocation", out inStockLocationObj) && inStockLocationObj is string)
+            {
+                return searchContext.ToUrl(new SearchContextOverrides() { InStockLocation = (string)inStockLocationObj });
             }
             return "#";
         }

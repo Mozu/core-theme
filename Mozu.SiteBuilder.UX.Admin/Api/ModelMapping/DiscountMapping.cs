@@ -215,6 +215,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Name, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.Name : string.Empty))
                 .ForMember(x => x.FriendlyDescription, op => op.ResolveUsing(dc => dc.Content != null ? dc.Content.FriendlyDescription : string.Empty))
                 .ForMember(x => x.CouponSets, op => op.Ignore())
+                .ForMember(x => x.CanBeStackedUpon, opt => opt.ResolveUsing(x => x.CanBeStackedUpon))
+                .ForMember(x => x.StackingLayer, opt => opt.ResolveUsing(x => x.StackingLayer))
                 //AuditInfo
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
@@ -224,10 +226,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             // To data contract
             CreateMap<Discount, DC.Discount>()
+                .ForMember(x => x.CanBeStackedUpon, opt => opt.ResolveUsing(x => x.CanBeStackedUpon))
+                .ForMember(x => x.StackingLayer, opt => opt.ResolveUsing(x => x.StackingLayer))
                 .ForMember(x => x.DoesNotApplyToSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToSalePrice))
-                .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))
-                
-
+                .ForMember(x => x.DoesNotApplyToProductsWithSalePrice, opt => opt.ResolveUsing(x => x.DoesNotApplyToProductsWithSalePrice))              
                 .ForMember(dc => dc.Amount, op => op.ResolveUsing(x => (x.AmountType == null || x.AmountType.EqualsIgnoreCase(DC.Discount.AmountTypes.FREE))
                     ? null
                     : x.Amount))

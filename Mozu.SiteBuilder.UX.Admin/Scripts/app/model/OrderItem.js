@@ -77,7 +77,7 @@ Ext.define('Taco.model.OrderItem', {
             "defaultValue": []
         },
         {
-            "name": "activeDiscount",
+            "name": "activeDiscounts",
             "type": "auto",
             "useNull": true
         },

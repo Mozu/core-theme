@@ -105,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public decimal? HandlingAmount { get; set; }
 
-        public OrderItemDiscount ActiveDiscount { get; set; }
+        public List<OrderItemDiscount> ActiveDiscounts { get; set; }
 
         public List<OrderItemDiscount> Discounts { get; set; }
 
@@ -258,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
             {
                 return (WeightedOrderAdjustment ?? 0 ) +
                     (WeightedOrderDiscount != null ? -WeightedOrderDiscount.Value : 0) +
-                    ((ActiveDiscount != null) ? (-ActiveDiscount.Total) : 0)
+                    ((ActiveDiscounts != null) ? -ActiveDiscounts.Sum(x=>x.Total) : 0)
                     ;
             }
         }

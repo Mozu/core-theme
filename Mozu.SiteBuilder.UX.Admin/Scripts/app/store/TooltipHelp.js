@@ -5,9 +5,9 @@
 */
 Ext.define('Taco.store.TooltipHelp', {
     extend: 'Ext.data.Store',
-    fields: ['key', 'value'],    
+    fields: ['key', 'value'],
     remoteSort: false,
-    remoteFilter: false,    
+    remoteFilter: false,
     data: [
         {
             key: 'category.productMembership',
@@ -28,7 +28,13 @@ Ext.define('Taco.store.TooltipHelp', {
             value: '<b>Line item:</b> Applies a discount to individual items.<br/><br/><b>Order:</b> Applies a discount to order subtotals.'
         }, {
             key: 'discount.general.amountType',
-            value: 'Options vary by discount configuration.<br/><br/><b>Percentage:</b> Take a percentage off the price<br/><b>Amount:</b> Take an amount off the price<br/><b>Free:</b> Give away a free item or shipping<br/><b>Fixed Price:</b> Specify a discounted price that stays constant'
+            value: 'Options vary by discount configuration.<br/><br/><b>Percentage:</b> Take a percentage off the price<br/><b>Amount:</b> Take an amount off the price<br/><b>Free:</b> Give away a free item or shipping<br/><b>Fixed Price:</b> Specify a discounted price that stays constant<br/><b>Auto Add Free Product:</b> Get a free product auto added to cart'
+        }, {
+            key: 'discount.general.stackable',
+            value: 'If enabled, This discounts will allow discounts in the following layer to be stacked on top.'
+        }, {
+            key: 'discount.general.layerInput',
+            value: 'Each Discount can be assigned to a layer which is then used to determine the order of application. Discounts in the same layer will compete and provide the best value for the shopper.'
         }, {
             key: 'discount.conditions.minOrderAmount',
             value: 'Order subtotal (pre-discount) must meet or exceed the specified amount.'
@@ -151,5 +157,4 @@ Ext.define('Taco.store.TooltipHelp', {
             value: 'Default Tooltip'
         }
    ]
-   
 });

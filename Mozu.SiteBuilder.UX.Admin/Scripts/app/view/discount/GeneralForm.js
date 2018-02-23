@@ -14,6 +14,9 @@ Ext.define('Taco.view.discount.GeneralForm', {
 
     title: 'General',
 
+    stackingEnabled: false,
+    layerSelected: null,
+
     initComponent: function() {
         var me = this;
 
@@ -200,6 +203,62 @@ Ext.define('Taco.view.discount.GeneralForm', {
             hidden: (this.record.get('amountType') === 'Free' || this.record.get('amountType') === 'FreeAutoAdd') ? true : false
         });
 
+        this.stackingEnabledCheckbox = Ext.widget({
+            xtype: 'checkboxfield',
+            boxLabel: 'Stackable',
+            fieldLabel: 'Discount Layering',
+            name: 'canBeStackedUpon',
+            itemId: 'stackable',
+            checked: true,
+            scope: me,
+            margin: '0 15 0 0',
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'stackable',
+                messageKey: 'discount.general.stackable',
+                offsetLeft: -130,
+                arrowPosition: 'left'
+            }),
+            hidden: true
+        });
+
+        this.layerInput = Ext.create('Ext.form.field.ComboBox', {
+            name: 'stackingLayer',
+            itemId: 'layerInput',
+            fieldLabel: "Assign to Discount Layer",
+            labelAlign: 'top',
+            editable: false,
+            allowBlank: false,
+            width: 295,
+            margin: '0 0 0 0',
+            forceSelection: true,
+            displayField: 'text',
+            valueField: 'value',
+            store: Ext.create('Ext.data.ArrayStore', {
+                fields: ['text', 'value'],
+                data: []
+            }),
+            tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
+                elementId: 'layerInput',
+                messageKey: 'discount.general.layerInput',
+                offsetLeft: -170,
+                arrowPosition: 'left'
+            }),
+            queryMode: 'local',
+            hidden: true,
+            listeners: {
+                change: function(cmp, newVal, oldVal) {
+                    me.layerSelected = newVal;
+
+                    if (newVal === 3) {
+                        me.stackingEnabledCheckbox.setValue(false);
+                        me.stackingEnabledCheckbox.setDisabled(true);
+                    } else {
+                        me.stackingEnabledCheckbox.setDisabled(false);
+                    }
+                }
+            }
+        });
+
         this.items = [
             this.nameInput,
             this.descriptionInput, {
@@ -223,10 +282,113 @@ Ext.define('Taco.view.discount.GeneralForm', {
                     this.amountTypeInput,
                     this.amountInput
                 ]
-            }
+            },
+            me.stackingEnabledCheckbox,
+            me.layerInput
         ];
 
+         Ext.Ajax.request({
+            url: '/admin/app/discountsettings/read/' + Taco.app.context.getCatalogId(),
+            method: 'GET',
+            success: function (res, status) {
+                var data = JSON.parse(res.responseText);
+
+                if (data.items && data.items.stackingConfiguration) {
+                    me.stackingEnabled = data.items.stackingConfiguration.stackingEnabled;
+                    me.layerInput.productOrderLayers = data.items.stackingConfiguration.productOrderLayers;
+                    me.layerInput.productLineItemLayers = data.items.stackingConfiguration.productLineItemLayers;
+                    me.setFieldVisibility();
+                }
+            }
+        }, this);
+
         this.callParent(arguments);
+    },
+
+    shouldDisplayStacking: function() {
+        var me = this;
+
+        if (!me.stackingEnabled) {
+            return false;
+        }
+
+        var targetType = me.targetTypeInput.getValue();
+        var discountType = me.amountTypeInput.getValue();
+
+        if (discountType === 'FreeAutoAdd' || discountType === 'FixedPrice' || discountType === 'Free') {
+            return false;
+        } else if (targetType === 'Shipping') {
+            return false;
+        }
+
+        return true;
+    },
+
+    showStacking: function(show) {
+        var me = this;
+        me.stackingEnabledCheckbox.setVisible(show);
+        me.stackingEnabledCheckbox.setDisabled(!show);
+        me.layerInput.setVisible(show);
+        me.layerInput.setDisabled(!show);
+    },
+
+    setLayers: function() {
+        var me = this;
+
+        var scopeType = me.scopeTypeInput.getValue();
+
+        if (scopeType === null) {
+            me.layerInput.setDisabled(true);
+            return;
+        } else {
+            me.layerInput.setDisabled(false);
+        }
+
+        var numLayers = scopeType === 'Order'
+            ? me.layerInput.productOrderLayers
+            : me.layerInput.productLineItemLayers
+
+        var data = []
+
+        for (var i = 1; i <= numLayers; ++i) {
+            data.push(["Layer " + i, i]);
+        }
+
+        me.layerInput.store.loadData(data);
+
+        if (me.layerSelected !== null) {
+            if (scopeType === 'Order') {
+                if (me.layerSelected > me.layerInput.productOrderLayers) {
+                    me.layerInput.setValue(me.record.data.stackingLayer);
+                } else {
+                    me.layerInput.setValue(me.layerSelected);
+                }
+            } else {
+                if (me.layerSelected > me.layerInput.productLineItemLayers) {
+                    me.layerInput.setValue(me.record.data.stackingLayer);
+                } else {
+                    me.layerInput.setValue(me.layerSelected);
+                }
+            }
+        } else {
+            me.layerInput.setValue(me.record.data.stackingLayer);
+        }
+
+        if (me.layerInput.getValue() === 3) {
+            me.stackingEnabledCheckbox.setDisabled(true);
+            me.stackingEnabledCheckbox.setValue(false);
+        }
+    },
+
+    setFieldVisibility: function (scopeType, targetType, discountType) {
+        var me = this;
+
+        var displayStacking = me.shouldDisplayStacking();
+        me.showStacking(displayStacking);
+
+        if (displayStacking) {
+            me.setLayers();
+        }
     },
 
     updateAmountField : function() {

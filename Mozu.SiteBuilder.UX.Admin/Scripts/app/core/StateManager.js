@@ -139,7 +139,8 @@ Ext.define('Taco.core.StateManager', {
             '/synonyms',
             '/categories',
             '/returns',
-            '/paymentgateways'
+            '/paymentgateways',
+			'/settings/discounts'
         ];
         var NOT_VIEWS =[
             '/customerset',

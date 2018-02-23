@@ -174,13 +174,19 @@
       "defaultParams": {
         "includeAttributeDefinition": true
       },
-      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition}"
+      "template": "{+locationService}locationUsageTypes/SP/locations/{?startIndex,sortBy,pageSize,filter,includeAttributeDefinition,nearZipcode,nearZipcodeRadius}"
     },
     "get-by-lat-long": {
       "defaultParams": {
         "includeAttributeDefinition": true
       },
       "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({latitude},{longitude}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
+    },
+    "get-by-zipcode": {
+      "defaultParams": {
+        "includeAttributeDefinition": false
+      },
+      "template": "{+locationService}locationUsageTypes/SP/locations/?filter=geo near({zipcode},{radius}){&startIndex,sortBy,pageSize,includeAttributeDefinition}"
     }
   },
   "cartsummary": "{+cartService}summary",

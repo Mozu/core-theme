@@ -219,11 +219,22 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             string cacheKey = null;
             ProductSearchResult pc = null;
+
+            var parsedFilter = filter;
+            // use the inStockLocation - TODO: could make sure it isn't already in the _.filter already
+            if (!string.IsNullOrWhiteSpace(((SearchContext)productListingState)?.InStockLocation))
+            {
+                var locationFilter = $"locationsinstock eq {(((SearchContext)productListingState).InStockLocation)}";
+                parsedFilter = string.IsNullOrWhiteSpace(parsedFilter)
+                    ? locationFilter
+                    : $"(({parsedFilter}) and ({locationFilter}))";
+            }
+
             if (cacheResults)
             {
                 cacheKey = new StringBuilder()
                     .Append(searchQueryString)
-                    .Append(filter)
+                    .Append(parsedFilter)
                     .Append(facetHierValue)
                     .Append(facetTemplate)
                     .Append(facetHierDepth)
@@ -251,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var res = includeUserClaims ?
                     await productSearchWebApiClient.Search(
                         query: searchQueryString,
-                        filter: filter,
+                        filter: parsedFilter,
                         facetHierValue: facetHierValue,
                         facetTemplate: facetTemplate,
                         facetHierDepth: facetHierDepth,
@@ -270,7 +281,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     ).ConfigureAwait(false)
                     : await productSearchWebApiClient.CloneWithoutUserClaims().Search(
                         query: searchQueryString,
-                        filter: filter,
+                        filter: parsedFilter,
                         facetHierValue: facetHierValue,
                         facetTemplate: facetTemplate,
                         facetHierDepth: facetHierDepth,

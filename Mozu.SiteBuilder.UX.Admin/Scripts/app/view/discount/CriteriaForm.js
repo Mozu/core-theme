@@ -764,10 +764,8 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         if (this.scopeType === 'LineItem' && this.targetType === 'Product' && this.discountType === 'FreeAutoAdd') {
             proxy.extraParams = {};
             proxy.extraParams.showProductUsages = "Standard";
-        } else {
-            if (proxy.extraParams) {
-                proxy.extraParams = {};
-            }
+        } else if (proxy.extraParams) {
+            proxy.extraParams = {};
         }
 
         store.load();
@@ -1021,11 +1019,27 @@ Ext.define('Taco.view.discount.CriteriaForm', {
         }
     },
 
+    clearProxyParams: function() {
+        var me = this;
+
+        var store = me.productList.getStore();
+        var proxy = store.getProxy();
+
+        if (proxy.extraParams && proxy.extraParams.showProductUsages) {
+            delete proxy.extraParams.showProductUsages;
+        }
+    },
+
     onDestroy: function () {
         var me = this;
 
         me.clearListeners();
 
+        this.callParent(arguments);
+    },
+
+    beforeDestroy: function() {
+        this.clearProxyParams();
         this.callParent(arguments);
     }
 });
