@@ -521,7 +521,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     '<td class="{tdCls}"></td>',
                     '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Discount: {description}</div></td>',
                     '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls} negative-currency">({[this.getCurrencyFormat(values.total)]})</div></td>',
-                    '<td class="{parent.tdCls}"></td>',
                     '<td class="x-action-col-cell taco-menu-col-cell x-action-col-celladjustment-cell{parent.tdCls}">',
                         '<div unselectable="on" isActive="{isActive}" discountId="{discountId}"  action="processDiscount"',
                             'class="order-action-icon discount-', '<tpl if="isActive">suppress<tpl else>activate</tpl>', '">',
