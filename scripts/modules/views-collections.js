@@ -21,6 +21,11 @@ define([
             var url = response.canonicalUrl;
             _$body.html(response.body);
             if (url) _dispatcher.replace(url);
+
+            if (window.myStoreView) {
+                window.myStoreView.init();
+            }
+
             _$body.removeClass('mz-loading');
         }
 
@@ -53,6 +58,7 @@ define([
                 'click [data-mz-pagenumbers] a',
                 'click a[data-mz-facet-value]',
                 'click [data-mz-action="clearFacets"]',
+                'click [data-mz-action="filterMyStore"]',
                 'change input[data-mz-facet-value]',
                 'change [data-mz-value="pageSize"]',
                 'change [data-mz-value="sortBy"]'
