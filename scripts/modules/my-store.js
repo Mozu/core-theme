@@ -291,9 +291,7 @@ define(['modules/api',
         navigator.geolocation.getCurrentPosition(function(pos) {
           getLocations(pos);
         }, function(err) {
-          if (err.code !== err.PERMISSION_DENIED) {
-            getLocations();
-          }
+          getLocations();
         });
       } else {
           getLocations();
@@ -313,7 +311,16 @@ define(['modules/api',
 
       if (location) {
         // todo: get locations by lat/long if geolocation is enabled in the browser
+        setZipcodeError(false);
+        showModal();
+        setModalLoading();
+
         locationsCollection.apiGetByLatLong({ location: location }).then(function(collection) {
+          if (collection.length === 0) {
+            _modal.setBody(Hypr.getLabel('noNearbyLocations'));
+          } else {
+            renderPickerBody(collection.data.items);
+          }
         }, function(err) {
           // error
         });
