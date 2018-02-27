@@ -54,7 +54,7 @@ define(['modules/api',
 
       var myStoreName = $.cookie('my-store-name');
       var myStoreCode = $.cookie('my-store-code');
-      var myStoreSelected = $.cookie('my-store-selected') !== "null";
+      var myStoreSelected = $.cookie('my-store-selected') && $.cookie('my-store-selected') !== "null";
 
       var purchaseLocation = require.mozuData('pagecontext').purchaseLocation;
 
@@ -70,7 +70,7 @@ define(['modules/api',
 
     function isMyStore(location) {
       var myStoreCode = $.cookie('my-store-code');
-      var myStoreSelected = $.cookie('my-store-selected') !== "null";
+      var myStoreSelected = $.cookie('my-store-selected') && $.cookie('my-store-selected') !== "null";
       var purchaseLocation = require.mozuData('pagecontext').purchaseLocation;
       return ((purchaseLocation || myStoreSelected) && myStoreCode && myStoreCode === location.code);
     }
@@ -426,9 +426,9 @@ define(['modules/api',
         var inStockLocation = getParameterByName('inStockLocation');
 
         if (inStockLocation && inStockLocation === myStore.locationCode) {
-          btn = $('#mz-shopping-my-store-btn-enabled').show();
+          btn = $('#mz-shopping-my-store-btn-enabled');
         } else {
-          btn = $('#mz-shopping-my-store-btn').show();
+          btn = $('#mz-shopping-my-store-btn');
         }
 
         var btnLabel = HyprLiveContext.locals.themeSettings.locationInventoryFilterText || 'Shop My Store';
