@@ -838,6 +838,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     if (changeMessage != null)
                     {
                         result = $"{ changeMessage.UserFirstName } { changeMessage.UserLastName }";
+                        if (result.Length == 1 && changeMessage.UserScopeType != null)
+                        {
+                            // If the change message had no name record, the user was anonymous. We'll list the user scop instead. 
+                            result = $"{ changeMessage.UserScopeType }";
+                        }
                     }
 
                     return result;
@@ -859,7 +864,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             ? action : "Manual" + action).ToList();
                     }
                     // otherwise we should duplicate each available actions with a ManualXXX.
-                    else if (!(payment.PaymentType == PaymentsDC.PaymentTypeConst.STORE_CREDIT && payment.Status == "Collected"))
+                    else if (!(payment.PaymentType == PaymentsDC.PaymentTypeConst.STORE_CREDIT && payment.Status == "Collected") && payment.PaymentType != PaymentsDC.PaymentTypeConst.PURCHASE_ORDER)
                     {
                         int i, originalCount = payment.AvailableActions.Count;
                         for (i = 0; i < originalCount; i++)
@@ -873,6 +878,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     payment.AvailableActions = payment.AvailableActions.OrderBy(a => a.StartsWith("Rollback")).ToList();
                 })
                 ;
+            CreateMap<PaymentsDC.SubPayment, SubPayment>();
         }
         private void Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment()
         {
@@ -904,6 +910,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CanEdit, op => op.Ignore()) //calc field returns IsManual
                 .ForMember(x => x.CanDelete, op => op.Ignore()) //ditto
                 ;
+            CreateMap<PaymentsDC.PaymentActionTarget, PaymentActionTarget>();
         }
 
         private void Map_DcRefund_to_Refund()

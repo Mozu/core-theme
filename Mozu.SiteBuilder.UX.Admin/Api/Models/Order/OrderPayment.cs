@@ -42,6 +42,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal AmountTotalCreditAndRefund { get; set; }
 
         public List<PaymentInteraction> Interactions { get; set; }
+        public List<SubPayment> Subpayments { get; set; }
 
 
         #region BillingInfo

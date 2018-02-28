@@ -16,6 +16,22 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
 
     initComponent: function () {
         var notes = null;
+        var me = this;
+        var paymentData = {};
+
+        // Defer to subpayment amounts if one exists that matches the id of this order. 
+        if (this.record.get('subpayments')) {
+            var subpaymentForThisOrder = this.record.findSubPayment(me.order);
+
+            if (subpaymentForThisOrder) {
+                paymentData = {
+                    amountAuthorized: this.record.get('amountAuthorized'),
+                    amountRequested: subpaymentForThisOrder.amountRequested
+                }
+            } else {
+                paymentData = this.record.data;
+            }
+        }
 
         if (this.record.get('paymentType') === 'PurchaseOrder') {
             notes = {
@@ -39,8 +55,8 @@ Ext.define('Taco.view.order.modal.CapturePayment', {
                     selectOnFocus: true,
                     width: 170,
                     value: this.record.get('status') == 'Invoiced'
-                        ? Math.min(this.record.data.amountRequested, this.order.getCaptureAmountHint())
-                        : Math.min(this.record.data.amountAuthorized, this.order.getCaptureAmountHint())
+                        ? Math.min(paymentData.amountRequested, this.order.getCaptureAmountHint())
+                        : Math.min(paymentData.amountAuthorized, this.order.getCaptureAmountHint())
                 },
                 notes
             ]

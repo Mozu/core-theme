@@ -13,7 +13,20 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
     scale: 'medium',
     title: 'Manual Transaction: Capture Payment',
 
-    initComponent: function () {
+    initComponent: function() {
+        var amountRequested = 0;
+
+        // Defer to subpayment amounts if one exists that matches the id of this order. 
+        if (this.record.get('subpayments')) {
+            var subpaymentForThisOrder = this.record.findSubPayment(this.order);
+
+            if (subpaymentForThisOrder) {
+                amountRequested = subpaymentForThisOrder.amountRequested;
+            } else {
+                amountRequested = this.record.get('amountRequested');
+            }
+        }
+
         this.form = Ext.create('Taco.core.ux.form.Form', {
             layout: {
                 type: 'vbox'
@@ -36,7 +49,7 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
                     currencyCode: this.order.getCurrencyCode(),
                     name: 'amount',
                     fieldLabel: 'Amount Captured',
-                    value: this.record.data.amountAuthorized,
+                    value: amountRequested,
                     margin: '0 0 0 0'
                 }]
             }, {
@@ -58,15 +71,14 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
         this.items = [this.form];
 
         this.callParent(arguments);
-
     },
 
-    doSave: function () {
+    doSave: function() {
         var me = this,
             formValues = this.form.getValues(),
             data,
             cfg;
-        
+
         data = {
             orderId: this.order.getId(),
             paymentId: this.record.getId(),
@@ -79,22 +91,21 @@ Ext.define('Taco.view.order.modal.ManualCapturePayment', {
             msg: "Saving"
         }, me.body);
 
-
         // package up the data for the model to persist
         cfg = {
             jsonData: data,
-            success: function (response) {
+            success: function(response) {
                 me.setLoading(false, me.body);
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
                     // service didn't return data properly
                     return;
                 }
-                
+
                 me.order.reload();
                 me.saveSuccess(json);
             },
-            failure: function () {
+            failure: function() {
                 me.setLoading(false, me.body);
             },
             scope: this

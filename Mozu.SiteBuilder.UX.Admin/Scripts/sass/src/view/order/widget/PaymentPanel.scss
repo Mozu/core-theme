@@ -112,6 +112,10 @@
             border-top: 1px solid $color-standard-border-dark;
             margin: 0px 10px 0px 10px ;
 
+            .disabled {
+                opacity: .4;
+            }
+
             .togglebtn {
                 float: left;
                 width: 30px;

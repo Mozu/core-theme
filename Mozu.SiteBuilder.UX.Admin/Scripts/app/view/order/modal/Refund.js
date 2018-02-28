@@ -49,7 +49,8 @@ Ext.define('Taco.view.order.modal.Refund', {
         var refundAmountField = form.getForm().findField('amount');
         var excessGroup = this.down('#allowExcessCreditGroup');
         var isCreditCard = nextState.method === 'CreditCard';
-        var isExcess = nextState.proposed > (nextState.collected - nextState.refunded);
+        var isExcess = nextState.proposed > Ext.Number.correctFloat(nextState.collected - nextState.refunded);
+        
 
         // show or hide the credit card field and its help text
         form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
@@ -78,10 +79,28 @@ Ext.define('Taco.view.order.modal.Refund', {
         var ccStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.OrderPayment',
             data: store.queryBy(function (record) {
+
+                var paymentData = {
+                    amountCredited: record.get('amountCredited'),
+                    amountCollected: record.get('amountCollected')
+                };
+
+                if (record.get('subpayments')) {
+                    var subpaymentForThisOrder = record.get('subpayments').filter(function (subpayment) {
+                        return subpayment.target.targetId == me.order.data.id;
+                    })[0];
+
+                    if (subpaymentForThisOrder) {
+                        paymentData = {
+                            amountCredited: subpaymentForThisOrder.amountCredited,
+                            amountCollected: subpaymentForThisOrder.amountCollected
+                        }
+                    }
+                }
                 return (
                     !Ext.Array.contains(['StoreCredit', 'Check'], record.get('paymentType'))
                         && Ext.Array.contains(record.get('availableActions'), 'CreditPayment')
-                        && record.get('amountCollected') - (record.get('amountCredited') || 0) > 0
+                        && paymentData.amountCollected - (paymentData.amountCredited || 0) > 0
                 );
             }).getRange()
         });
@@ -108,6 +127,17 @@ Ext.define('Taco.view.order.modal.Refund', {
                 data.transactionType = 'Payment';
                 data.transactionMethod = data.paymentType;
 
+                
+                if (data.subpayments) {
+                    var subpaymentForThisOrder = data.subpayments.filter(function (subpayment) {
+                        return subpayment.target.targetId == me.order.data.id;
+                    })[0];
+                    if (subpaymentForThisOrder) {
+                        data.amountCollected = subpaymentForThisOrder.amountCollected;
+                        data.amountCredited = subpaymentForThisOrder.amountCredited;
+                    }
+                }
+
                 return data;
             }).concat(Ext.Array.map(refunds.getRange(), function (record) {
                 var data = record.getData();
@@ -121,6 +151,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 return data;
             }))
         });
+
 
         this.setModalState({
             collected: this.order.get('authorizationInfo').amountCollected,
@@ -435,10 +466,20 @@ Ext.define('Taco.view.order.modal.Refund', {
     },
 
     suggestRefund: function () {
+        var me = this;
         var state = this.getModalState();
         var payment = state.payment;
-        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited - payment.amountRefunded : state.collected - state.refunded).toFixed(2));
 
+        if (payment && payment.subpayments) {
+            var subpaymentForThisOrder = payment.subpayments.filter(function (subpayment) {
+                return subpayment.target.targetId == me.order.data.id;
+            })[0];
+            if (subpaymentForThisOrder) {
+                payment = subpaymentForThisOrder;
+            }
+
+        }
+        var suggestion = parseFloat((payment ? payment.amountCollected - payment.amountCredited - payment.amountRefunded : state.collected - state.refunded).toFixed(2));
         return suggestion > 0 ? suggestion : 0;
     },
 

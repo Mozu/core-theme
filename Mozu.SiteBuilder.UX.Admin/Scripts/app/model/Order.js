@@ -967,12 +967,43 @@ Ext.define('Taco.model.Order', {
 
     // order total minus any money that is accounted for (requested/authorized/captured)
     getNewPaymentAmountHint: function () {
-        var payments = this.getAssociatedData('payments').payments,
+        var me = this;
+        var paymentsStore = this.paymentsStore,
             total = this.get('total'),
             pendingOrCapturedAmount = 0;
-            
-        if (payments && payments.length) {
-            pendingOrCapturedAmount = Ext.Array.sum(Ext.Array.pluck(payments, 'effectiveAmount'))
+
+        // We use paymentsStore instead of the payments list in the data
+        // so that we have access to the methods on the OrderPayment ext model 
+        if (paymentsStore && paymentsStore.data.items.length) {
+            paymentsStore.each(function (payment) {
+                var subpayments = payment.get('subpayments');
+                if (subpayments && subpayments.length) {
+                    var subpayment = payment.findSubPayment(me);
+                    if (subpayment) {
+                        // If our payment is a subpayment, its status could have different meaning in this context
+                        var subpaymentEffectiveAmount;
+                        if (subpayment.status === "Voided" || subpayment.status === "Declined") {
+                            subpaymentEffectiveAmount = 0;
+                        } else if (subpayment.status === "Collected" || subpayment.status === "Credited" || subpayment.status === "CreditedPending") {
+                            subpaymentEffectiveAmount = subpayment.amountCollected;
+                            pendingOrCapturedAmount += subpaymentEffectiveAmount;
+                        } else {
+                            subpaymentEffectiveAmount = subpayment.amountCollected || subpayment.amountRequested;
+                            subpaymentEffectiveAmount -= subpayment.amountCredited;
+                            pendingOrCapturedAmount += subpaymentEffectiveAmount;
+                        }
+
+                    } else {
+                        // On payment, 'effectiveAmount' is set with math in the payment ext model
+                        // We emulate that some of that math above when working with a subpayment, since it won't have this attribute
+                        pendingOrCapturedAmount += payment.get('effectiveAmount');
+                    }
+                } else {
+                    pendingOrCapturedAmount += payment.get('effectiveAmount');
+                }
+
+            });
+            //pendingOrCapturedAmount = Ext.Array.sum(Ext.Array.pluck(payments, 'effectiveAmount'))
         }
 
         return Math.max(0, total - pendingOrCapturedAmount);

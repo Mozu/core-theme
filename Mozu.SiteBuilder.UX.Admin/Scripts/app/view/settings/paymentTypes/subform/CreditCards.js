@@ -8,6 +8,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
     ],
     margin: "0 0 20 0",
     title: 'Credit Cards',
+    margin: "0 0 20 0",
     ui: "subform",
     width: "100%",
 
@@ -151,7 +152,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                 columns: 1,
                 vertical: true,
                 items: [
-                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement', disabled: me.record.get('isMultishipEnabled') },
+                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement', disabled: me.record.get('isMultiShipToEnabled') },
                     { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
                 ]
             });

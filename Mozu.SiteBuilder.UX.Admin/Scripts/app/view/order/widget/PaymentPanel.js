@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.order.widget.PaymentPanel', {
     extend: 'Ext.panel.Panel',
-    ui: 'subform-section-child',    
+    ui: 'subform-section-child',
 
     margin: '10 0 10 0',
     bodyPadding: '0',
@@ -133,24 +133,55 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     },
 
+    //Some of the fields on this panel rely on subpayment information. 
+    //We use this function to determine whether there is a viable subpayment for this order
+    //And return an accurate payment data object. 
+
+    getPaymentData: function () {
+        var me = this,
+            payment = this.record.data,
+            paymentData = payment;
+
+        if (payment.subpayments) {
+            var subpaymentForThisOrder = payment.subpayments.filter(function (subpayment) {
+                return subpayment.target.targetId == me.order.data.id;
+            })[0];
+
+            if (subpaymentForThisOrder) {
+                // Attributes that will be replaced with the subpayment's attribute include: 
+                // status, amountCollected, amountCredited, amountRequested, amountRefunded
+                paymentData = Ext.apply(payment, subpaymentForThisOrder);
+                // NGCOM-1139 - Our subpayments don't hold onto any amountAuthorized, so if the original payment
+                // data has an amountAuthorized value, it will be retained. We don't want this to appear in the UI
+                // in cases where the subpayment status is Collected. 
+                if (paymentData.status === "Collected") {
+                    paymentData.amountAuthorized = 0;
+                }
+            }
+        }
+        return paymentData;
+    },
     //large-type display amount for the total amount collected, displayed, or authorized
-    initDisplayAmount: function() {
+
+    initDisplayAmount: function () {
+        var me = this;
         var cls = Taco.baseCSSPrefix + 'orderform-payment-amounts-summary',
             lbl = function (label, value) {
                 return '<h4><span class="{cls}-label">' + label + '</span> <strong class="{cls}-value">' + value + '</strong></h4>';
             };
 
-        this.displayAmount = Ext.widget('component', {
+        var paymentData = this.getPaymentData();
+        this.displayAmount = Ext.create('Ext.Component', {
             cls: cls,
-            tpl: [
-                '<tpl if="payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0 && payment.paymentType != \'PurchaseOrder\'">',
+            tpl: Ext.create('Ext.XTemplate',
+                '<tpl if="this.displayAmountRequested(payment)">',
                 lbl('Amount Requested: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountAuthorized != 0">',
                 lbl('Amount Authorized: ', '{[values.orderRecord.formatCurrency(values.payment.amountAuthorized)]}'),
                 '</tpl>',
                 lbl('Amount Collected: ', '{[values.orderRecord.formatCurrency(values.payment.amountCollected)]}'),
-                '<tpl if="payment.paymentType == \'PurchaseOrder\'">',
+                '<tpl if="payment.paymentType == \'PurchaseOrder\' && payment.status != \'Voided\'">',
                 lbl('Amount Remaining: ', '{[values.orderRecord.formatCurrency(values.payment.amountRequested - values.payment.amountCollected)]}'),
                 '</tpl>',
                 '<tpl if="payment.amountCredited != 0">',
@@ -158,12 +189,24 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 '</tpl>',
                 '<tpl if="payment.amountRefunded != 0">',
                 lbl('Amount Refunded: ', '{[values.orderRecord.formatCurrency(values.payment.amountRefunded)]}'),
-                '</tpl>'
-            ],
+                '</tpl>',
+                {
+                    displayAmountRequested: function (payment) {
+                        var paymentAmountsUntouched = (payment.amountCollected == 0 && payment.amountAuthorized == 0 && payment.amountCredited == 0);
+                        var isPurchaseOrder = (payment.paymentType === 'PurchaseOrder');
+                        var hasSubpayment = !!payment.subpayments;
+                        if ((hasSubpayment || paymentAmountsUntouched) && !isPurchaseOrder) {
+                            return true;
+                        } else {
+                            return false;
+                        } 
+                    }
+                }
+            ),
             data: {
                 cls: cls,
-                orderRecord: this.order, 
-                payment: this.record.data
+                orderRecord: this.order,
+                payment: paymentData
             }
         });
     },
@@ -180,6 +223,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // order is awaiting approval
             pendingReview = me.order.get('orderStatus') === 'PendingReview';
 
+        var paymentStatus = this.getPaymentData().status;
         var packageStatus;
 
         var buttonLeft = null,
@@ -191,7 +235,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         }
 
         if (me.record.get('paymentType') == 'PurchaseOrder') {
-            if (me.record.data.status === 'PaymentRequested') {
+            if (paymentStatus === 'PaymentRequested') {
                 buttonLeft = {
                     xtype: 'button',
                     ui: 'action',
@@ -201,25 +245,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         model: 'Taco.model.Order',
                         behavior: 'update'
                     },
-                                {
-                                    model: 'Taco.model.Order',
-                                    behavior: 'paymentUpdate'
-                                }],
+                    {
+                        model: 'Taco.model.Order',
+                        behavior: 'paymentUpdate'
+                    }],
                     width: 77,
                     itemId: 'authorizeButton',
                     handler: function () {
                         var data,
-                            cfg;
+                            cfg,
+                            msg;
 
                         data = {
                             orderId: me.order.getId(),
                             paymentId: me.record.getId(),
                             amount: me.record.get('amountRequested')
                         };
-
-                        me.setLoading({
-                            msg: "Saving"
-                        }, me.body);
 
                         cfg = {
                             jsonData: data,
@@ -240,10 +281,46 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             scope: this
                         };
 
-                        me.order.authorize(cfg);
+                        var parentCheckoutNumber = me.order.get('parentCheckoutNumber');
+                        var subpayments = me.record.data.subpayments;
+
+                        if (subpayments && subpayments.length > 1) {
+                            msg = "All child orders associated with Order Reference # "
+                                + parentCheckoutNumber +
+                                " will change to an authorized state. Are you sure you would like to proceed?";
+
+                            this.actionModal = Ext.MessageBox.show({
+                                title: 'Authorize Purchase Order',
+                                rightJustifyButtons: true,
+                                reverseOrder: true,
+                                cls: 'auth-purchase-order',
+                                msg: msg,
+                                height: 200,
+                                closable: false,
+                                buttons: Ext.Msg.YESNO,
+                                fn: function (val) {
+                                    if (val !== 'yes') return;
+
+                                    me.setLoading({
+                                        msg: "Saving"
+                                    }, me.body);
+
+                                    // call the model method to persist the change
+                                    me.order.authorize(cfg);
+                                }
+                            });
+                        } else {
+                            me.setLoading({
+                                msg: "Saving"
+                            }, me.body);
+
+                            me.order.authorize(cfg);
+
+                        }
+
                     }
                 };
-            } else if (me.record.data.status === 'Authorized') {
+            } else if (paymentStatus === 'Authorized') {
                 buttonLeft = {
                     xtype: 'button',
                     ui: 'action',
@@ -254,42 +331,71 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     itemId: 'invoicedButton',
                     handler: function () {
                         var data = {
-                                orderId: me.order.getId(),
-                                paymentId: me.record.getId()
-                            },
+                            orderId: me.order.getId(),
+                            paymentId: me.record.getId()
+                        },
                             cfg = {
-                            jsonData: data,
-                            success: function (response) {
-                                var json = Ext.decode(response.responseText, true);
+                                jsonData: data,
+                                success: function (response) {
+                                    var json = Ext.decode(response.responseText, true);
 
-                                if (!json || !json.success) {
-                                    return;
+                                    if (!json || !json.success) {
+                                        return;
+                                    }
+
+                                    me.setLoading(false, me.body);
+                                    me.order.reload();
+                                },
+                                failure: function () {
+                                    me.setLoading(false, me.body)
+                                },
+                                scope: this
+                            };
+
+                        var parentCheckoutNumber = me.order.get('parentCheckoutNumber');
+                        var subpayments = me.record.data.subpayments;
+
+                        if (subpayments && subpayments.length > 1) {
+                            var msg = "All child orders associated with Order Reference # "
+                                + parentCheckoutNumber +
+                                " will change to an invoiced state. Are you sure you would like to proceed?";
+
+                            this.actionModal = Ext.MessageBox.show({
+                                title: 'Invoice Purchase Order',
+                                rightJustifyButtons: true,
+                                reverseOrder: true,
+                                cls: 'invoice-purchase-order',
+                                msg: msg,
+                                height: 200,
+                                closable: false,
+                                buttons: Ext.Msg.YESNO,
+                                fn: function (val) {
+                                    if (val !== 'yes') return;
+
+                                    me.setLoading({
+                                        msg: 'Saving'
+                                    }, me.body);
+
+                                    me.order.markAsInvoiced(cfg);
                                 }
+                            });
+                        } else {
+                            me.setLoading({
+                                msg: 'Saving'
+                            }, me.body);
 
-                                me.setLoading(false, me.body);
-                                me.order.reload();
-                            },
-                            failure: function () {
-                                me.setLoading(false, me.body)
-                            },
-                            scope: this
-                        };
-
-                        me.setLoading({
-                            msg: 'Saving'
-                        }, me.body);
-
-                        me.order.markAsInvoiced(cfg);
+                            me.order.markAsInvoiced(cfg);
+                        } 
                     },
                     disabled: !canCapture || pendingReview,
                     requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'paymentUpdate'
-                            }]
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                    {
+                        model: 'Taco.model.Order',
+                        behavior: 'paymentUpdate'
+                    }]
                 };
                 buttonRight = {
                     xtype: 'button',
@@ -303,15 +409,15 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     },
                     disabled: !canCapture || pendingReview,
                     requiredBehaviors: [{
-                                    model: 'Taco.model.Order',
-                                    behavior: 'update'
-                                },
-                                {
-                                    model: 'Taco.model.Order',
-                                    behavior: 'paymentUpdate'
-                                }]
+                        model: 'Taco.model.Order',
+                        behavior: 'update'
+                    },
+                    {
+                        model: 'Taco.model.Order',
+                        behavior: 'paymentUpdate'
+                    }]
                 };
-            } else if (me.record.data.status === 'Invoiced') {
+            } else if (paymentStatus === 'Invoiced') {
                 buttonLeft = {
                     xtype: 'button',
                     ui: 'action',
@@ -332,7 +438,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     }
                 };
                 buttonRight = null;
-            } else if (me.record.data.status === 'Collected') {
+            } else if (paymentStatus === 'Collected') {
                 buttonLeft = null;
                 buttonRight = null;
             }
@@ -359,10 +465,10 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             };
         }
 
-        if (me.record.data.status === 'Authorized') {
+        if (paymentStatus === 'Authorized') {
             packageStatus = '<span class="x-column-content-pill x-column-content-pill-true">Authorized</span>';
         } else {
-            packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">' + me.record.data.status + '</span>';
+            packageStatus = '<span class="x-column-content-pill x-column-content-pill-false">' + paymentStatus + '</span>';
         }
 
         me.statusRow = Ext.create('Ext.container.Container', {
@@ -427,7 +533,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this,
             el = this.transactionList.el.down(".taco-history-collapsable"),
             isCollapsed = (el.hasCls("collapsed"));
-        
+
         if (isCollapsed) {
             el.removeCls("collapsed")
             // down arrow
@@ -443,7 +549,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     initTransactionList: function () {
         var me = this;
-        
+
         this.interactionsStore = me.record.interactionsStore;
         if (this.interactionsStore.count()) {
             var collapsableCls = "",
@@ -453,14 +559,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 collapsableCls =  "taco-history-collapsable";
                 toggleBtnHtml = '<div class="togglebtn"></div>';
             }
-            
+
             me.transactionList = Ext.create('Ext.container.Container', {
                 cls: "orderform-payment-transactionlist",
                 listeners: {
                     boxready: {
                         fn: function () {
                             if (me.interactionsStore.count()>1) {
-                                // create an extjs button in place                               
+                                // create an extjs button in place
                                 var btnEl = me.transactionList.el.down(".togglebtn");
                                 this.toggleButton = Ext.widget({
                                     xtype: "button",
@@ -480,7 +586,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                         scope: me
                     }
                 },
-                tpl: [
+                tpl: Ext.create('Ext.XTemplate',
                     '<div class="' + collapsableCls + ' collapsed">',
                         '<div class="title">Transaction History</div>',
                         '<div class="body" >',
@@ -488,6 +594,22 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                             '<tpl for=".">',
                                 '<div class="payment-transaction {[xindex == 1 ? \'recent-transaction\' : \'previous-transaction\']}">',
                                     '<div class="details">',
+                                        '<tpl if="target">',
+                                        'From: ',
+                                            '<tpl if="this.forThisOrder(target)">',
+                                              '<span class="x-column-content-pill x-column-content-pill-true">This Order</span>',
+                                            '<tpl else>',
+                                                '<tpl switch="target.targetType.toLowerCase()">',
+                                                  '<tpl case="checkout">',
+                                                              'Order Reference #{[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                  '<tpl case="order" case="return">',
+                                                              'Order {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                  '<tpl default>',
+                                                              'Order {[ values.target.targetNumber ? values.target.targetNumber : values.target.targetId ]}',
+                                                '</tpl>',
+                                              '</tpl>',
+                                              '</br>',
+                                          '</tpl>',
                                         'Date: {createDate:date("M d g:ia")} ',
                                             '<span class="seperator"></span>',
                                         'Amount: {[Taco.app.context.getCurrent().formatCurrency(values.amount)]} ',
@@ -523,12 +645,26 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                         '<tpl if="gatewayCVV2Response">',
                                             'CVV2 Response: {gatewayCVV2Response} ',
                                         '</tpl>',
+                                        '<tpl if="note">',
+                                            '<br />',
+                                            'Note: {note} ',
+                                        '</tpl>',
                                     '</div>',
                                 '</div>',
                             '</tpl>',
                         '</div>',
-                    '</div>'
-                ],
+                    '</div>',
+                        {
+                            forThisOrder: function (target) {
+                                if (target.targetId == me.order.data.id) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+
+                            }
+                        }
+                ),
                 data: this.record.data.interactions
             });
         }
@@ -553,7 +689,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             margin: '10 0 0 0',
             tpl: Ext.create('Ext.XTemplate',
                     '<tpl if="paymentType != \'StoreCredit\'">',
-                        '<div class="billingInformation">',
+                '<div class="billingInformation">',
+
                             '<h4 class="paymentDetailsHeader">Bill To:</h4>',
                             // bad data check;
                             '<tpl if="!values.billingContact.firstName || !values.billingContact.lastName">',
@@ -671,7 +808,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         var me = this,
             actionName = item.itemId,
             actionSimpleName = actionName.replace('Rollback', '');
-        
+
         this.actionModal = Ext.MessageBox.show({
             title: 'Rollback',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -679,7 +816,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             // reverses the order of the buttons
             reverseOrder: true,
             msg: 'Are you sure you want to rollback this ' + actionSimpleName + ' transaction?',
-            closable:false,
+            closable: false,
             buttons: Ext.Msg.OKCANCEL,
             fn: function (rec) {
                 if (rec === 'ok') {
@@ -697,7 +834,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                                 Taco.app.fireEvent('setmessage', "Error rolling back.", 'error');
                                 return;
                             }
-                            
+
                             me.order.reload();
                             delete me.actionModal;
                         },
@@ -740,7 +877,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                   ? '<p>Amount voided will be applied to the customer\'s line of credit for purchase orders.</p>'
                   + '<br />'
                   + '<p>Void Amount</p>'
-                  + '<h2>' + me.order.formatCurrency(me.record.get('amountRequested')) + '</h2>'
+                  + '<h2>' + me.order.formatCurrency(me.getPaymentData().amountRequested) + '</h2>'
                   + '<br />'
                   + '<p>Are you certain you want to void this payment?</p>'
                   : 'Are you certain you want to void this payment?',
@@ -832,7 +969,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
 
     onDestroy: function () {
         var me = this;
-        
+
         var toBeDestroyed = [
             "toggleButton",
             "captureButton",
@@ -844,9 +981,9 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             "statusRow",
             "transactionList"
         ];
-        
+
         Ext.Array.forEach(toBeDestroyed, function (item) {
-            
+
             if (me[item]){
                 if (me[item].destroy){
                     me[item].destroy();

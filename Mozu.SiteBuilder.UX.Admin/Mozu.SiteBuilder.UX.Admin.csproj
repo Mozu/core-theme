@@ -187,7 +187,9 @@
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
+    <Compile Include="Api\Models\Order\PaymentActionTarget.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
+    <Compile Include="Api\Models\Order\SubPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />
     <Compile Include="Api\Models\Reports\ReportParams.cs" />
@@ -615,6 +617,7 @@
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
+    <Content Include="Scripts\app\model\PaymentActionTarget.js" />
     <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
     <Content Include="Scripts\app\model\PinnedProduct.js" />

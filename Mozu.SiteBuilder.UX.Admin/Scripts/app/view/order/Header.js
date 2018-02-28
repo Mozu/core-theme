@@ -160,7 +160,7 @@ Ext.define('Taco.view.order.Header', {
             ],
             data: this.record.getData()
         });
-
+        var orderRecord = this.record;
         this.statusCmp = Ext.widget({
             xtype: 'component',
             itemId: 'statusCmp',
@@ -254,14 +254,21 @@ Ext.define('Taco.view.order.Header', {
                 {
                     calculatePending: function (payments) {
                         var retVal = 0;
-
                         Ext.Array.each(payments, function (payment) {
-                            if (payment.status === 'Authorized' || payment.status === 'Pending') {
-                                if (payment.paymentType === 'Check') {
-                                    retVal += payment.amountRequested;
-                                } else {
-                                    retVal += payment.amountAuthorized;
-                                }
+                            var paymentData = payment;
+                            if (payment.subpayments) {
+                                var subpaymentForThisOrder = payment.subpayments.filter(function (subpayment) {
+                                    return subpayment.target.targetId == orderRecord.data.id;
+                                })[0];
+
+                                if (subpaymentForThisOrder) {
+                                    // Attributes that will be replaced with the subpayment's attribute include: 
+                                    // status, amountCollected, amountCredited, amountRequested, amountRefunded
+                                    paymentData = Ext.apply(payment, subpaymentForThisOrder);
+                                } 
+                            }
+                            if (paymentData.status === 'Authorized' || paymentData.status === 'Pending' || paymentData.status === 'Invoiced' || paymentData.status === 'PaymentRequested') {
+                                retVal += (paymentData.amountRequested - paymentData.amountCollected);
                             }
                         }, this);
 
@@ -270,7 +277,7 @@ Ext.define('Taco.view.order.Header', {
                 }
             ],
             data: Ext.apply(this.record.getData(), {
-                orderRecord: this.record,
+                orderRecord: orderRecord,
             })
         });
 

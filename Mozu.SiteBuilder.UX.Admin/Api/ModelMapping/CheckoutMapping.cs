@@ -57,23 +57,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             CreateMap<DCss.CheckoutSettings, CheckoutSettings>()
                 .ForMember(x => x.Id, op => op.Ignore())
-                .ForMember(x => x.PaymentProcessingFlowType, op => op.ResolveUsing(dc => (dc.OrderProcessingSettings != null) 
-                    ? dc.OrderProcessingSettings.PaymentProcessingFlowType 
+                .ForMember(x => x.PaymentProcessingFlowType, op => op.ResolveUsing(dc => (dc.OrderProcessingSettings != null)
+                    ? dc.OrderProcessingSettings.PaymentProcessingFlowType
                     : null))
-                .ForMember(x => x.CustomerCheckoutType, op => op.ResolveUsing(dc => (dc.CustomerCheckoutSettings != null) 
-                    ? dc.CustomerCheckoutSettings.CustomerCheckoutType 
+                .ForMember(x => x.CustomerCheckoutType, op => op.ResolveUsing(dc => (dc.CustomerCheckoutSettings != null)
+                    ? dc.CustomerCheckoutSettings.CustomerCheckoutType
                     : null))
                 //todo: confirm false default when null Greg Murray on 2014-01-27 
-                .ForMember(x => x.PayByMail, op => op.ResolveUsing(dc => (dc.PaymentSettings != null) 
-                    ? dc.PaymentSettings.PayByMail 
+                .ForMember(x => x.PayByMail, op => op.ResolveUsing(dc => (dc.PaymentSettings != null)
+                    ? dc.PaymentSettings.PayByMail
                     : false))
-                .ForMember(x => x.CardGatewayMap, op => op.ResolveUsing(dc => {
+                .ForMember(x => x.CardGatewayMap, op => op.ResolveUsing(dc =>
+                {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
                     {
-                        var sourceGateways = dc.PaymentSettings.Gateways.Where(g => g.GatewayAccount != null );
+                        var sourceGateways = dc.PaymentSettings.Gateways.Where(g => g.GatewayAccount != null);
                         var cardGateways = dc.PaymentSettings.Gateways
                             .Where(g => g.SupportedCards.Count > 0)
-                            .SelectMany(g => g.SupportedCards, (g, c) => new { c, g })
+                            .SelectMany(g => g.SupportedCards, (g, c) => new {c, g})
                             .ToDictionary(cg => cg.c, cg => cg.g);
 
                         var result = ToCardGateways(cardGateways);
@@ -86,7 +87,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
                 .ForMember(x => x.PurchaseOrder, op => op.ResolveUsing(dc => dc.PaymentSettings.PurchaseOrder))
                 //TODO: remove when old admin goes away.
-                .ForMember(x => x.Gateway, op => op.ResolveUsing(dc => {
+                .ForMember(x => x.Gateway, op => op.ResolveUsing(dc =>
+                {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
                     {
                         var sourceGateway = dc.PaymentSettings.Gateways.FirstOrDefault(g => g.GatewayAccount != null && g.GatewayAccount.IsActive);
@@ -97,10 +99,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         return new Gateway();
                     }
                 }))
-                .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null) 
-                    ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions 
-                    : null))
-                .ForMember(x => x.IsMultishipEnabled, op => op.Ignore());
+                .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null)
+                    ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions
+                    : null));
+                //.ForMember(x => x.IsMultishipEnabled, op => op.Ignore());
 
 
             CreateMap<DCss.Gateway, Gateway>()

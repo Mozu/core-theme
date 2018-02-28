@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.Routing;
@@ -31,12 +32,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     [WebApi("app/customer", SuppressDescriptorGeneration = true)]
     public class CustomerController : BaseController
     {
-         ICustomerAccountWebApiClient _customerWebApiClient;
+        ICustomerAccountWebApiClient _customerWebApiClient;
         private readonly ICustomerSegmentWebApiClient _customerSegmentWebApiClient;
         //  private readonly ICustomerGroupWebApiClient _customerGroupWebApiClient;
         private readonly ICreditWebApiClient _creditWebApiClient;
         //private readonly ICustomerVisitWebApiClient _customerVisitWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
+        private readonly ICheckoutWebApiClient _checkoutWebApiClient;
         private readonly ILogger _log;
         ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IApiContext _apiContext;
@@ -44,9 +46,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICustomerSegmentWebApiClient customerSegmentWebApiClient,
             //Mozu.Customer.Contracts.Clients.ICustomerGroupWebApiClient customerGroupWebApiClient, 
             ICreditWebApiClient creditWebApiClient, IOrderWebApiClient orderWebApiClient, ILogger log /*, ICustomerVisitWebApiClient customerVisitWebApiClient*/
-            ,ICustomerSetWebApiClient customerSetWebApiClient
-            , IApiContext apiContext
-            )
+            , ICustomerSetWebApiClient customerSetWebApiClient
+            , IApiContext apiContext, ICheckoutWebApiClient checkoutWebApiClient)
         {
             _customerWebApiClient = customerWebApiClient;
             _customerSegmentWebApiClient = customerSegmentWebApiClient;
@@ -57,6 +58,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSetWebApiClient = customerSetWebApiClient;
             //_customerVisitWebApiClient = customerVisitWebApiClient;
             _apiContext = apiContext;
+            _checkoutWebApiClient = checkoutWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "search")]
@@ -189,9 +191,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return this.Request.CreateResponse(HttpStatusCode.OK, List2(result));
         }
 
-       
 
-        
+
+
 
         [HttpPostRoute(UriTemplate = "customerSets/delete")]
         public async Task<HttpResponseMessage> DeleteCustomerSets(List<Newtonsoft.Json.Linq.JObject> customerSets)
@@ -219,9 +221,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
             var defaultCs = currentCustomerSets.FirstOrDefault(x => x.IsDefault);
             List<Task> assignTasks = new System.Collections.Generic.List<Task>();
-            foreach ( var cs in customerSets)
+            foreach (var cs in customerSets)
             {
-                
+
                 var existingCS = currentCustomerSets.FirstOrDefault(x => string.Equals(x.Code, cs.Code, StringComparison.OrdinalIgnoreCase));
                 //new site assignments
                 assignTasks.AddRange(cs.Sites?
@@ -229,7 +231,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     .Select(y => _customerSetWebApiClient.AssignToSite(y, cs.Code)));
 
                 //unassignements
-                if ( defaultCs != null && !string.Equals( defaultCs.Code , cs.Code, StringComparison.OrdinalIgnoreCase))
+                if (defaultCs != null && !string.Equals(defaultCs.Code, cs.Code, StringComparison.OrdinalIgnoreCase))
                 {
                     assignTasks.AddRange(existingCS.Sites?
                         .Where(x => cs?.Sites.Any(s => s.SiteId == x.SiteId) == false)
@@ -238,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
             }
-            if ( assignTasks.Count > 0 )
+            if (assignTasks.Count > 0)
             {
                 await Task.WhenAll(assignTasks);
                 currentCustomerSets = (await _customerSetWebApiClient.GetCustomerSets(pageSize: 600)).ReadAsSync().Items;
@@ -262,9 +264,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             int customerId;
 
-            if (filterByCustomerSet!= true)
+            if (filterByCustomerSet != true)
             {
-               _customerWebApiClient = _customerWebApiClient.CloneWithApiContext(x => x.SiteId = null);
+                _customerWebApiClient = _customerWebApiClient.CloneWithApiContext(x => x.SiteId = null);
             }
 
             if (pagingParameters.id != null)
@@ -320,9 +322,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             //TODO:this flag info should ideally come from getAccounts api call  
             if (isPOFlagRequired.GetValueOrDefault(false))
             {
-                var poTasks = customers.Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value,responseFields:"id,isEnabled")).ToArray();
+                var poTasks = customers.Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value, responseFields: "id,isEnabled")).ToArray();
                 await Task.WhenAll(poTasks);
-                var poAccounts = poTasks.Where(x => !x.Result.HasException).Select( x=> x.Result.ReadAsSync()).ToArray();
+                var poAccounts = poTasks.Where(x => !x.Result.HasException).Select(x => x.Result.ReadAsSync()).ToArray();
                 foreach (var customer in customers)
                 {
                     customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.AccountId == customer.Id)?.IsEnabled == true;
@@ -337,7 +339,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId)
         {
-            var customerTask =  _customerWebApiClient.GetAccount(accountId);
+            var customerTask = _customerWebApiClient.GetAccount(accountId);
             return customerTask.Result.ResponseMessage.IsSuccessStatusCode ? customerTask.Result.ReadAsAsync() : null;
 
             /* var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId);
@@ -363,7 +365,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
             Response<CustomerPurchaseOrderAccount> poResponse;
             int purchaseOrderUpdateBehaviorId = new PurchaseOrderUpdateBehavior().Id;
-            if (_apiContext.UserClaims !=null && _apiContext.UserClaims.BehaviorIds.Any(id => id == purchaseOrderUpdateBehaviorId))
+            if (_apiContext.UserClaims != null && _apiContext.UserClaims.BehaviorIds.Any(id => id == purchaseOrderUpdateBehaviorId))
             {
                 // save purchase orderInfo
                 foreach (var cust in customers)
@@ -378,7 +380,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
                         }
 
-                        else if(purchaseOrder.IsEnabled)
+                        else if (purchaseOrder.IsEnabled)
                         {
                             purchaseOrder.AccountId = cust.Id.Value;
                             poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
@@ -494,7 +496,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         private async Task<DC.CustomerAccount> AddCustomerAccountAndLogin(
-            DC.CustomerAccountAndAuthInfo customerAccountAndAuthInfo, List<int> segmentIds )
+            DC.CustomerAccountAndAuthInfo customerAccountAndAuthInfo, List<int> segmentIds)
         {
             DC.CustomerAccount customerAccount =
                 (await _customerWebApiClient.AddAccountAndLogin(customerAccountAndAuthInfo)).ReadAsSync()
@@ -581,10 +583,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     if ((c1.Types == null && c2.Types != null)
                         || (c1.Types != null && c2.Types == null) || c1.Types.Count != c2.Types.Count)
                         return true;
-                    
+
                     if (!c1.Types.All(c => c2.Types.Any(t => CompareHelper.AreSame<DC.ContactType>(c, t))))
                         return true;
-                    
+
                     return false;
                 }
 
@@ -644,7 +646,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var deleteResults = Task.WhenAll(contactDeleteTasks);
             return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
         }
-        
+
 
         /// <summary>
         /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
@@ -699,7 +701,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<CustomerPurchaseOrderAccount>> EditCustomerPurchaseOrder(CustomerPurchaseOrderAccount customerPurchaseOrderAccount)
         {
             var results = customerPurchaseOrderAccount;
-            
+
             var dcCustomerPurchaseOrderAccount = customerPurchaseOrderAccount.Map<DC.CustomerPurchaseOrderAccount>();
             var result =
                 (await _customerWebApiClient.UpdateCustomerPurchaseOrderAccount(customerPurchaseOrderAccount.AccountId,
@@ -739,32 +741,47 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             int? startIndex = pagingParams.startIndex;
             int? pageSize = pagingParams.pageSize ?? 20;
-            var result =(await _customerWebApiClient.GetCustomerPurchaseOrderTransactions(customerId.Value, startIndex,pageSize)).ReadAsAsync().Result;
+            var result = (await _customerWebApiClient.GetCustomerPurchaseOrderTransactions(customerId.Value, startIndex, pageSize)).ReadAsAsync().Result;
 
             var results = result.Items.Select(entry => entry.Map<CustomerPurchaseOrderTransaction>()).ToList();
-            var orderIds = results.Where(trans => !string.IsNullOrEmpty(trans.OrderId)).Select(x =>x.OrderId).Distinct().ToList();
+            var orderIds = results.Where(trans => !string.IsNullOrEmpty(trans.OrderId)).Select(x => x.OrderId).Distinct().ToList();
             var exceptions = new ConcurrentQueue<Exception>();
-            Parallel.ForEach(orderIds, new ParallelOptions {MaxDegreeOfParallelism = 20}, (orderId) =>
-            {
-                try
-                {
-                    var order =
-                        (_orderWebApiClient.GetOrder(orderId, responseFields: "OrderNumber,Type").Result.ReadAsAsync())
+            Parallel.ForEach(orderIds, new ParallelOptions { MaxDegreeOfParallelism = 20 }, (orderId) =>
+              {
+                  try
+                  {
+                      Order order;
+                      try
+                      {
+                          order =
+                            (_orderWebApiClient.GetOrder(orderId, responseFields: "OrderNumber,Type").Result.ReadAsAsync())
                             .Result;
-                    Parallel.ForEach(results.Where(x => x.OrderId == orderId),
-                        new ParallelOptions {MaxDegreeOfParallelism = 20}, (transaction) =>
-                        {
-                            transaction.OrderNumber = order?.OrderNumber.ToString();
-                            transaction.OrderType = order?.Type;
-                        });
-                }
-                catch (Exception ex)
-                {
-                    _log.Error($"Error getting order info for orderId - {orderId}", ex, orderId);
-                    exceptions.Enqueue(ex);
-                }
-            });
-           
+                      }
+                      catch (AggregateException)
+                      {
+                          //Check if this is a checkout
+                          var checkout = (_checkoutWebApiClient.GetCheckout(orderId, "Number,Type").Result.ReadAsAsync()).Result;
+                          order = new Order
+                          {
+                              OrderNumber = checkout.Number,
+                              Type = checkout.Type
+                          };
+
+                      }
+
+                      Parallel.ForEach(results.Where(x => x.OrderId == orderId),
+                          new ParallelOptions { MaxDegreeOfParallelism = 20 }, (transaction) =>
+                          {
+                              transaction.OrderNumber = order?.OrderNumber.ToString();
+                              transaction.OrderType = order?.Type;
+                          });
+                  }
+                  catch (Exception ex)
+                  {
+                      _log.Error($"Error getting order info for orderId - {orderId}", ex, orderId);
+                      exceptions.Enqueue(ex);
+                  }
+              });
             return List2(results);
         }
 
@@ -996,7 +1013,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new ArgumentException("No customerId provided.");
             }
             // Labes. this needs to change when adding localizability to the admin
-            Dictionary<string,string> labels = new Dictionary<string, string>()
+            Dictionary<string, string> labels = new Dictionary<string, string>()
             {
                 { "@LineofCreditChangeLabel","Line of Credit Change"},
                 {"@PurchaseOrderEnableLabel","Purchase Orders Enabled" },
@@ -1019,7 +1036,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     auditEntry.Description = labels[auditEntry.Description];
                 }
             }
-            var results = auditEntryCollection.Items.Select(entry =>  entry.Map<CustomerAuditEntry>()).ToList();
+            var results = auditEntryCollection.Items.Select(entry => entry.Map<CustomerAuditEntry>()).ToList();
             return List2(results, auditEntryCollection.TotalCount);
         }
 

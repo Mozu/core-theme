@@ -80,7 +80,7 @@ Ext.define('Taco.model.OrderPayment', {
             name: 'effectiveAmount',
             type: 'float',
             useNull: false,
-            convert: function (value, record) {
+            convert: function(value, record) {
                 if (Ext.Array.contains(['Voided', 'Declined'], record.get('status'))) return 0;
 
                 var amount = record.get('amountCollected') || record.get('amountAuthorized') || record.get('amountRequested')
@@ -91,6 +91,11 @@ Ext.define('Taco.model.OrderPayment', {
         },
         {
             name: 'interactions',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
+            name: 'subpayments',
             type: 'auto',
             defaultValue: []
         },
@@ -183,17 +188,21 @@ Ext.define('Taco.model.OrderPayment', {
         }, {
             type: 'belongsTo',
             model: 'Taco.model.Order'
+        },
+        {
+            type: 'hasMany',
+            model: 'Taco.model.SubPayment',
+            name: "subpayments"
         }
     ],
-    setProxy: function () {
+    setProxy: function() {
     },
     proxy: {
         type: 'ajax',
         reader: {
             type: 'json'
-         
         },
-        fonzie:'fonzie'
+        fonzie: 'fonzie'
     },
 
     /**
@@ -221,9 +230,9 @@ Ext.define('Taco.model.OrderPayment', {
             },
             scope: this
         }
-
      */
-    issueCredit: function (config) {
+
+    issueCredit: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/credit',
             method: "POST"
@@ -231,12 +240,25 @@ Ext.define('Taco.model.OrderPayment', {
         Ext.Ajax.request(config);
     },
 
-    applyCheck: function (config) {
-
+    applyCheck: function(config) {
         Ext.applyIf(config, {
             url: '/admin/app/order/payment/applycheck',
-            method: "POST"       
+            method: "POST"
         });
         Ext.Ajax.request(config);
+    },
+
+    findSubPayment: function(order) {
+        if (!order) return false;
+        var orderId = order.get('id');
+
+        var subpayments = this.get('subpayments') || [];
+        var targetedSubpayment = Ext.Array.findBy(subpayments,
+            function(subpayment) {
+                if (!subpayment.target) return false;
+                return subpayment.target.targetId === orderId;
+            });
+
+        return targetedSubpayment;
     }
 });

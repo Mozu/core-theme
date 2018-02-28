@@ -3,7 +3,10 @@
  */
 Ext.define('Taco.model.PaymentInteraction', {
     extend: 'Taco.core.data.Model',
-
+    requires: [
+        'Taco.model.PaymentActionTarget', 
+        'Ext.data.association.HasOne'
+    ],
     fields: [
     {
         'name': 'id',
@@ -36,6 +39,11 @@ Ext.define('Taco.model.PaymentInteraction', {
         'useNull': true
     },
     {
+        'name': 'target', 
+        'type': 'auto',
+        'useNull': true
+    },
+    {
         'name': 'status',
         'type': 'string',
         'useNull': true,
@@ -57,6 +65,11 @@ Ext.define('Taco.model.PaymentInteraction', {
         'useNull': true
     },
     {
+        'name': 'note',
+        'type': 'string',
+        'useNull': true
+    },
+    {
         'name': 'createDate',
         'type': 'date',
         'useNull': true
@@ -74,5 +87,13 @@ Ext.define('Taco.model.PaymentInteraction', {
         'name': 'canDelete',
         'type': 'boolean',
         'default': false
-    }]
+    }], 
+    associations: [
+        {
+            type: 'hasOne',
+            model: 'Taco.model.PaymentActionTarget',
+            name: 'target',
+            reader: 'json'
+        }
+    ]
 });

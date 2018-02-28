@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
-    
     public class PaymentInteraction
     {
         /// <summary>
@@ -41,6 +40,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string InteractionType { get; set; }
 
         /// <summary>
+        /// Specifies the context of this interaction, e.g. was it done on a checkout, order, or return, and which one.
+        /// </summary>
+        public PaymentActionTarget Target { get; set; }
+
+        /// <summary>
         /// If paying by check, the check number.
         /// </summary>
         public string CheckNumber { get; set; }
@@ -75,8 +79,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// Amount of funds to withdraw to pay for this order.
         /// </summary>        
-		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public decimal? Amount { get; set; }
+
+        /// <summary>
+        /// Note to be entered by merchant/application
+        /// </summary>
+        public string Note { get; set; }
 
         /// <summary>
         /// If the payment is a manual payment, this is set to true
@@ -105,6 +114,4 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string RefundId { get; set; }
     }
-
-
 }

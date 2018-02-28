@@ -10,9 +10,24 @@ Ext.define('Taco.view.order.modal.CreditPayment', {
     height: 430,
 
     initComponent: function (eOpts) {
-        var amountCollected = this.record.get('amountCollected'),
-            amountCredited = this.record.get('amountCredited'),
-            amountRefunded = this.record.get('amountRefunded'),
+        var me = this;
+        var payment = this.record.data;
+        var paymentData = payment;
+
+        // Defer to subpayment amounts if one exists that matches the id of this order. 
+        if (payment.subpayments) {
+            var subpaymentForThisOrder = payment.subpayments.filter(function (subpayment) {
+                return subpayment.target.targetId == me.order.data.id;
+            })[0];
+
+            if (subpaymentForThisOrder) {
+                paymentData = Ext.apply(payment, subpaymentForThisOrder);
+            } 
+        }
+
+        var amountCollected = paymentData.amountCollected,
+            amountCredited = paymentData.amountCredited,
+            amountRefunded = paymentData.amountRefunded,
             // JavaScript is terrible at maintaining proper precision with floating point math, e.g. 0.1 + 0.2 = 0.30000000000000004
             availableForCredit = Math.max(0, Ext.Number.correctFloat(amountCollected - amountCredited - amountRefunded)),
             poCheckbox = this.record.get('paymentType') === 'PurchaseOrder'
