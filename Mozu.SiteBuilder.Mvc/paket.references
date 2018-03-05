@@ -22,3 +22,4 @@ Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 Mozu.AppDev.Contracts
 protobuf-net
+MongoDB.Driver.GridFS

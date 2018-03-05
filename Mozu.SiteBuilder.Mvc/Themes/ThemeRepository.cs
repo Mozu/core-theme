@@ -9,6 +9,7 @@ using Mozu.SiteBuilder.Mvc.Themes.Factories;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.Core.Settings;
+using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -20,29 +21,29 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// <summary>
         /// Finds a theme by name.
         /// </summary>
-        Theme GetTheme(ThemeSelection name);
+        Task<Theme> GetTheme(ThemeSelection name);
 
-        Theme GetThemeSlim(ThemeSelection name);
+        Task<Theme> GetThemeSlim(ThemeSelection name);
 
-        DateTime GetLastWriteTime(string fileName);
+        DateTime GetLastWriteTime(string theme, string fileName);
 
         /// <summary>
         /// Finds a theme by name.
         /// If the theme is not found, returns the system default theme.
         /// </summary>
-        Theme GetThemeOrDefault(ThemeSelection name);
+        Task<Theme> GetThemeOrDefault(ThemeSelection name);
 
         /// <summary>
         /// Returns the system default theme.
         /// </summary>
-        Theme GetDefaultTheme();
+        Task<Theme> GetDefaultTheme();
 
        // string[] GetLocalThemePaths();
 
         string[] GetLocalThemesIds();
         void FixupPaths(Theme theme);
 
-        void ValidateLatest(Theme theme);
+        Task  ValidateLatest(Theme theme);
     }
 
 
@@ -72,10 +73,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// </summary>
     class ThemeRepository : IThemeRepository
     {
-        //  static ConcurrentDictionary<string, Theme> _themes = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        //   static ConcurrentDictionary<string, Theme> _themeSlims = new ConcurrentDictionary<string, Theme>(StringComparer.OrdinalIgnoreCase);
-        //   static ConcurrentDictionary<string, FileSystemWatcher> _watchers = new ConcurrentDictionary<string, FileSystemWatcher>(StringComparer.OrdinalIgnoreCase);
-        static ConcurrentDictionary<string, string> _themeToThemeKey = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        static ConcurrentDictionary<string, WeakReference<Theme>> _lookups = new ConcurrentDictionary<string, WeakReference<Theme>>();
+
 
         IThemeCache _cache;
         ISettings _settings;
@@ -105,30 +104,30 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             {
                 _themeMetaDataProvider.FixPaths(_theme);
                 _theme.PathsAreFixed = true;
+                AddToCache(_theme.Id, _theme, false);
             }
+            
             
         }
 
-        public void ValidateLatest(Theme theme)
+        public async  Task ValidateLatest(Theme theme)
         {
             var themeJson = theme.FileListing.GetFileInfo("theme.json", true);
             if ( themeJson == null)
             {
                 return;
             }
-            var themePath = new FileInfo(themeJson.FullPath).Directory.FullName;
-            var fileListings = _themeMetaDataProvider.GetThemeFileListing(themePath, theme.Id);
-            if ( fileListings == null )
+
+            if (!await _themeMetaDataProvider.IsLatest(theme.Id, theme.TimeStamp).ConfigureAwait(false))
             {
-                return;
-            }
-            if (fileListings.Hash != theme.Hash)
-            {
+                var themePath = new FileInfo(themeJson.FullPath).Directory.FullName;
+                var fileListings = await _themeMetaDataProvider.GetThemeFileListing(themePath, theme.Id).ConfigureAwait(false);
+
                 theme.FileListing = fileListings;
                 theme.TimeStamp = fileListings.TimeStamp;
                 theme.Hash = fileListings.Hash;
+
             }
-            
         }
 
         private Theme GetFromCache ( string key )
@@ -138,15 +137,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private void AddToCache(string key, Theme theme, bool isSlim)
         {
-            theme = theme ?? NullTheme;
-            var filePaths = (_settings.AppSettingsAsNullableBool("sitebuilder.MonitorThemeChanges") ??
-                        _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1  )
-                        &&  theme.ThemePath != null 
-                        ? new List<string> { theme.ThemePath } 
-                        : null;
-            _cache.Set(key, theme, CacheScope.Global, StorefrontCacheTypes.CatalogIndependent, (isSlim || Object.Equals( theme, NullTheme)) ? (Func<object,object>)null : CacheCallback, filePaths);
-            _themeToThemeKey[key] = theme.Id;
-
+            if(!isSlim)
+            {
+                _lookups[theme.Id] = new WeakReference<Theme>(theme);
+            }
+            
         }
         object CacheCallback(object state)
         {
@@ -160,57 +155,51 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
 
         public bool UseFileSystemCaching => !(_settings.AppSettingsAsNullableBool("sitebuilder.DisableFileSystemCaching")
-            .GetValueOrDefault(_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1));
+            .GetValueOrDefault(_settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) == -1));
 
-        public DateTime GetLastWriteTime(string fileName)
+        public DateTime GetLastWriteTime(string themeId, string virtPath)
         {
             if (!UseFileSystemCaching)
             {
-                return System.IO.File.GetLastWriteTimeUtc(fileName);
+                return DateTime.MinValue;
+            }
+            WeakReference<Theme> weakTheme;
+            Theme theme;
+            if ( _lookups.TryGetValue(themeId, out weakTheme) && weakTheme.TryGetTarget(out theme))
+            {
+                var fileInfo= theme?.FileListing.GetFileInfo(virtPath, true);
+                if (fileInfo!=null)
+                {
+                    return fileInfo.TimsStamp;
+                }
             }
             return DateTime.MinValue;
-            //var theme = _themeToThemeKey.Keys.Select( GetFromCache)
-            //    .Where( x=> 
-            //     x != null &&
-            //        x.ThemePath != null
-            //        && fileName.StartsWith(x.ThemePath, StringComparison.OrdinalIgnoreCase))
-            //    .Select(x => x).FirstOrDefault();
             
-            //if (theme != null)
-            //{
-            //    var vpath = fileName.Substring(theme.ThemePath.Length).TrimStart(new char[] { '\\' });
-            //    var info = theme.FileListing.GetFileInfo(vpath, true);
-            //    if (info != null)
-            //    {
-            //        return info.TimsStamp;
-            //    }
-            //}
-            //return File.GetLastWriteTime(fileName);
         }
 
         /// <summary>
         /// Finds a theme by name.
         /// </summary>
         /// <exception cref="ThemeNotFoundException">If the theme is not found.</exception>        
-        public Theme GetTheme(ThemeSelection selection)
+        public Task<Theme> GetTheme(ThemeSelection selection)
         {
             return GetThemeInternal(selection.Id, new Stack<string>());
         }
 
-        public Theme GetThemeSlim(ThemeSelection selection)
+        public async Task<Theme> GetThemeSlim(ThemeSelection selection)
         {
             var key = "GetThemeSlim_" + selection.Id;
             var theme = GetFromCache(key);
             //var theme = _themeSlims.GetOrAdd(selection.Id, CreateThemeSlim);
             if ( theme == null )
             {
-                theme = CreateThemeSlim(selection.Id);
+                theme = await CreateThemeSlim(selection.Id).ConfigureAwait(false);
 
             }
             if (theme ==  null)
             {
                 // if dir is written after initially asked the 
-                theme = CreateThemeSlim(selection.Id);
+                theme = await CreateThemeSlim(selection.Id).ConfigureAwait(false);
                 AddToCache(key, theme, true);
             }
             if (object.Equals(theme , NullTheme))
@@ -222,9 +211,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         }
         static Theme NullTheme = new Theme();
 
-        Theme CreateThemeSlim(string themeId)
+        async Task<Theme> CreateThemeSlim(string themeId)
         {
-            var tmd = _themeMetaDataProvider.GetThemeSlim(themeId);
+            var tmd = await _themeMetaDataProvider.GetThemeSlim(themeId).ConfigureAwait(false);
             if (tmd == null)
             {
                 return null;
@@ -239,24 +228,34 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// from the filesystem and uses ThemeFactory to build it.
         /// If the theme extends another theme, it will make a recursive call to find and initialize the parent theme.
         /// </summary>
-        Theme GetThemeInternal(string name, Stack<string> inheritChain)
+        async Task<Theme> GetThemeInternal(string name, Stack<string> inheritChain)
         {
           
             var themeName = name ?? Constants.DefaultTheme;
             var key = "GetTheme_" + themeName;
             var theme = GetFromCache(key);
-        
+
             if (theme == null)
             {
-                lock( System.String.Intern(key))
+                //todo:phipps add locking back in 
+                //lock( System.String.Intern(key))
+                //{
+                //    theme = GetFromCache(key);
+                //    if (theme == null)
+                //    {
+                //        theme = await CreateTheme(themeName, inheritChain).ConfigureAwait(false);
+                //        AddToCache(key, theme, false);
+                //    }
+                //}
+
+
+               
+                if (theme == null)
                 {
-                    theme = GetFromCache(key);
-                    if (theme == null)
-                    {
-                        theme = CreateTheme(themeName, inheritChain);
-                        AddToCache(key, theme, false);
-                    }
+                    theme = await CreateTheme(themeName, inheritChain).ConfigureAwait(false);
+                    AddToCache(key, theme, false);
                 }
+
             }
             
             if (object.Equals(theme, NullTheme))
@@ -275,13 +274,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Loads theme metadata from the filesystem and uses ThemeFactory to build it.
         /// If the theme extends another theme, it will make a recursive call to find and initialize the parent theme.
         /// </summary>
-        private Theme CreateTheme(string name, Stack<string> inheritChain)
+        private async Task<Theme> CreateTheme(string name, Stack<string> inheritChain)
         {
             // make sure that a theme isn't somehow trying to inherit from itself.
             if (inheritChain.Contains(name, StringComparer.OrdinalIgnoreCase))
                 throw new ThemeInheritanceRecursionException(string.Format("Theme {0} cannot be its own ancestor. Stack: {1}", name, string.Join(" // ", inheritChain)));
 
-            var tmd = _themeMetaDataProvider.GetTheme(name);
+            var tmd = await _themeMetaDataProvider.GetTheme(name).ConfigureAwait(false);
             if (tmd == null) return null;
             
             var parentName = tmd.Configuration.About.Extends;
@@ -289,7 +288,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!string.IsNullOrEmpty(parentName))
             {
                 inheritChain.Push(name);
-                parent = GetThemeInternal(parentName, inheritChain);
+                parent = await GetThemeInternal(parentName, inheritChain).ConfigureAwait(false);
                 inheritChain.Pop();
             }
             
@@ -305,26 +304,31 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// Finds a theme by name.
         /// If the theme is not found, returns the system default theme.
         /// </summary>
-        public Theme GetThemeOrDefault(ThemeSelection selection )
+        public async Task<Theme> GetThemeOrDefault(ThemeSelection selection )
         {
             try
             {
                 if ( selection != null && !string.IsNullOrEmpty(selection.Id ))
                 {
-                    return GetTheme(selection) ??  GetDefaultTheme();
+                    var theme =  await GetTheme(selection).ConfigureAwait(false);
+                    if (theme == null)
+                    {
+                        theme = await GetDefaultTheme().ConfigureAwait(false);
+                    }
+                    return theme;
                 }
-                return GetDefaultTheme();
+                return await GetDefaultTheme().ConfigureAwait(false);
             }
             catch (ThemeNotFoundException)
             {
-                return GetDefaultTheme();
+                return await GetDefaultTheme().ConfigureAwait(false);
             }
         }
 
         /// <summary>
         /// Returns the system default theme.
         /// </summary>
-        public Theme GetDefaultTheme()
+        public Task<Theme> GetDefaultTheme()
         {
             return GetTheme(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
         }

@@ -31,12 +31,12 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts 
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0 
-nuget Mozu.CommerceRuntime.Contracts.1.1804.2
+nuget Mozu.CommerceRuntime.Contracts 1.1804.2
 nuget mozu.Content.Contracts < 1.20 
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
 nuget Mozu.Core.Test >= 1.1731
-nuget Mozu.Customer.Contracts.1.1804.1
+nuget Mozu.Customer.Contracts 1.1804.1
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
@@ -54,3 +54,4 @@ nuget protobuf-net 2.0.0.668
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703
 nuget Mozu.Log4net.Gelf
+nuget MongoDB.Driver.GridFS  2.4.4

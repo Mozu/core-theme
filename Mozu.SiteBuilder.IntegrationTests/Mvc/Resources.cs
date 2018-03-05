@@ -25,6 +25,7 @@ using System.IO;
 using Mozu.Core;
 using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.Mvc.Context;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.IntegrationTests.Mvc
 {
@@ -164,21 +165,26 @@ namespace Mozu.SiteBuilder.IntegrationTests.Mvc
                 _fileToContentMap = fileToContentMap;
             }
 
-            public string GetContent(ThemeFileSystemInfo info)
+            public string GetContent(ThemeFileSystemInfo info, CancellationToken token)
             {
                 return _fileToContentMap[info.FullPath];
             }
 
-            public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
+            public async Task<string> GetContentAsync(ThemeFileSystemInfo info, CancellationToken token)
             {
                 return _fileToContentMap[info.FullPath.Replace("/", "\\").Replace("\\\\", "\\")];
             }
 
-            public Stream GetStream(ThemeFileSystemInfo info)
+            public Stream GetStream(ThemeFileSystemInfo info, CancellationToken token)
             {
                 var text = _fileToContentMap[info.FullPath];
                 var bytes = Encoding.UTF8.GetBytes(text);
                 return new MemoryStream(bytes);
+            }
+
+            public Task<Stream> GetStreamAsync(ThemeFileSystemInfo info, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(GetStream(info, cancellationToken));
             }
         }
     }
