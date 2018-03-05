@@ -7,6 +7,11 @@ using Autofac;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;
 using NDjango.Interfaces;
+using Mozu.Core.Settings;
+using Mozu.Core.Mongo;
+using MongoDB.Driver.GridFS;
+using MongoDB.Driver;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -14,10 +19,15 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
     {
         private readonly Lazy<IThemeRepository> _themeRepo;
 
+        private readonly Lazy<ISettings> _settings;
+        Lazy<IThemeContentRetriever> _contentRetriever;
 
-        public TemplateLoader(Lazy<IThemeRepository> themeRepo)
+        public TemplateLoader(Lazy<IThemeRepository> themeRepo, Lazy<ISettings> settings,
+            Lazy<IThemeContentRetriever> contentRetriever)
         {
             _themeRepo = themeRepo;
+            _settings = settings;
+            _contentRetriever = contentRetriever;
         }
 
         //public TextReader GetTemplate(string path)
@@ -27,16 +37,27 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
          
         public bool IsUpdated(string path, DateTime timestamp)
         {
-            var fileDate  = _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime();
-            bool isUpdated= fileDate !=  DateTime.MinValue  &&  _themeRepo.Value.GetLastWriteTime(path).ToUniversalTime() != timestamp.ToUniversalTime();
-            return isUpdated;
+            
+
+            var themeInfo = ThemeFileSystemInfoHelper.ToInfo(path);
+
+            var timestamp2 = _themeRepo.Value.GetLastWriteTime(themeInfo.ThemeId, themeInfo.VirtualPath);
+            return timestamp2.ToUniversalTime() > timestamp.ToUniversalTime();
+
 
         }
-
+        
         Tuple<TextReader, DateTime> ITemplateLoader.GetTemplate(string path)
         {
-            var file = new System.IO.FileInfo(path);
-            return new Tuple<TextReader, DateTime>(file.OpenText(), file.LastWriteTimeUtc);
+            var themeInfo = ThemeFileSystemInfoHelper.ToInfo(path);
+            var text = _contentRetriever.Value.GetContent(themeInfo, CancellationToken.None);
+            var timestamp = _themeRepo.Value.GetLastWriteTime(themeInfo.ThemeId, themeInfo.VirtualPath);
+            return new Tuple<TextReader, DateTime>(new StringReader(text), timestamp);
+
         }
+
+       
+
+
     }
 }

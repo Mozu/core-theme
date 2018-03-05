@@ -143,9 +143,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "thumNamil/{themeId}")]
-        public Task<HttpResponseMessage> GetThumbByTheme(string themeId)
+        public async Task<HttpResponseMessage> GetThumbByTheme(string themeId)
         {
-            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId });
+            var theme = await _themeRepository.GetThemeSlim(new ThemeSelection() { Id = themeId }).ConfigureAwait(false);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
 
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/" + System.IO.Path.GetExtension(theme.Thumbnail.Name).Replace(".", ""));
-            return Task.FromResult(response);
+            return response;
         }
 
         [HttpGetRoute(UriTemplate = "sitethumbNail")]
@@ -169,13 +169,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Theme theme = null;
             try
             {
-                theme = _themeRepository.GetThemeSlim(settings.DesktopTheme);
+                theme = await _themeRepository.GetThemeSlim(settings.DesktopTheme).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 _logger.Warn("error sitethumbNail", ex);
             }
-            theme = theme ?? _themeRepository.GetThemeSlim(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme });
+            if (theme==null)
+            {
+                theme = await _themeRepository.GetThemeSlim(new ThemeSelection() { Id = Mozu.SiteBuilder.Mvc.Constants.DefaultTheme }).ConfigureAwait(false);
+            }
+           
 
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new StreamContent(File.OpenRead(theme.Thumbnail.FullPath));
@@ -186,9 +190,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
-        Mozu.Tenant.Contracts.Entitlement GetEntitlementFromDirectory(string directoryPath, bool allowNonProductionThemes)
+       async Task< Mozu.Tenant.Contracts.Entitlement> GetEntitlementFromDirectory(string directoryPath, bool allowNonProductionThemes)
         {
-            var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = System.IO.Path.GetFileName(directoryPath) });
+            var theme = await _themeRepository.GetThemeSlim(new ThemeSelection() { Id = System.IO.Path.GetFileName(directoryPath) }).ConfigureAwait(false); ;
             if (theme == null)
             {
                 return null;
@@ -309,10 +313,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 allowNonProductionThemes = false;
             }
 
-            var coreEntitlements =
+            var coreEntitlementTasks =
                 localThemeIds
-                .Select(x => GetEntitlementFromDirectory(x, allowNonProductionThemes))
+                .Select(x =>  GetEntitlementFromDirectory(x, allowNonProductionThemes))
                 .Where(x => x != null);
+            await Task.WhenAll(coreEntitlementTasks).ConfigureAwait(false);
+            var coreEntitlements = coreEntitlementTasks.Select(x => x.Result).Where(x => x != null);
 
             var themes =
                 entitlements.Items
@@ -411,14 +417,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (themeIds.Count() == 0)
             {
-                var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = null });
+                var theme = await _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = null }).ConfigureAwait(false);
 
                 themeIds.Add(theme.Id);
             }
 
-            var themes = themeIds.Select(x =>
+
+
+            var themeTasks = themeIds.Select(async x =>
             {
-                var theme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x });
+                var theme = await _themeRepository.GetThemeSlim(new ThemeSelection() { Id = x }).ConfigureAwait(false);
 
                 var entitlement = entitlements.Items.FirstOrDefault(e => e.ApplicationAssetPath.Replace('\\', '~') == theme.Id);
 
@@ -426,7 +434,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return new ThemeDTO(genSettings, theme, version: version);
             });
-
+            await Task.WhenAll(themeTasks).ConfigureAwait(false);
+            var themes = themeTasks.Select(x => x.Result);
             return List2(themes.ToList());
         }
 
@@ -443,7 +452,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var settings = await _generalSettingsWebApiClient.ReadSettings();
             string lastTheme = null;
 
-            var theme = _themeRepository.GetTheme(new ThemeSelection { Id = id });
+            var theme = await _themeRepository.GetTheme(new ThemeSelection { Id = id }).ConfigureAwait(false);
 
             if (theme.IsDesktop.GetValueOrDefault(false))
             {
@@ -538,9 +547,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else if (themes.Any(t => t.Id == settings.DesktopTheme.Id))
             {
+                var dt = await _themeRepository.GetDefaultTheme().ConfigureAwait(false);
                 // intent to un-set the desktop theme.
                 // having NO desktop theme is not a legal state, so we will set the theme to the default.
-                newDesktop = new ThemeDTO(settings, _themeRepository.GetDefaultTheme(), true);
+                newDesktop = new ThemeDTO(settings, dt, true);
                 if (!themes.Any(t => t.Equals(newDesktop)))
                     themes.Add(newDesktop);
                 settings.DesktopTheme.Id = newDesktop.Id;
@@ -554,15 +564,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // the UI returns the ThemeDTO without a thumbnail (to minimize the payload). But if we pass the same ThemeDTO without
             // a thumbnail back to them, the UI will update to have no thumbnail. So we have to loop over the provided ThemeDTO objects
             // and construct a new one to return to them.
-
-            var returnedThemesList =
-                from t in themes
-                let isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id))
-                let isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id))
-                let isSelectedTablet = (newTablet != null && newTablet.Equals(t)) || (newTablet == null && settings.TabletTheme != null && t.Equals(settings.TabletTheme.Id))
-                let fullTheme = _themeRepository.GetThemeSlim(new ThemeSelection() { Id = t.Id })
-                select new ThemeDTO(settings, fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet);
-
+            List<ThemeDTO> returnedThemesList = new System.Collections.Generic.List<ThemeDTO>();
+            foreach ( var t in themes )
+            {
+                var isSelectedDesktop = (newDesktop != null && newDesktop.Equals(t)) || (newDesktop == null && t.Id.Equals(settings.DesktopTheme.Id));
+                var isSelectedMobile = (newMobile != null && newMobile.Equals(t)) || (newMobile == null && settings.MobileTheme != null && t.Equals(settings.MobileTheme.Id));
+                var isSelectedTablet = (newTablet != null && newTablet.Equals(t)) || (newTablet == null && settings.TabletTheme != null && t.Equals(settings.TabletTheme.Id));
+                var fullTheme = await _themeRepository.GetThemeSlim(new ThemeSelection() { Id = t.Id }).ConfigureAwait(false);
+                returnedThemesList.Add(new ThemeDTO(settings, fullTheme, isSelectedDesktop, isSelectedMobile, isSelectedTablet));
+            }
             return List2(returnedThemesList.ToList());
         }
 

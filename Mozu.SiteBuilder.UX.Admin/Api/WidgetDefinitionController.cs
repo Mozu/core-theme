@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "read")]
-        public Response<List<WidgetDefinition>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string themeId)
+        public async Task<Response<List<WidgetDefinition>>> GetWidgets([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, string themeId)
         {
             Theme theme = null;
             if (string.IsNullOrEmpty(themeId))
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                theme = _themeRepository.GetTheme(new ThemeSelection() { Id = themeId });
+                theme = await _themeRepository.GetTheme(new ThemeSelection() { Id = themeId }).ConfigureAwait(false);
             }
             
             var defs = theme.Widgets;

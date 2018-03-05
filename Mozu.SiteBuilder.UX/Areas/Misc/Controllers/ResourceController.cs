@@ -22,6 +22,7 @@ using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.UX.Filters;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -299,7 +300,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var file = _pathProvider.Value.GetThemeFileInfo(pathinfo);
             return file != null ?
-                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever.Value)) :
+                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever.Value, this.SbApiContext.RequestCancellationToken)) :
                 Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
         }
 
@@ -318,12 +319,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             private readonly ThemeFileSystemInfo _file;
             private readonly IThemeContentRetriever _contentRetriever;
+            CancellationToken _cancellationToken;
 
-            public MozuVirtualFileResult(string path, string contentType, ThemeFileSystemInfo file, IThemeContentRetriever contentRetriever)
+            public MozuVirtualFileResult(string path, string contentType, ThemeFileSystemInfo file, IThemeContentRetriever contentRetriever, 
+                CancellationToken cancellationToken)
                 : base(contentType)
             {
                 _file = file;
                 _contentRetriever = contentRetriever;
+                _cancellationToken = cancellationToken;
             }
 
             public Func<Stream, string, Task<Stream>> Transform { get; set; }
@@ -333,9 +337,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 WriteFile(response.OutputStream);
             }
 
+
             public void WriteFile(Stream outputStream)
             {
-                using (var stream = _contentRetriever.GetStream(_file))
+                using (var stream = _contentRetriever.GetStream(_file, _cancellationToken))
                 {
                     var source = stream;
                     if (Transform != null)
@@ -348,7 +353,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             protected override async Task WriteFileAsync(HttpResponseBase response)
             {
-                using (var stream = _contentRetriever.GetStream(_file))
+                
+                using (var stream = _contentRetriever.GetStream(_file, _cancellationToken))
                 {
                     var source = stream;
                     if (Transform != null)

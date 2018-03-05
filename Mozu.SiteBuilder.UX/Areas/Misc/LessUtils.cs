@@ -295,7 +295,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                 if (file != null)
                 {
-                    transFormedContent = _lessTransFormer.ProcessSettingsVariables(_contentRetriever.GetContent(file), file.VirtualPath);
+                    transFormedContent = _lessTransFormer.ProcessSettingsVariables(_contentRetriever.GetContent(file, Controller.SbApiContext.RequestCancellationToken), file.VirtualPath);
                 }
             }
             return string.IsNullOrWhiteSpace(transFormedContent) ? g_content : transFormedContent;
@@ -317,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                 if (file != null)
                 {
-                    using (Stream stream = _contentRetriever.GetStream(file))
+                    using (Stream stream = _contentRetriever.GetStream(file, this.Controller.SbApiContext.RequestCancellationToken))
                     {
                         var data = new byte[stream.Length];
                         stream.Read(data, 0, data.Length);
