@@ -3050,6 +3050,17 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
+        <Reference Include="MongoDB.Driver.GridFS">
+          <HintPath>..\packages\MongoDB.Driver.GridFS\lib\net45\MongoDB.Driver.GridFS.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
         <Reference Include="MoreLinq">
           <HintPath>..\packages\morelinq\lib\net35\MoreLinq.dll</HintPath>
           <Private>True</Private>

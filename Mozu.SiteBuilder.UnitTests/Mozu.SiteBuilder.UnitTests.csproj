@@ -625,6 +625,17 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
+        <Reference Include="MongoDB.Driver.GridFS">
+          <HintPath>..\packages\MongoDB.Driver.GridFS\lib\net45\MongoDB.Driver.GridFS.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
+      <ItemGroup>
         <Reference Include="Mozu.AdminUser.Contracts">
           <HintPath>..\packages\Mozu.AdminUser.Contracts\lib\net45\Mozu.AdminUser.Contracts.dll</HintPath>
           <Private>True</Private>
