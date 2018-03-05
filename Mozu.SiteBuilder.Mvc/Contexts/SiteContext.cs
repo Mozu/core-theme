@@ -419,7 +419,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 _themeRuntimeSettingsCollection = entry.Item2 ?? ((entry.Item1 == null) ? null : new ThemeRuntimeSettingsCollection());
             }
             //for theme override... eg preview
-            _theme = _theme ?? _themeRepository.Value.GetThemeOrDefault(_themeSelection);
+            if ( _theme == null )
+            {
+                _theme = await _themeRepository.Value.GetThemeOrDefault(_themeSelection).ConfigureAwait(false);
+            }
+
             
             _themeRepository.Value.FixupPaths(_theme);
             
@@ -430,7 +434,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var hash = data.Hash;
             if (isSandBox && _theme != null)
             {
-                _themeRepository.Value.ValidateLatest(_theme);
+               
+                await _themeRepository.Value.ValidateLatest(_theme).ConfigureAwait(false);
                 hash += _theme.Hash;
             }
 

@@ -29,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             var path = template;
             //var path = template.Split('|')[0];
-            if (!Path.IsPathRooted(path))
+            if (path.IndexOf('|')==-1&& !Path.IsPathRooted(path))
             {
                 string vpath = path;
                 if (path.IndexOf("templates", StringComparison.OrdinalIgnoreCase) == -1)
@@ -44,7 +44,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     throw new FileNotFoundException(string.Format( "invalid path [{0}]",  vpath),vpath );
                 }
-                path = vFile.FullPath;
+                path = ThemeFileSystemInfoHelper.ToString(vFile);
+               
+                
             }
 
            // path += "|" + _themeId;
@@ -61,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             //var path = template.Split('|')[0];
             var path = template;
-            if (!Path.IsPathRooted(path))
+            if (path.IndexOf('|') == -1 && !Path.IsPathRooted(path))
             {
                 string vpath = path;
                 if (path.IndexOf("templates", StringComparison.OrdinalIgnoreCase) == -1)
@@ -76,7 +78,8 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     throw new InvalidOperationException(string.Format("template not found [{0}]", vpath));
                 }
-                path = vFile.FullPath;
+                path =  ThemeFileSystemInfoHelper.ToString(vFile);
+                
             }
           
             return _innerTemplateManager.GetTemplate(path, resolver, model, extends);
@@ -86,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             //path = path.Split('|')[0];
 
-            if (!Path.IsPathRooted(path))
+            if (path.IndexOf('|') == -1 && !Path.IsPathRooted(path))
             {
                 string vpath = path;
                 if (path.IndexOf("templates", StringComparison.OrdinalIgnoreCase) == -1)
@@ -101,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 {
                     throw new InvalidOperationException(string.Format("invalid virtual path [{0}]", vpath));
                 }
-                path = vFile.FullPath;
+                path = ThemeFileSystemInfoHelper.ToString(vFile);
             }
             //path += "|" + _themeId;
             return ((ITemplateManager)this).GetTemplate(path).Walk(this, context);

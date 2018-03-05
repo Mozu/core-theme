@@ -11,6 +11,12 @@ using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using System.Collections.Concurrent;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
+using MongoDB.Bson;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -229,6 +235,11 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return _filePath ?? (_filePath = BuildPath());
             }
         }
+        public string MongoId
+        {
+            get;
+            set;
+        }
         string BuildPath()
         {
             return RootPath + "//" + VirtualPath;
@@ -238,9 +249,16 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         public string VirtualPath { get; set; }
         public string VirtualPathNoExt { get; set; }
         public DateTime TimsStamp { get; set; }
-        public bool IsCertified { get; set; }
+        //public bool IsCertified { get; set; }
 
         public string ThemeId { get; set; }
+        public string CheckSum { get;  set; }
+
+        public  bool UsesFileSystem()
+        {
+            return string.IsNullOrWhiteSpace(this.MongoId);
+        }
+
     }
 
     /// <summary>
@@ -249,41 +267,153 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// </summary>
     public interface IThemeContentRetriever
     {
-        string GetContent(ThemeFileSystemInfo info);
-        Task<string> GetContentAsync(ThemeFileSystemInfo info);
-        Stream GetStream(ThemeFileSystemInfo info);
+        string GetContent(ThemeFileSystemInfo info, CancellationToken cancellationToken);
+        Task<string> GetContentAsync(ThemeFileSystemInfo info, CancellationToken cancellationToken);
+        Stream GetStream(ThemeFileSystemInfo info, CancellationToken cancellationToken);
+        Task<Stream>  GetStreamAsync(ThemeFileSystemInfo info, CancellationToken cancellationToken);
     }
 
-    public class FileSystemContentRetriever : IThemeContentRetriever
+    public class ContentRetriever : IThemeContentRetriever
     {
-        public string GetContent(ThemeFileSystemInfo info)
+        
+        Mozu.Core.Mongo.IMongoDatabaseProviderProvider _mongoDatabaseProvider;
+        Mozu.Core.Settings.ISettings _settings;
+         public ContentRetriever(Mozu.Core.Mongo.IMongoDatabaseProviderProvider mongoDatabaseProvider, 
+             Mozu.Core.Settings.ISettings settings)
         {
-            return File.ReadAllText(info.FullPath);
+            _mongoDatabaseProvider = mongoDatabaseProvider;
+            _settings = settings;
         }
+
+        GridFSBucket GetBucket ()
+        {
+            var provider = _mongoDatabaseProvider.Get("MongoAppDevItemDB", "AppDev", _settings);
+            var database = provider.MongoDataBase;
+            return  new GridFSBucket(database, new GridFSBucketOptions
+            {
+                BucketName = "Theme",
+                ReadPreference = ReadPreference.SecondaryPreferred
+            });
+        }
+       
+
+        public string GetContent(ThemeFileSystemInfo info, CancellationToken cancellationToken = default(CancellationToken))
+        {
+           var sw = new Stopwatch();
+            sw.Start();
+           
+            using (var stream = this.GetStream(info, cancellationToken))
+            {
+                using (var sr = new StreamReader(stream))
+                {
+                    var s = sr.ReadToEnd();
+                    Debug.WriteLine($"{DateTime.Now.ToString("ss:ff")} {sw.ElapsedMilliseconds.ToString("00000")} { info.UsesFileSystem()} { info.VirtualPath}", "sb-gc");
+                    return s;
+                }
+            }
+        }
+        public async Task<string> GetContentAsync(ThemeFileSystemInfo info, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var sw = new Stopwatch();
+            sw.Start();
+            using (var r = new StreamReader(GetStream(info)))
+            {
+                var s= await r.ReadToEndAsync().ConfigureAwait(false);
+                Debug.WriteLine($"{DateTime.Now.ToString("ss:ff")} {sw.ElapsedMilliseconds.ToString("00000")}  { info.UsesFileSystem()} { info.VirtualPath}","sb-gca");
+                return s;
+            }
+        }
+
+
+        public Stream GetStream(ThemeFileSystemInfo info, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (info.UsesFileSystem())
+            {
+                return GetStreamLegacy(info);
+            }
+            return GetBucket().OpenDownloadStream(new ObjectId(info.MongoId), cancellationToken: cancellationToken);
+            
+        }
+        public Task<Stream> GetStreamAsync(ThemeFileSystemInfo info, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (info.UsesFileSystem())
+            {
+                return Task.FromResult(GetStreamLegacy(info));
+            }
+            return GetBucket().OpenDownloadStreamAsync(new ObjectId(info.MongoId), cancellationToken: cancellationToken).ContinueWith(x => (Stream)x.Result);
+
+        }
+
+       
+        Stream GetStreamLegacy(ThemeFileSystemInfo info)
+        {
+            return new FileStream(info.FullPath,
+               FileMode.Open,
+               FileAccess.Read,
+               FileShare.ReadWrite,
+               bufferSize: 4096,
+               useAsync: true);
+
+        }
+
+        //async Task<byte[]> GetMongoId(ThemeFileSystemInfo info)
+        //{
+        //    var fn = info.VirtualPath.Replace('\\', '/').Trim('/');
+        //    var appId = ThemeMetadataProvider.ParseId(info.ThemeId);
+
+        //    if (appId.Item1 ==0 || appId.Item2== 0)
+        //    {
+        //        return null;
+        //    }
+            
+              
+
+        //    var filter = Builders<GridFSFileInfo>.Filter.And(
+        //        Builders<GridFSFileInfo>.Filter.Regex(x => x.Filename, new MongoDB.Bson.BsonRegularExpression($"^{fn}$", "i")),
+        //        Builders<GridFSFileInfo>.Filter.Eq("metadata.AppVersionId", appId.Item1),
+        //        Builders<GridFSFileInfo>.Filter.Eq("metadata.PackageId", appId.Item2));
+            
+
+        //    var options = new GridFSFindOptions
+        //    {
+        //        Limit = 1,
+        //    };
+        //    using (var cursor = await _bucket.FindAsync(filter, options).ConfigureAwait(false))
+        //    {
+        //        var fileInfo = await cursor.FirstOrDefaultAsync().ConfigureAwait(false);
+        //        return fileInfo.Id.ToByteArray();
+        //    }
+
+        //}
+
+
+
+
+        //string GetContentInternal (ThemeFileSystemInfo info)
+        //{
+        //    System.Diagnostics.Debug.WriteLine($"* {DateTime.Now.ToString("ss:ff")} {"     "} { info.VirtualPath}");
+        //    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+        //    // System.Diagnostics.Debug.WriteLine("s reading " + info.FullPath);
+        //    sw.Start();
+        //    string str = null;
+        //    using (var s = GetStreamLegacy(info))
+        //    {
+        //        using (var sr = new StreamReader(s))
+        //        {
+        //            str = sr.ReadToEnd();
+        //        }
+        //    }
+        //    System.Diagnostics.Debug.WriteLine($"* {DateTime.Now.ToString("ss:ff")} {sw.ElapsedMilliseconds} { info.VirtualPath}");
+        //    return str;
+        //}
 
 
         static System.Collections.Concurrent.ConcurrentBag<byte[]> _bytePool = new System.Collections.Concurrent.ConcurrentBag<byte[]>();
         static System.Collections.Concurrent.ConcurrentBag<char[]> _charPool = new System.Collections.Concurrent.ConcurrentBag<char[]>();
 
-        public async Task<string> GetContentAsync(ThemeFileSystemInfo info)
-        {
-            
-            using (var r = new StreamReader(GetStream(info)))
-            {
-                return await r.ReadToEndAsync().ConfigureAwait(false);
-            }
-        }
+       
 
-        public Stream GetStream(ThemeFileSystemInfo info)
-        {
-            return  new FileStream(info.FullPath,
-               FileMode.Open, 
-               FileAccess.Read, 
-               FileShare.ReadWrite,
-               bufferSize: 4096, 
-               useAsync: true);
-            
-        }
+        
        
     }
 }

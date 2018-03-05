@@ -542,7 +542,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                                        EntityLists = x.EntityLists,
                                        DocumentTypes = x.DocumentTypes,
                                        Priority = x.Priority,
-                                       Code = _contentRetriever.GetContent(jsFile)
+                                       Code = _contentRetriever.GetContent(jsFile, this.SbApiContext.RequestCancellationToken)
                                    };
                         }
                         return null;

@@ -13,7 +13,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
     /// Deserialization target for theme.json.
     /// </summary>
     [DataContract]
-    internal class ThemeConfiguration
+    public  class ThemeConfiguration
     {
         [DataMember(Name="about")]
         public ThemeAbout About { get; set; }

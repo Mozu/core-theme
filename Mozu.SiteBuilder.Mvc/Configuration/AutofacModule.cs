@@ -25,6 +25,8 @@ using Module = Autofac.Module;
 using Mozu.SiteBuilder.Mvc.Logging;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Context;
+using Mozu.Core.Settings;
+using Mozu.Core.Mongo;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -65,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
 
             builder.RegisterType<CmsServiceWrapper>().As<ICmsServiceWrapper>().InstancePerDependency();
             builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
-            builder.RegisterType<FileSystemContentRetriever>().As<IThemeContentRetriever>();
+            builder.RegisterType<ContentRetriever>().As<IThemeContentRetriever>().SingleInstance();
 
             builder.RegisterType<ExceptionContextLogWrapper>();
             builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
@@ -100,7 +102,10 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                     .WithLibrary(typeof(AddFilter).Assembly)
                     .WithLibrary(typeof(HyprViewEngine).Assembly)
                     .WithLibrary(typeof(AutofacModule).Assembly)
-                    .WithLoader(new TemplateLoader(c.Resolve<Lazy<IThemeRepository>>()))
+                    .WithLoader(new TemplateLoader(c.Resolve<Lazy<IThemeRepository>>(),
+                    c.Resolve < Lazy<ISettings>>(),
+                    c.Resolve<Lazy<IThemeContentRetriever>>()
+                   ))
                 .WithSetting("settings.DEFAULT_AUTOESCAPE", true);
 
             var ass = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => new AssemblyName(x.FullName).Name == "Mozu.SiteBuilder.UX");
@@ -119,9 +124,9 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             EscaperConfig.Escaper = new SafeEscaper();
             Utilities.UtilConfig.Comparer = new DjangoComparer();
             Utilities.UtilConfig.VirtualPathFunc = new DjangoUtilHelper();
-
+       
            // var tm = tmp.GetNewManager();
-            
+
             builder.Register(c => {
                 var tm = c.Resolve<TemplateManagerProvider>().GetNewManager();
                 return new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>());

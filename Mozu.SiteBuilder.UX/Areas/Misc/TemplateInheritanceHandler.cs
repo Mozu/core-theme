@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
@@ -52,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             return new TemplateInfo
             {
                 key = ScrubVirtualPath(info.VirtualPathNoExt),
-                scrubbedContent = await _contentRetriever.GetContentAsync(info),
+                scrubbedContent = await _contentRetriever.GetContentAsync(info, CancellationToken.None),
                 themeId = info.ThemeId
             };
         }
@@ -132,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             {
                 key = ScrubVirtualPath(x.VirtualPathNoExt),
                 themeId = x.ThemeId,
-                scrubbedContent = await contentRetriever.GetContentAsync(x)
+                scrubbedContent = await contentRetriever.GetContentAsync(x, CancellationToken.None)
             });
 
             await Task.WhenAll(getContentTasks);

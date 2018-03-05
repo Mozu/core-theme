@@ -44,10 +44,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>List of SettingConfiguration</returns>
         [HttpGetRoute(UriTemplate = "config/read/{themeId}")]
-        public Response<List<ThemeSetting>> ReadConfiguration(string themeId )
+        public async Task<Response<List<ThemeSetting>>> ReadConfiguration(string themeId )
         {
             //tbd send selection from ui
-            var config = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId}).Settings;
+            var config = (await _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId}).ConfigureAwait(false)).Settings;
 
             return List2(config.Select(x => new ThemeSetting() { Id = x.Key, DefaultValue = x.Value }).ToList());
         }
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var docList = (await _documentListWebApiClient.GetDocumentList(documentListName: "siteSettings@mozu")).ReadAsSync();
             var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = themeId });
 
-            var configSettings = this.ReadConfiguration(themeId);
+            var configSettings = await this.ReadConfiguration(themeId).ConfigureAwait(false);
             string cmsDocId = null;
             bool? isPublishingEnabled = docList.EnablePublishing;
 
@@ -95,11 +95,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "ui/read/{themeId}")]
-        public  HttpResponseMessage ReadUi(string themeId)
+        public async Task<HttpResponseMessage> ReadUi(string themeId)
         {
 
             //todo get selection 
-            var theme = _themeRepository.GetThemeOrDefault(new ThemeSelection(){Id=themeId});
+            var theme = await _themeRepository.GetThemeOrDefault(new ThemeSelection() { Id = themeId }).ConfigureAwait(false);
             if (theme != null)
             {
                 var file = theme.FileListing.GetFileInfo("theme-ui.json", true );
@@ -107,7 +107,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 {
                     var response = this.Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StreamContent(_contentRetriever.GetStream(file));
+                    response.Content = new StreamContent(_contentRetriever.GetStream(file, this.SbApiContext.RequestCancellationToken));
                     response.Content.Headers.ContentType = new MediaTypeWithQualityHeaderValue("text/json");
                     return response;
                     
