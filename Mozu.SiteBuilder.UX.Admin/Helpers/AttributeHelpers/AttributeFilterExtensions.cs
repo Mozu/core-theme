@@ -22,6 +22,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string IS_CONFIGURABLE_PROPERTY = "isconfigurable";
         private const string IS_REQUIRED_PROPERTY = "isrequired";
         private const string IS_ACTIVE_PROPERTY = "isactive";
+        private const string SITE_ID = "siteid";
+        private const string CATALOG_ID = "catalogid";
+        private const string PROCESS_STATUS = "processstatus";
+        private const string STATUS_CODE = "eventdeliveryattempt.statuscode";
+        private const string SUBSCRIPTION_ID = "subscriptionid";
+        private const string EVENT_ID = "eventid";
+        private const string ENTITY_ID = "entityid";
+        private const string TOPIC = "topic";
+
 
         /// <summary>
         /// Converts a FilterCollection for Attribute to a mozu services-compatible filter string.
@@ -36,13 +45,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
         private static string GetFilter(FilterCollectionItem filter)
         {
-            
+
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
                     var strAll = "";
                     var formatStr = "({1} cont {0} or {2} cont {0} or {3} cont {0})";
-                    strAll += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                    strAll += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(searchString => string.Format(formatStr, searchString, ATTRIBUTE_CONTENT_NAME, ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE)));
                     return strAll;
                 case "id":
@@ -67,14 +76,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
                     if (value.Contains("option"))
                     {
-                        str += string.Format("{1}{0} eq true", ATTRIBUTE_IS_OPTION,seperator);
+                        str += string.Format("{1}{0} eq true", ATTRIBUTE_IS_OPTION, seperator);
                     }
 
                     if (str.IsNotEmpty())
                     {
                         str = "(" + str + ")";
                     }
-                    
+
                     return str;
                 case "inputtype":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_INPUT_TYPE);
@@ -89,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                 case "attributesetid":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_SET_ID_PROPERTY);
                 //case "name":
-                    //return String.Format("{1} cont \"{0}\"", filter.value, ATTRIBUTE_NAME_PROPERTY);
+                //return String.Format("{1} cont \"{0}\"", filter.value, ATTRIBUTE_NAME_PROPERTY);
                 case "datatype":
                     return string.Format("{2} {1} {0}", filter.value, filter.comparison, DATA_TYPE_PROPERTY);
                 case "isconfigurable":
@@ -98,6 +107,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
                     return string.Format("{1} eq {0}", filter.value, IS_REQUIRED_PROPERTY);
                 case "isactive":
                     return string.Format("{1} eq {0}", filter.value, IS_ACTIVE_PROPERTY);
+                case "siteid":
+                    return string.Format("{1} eq {0}", filter.value, SITE_ID);
+                case "catalogid":
+                    return string.Format("{1} eq {0}", filter.value, CATALOG_ID);
+                case "statuscode":
+                    return string.Format("{1} eq {0}", filter.value, STATUS_CODE);
+                case "subscriptionid":
+                    return string.Format("{1} eq {0}", filter.value, SUBSCRIPTION_ID);
+                case "processstatus":
+                    return string.Format("{1} eq {0}", filter.value, PROCESS_STATUS);
+                case "eventid":
+                    return string.Format("{1} eq {0}", filter.value, EVENT_ID);
+                case "entityid":
+                    return string.Format("{1} eq {0}", filter.value, ENTITY_ID);
+                case "eventtopic":
+                    return string.Format("{1} cont {0}", filter.value, TOPIC);
             }
             return "";
         }

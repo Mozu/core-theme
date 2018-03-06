@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		}
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<HttpResponseMessage> CapList([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        public async Task<HttpResponseMessage> CapList([FromUri] string id = null)
         {
             var apps = (await _applicationsWebApiClient.GetApplications(startIndex: 0, pageSize: 600)).ReadAsSync().Items;
 
@@ -86,9 +86,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 _secureConfigUrlHelper.BuildSecureUrl(capability, tenant, entitlement);
             }
 
-            if (pagingParams != null && !string.IsNullOrEmpty(pagingParams.id))
+            if (!string.IsNullOrEmpty(id))
             {
-                list = list.Where(x => x.AppId == pagingParams.id).ToList();
+                list = list.Where(x => x.AppId == id).ToList();
             }
 
             var ret = this.List2<VM.Capability>(list);
@@ -183,9 +183,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 		}
 
         [HttpGetRoute(UriTemplate = "subscriptionEvents")]
-        public async Task<HttpResponseMessage> SubscriptionEvents([FromUri] string AppId, [FromUri] bool forApplication, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        public async Task<HttpResponseMessage> SubscriptionEvents([FromUri] string AppId, [FromUri] bool forApplication, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection advancedSearch)
         {
             var filter = "AppId eq " + AppId;
+
             var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
 
             if (subscriptions.Items.Count < 1)
@@ -207,15 +208,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     subscriptionId: subscription.Id,
                     pageSize: pagingParams.pageSize ?? 20,
                     startIndex: pagingParams.startIndex ?? 0,
-                    sortBy: pagingParams.sort.ToSortString() ?? "CreateDate asc",
-                    filter: extFilter.ToFilterString()
+                    sortBy: (pagingParams.sort.Count > 0) ? pagingParams.sort.ToSortString() : "CreateDate desc",
+                    filter: advancedSearch.ToFilterString()
                 )).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, deliveryAttempts);
 		}
 
         [HttpGetRoute(UriTemplate = "subscribingInfo")]
-        public async Task<HttpResponseMessage> SubscribingInfo([FromUri] string AppId, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        public async Task<HttpResponseMessage> SubscribingInfo([FromUri] string AppId, [FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection advancedSearch)
         {
             var filter = "AppId eq " + AppId;
             var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
@@ -251,7 +252,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "export")]
-        public async Task<CapabilityCsvFileResult> Export([FromUri] string AppId, [FromUri] FilterCollection extFilter)
+        public async Task<CapabilityCsvFileResult> Export([FromUri] string AppId, [FromUri] FilterCollection advancedSearch)
         {
             var filter = "AppId eq " + AppId;
             var subscriptions = (await _eventSubscriptionWebAppClient.GetSubscriptions(filter: filter)).ReadAsSync();
@@ -264,7 +265,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             Task[] deliveryAttempts = subscriptions.Items.Select(sub => _eventSubscriptionWebAppClient.GetDeliveryAttemptSummaries(
               sub.Id,
-              filter: extFilter.ToFilterString()
+              filter: advancedSearch.ToFilterString()
               ).ContinueWith(item => resultCollection.Add(item.Result.ReadAsSync()))).ToArray();
 
 
