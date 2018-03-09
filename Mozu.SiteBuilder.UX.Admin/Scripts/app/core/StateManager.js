@@ -128,19 +128,20 @@ Ext.define('Taco.core.StateManager', {
 
         var VIEWS = [
             '/capability',
-            '/redirects',
-            '/filemanager',
-            '/ipblocking',
-            '/generalsettings',
+            '/categories',
             '/customers',
-            '/orderattributes',
+            '/discounts',
+            '/filemanager',
+            '/generalsettings',
+            '/ipblocking',
             '/locationattributes',
             '/locations',
-            '/synonyms',
-            '/categories',
-            '/returns',
+            '/orderattributes',
             '/paymentgateways',
-			'/settings/discounts'
+            '/redirects',
+            '/returns',
+            '/settings/discounts',
+            '/synonyms'
         ];
         var NOT_VIEWS =[
             '/customerset',

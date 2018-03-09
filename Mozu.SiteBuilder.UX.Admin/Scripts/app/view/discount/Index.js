@@ -3,8 +3,12 @@
 */
 
 Ext.define('Taco.view.discount.Index', {
-    extend: 'Taco.view.discount.Grid',
+    extend: 'Taco.view.react.Index',
     alias: 'widget.discountlist',
-    stateful:true,
-    stateId: 'statefulDiscountGrid'
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    }//,
+    //stateful:true,
+    //stateId: 'statefulDiscountGrid'
 });
