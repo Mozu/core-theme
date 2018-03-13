@@ -7,8 +7,8 @@ Ext.define('Taco.view.capability.Index', {
         'Taco.view.navigation.ContextSwitcherBar'
     ],
     contextConfig: {
-        supportedLevels: ['t', 's'],
-        requiresContextOfType: ['t', 's']
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
     },
     navHeaderCls: "taco-navheader",
     contextSwitchHeader: function () {
