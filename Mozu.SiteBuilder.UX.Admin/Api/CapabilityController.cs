@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (!string.IsNullOrEmpty(id))
             {
-                list = list.Where(x => x.AppId == id).ToList();
+                list = list.Where(x => x.Id == id).ToList();
             }
 
             var ret = this.List2<VM.Capability>(list);
