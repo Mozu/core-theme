@@ -6,7 +6,7 @@
 
 Ext.define('Taco.view.product.subform.OverrideForm', {
     extend: 'Taco.core.ux.form.Form',
-    requires: [        
+    requires: [
         'Ext.container.Container',
         'Ext.form.field.Checkbox'
     ],
@@ -45,18 +45,20 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
         this.isOverridden = this.productInCatalogInfo && this.productInCatalogInfo.get(this.overrideFieldName);
 
         if (this.productInCatalogInfo) {
-            if ( (this.overrideFieldName == 'isContentOverridden' || this.overrideFieldName=='isSEOContentOverridden')&&
-                this.productInCatalogInfo.getCatalog().localeCode != this.product.getMasterCatalog().localeCode) {
+            if ((this.overrideFieldName == 'isContentOverridden' || this.overrideFieldName == 'isSEOContentOverridden')
+                && this.productInCatalogInfo.getCatalog
+                && this.productInCatalogInfo.getCatalog()
+                && this.productInCatalogInfo.getCatalog().localeCode != this.product.getMasterCatalog().localeCode) {
                 this.isOverridden = true;
                 this.overrideChangeDisabled = true;
             }
-            else  if ( this.overrideFieldName == 'isPriceOverridden'&&
-                this.productInCatalogInfo.getCatalog().currencyCode != this.product.getMasterCatalog().currencyCode) {
+            else if (this.overrideFieldName == 'isPriceOverridden'
+                && this.productInCatalogInfo.getCatalog
+                && this.productInCatalogInfo.getCatalog()
+                && this.productInCatalogInfo.getCatalog().currencyCode != this.product.getMasterCatalog().currencyCode) {
                 this.isOverridden = true;
                 this.overrideChangeDisabled = true;
-            } 
-
-
+            }
         }
 
         this.formContainer = Ext.widget({
@@ -82,7 +84,6 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 handler: function (checkbox, isChecked) {
                     var overrideForm = this;
                     if (checkbox.allowModal) {
-
 
                         var title = isChecked ? 'Override Global Values' : 'Remove Global Override',
                             msg = isChecked ? 'You are about to override this section, are you sure you want to do that?' : 'You are about to remove the global override for this section, are you sure you want to do that?';
@@ -125,7 +126,6 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
                 afteredit: this.onProductChange,
                 scope: this
             });
-        
         }
         else if (this.isOverridden) {
             this.setOverride(this.isOverridden, false);
@@ -133,7 +133,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             // *** GlobalForm and SiteForm Single Site Mode
             this.record = this.product;
             this.loadForm();
-        } 
+        }
     },
 
     onProductChange: function ( record, modifiedFieldNames ) {
@@ -166,7 +166,7 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
     setOverride: function (val, shouldCopy, overrideCheckbox) {
         var overrideCountDelta;
         this.productInCatalogInfo.set( this.overrideFieldName, val );
-        
+
         if (val) {
             this.record = this.productInCatalogInfo;
             if (shouldCopy) {

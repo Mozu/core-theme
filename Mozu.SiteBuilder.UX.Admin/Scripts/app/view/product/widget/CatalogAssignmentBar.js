@@ -108,12 +108,14 @@ Ext.define('Taco.view.product.widget.CatalogAssignmentBar', {
         var catalogItems = [];
         var isOverridden;
 
-        Ext.Array.each(catalogs.data.items, function(cat) {
-            catalogItems.push({
-                name: cat.catalog.name,
-                id: cat.catalog.id,
-                isOverridden: cat.get('isContentOverridden') || cat.get('isPriceOverridden') || cat.get('isSEOContentOverridden')
-            });
+        Ext.Array.each(catalogs.data.items, function (cat) {
+            if (cat && cat.catalog) {
+                catalogItems.push({
+                    name: cat.catalog.name,
+                    id: cat.catalog.id,
+                    isOverridden: cat.get('isContentOverridden') || cat.get('isPriceOverridden') || cat.get('isSEOContentOverridden')
+                });
+            }
         });
 
         return catalogItems;
