@@ -4,6 +4,7 @@
 Ext.define('Taco.store.Navigation', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.NavigationItem',
+    hasLocalizationLinks: false,
     autoLoad: true,
     requires: [
         'Taco.store.SubnavLinks'
@@ -46,11 +47,15 @@ Ext.define('Taco.store.Navigation', {
 
                     return res;
                 },
-                pruneInvalidLocLinks = function(item) {
+                pruneInvalidLocLinks = function (item) {
                     if (item.items) {
                         item.items = Ext.Array.filter(item.items, pruneInvalidLocLinks, this);
                     }
-
+                    // if item has localization as an id, it is the top-level parent element 
+                    if (item.id === 'localization' && this.hasLocalizationLinks) {
+                        // top level element and it contains localization links, so we need to display it
+                        return true;
+                    }
                     if (item.locAtts) {
                         if (item.locAtts.length === 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
@@ -59,6 +64,8 @@ Ext.define('Taco.store.Navigation', {
                         } else if (Ext.Array.indexOf(item.locAtts, 'multCurrency') > -1 && !isMultiCurrency) {
                             return false;
                         }
+                        // if we make it here, then at least one of the items has a localization link that needs to be displayed
+                        this.hasLocalizationLinks = true;
                     }
                     return true;
                 },
