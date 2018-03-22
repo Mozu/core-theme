@@ -3,5 +3,7 @@
 {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
 {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 {% endpartial_cache %}
-{% require_script "modules/my-store" %}
+{% if themeSettings.allowFilterByLocationInventory %}
+	{% require_script "modules/my-store" %}
+{% endif %}
 {% dropzone "category-page-bottom" scope="page" %}
