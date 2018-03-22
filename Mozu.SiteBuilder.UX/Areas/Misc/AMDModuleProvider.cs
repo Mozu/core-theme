@@ -1,4 +1,5 @@
 ﻿using Mozu.SiteBuilder.Mvc.ObjectPools;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using System;
 using System.Collections.Generic;
@@ -6,15 +7,19 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
 {
     public class AMDModuleProvider
     {
         private IMozuVirtualPathProvider PathProvider;
-        public AMDModuleProvider(IMozuVirtualPathProvider pathProvider)
+        IThemeContentRetriever _contentRetriever;
+        public AMDModuleProvider(IMozuVirtualPathProvider pathProvider,
+            IThemeContentRetriever contentRetriever)
         {
             PathProvider = pathProvider;
+            _contentRetriever = contentRetriever;
         }
 
         private static class ModuleParts
@@ -58,7 +63,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         string GetScriptFileContents(string pathinfo)
         {
             var file = PathProvider.GetThemeFileInfo("scripts/" + pathinfo);
-            return file == null ? null : System.IO.File.ReadAllText(file.FullPath);
+
+
+            return file == null ? null : _contentRetriever.GetContent(file, cancellationToken:CancellationToken.None);
         }
 
         private readonly Regex DepNameRE = new Regex("(.+)=([a-zA-Z_$][0-9a-zA-Z_$]*)$");

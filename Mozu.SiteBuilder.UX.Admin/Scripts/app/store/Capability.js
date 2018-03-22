@@ -1,10 +1,10 @@
 Ext.define('Taco.store.Capability', {
-    extend: 'Ext.ux.data.PagingStore',
+    extend: 'Ext.data.Store',
     model: 'Taco.model.Capability',
     remoteFilter: false,
     remoteSort: false,
     remoteGroup: false,
-    pageSize: 25,
+    pageSize: 50,
     groupField: "capabilityName",
     storeManagerConfig: {
         clearFilters: true,

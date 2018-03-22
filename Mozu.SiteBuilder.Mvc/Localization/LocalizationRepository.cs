@@ -10,6 +10,8 @@ using Autofac;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Mozu.SiteBuilder.Mvc.Themes;
+using System.Threading;
 
 namespace Mozu.SiteBuilder.Mvc.Localization
 {
@@ -20,13 +22,15 @@ namespace Mozu.SiteBuilder.Mvc.Localization
         
         private readonly ISiteBuilderApiContext _builderApiContext;
         private static readonly ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>> _tableCache = new ConcurrentDictionary<string, Dictionary<string, Dictionary<string, string>>>();
-        
-        public LocalizationRepository(IMozuVirtualPathProvider mozuVirtualPathProvider , SiteContext siteContext, ISiteBuilderApiContext builderApiContext)
+        IThemeContentRetriever _contentRetriever;
+        public LocalizationRepository(IMozuVirtualPathProvider mozuVirtualPathProvider , SiteContext siteContext, ISiteBuilderApiContext builderApiContext,
+            IThemeContentRetriever contentRetriever)
         {
             _mozuVirtualPathProvider = mozuVirtualPathProvider;
             _siteContext = siteContext;
-
+            
             _builderApiContext = builderApiContext;
+            _contentRetriever = contentRetriever;
         }
 
         
@@ -124,14 +128,15 @@ namespace Mozu.SiteBuilder.Mvc.Localization
             {
                 var pp = _mozuVirtualPathProvider;
                 var stem = "~/themes/" + theme + "/resources/strings/lang-" + language + ".csv";
-                var file = pp.GetFile(stem) as MozuVirtualFile;
+                var file = pp.GetThemeFileInfo(stem);
+               // var file = pp.GetFile(stem) as MozuVirtualFile;
                 var dictKey = _builderApiContext.SiteId + "|" + _siteContext.Theme.Id.ToLower() + "|" + language;
 
-                if (file != null && file.Exists)
+                if (file != null )
                 {
                     var container = new Dictionary<string, Dictionary<string, string>>();
-
-                    using (var reader = new StreamReader(file.Open()))
+                   ;
+                    using (var reader = new StreamReader(_contentRetriever.GetStream(file, CancellationToken.None)))
                     {
                         while (!reader.EndOfStream)
                         {
