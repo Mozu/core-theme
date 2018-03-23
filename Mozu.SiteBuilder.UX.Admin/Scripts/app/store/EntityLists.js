@@ -6,7 +6,7 @@
 Ext.define('Taco.store.EntityLists', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.EntityList',
- 
+        pageSize: 100,
         storeManagerConfig: {
             createOnly: true,
             autoLoad: true
