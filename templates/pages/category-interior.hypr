@@ -4,6 +4,12 @@
 {% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 {% endpartial_cache %}
 {% if themeSettings.allowFilterByLocationInventory %}
+	<button
+		id="mz-shopping-my-store-btn"
+		class="mz-button mz-shopping-my-store-btn"
+		data-mz-action="filterMyStore"
+		data-mz-url="{% make_url "instocklocation" model with inStockLocation=pagecontext.purchaseLocation.code %}">
+	</button>
 	{% require_script "modules/my-store" %}
 {% endif %}
 {% dropzone "category-page-bottom" scope="page" %}

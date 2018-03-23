@@ -435,6 +435,7 @@ define(['modules/api',
           btn = $('#mz-shopping-my-store-btn-enabled');
         } else {
           btn = $('#mz-shopping-my-store-btn');
+          $('#mz-my-store-container').prepend(btn);
         }
 
         var btnLabel = HyprLiveContext.locals.themeSettings.locationInventoryFilterText || 'Shop My Store';

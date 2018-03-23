@@ -8,12 +8,6 @@
     <img src="/resources/images/location-pin.png">
   </button>
   <button
-    id="mz-shopping-my-store-btn"
-    class="mz-button mz-shopping-my-store-btn"
-    data-mz-action="filterMyStore"
-    data-mz-url="{% make_url "instocklocation" model with inStockLocation=pagecontext.purchaseLocation.code %}">
-  </button>
-  <button
     id="mz-shopping-my-store-btn-enabled"
     class="mz-button mz-shopping-my-store-btn mz-shopping-my-store-enabled"
     data-mz-action="filterMyStore"
