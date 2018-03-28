@@ -180,6 +180,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string CategoryCode { get; set; }
         int? CategoryId { get; set; }
         List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
+        string CorrelationId { get;  }
     }
     public class CrawlerInfo: ICrawlerInfo
     {
@@ -255,7 +256,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
         }
-
+        public string CorrelationId
+        {
+            get { return _apiContext.TraceContext?.CorrelationId; }
+        }
         public string IpAddress
         {
             get;

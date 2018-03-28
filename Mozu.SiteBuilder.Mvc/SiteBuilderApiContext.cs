@@ -14,6 +14,7 @@ using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Extensions;
+using System.Diagnostics;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -315,6 +316,11 @@ namespace Mozu.SiteBuilder.Mvc
                 }
             }
             LoadExtraInfoFromCookie(_cookieProvider);
+
+            if (string.IsNullOrWhiteSpace(TraceContext.CorrelationId) && Trace.CorrelationManager?.ActivityId != Guid.Empty)
+            {
+                TraceContext.CorrelationId = Trace.CorrelationManager?.ActivityId.ToString("N");
+            }
         }
 
         private void LoadExtraInfoFromCookie (ICookieProvider cookieProvider)
