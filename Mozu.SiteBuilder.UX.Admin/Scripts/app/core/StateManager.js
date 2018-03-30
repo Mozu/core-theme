@@ -173,13 +173,13 @@ Ext.define('Taco.core.StateManager', {
 
                 }
                 return true; 
-            }   
+            }
         }
 
 
         return false;
     },
-   
+
     //allows for late loading of controller... speeds up dev mode
     initController: function (params) {
         var controller, idx, name;

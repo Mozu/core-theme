@@ -1,5 +1,5 @@
 ﻿/**
- * 
+ *
  */
 Ext.define('Taco.view.settings.paymentTypes.Form', {
     extend: 'Taco.core.ux.form.NavForm2',
@@ -12,11 +12,11 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
     externalGateWayDefinitionsStore: null,
     initComponent: function () {
         var me = this;
-               
+
         me.creditCards = Ext.create('Taco.view.settings.paymentTypes.subform.CreditCards', me);
         me.checkByMail = Ext.create('Taco.view.settings.paymentTypes.subform.CheckByMail', me);
         me.purchaseOrder = Ext.create('Taco.view.settings.paymentTypes.subform.PurchaseOrder', me);
-        
+
         me.items = [
             me.creditCards,
             me.checkByMail,
@@ -26,10 +26,17 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
         me.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
         me.buildExternalGateway();
 
+        me.mon(Taco.core.StateManager, {
+            beforenavigate: me.destroyThis.bind(me),
+        });
+
         me.callParent(arguments);
 
         this.loadNavItems();
+    },
 
+    destroyThis: function (newState) {
+        this.destroy();
     },
 
     buildExternalGateway: function () {
