@@ -92,7 +92,7 @@
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
                 CartMonitor.addToCount(product.get('quantity'));
-                window.location.href = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
+                window.location.href = (HyprLiveContext.locals.pageContext.secureHost||HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }

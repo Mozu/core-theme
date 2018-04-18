@@ -61,7 +61,8 @@
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
                         {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
-                        {% if type.grouper == "PurchaseOrder" %}{{ labels.purchaseOrder }}
+                        {% if type.grouper == "PurchaseOrder" %}{{ labels.purchaseOrder }}{% endif %}
+                        {% if type.grouper == "PayWithAmazon" %}{{ labels.payWithAmazon }}{%endif%}
                         <table class="
                                 {% for payment in order.payments %}
                                     {% if payment.PaymentType == 'PurchaseOrder' %}

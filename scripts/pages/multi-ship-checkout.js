@@ -12,9 +12,10 @@ require(["modules/jquery-mozu",
     'modules/checkout/steps/step1/views-shipping-info',
     'modules/checkout/steps/step2/views-shipping-methods',
     'modules/checkout/steps/step3/views-payments',
-    'modules/checkout/contact-dialog/views-contact-dialog'],
+    'modules/checkout/contact-dialog/views-contact-dialog',
+    'modules/amazonpay'],
     function ($, _, Hypr, Backbone, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,
-        CheckoutModels, CheckoutStepView, ShippingDestinationsView, ShippingMethodsView, PaymentView, ContactDialogView) {
+        CheckoutModels, CheckoutStepView, ShippingDestinationsView, ShippingMethodsView, PaymentView, ContactDialogView, AmazonPay) {
 
     var OrderSummaryView = Backbone.MozuView.extend({
         templateName: 'modules/multi-ship-checkout/checkout-order-summary',
@@ -199,6 +200,9 @@ require(["modules/jquery-mozu",
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
+        AmazonPay.init(true); 
+        checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+
         var checkoutModel = window.order = new CheckoutModels(checkoutData),
             checkoutViews = {
                 parentView: new ParentView({
@@ -266,6 +270,10 @@ require(["modules/jquery-mozu",
         checkoutViews.contactDialog.render();
         checkoutViews.orderSummary.render();
         $checkoutView.noFlickerFadeIn();
+
+
+        if (AmazonPay.isEnabled)
+            AmazonPay.addCheckoutButton(window.order.id, false);
 
     });
 });

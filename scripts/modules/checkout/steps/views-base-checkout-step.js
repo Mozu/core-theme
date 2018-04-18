@@ -3,8 +3,9 @@ define(["modules/jquery-mozu",
     "hyprlive", 
     "modules/backbone-mozu", 
     'hyprlivecontext', 
-    'modules/editable-view'], 
-    function ($, _, Hypr, Backbone, HyprLiveContext, EditableView) {
+    'modules/editable-view',
+    'modules/amazonpay'], 
+    function ($, _, Hypr, Backbone, HyprLiveContext, EditableView, AmazonPay) {
 
 var CheckoutStepView = EditableView.extend({
         edit: function () {
@@ -17,6 +18,9 @@ var CheckoutStepView = EditableView.extend({
             _.defer(function () {
                 me.model.next();
             });
+        },
+        cancel: function(){
+            this.model.cancelStep();
         },
         choose: function () {
             var me = this;
@@ -36,6 +40,12 @@ var CheckoutStepView = EditableView.extend({
                     return false;
                 }
             });
+        },
+        amazonShippingAndBilling: function() {
+            var payments = window.order.get('payments');
+            var amazonpayment= _.findWhere(payments, {'paymentType' : 'PayWithAmazon'});
+            
+            window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&access_token="+amazonpayment.data.awsData.addressAuthorizationToken+"&view="+AmazonPay.viewName;
         },
         initStepView: function() {
             this.model.initStep();

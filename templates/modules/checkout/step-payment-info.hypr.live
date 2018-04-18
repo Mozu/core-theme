@@ -3,6 +3,9 @@
     {%if not model.isExternalCheckoutFlowComplete%}
         <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
     {%endif%}
+    {% if model.isAwsCheckout() and model.stepStatus == "incomplete" %}
+        <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
+    {% endif %}
 </h3>
 
 <div class="mz-formstep-body">
@@ -72,7 +75,8 @@
             </div>
         </div>
         {% endif %}
-        {% if payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+        
+        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentWorkflow|lower  == "paywithamazon"  %}
             {% if model.nonStoreCreditTotal == 0%}
                 <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
             {% endif %}
@@ -80,18 +84,23 @@
                {%if model.isExternalCheckoutFlowComplete%}
                 <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
                {% endif %}
-               <div class="mz-l-stack-section">
-                    <div class="mz-l-formfieldgroup-cell">
-                        <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
-                    </div>
+               {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
+                  {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                {%endif%}
+                {% if payment.paymentWorkflow|lower  == "paypalexpress2" %}
+                <div class="mz-l-stack-section">
+                        <div class="mz-l-formfieldgroup-cell">
+                            <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
+                        </div>
 
-                   {%if model.billingContact.firstName %}
-                    <div class="mz-addresssummary">
-                        {% include "modules/common/address-summary" with model=model.billingContact %}
-                    </div>
-                   {%endif%}
+                    {%if model.billingContact.firstName %}
+                        <div class="mz-addresssummary">
+                            {% include "modules/common/address-summary" with model=model.billingContact %}
+                        </div>
+                    {%endif%}
 
-                </div>
+                    </div>
+                {%endif%}
             {%endif%}
 
         {% endif %}

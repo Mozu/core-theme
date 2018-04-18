@@ -72,7 +72,7 @@ require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mo
                     $(window).on('beforeunload', function() {
                         me.$('.is-loading').removeClass('is-loading');
                     });
-                    window.location.href = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/cart";
+                    window.location.href = (HyprLiveContext.locals.pageContext.secureHost||HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
                 });
                 this.listenTo(me.product, 'error', function () {
                     this.$('.is-loading').removeClass('is-loading');

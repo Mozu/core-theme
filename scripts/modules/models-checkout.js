@@ -12,7 +12,7 @@
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext) {
 
         var CheckoutStep = Backbone.MozuModel.extend({
-            helpers: ['stepStatus', 'requiresFulfillmentInfo','isNonMozuCheckout', 'requiresDigitalFulfillmentContact','isShippingEditHidden'],  //
+            helpers: ['stepStatus', 'requiresFulfillmentInfo','isAwsCheckout','isNonMozuCheckout', 'requiresDigitalFulfillmentContact','isShippingEditHidden'],  //
             // instead of overriding constructor, we are creating
             // a method that only the CheckoutStepView knows to
             // run, so it can run late enough for the parent
@@ -58,10 +58,14 @@
             requiresFulfillmentInfo: function () {
                 return this.getOrder().get('requiresFulfillmentInfo');
             },
+            isAwsCheckout: function() {
+                var activePayments = this.getOrder().apiModel.getActivePayments();
+                return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+            },
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' })));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || this.isAwsCheckout() ));
             },
             isShippingEditHidden: function() {
                 if (HyprLiveContext.locals.themeSettings.changeShipping) return false;
@@ -76,6 +80,15 @@
             },
             next: function () {
                 if (this.submit()) this.isLoading(true);
+            },
+            cancelStep: function() {
+                var me = this,
+                order = me.getOrder();
+                    me.isLoading(true);
+                    order.apiModel.get().ensure(function(){
+                        me.isLoading(false);
+                        return me.stepStatus("complete");
+                });
             }
         }),
 
@@ -1208,6 +1221,9 @@
             },
             applyPayment: function () {
                 var self = this, order = this.getOrder();
+                if (this.get("paymentWorkflow") == "PayWithAmazon")
+                    this.unset("paymentWorkflow");
+
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
                     return order.apiAddPayment().then(function() {
@@ -1757,7 +1773,7 @@
             isNonMozuCheckout: function() {
                 var activePayments = this.apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' })));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
             },
             validateReviewCheckoutFields: function(){
                 var validationResults = [];
