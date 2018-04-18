@@ -105,9 +105,12 @@ define(["modules/jquery-mozu",
                 this.model.setPurchaseOrderPaymentTerm(e.target.value);
             },
             render: function() {
-                preserveElements(this, ['.v-button', '.p-button'], function() {
+                preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection'], function() {
                     CheckoutStepView.prototype.render.apply(this, arguments);
                 });
+                if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
+                     $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButtonPaymentSection");
+                     
                 var status = this.model.stepStatus();
                 if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                      window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);

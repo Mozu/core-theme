@@ -1,0 +1,16 @@
+<div class="mz-l-stack-section">
+    <div class="mz-l-formfieldgroup-cell">
+        <img src="../resources/images/amazonpay60x38.png"/>
+    </div>
+   {%if model.firstName %}
+    <div class="mz-addresssummary " style="margin-top:10px;">
+        {% include "modules/common/address-summary"  %}
+    </div>
+   {%endif%}
+    <div  class="mz-l-formfieldgroup-cell" style="margin-top:10px;">
+    <a data-mz-action="amazonShippingAndBilling" href="#">{{labels.aswChangeBilling}}</a>
+    </div>
+</div>
+
+
+

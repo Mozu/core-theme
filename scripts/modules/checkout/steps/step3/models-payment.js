@@ -795,7 +795,7 @@ define([
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' })));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
             },
             calculateStepStatus: function () {
                 var shippingStepComplete = this.parent.get('shippingStep').stepStatus() === 'complete',

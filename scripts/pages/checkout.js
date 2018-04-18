@@ -7,8 +7,9 @@ require(["modules/jquery-mozu",
     'hyprlivecontext', 
     'modules/editable-view', 
     'modules/preserve-element-through-render',
-    'modules/xpress-paypal'], 
-    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,PayPal) {
+    'modules/xpress-paypal',
+    'modules/amazonpay'], 
+    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,PayPal,AmazonPay) {
 
 
     var ThresholdMessageView = Backbone.MozuView.extend({
@@ -18,6 +19,13 @@ require(["modules/jquery-mozu",
     var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
+        },
+        cancel: function(){
+            this.model.cancelStep();
+        },
+        amazonShippingAndBilling: function() {
+            //isLoading(true);
+            window.location = "/checkout/"+window.order.id+"?isAwsCheckout=true&access_token="+window.order.get("fulfillmentInfo").get("data").addressAuthorizationToken+"&view="+AmazonPay.viewName;
         },
         next: function () {
             // wait for blur validation to complete
@@ -222,10 +230,13 @@ require(["modules/jquery-mozu",
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
-            preserveElements(this, ['.v-button', '.p-button'], function() {
+            preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
             });
             var status = this.model.stepStatus();
+            if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
+                $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButtonPaymentSection");
+
             if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                 window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
                 require([pageContext.visaCheckoutJavaScriptSdkUrl]);
@@ -541,6 +552,9 @@ require(["modules/jquery-mozu",
         var $checkoutView = $('#checkout-form'),
             checkoutData = require.mozuData('checkout');
 
+        AmazonPay.init(true); 
+        checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
+
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
             checkoutViews = {
                 parentView: new ParentView({
@@ -588,6 +602,8 @@ require(["modules/jquery-mozu",
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
+            if (amazon) // jshint ignore:line
+                amazon.Login.logout(); // jshint ignore:line
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
@@ -602,5 +618,7 @@ require(["modules/jquery-mozu",
 
         $checkoutView.noFlickerFadeIn();
 
+        if (AmazonPay.isEnabled)
+            AmazonPay.addCheckoutButton(window.order.id, false);
     });
 });

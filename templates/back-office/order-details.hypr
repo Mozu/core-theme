@@ -231,7 +231,16 @@
                                     <td>{{ payment.billingInfo.storeCreditCode }}</td>
                                     <td>N/A</td>
                                 {% else %}
-                                    <td>{{ payment.paymentType }}</td>
+                                    <td>
+                                        {% if payment.paymentType|lower == "paypalexpress2" %}
+                                            {{ labels.payPal }}
+                                        {% endif %}
+                                        {% if payment.paymentType|lower == "paywithamazon" %}
+                                            {{ labels.payWithAmazon }}
+                                        {% else %}
+                                            {{ payment.paymentType }}
+                                        {% endif %}
+                                    </td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                 {% endif %}
