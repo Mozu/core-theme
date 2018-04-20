@@ -55,10 +55,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             ISitesWebApiClient client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
             ServiceClientResponse<Site> siteRes = client.GetSite(siteid, false).Result;
-            if (siteRes.HasException)
-            {
-                return null;
-            }
             return siteRes.ReadAsSync();
         }
 
@@ -66,10 +62,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             ITenantsWebApiClient client = Request.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
             ServiceClientResponse<Tenant.Contracts.Tenant> res = client.GetTenantInternal(tenant,includeSoftDeletes:false, includeInactiveChildren:false).Result;
-            if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
-            {
-                return null;
-            }
             return res.ReadAsSync();
         }
 
