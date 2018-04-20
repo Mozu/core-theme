@@ -33,6 +33,7 @@
     <OldToolsVersion>4.0</OldToolsVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>79ceda54</NuGetPackageImportStamp>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -185,6 +186,7 @@
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
+    <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />

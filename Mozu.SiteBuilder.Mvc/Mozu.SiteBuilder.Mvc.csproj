@@ -23,6 +23,7 @@
     </SccProvider>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>5b8fe7a8</NuGetPackageImportStamp>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

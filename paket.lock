@@ -52,7 +52,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1642.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1804.2)
+    Mozu.CommerceRuntime.Contracts (1.1815.0-thresholdmsg-45)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -110,10 +110,10 @@ NUGET
     Mozu.Log4net.Gelf (1.1735.2)
     Mozu.MZDB.Contracts (1.19.3)
     Mozu.PaymentService.Contracts (1.1741.2)
-    Mozu.PricingRuntime.Contracts (1.1808.1)
+    Mozu.PricingRuntime.Contracts (1.1816.1)
       Mozu.Core.Prime (>= 1.1735.3)
       Mozu.SiteSettings.General.Contracts (>= 1.1738.2)
-    Mozu.ProductAdmin.Contracts (1.1808.1)
+    Mozu.ProductAdmin.Contracts (1.1816.1)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.1808.1)
       Mozu.Core.Prime (>= 1.18)

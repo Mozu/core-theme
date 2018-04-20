@@ -209,5 +209,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
 
         public string LastModifiedBy { get; set; }
 
+        /// <summary>
+        /// Container for a discounts threshold message
+        /// </summary>
+        public ThresholdMessage ThresholdMessage { get; set; }
+
+        public List<string> ProductsToExcludeFromMinOrderTotal { get; set; }
+
+        public List<int> CategoriesToExcludeFromMinOrderTotal { get; set; }
     }
 }

@@ -37,6 +37,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>ad1a35fa</NuGetPackageImportStamp>
     <UseGlobalApplicationHostFile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Dev|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
