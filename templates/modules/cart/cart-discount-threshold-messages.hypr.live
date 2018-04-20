@@ -1,0 +1,11 @@
+{% if model.discountThresholdMessages.length > 0 %}
+	<div class="mz-messagebar" id="mz-threshold-messages-container">
+		{% for message in model.discountThresholdMessages %}
+			{% if message.showInCart %}
+				<ul class="is-showing mz-success">
+	            	<li class="mz-message-item">{{ message.message }}</li>
+	            </ul>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endif %}

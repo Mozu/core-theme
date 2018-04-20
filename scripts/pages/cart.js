@@ -12,6 +12,9 @@ define(['modules/api',
         'modules/models-location'
       ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels) {
 
+    var ThresholdMessageView = Backbone.MozuView.extend({
+      templateName: 'modules/cart/cart-discount-threshold-messages'
+    });
 
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -41,11 +44,17 @@ define(['modules/api',
                 require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
             }
 
+            me.messageView = new ThresholdMessageView({
+              el: $('#mz-discount-threshold-messages'),
+              model: this.model
+            });
         },
         render: function() {
             preserveElement(this, ['.v-button', '.p-button'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
+
+            // this.messageView.render();
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -56,7 +65,6 @@ define(['modules/api',
             if (item && !isNaN(newQuantity)) {
                 item.set('quantity', newQuantity);
                 item.saveQuantity();
-
             }
         },400),
         onQuantityUpdateFailed: function(model, oldQuantity) {

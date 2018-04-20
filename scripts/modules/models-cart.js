@@ -94,7 +94,6 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             }),
             storeLocationsCache : StoreLocationsCache
         },
-
         initialize: function() {
             var self = this;
             this.get("items").on('sync remove', this.fetch, this)
@@ -115,7 +114,6 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
           // of a coupon code)
           var me = this;
           var suggestedDiscounts = this.get("suggestedDiscounts") || [];
-
 
           // First we filter our list down to
           // just the products we know we want added.
