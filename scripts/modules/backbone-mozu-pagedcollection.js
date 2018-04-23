@@ -2,7 +2,10 @@
     "jquery",
     "underscore",
     "hyprlive",
-    "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
+    "modules/backbone-mozu-model",
+    "modules/api",
+    'mappings/omsOrderToOrder'
+], function ($, _, Hypr, Backbone, api, omsOrderToOrder) {
 
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
@@ -87,13 +90,69 @@
 
             previousPage: function() {
                 try {
+                    var self = this;
+                    var type = self.apiModel.type;
+                    var customer = require.mozuData('customer');
+                    var newPage;
+                    if (type === 'orders' && customer) {
+                        var body = {
+                            page: self.get('page') - 1,
+                            perPage: self.get('pageSize'),
+                            sortBy: '-orderDate'
+                        };
+                        newPage = api.request('POST', 'oms/omsOrders', body);
+                    } else {
                     return this.apiModel.prevPage(this.lastRequest);
+                    }
+                    return newPage.then(function (data) {
+                        self._isSyncing = true;
+                        if (type === 'orders') {
+                            data.items = _.map(data.collection, function (item) {
+                                return omsOrderToOrder(item);
+                            });
+                            data.startIndex = (data.page - 1) * data.perPage;
+                            data.pageSize = data.perPage;
+                            data.pageCount =  Math.ceil(data.totalCount / data.perPage);
+                            delete data.collection;
+                        }
+                        self.set(data);
+                        self._isSyncing = false;
+                        self.trigger('sync', data);
+                    }), newPage;
                 } catch (e) { }
             },
 
             nextPage: function() {
                 try {
+                    var self = this;
+                    var type = self.apiModel.type;
+                    var customer = require.mozuData('customer');
+                    var newPage;
+                    if (type === 'orders' && customer) {
+                        var body = {
+                            page: self.get('page') + 1,
+                            perPage: self.get('pageSize'),
+                            sortBy: '-orderDate'
+                        };
+                        newPage = api.request('POST', 'oms/omsOrders', body);
+                    }  else {
                     return this.apiModel.nextPage(this.lastRequest);
+                    }
+                    return newPage.then(function (data) {
+                        self._isSyncing = true;
+                        if (type === 'orders') {
+                            data.items = _.map(data.collection, function (item) {
+                                return omsOrderToOrder(item);
+                            });
+                            data.startIndex = (data.page - 1) * data.perPage;
+                            data.pageSize = data.perPage;
+                            data.pageCount =  Math.ceil(data.totalCount / data.perPage);
+                            delete data.collection;
+                        }
+                        self.set(data);
+                        self._isSyncing = false;
+                        self.trigger('sync', data);
+                    }), newPage;
                 } catch (e) { }
             },
 
@@ -108,12 +167,69 @@
             },
 
             setPage: function(num) {
-                num = parseInt(num, 10);
-                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
+                    var self = this;
+                    var page = parseInt(num, 10);
+                    var type = self.apiModel.type;
+                    var customer = require.mozuData('customer');
+                    var newPage;
+                    if (type === 'orders' && customer) {
+                        var body = {
+                            page: page,
+                            perPage: self.get('pageSize'),
+                            sortBy: '-orderDate'
+                        };
+                        newPage = api.request('POST', 'oms/omsOrders', body);
+                    } else {
+                        return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
+                    }
+                    return newPage.then(function (data) {
+                        self._isSyncing = true;
+                        if (type === 'orders') {
+                            data.items = _.map(data.collection, function(item){
+                                return omsOrderToOrder(item);
+                            });
+                            data.startIndex = (data.page - 1) * data.perPage;
+                            data.pageSize = data.perPage;
+                            data.pageCount =  Math.ceil(data.totalCount / data.perPage);
+                            delete data.collection;
+                        }
+                        self.set(data);
+                        self._isSyncing = false;
+                        self.trigger('sync', data);
+                    }), newPage;
             },
 
             changePageSize: function() {
+                var newPageSize = this.get('pageSize');
+                var self = this;
+                var type = self.apiModel.type;
+                var newPage;
+                var customer = require.mozuData('customer');
+                if (type === 'orders' && customer) {
+                    var body = {
+                        page: 0,
+                        perPage: newPageSize,
+                        sortBy: '-orderDate'
+                    };
+                    newPage = api.request('POST', 'oms/omsOrders', body);
+                } else {
                 return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
+                }
+                return newPage.then(function (data) {
+                    self._isSyncing = true;
+                    if (type === 'orders') {
+                        data.items = _.map(data.collection, function (item) {
+                            return omsOrderToOrder(item);
+                        });
+                        data.startIndex = (data.page - 1) * data.perPage;
+                        data.pageSize = data.perPage;
+                        data.pageCount =  Math.ceil(data.totalCount / data.perPage);
+                        delete data.collection;
+                    }
+                    self.set(data);
+                    self._isSyncing = false;
+                    self.trigger('sync', data);
+                });
             },
 
             firstIndex: function() {
