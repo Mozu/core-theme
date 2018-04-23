@@ -22,6 +22,9 @@
 	{% include "modules/cart/cart-location-select" %}
 </div>
 <div class="mz-l-container">
+	<div id="mz-discount-threshold-messages">
+		{% include "modules/cart/cart-discount-threshold-messages" with model=model %}
+	</div>
 	<h1 class="mz-pagetitle">{{ labels.cart }}</h1>
 	<form method="post" action="{{ siteContext.secureHost }}{{siteContext.siteSubdirectory}}/cart/checkout" id="cartform">
 		{% dropzone "cart-top" scope="template" %}

@@ -34,7 +34,7 @@
                  {% endif %}
             {% else %}
                 <ul class="is-showing mz-errors">
-                    <li class="mz-message-item" >{{ msg.message }}</li>
+                    <li class="mz-message-item">{{ msg.message }}</li>
                 </ul>
             {% endif %}
         {% endfor %}

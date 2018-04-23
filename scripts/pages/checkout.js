@@ -11,6 +11,10 @@ require(["modules/jquery-mozu",
     function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,PayPal) {
 
 
+    var ThresholdMessageView = Backbone.MozuView.extend({
+      templateName: 'modules/checkout/checkout-discount-threshold-messages'
+    });
+
     var CheckoutStepView = EditableView.extend({
         edit: function () {
             this.model.edit();
@@ -40,6 +44,11 @@ require(["modules/jquery-mozu",
                     me.handleEnterKey(e);
                     return false;
                 }
+            });
+
+            me.messageView = new ThresholdMessageView({
+              el: $('#mz-discount-threshold-messages'),
+              model: window.order
             });
         },
         initStepView: function() {
@@ -401,6 +410,11 @@ require(["modules/jquery-mozu",
                     return false;
                 }
             });
+
+            me.messageView = new ThresholdMessageView({
+              el: $('#mz-discount-threshold-messages'),
+              model: window.order
+            });
         },
         onEnterCouponCode: function (model, code) {
             if (code && !this.codeEntered) {
@@ -424,6 +438,7 @@ require(["modules/jquery-mozu",
                 self.$el.removeClass('is-loading');
                 self.model.unset('couponCode');
                 self.render();
+                self.messageView.render();
             });
         },
         handleEnterKey: function () {
@@ -582,7 +597,7 @@ require(["modules/jquery-mozu",
                 setTimeout(function () { window.scrollTo(0, $reviewPanel.offset().top); }, 750);
             }
         });
- 
+
         _.invoke(checkoutViews.steps, 'initStepView');
 
         $checkoutView.noFlickerFadeIn();
