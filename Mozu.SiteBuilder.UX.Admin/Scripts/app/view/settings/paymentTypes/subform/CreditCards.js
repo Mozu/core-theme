@@ -144,6 +144,28 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             }
         });
 
+        me.supportedCardsGrid.on('validateedit', function (editor, e) {
+            var gateway = me.paymentGatewaysStore.findRecord('id', e.value);
+            if (!gateway)
+                return;
+            var gatewayDef = gateway.get('gatewayDefinition');
+            if (!gatewayDef)
+                return;
+            var cards = gatewayDef.supportedCards;
+            var gateWayName = gatewayDef.name;
+            var cardType = e.record.get('cardType');
+            if (!cardType)
+                return;
+            //fail if the card isnt supported on the gateway def
+            if ( !cards.find(function (_) { return _.key.toLowerCase() === cardType.toLowerCase() }))
+            {
+                Taco.app.fireEvent('setmessage', 'payment type not available on ' + gateWayName, 'error');
+                return false;
+            }
+
+
+        });
+
         me.paymentProcessingFlowTypeRg = Ext.widget(
             {
                 xtype: 'radiogroup',
@@ -156,8 +178,26 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                     { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
                 ]
             });
+        if (me.cardGateways && me.cardGateways.length) {
+            me.items.push(me.supportedCardsGrid, me.paymentProcessingFlowTypeRg);
+        }
+        else {
+            me.items.push({
+                xtype: 'box',
+                html: 'click <a href="#">here</a> to setup a gateway',
+                listeners: {
+                    click: {
+                        fn: function(){
+                            Taco.core.StateManager.attemptNavigate('settings/paymentGateways');
+                        },
+                        element: 'el',
+                        scope: this 
+                    }
+                }
+            });
+        }
 
-        me.items.push(me.supportedCardsGrid, me.paymentProcessingFlowTypeRg);
+
 
         me.callParent(arguments);
     },

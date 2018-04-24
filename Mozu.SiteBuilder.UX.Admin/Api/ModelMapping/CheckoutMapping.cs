@@ -21,37 +21,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         }
 
         //TODO: We should move this to reference service.
-        private static List<KeyValuePair<string, string>> Cards = new List<KeyValuePair<string, string>>
-                    {
-                        new KeyValuePair<string, string>("VISA", "VISA"),
-                        new KeyValuePair<string, string>("AMEX", "American Express"),
-                        new KeyValuePair<string, string>("MC", "MasterCard"),
-                        new KeyValuePair<string, string>("DISCOVER", "Discover"),
-                        new KeyValuePair<string, string>("JCB", "JCB"),
-                        new KeyValuePair<string, string>(CARD_TYPE.OTHER, CARD_TYPE.OTHER)
-                    };
-
-
-        private static List<CardGateway> CardGateways()
-        {
-            var result = Cards.Select(c => new CardGateway { CardType = c.Key, CardDisplay = c.Value, IsEnabled = false }).ToList();
-            return result;
-        }
-
-        private static List<CardGateway> ToCardGateways(Dictionary<string, DCss.Gateway> cardGateway)
-        {
-            var result = CardGateways();
-            foreach (var card in result)
-            {
-                if (cardGateway.ContainsKey(card.CardType))
-                {
-                    var gateway = cardGateway[card.CardType];
-                    card.GatewayId = gateway.GatewayAccount.Id;
-                    card.IsEnabled = true;
-                }
-            }
-            return result;
-        }
+      
+        //todo delte
+       
 
         public CheckoutMapping()
         {
@@ -71,18 +43,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 {
                     if (dc.PaymentSettings.Gateways != null && dc.PaymentSettings.Gateways.Count > 0)
                     {
-                        var sourceGateways = dc.PaymentSettings.Gateways.Where(g => g.GatewayAccount != null);
-                        var cardGateways = dc.PaymentSettings.Gateways
-                            .Where(g => g.SupportedCards.Count > 0)
-                            .SelectMany(g => g.SupportedCards, (g, c) => new {c, g})
-                            .ToDictionary(cg => cg.c, cg => cg.g);
-
-                        var result = ToCardGateways(cardGateways);
-                        return result;
+                        return dc.PaymentSettings.Gateways
+                            .Where(g => g.GatewayAccount != null && g.SupportedCards.Count > 0)
+                            .SelectMany(g => g.SupportedCards, (g, c) => new CardGateway() { GatewayId = g.GatewayAccount.Id, CardType = c, IsEnabled = true, GatewayName = g.GatewayAccount.Name })
+                            .ToList();
                     }
                     else
                     {
-                        return CardGateways();
+                        return new List<CardGateway>();
                     }
                 }))
                 .ForMember(x => x.PurchaseOrder, op => op.ResolveUsing(dc => dc.PaymentSettings.PurchaseOrder))
@@ -102,8 +70,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null)
                     ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions
                     : null));
-                //.ForMember(x => x.IsMultishipEnabled, op => op.Ignore());
-
+               
 
             CreateMap<DCss.Gateway, Gateway>()
                 .ForMember(x => x.AreGatewayCredentialFieldsSet, op => op.ResolveUsing(dc => dc.AreGatewayCredentialFieldsSet))

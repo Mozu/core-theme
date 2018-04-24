@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 {
@@ -23,5 +24,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         public List<GatewayCredentialFieldDefinition> CredentialDefinitions { get; set; }
 
         public PreAuthorizeDefinition PreAuthorizeDefinition { get; set; }
+        public JArray AdministationUi { get; set; }
     }
 }
