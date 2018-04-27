@@ -851,7 +851,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.IsManual, op => op.Ignore()) //calculated field
                 .ForMember(x => x.AmountRefunded, op => op.Ignore()) // calculated field
-                .ForMember(x => x.AmountTotalCreditAndRefund, op => op.Ignore())
+                .ForMember(x => x.AmountRefundedOnReturn, op => op.Ignore()) // used for returns
+                .ForMember(x => x.AmountTotalCreditAndRefund, op => op.Ignore()) // used for returns
                 .AfterMap((dc, payment) =>
                 {
                     if (payment == null || payment.PaymentType == PaymentsDC.PaymentTypeConst.CHECK)

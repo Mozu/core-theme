@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
-    
     public class OrderPayment
     {
         /// <summary>
@@ -38,6 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal AmountCredited { get; set; }
 
         public decimal AmountRefunded { get; set; }
+
+        public decimal AmountRefundedOnReturn { get; set; }
 
         public decimal AmountTotalCreditAndRefund { get; set; }
 

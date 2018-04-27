@@ -93,12 +93,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             foreach (var payment in ret.Payments)
             {
                 payment.AmountRefunded = payment.Interactions
-                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && i.Amount.HasValue && !i.Status.EqualsIgnoreCase("FAILED"))
-                    .Sum(i => i.Amount.Value);
+                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) || !string.IsNullOrEmpty(i.RefundId))
+                    .Where(i => !i.Status.EqualsIgnoreCase("FAILED"))
+                    .Sum(i => i.Amount ?? 0m);
 
+                payment.AmountRefundedOnReturn = payment.Interactions
+                    .Where(i => !string.IsNullOrEmpty(i.ReturnId) && i.ReturnId.Equals(ret.Id) && !i.Status.EqualsIgnoreCase("FAILED"))
+                    .Sum(i => i.Amount ?? 0m);
+
+                // Payment mapping may change InteractionType from Credit to Refund.
                 payment.AmountTotalCreditAndRefund = payment.Interactions
-                    .Where(i => i.InteractionType == InteractionTypeConst.CREDIT && i.Amount.HasValue && !i.Status.EqualsIgnoreCase("FAILED"))
-                    .Sum(i => i.Amount.Value);
+                    .Where(i => new[] { "Credit", "Refund" }.Contains(i.InteractionType, StringComparer.OrdinalIgnoreCase) && !i.Status.EqualsIgnoreCase("FAILED"))
+                    .Sum(i => i.Amount ?? 0m);
             }
         }
 
