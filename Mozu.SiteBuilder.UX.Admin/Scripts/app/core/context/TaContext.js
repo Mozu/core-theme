@@ -135,8 +135,6 @@ Ext.define('Taco.core.context.TaContext', {
             smState = Taco.core.StateManager.getCurrentState(),
             newUrl = '';
 
-        
-
         if (this.currentCtx != cfg) {
             if (!me.fireEvent('beforecontextchange', cfg)) {
                 return false;
