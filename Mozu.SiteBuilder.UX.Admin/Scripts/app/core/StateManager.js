@@ -92,7 +92,8 @@ Ext.define('Taco.core.StateManager', {
                     newMetadata.options = newMetadata.options || {};
 
                     newMetadata.options.DO_NOT_RENDER = true;
-                    
+
+                    Taco.app.contentView.removeAll(true);
                 }
 
                 this.initController(newMetadata);
