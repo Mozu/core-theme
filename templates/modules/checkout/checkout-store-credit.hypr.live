@@ -22,7 +22,7 @@
         </ul>
         <p>{{ labels.remainingTotal }}</p>
         <p class="mz-checkout-appliedcredits-remainingtotal">
-            {{ model.nonStoreCreditTotal|currency }}
+            {{ model.nonStoreCreditOrGiftCardTotal|currency }}
         </p>
     </div>
 {% endif %}
@@ -37,7 +37,7 @@
         <button class="mz-button" data-mz-action="cancelApplyCredit">{{ labels.cancel }}</button>
     </div>
 </div>
-{% else %} {% if model.availableStoreCredits and model.nonStoreCreditTotal > 0 %}
+{% else %} {% if model.availableStoreCredits and model.nonStoreCreditOrGiftCardTotal > 0 %}
   <p>{{ labels.digitalCreditAvailable }}</p>
   <div class="mz-checkout-storecredit-list">
     {% for credit in model.availableStoreCredits %}

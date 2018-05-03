@@ -129,13 +129,38 @@
                     if (!value) {
                         return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
                     }
-
                 }
             }
         })
     });
 
-    
+    var GiftCard = CreditCardWithCVV.extend({
+      isEnabled: false,
+      amountApplied: null,
+      remainingBalance: null,
+        // TODO: validation. needs only to check for cvv and number, and if it exceeds remaining balance
+        defaults: {
+          "isGiftCard": true
+        },
+        initialize: function(){
+          var self = this;
+            _.each(twoWayCardShapeMapping, function(k, v){
+                if (self.get(k) && !self.get(v)){
+                    self.set(v, self.get(k));
+                }
+            });
+            Backbone.MozuModel.prototype.initialize.apply(this);
+        },
+        calculateRemainingBalance: function(){
+            return (! this.get('amountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('amountApplied');
+        }
+        // validation: {
+        //     cvv: {
+        //         fn: "present"
+        //     }
+        // }
+    });
+
     var Check = PaymentMethod.extend({
         validation: {
             nameOnCheck: {
@@ -151,7 +176,6 @@
     });
 
     var DigitalCredit = PaymentMethod.extend({
-
         isEnabled: false,
         creditAmountApplied: null,
         remainingBalance: null,
@@ -227,7 +251,7 @@
                 model: PurchaseOrderPaymentTerm
             })
         },
-        
+
         initialize: function() {
             var self = this;
         },
@@ -269,7 +293,7 @@
         inflateCustomFields: function() {
             var customFields = [];
             var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
-            
+
             siteSettingsCustomFields.forEach(function(field) {
                 if(field.isEnabled) {
                     var value = this.get("pOCustomField-"+field.code);
@@ -334,7 +358,7 @@
                     if(!purchaseOrder.selected) {
                         return;
                     }
-                    
+
                     if(!selectedPaymentTerm.get('description')) {
                         return Hypr.getLabel('purchaseOrderPaymentTermMissing');
                     }
@@ -346,7 +370,7 @@
         // the toJSON method should omit the CVV so it is not sent to the wrong API
         toJSON: function (options) {
             var j = PaymentMethod.prototype.toJSON.apply(this);
-            
+
             return j;
         },
 
@@ -365,6 +389,7 @@
         CreditCard: CreditCard,
         CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
-        DigitalCredit: DigitalCredit
+        DigitalCredit: DigitalCredit,
+        GiftCard: GiftCard
     };
 });
