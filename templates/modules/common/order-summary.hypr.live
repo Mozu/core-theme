@@ -90,25 +90,37 @@
             </tr>
             {% endif %}
 
-          <tr class="mz-ordersummary-grandtotal">
+            <tr class="mz-ordersummary-grandtotal">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.total }}:</span>
                     <span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span>
                 </td>
             </tr>
-        {% if model.billingInfo and model.billingInfo.digitalCreditPaymentTotal %}
-          <tr class="mz-ordersummary-digitalcreditpayment">
-            <td colspan="4">
-              <span class="mz-ordersummary-totalname">{{ labels.digitalCreditTotal }}</span>
-              <span class="mz-ordersummary-totalvalue">{{ labels.digitalCreditSubtractFromOrderPrefix }}{{ model.billingInfo.digitalCreditPaymentTotal|currency }}{{ labels.digitalCreditSubtractFromOrderSuffix }}</span>
-            </td>
-          </tr>
-          <tr class="mz-ordersummary-grandtotal">
+            {% if model.billingInfo %}
+            {% if model.billingInfo.digitalCreditPaymentTotal %}
+            <tr class="mz-ordersummary-digitalcreditpayment">
+              <td colspan="4">
+                <span class="mz-ordersummary-totalname">{{ labels.digitalCreditTotal }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ labels.digitalCreditSubtractFromOrderPrefix }}{{ model.billingInfo.digitalCreditPaymentTotal|currency }}{{ labels.digitalCreditSubtractFromOrderSuffix }}</span>
+              </td>
+            </tr>
+            {% endif %}
+            {% if model.billingInfo.giftCardPaymentTotal %}
+            <tr class="mz-ordersummary-digitalcreditpayment">
+              <td colspan="4">
+                <span class="mz-ordersummary-totalname">{{ labels.giftCardTotal }}</span>
+                <span class="mz-ordersummary-totalvalue">{{ labels.digitalCreditSubtractFromOrderPrefix }}{{ model.billingInfo.giftCardPaymentTotal|currency }}{{ labels.digitalCreditSubtractFromOrderSuffix }}</span>
+              </td>
+            </tr>
+            {% endif %}
+            {% if model.billingInfo.digitalCreditPaymentTotal or model.billingInfo.giftCardPaymentTotal %}
+            <tr class="mz-ordersummary-grandtotal">
                 <td colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.remainingBalance }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{{ model.billingInfo.nonStoreCreditTotal|currency }}</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.billingInfo.nonStoreCreditOrGiftCardTotal|currency }}</span>
                 </td>
             </tr>
-       {% endif %}
+            {% endif %}
+            {% endif %}
         </tbody>
     </table>
