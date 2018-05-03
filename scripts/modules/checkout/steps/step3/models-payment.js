@@ -43,7 +43,7 @@ define([
                 var payment = order.apiModel.getCurrentPayment();
                 var errorMessage = Hypr.getLabel('paymentTypeMissing');
                 if (!value) return errorMessage;
-                if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+                if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditOrGiftCardTotal() > 0 && !payment) return errorMessage;
 
             },
             validateSavedPaymentMethodId: function (value, attr, computedState) {
@@ -54,8 +54,8 @@ define([
 
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits',
-              'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete','isExternalCheckoutFlowComplete', 'selectedBillingDestination',
+              'activeStoreCredits', 'activeGiftCards', 'nonStoreCreditOrGiftCardTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'availableGiftCards',
+              'digitalCreditPaymentTotal', 'giftCardPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete','isExternalCheckoutFlowComplete', 'selectedBillingDestination',
               'selectableDestinations'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
@@ -86,17 +86,26 @@ define([
                 var currentPayment = this.getOrder().apiModel.getCurrentPayment();
                 return !!(currentPayment && currentPayment.billingInfo.card && currentPayment.billingInfo.card.paymentServiceCardId);
             },
-            nonStoreCreditTotal: function () {
-                var me = this,
-                    order = this.getOrder(),
-                    total = order.get('total'),
-                    result,
-                    activeCredits = this.activeStoreCredits();
-                if (!activeCredits) return total;
-                result = total - _.reduce(activeCredits, function (sum, credit) {
-                    return sum + credit.amountRequested;
-                }, 0);
-                return me.roundToPlaces(result, 2);
+            nonStoreCreditOrGiftCardTotal: function () {
+              var me = this,
+                  order = this.getOrder(),
+                  total = order.get('total'),
+                  result,
+                  activeGiftCards = this.activeGiftCards(),
+                  activeCredits = this.activeStoreCredits();
+
+                  if (!activeGiftCards && !activeCredits) return total;
+
+                  var giftCardTotal = _.reduce(activeGiftCards || [], function(sum, giftCard) {
+                      return sum + giftCard.amountRequested;
+                  }, 0);
+
+                  var storeCreditTotal = _.reduce(activeCredits || [], function (sum, credit){
+                      return sum + credit.amountRequested;
+                  }, 0);
+
+                  result = total - giftCardTotal - storeCreditTotal;
+                  return me.roundToPlaces(result, 2);
             },
             resetAddressDefaults: function () {
                 var billingAddress = this.get('billingContact').get('address');
@@ -112,6 +121,10 @@ define([
             activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
                 return active && active.length > 0 && active;
+            },
+            activeGiftCards: function() {
+              var active = this.getOrder().apiModel.getActiveGiftCards();
+              return active && active.length > 0 && active;
             },
             availableStoreCredits: function () {
                 var order = this.getOrder(),
@@ -232,13 +245,12 @@ define([
                     });
                 });
             },
-
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) {
                     this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
-            }, 
+            },
             refreshBillingInfoAfterAddingStoreCredit: function (order, updatedOrder) {
                 var self = this;
                 //clearing existing order billing info because information may have been removed (payment info) #68583
@@ -247,7 +259,7 @@ define([
                 var activePayments = this.activePayments();
                 var hasNonStoreCreditPayment = (_.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; })).length > 0;
                 if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
-                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) 
+                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment))
                 {
                     var billingContactEmail = this.get('billingContact').get('email');
                     order.get('billingInfo').clear();
@@ -334,6 +346,7 @@ define([
                         }
                     }
                 }
+
                 if (creditAmountToApply === 0) {
                     return this.getOrder();
                 }
@@ -365,12 +378,204 @@ define([
 
                 return deferred.promise;
             },
-
             areNumbersEqual: function(f1, f2) {
                 var epsilon = 0.01;
                 return (Math.abs(f1 - f2)) < epsilon;
             },
+            loadGiftCards: function(){
+              //TODO: phase 2: get giftCards from customer account
 
+              // gets gift card payments from order, populates our gift card grid cache,
+              // complete with balance calls
+              var me = this;
+              var activeGiftCards = this.activeGiftCards();
+
+              if (activeGiftCards) {
+                var numberOfGiftCards = activeGiftCards.length;
+                var counter = 0;
+                activeGiftCards.forEach(function(giftCardPayment){
+                    var newGiftCardModel = new PaymentMethods.GiftCard(giftCardPayment.billingInfo.card);
+                      newGiftCardModel.apiGetBalance().then(function(res){
+                          var balance = res.data.balance;
+                          if (balance > 0){
+                            newGiftCardModel.set('isEnabled', true);
+                            newGiftCardModel.set('amountApplied', giftCardPayment.amountRequested);
+                            newGiftCardModel.set('currentBalance', balance);
+                            newGiftCardModel.set('remainingBalance', newGiftCardModel.calculateRemainingBalance());
+                            me._cachedGiftCards.push(newGiftCardModel);
+                          }
+                          counter ++;
+                          if (counter==numberOfGiftCards){
+                              me.trigger('render');
+                          }
+                        }
+                      );
+
+                });
+              }
+            },
+            applyGiftCard: function(giftCardId, amountToApply, isEnabled){
+              var self = this, order = this.getOrder();
+              //get gift card by id from _giftCardCache
+              var giftCardModel = this._cachedGiftCards.find(function(giftCard){
+                  return giftCard.get('id') === giftCardId;
+              });
+              //TODO: what do we do if it's not in the cache?
+              // realistically, we shouldn't be at this point if it's not in the cache.
+
+              var previousAmount = giftCardModel.get('amountApplied');
+              var previousEnabledState = giftCardModel.get('isEnabled');
+
+              if (!amountToApply && amountToApply !== 0) {
+                  amountToApply = self.getMaxCreditToApply(giftCardModel, self);
+              }
+
+              if (amountToApply > 0) {
+                  amountToApply = self.roundToPlaces(amountToApply, 2);
+              }
+
+              var activeGiftCards = this.activeGiftCards();
+              if (activeGiftCards) {
+                  var sameGiftCard = _.find(activeGiftCards, function(giftCard){
+                      return giftCard.status != 'Voided' && giftCard.billingInfo.card.paymentServiceCardId == giftCardId;
+                  });
+
+                  if (sameGiftCard){
+                    if (this.areNumbersEqual(sameGiftCard.amountRequested, amountToApply)) {
+                        var deferredSameGiftCard = api.defer();
+                        deferredSameGiftCard.reject();
+                        return deferredSameGiftCard.promise;
+                    }
+                    if (amountToApply === 0) {
+                        return order.apiVoidPayment(sameGiftCard.id).then(function(o) {
+                            order.set(o.data);
+                            self.setPurchaseOrderInfo();
+                            //self.setDefaultPaymentType(self);
+                            // TODO: figure out if this is needed?
+                            giftCardModel.set('amountApplied', amountToApply);
+                            giftCardModel.set('isEnabled', isEnabled);
+                            giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                            self.trigger('orderPayment', o.data, self);
+                            return o;
+                        });
+                    } else {
+                        maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self, sameGiftCard.amountRequested);
+                        if (amountToApply > maxCreditAvailable) {
+                            giftCardModel.set('amountApplied', previousAmount);
+                            giftCardModel.set('isEnabled', previousEnabledState);
+                            giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                            return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                        }
+                        return order.apiVoidPayment(sameGiftCard.id).then(function (o) {
+                            order.set(o.data);
+                            giftCardModel.set('amountToApply', amountToApply);
+                            return order.apiAddGiftCard(giftCardModel.toJSON()).then(function (o) {
+                                giftCardModel.set('amountApplied', amountToApply);
+                                giftCardModel.set('isEnabled', isEnabled);
+                                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                                self.refreshBillingInfoAfterAddingStoreCredit(order, o.data);
+                                return o;
+                            });
+                        });
+                    }
+                }
+            }
+
+            if (amountToApply === 0) {
+                return this.getOrder();
+            }
+
+            var maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self);
+            if (amountToApply > maxCreditAvailable) {
+                giftCardModel.set('amountApplied', previousAmount);
+                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                giftCardModel.set('isEnabled', previousEnabledState);
+                return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+            }
+
+            giftCardModel.set('amountToApply', amountToApply);
+            return order.apiAddGiftCard(giftCardModel.toJSON()).then(function(data){
+                giftCardModel.set('amountApplied', amountToApply);
+                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                giftCardModel.set('isEnabled', isEnabled);
+                //TODO: see if giftCardModel is changed by syncApiModel
+                //TODO: maybe update the order to represent the return from this?
+                self.syncApiModel();
+                self.trigger('render');
+              }, function(error){
+                  //console.log(error);
+              });
+
+            },
+            retrieveGiftCard: function(number, securityCode) {
+              var me = this;
+              this.syncApiModel();
+              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
+              me.isLoading(true);
+              return giftCardModel.apiGetBalanceUnregistered().then(function(res){
+                  if (!res.data.isSuccessful){
+                      me.isLoading(false);
+                      me.trigger('error', {
+                          message: res.data.message
+                      });
+                      return;
+                  }
+                  var balance = res.data.balance;
+                  if (balance>0){
+                      return giftCardModel.apiSave().then(function(giftCard){
+                          if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
+                          giftCardModel.set('currentBalance', balance);
+                          me._cachedGiftCards.push(giftCardModel.clone());
+                          return me.applyGiftCard(giftCardModel.get('id'), null, true);
+                      }, function(error){
+                        //Error with apiSave.
+                        me.trigger('error',{
+                            message: Hypr.getLabel('giftCardPaymentServiceError')
+                        });
+                      });
+                  } else {
+                      me.isLoading(false);
+                      // No balance error
+                      me.trigger('error', {
+                          message: Hypr.getLabel('giftCardNoBalance')
+                      });
+                  }
+              }, function(error){
+                me.isLoading(false);
+                me.trigger('error', {
+                    message: Hypr.getLabel('giftCardBalanceError')
+                });
+              });
+            },
+            getGatewayGiftCard: function() {
+                var me = this,
+                giftCardNumber = this.get('giftCardNumber'),
+                giftCardSecurityCode = this.get('giftCardSecurityCode');
+
+                //Our only option for checking if a card already exists, for now,
+                //is to only compare the last 4 digits.
+                var existingGiftCard = this._cachedGiftCards.filter(function (card) {
+                    var cachedCardLast4 = card.get('cardNumber').slice(-4);
+                    var newCardLast4 = giftCardNumber.slice(-4);
+                    return cachedCardLast4 === newCardLast4;
+                });
+
+                if (existingGiftCard && existingGiftCard.length > 0) {
+                    me.trigger('error', {
+                        message: Hypr.getLabel('giftCardAlreadyAdded')
+                    });
+                    me.isLoading(false);
+                    return me;
+                } else {
+                    return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(res){
+                      me.isLoading(false);
+                      return me;
+                    });
+                }
+            },
+            availableGiftCards: function(){
+              return this._cachedGiftCards && this._cachedGiftCards.length > 0 && this._cachedGiftCards;
+            },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
@@ -439,14 +644,13 @@ define([
             },
 
             getMaxCreditToApply: function(creditModel, scope, toBeVoidedPayment) {
-                var remainingTotal = scope.nonStoreCreditTotal();
+                var remainingTotal = scope.nonStoreCreditOrGiftCardTotal();
                 if (!!toBeVoidedPayment) {
                     remainingTotal += toBeVoidedPayment;
                 }
                 var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
                 return scope.roundToPlaces(maxAmt, 2);
             },
-
             roundToPlaces: function(amt, numberOfDecimalPlaces) {
                 var transmogrifier = Math.pow(10, numberOfDecimalPlaces);
                 return Math.round(amt * transmogrifier) / transmogrifier;
@@ -458,6 +662,15 @@ define([
                     return null;
                 return _.reduce(activeCreditPayments, function (sum, credit) {
                     return sum + credit.amountRequested;
+                }, 0);
+            },
+
+            giftCardPaymentTotal: function () {
+                var activeGiftCards = this.activeGiftCards();
+                if (!activeGiftCards)
+                    return null;
+                return _.reduce(activeGiftCards, function (sum, giftcard) {
+                    return sum + giftcard.amountRequested;
                 }, 0);
             },
 
@@ -707,6 +920,7 @@ define([
 
             initialize: function () {
                 var me = this;
+                this._cachedGiftCards = [];
 
                 _.defer(function () {
                     //set purchaseOrder defaults here.
@@ -736,6 +950,7 @@ define([
                         }
                     });
                     me.trigger('updateCheckoutPayment');
+                    me.loadGiftCards();
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -761,7 +976,10 @@ define([
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this._cachedDigitalCredits = null;
 
-
+                // This will changed with Gift Card handling phase 2,
+                // to emulate the way _cachedDigitalCredits fetches from
+                // the customer model later.
+                //this.loadGiftCards();
                 _.bindAll(this, 'applyPayment', 'markComplete');
             },
             getPrimarySavedCard: function(me){
@@ -893,7 +1111,7 @@ define([
 
                 var val = this.validate();
 
-                if (this.nonStoreCreditTotal() > 0 && val) {
+                if (this.nonStoreCreditOrGiftCardTotal() > 0 && val) {
                     // display errors:
                     var error = {"items":[]};
                     for (var key in val) {
@@ -913,8 +1131,6 @@ define([
                 if(val && val['billingContact.email']) {
                     order.onCheckoutError(val['billingContact.email']);
                 }
-
-
 
                 //If Single Address Save to Destination
                 //Do I need this Line? Why Did I orginally Do this?
@@ -942,7 +1158,7 @@ define([
 
                 var self = this, order = this.getOrder();
                 this.syncApiModel();
-                if (this.nonStoreCreditTotal() > 0) {
+                if (this.nonStoreCreditOrGiftCardTotal() > 0) {
                     return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
                         var modelCard, modelCvv;
@@ -959,7 +1175,7 @@ define([
                                     // Somthing is off with the apiSync for AddPayment.
                                     // We Should not have to manually set card info
                                     self.set('card', payment.billingInfo.card);
-                                    
+
                                     modelCard = self.get('card');
                                     modelCvv = modelCard.get('cvv');
                                     if (
@@ -998,7 +1214,7 @@ define([
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
-                if (this.nonStoreCreditTotal() === 0 && j.billingContact) {
+                if (this.nonStoreCreditOrGiftCardTotal() === 0 && j.billingContact) {
                     delete j.billingContact.address;
                 }
                 if (j.billingContact && !j.billingContact.email) {

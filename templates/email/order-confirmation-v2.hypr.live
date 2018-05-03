@@ -42,14 +42,15 @@
           <h4 class="mz-checkout-paymenttitle">
             <strong>
               {% if payment.amountCollected > 0 %}
-              {{ payment.amountCollected|currency }} &mdash;
+              {{ payment.amountCollected|currency }}
               {% else %}
               {{ payment.amountRequested|currency }}
               {% endif %}
             </strong>
             {% if payment.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }}{% endif %}
             {% if payment.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
-            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}
+            {% if payment.billingInfo.paymentType == "GiftCard" %}{{ labels.giftCard }}{% endif %}
+            {% if payment.billingInfo.paymentType == "StoreCredit" %}{{ labels.digitalCredit }}{% endif %}
             {% if payment.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
           </h4>
 
@@ -68,9 +69,13 @@
                {% if payment.billingInfo.paymentType|lower == "PayWithAmazon" %}
                     <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
                {%endif%}   
-               {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard"  %}
+               {% if payment.billingInfo.paymentType == "StoreCredit" %}
                   <small>{{ labels.digitalCreditCode }}</small>
                   <div>{{ payment.billingInfo.storeCreditCode }}</div>
+               {% endif %}
+               {% if payment.billingInfo.paymentType == "GiftCard" %}
+                  <small>{{ labels.cardNumber }}</small>
+                  <div>{{ payment.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
                {% endif %}
               </div>
             {% else %}
@@ -91,8 +96,8 @@
             {% endif %}
             {% if payment.billingInfo.paymentType == "CreditCard" %}
               <div class="mz-l-stack-item">
-                <small>{{ labels.cardtype }}</small>
-                <div>{{ payment.billingInfo.card.paymentOrCardtype }}</div>
+                <small>{{ labels.cardType }}</small>
+                <div>{{ payment.billingInfo.card.paymentOrCardType }}</div>
               </div>
               <div class="mz-l-stack-item">
                 <small>{{ labels.cardNumber }}</small>
