@@ -111,18 +111,18 @@
                 {{ labels.billingContact }}: <strong>{{ model.billingContact.email }}</strong>
             </p>
         </div>
-        
+
         <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-      
+
         {% if model.nonStoreCreditTotal > 0 %}
 
             {% if model.hasSavedCardPayment %}
-      
+
                 {% if editing.savedCard %}
                     <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">
                         {% include "modules/checkout/payment-selector" %}
@@ -165,7 +165,7 @@
                 </div>
             {% endif %}
         {% else %}
-        
+
             <h4 class="mz-checkout-nopaymentrequired mz-checkoutform">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
 
         {% endif %}
@@ -193,7 +193,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
+            {% include "modules/checkout/checkout-gateway-giftcard" %}
+        </div>
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
