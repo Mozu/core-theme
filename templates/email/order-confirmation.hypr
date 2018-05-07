@@ -45,6 +45,9 @@
                         {% if  model.billingInfo.paymentType|lower == "paypalexpress2"  %}
                             <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
                         {% endif %}
+                        {% if model.billingInfo.paymentType == "PayWithAmazon" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
+                        {%endif%}   
                 </td>
             </tr>
 

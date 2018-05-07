@@ -31,12 +31,15 @@
 
   {% for discount in model.orderDiscounts %}
     {% if not discount.excluded %}
-  <tr class="mz-carttable-total-row">
-    <td class="mz-carttable-total-label" colspan="3">
-        {{ discount.discount.name }}:
+  <tr class="mz-carttable-item">
+    <div class="mz-item-discount">
+    <td class="mz-carttable-total-label" colspan="4">
     </td>
-    <td class="mz-carttable-total-wrap">
-      <span class="mz-carttable-rowtotal">- {{ discount.impact|currency }}</span>
+    <td class="mz-carttable-item-total">
+      <div class="mz-item-discount">
+        <span class="mz-item-discountname">  {{ discount.discount.name }}:</span>
+        <span class="mz-item-discountamt"> -{{ discount.impact|currency }}</span>
+      </div>
     </td>
     <td></td>
   </tr>
@@ -69,12 +72,14 @@
               {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
                   {% if externalPayment.isEnabled %}
                   <div class="mz-carttable-thirdpartypayment" >
+                    {% if externalPayment.name == "PayWithAmazon" %}
+                        <div id="AmazonPayButton"></div>
+                    {% endif %}
                     {% if externalPayment.name == "VisaCheckout" %}
                       <img alt="Visa Checkout" class="v-button" role="button" src="{{pageContext.visaCheckoutButtonUrl}}"/>
                     {%endif%}
                     {% if externalPayment.name == "PayPalExpress2" %}
-                      <img id="btn_xpressPaypal" class="p-button" alt="Check out with PayPal" role="button" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" width="170px" height="32px" align="left" style="margin-top:12px; float:right;"/>
-
+                      <img id="btn_xpressPaypal" class="p-button" alt="Check out with PayPal" role="button" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" width="170px" height="32px" />
                     {%endif%}
                   </div>
                   {%endif%}

@@ -1,0 +1,60 @@
+{% extends "page" %}
+
+
+
+
+{% block body-content %}
+
+
+
+{% preload_json model "checkout" %}
+{% require_script "pages/amazon-checkout" %}
+
+
+{% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("name", "PayWithAmazon") as payWithAmazon %} 
+	{%with payWithAmazon.credentials|findwhere("apiName", "clientId") as clientId%}
+		<script>
+			window.onAmazonLoginReady = function() {
+				amazon.Login.setClientId("{{clientId.value}}"); 
+		};
+		</script>
+	{%endwith%}
+
+	{%with payWithAmazon.credentials|findwhere("apiName", "environment") as environment%}
+		{%with payWithAmazon.credentials|findwhere("apiName", "region") as region%}
+			{% if environment.value == "sandbox" %}
+				{% if region.value == "uk" || region.value == "de"%}  
+					<script ype='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/{{region.value}}/sandbox/lpa/js/Widgets.js'></script>
+				{%else%}
+					<script ype='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/sandbox/js/Widgets.js'></script>
+				{%endif%}
+			{%else%}
+				{% if region.value == "uk" || region.value == "de"%}  
+					<script type='text/javascript' src='https://static-eu.payments-amazon.com/OffAmazonPayments/{{region.value}}/lpa/js/Widgets.js'></script>
+				{%else%}
+					<script type='text/javascript' src='https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js'></script>
+				{%endif%}	
+			{%endif%}
+		{%endwith%}
+	{%endwith%}
+		
+{% endwith %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.awsCheckout }}
+    </h1>
+
+    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;" id="amazonCheckout">
+    	{% include "modules/common/message-bar" with model=model.messages %}
+    	<table id="shippingBillingTbl" class="shippingBillingTbl">
+        	{% include "modules/checkout/amazon-shipping-billing" %}
+	    </table>
+    </form>
+
+    
+
+</div>        
+
+
+{% endblock body-content %}

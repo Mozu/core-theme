@@ -7,13 +7,17 @@
             <div>{{ model.billingInfo.billingContact.email }}</div>
         </div>
     {% endif %}
-    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or  model.billingInfo.paymentType|lower == "paypalexpress2"%}
+    {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or  model.billingInfo.paymentType|lower == "paypalexpress2"  or model.billingInfo.paymentType == "PayWithAmazon"%}
         <dt>Payment Method</dt>
+        {% if model.billingInfo.paymentType|lower == "paywithamazon" %}
+            <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+        {%endif%}    
         {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}
             <dd>
                 <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
             </dd>
-        {% else %}
+        {% endif %}
+        {% if model.billingInfo.paymentType|lower == "storecredit" %}
             <dt>{{ labels.digitalCreditCode }}</dt>
             <dd>{{ model.billingInfo.storeCreditCode }}</dd>
         {%endif%}

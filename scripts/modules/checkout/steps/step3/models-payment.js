@@ -795,7 +795,7 @@ define([
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' })));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
             },
             calculateStepStatus: function () {
                 var shippingStepComplete = this.parent.get('shippingStep').stepStatus() === 'complete',
@@ -877,10 +877,7 @@ define([
 
                 var order = this.getOrder();
                 var self = this;
-                // just can't sync these emails right
 
-
-                //
 
                 // This needs to be ahead of validation so we can check if visa checkout is being used.
                 var currentPayment = order.apiModel.getCurrentPayment();
@@ -940,6 +937,7 @@ define([
                 }
             },
             applyPayment: function () {
+
                 var self = this, order = this.getOrder();
                 this.syncApiModel();
                 if (this.nonStoreCreditTotal() > 0) {
@@ -955,6 +953,11 @@ define([
                         if (payment) {
                             switch (payment.paymentType) {
                                 case 'CreditCard':
+                                    //TO-DO
+                                    // Somthing is off with the apiSync for AddPayment.
+                                    // We Should not have to manually set card info
+                                    self.set('card', payment.billingInfo.card);
+                                    
                                     modelCard = self.get('card');
                                     modelCvv = modelCard.get('cvv');
                                     if (
@@ -970,10 +973,12 @@ define([
                                     self.markComplete();
                             }
                         }
+
                     });
                 } else {
                     this.markComplete();
                 }
+
             },
 
             markComplete: function () {

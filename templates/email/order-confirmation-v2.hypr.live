@@ -60,16 +60,18 @@
                 <div>{{ payment.billingInfo.billingContact.email }}</div>
               </div>
             {% endif %}
-            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" or payment.billingInfo.paymentType|lower == "paypalexpress2" %}
+            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" or payment.billingInfo.paymentType|lower == "paypalexpress2" or payment.billingInfo.paymentType|lower == "paywithamazon" %}
               <div class="mz-l-stack-item">
-                {% if payment.billingInfo.paymentType|lower == "paypalexpress2" %}
-                  <div>
-                    <img alt="PayPal" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" align="left" width="100px" height="26px" style="margin-right:7px;">
-                  </div>
-                {% else %}
+               {% if  payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+                 <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
+               {% endif %}
+               {% if payment.billingInfo.paymentType|lower == "PayWithAmazon" %}
+                    <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
+               {%endif%}   
+               {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard"  %}
                   <small>{{ labels.digitalCreditCode }}</small>
                   <div>{{ payment.billingInfo.storeCreditCode }}</div>
-                {% endif %}
+               {% endif %}
               </div>
             {% else %}
               <div class="mz-l-stack-item">

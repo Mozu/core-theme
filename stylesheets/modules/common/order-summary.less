@@ -24,7 +24,7 @@
             padding-right: 0;
         }
     }
-    .mz-ordersummary-totalname {
+    .mz-ordersummary-totalname, .mz-ordersummary-discountname {
         display: inline-block;
         padding-right: @gutter;
     }
@@ -36,10 +36,10 @@
         font-weight: bold;
     }
 
-        .mz-item-discount {
+        .mz-item-discount, .mz-ordersummary-discount {
         font-weight: bold;
 
-        .mz-item-discountamt {
+        .mz-item-discountamt, .mz-ordersummary-discountamt {
             color: #900;
         }
     }
@@ -94,6 +94,14 @@
 
    .mz-ordersummary-ms2-checkout {
      border-bottom: 0px;
+
+     .mz-ordersummary-discount {
+       font-weight: bold;
+     }
+
+     .mz-ordersummary-discountamt {
+         color: #900;
+     }
    }
 
 
@@ -127,7 +135,7 @@
     td {
         background-color: #f7f7f7;
         text-align: right;
-        padding: @gutter/2 @gutter;
+        padding: @gutter/4 @gutter;
         &.mz-ordersummary-item-product {
             text-align: left;
         }
@@ -143,7 +151,7 @@
             padding-right: 0;
         }
     }
-    .mz-ordersummary-totalname {
+    .mz-ordersummary-totalname, .mz-ordersummary-discountname {
         display: inline-block;
         padding-right: @gutter;
     }
@@ -155,13 +163,13 @@
 
     }
     .mz-item-rowtotal{
-      color: #900;
+      color: #000;
     }
 
-        .mz-item-discount {
+        .mz-item-discount, .mz-ordersummary-discount {
         font-weight: bold;
 
-        .mz-item-discountamt {
+        .mz-item-discountamt, .mz-ordersummary-discountamt {
             color: #900;
         }
     }
@@ -200,7 +208,7 @@
     }
 
 
-    .mz-item-rowtotal, .mz-ordersummary-grandtotal {
+    .mz-ordersummary-grandtotal {
       color: #ae1231;
     }
 
@@ -210,7 +218,7 @@
             padding-right: 0;
         }
     }
-    .mz-ordersummary-totalname {
+    .mz-ordersummary-totalname, .mz-ordersummary-discountname {
         display: inline-block;
         padding-right: @gutter;
     }
@@ -221,10 +229,10 @@
         font-weight: bold;
     }
 
-        .mz-item-discount {
+        .mz-item-discount, .mz-ordersummary-discount {
         font-weight: bold;
 
-        .mz-item-discountamt {
+        .mz-item-discountamt, .mz-ordersummary-discountamt {
             color: #900;
         }
     }

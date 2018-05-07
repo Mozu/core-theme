@@ -1,5 +1,12 @@
 {% extends "back-office/base" %}
 {% block body-content %}
+
+{% if themeSettings.backofficeDateTimeFormat %}
+    {% set_var dateFormat=themeSettings.backofficeDateTimeFormat %}
+{% else %}
+    {% set_var dateFormat="m/d/Y H:i:s" %}
+{% endif %}
+            
 <table class="mz-printable-order mz-printable-order-details">
 <thead class="header"><tr>
     <th class="company-info">
@@ -9,7 +16,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date(dateFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
@@ -149,18 +156,27 @@
                                 <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
                             </div>
                         {% endfor %}
-						{% for discount in item.productDiscounts %}
-                            <div class="discount">
-                                <span class="product-discount-label">Discount (</span>{{ discount.discount.name }}<span>)</span>
-                            </div>
-                        {% endfor %}
+						
                     </td>
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
                     <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
                     <td class="quantity-column">{{ item.quantity }}</td>
-                    <td class="currency-column">{{ item.subtotal|currency }} <br/> {% if item.discountTotal != 0 %}({{ item.discountTotal|currency }}){% endif %}
+                    <td class="currency-column">{{ item.subtotal|currency }} <br/> 
+                         
 					</td>
                 </tr>
+                 {% if item.productDiscounts.length %}
+                    {% for discount in item.productDiscounts %}
+                        <tr class="mz-discount-row">
+                            <td colspan="5" class="mz-discount-name">
+                                <span> {{ discount.discount.name }} </span>
+                            </td>
+                            <td class="mz-discount-price">
+                                <span> ({{discount.impact|currency}})</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
@@ -190,7 +206,7 @@
                 {% for payment in model.payments %}
                     {% if payment.status != "Voided" and payment.paymentType != "PurchaseOrder" %}
                     <tr>
-                        <td>{{ payment.auditInfo.createDate|date(themeSettings.backofficeDateTimeFormat) }}</td>
+                        <td>{{ payment.auditInfo.createDate|date(dateFormat) }}</td>
                         <td>{{ payment.status }}</td>
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
@@ -215,7 +231,16 @@
                                     <td>{{ payment.billingInfo.storeCreditCode }}</td>
                                     <td>N/A</td>
                                 {% else %}
-                                    <td>{{ payment.paymentType }}</td>
+                                    <td>
+                                        {% if payment.paymentType|lower == "paypalexpress2" %}
+                                            {{ labels.payPal }}
+                                        {% endif %}
+                                        {% if payment.paymentType|lower == "paywithamazon" %}
+                                            {{ labels.payWithAmazon }}
+                                        {% else %}
+                                            {{ payment.paymentType }}
+                                        {% endif %}
+                                    </td>
                                     <td>&nbsp;</td>
                                     <td>&nbsp;</td>
                                 {% endif %}
@@ -253,7 +278,7 @@
                     {% for payment in model.payments %}
                         {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
                             <tr>
-                                <td>{{ payment.auditInfo.createDate|date(themeSettings.backofficeDateTimeFormat) }}</td>
+                                <td>{{ payment.auditInfo.createDate|date(dateFormat) }}</td>
                                 <td>{{ payment.status }}</td>
                                 <td>{{ labels.purchaseOrder }}</td>
                                 <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
@@ -308,7 +333,7 @@
                 <tbody>
                     {% if model.shopperNotes.comments %}
                         <tr>
-                            <td>{{ model.submittedDate | date(themeSettings.backofficeDateTimeFormat) }}</td>
+                            <td>{{ model.submittedDate | date(dateFormat) }}</td>
                             <td>Customer</td>
                             <td>Shopper Notes</td>
                             <td>{{ model.shopperNotes.comments }}</td>
@@ -316,7 +341,7 @@
                     {% endif %}
                     {% if model.shopperNotes.giftMessage %}
                         <tr>
-                            <td>{{ model.submittedDate | date(themeSettings.backofficeDateTimeFormat) }}</td>
+                            <td>{{ model.submittedDate | date(dateFormat) }}</td>
                             <td>Customer</td>
                             <td>Gift Message</td>
                             <td>{{ model.shopperNotes.giftMessage }}</td>
