@@ -238,7 +238,7 @@ define([
                     this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
-            }, 
+            },
             refreshBillingInfoAfterAddingStoreCredit: function (order, updatedOrder) {
                 var self = this;
                 //clearing existing order billing info because information may have been removed (payment info) #68583
@@ -247,7 +247,7 @@ define([
                 var activePayments = this.activePayments();
                 var hasNonStoreCreditPayment = (_.filter(activePayments, function (item) { return item.paymentType !== 'StoreCredit'; })).length > 0;
                 if ((order.get('amountRemainingForPayment') >= 0 && !hasNonStoreCreditPayment) ||
-                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment)) 
+                    (order.get('amountRemainingForPayment') < 0 && hasNonStoreCreditPayment))
                 {
                     var billingContactEmail = this.get('billingContact').get('email');
                     order.get('billingInfo').clear();
@@ -370,7 +370,39 @@ define([
                 var epsilon = 0.01;
                 return (Math.abs(f1 - f2)) < epsilon;
             },
+            retrieveGiftCard: function(number, securityCode) {
+              console.log('retrive giftcard');
+              //make api call to get giftcard
+              //if success,execute any front end validation like balance
+                //if valid, figure out amount to apply
+                  //push gift card info to _cachedGiftCards
+                  //applyGiftCard
+              //if not success, trigger error message
+            },
+            getGatewayGiftCard: function() {
+              console.log('get gateway giftcard');
+              var me = this,
+                  giftCardNumber = this.get('giftCardNumber'),
+                  giftCardSecurityCode = this.get('giftCardSecurityCode');
 
+                  var existingGiftCard = this._cachedGiftCards.filter(function (card) {
+                      //TODO: figure out the best way to identify cards, filter by that
+                      return true;
+                  });
+
+                  if (existingGiftCard && existingGiftCard.length > 0) {
+                    me.trigger('error', {
+                        //TODO: make label for this, take away quotes
+                        message: "Hypr.getLabel('giftCardAlreadyAdded')"
+                    });
+                  }
+                  me.isLoading(true);
+                  // return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function() {
+                  //     me.isLoading(false);
+                  //     return me;
+                  // });
+
+            },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
                 return customer.apiGetDigitalCredit(creditCode).then(function (credit) {
@@ -957,7 +989,7 @@ define([
                                     // Somthing is off with the apiSync for AddPayment.
                                     // We Should not have to manually set card info
                                     self.set('card', payment.billingInfo.card);
-                                    
+
                                     modelCard = self.get('card');
                                     modelCvv = modelCard.get('cvv');
                                     if (

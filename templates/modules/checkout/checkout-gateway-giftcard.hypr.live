@@ -1,22 +1,28 @@
 <div class="mz-checkout-digitalcredit mz-l-stack-section">
   <h4 class="mz-checkoutform-title">Gateway Giftcard</h4>
-  <div class="mz-l-formfieldgroup-cell">
-      <label for="mz-payment-gift-card-number">Gift Card Number<span class="is-required"> *</span>:</label>
-  </div>
-  <div class="mz-l-formfieldgroup-cell">
-      <input type="text" name="gift-card-number" id="mz-payment-gift-card-number" data-mz-value="giftCardNumber" value="{{ model.giftCardNumber }}">
-      <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cardNumberPartOrMask"></span>
-  </div>
+  <div class="mz-l-formfieldgroup">
+  <div class="mz-l-formfieldgroup-row">
     <div class="mz-l-formfieldgroup-cell">
-      <label for="mz-payment-security-code">{{ labels.securityCode }}{% if not model.isCvvOptional %}<span class="is-required"> *</span>{% endif %}:</label>
+      <label for="mz-payment-gift-card-number">Gift Card Number:</label>
     </div>
     <div class="mz-l-formfieldgroup-cell">
-      <input type="tel" name="security-code" id="mz-payment-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="{{ cardcontext }}cvv" value="{{ model.cvv }}" autocomplete="off">
-      <span class="mz-validationmessage" data-mz-validationmessage-for="{{ cardcontext }}cvv"></span>
+      <input type="text" name="gift-card-number" id="gift-card-number" data-mz-value="giftCardNumber" value="{{ model.giftCardNumber }}">
+      <span class="mz-validationmessage" data-mz-validationmessage-for="giftCardNumber"></span>
     </div>
+  </div>
+  <div class="mz-l-formfieldgroup-row">
+    <div class="mz-l-formfieldgroup-cell">
+      <label for="gift-card-security-code">{{ labels.securityCode }}:</label>
+    </div>
+    <div class="mz-l-formfieldgroup-cell">
+      <input type="tel" name="gift-card-security-code" id="gift-card-security-code" class="mz-l-formfieldgroup-halfsize" data-mz-value="giftCardSecurityCode" value="{{ model.giftCardSecurityCode }}" autocomplete="off"><button class="mz-button" data-mz-action="getGatewayGiftCard" {% if not model.giftCardNumber and not model.giftCardSecurityCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+      <span class="mz-validationmessage" data-mz-validationmessage-for="giftCardSecurityCode"></span>
+    </div>
+  </div>
+</div>
 
-  {% if model.availableDigitalCredits %}
-  <div class="mz-checkout-digitalcredit-table">
+  {% comment %} {% if model.availableDigitalCredits %} {% endcomment %}
+  <div style="display:none" class="mz-checkout-digitalcredit-table">
     <table class="mz-table">
       <thead>
         <tr>
@@ -79,5 +85,5 @@
       </tbody>
     </table>
   </div>
-  {% endif %}
+  {% comment %} {% endif %} {% endcomment %}
 </div>

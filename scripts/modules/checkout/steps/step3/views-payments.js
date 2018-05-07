@@ -57,7 +57,9 @@ define(["modules/jquery-mozu",
                 'creditAmountToApply',
                 'digitalCreditCode',
                 'purchaseOrder.purchaseOrderNumber',
-                'purchaseOrder.paymentTerm'
+                'purchaseOrder.paymentTerm',
+                'giftCardNumber',
+                'giftCardSecurityCode'
             ].concat(poCustomFields()),
             renderOnChange: [
                 'billingContact.address.countryCode',
@@ -76,6 +78,8 @@ define(["modules/jquery-mozu",
             },
             initialize: function () {
                 // this.addPOCustomFieldAutoUpdate();
+                this.listenTo(this.model, 'change:giftCardNumber', this.onEnterGiftCardInfo, this);
+                this.listenTo(this.model, 'change:giftCardSecurityCode', this.onEnterGiftCardInfo, this);
                 this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
                 this.listenTo(this.model, 'orderPayment', function (order, scope) {
                         this.render();
@@ -205,6 +209,14 @@ define(["modules/jquery-mozu",
                     self.$el.removeClass('is-loading');
                 });
             },
+            getGatewayGiftCard: function (e) {
+              console.log('get gateway giftcard');
+              var self = this;
+              this.$el.addClass('is-loading');
+              this.model.getGatewayGiftCard().ensure(function() {
+                  self.$el.removeClass('is-loading');
+              });
+            },
             stripNonNumericAndParseFloat: function (val) {
                 if (!val) return 0;
                 var result = parseFloat(val.replace(/[^\d\.]/g, ''));
@@ -221,6 +233,14 @@ define(["modules/jquery-mozu",
 
                 this.model.applyDigitalCredit(creditCode, amtToApply, true);
                 this.render();
+            },
+            onEnterGiftCardInfo: function(model) {
+              if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){
+                this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', false);
+              } else {
+                this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', true);
+              }
+
             },
             onEnterDigitalCreditCode: function(model, code) {
                 if (code && !this.codeEntered) {

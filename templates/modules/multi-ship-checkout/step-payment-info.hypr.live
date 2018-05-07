@@ -109,7 +109,9 @@
                 {{ labels.billingContact }}: <strong>{{ model.billingContact.email }}</strong>
             </p>
         </div>
-        
+        <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
+            {% include "modules/checkout/checkout-gateway-giftcard" %}
+        </div>
         <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
@@ -190,7 +192,9 @@
                 </div>
             </div>
         </div>
-
+        <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
+            {% include "modules/checkout/checkout-gateway-giftcard" %}
+        </div>
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
