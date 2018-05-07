@@ -212,10 +212,11 @@ define(["modules/jquery-mozu",
             getGatewayGiftCard: function (e) {
               console.log('get gateway giftcard');
               var self = this;
-              this.$el.addClass('is-loading');
-              this.model.getGatewayGiftCard().ensure(function() {
-                  self.$el.removeClass('is-loading');
-              });
+              //this.$el.addClass('is-loading');
+              this.model.getGatewayGiftCard();
+              // this.model.getGatewayGiftCard().ensure(function() {
+              //     self.$el.removeClass('is-loading');
+              // });
             },
             stripNonNumericAndParseFloat: function (val) {
                 if (!val) return 0;
@@ -235,6 +236,7 @@ define(["modules/jquery-mozu",
                 this.render();
             },
             onEnterGiftCardInfo: function(model) {
+              console.log('enter giftcard info');
               if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){
                 this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', false);
               } else {

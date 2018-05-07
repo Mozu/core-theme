@@ -21,8 +21,8 @@
   </div>
 </div>
 
-  {% comment %} {% if model.availableDigitalCredits %} {% endcomment %}
-  <div style="display:none" class="mz-checkout-digitalcredit-table">
+{% if model.availableGiftCards %}
+  <div class="mz-checkout-digitalcredit-table">
     <table class="mz-table">
       <thead>
         <tr>
@@ -85,5 +85,5 @@
       </tbody>
     </table>
   </div>
-  {% comment %} {% endif %} {% endcomment %}
+{% endif %}
 </div>

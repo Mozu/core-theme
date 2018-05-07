@@ -54,7 +54,7 @@ define([
 
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits',
+              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'availableGiftCards',
               'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete','isExternalCheckoutFlowComplete', 'selectedBillingDestination',
               'selectableDestinations'],
             acceptsMarketing: function () {
@@ -108,6 +108,10 @@ define([
             savedPaymentMethods: function () {
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
                 return cards && cards.length > 0 && cards;
+            },
+            activeGiftCards: function() {
+              //TODO: return getActiveGiftCards
+              console.log('active giftCards');
             },
             activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
@@ -232,7 +236,6 @@ define([
                     });
                 });
             },
-
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) {
                     this.loadCustomerDigitalCredits();
@@ -370,14 +373,26 @@ define([
                 var epsilon = 0.01;
                 return (Math.abs(f1 - f2)) < epsilon;
             },
+            loadCustomerGiftCards: function(){
+              //TODO: set _cachedGiftCards to giftcards associated with customer.
+              console.log('load customer giftcards');
+            },
+            applyGiftCard: function(giftCard){
+              console.log('apply giftcard');
+              this.trigger('render');
+            },
             retrieveGiftCard: function(number, securityCode) {
               console.log('retrive giftcard');
+              var me = this;
               //make api call to get giftcard
               //if success,execute any front end validation like balance
                 //if valid, figure out amount to apply
                   //push gift card info to _cachedGiftCards
                   //applyGiftCard
               //if not success, trigger error message
+              var giftCardModel = {number: number, securityCode: securityCode};
+              me._cachedGiftCards.push(giftCardModel);
+              return me.applyGiftCard(giftCardModel);
             },
             getGatewayGiftCard: function() {
               console.log('get gateway giftcard');
@@ -396,12 +411,21 @@ define([
                         message: "Hypr.getLabel('giftCardAlreadyAdded')"
                     });
                   }
-                  me.isLoading(true);
+
+                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode);
+                  // me.isLoading(true);
                   // return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function() {
                   //     me.isLoading(false);
                   //     return me;
                   // });
 
+            },
+            availableGiftCards: function(){
+              console.log('available gift cards');
+              if (! this._cachedGiftCards) {
+                  this.loadCustomerGiftCards();
+              }
+              return this._cachedGiftCards && this._cachedGiftCards.length > 0;
             },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
@@ -790,6 +814,7 @@ define([
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this._cachedDigitalCredits = null;
+                this._cachedGiftCards = [];
 
 
                 _.bindAll(this, 'applyPayment', 'markComplete');
