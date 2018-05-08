@@ -202,8 +202,8 @@
             return formatted;
         },
         setOp: function(proto, fnName) {
-            proto[fnName] = function (conf) {
-                return this.api.action(this, fnName, conf);
+            proto[fnName] = function (conf, runningOptions) {
+                return this.api.action(this, fnName, conf, runningOptions);
             };
         },
         getType: (function () {

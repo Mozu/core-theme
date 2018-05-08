@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-07-10
+ * Mozu JavaScript SDK - v0.3.0 - 2018-07-16
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4218,7 +4218,7 @@ module.exports=
     },
     "get-unregistered-gift-card-balance": {
       "verb": "POST",
-      "template": "{+paymentService}/balance",
+      "template": "{+paymentService}balance",
       "defaultParams": {
         "responseFields": "amount"
       }
@@ -5445,19 +5445,6 @@ module.exports = (function () {
             }, function (reason) {
                 errors.throwOnObject(self, 'GET_RETURN_LABEL_FAILED', reason.message);
             });
-        },
-        // as of 12/30/2013 partial updates on customer will
-        // blank out these values unless they are included
-        // TODO: remove as soon as TFS#21775 is fixed
-        getMinimumPartial: function () {
-            return {
-                firstName: this.prop('firstName'),
-                lastName: this.prop('lastName'),
-                emailAddress: this.prop('emailAddress')
-            };
-        },
-        update: function (data) {
-            return this.api.action(this, 'update', utils.extend(this.getMinimumPartial(), utils.clone(data)));
         }
     }
 }());
@@ -6269,8 +6256,8 @@ module.exports = (function() {
             return formatted;
         },
         setOp: function(proto, fnName) {
-            proto[fnName] = function (conf) {
-                return this.api.action(this, fnName, conf);
+            proto[fnName] = function (conf, runningOptions) {
+                return this.api.action(this, fnName, conf, runningOptions);
             };
         },
         getType: (function () {
