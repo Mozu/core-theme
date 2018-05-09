@@ -171,7 +171,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
        
         
             
-        private SuperNavigationNodeList ProccessNavData(SiteBuilderContextData ctxData, CategoryTree categoryTree)
+        private SuperNavigationNodeList ProccessNavData(ISiteBuilderContextData ctxData, CategoryTree categoryTree)
         {
 
             var pages = ctxData.NavWebPages;

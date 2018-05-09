@@ -909,7 +909,9 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc.SEO
             genSettingsClient.GetGeneralSettings(Arg.Any<string>(), Arg.Any<TargetContextLevelType>()).ReturnsForAnyArgs(Task.FromResult(Response(genSettings)));
 
 
-            
+            var mockSitebuilderContextCacheRepository = Substitute.For<ISitebuilderContextCacheRepository>();
+            mockSitebuilderContextCacheRepository.GetAsync(Arg.Any<ISiteBuilderApiContext>()).Returns(Task.FromResult< ISiteBuilderContextData>(null));
+            subber.Provide<ISitebuilderContextCacheRepository>(mockSitebuilderContextCacheRepository);
             subber.Provide<IContextServiceAggregator, ContextServiceAggregator>(); ;
             subber.Provide<Lazy<IContextServiceAggregator>>(new Lazy<IContextServiceAggregator>(() => subber.Resolve<ContextServiceAggregator>()));
             //subber.Provide < IContextServiceAggregator ,ContextServiceAggregator>();
