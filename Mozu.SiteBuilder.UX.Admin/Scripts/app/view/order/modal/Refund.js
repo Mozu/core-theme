@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
 
         // show or hide the refund amount field
-        refundAmountField.setVisible(nextState.payment || (nextState.method === 'StoreCredit'));
+        refundAmountField.setVisible(nextState.payment || (nextState.method === 'StoreCredit') || (nextState.method === 'GiftCard'));
 
         // set a hard maximum on the refund amount if refunding a credit card
         refundAmountField.emptyText = this.suggestRefund().toFixed(2);
@@ -98,7 +98,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     }
                 }
                 return (
-                    !Ext.Array.contains(['StoreCredit', 'Check'], record.get('paymentType'))
+                    !Ext.Array.contains(['StoreCredit', 'Check', 'GiftCard'], record.get('paymentType'))
                         && Ext.Array.contains(record.get('availableActions'), 'CreditPayment')
                         && paymentData.amountCollected - (paymentData.amountCredited || 0) > 0
                 );
@@ -279,7 +279,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                     queryMode: 'local',
                     store: [
                         ['CreditCard', 'Direct Refund'],
-                        ['StoreCredit', 'Store Credit']
+                        ['StoreCredit', 'Store Credit'],
+                        ['GiftCard', 'Giftcard']
                     ],
                     listeners: {
                         change: {

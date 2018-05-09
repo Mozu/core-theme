@@ -16,9 +16,11 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
         me.creditCards = Ext.create('Taco.view.settings.paymentTypes.subform.CreditCards', me);
         me.checkByMail = Ext.create('Taco.view.settings.paymentTypes.subform.CheckByMail', me);
         me.purchaseOrder = Ext.create('Taco.view.settings.paymentTypes.subform.PurchaseOrder', me);
+        me.giftCards = Ext.create('Taco.view.settings.paymentTypes.subform.GiftCards', me);
 
         me.items = [
             me.creditCards,
+            me.giftCards,
             me.checkByMail,
             me.purchaseOrder
         ];

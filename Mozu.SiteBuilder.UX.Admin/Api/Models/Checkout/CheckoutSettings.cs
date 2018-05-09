@@ -67,6 +67,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to PaymentSettings.PurchaseOrder
         /// </summary>
         public DC.PurchaseOrderPaymentDefinition PurchaseOrder { get; set; }
+
+        /// <summary>
+        /// Corresponds to OrderProcessingSettings for a Giftcard Gateway
+        /// </summary>
+        public string GiftCardProcessingType { get; set; }
     }
 
     public class CardGateway

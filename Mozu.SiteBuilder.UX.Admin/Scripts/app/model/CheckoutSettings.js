@@ -12,14 +12,22 @@ Ext.define('Taco.model.CheckoutSettings', {
         { name: "cardGatewayMap", type: "any", defaultValue: {} },
         { name: "payByMail", type: "boolean" },
         {
-            name: "paymentProcessingFlowType", type: "string" ,
-            serialize : function (v, r) {
+            name: "paymentProcessingFlowType", type: "string",
+            serialize: function (v, r) {
                 if (v) {
                     v = v.replace(/,/gi, '');
                 }
                 return v;
             }
-
+        },
+        {
+            name: "giftCardProcessingType", type: "string",
+            serialize: function (v, r) {
+                if (v) {
+                    v = v.replace(/,/gi, '');
+                }
+                return v;
+            }
         },
         { name: "purchaseOrder", type: "any", defaultValue: {} }
         /*

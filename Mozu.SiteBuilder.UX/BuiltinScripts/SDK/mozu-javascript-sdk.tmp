@@ -1,15 +1,4 @@
-/*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-06-13
- *
- * Copyright (c) 2018 Volusion, Inc.
- *
- */
-
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.MozuSDK=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/microevent/microevent.js
-
 /**
  * MicroEvent - to make any js object an event emitter (server or browser)
  * 
@@ -62,10 +51,6 @@ if( typeof module !== "undefined" && ('exports' in module)){
 }
 
 },{}],2:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/process/browser.js
-
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -132,10 +117,6 @@ process.chdir = function (dir) {
 
 },{}],3:[function(_dereq_,module,exports){
 (function (global){
-
-
-//# sourceUrl=node_modules/uritemplate/bin/uritemplate.js
-
 /*global unescape, module, define, window, global*/
 
 /*
@@ -1024,10 +1005,6 @@ var UriTemplate = (function () {
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/aggregator.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1123,10 +1100,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],5:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/array.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1185,10 +1158,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],6:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/console.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1242,10 +1211,6 @@ define(function(_dereq_) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
 },{"./aggregator":4,"./logger/consoleGroup":7,"./simpleFormatter":8,"./simpleReporter":9,"./stackFilter":10,"./throttledReporter":11}],7:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/logger/consoleGroup.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1324,10 +1289,6 @@ define(function(_dereq_) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
 },{"../array":5}],8:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/simpleFormatter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1403,10 +1364,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],9:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/simpleReporter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1467,10 +1424,6 @@ define(function() {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(); }));
 
 },{}],10:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/stackFilter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1523,10 +1476,6 @@ define(function(_dereq_) {
 }(typeof define === 'function' && define.amd ? define : function(factory) { module.exports = factory(_dereq_); }));
 
 },{"./array":5}],11:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=node_modules/when/monitor/throttledReporter.js
-
 /** @license MIT License (c) copyright 2010-2013 original author or authors */
 
 /**
@@ -1566,10 +1515,6 @@ define(function(_dereq_) {
 
 },{}],12:[function(_dereq_,module,exports){
 (function (process){
-
-
-//# sourceUrl=node_modules/when/when.js
-
 /** @license MIT License (c) copyright 2011-2013 original author or authors */
 
 /**
@@ -2501,11 +2446,7 @@ define(function (_dereq_) {
 
 }).call(this,_dereq_("v3go1D"))
 },{"v3go1D":2}],13:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/affiliate-tracking-mixin.js
-
-﻿var utils = _dereq_('./utils');
+var utils = _dereq_('./utils');
 
 function deparam(querystring) {
     // remove any preceding url and split
@@ -2713,11 +2654,7 @@ module.exports = {
 
     }
 }
-},{"./utils":37}],14:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/collection.js
-
+},{"./utils":36}],14:[function(_dereq_,module,exports){
 // BEGIN OBJECT
 
 var utils = _dereq_('./utils');
@@ -2841,11 +2778,7 @@ var ApiObject = _dereq_('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":30,"./utils":37}],15:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/constants/default.js
-
+},{"./object":22,"./types/locations":29,"./utils":36}],15:[function(_dereq_,module,exports){
 module.exports = {
     DEFAULT_WISHLIST_NAME: 'my_wishlist',
     PAYMENT_STATUSES: {
@@ -2915,10 +2848,6 @@ module.exports = {
 };
 
 },{}],16:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/context.js
-
 // BEGIN CONTEXT
 /**
  * @class
@@ -3021,11 +2950,7 @@ module.exports = ApiContextConstructor;
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utils":37,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/errors.js
-
+},{"./interface":20,"./reference":23,"./utils":36,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 // BEGIN ERRORS
 var utils = _dereq_('./utils');
 
@@ -3073,11 +2998,7 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":37}],18:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/iframexhr.js
-
+},{"./utils":36}],18:[function(_dereq_,module,exports){
 // BEGIN IFRAMEXHR
 var utils = _dereq_('./utils');
 module.exports = (function(window, document, undefined) {
@@ -3240,54 +3161,15 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":37}],19:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/init.js
-
+},{"./utils":36}],19:[function(_dereq_,module,exports){
 // BEGIN INIT
 var ApiContext = _dereq_('./context');
 _dereq_('./affiliate-tracking-mixin').mixin(_dereq_("./interface"));
 var initialGlobalContext = new ApiContext();
 module.exports = initialGlobalContext;
 // END INIT
-},{"./affiliate-tracking-mixin":13,"./context":16,"./interface":21}],20:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/init_debug.js
-
-// EXPOSE DEBUGGING STUFF
-var _init = _dereq_('./init');
-
-_init.Utils = _dereq_('./utils');
-_init.ApiContext = _dereq_('./context');
-_init.ApiInterface = _dereq_('./interface');
-
-
-_dereq_('./affiliate-tracking-mixin').mixin(_init.ApiInterface);
-
-_init.ApiObject = _dereq_('./object');
-_init.ApiCollection = _dereq_('./collection');
-_init.ApiReference = _dereq_('./reference');
-
-_init._expose = function (r) {
-    _init.lastResult = r;
-    console.log(r && r.inspect ? r.inspect() : r);
-};
-
-_init.ApiObject.prototype.inspect = function () {
-    return JSON.stringify(this.data, true, 2);
-};
-
-_init.ApiContext.__debug__ = true;
-
-module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":37}],21:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/interface.js
-
-﻿/**
+},{"./affiliate-tracking-mixin":13,"./context":16,"./interface":20}],20:[function(_dereq_,module,exports){
+/**
  * @external Promise
  * @see {@link https://github.com/cujojs/when/blob/master/docs/api.md#promise WhenJS/Promise}
  */
@@ -3516,12 +3398,8 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":37}],22:[function(_dereq_,module,exports){
-module.exports=
-
-//# sourceUrl=src/methods.json
-
-{
+},{"./object":22,"./reference":23,"./utils":36}],21:[function(_dereq_,module,exports){
+module.exports={
   "document": {
     "template": "{+documentListService}{listName}/documents/{id}{?_*}",
     "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
@@ -4461,11 +4339,7 @@ module.exports=
     }
   }
 }
-},{}],23:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/object.js
-
+},{}],22:[function(_dereq_,module,exports){
 // BEGIN OBJECT
 
 var utils = _dereq_('./utils');
@@ -4556,11 +4430,7 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/user":35,"./types/wishlist":36,"./utils":37}],24:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/reference.js
-
+},{"./collection":14,"./reference":23,"./types/cart":24,"./types/cartsummary":25,"./types/checkout":26,"./types/creditcard":27,"./types/customer":28,"./types/login":30,"./types/order":31,"./types/product":32,"./types/shipment":33,"./types/user":34,"./types/wishlist":35,"./utils":36}],23:[function(_dereq_,module,exports){
 // BEGIN REFERENCE
 var utils = _dereq_('./utils');
 var errors = _dereq_('./errors');
@@ -4741,11 +4611,7 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":37}],25:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/cart.js
-
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":21,"./object":22,"./utils":36}],24:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 var errors = _dereq_('../errors');
 
@@ -4801,23 +4667,15 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":37}],26:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/cartsummary.js
-
+},{"../errors":17,"../utils":36}],25:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 module.exports = {
     count: function () {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":37}],27:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/checkout.js
-
-﻿var errors = _dereq_('../errors');
+},{"../utils":36}],26:[function(_dereq_,module,exports){
+var errors = _dereq_('../errors');
 var CONSTANTS = _dereq_('../constants/default');
 var utils = _dereq_('../utils');
 var ApiReference;
@@ -5066,14 +4924,13 @@ module.exports = (function () {
             });
         },
         addGiftCard: function (payment) {
-            var self = this;
-            var giftcard = this.api.createSync('creditcard', payment);
+            var giftcard = order.api.createSync('creditcard', payment);
             return giftcard.save().then(function (giftcard) {
-                return self.createPayment({
-                    amount: payment.amountToApply,
+                return this.createPayment({
+                    amount: payment.amount,
                     newBillingInfo: {
                         paymentType: 'GiftCard',
-                        card: giftcard.data
+                        card: giftcard
                     }
                 });
             }, function (reason) {
@@ -5127,7 +4984,7 @@ module.exports = (function () {
             var activePayments = this.getActivePayments(),
                 giftCards = [];
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "GiftCard") giftCards.unshift(activePayments[i]);
+                if (activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
             }
             return giftCards;
         },
@@ -5167,11 +5024,7 @@ module.exports = (function () {
 
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],28:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/creditcard.js
-
+},{"../constants/default":15,"../errors":17,"../reference":23,"../utils":36}],27:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 var errors = _dereq_('../errors');
 module.exports = (function() {
@@ -5249,7 +5102,7 @@ module.exports = (function() {
 
         maskedData = transform.toCardData(data);
         cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
-        if (!data.isGiftCard) {
+        if (!obj.isGiftCard) {
             if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
         }
 
@@ -5345,11 +5198,7 @@ module.exports = (function() {
     };
 
 }());
-},{"../errors":17,"../utils":37}],29:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/customer.js
-
+},{"../errors":17,"../utils":36}],28:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 var errors = _dereq_('../errors');
 module.exports = (function () {
@@ -5422,11 +5271,7 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":37}],30:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/locations.js
-
+},{"../errors":17,"../utils":36}],29:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 module.exports = (function () {
 
@@ -5539,11 +5384,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":37}],31:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/login.js
-
+},{"../utils":36}],30:[function(_dereq_,module,exports){
 module.exports = {
     postconstruct: function (type, json) {
         var accessToken;
@@ -5558,11 +5399,7 @@ module.exports = {
         }
     }
 };
-},{}],32:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/order.js
-
+},{}],31:[function(_dereq_,module,exports){
 var errors = _dereq_('../errors');
 var CONSTANTS = _dereq_('../constants/default');
 var utils = _dereq_('../utils');
@@ -5845,11 +5682,7 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],33:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/product.js
-
+},{"../constants/default":15,"../errors":17,"../reference":23,"../utils":36}],32:[function(_dereq_,module,exports){
 var errors = _dereq_('../errors');
 var utils = _dereq_('../utils');
 var CONSTANTS = _dereq_('../constants/default');
@@ -5904,11 +5737,7 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":37}],34:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/shipment.js
-
+},{"../constants/default":15,"../errors":17,"../utils":36}],33:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
 module.exports = {
     getShippingMethodsFromContact: function (contact) {
@@ -5921,11 +5750,7 @@ module.exports = {
         });
     }
 };
-},{"../utils":37}],35:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/user.js
-
+},{"../utils":36}],34:[function(_dereq_,module,exports){
 module.exports = {
     postconstruct: function () {
         var self = this;
@@ -5962,11 +5787,7 @@ module.exports = {
         });
     }
 };
-},{}],36:[function(_dereq_,module,exports){
-
-
-//# sourceUrl=src/types/wishlist.js
-
+},{}],35:[function(_dereq_,module,exports){
 var errors = _dereq_('../errors'),
     utils = _dereq_('../utils');
 module.exports = (function() {
@@ -6019,12 +5840,8 @@ module.exports = (function() {
         }
     };
 }());
-},{"../errors":17,"../utils":37}],37:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":36}],36:[function(_dereq_,module,exports){
 (function (process){
-
-
-//# sourceUrl=src/utils.js
-
 // BEGIN UTILS
 // Many of these poached from lodash
 
@@ -6372,6 +6189,6 @@ module.exports = (function() {
 /*********/
 
 }).call(this,_dereq_("v3go1D"))
-},{"./iframexhr":18,"microevent":1,"uritemplate":3,"v3go1D":2,"when":12,"xmlhttprequest":false}]},{},[20])
-(20)
+},{"./iframexhr":18,"microevent":1,"uritemplate":3,"v3go1D":2,"when":12,"xmlhttprequest":false}]},{},[19])
+(19)
 });

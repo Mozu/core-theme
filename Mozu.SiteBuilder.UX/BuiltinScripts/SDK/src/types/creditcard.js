@@ -75,7 +75,9 @@ module.exports = (function() {
 
         maskedData = transform.toCardData(data);
         cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
-        if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
+        if (!data.isGiftCard) {
+            if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
+        }
 
         // only add numberPart if the current card number isn't already masked
         // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);

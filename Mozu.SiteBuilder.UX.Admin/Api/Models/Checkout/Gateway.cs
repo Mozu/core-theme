@@ -55,6 +55,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         public string Name { get; set; }
 
         /// <summary>
+        /// Indicates if the gateway supports processing giftcards
+        /// </summary>
+
+        public bool SupportsGiftCardProcessing { get; set; }
+
+        /// <summary>
         /// Friendly name for the gateway definition.
         /// </summary>
         public string GatewayDefinitionName { get; set; }

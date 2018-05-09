@@ -11,7 +11,7 @@ module.exports = (function () {
         'PAYPAL_TRANSACTION_ID_MISSING': 'Sorry, something went wrong: Expected the active payment to include a paymentServiceTransactionId and it did not.',
         'ORDER_CANNOT_SUBMIT': 'Sorry, this order cannot be submitted. Please refresh the page and try again, or contact Support.',
         'ADD_COUPON_FAILED': 'Adding coupon failed for the following reason: {0}',
-        //'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
+        'ADD_GIFT_CARD_FAILED': 'Adding gift card failed for the following reason: {0}',
         'ADD_CUSTOMER_FAILED': 'Adding customer failed for the following reason: {0}'
     });
 
@@ -149,6 +149,20 @@ module.exports = (function () {
                 }
             });
         },
+        addGiftCard: function (payment) {
+            var giftcard = this.api.createSync('creditcard', payment);
+            return giftcard.save().then(function (giftcard) {
+                return this.createPayment({
+                    amount: payment.amount,
+                    newBillingInfo: {
+                        paymentType: 'GiftCard',
+                        card: giftcard
+                    }
+                });
+            }, function (reason) {
+                errors.throwOnObject(self, 'ADD_GIFT_CARD_FAILED', reason.message);
+            } );
+        },
         addPayment: function (payment) {
             var billingInfo = payment || this.prop('billingInfo');
             if (!billingInfo) errors.throwOnObject(this, 'BILLING_INFO_MISSING');
@@ -187,9 +201,18 @@ module.exports = (function () {
             var activePayments = this.getActivePayments(),
                 credits = [];
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "StoreCredit" || activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+                if (activePayments[i].paymentType === "StoreCredit") credits.unshift(activePayments[i]);
             }
             return credits;
+        },
+        getActiveGiftCards: function () {
+            //TODO : make sure this works 
+            var activePayments = this.getActivePayments(),
+                giftCards = [];
+            for (var i = activePayments.length - 1; i >= 0; i--) {
+                if (activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+            }
+            return giftCards;
         },
         voidPayment: function (id) {
             var obj = this;

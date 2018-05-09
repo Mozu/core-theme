@@ -52,7 +52,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 // no valid billing contact, need to force the form to open;
                 this.toggleExtraInfo(null, false);
                 var sameAsBillingCheckbox = this.down("#sameAsBillingCheckbox");
-                sameAsBillingCheckbox.hide();
+                sameAsBillingCheckbox ? sameAsBillingCheckbox.hide() : null;
+                //sameAsBillingCheckbox.hide();
             } else {
                 this.toggleExtraInfo(null, true);
             }
@@ -188,6 +189,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             return payment.get('paymentType') === 'CreditCard';
         });
 
+        this.currentGiftCardPayments = order.payments().queryBy(function (payment) {
+            return payment.get('paymentType') === 'GiftCard';
+        });
+
         // Only run if no payments are on the order
         if (this.currentPayments && !this.currentPayments.getCount()) {
             // Pull the parent order payment data.
@@ -196,9 +201,11 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         // Retrieve the JSON array from the store.
         this.currentPayments = this.currentPayments.getRange().map(function (payment) { return payment.data; });
+        this.currentGiftCardPayments = this.currentGiftCardPayments.getRange().map(function (payment) { return payment.data; });
 
         // Filter and clear the json array, there isn't a primary so pass false to skip the search
         this.currentPayments = this.filterAndClearArrayDuplicates(this.currentPayments, false);
+        this.currentGiftCardPayments = this.filterAndClearArrayDuplicates(this.currentGiftCardPayments, false);
     },
 
     // private

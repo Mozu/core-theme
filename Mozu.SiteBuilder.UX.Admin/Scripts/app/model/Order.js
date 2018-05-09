@@ -1510,15 +1510,41 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
-
-    addGiftCards: function (config) {
+    createGiftCard : function (config) {
 
         Ext.applyIf(config, {
-            url: '/admin/app/order/payment/addgiftcards',
+            url: Taco.paymentApiBaseUrl,
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || 'Error saving gift cards';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+    addGiftCards: function (config) {
+        config.jsonData.paymentType = "GiftCard";
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/addgiftcard',
             method: 'POST'
         });
 
         config.errorMsg = config.errorMsg || 'Error adding gift cards';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
+    addStoreCredit: function (config) {
+        config.jsonData.paymentType = "StoreCredit";
+
+        Ext.applyIf(config, {
+            url: '/admin/app/order/payment/addStoreCredits',
+            method: 'POST'
+        });
+
+        config.errorMsg = config.errorMsg || 'Error adding store credits';
         this.addErrorHandling(config);
 
         Ext.Ajax.request(config);

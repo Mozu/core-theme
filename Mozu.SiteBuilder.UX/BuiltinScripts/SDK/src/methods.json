@@ -684,6 +684,14 @@
       "verb": "DELETE",
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}"
+    },
+    "getGiftCardBalance": {
+      "verb": "GET",
+      "shortcutParam": "cardId",
+      "template": "{+paymentService}{cardId}/balance{?responseFields}",
+       "defaultParams": {
+        "responseFields": "amount"
+      }
     }
   },
   "creditcards": {

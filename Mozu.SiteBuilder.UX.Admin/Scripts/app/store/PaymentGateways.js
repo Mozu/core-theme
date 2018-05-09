@@ -8,6 +8,6 @@ Ext.define('Taco.store.PaymentGateways', {
     model: 'Taco.model.PaymentGateway',
     pageSize: 25,
     remoteSort: true,
-    remoteFilter: true,
+    remoteFilter: false,
     autoLoad: true
 });

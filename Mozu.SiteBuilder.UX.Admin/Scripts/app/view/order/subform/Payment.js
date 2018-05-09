@@ -15,6 +15,7 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.widget.PaymentPanel',
         'Taco.view.order.modal.AddPayment',
         'Taco.view.order.modal.AddPaymentManual',
+        'Taco.view.order.modal.AddEcommerceGiftCard',
         'Taco.view.order.modal.AddGiftCard',
         'Taco.store.StoreCredits'
     ],
@@ -118,6 +119,12 @@ Ext.define('Taco.view.order.subform.Payment', {
                         var poEnabled = this.isPurchaseOrderEnalbled();
                         var purchaseOrder = cmp.down('#purchaseOrderOption');
                         purchaseOrder[poEnabled ? 'show' : 'hide']();
+
+                        // TODO: configure this
+                        // var gatewayGiftCardEnabled = this.isGatewayGiftcardEnabled();
+                        //var gatewayGiftCardEnabled = true;
+                        //var gatewayGiftCard = cmb.down('#giftCardOption');
+                        //gatewayGiftCard[gatewayGiftCardEnabled ? 'show' : 'hide']();
                     }, scope: this
                 },
                 ui: 'action',
@@ -243,7 +250,11 @@ Ext.define('Taco.view.order.subform.Payment', {
             }
         });
     },
-
+    isGatewayGiftCardEnabled: function () {
+        // TODO: make sure this actually gets site settings
+        var siteSettings = this.record && this.record.siteSettings && this.record.siteSettings.get('gatewayGiftCard') ? this.record.checkoutSettings.get('gatewayGiftCard').isEnabled : false;
+        return siteSettings;
+    },
     isPurchaseOrderEnalbled: function () {
         var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
         var customerSettings = this.record.customer && this.record.customer.raw.purchaseOrderAccount ? this.record.customer.raw.purchaseOrderAccount.isEnabled : false;
@@ -282,7 +293,8 @@ Ext.define('Taco.view.order.subform.Payment', {
             requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
             addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
             addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption'),
-            addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddGiftCard', 'storeCreditOption')
+            addEcommerceGiftCard: makeAction('eCommerce Gift Card', 'Taco.view.order.modal.AddEcommerceGiftCard', 'eCommerceGiftCardOption'),
+            addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddEcommerceGiftCard', 'storeCreditOption')
         };
 
         return Ext.Object.getValues(actions);

@@ -42,6 +42,7 @@ nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
+nuget Mozu.PaymentService.Contracts 1.1819.0-NGDEVC-120-clrf-31
 nuget Mozu.ProductAdmin.Contracts 1.1828.1
 nuget Mozu.ProductRuntime.Contracts 1.1815.1
 nuget Mozu.Provisioning.Contracts < 1.20
@@ -49,11 +50,10 @@ nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
 nuget Mozu.PricingRuntime.Contracts >= 1.1816.1
 nuget Mozu.SiteSettings.General.Contracts 1.1743.4
-nuget Mozu.SiteSettings.Order.Contracts 1.1743.4
+nuget Mozu.SiteSettings.Order.Contracts 1.1819.0-giftcard-22
 nuget protobuf-net 2.0.0.668
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703
 nuget Mozu.Log4net.Gelf
 nuget MongoDB.Driver.GridFS  2.4.4
 nuget Mozu.Event.Contracts
-nuget Mozu.PaymentService.Contracts 1.1822.1

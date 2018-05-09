@@ -32,6 +32,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PaymentProcessingFlowType, op => op.ResolveUsing(dc => (dc.OrderProcessingSettings != null)
                     ? dc.OrderProcessingSettings.PaymentProcessingFlowType
                     : null))
+                .ForMember(x => x.GiftCardProcessingType, op => op.ResolveUsing(dc => (dc.OrderProcessingSettings != null)
+                    ? dc.OrderProcessingSettings.GiftCardProcessingType
+                    : null))
                 .ForMember(x => x.CustomerCheckoutType, op => op.ResolveUsing(dc => (dc.CustomerCheckoutSettings != null)
                     ? dc.CustomerCheckoutSettings.CustomerCheckoutType
                     : null))
@@ -92,6 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                     return creds;
                 }))
+                .ForMember(x=>x.SupportsGiftCardProcessing, op=>op.ResolveUsing(dc=> dc.GatewayDefinition?.Features?.Contains("SupportsGiftCard")))
                 //ignore
                 .ForMember(x => x.IsActive, op => op.Ignore())
 
@@ -209,6 +213,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SupportedCards, opt => opt.Ignore())
                 .ForMember(x => x.CountryCode, opt => opt.Ignore())
                 .ForMember(x => x.IsActive, opt => opt.Ignore())
+                .ForMember(x => x.SupportsGiftCardProcessing, op => op.ResolveUsing(dc => dc.GatewayDefinition?.Features?.Contains("SupportsGiftCard")))
                 ;
 
             CreateMap<Gateway, DCss.TenantGateway>()

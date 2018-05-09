@@ -1,151 +1,189 @@
 ﻿
 /**
  * @class  Taco.view.order.widget.GiftCardForm
- * @author James Zetlen
- * @description The form for adding gift cards, includes a grid
+ * @author Shel Keller
+ * @description The form for adding gateway giftcards. See EcommerceGiftCardForm for other digital credits. 
  */
 Ext.define('Taco.view.order.widget.GiftCardForm', {
-    extend: 'Taco.core.ux.form.Form',
+    extend: 'Ext.form.FieldContainer',
     requires: [
-        'Taco.view.order.widget.GiftCardGrid',
-        'Taco.model.StoreCredit'
+        'Taco.core.ux.form.CurrencyField'
     ],
+    id: "giftCardForm",
     layout: {
         type: 'vbox',
         align: 'stretch'
     },
-    getTotalField: function() {
+    getAmountToApplyField: function() {
         return this._totalField || (this._totalField = this.down('#totalField'));
     },
-    getGiftCardCodeField: function() {
-        return this._giftCardCodeField || (this._giftCardCodeField = this.down('#giftCardCodeField'));
+    getGiftCardNumberField: function() {
+        return this._giftCardNumberField || (this._giftCardCodeField = this.down('#giftCardNumberField'));
     },
-    getGiftCardGrid: function() {
-        return this._giftCardGrid || (this._giftCardGrid = this.down('#giftCardGrid'));
+    getSecurityCodeField: function () {
+        return this._giftCardSecurityCodeField || (this._giftCardSecurityCodeField = this.down('#giftCardSecurityCodeField'));
+    },
+    getGiftCardBalanceField: function () {
+        return this._giftCardBalanceField || (this._giftCardBalanceField = this.down('#giftCardBalanceField'));
+    },
+    fetchGiftCard: function (number, securityCode) {
+        console.log('fetchGiftCard');
+        // TODO: make api call to get gift card using card number and security code
     },
     initComponent: function() {
 
         var me = this;
-
+        //TODO: 
+        //amountToApply field is numerical and needs currency filtering 
+        //
+        // in actions: 
+        // getBalance 
+            // return error if gift card number field is empty 
+            // Gets value of security code and gift card number field
+            // calls fetchGiftCard
+            // 
+   
         me.actions = {
-            applyGiftCard: Ext.create('Ext.Action', {
-                text: 'Apply Card',
+            getBalance: Ext.create('Ext.Action', {
+                text: 'Check Balance',
                 ui: "action",
                 scale: "medium",
-                margin:'41 0 0 10',
+                margin:'21 0 0 10',
                 handler: function() {
-                    var codeField = me.getGiftCardCodeField(),
-                        code = codeField.getValue();
+                    var numberField = me.getGiftCardNumberField(),
+                        number = numberField.getValue(),
+                        securityCodeField = me.getSecurityCodeField(),
+                        balanceField = me.getGiftCardBalanceField(),
+                        securityCode = securityCodeField.getValue();
                     // prevent submit with empty data;
-                    if (!code) {
+                    if (!number || !securityCode) {
                         return
                     }
+                   
+                    //me.setLoading("Loading...");
+                    //me.fetchGiftCard(number, securityCode).then(function (res) {
+                    //    var amountRemaining = res.data.amountRemaining;
+                    //    ////TODO: change to currency
+                    //    balanceField.html(amountRemaining);
+                    //    balanceField.show();
+                    //}), function (error) {
+                    //    console.log(error);
+                    //    ////TODO: Error handling on giftcard fetch
+                    //};
 
-                    me.setLoading("Loading...");
-
-					me.storeCreditsStore = Taco.store.StoreCredits.createByCustomCode(code, {}, true);
-					me.storeCreditsStore.load({
-                        callback: function (records, operation, success) {
-                            me.setLoading(false);
-
-                            if(!success) {
-                                return codeField.markInvalid([codeField.invalidText]);
-                            }
-
-                            if (!records) return codeField.markInvalid([codeField.invalidText]);
-
-                            Ext.Array.each(records, function(record){
-
-                                var errorText;
-
-                                var now = new Date().getTime(),
-                                    expDate = record.get('expirationDate'),
-                                    activationDate = record.get('activationDate');
-                                if (expDate && expDate < now) errorText = "expired on " + expDate.toString();
-                                if (activationDate && activationDate > now) errorText = "does not become active until " + activationDate.toString();
-                                if (record.get('currentBalance') <= 0) errorText = "has no remaining funds.";
-                                if (record.get('customerId')) errorText = "has already been claimed.";
-
-                                // check to see if the code has already been added to the store;double click on apply button.                
-                                if (me.store.getById(record.getId())) {
-                                    errorText = "has already been added below";
-                                }
-                                if (errorText) return codeField.markInvalid(["Credit code " + code + " " + errorText]);
-
-                                me.store.insert(0, record);
-                            })
-						}
-					});
+                    me.getGiftCardBalanceField().show();
+                    //me.setDisplayedItems();
                 }
             })
         }
 
         this.items = [
             {
-                xtype: 'container',
+                xtype: 'container', 
                 layout: {
                     type: 'hbox',
                     align: 'top'
                 },
+                width: '100%',
+                defaults: {
+                    margin: '0 10 0 10'
+                },
                 itemId: 'applyForm',
-
                 items: [
                     {
-                        xtype: 'textfield',
-                        name: 'giftCardCode',
-                        fieldLabel: 'Gift Card Code',
-                        itemId: 'giftCardCodeField',
-                        width: 380,
-                        invalidText: 'The gift card code you entered is not valid.',
-                        msgTarget: 'giftCardErrorEl',
-                        autoFitErrors: false,
-                        listeners: {
-                            specialkey: function(field, e) {
-                                if (e.getKey() === e.ENTER) me.actions.applyGiftCard.execute();
-                            },
-                            // ugh, cellediting cancel blurs this field when you focus it
-                            focus: function(field) {
-                                field.focusTS = new Date().getTime();
-                            },
-                            blur: function(field) {
-                                if (new Date().getTime() - field.focusTS < 200) {
-                                    field.focus(false, 50);
+                        xtype: 'container',
+                        layout: {
+                            type: 'vbox',
+                            align: 'top'
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'giftCardNumber',
+                                fieldLabel: 'Gift Card Number',
+                                itemId: 'giftCardNumberField',
+                                allowBlank: false,
+                                invalidText: 'The gift card number you entered is not valid.',
+                                msgTarget: 'giftCardErrorEl',
+                                autoFitErrors: false,
+                                listeners: {
+                                    specialkey: function (field, e) {
+                                        // TODO: Enter key should check if both code and number are entered
+                                        // If they are we try to check the balance
+                                        if (e.getKey() === e.ENTER) me.actions.applyGiftCard.execute();
+                                    },
+                                    // ugh, cellediting cancel blurs this field when you focus it
+                                    focus: function (field) {
+                                        field.focusTS = new Date().getTime();
+                                    },
+                                    blur: function (field) {
+                                        if (new Date().getTime() - field.focusTS < 200) {
+                                            field.focus(false, 50);
+                                        }
+                                    }
                                 }
+                            },
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'Amount to Apply',
+                                allowBlank: false,
+                                name: 'applyAmount',
+                                itemId: 'applyAmountField'
+                                //validator: function (val) {
+                                //    //must be a currency/number?
+                                //    return true;
+                                //}
                             }
-                        }
-                    },
-                    this.applyButton = Ext.create('Ext.button.Button',this.actions.applyGiftCard),
+                        ]
+                    }, 
                     {
-                        xtype: 'textfield',
-                        hidden: true,
-                        allowBlank: false,
-                        name: 'total',
-                        itemId: 'totalField',
-                        validator: function(val) {
-                            return parseFloat(val) > 0;
-                        }
+                        xtype: 'container',
+                        layout: {
+                            type: 'vbox',
+                            align: 'top'
+                        },
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                name: 'securityCode',
+                                fieldLabel: 'Security Code',
+                                itemId: 'giftCardSecurityCodeField',
+                                allowBlank: false,
+                                invalidText: 'The security code entered was not valid.',
+                                msgTarget: 'giftCardErrorEl',
+                                autoFitErrors: false,
+                                listeners: {
+                                    // ugh, cellediting cancel blurs this field when you focus it
+                                    focus: function (field) {
+                                        field.focusTS = new Date().getTime();
+                                    },
+                                    blur: function (field) {
+                                        if (new Date().getTime() - field.focusTS < 200) {
+                                            field.focus(false, 50);
+                                        }
+                                    }
+                                }
+                            },
+                            Ext.widget({
+                                xtype: 'box',
+                                anchor: 0,
+                                margin: '30 0 0 0',
+                                hidden: true,
+                                itemId: 'giftCardBalanceField',
+                                autoEl: {
+                                    tag: 'h3',
+                                    html: '$123.45'
+                                }
+                            }), 
+                            this.checkBalanceButton = Ext.create('Ext.button.Button', this.actions.getBalance),
+                        ]
                     }
+
                 ]
             },
             {
                 xtype: 'component',
                 html: '<div role="alert" aria-live="polite" class="x-form-invalid-under" colspan="2"><ul class="x-list-plain"><li id="giftCardErrorEl"></li></ul></div>'
-            },
-            {
-                xtype: 'taco-order-gift-card-grid',
-                itemId: 'giftCardGrid',
-                store: this.store,
-                order: this.order,
-                margin: '20 0 0 0',
-                listeners: {
-                    viewready: function (grid) {
-                        grid.startInitialFocus();
-                    },
-                    amountchanged: function(amount) {
-                        this.getTotalField().setValue(amount);
-                    },
-                    scope: this
-                }
             }
         ];
         this.callParent(arguments);

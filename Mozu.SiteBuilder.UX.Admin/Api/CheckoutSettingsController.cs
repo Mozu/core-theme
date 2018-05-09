@@ -212,13 +212,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "cards/list")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetCards()
         {
-            if (!_tenantAdminSettingsContext.EnableBetaAdmin)
+            //Rakesh 5/11/2018: Removing this logic as payment service doesn't support GetGatewayForCountry anymore.
+            /*if (!_tenantAdminSettingsContext.EnableBetaAdmin)
             {
                 var currCountryCode = await GetCountryCodeForSite();
                 var dcGateway = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetActiveGatewayForCountry(currCountryCode)).ReadAsSync();
                 var old = dcGateway.SupportedCards.Select(x => new KeyValuePair<string, string>(x, x)).ToList();
                 return List2(old);
-            }
+            }*/
 
             var settings = await (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsAsync();
             var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SupportedCards).ToList();
@@ -261,7 +262,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcOrderProcessingSettings = Mapper.Map<DC.OrderProcessingSettings>(settingReq);
 
             //TODO: remove - to keep old admin working.
-            if (!_tenantAdminSettingsContext.EnableBetaAdmin)
+            //Rakesh 5/11/2018: Removing this logic as payment service doesn't support GetGatewayForCountry anymore.
+           /* if (!_tenantAdminSettingsContext.EnableBetaAdmin)
             {
                 var currCountryCode = await GetCountryCodeForSite();
                 var gateway = await GetGatewayForCountry(currCountryCode);
@@ -272,7 +274,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 await UpdateSettings(gateway, posted, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
                 var result = await GetSettings();
                 return result;
-            }
+            }*/
 
             await UpdateSettings(null, null, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
 
@@ -327,17 +329,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         //TODO: remove after we remove old admin.
-        private async Task<DC.Gateway> GetGatewayForCountry(string currCountryCode)
-        {
-            DC.Gateway gateway = null;
+        //Rakesh 5/11/2018: Removing this logic as payment service doesn't support GetGatewayForCountry anymore.
+        /*  private async Task<DC.Gateway> GetGatewayForCountry(string currCountryCode)
+          {
+              DC.Gateway gateway = null;
 
-            var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry(currCountryCode));
-            if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
-            {
-                gateway = currentGatewayRes.ReadAsSync();
-            }
-            return gateway;
-        }
+              var currentGatewayRes = (await _checkoutSettingsWebApiClient.GetActiveGatewayForCountry(currCountryCode));
+              if (currentGatewayRes.ResponseMessage.IsSuccessStatusCode)
+              {
+                  gateway = currentGatewayRes.ReadAsSync();
+              }
+              return gateway;
+              return null;
+          }*/
 
 
         /// <summary>

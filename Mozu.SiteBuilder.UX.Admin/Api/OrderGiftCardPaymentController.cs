@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public partial class OrderController
     {
 
-        public class GiftCardPayment
+        public class StoreCreditPayment
         {
             public string Code { get; set; }
             public decimal AmtToApply { get; set; }
@@ -25,24 +25,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public bool? RemainderToAccount { get; set; }
             public string CreditType { get; set; }
             public string CustomCreditType { get; set; }
+            public string PaymentType { get; set; }
         }
-
-        public class GiftCardPaymentCollection
+        public class StoreCreditPaymentCollection
         {
             public string OrderId { get; set; }
             public int? CustomerId { get; set; }
-            public List<GiftCardPayment> Payments { get; set; }
+            public List<StoreCreditPayment> Payments { get; set; }
         }
 
-        [HttpPostRoute(UriTemplate = "payment/addgiftcards")]
-        public async Task<Response<Order>> AddGiftCards(GiftCardPaymentCollection args)
+        public class GiftCardPayment
+        {
+            public decimal AmountToApply { get; set; }
+            public OrderPayment PaymentInfo { get; set; }
+            public string OrderId { get; set; }
+        }
+
+
+
+        [HttpPostRoute(UriTemplate = "payment/addStoreCredits")]
+        public async Task<Response<Order>> AddStoreCredits(StoreCreditPaymentCollection args)
         {
             // apply all of the gift cards to the order.
             // important: THESE MUST BE DONE SERIALLY
             // the service is not friendly to concurrent requests and the last one in will win, resulting in a single payment being added.
             foreach (var p in args.Payments)
             {
-                (await AddGiftCard(args.OrderId, p.Code, p.AmtToApply, p.CreditType, p.CustomCreditType)).ReadAsSync();
+                (await AddStoreCredit(args.OrderId, p.Code, p.AmtToApply, p.CreditType, p.CustomCreditType, p.PaymentType)).ReadAsSync();
             }
             
             // for any cards where we had selected "remainder to account", tie the card to the customer account.
@@ -60,7 +69,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
 
-        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCard(string orderId, string code, decimal amountToApply, string creditType, string customCreditType)
+        [HttpPostRoute(UriTemplate = "payment/addGiftCard")]
+        public async Task<Response<Order>> AddGiftCard(GiftCardPayment args)
+        {
+
+            (await AddGiftCardPayment(args.OrderId, args.AmountToApply, args.PaymentInfo)).ReadAsSync();
+
+            var order = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
+
+            return Single2(order.Map<Order>());
+
+        }
+
+        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddStoreCredit(string orderId, string code, decimal amountToApply, string creditType, string customCreditType, string paymentType)
         {
             var action = new DCp.PaymentAction
             {
@@ -78,6 +99,33 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     StoreCreditType = creditType,
                     CustomCreditType = customCreditType
 
+                },
+                Amount = amountToApply
+            };
+
+
+            return _orderWebApiClient.CreatePaymentAction(orderId, action);
+
+        }
+
+        private Task<DCcore.Client.ServiceClientResponse<CR.Order>> AddGiftCardPayment(string orderId, decimal amountToApply, OrderPayment payment)
+        {
+            var action = new DCp.PaymentAction
+            {
+                ActionName = ACTIONS.CREATE_PAYMENT,
+                NewBillingInfo = new DCp.BillingInfo
+                {
+                    PaymentType = "GiftCard", //DCp.PaymentTypeConst.STORE_CREDIT,
+                    Card = new DCp.PaymentCard
+                    {
+                        CardNumberPartOrMask = payment.CardNumber,
+                        NameOnCard = payment.NameOnCard,
+                        PaymentServiceCardId = payment.PaymentServiceCardId
+                    },
+                    BillingContact = new DCcore.Contact
+                    {
+                        Email = payment.BillingContact?.Email
+                    }
                 },
                 Amount = amountToApply
             };

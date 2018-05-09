@@ -79,6 +79,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 // .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing(x => (x.PaymentSettings.Gateways ?? Enumerable.Empty<DC.Gateway>()).Where(g => g.GatewayAccount != null && g.GatewayAccount.IsActive).Select(g => g.SupportedCards.ToDictionary(card => card)).FirstOrDefault() ?? new Dictionary<string, string>()))
                 .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing<SupportedCardsWithCountryCodeContextResolver>())
                 .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts))
+                .ForMember(x => x.SupportedGiftCards, opt => opt.ResolveUsing<SupportedGiftCardsResolver>())
                 ;
 
             CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
@@ -265,8 +266,25 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             }
             return settings;
         }
-        
 
+        private class SupportedGiftCardsResolver : IValueResolver<object, object, Dictionary<string, string>>
+        {
+            Dictionary<string, string> IValueResolver<object, object, Dictionary<string, string>>.Resolve(object source, object destination, Dictionary<string, string> destMember, ResolutionContext context)
+            {
+                List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
+                IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
+                                                           where g.GatewayAccount != null && g.SupportedCards.Contains("GiftCard")
+                                                           select g;
+
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+
+                ///TO-DO: Remove
+                ///Temp Value for Testing
+                cards.Add("GIFTCARD", "GIFTCARD");
+
+                return cards;
+            }
+        }
 
         /// <summary>
         /// Custom value resolver that respects countryCode as a mapping context option
@@ -278,7 +296,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null
+                                                           where g.GatewayAccount != null && !(g.SupportedCards.Count == 1 && g.SupportedCards.FirstOrDefault() == "GiftCard")
                                                            select g;
 
                 var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();

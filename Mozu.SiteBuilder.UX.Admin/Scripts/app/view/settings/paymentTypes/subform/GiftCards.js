@@ -1,14 +1,13 @@
 ﻿/**
  * The discount editor view
  */
-Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
+Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.model.CardGateway'
     ],
     margin: "0 0 20 0",
-    title: 'Credit Cards',
-    margin: "0 0 20 0",
+    title: 'Gift Cards',
     ui: "subform",
     width: "100%",
 
@@ -18,13 +17,15 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
         me.header = null;
 
         me.items = [];
-        
+
         me.paymentGatewaysStore = Ext.create('Taco.store.PaymentGateways');
         me.paymentGatewaysStore.load({
             scope: me
         })
+        me.paymentGatewaysStore.filter('supportsGiftCardProcessing', true);
 
         me.cardGateways = me.record.get('cardGatewayMap');
+        
 
         me.cardGatewayStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.CardGateway',
@@ -34,7 +35,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             data: me.cardGateways
         });
 
-        me.cardGatewayStore.filter('cardType', /^((?!GIFTCARD).)*$/);
+        me.cardGatewayStore.filter('cardType', /GIFTCARD/);
 
         me.gatewayCombo = Ext.create("Ext.form.field.ComboBox", {
             store: me.paymentGatewaysStore,
@@ -56,11 +57,11 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             var raw = Ext.Array.pluck(me.cardGatewayStore.data.items, 'data');
             me.cardGatewayMap = raw;
         };
-                
+
         me.syncCardGatewayMap();
         me.supportedCardsGrid = Ext.widget({
             xtype: 'grid',
-            listeners: { },
+            listeners: {},
             store: me.cardGatewayStore,
             enableColumnHide: false,
             sortableColumns: false,
@@ -91,6 +92,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                                         }
                                     }
                                 });
+                                    
                             }
 
                         }
@@ -133,7 +135,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
         me.selectFirstGateway = function (rowIndex) {
             me.supportedCardsGrid.getView().select(rowIndex);
 
-            me.supportedCardsGrid.fireEvent('itemclick', me.supportedCardsGrid)
+            me.supportedCardsGrid.fireEvent('itemclick', me.supportedCardsGrid);
 
             me.gatewayCombo.expand();
             me.gatewayCombo.focus(null, 10);
@@ -150,27 +152,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             }
         });
 
-        me.supportedCardsGrid.on('validateedit', function (editor, e) {
-            var gateway = me.paymentGatewaysStore.findRecord('id', e.value);
-            if (!gateway)
-                return;
-            var gatewayDef = gateway.get('gatewayDefinition');
-            if (!gatewayDef)
-                return;
-            var cards = gatewayDef.supportedCards;
-            var gateWayName = gatewayDef.name;
-            var cardType = e.record.get('cardType');
-            if (!cardType)
-                return;
-            //fail if the card isnt supported on the gateway def
-            if (!cards.find(function (_) { return _.key.toLowerCase() === cardType.toLowerCase() })) {
-                Taco.app.fireEvent('setmessage', 'payment type not available on ' + gateWayName, 'error');
-                return false;
-            }
-
-        });
-
-        me.paymentProcessingFlowTypeRg = Ext.widget(
+        me.gatewayProcessingFlowTypeRg = Ext.widget(
             {
                 xtype: 'radiogroup',
                 fieldLabel: 'Order Processing',
@@ -178,45 +160,40 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
                 columns: 1,
                 vertical: true,
                 items: [
-                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement', disabled: me.record.get('isMultiShipToEnabled') },
-                    { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'paymentProcessingFlowType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
+                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'giftCardProcessingType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
+                    { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'giftCardProcessingType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
                 ]
             });
-        
+
         if (me.cardGateways && me.cardGateways.length) {
-            me.items.push(me.supportedCardsGrid, me.paymentProcessingFlowTypeRg);
+            me.items.push(me.supportedCardsGrid, me.gatewayProcessingFlowTypeRg);
         }
         else {
             me.items.push({
                 xtype: 'box',
-                html: 'No Configured gateways supporting credit cards, click <a href="#">here</a> to setup a gateway',
+                html: 'No Configured gateways supporting Giftcards, click <a href="#">here</a> to setup a gateway',
                 listeners: {
                     click: {
-                        fn: function(){
+                        fn: function () {
                             Taco.core.StateManager.attemptNavigate('settings/paymentGateways');
                         },
                         element: 'el',
-                        scope: this 
+                        scope: this
                     }
                 }
             });
-        }
+        }  
 
         me.callParent(arguments);
     },
     initTitle: Ext.emptyFn,
-    
+
     persistFormValues: function () {
         var me = this;
         var recordCardGatewayMap = me.record.get('cardGatewayMap');
-        var updatedCardGatewayMap = Ext.Array.map(recordCardGatewayMap, function (cardRecord) {
-            var cardGateway = me.cardGatewayMap.find(function (card) {
-                return cardRecord.cardType === card.cardType;
-            });
-            if (cardGateway) {
-                return Object.assign(cardRecord, cardGateway);
-            }
-            return cardRecord;
+        var updatedCardGatewayMap = Ext.Array.map(recordCardGatewayMap, function (item) {
+            if (item.cardType === "GIFTCARD") return me.cardGatewayMap[0];
+            return item;
         });
 
         me.record.set('cardGatewayMap', updatedCardGatewayMap);
