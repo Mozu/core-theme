@@ -38,7 +38,7 @@ define([
                         fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
                      
                         
-                        me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}).then(
+                        me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}, {silent: true}).then(
                             function() {
                                 //me.isLoading (false);
                                 me.set("fulfillmentInfo", fulfillmentInfo);
@@ -85,7 +85,7 @@ define([
                     "externalTransactionId" : me.awsData.awsReferenceId
                 };
 
-                me.apiCreatePayment(billingInfo).then( function() {
+                me.apiModel.createPayment(billingInfo, {silent:true}).then( function() {
                     me.trigger('awscheckoutcomplete', me.id);
                     me.isLoading(false);
                }, function(err) {
@@ -109,7 +109,7 @@ define([
                     else 
                         fulfillmentInfo.fulfillmentContact = null;
 
-                me.apiUpdateShippingInfo( fulfillmentInfo ).then(function(result) {
+                me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
                     me.set("fulfillmentInfo",result.data);
                     //me.isLoading(false);
                     if (me.apiModel.data.requiresFulfillmentInfo)
