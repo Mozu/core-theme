@@ -601,6 +601,17 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 }
             },
+            isEmptyAddress: function(obj){
+                var emptyAddress = new AddressModels.StreetAddress({}).toJSON();
+                var areEqual = _.isMatch(emptyAddress, {
+                    addressType: obj.addressType,
+                    candidateValidatedAddresses: obj.candidateValidatedAddresses,
+                    countryCode: obj.countryCode,
+                    postalOrZipCode: obj.postalOrZipCode,
+                    stateOrProvince: obj.stateOrProvince
+                });
+                return areEqual;
+            },
             compareAddressObjects: function(obj1, obj2) {
                 var areEqual = _.isMatch(obj1, {
                     address1 : obj2.address1,
@@ -659,7 +670,8 @@ var CheckoutPage = Backbone.MozuModel.extend({
                                 "name": "Shipping",
                                 "isPrimary": (destination.get('destinationContact').contactTypeHelpers().isPrimaryShipping()) ? true : false
                             }];
-                            updatedContacts.push(destinationContact);
+                            if (!self.isEmptyAddress(destinationContact.address))
+                                updatedContacts.push(destinationContact);
                         }
                     }
                 });
@@ -699,22 +711,25 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     updatedContacts.push(newBillingContact);
                 }
                 else {
-                    updatedContacts.push(billingContact);
+                    if (!self.isEmptyAddress(billingContact.address))
+                        updatedContacts.push(billingContact);
                 }
 
-
-                return customer.apiModel.updateCustomerContacts({id: customer.id, postdata:updatedContacts}).then(function(contactResult) {
-                    _.each(contactResult.data.items, function(contact) {
-                        if(contact.types){
-                            var found = _.findWhere(contact.types, {name: "Billing", isPrimary: true});
-                            if(found) {
-                                self.get('billingInfo').set('billingContact', contact);
-                            return false;
+                if (updatedContacts.length) {
+                    return customer.apiModel.updateCustomerContacts({id: customer.id, postdata:updatedContacts}).then(function(contactResult) {
+                        _.each(contactResult.data.items, function(contact) {
+                            if(contact.types){
+                                var found = _.findWhere(contact.types, {name: "Billing", isPrimary: true});
+                                if(found) {
+                                    self.get('billingInfo').set('billingContact', contact);
+                                return false;
+                                }
                             }
-                        }
+                        });
+                        return contactResult;
                     });
-                    return contactResult;
-                });
+                }
+                return {};
             },
             saveCustomerCard: function () {
                 var order = this,

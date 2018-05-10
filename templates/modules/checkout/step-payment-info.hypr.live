@@ -3,7 +3,7 @@
     {%if not model.isExternalCheckoutFlowComplete%}
         <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
     {%endif%}
-    {% if model.isAwsCheckout() and model.stepStatus == "incomplete" %}
+    {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
         <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
     {% endif %}
 </h3>
