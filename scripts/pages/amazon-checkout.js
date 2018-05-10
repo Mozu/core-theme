@@ -3,7 +3,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 	function ($,Backbone, EditableView, EventBus, _, AmazonPay, AmazonCheckoutModels, AmazonCheckoutModelsV2,hyprlivecontext,preserveElements) {
  
 
-	var AmazonCheckoutView = EditableView.extend({
+	var AmazonCheckoutView = Backbone.MozuView.extend({
 		templateName: 'modules/checkout/amazon-shipping-billing',
 		autoUpdate: ['overrideItemDestinations'],
 		initialize: function() {
@@ -82,10 +82,6 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 									model: checkoutModel,
 									messagesEl: $('[data-mz-message-bar]')
 								});
-
-
-		
-		
 		window.checkoutView.render();
 	});
 });
