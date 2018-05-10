@@ -19,7 +19,7 @@ define([
             applyShippingMethods: function(existingShippingMethodCode) {
                 var me = this;
                 //me.isLoading( true);
-                me.apiModel.getShippingMethods().then(
+                me.apiModel.getShippingMethods(null, {silent:true}).then(
                     function (methods) {
 
                         if (methods.length === 0) {
@@ -55,7 +55,7 @@ define([
                 }), function(payment) {
                     return me.apiVoidPayment(payment.id);
                 })).then(function() {
-                    return me.apiGet();
+                    return me.apiGet(null, { silent: true });
                 }).then(function(order) {
                     return me.applyPayment();
                 });
@@ -104,10 +104,15 @@ define([
                     fulfillmentInfo.data = me.awsData;
 
                    var user = require.mozuData('user');
-                    if (user && user.email)
+                    if (user && user.email) {
+                        if (!fulfillmentInfo.fulfillmentContact)
+                            fulfillmentInfo.fulfillmentContact = {};
+
                         fulfillmentInfo.fulfillmentContact.email =  user.email; 
-                    else 
+                    }
+                    else {
                         fulfillmentInfo.fulfillmentContact = null;
+                    }
 
                 me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
                     me.set("fulfillmentInfo",result.data);
