@@ -217,5 +217,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> ProductsToExcludeFromMinOrderTotal { get; set; }
 
         public List<int> CategoriesToExcludeFromMinOrderTotal { get; set; }
+
+        /// <summary>
+        /// Prevents Line Item Shipping discounts from being applied when a Line Item Product  
+        /// discount has been applied 
+        /// </summary>
+        public bool? PreventLineItemShippingDiscounts { get; set; }
+
+        /// <summary>
+        /// Prevents Order Product discounts from being applied when a Line Item Product  
+        /// or Shipping discount has been applied 
+        /// </summary>
+        public bool? PreventOrderProductDiscounts { get; set; }
+
+        /// <summary>
+        /// Prevents Order Shipping discounts from being applied when a Line Item Product/Shipping  
+        /// or Order Product discount has been applied 
+        /// </summary>
+        public bool? PreventOrderShippingDiscounts { get; set; }
+
     }
 }

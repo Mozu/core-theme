@@ -57,8 +57,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Get a list of discounts.
         /// </summary>
-		[HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Discount>>> ListDiscounts(PagingParamaters pagingParams, FilterCollection extFilter)
+        [HttpGetRoute(UriTemplate = "list")]
+        public async Task<Response<List<Discount>>> ListDiscounts(PagingParamaters pagingParams,
+            FilterCollection extFilter)
         {
             if (pagingParams.id != null)
             {
@@ -68,7 +69,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var couponSetId = extFilter.QueryString.Get("couponsetid");
             if (!string.IsNullOrEmpty(couponSetId))
             {
-                extFilter.Add(new FilterCollectionItem { comparison = "eq", field = "couponsetid", value = couponSetId });
+                extFilter.Add(new FilterCollectionItem {comparison = "eq", field = "couponsetid", value = couponSetId});
             }
 
             var query = extFilter.QueryString.Get("query");
@@ -78,14 +79,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             string filter = null;
-            if (extFilter != null && extFilter.Count > 0)
+            if (extFilter.Count > 0)
             {
                 var tenant = (await _tenantClient.GetTenant(_apiContext.TenantId)).ReadAsSync();
                 var masterCat = tenant.MasterCatalogs.FirstOrDefault(x => x.Id == _apiContext.MasterCatalogId);
-                var defaultLocalCode = masterCat.DefaultLocaleCode;
-                var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;
+                if (masterCat != null)
+                {
+                    var defaultLocalCode = masterCat.DefaultLocaleCode;
+                    var masterNumberFormat = CultureInfo.GetCultureInfo(defaultLocalCode).NumberFormat;
 
-                filter = extFilter.ToFilterString(_apiContext, masterNumberFormat, _tenantClient);
+                    filter = extFilter.ToFilterString(_apiContext, masterNumberFormat, _tenantClient);
+                }
             }
 
             var sortBy = pagingParams.ToSort(_discountSortFormatter);
@@ -102,13 +106,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 var discounts = Mapper.Map<List<Discount>>(discountList.Items);
 
-                return List2(discounts, (int?)discountList.TotalCount );
+                return List2(discounts, discountList.TotalCount);
             }
             catch (ApiWebClientConnectionException e)
             {
-                return this.FailureList2<Discount>(e.Message);
+                return FailureList2<Discount>(e.Message);
             }
-        }   
+        }
 
         /// <summary>
         /// Create a new discount.
@@ -130,10 +134,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
 
                 // the Mozu service does not allow us to pick "FreeShipping" but have no shipping methods associated.
-                if (dc.Target.Type == "FreeShipping" && (dc.Target.ShippingMethods == null || dc.Target.ShippingMethods.Count == 0))
+                if (dc.Target.Type == "FreeShipping" &&
+                    (dc.Target.ShippingMethods == null || dc.Target.ShippingMethods.Count == 0))
                 {
-                    var meth = new DC.TargetedShippingMethod { Code = "FreeShipping", Name = "Free Shipping" };
-                    dc.Target.ShippingMethods = new List<DC.TargetedShippingMethod>(new[] {meth});
+                    var targetedShippingMethod =
+                        new DC.TargetedShippingMethod {Code = "FreeShipping", Name = "Free Shipping"};
+                    dc.Target.ShippingMethods = new List<DC.TargetedShippingMethod>(new[] {targetedShippingMethod});
                 }
 
                 try
@@ -175,7 +181,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var discount in discountList)
             {
-                discount.RequiresCoupon = !discount.CouponSets.IsNullOrEmpty() || !string.IsNullOrEmpty(discount.CouponCode);
+                discount.RequiresCoupon =
+                    !discount.CouponSets.IsNullOrEmpty() || !string.IsNullOrEmpty(discount.CouponCode);
                 var dc = Mapper.Map<DC.Discount>(discount);
                 var res = (await _discountWebClient.UpdateDiscount(dc, discount.Id)).ReadAsSync();
 
@@ -194,18 +201,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task MergeCouponSets(Discount discount)
         {
-            var currentCouponSets = (await _couponSetClient.GetCouponSets(filter: $"assigneddiscountid eq {discount.Id}")).ReadAsSync();
+            var currentCouponSets =
+                (await _couponSetClient.GetCouponSets(filter: $"assigneddiscountid eq {discount.Id}")).ReadAsSync();
 
             if (discount.CouponSets.IsNullOrEmpty() && currentCouponSets.TotalCount == 0)
                 return;
 
             var tasks = new List<Task>();
 
-            var deleteList = currentCouponSets.Items.Where(x => !discount.CouponSets.Select(cs => cs.Id).Contains(x.Id));
+            var deleteList =
+                currentCouponSets.Items.Where(x => !discount.CouponSets.Select(cs => cs.Id).Contains(x.Id));
             var delTasks = UnassignCouponSetsFromDiscountTasks(discount.Id, deleteList);
             tasks.AddRange(delTasks);
 
-            var addList = discount.CouponSets.Where(x => !currentCouponSets.Items.Select(cs => cs.Id).Contains(x.Id));
+            var addList = 
+                discount.CouponSets.Where(x => !currentCouponSets.Items.Select(cs => cs.Id).Contains(x.Id));
             var addTasks = AssignCouponSetsToDiscountTasks(discount.Id, addList);
             tasks.AddRange(addTasks);
 
@@ -215,27 +225,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             addTasks.Select(TaskHelper.Result).ThrowExceptionsIfAny();
         }
 
-        private List<Task<ServiceClientResponse<StreamContent>>> UnassignCouponSetsFromDiscountTasks(int? discountId, IEnumerable<DC.CouponSet> deleteList )
+        private List<Task<ServiceClientResponse<StreamContent>>> UnassignCouponSetsFromDiscountTasks(int? discountId,
+            IEnumerable<DC.CouponSet> deleteList)
         {
-            List<Task<ServiceClientResponse<StreamContent>>> deleteTasks =
-                deleteList.Select(
-                    x =>
-                        _couponSetClient.UnAssignDiscount(x.CouponSetCode, discountId)).ToList();
+            var deleteTasks = deleteList
+                .Select(x => _couponSetClient.UnAssignDiscount(x.CouponSetCode, discountId))
+                .ToList();
             return deleteTasks;
         }
 
-        private List<Task<ServiceClientResponse<StreamContent>>> AssignCouponSetsToDiscountTasks(int? discountId, IEnumerable<CouponSet> addList)
+        private List<Task<ServiceClientResponse<StreamContent>>> AssignCouponSetsToDiscountTasks(int? discountId,
+            IEnumerable<CouponSet> addList)
         {
-            return addList.Select(x =>
-                _couponSetClient.AssignDiscount(x.CouponSetCode,
-                    new DC.AssignedDiscount
+            return addList
+                .Select(x =>
+                    _couponSetClient.AssignDiscount(x.CouponSetCode, new DC.AssignedDiscount
                     {
                         CouponSetCode = x.CouponSetCode,
                         CouponSetId = x.Id.GetValueOrDefault(),
                         DiscountId = discountId.GetValueOrDefault()
-                    })).ToList();
+                    }))
+                .ToList();
         }
-        
+
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<Discount>> DeleteDiscount(List<Discount> discounts)
         {
@@ -247,7 +259,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "paymentworkflow/list")]
-        public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(PagingParamaters pagingParams, FilterCollection extFilter)
+        public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(
+            PagingParamaters pagingParams, 
+            FilterCollection extFilter)
         {
             var displayNameLookup = new Dictionary<string, string>
             {

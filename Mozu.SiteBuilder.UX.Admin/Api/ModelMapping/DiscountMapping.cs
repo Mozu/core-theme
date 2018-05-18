@@ -88,31 +88,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             CreateMap<DC.Discount, Discount>()
                 .ForMember(x => x.Target, opt => opt.ResolveUsing(x => x.Target?.Type))
                 .ForMember(x => x.IncludeAllProducts, opt => opt.ResolveUsing(x => x.Target?.IncludeAllProducts))
-
                 .ForMember(x => x.IncludedPaymentType, opt => opt.ResolveUsing(x =>
                     (x.Conditions != null && !x.Conditions.IncludedPaymentWorkflows.IsNullOrEmpty())
                         ? x.Conditions.IncludedPaymentWorkflows.First()
                         : null))
-
                 .ForMember(x => x.ExcludeItemsWithExistingProductDiscounts,
                     opt => opt.ResolveUsing(x => x.Target?.ExcludeItemsWithExistingProductDiscounts))
-
                 .ForMember(x => x.AppliesToLeastExpensiveProductsFirst,
                     opt => opt.ResolveUsing(x => x.Target?.AppliesToLeastExpensiveProductsFirst))
-
                 .ForMember(x => x.ExcludeItemsWithExistingShippingDiscounts,
                     opt => opt.ResolveUsing(x => x.Target?.ExcludeItemsWithExistingShippingDiscounts))
-
                 .ForMember(x => x.MinimumLifetimeValueAmount,
                     opt => opt.ResolveUsing(x => x.Conditions?.MinimumLifetimeValueAmount))
                 .ForMember(x => x.MaximumQuantityPerRedemption,
                     opt => opt.ResolveUsing(x => x.Target?.MaximumQuantityPerRedemption))
                 .ForMember(x => x.Categories,
-                    opt => opt.ResolveUsing(x => x.Target?.Categories?.Select(_ => _.Id).ToList() 
-                        ?? (Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id).ToList()))
-                .ForMember(x => x.IsIncludedCategoriesAllOperator, 
-                    op => op.ResolveUsing(dc => (dc.Target != null 
-                        && dc.Target.IncludedCategoriesOperator == DC.DiscountTarget.TargetedCategoriesOperators.ALL)))
+                    opt => opt.ResolveUsing(x => x.Target?.Categories?.Select(_ => _.Id).ToList()
+                                                 ?? (Enumerable.Empty<DC.TargetedCategory>()).Select(_ => _.Id)
+                                                 .ToList()))
+                .ForMember(x => x.IsIncludedCategoriesAllOperator,
+                    op => op.ResolveUsing(dc => (dc.Target != null
+                                                 && dc.Target.IncludedCategoriesOperator ==
+                                                 DC.DiscountTarget.TargetedCategoriesOperators.ALL)))
                 .ForMember(x => x.Products, opt => opt.ResolveUsing(x =>
                     x.Target?.Products?.Select(_ => _.ProductCode).ToList() ?? (Enumerable.Empty<DC.TargetedProduct>())
                     .Select(_ => _.ProductCode).ToList()))
@@ -123,31 +120,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x =>
                         x.Target?.ExcludedProducts?.Select(_ => _.ProductCode).ToList() ??
                         (Enumerable.Empty<DC.TargetedProduct>()).Select(_ => _.ProductCode).ToList()))
-
                 .ForMember(dest => dest.ProductsToExcludeFromMinOrderTotal,
                     opt => opt.ResolveUsing(src => src.Conditions?.ProductsToExcludeFromMinOrderTotal?
-                        .Select(condition => condition.ProductCode).ToList() ?? Enumerable.Empty<string>()))
-
+                                                       .Select(condition => condition.ProductCode).ToList() ??
+                                                   Enumerable.Empty<string>()))
                 .ForMember(dest => dest.CategoriesToExcludeFromMinOrderTotal,
                     opt => opt.ResolveUsing(src => src.Conditions?.CategoriesToExcludeFromMinOrderTotal?
-                        .Select(condition => condition.CategoryId).ToList() ?? Enumerable.Empty<int>()))
-
+                                                       .Select(condition => condition.CategoryId).ToList() ??
+                                                   Enumerable.Empty<int>()))
                 .ForMember(x => x.IncludedPriceLists, op => op.ResolveUsing(dc => dc.IncludedPriceLists))
-
-
                 .ForMember(x => x.ShippingMethods,
                     opt => opt.ResolveUsing(x =>
                         x.Target?.ShippingMethods?.Select(_ => _.Code).ToList() ?? new List<string>()))
-
                 .ForMember(x => x.ShippingZones,
                     opt => opt.ResolveUsing(x =>
                         x.Target?.ShippingZones?.Select(_ => _.Zone).ToList() ?? new List<string>()))
-
-                //.ForMember(x => x.ShippingZones , opt => opt.ResolveUsing( x =>   (x.Target != null && x.Target.ShippingZones  != null)
-                //     ? x.Target.ShippingZones.Select(_ => __.z).ToList()
-                //     : new List<string>()))
-
-
                 .ForMember(x => x.MinimumOrderAmount, opt => opt.ResolveUsing(x => x.Conditions?.MinimumOrderAmount))
                 .ForMember(x => x.MaxRedemptionCount, opt => opt.ResolveUsing(x => x.Conditions?.MaxRedemptionCount))
                 .ForMember(x => x.MaximumRedemptionsPerOrder, opt => opt.ResolveUsing(dc => (dc.Conditions != null)
@@ -205,6 +192,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CanBeStackedUpon, op => op.ResolveUsing(dc => dc.CanBeStackedUpon))
                 .ForMember(x => x.StackingLayer, op => op.ResolveUsing(dc => dc.StackingLayer))
                 .ForMember(x => x.ThresholdMessage, op => op.ResolveUsing(dc => dc.ThresholdMessage))
+                .ForMember(x => x.PreventLineItemShippingDiscounts,
+                    op => op.ResolveUsing(dc => dc.PreventLineItemShippingDiscounts))
+                .ForMember(x => x.PreventOrderProductDiscounts,
+                    op => op.ResolveUsing(dc => dc.PreventOrderProductDiscounts))
+                .ForMember(x => x.PreventOrderShippingDiscounts,
+                    op => op.ResolveUsing(dc => dc.PreventOrderShippingDiscounts))
                 //AuditInfo
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
@@ -292,17 +285,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     IncludeAllProducts = x.IncludeAllProducts,
                     AppliesToLeastExpensiveProductsFirst = x.AppliesToLeastExpensiveProductsFirst,
                 }))
-
                 .ForMember(dc => dc.IncludedPriceLists, op => op.ResolveUsing(x => x.IncludedPriceLists))
-
+                .ForMember(dc => dc.PreventLineItemShippingDiscounts,
+                    op => op.ResolveUsing(x => x.PreventLineItemShippingDiscounts))
+                .ForMember(dc => dc.PreventOrderProductDiscounts,
+                    op => op.ResolveUsing(x => x.PreventOrderProductDiscounts))
+                .ForMember(dc => dc.PreventOrderShippingDiscounts,
+                    op => op.ResolveUsing(x => x.PreventOrderShippingDiscounts))
                 .AfterMap((s, d) =>
                 {
                     if (d.Target.IncludeAllProducts.GetValueOrDefault(false))
                     {
                         d.Target.Products = null;
                         d.Target.Categories = null;
-                        //d.Target.ExcludedCategories = null;
-                        //d.Target.ExcludedProducts = null;
                     }
                 })
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore());
@@ -334,53 +329,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateDate))
                 .ForMember(x => x.UpdateBy,
                     op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy));
-
-                    
-
+                   
             CreateMap<Coupon, DC.Coupon>()
                 .ForMember(x => x.AuditInfo, op => op.Ignore());
-
         }
-
-
-
-        //private string MapToTargetType(DC.DiscountTarget t)
-        //{
-        //    if (t.IncludeAllProducts == true)
-        //        return "AllProducts";
-        //    if (t.Type.Equals("FreeShipping", StringComparison.InvariantCultureIgnoreCase))
-        //        return "FreeShipping";
-        //    if (t.Type.Equals("Product", StringComparison.InvariantCultureIgnoreCase))
-        //        return "Product";
-        //    else
-        //        return "Order";
-        //}
-
-        //private DC.DiscountTarget MapToDiscountTarget(Discount d)
-        //{
-        //    string targetType;
-        //    switch (d.Target.ToLowerInvariant())
-        //    {
-        //        case "allproducts":
-        //        case "product":
-        //            targetType = "Product";
-        //            break;
-        //        default:
-        //            targetType = d.AmountType.Equals("FreeShipping", StringComparison.InvariantCultureIgnoreCase) ? "FreeShipping" : "Order";
-        //            break;
-        //    }
-
-
-        //    return new DC.DiscountTarget
-        //        {
-        //            Categories = (d.Categories ?? new List<int>()).Select(targetedCategory => new DC.TargetedCategory { Id = targetedCategory }).ToList(),
-        //            Products = (d.Products ?? new List<string>()).Select(targetedProduct => new DC.TargetedProduct { Code = targetedProduct }).ToList(),
-        //            ShippingMethods = (d.ShippingMethods ?? new List<string>()).Select(targetedShippingMethods => new DC.TargetedShippingMethod { Code = targetedShippingMethods }).ToList(),
-        //            IncludeAllProducts = d.Target.Equals("allproducts", StringComparison.InvariantCultureIgnoreCase),
-        //            MinimumOrderAmount = d.MinimumOrderAmount,
-        //            Type = targetType
-        //        };
-
-        //}
     }
 }
