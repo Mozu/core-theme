@@ -54,8 +54,8 @@
         {% endif %}
         {% if model.billingInfo.paymentType == "CreditCard" %}
             <div class="mz-l-stack-item">
-                <small>{{ labels.cardtype }}</small>
-                <div>{{ model.billingInfo.card.paymentOrCardtype }}</div>
+                <small>{{ labels.cardType }}</small>
+                <div>{{ model.billingInfo.card.paymentOrCardType }}</div>
             </div>
             <div class="mz-l-stack-item">
                 <small>{{ labels.cardNumber }}</small>
