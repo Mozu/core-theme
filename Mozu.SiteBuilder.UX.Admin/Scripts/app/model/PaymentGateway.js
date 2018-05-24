@@ -10,7 +10,6 @@ Ext.define('Taco.model.PaymentGateway', {
         { name: "credentials", type: "auto" },
         { name: "name", type: "string" },
         { name: "gatewayDefinitionName", type: "string" },
-        { name: "gatewayDefinition", type: "auto "},
         { name: "credentialsSet", type: "boolean" }
     ],
 

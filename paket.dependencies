@@ -56,4 +56,3 @@ nuget mozu.tenant.contracts > 1.1703
 nuget Mozu.Log4net.Gelf
 nuget MongoDB.Driver.GridFS  2.4.4
 nuget Mozu.Event.Contracts
-nuget Mozu.PaymentService.Contracts 1.1812.1

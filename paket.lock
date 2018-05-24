@@ -109,7 +109,7 @@ NUGET
       Mozu.Core.Prime (>= 1.1613.1)
     Mozu.Log4net.Gelf (1.1735.2)
     Mozu.MZDB.Contracts (1.19.3)
-    Mozu.PaymentService.Contracts (1.1814.1)
+    Mozu.PaymentService.Contracts (1.1741.2)
     Mozu.PricingRuntime.Contracts (1.1816.1)
       Mozu.Core.Prime (>= 1.1735.3)
       Mozu.SiteSettings.General.Contracts (>= 1.1738.2)

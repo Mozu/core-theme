@@ -14,9 +14,6 @@ using DC = Mozu.SiteSettings.Order.Contracts;
 using System.Net.Http;
 using System.Net;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using System.Collections;
-using System.Linq.Expressions;
-using Mozu.PaymentService.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -24,7 +21,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     public class CheckoutSettingsController : BaseController
     {
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-        private readonly Lazy<IGeneralSettingWrapper> _generalSettingWrapper;
         private readonly IApiContext _context;
         private readonly ITenantsWebApiClient _tenantClient;
         private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
@@ -33,7 +29,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// Constructor.
         /// </summary>
         public CheckoutSettingsController(ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
-            , Lazy<IGeneralSettingWrapper> generalSettingWrapper
             , ITenantsWebApiClient tenantClient
             , IApiContext context
             , ITenantAdminSettingsContext tenantAdminSettingsContext
@@ -41,7 +36,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             )
         {
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.CloneWithConfigOptions(config => config.EnableDirtyCacheRead = false);
-            _generalSettingWrapper = generalSettingWrapper;
             _context = context;
             _tenantClient = tenantClient.CloneWithoutUserClaims();
             _aggregateSiteSettingsWebApiClient = aggregateSiteSettingsWebApiClient.CloneWithoutUserClaims();
@@ -56,69 +50,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<CheckoutSettings>> GetSettings()
         {
             var dcSettings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
-            var definitions = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
-            var gateways = (await _checkoutSettingsWebApiClient.GetGateways()).ReadAsSync();
+
+            //TODO: remove - to keep old admin working.
+            if (!_tenantAdminSettingsContext.EnableBetaAdmin)
+            {
+                string currCountryCode = await GetCountryCodeForSite();
+                // filter out all gateways not from our current country code.
+                dcSettings.PaymentSettings.Gateways = (
+                    from g in dcSettings.PaymentSettings.Gateways
+                    where g.GatewayAccount != null
+                    where g.GatewayAccount.IsActive
+                    where currCountryCode.Equals(g.GatewayAccount.CountryCode, StringComparison.InvariantCultureIgnoreCase)
+                    select g
+                ).ToList();
+            }
 
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
-            ret.CardGatewayMap =  AppendUnmappedGateways(gateways, definitions, dcSettings);
-
             return Single2(ret);
         }
-       
-        private List<CardGateway> AppendUnmappedGateways(List<DC.TenantGateway> gateways, List<PaymentService.Contracts.GatewayDefinition> definitions, DC.CheckoutSettings checkoutSettings)
-        {
-            var configuredGatewayIds = new HashSet<string>(gateways.Select(_ => _.GatewayAccount.GatewayDefinitionId));
-           
-                return definitions
-               ?.Where(_=> configuredGatewayIds.Contains(_.Id))
-               ?.SelectMany(x => x.SupportedCards)
-               ?.Distinct(CGComp.Default)
-               ?.Select(x =>
-               {
-                   var associatedGatewayAccount = checkoutSettings.PaymentSettings.Gateways
-                   .FirstOrDefault(_ => _.SupportedCards
-                    .Any(c => string.Equals(c, x.Type, StringComparison.OrdinalIgnoreCase)));
-
-                   return checkoutSettings
-                   .PaymentSettings
-                   ?.Gateways
-                   ?.SelectMany(g => g.SupportedCards, (g, s) =>
-                   new CardGateway() {
-                       GatewayId = associatedGatewayAccount?.GatewayAccount.Id,
-                       GatewayName = associatedGatewayAccount?.GatewayAccount.Name,
-                       CardDisplay = x.FriendlyName,
-                       CardType = x.Type,
-                       IsEnabled= associatedGatewayAccount != null
-                   }).Where( _=> string.Equals(_.CardType , x.Type,StringComparison.OrdinalIgnoreCase))
-                   .FirstOrDefault() ?? new CardGateway()
-                   {
-                       CardDisplay = x.FriendlyName,
-                       CardType = x.Type
-                   };
-               }
-               )
-               ?.OrderBy(x => x.CardDisplay)
-               ?.ToList() ?? new System.Collections.Generic.List<CardGateway>();
-
-        }
-
-        class CGComp : IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>
-        {
-            public static IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard> Default = (IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>) new CGComp();
-
-            public int GetHashCode(Mozu.PaymentService.Contracts.SupportedCard obj)
-            {
-                return StringComparer.OrdinalIgnoreCase.GetHashCode(obj?.Type );
-            }
-
-            bool IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>.Equals(Mozu.PaymentService.Contracts.SupportedCard x, Mozu.PaymentService.Contracts.SupportedCard y)
-            {
-                return StringComparer.OrdinalIgnoreCase.Equals(x?.Type, y?.Type);
-            }
-
-            
-        }
-        
 
         [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
         public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()
@@ -345,11 +294,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns>Array of gateway definitions</returns>
         [HttpGetRoute(UriTemplate = "gatewaydefinitions/read")]
-        public async Task<Response<List<Models.Checkout.GatewayDefinition>>> GetGatewayDefinitions()
+        public async Task<Response<List<GatewayDefinition>>> GetGatewayDefinitions()
         {
             var gateways = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
 
-            var mapped = Mapper.Map<List<Models.Checkout.GatewayDefinition>>(gateways).OrderBy(x => x.Name).ToList();
+            var mapped = Mapper.Map<List<GatewayDefinition>>(gateways).OrderBy(x => x.Name).ToList();
 
             //TODO: remove after we remove old admin.
             mapped.ForEach(x =>
