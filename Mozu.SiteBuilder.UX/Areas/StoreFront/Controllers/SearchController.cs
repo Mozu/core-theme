@@ -23,6 +23,11 @@ using Mozu.SiteBuilder.Mvc.Helpers;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.Controllers;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.IO;
+using System.Net;
+using System.Linq;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -59,7 +64,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //adding w as an extra param for jelly belly.  Plan to remove in r6.1
             string w = null,
             string inStockLocation = null,
-            [FromUri]AdvancedSearchParamaters searchParams = null)
+            [FromUri]AdvancedSearchParamaters searchParams = null,
+            [FromUri(Name = "debug.explain.structured")]bool  debug_explain_structure = false)
         {
             var _ = searchParams;
 
@@ -85,6 +91,41 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     : $"(({_.filter}) and ({locationFilter}))";
             }
 
+            if (debug_explain_structure)
+            {
+                var debugTxt = await (await _searchClient.SearchDebug(
+                query: _.query,
+                filter: parsedFilter,
+                facetTemplate: _.facetTemplate,
+                facetTemplateSubset: _.facetTemplateSubset,
+                facet: _.facet,
+                facetFieldRangeQuery: _.facetFieldRangeQuery,
+                facetHierPrefix: _.facetHierPrefix,
+                facetHierValue: _.facetHierValue,
+                facetStartIndex: _.facetStartIndex,
+                facetPageSize: _.facetPageSize,
+                cursorMark: _.cursorMark,
+                enableSearchTuningRules: _.enableSearchTuningRules,
+                facetHierDepth: _.facetHierDepth,
+                facetPrefix: _.facetPrefix,
+                facetSettings: _.facetSettings,
+                facetTemplateExclude: _.facetTemplateExclude,
+                facetValueFilter: _.facetValueFilter,
+                pageSize: _.pageSize,
+                // responseFields: _.responseFields,
+                //  responseGroups: _.responseGroups,
+                //   responseOptions: _.responseOptions,
+                searchSettings: _.searchSettings,
+                searchTuningRuleCode: _.searchTuningRuleCode,
+                searchTuningRuleContext: _.searchTuningRuleContext,
+                sortBy: _.sortBy,
+                startIndex: _.startIndex,
+                targetContextLevel: _.targetContextLevel))
+                .ResponseMessage
+                .Content
+                .ReadAsStringAsync();
+                return this.CreateDebugResponse(debugTxt);
+            }
 
             var searchResponse = (await _searchClient.Search(
                 query: _.query,
@@ -135,6 +176,59 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, View(searchPageType, pc));
         }
 
+        HttpResponseMessage CreateDebugResponse (string debugTxt)
+        {
+            var jsonPfn =Request.GetQueryNameValuePairs().Where(kvp => kvp.Key.Equals("json.wrf", StringComparison.OrdinalIgnoreCase)).Select(kvp=> kvp.Value).FirstOrDefault();
+
+            return Request.CreateResponse(System.Net.HttpStatusCode.OK, 
+                new SolrDebugResp() {
+                    JsonPFn = jsonPfn,
+                    SolrDebug = debugTxt }, 
+                formatter: SolrDebugMediaTypeFormatter.Default, 
+                mediaType: "text/plain");
+        }
+        class SolrDebugResp
+        {
+            public string SolrDebug;
+            public string JsonPFn;
+        }
+        public class SolrDebugMediaTypeFormatter : MediaTypeFormatter
+        {
+            public static SolrDebugMediaTypeFormatter Default = new SolrDebugMediaTypeFormatter();
+            public SolrDebugMediaTypeFormatter()
+            { 
+                SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
+           
+            }
+            public override async Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
+            {
+                var resp = (SolrDebugResp)value;
+                using (StreamWriter sw = new StreamWriter(writeStream, Encoding.UTF8, 4096, true))
+                {
+                    if (!string.IsNullOrEmpty(resp.JsonPFn))
+                    {
+                        await sw.WriteAsync($"{resp.JsonPFn}(");
+                    }
+                    await sw.WriteAsync(resp.SolrDebug);
+                    if (!string.IsNullOrEmpty(resp.JsonPFn))
+                    {
+                        await sw.WriteAsync(");");
+                    }
+                }
+                    
+            }
+                      
+          
+            public override bool CanWriteType(Type type)
+            {
+                return true;
+            }
+
+            public override bool CanReadType(Type type)
+            {
+                return true;
+            }
+        }
         class AdvancdSearchParamterModelBinder : IModelBinder
         {
             public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)

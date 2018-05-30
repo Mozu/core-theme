@@ -43,7 +43,7 @@ nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.ProductAdmin.Contracts 1.1820.1
-nuget Mozu.ProductRuntime.Contracts 1.1808.1
+nuget Mozu.ProductRuntime.Contracts 1.1815.1
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
