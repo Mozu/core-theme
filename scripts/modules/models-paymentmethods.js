@@ -135,7 +135,25 @@
         })
     });
 
-    
+    var GiftCard = CreditCardWithCVV.extend({
+      isEnabled: false,
+      amountApplied: null,
+      remainingBalance: null,
+        // TODO: validation. needs only to check for cvv and number.
+        defaults: {
+          "isGiftCard": true
+        },
+        getBalance: function(){
+          // TODO: use this.get('id') to pass to api call
+          // call will probably be something like this.apiGetBalance
+          return 99.9;
+        },
+        calculateAmountRemaining: function(){
+          console.log('calculate amount remaining');
+        }
+    })
+
+
     var Check = PaymentMethod.extend({
         validation: {
             nameOnCheck: {
@@ -227,7 +245,7 @@
                 model: PurchaseOrderPaymentTerm
             })
         },
-        
+
         initialize: function() {
             var self = this;
         },
@@ -269,7 +287,7 @@
         inflateCustomFields: function() {
             var customFields = [];
             var siteSettingsCustomFields = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.customFields;
-            
+
             siteSettingsCustomFields.forEach(function(field) {
                 if(field.isEnabled) {
                     var value = this.get("pOCustomField-"+field.code);
@@ -334,7 +352,7 @@
                     if(!purchaseOrder.selected) {
                         return;
                     }
-                    
+
                     if(!selectedPaymentTerm.get('description')) {
                         return Hypr.getLabel('purchaseOrderPaymentTermMissing');
                     }
@@ -346,7 +364,7 @@
         // the toJSON method should omit the CVV so it is not sent to the wrong API
         toJSON: function (options) {
             var j = PaymentMethod.prototype.toJSON.apply(this);
-            
+
             return j;
         },
 
@@ -365,6 +383,7 @@
         CreditCard: CreditCard,
         CreditCardWithCVV: CreditCardWithCVV,
         Check: Check,
-        DigitalCredit: DigitalCredit
+        DigitalCredit: DigitalCredit,
+        GiftCard: GiftCard
     };
 });

@@ -27,7 +27,7 @@
       <thead>
         <tr>
           <th>&nbsp;</th>
-          <th class="mz-checkout-digitalcredit-header-code">{{ labels.digitalCreditCode }}</th>
+          <th class="mz-checkout-giftcard-header-number">Number</th>
           <th class="mz-checkout-digitalcredit-header-balance">{{ labels.digitalCreditBalance }}</th>
           <th class="mz-checkout-digitalcredit-header-amt-to-apply">{{ labels.digitalCreditAmtToUse }}</th>
           <th class="mz-checkout-digitalcredit-header-remainder">{{ labels.digitalCreditRemainder }}</th>
@@ -36,35 +36,36 @@
         </tr>
       </thead>
       <tbody>
-        {% for credit in model.availableDigitalCredits.models %}
+        {% for card in model.availableGiftCards.models %}
         <tr class="mz-checkout-digitalcredit-row">
           <td class="mz-checkout-digitalcredit-cell-enable">
-              <input type="checkbox" data-mz-digital-credit-enable {% if credit.attributes.isEnabled %}checked="checked"{% endif %}
-                     class="data-mz-credit-enabled"
-                     data-mz-credit-code-source="{{ credit.attributes.code }}"
-                     data-mz-credit-balance="{{ credit.attributes.currentBalance }}"
-                     id="enable{{ credit.attributes.code }}"/>
+              <input type="checkbox" data-mz-giftcard-enable {% if card.attributes.isEnabled %}checked="checked"{% endif %}
+                     class="data-mz-giftcard-enabled"
+                     data-mz-payment-id="{{ card.attributes.id }}"
+                     data-mz-credit-balance="{{ card.attributes.currentBalance }}"
+                     id="enable{{ credit.attributes.id }}"/>
           </td>
-          <td class="mz-checkout-digitalcredit-cell-code">
-            <label class="mz-checkout-digitalcredit-code" for="enable{{ credit.attributes.code }}">
-              <span class="mz-checkout-digitalcredit-code" data-mz-value="credit.attributes.code">{{ credit.attributes.code }}</span>
+          <td class="mz-checkout-giftcard-cell-number">
+            <label class="mz-checkout-digitalcredit-code" for="enable{{ card.attributes.id }}">
+              <span class="mz-checkout-digitalcredit-code" data-mz-value="card.attributes.id">{{ card.attributes.cardNumberPartOrMask }}</span>
             </label>
           </td>
-          <td class="mz-checkout-digitalcredit-cell-balance">{{ credit.attributes.currentBalance|currency }}</td>
+          <td class="mz-checkout-digitalcredit-cell-balance">{{ card.attributes.currentBalance|currency }}</td>
           <td class="mz-checkout-digitalcredit-cell-amt-to-apply">
-            <input class="data-mz-credit-amt-to-apply" data-mz-credit-code-target="{{ credit.attributes.code }}"
-                   min="1" step="0.01" data-mz-digital-credit-amount
-                   data-mz-value="creditAmountApplied"
-                   {% if credit.attributes.creditAmountApplied %}value="{{ credit.attributes.creditAmountApplied|currency }}"{% endif %}
-                      {% if not credit.attributes.isEnabled %}disabled="true"{% endif %}
+            <input class="data-mz-giftcard-amt-to-apply" data-mz-giftcard-target="{{ card.attributes.id }}"
+                   min="1" step="0.01" data-mz-giftcard-amount
+                   data-mz-value="amountApplied"
+                   {% if card.attributes.amountApplied %}value="{{ credit.attributes.amountApplied|currency }}"{% endif %}
+                      {% if not card.attributes.isEnabled %}disabled="true"{% endif %}
                    />
           </td>
           <td class="mz-checkout-digitalcredit-cell-remainder">
-            {% if credit.attributes.isEnabled and credit.attributes.remainingBalance > 0 %}
-              <span class="mz-checkout-digitalcredit-remainder" data-mz-value="credit.attributes.remainingBalance">{{ credit.attributes.remainingBalance|currency }}</span>
+            {% if card.attributes.isEnabled and card.attributes.remainingBalance > 0 %}
+              <span class="mz-checkout-digitalcredit-remainder" data-mz-value="card.attributes.remainingBalance">{{ card.attributes.remainingBalance|currency }}</span>
             {% endif %}
           </td>
           <td class="mz-checkout-digitalcredit-cell-savetoaccount">
+            {% comment %}
           {% if not model.isAnonymousShopper and not credit.attributes.isTiedToCustomer and credit.attributes.isEnabled and credit.attributes.remainingBalance > 0 %}
             <input type="checkbox" data-mz-value="credit.attributes.addRemainderToCustomer"
                     data-mz-digital-add-remainder-to-customer
@@ -72,13 +73,16 @@
                     id="addCust{{ credit.attributes.code }}"
                     value="true" {% if credit.attributes.isTiedToCustomer %}disabled="true" checked="true"{% else %} {% if credit.attributes.addRemainderToCustomer %}checked="true"{% endif %} {% endif %}/>
           {% endif %}
+          {% endcomment %}
         </td>
         <td class="mz-checkout-digitalcredit-cell-savetoaccount-label">
+          {% comment %}
           {% if not model.isAnonymousShopper and not credit.attributes.isTiedToCustomer and credit.attributes.isEnabled and credit.attributes.remainingBalance > 0 %}
             <label class="mz-paymenttype mz-paymenttype-paypal" for="addCust{{ credit.attributes.code }}">
               <span class="mz-checkout-digitalcredit-remainder">{{ labels.digitalCreditAddToAccount }}</span>
             </label>
           {% endif %}
+          {% endcomment %}
         </td>
         </tr>
         {% endfor %}

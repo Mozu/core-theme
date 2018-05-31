@@ -36,7 +36,8 @@ define([
                 billingContact: CustomerModels.Contact,
                 card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check,
-                purchaseOrder: PaymentMethods.PurchaseOrder
+                purchaseOrder: PaymentMethods.PurchaseOrder,
+                giftCard: PaymentMethods.GiftCard
             },
             validatePaymentType: function(value, attr) {
                 var order = this.getOrder();
@@ -110,7 +111,7 @@ define([
                 return cards && cards.length > 0 && cards;
             },
             activeGiftCards: function() {
-              //TODO: return getActiveGiftCards
+              //TODO: return getActiveGiftCards like below?
               console.log('active giftCards');
             },
             activeStoreCredits: function () {
@@ -188,6 +189,8 @@ define([
                     activeCredits = this.activeStoreCredits();
 
                 var customerCredits = customer.get('credits');
+                console.log("loadcustomerdigitalcredits");
+                console.log(customer.get('credits'));
                 if (customerCredits && customerCredits.length > 0) {
                     var currentDate = new Date(),
                         unexpiredDate = new Date(2076, 6, 4);
@@ -238,6 +241,8 @@ define([
             },
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) {
+                    console.log("None yet! Here's what it looks like:");
+                    console.log(this._cachedDigitalCredits);
                     this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
@@ -337,6 +342,36 @@ define([
                         }
                     }
                 }
+
+                /*
+                delete - notes for self
+                cache old payment type
+                get giftcard out of cache via number/id
+                if it isn't there give an already used code
+                store variables for the previous amount applied and previous enabled state
+                if we didn't pass in the amount to apply, and that amount isn't 0, set the amount yourself with getMaxCreditToApply
+                set on the gc model the amountToApply
+                set remainingBalance using calculateRemainingBalance
+                set isEnabled to whatever was passed in
+                if amountToApply is over 0, self.roundtoPlaces(amountToApply, 2);
+                get active giftcard payments from the checkout
+                #if there are active giftcard payments
+                find active giftcard payment that matches the number of the one we're adding
+                if the amounts match between the two payments, return a deferred promise
+                >if amountToApply is 0, return order.apiVoidPayment
+                    .then set order data accordingly
+                >else
+                maxGiftCardToApply = self.getMaxGiftCardToApply
+                >>if amountToApply > maxGiftCardToApply
+                  gc model reset creditAmountApplied, isEnabled, and remainingBalance
+                  return deferredError
+                >>
+                return order.apiVoidPayment of same giftcard id
+                >>
+                >
+                #
+
+                */
                 if (creditAmountToApply === 0) {
                     return this.getOrder();
                 }
@@ -368,7 +403,6 @@ define([
 
                 return deferred.promise;
             },
-
             areNumbersEqual: function(f1, f2) {
                 var epsilon = 0.01;
                 return (Math.abs(f1 - f2)) < epsilon;
@@ -378,24 +412,47 @@ define([
               console.log('load customer giftcards');
             },
             applyGiftCard: function(giftCard){
+              var self = this, order = this.getOrder();
+              this.syncApiModel();
+              if (this.nonStoreCreditTotal() > 0) {
+
+                return order.apiAddGiftCard(giftCard).then(function(data){
+                  console.log('.then apiAddGiftCard');
+                  console.log(data);
+                });
+              }
+              /*
+              This is going to involve adding the payment to the order. We should be
+              able to do order.apiAddPayment and just pass in the
+              */
               console.log('apply giftcard');
               this.trigger('render');
             },
             retrieveGiftCard: function(number, securityCode) {
-              console.log('retrive giftcard');
               var me = this;
-              //make api call to get giftcard
-              //if success,execute any front end validation like balance
-                //if valid, figure out amount to apply
-                  //push gift card info to _cachedGiftCards
-                  //applyGiftCard
-              //if not success, trigger error message
-              var giftCardModel = {number: number, securityCode: securityCode};
-              me._cachedGiftCards.push(giftCardModel);
-              return me.applyGiftCard(giftCardModel);
+              this.set('giftCard', {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD"});
+              this.syncApiModel();
+              var giftCardModel = this.get('giftCard');
+              me.isLoading(true);
+              giftCardModel.apiSave().then(function(asdf){
+                console.log("made it through");
+                me.isLoading(false);
+                console.log(asdf);
+                giftCardModel.apiGetBalance().then(function(balance){
+                  console.log(balance);
+                  if (balance>0) {
+                    me._cachedGiftCards.push(giftCardModel);
+                    return me.applyGiftCard(giftCardModel);
+                  } else {
+                    console.log("No balance!");
+                    //Giftcard has no balance. Throw error.
+                  }
+                });
+              }, function(error){
+                console.log("Giftcard failed to save.");
+              });
             },
             getGatewayGiftCard: function() {
-              console.log('get gateway giftcard');
               var me = this,
                   giftCardNumber = this.get('giftCardNumber'),
                   giftCardSecurityCode = this.get('giftCardSecurityCode');
@@ -411,10 +468,9 @@ define([
                         message: "Hypr.getLabel('giftCardAlreadyAdded')"
                     });
                   }
-
+                  //me.isLoading(true);
                   return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode);
-                  // me.isLoading(true);
-                  // return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function() {
+                  //.ensure(function() {
                   //     me.isLoading(false);
                   //     return me;
                   // });
@@ -425,7 +481,7 @@ define([
               if (! this._cachedGiftCards) {
                   this.loadCustomerGiftCards();
               }
-              return this._cachedGiftCards && this._cachedGiftCards.length > 0;
+              return this._cachedGiftCards && this._cachedGiftCards.length > 0 && this._cachedGiftCards;
             },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
                 var self = this;
@@ -814,7 +870,7 @@ define([
                 });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this._cachedDigitalCredits = null;
-                this._cachedGiftCards = [];
+                this._cachedGiftCards = new Backbone.Collection();
 
 
                 _.bindAll(this, 'applyPayment', 'markComplete');

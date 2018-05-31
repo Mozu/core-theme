@@ -75,7 +75,7 @@
             </div>
         </div>
         {% endif %}
-        
+
         {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentWorkflow|lower  == "paywithamazon"  %}
             {% if model.nonStoreCreditTotal == 0%}
                 <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
@@ -193,9 +193,11 @@
                 </div>
             </div>
         </div>
+        {% if siteContext.checkoutSettings.supportedGiftCards %}
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
+        {% endif %}
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>

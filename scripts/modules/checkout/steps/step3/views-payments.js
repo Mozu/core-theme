@@ -114,7 +114,7 @@ define(["modules/jquery-mozu",
                 });
                 if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
                      $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButtonPaymentSection");
-                     
+
                 var status = this.model.stepStatus();
                 if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                      window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
@@ -210,7 +210,6 @@ define(["modules/jquery-mozu",
                 });
             },
             getGatewayGiftCard: function (e) {
-              console.log('get gateway giftcard');
               var self = this;
               //this.$el.addClass('is-loading');
               this.model.getGatewayGiftCard();
@@ -236,7 +235,6 @@ define(["modules/jquery-mozu",
                 this.render();
             },
             onEnterGiftCardInfo: function(model) {
-              console.log('enter giftcard info');
               if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){
                 this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', false);
               } else {
