@@ -204,7 +204,10 @@
                         if (currentPayment && order.get('billingInfo').get('isSameBillingShippingAddress')) {
                             order.apiVoidPayment(currentPayment.id).then(function(){
                                     order.get('billingInfo').applyPayment().then(function(){
+                                    var oBilling = order.get('billingInfo').get('billingContact').toJSON();
                                     order.get('billingInfo').get('billingContact').set(order.get('fulfillmentInfo').get('fulfillmentContact').toJSON());
+                                    order.get('billingInfo').get('billingContact').set('email', oBilling.email);
+                                    order.get('billingInfo').trigger('billingContactUpdate');
                                 }).ensure(function () {
                                     me.isLoading(false);
                                     parent.isLoading(false);
@@ -352,7 +355,9 @@
                             //In order to resync our billing address with shipping.
                             //Not a great fix, look into correcting.
                             if(order.get('billingInfo').get('isSameBillingShippingAddress')) {
+                                var oBilling = order.get('billingInfo').get('billingContact').toJSON();
                                 order.get('billingInfo').get('billingContact').set(order.get('fulfillmentInfo').get('fulfillmentContact').toJSON());
+                                order.get('billingInfo').get('billingContact').set('email', oBilling.email);
                                 order.get('billingInfo').trigger('billingContactUpdate');
                             }
 
@@ -1070,7 +1075,9 @@
                 this.selectPaymentType(this, this.get('paymentType'));
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
                     if (wellIsIt) {
+                        var oBilling = billingContact.toJSON();
                         billingContact.set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
+                        billingContact.set('email', oBilling.email,{ silent: true });
                     } else if (billingContact) {
                         // if they initially checked the checkbox, then later they decided to uncheck it... remove the id so that updates don't update
                         // the original address, instead create a new contact address.
@@ -1173,7 +1180,7 @@
 
                 var order = this.getOrder();
                 // just can't sync these emails right
-                order.syncBillingAndCustomerEmail();
+                order.ensureEmailIsSet();
 
                 // This needs to be ahead of validation so we can check if visa checkout is being used.
                 var currentPayment = order.apiModel.getCurrentPayment();
@@ -1394,11 +1401,12 @@
                         self.validation = _.pick(self.constructor.prototype.validation, _.filter(_.keys(self.constructor.prototype.validation), function(k) { return k.indexOf('fulfillment') === -1; }));
                     }
 
+                    var billingEmail = billingInfo.get('billingContact.email');
+
                     self.get('billingInfo.billingContact').on('change:email', function(model, newVal) {
                         self.set('email', newVal);
                     });
 
-                    var billingEmail = billingInfo.get('billingContact.email');
                     if (!billingEmail && user.email) billingInfo.set('billingContact.email', user.email);
 
                     self.applyAttributes();
@@ -1671,7 +1679,7 @@
                 }
 
                 // handle email
-                if (!orderContact.email) orderContact.email = this.get('emailAddress') || customer.get('emailAddress') || require.mozuData('user').email;
+                if (!orderContact.email) orderContact.email = this.get('email') || this.get('emailAddress') || customer.get('emailAddress') || require.mozuData('user').email;
 
                 var contactId = orderContact.contactId;
                 if (contactId) orderContact.id = contactId;
@@ -1746,14 +1754,19 @@
                     this.set('fulfillmentInfo.fulfillmentContact.email', orderEmail);
                 }
             },
-            syncBillingAndCustomerEmail: function () {
+            ensureEmailIsSet: function () {
                 var billingEmail = this.get('billingInfo.billingContact.email'),
-                    customerEmail = this.get('emailAddress') || require.mozuData('user').email;
-                if (!customerEmail) {
-                    this.set('emailAddress', billingEmail);
+                    customerEmail = this.get('emailAddress') || require.mozuData('user').email,
+                    orderEmail = this.get('email');
+
+                if (billingEmail) {
+                    this.set('email', billingEmail);
                 }
-                if (!billingEmail) {
+                else if (orderEmail) {
+                    this.set('billingInfo.billingContact.email', orderEmail);
+                } else if (customerEmail) {
                     this.set('billingInfo.billingContact.email', customerEmail);
+                    this.set('email', customerEmail);
                 }
             },
             addDigitalCreditToCustomerAccount: function () {
@@ -1845,7 +1858,7 @@
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
-                this.syncBillingAndCustomerEmail();
+                this.ensureEmailIsSet();
                 this.setFulfillmentContactEmail();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
