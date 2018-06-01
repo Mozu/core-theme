@@ -129,7 +129,6 @@
                     if (!value) {
                         return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
                     }
-
                 }
             }
         })
@@ -151,8 +150,7 @@
         calculateAmountRemaining: function(){
           console.log('calculate amount remaining');
         }
-    })
-
+    });
 
     var Check = PaymentMethod.extend({
         validation: {
@@ -169,7 +167,6 @@
     });
 
     var DigitalCredit = PaymentMethod.extend({
-
         isEnabled: false,
         creditAmountApplied: null,
         remainingBalance: null,
