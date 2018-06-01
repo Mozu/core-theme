@@ -129,14 +129,14 @@
 
     {% if model.getNonShippedItems.length > 0 %}
         <h2 class="mz-orderlisting-heading">
-            {% if model.deliveryMethod == "IN_STORE_PICKUP" %}
+            {% if model.omsOrder.deliveryMethod == "IN_STORE_PICKUP" %}
                 {% if model.status == "Canceled" %}
                     {{ labels.orderItemsCancelled }}
                 {% else %}
                     {{labels.orderItemsPickup}}
                 {% endif %}
             {% else %}
-                {% if model.deliveryMethod == "DIGITAL" %}
+                {% if model.omsOrder.deliveryMethod == "DIGITAL" %}
                     {% if model.status == "Canceled" %}
                         {{ labels.orderItemsCancelled }}
                     {% else %}

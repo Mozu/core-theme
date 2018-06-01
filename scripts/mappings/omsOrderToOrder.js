@@ -310,7 +310,7 @@ define([
             // "amountAvailableForRefund": 0.0,
             // "amountRemainingForPayment": 0.0,
             // "amountRefunded": 0.0,
-            "id": source.customData.ngOrderId || source.orderID,
+            "id": source.orderID,
             // "tenantId": 17375,
             // "siteId": 21444,
             // "channelCode": "1234",
