@@ -6,7 +6,7 @@
 {% else %}
     {% set_var dateFormat="m/d/Y H:i:s" %}
 {% endif %}
-            
+
 <table class="mz-printable-order mz-printable-order-details">
 <thead class="header"><tr>
     <th class="company-info">
@@ -65,7 +65,7 @@
                 <th class="currency-column">Item Total</th>
             </tr></thead>
             <tfoot class="order-totals-breakdown">
-               
+
                 {% if model.adjustment and model.adjustment.amount != 0 %}
                     <tr>
                         <td colspan="5">Adjustments</td>
@@ -86,7 +86,7 @@
                     <td colspan="5">Subtotal</td>
                     <td>{{ model.lineItemSubtotalWithOrderAdjustments|currency }}</td>
                 </tr>
-                
+
                 {% if model.dutyTotal > 0 %}
                 <tr>
                     <td colspan="5">Duties and Taxes</td>
@@ -105,14 +105,14 @@
                 </tr>
 
                 {% for shippingDiscount in model.shippingDiscounts %}
-					{% if not shippingDiscount.excluded %}
-						<tr>
-							<td colspan="5">Shipping Discount ({{ shippingDiscount.discount.discount.name }})</td>
-							<td>({{ shippingDiscount.discount.impact|currency }})</td>
-						</tr>
-					{% endif %}
+                    {% if not shippingDiscount.excluded %}
+                        <tr>
+                            <td colspan="5">Shipping Discount ({{ shippingDiscount.discount.discount.name }})</td>
+                            <td>({{ shippingDiscount.discount.impact|currency }})</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
-               
+
                 {% if model.shippingAdjustment and model.shippingAdjustment.amount != 0 %}
                     <tr>
                         <td colspan="5">Shipping Adjustments</td>
@@ -156,14 +156,14 @@
                                 <em class="product-option-label">[includes]</em>{{ product.productCode }} - {{ product.name }} (Qty. {{ product.quantity }})
                             </div>
                         {% endfor %}
-						
+
                     </td>
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
                     <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
                     <td class="quantity-column">{{ item.quantity }}</td>
                     <td class="currency-column">{{ item.subtotal|currency }} <br/> 
-                         
-					</td>
+
+                    </td>
                 </tr>
                  {% if item.productDiscounts.length %}
                     {% for discount in item.productDiscounts %}
@@ -199,50 +199,61 @@
                     <th>Status</th>
                     <th>Type</th>
                     <th>Info</th>
-                    <th>Exp Date</th>
                     <th>Amount</th>
                 </tr></thead>
                 <tbody>
                 {% for payment in model.payments %}
-                    {% if payment.status != "Voided" and payment.paymentType != "PurchaseOrder" %}
+                    {% if payment.status != "Voided" %}
                     <tr>
                         <td>{{ payment.auditInfo.createDate|date(dateFormat) }}</td>
                         <td>{{ payment.status }}</td>
                         {% if payment.paymentType == "CreditCard" %}
                             <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
-                            <td>{{ payment.billingInfo.card.cardNumberPartOrMask }}</td>
                             <td>
+                                {{ payment.billingInfo.card.cardNumberPartOrMask }}
                                 {% if payment.billingInfo.card.expireMonth %}
                                     {{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}
                                 {% endif %}
                             </td>
                         {% else %}
-                            {% if payment.paymentType == "Check" %}
-                                <td>Check</td>
+                            {% if payment.paymentType == "GiftCard" %}
+                                <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
                                 <td>
-                                {% for interaction in payment.interactions %}
-                                    {% if interaction.interactionType == "Captured" %}{% endif %}
-                                {% endfor %}
+                                    {{ payment.billingInfo.card.cardNumberPartOrMask }}
+                                    {% if payment.billingInfo.card.expireMonth %}
+                                        {{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}
+                                    {% endif %}
                                 </td>
-                                <td>N/A</td>
                             {% else %}
-                                {% if payment.paymentType == "StoreCredit" %}
-                                    <td>Gift Card/Store Credit</td>
-                                    <td>{{ payment.billingInfo.storeCreditCode }}</td>
-                                    <td>N/A</td>
+                                {% if payment.paymentType == "PurchaseOrder" %}
+                                    <td>{{ labels.purchaseOrder }}</td>
+                                    <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }} ({{ payment.billingInfo.purchaseOrder.paymentTerm.description }})</td>
                                 {% else %}
-                                    <td>
-                                        {% if payment.paymentType|lower == "paypalexpress2" %}
-                                            {{ labels.payPal }}
-                                        {% endif %}
-                                        {% if payment.paymentType|lower == "paywithamazon" %}
-                                            {{ labels.payWithAmazon }}
+                                    {% if payment.paymentType == "Check" %}
+                                        <td>Check</td>
+                                        <td>
+                                            {% for interaction in payment.interactions %}
+                                                {% if interaction.interactionType == "Captured" %}{% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    {% else %}
+                                        {% if payment.paymentType == "StoreCredit" %}
+                                            <td>Gift Card/Store Credit</td>
+                                            <td>{{ payment.billingInfo.storeCreditCode }}</td>
                                         {% else %}
-                                            {{ payment.paymentType }}
+                                            <td>
+                                                {% if payment.paymentType|lower == "paypalexpress2" %}
+                                                    {{ labels.payPal }}
+                                                {% endif %}
+                                                {% if payment.paymentType|lower == "paywithamazon" %}
+                                                    {{ labels.payWithAmazon }}
+                                                {% else %}
+                                                    {{ payment.paymentType }}
+                                                {% endif %}
+                                            </td>
+                                            <td>&nbsp;</td>
                                         {% endif %}
-                                    </td>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endif %}
@@ -266,42 +277,7 @@
             ">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Type</th>
-                        <th>Info</th>
-                        <th>Payment terms</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for payment in model.payments %}
-                        {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
-                            <tr>
-                                <td>{{ payment.auditInfo.createDate|date(dateFormat) }}</td>
-                                <td>{{ payment.status }}</td>
-                                <td>{{ labels.purchaseOrder }}</td>
-                                <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
-                                <td>{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</td>
-                                <td>{% if payment.amountCollected > 0 %}{{ payment.amountCollected | currency }}
-                                    {% else %}{{ payment.amountRequested | currency }}
-                                    {% endif %}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <table class="grid payment-details
-                {% for payment in model.payments %}
-                    {% if payment.PaymentType == 'PurchaseOrder' %}
-                        show
-                    {% endif %}
-                {% endfor %}
-            ">
-                <thead>
-                    <tr>
-                        <th>Additional information</th>
+                        <th colspan=2>Additional information</th>
                     </tr>
                 </thead>
                 <tbody>

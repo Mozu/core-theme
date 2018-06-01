@@ -78,6 +78,7 @@
     "emailAddress"   : "E-Mail-Addresse",
     "logInInput"     : "Benutzername oder E-mail Adresse",
     "creditCard"   : "Kreditkarte",
+    "giftCard"   : "Geschenkkarte",
     "payPal"   : "Paypal Express",
     "password"   : "Passwort",
     "newPassword"   : "Neues Passwort",

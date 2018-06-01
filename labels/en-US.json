@@ -89,6 +89,7 @@
     "creditCard": "Credit Card",
     "creditDate": "Activation Date",
     "creditLimit": "Credit Limit",
+    "giftCard": "Gift Card",
     "customerAlreadyExists": "A customer is already registered as {0}. <a href=\"/user/login?returnUrl={1}\">Login as this customer</a>",
     "damaged": "Product, box or envelope are damaged",
     "dateFormat": "F j, Y",

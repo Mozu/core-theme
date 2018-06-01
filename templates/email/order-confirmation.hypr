@@ -24,12 +24,14 @@
                 </td>
             </tr>
 
-			{% ifnotequal model.total 0 %}
+            {% ifnotequal model.total 0 %}
            <tr>
-
                 <td>
                     <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                         {% if model.billingInfo.paymentType == "CreditCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
+                        {% endif %}
+                        {% if model.billingInfo.paymentType == "GiftCard" %}
                             <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
                         {% endif %}
                         {% if model.billingInfo.paymentType == "PurchaseOrder" %}
@@ -51,7 +53,7 @@
                 </td>
             </tr>
 
-			{% endifnotequal %}
+            {% endifnotequal %}
         </tbody>
     </table>
 

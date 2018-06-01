@@ -49,7 +49,8 @@
             </strong>
             {% if payment.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }}{% endif %}
             {% if payment.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
-            {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}
+            {% if payment.billingInfo.paymentType == "GiftCard" %}{{ labels.giftCard }}{% endif %}
+            {% if payment.billingInfo.paymentType == "StoreCredit" %}{{ labels.digitalCredit }}{% endif %}
             {% if payment.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
           </h4>
 
@@ -68,9 +69,13 @@
                {% if payment.billingInfo.paymentType|lower == "PayWithAmazon" %}
                     <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
                {%endif%}   
-               {% if payment.billingInfo.paymentType == "StoreCredit" or payment.billingInfo.paymentType == "GiftCard"  %}
+               {% if payment.billingInfo.paymentType == "StoreCredit" %}
                   <small>{{ labels.digitalCreditCode }}</small>
                   <div>{{ payment.billingInfo.storeCreditCode }}</div>
+               {% endif %}
+               {% if payment.billingInfo.paymentType == "GiftCard" %}
+                  <small>{{ labels.cardNumber }}</small>
+                  <div>{{ payment.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
                {% endif %}
               </div>
             {% else %}

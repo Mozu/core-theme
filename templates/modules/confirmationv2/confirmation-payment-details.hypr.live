@@ -9,7 +9,8 @@
         </strong> &mdash;
         {% if model.billingInfo.paymentType == "Check" %}{{ labels.checkByMail }}{% endif %}
         {% if model.billingInfo.paymentType == "CreditCard" %}{{ labels.creditCard }}{% endif %}
-        {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" %}{{ labels.digitalCredit }}{% endif %}
+        {% if model.billingInfo.paymentType == "GiftCard" %}{{ labels.giftCard }}{% endif %}
+        {% if model.billingInfo.paymentType == "StoreCredit" %}{{ labels.digitalCredit }}{% endif %}
         {% if model.billingInfo.paymentType == "PurchaseOrder" %}{{ labels.purchaseOrder }} - {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}{% endif %}
         {% if model.billingInfo.paymentType|lower == "paypalexpress2" %} {{ labels.payPal }} {% endif %}
     </h4>
@@ -34,6 +35,10 @@
                 {% if model.billingInfo.paymentType == "StoreCredit" %}
                     <small>{{ labels.digitalCreditCode }}</small>
                     <div>{{ model.billingInfo.storeCreditCode }}</div>
+                {% endif %}
+                {% if model.billingInfo.paymentType == "GiftCard" %}
+                    <small>{{ labels.cardNumber }}</small>
+                    <div>{{ model.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
                 {% endif %}
             </div>
         {% else %}
