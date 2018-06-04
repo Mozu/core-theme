@@ -514,7 +514,8 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    if (error.message.indexOf('10486') != -1){
+                    var has10486Error = _.find(error.additionalErrorData, function(additionalData) { return additionalData.value.indexOf('10486') != -1;});
+                    if (has10486Error){
                         var siteContext = HyprLiveContext.locals.siteContext,
                             externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayPalExpress2"}),
                             environment = _.findWhere(externalPayment.credentials, {"apiName" : "environment"}),
