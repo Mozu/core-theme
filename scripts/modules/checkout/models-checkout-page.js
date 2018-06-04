@@ -762,15 +762,19 @@ var CheckoutPage = Backbone.MozuModel.extend({
             getBillingContact: function () {
                 return;
             },
-            syncBillingAndCustomerEmail: function () {
+            ensureEmailIsSet: function () {
                 var self = this;
                 var billingEmail = this.get('billingInfo.billingContact.email'),
-                    customerEmail = require.mozuData('user').email;
+                    customerEmail = require.mozuData('user').email,
+                    orderEmail = this.get('email');
 
-                if (customerEmail) {
-                    this.set('email', customerEmail);
-                } else {
+                if (orderEmail) {
+                    this.set('billingInfo.billingContact.email', orderEmail);
+                } else if (billingEmail) {
                     this.set('email', billingEmail);
+                } else if (customerEmail) {
+                    this.set('billingInfo.billingContact.email', customerEmail);
+                    this.set('email', customerEmail);
                 }
             },
             setNewCustomerEmailAddress : function(){
@@ -867,7 +871,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
-                this.syncBillingAndCustomerEmail();
+                this.ensureEmailIsSet();
                 this.setNewCustomerEmailAddress();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
