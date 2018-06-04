@@ -744,7 +744,9 @@ define([
                     if (wellIsIt) {
                          var destinations = this.selectableDestinations();
                          if(destinations.length) {
+                            var oBilling = this.set('billingContact').toJSON();
                             this.set('billingContact', destinations[0].destinationContact, { silent: true });
+                            this.set('billingContact.email', oBilling.email, { silent: true });
                          }
 
                     } else if (billingContact) {
