@@ -1,5 +1,5 @@
 <div class="mz-checkout-digitalcredit mz-l-stack-section">
-  <h4 class="mz-checkoutform-title">Gateway Giftcard</h4>
+  <h4 class="mz-checkoutform-title">{{ labels.giftCard }}</h4>
   <div class="mz-l-formfieldgroup">
   <div class="mz-l-formfieldgroup-row">
     <div class="mz-l-formfieldgroup-cell">

@@ -414,8 +414,9 @@ define([
             applyGiftCard: function(giftCard){
               var self = this, order = this.getOrder();
               this.syncApiModel();
+              console.log('apply giftcard');
+              this.trigger('render');
               if (this.nonStoreCreditTotal() > 0) {
-
                 return order.apiAddGiftCard(giftCard).then(function(data){
                   console.log('.then apiAddGiftCard');
                   console.log(data);
@@ -425,30 +426,28 @@ define([
               This is going to involve adding the payment to the order. We should be
               able to do order.apiAddPayment and just pass in the
               */
-              console.log('apply giftcard');
-              this.trigger('render');
+
             },
             retrieveGiftCard: function(number, securityCode) {
               var me = this;
               this.set('giftCard', {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD"});
               this.syncApiModel();
               var giftCardModel = this.get('giftCard');
-              me.isLoading(true);
-              giftCardModel.apiSave().then(function(asdf){
-                console.log("made it through");
-                me.isLoading(false);
-                console.log(asdf);
-                giftCardModel.apiGetBalance().then(function(balance){
-                  console.log(balance);
+              // me.isLoading(true);
+              return giftCardModel.apiSave().then(function(giftCard){
+                return giftCardModel.apiGetBalance().then(function(balance){
+                  me.isLoading(false);
                   if (balance>0) {
                     me._cachedGiftCards.push(giftCardModel);
-                    return me.applyGiftCard(giftCardModel);
+                    console.log(me._cachedGiftCards);
+                    return me.applyGiftCard(giftCard);
                   } else {
                     console.log("No balance!");
                     //Giftcard has no balance. Throw error.
                   }
                 });
               }, function(error){
+                me.isLoading(false);
                 console.log("Giftcard failed to save.");
               });
             },
@@ -458,8 +457,7 @@ define([
                   giftCardSecurityCode = this.get('giftCardSecurityCode');
 
                   var existingGiftCard = this._cachedGiftCards.filter(function (card) {
-                      //TODO: figure out the best way to identify cards, filter by that
-                      return true;
+                      return card.cardNumber === giftCardNumber;
                   });
 
                   if (existingGiftCard && existingGiftCard.length > 0) {
@@ -469,7 +467,10 @@ define([
                     });
                   }
                   //me.isLoading(true);
-                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode);
+                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).then(function(x){
+                    console.log("then of retrievegiftcard");
+                    console.log(x);
+                  });
                   //.ensure(function() {
                   //     me.isLoading(false);
                   //     return me;
@@ -477,7 +478,6 @@ define([
 
             },
             availableGiftCards: function(){
-              console.log('available gift cards');
               if (! this._cachedGiftCards) {
                   this.loadCustomerGiftCards();
               }

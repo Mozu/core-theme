@@ -274,6 +274,7 @@ define(["modules/jquery-mozu",
                 this.model.addRemainingCreditToCustomerAccount(creditCode, isEnabled);
             },
             handleEnterKey: function (e) {
+              //TODO: add handling for enter key in giftcard fields
                 var source = $(e.currentTarget).attr('data-mz-value');
                 if (!source) return;
                 switch (source) {
