@@ -148,7 +148,7 @@
           return 99.9;
         },
         calculateAmountRemaining: function(){
-          console.log('calculate amount remaining');
+          //console.log('calculate amount remaining');
         }
     });
 

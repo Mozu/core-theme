@@ -112,7 +112,7 @@ define([
             },
             activeGiftCards: function() {
               //TODO: return getActiveGiftCards like below?
-              console.log('active giftCards');
+              //console.log('active giftCards');
             },
             activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
@@ -189,14 +189,14 @@ define([
                     activeCredits = this.activeStoreCredits();
 
                 var customerCredits = customer.get('credits');
-                console.log("loadcustomerdigitalcredits");
-                console.log(customer.get('credits'));
+                //console.log("loadcustomerdigitalcredits");
+                //console.log(customer.get('credits'));
                 if (customerCredits && customerCredits.length > 0) {
                     var currentDate = new Date(),
                         unexpiredDate = new Date(2076, 6, 4);
 
                     // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01
-                    var invalidCredits = customerCredits.filter(function(cred) {
+                    var invalidCredits = customerCredits.flter(function(cred) {
                         var credBalance = cred.get('currentBalance'),
                             credExpDate = cred.get('expirationDate');
                         var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
@@ -241,8 +241,8 @@ define([
             },
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) {
-                    console.log("None yet! Here's what it looks like:");
-                    console.log(this._cachedDigitalCredits);
+                    //console.log("None yet! Here's what it looks like:");
+                    //console.log(this._cachedDigitalCredits);
                     this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
@@ -409,17 +409,17 @@ define([
             },
             loadCustomerGiftCards: function(){
               //TODO: set _cachedGiftCards to giftcards associated with customer.
-              console.log('load customer giftcards');
+              //console.log('load customer giftcards');
             },
             applyGiftCard: function(giftCard){
               var self = this, order = this.getOrder();
               this.syncApiModel();
-              console.log('apply giftcard');
+              //console.log('apply giftcard');
               this.trigger('render');
               if (this.nonStoreCreditTotal() > 0) {
                 return order.apiAddGiftCard(giftCard).then(function(data){
-                  console.log('.then apiAddGiftCard');
-                  console.log(data);
+                  //console.log('.then apiAddGiftCard');
+                  //console.log(data);
                 });
               }
               /*
@@ -439,16 +439,16 @@ define([
                   me.isLoading(false);
                   if (balance>0) {
                     me._cachedGiftCards.push(giftCardModel);
-                    console.log(me._cachedGiftCards);
+                    //console.log(me._cachedGiftCards);
                     return me.applyGiftCard(giftCard);
                   } else {
-                    console.log("No balance!");
+                    //console.log("No balance!");
                     //Giftcard has no balance. Throw error.
                   }
                 });
               }, function(error){
                 me.isLoading(false);
-                console.log("Giftcard failed to save.");
+                //console.log("Giftcard failed to save.");
               });
             },
             getGatewayGiftCard: function() {
@@ -468,8 +468,8 @@ define([
                   }
                   //me.isLoading(true);
                   return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).then(function(x){
-                    console.log("then of retrievegiftcard");
-                    console.log(x);
+                    //console.log("then of retrievegiftcard");
+                    //console.log(x);
                   });
                   //.ensure(function() {
                   //     me.isLoading(false);
