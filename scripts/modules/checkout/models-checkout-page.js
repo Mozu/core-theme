@@ -528,7 +528,10 @@ var CheckoutPage = Backbone.MozuModel.extend({
                             url = "https://www.paypal.com";
                         }
 
-                        window.location.href = url + "/cgi-bin/webscr?cmd=_express-checkout&token=" + order.get('payments')[order.get('payments').length-1].externalTransactionId;
+                        var paypalPayments = _.filter(order.get("payments"),function(payment) { return payment.paymentType == "PayPalExpress2";});
+                        paypalPayments = _.sortBy(paypalPayments, function(payment) {return payment.auditInfo.updateDate;}).reverse();
+
+                        window.location.href = url + "/cgi-bin/webscr?cmd=_express-checkout&token=" + paypalPayments[0].externalTransactionId;
 
                         return;
                     } else {
