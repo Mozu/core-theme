@@ -36,13 +36,13 @@
         </tr>
       </thead>
       <tbody>
-        {% for card in model.availableGiftCards.models %}
+        {% for card in model.availableGiftCards %}
         <tr class="mz-checkout-digitalcredit-row">
           <td class="mz-checkout-digitalcredit-cell-enable">
-              <input type="checkbox" data-mz-giftcard-enable {% if card.attributes.isEnabled %}checked="checked"{% endif %}
-                     class="data-mz-giftcard-enabled"
+              <input type="checkbox" data-mz-gift-card-enable {% if card.attributes.isEnabled %}checked="checked"{% endif %}
+                     class="data-mz-gift-card-enabled"
                      data-mz-payment-id="{{ card.attributes.id }}"
-                     data-mz-credit-balance="{{ card.attributes.currentBalance }}"
+                     data-mz-gift-card-balance="{{ card.attributes.currentBalance }}"
                      id="enable{{ credit.attributes.id }}"/>
           </td>
           <td class="mz-checkout-giftcard-cell-number">
@@ -52,8 +52,8 @@
           </td>
           <td class="mz-checkout-digitalcredit-cell-balance">{{ card.attributes.currentBalance|currency }}</td>
           <td class="mz-checkout-digitalcredit-cell-amt-to-apply">
-            <input class="data-mz-giftcard-amt-to-apply" data-mz-giftcard-target="{{ card.attributes.id }}"
-                   min="1" step="0.01" data-mz-giftcard-amount
+            <input class="data-mz-giftcard-amt-to-apply" data-mz-gift-card-target="{{ card.attributes.id }}"
+                   min="1" step="0.01" data-mz-gift-card-amount
                    data-mz-value="amountApplied"
                    {% if card.attributes.amountApplied %}value="{{ credit.attributes.amountApplied|currency }}"{% endif %}
                       {% if not card.attributes.isEnabled %}disabled="true"{% endif %}

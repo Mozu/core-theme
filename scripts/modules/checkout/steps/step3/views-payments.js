@@ -71,6 +71,8 @@ define(["modules/jquery-mozu",
             additionalEvents: {
                 "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
                 "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
+                "change [data-mz-gift-card-amount]": "applyGiftCard",
+                "change [data-mz-gift-card-enable]": "enableGiftCard",
                 "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
                 "change [name='paymentType']": "resetPaymentData",
                 "change [data-mz-purchase-order-payment-term]": "updatePurchaseOrderPaymentTerm",
@@ -234,6 +236,16 @@ define(["modules/jquery-mozu",
                 this.model.applyDigitalCredit(creditCode, amtToApply, true);
                 this.render();
             },
+            applyGiftCard: function(e) {
+                var val = $(e.currentTarget).prop('value'),
+                    giftCardId = $(e.currentTarget).attr('data-mz-gift-card-target');
+                if (!giftCardId) {
+                  return;
+                }
+                var amtToApply = this.stripNonNumericAndParseFloat(val);
+                this.model.applyGiftCard(giftCardId, amtToApply, true);
+                this.render();
+            },
             onEnterGiftCardInfo: function(model) {
               if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){
                 this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', false);
@@ -267,6 +279,20 @@ define(["modules/jquery-mozu",
 
                 }
 
+            },
+            enableGiftCard: function(e){
+                var isEnabled = $(e.currentTarget).prop('checked') === true,
+                    giftCardId = $(e.currentTarget).attr('data-mz-payment-id'),
+                    targetAmtEl = this.$el.find("input[data-mz-gift-card-target='" + giftCardId + "']"),
+                    me = this;
+
+                if (isEnabled) {
+                  targetAmtEl.prop('disabled', false);
+                  me.model.applyGiftCard(giftCardId, null, true);
+                } else {
+                  targetAmtEl.prop('disabled', true);
+                  me.model.applyGiftCard(giftCardId, 0, false)
+                }
             },
             addRemainderToCustomer: function (e) {
                 var creditCode = $(e.currentTarget).attr('data-mz-credit-code-to-tie-to-customer'),
