@@ -138,7 +138,7 @@
       isEnabled: false,
       amountApplied: null,
       remainingBalance: null,
-        // TODO: validation. needs only to check for cvv and number.
+        // TODO: validation. needs only to check for cvv and number, and if it exceeds remaining balance
         defaults: {
           "isGiftCard": true
         },
@@ -148,8 +148,13 @@
           return 99.9;
         },
         calculateAmountRemaining: function(){
-          //console.log('calculate amount remaining');
-        }
+            return (! this.get('amountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('amountApplied');
+        },
+        // validation: {
+        //     cvv: {
+        //         fn: "present"
+        //     }
+        // }
     });
 
     var Check = PaymentMethod.extend({

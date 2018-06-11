@@ -107,9 +107,9 @@ define([
 
                   if (!activeGiftCards) return total;
                   result = total- _.reduce(activeGiftCards, function(sum, giftCard) {
-                      return sum + giftCard.amountApplied; //
+                      return sum + giftCard.amountApplied; //TODO: may need to be giftCard.card.amountApplied? or giftCard.amountRequested?
                   }, 0);
-
+                  return me.roundToPlaces(result, 2);
             },
             resetAddressDefaults: function () {
                 var billingAddress = this.get('billingContact').get('address');
@@ -126,7 +126,8 @@ define([
               //TODO: return getActiveGiftCards like below?
               //console.log('active giftCards');
               //for now return availableGiftCards
-              return this.availableGiftCards();
+              var active = this.getOrder().apiModel.getActiveGiftCards();
+              return active && active.length > 0 && active;
             },
             activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
@@ -399,31 +400,90 @@ define([
             applyGiftCard: function(giftCardId, amountToApply, isEnabled){
               var self = this, order = this.getOrder();
               //get gift card by id from _giftCardCache
-              // at this point it needs to have:
-              // amountToApply maybe
-              console.log("model.applyGiftCard called");
-
+              //TODO: set previousAmount, previousEnabledState
               var giftCardModel = this._cachedGiftCards.find(function(giftCard){
                   return giftCard.id === giftCardId;
               });
-              if (giftCardModel){
-                giftCardModel.set('amountApplied', amountToApply);
-                console.log(giftCardModel);
+              //TODO: what do we do if it's not in the cache?
+              // realistically, we shouldn't be at this point if it's not in the cache.
 
+              var previousAmount = giftCardModel.get('amountApplied');
+              var previousEnabledState = giftCardModel.get('isEnabled');
+
+              if (!amountToApply && amountToApply !== 0) {
+                  amountToApply = self.getMaxCreditToApply(giftCardModel, self);
               }
-              this.syncApiModel();
-              //console.log('apply giftcard');
-              this.trigger('render');
-              // if (this.nonStoreCreditTotal() > 0) {
-              //   return order.apiAddGiftCard(giftCard).then(function(data){
-              //     //console.log('.then apiAddGiftCard');
-              //     //console.log(data);
-              //   });
-              // }
+
+              if (amountToApply > 0) {
+                  amountToApply = self.roundToPlaces(amountToApply, 2);
+              }
               /*
-              This is going to involve adding the payment to the order. We should be
-              able to do order.apiAddPayment and just pass in the
-              */
+              var activeGiftCards = this.activeGiftCards();
+              if (activeGiftCards) {
+                  var sameGiftCard = _.find(activeGiftCards, function(giftCard){
+                      //TODO: change to giftCard.billingInfo.id when activeGiftCards is configured
+                      return giftCard.status != 'Voided' && giftCard.id == giftCardId;
+                  });
+
+                  if (sameGiftCard){
+                    if (this.areNumbersEqual(sameGiftCard.amountRequested, amountToApply)) {
+                        var deferredSameGiftCard = api.defer();
+                        deferredSameGiftCard.reject();
+                        return deferredSameGiftCard.promise;
+                    }
+                    if (amountToApply === 0) {
+                        return order.apiVoidPayment(sameGiftCard.id).then(function(o) {
+                            order.set(o.data);
+                            self.setPurchaseOrderInfo();
+                            //self.setDefaultPaymentType(self);
+                            // TODO: figure out if this is needed?
+                            self.trigger('orderPayment', o.data, self);
+                            return o;
+                        });
+                    } else {
+                        maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self, sameGiftCard.amountRequested);
+                        if (amountToApply > maxCreditAvailable) {
+                            giftCardModel.set('amountApplied', previousAmount);
+                            giftCardModel.set('isEnabled', previousEnabledState);
+                            giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                            return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+                        }
+                        return order.apiVoidPayment(sameGiftCard.id).then(function (o) {
+                            order.set(o.data);
+
+                            return order.apiAddGiftCard(giftCardModel).then(function (o) {
+                                //TODO: figure out what this function does.
+                                self.refreshBillingInfoAfterAddingStoreCredit(order, o.data);
+                                return o;
+                            });
+                        });
+                    }
+                }
+            }
+            */
+            if (amountToApply === 0) {
+                return this.getOrder();
+            }
+
+            maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self);
+            if (amountToApply > maxCreditAvailable) {
+                giftCardModel.set('amountApplied', previousAmount);
+                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
+                giftCardModel.set('isEnabled', previousEnabledState);
+                return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
+            }
+
+            giftCardModel.set('amountToApply', amountToApply);
+            return order.apiAddGiftCard(giftCardModel.toJSON()).then(function(data){
+                giftCardModel.set('amountApplied', amountToApply);
+                giftCardModel.set('amountRemaining', giftCardModel.calculateRemainingBalance());
+                giftCardModel.set('isEnabled', isEnabled);
+                //TODO: see if giftCardModel is changed by syncApiModel
+                this.syncApiModel();
+                this.trigger('render');
+              }, function(error){
+                  //console.log(error);
+              });
 
             },
             retrieveGiftCard: function(number, securityCode) {
@@ -439,7 +499,7 @@ define([
                     me._cachedGiftCards.push(giftCardModel.clone());
                     //applyGiftCard function has a render that will fill the
                     //grid with what's in me._cachedGiftCards
-                    return me.applyGiftCard(giftCard);
+                    return me.applyGiftCard(giftCard.data.id);
                   } else {
                     //Giftcard has no balance. Throw error.
                   }
