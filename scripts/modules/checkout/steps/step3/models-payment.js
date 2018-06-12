@@ -115,7 +115,7 @@ define([
                       return sum + credit.amountRequested;
                   }, 0);
 
-                  var result = total - giftCardTotal - storeCreditTotal;
+                  result = total - giftCardTotal - storeCreditTotal;
                   return me.roundToPlaces(result, 2);
             },
             resetAddressDefaults: function () {
@@ -130,9 +130,6 @@ define([
                 return cards && cards.length > 0 && cards;
             },
             activeGiftCards: function() {
-              //TODO: return getActiveGiftCards like below?
-              //console.log('active giftCards');
-              //for now return availableGiftCards
               var active = this.getOrder().apiModel.getActiveGiftCards();
               return active && active.length > 0 && active;
             },
