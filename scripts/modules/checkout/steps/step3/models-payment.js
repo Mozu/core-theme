@@ -43,7 +43,7 @@ define([
                 var payment = order.apiModel.getCurrentPayment();
                 var errorMessage = Hypr.getLabel('paymentTypeMissing');
                 if (!value) return errorMessage;
-                if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditTotal() > 0 && !payment) return errorMessage;
+                if ((value === "StoreCredit" || value === "GiftCard") && this.nonStoreCreditOrGiftCardTotal() > 0 && !payment) return errorMessage;
 
             },
             validateSavedPaymentMethodId: function (value, attr, computedState) {
@@ -98,17 +98,24 @@ define([
                 }, 0);
                 return me.roundToPlaces(result, 2);
             },
-            nonGiftCardTotal: function () {
+            nonStoreCreditOrGiftCardTotal: function () {
               var me = this,
                   order = this.getOrder(),
                   total = order.get('total'),
                   result,
-                  activeGiftCards = this.activeGiftCards();
+                  activeGiftCards = this.activeGiftCards(),
+                  activeCredits = this.activeStoreCredits();
 
-                  if (!activeGiftCards) return total;
-                  result = total- _.reduce(activeGiftCards, function(sum, giftCard) {
-                      return sum + giftCard.amountApplied; //TODO: may need to be giftCard.card.amountApplied? or giftCard.amountRequested?
+                  if (!activeGiftCards && !activeCredits) return total;
+                  var giftCardTotal = _.reduce(activeGiftCards, function(sum, giftCard) {
+                      return sum + giftCard.amountRequested;
                   }, 0);
+
+                  var storeCreditTotal = _.reduce(activeCredits, function (sum, credit){
+                      return sum + credit.amountRequested;
+                  }, 0);
+
+                  var result = total - giftCardTotal - storeCreditTotal;
                   return me.roundToPlaces(result, 2);
             },
             resetAddressDefaults: function () {
@@ -613,14 +620,13 @@ define([
             },
 
             getMaxCreditToApply: function(creditModel, scope, toBeVoidedPayment) {
-                var remainingTotal = scope.nonStoreCreditTotal();
+                var remainingTotal = scope.nonStoreCreditOrGiftCardTotal();
                 if (!!toBeVoidedPayment) {
                     remainingTotal += toBeVoidedPayment;
                 }
                 var maxAmt = remainingTotal < creditModel.get('currentBalance') ? remainingTotal : creditModel.get('currentBalance');
                 return scope.roundToPlaces(maxAmt, 2);
             },
-
             roundToPlaces: function(amt, numberOfDecimalPlaces) {
                 var transmogrifier = Math.pow(10, numberOfDecimalPlaces);
                 return Math.round(amt * transmogrifier) / transmogrifier;
