@@ -211,7 +211,7 @@ define([
                         unexpiredDate = new Date(2076, 6, 4);
 
                     // todo: refactor so conversion & get can re-use - Greg Murray on 2014-07-01
-                    var invalidCredits = customerCredits.flter(function(cred) {
+                    var invalidCredits = customerCredits.filter(function(cred) {
                         var credBalance = cred.get('currentBalance'),
                             credExpDate = cred.get('expirationDate');
                         var expDate = (credExpDate) ? new Date(credExpDate) : unexpiredDate;
