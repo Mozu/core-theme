@@ -451,11 +451,12 @@ define([
                             return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
                         }
                         return order.apiVoidPayment(sameGiftCard.id).then(function (o) {
-                            console.log("samegiftcard voided");
                             order.set(o.data);
-
-                            return order.apiAddGiftCard(giftCardModel).then(function (o) {
-                                //TODO: figure out what this function does.
+                            giftCardModel.set('amountToApply', amountToApply);
+                            return order.apiAddGiftCard(giftCardModel.toJSON()).then(function (o) {
+                                giftCardModel.set('amountApplied', amountToApply);
+                                giftCardModel.set('isEnabled', isEnabled);
+                                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
                                 self.refreshBillingInfoAfterAddingStoreCredit(order, o.data);
                                 return o;
                             });
@@ -479,7 +480,7 @@ define([
             giftCardModel.set('amountToApply', amountToApply);
             return order.apiAddGiftCard(giftCardModel.toJSON()).then(function(data){
                 giftCardModel.set('amountApplied', amountToApply);
-                giftCardModel.set('amountRemaining', giftCardModel.calculateRemainingBalance());
+                giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
                 giftCardModel.set('isEnabled', isEnabled);
                 //TODO: see if giftCardModel is changed by syncApiModel
                 //TODO: maybe update the order to represent the return from this?
@@ -497,7 +498,6 @@ define([
                me.isLoading(true);
               return giftCardModel.apiSave().then(function(giftCard){
                 return giftCardModel.apiGetBalance().then(function(balance){
-                  me.isLoading(false);
                   if (balance>0) {
                     giftCardModel.set('currentBalance', balance);
                     me._cachedGiftCards.push(giftCardModel.clone());

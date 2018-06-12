@@ -216,7 +216,6 @@ define(["modules/jquery-mozu",
               this.$el.addClass('is-loading');
               this.model.getGatewayGiftCard().ensure(function() {
                    self.$el.removeClass('is-loading');
-                   console.log(self.model._cachedGiftCards);
                });
             },
             stripNonNumericAndParseFloat: function (val) {
@@ -237,14 +236,18 @@ define(["modules/jquery-mozu",
                 this.render();
             },
             applyGiftCard: function(e) {
-                var val = $(e.currentTarget).prop('value'),
+                var self = this,
+                    val = $(e.currentTarget).prop('value'),
                     giftCardId = $(e.currentTarget).attr('data-mz-gift-card-target');
                 if (!giftCardId) {
                   return;
                 }
                 var amtToApply = this.stripNonNumericAndParseFloat(val);
-                this.model.applyGiftCard(giftCardId, amtToApply, true);
-                this.render();
+                this.$el.addClass('is-loading');
+                return this.model.applyGiftCard(giftCardId, amtToApply, true).then(function(){
+                    self.$el.removeClass('is-loading');
+                    this.render();
+                });
             },
             onEnterGiftCardInfo: function(model) {
               if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){

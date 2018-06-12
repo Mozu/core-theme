@@ -54,7 +54,7 @@
             <input class="data-mz-giftcard-amt-to-apply" data-mz-gift-card-target="{{ card.attributes.id }}"
                    min="1" step="0.01" data-mz-gift-card-amount
                    data-mz-value="amountApplied"
-                   {% if card.attributes.amountApplied %}value="{{ credit.attributes.amountApplied|currency }}"{% endif %}
+                   {% if card.attributes.amountApplied %}value="{{ card.attributes.amountApplied|currency }}"{% endif %}
                       {% if not card.attributes.isEnabled %}disabled="true"{% endif %}
                    />
           </td>
