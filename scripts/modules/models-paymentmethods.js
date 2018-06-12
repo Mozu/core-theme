@@ -147,9 +147,9 @@
           // call will probably be something like this.apiGetBalance
           return 99.9;
         },
-        calculateAmountRemaining: function(){
+        calculateRemainingBalance: function(){
             return (! this.get('amountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('amountApplied');
-        },
+        }
         // validation: {
         //     cvv: {
         //         fn: "present"

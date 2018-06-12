@@ -213,11 +213,11 @@ define(["modules/jquery-mozu",
             },
             getGatewayGiftCard: function (e) {
               var self = this;
-              //this.$el.addClass('is-loading');
-              this.model.getGatewayGiftCard();
-              // this.model.getGatewayGiftCard().ensure(function() {
-              //     self.$el.removeClass('is-loading');
-              // });
+              this.$el.addClass('is-loading');
+              this.model.getGatewayGiftCard().ensure(function() {
+                   self.$el.removeClass('is-loading');
+                   console.log(self.model._cachedGiftCards);
+               });
             },
             stripNonNumericAndParseFloat: function (val) {
                 if (!val) return 0;
@@ -291,7 +291,7 @@ define(["modules/jquery-mozu",
                   me.model.applyGiftCard(giftCardId, null, true);
                 } else {
                   targetAmtEl.prop('disabled', true);
-                  me.model.applyGiftCard(giftCardId, 0, false)
+                  me.model.applyGiftCard(giftCardId, 0, false);
                 }
             },
             addRemainderToCustomer: function (e) {
@@ -308,6 +308,10 @@ define(["modules/jquery-mozu",
                         return this.applyDigitalCredit(e);
                     case "digitalCreditCode":
                         return this.getDigitalCredit(e);
+                    case "giftCardNumber":
+                        return this.getGatewayGiftCard();
+                    case "giftCardSecurityCode":
+                        return this.getGatewayGiftCard();
                 }
             },
             /* begin visa checkout */

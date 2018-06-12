@@ -465,7 +465,7 @@ define([
                 return this.getOrder();
             }
 
-            maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self);
+            var maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self);
             if (amountToApply > maxCreditAvailable) {
                 giftCardModel.set('amountApplied', previousAmount);
                 giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
@@ -479,8 +479,9 @@ define([
                 giftCardModel.set('amountRemaining', giftCardModel.calculateRemainingBalance());
                 giftCardModel.set('isEnabled', isEnabled);
                 //TODO: see if giftCardModel is changed by syncApiModel
-                this.syncApiModel();
-                this.trigger('render');
+                //TODO: maybe update the order to represent the return from this?
+                self.syncApiModel();
+                self.trigger('render');
               }, function(error){
                   //console.log(error);
               });
@@ -499,7 +500,7 @@ define([
                     me._cachedGiftCards.push(giftCardModel.clone());
                     //applyGiftCard function has a render that will fill the
                     //grid with what's in me._cachedGiftCards
-                    return me.applyGiftCard(giftCard.data.id);
+                    return me.applyGiftCard(giftCard.data.id, null, true);
                   } else {
                     //Giftcard has no balance. Throw error.
                   }

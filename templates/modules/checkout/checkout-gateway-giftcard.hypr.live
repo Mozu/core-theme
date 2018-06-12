@@ -20,7 +20,6 @@
     </div>
   </div>
 </div>
-
 {% if model.availableGiftCards %}
   <div class="mz-checkout-digitalcredit-table">
     <table class="mz-table">
