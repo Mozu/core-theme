@@ -417,12 +417,11 @@ define([
               if (amountToApply > 0) {
                   amountToApply = self.roundToPlaces(amountToApply, 2);
               }
-              /*
+
               var activeGiftCards = this.activeGiftCards();
               if (activeGiftCards) {
                   var sameGiftCard = _.find(activeGiftCards, function(giftCard){
-                      //TODO: change to giftCard.billingInfo.id when activeGiftCards is configured
-                      return giftCard.status != 'Voided' && giftCard.id == giftCardId;
+                      return giftCard.status != 'Voided' && giftCard.billingInfo.card.paymentServiceCardId == giftCardId;
                   });
 
                   if (sameGiftCard){
@@ -437,6 +436,9 @@ define([
                             self.setPurchaseOrderInfo();
                             //self.setDefaultPaymentType(self);
                             // TODO: figure out if this is needed?
+                            giftCardModel.set('amountApplied', amountToApply);
+                            giftCardModel.set('isEnabled', isEnabled);
+                            giftCardModel.set('remainingBalance', giftCardModel.calculateRemainingBalance());
                             self.trigger('orderPayment', o.data, self);
                             return o;
                         });
@@ -449,6 +451,7 @@ define([
                             return self.deferredError(Hypr.getLabel('digitalCreditExceedsBalance'), self);
                         }
                         return order.apiVoidPayment(sameGiftCard.id).then(function (o) {
+                            console.log("samegiftcard voided");
                             order.set(o.data);
 
                             return order.apiAddGiftCard(giftCardModel).then(function (o) {
@@ -460,7 +463,7 @@ define([
                     }
                 }
             }
-            */
+
             if (amountToApply === 0) {
                 return this.getOrder();
             }
