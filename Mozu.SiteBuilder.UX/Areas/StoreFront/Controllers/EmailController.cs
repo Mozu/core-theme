@@ -374,46 +374,42 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             var obj = JsonConvert.DeserializeObject(json, eti.ModelType, CaseInsensitiveJsonSerializerSettings.Default);
             var order = obj as Order;
-            if (order != null)
+            if (order?.Items != null && order.Packages != null && order.Packages.Count > 0)
             {
-                if (order.Items != null && order.Packages != null && order.Packages.Count > 0)
+                Hashtable ht = new Hashtable(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var x in (order.Items).Where(x => x != null))
                 {
-                    Hashtable ht = new Hashtable(StringComparer.OrdinalIgnoreCase);
-
-
-                    foreach (var x in (order.Items).SelectMany(x => (x.Product.BundledProducts)).Where(x=> x != null))
-                    
+                    if ( !string.IsNullOrEmpty(x.Product.VariationProductCode) )
                     {
-                        ht[x.ProductCode] = x;
+                        ht[$"{x.Product.VariationProductCode}.{x.LineId}"] = x.Product;
                     }
+                    ht[$"{x.Product.ProductCode}.{x.LineId}"] = x.Product;
 
-                    foreach (var x in (order.Items).Select(x => x.Product).Where(x => x != null))
+                    foreach (var productBundledProduct in x.Product.BundledProducts)
                     {
-                        if ( !string.IsNullOrEmpty(x.VariationProductCode) )
+                        ht[$"{productBundledProduct.ProductCode}.{x.LineId}"] = productBundledProduct;
+                    }
+                }
+
+                foreach (Package p in order.Packages.Where(x => x.Items != null))
+                {
+                    for (var i = 0; i < p.Items.Count; i++)
+                    {
+                        var packageItem = p.Items[i];
+                        p.Items[i] = new MyPackageItem()
                         {
-                            ht[x.VariationProductCode] = x;
-                        }
-                        ht[x.ProductCode] = x;
+                            FulfillmentItemType = packageItem.FulfillmentItemType,
+                            Product = ht[$"{packageItem.ProductCode}.{packageItem.LineId}"],
+                            ProductCode = packageItem.ProductCode,
+                            Quantity = packageItem.Quantity
+                        };
                     }
-                    foreach (Package p in order.Packages.Where(x => x.Items != null))
-                    {
-                        for (int i = 0; i < p.Items.Count; i++)
-                        {
-                            var packageItem = p.Items[i];
-                            p.Items[i] = new MyPackageItem()
-                                         {
-                                             FulfillmentItemType = packageItem.FulfillmentItemType,
-                                             Product = ht[packageItem.ProductCode],
-                                             ProductCode = packageItem.ProductCode,
-                                             Quantity = packageItem.Quantity
-                                         };
-                        }
-                    }
+                }
               
                   
-                }
             }
-            
+
             if (obj is ReturnEmail)
             {
                 var returnEmail = (ReturnEmail)obj;
