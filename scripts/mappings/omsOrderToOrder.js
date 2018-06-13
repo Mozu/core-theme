@@ -247,7 +247,7 @@ define([
                     mapping.packages.push(myPackage);
                 } else if (source.deliveryMethod === 'DIGITAL') {
                     mapping.digitalPackages.push(myPackage);
-                } else if (source.deliveryMethod === 'IN_STORE_PICKUP' || 'SHIP_TO_STORE' || 'SHIP_TO_STORE_PLUS') {
+                } else if (source.deliveryMethod === 'IN_STORE_PICKUP' || source.deliveryMethod === 'SHIP_TO_STORE' || source.deliveryMethod === 'SHIP_TO_STORE_PLUS') {
                     mapping.pickups.push(myPackage);
                 }
             });
