@@ -46,12 +46,7 @@
 
         <a id="orderhistory"></a>
         <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
-            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=true %}
-        </div>
-        
-        <a id="returnhistory"></a>
-        <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
-            {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
+            {% include "modules/my-account/my-account-orderhistory" with showPaging=true %}
         </div>
 
         <a id="paymentmethods"></a>

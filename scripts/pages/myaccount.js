@@ -1,4 +1,5 @@
-define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view', 'modules/models-orders', 'mappings/omsReturnToReturn','mappings/omsOrderToOrder'], 
+    function (Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView, OrderModels, omsReturnToReturn, omsOrderToOrder) {
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -143,7 +144,7 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
 
 
     var OrderHistoryView = Backbone.MozuView.extend({
-        templateName: "modules/my-account/order-history-list",
+        templateName: "modules/my-account/my-account-orderhistory",
         getRenderContext: function() {
             var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
             context.returning = this.returning;
@@ -153,11 +154,69 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
             context.returningPackage = this.returningPackage;
             return context;
         },
+        initialize: function () {
+            var self = this;
+
+            var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
+
+            self.model.isLoading(true);
+
+            Api.request("POST", "oms/omsOrders",
+                { page: 0, perPage: 5, customerId: accountModel.get('externalId'), sortBy: '-orderDate' })
+                .then(function (data) {
+                    data.items = _.map(data.collection, function (item) {
+                        return omsOrderToOrder(item);
+                    });
+                    data.startIndex = (data.page - 1) * data.perPage;
+                    data.pageSize = data.perPage;
+                    data.pageCount = Math.ceil(data.totalCount / data.perPage);
+                    delete data.collection;
+
+                    self.model.set(data);
+                    self.model.set('showPaging', true);
+                    self.model.isLoading(false);
+                    self.render();
+                });
+
+        },
+        loadOMSReturnItems: function (orderNumber, target) {
+            var order = this.model.get('items').findWhere({ id: orderNumber });
+
+            return Api.request("POST", "oms/omsReturns",
+                { ids: order.get('omsOrder').orderID.toString() }
+            ).then(function (resp) {
+                if (resp.totalCount > 0) {
+                    var returnOrderCollection = new OrderModels.OrderCollection({});
+
+                    _.each(resp.collection, function (item) {
+                        var ngOrder = new OrderModels.Order(omsReturnToReturn(item));
+                        returnOrderCollection.add(ngOrder);
+                    });
+
+                    var returnHistoryView = new ReturnHistoryView({
+                        el: $(target).find('.omsReturnHistoryItem'),
+                        model: returnOrderCollection
+                    });
+                    returnHistoryView.render();
+                }
+            });
+        },
         render: function() {
             var self = this;
             Backbone.MozuView.prototype.render.apply(this, arguments);
 
-            $.each(this.$el.find('[data-mz-order-history-listing]'), function(index, val) {
+            var orderHistoryPagingControls = new PagingViews.PagingControls({
+                templateName: 'modules/my-account/order-history-paging-controls',
+                el: self.$el.find('[data-mz-pagingcontrols]'),
+                model: self.model
+            }),
+
+            orderHistoryPageNumbers = new PagingViews.PageNumbers({
+                el: self.$el.find('[data-mz-pagenumbers]'),
+                model: self.model
+            });
+
+            $.each(this.$el.find('[data-mz-order-history-listing]'), function (index, val) {
 
                 var orderId = $(this).data('mzOrderId');
                 var myOrder = self.model.get('items').get(orderId);
@@ -167,7 +226,12 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                     messagesEl: $(this).find('[data-order-message-bar]')
                 });
                 orderHistoryListingView.render();
+                //self.loadOMSReturnItems(orderId, $(this).find('.listing')).always(function(){
+                    
+                //});
             });
+
+            _.invoke([orderHistoryPagingControls, orderHistoryPageNumbers], 'render');
         },
         selectReturnItems: function() {
             if (typeof this.returning == 'object') {
@@ -652,14 +716,12 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
         var $accountSettingsEl = $('#account-settings'),
             $passwordEl = $('#password-section'),
             $orderHistoryEl = $('#account-orderhistory'),
-            $returnHistoryEl = $('#account-returnhistory'),
             $paymentMethodsEl = $('#account-paymentmethods'),
             $addressBookEl = $('#account-addressbook'),
             $wishListEl = $('#account-wishlist'),
             $messagesEl = $('#account-messages'),
             $storeCreditEl = $('#account-storecredit'),
-            orderHistory = accountModel.get('orderHistory'),
-            returnHistory = accountModel.get('returnHistory');
+            orderHistory = new OrderModels.OrderCollection({});
 
         var accountViews = window.accountViews = {
             settings: new AccountSettingsView({
@@ -672,32 +734,9 @@ define(['modules/backbone-mozu', "modules/api", 'hyprlive', 'hyprlivecontext', '
                 model: accountModel,
                 messagesEl: $messagesEl
             }),
-
             orderHistory: new OrderHistoryView({
-                el: $orderHistoryEl.find('[data-mz-orderlist]'),
+                el: $orderHistoryEl,
                 model: orderHistory
-            }),
-            orderHistoryPagingControls: new PagingViews.PagingControls({
-                templateName: 'modules/my-account/order-history-paging-controls',
-                el: $orderHistoryEl.find('[data-mz-pagingcontrols]'),
-                model: orderHistory
-            }),
-            orderHistoryPageNumbers: new PagingViews.PageNumbers({
-                el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
-                model: orderHistory
-            }),
-            returnHistory: new ReturnHistoryView({
-                el: $returnHistoryEl.find('[data-mz-orderlist]'),
-                model: returnHistory
-            }),
-            returnHistoryPagingControls: new PagingViews.PagingControls({
-                templateName: 'modules/my-account/order-history-paging-controls',
-                el: $returnHistoryEl.find('[data-mz-pagingcontrols]'),
-                model: returnHistory
-            }),
-            returnHistoryPageNumbers: new PagingViews.PageNumbers({
-                el: $returnHistoryEl.find('[data-mz-pagenumbers]'),
-                model: returnHistory
             }),
             paymentMethods: new PaymentMethodsView({
                 el: $paymentMethodsEl,

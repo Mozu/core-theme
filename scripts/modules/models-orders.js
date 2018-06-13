@@ -301,7 +301,7 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 rma: ReturnModels.RMA
             },
             handlesMessages: true,
-            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems'],
+            helpers: ['getNonShippedItems', 'hasFulfilledPackages', 'hasFulfilledPickups', 'hasFulfilledDigital', 'getInStorePickups', 'getReturnableItems', 'isFirstSibling', 'hasOtherSiblings'],
             _nonShippedItems: {},
             initialize: function() {
                 var self = this;
@@ -313,6 +313,25 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                 //This is used to set the value for the helper function getNonShippedItems
                 //Figuring out what items have yet to ship is somwhat heavy. So in order to ensure it is only run once we do this here.
                 self.setNonShippedItems();
+            },
+            hasOtherSiblings: function () {
+                var self = this;
+                var sibling = self.collection.models.find(function (order) {
+                    if (order.id != self.id) {
+                        return self.get('parentCheckoutNumber') === order.get('parentCheckoutNumber');
+                    }
+                    return false;
+                });
+
+                return (sibling) ? true : false;
+            },
+            isFirstSibling: function () {
+                var self = this;
+
+                var firstOrder = self.collection.models.find(function (order) {
+                    return self.get('parentCheckoutNumber') === order.get('parentCheckoutNumber');
+                });
+                return (firstOrder.id === self.id);
             },
             hasFulfilledPackages: function() {
                 var self = this,

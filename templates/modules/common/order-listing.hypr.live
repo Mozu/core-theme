@@ -101,6 +101,6 @@
             {% for item in model.items %}
                 {% include "modules/common/item-listing" with model=item %}
             {% endfor %}
-        {% endblock order-items %}
+        {% endblock order-items %}    
     </div>
 </div>

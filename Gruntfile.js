@@ -14,8 +14,20 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   require('time-grunt')(grunt);
 
+  var getMozuConfig = function(configName){
+    var config = {};
+    if (grunt.file.exists('./mozu.config.json')) {
+      config = grunt.file.readJSON('./mozu.config.json');
+      if (configName && Array.isArray(config)) {
+        return (config[configName]) ? config[configName] : config[0];
+      }
+      return Array.isArray(config) ? config[0] : config;
+    }
+    return config;
+  };
+
   grunt.initConfig({
-    mozuconfig: grunt.file.exists('./mozu.config.json') ? grunt.file.readJSON('./mozu.config.json') : {},
+    mozuconfig: getMozuConfig(),
     pkg: pkg,
     copy: {
       packagedeps: {
@@ -227,5 +239,5 @@ module.exports = function (grunt) {
   grunt.registerTask('default', [
     'build',
     'watch:sync'
-    ]);
+  ]);
 };

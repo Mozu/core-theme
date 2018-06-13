@@ -1,0 +1,94 @@
+{% block order-details %}
+        <ul class="mz-orderlisting-details-list">
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    {% if model.submittedDate %}
+                        <dt>{{ labels.orderPlaced }}</dt>
+                        <dd>{{ model.submittedDate|date("F j, Y") }}</dd>
+                    {% else %}
+                        <dt>{{ labels.orderPlaced }}</dt>
+                        <dd>{{ model.auditInfo.createDate|date("F j, Y") }}</dd>
+                    {% endif %}
+                </dl>
+            </li>
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.orderNumber }}</dt>
+                    <dd>{{ model.orderNumber }}</dd>
+                </dl>
+            </li>
+            {% for payment in model.payments %}
+                {% if payment.billingInfo.paymentType == "PurchaseOrder" and payment.status != "Voided" %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.purchaseOrderNumber }}</dt>
+                        <dd>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</dd>
+                    </dl>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.orderStatus }}</dt>
+                    <dd>{{ model.status }}</dd>
+                </dl>
+            </li>
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.total }}</dt>
+                    <dd>{{ model.total|currency }}</dd>
+                </dl>
+            </li>
+            {% if model.amountRefunded > 0 %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.refund }}</dt>
+                        <dd>{{ model.amountRefunded|currency }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
+
+            {% if model.fulfillmentInfo.fulfillmentContact %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        {% block order-shipped-to %}
+                            <dt>{{ labels.shippedTo }}</dt>
+                            <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+                        {% endblock order-shipped-to %}
+                    </dl>
+                </li>
+            {% endif %}
+
+        </ul>
+    {% block attributes %}
+        {% for attribute in model.attributes %}
+        {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
+            {% if attDef %}
+                {% with attribute.values|first as attributeVal %}
+                    <div class="mz-orderlisting-attribute">
+                        <span>{{ attDef.content.value }}</span>
+                        <div>
+                            {% if attDef.dataType === "DateTime" %}
+                                {{ attributeVal|date("F j, Y") }}
+                            {% else %}
+                                {% if attDef.dataType === "Bool" %}
+
+                                    {% if attributeVal == "true" || attributeVal == "True" %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                {% else %}
+                                    {{ attributeVal }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
+
+        {% endblock attributes %}
+
+    {% endblock order-details %}

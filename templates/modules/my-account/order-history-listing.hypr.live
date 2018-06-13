@@ -1,18 +1,110 @@
 {% extends "modules/common/order-listing" %}
+
+{% block order-details %}
+        <ul class="mz-orderlisting-details-list">
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    {% if model.submittedDate %}
+                        <dt>{{ labels.orderPlaced }}</dt>
+                        <dd>{{ model.submittedDate|date("F j, Y") }}</dd>
+                    {% else %}
+                        <dt>{{ labels.orderPlaced }}</dt>
+                        <dd>{{ model.auditInfo.createDate|date("F j, Y") }}</dd>
+                    {% endif %}
+                </dl>
+            </li>
+            {% if model.hasOtherSiblings %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.orderNumber }}</dt>
+                        <dd>{{ model.orderNumber }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.customerCareNumber }}</dt>
+                    <dd>{{ model.omsOrder.orderID }}</dd>
+                </dl>
+            </li>
+            {% for payment in model.payments %}
+                {% if payment.billingInfo.paymentType == "PurchaseOrder" and payment.status != "Voided" %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.purchaseOrderNumber }}</dt>
+                        <dd>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</dd>
+                    </dl>
+                </li>
+                {% endif %}
+            {% endfor %}
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.orderStatus }}</dt>
+                    <dd>{{ model.status }}</dd>
+                </dl>
+            </li>
+            <li class="mz-orderlisting-details-item">
+                <dl class="mz-propertylist mz-propertylist-order">
+                    <dt>{{ labels.total }}</dt>
+                    <dd>{{ model.total|currency }}</dd>
+                </dl>
+            </li>
+            {% if model.amountRefunded > 0 %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        <dt>{{ labels.refund }}</dt>
+                        <dd>{{ model.amountRefunded|currency }}</dd>
+                    </dl>
+                </li>
+            {% endif %}
+
+            {% if model.fulfillmentInfo.fulfillmentContact %}
+                <li class="mz-orderlisting-details-item">
+                    <dl class="mz-propertylist mz-propertylist-order">
+                        {% block order-shipped-to %}
+                            <dt>{{ labels.shippedTo }}</dt>
+                            <dd>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</dd>
+                        {% endblock order-shipped-to %}
+                    </dl>
+                </li>
+            {% endif %}
+
+        </ul>
+    {% block attributes %}
+        {% for attribute in model.attributes %}
+        {% with model.orderAttributeDefinitions|findwhere('attributeFQN', attribute.fullyQualifiedName) as attDef %}
+            {% if attDef %}
+                {% with attribute.values|first as attributeVal %}
+                    <div class="mz-orderlisting-attribute">
+                        <span>{{ attDef.content.value }}</span>
+                        <div>
+                            {% if attDef.dataType === "DateTime" %}
+                                {{ attributeVal|date("F j, Y") }}
+                            {% else %}
+                                {% if attDef.dataType === "Bool" %}
+
+                                    {% if attributeVal == "true" || attributeVal == "True" %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                {% else %}
+                                    {{ attributeVal }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+        {% endfor %}
+
+        {% endblock attributes %}
+
+    {% endblock order-details %}
+
 {% block order-items %}
 <div class="order-history-listing">
-    {% if model.hasFulfilledPackages or model.hasFulfilledPickups %}
-        <div class="mz-orderlisting-prompt is-warning" data-mz-message-for="noReturnableItems"></div>
-            <div class="mz-orderlisting-header">
-                {% if themeSettings.allowCustomerInitiatedReturns %}
-                    <div class="mz-orderlisting-return">
-                        <span class="mz-itemlisting-action">
-                            <button type="submit" class="mz-button" data-mz-order-id="{{ model.id }}" data-mz-action="startOrderReturn" >{{ labels.returnOrReplace }}</button>
-                        </span>
-                    </div>
-                {% endif %}
-            </div>
-    {% endif %}
 
     {% if model.hasFulfilledPackages %}
         <h2 class="mz-orderlisting-heading">{{labels.shipped}}</h2> 
@@ -36,7 +128,30 @@
     {% endif %}
 
     {% if model.getNonShippedItems.length > 0 %}
-        <h2 class="mz-orderlisting-heading">{{labels.orderItemsNotShipped}}</h2> 
+        <h2 class="mz-orderlisting-heading">
+            {% if model.omsOrder.deliveryMethod == "IN_STORE_PICKUP" %}
+                {% if model.status == "Canceled" %}
+                    {{ labels.orderItemsCancelled }}
+                {% else %}
+                    {{labels.orderItemsPickup}}
+                {% endif %}
+            {% else %}
+                {% if model.omsOrder.deliveryMethod == "DIGITAL" %}
+                    {% if model.status == "Canceled" %}
+                        {{ labels.orderItemsCancelled }}
+                    {% else %}
+                        {{labels.orderItemsDigital}}
+                    {% endif %}
+                {% else %}
+                    {% if model.status == "Canceled" %}
+                        {{ labels.orderItemsCancelled }}
+                    {% else %}
+                        {{labels.orderItemsNotShipped}}
+                    {% endif %}
+                 {% endif %}
+            {% endif %}
+            
+        </h2> 
         <div class="mz-orderlisting-nonShipped">
         {% for item in model.getNonShippedItems %}
             {% if item.Type == "BundleItem" %}
@@ -47,6 +162,9 @@
         {% endfor %}
         </div>
     {% endif %}
+</div>
 
+<div class="omsReturnHistoryItem" data-mz-orderId="{{ model.orderNumber }}">
+    {% include "modules/my-account/return-history-list" with model=item %}
 </div>
 {% endblock order-items %}
