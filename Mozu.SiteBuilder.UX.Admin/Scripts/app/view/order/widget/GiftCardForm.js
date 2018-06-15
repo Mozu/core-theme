@@ -60,16 +60,13 @@ Ext.define('Taco.view.order.widget.GiftCardForm', {
                         return
                     }
                    
-                    //me.setLoading("Loading...");
-                    //me.fetchGiftCard(number, securityCode).then(function (res) {
-                    //    var amountRemaining = res.data.amountRemaining;
-                    //    ////TODO: change to currency
-                    //    balanceField.html(amountRemaining);
-                    //    balanceField.show();
-                    //}), function (error) {
-                    //    console.log(error);
-                    //    ////TODO: Error handling on giftcard fetch
-                    //};
+                    me.setLoading("Loading...");
+                    me.fetchGiftCard(number, securityCode).then(function (res) {
+                        var amountRemaining = res.data.amountRemaining;
+                        //TODO: change to currency
+                        balanceField.html(amountRemaining);
+                        balanceField.show();
+                    })
 
                     me.getGiftCardBalanceField().show();
                     //me.setDisplayedItems();

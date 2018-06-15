@@ -316,13 +316,21 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
             width: 500,
             allowBlank: false,
             margin: '0px 5px 0px 5px',
-            listeners: {
-                select: {
-                    fn: function (combo, record) {
-                        // Call a method to update the billing info stuff related to this card!!
-                        console.log("Update billing info was here. replace with something relevant.");
-                    }
+            emptyText: "Select a Giftcard",
+            displayTpl: Ext.create('Ext.XTemplate', '<tpl for=".">{cardType} {cardNumber} </tpl>'),
+            listConfig: {
+                loadingText: 'Loading...',
+                emptyText: 'No matching payments found.',
+                // Custom rendering template for each item
+                // Card type (Visa) Card Mask (****) exp (month/year)
+                getInnerTpl: function () {
+                    return '<tpl for="."><div class="taco-payment-item"><span style="width:30px">{cardType}</span><span style="width:140px">{cardNumber}</span></div></tpl>';
                 }
+            },
+            initComponent: function (eOpts) {
+                var me = this;
+
+                me.callParent(arguments);
             }
         });
 
@@ -335,17 +343,22 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 text: 'Check Balance',
                 margin: '30 0 0 0',
                 handler: function (button) {
-                    // TODO
-                    //set loading
-                    //Get the id of giftcard currently selected from the dropdown box
-                    //make call to check for balance
-                    //if not error
-                    //unset loading
-                    //set giftCardBalanceField HTML to the proper amount
-                    //if error 
-                    //unset loading 
-                    //set error message
-                    console.log("It got call");
+                    
+                    var data = me.getApplyingGiftCardData();
+
+                    me.record.checkGiftCardBalance({
+                        jsonData: data.paymentInfo,
+                        success: function (response) {
+                            me.setLoading(false, me.body);
+
+                            me.getGiftCardBalanceField.value(response);
+                            me.newCardBalanceField.show();
+                        },
+                        failure: function () {
+                            me.setLoading(false, me.body);
+                        }
+                    })
+
                     me.checkBalanceButton.hide();
                     me.existingCardBalanceField.show();
                 }
@@ -517,21 +530,26 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     text: 'Check Balance',
                                     margin: '30 0 0 0',
                                     handler: function (button) {
-                                        // TODO
-                                        //set loading
-                                        //Get card from api call to payment service.then(
-                                            //Get balance from card from api call to payment service
-                                        //)
-                                        //if not error
-                                        //unset loading
-                                        //set giftCardBalanceField HTML to the proper amount
-                                        //if error 
-                                        //unset loading 
-                                        //set error message
-                                        
-                                        console.log("it got call");
-                                        me.newCardBalanceField.show();
+                                        var addCard = this.pciProcessor;
+                                        addCard.events.success = function(){
+                                            var data = me.getNewGiftCardData();
 
+                                            me.record.checkGiftCardBalance({
+                                                jsonData: data.paymentInfo,
+                                                success: function (response) {
+                                                    me.setLoading(false, me.body);
+
+                                                    me.getGiftCardBalanceField.value(response);
+                                                    me.newCardBalanceField.show();
+                                                },
+                                                failure: function () {
+                                                    me.setLoading(false, me.body);
+                                                }
+                                            })
+                                        }
+
+                                        addCard.process();
+                                        
                                     }
                                 }
                             ]
@@ -719,6 +737,29 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         }, this.body);
 
         if (this.newCardRadio && this.newCardRadio.getValue()) {
+            if (this.getNewGiftCardData.paymentInfo.paymentServiceCardId) {
+                var me = this,
+               data = this.getNewGiftCardData();
+
+                this.record.addGiftCards({
+                    jsonData: data,
+                    success: function (response) {
+                        me.setLoading(false, me.body);
+                        var json = Ext.decode(response.responseText, true),
+                            data;
+
+                        if (!json) return;
+
+                        data = json.items;
+                        me.record.reload();
+                        me.saveSuccess(data);
+                    },
+                    failure: function () {
+                        me.setLoading(false, me.body);
+                    }
+                });
+                return;
+            }
             this.pciProcessor.process();
             
         } else {
@@ -756,7 +797,7 @@ function () {
         url: '/admin/scripts/resources/lib/pci-temp.js',
         onLoad: function () {
             me.PCIaaS = window.PCIaaS;
-            Taco.app && Taco.app.fireEvent('pciloaded', me.PCIaaS);
+            if(Taco.app) Taco.app.fireEvent('pciloaded', me.PCIaaS);
         }
     });
 });

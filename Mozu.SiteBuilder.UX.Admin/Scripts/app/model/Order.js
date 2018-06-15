@@ -10,7 +10,8 @@ Ext.define('Taco.model.Order', {
     'Taco.model.OrderPayment',
     'Taco.model.OrderRefund',
     'Taco.store.ShippingMethods',
-    'Ext.data.association.HasOne'
+    'Ext.data.association.HasOne',
+    'Ext.ux.IFrame'
     ],
 
     statics: {
@@ -1534,6 +1535,82 @@ Ext.define('Taco.model.Order', {
         this.addErrorHandling(config);
 
         Ext.Ajax.request(config);
+    },
+    checkGiftCardBalance: function (config) {
+
+        var checkCardBalanceURL = Taco.paymentApiBaseUrl + config.jsonData.paymentServiceCardId + '/balance';
+
+        var configIframe = Ext.create('Ext.ux.IFrame', {
+            height: '100%',
+            src: 'about:blank'
+        });
+
+        var formHtml = "<form id='configPost' method='POST' action='" + checkCardBalanceURL
+            + "' target='" + configIframe.frameName + "'>"
+            //+ "<input type=hidden name='x-vol-tenant-domain' value='" + this.record.get("tenantDomain") + "'/>"
+            + "<input type='hidden' name='cardNumberPart' value='" + config.jsonData.cardNumber + "'/>"
+            + "<input type=hidden name='x-vol-tenant-domain' value='t17375.ngdev06.dev.kibocommerce.com'/>"
+            + "</form>";
+
+        var configForm = {
+            xtype: 'component',
+            html: formHtml,
+            id: 'configHiddenForm',
+            listeners: {
+                afterrender: function (cmp) {
+                    var self = this;
+                    var fm = cmp.el.dom.firstElementChild;;
+
+                    fm.submit({
+                        params: config.jsonData,
+                        success: function (form, action) {
+                            //Or somthing liek this we need to just find the element and replace the html since we are doing this in order.js
+                            var giftCardField = self.down('#giftCardBalanceField')
+                            giftCardField.value(action.result);
+                            Ext.Msg.alert('Success', action.result.message);
+                        },
+                        failure: function (form, action) {
+                            Ext.Msg.alert('Failed', action.result ? action.result.message : 'No response');
+                        }
+                    });
+                }
+            }
+        };
+
+        var modalConfigWindow = Ext.create('Taco.core.ux.window.Window', {
+            autoShow: true,
+            resizable: true,
+            draggable: true,
+            scale: 'large',
+            shadow: true,
+            height: 700,
+            items: [
+                configIframe,
+                configForm
+            ],
+            listeners: {
+                close: function (cmp) {
+                    cmp.removeAll(true);
+                    this.record.reload();
+                },
+                scope: this
+            }
+        });
+        modalConfigWindow.center();
+
+        if (Ext.isArray(this.modals)) this.modals.push(modalConfigWindow);
+        else this.modals = [modalConfigWindow];
+
+
+        //Ext.applyIf(config, {
+        //    url: Taco.paymentApiBaseUrl + config.paymentServiceCardId + '/balance',
+        //    method: 'POST'
+        //});
+
+        //config.errorMsg = config.errorMsg || 'Error getting giftcard balance';
+        //this.addErrorHandling(config);
+
+        //Ext.Ajax.request(config);
     },
 
     addStoreCredit: function (config) {
