@@ -130,6 +130,11 @@ module.exports = (function() {
                 return self;
             });
         },
+        getBalance: function () {
+            return this.save().then(function (saved) {
+                return "124.5";
+            });
+        },
         saveToCustomer: function (customerId) {
             var self = this;
             return this.save().then(function (cardId) {

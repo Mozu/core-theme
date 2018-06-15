@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-06-13
+ * Mozu JavaScript SDK - v0.3.0 - 2018-06-15
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4208,10 +4208,13 @@ module.exports=
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}"
     },
-    "GetGiftCardBalance": {
+    "getGiftCardBalance": {
       "verb": "GET",
       "shortcutParam": "cardId",
-      "template": "{+paymentService}{cardId}/balance"
+      "template": "{+paymentService}{cardId}/balance{?responseFields}",
+       "defaultParams": {
+        "responseFields": "amount"
+      }
     }
   },
   "creditcards": {
@@ -5304,6 +5307,11 @@ module.exports = (function() {
                 return self;
             });
         },
+        getBalance: function () {
+            return this.save().then(function (saved) {
+                return "124.5";
+            });
+        },
         saveToCustomer: function (customerId) {
             var self = this;
             return this.save().then(function (cardId) {
@@ -5311,11 +5319,6 @@ module.exports = (function() {
                 var customer = self.api.createSync('customer', { id: customerId });
                 errors.passFrom(customer, this);
                 return customer.addCard(self.data);
-            });
-        },
-        getBalance: function () {
-            return this.save().then(function (saved) {
-                return "124.5";
             });
         },
         getOrderData: function () {
