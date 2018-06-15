@@ -807,9 +807,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     isSavingCreditCard = false,
                     isSavingNewCustomer = this.isSavingNewCustomer(),
                     isAuthenticated = require.mozuData('user').isAuthenticated,
-                    nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
+                    nonStoreCreditOrGiftCardTotal = billingInfo.nonStoreCreditOrGiftCardTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
-                    requiresBillingInfo = nonStoreCreditTotal > 0,
+                    requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
                     process = [function() {
                         return checkout.apiUpdateCheckout({
                             ipAddress: checkout.get('ipAddress'),

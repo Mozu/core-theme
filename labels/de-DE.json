@@ -36,6 +36,7 @@
     "shippingHandling"   : "Versandkosten",
     "additionalHandling"   : "Zusätzliche Handhabung",
     "digitalCreditTotal"   : "Weniger   : Geschenkkarten",
+    "giftCardTotal"   : "Weniger   : Geschenkkarten",
     "digitalCreditSubtractFromOrderPrefix"   : "",
     "digitalCreditSubtractFromOrderSuffix"   : "",
     "remainingBalance"   : "Restbetrag",

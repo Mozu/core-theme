@@ -118,6 +118,7 @@
     "digitalCreditSubtractFromOrderPrefix": "(",
     "digitalCreditSubtractFromOrderSuffix": ")",
     "digitalCreditTotal": "Less: Gift Cards",
+    "giftCardTotal": "Less: Gift Cards",
     "digitalDelivery": "Digital Delivery",
     "digitalDeliveryOnly": "This item is available via digital delivery only.",
     "digitalDownload": "Digital Download",

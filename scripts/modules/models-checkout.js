@@ -406,7 +406,7 @@
 
             },
             helpers: ['acceptsMarketing', 'savedPaymentMethods', 'availableStoreCredits', 'applyingCredit', 'maxCreditAmountToApply',
-              'activeStoreCredits', 'nonStoreCreditTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'availableGiftCards', 'digitalCreditPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete','isExternalCheckoutFlowComplete', 'checkoutFlow'],
+              'activeStoreCredits', 'activeGiftCards', 'nonStoreCreditOrGiftCardTotal', 'activePayments', 'hasSavedCardPayment', 'availableDigitalCredits', 'availableGiftCards', 'digitalCreditPaymentTotal', 'giftCardPaymentTotal', 'isAnonymousShopper', 'visaCheckoutFlowComplete','isExternalCheckoutFlowComplete', 'checkoutFlow'],
             acceptsMarketing: function () {
                 return this.getOrder().get('acceptsMarketing');
             },
@@ -439,18 +439,6 @@
                 var currentPayment = this.getOrder().apiModel.getCurrentPayment();
                 return !!(currentPayment && currentPayment.billingInfo.card && currentPayment.billingInfo.card.paymentServiceCardId);
             },
-            nonStoreCreditTotal: function () {
-                var me = this,
-                    order = this.getOrder(),
-                    total = order.get('total'),
-                    result,
-                    activeCredits = this.activeStoreCredits();
-                if (!activeCredits) return total;
-                result = total - _.reduce(activeCredits, function (sum, credit) {
-                    return sum + credit.amountRequested;
-                }, 0);
-                return me.roundToPlaces(result, 2);
-            },
             nonStoreCreditOrGiftCardTotal: function () {
                 var me = this,
                     order = this.getOrder(),
@@ -460,11 +448,13 @@
                     activeCredits = this.activeStoreCredits();
 
                     if (!activeGiftCards && !activeCredits) return total;
-                    var giftCardTotal = _.reduce(activeGiftCards, function(sum, giftCard) {
+
+                    var giftCardTotal = _.reduce(activeGiftCards || [], function(sum, giftCard) {
                         return sum + giftCard.amountRequested;
                     }, 0);
 
-                    var storeCreditTotal = _.reduce(activeCredits, function (sum, credit){
+
+                    var storeCreditTotal = _.reduce(activeCredits || [], function (sum, credit){
                         return sum + credit.amountRequested;
                     }, 0);
 
@@ -482,13 +472,13 @@
                 var cards = this.getOrder().get('customer').get('cards').toJSON();
                 return cards && cards.length > 0 && cards;
             },
-            activeGiftCards: function() {
-                var active = this.getOrder().apiModel.getActiveGiftCards();
-                return active && active.length > 0 && active;
-            },
             activeStoreCredits: function () {
                 var active = this.getOrder().apiModel.getActiveStoreCredits();
                 return active && active.length > 0 && active;
+            },
+            activeGiftCards: function() {
+              var active = this.getOrder().apiModel.getActiveGiftCards();
+              return active && active.length > 0 && active;
             },
             availableStoreCredits: function () {
                 var order = this.getOrder(),
@@ -1004,6 +994,15 @@
                 }, 0);
             },
 
+            giftCardPaymentTotal: function () {
+                var activeGiftCards = this.activeGiftCards();
+                if (!activeGiftCards)
+                    return null;
+                return _.reduce(activeGiftCards, function (sum, giftcard) {
+                    return sum + giftcard.amountRequested;
+                }, 0);
+            },
+
             addRemainingCreditToCustomerAccount: function(creditCode, isEnabled) {
                 var self = this;
 
@@ -1382,7 +1381,7 @@
 
                 var val = this.validate();
 
-                if (this.nonStoreCreditTotal() > 0 && val) {
+                if (this.nonStoreCreditOrGiftCardTotal() > 0 && val) {
                     // display errors:
                     var error = {"items":[]};
                     for (var key in val) {
@@ -1420,7 +1419,7 @@
                     this.unset("paymentWorkflow");
 
                 this.syncApiModel();
-                if (this.nonStoreCreditTotal() > 0) {
+                if (this.nonStoreCreditOrGiftCardTotal() > 0) {
                     return order.apiAddPayment().then(function() {
                         var payment = order.apiModel.getCurrentPayment();
                         var modelCard, modelCvv;
@@ -1464,7 +1463,7 @@
             },
             toJSON: function(options) {
                 var j = CheckoutStep.prototype.toJSON.apply(this, arguments), loggedInEmail;
-                if (this.nonStoreCreditTotal() === 0 && j.billingContact) {
+                if (this.nonStoreCreditOrGiftCardTotal() === 0 && j.billingContact) {
                     delete j.billingContact.address;
                 }
                 if (j.billingContact && !j.billingContact.email) {
@@ -1992,9 +1991,9 @@
                     isSavingCreditCard = false,
                     isSavingNewCustomer = this.isSavingNewCustomer(),
                     isAuthenticated = require.mozuData('user').isAuthenticated,
-                    nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
+                    nonStoreCreditOrGiftCardTotal = billingInfo.nonStoreCreditOrGiftCardTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
-                    requiresBillingInfo = nonStoreCreditTotal > 0,
+                    requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
                     process = [function() {
                         return order.update({
                             ipAddress: order.get('ipAddress'),
@@ -2044,7 +2043,7 @@
                 this.setFulfillmentContactEmail();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
-                if ( ((nonStoreCreditTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) && ( !this.isNonMozuCheckout() || this.validate().agreeToTerms)) {
+                if ( ((nonStoreCreditOrGiftCardTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) && ( !this.isNonMozuCheckout() || this.validate().agreeToTerms)) {
                     this.isSubmitting = false;
                     return false;
                 }
