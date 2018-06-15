@@ -317,12 +317,14 @@ define(["modules/jquery-mozu",
                         } else {
                             //TODO: trigger error message
                         }
+                        break;
                     case "giftCardSecurityCode":
                         if (this.model.get('giftCardNumber') && this.model.get('giftCardSecurityCode')){
                             return this.getGatewayGiftCard(e);
                         } else {
                             //TODO: trigger error message
                         }
+                        break;
                 }
             },
             /* begin visa checkout */
