@@ -208,8 +208,6 @@ define([
                     activeCredits = this.activeStoreCredits();
 
                 var customerCredits = customer.get('credits');
-                //console.log("loadcustomerdigitalcredits");
-                //console.log(customer.get('credits'));
                 if (customerCredits && customerCredits.length > 0) {
                     var currentDate = new Date(),
                         unexpiredDate = new Date(2076, 6, 4);
@@ -260,8 +258,6 @@ define([
             },
             availableDigitalCredits: function () {
                 if (! this._cachedDigitalCredits) {
-                    //console.log("None yet! Here's what it looks like:");
-                    //console.log(this._cachedDigitalCredits);
                     this.loadCustomerDigitalCredits();
                 }
                 return this._cachedDigitalCredits && this._cachedDigitalCredits.length > 0 && this._cachedDigitalCredits;
@@ -397,9 +393,37 @@ define([
                 var epsilon = 0.01;
                 return (Math.abs(f1 - f2)) < epsilon;
             },
-            loadCustomerGiftCards: function(){
-              //TODO: set _cachedGiftCards to giftcards associated with customer.
-              //console.log('load customer giftcards');
+            loadGiftCards: function(){
+              //TODO: phase 2: get giftCards from customer account
+              // Right now, we assume that this function is only called when the cache of gift cards
+              // is empty.
+              // we fill up the cache with card info for gift card payments already on
+              // this order.
+              var me = this;
+              var activeGiftCards = this.activeGiftCards();
+
+              if (activeGiftCards) {
+                var numberOfGiftCards = activeGiftCards.length;
+                var counter = 0;
+                activeGiftCards.forEach(function(giftCardPayment){
+                    var newGiftCardModel = new PaymentMethods.GiftCard(giftCardPayment.billingInfo.card);
+                      newGiftCardModel.apiGetBalance().then(function(balance){
+                          if (balance > 0){
+                            newGiftCardModel.set('isEnabled', true);
+                            newGiftCardModel.set('amountApplied', giftCardPayment.amountRequested);
+                            newGiftCardModel.set('currentBalance', balance);
+                            newGiftCardModel.set('remainingBalance', newGiftCardModel.calculateRemainingBalance());
+                            me._cachedGiftCards.push(newGiftCardModel);
+                          }
+                          counter ++;
+                          if (counter==numberOfGiftCards){
+                              me.trigger('render');
+                          }
+                        }
+                      );
+
+                });
+              }
             },
             applyGiftCard: function(giftCardId, amountToApply, isEnabled){
               var self = this, order = this.getOrder();
@@ -533,20 +557,12 @@ define([
                     });
                   }
                   //me.isLoading(true);
-                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).then(function(x){
-                    //console.log("then of retrievegiftcard");
-                    //console.log(x);
+                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(x){
+                    me.isLoading(false);
+                    return me;
                   });
-                  //.ensure(function() {
-                  //     me.isLoading(false);
-                  //     return me;
-                  // });
-
             },
             availableGiftCards: function(){
-              if (! this._cachedGiftCards) {
-                  this.loadCustomerGiftCards();
-              }
               return this._cachedGiftCards && this._cachedGiftCards.length > 0 && this._cachedGiftCards;
             },
             retrieveDigitalCredit: function (customer, creditCode, me, amountRequested) {
@@ -884,6 +900,7 @@ define([
 
             initialize: function () {
                 var me = this;
+                this._cachedGiftCards = [];
 
                 _.defer(function () {
                     //set purchaseOrder defaults here.
@@ -913,6 +930,7 @@ define([
                         }
                     });
                     me.trigger('updateCheckoutPayment');
+                    me.loadGiftCards();
                 });
                 var billingContact = this.get('billingContact');
                 this.on('change:paymentType', this.selectPaymentType);
@@ -939,9 +957,7 @@ define([
                 // This will changed with Gift Card handling phase 2,
                 // to emulate the way _cachedDigitalCredits fetches from
                 // the customer model later.
-                this._cachedGiftCards = [];
-
-
+                //this.loadGiftCards();
                 _.bindAll(this, 'applyPayment', 'markComplete');
             },
             getPrimarySavedCard: function(me){

@@ -312,9 +312,17 @@ define(["modules/jquery-mozu",
                     case "digitalCreditCode":
                         return this.getDigitalCredit(e);
                     case "giftCardNumber":
-                        return this.getGatewayGiftCard();
+                        if (this.model.get('giftCardNumber') && this.model.get('giftCardSecurityCode')){
+                            return this.getGatewayGiftCard(e);
+                        } else {
+                            //TODO: trigger error message
+                        }
                     case "giftCardSecurityCode":
-                        return this.getGatewayGiftCard();
+                        if (this.model.get('giftCardNumber') && this.model.get('giftCardSecurityCode')){
+                            return this.getGatewayGiftCard(e);
+                        } else {
+                            //TODO: trigger error message
+                        }
                 }
             },
             /* begin visa checkout */
