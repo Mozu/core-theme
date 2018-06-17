@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "5";
+        public const string CacheVersion = "8";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -350,7 +350,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             RecordVisit(apiContext);
             var cacheKey = this.GetContextCacheKey(apiContext);
             var sbc = await _cacheProvider.GetCache(CacheName, apiContext)
-                .GetAsync<ISiteBuilderContextData>(cacheKey)
+                .GetAsync<SiteBuilderContextData>(cacheKey)
                 .ContinueWith(x => x.Result?.Item)
                 .ConfigureAwait(false);
             if ( sbc != null && sbc.RedirectUpdateDate .HasValue && sbc.RuntimeRedirects == null)
@@ -421,7 +421,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 };
 
                 await _cacheProvider.GetCache(CacheName, apiContext).PutAsync(
-                    item: item, 
+                    item: (SiteBuilderContextData)item, 
                     key: cacheKey , 
                     tags: tags,
                     policy:policy,
@@ -692,7 +692,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 return await AppendCategoryData(ctxData);
             }
             var data = await BuildContextData(ctxData).ConfigureAwait(false);
-            await _sitebuilderContextCacheRepository.PutAsync(data, _context).ConfigureAwait(false);
+            await _sitebuilderContextCacheRepository.PutAsync((SiteBuilderContextData)data, _context).ConfigureAwait(false);
             return await AppendCategoryData(data);
         }
 
