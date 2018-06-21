@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.modal.Refund', {
         form.getForm().findField('paymentId').setVisible(isCreditCard).setDisabled(!isCreditCard);
 
         // show or hide the refund amount field
-        refundAmountField.setVisible(nextState.payment || (nextState.method === 'StoreCredit') || (nextState.method === 'GiftCard'));
+        refundAmountField.setVisible(nextState.payment || (nextState.method === 'StoreCredit'));
 
         // set a hard maximum on the refund amount if refunding a credit card
         refundAmountField.emptyText = this.suggestRefund().toFixed(2);
@@ -98,7 +98,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     }
                 }
                 return (
-                    !Ext.Array.contains(['StoreCredit', 'Check', 'GiftCard'], record.get('paymentType'))
+                    !Ext.Array.contains(['StoreCredit', 'Check'], record.get('paymentType'))
                         && Ext.Array.contains(record.get('availableActions'), 'CreditPayment')
                         && paymentData.amountCollected - (paymentData.amountCredited || 0) > 0
                 );
@@ -211,11 +211,18 @@ Ext.define('Taco.view.order.modal.Refund', {
                 cardTemplate: new Ext.XTemplate([
                     '{cardType}: {cardNumber} ({expireMonth:leftPad(2, "0")}/{expireYear})'
                 ]),
+                giftCardTemplate: new Ext.XTemplate([
+                    'GiftCard: {cardNumber}'
+                ]),
                 renderer: function (value, metaData, record) {
                     var type = record.get('transactionType');
 
                     if (value === 'CreditCard') {
                         return metaData.column.cardTemplate.apply(type === 'Payment' ? record.raw : record.raw.payment);
+                    }
+
+                    if (value === 'GiftCard') {
+                        return metaData.column.giftCardTemplate.apply(type === 'Payment' ? record.raw : record.raw.payment);
                     }
 
                     return value;
@@ -279,8 +286,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     queryMode: 'local',
                     store: [
                         ['CreditCard', 'Direct Refund'],
-                        ['StoreCredit', 'Store Credit'],
-                        ['GiftCard', 'Giftcard']
+                        ['StoreCredit', 'Store Credit']
                     ],
                     listeners: {
                         change: {
@@ -309,9 +315,12 @@ Ext.define('Taco.view.order.modal.Refund', {
                     displayField: 'cardNumber',
                     displayTpl: [
                         '<tpl for=".">',
-                            '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
-                                ' ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
-                            '<tpl else>{[values.paymentType]}: {[values.billingContact.email]}',
+                            '<tpl if="paymentType == \'GiftCard\'">{[GiftCard]}: {[values.cardNumber]}',
+                            '<tpl else>',
+                                '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
+                                    ' ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
+                                '<tpl else>{[values.paymentType]}: {[values.billingContact.email]}',
+                                '</tpl>',
                             '</tpl>',
                         '</tpl>'
                     ],
@@ -320,11 +329,15 @@ Ext.define('Taco.view.order.modal.Refund', {
                             var siteId = me.order.get('siteId');
 
                             var tpl = [
-                                '<tpl if="paymentType == \'CreditCard\'">',
-                                    '{cardType}: {cardNumber} ({amountCollected:siteCurrency(', siteId, ')})',
+                                '<tpl if="paymentType == \'GiftCard\'">',
+                                '   GiftCard: {cardNumber} ({amountCollected:siteCurrency(', siteId, ')})',
                                 '<tpl else>',
-                                    '{paymentType}: {billingContact.email}',
-                                '</tpl>'
+                                    '<tpl if="paymentType == \'CreditCard\'">',
+                                        '{cardType}: {cardNumber} ({amountCollected:siteCurrency(', siteId, ')})',
+                                    '<tpl else>',
+                                        '{paymentType}: {billingContact.email}',
+                                    '</tpl>',
+                                '</tpl>',
                             ].join(' ');
 
                             return tpl;
