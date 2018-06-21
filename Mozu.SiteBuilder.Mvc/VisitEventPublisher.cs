@@ -17,10 +17,10 @@ namespace Mozu.SiteBuilder.UX.Messaging
     {
         private ISiteBuilderApiContext _apiContext;
         private IPublisher _publisher;
-        private PageContext _pageContext;
+        private IPageContext _pageContext;
         private HttpContextBase _httpContext;
 
-        public VisitEventPublisher(HttpContextBase httpContext, ISiteBuilderApiContext apiContext, PageContext pageContext, IPublisher publisher)
+        public VisitEventPublisher(HttpContextBase httpContext, ISiteBuilderApiContext apiContext, IPageContext pageContext, IPublisher publisher)
         {
             _httpContext = httpContext;
             _apiContext = apiContext;
