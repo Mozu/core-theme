@@ -94,7 +94,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var sortBy = pagingParams.ToSort(_discountSortFormatter);
             const string responseFields =
-                "items(id,content(name,friendlyDescription),amountType,amount,status,currentRedemptionCount,thresholdMessage" +
+                "items(id,content(name,friendlyDescription),amountType,amount,status,currentRedemptionCount,thresholdMessage," +
                 "stackingLayer,canBeStackedUpon," +
                 "target(categories,products,includeAllProducts,type)," +
                 "conditions(minimumOrderAmount,startDate,expirationDate,requiresCoupon,couponCode),auditInfo)";
