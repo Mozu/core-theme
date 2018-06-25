@@ -1,7 +1,20 @@
 ﻿﻿{% extends "modules/common/item-listing" %}
+
 {% block item-details %}
     <div class="mz-itemlisting-description">
-      {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+      {% for option in model.product.options %}
+        {{ option.name }}: 
+        {% if option.shopperEnteredValue %} 
+          {{ option.shopperEnteredValue }}, 
+        {% endif %}
+        {% if option.value %} 
+          {{ option.value }}, 
+        {% endif %}
+      {% endfor %}
+      {{ model.product.variationProductCode|default(model.product.productCode) }}
+      {% if model.product.measurements.packageWeight.value %}, 
+        {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}
+      {% endif %}
     </div>
     <div class="mz-itemlisting-price">
      {{labels.orderPackagePrice}} : {%if model.product.price.tenantOverridePrice %} {{ model.product.price.tenantOverridePrice|currency }} {% else %} {%if model.product.price.salePrice %} {{ model.product.price.salePrice|currency }} {% else %} {{ model.product.price.price|currency }} {%endif%}{%endif%}

@@ -51,7 +51,13 @@ define(["modules/api", 'underscore', "modules/backbone-mozu", "hyprlive", "modul
                         if (model.get('productCode')) {
                             return self.get('productCode') === model.get('productCode');
                         }
-                        return self.get('productCode') === (model.get('product').get('variationProductCode') ? model.get('product').get('variationProductCode') : model.get('product').get('productCode'));
+
+                        var product = model.get('product');
+                        var productMatch = self.get('productCode') === (product.get('variationProductCode') ? product.get('variationProductCode') : product.get('productCode')) ;
+                        if (self.get('lineId')) {
+                            return  productMatch && (self.get('lineId') == model.get('lineId'));
+                        } else
+                            return productMatch;
                     });
                 }
                 return null;
