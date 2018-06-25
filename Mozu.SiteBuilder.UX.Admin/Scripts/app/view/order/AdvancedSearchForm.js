@@ -246,6 +246,35 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 ]
             },
             {
+                xtype: 'fieldcontainer',
+                fieldLabel: 'Submitted Date Range',
+                layout: {
+                    type: 'hbox',
+                    align: 'middle'
+                },
+                items: [
+                    {
+                        xtype: 'datefield',
+                        name: 'submittedFrom',
+                        altFormats: "c",
+                        //fieldLabel: 'Modified From',
+                        width: 200
+                    },
+                    {
+                        xtype: 'component',
+                        html: 'to',
+                        margin: '0 10'
+                    },
+                    {
+                        xtype: 'datefield',
+                        name: 'submittedTo',
+                        altFormats: "c",
+                        //fieldLabel: 'Modified To',
+                        width: 200
+                    }
+                ]
+            },
+            {
                 name: 'returnNumber',
                 fieldLabel: 'Return Number',
                 xtype: 'numberfield',
@@ -260,6 +289,14 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 hideTrigger: true,
                 keyNavEnabled: false,
                 mouseWheelEnabled: false
+            },
+            {
+                name: 'attributeName',
+                fieldLabel: 'Attribute Name'
+            },
+            {
+                name: 'shippingMethod',
+                fieldLabel: 'Shipping Method'
             }];
         this.callParent(arguments);
     },

@@ -841,6 +841,7 @@
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
+    <Content Include="Scripts\app\view\order\widget\AttributeDropdown.js" />
     <Content Include="Scripts\app\view\order\widget\EcommerceGiftCardForm.js" />
     <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
