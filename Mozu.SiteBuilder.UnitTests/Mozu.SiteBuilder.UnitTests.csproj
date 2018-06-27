@@ -178,6 +178,7 @@
     <Compile Include="Mvc\Tags\ArgumentCollectionTests.cs" />
     <Compile Include="Mvc\Tags\DumpTagTests.cs" />
     <Compile Include="Mvc\Tags\MakeUrlTests.cs" />
+    <Compile Include="Mvc\Tags\SetHeaderTests.cs" />
     <Compile Include="StoreFront\Controllers\StaticContentTest.cs" />
     <Compile Include="StoreFront\Security\DataViewModeEnforcementFilterTests.cs" />
     <Compile Include="Mvc\Caching\ContextualCacheTests.cs" />

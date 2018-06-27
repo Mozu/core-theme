@@ -66,6 +66,7 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             public string Template { get; set; }
             public Dictionary<string, object> Context { get; set; }
             public Func<string, Tuple<bool, string>> ExpectedFunc { get; set; }
+            public Action<string, TestDescriptor> AssertFn { get; set; }
             public override string ToString()
             {
                 return Name;
@@ -121,6 +122,10 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var renderer = new TemplateRenderer(manager, template, context);
             var rendered = RenderTemplate(renderer);
             var expected = desc.ExpectedFunc(rendered);
+            if ( desc.AssertFn != null)
+            {
+                desc.AssertFn(rendered, desc);
+            }
             Assert.IsTrue(expected.Item1, expected.Item2);
         }
 
@@ -162,7 +167,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             
             hyprviewcontext.LifetimeScope = autoSub.Container;
             dict.Add("_vc", hyprviewcontext);
-            hyprviewcontext.HttpContext = new HttpContextWrapper(new HttpContext(new HttpRequest("Default", "http://mozilla.com", ""), new HttpResponse(new StreamWriter(new MemoryStream()))));
+            
+            hyprviewcontext.HttpContext = autoSub.Container.IsRegistered<HttpContextBase>() ? autoSub.Resolve<HttpContextBase>() : new HttpContextWrapper(new HttpContext(new HttpRequest("Default", "http://mozilla.com", ""), new HttpResponse(new StreamWriter(new MemoryStream()))));
             return dict;
         }
     }
