@@ -1527,7 +1527,7 @@ Ext.define('Taco.model.Order', {
         config.jsonData.paymentType = "GiftCard";
 
         Ext.applyIf(config, {
-            url: '/admin/app/order/payment/addgiftcard',
+            url: '/admin/app/order/payment/create',
             method: 'POST'
         });
 

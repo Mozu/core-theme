@@ -51,6 +51,10 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             update: {
                 uri: function (cardId) { return apiCall.base.uri() + '/' + cardId.toString(); },
                 method: "PUT"
+            },
+            giftCardBalance: {
+                uri: function (cardId) { return apiCall.base.uri() + '/' + cardId.toString() + '/balance'},
+                method: "POST"
             }
         },
 
@@ -416,17 +420,29 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
 
 
     // let's roll!
-    process = function () {
+    process = function (payload) {
         var cardID = fields.getValue("HiddenCardID", true);
+        if (payload) {
+            if (!cardID && payload.paymentServiceCardId) {
+                cardID = payload.paymentServiceCardId;
+                payload = JSON.stringify(payload);
+            }
+        }
+       
         errors.clear();
         if (fieldsChanged()) {
-            if (!validate() && !settings.get('skipValidation')) {
-                events.error(errors.get());
-                return false;
+            if (!settings.get('skipValidation')) {
+                if (!validate()){
+                    events.error(errors.get());
+                    return false;
+                }
             }
-            var preprocessReturn,
-                payload = makePayload();
+            var preprocessReturn;
 
+            if (!payload) {
+                payload = makePayload();
+            }
+                
             if (!payload) {
                 events.error(errors.get());
                 return false;
@@ -446,10 +462,17 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
                 events.error(errors.get());
                 return false;
             }
-            lastPostSent = makePayload(true); // payload without CardID, for compare
+            lastPostSent = (payload) ? payload : makePayload(true); // payload without CardID, for compare
             // run the request!
+            
             var requestUri = (cardID) ? apiCall.update.uri(cardID) : apiCall.save.uri();
             var requestMethod = (cardID) ? apiCall.update.method : apiCall.save.method;
+
+            if (cardID && settings.get('giftCardBalanceCall')) {
+                var requestUri = apiCall.giftCardBalance.uri(cardID);
+                var requestMethod = apiCall.giftCardBalance.method;
+            }
+
             request(requestUri, payload, requestMethod, null, settings.get('siteId'), settings.get('tenantId'));
             return true;
         } else {

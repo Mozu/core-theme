@@ -224,6 +224,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     };
                     action.ActionName = "CreatePayment";
                     break;
+                case DCp.PaymentTypeConst.GIFT_CARD:
+                    action.NewBillingInfo = new DCp.BillingInfo
+                    {
+                        Card = new DCp.PaymentCard
+                        {
+                            PaymentServiceCardId = args.BillingInfo.PaymentServiceCardId,
+                            NameOnCard = args.BillingInfo.NameOnCard,
+                            PaymentOrCardType = args.BillingInfo.CardType,
+                            CardNumberPartOrMask = args.BillingInfo.CardNumber,
+                            ExpireMonth = args.BillingInfo.ExpireMonth,
+                            ExpireYear = args.BillingInfo.ExpireYear,
+                            IsCardInfoSaved = false,
+                            IsUsedRecurring = false
+                        },
+                        IsSameBillingShippingAddress = args.BillingInfo.IsSameBillingShippingAddress,
+                        BillingContact = args.BillingContact.Map<Core.Api.Contracts.Contact>(),
+                        PaymentType = DCp.PaymentTypeConst.GIFT_CARD
+                    };
+                    action.ActionName = "CreatePayment";
+                    break;
             }
            
             var order = (await _orderWebApiClient.CreatePaymentAction(args.OrderId, action)).ReadAsSync();
