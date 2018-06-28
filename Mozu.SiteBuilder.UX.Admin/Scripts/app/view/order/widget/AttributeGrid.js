@@ -92,7 +92,12 @@ Ext.define('Taco.view.order.widget.AttributeGrid', {
                 });
 
                 if (record.get('inputType') === "YesNo") {
-                    return att && !Ext.isEmpty(att.values) && att.values[0] ? (att.values[0].toLowerCase() === 'true' ? 'Yes' : 'No') : this.GridEmptyItemText;
+                    if(att && !Ext.isEmpty(att.values) && att.values[0]) {
+                        var attrStringValue = att.values[0] + '';
+                        return (attrStringValue.toLowerCase()) === 'true' ? 'Yes' : 'No';
+                    }
+                    return this.GridEmptyItemText;
+                   
                 }
 
                 if (record.get('inputType') === "Date") {
