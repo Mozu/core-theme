@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
@@ -19,13 +18,13 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers;
 using DCcore = Mozu.Core.Api.Contracts;
+using CR = Mozu.CommerceRuntime.Contracts;
 using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
-using Mozu.CommerceRuntime.Contracts.Refunds;
-using Mozu.SiteBuilder.UX.Admin.Api.ModelMapping;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -41,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
-        string _ipAddress;
+        private readonly string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
          * Valid options are: ApplyToOriginal, ApplyToDraft, and ApplyAndCommit
@@ -57,7 +56,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             , CustomerController customerController, IPriceListRuntimeWebApiClient priceListRuntimeWebApiClient, IApiContext apiContext
             , ICartWebApiClient cartWebApiClient, ICustomerSetWebApiClient customerSetWebApiClient, IReturnWebApiClient returnWebApiClient
             , IIpAddressFinderOuter ipAddressFinderOuter)
-            
         {
             _orderWebApiClient = orderWebApiClient;
             _customerAccountWebApiClient = customerAccountWebApiClient;
@@ -95,12 +93,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(Mapper.Map<List<Order>>(dcOrders.Items), (int)dcOrders.TotalCount);
         }
 
+        [HttpPostRoute(UriTemplate = "addShoppersCartItems")]
+        public async Task<bool> AddShoppersCartItems(string userId, string orderId)
+        {
+            var cart = (await _cartWebApiClient.GetUserCart(userId).ConfigureAwait(false)).ReadAsSync();
+
+            foreach (var cartItem in cart?.Items)
+            {
+                var product = JObject.FromObject(cartItem.Product).ToObject<CR.Products.Product>();
+                var res = (await _orderWebApiClient.CreateOrderItem(orderId, new CR.Orders.OrderItem
+                {
+                    Data = cartItem.Data,
+                    FulfillmentLocationCode = cartItem.FulfillmentLocationCode,
+                    FulfillmentMethod = cartItem.FulfillmentMethod,
+                    Product = product,
+                    Quantity = cartItem.Quantity,
+                    IsRecurring = cartItem.IsRecurring,
+
+                }).ConfigureAwait(false));
+                if (res.HasException)
+                {
+                    throw res.ReadException();
+                }
+            }
+
+            foreach (var coup in cart?.CouponCodes ?? new List<string>())
+            {
+                var res = await _orderWebApiClient.ApplyCoupon(orderId, coup).ConfigureAwait(false);
+            }
+            return true;
+        }
+
         private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft)
         {
             var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            
+
             var single = order.Map<Order>();
             if (single.CustomerId.HasValue)
             {
@@ -120,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2<Order>(single);
         }
-        
+
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()
         {
@@ -272,7 +301,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 dcOrder.FulfillmentInfo.FulfillmentContact = fulfillmentContact;
                 (await _orderWebApiClient.SetFulFillmentInfo(dcOrder.Id, dcOrder.FulfillmentInfo)).ReadAsSync();
-
             }
 
             if (billingContact != null)
@@ -296,6 +324,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public CardPaymentInformation BillingInfo { get; set; }
             public Contact BillingContact { get; set; }
         }
+
         [HttpPostRoute(UriTemplate = "setbillinginfo")]
         public async Task<Response<Order>> SetBillingInfo(SetBillingInfoArgs args)
         {
@@ -336,6 +365,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string ShippingMethodName { get; set; }
             public string ShippingMethodCode { get; set; }
         }
+
         [HttpPostRoute(UriTemplate = "setshippinginfo")]
         public async Task<Response<Order>> SetShippingInfo(SetShippingInfoArgs args, [FromUri]bool draft = false)
         {
@@ -375,17 +405,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string CartId { get; set; }
         }
 
-
         [HttpPostRoute(UriTemplate = "addCartToOrder")]
         public async Task<Response<string>> AddCartToOrder(SetCustomerAccountIdArgs args)
         {
             var cart = (await _cartWebApiClient.GetCart(args.CartId)).ReadAsSync();
-           
-            args.OrderId = (await _orderWebApiClient.CloneWithApiContext( ctx=> ctx.PriceListCode = cart.PriceListCode).CreateOrderFromCart(args.CartId)).ReadAsSync().Id;
+
+            args.OrderId = (await _orderWebApiClient.CloneWithApiContext(ctx => ctx.PriceListCode = cart.PriceListCode).CreateOrderFromCart(args.CartId)).ReadAsSync().Id;
 
             //todo copy cart items into order instead of creating a new one.
-            var res= await SetCustomerAccountId(args);
-            if (res.Success )
+            var res = await SetCustomerAccountId(args);
+            if (res.Success)
             {
                 return Single2(res.Items.Id);
             }
@@ -393,7 +422,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return Single2((string)null, 0, res.Message);
             }
-
         }
 
         [HttpPostRoute(UriTemplate = "setcustomer")]
@@ -407,13 +435,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (dcCustomer?.CustomerSet != null)
             {
-                CustomerSet customerset =  (await _customerSetWebApiClient.GetCustomerSet(dcCustomer.CustomerSet)).ReadAsSync();
+                CustomerSet customerset = (await _customerSetWebApiClient.GetCustomerSet(dcCustomer.CustomerSet)).ReadAsSync();
                 if (!customerset.Sites.Any(site => site.SiteId == _apiContext.SiteId))
                 {
                     throw new Exception("Customer doesn't belong to the site/customer set");
                 }
             }
-            
+
             string priceListCode = (await GetPriceListCode(args.CustomerAccountId));
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
             {
@@ -437,6 +465,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     dcOrder.BillingInfo.BillingContact = defaultCustomerBillingContact;
                 }
             }
+
             if (dcOrder.FulfillmentInfo == null || dcOrder.FulfillmentInfo.FulfillmentContact == null)
             {
                 // if (dcCustomer.Contacts.Any(c => c.Types.First().Name == Mozu.Customer.Contracts.ContactTypeConst.SHIPPING
@@ -461,6 +490,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string OrderId { get; set; }
             public string PriceListCode { get; set; }
         }
+
         [HttpPostRoute(UriTemplate = "setpricelist")]
         public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
         {
@@ -473,9 +503,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Compare the string by treating null and empty value as same
         /// </summary>
-        /// <param name="priceList1"></param>
-        /// <param name="priceList2"></param>
-        /// <returns></returns>
+        /// <returns>Returns <c>true</c> if the pricelists are equivalent, otherwise <c>false</c>.</returns>
         private bool ComparePriceList(string priceList1, string priceList2)
         {
             return String.IsNullOrEmpty(priceList1) ? String.IsNullOrEmpty(priceList2) : priceList1.Equals(priceList2, StringComparison.OrdinalIgnoreCase);
@@ -488,10 +516,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return resolvedPriceListpriceList.PriceListCode;
             }
-            
-            PriceList defaultPriceList =  (await _priceListRuntimeWebApiClient.GetDefaultPriceList()).ReadAsSync();
+
+            PriceList defaultPriceList = (await _priceListRuntimeWebApiClient.GetDefaultPriceList()).ReadAsSync();
             return defaultPriceList != null ? defaultPriceList.PriceListCode : null;
-            
         }
 
         [HttpGetRoute(UriTemplate = "returnableitems")]

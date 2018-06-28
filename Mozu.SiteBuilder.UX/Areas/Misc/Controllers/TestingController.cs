@@ -11,8 +11,6 @@ using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
-using Mozu.Core.Api.Handlers.Message;
-using Mozu.Core.Api.Session;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -24,23 +22,19 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteBuilder.UX.Models.Visit;
-using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
-using Constants = Mozu.Core.Api.Contracts.Constants;
 using Mozu.Customer.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc.Handler;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
+using Headers = Mozu.Core.Api.Contracts.Constants.Headers;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class TestingController : ApiControllerBase
     {
-        ISitesWebApiClient _wsRepo;
-        ITenantsWebApiClient _tRepo;
-        ICookieProvider _cookies;
-        IAuthenticationHelper _authenticationHelper;
+        private readonly ISitesWebApiClient _wsRepo;
+        private readonly ICookieProvider _cookies;
+        private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
-        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
 
         private const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
 
@@ -52,39 +46,34 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Tablet
         }
 
-        public TestingController(ISitesWebApiClient  wsRepo, ITenantsWebApiClient tRepo, ICookieProvider cookies, ISettings settings , Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient, IAuthenticationHelper authenticationHelper)
+        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper)
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
-            _tRepo = tRepo.CloneWithoutUserClaims();
             _cookies = cookies;
             _settings = settings;
-            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _authenticationHelper = authenticationHelper;
-//            SuppressMissingContextRedirect = true;
+            //SuppressMissingContextRedirect = true;
         }
-
 
         [RefreshStoreFrontUserAuthTicketFilter]
         [AcceptVerbs("POST")]
         public HttpResponseMessage RefreshAPiContextHeaders()
         {
             IEnumerable<string> tmp;
-            if (this.Request.Headers.TryGetValues(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, out tmp))
+            if (this.Request.Headers.TryGetValues(Headers.APP_CLAIMS, out tmp))
             {
-                var appClaim = Mozu.Core.LightweightAppClaims.Parse(tmp.First());
+                var appClaim = LightweightAppClaims.Parse(tmp.First());
                 if ((DateTime.UtcNow - appClaim.Expiration).TotalDays < 1)
                 {
                     var clientApiContext = this.Request.Resolve<ClientApiContext>();
                     var resp = Request.CreateResponse(HttpStatusCode.OK);
-                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.APP_CLAIMS]);
-                    resp.Headers.Add(Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS, clientApiContext.Headers[Mozu.Core.Api.Contracts.Constants.Headers.USER_CLAIMS]);
+                    resp.Headers.Add(Headers.APP_CLAIMS, clientApiContext.Headers[Headers.APP_CLAIMS]);
+                    resp.Headers.Add(Headers.USER_CLAIMS, clientApiContext.Headers[Headers.USER_CLAIMS]);
                     return resp;
                 }
             }
             return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "not authorized");
         }
-
-
 
         [AcceptVerbs("GET")]
         public HttpResponseMessage CoolDownUser()
@@ -97,11 +86,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Message = "Cool."
             });
         }
+
         static HttpClient _client;
 
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
-
-
         public Task<HttpResponseMessage> Api(string url)
         {
             var service = _settings.Resources.FirstOrDefault(x => url.IndexOf(x.Path, StringComparison.OrdinalIgnoreCase) == 0);
@@ -123,8 +111,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return _client.SendAsync(this.Request);
         }
 
-
-        //[System.Web.Http.HttpGet]
+        //[HttpGet]
         //public async Task<ActionResult> widgettest()
         //{
         //    var pc = this.PageContext;
@@ -137,19 +124,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //            ListFQN = "pages@mozu",
         //            DocumentTypeFQN = "web_page@mozu"
         //        }
-
         //    };
-
 
         //    var helper = new CmsHelper(CmsService);
         //    await helper.InitCmsPageContext(PageContext);
         //    return this.View("WidgetTEsting/test", this.SiteContext );
         //}
 
-
-
-
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public ActionResult ForceTheme(string themeType = "", string redir = null)
         {
             ThemeMode mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
@@ -169,36 +151,29 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return new RedirectResult(redir ?? "/");
         }
 
-
-        [System.Web.Http.HttpPost]
-        public HttpResponseMessage Visit(string id=null)
+        [HttpPost]
+        public HttpResponseMessage Visit(string id = null)
         {
             int accountId;
             if (int.TryParse(id, out accountId))
             {
                 this.PageContext.User.AccountId = accountId;
-
             }
-            
 
             var publisher = this.Request.Resolve<VisitEventPublisher>();
-            
-         
 
             publisher.PublishVisit(new Visit()
-                                   {
-                                      
-                                    //   CustomerId  = int.Parse(id),
-                                       VisitId = Guid.NewGuid().ToUrlSafeString(),
-                                       IsTracked = true,
-                                       UserAgent = "blurf",
-                                       VisitorId = Guid.NewGuid().ToUrlSafeString()
-                                   });
+            {
+                //   CustomerId  = int.Parse(id),
+                VisitId = Guid.NewGuid().ToUrlSafeString(),
+                IsTracked = true,
+                UserAgent = "blurf",
+                VisitorId = Guid.NewGuid().ToUrlSafeString()
+            });
             return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
         }
 
-
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public ContentResult Echo()
         {
             StringBuilder sb = new StringBuilder();
@@ -206,31 +181,30 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             sb.AppendLine();
             sb.AppendLine("headers");
             sb.AppendLine("_____________");
-            foreach (var httpRequestHeader in this.Request.Headers )
+            foreach (var httpRequestHeader in this.Request.Headers)
             {
                 sb.AppendFormat("{0}:{1}", httpRequestHeader.Key, string.Join(",", httpRequestHeader.Value));
                 sb.AppendLine();
             }
-             sb.AppendLine();
-            sb.AppendLine("server vars");
-            sb.AppendFormat("{0}:{1}", "manchine name" ,this.HttpContext.Server.MachineName );
             sb.AppendLine();
-            sb.AppendFormat("{0}:{1}", "version" ,this.GetType().Assembly.GetName().Version  );
-           
+            sb.AppendLine("server vars");
+            sb.AppendFormat("{0}:{1}", "manchine name", this.HttpContext.Server.MachineName);
+            sb.AppendLine();
+            sb.AppendFormat("{0}:{1}", "version", this.GetType().Assembly.GetName().Version);
+
             sb.AppendLine("</pre>");
-               return new ContentResult()
-                      {
-                          Content = sb.ToString(),
-                          ContentType ="text/html"
-                      };
-            //return this.Request.CreateResponse(HttpStatusCode.OK, sb.ToString());
+            return new ContentResult()
+            {
+                Content = sb.ToString(),
+                ContentType = "text/html"
+            };
         }
 
         /// <summary>
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null)
         {
             var res = await _wsRepo.GetSite(siteId);
@@ -266,44 +240,34 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
                 case "admin":
                     {
-                        
                         isAdminMode = true;
                         domainList = Enumerable.Empty<string>();
-                        if (!string.IsNullOrEmpty(redir) && redir.IndexOf("?")>-1)
+                        if (!string.IsNullOrEmpty(redir) && redir.IndexOf("?") > -1)
                         {
                             var qstring = HttpUtility.ParseQueryString(redir.Substring(redir.IndexOf("?")));
-                            var tmp = qstring["mz_cust_impersonate"];
+                            var reqCustId = qstring["mz_cust_impersonate"];
                             var canImpersonate = (this.SbApiContext.AdminUserClaim?.HasBehavior<Core.Behaviors.CustomerUpdateBehavior>()).GetValueOrDefault(false);
-                           
+
                             int customerAccountId;
-                            if (canImpersonate && int.TryParse(tmp, out customerAccountId))
+                            if (canImpersonate && int.TryParse(reqCustId, out customerAccountId))
                             {
-                               
-                                var custInfo =( await Request.Resolve<ICustomerAccountWebApiClient>().CloneWithoutUserClaims().GetAccount(customerAccountId).ConfigureAwait(false)).ReadAsSync();
-                                //tbd add another switch to use userid to get users cart..
+                                var authTicket = (await Request.Resolve<IAuthTicketWebApiClient>()
+                                    .CloneWithoutUserClaims()
+                                    .CloneWithApiContext(ctx => ctx.SiteId = site.Id)
+                                    .CreateImpersonatedAuthTicket(customerAccountId)).ReadAsSync();
 
+                                var profile = new UserProfile()
+                                {
+                                    FirstName = authTicket.CustomerAccount?.FirstName,
+                                    LastName = authTicket.CustomerAccount?.LastName,
+                                    UserId = authTicket.CustomerAccount?.UserId,
+                                    EmailAddress = authTicket.CustomerAccount?.EmailAddress,
+                                    UserName = authTicket.CustomerAccount?.UserName
+                                };
 
-                                var newUser =LightweightUserClaims.CreateForShopper( 
-                                    Guid.NewGuid().ToString("N"), 
-                                    custInfo.FirstName, 
-                                    custInfo.LastName, 
-                                    custInfo.Id, 
-                                    this.SbApiContext.TenantId, 
-                                    this.SbApiContext.SiteId.GetValueOrDefault(), 
-                                    DateTime.UtcNow.AddHours(1));
-
-                                var profile = new UserProfile() {
-                                    FirstName = custInfo.FirstName,
-                                    LastName = custInfo.LastName,
-                                    UserId = newUser.UserId,
-                                    EmailAddress = custInfo.EmailAddress,
-                                    UserName = custInfo.UserName };
-
-                                
                                 var authHelper = Request.Resolve<IAuthenticationHelper>();
-                                authHelper.SaveStoreFrontAccessToken(newUser.ToAccessToken(), profile.ToToken());
+                                authHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
                                 authHelper.ClearSessionToken();
-
                             }
                         }
                         break;
@@ -317,8 +281,6 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
             }
 
-
-
             string newHostname = (domainList.FirstOrDefault());
             bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
 
@@ -329,20 +291,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var writableContext = (SiteBuilderApiContext)SbApiContext;
                 var headers = new NameValueCollection();
 
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.TENANT] = site.TenantId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.CATALOG] = site.CatalogId.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.SITE] = site.Id.ToString();
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.LOCALE] = site.DefaultLocaleCode;
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.CURRENCY] = site.DefaultCurrencyCode;
-                headers[Mozu.Core.Api.Contracts.Constants.Headers.DATA_VIEW_MODE] = viewMode.ToString();
+                headers[Headers.TENANT] = site.TenantId.ToString();
+                headers[Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
+                headers[Headers.CATALOG] = site.CatalogId.ToString();
+                headers[Headers.SITE] = site.Id.ToString();
+                headers[Headers.LOCALE] = site.DefaultLocaleCode;
+                headers[Headers.CURRENCY] = site.DefaultCurrencyCode;
+                headers[Headers.DATA_VIEW_MODE] = viewMode.ToString();
 
                 return new TransferResult(redirUrl)
                 {
                     Headers = headers
                 };
             }
-            SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode:isAdminMode);
+            SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode: isAdminMode);
 
             var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);
             return new RedirectResult(uri);
@@ -352,8 +314,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             if (redir.IsNullOrEmpty()) return doHostnameRedirect ? "http://" + newHostname : "~/";
 
-            redir = redir.StartsWith("http") || redir.StartsWith("/") ? 
-                redir : 
+            redir = redir.StartsWith("http") || redir.StartsWith("/") ?
+                redir :
                 "/" + redir;
             var redirUri = new Uri(redir, UriKind.RelativeOrAbsolute);
 
@@ -362,15 +324,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 // for an absolute url (think custom route that specifies a http schema) we must always use the resolved hostname.
                 var scheme = redirUri.IsAbsoluteUri ? redirUri.Scheme : "http";
                 var qmarkpos = redirUri.OriginalString.IndexOf('?');
-                var path = redirUri.IsAbsoluteUri ? 
-                    redirUri.LocalPath : 
-                    redirUri.OriginalString.Substring(0, qmarkpos != -1 ? 
-                        qmarkpos : 
+                var path = redirUri.IsAbsoluteUri ?
+                    redirUri.LocalPath :
+                    redirUri.OriginalString.Substring(0, qmarkpos != -1 ?
+                        qmarkpos :
                         redirUri.OriginalString.Length);
-                var query = redirUri.IsAbsoluteUri ? 
-                    redirUri.Query.TrimStart('?') : 
-                    (qmarkpos != -1 ? 
-                        redirUri.OriginalString.Substring(qmarkpos+1) : 
+                var query = redirUri.IsAbsoluteUri ?
+                    redirUri.Query.TrimStart('?') :
+                    (qmarkpos != -1 ?
+                        redirUri.OriginalString.Substring(qmarkpos + 1) :
                         string.Empty);
 
                 var builder = new UriBuilder(scheme, newHostname);
@@ -386,5 +348,4 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
     }
-
 }

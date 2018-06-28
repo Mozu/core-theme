@@ -93,21 +93,114 @@ Ext.define('Taco.view.order.Header', {
             }
         });
     },
+    showStorefrontModal: function (customerId, userId, orderId) {
+        var me = this;
+        var modalConfigWindow = null;
+        var loadCart = function(){
+            Taco.app.setLoading();
+            Ext.Ajax.request({
+                url: '/admin/app/order/addShoppersCartItems?userId='+userId+'&orderId='+orderId,
+                method: 'POST',
+                success: function (response) {
+                    Taco.app.setLoading(false);
+                    me.record.reload();
+                    if (modalConfigWindow){
+                        modalConfigWindow.close();
+                    }
+                },
+                failure: function (response) {
+                    Taco.app.setLoading(false);
+                    if (modalConfigWindow){
+                        modalConfigWindow.close();
+                    }
+                }                  
+            });
+        };
+        var configIframe = Ext.create('Ext.ux.IFrame', {
+            height: '100%',
+            src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=admin&redir=' + encodeURIComponent('/cart?mz_cust_impersonate='+customerId),
+            listeners:{
+                load:function(iframe){
+                    var doc = iframe.getDoc();
+                    if(!doc){
+                        return;
+                    }
+                    if (!doc.location || !doc.location.pathname || !/\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)){
+                        return;
+                    }
+                    loadCart();
+                },            
+                scope:this
+            }
+        });
 
+        modalConfigWindow = Ext.create('Taco.core.ux.window.Drawer', {
+            autoShow: true,
+            resizable: true,
+            draggable: true,
+            layout: 'fit',
+            autoScroll: false,
+            height: '90%',
+            scale: 'large',
+            primaryText: 'Add Cart Items',
+            secondaryText: 'Close',
+            primaryHandler: loadCart,
+            width: '90%',
+            shadow: true,
+            title: '',
+            items: [
+                configIframe,
+            ]
+       
+        });
+        modalConfigWindow.center();
+    },
     loadItems: function () {
+        var custData = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+
         this.customerCmp = Ext.widget({
-            xtype: 'component',
+            xtype: 'container',
             itemId: 'customerCmp',
             cls: 'pane account-name',
             flex: 33,
-            tpl: [
-                '<span class="label label-light">Account:</span>',
-                '<tpl if="id">',
-                '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
-                '</tpl>'
-            ],
-            data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
+            items: [{
+                xtype: 'label',
+                text: 'Account:',
+                cls: 'label label-light'
+            }, {
+                xtype: 'button',
+                ui: 'link',
+                text: (custData.lastNameSafe) ? custData.firstNameSafe + " " + custData.lastNameSafe : custData.emailAddressSafe,
+                itemId: "accountCallToAction",
+                plain: true,
+                shadow: false,
+                cls: Taco.baseCSSPrefix + 'grid-row-menu',
+                menu: [
+                    {
+                        text: 'View User\'s Cart',
+                        itemId: 'viewCartId',
+                        hidden: !custData.userId || this.record.get('orderStatus') !== 'Pending',
+                        handler: function () {
+                            var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+                            this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
+                        },
+                        scope: this
+                    },
+                    {
+                        text: 'Edit Customer',
+                        handler: function () {
+                            Taco.app.StateManager.attemptNavigate('customer/edit/' + custData.id);
+                        }
+                    }
+                ],
+                scope: this
+            }]
         });
+
+        this.customerCmp.updateCustomer = function (custData){
+            this.query('#viewCartId')[0].hidden = !custData.userId;
+            this.query('#accountCallToAction')[0].setText( (custData.lastNameSafe) ? custData.firstNameSafe + " " + custData.lastNameSafe : custData.emailAddressSafe);
+        };
 
         this.siteCmp = Ext.widget({
             xtype: 'component',
@@ -127,19 +220,15 @@ Ext.define('Taco.view.order.Header', {
                 xtype: 'label',
                 text: 'Addresses:',
                 cls: 'label label-light'
-            },{
+            }, {
                 xtype: 'button',
                 ui: 'link',
                 text: 'Change Address',
                 itemId: "changeLink",
-                requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                           {
-                               model: 'Taco.model.Order',
-                               behavior: 'fulfill'
-                           }],
+                requiredBehaviors: [
+                    { model: 'Taco.model.Order', behavior: 'update' },
+                    { model: 'Taco.model.Order', behavior: 'fulfill' }
+                ],
                 handler: this.changeAddress,
                 scope: this
             }]
@@ -538,7 +627,7 @@ Ext.define('Taco.view.order.Header', {
         
         Ext.suspendLayouts();
 
-        this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
+        this.customerCmp.updateCustomer(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
         this.detailCmp.update( Ext.apply({ channelName: this.record.getChannelName() }, data));
         this.statusCmp.update(Ext.apply({}, { orderRecord: this.record }, data));
         this.addressesCmp.update(data);
