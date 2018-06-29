@@ -485,6 +485,7 @@ Ext.define('Taco.view.order.subform.Detail', {
         me.totalRow.setRecord(me.record);
 
         me.customerNoteRow.update(me.record.data);
+        me.giftMessageRow.update(me.record.data);
         
         me.detailGrid.record = me.record;
         // todo: update the internalNotes
