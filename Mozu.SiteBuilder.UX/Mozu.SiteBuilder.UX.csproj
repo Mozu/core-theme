@@ -216,6 +216,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hypr\SetHeaderTag.cs" />
     <Compile Include="Hypr\Tags\HeaderContent.cs" />
     <Compile Include="Hypr\Tags\DropZoneTag.cs" />
     <Compile Include="Hypr\Tags\IncludeEntityTag.cs" />
@@ -232,7 +233,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BuiltinScripts\SDK\src\types\checkout.js" />
-    <Content Include="foo.aspx" />
     <Content Include="PostDeploy.ps1">
     </Content>
     <Content Include="PreDeploy.ps1">
