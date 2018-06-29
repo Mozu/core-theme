@@ -158,9 +158,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                 case "submittedto":
                     return string.Format("submittedDate le {0}", ((DateTime)filter.value).AddDays(1).AddTicks(-1).ToUniversalTime().ToString("o"));
                 case "attributename":
-                    return string.Format("( attributeNames eq {0} || attributeNames eq tenant~{0} )", filter.value);
+                    return string.Format("(attributes.name eq {0} or attributes.name eq tenant~{0})", filter.value);
                 case "shippingmethod":
-                    return string.Format("( itemFulfillmentMethod eq {0} )", filter.value);
+                    return string.Format("(itemFulfillmentMethod eq {0} )", filter.value);
                 default:
                 {
                     throw new NotImplementedException("unable to filter on property " + filter.property);

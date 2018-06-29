@@ -293,10 +293,6 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             {
                 name: 'attributeName',
                 fieldLabel: 'Attribute Name'
-            },
-            {
-                name: 'shippingMethod',
-                fieldLabel: 'Shipping Method'
             }];
         this.callParent(arguments);
     },
