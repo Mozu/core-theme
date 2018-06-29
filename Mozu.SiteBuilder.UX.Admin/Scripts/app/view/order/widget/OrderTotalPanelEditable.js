@@ -547,7 +547,6 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         me.leftPanel.add(me.priceListCombo);
 
         me.customerNoteField = Ext.widget({
-            //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
             xtype: "textarea",
             fieldLabel: "Customer Notes",
             value: customerNotesText,
@@ -562,15 +561,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         });
 
         me.giftMessageField = Ext.widget({
-            //xtype: (this.record.get("orderStatus") == "Pending") ? "textarea" : "editabledisplayfield",
             xtype: "textarea",
             fieldLabel: "Gift Message",
             value: giftMessageText,
             placeholder: placeholder,
-            disabled: !(this.record.get("orderStatus") == "Pending"),
             listeners: {
                 blur: {
-                    fn: me.ongiftMessageChange,
+                    fn: me.onGiftMessageChange,
                     scope: me
                 }
             }
@@ -702,7 +699,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
         }
     },
 
-    ongiftMessageChange: function (field, e, eOpts) {
+    onGiftMessageChange: function (field, e, eOpts) {
         if (field.isDirty()) {
             this.record.setGiftMessage({
                 jsonData: {
