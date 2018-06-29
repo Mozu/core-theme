@@ -9,6 +9,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using DC = Mozu.ProductAdmin.Contracts;
@@ -40,12 +41,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<IProductCategoryRuntimeWebApiClient> _categoryRuntimeWebApiClient;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
         private readonly IApiContext _apiCtx;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public SearchTuningRuleController(IApiContext apiCtx,
             ISearchWebApiClient searchWebApiClient,
+            ILogger logger,
             Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder,
             Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder,
             Lazy<IProductWebApiClient> productWebApiClient,
@@ -65,6 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _synonymFilterBuilder = synonymFilterBuilder;
             _synonymSortBuilder = synonymSortBuilder;
             _categoryRuntimeWebApiClient = categoryRuntimeWebApiClient;
+            _logger = logger;
         }
 
         /// <summary>
@@ -129,6 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch (ApiWebClientConnectionException e)
             {
+                _logger.Error(e);
                 return this.FailureList2<SearchTuningRule>(e.Message);
             }
         }
@@ -162,10 +167,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        /// <summary>
-        ///     Get all categories, using paging if required
-        /// </summary>
-        /// <returns></returns>
         private async Task<Dictionary<string, string>> GetCategoryNamesFromCategoryTree(
             ProductRuntime.Contracts.CategoryCollection categoryTree, string[] catCodes)
         {
