@@ -10,6 +10,7 @@ using Mozu.Core.Api.Routing;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.ProductRuntime.Contracts.Clients;
 using DC = Mozu.ProductAdmin.Contracts;
 using SearchTuningRule = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SearchTuningRule;
 using SimpleSearchProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SimpleSearchProduct;
@@ -36,8 +37,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
         private readonly Lazy<ICategoryWebApiClient> _categoryWebApiClient;
+        private readonly Lazy<IProductCategoryRuntimeWebApiClient> _categoryRuntimeWebApiClient;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
-
         private readonly IApiContext _apiCtx;
 
         /// <summary>
@@ -51,7 +52,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
             Lazy<ICategoryWebApiClient> categoryWebApiClient,
             Lazy<ISynonymFilterBuilder> synonymFilterBuilder,
-            Lazy<ISynonymSortBuilder> synonymSortBuilder)
+            Lazy<ISynonymSortBuilder> synonymSortBuilder,
+            Lazy<IProductCategoryRuntimeWebApiClient> categoryRuntimeWebApiClient)
         {
             _searchWebApiClient = searchWebApiClient;
             _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
@@ -62,6 +64,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _apiCtx = apiCtx;
             _synonymFilterBuilder = synonymFilterBuilder;
             _synonymSortBuilder = synonymSortBuilder;
+            _categoryRuntimeWebApiClient = categoryRuntimeWebApiClient;
         }
 
         /// <summary>
@@ -145,7 +148,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return;
             }
-            var catNameLookup = await GetCategoryNamesByCodes(codeList);
+
+            var categoryTree = (await _categoryRuntimeWebApiClient.Value.GetCategoryTree()).ReadAsSync();
+            var catNameLookup = await GetCategoryNamesFromCategoryTree(categoryTree, codeList).ConfigureAwait(false);
+                
             foreach (var searchRule in searchTuningRules)
             {
                 searchRule.CategoryNames =
@@ -155,6 +161,36 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         .ToArray();
             }
         }
+
+        /// <summary>
+        ///     Get all categories, using paging if required
+        /// </summary>
+        /// <returns></returns>
+        private async Task<Dictionary<string, string>> GetCategoryNamesFromCategoryTree(
+            ProductRuntime.Contracts.CategoryCollection categoryTree, string[] catCodes)
+        {
+            // convert to paged collection
+            var catPagedCollection = categoryTree.Items
+                .Where(x => catCodes.Contains(x.CategoryCode))
+                .ToDictionary(x => x.CategoryCode, x => x.Content.Name);
+
+            // since results in the categoryTree are coming from product runtime, some codes may be missing
+            if (catCodes.Length > catPagedCollection.Count)
+            {
+                var missingCodes = catCodes.Except(catPagedCollection.Keys).ToArray();
+
+                // get missing code names from product admin and add to collection
+                var missingCodesCollection = await GetCategoryNamesByCodes(missingCodes).ConfigureAwait(false);
+
+                foreach (var keyValuePair in missingCodesCollection)
+                {
+                    catPagedCollection.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }            
+
+            return catPagedCollection;
+        }
+
 
         /// <summary>
         ///     Get all categories, using paging if required
