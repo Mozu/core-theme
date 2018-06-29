@@ -25,7 +25,10 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
             me.purchaseOrder
         ];
 
-        me.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
+        me.externalGateWayDefinitionsStore = Ext.create('Taco.store.ExternalGatewayDefinitions', {
+            autoLoad: true
+        });
+
         me.buildExternalGateway();
 
         me.mon(Taco.core.StateManager, {
