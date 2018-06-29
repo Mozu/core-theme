@@ -154,8 +154,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 return;
             }
 
-            var categoryTree = (await _categoryRuntimeWebApiClient.Value.GetCategoryTree()).ReadAsSync();
-            var catNameLookup = await GetCategoryNamesFromCategoryTree(categoryTree, codeList).ConfigureAwait(false);
+            var catNameLookup = await GetCategoryNamesByCodes(codeList).ConfigureAwait(false);
                 
             foreach (var searchRule in searchTuningRules)
             {
@@ -167,48 +166,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private async Task<Dictionary<string, string>> GetCategoryNamesFromCategoryTree(
-            ProductRuntime.Contracts.CategoryCollection categoryTree, string[] catCodes)
-        {
-            // convert to paged collection
-            var catPagedCollection = categoryTree.Items
-                .Where(x => catCodes.Contains(x.CategoryCode))
-                .ToDictionary(x => x.CategoryCode, x => x.Content.Name);
-
-            // since results in the categoryTree are coming from product runtime, some codes may be missing
-            if (catCodes.Length > catPagedCollection.Count)
-            {
-                var missingCodes = catCodes.Except(catPagedCollection.Keys).ToArray();
-
-                // get missing code names from product admin and add to collection
-                var missingCodesCollection = await GetCategoryNamesByCodes(missingCodes).ConfigureAwait(false);
-
-                foreach (var keyValuePair in missingCodesCollection)
-                {
-                    catPagedCollection.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }            
-
-            return catPagedCollection;
-        }
-
-
         /// <summary>
         ///     Get all categories, using paging if required
         /// </summary>
         /// <returns></returns>
         private async Task<Dictionary<string, string>> GetCategoryNamesByCodes(string[] categoryCodes)
         {
-            var filter = $"categorycode in [\"{string.Join("\",\"", categoryCodes) }\"]";
+            var pageSize = 200;
+            var currentIndex = 0;
+            var categories = new List<DC.Category>();
 
-            ProductAdmin.Contracts.CategoryPagedCollection catPagedCollection = (await _categoryWebApiClient.Value
-                .GetCategories(startIndex: 0,
-                    pageSize: 200,
-                    responseFields: "items(categoryCode,content(name)",
-                    filter: filter
-                )).ReadAsSync();
+            // need to only process in batches of 200
+            while (currentIndex < categoryCodes.Length)
+            {
+                var codesToProcess = categoryCodes.Skip(currentIndex).Take(pageSize);
+                var filter = $"categorycode in [\"{string.Join("\",\"", codesToProcess) }\"]";
 
-            return catPagedCollection.Items.ToDictionary(x => x.CategoryCode, x => x.Content.Name);
+                var response = (await _categoryWebApiClient.Value
+                    .GetCategories(startIndex: 0,
+                        pageSize: pageSize,
+                        responseFields: "items(categoryCode,content(name)",
+                        filter: filter
+                    )).ReadAsSync();
+
+                categories.AddRange(response.Items);
+                currentIndex += pageSize;
+            }
+
+            return categories.ToDictionary(x => x.CategoryCode, x => x.Content.Name);
         }
 
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
