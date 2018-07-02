@@ -9,7 +9,9 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Routing;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Extensions;
+using Mozu.Core.Logging;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.ProductRuntime.Contracts.Clients;
 using DC = Mozu.ProductAdmin.Contracts;
 using SearchTuningRule = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SearchTuningRule;
 using SimpleSearchProduct = Mozu.SiteBuilder.UX.Admin.Api.Models.Search.SimpleSearchProduct;
@@ -36,22 +38,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly Lazy<IProductWebApiClient> _productWebApiClient;
         private readonly Lazy<IProductTypeWebApiClient> _productTypeWebApiClient;
         private readonly Lazy<ICategoryWebApiClient> _categoryWebApiClient;
+        private readonly Lazy<IProductCategoryRuntimeWebApiClient> _categoryRuntimeWebApiClient;
         private Lazy<ISearchWebApiClient> _lazySearchClient;
-
         private readonly IApiContext _apiCtx;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public SearchTuningRuleController(IApiContext apiCtx,
             ISearchWebApiClient searchWebApiClient,
+            ILogger logger,
             Lazy<ISearchTuningRuleFilterBuilder> searchTuningRuleFilterBuilder,
             Lazy<ISearchTuningRuleSortBuilder> searchtuningRuleSortBuilder,
             Lazy<IProductWebApiClient> productWebApiClient,
             Lazy<IProductTypeWebApiClient> productTypeWebApiClient,
             Lazy<ICategoryWebApiClient> categoryWebApiClient,
             Lazy<ISynonymFilterBuilder> synonymFilterBuilder,
-            Lazy<ISynonymSortBuilder> synonymSortBuilder)
+            Lazy<ISynonymSortBuilder> synonymSortBuilder,
+            Lazy<IProductCategoryRuntimeWebApiClient> categoryRuntimeWebApiClient)
         {
             _searchWebApiClient = searchWebApiClient;
             _searchTuningRuleFilterBuilder = searchTuningRuleFilterBuilder;
@@ -62,6 +67,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _apiCtx = apiCtx;
             _synonymFilterBuilder = synonymFilterBuilder;
             _synonymSortBuilder = synonymSortBuilder;
+            _categoryRuntimeWebApiClient = categoryRuntimeWebApiClient;
+            _logger = logger;
         }
 
         /// <summary>
@@ -126,6 +133,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch (ApiWebClientConnectionException e)
             {
+                _logger.Error(e);
                 return this.FailureList2<SearchTuningRule>(e.Message);
             }
         }
@@ -145,7 +153,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return;
             }
-            var catNameLookup = await GetCategoryNamesByCodes(codeList);
+
+            var catNameLookup = await GetCategoryNamesByCodes(codeList).ConfigureAwait(false);
+                
             foreach (var searchRule in searchTuningRules)
             {
                 searchRule.CategoryNames =
@@ -162,16 +172,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <returns></returns>
         private async Task<Dictionary<string, string>> GetCategoryNamesByCodes(string[] categoryCodes)
         {
-            var filter = $"categorycode in [\"{string.Join("\",\"", categoryCodes) }\"]";
+            var pageSize = 200;
+            var currentIndex = 0;
+            var categories = new List<DC.Category>();
 
-            ProductAdmin.Contracts.CategoryPagedCollection catPagedCollection = (await _categoryWebApiClient.Value
-                .GetCategories(startIndex: 0,
-                    pageSize: 200,
-                    responseFields: "items(categoryCode,content(name)",
-                    filter: filter
-                )).ReadAsSync();
+            // need to only process in batches of 200
+            while (currentIndex < categoryCodes.Length)
+            {
+                var codesToProcess = categoryCodes.Skip(currentIndex).Take(pageSize);
+                var filter = $"categorycode in [\"{string.Join("\",\"", codesToProcess) }\"]";
 
-            return catPagedCollection.Items.ToDictionary(x => x.CategoryCode, x => x.Content.Name);
+                var response = (await _categoryWebApiClient.Value
+                    .GetCategories(startIndex: 0,
+                        pageSize: pageSize,
+                        responseFields: "items(categoryCode,content(name)",
+                        filter: filter
+                    )).ReadAsSync();
+
+                categories.AddRange(response.Items);
+                currentIndex += pageSize;
+            }
+
+            return categories.ToDictionary(x => x.CategoryCode, x => x.Content.Name);
         }
 
         private async Task AddSearchProducts(SearchTuningRule singleSearchTuningRule)
