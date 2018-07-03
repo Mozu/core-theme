@@ -511,7 +511,7 @@ define([
             retrieveGiftCard: function(number, securityCode) {
               var me = this;
               this.syncApiModel();
-              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GC", isEnabled: true });
+              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
                me.isLoading(true);
               return giftCardModel.apiSave().then(function(giftCard){
                 return giftCardModel.apiGetBalance().then(function(balance){
@@ -1107,8 +1107,6 @@ define([
                 if(val && val['billingContact.email']) {
                     order.onCheckoutError(val['billingContact.email']);
                 }
-
-
 
                 //If Single Address Save to Destination
                 //Do I need this Line? Why Did I orginally Do this?

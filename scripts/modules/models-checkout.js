@@ -861,7 +861,7 @@
            },
            retrieveGiftCard: function(number, securityCode) {var me = this;
               this.syncApiModel();
-              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GC", isEnabled: true });
+              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
                me.isLoading(true);
               return giftCardModel.apiSave().then(function(giftCard){
                 return giftCardModel.apiGetBalance().then(function(balance){
