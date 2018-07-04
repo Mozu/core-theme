@@ -744,7 +744,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         return {
             orderId: order.getId(),
             orderNumber: order.get('orderNumber'),
-            amountToApply: amount,
+            amount: amount,
             billingInfo: {
                 cardNumberPart: curPayment.data.cardNumber,
                 cardNumber: curPayment.data.cardNumber,
@@ -764,7 +764,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         if (me.createNewCardForm) {
             var data = {
                 orderId: this.record.getId(),
-                amountToApply: this.down('[name=newGiftCardamount]').getValue(),
+                amount: this.down('[name=newGiftCardamount]').getValue(),
                 billingInfo: {
                     cardNumber: this.down('[name=giftCardNumber]').getValue(),
                     cardType: "GIFTCARD",
