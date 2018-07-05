@@ -142,10 +142,14 @@
         defaults: {
           "isGiftCard": true
         },
-        getBalance: function(){
-          // TODO: use this.get('id') to pass to api call
-          // call will probably be something like this.apiGetBalance
-          return 99.9;
+        initialize: function(){
+          var self = this;
+            _.each(twoWayCardShapeMapping, function(k, v){
+                if (self.get(k) && !self.get(v)){
+                    self.set(v, self.get(k));
+                }
+            });
+            Backbone.MozuModel.prototype.initialize.apply(this);
         },
         calculateRemainingBalance: function(){
             return (! this.get('amountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('amountApplied');

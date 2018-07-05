@@ -747,7 +747,8 @@
                 var counter = 0;
                 activeGiftCards.forEach(function(giftCardPayment){
                     var newGiftCardModel = new PaymentMethods.GiftCard(giftCardPayment.billingInfo.card);
-                      newGiftCardModel.apiGetBalance().then(function(balance){
+                      newGiftCardModel.apiGetBalance().then(function(res){
+                          var balance = res.data.balance;
                           if (balance > 0){
                             newGiftCardModel.set('isEnabled', true);
                             newGiftCardModel.set('amountApplied', giftCardPayment.amountRequested);
@@ -768,9 +769,8 @@
             applyGiftCard: function(giftCardId, amountToApply, isEnabled){
              var self = this, order = this.getOrder();
              //get gift card by id from _giftCardCache
-             //TODO: set previousAmount, previousEnabledState
              var giftCardModel = this._cachedGiftCards.find(function(giftCard){
-                 return giftCard.id === giftCardId;
+                return giftCard.get('id') === giftCardId;
              });
              //TODO: what do we do if it's not in the cache?
              // realistically, we shouldn't be at this point if it's not in the cache.
@@ -864,15 +864,16 @@
               var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
                me.isLoading(true);
               return giftCardModel.apiSave().then(function(giftCard){
-                return giftCardModel.apiGetBalance().then(function(balance){
+                return giftCardModel.apiGetBalance().then(function(res){
+                  var balance = res.data.balance;
                   if (balance>0) {
                     giftCardModel.set('currentBalance', balance);
                     me._cachedGiftCards.push(giftCardModel.clone());
                     //applyGiftCard function has a render that will fill the
                     //grid with what's in me._cachedGiftCards
-                    return me.applyGiftCard(giftCard.data.id, null, true);
+                    return me.applyGiftCard(giftCardModel.get('id'), null, true);
                   } else {
-                    //Giftcard has no balance. Throw error.
+                    alert("No balance on that card! Also there is no error handling for this scenario yet.");
                   }
                 });
               }, function(error){
