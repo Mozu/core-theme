@@ -145,9 +145,13 @@
         initialize: function(){
           var self = this;
             _.each(twoWayCardShapeMapping, function(k, v){
+<<<<<<< HEAD
                 if (self.get(k) && !self.get(v)){
                     self.set(v, self.get(k));
                 }
+=======
+                self.set(v, self.get(k));
+>>>>>>> 918db96a906c429e1d0b37da34d523938c6eca11
             });
             Backbone.MozuModel.prototype.initialize.apply(this);
         },
