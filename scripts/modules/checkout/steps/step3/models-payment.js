@@ -515,6 +515,9 @@ define([
                me.isLoading(true);
               return giftCardModel.apiSave().then(function(giftCard){
                 return giftCardModel.apiGetBalance().then(function(res){
+                  // We're supposed to be mapping paymentServiceCardId to id, but it isn't working, so
+                  // let's go ahead and make sure ID is set at this point.
+                  if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
                   var balance = res.data.balance;
                   if (balance>0) {
                     giftCardModel.set('currentBalance', balance);
