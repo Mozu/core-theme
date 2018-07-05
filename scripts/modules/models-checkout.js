@@ -873,7 +873,7 @@
                     //grid with what's in me._cachedGiftCards
                     return me.applyGiftCard(giftCardModel.get('id'), null, true);
                   } else {
-                    alert("No balance on that card! Also there is no error handling for this scenario yet.");
+                    // alert("No balance on that card! Also there is no error handling for this scenario yet.");
                   }
                 });
               }, function(error){
