@@ -358,8 +358,11 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                             },
                             success: function (data) {
 
-                                console.log(data)
-
+                                me.setLoading(false, me.body);
+                                var balance = data.balance;
+                                me.existingCardBalanceField.setValue(balance);
+                                me.existingCardBalanceField.setVisible(true);
+                                me.checkBalanceButton.setVisible(false);
                             }
                         },
                         settings: {
@@ -372,9 +375,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                         }
                     });
                     var payload = data.billingInfo;
-                    payload.merchantTransactionId = data.orderNumber;
-                    var fakePayload = { merchantTransactionId: data.orderNumber, cardNumberPart: data.billingInfo.cardNumber };
-
+                    me.setLoading(true, me.body);
                     pciProcessor.process(payload);
                 }
             }
@@ -388,7 +389,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 name: 'giftCardBalanceField',
                 itemId: 'giftCardBalanceField',
                 fieldLabel: 'Balance',
-                disabled: true,
+                readOnly: true,
                 margin: '0px 5px 0px 5px',
                 value: '123.45',
                 hidden: true
@@ -565,9 +566,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                                     me.setLoading(false, me.body);
                                                 },
                                                 success: function (data) {
-
-                                                    console.log(data)
-
+                                                    me.setLoading(false, me.body);
                                                 }
                                             },
                                             settings: {
@@ -581,6 +580,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                         });
                                         var payload = data.billingInfo;
                                         payload.merchantTransactionId = data.orderId;
+                                        me.setLoading(true, me.body);
                                         pciProcessor.process(payload);
                                         
                                     }

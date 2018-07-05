@@ -73,11 +73,15 @@ module.exports = (function() {
         // SDK shouldn't check for CVV anymore because we now check for it in the theme.
         //if (!data.cvv && !data.isCvvOptional) errors.throwOnObject(obj, 'CVV_MISSING');
 
-        maskedData = transform.toCardData(data);
-        cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         if (!data.isGiftCard) {
+            maskedData = transform.toCardData(data);
+            cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
             if (!validateCardNumber(obj, cardNumber)) errors.throwOnObject(obj, 'CARD_NUMBER_UNRECOGNIZED');
+        } else {
+            maskedData = transform.toGetBalanceData(data);
+            cardNumber = maskedData.cardNumber.replace(charsInCardNumberRE, '');
         }
+
 
         // only add numberPart if the current card number isn't already masked
         // if (cardNumber.indexOf(maskCharacter) === -1) maskedData.numberPart = createCardNumberMask(obj, cardNumber);
@@ -110,6 +114,16 @@ module.exports = (function() {
                 if (this.fields[serviceField] in data) cardData[serviceField] = data[this.fields[serviceField]]
             }
             return cardData;
+        }, 
+        toGetBalanceData: function (data) {
+            var giftCardData = {};
+            for (var serviceField in this.fields) {
+                if (this.fields[serviceField] in data) giftCardData[serviceField] = data[this.fields[serviceField]]
+            }
+
+            //giftCardData.merchantTransactionId = "1";
+            giftCardData.cardNumberPart = giftCardData.cardNumber;
+            return giftCardData;
         }
     };
     
@@ -131,9 +145,12 @@ module.exports = (function() {
             });
         },
         getBalance: function () {
-            return this.save().then(function (saved) {
-                return "124.5";
+            return this.api.action(this, 'getGiftCardBalance', makePayload(this)).then(function (res) {
+                return res;
             });
+            //return this.save().then(function (saved) {
+            //    return "124.5";
+            //});
         },
         saveToCustomer: function (customerId) {
             var self = this;

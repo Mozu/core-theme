@@ -685,8 +685,8 @@
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}"
     },
-    "getGiftCardBalance": {
-      "verb": "GET",
+    "get-gift-card-balance": {
+      "verb": "POST",
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}/balance{?responseFields}",
        "defaultParams": {
