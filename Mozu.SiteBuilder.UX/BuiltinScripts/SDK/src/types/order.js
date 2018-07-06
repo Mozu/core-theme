@@ -150,13 +150,14 @@ module.exports = (function () {
             });
         },
         addGiftCard: function (payment) {
+            var self = this;
             var giftcard = this.api.createSync('creditcard', payment);
             return giftcard.save().then(function (giftcard) {
-                return this.createPayment({
-                    amount: payment.amount,
+                return self.createPayment({
+                    amount: payment.amountToApply,
                     newBillingInfo: {
                         paymentType: 'GiftCard',
-                        card: giftcard
+                        card: giftcard.data
                     }
                 });
             }, function (reason) {
@@ -210,7 +211,7 @@ module.exports = (function () {
             var activePayments = this.getActivePayments(),
                 giftCards = [];
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+                if (activePayments[i].paymentType === "GiftCard") giftCards.unshift(activePayments[i]);
             }
             return giftCards;
         },

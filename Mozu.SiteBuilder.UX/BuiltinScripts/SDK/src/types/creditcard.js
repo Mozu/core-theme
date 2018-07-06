@@ -145,12 +145,24 @@ module.exports = (function() {
             });
         },
         getBalance: function () {
-            return this.api.action(this, 'getGiftCardBalance', makePayload(this)).then(function (res) {
+            var payload = {
+                cardNumberPart: this.data.cardNumber,
+                cardId: this.data.paymentServiceCardId || this.data.id,
+                cardType: this.data.cardType
+            }
+            return this.api.action(this, 'getGiftCardBalance', payload).then(function (res) {
                 return res;
             });
-            //return this.save().then(function (saved) {
-            //    return "124.5";
-            //});
+        },
+        getBalanceUnregistered: function () {
+            var payload = {
+                cardNumberPart: this.data.cardNumber,
+                cvv: this.data.cvv,
+                cardType: this.data.cardType
+            }
+            return this.api.action(this, 'getUnregisteredGiftCardBalance', payload).then(function (res) {
+                return res;
+            })
         },
         saveToCustomer: function (customerId) {
             var self = this;

@@ -689,7 +689,14 @@
       "verb": "POST",
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}/balance{?responseFields}",
-       "defaultParams": {
+      "defaultParams": {
+        "responseFields": "amount"
+      }
+    },
+    "get-unregistered-gift-card-balance": {
+      "verb": "POST",
+      "template": "{+paymentService}/balance",
+      "defaultParams": {
         "responseFields": "amount"
       }
     }

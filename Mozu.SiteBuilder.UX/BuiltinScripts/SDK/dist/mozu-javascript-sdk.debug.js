@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-07-05
+ * Mozu JavaScript SDK - v0.3.0 - 2018-07-10
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4212,7 +4212,14 @@ module.exports=
       "verb": "POST",
       "shortcutParam": "cardId",
       "template": "{+paymentService}{cardId}/balance{?responseFields}",
-       "defaultParams": {
+      "defaultParams": {
+        "responseFields": "amount"
+      }
+    },
+    "get-unregistered-gift-card-balance": {
+      "verb": "POST",
+      "template": "{+paymentService}/balance",
+      "defaultParams": {
         "responseFields": "amount"
       }
     }
@@ -5322,12 +5329,24 @@ module.exports = (function() {
             });
         },
         getBalance: function () {
-            return this.api.action(this, 'getGiftCardBalance', makePayload(this)).then(function (res) {
+            var payload = {
+                cardNumberPart: this.data.cardNumber,
+                cardId: this.data.paymentServiceCardId || this.data.id,
+                cardType: this.data.cardType
+            }
+            return this.api.action(this, 'getGiftCardBalance', payload).then(function (res) {
                 return res;
             });
-            //return this.save().then(function (saved) {
-            //    return "124.5";
-            //});
+        },
+        getBalanceUnregistered: function () {
+            var payload = {
+                cardNumberPart: this.data.cardNumber,
+                cvv: this.data.cvv,
+                cardType: this.data.cardType
+            }
+            return this.api.action(this, 'getUnregisteredGiftCardBalance', payload).then(function (res) {
+                return res;
+            })
         },
         saveToCustomer: function (customerId) {
             var self = this;
@@ -5735,13 +5754,14 @@ module.exports = (function () {
             });
         },
         addGiftCard: function (payment) {
+            var self = this;
             var giftcard = this.api.createSync('creditcard', payment);
             return giftcard.save().then(function (giftcard) {
-                return this.createPayment({
-                    amount: payment.amount,
+                return self.createPayment({
+                    amount: payment.amountToApply,
                     newBillingInfo: {
                         paymentType: 'GiftCard',
-                        card: giftcard
+                        card: giftcard.data
                     }
                 });
             }, function (reason) {
@@ -5795,7 +5815,7 @@ module.exports = (function () {
             var activePayments = this.getActivePayments(),
                 giftCards = [];
             for (var i = activePayments.length - 1; i >= 0; i--) {
-                if (activePayments[i].paymentType === "GiftCard") credits.unshift(activePayments[i]);
+                if (activePayments[i].paymentType === "GiftCard") giftCards.unshift(activePayments[i]);
             }
             return giftCards;
         },
