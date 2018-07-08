@@ -511,27 +511,37 @@ define([
             retrieveGiftCard: function(number, securityCode) {
               var me = this;
               this.syncApiModel();
-              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
-               me.isLoading(true);
-              return giftCardModel.apiSave().then(function(giftCard){
-                return giftCardModel.apiGetBalance().then(function(res){
-                  // We're supposed to be mapping paymentServiceCardId to id, but it isn't working, so
-                  // let's go ahead and make sure ID is set at this point.
-                  if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
-                  var balance = res.data.balance;
-                  if (balance>0) {
-                    giftCardModel.set('currentBalance', balance);
-                    me._cachedGiftCards.push(giftCardModel.clone());
-                    //applyGiftCard function has a render that will fill the
-                    //grid with what's in me._cachedGiftCards
-                    return me.applyGiftCard(giftCardModel.get('id'), null, true);
+              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: 'num', cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
+              me.isLoading(true);
+              return giftCardModel.apiGetBalanceUnregistered().then(function(bal){
+                  var balance = bal.data.balance;
+                  if (balance>0){
+                      return giftCardModel.apiSave().then(function(giftCard){
+                          if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
+                          giftCardModel.set('currentBalance', balance);
+                          me._cachedGiftCards.push(giftCardModel.clone());
+                          return me.applyGiftCard(giftCardModel.get('id'), null, true);
+                      }, function(error){
+                        //Error with apiSave.
+                        me.trigger('error',{
+                            message: "There was a problem saving the gift card to the payment service."
+                        })
+                      });
                   } else {
-                    // alert("No balance on that card! Also there is no error handling for this scenario yet.");
+                      me.isLoading(false);
+                      // No balance error
+                      // trigger error;
+                      // possibly return promise.deferred?
+                      me.trigger('error', {
+                          message: Hypr.getLabel('giftCardNoBalance')
+                      });
                   }
-                });
               }, function(error){
                 me.isLoading(false);
-                //giftcard failed to save for some reason, throw error
+                //TODO: make hypr label
+                me.trigger('error', {
+                    message: "There was a problem getting the gift card balance."
+                })
               });
             },
             getGatewayGiftCard: function() {
@@ -539,6 +549,10 @@ define([
                   giftCardNumber = this.get('giftCardNumber'),
                   giftCardSecurityCode = this.get('giftCardSecurityCode');
 
+                  // TODO: This check to see if the card was already added is not going to work.
+                  // At this point all our gift cards only know the masked number.
+                  // figure out something else
+                  /*
                   var existingGiftCard = this._cachedGiftCards.filter(function (card) {
                       return card.cardNumber === giftCardNumber;
                   });
@@ -549,8 +563,8 @@ define([
                         message: "Hypr.getLabel('giftCardAlreadyAdded')"
                     });
                   }
-                  //me.isLoading(true);
-                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(x){
+                  */
+                  return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(res){
                     me.isLoading(false);
                     return me;
                   });
