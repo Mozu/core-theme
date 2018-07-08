@@ -53,7 +53,11 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
                 method: "PUT"
             },
             giftCardBalance: {
-                uri: function (cardId) { return apiCall.base.uri() + '/' + cardId.toString() + '/balance'},
+                uri: function (cardId) { return apiCall.base.uri() + '/' + cardId.toString() + '/balance' },
+                method: "POST"
+            },
+            unregisteredGiftCardBalance: {
+                uri: function (cardId) { return apiCall.base.uri() + '/balance' },
                 method: "POST"
             }
         },
@@ -156,7 +160,8 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         maskPattern: "^(\\d+?)\\d{4}$",
         maskCharacter: "*",
         apiBase: window.location.protocol + "//pci." + window.location.hostname.replace('www.', ''),
-        framePath: "/../Assets/pci_receiver.html"
+        framePath: "/../Assets/pci_receiver.html",
+        skipValidation: false
     },
 
     events = {
@@ -174,7 +179,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
     settings = {
         get: function (settingName) {
             var rval = settingName in settings ? settings[settingName] : DEFAULTS[settingName];
-            if (rval) {
+            if (typeof rval != "undefined") {
                 return rval;
             } else {
                 errors.add('-1', '2', formatErrorMessage(errorMessages.settingMissing, settingName));
@@ -372,30 +377,25 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
         }
     },
 
-    // cache of last payload, used to string compare payloads
-    lastPostSent = null,
-
     // these fields will be added to the payload
     _optionalFields = ["PersistCard", "CardHolderName", "ExpireMonth", "ExpireYear", "CVV"],
     _requiredFields = ["CardType"],//, "CardHolderName"],
 
-    //this function takes a boolean which forces it to build a payload that doesn't include the saved card ID
-    // so that we can accurately string compare it with a prior post that may not have contained a saved card ID
-    makePayload = function (isTest) {
+    makePayload = function() {
         var merchantPayload = {},
             cardID = fields.getValue("HiddenCardID", true),
-            cardNumber = fields.getValue("CardNumber", isTest);
+            cardNumber = fields.getValue("CardNumber");
 
         if (!cardNumber) {
             errors.add('-1', '4', errorMessages.cardNumberInvalid);
             return false;
         }
 
-        merchantPayload.NumberPart = (cardNumber.indexOf(settings.get('maskCharacter')) === -1) ? getMask("nocache", isTest).toSend : '';
+        merchantPayload.NumberPart = (cardNumber.indexOf(settings.get('maskCharacter')) === -1) ? getMask("nocache").toSend : '';
         merchantPayload.CardNumber = cardNumber.replace(_stripCharsInCardNumRE, '');
 
         for (var i = 0; i < _requiredFields.length; i++) {
-            merchantPayload[_requiredFields[i]] = fields.getValue(_requiredFields[i], isTest);
+            merchantPayload[_requiredFields[i]] = fields.getValue(_requiredFields[i]);
         }
         for (var j = 0; j < _optionalFields.length; j++) {
             if (_optionalFields[j] in fields) {
@@ -405,81 +405,67 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
             }
         }
 
-        if (cardID && !isTest) {
+        if (cardID) {
             merchantPayload.CardId = cardID;
         }
         return JSON.stringify(merchantPayload);
     },
 
-        // string compare last payload sent with payload that would send, to prevent unnecessary requests
-        //changing to return true to bypass the storefronts check to minimize net chatter... cards can be reused on the same order or others... 
-    fieldsChanged = function () {
-        return true;
-        //return makePayload(true) !== lastPostSent;
-    },
-
-
     // let's roll!
     process = function (payload) {
         var cardID = fields.getValue("HiddenCardID", true);
-        if (payload) {
-            if (!cardID && payload.paymentServiceCardId) {
-                cardID = payload.paymentServiceCardId;
-                payload = JSON.stringify(payload);
-            }
-        }
-       
+
         errors.clear();
-        if (fieldsChanged()) {
-            if (!settings.get('skipValidation')) {
-                if (!validate()){
-                    events.error(errors.get());
-                    return false;
-                }
-            }
-            var preprocessReturn;
 
-            if (!payload) {
-                payload = makePayload();
-            }
-                
-            if (!payload) {
+        if (!settings.get('skipValidation')) {
+            if (!validate()){
                 events.error(errors.get());
                 return false;
             }
-            // if user specified a preprocess event, they may have something they want to do to the payload
-            if (events.preprocess) {
-                preprocessReturn = events.preprocess(payload);
-            }
-            if (preprocessReturn === false) {
-                return false;
-            }
-            // if preprocess function returned a string, set it as payload
-            if (typeof preprocessReturn === "string") {
-                payload = preprocessReturn;
-            }
-            if (errors.number() !== 0) {
-                events.error(errors.get());
-                return false;
-            }
-            lastPostSent = (payload) ? payload : makePayload(true); // payload without CardID, for compare
-            // run the request!
-            
-            var requestUri = (cardID) ? apiCall.update.uri(cardID) : apiCall.save.uri();
-            var requestMethod = (cardID) ? apiCall.update.method : apiCall.save.method;
-
-            if (cardID && settings.get('giftCardBalanceCall')) {
-                var requestUri = apiCall.giftCardBalance.uri(cardID);
-                var requestMethod = apiCall.giftCardBalance.method;
-            }
-
-            request(requestUri, payload, requestMethod, null, settings.get('siteId'), settings.get('tenantId'));
-            return true;
-        } else {
-            // fields haven't changed, so just run success function
-            events.success && events.success(JSON.stringify({ IsSuccessful: true, CardId: cardID }), fields.getValue("CardNumber"), null);
-            return true;
         }
+        var preprocessReturn;
+
+        if (!payload) {
+            payload = makePayload();
+        }
+
+        if (!payload) {
+            events.error(errors.get());
+            return false;
+        }
+        // if user specified a preprocess event, they may have something they want to do to the payload
+        if (events.preprocess) {
+            preprocessReturn = events.preprocess(payload);
+        }
+        if (preprocessReturn === false) {
+            return false;
+        }
+        // if preprocess function returned a string, set it as payload
+        if (typeof preprocessReturn === "string") {
+            payload = preprocessReturn;
+        }
+        if (errors.number() !== 0) {
+            events.error(errors.get());
+            return false;
+        }
+
+        // run the request!
+        var requestUri = (cardID) ? apiCall.update.uri(cardID) : apiCall.save.uri();
+        var requestMethod = (cardID) ? apiCall.update.method : apiCall.save.method;
+
+        if (settings.get('giftCardBalanceCall')) {
+            if (cardID) {
+                requestUri = apiCall.giftCardBalance.uri(cardID);
+                requestMethod = apiCall.giftCardBalance.method;
+            }
+            else {
+                requestUri = apiCall.unregisteredGiftCardBalance.uri();
+                requestMethod = apiCall.unregisteredGiftCardBalance.method;
+            }
+        }
+
+        request(requestUri, payload, requestMethod, null, settings.get('siteId'), settings.get('tenantId'));
+        return true;
     },
 
     // iframe XHR will call this function on success, and pass it the XHR and the responsetext.
@@ -518,6 +504,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
     // create a mask using the regex, and return an object containing two strings with opposite chars masked
     getMask = function (getCache, noError) {
         if (getCache == "cached" && _cachedMask !== '') { return _cachedMask; }
+
         var value = fields.getValue('CardNumber', noError).replace(_stripCharsInCardNumRE, ''),
             re1 = new RegExp(settings.get('maskPattern')),
             matches = value.match(re1),

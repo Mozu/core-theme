@@ -986,7 +986,6 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     },
                     amount = formValues.amount;
 
-
                     billingInfo.paymentServiceCardId = me._hiddenCardId;
 
                     me.setLoading(true, me.body);
