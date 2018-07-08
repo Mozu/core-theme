@@ -855,7 +855,7 @@
                self.syncApiModel();
                self.trigger('render');
              }, function(error){
-               me.trigger('error', {
+               self.trigger('error', {
                     message: error.message
                });
              });
@@ -864,7 +864,7 @@
            retrieveGiftCard: function(number, securityCode) {
              var me = this;
              this.syncApiModel();
-             var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: 'num', cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
+             var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
              me.isLoading(true);
              return giftCardModel.apiGetBalanceUnregistered().then(function(bal){
                  var balance = bal.data.balance;
@@ -878,7 +878,7 @@
                        //Error with apiSave.
                        me.trigger('error',{
                            message: "There was a problem saving the gift card to the payment service."
-                       })
+                       });
                      });
                  } else {
                      me.isLoading(false);
@@ -894,7 +894,7 @@
                //TODO: make hypr label
                me.trigger('error', {
                    message: "There was a problem getting the gift card balance."
-               })
+               });
              });
             },
             getGatewayGiftCard: function() {
