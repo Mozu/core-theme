@@ -1613,7 +1613,7 @@ Ext.define('Taco.model.Order', {
         //Ext.Ajax.request(config);
     },
 
-    addStoreCredit: function (config) {
+    addStoreCredits: function (config) {
         config.jsonData.paymentType = "StoreCredit";
 
         Ext.applyIf(config, {
