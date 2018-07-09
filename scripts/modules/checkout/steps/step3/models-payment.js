@@ -513,8 +513,15 @@ define([
               this.syncApiModel();
               var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
               me.isLoading(true);
-              return giftCardModel.apiGetBalanceUnregistered().then(function(bal){
-                  var balance = bal.data.balance;
+              return giftCardModel.apiGetBalanceUnregistered().then(function(res){
+                  if (!res.data.isSuccessful){
+                      me.isLoading(false);
+                      me.trigger('error', {
+                          message: res.data.message
+                      });
+                      return;
+                  }
+                  var balance = res.data.balance;
                   if (balance>0){
                       return giftCardModel.apiSave().then(function(giftCard){
                           if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
@@ -552,18 +559,7 @@ define([
                   // TODO: This check to see if the card was already added is not going to work.
                   // At this point all our gift cards only know the masked number.
                   // figure out something else
-                  /*
-                  var existingGiftCard = this._cachedGiftCards.filter(function (card) {
-                      return card.cardNumber === giftCardNumber;
-                  });
 
-                  if (existingGiftCard && existingGiftCard.length > 0) {
-                    me.trigger('error', {
-                        //TODO: make label for this, take away quotes
-                        message: "Hypr.getLabel('giftCardAlreadyAdded')"
-                    });
-                  }
-                  */
                   return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(res){
                     me.isLoading(false);
                     return me;
