@@ -172,6 +172,7 @@
     "genericRange": "{0} must be between {1} and {2}",
     "genericRangeLength": "{0} must be between {1} and {2} characters",
     "genericRequired": "This field is required",
+    "giftCardAlreadyAdded": "The gift card has already been applied to this order.",
     "giftCardEmailAmount": "Gift Card Amount:",
     "giftCardEmailBanner": "<!--<a href=\"{0}\"><img src=\"//:0\"/></a>-->",
     "giftCardEmailClaimCode": "Claim Code:",

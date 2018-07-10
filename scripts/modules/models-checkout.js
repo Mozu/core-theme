@@ -909,21 +909,25 @@
                 giftCardNumber = this.get('giftCardNumber'),
                 giftCardSecurityCode = this.get('giftCardSecurityCode');
 
+                //Our only option for checking if a card already exists, for now,
+                //is to only compare the last 4 digits.
                 var existingGiftCard = this._cachedGiftCards.filter(function (card) {
-                    return card.cardNumber === giftCardNumber;
+                    var cachedCardLast4 = card.get('cardNumber').slice(-4);
+                    var newCardLast4 = giftCardNumber.slice(-4);
+                    return cachedCardLast4 === newCardLast4;
                 });
 
                 if (existingGiftCard && existingGiftCard.length > 0) {
-                  me.trigger('error', {
-                      //TODO: make label for this, take away quotes
-                      message: "Hypr.getLabel('giftCardAlreadyAdded')"
-                  });
+                    me.trigger('error', {
+                        message: Hypr.getLabel('giftCardAlreadyAdded')
+                    });
+                    return me;
+                } else {
+                    return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(res){
+                      me.isLoading(false);
+                      return me;
+                    });
                 }
-                //me.isLoading(true);
-                return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(x){
-                  me.isLoading(false);
-                  return me;
-                });
             },
             availableGiftCards: function(){
               return this._cachedGiftCards && this._cachedGiftCards.length > 0 && this._cachedGiftCards;
