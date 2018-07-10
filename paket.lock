@@ -3,7 +3,7 @@ CONTENT: NONE
 RESTRICTION: || (== net45) (== net451)
 NUGET
   remote: http://ng-repo.dev.kibocommerce.com:8081/repository/nuget-ng-internal
-    51Degrees.mobi (3.2.8.1) - content: none
+    51Degrees.mobi (3.2.8.1)
       Microsoft.Web.Infrastructure (>= 1.0)
     dotless (1.4.0.0)
     Jolt (1.0.0)
@@ -109,11 +109,11 @@ NUGET
       Mozu.Core.Prime (>= 1.1613.1)
     Mozu.Log4net.Gelf (1.1735.2)
     Mozu.MZDB.Contracts (1.19.3)
-    Mozu.PaymentService.Contracts (1.1814.1)
+    Mozu.PaymentService.Contracts (1.1822.1)
     Mozu.PricingRuntime.Contracts (1.1816.1)
       Mozu.Core.Prime (>= 1.1735.3)
       Mozu.SiteSettings.General.Contracts (>= 1.1738.2)
-    Mozu.ProductAdmin.Contracts (1.1820.1)
+    Mozu.ProductAdmin.Contracts (1.1828.1)
       Mozu.Core.Prime (>= 1.18.1)
     Mozu.ProductRuntime.Contracts (1.1815.1)
       Mozu.Core.Prime (>= 1.18)
@@ -394,7 +394,7 @@ NUGET
     Microsoft.Owin.Hosting (3.0.0)
       Microsoft.Owin (>= 3.0)
       Owin (>= 1.0)
-    Microsoft.Web.Infrastructure (1.0.0.0) - content: none
+    Microsoft.Web.Infrastructure (1.0.0.0)
     Microsoft.Web.Xdt (2.1.1)
     MongoDB.Driver.GridFS (2.4.4)
       MongoDB.Bson (>= 2.4.4)

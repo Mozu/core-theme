@@ -139,10 +139,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public List<string> ShippingZones { get; set; }
 
    
-        public Decimal? MinimumOrderAmount { get; set; }
+        public decimal? MinimumOrderAmount { get; set; }
 
       
-        public Decimal? MinimumLifetimeValueAmount { get; set; }
+        public decimal? MinimumLifetimeValueAmount { get; set; }
 
       
         public int? MaxRedemptionCount { get; set; }
@@ -182,7 +182,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         public bool CanBeDeleted { get; set; }
 
         public int? MinimumQuantityProductsRequiredInCategories { get; set; }
+
         public int? MinimumQuantityRequiredProducts { get; set; }
+
         public decimal? MinimumCategorySubtotalBeforeDiscounts { get; set; }
 
         public List<CouponSet> CouponSets { get; set; }
@@ -236,5 +238,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
         /// </summary>
         public bool? PreventOrderShippingDiscounts { get; set; }
 
+        /// <summary>
+        /// Defines a minimum quantity that is required for a target only discount
+        /// </summary>
+        public int? MinimumRequiredQuantityPerRedemption { get; set; }
+
+        /// <summary>
+        /// Indicates if this discount has purchase conditions that must be met before 
+        /// the discount is applied
+        /// </summary>
+        public bool HasPurchaseConditions { get; set; }
+
+        /// <summary>
+        /// The type of purchase requirement for this discount, either purchase conditions and targets which   
+        /// Supports BoGo, and BxGx scenarios. Or Target only that only have a target and no purchase conditions
+        /// </summary>
+        public string PurchaseRequirementType { get; set; }
     }
 }

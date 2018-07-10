@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using AutoMapper;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -26,7 +25,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         public string Format(SortingCollectionItem sortItem)
         {
             if (string.IsNullOrEmpty(sortItem?.property))
+            {
                 return string.Empty;
+            }
             switch (sortItem.property.ToLowerInvariant())
             {
                 case "name":
@@ -64,8 +65,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         public string Format(SortingCollectionItem sortItem)
         {
-            if (sortItem == null || string.IsNullOrEmpty(sortItem.property))
+            if (string.IsNullOrEmpty(sortItem?.property))
+            {
                 return string.Empty;
+            }
             return sortItem.property.ToLowerInvariant() + GetSortDirection(sortItem);
         }
 
@@ -155,6 +158,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x => x.Conditions?.MinimumQuantityProductsRequiredInCategories))
                 .ForMember(x => x.MinimumQuantityRequiredProducts,
                     opt => opt.ResolveUsing(x => x.Conditions?.MinimumQuantityRequiredProducts))
+                .ForMember(x => x.MinimumRequiredQuantityPerRedemption,
+                    opt => opt.ResolveUsing(x => x.Conditions?.MinimumRequiredQuantityPerRedemption))
                 .ForMember(x => x.MinimumCategorySubtotalBeforeDiscounts,
                     opt => opt.ResolveUsing(x => x.Conditions?.MinimumCategorySubtotalBeforeDiscounts))
                 .ForMember(x => x.DiscountConditionProducts,
@@ -198,6 +203,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     op => op.ResolveUsing(dc => dc.PreventOrderProductDiscounts))
                 .ForMember(x => x.PreventOrderShippingDiscounts,
                     op => op.ResolveUsing(dc => dc.PreventOrderShippingDiscounts))
+                .ForMember(x => x.HasPurchaseConditions, op => op.ResolveUsing(dc => dc.HasPurchaseConditions))
+                .ForMember(x => x.PurchaseRequirementType, op => op.ResolveUsing(dc => dc.PurchaseRequirementType))
                 //AuditInfo
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
@@ -250,6 +257,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             ? (int?) null
                             : Math.Max(x.MinimumQuantityRequiredProducts.Value, 1),
                     MinimumCategorySubtotalBeforeDiscounts = x.MinimumCategorySubtotalBeforeDiscounts,
+                    MinimumRequiredQuantityPerRedemption = x.MinimumRequiredQuantityPerRedemption,
                     MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
                     MinimumLifetimeValueAmount =
                         x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
@@ -300,6 +308,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                         d.Target.Categories = null;
                     }
                 })
+                .ForMember(dc => dc.HasPurchaseConditions, opt => opt.Ignore())
+                .ForMember(dc => dc.PurchaseRequirementType, opt => opt.Ignore())
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore());
 
             CreateMap<ThresholdMessage, DC.ThresholdMessage>()

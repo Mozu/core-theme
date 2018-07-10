@@ -42,7 +42,7 @@ nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.ProductAdmin.Contracts 1.1820.1
+nuget Mozu.ProductAdmin.Contracts 1.1828.1
 nuget Mozu.ProductRuntime.Contracts 1.1815.1
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
@@ -56,4 +56,4 @@ nuget mozu.tenant.contracts > 1.1703
 nuget Mozu.Log4net.Gelf
 nuget MongoDB.Driver.GridFS  2.4.4
 nuget Mozu.Event.Contracts
-nuget Mozu.PaymentService.Contracts 1.1812.1
+nuget Mozu.PaymentService.Contracts 1.1822.1
