@@ -866,8 +866,15 @@
              this.syncApiModel();
              var giftCardModel = new PaymentMethods.GiftCard( {cardNumber: number, cvv: securityCode, cardType: "GIFTCARD", isEnabled: true });
              me.isLoading(true);
-             return giftCardModel.apiGetBalanceUnregistered().then(function(bal){
-                 var balance = bal.data.balance;
+             return giftCardModel.apiGetBalanceUnregistered().then(function(res){
+                 if (!res.data.isSuccessful){
+                     me.isLoading(false);
+                     me.trigger('error', {
+                         message: res.data.message
+                     });
+                     return;
+                 }
+                 var balance = res.data.balance;
                  if (balance>0){
                      return giftCardModel.apiSave().then(function(giftCard){
                          if (!giftCardModel.get('id')) giftCardModel.set('id', giftCardModel.get('paymentServiceCardId'));
