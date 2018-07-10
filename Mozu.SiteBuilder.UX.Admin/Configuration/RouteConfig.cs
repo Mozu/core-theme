@@ -7,16 +7,19 @@ using System.Web.Routing;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using HttpMethodConstraint = System.Web.Routing.HttpMethodConstraint;
 
-
 namespace Mozu.SiteBuilder.UX.Admin.Configuration
 {
     public class RouteConfig
     {
-
-
-
         public void Register(HttpRouteCollection routes)
         {
+            routes.MapHttpRoute(
+                "form-rewrite",
+                "form-to-get/{*url}",
+                new { },
+                new { }
+            );
+
             routes.MapHttpRoute("img", "img/{collection}/{documentId}",
                                 new {action = "Index", controller = "img"});
 
@@ -58,16 +61,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                                 {
                                     httpMethod = new HttpMethodConstraint(HttpMethod.Get.ToString()),
                                     accpts = new AcceptsConstraint("text/html")
-                                });
-
-
-
+                                });      
             // ,
             //  new {url = @"^((?!api|\.).)*$", httpMethod = new HttpMethodConstraint(HttpMethod.Get.ToString())});
-
-
-
         }
+
         class AcceptsConstraint : IRouteConstraint
         {
             private readonly string _filter;
@@ -82,9 +80,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 return Enumerable.Any((httpContext.Request.AcceptTypes ?? new string[0]), x => x.IndexOf(_filter, StringComparison.OrdinalIgnoreCase) != -1);
             }
         }
+
         class MyRoute  : IHttpRoute
         {
-
             public System.Collections.Generic.IDictionary<string, object> Constraints
             {
                 get { throw new System.NotImplementedException(); }
@@ -119,8 +117,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             {
                 get { throw new System.NotImplementedException(); }
             }
-        }
-     
-
+        }   
     }
 }

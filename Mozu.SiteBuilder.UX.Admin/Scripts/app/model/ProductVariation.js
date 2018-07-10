@@ -195,9 +195,17 @@ Ext.define('Taco.model.ProductVariation', {
 
     proxy: {
         type: 'ajax',
+        // changed for issue with long URI on GET request- HACK!
         api: {
-            read: '/admin/app/productVariation/list',
+            read: '/admin/form-to-get/app/productVariation/list',
             update: '/admin/app/productVariation/edit'
+        },
+        actionMethods: {
+            create: 'POST',
+            read: 'POST',
+            update: 'POST',
+            destroy: 'POST',
+            duplicate: 'POST'
         },
         reader: {
             type: 'json',
@@ -206,7 +214,24 @@ Ext.define('Taco.model.ProductVariation', {
         },
         writer: {
             allowSingle: false,
-            type: 'json'
+            type: 'json',
+            write: function (request) {
+                // overwriting the write function to fix an issue 
+                // with URL option param being too long
+                if (request.operation.action === 'update') {
+                    request.params.options = '';
+                }
+                
+                var operation = request.operation,
+                    records = operation.records || [],
+                    data = [];
+
+                for (var i = 0; i < records.length; i++) {
+                    data.push(this.getRecordData(records[i], operation));
+                }
+
+                return this.writeRecords(request, data);
+            }
         }
     }
 });

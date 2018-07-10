@@ -78,8 +78,16 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                 ],
                 proxy: {
                     type: 'ajax',
+                    // changed for issue with long URI on GET request
                     api: {
-                        read: '/admin/app/productVariation/list',                  
+                        read: '/admin/form-to-get/app/productVariation/list'                  
+                    },
+                    actionMethods: {
+                        create: 'POST',
+                        read: 'POST',
+                        update: 'POST',
+                        destroy: 'POST',
+                        duplicate: 'POST'
                     },
                     reader: {
                         type: 'json',

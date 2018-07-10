@@ -496,6 +496,7 @@
     <Compile Include="Helpers\SynonymHelpers\SynonymFilterBuilder.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="MessageHandlers\AuthRedirectMessageHandler.cs" />
+    <Compile Include="MessageHandlers\FormEncodingRewriter.cs" />
     <Compile Include="MockServices\AbstractInMemoryResourceApiClient.cs" />
     <Compile Include="MockServices\InMemoryProductTypeApiClient.cs" />
     <Compile Include="MockServices\InMemoryAttributeWebApiClient.cs" />
