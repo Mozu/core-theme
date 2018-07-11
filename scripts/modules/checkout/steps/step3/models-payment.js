@@ -530,7 +530,7 @@ define([
                       }, function(error){
                         //Error with apiSave.
                         me.trigger('error',{
-                            message: Hypr.getLabel('giftCardPaymentServiceError');
+                            message: Hypr.getLabel('giftCardPaymentServiceError')
                         });
                       });
                   } else {
@@ -543,7 +543,7 @@ define([
               }, function(error){
                 me.isLoading(false);
                 me.trigger('error', {
-                    message: Hyper.getLabel('giftCardBalanceError')
+                    message: Hypr.getLabel('giftCardBalanceError')
                 });
               });
             },
