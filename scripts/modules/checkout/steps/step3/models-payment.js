@@ -568,6 +568,7 @@ define([
                     me.trigger('error', {
                         message: Hypr.getLabel('giftCardAlreadyAdded')
                     });
+                    me.isLoading(false);
                     return me;
                 } else {
                     return me.retrieveGiftCard(giftCardNumber, giftCardSecurityCode).ensure(function(res){
