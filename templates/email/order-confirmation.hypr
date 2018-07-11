@@ -32,28 +32,32 @@
                     {% if model.billingInformation.firstName or model.billingInformation.lastNameOrSurname %}
                         <b>{{ labels.billingInformation }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.billingInfo.billingContact %}<br><br>
                     {% endif %}
-                    {% if model.billingInfo.paymentType == "CreditCard" %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
-                    {% endif %}
-                    {% if model.billingInfo.paymentType == "GiftCard" %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ model.billingInfo.card.paymentOrCardType }} {{ model.billingInfo.card.cardNumberPartOrMask }}<br>
-                    {% endif %}
-                    {% if model.billingInfo.paymentType == "PurchaseOrder" %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>
-                        <b>{{ labels.purchaseOrderNumber }}</b>: {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }}<br>
-                        {% if model.billingInfo.purchaseOrder.customFields.length > 0 %}
-                            {% for field in model.billingInfo.purchaseOrder.customFields %}
-                                <b>{{ field.label }}</b>: {{ field.value }}<br>
-                            {% endfor %}
+                    {% for payment in model.payments %}
+                    {% if payment.status != "Voided" and payment.status != "Declined" %}
+                        {% if payment.billingInfo.paymentType == "CreditCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
                         {% endif %}
-                        <b>{{ labels.purchaseOrderPaymentTerms }}</b>: {{ model.billingInfo.purchaseOrder.paymentTerm.description }}
+                        {% if payment.billingInfo.paymentType == "GiftCard" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
+                        {% endif %}
+                        {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>
+                            <b>{{ labels.purchaseOrderNumber }}</b>: {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}<br>
+                            {% if payment.billingInfo.purchaseOrder.customFields.length > 0 %}
+                                {% for field in payment.billingInfo.purchaseOrder.customFields %}
+                                    <b>{{ field.label }}</b>: {{ field.value }}<br>
+                                {% endfor %}
+                            {% endif %}
+                            <b>{{ labels.purchaseOrderPaymentTerms }}</b>: {{ payment.billingInfo.purchaseOrder.paymentTerm.description }}
+                        {% endif %}
+                        {% if  payment.billingInfo.paymentType|lower == "paypalexpress2"  %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
+                        {% endif %}
+                        {% if payment.billingInfo.paymentType == "PayWithAmazon" %}
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
+                        {% endif %}
                     {% endif %}
-                    {% if  model.billingInfo.paymentType|lower == "paypalexpress2"  %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ labels.paypalExpress }}
-                    {% endif %}
-                    {% if model.billingInfo.paymentType == "PayWithAmazon" %}
-                        <b>{{ labels.paymentMethod }}</b>: {{ labels.payWithAmazon }}
-                    {%endif%}
+                    {% endfor %}
                 </td>
             </tr>
 
