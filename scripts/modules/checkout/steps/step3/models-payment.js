@@ -384,10 +384,9 @@ define([
             },
             loadGiftCards: function(){
               //TODO: phase 2: get giftCards from customer account
-              // Right now, we assume that this function is only called when the cache of gift cards
-              // is empty.
-              // we fill up the cache with card info for gift card payments already on
-              // this order.
+
+              // gets gift card payments from order, populates our gift card grid cache,
+              // complete with balance calls
               var me = this;
               var activeGiftCards = this.activeGiftCards();
 
@@ -531,23 +530,20 @@ define([
                       }, function(error){
                         //Error with apiSave.
                         me.trigger('error',{
-                            message: "There was a problem saving the gift card to the payment service."
+                            message: Hypr.getLabel('giftCardPaymentServiceError');
                         });
                       });
                   } else {
                       me.isLoading(false);
                       // No balance error
-                      // trigger error;
-                      // possibly return promise.deferred?
                       me.trigger('error', {
                           message: Hypr.getLabel('giftCardNoBalance')
                       });
                   }
               }, function(error){
                 me.isLoading(false);
-                //TODO: make hypr label
                 me.trigger('error', {
-                    message: "There was a problem getting the gift card balance."
+                    message: Hyper.getLabel('giftCardBalanceError')
                 });
               });
             },

@@ -3,7 +3,7 @@
   <div class="mz-l-formfieldgroup">
   <div class="mz-l-formfieldgroup-row">
     <div class="mz-l-formfieldgroup-cell">
-      <label for="mz-payment-gift-card-number">Gift Card Number:</label>
+      <label for="mz-payment-gift-card-number">{{ labels.giftCardNumber }}:</label>
     </div>
     <div class="mz-l-formfieldgroup-cell">
       <input type="text" name="gift-card-number" id="gift-card-number" data-mz-value="giftCardNumber" value="{{ model.giftCardNumber }}">
@@ -26,7 +26,7 @@
       <thead>
         <tr>
           <th>&nbsp;</th>
-          <th class="mz-checkout-giftcard-header-number">Number</th>
+          <th class="mz-checkout-giftcard-header-number">{{ labels.cardNumber }}</th>
           <th class="mz-checkout-digitalcredit-header-balance">{{ labels.digitalCreditBalance }}</th>
           <th class="mz-checkout-digitalcredit-header-amt-to-apply">{{ labels.digitalCreditAmtToUse }}</th>
           <th class="mz-checkout-digitalcredit-header-remainder">{{ labels.digitalCreditRemainder }}</th>
