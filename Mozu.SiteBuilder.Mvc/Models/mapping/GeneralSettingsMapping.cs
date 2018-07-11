@@ -278,10 +278,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
                 var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
-                ///TO-DO: Remove
-                ///Temp Value for Testing
-                cards.Add("GIFTCARD", "GIFTCARD");
-
                 return cards;
             }
         }

@@ -20,8 +20,25 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
 
         me.paymentGatewaysStore = Ext.create('Taco.store.PaymentGateways');
         me.paymentGatewaysStore.load({
-            scope: me
-        })
+            scope: me,
+            callback: function (records, operation, success) {
+                var supportedCards = false;
+
+                for (var i = 0; i < records.length; i++) {
+                    if(records[i].data.supportsGiftCardProcessing) {
+                        supportedCards = true
+                    }       
+                }
+                
+                if (supportedCards) {
+                   me.items.items[0].hide();
+                   me.items.items[1].show();
+                    me.items.items[2].show();
+                }
+                     
+        }
+        });
+
         me.paymentGatewaysStore.filter('supportsGiftCardProcessing', true);
 
         me.cardGateways = me.record.get('cardGatewayMap');
@@ -36,6 +53,13 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
         });
 
         me.cardGatewayStore.filter('cardType', /GIFTCARD/);
+        if(me.cardGatewayStore.length === 0) {
+            me.cardGatewayStore.add({
+                cardDisplay: "Giftcard",
+                cardType: "GIFTCARD",
+                isEnabled : false
+            })
+        }
 
         me.gatewayCombo = Ext.create("Ext.form.field.ComboBox", {
             store: me.paymentGatewaysStore,
@@ -61,6 +85,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
         me.syncCardGatewayMap();
         me.supportedCardsGrid = Ext.widget({
             xtype: 'grid',
+            hidden: true,
             listeners: {},
             store: me.cardGatewayStore,
             enableColumnHide: false,
@@ -155,36 +180,35 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
         me.gatewayProcessingFlowTypeRg = Ext.widget(
             {
                 xtype: 'radiogroup',
+                hidden: true,
                 fieldLabel: 'Order Processing',
                 // Arrange radio buttons into two columns, distributed vertically
                 columns: 1,
                 vertical: true,
                 items: [
-                    { boxLabel: 'Authorize And Capture On Order Placement', name: 'giftCardProcessingType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
-                    { boxLabel: 'Authorize On Order Placement And Capture On Order Shipment', name: 'giftCardProcessingType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
+                    { boxLabel: 'Redeem Gift Card on Order Submit', name: 'giftCardProcessingType', inputValue: 'AuthorizeAndCaptureOnOrderPlacement' },
+                    { boxLabel: 'Redeem Gift Card upon Fulfillment', name: 'giftCardProcessingType', inputValue: 'AuthorizeOnOrderPlacementAndCaptureOnOrderShipment' },
                 ]
             });
-
-        if (me.cardGateways && me.cardGateways.length) {
-            me.items.push(me.supportedCardsGrid, me.gatewayProcessingFlowTypeRg);
-        }
-        else {
-            me.items.push({
-                xtype: 'box',
-                html: 'No Configured gateways supporting Giftcards, click <a href="#">here</a> to setup a gateway',
-                listeners: {
-                    click: {
-                        fn: function () {
-                            Taco.core.StateManager.attemptNavigate('settings/paymentGateways');
-                        },
-                        element: 'el',
-                        scope: this
-                    }
+        
+        me.items.push({
+            xtype: 'box',
+            html: 'No Configured gateways supporting Giftcards, click <a href="#">here</a> to setup a gateway',
+            listeners: {
+                click: {
+                    fn: function () {
+                        Taco.core.StateManager.attemptNavigate('settings/paymentGateways');
+                    },
+                    element: 'el',
+                    scope: this
                 }
-            });
-        }  
+            }
+        });
+        me.items.push(me.supportedCardsGrid, me.gatewayProcessingFlowTypeRg);
+       
 
         me.callParent(arguments);
+        
     },
     initTitle: Ext.emptyFn,
 
