@@ -43,37 +43,25 @@ Ext.define('Taco.view.order.subform.Payment', {
         return this.record.payments().queryBy(function(payment) { return payment.get('status') !== "Voided"; }).last();
     },
 
-    initComponent: function () {
-        var me = this;
+    addTools: function (){
+        var me =this;
         var record = this.record;
         var isUnpaid = record.get("paymentStatus") === "Unpaid";
 
-        Taco.model.CheckoutSettings.load(123, {
-            scope: this,
-            failure: function () {
-                // there should be a message here
-            },
-            success: function (record) {
-            },
-            callback: function (record) {
-                this.record.checkoutSettings = record;
-            }
-        });
-
-        this.tools = [
+        me.tools = [
             Ext.widget('button', {
                 itemId: 'refundButton',
                 ui: 'action',
                 scale: 'medium',
                 text: 'Refund',
                 requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'paymentUpdate'
-                            }],
+                    model: 'Taco.model.Order',
+                    behavior: 'update'
+                },
+                {
+                    model: 'Taco.model.Order',
+                    behavior: 'paymentUpdate'
+                }],
                 margin: '0 10 0 0',
                 handler: function () {
                     Ext.create('Taco.view.order.modal.Refund', {
@@ -86,13 +74,13 @@ Ext.define('Taco.view.order.subform.Payment', {
                 menuAlign: 'tr-br?',
                 text: 'Add Payment',
                 requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'paymentCreate'
-                            }],
+                    model: 'Taco.model.Order',
+                    behavior: 'update'
+                },
+                {
+                    model: 'Taco.model.Order',
+                    behavior: 'paymentCreate'
+                }],
                 itemId: 'paymentSplitButton',
                 handler: function () {
                     var action = me.paymentActions.addCreditCard;
@@ -132,6 +120,24 @@ Ext.define('Taco.view.order.subform.Payment', {
                 margin: '0 2px 0 0'
             })
         ];
+    },
+
+    initComponent: function () {
+        var me = this;
+        
+
+        Taco.model.CheckoutSettings.load(123, {
+            scope: this,
+            failure: function () {
+                // there should be a message here
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                me.record.checkoutSettings = record;
+                me.addTools();
+            }
+        });
 
         this.refundGrid = Ext.create('Ext.grid.Panel', {
             hidden: true,
@@ -251,9 +257,9 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
     },
     isGatewayGiftCardEnabled: function () {
-        // TODO: make sure this actually gets site settings
-        var siteSettings = this.record && this.record.siteSettings && this.record.siteSettings.get('gatewayGiftCard') ? this.record.checkoutSettings.get('gatewayGiftCard').isEnabled : false;
-        return siteSettings;
+        return this.record.checkoutSettings.get('cardGatewayMap').find(function (card) { 
+            return card.cardType === 'GIFTCARD' && card.isEnabled 
+        });
     },
     isPurchaseOrderEnalbled: function () {
         var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;
@@ -292,10 +298,13 @@ Ext.define('Taco.view.order.subform.Payment', {
             addCreditCard: makeAction('Credit Card', 'Taco.view.order.modal.AddPayment', 'creditCardOption'),
             requestCheck: makeAction('Check', 'Taco.view.order.modal.RequestCheck', 'checkOptions'),
             addManualCreditCard: makeAction('Credit Card (Manual)', 'Taco.view.order.modal.AddPaymentManual', 'creditCardManualOption'),
-            addGiftCard: makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption'),
             addEcommerceGiftCard: makeAction('eCommerce Gift Card', 'Taco.view.order.modal.AddEcommerceGiftCard', 'eCommerceGiftCardOption'),
             addStoreCredit: makeAction('Store Credit', 'Taco.view.order.modal.AddEcommerceGiftCard', 'storeCreditOption')
         };
+
+        if (me.isGatewayGiftCardEnabled()) {
+            actions.addGiftCard = makeAction('Gift Card', 'Taco.view.order.modal.AddGiftCard', 'giftCardOption');
+        }
 
         return Ext.Object.getValues(actions);
     },
