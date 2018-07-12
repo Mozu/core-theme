@@ -494,7 +494,7 @@ p = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u
                 errors.add(response.Items[i].MajorCode, response.Items[i].MinorCode, response.Items[i].Message);
             }
         } else {
-            errors.add("-1", "-1", errorMessages.unknownError);
+            errors.add("-1", "-1", response.message || errorMessages.unknownError);
         }
         events.error(errors.get());
     },

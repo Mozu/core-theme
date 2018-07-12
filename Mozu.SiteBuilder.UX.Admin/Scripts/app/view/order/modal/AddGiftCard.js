@@ -175,19 +175,21 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 fieldLabel: 'Balance',
                 readOnly: true,
                 margin: '0px 5px 0px 5px',
-                hidden: true
+                hidden: true,
             });
 
         var checkBalanceButton = Ext.widget(
             {
                 xtype: 'button',
                 itemId: namePrefix + 'CheckBalanceButton',
+                name: namePrefix + 'CheckBalanceButton',
                 ui: 'action',
                 scale: 'medium',
                 text: 'Check Balance',
                 margin: '30 0 0 0',
                 handler: function () {
-                    me.doGetBalance(function (value) {
+                    me.doGetBalance(function (data) {
+                        var value = data.balance;
                         balanceDisplayField.setValue(value);
                         balanceDisplayField.setVisible(true);
                         checkBalanceButton.setVisible(false);
@@ -409,12 +411,23 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                 name: 'existingCardAmount',
                                 itemId: 'existingCardAmount',
                                 fieldLabel: 'Amount',
-                                validateOnChange: false,
+                                validateOnChange: true,
                                 selectOnFocus: true,
                                 allowBlank: false,
                                 minValue: 0.01,
+                                maxValue: this.getMaxValueToApply('existing'),
                                 margin: '0px 5px 0px 5px',
-                                value: this.getDefaultPaymentAmount()
+                                value: this.getDefaultPaymentAmount(),
+                                validator: function (value) {
+                                    var balanceField = me.query('[name="existingGiftCardBalanceField"]')[0];
+                                    if (!balanceField || balanceField.value === null) {
+                                        return true;
+                                    } else if (balanceField.parseValue(value[0]) <= balanceField.value) {
+                                        return true;
+                                    } else {
+                                        return "Amount cannot exceed card balance.";
+                                    }
+                                }
                             },
                             checkBalanceContainer
                         ]
@@ -498,14 +511,24 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     xtype: 'currencyfield',
                                     width: 170,
                                     currencyCode: this.record.getCurrencyCode(),
-                                    name: 'newGiftCardAmount',
+                                    name: 'newCardAmount',
                                     fieldLabel: 'Amount',
-                                    validateOnChange: false,
+                                    validateOnChange: true,
                                     selectOnFocus: true,
                                     allowBlank: false,
                                     minValue: 0.01,
                                     margin: '0px 5px 0px 5px',
-                                    value: this.getDefaultPaymentAmount()
+                                    value: this.getDefaultPaymentAmount(),
+                                    validator: function (value) {
+                                        var balanceField = me.query('[name="newGiftCardBalanceField"]')[0];
+                                        if (!balanceField || balanceField.value === null) {
+                                            return true;
+                                        } else if (balanceField.parseValue(value[0]) <= balanceField.value) {
+                                            return true;
+                                        } else {
+                                            return "Amount cannot exceed card balance.";
+                                        }
+                                    }
                                 },
                                 checkBalanceContainer
                             ]
@@ -515,6 +538,15 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         }, this);
     },
 
+    getMaxValueToApply: function (namePrefix) {
+        var balanceField = this.query('[name="' + namePrefix + 'GiftCardBalanceField"]')[0];
+
+        if (!balanceField || balanceField.value === null) {
+            return undefined;
+        } else {
+            return balanceField.value;
+        }
+    },
     /**
      * @private
      */
@@ -598,7 +630,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         if (me.createNewCardForm) {
             var data = {
                 orderId: this.record.getId(),
-                amount: this.down('[name=newGiftCardAmount]').getValue(),
+                amount: this.down('[name=newCardAmount]').getValue(),
                 paymentType: 'GiftCard',
                 billingInfo: {
                     paymentServiceCardId: me._hiddenCardId,
@@ -700,7 +732,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 },
                 success: function (data) {
                     me.setLoading(false, me.body);
-                    successFunc(data.balance);
+                    successFunc(data);
                 }
             },
             settings: {
@@ -715,17 +747,54 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         me.setLoading(true, me.body);
         pciProcessor.process(JSON.stringify(payload));
     },
-
     doSave: function () {
+        var self = this;
         this.setLoading({
             msg: "Applying gift cards"
         }, this.body);
-
-        if (this.newCardRadio && this.newCardRadio.getValue()) {
-            this.registerNewCardAndAddToOrder();
+        var prefix;
+        if (self.newCardRadio && self.newCardRadio.getValue()) {
+            prefix = 'new';
         } else {
-            this.addGiftCardPaymentToOrder(this.getExistingGiftCardData());
+            prefix = 'existing';
         }
+        var alreadyCheckedBalance = true;
+        var balanceField = this.query('[name="' + prefix + 'GiftCardBalanceField"]')[0];
+        if (balanceField.getValue() === null) {
+            alreadyCheckedBalance = false;
+        }
+
+        if (!alreadyCheckedBalance) {
+            this.doGetBalance(function (data) {
+                    // Check amount to add value and compare to balance 
+                    var amount = self.query('[name="' + prefix + 'CardAmount"]')[0].getValue();
+                    if (amount > data.balance) {
+                        Taco.app.fireEvent('setmessage', 'Applied amount exceeds the balance on the gift card.', 'error');
+                        self.query('[name="' + prefix + 'CheckBalanceButton"]')[0].setVisible(false);
+                        balanceField.setValue(data.balance);
+                        balanceField.setVisible(true);
+                    } else {
+                        if (self.newCardRadio && self.newCardRadio.getValue()) {
+                            self.registerNewCardAndAddToOrder();
+                        } else {
+                            self.addGiftCardPaymentToOrder(self.getExistingGiftCardData());
+                        }
+                    }     
+                
+            });
+        } else {
+            // At this point we shouldn't need to do any amount comparison because 
+            // a balance call has already been made, populating the balance field
+            // there should be validation on the Amount field ensuring that it never exceeds
+            // the value in the balance field if it exists. 
+            if (this.newCardRadio && this.newCardRadio.getValue()) {
+                this.registerNewCardAndAddToOrder();
+            } else {
+                this.addGiftCardPaymentToOrder(this.getExistingGiftCardData());
+            }
+        }
+
+       
     },
 
     addGiftCardPaymentToOrder: function (data) {

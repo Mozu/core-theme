@@ -695,7 +695,7 @@
     },
     "get-unregistered-gift-card-balance": {
       "verb": "POST",
-      "template": "{+paymentService}/balance",
+      "template": "{+paymentService}balance",
       "defaultParams": {
         "responseFields": "amount"
       }
