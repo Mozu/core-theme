@@ -664,8 +664,8 @@ require(["modules/jquery-mozu",
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
-            if (amazon) // jshint ignore:line
-                amazon.Login.logout(); // jshint ignore:line
+            if (window.amazon)
+                window.amazon.Login.logout();
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });
 
