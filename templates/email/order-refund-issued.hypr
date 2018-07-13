@@ -44,6 +44,10 @@
 						{% else %}
 							{% if refund.payment.paymentType == "StoreCredit" %}
 								{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}
+                  {% else %}
+                    {% if refund.payment.paymentType == "GiftCard" %}
+                      {{ labels.giftCard }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
+                    {% endif %}
 							{% endif %}
 						{% endif %}
 					{% endif %}
