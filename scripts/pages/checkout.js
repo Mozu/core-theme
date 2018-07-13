@@ -353,6 +353,8 @@ require(["modules/jquery-mozu",
             return this.model.applyGiftCard(giftCardId, amtToApply, true).then(function(){
                 self.$el.removeClass('is-loading');
                 this.render();
+            }, function(error){
+                self.$el.removeClass('is-loading');
             });
         },
         onEnterGiftCardInfo: function(model) {
