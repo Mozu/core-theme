@@ -315,7 +315,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                     displayField: 'cardNumber',
                     displayTpl: [
                         '<tpl for=".">',
-                            '<tpl if="paymentType == \'GiftCard\'">{[GiftCard]}: {[values.cardNumber]}',
+                            '<tpl if="paymentType == \'GiftCard\'">GiftCard: {cardNumber}',
                             '<tpl else>',
                                 '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
                                     ' ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
