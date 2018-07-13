@@ -415,7 +415,6 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                 selectOnFocus: true,
                                 allowBlank: false,
                                 minValue: 0.01,
-                                maxValue: this.getMaxValueToApply('existing'),
                                 margin: '0px 5px 0px 5px',
                                 value: this.getDefaultPaymentAmount(),
                                 validator: function (value) {
@@ -538,15 +537,6 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
         }, this);
     },
 
-    getMaxValueToApply: function (namePrefix) {
-        var balanceField = this.query('[name="' + namePrefix + 'GiftCardBalanceField"]')[0];
-
-        if (!balanceField || balanceField.value === null) {
-            return undefined;
-        } else {
-            return balanceField.value;
-        }
-    },
     /**
      * @private
      */

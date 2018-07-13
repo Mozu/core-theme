@@ -7,8 +7,8 @@ Ext.define('Taco.store.ConfiguredCreditCards', {
         extend: 'Ext.data.Store',
         model: 'Taco.model.KeyValuePair',
         pageSize: 25,
-        remoteSort: true,
-        remoteFilter: true,
+        remoteSort: false,
+        remoteFilter: false,
         storeManagerConfig: {
             clearFilters: true,
             contextLevel: 's',

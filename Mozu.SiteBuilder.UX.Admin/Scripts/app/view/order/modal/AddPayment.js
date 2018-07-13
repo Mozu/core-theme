@@ -385,6 +385,10 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     },
 
     createNewCardForm: function () {
+        var cardTypeStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ConfiguredCreditCards'
+        });
+        cardTypeStore.removeAt(cardTypeStore.find('key', 'GIFTCARD'));
         return Ext.create('Ext.form.FieldContainer', {
             name: 'addNewCard',
             width: '100%',
@@ -433,9 +437,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                             allowBlank: false,
                             editable: false,
                             forceSelection: true,
-                            store: Taco.core.data.StoreManager.getOrCreate({
-                                type: 'Taco.store.ConfiguredCreditCards'
-                            })
+                            store: cardTypeStore
                         }
                     ]
                 }, {

@@ -25,7 +25,10 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
 
     // override of base class;
     getPaymentForm: function () {
-
+        var cardTypeStore = Taco.core.data.StoreManager.getOrCreate({
+            type: 'Taco.store.ConfiguredCreditCards'
+        });
+        cardTypeStore.removeAt(cardTypeStore.find('key', 'GIFTCARD'));
         return {
             xtype: 'container',
             anchor: 0,
@@ -84,9 +87,7 @@ Ext.define('Taco.view.order.modal.AddPaymentManual', {
                         allowBlank: false,
                         editable: false,
                         forceSelection: true,
-                        store: Taco.core.data.StoreManager.getOrCreate({
-                            type: 'Taco.store.ConfiguredCreditCards'
-                        })
+                        store: cardTypeStore
                     }, {
                         xtype: 'fieldcontainer',
                         layout: 'hbox',
