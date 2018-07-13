@@ -35,8 +35,8 @@
             <dd>{{ model.billingInfo.storeCreditCode }}</dd>
         {% endif %}
         {% if model.billingInfo.paymentType|lower == "giftcard" %}
-            <dt>{{ labels.cardNumber }}</dt>
-            <dd>{{ model.billingInfo.card.cardNumberPartOrMask|default("****************") }}</dd>
+            <small>{{ labels.cardNumber }}</small>
+            <div>{{ model.billingInfo.card.cardNumberPartOrMask|default("****************") }}</div>
         {% endif %}
     {% else %}
         <div class="mz-l-stack-item">
