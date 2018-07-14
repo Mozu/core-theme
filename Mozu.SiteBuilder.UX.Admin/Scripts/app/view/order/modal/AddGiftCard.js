@@ -251,7 +251,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
             allowBlank: false,
             margin: '0px 5px 0px 5px',
             listeners: {
-                select: {
+                change: {
                     fn: function (combo, record) {
                         checkBalanceContainer.setDisabled(!record);
                     }
@@ -364,7 +364,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                 }
             },
             listeners: {
-                select: {
+                change: {
                     fn: function (combo, record) {
                         checkBalanceContainer.setDisabled(!record);
                     }

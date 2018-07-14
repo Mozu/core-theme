@@ -253,7 +253,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
                 // create the store here if it doesn't exist!
                 me.currentPayments = me.currentPayments || [];
-                
+                me.currentGiftCardPayments = me.currentGiftCardPayments || [];
+
                 if (orderList && orderList.length > 0) {
                     var paymentList = orderList[0].payments;
                     if (paymentList) {
@@ -263,12 +264,16 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                                 // Need to do this when there is a currentPayments created and when adding a new one.
                                 me.currentPayments.push(paymentList[i]);
                             }
+                            if (paymentList[i].paymentType.toLowerCase() === 'giftcard') {
+                                me.currentGiftCardPayments.push(paymentList[i]);
+                            }
                         }
                     }
                 }
                 // This is needed because the parent order may have duplicates, and this is inside an async call so it
                 //  is done well after the first pass.
                 me.currentPayments = me.filterAndClearArrayDuplicates(me.currentPayments, false);
+                me.currentGiftCardPayments = me.filterAndClearArrayDuplicates(me.currentGiftCardPayments, false);
                 me.setDisplayedItems();
                 me.setModalLoading(false);
             }
@@ -346,7 +351,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 // If not place in the proper bin.
                 if (curItem.isDefault && !curItem.isExpired) {
                     primary = curItem;
-                } else if (curItem.isExpired) {
+                } else if (curItem.isExpired ) {
                     expired.push(curItem);
                 } else {
                     current.push(curItem);
@@ -367,7 +372,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         return retVal;
     },
 
-    isCardExpired: function(currentItem) {
+    isCardExpired: function (currentItem) {
+        if (currentItem.paymentType && currentItem.paymentType.toLowerCase() === 'giftcard') return false;
         // Expiration checks:
         var curDate = new Date();
         var curYear = curDate.getFullYear();
@@ -377,11 +383,19 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     },
 
     createKey: function(paymentObj) {
-        return paymentObj.cardType + paymentObj.cardNumber + paymentObj.expireMonth + paymentObj.expireYear
-            + paymentObj.nameOnCard + paymentObj.billingContact.address1 + paymentObj.billingContact.cityOrTown
-            + paymentObj.billingContact.countryCode + paymentObj.billingContact.email
-            + paymentObj.billingContact.firstName + paymentObj.billingContact.lastName
-            + paymentObj.billingContact.postalOrZipCode + paymentObj.billingContact.stateOrProvince;
+        var key = (paymentObj.cardType || "") +
+            paymentObj.cardNumber +
+            (paymentObj.expireMonth || "") +
+            (paymentObj.expireYear || "") +
+            (paymentObj.nameOnCard || "");
+
+        if (paymentObj.billingContact) {
+            key += (paymentObj.billingContact.address1 || "") + (paymentObj.billingContact.cityOrTown || "")
+            + (paymentObj.billingContact.countryCode || "") + (paymentObj.billingContact.email || "")
+            + (paymentObj.billingContact.firstName || "") + (paymentObj.billingContact.lastName || "")
+            + (paymentObj.billingContact.postalOrZipCode || "") + (paymentObj.billingContact.stateOrProvince || "");
+        }
+        return key;
     },
 
     createNewCardForm: function () {
