@@ -41,7 +41,7 @@
                             <b>{{ labels.paymentMethod }}</b>: {{ payment.billingInfo.card.paymentOrCardType }} {{ payment.billingInfo.card.cardNumberPartOrMask }}<br>
                         {% endif %}
                         {% if payment.billingInfo.paymentType == "StoreCredit" %}
-                            <b>{{ labels.storeCredit }}</b>: {{ payment.billingInfo.storeCreditCode }}<br>
+                            <b>{{ labels.paymentMethod }}</b>: {{ labels.storeCreditCode }} {{ payment.billingInfo.storeCreditCode }}<br>
                         {% endif %}
                         {% if payment.billingInfo.paymentType == "PurchaseOrder" %}
                             <b>{{ labels.paymentMethod }}</b>: {{ label.purchaseOrder }}<br>

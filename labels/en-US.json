@@ -447,6 +447,7 @@
     "stateProvMissing": "State or province required",
     "status": "Status",
     "storeCredit": "Store Credit",
+    "storeCreditCode": "Store Credit Code",
     "storeCreditApplied": "You have applied the following store credits to your order:",
     "storeCreditAvailable": "You have the following store credits available:",
     "storeCreditNumber": "Store Credit Number",
