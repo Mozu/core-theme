@@ -109,7 +109,7 @@
                 {{ labels.billingContact }}: <strong>{{ model.billingContact.email }}</strong>
             </p>
         </div>
-        {% if siteContext.checkoutSettings.supportedGiftCards.length > 0 %}
+        {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
         <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
@@ -194,7 +194,7 @@
                 </div>
             </div>
         </div>
-        {% if siteContext.checkoutSettings.supportedGiftCards.length > 0 %}
+        {% if siteContext.checkoutSettings.supportedGiftCards.giftcard %}
         <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
