@@ -22,7 +22,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         public GeneralSettingsMapping()
         {
             //  CreateMap<Mozu.SiteSettings.General.Contracts.GeneralSettings, UX.Models.Settings.GeneralSettings>();
-            CreateMap<Mozu.Tenant.Contracts.Domain , SiteDomain>();
+            CreateMap<Mozu.Tenant.Contracts.Domain, SiteDomain>();
 
             CreateMap<DC.ThirdPartyCredentialField, ThirdPartyCredentialField>()
                 ;
@@ -85,23 +85,20 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
                 .ForMember(x => x.Selected, op => op.Ignore());
 
-
             CreateMap<GDC.EmailTypeSetting, EmailTypeSettingVM>()
                 .ForMember(m => m.Enabled, op => op.Ignore())
                 .ForMember(m => m.OnlyOnApiRequest, op => op.Ignore());
-                
+
             CreateMap<GDC.GeneralSettings, GeneralSettings>()
                 //ignores
                 .ForMember(m => m.AdjustForDaylightSavingTime, op => op.Ignore())
                 .ForMember(m => m.AllowAllIPs, op => op.Ignore())
-                .ForMember(m => m.CdnCacheBustKey , op => op.ResolveUsing (x=> x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
+                .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CacheSettings != null ? x.CacheSettings.CdnCacheBustKey : null))
                 .ForMember(m => m.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
-                .ForMember(m=> m.EmailTypes, op => op.ResolveUsing(x => x.EmailTypes))
-
+                .ForMember(m => m.EmailTypes, op => op.ResolveUsing(x => x.EmailTypes))
                 .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
-             
+
                 //  .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CustomCdnHostName))
-                   
 
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.IsMultishipEnabled, op => op.ResolveUsing(x => x.IsMultishipEnabled))
@@ -114,13 +111,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                     if (!string.IsNullOrEmpty(x.Theme))
                     {
                         return Deserialize(x.Theme);
-                          
-
                     }
                     return new ThemeSelection()
                     {
 
-                    }; 
+                    };
                 }))
                 .ForMember(m => m.MobileTheme, opt => opt.ResolveUsing(x =>
                 {
@@ -145,12 +140,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.IsRequiredLoginForLiveEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForLive))
                 .ForMember(x => x.EnforceSitewideSSL, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.EnforceSitewideSSL))
                 .ForMember(x => x.IsRequiredLoginForStagingEnabled, opt => opt.ResolveUsing((GDC.General.ViewAuthorizations y) => y.RequireAuthForPending));
-                
+
             CreateMap<ViewModeToggles, GDC.General.ViewAuthorizations>()
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled))
                  .ForMember((GDC.General.ViewAuthorizations va) => va.EnforceSitewideSSL, op => op.ResolveUsing((ViewModeToggles vm) => vm.EnforceSitewideSSL))
                 .ForMember((GDC.General.ViewAuthorizations va) => va.RequireAuthForPending, op => op.ResolveUsing((ViewModeToggles vm) => vm.IsRequiredLoginForStagingEnabled));
-
 
             CreateMap<GDC.General.ViewAuthorizations, ViewModeToggles>()
                 .ForMember((ViewModeToggles vm) => vm.IsRequiredLoginForLiveEnabled, op => op.ResolveUsing((GDC.General.ViewAuthorizations va) => va.RequireAuthForLive))
@@ -167,7 +161,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.CacheSettings, op => op.ResolveUsing(x => new GDC.CacheSettings() { CdnCacheBustKey = x.CdnCacheBustKey }))
                 //ignores
                 .ForMember(dc => dc.IsMozuWebSite, op => op.Ignore())
-                .ForMember(dc => dc.CustomCdnHostName, op => op.ResolveUsing ( x=> x.CustomCdnHostName))
+                .ForMember(dc => dc.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
                 .ForMember(dc => dc.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(dc => dc.MissingImageSubstitute, op => op.ResolveUsing(x => x.MissingImageSubstitute))
                 .ForMember(m => m.BccEmailAddress, op => op.ResolveUsing(dc => dc.BccEmailAddress))
@@ -179,13 +173,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(dc => dc.TabletTheme, op => op.ResolveUsing(x => (x.TabletTheme == null || string.IsNullOrEmpty(x.TabletTheme.Id)) ? null : Serialize(x.TabletTheme)))
                 .ForMember(dc => dc.TemplateSiteId, op => op.ResolveUsing(x => x.TemplateSiteId))
                 .ForMember(dc => dc.ViewAuthorizations, opt => opt.ResolveUsing((GeneralSettings x) => Mapper.Map<GDC.General.ViewAuthorizations>(x)));
-                
-           
+
             CreateMap<Mozu.SiteSettings.General.Contracts.EmailTransactionSettings, EmailTransactionSettings>();
             CreateMap<EmailTransactionSettings, Mozu.SiteSettings.General.Contracts.EmailTransactionSettings>();
         }
         static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
-        public static ThemeSelection  Deserialize(string val)
+        public static ThemeSelection Deserialize(string val)
         {
             if (string.IsNullOrEmpty(val))
             {
@@ -203,16 +196,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
                     return serializer.Deserialize<ThemeSelection>(jtr);
                 }
-                catch 
+                catch
                 {
-                    
+
                 }
             }
             return new ThemeSelection() { Id = val };
-
-
-
-
         }
 
         static string Serialize(ThemeSelection val)
@@ -224,14 +213,12 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             serializer.Serialize(jtw, val);
             jtw.Flush();
-            return  Convert.ToBase64String(ms.ToArray());
-
-
+            return Convert.ToBase64String(ms.ToArray());
         }
 
         private static List<ExternalPaymentWorkflowSettings> GetExternalPaymentWorkflowSettings(DC.CheckoutSettings checkoutSettings)
         {
-            if(checkoutSettings == null || checkoutSettings.PaymentSettings == null || checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions == null)
+            if (checkoutSettings == null || checkoutSettings.PaymentSettings == null || checkoutSettings.PaymentSettings.ExternalPaymentWorkflowDefinitions == null)
                 return new List<ExternalPaymentWorkflowSettings>();
 
             return
@@ -273,7 +260,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null && g.SupportedCards.Contains("GiftCard")
+                                                           where g.GatewayAccount != null && g.SupportedCards.Contains("GIFTCARD", StringComparer.OrdinalIgnoreCase)
                                                            select g;
 
                 var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
@@ -286,13 +273,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
         /// Custom value resolver that respects countryCode as a mapping context option
         /// And will choose a list of supported cards from a gateway in that country only.
         /// </summary>
-        private class SupportedCardsWithCountryCodeContextResolver : IValueResolver<object,object, Dictionary<string, string>>
+        private class SupportedCardsWithCountryCodeContextResolver : IValueResolver<object, object, Dictionary<string, string>>
         {
             Dictionary<string, string> IValueResolver<object, object, Dictionary<string, string>>.Resolve(object source, object destination, Dictionary<string, string> destMember, ResolutionContext context)
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null && !(g.SupportedCards.Count == 1 && g.SupportedCards.FirstOrDefault() == "GiftCard")
+                                                           where g.GatewayAccount != null && !(g.SupportedCards.Count == 1 && g.SupportedCards.Contains("GIFTCARD", StringComparer.OrdinalIgnoreCase))
                                                            select g;
 
                 var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
@@ -315,8 +302,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
 
             //    return ctx.New(cards, typeof(Dictionary<string, string>));
             //}
-
-          
         }
     }
 }
