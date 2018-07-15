@@ -177,7 +177,7 @@ Ext.define('Taco.view.order.subform.Payment', {
                         return meta.column.cardTemplate.apply(value);
                     } else if (value.storeCreditCode && paymentType === 'StoreCredit') {
                         return ('Store Credit: ' + value.storeCreditCode);
-                    } else if (value.storeCreditCode && paymentType === 'GiftCard') {
+                    } else if (paymentType === 'GiftCard') {
                         return ('GiftCard: ' + value.cardNumber);
                     }
 
