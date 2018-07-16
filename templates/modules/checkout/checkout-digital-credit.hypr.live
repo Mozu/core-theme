@@ -23,10 +23,10 @@
         {% for credit in model.availableDigitalCredits.models %}
         <tr class="mz-checkout-digitalcredit-row">
           <td class="mz-checkout-digitalcredit-cell-enable">
-              <input type="checkbox" data-mz-digital-credit-enable {% if credit.attributes.isEnabled %}checked="checked"{% endif %} 
+              <input type="checkbox" data-mz-digital-credit-enable {% if credit.attributes.isEnabled %}checked="checked"{% endif %}
                      class="data-mz-credit-enabled"
-                     data-mz-credit-code-source="{{ credit.attributes.code }}" 
-                     data-mz-credit-balance="{{ credit.attributes.currentBalance }}" 
+                     data-mz-credit-code-source="{{ credit.attributes.code }}"
+                     data-mz-credit-balance="{{ credit.attributes.currentBalance }}"
                      id="enable{{ credit.attributes.code }}"/>
           </td>
           <td class="mz-checkout-digitalcredit-cell-code">
@@ -36,11 +36,11 @@
           </td>
           <td class="mz-checkout-digitalcredit-cell-balance">{{ credit.attributes.currentBalance|currency }}</td>
           <td class="mz-checkout-digitalcredit-cell-amt-to-apply">
-            <input class="data-mz-credit-amt-to-apply" data-mz-credit-code-target="{{ credit.attributes.code }}" 
+            <input class="data-mz-credit-amt-to-apply" data-mz-credit-code-target="{{ credit.attributes.code }}"
                    min="1" step="0.01" data-mz-digital-credit-amount
                    data-mz-value="creditAmountApplied"
                    {% if credit.attributes.creditAmountApplied %}value="{{ credit.attributes.creditAmountApplied|currency }}"{% endif %}
-                      {% if not credit.attributes.isEnabled %}disabled="true"{% endif %} 
+                      {% if not credit.attributes.isEnabled %}disabled="true"{% endif %}
                    />
           </td>
           <td class="mz-checkout-digitalcredit-cell-remainder">
