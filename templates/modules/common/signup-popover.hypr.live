@@ -4,9 +4,6 @@
   <input type="email" class="mz-popover-signup-email" placeholder="{{ labels.emailAddress }}" data-mz-signup-emailaddress />
   <input type="password" class="mz-popover-signup-password" placeholder="{{ labels.password }}" data-mz-signup-password />
   <input type="password" class="mz-popover-signup-confirmpassword" placeholder="{{ labels.confirmPassword }}" data-mz-signup-confirmpassword />
-  <input type="checkbox" name="agreeToGDPR" class="mz-popover-signup-agreeToGDPR" data-mz-signup-agreeToGDPR />
-  <label for="agreeToGDPR">{{ labels.agreeToGDPR|string_format("https://kibocommerce.com/privacy/")|safe }}</label>
-  </br>
   <button class="mz-button mz-popover-signup-register" data-mz-action="signup">{{ labels.register }}</button>
   <section data-mz-role="popover-message" class="mz-popover-message"></section>
 </div>

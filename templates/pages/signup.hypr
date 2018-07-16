@@ -53,14 +53,6 @@
                     </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row">
-                  <div class="mz-l-formfieldgroup-cell">
-                      <input style="float:right" type="checkbox" name="agreeToGDPR" data-mz-signup-agreeToGDPR />
-                  </div>
-                    <div class="mz-l-formfieldgroup-cell">
-                      <label style="float:left" for="agreeToGDPR">{{ labels.agreeToGDPR|string_format("https://kibocommerce.com/privacy/")|safe }}</label>
-                  </div>
-                </div>
-                <div class="mz-l-formfieldgroup-row">
                     <div class="mz-l-formfieldgroup-cell"></div>
                     <div class="mz-l-formfieldgroup-cell">
                         <button class="mz-button mz-button-large mz-sign-up-page-button" data-mz-action="signuppage-submit">{{ labels.signUp }}</button>

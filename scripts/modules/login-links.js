@@ -284,7 +284,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
             if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
             if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
-            if (!payload.agreeToGDPR) return this.displayMessage(Hypr.getLabel('didNotAgreeToGDPR')), false;
             return true;
         },
         signup: function () {
@@ -292,7 +291,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 email = this.$parent.find('[data-mz-signup-emailaddress]').val(),
                 firstName = this.$parent.find('[data-mz-signup-firstname]').val(),
                 lastName = this.$parent.find('[data-mz-signup-lastname]').val(),
-                agreeToGDPR = this.$parent.find('[data-mz-signup-agreeToGDPR]').prop('checked'),
                 payload = {
                     account: {
                         emailAddress: email,
@@ -305,11 +303,9 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                             lastNameOrSurname: lastName
                         }]
                     },
-                    password: this.$parent.find('[data-mz-signup-password]').val(),
-                    agreeToGDPR: agreeToGDPR
+                    password: this.$parent.find('[data-mz-signup-password]').val()
                 };
             if (this.validate(payload)) {
-                delete payload.agreeToGDPR;
                 //var user = api.createSync('user', payload);
                 this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {

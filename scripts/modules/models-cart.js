@@ -48,16 +48,17 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             var oldQuantity = this.previous("quantity");
             if (this.hasChanged("quantity")) {
                 this.apiModel.updateQuantity(this.get("quantity"))
-                    .then(
-                        function() {
-                            self.collection.parent.checkBOGA();
-                        },
-                        function() {
-                            // Quantity update failed, e.g. due to limited quantity or min. quantity not met. Roll back.
-                            self.set("quantity", oldQuantity);
-                            self.trigger("quantityupdatefailed", self, oldQuantity);
-                        }
-                    );
+                    .then(function(){
+                      self.collection.parent.fetch().then(function(cart){
+                        cart.checkBOGA();
+                      });
+
+                    }, function() {
+                        // Quantity update failed, e.g. due to limited quantity or min. quantity not met. Roll back.
+                        self.set("quantity", oldQuantity);
+                        self.trigger("quantityupdatefailed", self, oldQuantity);
+
+                    });
             }
         },
         storeLocation: function(){

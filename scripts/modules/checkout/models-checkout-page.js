@@ -514,8 +514,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     errorHandled = false;
                 order.isLoading(false);
                 if (!error || !error.items || error.items.length === 0) {
-                    var has10486Error = _.find(error.additionalErrorData, function(additionalData) { return additionalData.value.indexOf('10486') != -1;});
-                    if (has10486Error){
+                    if (error.message.indexOf('10486') != -1){
                         var siteContext = HyprLiveContext.locals.siteContext,
                             externalPayment = _.findWhere(siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayPalExpress2"}),
                             environment = _.findWhere(externalPayment.credentials, {"apiName" : "environment"}),
@@ -528,10 +527,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                             url = "https://www.paypal.com";
                         }
 
-                        var paypalPayments = _.filter(order.get("payments"),function(payment) { return payment.paymentType == "PayPalExpress2";});
-                        paypalPayments = _.sortBy(paypalPayments, function(payment) {return payment.auditInfo.updateDate;}).reverse();
-
-                        window.location.href = url + "/cgi-bin/webscr?cmd=_express-checkout&token=" + paypalPayments[0].externalTransactionId;
+                        window.location.href = url + "/cgi-bin/webscr?cmd=_express-checkout&token=" + order.get('payments')[order.get('payments').length-1].externalTransactionId;
 
                         return;
                     } else {
@@ -605,17 +601,6 @@ var CheckoutPage = Backbone.MozuModel.extend({
 
                 }
             },
-            isEmptyAddress: function(obj){
-                var emptyAddress = new AddressModels.StreetAddress({}).toJSON();
-                var areEqual = _.isMatch(emptyAddress, {
-                    addressType: obj.addressType,
-                    candidateValidatedAddresses: obj.candidateValidatedAddresses,
-                    countryCode: obj.countryCode,
-                    postalOrZipCode: obj.postalOrZipCode,
-                    stateOrProvince: obj.stateOrProvince
-                });
-                return areEqual;
-            },
             compareAddressObjects: function(obj1, obj2) {
                 var areEqual = _.isMatch(obj1, {
                     address1 : obj2.address1,
@@ -674,8 +659,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                                 "name": "Shipping",
                                 "isPrimary": (destination.get('destinationContact').contactTypeHelpers().isPrimaryShipping()) ? true : false
                             }];
-                            if (!self.isEmptyAddress(destinationContact.address))
-                                updatedContacts.push(destinationContact);
+                            updatedContacts.push(destinationContact);
                         }
                     }
                 });
@@ -715,25 +699,22 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     updatedContacts.push(newBillingContact);
                 }
                 else {
-                    if (!self.isEmptyAddress(billingContact.address))
-                        updatedContacts.push(billingContact);
+                    updatedContacts.push(billingContact);
                 }
 
-                if (updatedContacts.length) {
-                    return customer.apiModel.updateCustomerContacts({id: customer.id, postdata:updatedContacts}).then(function(contactResult) {
-                        _.each(contactResult.data.items, function(contact) {
-                            if(contact.types){
-                                var found = _.findWhere(contact.types, {name: "Billing", isPrimary: true});
-                                if(found) {
-                                    self.get('billingInfo').set('billingContact', contact);
-                                return false;
-                                }
+
+                return customer.apiModel.updateCustomerContacts({id: customer.id, postdata:updatedContacts}).then(function(contactResult) {
+                    _.each(contactResult.data.items, function(contact) {
+                        if(contact.types){
+                            var found = _.findWhere(contact.types, {name: "Billing", isPrimary: true});
+                            if(found) {
+                                self.get('billingInfo').set('billingContact', contact);
+                            return false;
                             }
-                        });
-                        return contactResult;
+                        }
                     });
-                }
-                return {};
+                    return contactResult;
+                });
             },
             saveCustomerCard: function () {
                 var order = this,
@@ -765,19 +746,15 @@ var CheckoutPage = Backbone.MozuModel.extend({
             getBillingContact: function () {
                 return;
             },
-            ensureEmailIsSet: function () {
+            syncBillingAndCustomerEmail: function () {
                 var self = this;
                 var billingEmail = this.get('billingInfo.billingContact.email'),
-                    customerEmail = require.mozuData('user').email,
-                    orderEmail = this.get('email');
+                    customerEmail = require.mozuData('user').email;
 
-                if (orderEmail) {
-                    this.set('billingInfo.billingContact.email', orderEmail);
-                } else if (billingEmail) {
-                    this.set('email', billingEmail);
-                } else if (customerEmail) {
-                    this.set('billingInfo.billingContact.email', customerEmail);
+                if (customerEmail) {
                     this.set('email', customerEmail);
+                } else {
+                    this.set('email', billingEmail);
                 }
             },
             setNewCustomerEmailAddress : function(){
@@ -830,9 +807,9 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     isSavingCreditCard = false,
                     isSavingNewCustomer = this.isSavingNewCustomer(),
                     isAuthenticated = require.mozuData('user').isAuthenticated,
-                    nonStoreCreditOrGiftCardTotal = billingInfo.nonStoreCreditOrGiftCardTotal(),
+                    nonStoreCreditTotal = billingInfo.nonStoreCreditTotal(),
                     requiresFulfillmentInfo = this.get('requiresFulfillmentInfo'),
-                    requiresBillingInfo = nonStoreCreditOrGiftCardTotal > 0,
+                    requiresBillingInfo = nonStoreCreditTotal > 0,
                     process = [function() {
                         return checkout.apiUpdateCheckout({
                             ipAddress: checkout.get('ipAddress'),
@@ -874,7 +851,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                     billingInfo.set(billingInfoFromPayment, { silent: true });
                 }
 
-                this.ensureEmailIsSet();
+                this.syncBillingAndCustomerEmail();
                 this.setNewCustomerEmailAddress();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.

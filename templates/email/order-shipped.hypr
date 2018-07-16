@@ -29,7 +29,6 @@
                 <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.product }}</font></td>
             </tr>
         </thead>
-        
         {% for packageItem in package.items %}
          
             <tbody class="mz-ordersummary-package">

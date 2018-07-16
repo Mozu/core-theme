@@ -39,16 +39,11 @@
 					{% if refund.payment.paymentType == "PurchaseOrder" %}
 						{{ labels.purchaseOrder }}
 					{% else %}
-            {{ refund.payment.paymentType }}
-						{% if refund.payment.paymentType == "PaypalExpress" || refund.payment.paymentType == "PayPalExpress2" %}
+						{% if refund.payment.paymentType == "PaypalExpress" %}
 							{{ labels.payPal }}
 						{% else %}
 							{% if refund.payment.paymentType == "StoreCredit" %}
 								{{ labels.storeCredit }} {{ refund.payment.billingInfo.storeCreditCode|default("") }}
-                  {% else %}
-                    {% if refund.payment.paymentType == "GiftCard" %}
-                      {{ labels.giftCard }} {{ refund.payment.billingInfo.card.cardNumberPartOrMask }}
-                    {% endif %}
 							{% endif %}
 						{% endif %}
 					{% endif %}
