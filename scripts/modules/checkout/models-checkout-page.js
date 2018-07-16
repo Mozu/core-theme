@@ -97,11 +97,15 @@ var CheckoutOrder = OrderModels.Order.extend({
         return originalCartItem.id == self.get('id');
     },
     addNewContact: function(){
-
+        var self = this;
         this.getCheckout().get('dialogContact').resetDestinationContact();
         this.getCheckout().get('dialogContact').unset('id');
 
         this.getCheckout().get('dialogContact').trigger('openDialog');
+
+        this.listenToOnce(this.getCheckout().get('dialogContact'), 'dialogClose', function () {
+            self.set('editingDestination', false);
+        });
     },
     editContact: function(destinationId){
         var destination = this.getDestinations().findWhere({'id': destinationId});
