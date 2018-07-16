@@ -54,22 +54,38 @@
                 {% regroup order.payments by paymentType as payment_types %}
                 {% for type in payment_types %}
                     {% regroup type.list by status as payment_statuses %}
+                        {% if not forloop.first %}, {% endif %}
                         {% if type.grouper == "Check" %}Check{% endif %}
                         {% if type.grouper == "CreditCard" %}{{ labels.creditCard }}{% endif %}
-                        {% if type.grouper == "GiftCard" %}{{ labels.giftCard }}{% endif %}
                         {% if type.grouper == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
                         {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
-                        {% if type.grouper == "PurchaseOrder" %}
+                        {% if type.grouper == "PurchaseOrder" %}{{ labels.purchaseOrder }}{% endif %}
+                        {% if type.grouper == "PayWithAmazon" %}{{ labels.payWithAmazon }}{%endif%}
+                        <table class="
+                                {% for payment in order.payments %}
+                                    {% if payment.PaymentType == 'PurchaseOrder' %}
+                                        show
+                                    {% endif %}
+                                {% endfor %}
+                            ">
+                        <tbody>
                             {% for payment in order.payments %}
                                 {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
-                                    {{ labels.purchaseOrder }} {{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }} ({{ payment.billingInfo.purchaseOrder.paymentTerm.description }})
+                                    <tr>
+                                        <td><b>{{labels.purchaseOrderNumber}}</b></td>
+                                        <td>{{ payment.billingInfo.purchaseOrder.purchaseOrderNumber }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>{{labels.purchaseOrderPaymentTerms}}</b></td>
+                                        <td>{{ payment.billingInfo.purchaseOrder.paymentTerm.description }}</td>
+                                    </tr>
                                 {% endif %}
                             {% endfor %}
-                        {% endif %}
-                        {% if type.grouper == "PayWithAmazon" %}{{ labels.payWithAmazon }}{% endif %}
-                        {% if not forloop.last %}<br/>{% endif %}
+                        </tbody>
+                    </table>{% endif %}
+                   
                 {% endfor %}
             </td>
             <td>{{ model.shippingMethodName }}</td>
@@ -86,17 +102,17 @@
         {% for item in model.items %} <!-- model represents the package -->
            <tr>
                 <td>
-                    {{ item.productCode }}
-                </td>
-                <td>
+					{{ item.productCode }}
+				</td>
+				<td>
                     <div class="product-name">{{ item.productname }}</div>
                 </td>
                 <td>
-                    {{ item.quantity }}
-                </td>
-                <td>
-                    {{ item.adjustedweight.value }} {{ item.adjustedweight.unit }}
-                </td>
+					{{ item.quantity }}
+				</td>
+				<td>
+					{{ item.adjustedweight.value }} {{ item.adjustedweight.unit }}
+				</td>
             </tr>
         {% endfor %}
         </tbody>

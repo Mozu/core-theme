@@ -8,9 +8,7 @@
             <div class="mz-orderattributes">
                 {% include "modules/checkout/checkout-attributes" with model=model.orderAttributes %}
             </div>
-            <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
-              <p>{{ labels.agreeToGDPRCheckout|string_format("https://kibocommerce.com/privacy/")|safe }}</p>
-            </div>
+
             {% if themeSettings.requireCheckoutAgreeToTerms %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
             <label class='inline'>
@@ -18,7 +16,6 @@
             </label>
             <span class="mz-validationmessage" data-mz-validationmessage-for="agreeToTerms"></span>
             </div>
-
             {% endif %}
 
             {% if not user or user.isAnonymous %}
@@ -55,7 +52,7 @@
                       <div class="mz-l-formfieldgroup-cell">
                         <input type="password" name="new-account-confirm" data-mz-value="confirmPassword" value="{{ model.confirmPassword }}">
                         <span class="mz-validationmessage" data-mz-validationmessage-for="confirmPassword"></span>
-                      </div>
+                       </div>
                     </div>
                 </div>
                 {% endif %}

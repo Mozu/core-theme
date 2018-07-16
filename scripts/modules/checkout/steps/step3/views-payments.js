@@ -57,9 +57,7 @@ define(["modules/jquery-mozu",
                 'creditAmountToApply',
                 'digitalCreditCode',
                 'purchaseOrder.purchaseOrderNumber',
-                'purchaseOrder.paymentTerm',
-                'giftCardNumber',
-                'giftCardSecurityCode'
+                'purchaseOrder.paymentTerm'
             ].concat(poCustomFields()),
             renderOnChange: [
                 'billingContact.address.countryCode',
@@ -71,8 +69,6 @@ define(["modules/jquery-mozu",
             additionalEvents: {
                 "change [data-mz-digital-credit-enable]": "enableDigitalCredit",
                 "change [data-mz-digital-credit-amount]": "applyDigitalCredit",
-                "change [data-mz-gift-card-amount]": "applyGiftCard",
-                "change [data-mz-gift-card-enable]": "enableGiftCard",
                 "change [data-mz-digital-add-remainder-to-customer]": "addRemainderToCustomer",
                 "change [name='paymentType']": "resetPaymentData",
                 "change [data-mz-purchase-order-payment-term]": "updatePurchaseOrderPaymentTerm",
@@ -80,8 +76,6 @@ define(["modules/jquery-mozu",
             },
             initialize: function () {
                 // this.addPOCustomFieldAutoUpdate();
-                this.listenTo(this.model, 'change:giftCardNumber', this.onEnterGiftCardInfo, this);
-                this.listenTo(this.model, 'change:giftCardSecurityCode', this.onEnterGiftCardInfo, this);
                 this.listenTo(this.model, 'change:digitalCreditCode', this.onEnterDigitalCreditCode, this);
                 this.listenTo(this.model, 'orderPayment', function (order, scope) {
                         this.render();
@@ -116,7 +110,7 @@ define(["modules/jquery-mozu",
                 });
                 if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
                      $("#AmazonPayButton").removeAttr("style").appendTo("#amazonButtonPaymentSection");
-
+                     
                 var status = this.model.stepStatus();
                 if (visaCheckoutSettings.isEnabled && !this.visaCheckoutInitialized && this.$('.v-button').length > 0) {
                      window.onVisaCheckoutReady = _.bind(this.initVisaCheckout, this);
@@ -211,13 +205,6 @@ define(["modules/jquery-mozu",
                     self.$el.removeClass('is-loading');
                 });
             },
-            getGatewayGiftCard: function (e) {
-              var self = this;
-              this.$el.addClass('is-loading');
-              this.model.getGatewayGiftCard().ensure(function() {
-                   self.$el.removeClass('is-loading');
-               });
-            },
             stripNonNumericAndParseFloat: function (val) {
                 if (!val) return 0;
                 var result = parseFloat(val.replace(/[^\d\.]/g, ''));
@@ -234,30 +221,6 @@ define(["modules/jquery-mozu",
 
                 this.model.applyDigitalCredit(creditCode, amtToApply, true);
                 this.render();
-            },
-            applyGiftCard: function(e) {
-                var self = this,
-                    val = $(e.currentTarget).prop('value'),
-                    giftCardId = $(e.currentTarget).attr('data-mz-gift-card-target');
-                if (!giftCardId) {
-                  return;
-                }
-                var amtToApply = this.stripNonNumericAndParseFloat(val);
-                this.$el.addClass('is-loading');
-                return this.model.applyGiftCard(giftCardId, amtToApply, true).then(function(){
-                    self.$el.removeClass('is-loading');
-                    this.render();
-                }, function(error){
-                    self.$el.removeClass('is-loading');
-                });
-            },
-            onEnterGiftCardInfo: function(model) {
-              if (model.get('giftCardNumber') && model.get('giftCardSecurityCode')){
-                this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', false);
-              } else {
-                this.$el.find('input#gift-card-security-code').siblings('button').prop('disabled', true);
-              }
-
             },
             onEnterDigitalCreditCode: function(model, code) {
                 if (code && !this.codeEntered) {
@@ -285,27 +248,12 @@ define(["modules/jquery-mozu",
                 }
 
             },
-            enableGiftCard: function(e){
-                var isEnabled = $(e.currentTarget).prop('checked') === true,
-                    giftCardId = $(e.currentTarget).attr('data-mz-payment-id'),
-                    targetAmtEl = this.$el.find("input[data-mz-gift-card-target='" + giftCardId + "']"),
-                    me = this;
-
-                if (isEnabled) {
-                  targetAmtEl.prop('disabled', false);
-                  me.model.applyGiftCard(giftCardId, null, true);
-                } else {
-                  targetAmtEl.prop('disabled', true);
-                  me.model.applyGiftCard(giftCardId, 0, false);
-                }
-            },
             addRemainderToCustomer: function (e) {
                 var creditCode = $(e.currentTarget).attr('data-mz-credit-code-to-tie-to-customer'),
                     isEnabled = $(e.currentTarget).prop('checked') === true;
                 this.model.addRemainingCreditToCustomerAccount(creditCode, isEnabled);
             },
             handleEnterKey: function (e) {
-              //TODO: add handling for enter key in giftcard fields
                 var source = $(e.currentTarget).attr('data-mz-value');
                 if (!source) return;
                 switch (source) {
@@ -313,20 +261,6 @@ define(["modules/jquery-mozu",
                         return this.applyDigitalCredit(e);
                     case "digitalCreditCode":
                         return this.getDigitalCredit(e);
-                    case "giftCardNumber":
-                        if (this.model.get('giftCardNumber') && this.model.get('giftCardSecurityCode')){
-                            return this.getGatewayGiftCard(e);
-                        } else {
-                            //TODO: trigger error message
-                        }
-                        break;
-                    case "giftCardSecurityCode":
-                        if (this.model.get('giftCardNumber') && this.model.get('giftCardSecurityCode')){
-                            return this.getGatewayGiftCard(e);
-                        } else {
-                            //TODO: trigger error message
-                        }
-                        break;
                 }
             },
             /* begin visa checkout */

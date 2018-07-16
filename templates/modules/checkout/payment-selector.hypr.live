@@ -3,7 +3,7 @@
     {% if model.paymentType == "PayWithAmazon" %}
         <div class="mz-l-formfieldgroup-row mz-l-security-box" >
             {{ labels.awsPaymentWarning }}
-         </div>
+         </div> 
     {%endif%}
     {% if siteContext.checkoutSettings.purchaseOrder.isEnabled and model.purchaseOrder.isEnabled %}
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard mz-checkoutform {% if model.paymentType == "PurchaseOrder" %}mz-checkoutform-active{% endif %}">
@@ -24,7 +24,6 @@
         {% endif %}
     </div>
     {% endif %}
-
     <div class="mz-l-formfieldgroup-row mz-paymentselector-option mz-paymentselector-newcreditcard mz-checkoutform {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}mz-checkoutform-active{% endif %}">
         <div class="mz-l-formfieldgroup-row">
             <div class="mz-l-formfieldgroup-cell">
@@ -94,8 +93,8 @@
         {% endif %}
     </div>
     {% endif %}
-
-    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
+    
+    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
         {% if externalPaymentWorkflowsEnabled %}
             <div class="mz-l-formfieldgroup-row">
                 <div class="mz-paymentselector-label-separator">&ndash; {{ labels.or }} &ndash;</div>
@@ -118,7 +117,7 @@
                             {%endif%}
                              {% if name == "paywithamazon" %}
                                 <div class="mz-paymenttype" id="amazonButtonPaymentSection">
-                                </div>
+                                </div> 
                              {% endif %}
                         </div>
                     </div>

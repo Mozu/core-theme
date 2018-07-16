@@ -3,7 +3,7 @@
         {% if model.requiresFulfillmentInfo %}
         <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
         {% endif %}
-        {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
+        {% if model.isAwsCheckout() and model.stepStatus == "incomplete" %}
           <a href="javascript:;" class="mz-formstep-cancel" data-mz-action="cancel">{{ labels.cancel }}</a>
         {% endif %}
     </h3>
@@ -14,7 +14,7 @@
           <div class="mz-formstep-summary mz-addresssummary mz-checkoutform">
           {% if model.requiresFulfillmentInfo %}
             {% include "modules/common/address-summary" %}
-             {% if model.isAwsCheckout %}
+             {% if model.isAwsCheckout() %}
               <div style="margin-top:5px;margin-bottom:20px;">
                 <a data-mz-action="amazonShippingAndBilling" href="javascript:;">{{labels.awsChangeAddress}}</a>
               </div>
@@ -24,7 +24,7 @@
           {% endif %}
         </div>
         {% if model.requiresFulfillmentInfo  %}
-          {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
+          {% if model.isAwsCheckout() and model.stepStatus == "incomplete" %}
               <div class="mz-l-security-box">
               {{ labels.awsAddressWarning }}
               </div>
