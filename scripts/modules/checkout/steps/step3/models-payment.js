@@ -480,11 +480,9 @@ define([
                     }
                 }
             }
-
             if (amountToApply === 0) {
                 return this.getOrder();
             }
-
             var maxCreditAvailable = self.getMaxCreditToApply(giftCardModel, self);
             if (amountToApply > maxCreditAvailable) {
                 giftCardModel.set('amountApplied', previousAmount);
