@@ -26,6 +26,8 @@ using System.Threading;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Linq.Expressions;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -40,12 +42,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
-        private PageContext _pageContext;
+        private IPageContext _pageContext;
         private VisitEventPublisher _visitPublisher;
         ISiteContext _siteContext;
+        IHttpErrorResponseGenerator _errorGenerator;
 
-        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, PageContext pageContext, VisitEventPublisher visitPublisher,
-            ISiteContext siteContext)
+        public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, IPageContext pageContext, VisitEventPublisher visitPublisher,
+            ISiteContext siteContext,
+            IHttpErrorResponseGenerator errorGenerator)
         {
             if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
             if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
@@ -59,6 +63,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _pageContext = pageContext;
             _visitPublisher = visitPublisher;
             _siteContext = siteContext;
+            _errorGenerator = errorGenerator;
         }
        
         protected void DoLogout(bool? saveUserId = false) 
@@ -108,9 +113,30 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return response;
         }
 
-        async Task<ServiceClientResponse<CustomerAuthTicket>> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo )
+        async Task<HttpResponseMessage> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
         {
-            return await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo));
+            HttpResponseMessage ret = null;
+            if (
+                HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out ret) ||
+                HasInvalidCharecters(accountInfo.Account?.LastName, "lastName", out ret) ||
+                 HasInvalidCharecters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
+                HasInvalidCharecters(accountInfo.Account?.UserName, "userName", out ret) 
+                )
+            {
+                return ret;
+            }
+            return (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo))).ResponseMessage;
+        }
+        bool  HasInvalidCharecters(string str, string fieldName, out HttpResponseMessage resp)
+        {
+            resp = null;
+            str = (str ?? "").Trim();
+            if (str != HttpUtility.HtmlEncode(str))
+            {
+                resp = _errorGenerator.GenerateErrorResponse(this.Request, new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"));
+                return true;
+            }
+            return false;
         }
 
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
@@ -257,9 +283,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
              var res = await DoCreateAccount(authInfo);
-             if (res.ResponseMessage.IsSuccessStatusCode)
+             if (res.IsSuccessStatusCode)
              {
-                 return res.ResponseMessage;
+                 return res;
              }
             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
@@ -277,7 +303,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              }
             var res = await DoCreateAccount(authInfo);
 
-             return res.ResponseMessage;
+             return res;
          }
 
         [System.Web.Http.HttpPost]

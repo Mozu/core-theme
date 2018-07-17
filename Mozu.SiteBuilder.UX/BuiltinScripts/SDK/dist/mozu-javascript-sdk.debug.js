@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-07-10
+ * Mozu JavaScript SDK - v0.3.0 - 2018-07-16
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4218,7 +4218,7 @@ module.exports=
     },
     "get-unregistered-gift-card-balance": {
       "verb": "POST",
-      "template": "{+paymentService}/balance",
+      "template": "{+paymentService}balance",
       "defaultParams": {
         "responseFields": "amount"
       }
