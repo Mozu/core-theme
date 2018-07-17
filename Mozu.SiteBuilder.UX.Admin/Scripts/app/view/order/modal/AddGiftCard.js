@@ -482,7 +482,7 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                 {
                                     xtype: 'textfield',
                                     name: 'giftCardSecurityCode',
-                                    allowBlank: false,
+                                    allowBlank: true,
                                     fieldLabel: 'Security Code',
                                     margin: '0px 5px 0px 5px',
                                     flex: 1,
