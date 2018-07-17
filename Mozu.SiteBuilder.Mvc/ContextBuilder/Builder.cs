@@ -600,9 +600,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                         w.Write(_.IsDisplayed);
                         w.Write(_.Sequence.GetValueOrDefault(-1));
                         w.Write(_.ParentCategoryId.GetValueOrDefault(-1));
+                        w.Write(_.Count > 0 ? 1 : 0);
                     });
-
-
 
                     w.Flush();
                     stream.Position = 0;
