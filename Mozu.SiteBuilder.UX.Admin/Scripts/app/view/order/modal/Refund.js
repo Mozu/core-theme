@@ -149,7 +149,12 @@ Ext.define('Taco.view.order.modal.Refund', {
                 data.paymentId = data.transactionMethod === 'StoreCredit' ? data.orderId : data.payment.id;
 
                 return data;
-            }))
+            })),
+            filters: [
+                function (item) {
+                    return (item.raw.status != 'Voided' && item.raw.status != 'Declined');
+                }
+            ]
         });
 
 

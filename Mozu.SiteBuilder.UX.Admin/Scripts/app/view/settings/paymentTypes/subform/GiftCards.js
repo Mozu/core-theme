@@ -53,7 +53,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
         });
 
         me.cardGatewayStore.filter('cardType', /GIFTCARD/);
-        if(me.cardGatewayStore.length === 0) {
+        if(!me.cardGatewayStore.data.length) {
             me.cardGatewayStore.add({
                 cardDisplay: "Giftcard",
                 cardType: "GIFTCARD",
@@ -215,10 +215,19 @@ Ext.define('Taco.view.settings.paymentTypes.subform.GiftCards', {
     persistFormValues: function () {
         var me = this;
         var recordCardGatewayMap = me.record.get('cardGatewayMap');
+
+        var hasGiftCard = false;
         var updatedCardGatewayMap = Ext.Array.map(recordCardGatewayMap, function (item) {
-            if (item.cardType === "GIFTCARD") return me.cardGatewayMap[0];
+            if (item.cardType === "GIFTCARD") {
+                hasGiftCard = true; 
+                return me.cardGatewayMap[0];
+            }
             return item;
         });
+
+        if (!hasGiftCard){
+            updatedCardGatewayMap.push(me.cardGatewayMap[0]);
+        }
 
         me.record.set('cardGatewayMap', updatedCardGatewayMap);
     }

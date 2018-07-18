@@ -103,7 +103,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
 
             var fqn = this.fqn;
             var radioButtonItems = [];
-            console.log(fieldDef.vocabularyValues);
             Ext.each(fieldDef.vocabularyValues, function (val) {
                 if (val.contents[0]) {
                     radioButtonItems.push({
