@@ -27,3 +27,5 @@ NUnit
 protobuf-net
 Should
 Mozu.Log4net.Gelf
+
+Newtonsoft.Json

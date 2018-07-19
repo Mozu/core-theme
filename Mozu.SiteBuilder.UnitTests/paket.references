@@ -23,3 +23,6 @@ Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
 protobuf-net
 Mozu.Log4net.Gelf
+
+
+Newtonsoft.Json

@@ -130,7 +130,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.General.Contracts (1.1743.4)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.1828.2)
+    Mozu.SiteSettings.Order.Contracts (1.1828.5)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.1706.1)
