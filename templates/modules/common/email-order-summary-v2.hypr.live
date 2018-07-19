@@ -50,8 +50,8 @@
   {% for location in locations %}
     {% with "fulfillmentLocationCode eq '{0}'" as qFormat%}
       {% with qFormat|string_format(location.code) as q %}
-        {% for item in pickupItems|collection_filter(q) %}
-          {% if item.fulfillmentMethod=="Pickup" && item.fulfillmentLocationCode===location.code %}
+        {% for item in items %}
+          {% if item.fulfillmentMethod=="Pickup" and item.fulfillmentLocationCode==location.code %}
             <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
               <td class="mz-ordersummary-item-product">
               {{ item.product.name }}
