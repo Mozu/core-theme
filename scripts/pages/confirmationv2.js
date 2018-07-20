@@ -15,7 +15,13 @@ define(['modules/api',
           });
 
           var ConfirmationModel = Backbone.MozuModel.extend({
-            mozuType: 'checkout'
+            mozuType: 'checkout',
+            initialize: function() {
+              var self = this;
+              var pageContext = require.mozuData('pagecontext'),
+                  orderAttributeDefinitions = pageContext.storefrontOrderAttributes;
+              self.set('orderAttributeDefinitions', orderAttributeDefinitions);
+            }
           });
 
           $(document).ready(function(){
