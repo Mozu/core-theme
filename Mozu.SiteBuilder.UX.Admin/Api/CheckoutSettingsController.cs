@@ -11,12 +11,10 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using DC = Mozu.SiteSettings.Order.Contracts;
-using System.Net.Http;
-using System.Net;
 using Mozu.SiteBuilder.Mvc.Contexts;
-using System.Collections;
-using System.Linq.Expressions;
+using Mozu.Core.Extensions;
 using Mozu.PaymentService.Contracts;
+using GatewayDefinition = Mozu.PaymentService.Contracts.GatewayDefinition;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -28,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IApiContext _context;
         private readonly ITenantsWebApiClient _tenantClient;
         private readonly ITenantAdminSettingsContext _tenantAdminSettingsContext;
-        IAggregateSiteSettingsWebApiClient _aggregateSiteSettingsWebApiClient;
+        private readonly IAggregateSiteSettingsWebApiClient _aggregateSiteSettingsWebApiClient;
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -56,81 +54,72 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<CheckoutSettings>> GetSettings()
         {
             var dcSettings = (await _checkoutSettingsWebApiClient.GetCheckoutSettings()).ReadAsSync();
-            var definitions = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync();
+            var definitions = (await _checkoutSettingsWebApiClient.GetGatewayDefinitions()).ReadAsSync() ?? new List<GatewayDefinition>();
             var gateways = (await _checkoutSettingsWebApiClient.GetGateways()).ReadAsSync();
 
             var ret = Mapper.Map<CheckoutSettings>(dcSettings);
-            ret.CardGatewayMap =  AppendUnmappedGateways(gateways, definitions, dcSettings);
+            ret.CardGatewayMap = AppendUnmappedGateways(gateways, definitions, dcSettings);
 
             return Single2(ret);
         }
-       
-        private List<CardGateway> AppendUnmappedGateways(List<DC.TenantGateway> gateways, List<PaymentService.Contracts.GatewayDefinition> definitions, DC.CheckoutSettings checkoutSettings)
+
+        private List<CardGateway> AppendUnmappedGateways(List<DC.TenantGateway> gateways, List<GatewayDefinition> definitions, DC.CheckoutSettings checkoutSettings)
         {
-            var configuredGatewayIds = new HashSet<string>(gateways.Select(_ => _.GatewayAccount.GatewayDefinitionId));
-           
-                return definitions
-               ?.Where(_=> configuredGatewayIds.Contains(_.Id))
-               ?.SelectMany(x => x.SupportedCards)
-               ?.Distinct(CGComp.Default)
-               ?.Select(x =>
-               {
-                   var associatedGatewayAccount = checkoutSettings.PaymentSettings.Gateways
-                   .FirstOrDefault(_ => _.SupportedCards
-                    .Any(c => string.Equals(c, x.Type, StringComparison.OrdinalIgnoreCase)));
+            var configuredGatewayIds = new HashSet<string>(gateways.Select(x => x.GatewayAccount.GatewayDefinitionId));
 
-                   return checkoutSettings
-                   .PaymentSettings
-                   ?.Gateways
-                   ?.SelectMany(g => g.SupportedCards, (g, s) =>
-                   new CardGateway() {
-                       GatewayId = associatedGatewayAccount?.GatewayAccount.Id,
-                       GatewayName = associatedGatewayAccount?.GatewayAccount.Name,
-                       CardDisplay = x.FriendlyName,
-                       CardType = x.Type,
-                       IsEnabled= associatedGatewayAccount != null
-                   }).Where( _=> string.Equals(_.CardType , x.Type,StringComparison.OrdinalIgnoreCase))
-                   .FirstOrDefault() ?? new CardGateway()
-                   {
-                       CardDisplay = x.FriendlyName,
-                       CardType = x.Type
-                   };
-               }
-               )
-               ?.OrderBy(x => x.CardDisplay)
-               ?.ToList() ?? new System.Collections.Generic.List<CardGateway>();
+            var possiblySupportedCards = definitions
+                .Where(x => configuredGatewayIds.Contains(x.Id))
+                .SelectMany(x => x.SupportedCards)
+                .Distinct(CGComp.Default)
+                .ToList();
 
+            return possiblySupportedCards
+                .Select(card =>
+                    {
+                        var associatedGatewayAccount = checkoutSettings.PaymentSettings.Gateways
+                            .FirstOrDefault(x => x.SupportedCards.Any(c => c.EqualsIgnoreCase(card.Type)));
+
+                        return new CardGateway
+                        {
+                            GatewayId = associatedGatewayAccount?.GatewayAccount.Id,
+                            GatewayName = associatedGatewayAccount?.GatewayAccount.Name,
+                            CardDisplay = card.FriendlyName,
+                            CardType = card.Type,
+                            IsEnabled = associatedGatewayAccount != null
+                        };
+                    }
+                )
+                .OrderBy(x => x.CardDisplay)
+                .ToList();
         }
 
         class CGComp : IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>
         {
-            public static IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard> Default = (IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>) new CGComp();
+            public static readonly IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard> Default = new CGComp();
 
             public int GetHashCode(Mozu.PaymentService.Contracts.SupportedCard obj)
             {
-                return StringComparer.OrdinalIgnoreCase.GetHashCode(obj?.Type );
+                return StringComparer.OrdinalIgnoreCase.GetHashCode(obj?.Type);
             }
 
             bool IEqualityComparer<Mozu.PaymentService.Contracts.SupportedCard>.Equals(Mozu.PaymentService.Contracts.SupportedCard x, Mozu.PaymentService.Contracts.SupportedCard y)
             {
                 return StringComparer.OrdinalIgnoreCase.Equals(x?.Type, y?.Type);
             }
-
-            
         }
-        
+
 
         [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
         public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()
         {
-            
+
             var poSettings = (await _aggregateSiteSettingsWebApiClient.GetPurchaseOrderSettings()).ReadAsSync();
 
             var ret = poSettings.Select(x => new SitePaymentTerm()
             {
                 siteId = x.Key,
                 isPoEnabled = x.Value.IsEnabled,
-                paymentTerms = x.Value.PaymentTerms ?? new System.Collections.Generic.List<DC.PurchaseOrderPaymentTerm>()
+                paymentTerms = x.Value.PaymentTerms ?? new List<DC.PurchaseOrderPaymentTerm>()
             }).ToList();
 
             return List2(ret);
@@ -143,14 +132,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<DC.PurchaseOrderPaymentTerm> paymentTerms { get; set; }
         }
 
-
         [HttpGetRoute(UriTemplate = "read/paymentTerms/site")]
         public async Task<Response<List<DC.PurchaseOrderPaymentTerm>>> GetSitePaymentTerms()
         {
-            
             var dcSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
             return List2(dcSettings.PurchaseOrder?.PaymentTerms ?? new List<DC.PurchaseOrderPaymentTerm>());
-            
         }
 
         /// <summary>
@@ -226,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             cards.Remove(CARD_TYPE.OTHER);
 
-            var ret = cards.Select(x => new KeyValuePair<string, string>(x, x)) .ToList();
+            var ret = cards.Select(x => new KeyValuePair<string, string>(x, x)).ToList();
             return List2(ret);
         }
 
@@ -263,18 +249,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             //TODO: remove - to keep old admin working.
             //Rakesh 5/11/2018: Removing this logic as payment service doesn't support GetGatewayForCountry anymore.
-           /* if (!_tenantAdminSettingsContext.EnableBetaAdmin)
-            {
-                var currCountryCode = await GetCountryCodeForSite();
-                var gateway = await GetGatewayForCountry(currCountryCode);
+            /* if (!_tenantAdminSettingsContext.EnableBetaAdmin)
+             {
+                 var currCountryCode = await GetCountryCodeForSite();
+                 var gateway = await GetGatewayForCountry(currCountryCode);
 
-                var posted = dcPaymentSettings.Gateways.First();
-                posted.GatewayAccount.CountryCode = currCountryCode; // 2014-10-7 chusk: according to Wallis, we are fine with locking down gateways to Site Country codes
+                 var posted = dcPaymentSettings.Gateways.First();
+                 posted.GatewayAccount.CountryCode = currCountryCode; // 2014-10-7 chusk: according to Wallis, we are fine with locking down gateways to Site Country codes
 
-                await UpdateSettings(gateway, posted, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
-                var result = await GetSettings();
-                return result;
-            }*/
+                 await UpdateSettings(gateway, posted, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
+                 var result = await GetSettings();
+                 return result;
+             }*/
 
             await UpdateSettings(null, null, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
 
@@ -307,7 +293,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             tasks.ForEach(x =>
             {
-                var y = (dynamic) x;
+                var y = (dynamic)x;
 
 
                 var serviceClientResponse = y.Result;
@@ -315,7 +301,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (serviceClientResponse.HasException)
                 {
-                    throw (Exception) serviceClientResponse.ReadException();
+                    throw (Exception)serviceClientResponse.ReadException();
                 }
             });
         }
