@@ -73,6 +73,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .Distinct(CGComp.Default)
                 .ToList();
 
+            if (!possiblySupportedCards.Any(x => x.Type.EqualsIgnoreCase("GIFTCARD")) && definitions.Any(x => x.Features.Contains("SupportsGiftCard")))
+            {
+                possiblySupportedCards.Add(new SupportedCard
+                {
+                    Type = "GIFTCARD",
+                    FriendlyName = "GiftCard"
+                });
+            }
+
             return possiblySupportedCards
                 .Select(card =>
                     {
