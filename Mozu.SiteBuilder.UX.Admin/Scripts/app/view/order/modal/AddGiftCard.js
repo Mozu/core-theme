@@ -473,8 +473,16 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     flex: 2,
                                     listeners: {
                                         focus: {
-                                            fn: function() {
-                                                checkBalanceContainer.setDisabled(false);
+                                            fn: function () {
+                                                this.prevValue = this.value || "";
+                                            }
+                                        },
+                                        blur: {
+                                            fn: function () {
+                                                this.currentValue = this.value || "";
+                                                if (this.prevValue !== this.currentValue) {
+                                                    checkBalanceContainer.setDisabled(false);
+                                                }
                                             }
                                         }
                                     }
@@ -488,8 +496,16 @@ Ext.define('Taco.view.order.modal.AddGiftCard', {
                                     flex: 1,
                                     listeners: {
                                         focus: {
-                                            fn: function() {
-                                                checkBalanceContainer.setDisabled(false);
+                                            fn: function () {
+                                                this.prevValue = this.value || "";
+                                            }
+                                        },
+                                        blur: {
+                                            fn: function () {
+                                                this.currentValue = this.value || "";
+                                                if (this.prevValue !== this.currentValue) {
+                                                    checkBalanceContainer.setDisabled(false);
+                                                }
                                             }
                                         }
                                     }
