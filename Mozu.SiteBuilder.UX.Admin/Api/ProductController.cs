@@ -51,18 +51,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        public async Task<Response<List<Product>>> ListProducts([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter, [FromUri]string responseGroups = "")
         {
             if (pagingParams.id != null)
             {
                 return await GetSingleProductAsync(pagingParams);
             }
 
-            string responseGroups = !string.IsNullOrEmpty(extFilter.ResponseGroups)
-                ? extFilter.ResponseGroups
-                : (extFilter.SearchType == "global" || extFilter.SearchType == "picker"
-                    ? "min"
-                    : "ProductInCatalogs,Min,Price");
+            if (string.IsNullOrEmpty(responseGroups)) {
+                responseGroups = (extFilter.SearchType == "global" || extFilter.SearchType == "picker"
+                     ? "min"
+                     : "ProductInCatalogs,Min,Price");
+            }
 
             StringBuilder strBuilder = new StringBuilder(extFilter.ToFilterString(extFilter.ShowVariations));
 
