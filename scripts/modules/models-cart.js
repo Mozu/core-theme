@@ -160,7 +160,6 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
               });
             }
           };
-
           addProductsToCart();
         },
         isEmpty: function() {

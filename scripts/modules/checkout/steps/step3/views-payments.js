@@ -5,8 +5,9 @@ define(["modules/jquery-mozu",
     'hyprlivecontext',
     'modules/preserve-element-through-render',
     'modules/checkout/steps/views-base-checkout-step',
-    'modules/xpress-paypal'],
-    function ($, _, Hypr, Backbone, HyprLiveContext, preserveElements, CheckoutStepView,PayPal) {
+    'modules/xpress-paypal',
+    'modules/applepay'],
+    function ($, _, Hypr, Backbone, HyprLiveContext, preserveElements, CheckoutStepView,PayPal, ApplePay) {
         var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
         var pageContext = require.mozuData('pagecontext');
         var poCustomFields = function() {
@@ -111,7 +112,7 @@ define(["modules/jquery-mozu",
                 this.model.setPurchaseOrderPaymentTerm(e.target.value);
             },
             render: function() {
-                preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection'], function() {
+                preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection', '.apple-pay-button'], function() {
                     CheckoutStepView.prototype.render.apply(this, arguments);
                 });
                 if ($("#AmazonPayButton").length > 0 && $("#amazonButtonPaymentSection").length > 0)
@@ -123,6 +124,9 @@ define(["modules/jquery-mozu",
                      require([pageContext.visaCheckoutJavaScriptSdkUrl]);
                      this.visaCheckoutInitialized = true;
                 }
+
+                if (this.$(".apple-pay-button").length > 0)
+                    ApplePay.init();
 
                 if (this.$(".p-button").length > 0)
                     PayPal.loadScript();

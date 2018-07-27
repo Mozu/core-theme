@@ -61,7 +61,8 @@ define([
                 return this.getOrder().get('acceptsMarketing');
             },
             isExternalCheckoutFlowComplete: function () {
-                return this.get('paymentWorkflow') !== "Mozu";
+                // we check for token payment type because tokens technically are external workflows but their paymentWorkflow will always be Mozu.
+                return this.get('paymentWorkflow') !== "Mozu" || this.get("paymentType") == "token";
             },
             visaCheckoutFlowComplete: function() {
                 return this.get('paymentWorkflow') === 'VisaCheckout';
@@ -1013,7 +1014,7 @@ define([
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
                 if (activePayments && activePayments.length === 0) return false;
-                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ));
+                return (activePayments && (_.findWhere(activePayments, { paymentType: 'PayPalExpress2' }) || _.findWhere(activePayments, {paymentType: 'PayWithAmazon'}) ||  _.findWhere(activePayments, {paymentType: "token"}) ));
             },
             calculateStepStatus: function () {
                 var shippingStepComplete = this.parent.get('shippingStep').stepStatus() === 'complete',

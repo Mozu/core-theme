@@ -60,7 +60,17 @@
             },
             isAwsCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
-                return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+                if (activePayments) {
+                    var tokenPayment = _.findWhere(activePayments, { paymentType: 'token' });
+                    if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon")
+                        return true;
+
+                    var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+                    if (legacyPWA) return true;
+                    
+                    return false;
+                } else
+                   return false;
             },
             isNonMozuCheckout: function() {
                 var activePayments = this.getOrder().apiModel.getActivePayments();
@@ -416,7 +426,7 @@
                 return this.getOrder().get('acceptsMarketing');
             },
             isExternalCheckoutFlowComplete: function () {
-                return this.get('paymentWorkflow') !== "Mozu";
+                return this.get('paymentWorkflow') !== "Mozu" || this.get("paymentType") == "token";
             },
             visaCheckoutFlowComplete: function() {
                 return this.get('paymentWorkflow') === 'VisaCheckout';
@@ -2037,6 +2047,11 @@
                         });
                     }];
 
+                var activePayments = this.apiModel.getActivePayments();
+
+                var hasTokenPayment = _.findWhere(activePayments, {"paymentType" : "token"});
+                if (hasTokenPayment) requiresBillingInfo = false;
+
                 var storefrontOrderAttributes = require.mozuData('pagecontext').storefrontOrderAttributes;
                 if(storefrontOrderAttributes && storefrontOrderAttributes.length > 0) {
                     var updateAttrs = [];
@@ -2079,18 +2094,18 @@
                 this.setFulfillmentContactEmail();
 
                 // skip payment validation, if there are no payments, but run the attributes and accept terms validation.
-                if ( ((nonStoreCreditOrGiftCardTotal > 0 && this.validate()) || this.validateReviewCheckoutFields()) && ( !this.isNonMozuCheckout() || this.validate().agreeToTerms)) {
+                if ( ((nonStoreCreditOrGiftCardTotal > 0 && this.validate() && !hasTokenPayment) || this.validateReviewCheckoutFields()) && ( !this.isNonMozuCheckout() || this.validate().agreeToTerms)) {
                     this.isSubmitting = false;
                     return false;
                 }
 
                 this.isLoading(true);
 
-                if (isSavingNewCustomer) {
+                if (isSavingNewCustomer) {  
                     process.unshift(this.addNewCustomer);
                 }
 
-                var activePayments = this.apiModel.getActivePayments();
+                
                 var saveCreditCard = false;
                 if (activePayments !== null && activePayments.length > 0) {
                      var creditCard = _.findWhere(activePayments, { paymentType: 'CreditCard' });

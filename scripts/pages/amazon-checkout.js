@@ -1,6 +1,6 @@
-require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', "modules/eventbus","underscore", 
+require(["modules/jquery-mozu","modules/backbone-mozu", "modules/eventbus","underscore", 
 	"modules/amazonPay","modules/models-amazoncheckout","modules/models-amazoncheckoutv2",'hyprlivecontext','modules/preserve-element-through-render'], 
-	function ($,Backbone, EditableView, EventBus, _, AmazonPay, AmazonCheckoutModels, AmazonCheckoutModelsV2,hyprlivecontext,preserveElements) {
+	function ($,Backbone, EventBus, _, AmazonPay, AmazonCheckoutModels, AmazonCheckoutModelsV2,hyprlivecontext) {
  
 
 	var AmazonCheckoutView = Backbone.MozuView.extend({
@@ -19,9 +19,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 			
 		},
 		render: function() {
-			//preserveElements(this, ['.shippingBillingTbl'], function() {
-				Backbone.MozuView.prototype.render.call(this);
-			//});
+			Backbone.MozuView.prototype.render.call(this);
 			AmazonPay.addAddressWidget();
 			AmazonPay.addWalletWidget();
 
@@ -38,7 +36,7 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 					existing.data = awsData;
 					_.extend(
 						_.findWhere(destinations, function(destination) {
-							 if (destination.awsData && destination.awsData.awsReferenceId) return destination; 
+							if (destination.awsData && destination.awsData.awsReferenceId) return destination; 
 						}), existing);
 				}
 				else {
@@ -46,15 +44,14 @@ require(["modules/jquery-mozu","modules/backbone-mozu",'modules/editable-view', 
 						destinations.push({ data: awsData});
 					else
 						destinations= [{data: awsData}];
-					 window.order.set("destinations", destinations);
+					window.order.set("destinations", destinations);
 				}
 			}
 			else {
-				var fulfillmentInfo = window.order.get("fulfillmentInfo");//.set("data", awsData );
+				var fulfillmentInfo = window.order.get("fulfillmentInfo");
 				fulfillmentInfo.data = awsData;
 				window.order.set("fulfillmentInfo", fulfillmentInfo);
 			}
-
 		},
 		redirectToCart: function() {
 			window.amazon.Login.logout();

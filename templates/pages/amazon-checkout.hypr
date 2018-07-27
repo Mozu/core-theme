@@ -11,7 +11,7 @@
 {% require_script "pages/amazon-checkout" %}
 
 
-{% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("name", "PayWithAmazon") as payWithAmazon %} 
+{% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("name", "PAYWITHAMAZON") as payWithAmazon %} 
 	{%with payWithAmazon.credentials|findwhere("apiName", "clientId") as clientId%}
 		<script>
 			window.onAmazonLoginReady = function() {

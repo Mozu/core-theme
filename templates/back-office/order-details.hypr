@@ -161,7 +161,7 @@
                     <td>{% if "item.fulfillmentLocationCode" %}{{ item.fulfillmentMethod }} ({{ item.fulfillmentLocationCode }}){% endif %}</td>
                     <td class="currency-column">{{ item.unitPrice.extendedAmount|currency }}</td>
                     <td class="quantity-column">{{ item.quantity }}</td>
-                    <td class="currency-column">{{ item.subtotal|currency }} <br/> 
+                    <td class="currency-column">{{ item.subtotal|currency }} <br/>
 
                     </td>
                 </tr>
@@ -244,6 +244,14 @@
                                                 {% endif %}
                                                 {% if payment.paymentType|lower == "paywithamazon" %}
                                                     {{ labels.payWithAmazon }}
+                                                {%endif%}
+                                                {% if payment.paymentType|lower == "token"%}
+                                                    {%if payment.billingInfo.token.type|lower == "paywithamazon" %}
+                                                        {{ labels.payWithAmazon }}
+                                                    {% endif %}
+                                                    {%if payment.billingInfo.token.type|lower == "applepay" %}
+                                                        {{ labels.applePay }}
+                                                    {% endif %}
                                                 {% else %}
                                                     {{ payment.paymentType }}
                                                 {% endif %}
