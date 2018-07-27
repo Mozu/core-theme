@@ -3,14 +3,16 @@ define([
     "underscore",
     "modules/backbone-mozu",
     "modules/api",
-    "hyprlivecontext",
-    "hyprlive"
-],function ($, _, Backbone, api, HyprLiveContext, Hypr) {
+    "hyprlive",
+    "modules/models-token",
+    'hyprlivecontext'
+],function ($, _, Backbone, api, Hypr, TokenModel,hyprlivecontext) {
 
     var AwsCheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'order',
             awsData: null,
             handlesMessages: true,
+            tokenDetails : null,
             initialize: function (data) {
                 var self = this;
                 _.bindAll(this, "submit");
@@ -25,19 +27,19 @@ define([
                         if (methods.length === 0) {
                             me.onCheckoutError(Hypr.getLabel("awsNoShippingOptions"));
                         }
-                        
+
                         var shippingMethod = "";
                         if (existingShippingMethodCode)
                             shippingMethod = _.findWhere(methods, {shippingMethodCode: existingShippingMethodCode});
-                        
+
                         if (!shippingMethod || !shippingMethod.shippingMethodCode)
                             shippingMethod =_.min(methods, function(method){return method.price;});
-                        
+
                         var fulfillmentInfo = me.get("fulfillmentInfo");
                         fulfillmentInfo.shippingMethodCode = shippingMethod.shippingMethodCode;
                         fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
-                     
-                        
+
+
                         me.apiModel.update({ fulfillmentInfo: fulfillmentInfo}, {silent: true}).then(
                             function() {
                                 //me.isLoading (false);
@@ -67,23 +69,34 @@ define([
                     return;
                 }
                 var user = require.mozuData('user');
-                 var billingInfo = {
-                    "newBillingInfo" : 
-                    {   
-                        "paymentType": "PayWithAmazon",
-                        "paymentWorkflow": "PayWithAmazon",
+                var billingContact = me.tokenDetails ? me.tokenDetails.billingContact  || {} : {};
+                billingContact.email = (user.email !== "" ? user.email : me.get("fulfillmentInfo").fulfillmentContact.email);
+
+                var billingInfo =  {
+                    "newBillingInfo" :
+                    {
                         "card" : null,
-                        "billingContact" : {
-                            "email": (user.email !== "" ? user.email : me.get("fulfillmentInfo").fulfillmentContact.email)
-                        },
+                        "billingContact" : billingContact,
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false,
                         data : {
                             "awsData" : me.awsData
                         }
-                    },
-                    "externalTransactionId" : me.awsData.awsReferenceId
+                    }
                 };
+
+                if (me.isLegacyCheckout()) {
+                    billingInfo.externalTransactionId =  me.awsData.awsReferenceId;
+
+                    billingInfo.newBillingInfo.paymentType  = "PayWithAmazon";
+                    billingInfo.newBillingInfo.paymentWorkflow  = "PayWithAmazon";
+                } else {
+                    billingInfo.newBillingInfo.paymentType  = "token";
+                    billingInfo.newBillingInfo.token  = {
+                        "paymentServiceTokenId": me.awsData.id,
+                        "type": "PayWithAmazon"
+                    };
+                }
 
                 me.apiModel.createPayment(billingInfo, {silent:true}).then( function() {
                     me.trigger('awscheckoutcomplete', me.id);
@@ -91,6 +104,10 @@ define([
                }, function(err) {
                     me.isLoading(false);
                });
+            },
+            isLegacyCheckout: function() {
+                var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
+                return paymentSettings  && paymentSettings.namespace.toLowerCase() != "tenant" && paymentSettings.isEnabled;
             },
             submit: function() {
                 var me = this;
@@ -100,28 +117,63 @@ define([
 
                 if (me.awsData === null)
                     me.awsData = fulfillmentInfo.data;
-                else 
+                else
                     fulfillmentInfo.data = me.awsData;
 
-                   var user = require.mozuData('user');
+                if (me.isLegacyCheckout()) {
+                    var user = require.mozuData('user');
                     if (user && user.email) {
                         if (!fulfillmentInfo.fulfillmentContact)
                             fulfillmentInfo.fulfillmentContact = {};
 
-                        fulfillmentInfo.fulfillmentContact.email =  user.email; 
+                        fulfillmentInfo.fulfillmentContact.email =  user.email;
                     }
                     else {
                         fulfillmentInfo.fulfillmentContact = null;
                     }
 
-                me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
-                    me.set("fulfillmentInfo",result.data);
-                    //me.isLoading(false);
-                    if (me.apiModel.data.requiresFulfillmentInfo)
-                        me.applyShippingMethods(existingShippingMethodCode);
-                    else
-                        me.applyBilling();
-                });
+                    me.apiModel.updateShippingInfo(fulfillmentInfo, { silent: true }).then(function(result) {
+                        me.set("fulfillmentInfo",result.data);
+                        //me.isLoading(false);
+                        if (me.apiModel.data.requiresFulfillmentInfo)
+                            me.applyShippingMethods(existingShippingMethodCode);
+                        else
+                            me.applyBilling();
+                    });
+                } else {
+                    var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
+                    payWithAmazonToken.set('tokenObject', me.awsData);
+                    payWithAmazonToken.apiCreate().then(function(response){
+                        me.awsData.id = response.id;
+
+                        payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
+                            methodName: "tokenDetails",
+                            cardType: "PayWithAmazon",
+                            body: null,
+                            tokenId: response.id
+                        }).then(function(details) {
+                            window.console.log(details);
+                            if (details.error) {
+                                me.onCheckoutError(details.error.message);
+                                return;
+                            }
+                            me.tokenDetails = details;
+
+                            var shipping = details.shippingContact;
+                            var user = require.mozuData('user');
+                            if (user && user.email)
+                                shipping.email =  user.email;
+
+                            me.apiModel.updateShippingInfo({fulfillmentContact : shipping, data: me.awsData}, { silent: true }).then(function(result) {
+                                me.set("fulfillmentInfo",result.data);
+                                if (me.apiModel.data.requiresFulfillmentInfo)
+                                    me.applyShippingMethods(existingShippingMethodCode);
+                                else
+                                    me.applyBilling();
+                            });
+                        });
+                    });
+                }
             },
              onCheckoutError: function (msg) {
                 var me = this,

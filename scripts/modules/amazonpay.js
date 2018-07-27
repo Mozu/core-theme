@@ -10,18 +10,18 @@ function($,EventBus, Api, hyprlivecontext, _) {
 		isScriptLoaded: false,
 		viewName:"amazon-checkout",
 		init:function(loadScript) {
-			var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
+			var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PAYWITHAMAZON"}) ||
+								_.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
 			if (!paymentSettings || !paymentSettings.isEnabled) return;
 			this.isEnabled = paymentSettings.isEnabled;
 			var environment = this.getValue(paymentSettings, "environment");
 			var isSandbox = environment == "sandbox";
-			var region = this.getValue(paymentSettings, "region");
+			var region = this.getValue(paymentSettings, "awsRegion") || this.getValue(paymentSettings, "region");
 			this.sellerId = this.getValue(paymentSettings, "sellerId");
 			this.clientId = this.getValue(paymentSettings, "clientId");
-			this.buttonColor = this.getValue(paymentSettings,"buttonColor") || "Gold";
-			this.buttonType = this.getValue(paymentSettings,"buttonType") || "PwA";
-			this.usePopUp = (this.getValue(paymentSettings, "usepopup") || "true") == "true";
-			this.billingType = this.getValue(paymentSettings, "billingAddressOption") ;
+			this.buttonColor = "Gold";
+			this.buttonType = "PwA";
+			this.usePopUp = "true";
 			var regionMappings = {"de" : "eu", "uk" : "eu", "us" : "na", "jp" : "jp"};
 
 			if (this.sellerId && this.clientId && loadScript) {
@@ -72,10 +72,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 					useAmazonAddressBook: true,
 					size: (!isCart ? "small" : "medium"),
 					authorization: function() {
-						var scope = "profile postal_code payments:widget payments:shipping_address";
-						if (self.billingType === "1")
-							scope += " payments:billing_address";
-						
+						var scope = "profile postal_code payments:widget payments:shipping_address payments:billing_address";
 						var loginOptions = {scope: scope, popup: self.usePopUp};
 						authRequest = window.amazon.Login.authorize (loginOptions,redirectUrl);
 					},

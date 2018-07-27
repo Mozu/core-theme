@@ -30,9 +30,9 @@
         </div>
         {% if model.paymentType == "CreditCard" and not model.usingSavedCard %}
             {% include "modules/checkout/billing-credit-card-form" with model=model.card %}
-            <div class="mz-l-stack-section"> 
+            <div class="mz-l-stack-section">
                 <h4 class="mz-checkoutform-title">{{ labels.billingAddress }}</h4>
-               
+
                 {% include "modules/multi-ship-checkout/billing-contact-selector" %}
             </div>
         {% endif %}
@@ -89,8 +89,8 @@
         {% endif %}
     </div>
     {% endif %}
-    
-    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %} 
+
+    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
         {% if externalPaymentWorkflowsEnabled %}
             <div class="mz-l-formfieldgroup-row">
                 <div class="mz-paymentselector-label-separator">&ndash; {{ labels.or }} &ndash;</div>
@@ -113,8 +113,12 @@
                             {%endif%}
                             {% if name == "paywithamazon" %}
                                 <div class="mz-paymenttype" id="amazonButtonPaymentSection">
-                                </div> 
-                             {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if name == "applepay" %}
+                                <div class="apple-pay-button" role="button" width="200px" style="display: none" id="applePayButton"></div>
+                            {% endif %}
+
                         </div>
                     </div>
                 {% endwith %}
@@ -122,6 +126,9 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+    </div>
+
+
     <div class="mz-l-formfieldgroup-row mz-paymentselector-validation">
         <div class="mz-formfieldgroup-cell">
         </div>
@@ -129,6 +136,5 @@
             <span class="mz-validationmessage" data-mz-validationmessage-for="paymentType"></span>
         </div>
     </div>
-</div>
 
 {% endwith %}

@@ -120,6 +120,9 @@
                                 <div class="mz-paymenttype" id="amazonButtonPaymentSection">
                                 </div>
                              {% endif %}
+                             {% if name == "applepay" %}
+                             <div class="apple-pay-button" role="button" width="200px" style="display: none" id="applePayButton"></div>
+                             {% endif %}
                         </div>
                     </div>
                 {% endwith %}

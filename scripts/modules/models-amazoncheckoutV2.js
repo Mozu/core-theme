@@ -3,13 +3,15 @@ define([
     "underscore",
     "modules/backbone-mozu",
     "modules/api",
-    "hyprlivecontext",
-    "hyprlive"
-],function ($, _, Backbone, api, HyprLiveContext, Hypr) {
+    "hyprlive",
+    "modules/models-token",
+    "hyprlivecontext"
+],function ($, _, Backbone, api,  Hypr,TokenModel,hyprlivecontext) {
 
     var AwsCheckoutPage = Backbone.MozuModel.extend({
             mozuType: 'checkout',
             awsData: null,
+            tokenDetails : null,
             handlesMessages: true,
             defaults: {
                 overrideItemDestinations: false
@@ -63,7 +65,7 @@ define([
                         if (methods.length === 0) {
                             me.onCheckoutError(Hypr.getLabel("awsNoShippingOptions"));
                         }
-                        
+
                         var shippingMethods = [];
 
                         _.each(methods, function(method) {
@@ -107,23 +109,32 @@ define([
                 }
                 var awsDestination = me.getAwsDestination();
                 var user = require.mozuData('user');
-                 var billingInfo = {
-                    "newBillingInfo" : 
-                    {   
-                        "paymentType": "PayWithAmazon",
-                        "paymentWorkflow": "PayWithAmazon",
+                var billingContact = me.tokenDetails ? me.tokenDetails.billingContact  || {} : {};
+                billingContact.email = (user.email !== "" ? user.email : (awsDestination.destinationContact ? awsDestination.destinationContact.email : ""));
+                var billingInfo =  {
+                    "newBillingInfo" :
+                    {
                         "card" : null,
-                        "billingContact" : {
-                            "email": (user.email !== "" ? user.email : awsDestination.email)
-                        },
+                        "billingContact" : billingContact,
                         "orderId" : me.id,
                         "isSameBillingShippingAddress" : false,
                         data : {
                             "awsData" : awsDestination.data
                         }
-                    },
-                    "externalTransactionId" : awsDestination.data.awsReferenceId
+                    }
                 };
+
+                if (me.isLegacyCheckout()) {
+                    billingInfo.externalTransactionId =  awsDestination.data.awsReferenceId;
+                    billingInfo.newBillingInfo.paymentType  = "PayWithAmazon";
+                    billingInfo.newBillingInfo.paymentWorkflow  = "PayWithAmazon";
+                } else {
+                    billingInfo.newBillingInfo.paymentType  = "token";
+                    billingInfo.newBillingInfo.token  = {
+                        "paymentServiceTokenId": me.awsData.id,
+                        "type": "PayWithAmazon"
+                    };
+                }
 
                 me.apiModel.createPayment(billingInfo).then( function() {
                     me.trigger('awscheckoutcomplete', me.id);
@@ -137,26 +148,70 @@ define([
                 var awsDestination = _.find(destinations, function(destination) { return destination.data && destination.data.awsReferenceId;});
                 return awsDestination;
             },
+            isLegacyCheckout: function() {
+              var paymentSettings = _.findWhere(hyprlivecontext.locals.siteContext.checkoutSettings.externalPaymentWorkflowSettings, {"name" : "PayWithAmazon"});
+              return paymentSettings  && paymentSettings.namespace.toLowerCase() != "tenant" && paymentSettings.isEnabled;
+            },
             submit: function() {
                 var me = this;
                 me.isLoading(true);
-                
+
                 var awsDestination = me.getAwsDestination();
-                var user = require.mozuData('user');
 
-                if (user && user.email) 
-                    awsDestination.destinationContact= {email: user.email}; 
-                else 
-                    awsDestination.destinationContact = null;
 
-                
-                if (me.get('overrideItemDestinations')) {
-                    me.apiModel.unsetAllShippingDestinations().then(function(result){
+                if (me.isLegacyCheckout()) {
+                    var user = require.mozuData('user');
+
+                    if (user && user.email)
+                        awsDestination.destinationContact= {email: user.email};
+                    else
+                        awsDestination.destinationContact = null;
+
+
+                    if (me.get('overrideItemDestinations')) {
+                        me.apiModel.unsetAllShippingDestinations().then(function(result){
+                            me.setShippingDestination(awsDestination);
+                        });
+                    } else
                         me.setShippingDestination(awsDestination);
-                    });    
-                } else
-                    me.setShippingDestination(awsDestination);
-                
+                } else {
+                    if (me.awsData === null)
+                    me.awsData = awsDestination.data;
+
+                    var payWithAmazonToken = new TokenModel.Token({ type: 'PayWithAmazon' });
+                    payWithAmazonToken.set('tokenObject', me.awsData);
+                    payWithAmazonToken.apiCreate().then(function(response){
+                        me.awsData.id = response.id;
+
+                        payWithAmazonToken.apiModel.thirdPartyPaymentExecute({
+                            methodName: "tokenDetails",
+                            cardType: "PayWithAmazon",
+                            body: null,
+                            tokenId: response.id
+                        }).then(function(details) {
+                            window.console.log(details);
+                            if (details.error) {
+                                me.onCheckoutError(details.error.message);
+                                return;
+                            }
+                            me.tokenDetails = details;
+
+
+                            var user = require.mozuData('user');
+
+                            awsDestination.destinationContact = details.shippingContact;
+                            if (user && user.email)
+                                awsDestination.destinationContact.email = user.email;
+
+                            if (me.get('overrideItemDestinations')) {
+                                me.apiModel.unsetAllShippingDestinations().then(function(result){
+                                    me.setShippingDestination(awsDestination);
+                                });
+                            } else
+                                me.setShippingDestination(awsDestination);
+                        });
+                    });
+                }
             },
              onCheckoutError: function (msg) {
                 var me = this,

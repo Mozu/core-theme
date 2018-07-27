@@ -52,6 +52,7 @@
         <tbody><tr>
             <td>
                 {% regroup order.payments by paymentType as payment_types %}
+
                 {% for type in payment_types %}
                     {% regroup type.list by status as payment_statuses %}
                         {% if type.grouper == "Check" %}Check{% endif %}
@@ -69,6 +70,14 @@
                             {% endfor %}
                         {% endif %}
                         {% if type.grouper == "PayWithAmazon" %}{{ labels.payWithAmazon }}{% endif %}
+                        {% if type.grouper|lower == "token" %}
+                            {% for payment in order.payments %}
+                                {% if payment.status != "Voided" and payment.paymentType|lower == "token" %}
+                                    {% if payment.billingInfo.token.type|lower == "paywithamazon" %} {{labels.payWithAmazon}}{%endif%}
+                                    {% if payment.billingInfo.token.type|lower == "applepay" %} {{labels.applePay}}{%endif%}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         {% if not forloop.last %}<br/>{% endif %}
                 {% endfor %}
             </td>
