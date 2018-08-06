@@ -25,7 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     /// <summary>
     /// Controller for discounts.
-	/// </summary>
+    /// </summary>
     [WebApi("app/discount", SuppressDescriptorGeneration = true)]
     public class DiscountController : BaseController
     {
@@ -39,11 +39,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public DiscountController(IDiscountWebApiClient discountWebClient, 
-            IDiscountSortFormatter discountSortFormatter, 
-            IApiContext apiContext, 
-            ITenantsWebApiClient tenantClient, 
-            ICheckoutSettingsWebApiClient checkoutSettingsClient, 
+        public DiscountController(IDiscountWebApiClient discountWebClient,
+            IDiscountSortFormatter discountSortFormatter,
+            IApiContext apiContext,
+            ITenantsWebApiClient tenantClient,
+            ICheckoutSettingsWebApiClient checkoutSettingsClient,
             ICouponSetWebApiClient couponSetClient)
         {
             _discountWebClient = discountWebClient;
@@ -125,13 +125,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Create a new discount.
         /// </summary>
-		[HttpPostRoute(UriTemplate = "create")]
+        [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<Discount>>> CreateDiscount(List<Discount> discounts)
         {
             var responseList = new List<Discount>();
 
             foreach (var discount in discounts)
             {
+                discount.RequiresCoupon =
+                    !discount.CouponSets.IsNullOrEmpty() || !string.IsNullOrEmpty(discount.CouponCode);
                 var dc = Mapper.Map<DC.Discount>(discount);
 
                 // the Mozu service does not accept a null StartDate, even though the field is nullable.
@@ -186,7 +188,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update an existing discount.
         /// </summary>
-		[HttpPostRoute(UriTemplate = "edit")]
+        [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<Discount>>> EditDiscount(List<Discount> discountList, int? id = null)
         {
             var retList = new List<Discount>();
@@ -276,7 +278,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpGetRoute(UriTemplate = "paymentworkflow/list")]
         public async Task<Response<List<KeyValuePair<string, string>>>> GetPaymentWorkflows(
-            PagingParamaters pagingParams, 
+            PagingParamaters pagingParams,
             FilterCollection extFilter)
         {
             var displayNameLookup = new Dictionary<string, string>
