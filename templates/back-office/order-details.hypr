@@ -220,9 +220,6 @@
                                 <td>{{ payment.billingInfo.card.paymentOrCardType }}</td>
                                 <td>
                                     {{ payment.billingInfo.card.cardNumberPartOrMask }}
-                                    {% if payment.billingInfo.card.expireMonth %}
-                                        {{ payment.billingInfo.card.expireMonth }}/{{ payment.billingInfo.card.expireYear }}
-                                    {% endif %}
                                 </td>
                             {% else %}
                                 {% if payment.paymentType == "PurchaseOrder" %}
