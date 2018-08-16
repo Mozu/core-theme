@@ -186,6 +186,7 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
+    <Compile Include="Api\Models\Checkout\SupportedCard.cs" />
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
@@ -963,6 +964,7 @@
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderCustomFieldGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\ThirdPartyPayments.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -3506,61 +3508,9 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="System.Core">
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="mscorlib">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.ComponentModel.Primitives">
-          <HintPath>..\packages\System.ComponentModel.Primitives\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.ComponentModel.TypeConverter">
-          <HintPath>..\packages\System.ComponentModel.TypeConverter\lib\net45\System.ComponentModel.TypeConverter.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.ComponentModel.Composition">
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
         <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
           <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
           <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.Numerics">
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>

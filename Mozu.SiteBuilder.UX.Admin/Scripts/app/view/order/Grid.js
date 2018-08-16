@@ -498,7 +498,10 @@ Ext.define('Taco.view.order.Grid', {
                 sortable: false,
                 hidden: true,
                 renderer: function (value, metaData, record) {
-                    return Ext.isArray(value) ? Ext.Array.unique(Ext.Array.pluck(value, 'paymentType')).join(', ') : null;
+                    if (Ext.isArray(value)) {
+                        return Ext.Array.unique(value.map(function (val) { if (val.paymentType === "token") return val.tokenType; else return val.paymentType; }));
+                    } else
+                       return null;
                 }
             }, {
                 stateId: 'amountReceived',

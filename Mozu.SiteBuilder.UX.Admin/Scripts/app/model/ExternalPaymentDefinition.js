@@ -13,7 +13,12 @@ Ext.define('Taco.model.ExternalPaymentDefinition', {
         }, {
             name: 'isEnabled',
             type: 'bool'
-        }, {
+        },
+        {
+            name: 'isLegacy',
+            type: 'bool'
+        },
+        {
             name: 'fullyQualifiedName',
             type: 'string'
         }, {

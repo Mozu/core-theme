@@ -19,7 +19,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 
         public string IntegrationImplTypeName { get; set; }
 
-        public List<KeyValuePair<string, string>> SupportedCards { get; set; }
+        public List<SupportedCard> SupportedCards { get; set; }
 
         public List<GatewayCredentialFieldDefinition> CredentialDefinitions { get; set; }
 

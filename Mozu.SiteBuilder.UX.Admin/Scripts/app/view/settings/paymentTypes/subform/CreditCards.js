@@ -24,6 +24,18 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             scope: me
         })
 
+        me.paymentGatewaysStore.filter([{
+            filterFn: function (item, cardGatewayStore) {
+                var gatewaySupportedCards = item.get("gatewayDefinition").supportedCards;
+              
+
+                if (Ext.Array.findBy(gatewaySupportedCards, function (item) {
+                    return item.paymentType === "CC";
+                })) { return true }
+                return false;
+            }
+        }])
+
         me.cardGateways = me.record.get('cardGatewayMap');
 
         me.cardGatewayStore = Ext.create('Ext.data.Store', {
@@ -33,8 +45,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             remoteFilter: false,
             data: me.cardGateways
         });
-
-        me.cardGatewayStore.filter('cardType', /^((?!GIFTCARD).)*$/);
+      
+        me.cardGatewayStore.filter('paymentType', 'CC');
 
         me.gatewayCombo = Ext.create("Ext.form.field.ComboBox", {
             store: me.paymentGatewaysStore,
@@ -163,7 +175,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
             if (!cardType)
                 return;
             //fail if the card isnt supported on the gateway def
-            if (!cards.find(function (_) { return _.key.toLowerCase() === cardType.toLowerCase() })) {
+            if (!cards.find(function (_) { return _.type.toLowerCase() === cardType.toLowerCase() })) {
                 Taco.app.fireEvent('setmessage', 'payment type not available on ' + gateWayName, 'error');
                 return false;
             }
@@ -211,7 +223,10 @@ Ext.define('Taco.view.settings.paymentTypes.subform.CreditCards', {
         var recordCardGatewayMap = me.record.get('cardGatewayMap');
         var updatedCardGatewayMap = Ext.Array.map(recordCardGatewayMap, function (cardRecord) {
             var cardGateway = me.cardGatewayMap.find(function (card) {
-                return cardRecord.cardType === card.cardType;
+                if (card.paymentType === "CC") {
+                    return cardRecord.cardType === card.cardType;
+                }
+                return false
             });
             if (cardGateway) {
                 return Object.assign(cardRecord, cardGateway);

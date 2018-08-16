@@ -181,6 +181,10 @@ Ext.define('Taco.view.order.subform.Payment', {
                         return ('GiftCard: ' + value.cardNumber);
                     }
 
+                    if (paymentType === 'token') {
+                        return value.tokenType;
+                    }
+
                     return value.paymentType;
                 }
             }, {

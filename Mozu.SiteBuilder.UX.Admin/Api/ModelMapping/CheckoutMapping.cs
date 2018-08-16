@@ -48,7 +48,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         return dc.PaymentSettings.Gateways
                             .Where(g => g.GatewayAccount != null && g.SupportedCards.Count > 0)
-                            .SelectMany(g => g.SupportedCards, (g, c) => new CardGateway() { GatewayId = g.GatewayAccount.Id, CardType = c, IsEnabled = true, GatewayName = g.GatewayAccount.Name })
+                            .SelectMany(g => g.SupportedCards, (g, c) => new CardGateway()
+                            {
+                                GatewayId = g.GatewayAccount.Id,
+                                CardType = c.CardTypeId,
+                                PaymentType = c.PaymentType,
+                                IsEnabled = true,
+                                GatewayName = g.GatewayAccount.Name
+                               
+                            })
                             .ToList();
                     }
                     else
@@ -72,7 +80,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 }))
                 .ForMember(x => x.ExternalPaymentWorkflows, op => op.ResolveUsing(dc => (dc.PaymentSettings != null)
                     ? dc.PaymentSettings.ExternalPaymentWorkflowDefinitions
-                    : null));
+                    : null))
+                .ForMember(x=>x.ThirdPartyPaymentSettings, op=>op.ResolveUsing(y=>y.OrderProcessingSettings?.ThirdPartyPaymentSettings));
                
 
             CreateMap<DCss.Gateway, Gateway>()
@@ -95,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     }
                     return creds;
                 }))
-                .ForMember(x=>x.SupportsGiftCardProcessing, op=>op.ResolveUsing(dc=> dc.GatewayDefinition?.Features?.Contains("SupportsGiftCard")))
+                .ForMember(x=>x.SupportsGiftCardProcessing, op=>op.ResolveUsing(dc=> dc.GatewayDefinition?.Features?.Any(x=>x.EqualsIgnoreCase("giftcards"))))
                 //ignore
                 .ForMember(x => x.IsActive, op => op.Ignore())
 
@@ -121,13 +130,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                     if (x.CardGatewayMap != null)
                     {
-                        var cardsLookByGateway = x.CardGatewayMap.Where(m => m.IsEnabled).ToLookup(m => m.GatewayId);
+                        var cardsLookByGateway = x.CardGatewayMap.Where(m => m.IsEnabled && !string.IsNullOrEmpty(m.GatewayId)).ToLookup(m => m.GatewayId);
                         foreach (var g in cardsLookByGateway)
                         {
                             ps.Gateways.Add(new DCss.Gateway
                             {
                                 GatewayAccount = new DCp.GatewayAccount { Id = g.Key },
-                                SupportedCards = g.Select(cm => cm.CardType).ToList()
+                                SupportedCards = g.Select(cm => new DCp.SiteGatewaySupportedCard
+                                {
+                                    CardTypeId = cm.CardType,
+                                    ProcessingGatewayAccountId = !string.IsNullOrEmpty(cm.ProcessingGatewayId)?cm.ProcessingGatewayId:null
+                                } ).ToList()
                             });
                         }
                     }
@@ -179,10 +192,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             // disgusting implicit mappings.
             CreateMap<DCp.GatewayDefinition, GatewayDefinition>()
                 //todo: confirm KeyValuePair transformation Greg Murray on 2014-01-24 
-                .ForMember(x => x.SupportedCards, op => op.ResolveUsing(dc => (dc.SupportedCards.IsNullOrEmpty())
-                    ? null
-                    : dc.SupportedCards.Select(
-                        x => new KeyValuePair<string, string>(x.Type, x.FriendlyName)).ToList()))
+                .ForMember(x => x.SupportedCards, op => op.ResolveUsing(dc => dc.SupportedCards));
                 ;
             CreateMap<DCp.GatewayCredentialFieldDefinition, GatewayCredentialFieldDefinition>();
             CreateMap<DCp.PreAuthorizeDefinition, PreAuthorizeDefinition>();
@@ -213,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SupportedCards, opt => opt.Ignore())
                 .ForMember(x => x.CountryCode, opt => opt.Ignore())
                 .ForMember(x => x.IsActive, opt => opt.Ignore())
-                .ForMember(x => x.SupportsGiftCardProcessing, op => op.ResolveUsing(dc => dc.GatewayDefinition?.Features?.Contains("SupportsGiftCard")))
+                .ForMember(x => x.SupportsGiftCardProcessing, op => op.ResolveUsing(dc => dc.GatewayDefinition?.Features?.Any(x=>x.EqualsIgnoreCase("giftcards"))))
                 ;
 
             CreateMap<Gateway, DCss.TenantGateway>()

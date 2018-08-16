@@ -152,7 +152,11 @@ Ext.define('Taco.store.TooltipHelp', {
         }, {
             key: 'purchaseOrder.siteSettings.customFields',
             value: 'Use custom fields to capture additional information from the shopper on the checkout page when purchase order is used as the payment method. The label entered below will be the label for the text fields displayed on the storefront and admin.'
-        }, {
+        },{
+            key: 'thirdPartyPayment.processingGateway',
+            value: 'Payment Gateway that is used to process Digital Wallet payments.'
+        },
+         {
             key: 'default',
             value: 'Default Tooltip'
         }

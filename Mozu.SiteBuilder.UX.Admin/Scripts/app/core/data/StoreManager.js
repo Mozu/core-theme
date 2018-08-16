@@ -61,27 +61,27 @@ Ext.define('Taco.core.data.StoreManager', {
             ctxLvl = '';
             Ext.each(config.contextLevel, function (ctxType) {
                 switch (ctxType) {
-                case 'sc':
-                case 'mc':
-                {
-                    ctxLvl += '-mc=' + Taco.app.context.getMasterCatalogId();
-                    break;
-                }
-                case 'c':
-                {
-                    ctxLvl += '-c=' + Taco.app.context.getMasterCatalogId()+'-'+ Taco.app.context.getCatalogId();
-                    break;
-                }
-                case 's':
-                {
-                    ctxLvl += '-s=' + Taco.app.context.getMasterCatalogId() + '-' + Taco.app.context.getCatalogId()+'-'+ Taco.app.context.getSiteId();
-                    break;
-                }
-                case 't':
-                {
-                    ctxLvl += '-t=' + Taco.app.context.getTenantId();
-                    break;
-                }
+                    case 'sc':
+                    case 'mc':
+                        {
+                            ctxLvl += '-mc=' + Taco.app.context.getMasterCatalogId();
+                            break;
+                        }
+                    case 'c':
+                        {
+                            ctxLvl += '-c=' + Taco.app.context.getMasterCatalogId()+'-'+ Taco.app.context.getCatalogId();
+                            break;
+                        }
+                    case 's':
+                        {
+                            ctxLvl += '-s=' + Taco.app.context.getMasterCatalogId() + '-' + Taco.app.context.getCatalogId()+'-'+ Taco.app.context.getSiteId();
+                            break;
+                        }
+                    case 't':
+                        {
+                            ctxLvl += '-t=' + Taco.app.context.getTenantId();
+                            break;
+                        }
                 }
 
                 
@@ -246,5 +246,20 @@ Ext.define('Taco.core.data.StoreManager', {
             storeConfig.isActive = true;
         }
         return this.getOrCreate(storeConfig);
+    },
+    deepCloneStore: function (config) {
+        var store = this.getOrCreate(config);
+        var target = Ext.create ('Ext.data.Store', {
+            model: store.model
+        });
+
+        Ext.each(store.getRange(), function (record) {
+            var newRecordData = Ext.clone (record.copy().data);
+            var model = new store.model(newRecordData, newRecordData.id);
+
+            target.add (model);
+        });
+
+        return target;
     }
 });

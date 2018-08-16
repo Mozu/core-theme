@@ -15,6 +15,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
 using Mozu.PaymentService.Contracts;
 using GatewayDefinition = Mozu.PaymentService.Contracts.GatewayDefinition;
+using SupportedCard = Mozu.PaymentService.Contracts.SupportedCard;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -73,11 +74,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .Distinct(CGComp.Default)
                 .ToList();
 
-            if (!possiblySupportedCards.Any(x => x.Type.EqualsIgnoreCase("GIFTCARD")) && definitions.Any(x => x.Features.Contains("SupportsGiftCard")))
+            if (!possiblySupportedCards.Any(x => x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)))
             {
                 possiblySupportedCards.Add(new SupportedCard
                 {
                     Type = "GIFTCARD",
+                    PaymentType = "GC",
                     FriendlyName = "GiftCard"
                 });
             }
@@ -86,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .Select(card =>
                     {
                         var associatedGatewayAccount = checkoutSettings.PaymentSettings.Gateways
-                            .FirstOrDefault(x => x.SupportedCards.Any(c => c.EqualsIgnoreCase(card.Type)));
+                            .FirstOrDefault(x => x.SupportedCards.Any(c => c.CardTypeId.EqualsIgnoreCase(card.Type)));
 
                         return new CardGateway
                         {
@@ -94,7 +96,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             GatewayName = associatedGatewayAccount?.GatewayAccount.Name,
                             CardDisplay = card.FriendlyName,
                             CardType = card.Type,
-                            IsEnabled = associatedGatewayAccount != null
+                            PaymentType = card.PaymentType,
+                            IsEnabled = associatedGatewayAccount != null,
+                            ProcessingGatewayId = associatedGatewayAccount?.SupportedCards.FirstOrDefault(x => x.CardTypeId == card.Type)?.ProcessingGatewayAccountId
                         };
                     }
                 )
@@ -219,9 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var settings = await (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsAsync();
             var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SupportedCards).ToList();
 
-            cards.Remove(CARD_TYPE.OTHER);
-
-            var ret = cards.Select(x => new KeyValuePair<string, string>(x, x)).ToList();
+            var ret = cards.Where(x=>x.CardTypeId != CARD_TYPE.OTHER && x.PaymentType=="CC").Select(x => new KeyValuePair<string, string>(x.CardTypeId, x.CardTypeId)).ToList();
             return List2(ret);
         }
 
@@ -356,13 +358,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 if (x.SupportedCards == null || x.SupportedCards.Count == 0)
                 {
-                    x.SupportedCards = new List<KeyValuePair<string, string>>
+                    x.SupportedCards = new List<Models.Checkout.SupportedCard>
                     {
-                        new KeyValuePair<string, string>("VISA", "VISA"),
-                        new KeyValuePair<string, string>("AMEX", "American Express"),
-                        new KeyValuePair<string, string>("MC", "MasterCard"),
-                        new KeyValuePair<string, string>("DISCOVER", "Discover"),
-                        new KeyValuePair<string, string>("JCB", "JCB"),
+                        new Models.Checkout.SupportedCard() {Type = "VISA", FriendlyName = "VISA"},
+                        new Models.Checkout.SupportedCard() {Type = "AMEX", FriendlyName = "American Express"},
+                        new Models.Checkout.SupportedCard() {Type = "MC", FriendlyName = "MasterCard"},
+                        new Models.Checkout.SupportedCard() {Type = "DISCOVER", FriendlyName = "Discover"},
+                        new Models.Checkout.SupportedCard() {Type = "JCB", FriendlyName = "JCB"}
                     };
                 }
             });

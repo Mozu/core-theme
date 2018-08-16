@@ -294,7 +294,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             Id = "CheckoutService",
                             InternalUrl = settings.Urls("service-url-CheckoutWebApi"),
                             RequiresSsl = true
-                        }
+                        }, 
+                         new ServiceInfo
+                         {
+                             Id = "tokenService",
+                             InternalUrl = settings.Urls("service-url-StorefrontTokensWebApi"),
+                             RequiresSsl = true
+
+                         }
 
 
 

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-07-16
+ * Mozu JavaScript SDK - v0.3.0 - 2018-09-07
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -2713,7 +2713,7 @@ module.exports = {
 
     }
 }
-},{"./utils":37}],14:[function(_dereq_,module,exports){
+},{"./utils":38}],14:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/collection.js
@@ -2841,7 +2841,7 @@ var ApiObject = _dereq_('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":30,"./utils":37}],15:[function(_dereq_,module,exports){
+},{"./object":23,"./types/locations":30,"./utils":38}],15:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/constants/default.js
@@ -3021,7 +3021,7 @@ module.exports = ApiContextConstructor;
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utils":37,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
+},{"./interface":21,"./reference":24,"./utils":38,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/errors.js
@@ -3073,7 +3073,7 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":37}],18:[function(_dereq_,module,exports){
+},{"./utils":38}],18:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/iframexhr.js
@@ -3240,7 +3240,7 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":37}],19:[function(_dereq_,module,exports){
+},{"./utils":38}],19:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init.js
@@ -3282,7 +3282,7 @@ _init.ApiObject.prototype.inspect = function () {
 _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":37}],21:[function(_dereq_,module,exports){
+},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":38}],21:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/interface.js
@@ -3516,7 +3516,7 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":37}],22:[function(_dereq_,module,exports){
+},{"./object":23,"./reference":24,"./utils":38}],22:[function(_dereq_,module,exports){
 module.exports=
 
 //# sourceUrl=src/methods.json
@@ -4183,6 +4183,19 @@ module.exports=
       "includeSelf": true
     }
   },
+  "token": {
+    "create": {
+      "verb": "POST",
+      "template": "{+tokenService}",
+      "returnType": "json"
+    },
+    "execute": {
+      "verb": "POST",
+      "shortcutParam": "cardType",
+      "template": "{+tokenService}/{cardType}/execute",
+      "returnType": "json"
+    }
+  },
   "accountcard": {
     "template": "{+customerService}{id}/cards"
   },
@@ -4525,7 +4538,8 @@ ApiObjectConstructor.types = {
     product: _dereq_('./types/product'),
     shipment: _dereq_('./types/shipment'),
     user: _dereq_('./types/user'),
-    wishlist: _dereq_('./types/wishlist')
+    wishlist: _dereq_('./types/wishlist'), 
+    token: _dereq_('./types/token')
 };
 ApiObjectConstructor.hydratedTypes = {};
 
@@ -4566,7 +4580,7 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/user":35,"./types/wishlist":36,"./utils":37}],24:[function(_dereq_,module,exports){
+},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/token":35,"./types/user":36,"./types/wishlist":37,"./utils":38}],24:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/reference.js
@@ -4751,7 +4765,7 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":37}],25:[function(_dereq_,module,exports){
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":38}],25:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cart.js
@@ -4811,7 +4825,7 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":37}],26:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":38}],26:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
@@ -4822,7 +4836,7 @@ module.exports = {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":37}],27:[function(_dereq_,module,exports){
+},{"../utils":38}],27:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/checkout.js
@@ -4845,7 +4859,9 @@ module.exports = (function () {
         'SPLIT_ORDER_ITEM_FAILED': 'Split Order Item Failed',
         'SET_SHIPPING_METHODS_FAILED': 'Set Shipping Methods Failed',
         'UNSET_DESTINATIONS_FAILED': 'Sorry, something went wrong: Unsetting all shipping destinations failed',
-        'SET_DESTINATIONS_FAILED': "Sorry, something went wrong: Setting all shipping destinations failed"
+        'SET_DESTINATIONS_FAILED': "Sorry, something went wrong: Setting all shipping destinations failed",
+        'TOKEN_MISSING': "Payment Token missing or unrecognized",
+        'TOKEN_TYPE_MISSING': "Payment Token Type missing or unrecognized"
     });
 
     var checkoutStatus2IsComplete = {};
@@ -4895,6 +4911,12 @@ module.exports = (function () {
         },
         "Check": function (checkout, billingInfo) {
             return checkout.createPayment();
+        },
+        "ThirdParty": function (checkout, billingInfo) {
+            if (!checkout.token) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.paymentServiceTokenId) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.type) errors.throwOnObject(checkout, 'TOKEN_TYPE_MISSING');
+            return checkout.createPayment(billingInfo);
         }
     };
 
@@ -5177,7 +5199,7 @@ module.exports = (function () {
 
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],28:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":38}],28:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/creditcard.js
@@ -5384,7 +5406,7 @@ module.exports = (function() {
     };
 
 }());
-},{"../errors":17,"../utils":37}],29:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":38}],29:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/customer.js
@@ -5448,7 +5470,7 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":37}],30:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":38}],30:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/locations.js
@@ -5565,7 +5587,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":37}],31:[function(_dereq_,module,exports){
+},{"../utils":38}],31:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/login.js
@@ -5872,7 +5894,7 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":37}],33:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":38}],33:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/product.js
@@ -5931,7 +5953,7 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":37}],34:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../utils":38}],34:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/shipment.js
@@ -5948,7 +5970,41 @@ module.exports = {
         });
     }
 };
-},{"../utils":37}],35:[function(_dereq_,module,exports){
+},{"../utils":38}],35:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=src/types/token.js
+
+﻿var utils = _dereq_('../utils');
+var errors = _dereq_('../errors');
+
+errors.register({
+    'CREATE_TOKEN_FAILED': 'Create payment token failed for the following reason: {0}',
+    'GET_SESSION_FAILED': 'Get payment session failed for the following reason: {0}'
+});
+
+module.exports = {
+    create: function (options) {
+        var self = this;
+        var payload = {token: self.data.tokenObject, type: self.data.type.toUpperCase()};
+        return this.api.action(this, 'create', payload).then(function (res) {
+            return res;
+        }, function (error) {
+            errors.throwOnObject(self, 'CREATE_TOKEN_FAILED', error);
+        }
+        );
+    },
+    thirdPartyPaymentExecute: function (payload) {
+        var self = this;
+        return this.api.action(this, 'execute', payload).then(function (res) {
+            return res;
+        }, function (error) {
+            errors.throwOnObject(self, 'GET_SESSION_FAILED', error.msg);
+        });
+    }
+}
+
+},{"../errors":17,"../utils":38}],36:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/user.js
@@ -5989,7 +6045,7 @@ module.exports = {
         });
     }
 };
-},{}],36:[function(_dereq_,module,exports){
+},{}],37:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/wishlist.js
@@ -6046,7 +6102,7 @@ module.exports = (function() {
         }
     };
 }());
-},{"../errors":17,"../utils":37}],37:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":38}],38:[function(_dereq_,module,exports){
 (function (process){
 
 

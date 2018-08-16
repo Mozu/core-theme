@@ -15,7 +15,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
         
         this.title = this.externalPayment.get('name');
 
-        var externalGateway = Ext.clone(this.record.get('externalPaymentWorkflows'));
+        var externalGateways = Ext.clone(this.record.get('externalPaymentWorkflows'));
         var credFieldDefs = this.externalPayment.get('credentials');
         var gatewayType = this.externalPayment.get('name').toUpperCase();
         var credOriginalValues = [];
@@ -28,8 +28,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
         this.credFields = [];
         this.credValues = [];
         
-        Ext.each(externalGateway, function (item) {
-            if (gatewayType == item['name'].toUpperCase()) {
+        Ext.each(externalGateways, function (item) {
+            if (item['isLegacy'] === true && gatewayType === item['name'].toUpperCase()) {
 
                 description = item['description'];
                 credOriginalValues = item['credentials'];
