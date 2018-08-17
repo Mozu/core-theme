@@ -9,3 +9,7 @@ Mozu continually updates the Core theme. Sometimes, you may have to merge an upd
 For the latest enhancements, see the [Release Notes](https://github.com/Mozu/core-theme/blob/master/RELEASE_NOTES.md).
 
 
+## Documentation Guide for Backbone
+
+- [Mozu Backbone Models](docs/backbone-mozu-model.md)
+- [Mozu BackboneViews](docs/backbone-mozu-view.md)
