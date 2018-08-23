@@ -8,14 +8,13 @@ Ext.define('Taco.shared.model.File', {
     fields: [
         {
             name: 'cmsId',
-            type:'string',
+            type: 'string',
             useNull: true,
-            convert:function (v, record) {
-                v = v|| (record.raw ? record.raw.id : null);
+            convert: function (v, record) {
+                v = v || ((record.raw && !record.raw.url) ? record.raw.id : null);
                 return v;
             }
         },
-
         {
             name: 'id',
             type: 'string',
