@@ -96,41 +96,51 @@ Ext.define('Taco.view.order.Header', {
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var loadCart = function(){
+        var loadCart = function () {
             Taco.app.setLoading();
             Ext.Ajax.request({
-                url: '/admin/app/order/addShoppersCartItems?userId='+userId+'&orderId='+orderId,
+                url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
                 method: 'POST',
                 success: function (response) {
                     Taco.app.setLoading(false);
                     me.record.reload();
-                    if (modalConfigWindow){
+                    if (modalConfigWindow) {
                         modalConfigWindow.close();
                     }
                 },
                 failure: function (response) {
                     Taco.app.setLoading(false);
-                    if (modalConfigWindow){
+                    if (modalConfigWindow) {
                         modalConfigWindow.close();
                     }
-                }                  
+                }
             });
         };
         var configIframe = Ext.create('Ext.ux.IFrame', {
             height: '100%',
-            src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=admin&redir=' + encodeURIComponent('/cart?mz_cust_impersonate='+customerId),
-            listeners:{
-                load:function(iframe){
+            src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=admin&redir=' + encodeURIComponent('/cart?mz_cust_impersonate=' + customerId),
+            listeners: {
+                load: function (iframe) {
                     var doc = iframe.getDoc();
-                    if(!doc){
+                    if (!doc) {
                         return;
                     }
-                    if (!doc.location || !doc.location.pathname || !/\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)){
+                    // If the shopper is not a registered shopper, the customer account won't have a userId, which is used to lookup the cart.
+                    // Impersonating an unregistered shopper should generate a placeholder userId. Brute force that userId out of the page.
+                    if (!userId) {
+                        var userPreloadScript = doc.getElementById('data-mz-preload-user');
+                        if (userPreloadScript && userPreloadScript.textContent) {
+                            var userData = JSON.parse(userPreloadScript.textContent);
+                            userId = userData.userId;
+                        }
+                    }
+
+                    if (!doc.location || !doc.location.pathname || !/\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)) {
                         return;
                     }
                     loadCart();
-                },            
-                scope:this
+                },
+                scope: this
             }
         });
 
@@ -151,7 +161,7 @@ Ext.define('Taco.view.order.Header', {
             items: [
                 configIframe,
             ]
-       
+
         });
         modalConfigWindow.center();
     },
@@ -179,7 +189,7 @@ Ext.define('Taco.view.order.Header', {
                     {
                         text: 'View User\'s Cart',
                         itemId: 'viewCartId',
-                        hidden: !custData.userId || this.record.get('orderStatus') !== 'Pending',
+                        hidden: this.record.get('orderStatus') !== 'Pending',
                         handler: function () {
                             var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
                             this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());

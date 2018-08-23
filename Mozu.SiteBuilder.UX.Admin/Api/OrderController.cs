@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             foreach (var cartItem in cart?.Items)
             {
                 var product = JObject.FromObject(cartItem.Product).ToObject<CR.Products.Product>();
-                var res = (await _orderWebApiClient.CreateOrderItem(orderId, new CR.Orders.OrderItem
+                var orderItem = new CR.Orders.OrderItem
                 {
                     Data = cartItem.Data,
                     FulfillmentLocationCode = cartItem.FulfillmentLocationCode,
@@ -109,8 +109,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     Product = product,
                     Quantity = cartItem.Quantity,
                     IsRecurring = cartItem.IsRecurring,
+                };
 
-                }).ConfigureAwait(false));
+                var res = await _orderWebApiClient.CreateOrderItem(orderId, orderItem).ConfigureAwait(false);
                 if (res.HasException)
                 {
                     throw res.ReadException();
