@@ -49,15 +49,20 @@ Ext.define('Taco.model.Order', {
         type: 'string',
         useNull: true
     },
-        {
-            name: 'isDraft',
-            type: 'boolean',
-            defaultValue: false
-        }, {
-            name: 'hasDraft',
-            type: 'boolean',
-            defaultValue: false
-        },
+    {
+        name: 'isDraft',
+        type: 'boolean',
+        defaultValue: false
+    }, {
+        name: 'hasDraft',
+        type: 'boolean',
+        defaultValue: false
+    },
+    {
+        name: 'originalCartId',
+        type: 'string',
+        useNull: true
+    },
     {
         name: 'parentOrderId',
         type: 'string',

@@ -96,7 +96,7 @@ Ext.define('Taco.view.order.Header', {
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var loadCart = function () {
+        var loadCart = function() {
             Taco.app.setLoading();
             Ext.Ajax.request({
                 url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
@@ -114,8 +114,23 @@ Ext.define('Taco.view.order.Header', {
                         modalConfigWindow.close();
                     }
                 }
+                // TODO: Now that we're done with the cart (for now), should we remove the shopper's storefront token from the CSR's cookie?
             });
         };
+        var linkOrderToCart = function(cartId) {
+            Taco.app.setLoading();
+            Ext.Ajax.request({
+                url: '/admin/app/order/linkOrderToCart?cartId=' + cartId + '&orderId=' + orderId,
+                method: 'POST',
+                success: function (response) {
+                    Taco.app.setLoading(false);
+                    me.record.reload();
+                },
+                failure: function (response) {
+                    Taco.app.setLoading(false);
+                }
+            });
+        }
         var configIframe = Ext.create('Ext.ux.IFrame', {
             height: '100%',
             src: '/_gosite/' + Taco.app.context.getSiteId() + '?environment=admin&redir=' + encodeURIComponent('/cart?mz_cust_impersonate=' + customerId),
@@ -125,6 +140,7 @@ Ext.define('Taco.view.order.Header', {
                     if (!doc) {
                         return;
                     }
+
                     // If the shopper is not a registered shopper, the customer account won't have a userId, which is used to lookup the cart.
                     // Impersonating an unregistered shopper should generate a placeholder userId. Brute force that userId out of the page.
                     if (!userId) {
@@ -135,10 +151,23 @@ Ext.define('Taco.view.order.Header', {
                         }
                     }
 
-                    if (!doc.location || !doc.location.pathname || !/\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)) {
-                        return;
+                    // Link the order to the cart. If we submit this order, it should then delete the cart.
+                    var cartPreloadScript = doc.getElementById('data-mz-preload-cart');
+                    if (cartPreloadScript && cartPreloadScript.textContent) {
+                        var cartData = JSON.parse(cartPreloadScript.textContent);
+                        var cartId = cartData.id;
+                        var originalCartId = me.record.get('originalCartId');
+
+                        // If we haven't linked this order to the cart yet, or if the user's current cart has changed
+                        // e.g. the user has done "empty cart", then link the order to this latest cart.
+                        if (!originalCartId || (cartId && originalCartId !== cartId)) {
+                            linkOrderToCart(cartId);
+                        }
                     }
-                    loadCart();
+
+                    if (doc.location && doc.location.pathname && /\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)) {
+                        loadCart();
+                    }
                 },
                 scope: this
             }

@@ -27,6 +27,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int? SiteId { get; set; }
 
+        public string OriginalCartId { get; set; }
+
         public string ParentOrderId { get; set; }
 
         public int? ParentOrderNumber { get; set; }

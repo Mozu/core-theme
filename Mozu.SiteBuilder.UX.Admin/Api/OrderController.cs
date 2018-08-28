@@ -23,6 +23,7 @@ using DCo = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Newtonsoft.Json.Linq;
 
@@ -123,6 +124,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var res = await _orderWebApiClient.ApplyCoupon(orderId, coup).ConfigureAwait(false);
             }
             return true;
+        }
+
+        [HttpPostRoute(UriTemplate = "linkOrderToCart")]
+        public async Task<bool> LinkOfflineOrderToCart(string cartId, string orderId)
+        {
+            try
+            {
+                var order = (await _orderWebApiClient.GetOrder(orderId).ConfigureAwait(false)).ReadAsSync();
+                if (order.OriginalCartId.EqualsIgnoreCase(cartId)) return true;
+
+                order.OriginalCartId = cartId;
+                var updatedOrder = (await _orderWebApiClient.UpdateOrder(orderId, order).ConfigureAwait(false)).ReadAsSync();
+                return updatedOrder.OriginalCartId.EqualsIgnoreCase(cartId);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft)
