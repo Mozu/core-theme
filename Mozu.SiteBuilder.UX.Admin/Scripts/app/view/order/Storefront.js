@@ -1,22 +1,20 @@
 /**
  * @class Taco.view.order.Storefront
  */
+// This is Thom's first proof-of-concept for cart take over.
+// This has been replaced by a modal dialog found in the order's Header.js.
 Ext.define('Taco.view.order.Storefront', {
     extend: 'Ext.panel.Panel',
     mixins: {
-
         navHeader: 'Taco.core.ux.mixins.NavHeader'
-
     },
     requires: [
-
         'Ext.ux.IFrame',
         'Taco.core.ux.action.Action'
-
     ],
     customerId: null,
     orderId: null,
-    title: 'thing dooer',
+    title: 'Order',
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
@@ -29,9 +27,32 @@ Ext.define('Taco.view.order.Storefront', {
     padding: '0 0 0 0',
     url: '/',
     enableSearchBarInHeader: false,
+    saveText: "Add Items to Order",
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
+        this.hideContextSwitcherBar = true;
+        //this.setTitle("Do not proceed to checkout after adding items to cart. Use <em>Add Items to Order</em> to complete the order.");
+        //this.setTitle("Thingamabober");
+        this.titlePanel = {
+            xtype: 'container',
+            height: '100%',
+            layout: { type: 'hbox', align: 'stretch' },
+            flex: 1,
+            items: [
+                {
+                    xtype: 'component',
+                    flex: 1
+                },
+                {
+                    xtype: 'component',
+                    html: "<span style='display:inline-block; height:60px; vertical-align:middle'>&nbsp;</span>" + // Hackery for vertical alignment.
+                          "<span style='display:inline-block; vertical-align:middle'>Do not proceed to checkout after adding items to cart.<br>Use <em>Add Items to Order</em> to complete the order.</span>",
+                    flex: 0
+                }
+            ]
+        };
+
         this.mixins.navHeader.init.apply(this);
 
         me.items = [{
@@ -43,57 +64,50 @@ Ext.define('Taco.view.order.Storefront', {
                 type: 'fit'
             },
             items: [{
-                    xtype: 'panel',
-                    itemId: 'editorCardPanel',
-                    region: 'center',
+                xtype: 'panel',
+                itemId: 'editorCardPanel',
+                region: 'center',
 
-                    layout: {
-                        type: 'vbox', // Arrange child items vertically
-                        align: 'stretch', // Each takes up full width
-                        padding: 5
+                layout: {
+                    type: 'vbox', // Arrange child items vertically
+                    align: 'stretch', // Each takes up full width
+                    padding: 5
+                },
+                dockedItems: this.getSubheader(),
+                items: [{
+                    xtype: 'component',
+                    itemId: 'leftIframeOffset',
+                    width: 0
+                }, {
+                    flex: 1,
+                    itemId: 'iframe',
+                    xtype: 'uxiframe',
+                    listeners: {
+                        load: this.onIframeLoad,
+                        scope: this
                     },
-                    dockedItems: this.getSubheader(),
-                    items: [{
-                        xtype: 'component',
-                        itemId: 'leftIframeOffset',
-                        width: 0
-                    }, {
-                        flex: 1,
-                        itemId: 'iframe',
-                        xtype: 'uxiframe',
-                        cls: 'taco-website-iframe',
-                        listeners: {
-                            load: this.onIframeLoad,
-                            scope: this
-                        },
 
-                        src: this.getStartUrl()
-                    }, {
-                        xtype: 'component',
-                        itemId: 'rightIframeOffset',
-                        width: 0
-                    }]
-                }
-
-            ]
-
+                    src: this.getStartUrl()
+                }, {
+                    xtype: 'component',
+                    itemId: 'rightIframeOffset',
+                    width: 0
+                }]
+            }]
         }];
 
         this.callParent(arguments);
         this.iframe = this.down('#iframe');
 
-      
-       Taco.model.CustomerAccount.load(me.customerId, {
-                success: function (record, op) {
-                   me.customer = record;
-                   me.setTitle( 'Order for ' + record.get('firstNameSafe') + ' ' + record.get('lastNameSafe'));
-               }
-           });
-
-
+        Taco.model.CustomerAccount.load(me.customerId, {
+            success: function (record, op) {
+                me.customer = record;
+                me.setTitle('Order for ' + record.get('firstNameSafe') + ' ' + record.get('lastNameSafe'));
+            }
+        });
     },
 
-    onIframeLoad: function() {
+    onIframeLoad: function () {
         var me = this,
             doc = me.iframe.getDoc(),
             cart = me.getCartData();
@@ -104,10 +118,10 @@ Ext.define('Taco.view.order.Storefront', {
             return;
         }
         if (cart) {
-            Ext.Array.each(doc.getElementsByTagName('form'), function(form) {
+            Ext.Array.each(doc.getElementsByTagName('form'), function (form) {
                 if (me.cartFormRe.test(form.action)) {
-                    Ext.fly(form).on('submit', function(e) {
-                      
+                    Ext.fly(form).on('submit', function (e) {
+
                         e.preventDefault();
                         e.stopPropagation();
                         me.onCheckoutSubmit(cart.id);
@@ -118,48 +132,40 @@ Ext.define('Taco.view.order.Storefront', {
         // setTimeout(index.pollDoc, 100, index);
     },
 
-
-    getStartUrl: function() {
+    getStartUrl: function () {
         return '/_gosite/' + Taco.app.context.getSiteId() + '?environment=admin&redir=' + encodeURIComponent(Ext.String.urlAppend(this.url, 'isAdminMode=true&mz_cust_impersonate=' + this.customerId));
     },
 
-    getSubheader: function() {
-
+    getSubheader: function () {
         return {
             xtype: 'toolbar',
         };
-
     },
-    onSave : function (){
+    onSave: function () {
         var me = this;
 
-        me.iframe.getWin().require(['modules/api'] , function(api){
-            api.post('cart').then ( function (resp){ 
-                if ( resp.data.items.length ){
-                    me.onCheckoutSubmit( resp.data.id);
-                }else{
+        me.iframe.getWin().require(['modules/api'], function (api) {
+            api.get('cart').then(function (resp) {
+                if (resp.data.items.length) {
+                    me.onCheckoutSubmit(resp.data.id);
+                } else {
                     me.onCancel();
                 }
             });
         });
-        
     },
-    onCancel: function (){
+    onCancel: function () {
         var me = this;
-        Taco.core.StateManager.attemptNavigate('/orders/edit/'+ me.orderId);
+        Taco.core.StateManager.attemptNavigate('/orders/edit/' + me.orderId);
     },
-    getCartData: function() {
+    getCartData: function () {
         var script = this.iframe.getDoc().getElementById('data-mz-preload-cart');
         var text;
         if (script) text = script.textContent || script.innerText || script.text || script.innerHTML;
         if (text) return text && JSON.parse(text);
     },
-    onCheckoutSubmit: function(cartId) {
-         var me = this;
-
-
-
-
+    onCheckoutSubmit: function (cartId) {
+        var me = this;
 
         me.setLoading();
         Ext.Ajax.request({
@@ -170,19 +176,18 @@ Ext.define('Taco.view.order.Storefront', {
                 CustomerAccountId: me.customerId,
                 CartId: cartId
             },
-            success: function(record) {
+            success: function (record) {
                 me.setLoading(false);
                 Taco.core.StateManager.attemptNavigate('/orders/edit/' + JSON.parse(record.responseText).items);
             },
-            failure: function() {
+            failure: function () {
                 me.setLoading(false);
                 alert('error editing  order');
-               // Taco.core.StateManager.attemptNavigate('/orders/edit/' + record.id);
+                // Taco.core.StateManager.attemptNavigate('/orders/edit/' + record.id);
             }
-
         });
     },
-    onCheckoutPage: function(newOrderId) {
+    onCheckoutPage: function (newOrderId) {
         var me = this;
         if (me.customerId) {
             me.setLoading();
@@ -193,11 +198,11 @@ Ext.define('Taco.view.order.Storefront', {
                     OrderId: newOrderId,
                     CustomerAccountId: me.customerId
                 },
-                success: function(record) {
+                success: function (record) {
                     me.setLoading(false);
                     Taco.core.StateManager.attemptNavigate('/orders/edit/' + newOrderId);
                 },
-                failure: function() {
+                failure: function () {
                     me.setLoading(false);
                     alert('ooops - setCustomer');
                     Taco.core.StateManager.attemptNavigate('/orders/edit/' + newOrderId);
@@ -223,8 +228,6 @@ Ext.define('Taco.view.order.Storefront', {
     //        delay = delay || 100;
     //        setTimeout( index.pollDoc, delay , index );
     //    }
-    //
-    //
     //},
     //setIFrameLocation: function(config) {
     //
@@ -270,8 +273,6 @@ Ext.define('Taco.view.order.Storefront', {
     //},
     //
     //navigate: function (config) {
-    //
-    //
     //    console.log( 'naving to', config.url);
     //    var parser = document.createElement('a');
     //    parser.href = config.url;
@@ -293,17 +294,8 @@ Ext.define('Taco.view.order.Storefront', {
     //    //  this.showHideButtons([]);
     //    this.url = config.url;
     //
-    //
-    //
     //    this.setIFrameLocation(config);
     //
     //    // Taco.core.StateManager.addState('website/page' + config.url);
-    //
-    //
-    //
-    //
-    //
-    //
     //},
-
 });

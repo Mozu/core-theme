@@ -26,13 +26,11 @@ Ext.define('Taco.view.order.subform.Detail', {
     bodyPadding: '0 0 0 0 ',
 
     config: {
-
         // order model
         record: null,
 
         // determines whether the detailGrid allows field editing
         editMode: false,
-
 
         totalColumnWidth: 100,
 
@@ -40,34 +38,15 @@ Ext.define('Taco.view.order.subform.Detail', {
         rowTotalColumnWidth: 150,
 
         itemId: "orderDetails"
-
     },
-    orderUpdateBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateItem'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updatePrice'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateDiscount'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateAttribute'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'manualAdjustment'
-                            }
-
-                            ],
+    orderUpdateBehaviors: [
+        { model: 'Taco.model.Order', behavior: 'update' },
+        { model: 'Taco.model.Order', behavior: 'updateItem' },
+        { model: 'Taco.model.Order', behavior: 'updatePrice' },
+        { model: 'Taco.model.Order', behavior: 'updateDiscount' },
+        { model: 'Taco.model.Order', behavior: 'updateAttribute' },
+        { model: 'Taco.model.Order', behavior: 'manualAdjustment' }
+    ],
 
 
 // width of the actionColumn. used to align the grid total container
@@ -160,12 +139,7 @@ Ext.define('Taco.view.order.subform.Detail', {
             me.onRecordChange();
         }, me);
 
-        //me.tools = me.getButtonActions();
-
-        // var siteContext = Taco.app.context.getCurrent().urlToken;
-
         this.cls += ' ' + Taco.baseCSSPrefix + 'orderform-detail';
-
 
         // Sort this store by LineId first!
         this.record.itemsStore.sort({
@@ -213,7 +187,6 @@ Ext.define('Taco.view.order.subform.Detail', {
                 }
             }
         });
-
 
         // subtotals, orderlevel discounts, tax shipping, and totals
         this.totalRow = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
@@ -495,47 +468,6 @@ Ext.define('Taco.view.order.subform.Detail', {
         me.updateHasDraftToolbar();
         me.updateButtonActions();
     },
-    
-
-    // sets up the action menu for the gear icon trigger;  Will be called every time the record loads since actions may become disabled and enabled after each change;
-
-    //getMenuActions: function () {
-    //    var me = this,
-    //        availableActions = me.record.get("availableActions"),
-    //        canAccept = Ext.Array.indexOf(availableActions, "AcceptOrder") != -1,
-    //        canCancel = Ext.Array.indexOf(availableActions, "CancelOrder") != -1,
-    //        canEdit = !canAccept,
-    //        menu;
-        
-    //    menu = [{
-    //        text: 'Accept Order',
-    //        handler: function () {
-    //            this.detailGrid.acceptOrder();
-    //        },
-    //        scope: me,
-    //        hidden: !canAccept
-    //    }, {
-    //        text: 'Edit Details',
-    //        handler: function () {
-    //            this.editOrder();
-    //        },
-    //        scope: me,
-    //        disabled: !canEdit
-    //    }, {
-    //        text: 'Cancel Order',
-    //        handler: function() {
-    //            this.detailGrid.cancelOrder();
-    //        },
-    //        scope: me,
-    //        disabled: !canCancel
-    //    }];
-
-    //    return menu;
-        
-    //},
-
-    
-    // removed temporarily. due to designer snerst
 
     // update whether the buttons are enabled or disabled with every update of the record;
     updateButtonActions: function () {
@@ -647,6 +579,7 @@ Ext.define('Taco.view.order.subform.Detail', {
                 disabled: !canEdit
             },
             {
+                // Deprecated by the "View User's Cart" link in the order's Header.js.
                 text: 'Edit In Storefront',
                 xtype: "button",
                 ui: "action",

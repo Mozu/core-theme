@@ -181,59 +181,34 @@ Ext.define('Taco.view.order.Header', {
             autoScroll: false,
             height: '90%',
             scale: 'large',
-            primaryText: 'Add Cart Items',
+            primaryText: 'Add Items to Order',
             secondaryText: 'Close',
             primaryHandler: loadCart,
             width: '90%',
             shadow: true,
-            title: '',
+            title: 'Do not proceed to checkout after adding items to cart. Return to Admin to complete the order.',
+            actionBar: {
+                dock: 'top'
+            },
             items: [
-                configIframe,
+                configIframe
             ]
-
         });
         modalConfigWindow.center();
     },
     loadItems: function () {
-        var custData = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
-
         this.customerCmp = Ext.widget({
-            xtype: 'container',
+            xtype: 'component',
             itemId: 'customerCmp',
             cls: 'pane account-name',
             flex: 33,
-            items: [{
-                xtype: 'label',
-                text: 'Account:',
-                cls: 'label label-light'
-            }, {
-                xtype: 'button',
-                ui: 'link',
-                text: (custData.lastNameSafe) ? custData.firstNameSafe + " " + custData.lastNameSafe : custData.emailAddressSafe,
-                itemId: "accountCallToAction",
-                plain: true,
-                shadow: false,
-                cls: Taco.baseCSSPrefix + 'grid-row-menu',
-                menu: [
-                    {
-                        text: 'View User\'s Cart',
-                        itemId: 'viewCartId',
-                        hidden: this.record.get('orderStatus') !== 'Pending',
-                        handler: function () {
-                            var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
-                            this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
-                        },
-                        scope: this
-                    },
-                    {
-                        text: 'Edit Customer',
-                        handler: function () {
-                            Taco.app.StateManager.attemptNavigate('customer/edit/' + custData.id);
-                        }
-                    }
-                ],
-                scope: this
-            }]
+            tpl: [
+                '<span class="label label-light">Account:</span>',
+                '<tpl if="id">',
+                '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
+                '</tpl>'
+            ],
+            data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
         });
 
         this.customerCmp.updateCustomer = function (custData){
@@ -242,12 +217,43 @@ Ext.define('Taco.view.order.Header', {
         };
 
         this.siteCmp = Ext.widget({
-            xtype: 'component',
+            xtype: 'container',
             itemId: 'siteCmp',
             cls: 'pane pane-site',
             flex: 33,
-            tpl: ['<span class="label label-light">Site:</span>', '<a href="/_gosite/{siteId}" target="_blank">{siteName}</a>'],
-            data: this.record.getData()
+            items: [
+                {
+                    xtype: 'label',
+                    text: 'Site:',
+                    cls: 'label label-light'
+                },
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox'
+                    },
+                    items: [
+                        {
+                            xtype: 'component',
+                            tpl: ['<a href="/_gosite/{siteId}" target="_blank">{siteName}</a>'],
+                            data: this.record.getData(),
+                            margin: '0, 20, 0, 0'
+                        },
+                        {
+                            xtype: 'button',
+                            ui: 'link',
+                            text: 'View User\'s Cart',
+                            itemId: 'viewCartId',
+                            hidden: this.record.get('orderStatus') !== 'Pending',
+                            handler: function () {
+                                var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+                                this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
+                            },
+                            scope: this
+                        }
+                    ]
+                }
+            ]
         });
 
         this.changeAddressCmp = Ext.widget({
