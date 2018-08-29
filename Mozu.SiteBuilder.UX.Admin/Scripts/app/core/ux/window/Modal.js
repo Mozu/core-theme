@@ -276,7 +276,7 @@ Ext.define('Taco.core.ux.window.Modal', {
 
         windowCfg = windowCfg || {};
 
-        actionsCfg = windowCfg.actions || this.actions
+        actionsCfg = windowCfg.actions || this.actions;
 
         // actions may be one object instead of an array of them
         actionsCfg = Ext.isArray(actionsCfg) ? actionsCfg : [actionsCfg];

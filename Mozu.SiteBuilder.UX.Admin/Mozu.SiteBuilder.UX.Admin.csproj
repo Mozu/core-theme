@@ -838,9 +838,11 @@
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
     <Content Include="Scripts\app\view\location\inventory\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
+    <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\widget\AttributeDropdown.js" />
     <Content Include="Scripts\app\view\order\widget\EcommerceGiftCardForm.js" />
     <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
@@ -2288,7 +2290,6 @@
     <Content Include="Scripts\resources\css\ExtUx\css\ItemSelector.css" />
     <Content Include="Scripts\resources\css\ExtUx\css\LiveSearchGridPanel.css" />
     <Content Include="Scripts\resources\css\ExtUx\css\TabScrollerMenu.css" />
-    <Content Include="Scripts\resources\css\taco\widgets\tfs2609084916238200047.css" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.eot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
