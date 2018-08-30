@@ -93,6 +93,11 @@ Ext.define('Taco.view.order.Header', {
             }
         });
     },
+
+    canViewShopperCart: function() {
+        return this.record.getCustomer() && this.record.get('orderStatus') === 'Pending';
+    },
+
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
@@ -211,10 +216,18 @@ Ext.define('Taco.view.order.Header', {
             data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
         });
 
-        this.customerCmp.updateCustomer = function (custData){
-            this.query('#viewCartId')[0].hidden = !custData.userId;
-            this.query('#accountCallToAction')[0].setText( (custData.lastNameSafe) ? custData.firstNameSafe + " " + custData.lastNameSafe : custData.emailAddressSafe);
-        };
+        this.viewCartLink = Ext.widget({
+            xtype: 'button',
+            ui: 'link',
+            text: 'View User\'s Cart',
+            itemId: 'viewCartLink',
+            hidden: !this.canViewShopperCart(),
+            handler: function() {
+                var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+                this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
+            },
+            scope: this
+        });
 
         this.siteCmp = Ext.widget({
             xtype: 'container',
@@ -239,18 +252,7 @@ Ext.define('Taco.view.order.Header', {
                             data: this.record.getData(),
                             margin: '0, 20, 0, 0'
                         },
-                        {
-                            xtype: 'button',
-                            ui: 'link',
-                            text: 'View User\'s Cart',
-                            itemId: 'viewCartId',
-                            hidden: this.record.get('orderStatus') !== 'Pending',
-                            handler: function () {
-                                var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
-                                this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
-                            },
-                            scope: this
-                        }
+                        this.viewCartLink
                     ]
                 }
             ]
@@ -294,6 +296,7 @@ Ext.define('Taco.view.order.Header', {
             ],
             data: this.record.getData()
         });
+
         var orderRecord = this.record;
         this.statusCmp = Ext.widget({
             xtype: 'component',
@@ -396,10 +399,10 @@ Ext.define('Taco.view.order.Header', {
                                 })[0];
 
                                 if (subpaymentForThisOrder) {
-                                    // Attributes that will be replaced with the subpayment's attribute include: 
+                                    // Attributes that will be replaced with the subpayment's attribute include:
                                     // status, amountCollected, amountCredited, amountRequested, amountRefunded
                                     paymentData = Ext.apply(payment, subpaymentForThisOrder);
-                                } 
+                                }
                             }
                             if (paymentData.status === 'Authorized' || paymentData.status === 'Pending' || paymentData.status === 'Invoiced' || paymentData.status === 'PaymentRequested') {
                                 retVal += (paymentData.amountRequested - paymentData.amountCollected);
@@ -423,7 +426,7 @@ Ext.define('Taco.view.order.Header', {
             tpl: [
                 '<table>',
                 '<tr>',
-                '<td>', 
+                '<td>',
                     '<tpl if="submittedDate">',
                         '<span class="label label-light">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
                     '<tplelse>',
@@ -523,22 +526,7 @@ Ext.define('Taco.view.order.Header', {
             cls: 'pane pane-addresses',
             flex: 33,
             hidden: !this.record.getCustomer(),
-            items: [/*{
-                    xtype: 'component',
-                    cls: 'order-addresses',
-                    autoEl: {
-                        tag: 'div',
-                        html: '<span class="label">Order Addresses</span>'
-                    }
-            }, {
-                    xtype: 'button',
-                    ui: 'link',
-                    text: '(Change)',
-                    itemId: "changeLink",
-                    handler: this.changeAddress,
-                    scope: this
-            },*/
-                this.addressesCmp]
+            items: [ this.addressesCmp ]
         });
 
         this.customerSelector = Ext.widget({
@@ -620,29 +608,28 @@ Ext.define('Taco.view.order.Header', {
             this.relatedCmp
         ]);
 
-        //set the default focus 
+        //set the default focus
         if (!!this.record.getCustomer()) {
             var changeLink = this.down("#changeLink");
             changeLink.focus();
         } else {
-            this.customerSelector.focus()
+            this.customerSelector.focus();
         }
-
     },
-    
+
     isCustomerValid: function (customer) {
         var me = this,
             isValid = true;
 
         // need to check to see if the customer has an email address on the default shipping address.
         var defaultShippingAddress = Ext.Array.findBy(customer.data.contacts, function (contact) {
-            return contact.isPrimaryShipping
-        })
-        
+            return contact.isPrimaryShipping;
+        });
+
         // if we have a default shipping address that lacks an email. prompty
         if (defaultShippingAddress && !defaultShippingAddress.email) {
             isValid = false;
-            Ext.MessageBox.show({                
+            Ext.MessageBox.show({
                 title: "Invalid Shipping Address",
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
@@ -660,20 +647,19 @@ Ext.define('Taco.view.order.Header', {
                     }
                 }
             });
-
-
         }
 
-        return isValid
+        return isValid;
     },
 
     updateHeader: function () {
         var data = this.record.getData();
-        
+
         Ext.suspendLayouts();
 
-        this.customerCmp.updateCustomer(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
-        this.detailCmp.update( Ext.apply({ channelName: this.record.getChannelName() }, data));
+        this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
+        this.viewCartLink[this.canViewShopperCart() ? 'show' : 'hide']();
+        this.detailCmp.update(Ext.apply({ channelName: this.record.getChannelName() }, data));
         this.statusCmp.update(Ext.apply({}, { orderRecord: this.record }, data));
         this.addressesCmp.update(data);
         this.relatedCmp.update(data);
@@ -706,7 +692,6 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-
     changeAddress: function (focusAfterCloseCmp) {
         var me = this;
 
@@ -729,7 +714,6 @@ Ext.define('Taco.view.order.Header', {
     },
 
     changeCustomer: function (customerRecord) {
-
         this.record.setCustomer({
             jsonData: {
                 orderId: this.record.getId(),
@@ -741,7 +725,7 @@ Ext.define('Taco.view.order.Header', {
                     try {
                         var responseMessage = JSON.parse(response.responseText).message;
                         message = message + ' ' + responseMessage;
-                    } catch (e) { } 
+                    } catch (e) { }
                     Taco.app.fireEvent('setmessage', message, 'error');
                     console.error(options, response);
                     return;

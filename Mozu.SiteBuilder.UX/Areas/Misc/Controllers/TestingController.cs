@@ -269,6 +269,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                 authHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
                                 authHelper.ClearSessionToken();
                             }
+                            else
+                            {
+                                // If you were impersonating a shopper previously, but now the customer ID
+                                // is bad (e.g. "undefined") then clear out the tokens.
+                                var authHelper = Request.Resolve<IAuthenticationHelper>();
+                                authHelper.ClearStorefrontTokens();
+                                authHelper.ClearSessionToken();
+                            }
                         }
                         break;
                     }
