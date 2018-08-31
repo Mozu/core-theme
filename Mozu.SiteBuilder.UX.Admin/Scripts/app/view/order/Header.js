@@ -101,38 +101,37 @@ Ext.define('Taco.view.order.Header', {
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var loadCart = function() {
-            Taco.app.setLoading();
+        var loadCart = function(button) {
+            modalConfigWindow.setLoading({ msg: 'Loading' });
             Ext.Ajax.request({
                 url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
                 method: 'POST',
                 success: function (response) {
-                    Taco.app.setLoading(false);
+                    modalConfigWindow.setLoading(false);
                     me.record.reload();
                     if (modalConfigWindow) {
                         modalConfigWindow.close();
                     }
                 },
                 failure: function (response) {
-                    Taco.app.setLoading(false);
+                    modalConfigWindow.setLoading(false);
                     if (modalConfigWindow) {
                         modalConfigWindow.close();
                     }
                 }
-                // TODO: Now that we're done with the cart (for now), should we remove the shopper's storefront token from the CSR's cookie?
             });
         };
         var linkOrderToCart = function(cartId) {
-            Taco.app.setLoading();
+            modalConfigWindow.setLoading({ msg: 'Loading' });
             Ext.Ajax.request({
                 url: '/admin/app/order/linkOrderToCart?cartId=' + cartId + '&orderId=' + orderId,
                 method: 'POST',
                 success: function (response) {
-                    Taco.app.setLoading(false);
+                    modalConfigWindow.setLoading(false);
                     me.record.reload();
                 },
                 failure: function (response) {
-                    Taco.app.setLoading(false);
+                    modalConfigWindow.setLoading(false);
                 }
             });
         }
@@ -184,17 +183,27 @@ Ext.define('Taco.view.order.Header', {
             draggable: true,
             layout: 'fit',
             autoScroll: false,
-            height: '90%',
             scale: 'large',
+            width: '95%',
+            height: '95%',
             primaryText: 'Add Items to Order',
             secondaryText: 'Close',
             primaryHandler: loadCart,
-            width: '90%',
             shadow: true,
-            title: 'Do not proceed to checkout after adding items to cart. Return to Admin to complete the order.',
-            actionBar: {
-                dock: 'top'
-            },
+            title: 'Do not proceed to checkout after adding items to cart. Use <em>Add Items to Order</em> to complete the order.',
+            showActionsBar: false, // Opt for tools in the title.
+            actionBar: { dock: 'top' },
+            tools: [
+                {
+                    ui: 'action',
+                    xtype: 'button',
+                    scale: 'medium',
+                    text: 'Add Items to Order',
+                    handler: loadCart,
+                    scope: me,
+                    margin: '0, 30, 0, 0' // Make room for the close button.
+                }
+            ],
             items: [
                 configIframe
             ]
@@ -202,17 +211,15 @@ Ext.define('Taco.view.order.Header', {
         modalConfigWindow.center();
     },
     loadItems: function () {
-        this.customerCmp = Ext.widget({
+        this.customerLink = Ext.widget({
             xtype: 'component',
-            itemId: 'customerCmp',
-            cls: 'pane account-name',
-            flex: 33,
+            itemId: 'customerLink',
             tpl: [
-                '<span class="label label-light">Account:</span>',
                 '<tpl if="id">',
                 '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
                 '</tpl>'
             ],
+            margin: '0, 20, 0, 0',
             data: this.record.getCustomer() ? this.record.getCustomer().getData() : {}
         });
 
@@ -222,6 +229,8 @@ Ext.define('Taco.view.order.Header', {
             text: 'View User\'s Cart',
             itemId: 'viewCartLink',
             hidden: !this.canViewShopperCart(),
+            // Customer update behavior required for impersonation.
+            requiredBehaviors: [{ model: 'Taco.model.CustomerAccount', behavior: 'update' }],
             handler: function() {
                 var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
                 this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
@@ -229,15 +238,15 @@ Ext.define('Taco.view.order.Header', {
             scope: this
         });
 
-        this.siteCmp = Ext.widget({
+        this.customerCmp = Ext.widget({
             xtype: 'container',
-            itemId: 'siteCmp',
-            cls: 'pane pane-site',
+            itemId: 'customerCmp',
+            cls: 'pane account-name',
             flex: 33,
             items: [
                 {
                     xtype: 'label',
-                    text: 'Site:',
+                    text: 'Account:',
                     cls: 'label label-light'
                 },
                 {
@@ -246,16 +255,20 @@ Ext.define('Taco.view.order.Header', {
                         type: 'hbox'
                     },
                     items: [
-                        {
-                            xtype: 'component',
-                            tpl: ['<a href="/_gosite/{siteId}" target="_blank">{siteName}</a>'],
-                            data: this.record.getData(),
-                            margin: '0, 20, 0, 0'
-                        },
+                        this.customerLink,
                         this.viewCartLink
                     ]
                 }
             ]
+        });
+
+        this.siteCmp = Ext.widget({
+            xtype: 'component',
+            itemId: 'siteCmp',
+            cls: 'pane pane-site',
+            flex: 33,
+            tpl: ['<span class="label label-light">Site:</span>', '<a href="/_gosite/{siteId}" target="_blank">{siteName}</a>'],
+            data: this.record.getData()
         });
 
         this.changeAddressCmp = Ext.widget({
@@ -657,7 +670,7 @@ Ext.define('Taco.view.order.Header', {
 
         Ext.suspendLayouts();
 
-        this.customerCmp.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
+        this.customerLink.update(this.record.getCustomer() ? this.record.getCustomer().getData() : {});
         this.viewCartLink[this.canViewShopperCart() ? 'show' : 'hide']();
         this.detailCmp.update(Ext.apply({ channelName: this.record.getChannelName() }, data));
         this.statusCmp.update(Ext.apply({}, { orderRecord: this.record }, data));
