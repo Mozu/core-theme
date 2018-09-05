@@ -22,20 +22,33 @@ Ext.define('Taco.shared.view.field.Customer', {
    
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
+            '<div class="x-boundlist-item taco-boundlist-item-customer">',
             '<tpl if="lastName">',
-                '<div class="x-boundlist-item">{lastNameSafe}, {firstNameSafe} - ({id}) - {emailAddressSafe}</div>',
+                '<div class="name">{lastNameSafe}, {firstNameSafe}</div>{[this.getAccountPill(values)]}',
+                '<div class="email">{emailAddressSafe}</div>',
             '<tpl elseif="contacts.length">',
-                '<div class="x-boundlist-item">{[this.getNames(values.contacts)]} - ({id}) - {[values.emailAddressSafe || "(no email address)"]}</div>',
+                '<div class="name">{[this.getNames(values.contacts)]}</div>{[this.getAccountPill(values)]}',
+                '<div class="email">{[values.emailAddressSafe || "(no email address)"]}</div>',
             '<tpl else>',
-                '<div class="x-boundlist-item">Customer {id}</div>',
+                '<div class="name">Customer</div>{[this.getAccountPill(values)]}',
+                '<div class="email"></div>',
             '</tpl>',
+            '</div>',
         '</tpl>',
         {
-            getNames: function (contacts) {
+            getNames: function(contacts) {
                 var lastName = Ext.util.Format.htmlEncode(contacts[0].lastName);
                 var firstName = Ext.util.Format.htmlEncode(contacts[0].firstName);
 
                 return Ext.String.format('{0}, {1}', lastName, firstName);
+            },
+            getRegistrationStatus: function(customer) {
+                return (customer.isAnonymous) ? 'Shopper' : 'Guest';
+            },
+            getAccountPill: function(customer) {
+                return (customer.isAnonymous)
+                    ? '<div class="account x-column-content-pill x-column-content-pill-false taco-combo-pill">Guest ' + customer.id + '</div>'
+                    : '<div class="account x-column-content-pill x-column-content-pill-true taco-combo-pill">Shopper ' + customer.id + '</div>';
             }
         }
     ),
@@ -44,7 +57,7 @@ Ext.define('Taco.shared.view.field.Customer', {
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
             '<tpl if="lastName">',
-                '{lastName}, {firstName} - ({id}) - {emailAddress}',
+                '{lastName}, {firstName} ({id}) - {emailAddress}',
             '<tpl else>',
                 'Customer {id}',
             '</tpl>',
@@ -53,8 +66,8 @@ Ext.define('Taco.shared.view.field.Customer', {
     listConfig: {
         loadingText: 'Searching...',
         emptyText: '<div style="padding:20px; 10px; ">No matching customers found.</div>'
-       
     },
+
     pageSize: 30,
 
     queryParam: 'filter',
