@@ -101,7 +101,7 @@ Ext.define('Taco.view.order.Header', {
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var loadCart = function(button) {
+        var addCartItems = function(button) {
             modalConfigWindow.setLoading({ msg: 'Loading' });
             Ext.Ajax.request({
                 url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
@@ -170,7 +170,10 @@ Ext.define('Taco.view.order.Header', {
                     }
 
                     if (doc.location && doc.location.pathname && /\/checkout[^\/]*\/([a-zA-Z0-9]+)/.test(doc.location.pathname)) {
-                        loadCart();
+                        me.record.reload();
+                        if (modalConfigWindow) {
+                            modalConfigWindow.close();
+                        }
                     }
                 },
                 scope: this
@@ -188,7 +191,7 @@ Ext.define('Taco.view.order.Header', {
             height: '95%',
             primaryText: 'Add Items to Order',
             secondaryText: 'Close',
-            primaryHandler: loadCart,
+            primaryHandler: addCartItems,
             shadow: true,
             title: 'Do not proceed to checkout after adding items to cart. Use <em>Add Items to Order</em> to complete the order.',
             showActionsBar: false, // Opt for tools in the title.
@@ -199,7 +202,7 @@ Ext.define('Taco.view.order.Header', {
                     xtype: 'button',
                     scale: 'medium',
                     text: 'Add Items to Order',
-                    handler: loadCart,
+                    handler: addCartItems,
                     scope: me,
                     margin: '0, 30, 0, 0' // Make room for the close button.
                 }

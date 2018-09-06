@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Mozu.CommerceRuntime.Contracts.Carts;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -99,7 +100,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var cart = (await _cartWebApiClient.GetUserCart(userId).ConfigureAwait(false)).ReadAsSync();
 
-            foreach (var cartItem in cart?.Items)
+            foreach (var cartItem in cart?.Items ?? new List<CartItem>())
             {
                 var product = JObject.FromObject(cartItem.Product).ToObject<CR.Products.Product>();
                 var orderItem = new CR.Orders.OrderItem

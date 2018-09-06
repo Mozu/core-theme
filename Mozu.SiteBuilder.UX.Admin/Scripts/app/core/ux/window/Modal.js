@@ -94,7 +94,7 @@ Ext.define('Taco.core.ux.window.Modal', {
         actions = this.configureActions(config);
         actionBar = this.initActionBar(actions, config.actionBar || this.actionBar);
 
-        if ((config.showActionsBar !== false) && this.showActionsBar) {
+        if (config.showActionsBar !== false) {
             config.dockedItems = Ext.Array.merge([actionBar], config.dockedItems);
         }
         
