@@ -8,6 +8,7 @@ Ext.define('Taco.view.category.Edit', {
     requires: ['Taco.view.category.Form'],
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
+    extraButtonEnabled: false,
     enableSearchBarInHeader: false,
     parentTitleCfg: {
         title: 'Categories',
@@ -40,7 +41,7 @@ Ext.define('Taco.view.category.Edit', {
                     }
                 }, {
                     itemId: 'preview',
-                    text: 'View Staged',                        
+                    text: 'View Staged',
                     menu: {
                         plain: true,
                         shadow: false,
@@ -61,7 +62,7 @@ Ext.define('Taco.view.category.Edit', {
                                 record: record,
                                 id: record.getId()
                             };
-                        
+
                         Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
                     }
                 }
@@ -75,11 +76,10 @@ Ext.define('Taco.view.category.Edit', {
                             previewSites = [],
                             liveSites = [];
 
-                    
                         if (me.record.phantom) {
                             liveItems.disable();
                             previewItem.disable();
-                            return; 
+                            return;
                         }
 
                         var ctx = Taco.app.context.getCurrentContext();
@@ -87,7 +87,7 @@ Ext.define('Taco.view.category.Edit', {
                         if (previewItem && previewItem.menu) {
                             previewMenu = previewItem.menu;
                             liveMenu = liveItems.menu;
-                            
+
                             var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
 
                             Ext.each(sites, function (site) {
@@ -105,7 +105,6 @@ Ext.define('Taco.view.category.Edit', {
                                         });
                                     }
                                 });
-                            
 
                             if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
                                 previewMenu.removeAll();
@@ -113,10 +112,6 @@ Ext.define('Taco.view.category.Edit', {
                                 liveMenu.removeAll();
                                 liveMenu.add(liveSites);
                             }
-                            
-
-
-                            
                         }
                     },
                     scope: this
@@ -124,10 +119,7 @@ Ext.define('Taco.view.category.Edit', {
             }
         };
 
-
-
         this.callParent(arguments);
-
     },
     viewInSite: function(site, env, noPrompt) {
         var url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + this.record.getId());
@@ -156,9 +148,5 @@ Ext.define('Taco.view.category.Edit', {
     onBeforeRender: function () {
         var me = this;
         this.callParent(arguments);
-
-        me.mon(me.form, 'dirtychange', function (form, isDirty) {
-            Taco.core.StateManager.setDirtyState(isDirty);
-        }, me);
     }
 });

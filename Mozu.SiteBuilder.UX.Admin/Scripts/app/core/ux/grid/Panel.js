@@ -2,7 +2,7 @@
  * @class Taco.core.ux.grid.Panel
  * @author Jimmy Sanford
  * A base class for grid panels.
- * 
+ *
  */
 Ext.define('Taco.core.ux.grid.Panel', {
     extend: 'Ext.grid.Panel',

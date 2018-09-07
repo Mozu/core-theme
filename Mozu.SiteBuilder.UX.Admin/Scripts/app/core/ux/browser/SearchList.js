@@ -29,6 +29,8 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
     gridHeaderLabel: 'Items',
 
+    enableSearchBarInHeader: true,
+
     enableNavHeader: false,
 
     hideNavMenu: false,
@@ -119,7 +121,10 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
         if (me.enableNavHeader) {
             //initialize the content navigation toolbar.
-            this.mixins.navHeader.init.apply(this);
+            this.mixins.navHeader.init.apply(this, {
+                enableSearchBarInHeader: me.enableSearchBarInHeader,
+                showTitleBorder: me.showTitleBorder
+            });
         }
 
         this.mixins.rowEditable.constructor.apply(this);

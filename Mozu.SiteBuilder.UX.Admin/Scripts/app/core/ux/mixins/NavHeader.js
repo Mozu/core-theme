@@ -1,9 +1,9 @@
 ﻿/**
- * @class Taco.core.ux.mixins.NavHeader 
+ * @class Taco.core.ux.mixins.NavHeader
  * View Mixin that provides the Content Navigation Toolbar (title, save, cancel, etc)
  * add this to the initComponent of your view to initilize this mixin
 
- * TODO: Add the next and previous buttons to this class with call to overrideable template methods.  
+ * TODO: Add the next and previous buttons to this class with call to overrideable template methods.
   // to include this mixin in your class:
 
         mixins: {
@@ -11,7 +11,6 @@
         },
 
 
-  
     < ... code fragment ... >
 
         initComponent: function (){
@@ -98,7 +97,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 me.bindActionsToForm();
             },
             titlechange: function (panel, newTitle, pillCfg) {
-                
+
                 var me = this;
                 var parentTitleCfg = this.parentTitleCfg ? this.parentTitleCfg : {};
                 var lightTagLabel = parentTitleCfg.lightTagLabel && this.record
@@ -145,19 +144,21 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     });
                 };
 
-                // override the split editor behavior 
+                // override the split editor behavior
                 // so when we navigate back from an order, we update the title to 'Orders'
                 if (newTitle === 'Orders') {
                       me.titleCmp.update({
                         title: newTitle,
-                        id: this.titleId
+                        id: this.titleId,
+                        showTitleBorder: this.showTitleBorder
                       });
                 }
 
                 else if (Object.keys(parentTitleCfg).length === 0) {
                     me.titleCmp.update({
                         title: newTitle,
-                        id: this.titleId
+                        id: this.titleId,
+                        showTitleBorder: this.showTitleBorder
                     });
                 }
 
@@ -168,7 +169,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                         id: this.titleId,
                         lightTagLabel: lightTagLabel,
                         pillText: pillText,
-                        pillType: pillType
+                        pillType: pillType,
+                        showTitleBorder: this.showTitleBorder
                     });
 
                     if (this.pillTooltip) {
@@ -176,7 +178,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     }
 
                     if (pillCfg.pillTooltipData && pillCfg.pillTooltipTpl) {
-                        
+
                         this.pillTooltip = Ext.create('Taco.core.ux.content.Tooltip', {
                             elementSelector: '[data-role="nav-header-pill"]',
                             arrowPosition: 'top',
@@ -218,13 +220,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
          * Any additional actions you want to add on top of the default Save/Cancel actions
          */
         additionalActions: null,
-        
+
         // set to true if this editor is going to be in a modal (save and cancel buttons go to the bottom instead of the top header;
         isModalWrapper :false,
 
         //temporary data member that is set when user chooses to save and create new;
         createOnSaveSuccess : false,
-        
+
         enableSaveActionToggle: true,
         createButtonEnabled: false,
         createButtonVisible: true,
@@ -241,9 +243,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         saveInProgressText: "Saving...",
 
         enableSearchBarInHeader: true,
+        showTitleBorder: true,
 
         // turns off all the default coloration for the content container; ie. makes everything white;
-        useWhiteContainer:false,
+        useWhiteContainer: false,
 
         navContainerCls: " taco-content-navcontainer ",
 
@@ -290,12 +293,10 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
         this.cls = this.cls || "";
         this.cls += this.navContainerCls;
-        
+
         if (this.useWhiteContainer) {
             this.cls += this.navContainerWhiteCls;
         }
-
-        
 
         if (this.addContentViewPadding) {
             // adds the 20px padding that is typical of views inserted into the contentView;
@@ -393,7 +394,11 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 cls: "taco-content-header-title",
                 tpl: [
                     '<tpl>',
-                        '<span class="title" id="{id}" data-role="nav-title"> {title} </span>',
+                        '<tpl if="showTitleBorder">',
+                            '<span class="title" id="{id}" data-role="nav-title"> {title} </span>',
+                        '<tpl else>',
+                            '<span class="title" id="{id}" data-role="nav-title" style="border-right: 0;"> {title} </span>',
+                        '</tpl>',
                         '<tpl if="subTitle">',
                             '<span class="title subTitle" data-role="nav-sub-title"> {subTitle} </span>',
                             '<tpl if="lightTagLabel">',
@@ -411,7 +416,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 data: {
                     title: this.getTitle(),
                     subTitle: '',
-                    id: this.titleId
+                    id: this.titleId,
+                    showTitleBorder: this.showTitleBorder
                 }
             });
 
@@ -513,7 +519,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                     handler: me.cancelActionHandler,
                     scope: me
                 }));
-                
+
                 // if not in the modal wrapper then put in the header.
                 if (!me.isModalWrapper) {
                     me.actions.push(me.cancelActionButton);
@@ -566,9 +572,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 } else {
                     me.footerActions.push(me.saveActionButton);
                 }
-                
             }
-            
+
             if (me.createButtonEnabled) {
                 me.createButton = Ext.create('Ext.button.Button', Ext.apply({}, me.createButtonCfg, {
                     height: 40,
@@ -583,12 +588,26 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 }));
                 me.actions.push(me.createButton);
             }
+        }
 
+        if (me.extraButtonEnabled) {
+            me.extraButton = Ext.create('Ext.button.Button', Ext.apply({}, me.extraButtonCfg, {
+                height: 40,
+                text: this.extraButtonText,
+                margin: '0 0 0 10',
+                ui: 'action-primary',
+                scale: 'medium',
+                hidden: false,
+                itemId: 'extraActionButton',
+                handler: me.extraActionHandler,
+                scope: me
+            }));
+
+            me.actions.push(me.extraButton);
         }
 
 
         if (me.moreButtonCfg && me.moreButtonCfg.menu) {
-            
             if (!me.actions) me.actions = [];
 
             me.actions.push(Ext.apply({}, me.moreButtonCfg, {
@@ -629,7 +648,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         var actionToolbar = {
             xtype: 'toolbar',
             cls: 'navheader-action-toolbar',
-            itemHeader: 'navHeaderActionContainer',            
+            itemHeader: 'navHeaderActionContainer',
             items: me.actions,
             padding: actionBarPadding
         }
@@ -639,7 +658,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             actionToolbar.flex = 1;
         }
 
-        me.actionToolbar = Ext.widget(actionToolbar);        
+        me.actionToolbar = Ext.widget(actionToolbar);
 
         Ext.Array.push(conf.items, me.actionToolbar);
 
@@ -671,7 +690,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
             me.bbar = {
                 xtype: "toolbar",
                 padding: "10px 0px 0px 0px",
-                items:me.footerActions 
+                items:me.footerActions
             };
         }
 
@@ -679,7 +698,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     resetSaveButton: function () {
         var me = this;
-        if (me.saveActionButton) {         
+        if (me.saveActionButton) {
             me.saveInProgress = false;
             me.saveActionButton.stopLoading();
         }
@@ -697,7 +716,6 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         me.save(me.saveActionButton);
 
     },
-    
 
     /**
      * @cfg saveActionHandler
@@ -714,7 +732,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     /**
      * @private
      * The function to execute when the default save button is pressed
-     * This is the beginning of the save process not the end. 
+     * This is the beginning of the save process not the end.
      * Listen to the "savesuccess" event to get the final data after the save process completes
      * Subclasses should NOT override this method with their own behavior. They should override the doSave()
      */
@@ -730,14 +748,13 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         *  Dismiss all error and success messages;
         */
         me.dismissMessages();
-        
 
         if (me.fireEvent('beforesave', me) !== false) {
             me.onSave();
             me.fireEvent('save', me);
 
             if (me.saveActionButton) {
-                me.saveActionButton.startLoading();                
+                me.saveActionButton.startLoading();
             };
 
             me.saveInProgress = true;
@@ -749,7 +766,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     getBreadCrumb: function(config) {
         return Ext.create('Ext.Component', {
             cls: "taco-subnav-breadcrumb",
-            tpl: [  
+            tpl: [
                 '<tpl>',
                     '<div class="{[this.getClass(values)]}"tabidnex="{tabIndex}"><a> {title} </a></div>',
                 '</tpl>',
@@ -781,8 +798,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
     /**
      * @cfg doSave
-     * The function to execute the persistance code if needed;  
-     * Subclasses should override this method with their own behavior. 
+     * The function to execute the persistance code if needed;
+     * Subclasses should override this method with their own behavior.
      * Be sure to call the "saveSuccess(data)" method with the new data as an argument when the save process is complete;
      */
     doSave: function () {
@@ -792,8 +809,8 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         //console.log("doSave")
         //console.warn("The instances and subclasses of this Modal typically overide the doSave() Method and this modal has not.")
 
-        /*        
-            // your persistance code goes here. 
+        /*
+            // your persistance code goes here.
             Call saveSuccess(data)
         */
         //This is required. don't forget to call this method when your override finishes the persistance process.
@@ -812,7 +829,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
         me.onSaveSuccess(data, store, isSuccessful);
         this.resetSaveButton()
         me.fireEvent('savesuccess', me, data, store, isSuccessful);
-        
+
         if (me.createOnSaveSuccess) {
             me.createOnSaveSuccess = false;
             // push the edit url in to history so we can go back to the editor using history. This is not going to navigate though since we are skipping it and going to the create url
@@ -830,12 +847,12 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
 
     /**
-    *  Template method called just before the savesuccess event is fired; 
+    *  Template method called just before the savesuccess event is fired;
     */
     onSaveSuccess: Ext.emptyFn,
 
     /**
-    * Callback method that announces when a bound form had a failure while saving    
+    * Callback method that announces when a bound form had a failure while saving
     * @param  {mixed} data the data that was saved. Could be record, string, object, array. Optional, but strongly recommended; If data not passed the method will attempt to pull the data from a child form;
     */
     saveFailure: function () {
@@ -904,7 +921,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
     onCreate: Ext.emptyFn,
 
     doCreate: function () {
-        
+
     },
 
     getDefaultStore: function() {

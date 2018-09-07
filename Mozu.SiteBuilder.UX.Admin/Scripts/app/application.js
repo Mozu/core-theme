@@ -157,6 +157,7 @@ Ext.define('Taco.Application', {
         //'PendingChanges',
         'Inventory',
         'Message',
+        'Merchandising',
         'Catalog',
         'Testing',
         'Discounts',
@@ -724,6 +725,8 @@ Ext.define('Taco.Application', {
             if (state.controller === 'products' && (state.action === 'edit' || state.action === 'create')) {
                 return true;
             } else if (state.controller === 'categories' && (state.action === 'edit' || state.action === 'create')) {
+                return true;
+            } else if (state.controller === 'merchandising' && (state.action === 'edit' || state.action === 'create')) {
                 return true;
             }
         }

@@ -87,7 +87,7 @@
     },
 
 
-    // state property of the form that gets set to true whtn the form and its child panels get dirtied. 
+    // state property of the form that gets set to true whtn the form and its child panels get dirtied.
     // note that isDirty seems to always return true. Which necessitated this work around;  The manageInventory button in the inventory subform checks this value before navigating to the inventory view.
     // Todo: figure out why the isDirty is always true and generalize the isDirty Prompt for reuse rathaer than part of the inventory subform.
     requiresSave: false,
@@ -182,7 +182,6 @@
                         items: []
                     }
                 },
-                
                 {
                     xtype: 'menuseparator',
                     style: 'border:0px;height:1px;background-color:#ccc;margin:6px 0px;'
@@ -190,7 +189,7 @@
                     text: 'Duplicate',
                     disabled: me.record.phantom,
                     requiredBehaviors: {
-                        model: 'Taco.model.Product',    
+                        model: 'Taco.model.Product',
                         behavior: 'create'
                     },
                     handler: function () {
@@ -210,7 +209,7 @@
                         behavior: 'destroy'
                     },
                     handler: Ext.bind(me.destroyRecord, me)
-                },                
+                },
                 {
                     itemId: 'changeProductCode',
                     text: 'Change Product Code',
@@ -279,10 +278,10 @@
                     var tabItems = me.down('#productFormLayout').up().tabItems;
                     var index = 0;
 
-                    Ext.Array.each(tabItems, function(page, i) { 
+                    Ext.Array.each(tabItems, function(page, i) {
                         if (page.catalogId === record.get('value')) {
                             index = i;
-                        } 
+                        }
                     });
 
                     if (record.get('type') === 'master') index = 0;
@@ -331,7 +330,7 @@
     },
     onBeforeRender: function () {
         var me = this;
-        
+
         this.callParent(arguments);
 
         //if (me.publishButton) {
@@ -340,13 +339,12 @@
                 if (me.publishButton) {
                     // me.publishNowMenuItem.setDisabled(!valid);
                 }
-                
             }, me);
-            
+
             me.mon(me.form, 'dirtychange', function (form, isDirty) {
                 if (me.publishButton && me.form.isDirty()) {
 
-                  me.publishButton.disable();   
+                  me.publishButton.disable();
                 }
 
                 Taco.core.StateManager.setDirtyState(isDirty);
@@ -413,14 +411,11 @@
     },
 
     movePublishSet: function () {
-        
         var me = this,
             modal = Ext.create('Taco.view.publishing.modal.PublishSetPicker', {
                 record: me.record,
                 listeners: {
                     aftersaveclose: function (win, data) {
-
-                        
                         me.record.set('publishSetCode', publishSetCode);
                         if (publishSetCode) {
                             var store = Ext.create('Taco.store.PublishSets', { includeCounts: false });
@@ -513,7 +508,7 @@
 
     destroyRecord: function () {
         var me = this;
-    
+
         Ext.MessageBox.show({
             title: 'Delete',
             // pushes the buttons to the right to be consistant with our dialog ux.
@@ -524,7 +519,7 @@
             closable: false,
             buttons: Ext.Msg.YESNO,
             fn: function (val) {
-                if (val === 'yes') {                    
+                if (val === 'yes') {
                     me.setLoading(true, me.body);
                     me.record.destroy({
                         success: function (m) {

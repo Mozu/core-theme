@@ -71,7 +71,9 @@ Mozu.SiteBuilder.UX/BuiltinScripts/SDK/tests/sdk.js
 
 # ignore any of Chet's ideas
 .paket/
+packet-files/
 .fake
 ext/
 /Mozu.SiteBuilder.sdf
 /Mozu.SiteBuilder.VC.opendb
+/paket-files/paket.restore.cached

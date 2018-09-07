@@ -20,7 +20,7 @@ Ext.define('Taco.view.product.Form', {
         var tabItems;
 
         this.inSitesStore = this.record.productInCatalogsStore();
-        
+
         this.title = this.record.get('productName');
 
         this.stores = [this.inSitesStore, this.record.getOptions(), this.record.getVariations(false)];
@@ -51,20 +51,18 @@ Ext.define('Taco.view.product.Form', {
         ];
         this.callParent(arguments);
     },
-    
+
     //todo fix for omni
     getInitialTab: function (tabItems) {
         var selectedTabIndex = 0,
             initCatalogId = (this.options && this.options.catalogId) ? this.options.catalogId : Taco.app.context.getCatalogId();
-            
+
         if (initCatalogId && !this.isDuplicate) {
             Ext.each(tabItems, function(x, index) {
                 if (x.catalogId == initCatalogId) {
                     selectedTabIndex = index;
                 }
             });
-            
-           
         }
         return selectedTabIndex;
     },
@@ -85,7 +83,7 @@ Ext.define('Taco.view.product.Form', {
         this.buildSiteTabs();
 
         this.tabPanel.add(this.siteForms);
-        
+
         Ext.resumeLayouts();
     },
 
@@ -145,20 +143,19 @@ Ext.define('Taco.view.product.Form', {
 
         //this.globalForm.loadForm(undefined, true);
         this.rebuildTabs();
-        
-        
+
         // START HACK
         this.tabPanel.getLayout().activeItem = null;
         this.globalForm.hidden = true;
         // END HACK
-        
+
         // this.tabPanel.setActiveItemAt(this.tabPanel.items.length - 1);
         //I am defaulting this to the first tab to get around a werid validation issue
         //Note: this is kinda parta Thoms voodo stuff so yea............................
         this.tabPanel.setActiveItemAt(0);
         this.tabPanel.getActiveItem().nav.show();
     },
-    
+
     savableStateCheck: function () {
         throw 'deprecated function: savableStateCheck';
     },

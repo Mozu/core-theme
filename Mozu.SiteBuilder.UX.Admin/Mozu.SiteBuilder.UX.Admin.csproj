@@ -179,6 +179,7 @@
     <Compile Include="Api\DiscountSettingsController.cs" />
     <Compile Include="Api\LocationAttributeController.cs" />
     <Compile Include="Api\ModelMapping\DiscountSettingsMapping.cs" />
+    <Compile Include="Api\ModelMapping\ProductSortDefinitionMapping.cs" />
     <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
     <Compile Include="Api\ModelMapping\PurchaseOrderMapping.cs" />
     <Compile Include="Api\Models\Account\CustomerAuditEntry.cs" />
@@ -193,10 +194,14 @@
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\Order\SubPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
+    <Compile Include="Api\Models\ProductSortDefinitions\ProductSortDefinitionPreviewProduct.cs" />
+    <Compile Include="Api\Models\ProductSortDefinitions\ProductSortPosition.cs" />
+    <Compile Include="Api\Models\ProductSortDefinitions\ProductSortDefinition.cs" />
     <Compile Include="Api\Models\Reports\Report.cs" />
     <Compile Include="Api\Models\Reports\ReportParams.cs" />
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
+    <Compile Include="Api\ProductSortDefinitionController.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -485,6 +490,9 @@
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeFilterExpressionBuilder.cs" />
     <Compile Include="Helpers\ProductRuntimeHelpers\ProductRuntimeSortExpressionBuilder.cs" />
     <Compile Include="Helpers\AbstractSortExpressionBuilder.cs" />
+    <Compile Include="Helpers\ProductSortDefinitionHelpers\ProductSortDefinitionFilterExtensions.cs" />
+    <Compile Include="Helpers\ProductSortDefinitionHelpers\ProductSortDefinitionHelper.cs" />
+    <Compile Include="Helpers\ProductSortDefinitionHelpers\ProductSortDefinitionSortExtensions.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
     <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
     <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
@@ -3508,61 +3516,9 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
       <ItemGroup>
-        <Reference Include="System.Core">
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="mscorlib">
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.ComponentModel.Primitives">
-          <HintPath>..\packages\System.ComponentModel.Primitives\lib\net45\System.ComponentModel.Primitives.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.ComponentModel.TypeConverter">
-          <HintPath>..\packages\System.ComponentModel.TypeConverter\lib\net45\System.ComponentModel.TypeConverter.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.ComponentModel.Composition">
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
         <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
           <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
           <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1')">
-      <ItemGroup>
-        <Reference Include="System.Numerics">
           <Paket>True</Paket>
         </Reference>
       </ItemGroup>

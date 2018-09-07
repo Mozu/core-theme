@@ -10,7 +10,4 @@ Ext.define('Taco.controller.Discounts', {
     stores: ['Taco.store.Discounts', 'Taco.store.DiscountGrid'],
     views: ['discount.Index'],
     modelName: 'Discount'
-    
-    
 });
-

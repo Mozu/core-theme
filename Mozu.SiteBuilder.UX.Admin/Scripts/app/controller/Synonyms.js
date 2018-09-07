@@ -17,7 +17,7 @@ Ext.define('Taco.controller.Synonyms', {
             Taco.model.GeneralSettings.load('', {
                 success: function (record) {
                     me.createContentView('Taco.view.synonyms.Index', {
-                        record: record      
+                        record: record
                     });
                 },
                 failure: function () {

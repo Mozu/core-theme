@@ -19,7 +19,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         'Taco.view.product.subform.SEO'
         //'Taco.view.product.subform.CrossSale'
     ],
-    
+
     mixins: {
         bundleable: 'Taco.view.product.mixins.Bundleable'
     },
@@ -43,19 +43,16 @@ Ext.define('Taco.view.product.GlobalForm', {
         me.isGlobal = true;
 
         me.product = this.record;
-        
+
         this.callParent(arguments);
 
         //initialize the bundling mixin
         this.mixins.bundleable.constructor.apply(this, arguments);
 
         this.buildForm();
-        
-        
     },
 
     buildForm: function () {
-        
         var subFormCfg = {
                 isGlobal: true,
                 product: this.record,
@@ -73,13 +70,13 @@ Ext.define('Taco.view.product.GlobalForm', {
             persistChangesToModel: true,
             hidden: false
         };
-        
+
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', globalSubFormCfg)
         ]);
-        
+
         // if this product has a product usage of type "Bundle" add the subPanel for managing its items
-        
+
         if (this.record.get("productUsage") == "Bundle") {
             Ext.Array.push(items, [
                 Ext.create('Taco.view.product.subform.Bundle', subFormCfg)
@@ -96,8 +93,6 @@ Ext.define('Taco.view.product.GlobalForm', {
         ]);
 
         this.loadNavItems(items);
-
-        
 
         //need to initialize the visibility of the subForms
         this.updateSubFormVisibility(this.product.get('productUsage'));

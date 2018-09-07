@@ -105,7 +105,7 @@ Ext.define('Taco.controller.Categories', {
             }
 
             record.phantom = true;
-            Ext.data.Model.id(record);                    
+            Ext.data.Model.id(record);
             this.ensureRequiredStores(function () {
                 this.createContentView(viewName, {
                     isDuplicate:true,
@@ -123,7 +123,7 @@ Ext.define('Taco.controller.Categories', {
 
                     record.raw = undefined;
 
-                    // do any class specific modifications to the source model that is being cloned                    
+                    // do any class specific modifications to the source model that is being cloned
                     if (record.beforeDuplicate) {
                         record.beforeDuplicate();
                     }

@@ -26,7 +26,6 @@ Ext.define('Taco.view.productRanking.Grid', {
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid'
     },
 
-    
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s'] //'c',
@@ -50,6 +49,7 @@ Ext.define('Taco.view.productRanking.Grid', {
     enableRowEditing: false,
     enableAutoSelect: false,
     createButtonEnabled: true,
+    willDisableSortDefinitions: false,
     saveButtonEnabled: false,
     cancelButtonEnabled: false,
 
@@ -102,6 +102,7 @@ Ext.define('Taco.view.productRanking.Grid', {
         var me = this;
 
         this.columns = this.getColumnConfig(me.isCatalogLevel);
+        
 
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
@@ -117,7 +118,7 @@ Ext.define('Taco.view.productRanking.Grid', {
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ProductRankings',
-            createOnly: true,
+            createOnly: false,
             pageSize: this.pageSize,
             autoLoad: false,
             clearFilters: true,
@@ -137,13 +138,13 @@ Ext.define('Taco.view.productRanking.Grid', {
             isCatalogLevel: me.isCatalogLevel
         });
 
+        if(this.willDisableSortDefinitions) {
+            this.mon(me.store, 'load', me.disableSortDefinitions, me);
+        }
 
 
         me.callParent(arguments);
 
-        if (me.isDisabled) {
-            me.disableRankingRules();
-        }
     },
 
     reloadGrid: function() {
@@ -166,7 +167,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 stateId: 'name',
                 text: 'Name',
                 hideable: false,
-                flex: 2,                
+                flex: 2,
                 sortable: true
             }, {
                 xtype: 'gridcolumn',
@@ -309,7 +310,7 @@ Ext.define('Taco.view.productRanking.Grid', {
 
                     Taco.app.StateManager.attemptNavigate('ProductRankings/duplicate/' + record.getId(), metaData);
                 }
-            });    
+            });
         }
 
 
@@ -425,7 +426,7 @@ Ext.define('Taco.view.productRanking.Grid', {
                 }
             });
     },
-    
+
     createPopup: function(record, isNew, categoryCode) {
         Ext.create('Taco.view.productRanking.modal.ProductRankingEditor', {
             record: record,
@@ -455,6 +456,23 @@ Ext.define('Taco.view.productRanking.Grid', {
         var createActionButton = Ext.ComponentQuery.query('button[itemId=createActionButton]');
         if (createActionButton && createActionButton.length > 0) {
             createActionButton[0].setDisabled(true);
+        }
+    },
+
+
+
+    disableSortDefinitions: function (me, records) {
+        var toolbar = Ext.getCmp('sort-definitions-grid').down('[cls~= navheader-action-toolbar]');
+        if (toolbar) {
+            var btn = toolbar.getRefItems()[0];
+            
+            if (btn && this.store.count() > 0) {
+                btn.setTooltip("Cannot add Sort Definitions with Product Ranking Rules set.");
+                btn.setDisabled(true);
+            } else if (btn.isDisabled()) {
+                btn.setTooltip("");
+                btn.setDisabled(false);
+            }
         }
     }
 

@@ -137,6 +137,7 @@ Ext.define('Taco.core.StateManager', {
             '/ipblocking',
             '/locationattributes',
             '/locations',
+            '/merchandising',
             '/orderattributes',
             '/paymentgateways',
             '/redirects',
@@ -196,6 +197,7 @@ Ext.define('Taco.core.StateManager', {
             name = Taco.app.getModuleClassName(Ext.String.capitalize(params.controller), 'controller');
             //Ext.require(name);
             name = Ext.ClassManager.getNameByAlias(name);
+
             if (name) {
                 return Taco.app.getController(name.substring(name.lastIndexOf('.') + 1));
             }
@@ -399,6 +401,7 @@ Ext.define('Taco.core.StateManager', {
      */
     dispatchController: function (params) {
         var controller, idx, ret;
+
         try {
             idx = Taco.app.controllers.findIndex('id', new RegExp( '^' + params.controller +'$', 'i'));
             if (idx) {

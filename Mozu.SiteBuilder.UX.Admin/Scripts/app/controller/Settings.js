@@ -43,11 +43,10 @@
         }
     },
 
-    paymentGateways: function() { 
+    paymentGateways: function() {
         if (!this.requiresSiteContext()) {
 
             this.createContentView('Taco.view.settings.paymentGateways.Index');
-            
         }
     },
 

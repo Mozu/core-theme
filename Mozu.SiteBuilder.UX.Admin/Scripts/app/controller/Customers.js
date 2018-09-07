@@ -10,7 +10,7 @@ Ext.define('Taco.controller.Customers', {
     views: ['customers.Index'],
     indexView: 'Taco.view.customers.Index',
     editorView: 'Taco.view.customers.Edit',
-    segments:function () {
+    segments: function () {
         this.createContentView('Taco.view.customers.Segments.Index');
     }
 });

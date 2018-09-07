@@ -270,14 +270,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         facet: facet,
                         facetPrefix: facetPrefix,
                         startIndex: startIndex,
-                        sortBy: sortBy.sortValue,
+                        sortBy: sortBy.cacheKey.Equals("default") ? null : sortBy.sortValue,
                         responseFields: responseFields,
                         responseOptions: responseOptions,
                         responseGroups: responseGroups,
                         pageSize: pageSize,
                         searchTuningRuleCode: searchTuningRuleCode,
                         enableSearchTuningRules: enableSearchTuningRules,
-                        searchTuningRuleContext: searchTuningRuleContext
+                        searchTuningRuleContext: searchTuningRuleContext,
+                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
                     ).ConfigureAwait(false)
                     : await productSearchWebApiClient.CloneWithoutUserClaims().Search(
                         query: searchQueryString,
@@ -289,14 +290,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                         facet: facet,
                         facetPrefix: facetPrefix,
                         startIndex: startIndex,
-                        sortBy: sortBy.sortValue,
+                        sortBy: sortBy.cacheKey.Equals("default") ? null : sortBy.sortValue,
                         responseFields: responseFields,
                         responseOptions: responseOptions,
                         responseGroups: responseGroups,
                         pageSize: pageSize,
                         searchTuningRuleCode: searchTuningRuleCode,
                         enableSearchTuningRules: enableSearchTuningRules,
-                        searchTuningRuleContext: searchTuningRuleContext
+                        searchTuningRuleContext: searchTuningRuleContext,
+                        defaultSort: sortBy.cacheKey.Equals("default") ? sortBy.sortValue : null
                     ).ConfigureAwait(false);
 
 
@@ -315,7 +317,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     }
                     else
                     {
-                        throw res.ReadException();
+                        var ex = res.ReadException();
+                        throw ex;
                     }
                 }
                 else

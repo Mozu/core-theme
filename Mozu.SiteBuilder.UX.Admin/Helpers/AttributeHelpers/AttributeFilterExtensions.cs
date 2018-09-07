@@ -14,7 +14,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string ATTRIBUTE_ADMIN_NAME = "adminname";
         private const string ATTRIBUTE_CONTENT_NAME = "content.name";
         private const string ATTRIBUTE_CODE = "attributecode";
-
         private const string ATTRIBUTE_ID_PROPERTY = "attributeid";
         private const string ATTRIBUTE_SET_ID_PROPERTY = "attributesetid";
         //private const string ATTRIBUTE_NAME_PROPERTY = "internalname";
@@ -30,7 +29,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         private const string EVENT_ID = "eventid";
         private const string ENTITY_ID = "entityid";
         private const string TOPIC = "topic";
-
+        private const string IS_SORTABLE = "searchsettings.allowfilteringandsortinginstorefront";
 
         /// <summary>
         /// Converts a FilterCollection for Attribute to a mozu services-compatible filter string.
@@ -38,21 +37,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
         public static string ToFilterString(this FilterCollection extFilter)
         {
             if (extFilter == null || extFilter.Count == 0)
+            {
                 return null;
+            }
 
             return string.Join(" and ", extFilter.Select(GetFilter));
         }
 
         private static string GetFilter(FilterCollectionItem filter)
         {
-
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
                     var strAll = "";
-                    var formatStr = "({1} cont {0} or {2} cont {0} or {3} cont {0})";
-                    strAll += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(searchString => string.Format(formatStr, searchString, ATTRIBUTE_CONTENT_NAME, ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE)));
+                    const string formatStr = "({1} cont {0} or {2} cont {0} or {3} cont {0})";
+                    strAll += string.Join(" and ", filter.escapedValue.ToString().Trim()
+                        .Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(searchString => string.Format(formatStr, searchString, ATTRIBUTE_CONTENT_NAME,
+                            ATTRIBUTE_ADMIN_NAME, ATTRIBUTE_CODE)));
                     return strAll;
                 case "id":
                 case "type":
@@ -64,19 +66,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
                     if (value.Contains("property"))
                     {
-                        str += string.Format("{0} eq true", ATTRIBUTE_IS_PROPERTY);
+                        str += $"{ATTRIBUTE_IS_PROPERTY} eq true";
                         seperator = " or ";
                     }
 
                     if (value.Contains("extra"))
                     {
-                        str += string.Format("{1}{0} eq true", ATTRIBUTE_IS_EXTRA, seperator);
+                        str += $"{seperator}{ATTRIBUTE_IS_EXTRA} eq true";
                         seperator = " or ";
                     }
 
                     if (value.Contains("option"))
                     {
-                        str += string.Format("{1}{0} eq true", ATTRIBUTE_IS_OPTION, seperator);
+                        str += $"{seperator}{ATTRIBUTE_IS_OPTION} eq true";
                     }
 
                     if (str.IsNotEmpty())
@@ -86,43 +88,45 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.AttributeHelpers
 
                     return str;
                 case "inputtype":
-                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_INPUT_TYPE);
+                    return $"{ATTRIBUTE_INPUT_TYPE} {filter.comparison} {filter.value}";
                 case "code":
-                    return string.Format("{1} cont {0}", filter.escapedValue, ATTRIBUTE_CODE);
+                    return $"{ATTRIBUTE_CODE} cont {filter.escapedValue}";
                 case "adminname":
-                    return string.Format("{1} cont {0}", filter.escapedValue, ATTRIBUTE_ADMIN_NAME);
+                    return $"{ATTRIBUTE_ADMIN_NAME} cont {filter.escapedValue}";
                 case "name":
-                    return string.Format("{1} cont {0}", filter.escapedValue, ATTRIBUTE_CONTENT_NAME);
+                    return $"{ATTRIBUTE_CONTENT_NAME} cont {filter.escapedValue}";
                 case "attributeid":
-                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_ID_PROPERTY);
+                    return $"{ATTRIBUTE_ID_PROPERTY} {filter.comparison} {filter.value}";
                 case "attributesetid":
-                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, ATTRIBUTE_SET_ID_PROPERTY);
+                    return $"{ATTRIBUTE_SET_ID_PROPERTY} {filter.comparison} {filter.value}";
                 //case "name":
                 //return String.Format("{1} cont \"{0}\"", filter.value, ATTRIBUTE_NAME_PROPERTY);
                 case "datatype":
-                    return string.Format("{2} {1} {0}", filter.value, filter.comparison, DATA_TYPE_PROPERTY);
+                    return $"{DATA_TYPE_PROPERTY} {filter.comparison} {filter.value}";
                 case "isconfigurable":
-                    return string.Format("{1} eq {0}", filter.value, IS_CONFIGURABLE_PROPERTY);
+                    return $"{IS_CONFIGURABLE_PROPERTY} eq {filter.value}";
                 case "isrequired":
-                    return string.Format("{1} eq {0}", filter.value, IS_REQUIRED_PROPERTY);
+                    return $"{IS_REQUIRED_PROPERTY} eq {filter.value}";
                 case "isactive":
-                    return string.Format("{1} eq {0}", filter.value, IS_ACTIVE_PROPERTY);
+                    return $"{IS_ACTIVE_PROPERTY} eq {filter.value}";
                 case "siteid":
-                    return string.Format("{1} eq {0}", filter.value, SITE_ID);
+                    return $"{SITE_ID} eq {filter.value}";
                 case "catalogid":
-                    return string.Format("{1} eq {0}", filter.value, CATALOG_ID);
+                    return $"{CATALOG_ID} eq {filter.value}";
                 case "statuscode":
-                    return string.Format("{1} eq {0}", filter.value, STATUS_CODE);
+                    return $"{STATUS_CODE} eq {filter.value}";
                 case "subscriptionid":
-                    return string.Format("{1} eq {0}", filter.value, SUBSCRIPTION_ID);
+                    return $"{SUBSCRIPTION_ID} eq {filter.value}";
                 case "processstatus":
-                    return string.Format("{1} eq {0}", filter.value, PROCESS_STATUS);
+                    return $"{PROCESS_STATUS} eq {filter.value}";
                 case "eventid":
-                    return string.Format("{1} eq {0}", filter.value, EVENT_ID);
+                    return $"{EVENT_ID} eq {filter.value}";
                 case "entityid":
-                    return string.Format("{1} eq {0}", filter.value, ENTITY_ID);
+                    return $"{ENTITY_ID} eq {filter.value}";
                 case "eventtopic":
-                    return string.Format("{1} cont {0}", filter.value, TOPIC);
+                    return $"{TOPIC} cont {filter.value}";
+                case "allowfilteringandsortinginstorefront":
+                    return $"{IS_SORTABLE} eq {filter.value}";
             }
             return "";
         }

@@ -14,6 +14,7 @@ Ext.define("Taco.view.category.Form", {
         "Taco.view.filter.Schema",
         "Taco.view.filter.OperatorField",
         "Taco.view.productRanking.Grid",
+        "Taco.view.sortDefinition.Grid",
         "Taco.shared.view.field.CategoryPickerField"
     ],
 
@@ -337,6 +338,7 @@ Ext.define("Taco.view.category.Form", {
 
         this.items.push(
             Ext.create('Taco.view.productRanking.Grid', {
+                id: 'product-rankings-grid',
                 title: "Product Ranking Rules",
                 hideSubnavLinks: true,
                 margin: '50 0 0 0',
@@ -354,7 +356,33 @@ Ext.define("Taco.view.category.Form", {
                 isCatalogLevel: true,
                 categoryCode: me.record.get('categoryCode'),
                 isPopUp: true,
-                pageSize: 5
+                pageSize: 5,
+                willDisableSortDefinitions: true
+            })
+        );
+
+        this.items.push(
+            Ext.create('Taco.view.sortDefinition.Grid', {
+                id:'sort-definitions-grid',
+                title: 'Sort Definitions',
+                hideSubnavLinks: true,
+                margin: '50 0 0 0',
+                useWhiteContainer: true,
+                minHeight: 350,
+                contextConfig: {
+                    requiresContextOfType: ['c']
+                },
+                viewConfig: {
+                    deferEmptyText: true,
+                    emptyText: me.record.phantom ? 'Save the category to add sort definitions' : 'None Available'
+                },
+                hideNavMenu: true,
+                isCatalogLevel: true,
+                categoryCode: me.record.get('categoryCode'),
+                categoryId: me.record.get('id'),
+                isPopUp: true,
+                pageSize: 50,
+                willDisableProductRankings: true
             })
         );
 
@@ -417,8 +445,8 @@ Ext.define("Taco.view.category.Form", {
             primaryText: 'Proceed',
             items: [{
                 xtype: 'container',
-                layout: { 
-                    type: 'hbox' 
+                layout: {
+                    type: 'hbox'
                 },
                 items: [
                     Ext.create('Ext.panel.Panel', {
@@ -465,7 +493,6 @@ Ext.define("Taco.view.category.Form", {
                     // if the categoryPreviewTotal fails, just continue
                     resolve(true);
                 });
-            
             })
         });
     },
@@ -498,7 +525,7 @@ Ext.define("Taco.view.category.Form", {
                 tree: treeData,
                 type: me.record.get("categoryType")
             };
-            
+
             me.expressionTreePanel.getExpressionText(expressionData, function(text) {
                 expressionData.text = text;
                 me.record.set("dynamicExpression", expressionData);
@@ -507,7 +534,7 @@ Ext.define("Taco.view.category.Form", {
         });
     },
     /**
-    * Do any class level cleanup. Destroy and null any scoped refs.     
+    * Do any class level cleanup. Destroy and null any scoped refs.
     */
     onDestroy: function(destroy) {
         this.callParent(arguments);
