@@ -115,13 +115,9 @@ Ext.define('Taco.view.productRanking.Grid', {
 
         me.mon(Taco.app, 'productrankingrulecreated', me.reloadGrid, me);
 
-        me.mon(Taco.core.StateManager, {
-            beforenavigate: me.clearProxyParams.bind(me)
-        });
-
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ProductRankings',
-            createOnly: false,
+            createOnly: true,
             pageSize: this.pageSize,
             autoLoad: false,
             clearFilters: true,
@@ -474,16 +470,6 @@ Ext.define('Taco.view.productRanking.Grid', {
             } else if (btn.isDisabled()) {
                 btn.setTooltip("");
                 btn.setDisabled(false);
-            }
-        }
-    },
-
-    clearProxyParams: function() {
-        if (this.store) {
-            var proxy = this.store.getProxy();
-
-            if (proxy.extraParams && proxy.extraParams.categoryCode) {
-                delete proxy.extraParams.categoryCode;
             }
         }
     }
