@@ -402,57 +402,55 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> CategoryFeed(int? categoryId = null)
         {
-            int itemsPerPage = 10;
-            int startIdx = 0;
+            var itemsPerPage = 10;
+            var startIdx = 0;
             // TODO: Sort by Date Last Modified DESC
             string sortBy = null; // "CreateDate DESC";
 
-            List<Category> catList = ( _categoryTreeProvider.GetAllCategories()).AllCategories;
-            Category cat = catList.Where(x => x.CategoryId == categoryId.GetValueOrDefault(-1)).FirstOrDefault();
+            var catList = _categoryTreeProvider.GetAllCategories().AllCategories;
+            var cat = catList.FirstOrDefault(x => x.CategoryId == categoryId.GetValueOrDefault(-1));
             if (cat == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
-            Uri feedUrl = HttpRequestBase.Url;
+            var feedUrl = new Uri(PageContext.Url);
             int.TryParse(HttpRequestBase.QueryString["startIndex"], out startIdx);
 
             // Get Results and populate feed
-
             var result = await ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);
-
-
-            var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""));
-
-            feed.Items = result.Items.Select(item =>
+            var feed = new SyndicationFeed(cat.Name, cat.Name, new Uri(feedUrl, ""))
+            {
+                Items = result.Items.Select(item =>
                 {
                     var si = new SyndicationItem(
                         item.ProductName,
-                        item.Content.ProductShortDescription + (item.Content.ProductImages.Main != null ? string.Format("<br /><img src=\"{0}\" />", new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)) : ""),
+                        item.Content.ProductShortDescription + (item.Content.ProductImages.Main != null
+                            ? $"<br /><img src=\"{new Uri(feedUrl, item.Content.ProductImages.Main.ImageUrl)}\" />"
+                            : ""),
                         new Uri(feedUrl, "/product/" + item.ProductCode),
-                        string.Format("{0}-{1}", item.ProductCode, item.CreateDate.Ticks /* TODO: replace with ModifiedDate */),
+                        $"{item.ProductCode}-{item.CreateDate.Ticks}",
                         item.CreateDate /* TODO: replace with ModifiedDate */
-                        );
+                    );
                     item.Categories.ForEach(itemCat => si.Categories.Add(new SyndicationCategory(itemCat.Name)));
                     return si;
-                });
+                })
+            };
 
             // Pagination
-
             if (result.CurrentPage > 1)
             {
-                int idx = Math.Min(0, result.StartIndex - result.PageSize);
+                var idx = Math.Min(0, result.StartIndex - result.PageSize);
                 var uri = new Uri(feedUrl, "?startIndex=" + idx);
                 feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "prev" });
             }
+
             if (result.CurrentPage < result.PageCount)
             {
-                int idx = result.StartIndex + result.PageSize;
+                var idx = result.StartIndex + result.PageSize;
                 var uri = new Uri(feedUrl, "?startIndex=" + idx);
                 feed.Links.Add(new SyndicationLink(uri) { RelationshipType = "next" });
             }
-
-            
 
             var res = new RssActionResult { Feed = feed };
             return Request.CreateResponse(HttpStatusCode.OK, res);
