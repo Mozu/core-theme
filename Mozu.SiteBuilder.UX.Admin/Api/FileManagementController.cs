@@ -81,8 +81,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 string nameWoExt = Path.GetFileNameWithoutExtension(file.name);
                 string ext = Path.GetExtension(file.name);
 
-                var existingFiles = (await _documentWebApiClient.GetDocuments(documentListName: MozuFilesDocList, filter: string.Format("name sw \"{0}\"", nameWoExt.ToFilterSafeString()))).ReadAsSync().Items;
-                if (existingFiles.Count > 0 || existingFiles.Any(x => x.Name.Equals(file.name, StringComparison.OrdinalIgnoreCase)))
+                var existingFiles = (await _documentWebApiClient.GetDocuments(
+                    documentListName: MozuFilesDocList,
+                    filter: $"name sw \"{nameWoExt.ToFilterSafeString()}\"")).ReadAsSync().Items;
+
+                if (existingFiles.Any(x => x.Name.Equals(file.name, StringComparison.OrdinalIgnoreCase)))
                 {
                     for (int i = 1; i < 200; i++)
                     {
@@ -93,6 +96,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         }
                     }
                 }
+
                 var dm = new Content.Contracts.Document
                 {
                     Name = file.name,
