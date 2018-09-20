@@ -7,6 +7,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions;
 using NUnit.Framework;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers;
+using PR = Mozu.ProductRuntime.Contracts;
 using SB = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions;
 using UX = Mozu.SiteBuilder.UX.Admin.Api.Models;
 
@@ -95,11 +96,11 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.ProductSortDefinition
             var inputFromUi = GetBasicSortDefinition("Invalid boost");
 
             inputFromUi.Products.Add(new ProductSortPosition
-                {
-                    IsRanked= true,
-                    ProductCode = $"product-55",
-                    Position = 55
-                });
+            {
+                IsRanked = true,
+                ProductCode = $"product-55",
+                Position = 55
+            });
 
             //WHEN - Validate
             ProductSortDefinitionHelper.ValidateSortDefinition(inputFromUi);
@@ -136,7 +137,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.ProductSortDefinition
         {
             //GIVEN 
             var inputFromUi = GetBasicSortDefinition("Invalid pin");
-            
+
             inputFromUi.Products.Add(new ProductSortPosition
             {
                 IsRanked = true,
@@ -151,21 +152,178 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.ProductSortDefinition
             });
 
             var solrResults = GetSolrPreviewResponse(inputFromUi);
-            solrResults.Add(new Mozu.ProductRuntime.Contracts.Product { ProductCode = "JJJ"});
-            solrResults.Add(new Mozu.ProductRuntime.Contracts.Product { ProductCode = "KKK"});
-            
+            solrResults.Add(new Mozu.ProductRuntime.Contracts.Product { ProductCode = "JJJ" });
+            solrResults.Add(new Mozu.ProductRuntime.Contracts.Product { ProductCode = "KKK" });
+
+            var sortDefinition = GetStorefrontSortDefinition();
+
             //WHEN converting to runtime contract
-            var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi);
+            var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi, sortDefinition);
 
             //THEN
-            // Runtime runtime contract should be populated
+            // Runtime contract should be populated
             sortedResults.FirstOrDefault(z => z.ProductCode == "AAA")?.Position.ShouldEqual(3);
             sortedResults.FirstOrDefault(z => z.ProductCode == "BBB")?.Position.ShouldEqual(2);
             sortedResults.Count().ShouldEqual(solrResults.Count());
 
         }
 
+        [Test]
+        public void Should_map_price_ASC_for_products_without_range()
+        {
+            try
+            {
+                //GIVEN 
+                var inputFromUi = GetBasicSortDefinition("Invalid pin");
+                var storefrontSortDefinition = GetStorefrontSortDefinition("test", 99, "price", "ASC");
+
+                var solrResults = new List<PR.Product>
+                {
+                    new Mozu.ProductRuntime.Contracts.Product
+                    {
+                        ProductCode = "OnSale",
+                        Price = new PR.ProductPrice {Price = 100, SalePrice = 50}
+                    },
+                    new Mozu.ProductRuntime.Contracts.Product
+                    {
+                        ProductCode = "WithoutSale",
+                        Price = new PR.ProductPrice {Price = 80}
+                    }
+                };
+
+                //WHEN converting to runtime contract
+                var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi, storefrontSortDefinition);
+
+                //THEN
+                // Runtime should pick lowest prices
+                sortedResults.FirstOrDefault(z => z.ProductCode == "OnSale")?.Price.ShouldEqual(50);
+                sortedResults.FirstOrDefault(z => z.ProductCode == "WithoutSale")?.Price.ShouldEqual(80);
+                sortedResults.Count().ShouldEqual(solrResults.Count());
+            }
+            catch
+            {
+                var x = 1;
+            }
+        }
+
+        [Test]
+        public void Should_map_price_DESC_for_products_without_range()
+        {
+            try
+            {
+                //GIVEN 
+                var inputFromUi = GetBasicSortDefinition("Invalid pin");
+                var storefrontSortDefinition = GetStorefrontSortDefinition("test", 99, "price", "desc");
+
+                var solrResults = new List<PR.Product>
+                {
+                    new Mozu.ProductRuntime.Contracts.Product
+                    {
+                        ProductCode = "OnSale",
+                        Price = new PR.ProductPrice {Price = 100, SalePrice = 50}
+                    },
+                    new Mozu.ProductRuntime.Contracts.Product
+                    {
+                        ProductCode = "WithoutSale",
+                        Price = new PR.ProductPrice {Price = 80}
+                    }
+                };
+
+                //WHEN converting to runtime contract
+                var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi, storefrontSortDefinition);
+
+                //THEN
+                // Runtime should pick highest prices
+                sortedResults.FirstOrDefault(z => z.ProductCode == "OnSale")?.Price.ShouldEqual(100);
+                sortedResults.FirstOrDefault(z => z.ProductCode == "WithoutSale")?.Price.ShouldEqual(80);
+                sortedResults.Count().ShouldEqual(solrResults.Count());
+            }
+            catch
+            {
+                var x = 1;
+            }
+        }
+
+        [Test]
+        public void Should_map_price_ASC_for_products_with_range()
+        {
+            //GIVEN 
+            var inputFromUi = GetBasicSortDefinition("Invalid pin");
+            var storefrontSortDefinition = GetStorefrontSortDefinition("test", 99, "price", "ASC");
+
+            var solrResults = new List<PR.Product>
+            {
+                new Mozu.ProductRuntime.Contracts.Product
+                {
+                    ProductCode = "OnSale",
+                    PriceRange = new PR.ProductPriceRange
+                    {
+                        Lower = new PR.ProductPrice {Price = 20, SalePrice = 10},
+                        Upper = new PR.ProductPrice {Price = 200, SalePrice = 150}
+                    }
+                },
+                new Mozu.ProductRuntime.Contracts.Product
+                {
+                    ProductCode = "WithoutSale",
+                    PriceRange = new PR.ProductPriceRange
+                    {
+                        Lower = new PR.ProductPrice {Price = 300,},
+                        Upper = new PR.ProductPrice {Price = 400,}
+                    }
+                }
+            };
+
+            //WHEN converting to runtime contract
+            var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi, storefrontSortDefinition);
+
+            //THEN
+            // Runtime should pick lowest prices
+            sortedResults.FirstOrDefault(z => z.ProductCode == "OnSale")?.Price.ShouldEqual(10);
+            sortedResults.FirstOrDefault(z => z.ProductCode == "WithoutSale")?.Price.ShouldEqual(300);
+            sortedResults.Count().ShouldEqual(solrResults.Count());
+        }
+
+        [Test]
+        public void Should_map_price_DESC_for_products_with_range()
+        {
+            //GIVEN 
+            var inputFromUi = GetBasicSortDefinition("Invalid pin");
+            var storefrontSortDefinition = GetStorefrontSortDefinition("test", 99, "price", "DESC");
+
+            var solrResults = new List<PR.Product>
+            {
+                new Mozu.ProductRuntime.Contracts.Product
+                {
+                    ProductCode = "OnSale",
+                    PriceRange = new PR.ProductPriceRange
+                    {
+                        Lower = new PR.ProductPrice {Price = 20, SalePrice = 10},
+                        Upper = new PR.ProductPrice {Price = 200, SalePrice = 150}
+                    }
+                },
+                new Mozu.ProductRuntime.Contracts.Product
+                {
+                    ProductCode = "WithoutSale",
+                    PriceRange = new PR.ProductPriceRange
+                    {
+                        Lower = new PR.ProductPrice {Price = 300,},
+                        Upper = new PR.ProductPrice {Price = 400,}
+                    }
+                }
+            };
+
+            //WHEN converting to runtime contract
+            var sortedResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(solrResults, inputFromUi, storefrontSortDefinition);
+
+            //THEN
+            // Runtime should pick highest prices
+            sortedResults.FirstOrDefault(z => z.ProductCode == "OnSale")?.Price.ShouldEqual(200);
+            sortedResults.FirstOrDefault(z => z.ProductCode == "WithoutSale")?.Price.ShouldEqual(400);
+            sortedResults.Count().ShouldEqual(solrResults.Count());
+        }
+
         #endregion Convert from UI to domain contract
+
 
         #region Helpers
 
@@ -180,6 +338,20 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Helpers.ProductSortDefinition
                 EndDate = DateTime.UtcNow.AddYears(1),
                 SortExpressions = MultipleSortingCollection,
                 Products = new List<ProductSortPosition>()
+            };
+        }
+
+        private static PR.ProductSortDefinition GetStorefrontSortDefinition(string name = "test", int categoryId = 99, string field = "createDate", string direction = "DESC")
+        {
+            var sortExpressions = new List<PR.ProductSortExpression>()
+            {
+                new PR.ProductSortExpression {Field = field, Direction = direction}
+            };
+            return new Mozu.ProductRuntime.Contracts.ProductSortDefinition
+            {
+                CategoryId = categoryId,
+                Name = name,
+                SortExpressions = sortExpressions,
             };
         }
 
