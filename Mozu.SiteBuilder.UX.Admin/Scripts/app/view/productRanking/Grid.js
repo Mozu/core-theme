@@ -102,7 +102,6 @@ Ext.define('Taco.view.productRanking.Grid', {
         var me = this;
 
         this.columns = this.getColumnConfig(me.isCatalogLevel);
-        
 
         if (this.showActionsColumn) {
             var actionColumn = this.getActionColumn();
@@ -118,12 +117,13 @@ Ext.define('Taco.view.productRanking.Grid', {
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ProductRankings',
-            createOnly: false,
+            createOnly: true,
             pageSize: this.pageSize,
             autoLoad: false,
             clearFilters: true,
             remoteFilter: true
         });
+
         if (me.categoryCode) {
             me.store.proxy.extraParams = this.store.proxy.extraParams || {};
             me.store.proxy.extraParams.categoryCode = me.categoryCode;
@@ -459,13 +459,11 @@ Ext.define('Taco.view.productRanking.Grid', {
         }
     },
 
-
-
     disableSortDefinitions: function (me, records) {
         var toolbar = Ext.getCmp('sort-definitions-grid').down('[cls~= navheader-action-toolbar]');
         if (toolbar) {
             var btn = toolbar.getRefItems()[0];
-            
+
             if (btn && this.store.count() > 0) {
                 btn.setTooltip("Cannot add Sort Definitions with Product Ranking Rules set.");
                 btn.setDisabled(true);
@@ -475,5 +473,4 @@ Ext.define('Taco.view.productRanking.Grid', {
             }
         }
     }
-
 });
