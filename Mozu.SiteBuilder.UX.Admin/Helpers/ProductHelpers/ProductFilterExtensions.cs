@@ -68,8 +68,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
 
             var sb = new StringBuilder();
 
-            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
-            {             
+            foreach (var filter in extFilter.Where(x =>
+                x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+            {
                 var filterString = GetFilter(filter.value, filter);
                 if (!string.IsNullOrWhiteSpace(filterString))
                 {
@@ -77,8 +78,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     {
                         sb.Append(" and ");
                     }
-                    sb.Append(filterString);                      
-                }            
+                    sb.Append(filterString);
+                }
             }
 
             return sb.ToString().Trim();
@@ -133,9 +134,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("{1} ge {0}", filter.value,  PRICE_PROPERTY);
                 case "maxprice":
                     return string.Format("{1} le {0}", filter.value, PRICE_PROPERTY);
+                case "excludebundles":
+                    return value.ToString().ToLower() == "true"
+                        ? string.Format("{0} ne bundle and {0} ne component", PRODUCT_USAGE)
+                        : "";
                 case "productusage":
                 {
-                    if (!(value is string ) && value is IEnumerable)
+                    if (!(value is string) && value is IEnumerable)
                     {
                         var filters = ((IEnumerable)value).Cast<object>().Select(v => "productUsage eq " + v).ToArray();
                         return "(" + String.Join(" or ", filters) + ")";
