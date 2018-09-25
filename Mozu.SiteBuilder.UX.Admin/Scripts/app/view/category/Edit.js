@@ -32,6 +32,7 @@ Ext.define('Taco.view.category.Edit', {
                 shadow: false,
                 items: [
                 {
+                    disabled: me.record.data.isHidden,
                     itemId: 'live',
                     text: 'View Live',
                     menu: {
@@ -40,6 +41,7 @@ Ext.define('Taco.view.category.Edit', {
                         items: []
                     }
                 }, {
+                    disabled: me.record.data.isHidden,
                     itemId: 'preview',
                     text: 'View Staged',
                     menu: {
