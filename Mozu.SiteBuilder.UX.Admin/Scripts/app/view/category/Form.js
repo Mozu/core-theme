@@ -153,9 +153,17 @@ Ext.define("Taco.view.category.Form", {
             valueField: 'id',
             displayField: 'nameAndCodeAndStatus',
             defaultFilters: parentDefaultFilters,
+            isDirty: function() {
+                if (this.initialValue === null && this.value === '') {
+                    return false;
+                }
+
+                return this.initialValue !== this.value;
+            },
             listeners: {
                 afterrender: function (cmp) {
                     if (!me.record || me.record.phantom || me.record.get('parentId') === -1) {
+                        cmp.initialValue = null;
                         return;
                     }
                     var parentCat = Ext.create('Taco.model.Category', {
@@ -164,6 +172,8 @@ Ext.define("Taco.view.category.Form", {
                         name: me.record.get('parentName'),
                         isActive: me.record.get('parentIsActive')
                     });
+
+                    cmp.initialValue = me.record.get('parentId');
                     cmp.setValue(parentCat);
                 },
                 select: function (cmp, records) {
@@ -489,6 +499,8 @@ Ext.define("Taco.view.category.Form", {
                         resolve(true);
                     }
 
+                    // Reset initial value so that dirty check works
+                    me.parentCategoryPicker.initialValue = me.parentCategoryPicker.value;
                 })['catch'](function () {
                     // if the categoryPreviewTotal fails, just continue
                     resolve(true);

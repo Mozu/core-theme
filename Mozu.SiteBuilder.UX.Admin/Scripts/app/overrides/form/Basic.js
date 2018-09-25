@@ -28,7 +28,7 @@ Ext.define('Taco.overrides.form.Basic', {
             Ext.defer(function () {
                 me.onValidityChange(valid);
             }, 10, me)
-            
+
             me.fireEvent('validitychange', me, valid);
             me.wasValid = valid;
         }

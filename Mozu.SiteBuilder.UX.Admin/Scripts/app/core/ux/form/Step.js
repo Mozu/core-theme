@@ -83,7 +83,7 @@
         
         onDirtyChange: function (field, isDirty) {
             var currentState;
-            
+
             if (isDirty && isDirty === this.dirtyState) {
                 return;
             }
