@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 productCodes = null;
             }
-            var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true);
+            var cacheResults = arguments.GetValueOrDefault<bool>("cacheResults", true) && siteContext.CurrencyExchangeRate== null ;
             var facetHierDepthInt = arguments.GetValueOrDefault<int>("facetHierDepth", 2);
             var responseFields = arguments.GetValueOrDefault<string>("responseFields");
             var responseGroups = arguments.GetValueOrDefault<string>("responseGroups");

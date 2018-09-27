@@ -11,10 +11,9 @@ namespace Mozu.SiteBuilder.Mvc
 
         DebugModeFlagValues DebugFlags { get; set; }
         void SetUser(LightweightUserClaims user);
-        void SetDataMode(Mozu.Core.DataViewModeType  dataViewMode);
+        void SetDataMode(Mozu.Core.DataViewModeType dataViewMode);
         void SetPriceListCode(string plCode);
-
-
+        string CurrencyCodeOverride { get; }
         LightweightUserClaims AdminUserClaim { get; set; }
     }
 }

@@ -53,6 +53,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         SiteDomains Domains { get; set; }
         Core.Money.Currency CurrencyInfo { get; set; }
         NumberFormatInfo NumberFormat { get; set; }
+  
+        Mozu.ProductRuntime.Contracts.CurrencyExchangeRate CurrencyExchangeRate { get; set; }
+
         Task Init();
 
     }
@@ -127,11 +130,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 this.CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
 
-                this.NumberFormat= new NumberFormatInfo()
-                        {
-                            CurrencyDecimalDigits = this.CurrencyInfo.Precision,
-                            CurrencySymbol = this.CurrencyInfo.Symbol
-                        };
+                this.NumberFormat = new NumberFormatInfo()
+                {
+                    CurrencyDecimalDigits = this.CurrencyInfo.Precision,
+                    CurrencySymbol = this.CurrencyInfo.Symbol
+                };
             }
             
         }
@@ -438,14 +441,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 await _themeRepository.Value.ValidateLatest(_theme).ConfigureAwait(false);
                 hash += _theme.Hash;
             }
-
+            if (!string.IsNullOrEmpty(_siteBuilderApiContext.CurrencyCodeOverride))
+            {
+                data.CurrencyExchangeRates?.FirstOrDefault(_ => _.FromCurrencyCode == _siteBuilderApiContext.CurrencyCodeOverride);
+            }
 
             HashString = hash + _themeOverrideId;
         }
 
-      
+        [IgnoreDataMember]
+        public Mozu.ProductRuntime.Contracts.CurrencyExchangeRate CurrencyExchangeRate { get; set; }
 
-        
+
         public Core.Money.Currency CurrencyInfo { get; set; }
 
         [Newtonsoft.Json.JsonIgnore()]
@@ -455,5 +462,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get;set;
         }
+
+      
     }
 }

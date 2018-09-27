@@ -51,7 +51,17 @@ namespace Mozu.SiteBuilder.Mvc
 
             DataViewMode = dvmGetter.GetDataViewMode(UserClaims);
             PreviewDate = GetNowValue();
+
+
+
+
+            var cur = cookieProvider.GetRequestCookie("currency_code_override")?.Value;
+           if (!string.IsNullOrEmpty(cur))
+            {
+                this.CurrencyCodeOverride = cur;
+            }
            
+
         }
         private SiteBuilderApiContext() { }
         public static SiteBuilderApiContext Create()
@@ -469,7 +479,8 @@ namespace Mozu.SiteBuilder.Mvc
         {
             get; set;
         }
-
+      
+        public string CurrencyCodeOverride { get; set; }
     }
 
     [Flags]

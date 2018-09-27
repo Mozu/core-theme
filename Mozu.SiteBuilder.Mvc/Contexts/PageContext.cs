@@ -19,7 +19,10 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using System.Globalization;
+using Mozu.Core.Money;
 using Mozu.SiteBuilder.Mvc.Tags;
+
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -182,6 +185,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         int? CategoryId { get; set; }
         List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
         string CorrelationId { get;  }
+         Currency CurrencyInfo
+        {
+            get;
+        }
+
+
+         NumberFormatInfo NumberFormat
+        {
+            get; 
+        }
+
+        decimal? ConversionRate
+        {
+            get;
+        }
     }
     public class CrawlerInfo: ICrawlerInfo
     {
@@ -229,7 +247,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         LocationInfo _location;
 
         public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
-            , IIpAddressFinderOuter ipAddressFinderOuter)
+            , IIpAddressFinderOuter ipAddressFinderOuter,
+            ISiteContext siteContext)
         {
             _apiContext = apiContext;
             _authenticationHelper = authenticationHelper;
@@ -256,6 +275,32 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _location = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
+
+
+            Mozu.Core.Money.CurrencyCode cc;
+          
+           
+            if (siteContext.CurrencyExchangeRate != null &&
+                Mozu.Core.Money.CurrencyCode.TryParse(siteContext.CurrencyExchangeRate.ToCurrencyCode, out cc))
+            {
+                CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
+
+                NumberFormat = new NumberFormatInfo()
+                {
+                    CurrencyDecimalDigits = CurrencyInfo.Precision,
+                    CurrencySymbol = CurrencyInfo.Symbol
+                };
+                ConversionRate = siteContext.CurrencyExchangeRate.Rate;
+            }
+            else
+            {
+                NumberFormat = siteContext.NumberFormat;
+                CurrencyInfo = siteContext.CurrencyInfo;
+                ConversionRate = 1;
+            }
+
+
+
         }
         [JsonPreloadFilter]
         public string CorrelationId
@@ -573,7 +618,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
+        public Currency CurrencyInfo
+        {
+            get; set;
+        }
         
+       
+        public NumberFormatInfo NumberFormat
+        {
+            get;set;
+        }
+
+        public decimal? ConversionRate
+        {
+            get;set;
+        }
     }
     public class LocationInfo
     {

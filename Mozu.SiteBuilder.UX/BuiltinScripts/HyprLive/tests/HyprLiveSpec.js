@@ -203,12 +203,12 @@
         before(function () {
             history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>");
         });
-        it('has a currency filter that formats currency (currently US only)', function() {
-            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('$3.00');
-            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3.0002 } })).to.equal('$3.00');
-            expect(Hypr.engine.render('{{ dolla|currency("USD ") }}', { locals: { dolla: 3.0002 } })).to.equal('USD 3.00');
-            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3000000 } })).to.equal('$3,000,000.00');
-        });
+        //it('has a currency filter that formats currency (currently US only)', function() {
+        //    expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('$3.00');
+        //    expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3.0002 } })).to.equal('$3.00');
+        //    expect(Hypr.engine.render('{{ dolla|currency("USD ") }}', { locals: { dolla: 3.0002 } })).to.equal('USD 3.00');
+        //    expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3000000 } })).to.equal('$3,000,000.00');
+        //});
         it('has a divisibleby filter that returns true if the number is divisible by the argument', function() {
             var tpt2 = '{% if n|divisibleby(2) %}{{ n }}{% else %}no{% endif %}';
             var tpt3 = '{% if n|divisibleby(3) %}{{ n }}{% else %}no{% endif %}';

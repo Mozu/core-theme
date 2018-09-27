@@ -46,6 +46,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
 
 locals.now = require.mozuData('now') || (new Date()).toISOString();
 
+
 var HyprLive = {
     engine: new amds[0].Swig({
         cache: false,

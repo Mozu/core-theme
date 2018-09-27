@@ -1,16 +1,11 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2017-03-03
+ * Mozu Hypr Live - v1.0.0 - 2018-09-27
  *
- * Copyright (c) 2017 Volusion, Inc.
+ * Copyright (c) 2018 Volusion, Inc.
  *
  */
 
- (function(root) {
-
-	/* IE8 polyfills */
-
-
-	var hasOwnProperty = Object.prototype.hasOwnProperty,
+ (function(root) {	/* IE8 polyfills */	var hasOwnProperty = Object.prototype.hasOwnProperty,
     hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
     dontEnums = [
         'toString',
@@ -20,8 +15,7 @@
         'isPrototypeOf',
         'propertyIsEnumerable'
     ],
-    dontEnumsLength = dontEnums.length;
-	(function() {
+    dontEnumsLength = dontEnums.length;	(function() {
     var _slice = Array.prototype.slice;
 
     try {
@@ -355,9 +349,7 @@
 	}
 
 
-})();
-
-	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
+})();	// the definewrapper.tpl uses a super-slim override of "define" that pushes AMD deps into an array.
     // this allows us to cleanly vendor AMD-compatible scripts without polluting scope or registering 
     // private scripts in the root require namespace.
     // only downside is, you have to refer to the build script (Gruntfile) to see what order you brought them in.
@@ -5617,6 +5609,7 @@ for (var lni = 0, llen = volatilelocalNames.length; lni < llen; lni++) {
 
 locals.now = require.mozuData('now') || (new Date()).toISOString();
 
+
 var HyprLive = {
     engine: new amds[0].Swig({
         cache: false,
@@ -5830,10 +5823,16 @@ HyprLive.engine.setExtension('makeUrlTag', function(type, object) {
 var util = {
     sortingKey: 'sortBy',
     facetKey: 'facetValueFilter',
+    inStockLocationKey: 'inStockLocationKey',
     pagingKey: 'startIndex',
     imageUrl: function(object, extendedQuery) {
         var url = typeof object === 'object' ? object.imageUrl : object;
         return this.urlScrub(url + extendedQuery + this.getCdnCacheBust());
+    },
+    inStockLocationUrl: function (object, extendedQuery) {
+        var query = this.parseQuery();
+        query[this.inStockLocationKey] = object;
+        return this.urlScrub(extendedQuery + '&' + this.stringify(query));
     },
     productUrl: function(object, extendedQuery, variant) {
         var code = typeof object === 'object' ? object.productCode : object;
@@ -5966,13 +5965,15 @@ var util = {
 
 HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, false);
 (function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp) {
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate) {
         var sign, i, j, s, om;
         decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
         om = Math.pow(10, decPlaces);
+
         symbol = symbol || "$";
         decSeparator = decSeparator == undefined ? "." : decSeparator;
         thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
+        n = n * conversionRate;
         sign = n < 0 ? "-" : "";
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
@@ -6037,10 +6038,11 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
         };
+    var conversionRate;
     HyprLive.engine.setFilter('currency', function(num, symbol) {
         if (!currencyInfo) {
             try {
-                currencyInfo = HyprLive.engine.options.locals.siteContext.currencyInfo;
+                currencyInfo = HyprLive.engine.options.locals.pageContext.currencyInfo;
             } catch (e) {
                 currencyInfo = {
                     symbol: '$',
@@ -6049,7 +6051,14 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
                 };
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision);
+        if (!conversionRate) {
+            try {
+                conversionRate = HyprLive.engine.options.locals.pageContext.conversionRate || 1;
+            } catch (e) {
+                conversionRate = 1;
+            }
+        }
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate);
     });
 
 

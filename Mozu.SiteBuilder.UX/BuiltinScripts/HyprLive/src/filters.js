@@ -1,11 +1,13 @@
 ﻿(function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp) {
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate) {
         var sign, i, j, s, om;
         decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
         om = Math.pow(10, decPlaces);
+
         symbol = symbol || "$";
         decSeparator = decSeparator == undefined ? "." : decSeparator;
         thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
+        n = n * conversionRate;
         sign = n < 0 ? "-" : "";
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
@@ -70,10 +72,11 @@
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
         };
+    var conversionRate;
     HyprLive.engine.setFilter('currency', function(num, symbol) {
         if (!currencyInfo) {
             try {
-                currencyInfo = HyprLive.engine.options.locals.siteContext.currencyInfo;
+                currencyInfo = HyprLive.engine.options.locals.pageContext.currencyInfo;
             } catch (e) {
                 currencyInfo = {
                     symbol: '$',
@@ -82,7 +85,14 @@
                 };
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision);
+        if (!conversionRate) {
+            try {
+                conversionRate = HyprLive.engine.options.locals.pageContext.conversionRate || 1;
+            } catch (e) {
+                conversionRate = 1;
+            }
+        }
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate);
     });
 
 

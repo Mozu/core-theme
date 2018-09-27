@@ -12,6 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Mozu.SiteBuilder.Mvc.Contexts;
     using NDjango.Interfaces;
 
     [Name("currency")]
@@ -33,22 +34,26 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         {
             throw new NotImplementedException();
         }
-
+        decimal DoConversion (decimal invalue, PageContext pageContext)
+        {
+           return pageContext.ConversionRate.GetValueOrDefault(1) * invalue;
+        }
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
             if (value == null || (value.ToString() == string.Empty))
             {
                 return string.Empty;
             }
+            var pageContext = context.PageContext();
 
-            var numberFormat = GetNumberFormat(context);
+            var numberFormat = pageContext.NumberFormat;
             var format = "C" + parameter.FirstOrDefault();
             if (value is IConvertible)
             {
                 var formatProvider = value as IFormatProvider ?? System.Threading.Thread.CurrentThread.CurrentCulture;
                 try
                 {
-                    return (value as IConvertible).ToDecimal(formatProvider).ToString(format, numberFormat);
+                    return DoConversion( (value as IConvertible).ToDecimal(formatProvider), pageContext).ToString(format, numberFormat);
                 }
                 catch
                 {
@@ -60,6 +65,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
                 decimal d;
                 if (decimal.TryParse(value.ToString(), out d))
                 {
+                    d = DoConversion(d, pageContext);
                     return d.ToString(format, numberFormat);
                 }
             }
@@ -67,16 +73,6 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             return string.Empty;
         }
 
-        private IFormatProvider GetNumberFormat(IContext context)
-        {
-            try
-            {
-                return context.SiteContext().NumberFormat;
-            }
-            catch (Exception)
-            {
-                return NumberFormatInfo.InvariantInfo;
-            }
-        }
+      
     }
 }

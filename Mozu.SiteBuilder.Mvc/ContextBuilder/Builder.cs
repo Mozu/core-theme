@@ -34,6 +34,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using SBCategory = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 using Mozu.Core.EnsureThat;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
+using Mozu.ProductRuntime.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Context
 {
@@ -817,6 +818,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient _tenantsWebApiClient;
+        Mozu.ProductRuntime.Contracts.Clients.ICurrencyRuntimeWebApiClient _currencyRuntimeWebApiClient;
         Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient _productSearchWebApiClient;
         Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient _locationSettingsWebApiClient;
         IThemeRepository _themeRepository;
@@ -833,6 +835,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient generalSettingsWebApiClient,
             Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient,
             Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient tenantsWebApiClient,
+            Mozu.ProductRuntime.Contracts.Clients.ICurrencyRuntimeWebApiClient currencyRuntimeWebApiClient,
             Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient locationSettingsWebApiClient,
             INavigationRepository navigationRepository,
             IThemeRepository themeRepository,
@@ -850,6 +853,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient.WithTimeout(defaultTimeout);
             _tenantsWebApiClient = tenantsWebApiClient.WithTimeout(defaultTimeout);
             _productSearchWebApiClient = productSearchWebApiClient.WithTimeout(defaultTimeout);
+            _currencyRuntimeWebApiClient = currencyRuntimeWebApiClient.WithTimeout(defaultTimeout);
             _locationSettingsWebApiClient = locationSettingsWebApiClient.WithTimeout(defaultTimeout);
             _themeRepository = themeRepository;
             _navigationRepository = navigationRepository;
@@ -875,7 +879,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.TenantInfo = x.Result ?? existing?.TenantInfo, TaskContinuationOptions.OnlyOnRanToCompletion)
             );
-
+            tasks.Add(_currencyRuntimeWebApiClient.GetCurrencyExchangeRates()
+                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(x => ret.CurrencyExchangeRates = x.Result ?? existing?.CurrencyExchangeRates, TaskContinuationOptions.OnlyOnRanToCompletion)
+            );
             tasks.Add(_locationSettingsWebApiClient.GetLocationUsages()
                 .ContinueWith(GenericServiceContinuation)
                 .ContinueWith(x => ret.LocationUsages = x.Result ?? existing?.LocationUsages, TaskContinuationOptions.OnlyOnRanToCompletion)
@@ -1094,6 +1101,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     w.Write(_.Sequence.GetValueOrDefault(-1));
                     w.Write(_.ParentCategoryId.GetValueOrDefault(-1));
                 });
+
                 w.Write(data.CheckoutSettings?.CustomerCheckoutSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
                 w.Write(data.CheckoutSettings?.OrderProcessingSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
                 w.Write(data.CheckoutSettings?.PaymentSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0 );
@@ -1144,6 +1152,15 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 });
                 
                 w.Write(data.TenantInfo?.UpdateDate.Ticks??0);
+                
+
+                data.CurrencyExchangeRates?.OrderBy(_ => _.FromCurrencyCode).All(_ =>
+                {
+                    w.Write(_.FromCurrencyCode ?? string.Empty);
+                    w.Write(_.DecimalPlaces.GetValueOrDefault(0) );
+                    w.Write(_.Rate.GetValueOrDefault(0));
+                    return true;
+                });
                 w.Flush();
                 w.Flush();
                 stream.Position = 0;
@@ -1622,6 +1639,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
+        public List<CurrencyExchangeRate> CurrencyExchangeRates
+        {
+            get
+            {
+                return _inner.CurrencyExchangeRates;
+            }
+            set
+            {
+                _inner.CurrencyExchangeRates = value;
+            }
+        }
+
         public UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
         {
             return ((ISiteBuilderContextData)_inner).GetMappedCheckoutSettings();
@@ -1680,6 +1709,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public string Hash { get;  set; }
 
         public string ThemeHash { get; set; }
+        public List<CurrencyExchangeRate> CurrencyExchangeRates { get; set; }
 
         Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings _mappedGenSettings;
         public Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()

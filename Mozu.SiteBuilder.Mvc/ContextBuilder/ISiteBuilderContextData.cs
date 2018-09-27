@@ -41,5 +41,6 @@ namespace Mozu.SiteBuilder.Mvc.Context
         List<UX.Models.Settings.SiteDomain> GetMappedSiteDomains();
         string GetSiteSubDirectory();
         void ProcessCategoryTree();
+        List<ProductRuntime.Contracts.CurrencyExchangeRate> CurrencyExchangeRates { get; set; }
     }
 }

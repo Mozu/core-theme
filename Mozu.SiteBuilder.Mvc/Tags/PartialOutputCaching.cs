@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
                 var viewPath = _blockToken.Location.TemplateName;
                 var loc = _blockToken.Location.Offset;
-                var key = string.Format("{0}{1}{2}{3}{4}{5}{6}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"), apiCtx.PriceListCode);
+                var key = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}", string.Join("|", arguments.Where(x => x.Value != null).Select(x => x.Value)), apiCtx.SiteId, siteCtx.HashString, viewPath, loc, (pageCtx.IsSecure ? "1" : "0"), apiCtx.PriceListCode, apiCtx.CurrencyCodeOverride);
                 var cachescope = GetCacheScope(apiCtx.MostSpecificContext);
 
                 var output = TryGetOutputStrings(manager, walker, key, cachescope, settings);
