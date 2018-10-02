@@ -19,6 +19,74 @@
         },
         {
             "xtype": "panel",
+            "title": "Recaptcha",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "enableRecaptcha",
+                    "fieldLabel": "Enable Recaptcha"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "recaptchaSiteKey",
+                    "fieldLabel": "Recaptcha Site Key"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "__recaptchaSecrete",
+                    "fieldLabel": "Recaptcha Secret",
+                    "inputType": "password"
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "recaptchaType",
+                    "fieldLabel": "Recaptcha Type",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "Invisible",
+                        "I'm not a robot"
+                    ]
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "recaptchaSize",
+                    "fieldLabel": "Recaptcha Size",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "normal",
+                        "compact"
+                    ]
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "recaptchaTheme",
+                    "fieldLabel": "Recaptcha Theme",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "light",
+                        "dark"
+                    ]
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "recaptchaBadgePosition",
+                    "fieldLabel": "Recaptcha Badge Position",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "bottomright",
+                        "bottomleft",
+                        "inline"
+                    ]
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Filters",
             "collapsed": false,
             "items": [

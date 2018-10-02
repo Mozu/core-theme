@@ -382,6 +382,13 @@
         }
     ],
     "settings": {
+        "enableRecaptcha": false,
+        "recaptchaSiteKey": null,
+        "__recaptchaSecrete": null,
+        "recaptchaType": "Invisible",
+        "recaptchaTheme": "light",
+        "recaptchaSize": "normal",
+        "recaptchaBadgePosition": "bottomright",
         "allowFilterByLocationInventory": false,
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,

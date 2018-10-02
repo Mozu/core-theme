@@ -67,6 +67,10 @@
         <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
         {% endif %}
 
+        {% if themeSettings.enableRecaptcha %}
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        {% endif %}
+
         {% block stylesheets %}
         <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
         {% endblock stylesheets %}
@@ -93,6 +97,10 @@
 
 
         <div id="page-wrapper" class="mz-l-pagewrapper">
+            {% if themeSettings.enableRecaptcha %}
+            <div id="recaptcha-container-global"></div>
+            {% endif %}
+
             {% block utility-bar %}
                 {% include "modules/utility-bar/header" %}
             {% endblock utility-bar %}

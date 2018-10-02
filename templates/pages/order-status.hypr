@@ -31,6 +31,14 @@
                                 <input name="password"  type="password" data-mz-login-password/>
                             </div>
                         </div>
+                        {% if themeSettings.enableRecaptcha %}
+                        <div class="mz-l-formfieldgroup-row">
+                            <div class="mz-l-formfieldgroup-cell"></div>
+                            <div class="mz-l-formfieldgroup-cell">
+                                <div id="recaptcha-container"></div>
+                            </div>
+                        </div>
+                        {% endif %}
                         <div class="mz-l-formfieldgroup-row">
                             <div class="mz-l-formfieldgroup-cell"></div>
                             <div class="mz-l-formfieldgroup-cell">
@@ -46,7 +54,11 @@
                         <div class="mz-l-formfieldgroup-row">
                             <div class="mz-l-formfieldgroup-cell"></div>
                             <div class="mz-l-formfieldgroup-cell">
+                                {% if themeSettings.enableRecaptcha %}
+                                <button class="mz-button mz-button-large mz-login-button" data-mz-action="recaptcha-submit">{{ labels.logIn }}</button>
+                                {% else %}
                                 <button class="mz-button mz-button-large mz-login-button" data-mz-action="loginpage-submit">{{ labels.logIn }}</button>
+                                {% endif %}
                                 <div class="mz-l-formfieldgroup-cell">
                                     <section data-mz-role="popover-message" class="mz-popover-message"></section>
                                 </div>
