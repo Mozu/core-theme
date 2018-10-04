@@ -178,7 +178,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returnResults = ProductSortDefinitionHelper.MapRuntimeToFrontEnd(runtimeSolrResultsRaw.Items, inputSortDefinition, runtimeSortDef);
 
-            var returnCount = returnResults.Count < pageSize
+            var returnCount = (returnResults.Count < pageSize && start == 0)
                 ? returnResults.Count
                 : runtimeSolrResultsRaw.TotalCount; 
 
