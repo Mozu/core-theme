@@ -28,6 +28,10 @@ using System.Web.Http.Filters;
 using System.Linq.Expressions;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Api;
+using Mozu.Core.Api.Client.Caching;
+using Mozu.Core.Settings;
+using Newtonsoft.Json.Linq;
+using Mozu.SiteBuilder.Mvc.MessageHandler;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -46,10 +50,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private VisitEventPublisher _visitPublisher;
         ISiteContext _siteContext;
         IHttpErrorResponseGenerator _errorGenerator;
+        Lazy<ICaptchaClient> _captchaClient;
+        Mozu.Core.Logging.ILogger _logger;
 
         public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, IPageContext pageContext, VisitEventPublisher visitPublisher,
             ISiteContext siteContext,
-            IHttpErrorResponseGenerator errorGenerator)
+            IHttpErrorResponseGenerator errorGenerator,
+           Lazy<ICaptchaClient> captchaClient,
+           Mozu.Core.Logging.ILogger logger)
         {
             if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
             if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
@@ -64,6 +72,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _visitPublisher = visitPublisher;
             _siteContext = siteContext;
             _errorGenerator = errorGenerator;
+            _logger = logger;
+            _captchaClient = captchaClient;
         }
        
         protected void DoLogout(bool? saveUserId = false) 
@@ -139,14 +149,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return false;
         }
 
-        protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password)
+        protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password,string token)
         {
-            return await LoginAndTrack(() => _authTicketWebApiClient.CreateUserAuthTicket(new CustomerUserAuthInfo()
+            //add token header for arcjs integration.
+            var extraHeader = new  System.Collections.Specialized.NameValueCollection();
+            extraHeader["racaptchaToken"] = token;
+            return await LoginAndTrack(() => _authTicketWebApiClient
+            .CloneWithHeaders(extraHeader)
+            .CreateUserAuthTicket(new CustomerUserAuthInfo()
             {
                 Username = email,
-                Password = password
+                Password = password,
             }));
         }
+      
             
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
@@ -276,6 +292,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string email { get; set; }
             public string password { get; set; }
             public string returnUrl { get; set; }
+            public string token { get;  set; }
         }
 
         [HttpPost]
@@ -306,6 +323,105 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              return res;
          }
 
+
+       Task<CaptchResponse> ValidateToken( string token)
+        {
+            var secret = _siteContext.ThemeSettings.Get<string>("__recaptchaSecrete", null);
+            if ( secret == null)
+            {
+                return Task.FromResult(new CaptchResponse { NoOp = true });
+            }
+            return _captchaClient.Value.Validate(token, secret, _apiContext.RequestCancellationToken);
+        }
+        public interface ICaptchaClient
+        {
+            Task<CaptchResponse> Validate(string token, string secret, CancellationToken cancellationToken);
+        }
+        public class CaptchaClient: ICaptchaClient
+        {
+            ISettings _settings;
+            Mozu.Core.Logging.ILogger _logger;
+            public CaptchaClient(
+                ISettings settings,
+                Mozu.Core.Logging.ILogger logger)
+            {
+                _settings = settings;
+                _logger = logger;
+            }
+
+            static Lazy<HttpMessageHandler> _clientHandler = new Lazy<HttpMessageHandler>(() =>
+            {
+                var handler = new WebRequestHandler();
+                handler.UseCookies = false;
+                handler.UnsafeAuthenticatedConnectionSharing = true;
+                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                return (HttpMessageHandler)handler;
+            }, LazyThreadSafetyMode.ExecutionAndPublication);
+
+
+            const string DefaultRecaptchaEndpoint = "https://www.google.com/recaptcha/api/siteverify";
+
+            HttpClient GetClient()
+            {
+                return new HttpClient(_clientHandler.Value, false);
+            }
+            public async Task<CaptchResponse> Validate(string token , string secret, CancellationToken cancellationToken)
+            {
+                if (string.IsNullOrEmpty(token))
+                {
+                    return new CaptchResponse()
+                    {
+                        errorCodes = new List<string>() { "token-missing" }
+                    };
+                }
+                var captchaUrl = _settings.AppSettings("recaptcha_endpoint");
+                captchaUrl = string.IsNullOrEmpty(captchaUrl) ? DefaultRecaptchaEndpoint : captchaUrl;
+                var client = GetClient();
+                var res = await client.GetAsync($"{captchaUrl}?secret={secret}&response={token}", cancellationToken).ConfigureAwait(false);
+                if (res.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        return await res.Content.ReadAsAsync<CaptchResponse>().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error("error deserilizing captcha response", ex);
+                        return new CaptchResponse()
+                        {
+                            errorCodes = new List<string>() { "connection-error" }
+                        };
+                    }
+                }
+                return new CaptchResponse()
+                {
+                    errorCodes = new List<string>() { "connection-error" }
+                };
+            }
+         
+        }
+        public class CaptchResponse
+        {
+
+            public bool? NoOp { get; set; }
+            public bool? success { get; set; }
+            public DateTime challenge_ts { get; set; }
+            public string hostname { get; set; }
+            [Newtonsoft.Json.JsonProperty("error-codes")]
+            public List<string> errorCodes { get; set; }
+            public string GetErrorCode()
+            {
+                if (errorCodes == null || errorCodes.Count ==0)
+                {
+                    return null;
+                }
+                return $"Recaptcha-{errorCodes.First()}";
+            }
+           
+            public decimal? score { get; set; }
+   
+    }
+
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
         public async Task<HttpResponseMessage> Login(LoginDetails details)
@@ -317,8 +433,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             string email = details.email;
             string password = details.password;
             string returnUrl = details.returnUrl;
+            string token = details.token;
 
-            var res = await DoLogin(email, password);
+            var tokenRes = await ValidateToken(token);
+
+            if (!tokenRes.NoOp.GetValueOrDefault(false)  && 
+                !tokenRes.success.GetValueOrDefault(false))
+            {
+                return LoginFailed(email, tokenRes.GetErrorCode());
+                
+            }
+
+            var res = await DoLogin(email, password, token);
 
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
@@ -345,11 +471,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
 
-        private HttpResponseMessage LoginFailed(string email = null)
+        private HttpResponseMessage LoginFailed(string email = null, string code = null)
         {
-            var errorMsg = GetLoginFailureMessage(email);
-            return Request.CreateResponse(HttpStatusCode.Unauthorized,
-                View("Login", new { email, Messages = new List<object> { new { Message = errorMsg } } }));
+            var errorMsg = GetLoginFailureMessage(email, code);
+            FourHundredMessageHandler.BypassErrorHandler(this.Request);
+            return  Request.CreateResponse(HttpStatusCode.Unauthorized,
+                View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
         }
 
         private string GetLoginFailureMessage(string email, string errorCode = null)
@@ -361,6 +488,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     "The User account is locked for security purposes. To unlock the user account please secure it by resetting your password now."
                 );
             }
+            if (errorCode?.StartsWith("Recaptcha-") == true)
+            {
+                errorCode = errorCode.Substring("Recaptcha-".Length);
+                return GetLabel(
+                           $"recaptcha-error-msg-{errorCode}",
+                           GetLabel("recaptcha-error-msg-generic", "Erorr With Captcha Validation"));
+            }
+            
             return (email != null)
                 ? string.Format(GetLabel(
                     "loginFailedErrorWithEmail",
@@ -382,7 +517,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             string email = details.email;
             string password = details.password;
-            var res = await DoLogin(email, password);
+            string token = details.token;
+
+            var tokenRes = await ValidateToken(token);
+
+            if (!tokenRes.NoOp.GetValueOrDefault(false) &&
+                !tokenRes.success.GetValueOrDefault(false))
+            {
+                return AjaxLoginFailure(email, tokenRes.GetErrorCode());
+
+            }
+
+            var res = await DoLogin(email, password,token);
 
             if (res.ResponseMessage.IsSuccessStatusCode)
             {

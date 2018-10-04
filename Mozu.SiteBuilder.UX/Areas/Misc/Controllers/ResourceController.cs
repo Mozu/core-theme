@@ -195,8 +195,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ctx.Add("templates", templates);
             ctx.Add("locals", locals);
 
-            var setting = JObject.FromObject(SiteContext.ThemeSettings);
+            var settingsDic = SiteContext.ThemeSettings?.InnerDictionary;
 
+            //filter out server side only parameters
+            if ( settingsDic != null)
+            {
+                settingsDic = settingsDic.Where(x => !x.Key.StartsWith("__")).ToDictionary(x => x.Key, y => y.Value);
+            }
+
+            
+            var setting = JObject.FromObject(settingsDic);
+            
             locals.Add("themeSettings", setting);// SiteContext.ThemeSettings);
             locals.Add("labels", SiteContext.Labels);
             locals.Add("siteContext", siteContext);

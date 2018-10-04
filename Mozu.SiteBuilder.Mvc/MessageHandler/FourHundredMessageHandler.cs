@@ -62,13 +62,22 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     }
     public class FourHundredMessageHandler : DelegatingHandler
     {
+        const string BypassErrorHandlerKey = "BypassFourHundredMessageHandler";
+        public static void BypassErrorHandler(HttpRequestMessage message)
+        {
+            message.Properties[BypassErrorHandlerKey] = true;
+        }
+        static bool ShouldBypass ( HttpRequestMessage message)
+        {
+            return message.Properties.ContainsKey(BypassErrorHandlerKey);
+        }
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-            if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
+        
+            if (!ShouldBypass(request) && (int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
             {
                 var iSiteBuilderApiContext = request.Resolve<ISiteBuilderApiContext>();
                 if (!iSiteBuilderApiContext.SiteId.HasValue)
