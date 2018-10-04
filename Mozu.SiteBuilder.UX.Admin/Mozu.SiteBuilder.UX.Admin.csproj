@@ -187,6 +187,7 @@
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
+    <Compile Include="Api\Models\Checkout\SupportedCard.cs" />
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
@@ -973,6 +974,7 @@
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderCustomFieldGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
+    <Content Include="Scripts\app\view\settings\paymentTypes\subform\ThirdPartyPayments.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />

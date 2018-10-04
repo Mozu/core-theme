@@ -58,6 +58,12 @@ module.exports = (function () {
         },
         "Check": function (order, billingInfo) {
             return order.createPayment();
+        },
+        "ThirdParty": function (checkout, billingInfo) {
+            if (!checkout.token) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.paymentServiceTokenId) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.type) errors.throwOnObject(checkout, 'TOKEN_TYPE_MISSING');
+            return checkout.createPayment(billingInfo);
         }
     };
     

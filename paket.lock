@@ -49,7 +49,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1642.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1828.6)
+    Mozu.CommerceRuntime.Contracts (1.1837.0-NGCOM-1694-54)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
@@ -106,7 +106,7 @@ NUGET
       Mozu.Core.Prime (>= 1.1613.1)
     Mozu.Log4net.Gelf (1.1735.2)
     Mozu.MZDB.Contracts (1.19.3)
-    Mozu.PaymentService.Contracts (1.1828.1)
+    Mozu.PaymentService.Contracts (1.1835.0-payment-types-59)
     Mozu.PricingRuntime.Contracts (1.1816.1)
       Mozu.Core.Prime (>= 1.1735.3)
       Mozu.SiteSettings.General.Contracts (>= 1.1738.2)
@@ -124,9 +124,9 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.1743.4)
+    Mozu.SiteSettings.General.Contracts (1.1835.0-applepay-30)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.1828.5)
+    Mozu.SiteSettings.Order.Contracts (1.1835.0-applepay-30)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.Tenant.Contracts (1.1706.1)

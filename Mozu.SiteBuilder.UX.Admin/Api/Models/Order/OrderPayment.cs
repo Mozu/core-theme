@@ -56,6 +56,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public string PaymentWorkflow { get; set; }
 
+        public string  TokenType { get; set; }
+
+        public string TokenId { get; set; }
         /// <summary>
         /// Billing Contact for this payment.
         /// </summary>

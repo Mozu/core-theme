@@ -21,7 +21,6 @@ Ext.define('Taco.view.settings.paymentTypes.subform.PaymentType', {
             labelAlign: 'top',
             labelSeparator: ''
         };
-        this.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
                        
         this.externalGatewayContainer = Ext.widget({
             xtype: 'container',

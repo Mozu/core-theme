@@ -29,7 +29,9 @@ Ext.define('Taco.model.CheckoutSettings', {
                 return v;
             }
         },
-        { name: "purchaseOrder", type: "any", defaultValue: {} }
+        { name: "purchaseOrder", type: "any", defaultValue: {} },
+
+        { name: "thirdPartyPaymentSettings", type: "any", defaultValue: [] }
         /*
         {
             name: "supportedCards",

@@ -660,6 +660,19 @@
       "includeSelf": true
     }
   },
+  "token": {
+    "create": {
+      "verb": "POST",
+      "template": "{+tokenService}",
+      "returnType": "json"
+    },
+    "execute": {
+      "verb": "POST",
+      "shortcutParam": "cardType",
+      "template": "{+tokenService}/{cardType}/execute",
+      "returnType": "json"
+    }
+  },
   "accountcard": {
     "template": "{+customerService}{id}/cards"
   },

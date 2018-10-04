@@ -125,7 +125,7 @@ Ext.define('Taco.view.order.modal.Refund', {
                 data.paymentId = data.id;
                 data.id = 'payment-' + data.id;
                 data.transactionType = 'Payment';
-                data.transactionMethod = data.paymentType;
+                data.transactionMethod = (data.paymentType == "token" ? data.tokenType : data.paymentType);
 
                 
                 if (data.subpayments) {
@@ -144,7 +144,7 @@ Ext.define('Taco.view.order.modal.Refund', {
 
                 data.id = 'refund-' + data.id;
                 data.transactionType = 'Refund';
-                data.transactionMethod = data.payment.paymentType;
+                data.transactionMethod = (data.payment.paymentType == "token" ? data.payment.tokenType : data.payment.paymentType);
                 data.amountCredited = data.amount;
                 data.paymentId = data.transactionMethod === 'StoreCredit' ? data.orderId : data.payment.id;
 
@@ -323,7 +323,9 @@ Ext.define('Taco.view.order.modal.Refund', {
                             '<tpl if="paymentType == \'GiftCard\'">GiftCard: {cardNumber}',
                             '<tpl else>',
                                 '<tpl if="paymentType == \'CreditCard\'">{[values.cardType]}: {[values.cardNumber]}',
-                                    ' ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
+                                 ' ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
+                                '<tpl elseif="paymentType ==\'token\'">',
+                        '{tokenType} ({amountCollected:siteCurrency(', me.order.get('siteId'), ')})',
                                 '<tpl else>{[values.paymentType]}: {[values.billingContact.email]}',
                                 '</tpl>',
                             '</tpl>',
@@ -339,6 +341,8 @@ Ext.define('Taco.view.order.modal.Refund', {
                                 '<tpl else>',
                                     '<tpl if="paymentType == \'CreditCard\'">',
                                         '{cardType}: {cardNumber} ({amountCollected:siteCurrency(', siteId, ')})',
+                                    '<tpl elseif="paymentType == \'token\'">',
+                                        '{tokenType} ({amountCollected:siteCurrency(', siteId, ')})',
                                     '<tpl else>',
                                         '{paymentType}: {billingContact.email}',
                                     '</tpl>',

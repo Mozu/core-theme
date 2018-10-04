@@ -14,18 +14,21 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
         var me = this;
 
         me.creditCards = Ext.create('Taco.view.settings.paymentTypes.subform.CreditCards', me);
+        me.thirdPartyPayments = Ext.create('Taco.view.settings.paymentTypes.subform.ThirdPartyPayments', me);
         me.checkByMail = Ext.create('Taco.view.settings.paymentTypes.subform.CheckByMail', me);
         me.purchaseOrder = Ext.create('Taco.view.settings.paymentTypes.subform.PurchaseOrder', me);
         me.giftCards = Ext.create('Taco.view.settings.paymentTypes.subform.GiftCards', me);
 
         me.items = [
             me.creditCards,
+            me.thirdPartyPayments,
             me.giftCards,
             me.checkByMail,
             me.purchaseOrder
         ];
 
         me.externalGateWayDefinitionsStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.ExternalGatewayDefinitions');
+        
         me.buildExternalGateway();
 
         me.mon(Taco.core.StateManager, {
@@ -44,6 +47,7 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
     buildExternalGateway: function () {
         var me = this;
         var store = this.externalGateWayDefinitionsStore;
+        store.filter('isLegacy', 'true');
         store.each(function (externalPayment) {
             var panel = Ext.create('Taco.view.settings.paymentTypes.subform.ExternalGateway', {
                 record: me.record,
@@ -51,5 +55,6 @@ Ext.define('Taco.view.settings.paymentTypes.Form', {
             });
             me.items.push(panel);
         }, this);
-    }
+    }  
+    
 });

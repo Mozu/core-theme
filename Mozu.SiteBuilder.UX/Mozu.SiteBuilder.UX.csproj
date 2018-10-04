@@ -233,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BuiltinScripts\SDK\src\types\checkout.js" />
+    <Content Include="BuiltinScripts\SDK\src\types\token.js" />
     <Content Include="PostDeploy.ps1">
     </Content>
     <Content Include="PreDeploy.ps1">

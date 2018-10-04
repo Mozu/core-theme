@@ -16,7 +16,9 @@ module.exports = (function () {
         'SPLIT_ORDER_ITEM_FAILED': 'Split Order Item Failed',
         'SET_SHIPPING_METHODS_FAILED': 'Set Shipping Methods Failed',
         'UNSET_DESTINATIONS_FAILED': 'Sorry, something went wrong: Unsetting all shipping destinations failed',
-        'SET_DESTINATIONS_FAILED': "Sorry, something went wrong: Setting all shipping destinations failed"
+        'SET_DESTINATIONS_FAILED': "Sorry, something went wrong: Setting all shipping destinations failed",
+        'TOKEN_MISSING': "Payment Token missing or unrecognized",
+        'TOKEN_TYPE_MISSING': "Payment Token Type missing or unrecognized"
     });
 
     var checkoutStatus2IsComplete = {};
@@ -66,6 +68,12 @@ module.exports = (function () {
         },
         "Check": function (checkout, billingInfo) {
             return checkout.createPayment();
+        },
+        "ThirdParty": function (checkout, billingInfo) {
+            if (!checkout.token) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.paymentServiceTokenId) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.type) errors.throwOnObject(checkout, 'TOKEN_TYPE_MISSING');
+            return checkout.createPayment(billingInfo);
         }
     };
 

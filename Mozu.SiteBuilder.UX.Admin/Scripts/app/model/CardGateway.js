@@ -11,6 +11,11 @@ Ext.define('Taco.model.CardGateway', {
             "useNull": true
         },
         {
+            "name": "paymentType",
+            "type": "string",
+            "useNull": true
+        },
+        {
             "name": "cardDisplay",
             "type": "string",
             "useNull": true
@@ -29,7 +34,18 @@ Ext.define('Taco.model.CardGateway', {
             "name": "gatewayName",
             "type": "number",
             "useNull": true
+        },
+        {
+            "name": "processingGatewayId",
+            "type": "string",
+            "useNull": true
+        },
+        {
+            "name": "processingGatewayName",
+            "type": "string",
+            "useNull": true
         }
+
     ],
 
     proxy: {

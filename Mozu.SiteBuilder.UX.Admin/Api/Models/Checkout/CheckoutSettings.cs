@@ -72,11 +72,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         /// Corresponds to OrderProcessingSettings for a Giftcard Gateway
         /// </summary>
         public string GiftCardProcessingType { get; set; }
+
+        public List<DC.ThirdPartyPaymentSetting> ThirdPartyPaymentSettings { get; set; }
     }
 
     public class CardGateway
     {
         public string CardType { get; set; }
+
+        public string PaymentType { get; set; }
 
         public string CardDisplay { get; set; }
 
@@ -85,6 +89,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
         public string GatewayId { get; set; }
 
         public string GatewayName { get; set; }
+
+        public string ProcessingGatewayId { get; set; }
+        public string ProcessingGatewayName { get; set; }
     }
 
     internal static class CARD_TYPE
