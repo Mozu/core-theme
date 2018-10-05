@@ -17,9 +17,7 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ThirdPartyPayments', {
 
         me.header = null;
 
-        me.items = [];
-        me.cardTypes = [];
-        me.externalDefinitions = [];
+        me.items = [];       
         me.cardGateways = me.record.get('cardGatewayMap');
 
         me.cardGatewayStore = Ext.create('Ext.data.Store', {
@@ -68,6 +66,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ThirdPartyPayments', {
                 return cardGateway.cardType === externalPaymentName;
             });
 
+            //configuraiton items
+
             var primaryGateway = Ext.create('Ext.form.field.ComboBox', {
                 xtype: 'combobox',
                 width: 180,
@@ -92,9 +92,8 @@ Ext.define('Taco.view.settings.paymentTypes.subform.ThirdPartyPayments', {
 
                             me.record.set('cardGatewayMap', me.cardGateways);
                         }
-
-                        }
-                    } 
+                    }
+                }
             });
 
             var secondaryGateway = Ext.create('Ext.form.field.ComboBox', {

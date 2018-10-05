@@ -31,7 +31,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
-nuget Mozu.CommerceRuntime.Contracts 1.1837.0-NGCOM-1694-54
+nuget Mozu.CommerceRuntime.Contracts 1.1840.1
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
@@ -42,15 +42,15 @@ nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
-nuget Mozu.PaymentService.Contracts 1.1828.1
+nuget Mozu.PaymentService.Contracts 1.1840.1
 nuget Mozu.ProductAdmin.Contracts 1.1836.1
 nuget Mozu.ProductRuntime.Contracts 1.1836.1
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
 nuget Mozu.PricingRuntime.Contracts >= 1.1816.1
-nuget Mozu.SiteSettings.General.Contracts 1.1835.0-applepay-30
-nuget Mozu.SiteSettings.Order.Contracts 1.1835.0-applepay-30
+nuget Mozu.SiteSettings.General.Contracts 1.1840.1
+nuget Mozu.SiteSettings.Order.Contracts 1.1840.1
 nuget protobuf-net 2.0.0.668
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703
