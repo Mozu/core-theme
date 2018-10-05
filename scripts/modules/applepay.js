@@ -108,18 +108,7 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
                     var currentPayment = self.orderModel.apiModel.getCurrentPayment() || {};
 
                     self.setShippingContact(appleShippingContact).then(function(shippingContactResponse){
-                        if (shippingContactResponse && !self.multishipEnabled) {
-                          // If we're in singleship, the response is some fulfillmentInfo data.
-                          self.orderModel.set('fulfillmentInfo', shippingContactResponse.data);
-                        } else if (shippingContactResponse && self.multishipEnabled) {
-                          // If we're in multiship, the response is a whole new order object
-                          // loaded with destinations.
-                          self.orderModel.set(shippingContactResponse);
-                        }
                         self.setShippingMethod().then(function(shippingMethodResponse){
-                            if (shippingMethodResponse){
-                              self.orderModel.set(shippingMethodResponse.data);
-                            }
                             self.orderModel.apiVoidPayment(currentPayment.id).ensure(function(){
                                 self.orderModel.apiCreatePayment(createPaymentPayload).then(function(order){
                                     self.orderModel.set(order.data);
@@ -278,7 +267,11 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
         else {
             fulfillmentInfo.fulfillmentContact.email = appleShippingContact.emailAddress;
         }
-        return self.orderModel.apiModel.updateShippingInfo(fulfillmentInfo,  { silent: true });
+        return self.orderModel.apiModel.updateShippingInfo(fulfillmentInfo,  { silent: true }).then(function(response){
+            self.orderModel.set('fulfillmentInfo', response.data);
+        }, function(error){
+            return error;
+        });
       }
     },
     // shipping address setter for multiship.
@@ -291,6 +284,11 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
             var destinationId = response.data.id;
             return self.orderModel.apiModel.setAllShippingDestinations({
               destinationId: destinationId
+            }).then(function(response){
+              self.orderModel.set(response);
+              return response;
+            }, function(error){
+              return error;
             });
         });
 
@@ -328,8 +326,14 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
 
                     shippingMethods.push({groupingId: method.groupingId, shippingRate: shippingRate});
                 });
+                var shippingMethodsPayload = { id: self.orderModel.get('id'), postdata: shippingMethods };
 
-                return self.orderModel.apiModel.setShippingMethods({id: self.orderModel.get('id'), postdata:shippingMethods});
+                return self.orderModel.apiModel.setShippingMethods(shippingMethodsPayload).then(function(response){
+                    self.orderModel.set(response.data);
+                    return response;
+                }, function(error){
+                  return error;
+                });
 
               } else {
               var shippingMethod = "";
@@ -339,7 +343,12 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
               var fulfillmentInfo = self.orderModel.get("fulfillmentInfo");
               fulfillmentInfo.shippingMethodCode = shippingMethod.shippingMethodCode;
               fulfillmentInfo.shippingMethodName = shippingMethod.shippingMethodName;
-              return self.orderModel.apiModel.updateShippingInfo(fulfillmentInfo,  { silent: true });
+              return self.orderModel.apiModel.updateShippingInfo(fulfillmentInfo,  { silent: true }).then(function(response){
+                  self.orderModel.set(response.data);
+                  return response;
+              }, function (error){
+                return error;
+              });
             }
           }
         );
