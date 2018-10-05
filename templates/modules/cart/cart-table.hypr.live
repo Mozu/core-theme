@@ -72,7 +72,7 @@
               {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
                   {% if externalPayment.isEnabled %}
                   <div class="mz-carttable-thirdpartypayment" >
-                    {% if externalPayment.name == "PayWithAmazon" %}
+                    {% if externalPayment.name|lower == "paywithamazon" %}
                         <div id="AmazonPayButton"></div>
                     {% endif %}
                     {% if externalPayment.name == "VisaCheckout" %}
@@ -81,6 +81,9 @@
                     {% if externalPayment.name == "PayPalExpress2" %}
                       <img id="btn_xpressPaypal" class="p-button" alt="Check out with PayPal" role="button" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" width="170px" height="32px" />
                     {%endif%}
+                    {% if externalPayment.name == "APPLEPAY" %}
+                      <div class="apple-pay-button" role="button" width="200px" style="display: none" id="applePayButton"></div>
+                    {% endif %}
                   </div>
                   {%endif%}
               {%endfor%}

@@ -1,10 +1,10 @@
-define(["modules/jquery-mozu", 
-    "underscore", 
-    "hyprlive", 
-    "modules/backbone-mozu", 
-    'hyprlivecontext', 
+define(["modules/jquery-mozu",
+    "underscore",
+    "hyprlive",
+    "modules/backbone-mozu",
+    'hyprlivecontext',
     'modules/editable-view',
-    'modules/amazonpay'], 
+    'modules/amazonpay'],
     function ($, _, Hypr, Backbone, HyprLiveContext, EditableView, AmazonPay) {
 
 var CheckoutStepView = EditableView.extend({
@@ -43,8 +43,10 @@ var CheckoutStepView = EditableView.extend({
         },
         amazonShippingAndBilling: function() {
             var payments = window.order.get('payments');
-            var amazonpayment= _.findWhere(payments, {'paymentType' : 'PayWithAmazon'});
-            
+            var amazonpayment = _.find(payments, function(payment){
+                return payment.paymentType === 'token' || payment.paymentType === 'PayWithAmazon';
+            });
+
             window.location = "/checkoutV2/"+window.order.id+"?isAwsCheckout=true&access_token="+amazonpayment.data.awsData.addressAuthorizationToken+"&view="+AmazonPay.viewName;
         },
         initStepView: function() {
@@ -66,5 +68,5 @@ var CheckoutStepView = EditableView.extend({
             this.$('.mz-panel-wrap').animate({'height': this.$('.mz-inner-panel').outerHeight() });
         },200)
     });
-    return CheckoutStepView; 
+    return CheckoutStepView;
 });

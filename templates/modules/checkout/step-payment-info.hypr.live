@@ -76,16 +76,25 @@
         </div>
         {% endif %}
 
-        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentWorkflow|lower  == "paywithamazon"  %}
-            {% if model.nonStoreCreditOrGiftCardTotal == 0%}
-                <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-            {% endif %}
+        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower == "token"  || payment.paymentType|lower  == "paywithamazon"  %}
             {% if model.nonStoreCreditOrGiftCardTotal > 0%}
                {%if model.isExternalCheckoutFlowComplete%}
                 <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
                {% endif %}
                {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
-                  {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                    {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                {%endif%}
+               {%if payment.paymentType|lower == "token" %}
+                    {%if payment.billingInfo.token.type|lower  == "paywithamazon" %}
+                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                    {%endif%}
+                    {% if payment.billingInfo.token.type|lower == "applepay" %}
+                      <div class="mz-l-stack-section">
+                        <div class="mz-l-formfieldgroup-cell">
+                          <img width="100px" src="../../../resources/images/Apple_Pay_Mark.png"/>
+                        </div>
+                      </div>
+                    {% endif %}
                 {%endif%}
                 {% if payment.paymentWorkflow|lower  == "paypalexpress2" %}
                 <div class="mz-l-stack-section">

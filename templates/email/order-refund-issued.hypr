@@ -55,6 +55,14 @@
 				{% if refund.payment.paymentType == "PayWithAmazon" %}
 					{{labels.payWithAmazon}}
 				{% endif %}
+				{% if refund.payment.paymentType|lower == "token"%}
+					{%if refund.payment.billingInfo.token.type|lower == "paywithamazon" %}
+						{{labels.payWithAmazon}}
+					{% endif %}
+          {%if refund.payment.billingInfo.token.type|lower == "applepay" %}
+            {{labels.applePay}}
+          {% endif %}
+				{% endif %}
 			</td>
 			<td>{{ refund.amount|currency }}</td>
 			<td>{{ refund.auditInfo.createDate }}</td>

@@ -74,15 +74,23 @@
             </div>
         </div>
         {% endif %}
-        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentWorkflow|lower  == "paywithamazon"  %}
-            {% if model.nonStoreCreditOrGiftCardTotal == 0%}
-                <h4 class="mz-checkout-nopaymentrequired">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
-            {% endif %}
+
+        {% if payment.billingInfo.paymentType|lower == "paypalexpress2" || payment.paymentType|lower  == "token" || payment.paymentWorkflow|lower  == "paywithamazon" %}
             {% if model.nonStoreCreditOrGiftCardTotal > 0%}
                {%if model.isExternalCheckoutFlowComplete%}
                 <a class="mz-checkout-payment-change" href="javascript:;" data-mz-action="cancelExternalCheckout">{{ labels.remove }} </a>
                {% endif %}
-               {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
+                {% if payment.paymentType|lower == "token"%}
+                    {%if payment.billingInfo.token.type|lower == "paywithamazon" %}
+                        {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
+                    {%endif%}
+                    {% if payment.billingInfo.token.type|lower == "applepay" %}
+                      <div class = "mz-l-formfieldgroup-cell">
+                        <img width="100px" style="margin-right:7px;" src="../../resources/images/Apple_Pay_Mark.png"/>
+                      </div>
+                    {% endif %}
+                {%endif%}
+                {%if payment.paymentWorkflow|lower  == "paywithamazon" %}
                   {% include "modules/checkout/payment-paybyamazon" with model=payment.billingInfo.billingContact%}
                 {%endif%}
                 {% if payment.paymentWorkflow|lower  == "paypalexpress2" %}
@@ -96,12 +104,14 @@
                             {% include "modules/common/address-summary" with model=model.billingContact %}
                         </div>
                     {%endif%}
-
                     </div>
+
                 {%endif%}
             {%endif%}
 
+
         {% endif %}
+
         {% endfor %}
 
         <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
@@ -114,17 +124,14 @@
             {% include "modules/checkout/checkout-gateway-giftcard" %}
         </div>
         {% endif %}
-        <div class="mz-l-stack-section mz-paymentselector-separator mz-checkoutform">
+        <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
     </div>
 
     <div class="mz-formstep-fields mz-l-stack">
-
         {% if model.nonStoreCreditOrGiftCardTotal > 0 %}
-
             {% if model.hasSavedCardPayment %}
-
                 {% if editing.savedCard %}
                     <div class="mz-l-stack-section mz-checkout-current-payment mz-checkout-saved-card-editing">
                         {% include "modules/multi-ship-checkout/payment-selector" %}
@@ -159,13 +166,13 @@
                         </div>
                     </div>
                 {% endif %}
-
             {% else %}
 
                 <div class="mz-l-stack-section">
                     {% include "modules/multi-ship-checkout/payment-selector" %}
                 </div>
             {% endif %}
+
         {% else %}
             <h4 class="mz-checkout-nopaymentrequired mz-checkoutform">{{ labels.noPaymentRequired|string_format(model.remainingTotal|currency) }}</h4>
 
@@ -202,9 +209,9 @@
         <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform">
             {% include "modules/checkout/checkout-digital-credit" %}
         </div>
+        <div class="mz-formstep-next">
+            <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
+        </div>
     </div>
 
-    <div class="mz-formstep-next">
-        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
-    </div>
-</div><!-- .mz-panel-wrap -->
+</div>
