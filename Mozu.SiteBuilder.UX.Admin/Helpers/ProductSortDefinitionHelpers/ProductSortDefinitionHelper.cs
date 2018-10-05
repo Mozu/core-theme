@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Mozu.SiteBuilder.Mvc.Extensions;
 using PR = Mozu.ProductRuntime.Contracts;
 using SB = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductSortDefinitions;
 
@@ -74,6 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
                 var newItem = Mapper.Map<PR.Product, SB.ProductSortDefinitionPreviewProduct>(runtimeProduct);
 
                 newItem.Price = GetDisplayPrice(sortDef, runtimeProduct);
+                newItem.NotAvailableInStorefront = newItem.Name.IsNullOrEmpty(); //we didn't get information from API
 
                 //Re-populate some values from original input
                 if (matchOriginalInput != null)
@@ -87,7 +89,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductSortDefinitionHelpers
                 outputList.Add(newItem);
             }
 
-            //return outputList.OrderBy(z => z.Position).ToList();
             return outputList;
         }
 
