@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.Mvc
                     newCookie.Expires = DateTime.MinValue;
                 }
                 
-                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, newCookie);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, newCookie, false);
 
             }
             this.IsDebugMode = isDebugMode;
@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.Mvc
                     }
 
 
-                    _cookieProvider.SaveResponseCookie(Constants.NOWCOOKIENAME, cookie);
+                    _cookieProvider.SaveResponseCookie(Constants.NOWCOOKIENAME, cookie, false);
 
                 }
                 else
@@ -449,7 +449,7 @@ namespace Mozu.SiteBuilder.Mvc
                     cookie.Expires = DateTime.MinValue;
                 }
 
-                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, cookie);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, cookie, false);
 
             }
             else

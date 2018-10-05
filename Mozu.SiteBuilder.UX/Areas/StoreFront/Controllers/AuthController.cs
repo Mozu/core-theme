@@ -187,7 +187,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             if (string.IsNullOrEmpty(returnUrl))
             {
-                returnUrl = Request.Headers.Referrer.ToString();
+                returnUrl = Request.Headers.Referrer?.ToString();
                 if (string.IsNullOrEmpty(returnUrl))
                 {
                     return new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative);

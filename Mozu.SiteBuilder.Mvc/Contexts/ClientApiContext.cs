@@ -6,6 +6,7 @@ using Mozu.Core;
 using Mozu.Core.Settings;
 using Mozu.Core.Api.Client;
 using APIConstants = Mozu.Core.Api.Contracts.Constants;
+using static Mozu.SiteBuilder.Mvc.Tags.PreloadJsonTag;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -41,6 +42,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             Headers = BuildHeaders(apiContext);
         }
+
+
 
         public Dictionary<string, string> Headers { get; set; }
 
@@ -124,19 +127,31 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 
         }
 
+        public static bool OmitUserFields
+        {
+            get { return MozuConfigurationManager.Settings.AppSettingsAsNullableBool("sitebuilder_preload_json_omitUserFields").GetValueOrDefault(true); }
+        }
         private Dictionary<string, string> BuildHeaders(IApiContext apiContext)
         {
             var header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            header[APIConstants.Headers.APP_CLAIMS] = _apiClaims.Value;
+            if (!OmitUserFields)
+            {
+                header[APIConstants.Headers.APP_CLAIMS] = _apiClaims.Value;
+            }
+
             header[APIConstants.Headers.CURRENCY] = apiContext.CurrencyCode;
             header[APIConstants.Headers.LOCALE] = apiContext.LocaleCode;
             header[APIConstants.Headers.SITE] = apiContext.SiteId.HasValue ? apiContext.SiteId.Value.ToString() : "";
             header[APIConstants.Headers.MASTER_CATALOG] = apiContext.MasterCatalogId.HasValue ? apiContext.MasterCatalogId.Value.ToString() : "";
             header[APIConstants.Headers.CATALOG] = apiContext.CatalogId.HasValue ? apiContext.CatalogId.Value.ToString() : "";
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
-            header[APIConstants.Headers.PURCHASE_LOCATION] = apiContext.PurchaseLocation?.ToString();
-            header[APIConstants.Headers.USER_CLAIMS] = GetUserClaims(apiContext);
 
+            //food/
+            if (!OmitUserFields)
+            {
+                header[APIConstants.Headers.PURCHASE_LOCATION] = apiContext.PurchaseLocation?.ToString();
+                header[APIConstants.Headers.USER_CLAIMS] = GetUserClaims(apiContext);
+            }
          //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
             if (apiContext.DataViewMode == DataViewModeType.Pending)
             {

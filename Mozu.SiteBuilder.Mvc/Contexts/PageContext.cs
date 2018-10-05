@@ -19,6 +19,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.SiteBuilder.Mvc.Tags;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -256,10 +257,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
         }
+        [JsonPreloadFilter]
         public string CorrelationId
         {
             get { return _apiContext.TraceContext?.CorrelationId; }
         }
+        [JsonPreloadFilter]
         public string IpAddress
         {
             get;
@@ -383,7 +386,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _themeId;
             }
         }
-
+        [JsonPreloadFilter]
         public bool IsDebugMode 
         {
             get { return _apiContext.IsDebugMode; }
@@ -437,22 +440,22 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageTypeId { get; set; }
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
-
+        [JsonPreloadFilter]
         public bool IsCrawler
         {
             get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
         }
-        
+        [JsonPreloadFilter]
         public bool IsMobile
         {
             get { return _mobileDetectionProvider.IsCurrentRequestMobile; }
         }
-        
+        [JsonPreloadFilter]
         public bool IsTablet
         {
             get { return _mobileDetectionProvider.IsCurrentRequestTablet; }
         }
-        
+        [JsonPreloadFilter]
         public bool IsDesktop
         {
             get
@@ -474,7 +477,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
             }
         }
-
+        [JsonPreloadFilter]
         public Visit Visit {
             get; set;
         }
@@ -492,7 +495,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         private Lazy<UserProfile> _userProfile;
         private Lazy<User> _user;
-
+        [JsonPreloadFilter]
         public User User
         {
             get
@@ -504,7 +507,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 _user = new Lazy<User>(() => value);
             }
         }
-
+        [JsonPreloadFilter]
         public UserProfile UserProfile
         {
             get
@@ -512,6 +515,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return _userProfile.Value;
             }
         }
+        [JsonPreloadFilter]
         public LocationInfo PurchaseLocation
         {
             get
@@ -530,9 +534,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string ListViewName { get; set; }
 
         public string DocumentId { get; set; }
-
+        [JsonPreloadFilter]
         public bool IsEditMode { get { return _apiContext.IsEditMode;  } set { _apiContext.IsEditMode = value; } }
-
+        [JsonPreloadFilter]
         public bool IsAdminMode {  get { return _apiContext.IsAdminMode; } }
         public string Url { get; set; }
 
@@ -545,13 +549,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string VisaCheckoutButtonUrl { get; set; }
         public string VisaCheckoutJavaScriptSdkUrl { get; set; }
         public JObject ReasonCollection { get; set; }
+        [JsonPreloadFilter]
         public DateTime Now { get; set; }
 
         public  string CategoryCode { get; set; }
         public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
         public List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
 
+        
         ICrawlerInfo _crawlerInfo;
+        [JsonPreloadFilter]
         public ICrawlerInfo CrawlerInfo
         {
             get

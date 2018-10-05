@@ -67,14 +67,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             httpConfiguration.MessageHandlers.Add(new DeepPagingLimitingRequestHandler());
             httpConfiguration.MessageHandlers.Add(new ResponseHeaderAppenderMessagHandler());
-            
+            httpConfiguration.MessageHandlers.Add(new PageContextCookieHandler());
 
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-
-
-            
-
-
         }
         protected override void ApplicationStart(System.Web.Http.HttpConfiguration httpConfiguration)
         {

@@ -23,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc
     public interface ICookieProvider
     {
         CookieState GetRequestCookie(string cookieName);
-        void SaveResponseCookie(string cookieName, HttpCookie cookie);
+        void SaveResponseCookie(string cookieName, HttpCookie cookie, bool httpOnly = true);
         void RemoveCookie(string cookieName);
     }
 
@@ -65,9 +65,10 @@ namespace Mozu.SiteBuilder.Mvc
             return cookie;
         }
 
-        public void SaveResponseCookie(string cookieName , HttpCookie cookie)
+        public void SaveResponseCookie(string cookieName , HttpCookie cookie, bool httpConly = true)
         {
             cookie.Name = cookieName;
+            cookie.HttpOnly = httpConly;
             //cookie.Domain = this.Domain;
             if (_context.Response.Cookies.AllKeys.Any( x=> x == cookieName ))
             {

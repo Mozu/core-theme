@@ -20,6 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         CheckoutSettings CheckoutSettings { get; set; }
         GeneralSettings GeneralSettings { get; set; }
         string Hash { get; set; }
+        string ThemeHash { get; set; }
         LocationUsageCollection LocationUsages { get; set; }
         NavigationSet NavigationSet { get; set; }
         DocumentCollection NavWebPages { get; set; }

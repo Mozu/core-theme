@@ -431,7 +431,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
 
             bool isSandBox = _settings.CoreSettings.ScaleUnitId.IndexOf("sb", StringComparison.OrdinalIgnoreCase) > -1;
-            var hash = data.Hash;
+            var hash = data.ThemeHash;
             if (isSandBox && _theme != null)
             {
                

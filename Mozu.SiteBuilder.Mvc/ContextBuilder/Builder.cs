@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "8";
+        public const string CacheVersion = "9";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
@@ -978,7 +978,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
 
             ret.Hash = Hash(ret);
-            
+            ret.ThemeHash = ThemeHash(ret);
             return ret;
 
         }
@@ -1045,7 +1045,42 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 }
             }
         }
+        public static string ThemeHash (ISiteBuilderContextData data)
+        {
+            using (var md5 = MD5.Create())
+            using (var stream = new MemoryStream())
+            using (var w = new BinaryWriter(stream))
+            {
+                
+                w.Write(data.CheckoutSettings?.CustomerCheckoutSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
+                w.Write(data.CheckoutSettings?.OrderProcessingSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
+                w.Write(data.CheckoutSettings?.PaymentSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
+                w.Write(data.GeneralSettings?.AuditInfo?.UpdateDate?.Ticks ?? 0);
+                data.LocationUsages?.Items?.OrderBy(x => x.LocationUsageTypeCode)?.ToList().ForEach(_ =>
+                {
+                    w.Write(_.LocationUsageTypeCode ?? string.Empty);
+                    w.Write((_.AuditInfo?.UpdateDate ?? DateTime.MinValue).Ticks);
+                });
+               
+                
 
+                data.Themes?.Keys?.OrderBy(_ => _)?.All(_ =>
+                {
+                    var tup = data.Themes[_];
+                    w.Write(tup.Item1?.Id ?? string.Empty);
+                    w.Write(tup.Item1?.Hash ?? string.Empty);
+                    w.Write(tup.Item2?.TimeStamp.Ticks ?? 0);
+                    return true;
+                });
+
+                w.Write(data.TenantInfo?.UpdateDate.Ticks ?? 0);
+                w.Flush();
+                w.Flush();
+                stream.Position = 0;
+                var hash = md5.ComputeHash(stream);
+                return hash.ToHexString();
+            }
+        }
         public static string Hash (ISiteBuilderContextData data )
         {
             using (var md5 = MD5.Create())
@@ -1575,7 +1610,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-    
+        public string ThemeHash
+        {
+            get
+            {
+                return _inner.ThemeHash;
+            }
+            set
+            {
+                _inner.ThemeHash = value;
+            }
+        }
+
         public UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
         {
             return ((ISiteBuilderContextData)_inner).GetMappedCheckoutSettings();
@@ -1632,6 +1678,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public Dictionary<string, Dictionary<string, object>> RouteMapperData { get;  set; }
         public DateTime BuildDate { get;  set; }
         public string Hash { get;  set; }
+
+        public string ThemeHash { get; set; }
 
         Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings _mappedGenSettings;
         public Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()

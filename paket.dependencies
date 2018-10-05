@@ -54,7 +54,7 @@ nuget Mozu.SiteSettings.Order.Contracts 1.1840.3
 nuget protobuf-net 2.0.0.668
 nuget FAKE
 nuget mozu.tenant.contracts > 1.1703
-nuget Mozu.Log4net.Gelf
+nuget Mozu.Log4net.Gelf 1.1842.1
 nuget MongoDB.Driver.GridFS  2.4.4
 nuget Mozu.Event.Contracts
 

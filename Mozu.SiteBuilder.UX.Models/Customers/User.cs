@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Customers
 {
+
     [DataContract]
     public class User :ModelBase
     {

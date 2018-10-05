@@ -141,10 +141,35 @@
     }
 
     function getMozuData(name) {
+        
         var script = document.getElementById('data-mz-preload-' + name);
         var text;
-        if (script) text = script.textContent || script.innerText || script.text || script.innerHTML;
-        if (text) return text && JSON.parse(text);
+        if (script) {
+            text = script.textContent || script.innerText || script.text || script.innerHTML;
+        }
+        var obj;
+        if (text) {
+            obj = JSON.parse(text);
+        }
+        if (obj && name == 'pagecontext') {
+            var pc = getPageContext() || {}
+            obj = Object.assign(obj, pc);
+        }
+        if (obj && name == 'user') {
+            var pc = getPageContext() || {}
+            obj = Object.assign(obj, pc.user);
+        }
+        return obj;
+    }
+    function getPageContext() {
+        var pcCookie = document.cookie.split('; ').map(function (_) { return _.split('='); }).filter(function (_) { return _[0] == '_mzPc'; });
+        if (pcCookie && pcCookie.length) {
+            try {
+                return JSON.parse(atob(decodeURIComponent(pcCookie[0][1])));
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 
     //Allow getting a global that expressed in

@@ -59,20 +59,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [AcceptVerbs("POST")]
         public HttpResponseMessage RefreshAPiContextHeaders()
         {
-            IEnumerable<string> tmp;
-            if (this.Request.Headers.TryGetValues(Headers.APP_CLAIMS, out tmp))
-            {
-                var appClaim = LightweightAppClaims.Parse(tmp.First());
-                if ((DateTime.UtcNow - appClaim.Expiration).TotalDays < 1)
-                {
-                    var clientApiContext = this.Request.Resolve<ClientApiContext>();
-                    var resp = Request.CreateResponse(HttpStatusCode.OK);
-                    resp.Headers.Add(Headers.APP_CLAIMS, clientApiContext.Headers[Headers.APP_CLAIMS]);
-                    resp.Headers.Add(Headers.USER_CLAIMS, clientApiContext.Headers[Headers.USER_CLAIMS]);
-                    return resp;
-                }
-            }
-            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "not authorized");
+            var resp = Request.CreateResponse(HttpStatusCode.OK);
+            resp.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
+            resp.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+            return resp;
         }
 
         [AcceptVerbs("GET")]
@@ -100,6 +90,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out vals) && vals.Count() > 0)
             {
                 this.Request.Method = new HttpMethod(vals.First());
+            }
+
+            IEnumerable<string> values;
+            if (!this.Request.Headers.TryGetValues(Headers.USER_CLAIMS, out values))
+            {
+                Request.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
+            }
+
+            if (!this.Request.Headers.TryGetValues(Headers.APP_CLAIMS, out values))
+            {
+                Request.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
             }
 
             if (this.Request.Content.Headers.ContentLength == 0)
