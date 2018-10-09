@@ -299,12 +299,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                          {
                              Id = "tokenService",
                              InternalUrl = settings.Urls("service-url-StorefrontTokensWebApi"),
+                             SkipRename = true,
                              RequiresSsl = true
-
                          }
-
-
-
                     };
                 foreach (ServiceInfo si in sis)
                 {
