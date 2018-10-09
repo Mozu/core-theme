@@ -661,6 +661,9 @@
     }
   },
   "token": {
+    "defaults": {
+      "useIframeTransport": "{+tokenService}../../../Assets/mozu_receiver_v2.html"
+    },
     "create": {
       "verb": "POST",
       "template": "{+tokenService}",

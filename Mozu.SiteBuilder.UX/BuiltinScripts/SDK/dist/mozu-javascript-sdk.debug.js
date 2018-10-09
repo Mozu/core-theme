@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-09-07
+ * Mozu JavaScript SDK - v0.3.0 - 2018-10-09
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -4184,6 +4184,9 @@ module.exports=
     }
   },
   "token": {
+    "defaults": {
+      "useIframeTransport": "{+tokenService}../../../Assets/mozu_receiver_v2.html"
+    },
     "create": {
       "verb": "POST",
       "template": "{+tokenService}",
@@ -5671,6 +5674,12 @@ module.exports = (function () {
         },
         "Check": function (order, billingInfo) {
             return order.createPayment();
+        },
+        "ThirdParty": function (checkout, billingInfo) {
+            if (!checkout.token) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.paymentServiceTokenId) errors.throwOnObject(checkout, 'TOKEN_MISSING');
+            if (!checkout.token.type) errors.throwOnObject(checkout, 'TOKEN_TYPE_MISSING');
+            return checkout.createPayment(billingInfo);
         }
     };
     
