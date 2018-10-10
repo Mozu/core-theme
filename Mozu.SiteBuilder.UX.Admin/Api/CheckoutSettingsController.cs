@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 .Select(card =>
                     {
                         var associatedGatewayAccount = checkoutSettings.PaymentSettings.Gateways
-                            .FirstOrDefault(x => x.SupportedCards.Any(c => c.CardTypeId.EqualsIgnoreCase(card.Type)));
+                            .FirstOrDefault(x => x.SiteGatewaySupportedCards.Any(c => c.CardTypeId.EqualsIgnoreCase(card.Type)));
 
                         return new CardGateway
                         {
@@ -98,7 +98,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                             CardType = card.Type,
                             PaymentType = card.PaymentType,
                             IsEnabled = associatedGatewayAccount != null,
-                            ProcessingGatewayId = associatedGatewayAccount?.SupportedCards.FirstOrDefault(x => x.CardTypeId == card.Type)?.ProcessingGatewayAccountId
+                            ProcessingGatewayId = associatedGatewayAccount?.SiteGatewaySupportedCards.FirstOrDefault(x => x.CardTypeId == card.Type)?.ProcessingGatewayAccountId
                         };
                     }
                 )
@@ -221,7 +221,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }*/
 
             var settings = await (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsAsync();
-            var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SupportedCards).ToList();
+            var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SiteGatewaySupportedCards).ToList();
 
             var ret = cards.Where(x=>x.CardTypeId != CARD_TYPE.OTHER && x.PaymentType=="CC").Select(x => new KeyValuePair<string, string>(x.CardTypeId, x.CardTypeId)).ToList();
             return List2(ret);

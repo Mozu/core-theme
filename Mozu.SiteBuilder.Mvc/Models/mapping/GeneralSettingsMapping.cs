@@ -261,11 +261,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null && g.SupportedCards.Any(x=>x.PaymentType.Equals("gc",StringComparison.OrdinalIgnoreCase))
+                                                           where g.GatewayAccount != null && g.SiteGatewaySupportedCards.Any(x=>x.PaymentType.Equals("gc",StringComparison.OrdinalIgnoreCase))
                                                            select g;
 
                 
-                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Where(x=> x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x=>x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x=> x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x=>x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
                 return cards;
             }
@@ -281,10 +281,10 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null && g.SupportedCards.Any(x => x.PaymentType.Equals("cc", StringComparison.OrdinalIgnoreCase))
+                                                           where g.GatewayAccount != null && g.SiteGatewaySupportedCards.Any(x => x.PaymentType.Equals("cc", StringComparison.OrdinalIgnoreCase))
                                                            select g;
 
-                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SupportedCards).Where(x => x.PaymentType.Equals("cc", StringComparison.OrdinalIgnoreCase)).Select(x => x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x => x.PaymentType.Equals("cc", StringComparison.OrdinalIgnoreCase)).Select(x => x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
                 return cards;
             }

@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     {
                         return dc.PaymentSettings.Gateways
                             .Where(g => g.GatewayAccount != null && g.SupportedCards.Count > 0)
-                            .SelectMany(g => g.SupportedCards, (g, c) => new CardGateway()
+                            .SelectMany(g => g.SiteGatewaySupportedCards, (g, c) => new CardGateway()
                             {
                                 GatewayId = g.GatewayAccount.Id,
                                 CardType = c.CardTypeId,
@@ -136,7 +136,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                             ps.Gateways.Add(new DCss.Gateway
                             {
                                 GatewayAccount = new DCp.GatewayAccount { Id = g.Key },
-                                SupportedCards = g.Select(cm => new DCp.SiteGatewaySupportedCard
+                                SiteGatewaySupportedCards = g.Select(cm => new DCp.SiteGatewaySupportedCard
                                 {
                                     CardTypeId = cm.CardType,
                                     ProcessingGatewayAccountId = !string.IsNullOrEmpty(cm.ProcessingGatewayId)?cm.ProcessingGatewayId:null
