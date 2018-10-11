@@ -177,7 +177,12 @@ Ext.define('Taco.view.order.subform.Detail', {
                 'orderAccepted': {
                     fn: function() {
                         me.record.reload();
-                    },
+                    }
+                },
+                'reOrder': {
+                    fn: function () {
+                        me.record.reload();
+                    }
                 },
                 'orderCancelled': {
                     fn: function() {
@@ -528,7 +533,8 @@ Ext.define('Taco.view.order.subform.Detail', {
                 },
                 scope: me,
                 hidden: !canAccept
-            }, {
+            },
+            {
                 text: 'Cancel Order',
                 xtype: "button",
                 ui: "action",

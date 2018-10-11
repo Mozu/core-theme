@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2019-01-07
+ * Mozu JavaScript SDK - v0.3.0 - 2019-01-14
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -2713,7 +2713,7 @@ module.exports = {
 
     }
 }
-},{"./utils":38}],14:[function(_dereq_,module,exports){
+},{"./utils":40}],14:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/collection.js
@@ -2841,7 +2841,7 @@ var ApiObject = _dereq_('./object');
 // END OBJECT
 
 /***********/
-},{"./object":23,"./types/locations":30,"./utils":38}],15:[function(_dereq_,module,exports){
+},{"./object":23,"./types/locations":30,"./utils":40}],15:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/constants/default.js
@@ -2928,6 +2928,7 @@ module.exports = {
 var ApiInterface = _dereq_('./interface');
 var ApiReference = _dereq_('./reference');
 var utils = _dereq_('./utils');
+var MozuUtilities = _dereq_('./utilities');
 
 /**
  * @private
@@ -3016,18 +3017,23 @@ ApiContextConstructor.prototype = {
         return utils.extend({}, ApiReference.urls);
     },
     currency: 'usd',
-    locale: 'en-US'
+    locale: 'en-US',
+    utilities: function() {
+        return utils.extend({}, ApiReference.urls);
+    }
 };
 
 for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
 for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+
+ApiContextConstructor.prototype.MozuUtilities = MozuUtilities;
 
 module.exports = ApiContextConstructor;
 
 // END CONTEXT
 
 /********/
-},{"./interface":21,"./reference":24,"./utils":38,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
+},{"./interface":21,"./reference":24,"./utilities":38,"./utils":40,"when/monitor/console":6}],17:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/errors.js
@@ -3079,7 +3085,7 @@ var errors = {
 
 module.exports = errors;
 // END ERRORS
-},{"./utils":38}],18:[function(_dereq_,module,exports){
+},{"./utils":40}],18:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/iframexhr.js
@@ -3246,7 +3252,7 @@ module.exports = (function(window, document, undefined) {
 
 }(window, document));
 // END IFRAMEXHR
-},{"./utils":38}],19:[function(_dereq_,module,exports){
+},{"./utils":40}],19:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/init.js
@@ -3266,6 +3272,7 @@ module.exports = initialGlobalContext;
 var _init = _dereq_('./init');
 
 _init.Utils = _dereq_('./utils');
+_init.MozuUtilities = _dereq_('./utilities');
 _init.ApiContext = _dereq_('./context');
 _init.ApiInterface = _dereq_('./interface');
 
@@ -3288,7 +3295,7 @@ _init.ApiObject.prototype.inspect = function () {
 _init.ApiContext.__debug__ = true;
 
 module.exports = _init;
-},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utils":38}],21:[function(_dereq_,module,exports){
+},{"./affiliate-tracking-mixin":13,"./collection":14,"./context":16,"./init":19,"./interface":21,"./object":23,"./reference":24,"./utilities":38,"./utils":40}],21:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/interface.js
@@ -3312,6 +3319,7 @@ module.exports = _init;
 var utils = _dereq_('./utils');
 var ApiReference = _dereq_('./reference');
 var ApiObject = _dereq_('./object');
+
 
 var errorMessage = "No {0} was specified. Run Mozu.Tenant(tenantId).MasterCatalog(masterCatalogId).Catalog(catalogId).Site(siteId).",
     requiredContextValues = ['Tenant', 'MasterCatalog', 'Site', 'Catalog'];
@@ -3525,7 +3533,7 @@ module.exports = ApiInterfaceConstructor;
 // END INTERFACE
 
 /*********/
-},{"./object":23,"./reference":24,"./utils":38}],22:[function(_dereq_,module,exports){
+},{"./object":23,"./reference":24,"./utils":40}],22:[function(_dereq_,module,exports){
 module.exports=
 
 //# sourceUrl=src/methods.json
@@ -3662,6 +3670,14 @@ module.exports=
     },
     "collectionOf": "order"
   },
+  "purchaseOrderTransactions": {
+    "template": "{+customerService}{id}PurchaseOrderTransaction",
+    "shortcutParam":  "id",
+    "defaultParams": {
+      "startIndex": 0,
+      "pageSize": 20
+    }
+  },
   "product": {
    "get": {
       "template": "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
@@ -3734,6 +3750,15 @@ module.exports=
     "empty": {
       "verb": "DELETE",
       "template": "{+cartService}current/items/"
+    },
+    "add-bulk-products": {
+      "verb": "POST",
+      "template": "{+cartService}current/bulkitems{?throwErrorOnInvalidItems}",
+      "shortcutParam": "throwErrorOnInvalidItems",
+      "specifyPostData": true,
+      "defaultParams": {
+        "throwErrorOnInvalidItems": true
+      }
     },
     "get-extended-properties": {
       "template": "{+cartService}current/extendedproperties",
@@ -3813,6 +3838,27 @@ module.exports=
       "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
     }
   },
+  "accountattributedefinition": {
+    "template": "{+accountAttributeDefService}{attributeFQN}",
+    "shortcutParam": "attributeFQN",
+    "defaults": {
+      "useIframeTransport": "{+storefrontUserService}../../receiver{?receiverVersion}"
+    }
+  },
+  "accountattributedefinitions": {
+    "template": "{+accountAttributeDefService}",
+    "returnType": "accountattribute"
+  },
+  "accountattribute": {
+    "template": "{+b2BAccountService}{accountId}/attributes/{attributeFQN}",
+    "shortcutParam": "accountId",
+    "returnType": "accountattribute"
+  },
+  "accountattributes": {
+    "template": "{+b2BAccountService}{accountId}/attributes",
+    "shortcutParam": "accountId",
+    "returnType": "accountattribute"
+  },
   "customerattribute": {
     "template": "{+customerService}{accountId}/attributes/{attributeFQN}",
     "defaults": {
@@ -3843,6 +3889,10 @@ module.exports=
       "verb": "POST",
       "template": "{+storefrontUserService}create",
       "returnType": "login"
+    },
+    "get-purchase-order-transactions": {
+      "verb": "GET",
+      "template": "{+customerService}{accountId}/PurchaseOrderTransaction"
     },
     "login": {
       "verb": "POST",
@@ -3875,8 +3925,9 @@ module.exports=
     },
     "change-password": {
       "verb": "POST",
-      "template": "{+customerService}{id}/change-password",
-      "includeSelf": true
+      "template": "{+customerService}{id}/change-password{?userId}",
+      "includeSelf": true,
+      "shortcutParam":  "userId"
     },
     "get-attributes": {
       "template": "{+customerService}{customer.id}/attributes/{?startIndex,pageSize,sortBy,filter}",
@@ -3958,13 +4009,15 @@ module.exports=
     },
     "update-contact": {
       "verb": "PUT",
-      "template": "{+customerService}{accountId}/contacts/{id}",
+      "template": "{+customerService}{accountId}/contacts/{id}/{?userId}",
       "includeSelf": true,
+      "shortcutParam": "userId",
       "returnType": "contact"
     },
     "get-contacts": {
-      "template": "{+customerService}{id}/contacts",
+      "template": "{+customerService}{id}/contacts/{?userId}",
       "includeSelf": true,
+      "shortcutParam": "userId",
       "returnType": "contacts"
     },
     "delete-contact": {
@@ -4012,8 +4065,16 @@ module.exports=
     "collectionOf": "storecredit"
   },
   "contact": {
-    "template": "{+customerService}{accountId}/contacts/{id}",
-    "includeSelf": true
+    "template": "{+customerService}{accountId}/contacts/{id}{?userId}",
+    "shortcutParam": "userId",
+    "includeSelf": true,
+    "update": {
+      "verb": "PUT",
+      "template": "{+customerService}{accountId}/contacts/{id}{?userId}",
+      "includeSelf": true,
+      "shortcutParam": "userId",
+      "returnType": "contact"
+    }
   },
   "contacts": {
     "collectionOf": "contact"
@@ -4261,7 +4322,21 @@ module.exports=
   },
   "addressschemas": "{+referenceService}addressschemas",
   "wishlist": {
+    "create": {
+      "verb": "POST",
+      "template": "{+wishlistService}",
+      "includeSelf": true
+    },
+    "delete": {
+      "verb": "DELETE",
+      "template": "{+wishlistService}{id}"
+    },
     "get": {
+      "verb": "GET",
+      "template": "{+wishlistService}{id}"
+    },
+    "update": {
+      "verb": "PUT",
       "template": "{+wishlistService}{id}",
       "includeSelf": true
     },
@@ -4285,6 +4360,11 @@ module.exports=
     "add-item": {
       "verb": "POST",
       "template": "{+wishlistService}{id}/items/",
+      "includeSelf": true
+    },
+    "add-item-to": {
+      "verb": "POST",
+      "template": "{+wishlistService}{wishlistId}/items/",
       "includeSelf": true
     },
     "delete-all-items": {
@@ -4317,6 +4397,11 @@ module.exports=
     }
   },
   "wishlists": {
+    "template": "{+wishlistService}{?_*}",
+    "defaultParams": {
+      "startIndex": 0,
+      "pageSize": 5
+    },
     "collectionOf": "wishlist"
   },
   "instockrequest": {
@@ -4499,12 +4584,93 @@ module.exports=
       "returnType": "json"
     }
   },
-  "discounts": {
+  "b2baccount": {
     "get": {
-      "returnType": "discount",
-      "template": "{+discountService}autoaddtarget/{discountId}",
-      "shortcutParam": "discountId"
+      "verb": "GET",
+      "template": "{+b2BAccountService}/{id}"
+    },
+    "create": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}"
+    },
+    "update": {
+      "verb": "PUT",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{id}"
+    },
+    "get-users": {
+      "template": "{+b2BAccountService}/{id}/users{?_*}",
+      "returnType": "b2busers"
+    },
+    "add-user": {
+      "verb": "POST",
+      "template": "{+b2BAccountService}/{id}/user",
+      "returnType": "b2buser"
+    },
+    "remove-user": {
+      "verb": "PUT",
+      "template": "{+b2BAccountService}/{id}/user/{userId}/remove",
+      "shortcutParam": "userId"
+    },
+    "update-user": {
+      "verb": "PUT",
+      "template": "{+b2BAccountService}/{id}/user/{userId}",
+      "shortcutParam": "userId",
+      "returnType": "b2buser"
     }
+  },
+  "b2baccounts": {
+    "template": "{+b2BAccountService}/{?_*}",
+    "defaultParams": {
+      "startIndex": 0,
+      "pageSize": 20
+    },
+    "collectionOf": "b2baccount"
+  },
+  "b2buser": {
+    "get": {
+      "verb": "GET",
+      "template": "{+b2BAccountService}/{accountId}/user?filter=id eq {id}",
+      "shortcutParam": "id"
+    },
+    "create": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{accountId}/user"
+    },
+    "remove": {
+      "verb": "PUT",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{accountId}/user/{id}/remove"
+    },
+    "update": {
+      "verb": "PUT",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{accountId}/user/{id}"
+    },
+    "get-user-roles": {
+      "verb": "GET",
+      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles"
+    },
+    "add-user-role": {
+      "verb": "POST",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles/{roleId}"
+    },
+    "remove-user-role": {
+      "verb": "DELETE",
+      "includeSelf": true,
+      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles/{roleId}"
+    }
+  },
+  "b2busers": {
+    "template": "{+b2BAccountService}/{accountId}/users{?startIndex,sortBy,pageSize,filter}",
+    "defaultParams": {
+      "startIndex": 0,
+      "pageSize": 20
+    },
+    "collectionOf": "b2buser"
   }
 }
 },{}],23:[function(_dereq_,module,exports){
@@ -4603,7 +4769,7 @@ module.exports = ApiObjectConstructor;
 // END OBJECT
 
 /***********/
-},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/token":35,"./types/user":36,"./types/wishlist":37,"./utils":38}],24:[function(_dereq_,module,exports){
+},{"./collection":14,"./reference":24,"./types/cart":25,"./types/cartsummary":26,"./types/checkout":27,"./types/creditcard":28,"./types/customer":29,"./types/login":31,"./types/order":32,"./types/product":33,"./types/shipment":34,"./types/token":35,"./types/user":36,"./types/wishlist":37,"./utils":40}],24:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/reference.js
@@ -4788,7 +4954,7 @@ module.exports = ApiReference;
 
 /***********/
 
-},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":38}],25:[function(_dereq_,module,exports){
+},{"./collection":14,"./errors":17,"./iframexhr":18,"./methods.json":22,"./object":23,"./utils":40}],25:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cart.js
@@ -4848,7 +5014,7 @@ module.exports = {
         });
     }
 };
-},{"../errors":17,"../utils":38}],26:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":40}],26:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/cartsummary.js
@@ -4859,7 +5025,7 @@ module.exports = {
         return this.data.totalQuantity || 0;
     }
 };
-},{"../utils":38}],27:[function(_dereq_,module,exports){
+},{"../utils":40}],27:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/checkout.js
@@ -5222,7 +5388,7 @@ module.exports = (function () {
 
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":38}],28:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":40}],28:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/creditcard.js
@@ -5429,7 +5595,7 @@ module.exports = (function() {
     };
 
 }());
-},{"../errors":17,"../utils":38}],29:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":40}],29:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/customer.js
@@ -5474,6 +5640,14 @@ module.exports = (function () {
             errors.passFrom(credits, this);
             return credits.get();
         },
+        getPurchaseOrderTransactions: function () {
+            var self = this;
+            return this.api.action(this, 'getPurchaseOrderTransactions', { accountId: this.data.id }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error)
+            });
+        },
         getDigitalCredit: function (id) {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);
@@ -5493,7 +5667,7 @@ module.exports = (function () {
         }
     }
 }());
-},{"../errors":17,"../utils":38}],30:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":40}],30:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/locations.js
@@ -5610,7 +5784,7 @@ module.exports = (function () {
     }
 
 }());
-},{"../utils":38}],31:[function(_dereq_,module,exports){
+},{"../utils":40}],31:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/login.js
@@ -5923,7 +6097,7 @@ module.exports = (function () {
         }
     };
 }());
-},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":38}],33:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../reference":24,"../utils":40}],33:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/product.js
@@ -5982,7 +6156,7 @@ module.exports = {
         }, opts));
     }
 };
-},{"../constants/default":15,"../errors":17,"../utils":38}],34:[function(_dereq_,module,exports){
+},{"../constants/default":15,"../errors":17,"../utils":40}],34:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/shipment.js
@@ -5999,7 +6173,7 @@ module.exports = {
         });
     }
 };
-},{"../utils":38}],35:[function(_dereq_,module,exports){
+},{"../utils":40}],35:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/token.js
@@ -6033,10 +6207,12 @@ module.exports = {
     }
 }
 
-},{"../errors":17,"../utils":38}],36:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":40}],36:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/user.js
+
+var CONSTANTS = _dereq_('../constants/default');
 
 module.exports = {
     postconstruct: function () {
@@ -6072,9 +6248,22 @@ module.exports = {
                 address: {}
             });
         });
+    },
+    behaviorsById: function () {
+        return CONSTANTS.USER_BEHAVIORS_ID
+    },
+    behaviorsByName: function () {
+        return CONSTANTS.USER_BEHAVIORS_Name
+    },
+    getBehaviorById: function(id){
+        return CONSTANTS.USER_BEHAVIORS_ID[id];
+    },
+    getBehaviorByName: function (name) {
+        var behaviorName = name.replace(" ", "_")
+        return CONSTANTS.USER_BEHAVIORS_NAME[behaviorName];
     }
 };
-},{}],37:[function(_dereq_,module,exports){
+},{"../constants/default":15}],37:[function(_dereq_,module,exports){
 
 
 //# sourceUrl=src/types/wishlist.js
@@ -6131,7 +6320,106 @@ module.exports = (function() {
         }
     };
 }());
-},{"../errors":17,"../utils":38}],38:[function(_dereq_,module,exports){
+},{"../errors":17,"../utils":40}],38:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=src/utilities.js
+
+﻿var behaviors = _dereq_('./utilities/behaviors');
+
+var MozuUtilitiesConstructor = {
+    Behaviors: behaviors
+}
+
+MozuUtilitiesConstructor.prototype = {
+    constructor: MozuUtilitiesConstructor
+}
+
+module.exports = MozuUtilitiesConstructor;
+},{"./utilities/behaviors":39}],39:[function(_dereq_,module,exports){
+
+
+//# sourceUrl=src/utilities/behaviors.js
+
+﻿function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+var behaviors = {
+    USER_BEHAVIORS_BY_ID: {
+        1000: "Manage Account Information",
+        1001: "Manage Users",
+        1002: "Manage Contacts",
+        1003: "Manage Saved Payments",
+        1004: "Manage Account Attributes",
+        1005: "Use Purchase Order",
+        1006: "View Purchase Order Transaction History",
+        1007: "View Purchase Order Credit Limit",
+        1008: "Place Orders",
+        1009: "Initiate Returns",
+        1010: "View Lists of Child Accounts",
+        1011: "View Quotes of Child Accounts",
+        1012: "View Orders of Child Accounts",
+        1013: "View Returns of Child Accounts",
+        1014: "User Has Full Access to Their Account"
+    },
+    USER_BEHAVIORS_BY_NAME: {
+        "Manage_Account_Information": 1000,
+        "Manage_Users": 1001,
+        "Manage_Contacts": 1002,
+        "Manage_Saved_Payments": 1003,
+        "Manage_Account_Attributes": 1004,
+        "Use_Purchase_Order": 1005,
+        "View_Purchase_Order_Transaction_History": 1006,
+        "View_Purchase_Order_Credit_Limit": 1007,
+        "Place_Orders": 1008,
+        "Initiate_Returns": 1009,
+        "View_Lists_Of_Child_Accounts": 1010,
+        "View_Quotes_Of_Child_Accounts": 1011,
+        "View_Orders_Of_Child_Accounts": 1012,
+        "View_Returns_Of_Child_Accounts": 1013,
+        "User_Has_Full_Access_To_Their_Account": 1014
+    },
+    behaviors: this.USER_BEHAVIORS_BY_NAME,
+    getBehaviorByName: function (behaviorId) {
+        var behavior = null;
+        var parsedID = parseInt(behaviorId, 10);
+        if (!behaviorId) {
+            throw new TypeError('Behavior Name Required');
+        }
+
+        if (!behavior) {
+            var behaviorName = toTitleCase(behaviorId);
+            behaviorName = behaviorId.repalce(" ", "_");
+
+            behavior = this.USER_BEHAVIORS_BY_NAME[behaviorName];
+        }
+
+        return behavior;
+    },
+    getBehaviorById: function (behaviorId) {
+        var behavior = null;
+        var parsedID = parseInt(behaviorId, 10);
+        if (!behaviorId) {
+            throw new TypeError('Behavior Id or Name Required');
+        }
+
+        if (typeof behaviorId === 'int') {
+            behavior = this.USER_BEHAVIORS_BY_ID[behaviorId];
+        }
+
+        if (!behavior && parsedID !== "NAN") {
+            behavior = this.USER_BEHAVIORS_BY_ID[parsedID];
+        }
+
+        return behavior;
+    }
+}
+
+module.exports = behaviors;
+},{}],40:[function(_dereq_,module,exports){
 (function (process){
 
 

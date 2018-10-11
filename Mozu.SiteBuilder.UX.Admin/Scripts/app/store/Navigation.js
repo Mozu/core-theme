@@ -368,6 +368,17 @@ Ext.define('Taco.store.Navigation', {
                 ]
             },
             {
+                'id': 'b2baccount',
+                'navParent': 'main',
+                'label': 'B2B',
+                'behaviorIds': [188],
+                'items': [{
+                    'id': 'b2b-accounts',
+                    'label': 'B2B Accounts',
+                    'address': 'b2baccounts'
+                }]
+            },
+            {
                 'id': 'report',
                 'navParent': 'main',
                 'label': 'Reporting',
@@ -441,7 +452,11 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'customerAttributes',
                     'label': 'Customer Attributes',
                     'address': 'CustomerAttributes'
-                }, {
+                },{
+                    'id': 'b2bAttributes',
+                    'label': 'B2B Attributes',
+                    'address': 'b2battributes'
+                },{
                     'id': 'locationTypes',
                     'label': 'Location Types',
                     'address': 'locationTypes'

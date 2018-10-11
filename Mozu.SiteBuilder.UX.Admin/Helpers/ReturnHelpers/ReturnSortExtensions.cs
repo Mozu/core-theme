@@ -11,18 +11,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers
         public static string ToSortString(this SortingCollection sortCollection)
         {
             if (sortCollection == null || sortCollection.Count == 0)
+            {
                 return null;
+            }
 
-            return string.Join(" and ", sortCollection.Select(x => GetFilter(x) + (x.IsAscending ? " asc" : " desc")));
+            return string.Join(" and ", sortCollection.Select(item => $"{GetFilter(item)} {GetDirection(item)}"));
+        }
+
+        private static string GetDirection(SortingCollectionItem item)
+        {
+            // doing this because IsAscending can be sent as true even if direction is desc
+            return item.direction == "desc" ? "desc" : (item.IsAscending ? "asc" : "desc");
         }
 
         private static string GetFilter(SortingCollectionItem item)
         {
             switch (item.property.ToLowerInvariant())
             {
-                //case "createDate":
-                //    return "auditinfo.createdate";
-
                 default:
                     return item.property.ToLowerInvariant();
             }

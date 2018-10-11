@@ -4,46 +4,43 @@
 
 Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
     extend: 'Taco.core.ux.window.Modal',
-    mixins:['Taco.core.ux.browser.Browsable'],
+    mixins: ['Taco.core.ux.browser.Browsable'],
     requires: [
-       // 'Taco.model.CustomerAccount',
-     //   'Taco.store.CustomerSegments',
-     //   'Taco.view.customers.AdvancedSearchForm',
+        // 'Taco.model.CustomerAccount',
+        //   'Taco.store.CustomerSegments',
+        //   'Taco.view.customers.AdvancedSearchForm',
         'Taco.store.CustomerSegments',
         'Taco.store.Customers'
     ],
-    launchEditorOnClick:false,
+    launchEditorOnClick: false,
     autoShow: true,
     closeAction: 'destroy',
     height: '95%',
     scale: 'large',
     //title: 'Edit Order Details',
     width: '95%',
-    enableAutoSelect:false,
-    
+    enableAutoSelect: false,
+
     secondaryText: 'Close',
-    primaryText:'Apply',
+    primaryText: 'Apply',
     useTilePanel: false,
-    
+
     layoutItemBrowser: function () {
         Ext.apply(this, {
             layout: { type: 'fit' },
             items: [this.itemBrowser]
         });
     },
-    
-    
-    updateRecordTypeName:function() {
-        
+
+    updateRecordTypeName: function () {
     },
+
     initComponent: function () {
         var me = this,
             storeCfg = {
                 autoLoad: true
             };
 
-    
-        
         if (this.batchMethod == 'add') {
             storeCfg.filters = [{
                 property: 'notsegments',
@@ -56,15 +53,13 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
                 property: 'segments',
                 value: this.segmentId
             }];
-            this.header.title= 'Remove Customers: '+this.segmentCode ;
+            this.header.title = 'Remove Customers: ' + this.segmentCode;
         }
 
         this.store = Ext.create('Taco.store.Customers', storeCfg);
 
-
-
         this.gridPanelConf = {
-            
+
             selModel: { selType: 'checkboxmodel' },
             columns: [{
                 dataIndex: 'id',
@@ -82,7 +77,6 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
                     }
                     return null;
                 }
-
             }, {
                 dataIndex: 'lastNameSafe',
                 text: 'Last Name',
@@ -160,16 +154,15 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
 
         this.initBrowserConfig();
         //this.body= Ext.widget(this.body);
-       // this.items = [this.body];
+        // this.items = [this.body];
         this.callParent(arguments);
-       // this.add(this.body);
+        // this.add(this.body);
         this.initBrowserListeners();
 
         this.gridPanel.on('selectionchange', function () {
             var selected = this.gridPanel.getSelectionModel().getSelection();
-            this.down('#primaryAction').setDisabled(selected.length==0 );
+            this.down('#primaryAction').setDisabled(selected.length == 0);
         }, this);
-
     },
 
     advancedSearchConfig: {
@@ -182,32 +175,30 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
     },
 
     doSave: function () {
-
         var me = this,
             selected = this.gridPanel.getSelectionModel().getSelection(),
             postData = {
                 segmentId: me.segmentId,
                 method: me.batchMethod,
-                customers: []                
+                customers: []
             },
             request;
 
         Ext.Array.each(selected, function (record) {
-            postData.customers.push(record.getId());
+            postData.customers.push(record.get('id'));
         });
 
-            
         /*    public int SegmentId { get; set; }
         public string Method { get; set; }
         public List<int> Customers { get; set; }*/
 
         me.gridPanel.setLoading();
-        request= {
-            url: '/admin/app/customer/segments/batch' ,
+        request = {
+            url: '/admin/app/customer/segments/batch',
             method: "POST",
             jsonData: postData,
-            success: function (response, opts) {                
-                me.gridPanel.setLoading(false);                
+            success: function (response, opts) {
+                me.gridPanel.setLoading(false);
                 me.store.reload();
                 me.saveSuccess();
             },
@@ -221,8 +212,5 @@ Ext.define('Taco.view.customers.Segments.AddRemoveModal', {
         };
 
         Ext.Ajax.request(request);
-        
     }
-
-    
 });

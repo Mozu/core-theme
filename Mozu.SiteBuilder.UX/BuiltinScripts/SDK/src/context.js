@@ -7,6 +7,7 @@
 var ApiInterface = require('./interface');
 var ApiReference = require('./reference');
 var utils = require('./utils');
+var MozuUtilities = require('./utilities');
 
 /**
  * @private
@@ -95,11 +96,16 @@ ApiContextConstructor.prototype = {
         return utils.extend({}, ApiReference.urls);
     },
     currency: 'usd',
-    locale: 'en-US'
+    locale: 'en-US',
+    utilities: function() {
+        return utils.extend({}, ApiReference.urls);
+    }
 };
 
 for (j = 0; j < immutableAccessors.length; j++) setImmutableAccessor(immutableAccessors[j]);
 for (j = 0; j < mutableAccessors.length; j++) setMutableAccessor(mutableAccessors[j]);
+
+ApiContextConstructor.prototype.MozuUtilities = MozuUtilities;
 
 module.exports = ApiContextConstructor;
 

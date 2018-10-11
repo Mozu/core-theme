@@ -56,6 +56,15 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 fieldLabel: 'Customer Email Address'
             },
             {
+                xtype: 'numberfield',
+                name: 'customerid',
+                fieldLabel: 'Customer Account Id'
+                /*hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false,
+                width: 200*/
+            },
+            {
                 xtype: 'combobox',
                 name: 'site',
                 allowBlank: true,

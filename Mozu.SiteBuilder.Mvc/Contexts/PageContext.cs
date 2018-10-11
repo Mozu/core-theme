@@ -324,6 +324,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     catch { }
                 }
             }
+            var behaviors = new List<int>();
+            if (userClaims.BehaviorIds != null && userClaims.BehaviorIds.Any())
+            {
+                behaviors.AddRange(userClaims.BehaviorIds);
+            }
             
             return new User
             {
@@ -334,7 +339,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 AccountId = accountId > 0 ? accountId : (int?)null,
                 IsAuthenticated = !userClaims.IsAnonymous && userClaims.IsAuthenticationHot,
                 IsAnonymous = userClaims.IsAnonymous,
-                Segments = segments
+                Segments = segments,
+                Behaviors = behaviors
             };
         }
 

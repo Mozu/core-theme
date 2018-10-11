@@ -191,6 +191,11 @@ Ext.define('Taco.model.Order', {
             type: 'int',
             useNull: true
         }, {
+            name: 'userId',
+            type: 'string',
+            useNull: true,
+            persist: false
+        }, {
             name: 'billingContact',
             type: 'auto',
             defaultValue: {}
@@ -946,6 +951,10 @@ Ext.define('Taco.model.Order', {
         }
 
         Taco.model.CustomerAccount.load(this.get('customerId'), {
+            filters: [{
+                property: 'userId',
+                value: this.get('userId')
+            }],
             success: function (record, op) {
                 me.customer = record;
                 if (cfg.success) cfg.success.call(cfg.scope || this, record, op);
@@ -2642,6 +2651,14 @@ Ext.define('Taco.model.Order', {
     acceptOrder: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/accept',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+    reOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/copy',
             method: 'POST'
         });
 

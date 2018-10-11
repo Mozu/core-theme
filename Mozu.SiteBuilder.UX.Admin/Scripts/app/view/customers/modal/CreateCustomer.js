@@ -75,7 +75,7 @@ Ext.define('Taco.view.customers.modal.CreateCustomer', {
                 this.order.setCustomer({
                     jsonData: {
                         orderId: this.order.getId(),
-                        customerAccountId: this.record.getId()
+                        customerAccountId: this.record.data.id
                     },
                     callback: function (options, success, response) {
                         if (!success) {

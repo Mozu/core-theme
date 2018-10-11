@@ -24,6 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         private const string CURRENCYCODE_PROPERTY = "CurrencyCode";
         private const string CREATEBY_PROPERTY = "CreateBy";
         private const string UPDATEBY_PROPERTY = "UpdateBy";
+        private const string USER_ID = "UserId";
 
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
@@ -34,17 +35,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             {
                 return null;
             }
-          
-            // TODO: If the filter needs to include products with variations, do something with 'withVariations'
-            // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
-
-            // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
-            // if (!string.IsNullOrEmpty(extFilter.query))
-            //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
-            StringBuilder sb = new StringBuilder();
-            foreach (var filter in extFilter.Where(x => x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
+ 
+            var sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(x =>
+                x.value != null && x.property != "all" && !string.IsNullOrEmpty(x.value.ToString())))
             {
-
                 var filterString = GetFilter(filter.value, filter);
                 if (!string.IsNullOrWhiteSpace(filterString))
                 {
@@ -53,65 +48,91 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                         sb.Append(" and ");
                     }
                     sb.Append(filterString);
-
                 }
-
             }
 
             return sb.ToString().Trim();
         }
+
         public static string ToQString(this FilterCollection extFilter, bool? withVariations = null)
         {
             string allString;
-            if (extFilter.TryGetValue<string>("all", out allString) && !string.IsNullOrWhiteSpace(allString))
+            if (extFilter.TryGetValue("all", out allString) && !string.IsNullOrWhiteSpace(allString))
             {
-                return string.Join(" ", allString.Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(x =>
-                {
-                    int tmp;
-                    if (int.TryParse(x, out tmp))
+                return string.Join(" ", allString.Trim().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x =>
                     {
-                        extFilter.Add(new FilterCollectionItem()
-                                             {
-                                                 field = "id",
-                                                 property = "id",
-                                                 value = tmp
-                                             });
-                        return null;
-                    }
-                    else
-                    {
+                        int temp;
+                        if (int.TryParse(x, out temp))
+                        {
+                            extFilter.Add(new FilterCollectionItem
+                            {
+                                field = "customeraccountid",
+                                property = "customeraccountid",
+                                value = temp
+                            });
+
+                            return null;
+                        }
+
                         return x + "*";
-                    }
-                
-                   
-                })).Trim();
+                    })).Trim();
             }
+
             return null;
         }
+
         private static string GetFilter(object value, FilterCollectionItem filter)
         {
-            
             switch (filter.property.ToLowerInvariant())
             {
                 case "excludeanonymous":
                     return string.Empty;
                 // return string.Format("excludeAnonymous eq {0}", filter.value);
                 case "groups":
-                    return string.Format("groups eq {0}", filter.value);
+                    return $"groups eq {filter.value}";
                 case "segments":
-                    return string.Format("segments.id eq {0}", filter.value);
+                    return $"segments.id eq {filter.value}";
                 case "notsegments":
-                    return string.Format("segments.id ne {0}", filter.value);
+                    return $"segments.id ne {filter.value}";
                 case "segment":
-                    return string.Format("segments.id eq {0}", filter.value);
+                    return $"segments.id eq {filter.value}";
                 case "notsegment":
-                    return string.Format("segments.id ne {0}", filter.value);
+                    return $"segments.id ne {filter.value}";
                 case "customerset":
-                    return string.Format("customerset eq {0}", filter.value);
-                default:
+                    return $"customerset eq {filter.value}";
+                case "accounttype":
+                    return $"accounttype eq {filter.value}";
+                case "isactive":
+                    return $"isactive eq {filter.value}";
+                case "isremoved":
+                    return $"isremoved eq {filter.value}";
+                case "userid":
+                    var userIds = value.ToString().Split(',');
+                    if (userIds.Length > 1)
                     {
-                        throw new NotImplementedException("unable to filter on property " + filter.property);
+                        var filters = userIds.Select(v => $"userId eq {v}").ToArray();
+                        return "(" + string.Join(" or ", filters) + ")";
                     }
+                    else
+                    {
+                        return $"userId eq {value}";
+                    }
+                case "customeraccountid":
+                    var accountIds = value.ToString().Split(',');
+                    if (accountIds.Length > 1)
+                    {
+                        var filters = accountIds.Select(v => $"customeraccountid eq {v}").ToArray();
+                        return "(" + string.Join(" or ", filters) + ")";
+                    }
+                    else
+                    {
+                        return $"customeraccountid eq {value}";
+                    }
+                default:
+                {
+                    throw new NotImplementedException($"Unable to filter on property {filter.property}");
+                }
             }
         }
 
@@ -158,44 +179,48 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     var retVal = String.Format("{0} sw '{2}' or {1} eq '{2}'", CODE_PROPERTY, CUSTOMERID_PROPERTY, filter.escapedValue);
                     return retVal;
                 case "code":
-                    return String.Format("{0} sw \"{1}\"", CODE_PROPERTY, filter.escapedValue);
+                    return $"{CODE_PROPERTY} sw \"{filter.escapedValue}\"";
                 case "customerid":
-                    return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
+                    return $"{CUSTOMERID_PROPERTY} eq \"{filter.escapedValue}\"";
                 case "customer":
                     //this is the value coming from the customer picker field. Display value varies but it maps to a customerId
-                    return String.Format("{0} eq \"{1}\"", CUSTOMERID_PROPERTY, filter.escapedValue);
+                    return $"{CUSTOMERID_PROPERTY} eq \"{filter.escapedValue}\"";
                 case "activatedatefrom":
-                    return String.Format("{0} ge \"{1}\"", ACTIVATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return
+                        $"{ACTIVATEDATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "activatedateto":
-                    return String.Format("{0} le \"{1}\"", ACTIVATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return
+                        $"{ACTIVATEDATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "expirationdatefrom":
-                    return String.Format("{0} ge \"{1}\"", EXPIRATIONDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return
+                        $"{EXPIRATIONDATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "expirationdateto":
-                    return String.Format("{0} le \"{1}\"", EXPIRATIONDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return
+                        $"{EXPIRATIONDATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "createdatefrom":
-                    return String.Format("{0} ge \"{1}\"", CREATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{CREATEDATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "createdateto":
-                    return String.Format("{0} le \"{1}\"", CREATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{CREATEDATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "updatedatefrom":
-                    return String.Format("{0} ge \"{1}\"", UPDATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{UPDATEDATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "updatedateto":
-                    return String.Format("{0} le \"{1}\"", UPDATEDATE_PROPERTY, ((DateTime)filter.value).ToUniversalTime().ToString("o"));
+                    return $"{UPDATEDATE_PROPERTY} le \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
                 case "credittype":
-                    return String.Format("{0} eq \"{1}\"", CREDITTYPE_PROPERTY, filter.value);
+                    return $"{CREDITTYPE_PROPERTY} eq \"{filter.value}\"";
                 case "initialbalancefrom":
-                    return String.Format("{0} ge \"{1}\"", INITIALBALANCE_PROPERTY, filter.value);
+                    return $"{INITIALBALANCE_PROPERTY} ge \"{filter.value}\"";
                 case "initialbalanceto":
-                    return String.Format("{0} le \"{1}\"", INITIALBALANCE_PROPERTY, filter.value);
+                    return $"{INITIALBALANCE_PROPERTY} le \"{filter.value}\"";
                 case "currentbalancefrom":
-                    return String.Format("{0} ge \"{1}\"", CURRENTBALANCE_PROPERTY, filter.value);
+                    return $"{CURRENTBALANCE_PROPERTY} ge \"{filter.value}\"";
                 case "currentbalanceto":
-                    return String.Format("{0} le \"{1}\"", CURRENTBALANCE_PROPERTY, filter.value);
+                    return $"{CURRENTBALANCE_PROPERTY} le \"{filter.value}\"";
                 case "currencycode":
-                    return String.Format("{0} eq \"{1}\"", CURRENCYCODE_PROPERTY, filter.value);
+                    return $"{CURRENCYCODE_PROPERTY} eq \"{filter.value}\"";
                 case "createby":
-                    return String.Format("{0} eq \"{1}\"", CREATEBY_PROPERTY, filter.value);
+                    return $"{CREATEBY_PROPERTY} eq \"{filter.value}\"";
                 case "updateby":
-                    return String.Format("{0} eq \"{1}\"", UPDATEBY_PROPERTY, filter.value);
+                    return $"{UPDATEBY_PROPERTY} eq \"{filter.value}\"";
                 case "modifiedby":
                     return String.Format("({0} eq \"{2}\" or {1} eq \"{2}\")", UPDATEBY_PROPERTY, CREATEBY_PROPERTY, filter.value);
                 case "currentlyactiveonly":
@@ -204,6 +229,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                          return String.Format("{0} le \"{1}\" and {2} ge {1}", ACTIVATEDATE_PROPERTY, DateTime.UtcNow.ToString("o"), EXPIRATIONDATE_PROPERTY);
                     }
                     return null;
+               
 
                 // need service to add support for user name and user email address
                 //case "name":
@@ -213,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
 
                 default:
                     {
-                        throw new NotImplementedException("unable to filter on property " + filter.property);
+                        throw new NotImplementedException($"Unable to filter on property {filter.property}");
                     }
             }
         }

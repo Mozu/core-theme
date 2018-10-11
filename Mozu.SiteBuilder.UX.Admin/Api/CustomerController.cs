@@ -255,107 +255,130 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
 
-
-
-
-
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<ApiCustomer>>> List([FromUri]PagingParamaters pagingParameters, [FromUri]FilterCollection extFilter, bool? showAnonymous = null, bool? isPOFlagRequired = null, bool? filterByCustomerSet = false)
+        public async Task<Response<List<ApiCustomer>>> List(
+            [FromUri] PagingParamaters pagingParameters,
+            [FromUri] FilterCollection extFilter, 
+            bool? showAnonymous = null,
+            bool? isPOFlagRequired = null,
+            bool? filterByCustomerSet = false)
         {
             int customerId;
+            string userId;
 
             if (filterByCustomerSet != true)
             {
                 _customerWebApiClient = _customerWebApiClient.CloneWithApiContext(x => x.SiteId = null);
             }
 
+            // ToQString() is doing a modification to the extFilter
+            var q = extFilter.ToQString();
+            var filter = extFilter.ToFilterString();
+
             if (pagingParameters.id != null)
             {
                 customerId = Convert.ToInt32(pagingParameters.id);
+            }
+            else
+            {
+                if (!extFilter.TryGetValue("id", out customerId))
+                {
+                    extFilter.TryGetValue("customeraccountid", out customerId);
+                }
+            }
 
-                var customer = (await GetAccountWithAttributes(customerId)).Map<ApiCustomer>();
+            // getting a single account
+            if (customerId > 0 && extFilter.TryGetValue("userId", out userId))
+            {
+                var dcCustomer = await GetAccountWithAttributes(customerId, userId);
 
-                customer.PaymentCards = (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync().Items;
+                if (dcCustomer == null)
+                {
+                    return List2(new List<ApiCustomer>());
+                }
 
-                customer.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
+                var customer = dcCustomer.Map<ApiCustomer>();
+
+                if (pagingParameters.id == null || customer.Id == null)
+                {
+                    return List2(customer);
+                }
+
+                // include payments and PO if customer id came from paging params
+                customer.PaymentCards =
+                    (await _customerWebApiClient.GetAccountCards(customer.Id.Value)).ReadAsSync().Items;
+
+                customer.PurchaseOrderAccount =
+                    (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(customer.Id.Value)).ReadAsAsync().Result;
 
                 return List2(customer);
             }
 
-            var filter = extFilter.ToFilterString();
-            var q = extFilter.ToQString();
-
-            if (extFilter.TryGetValue("id", out customerId))
-            {
-                var dcCust = (await GetAccountWithAttributes(customerId));
-
-                if (dcCust != null)
-                {
-                    var customer = dcCust.Map<ApiCustomer>();
-                    return List2(customer);
-                }
-
-                return List2(new List<ApiCustomer>());
-            }
-
-            bool isAnonymous = showAnonymous.GetValueOrDefault(false);
+            var isAnonymous = showAnonymous.GetValueOrDefault(false);
             bool excludeAnonymous;
             if (extFilter.TryGetValue("excludeAnonymous", out excludeAnonymous))
             {
                 isAnonymous = !excludeAnonymous;
             }
 
-            int? qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?)3 : (int?)null;
+            var qLimit = (!string.IsNullOrEmpty(q) && extFilter.SearchType == "global") ? (int?) 3 : null;
             var sort = pagingParameters.sort.ToSortString();
             var dcCustomers = (await _customerWebApiClient.GetAccounts(
-                                startIndex: pagingParameters.startIndex,
-                                pageSize: pagingParameters.pageSize,
-                                sortBy: sort,
-                                qLimit: qLimit,
-                                q: q,
-                                filter: filter.ToFilterSafeString(),
-                                isAnonymous: isAnonymous == true ? (bool?)null : false
-                            )).ReadAsSync();
+                startIndex: pagingParameters.startIndex,
+                pageSize: pagingParameters.pageSize,
+                sortBy: sort,
+                qLimit: qLimit,
+                q: q,
+                filter: filter.ToFilterSafeString(),
+                isAnonymous: isAnonymous ? (bool?) null : false
+            )).ReadAsSync();
 
             var customers = Mapper.Map<List<ApiCustomer>>(dcCustomers.Items);
 
             //TODO:this flag info should ideally come from getAccounts api call  
             if (isPOFlagRequired.GetValueOrDefault(false))
             {
-                var poTasks = customers.Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value, responseFields: "id,isEnabled")).ToArray();
+                var poTasks = customers
+                    .Select(x => _customerWebApiClient.GetCustomerPurchaseOrderAccount(x.Id.Value,
+                        responseFields: "id,isEnabled"))
+                    .ToArray();
                 await Task.WhenAll(poTasks);
-                var poAccounts = poTasks.Where(x => !x.Result.HasException).Select(x => x.Result.ReadAsSync()).ToArray();
+
+                var poAccounts = poTasks.Where(x => !x.Result.HasException)
+                    .Select(x => x.Result.ReadAsSync())
+                    .ToArray();
+
                 foreach (var customer in customers)
                 {
-                    customer.IsPoEnabled = poAccounts.FirstOrDefault(x => x?.AccountId == customer.Id)?.IsEnabled == true;
+                    customer.IsPoEnabled =
+                        poAccounts.FirstOrDefault(x => x?.AccountId == customer.Id)?.IsEnabled == true;
                 }
             }
 
-            return List2(customers, total: (int)dcCustomers.TotalCount);
+            return List2(customers, dcCustomers.TotalCount);
         }
 
         /// <summary>
         /// Get single customer account with attributes.
         /// </summary>
-        private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId)
+        private Task<DC.CustomerAccount> GetAccountWithAttributes(int accountId, string userId = null)
         {
-            var customerTask = _customerWebApiClient.GetAccount(accountId);
-            return customerTask.Result.ResponseMessage.IsSuccessStatusCode ? customerTask.Result.ReadAsAsync() : null;
+            var customerTask = _customerWebApiClient.GetAccount(accountId, null, userId);
+            var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId, userId: userId);
 
-            /* var attributeTask = _customerWebApiClient.GetAccountAttributes(accountId);
+            return Task.WhenAll(customerTask, attributeTask).ContinueWith(t =>
+            {
+                if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
+                {
+                    var customer = customerTask.Result.ReadAsSync();
+                    var attributes = attributeTask.Result.ReadAsSync();
 
-            return Task.WhenAll(customerTask, attributeTask).ContinueWith<DC.CustomerAccount>(t =>
-             {
-                 if (customerTask.Result.ResponseMessage.IsSuccessStatusCode)
-                 {
-                     var customer = customerTask.Result.ReadAsSync();
-                     var attributes = attributeTask.Result.ReadAsSync();
- 
-                     customer.Attributes = attributes.Items;
-                     return customer;
-                 }
-                 return null;
-             });*/
+                    customer.Attributes = attributes.Items;
+                    return customer;
+                }
+
+                return null;
+            });
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
@@ -363,9 +386,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var retList = new List<ApiCustomer>();
             var dcCustomers = Mapper.Map<List<DC.CustomerAccount>>(customers);
-            Response<CustomerPurchaseOrderAccount> poResponse;
-            int purchaseOrderUpdateBehaviorId = new PurchaseOrderUpdateBehavior().Id;
-            if (_apiContext.UserClaims != null && _apiContext.UserClaims.BehaviorIds.Any(id => id == purchaseOrderUpdateBehaviorId))
+            var purchaseOrderUpdateBehaviorId = new PurchaseOrderUpdateBehavior().Id;
+            if (_apiContext.UserClaims != null &&
+                _apiContext.UserClaims.BehaviorIds.Any(id => id == purchaseOrderUpdateBehaviorId))
             {
                 // save purchase orderInfo
                 foreach (var cust in customers)
@@ -377,13 +400,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         if (purchaseOrder.Id != null && purchaseOrder.Id != 0)
                         {
                             purchaseOrder.AccountId = cust.Id.Value;
-                            poResponse = await EditCustomerPurchaseOrder(purchaseOrder);
+                            await EditCustomerPurchaseOrder(purchaseOrder);
                         }
-
                         else if (purchaseOrder.IsEnabled)
                         {
                             purchaseOrder.AccountId = cust.Id.Value;
-                            poResponse = await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
+                            await CreateCustomerPurchaseOrder(purchaseOrder, cust.Id);
                         }
                     }
                 }
@@ -391,7 +413,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var dcCust in dcCustomers)
             {
-                var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id);
+                var dcExistingCustomer = await GetAccountWithAttributes(dcCust.Id, dcCust.UserId);
                 var contactsTuple = ManageContacts(dcCust, dcExistingCustomer);
                 var contactsManagementTasks = contactsTuple.Item1;
                 var contactsDeleteTasks = contactsTuple.Item2;
@@ -403,10 +425,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 // on customer save, if he is no longer locked 
                 if (!dcCust.IsLocked && dcExistingCustomer.IsLocked)
                 {
-                    await Unlock(dcExistingCustomer.Id);
+                    await Unlock(dcExistingCustomer.Id, dcExistingCustomer.UserId);
                 }
 
-                await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, attrDeleteTasks, segmentTasks);
+                await Task.WhenAll(contactsManagementTasks, contactsDeleteTasks, attrTasks, attrDeleteTasks,
+                    segmentTasks);
                 IfTaskHasExceptionThenThrow(contactsManagementTasks);
                 IfTaskHasExceptionThenThrow(contactsDeleteTasks);
                 IfTaskHasExceptionThenThrow(attrTasks);
@@ -416,14 +439,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var response = await _customerWebApiClient.UpdateAccount(dcCust, dcCust.Id);
                 IfResponseHasExceptionThenThrow(response);
 
-                var updatedCustomer = await GetAccountWithAttributes(dcCust.Id);
+                var updatedCustomer = await GetAccountWithAttributes(dcCust.Id, dcCust.UserId);
 
                 if (dcExistingCustomer.IsActive)
                 {
                     if (!dcCust.IsActive)
                     {
                         await _customerWebApiClient.PerformCustomerAccountAction(dcCust.Id,
-                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.DISABLE_ACCOUNT });
+                            new DC.CustomerAccountAction
+                            {
+                                ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.DISABLE_ACCOUNT
+                            }, dcCust.UserId);
                     }
                 }
                 else
@@ -431,7 +457,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     if (dcCust.IsActive)
                     {
                         await _customerWebApiClient.PerformCustomerAccountAction(dcCust.Id,
-                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.ENABLE_ACCOUNT });
+                            new DC.CustomerAccountAction
+                            {
+                                ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.ENABLE_ACCOUNT
+                            }, dcCust.UserId);
                     }
                 }
 
@@ -439,10 +468,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 cust.IsDisabled = !dcCust.IsActive;
                 cust.IsLocked = dcCust.IsLocked;
-                cust.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(cust.Id.Value)).ReadAsAsync().Result;
+                cust.PurchaseOrderAccount = (await _customerWebApiClient.GetCustomerPurchaseOrderAccount(cust.Id.Value))
+                    .ReadAsAsync().Result;
 
                 retList.Add(cust);
             }
+
             return List2(retList);
         }
 
@@ -475,7 +506,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (customer.IsAnonymous)
                 {
                     // anonymous customer: AddAccount
-                    tasks.Add(_customerWebApiClient.AddAccount(customer.Map<DC.CustomerAccount>()).ContinueWith(t => t.Result.ReadAsSync()));
+                    tasks.Add(_customerWebApiClient.AddAccount(customer.Map<DC.CustomerAccount>())
+                        .ContinueWith(t => t.Result.ReadAsSync()));
                 }
                 else
                 {
@@ -498,14 +530,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<DC.CustomerAccount> AddCustomerAccountAndLogin(
             DC.CustomerAccountAndAuthInfo customerAccountAndAuthInfo, List<int> segmentIds)
         {
-            DC.CustomerAccount customerAccount =
-                (await _customerWebApiClient.AddAccountAndLogin(customerAccountAndAuthInfo)).ReadAsSync()
+            var customerAccount = (await _customerWebApiClient.AddAccountAndLogin(customerAccountAndAuthInfo)).ReadAsSync()
                     .CustomerAccount;
             if (segmentIds != null && segmentIds.Any())
             {
-                foreach (int segmentId in segmentIds)
+                foreach (var segmentId in segmentIds)
                 {
-                    await _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> { customerAccount.Id }, segmentId);
+                    await _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> {customerAccount.Id},
+                        segmentId);
                 }
 
                 customerAccount = (await _customerWebApiClient.GetAccount(customerAccount.Id)).ReadAsSync();
@@ -604,7 +636,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Task<ServiceClientResponse<StreamContent>[]> ManageSegments(DC.CustomerAccount dcCustomer,
+            DC.CustomerAccount dcExistingCustomer)
         {
 
             var groupManagementTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
@@ -615,8 +648,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var groupsToAdd = newGroups.Except(existingGroups);
             var groupsToDel = existingGroups.Except(newGroups);
 
-            groupManagementTasks.AddRange(groupsToAdd.Select(x => _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
-            groupManagementTasks.AddRange(groupsToDel.Select(x => _customerSegmentWebApiClient.DeleteSegmentAccounts(new List<int> { dcCustomer.Id }, x)));
+            groupManagementTasks.AddRange(groupsToAdd.Select(x =>
+                _customerSegmentWebApiClient.AddSegmentAccounts(new List<int> {dcCustomer.Id}, x)));
+            groupManagementTasks.AddRange(groupsToDel.Select(x =>
+                _customerSegmentWebApiClient.DeleteSegmentAccounts(new List<int> {dcCustomer.Id}, x)));
 
             return Task.WhenAll(groupManagementTasks);
         }
@@ -624,41 +659,59 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <summary>
         /// Update contacts subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>
+            ManageContacts(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
             var contactManagementTasks = new List<Task<ServiceClientResponse<DC.CustomerContact>>>();
             var contactDeleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
 
-            if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null && dcExistingCustomer != null)
+            if (dcCustomer != null && dcCustomer.Contacts != null && dcExistingCustomer != null &&
+                dcExistingCustomer != null)
             {
                 var comparer = new ContactIdEqualityComparer();
                 var updateComparer = new ContactUpdateComparer();
-                var contactsToUpdate = dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, updateComparer).ToList();
+                var contactsToUpdate =
+                    dcCustomer.Contacts.Intersect(dcExistingCustomer.Contacts, updateComparer).ToList();
                 var contactsToAdd = dcCustomer.Contacts.Except(dcExistingCustomer.Contacts, comparer).ToList();
                 var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
 
-                contactManagementTasks.AddRange(contactsToUpdate.Select(con => _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
-                contactManagementTasks.AddRange(contactsToAdd.Select(con => _customerWebApiClient.AddAccountContact(con, con.AccountId)));
-                contactDeleteTasks.AddRange(contactsToDel.Select(con => _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
+                contactManagementTasks.AddRange(contactsToUpdate.Select(con =>
+                    _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
+                contactManagementTasks.AddRange(contactsToAdd.Select(con =>
+                    _customerWebApiClient.AddAccountContact(con, con.AccountId)));
+                contactDeleteTasks.AddRange(contactsToDel.Select(con =>
+                    _customerWebApiClient.DeleteAccountContact(con.AccountId, con.Id)));
             }
 
             var managementResults = Task.WhenAll(contactManagementTasks);
             var deleteResults = Task.WhenAll(contactDeleteTasks);
-            return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>, Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
+            return new Tuple<Task<ServiceClientResponse<DC.CustomerContact>[]>,
+                Task<ServiceClientResponse<StreamContent>[]>>(managementResults, deleteResults);
         }
 
 
         /// <summary>
         /// Update attributes subroutine for EditCustomers. Yes, a subroutine.
         /// </summary>
-        private Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>, Task<ServiceClientResponse<StreamContent>[]>> ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
+        private Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>, Task<ServiceClientResponse<StreamContent>[]>>
+            ManageAttributes(DC.CustomerAccount dcCustomer, DC.CustomerAccount dcExistingCustomer)
         {
             var attributeTasks = new List<Task<ServiceClientResponse<DC.CustomerAttribute>>>();
             var deleteTasks = new List<Task<ServiceClientResponse<StreamContent>>>();
 
-            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null)).Select(attr => attr.FullyQualifiedName);
-            var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Select(attr => attr.FullyQualifiedName);
-            var nullAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>()).Where(attribute => attribute.Values == null).Select(attr => attr.FullyQualifiedName);
+            var custAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>())
+                .Where(attribute => attribute.Values != null && attribute.Values.All(o => o != null))
+                .Select(attr => attr.FullyQualifiedName)
+                .ToList();
+
+            var existingAttrIds = (dcExistingCustomer.Attributes ?? new List<DC.CustomerAttribute>())
+                .Select(attr => attr.FullyQualifiedName)
+                .ToList();
+
+            var nullAttrIds = (dcCustomer.Attributes ?? new List<DC.CustomerAttribute>())
+                .Where(attribute => attribute.Values == null)
+                .Select(attr => attr.FullyQualifiedName)
+                .ToList();
 
             var createdAttributeIds = custAttrIds.Except(existingAttrIds).ToList();
             var updatedAttributeIds = custAttrIds.Intersect(existingAttrIds).ToList();
@@ -666,20 +719,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (createdAttributeIds.Count > 0)
             {
-                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => createdAttributeIds.Contains(a.FullyQualifiedName)).Select(a => _customerWebApiClient.AddAccountAttribute(a, dcCustomer.Id)));
+                attributeTasks.AddRange(dcCustomer.Attributes
+                    .Where(a => createdAttributeIds.Contains(a.FullyQualifiedName))
+                    .Select(a => _customerWebApiClient.AddAccountAttribute(a, dcCustomer.Id, dcCustomer.UserId)));
             }
             if (updatedAttributeIds.Count > 0)
             {
-                attributeTasks.AddRange(dcCustomer.Attributes.Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
-                    .Select(a => _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName)));
+                attributeTasks.AddRange(dcCustomer.Attributes
+                    .Where(a => updatedAttributeIds.Contains(a.FullyQualifiedName))
+                    .Select(a =>
+                        _customerWebApiClient.UpdateAccountAttribute(a, dcCustomer.Id, a.FullyQualifiedName,
+                            dcCustomer.UserId)));
             }
             if (deleteAttributeIds.Count > 0)
             {
                 deleteTasks.AddRange(dcCustomer.Attributes.Where(a => deleteAttributeIds.Contains(a.FullyQualifiedName))
-                    .Select(a => _customerWebApiClient.DeleteAccountAttribute(dcCustomer.Id, a.FullyQualifiedName)));
+                    .Select(a =>
+                        _customerWebApiClient.DeleteAccountAttribute(dcCustomer.Id, a.FullyQualifiedName,
+                            dcCustomer.UserId)));
             }
 
-            return new Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>, Task<ServiceClientResponse<StreamContent>[]>>(Task.WhenAll(attributeTasks), Task.WhenAll(deleteTasks));
+            return new Tuple<Task<ServiceClientResponse<DC.CustomerAttribute>[]>,
+                Task<ServiceClientResponse<StreamContent>[]>>(Task.WhenAll(attributeTasks), Task.WhenAll(deleteTasks));
         }
 
         [HttpGetRoute(UriTemplate = "purchaseOrder/get")]
@@ -909,19 +970,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         cred.Customer = Mapper.Map<ApiCustomer>(customer);
                     }
                 }
-
             }
+
             return List2(vmitem, dcitem.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "credits/create")]
-        public async Task<Response<Credit>> AddCredit(Credit credit)
+        public async Task<Response<Credit>> AddCredit(Credit credit, [FromUri] string userId = null)
         {
-            var dcitem = Mapper.Map<Customer.Contracts.Credit.Credit>(credit);
-            dcitem.InitialBalance = dcitem.CurrentBalance;
-            dcitem.CurrencyCode = "USD";
-            dcitem = (await _creditWebApiClient.AddCredit(dcitem)).ReadAsSync();
-            return Single2(Mapper.Map<Credit>(dcitem));
+            var dcItem = Mapper.Map<Customer.Contracts.Credit.Credit>(credit);
+            dcItem.InitialBalance = dcItem.CurrentBalance;
+            dcItem.CurrencyCode = "USD";
+            dcItem = (await _creditWebApiClient.AddCredit(dcItem, userId)).ReadAsSync();
+            return Single2(Mapper.Map<Credit>(dcItem));
         }
 
         [HttpPostRoute(UriTemplate = "credits/edit")]
@@ -964,14 +1025,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "{accountId}/resetpassword")]
-        public async Task<HttpResponseMessage> ResetPassword(int accountId, [FromUri] int? siteId)
+        public async Task<HttpResponseMessage> ResetPassword(int accountId, [FromUri] int? siteId, [FromUri] string userId = null)
         {
             if (siteId.HasValue)
             {
                 (_apiContext as ApiContext).SiteId = siteId;
             }
 
-            var result = (await _customerWebApiClient.SendPasswordResetEmail(accountId));
+            var result = await _customerWebApiClient.SendPasswordResetEmail(accountId, userId);
             if (result.HasException)
             {
                 throw result.ReadException();
@@ -981,10 +1042,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "{accountId}/unlock")]
-        public async Task<HttpResponseMessage> Unlock(int accountId)
+        public async Task<HttpResponseMessage> Unlock(int accountId, [FromUri] string userId = null)
         {
-            var result = (await _customerWebApiClient.PerformCustomerAccountAction(accountId,
-                            new DC.CustomerAccountAction { ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.UNLOCK_ACCOUNT }));
+            var action = new DC.CustomerAccountAction
+            {
+                ActionName = DC.CustomerAccountAction.CustomerAccountActionNameConst.UNLOCK_ACCOUNT
+            };
+            var result = await _customerWebApiClient.PerformCustomerAccountAction(accountId, action, userId);
             if (result.HasException)
             {
                 throw result.ReadException();
@@ -998,9 +1062,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public string Code { get; set; }
         }
         [HttpPostRoute(UriTemplate = "resendcreditcreatedemail")]
-        public async Task<Response<Credit>> ResendCreditCreatedEmail(ResendCreditCreatedEmailArgs args)
+        public async Task<Response<Credit>> ResendCreditCreatedEmail(ResendCreditCreatedEmailArgs args, [FromUri] string userId = null)
         {
-            await (await _creditWebApiClient.ResendCreditCreatedEmail(args.Code)).ReadAsAsync();
+            await (await _creditWebApiClient.ResendCreditCreatedEmail(args.Code, userId)).ReadAsAsync();
             return this.EmptySingle2<Credit>();
         }
 

@@ -6,7 +6,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
 {
     internal static class CustomerSortExtensions
     {
-        
         /// <summary>
         /// Converts a SortingCollection for Product to a mozu services-compatible sort string.
         /// </summary>
@@ -16,13 +15,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
         /// </param>
         public static string ToSortString(this SortingCollection sortCollection, bool useSiteContext = false)
         {
-            if (sortCollection == null)
-                return null;
-
-            return string.Join(" and ", sortCollection.Select(x => GetFilter(x, useSiteContext) + (x.IsAscending ? " asc" : " desc")));
+            return sortCollection == null
+                ? null
+                : string.Join(" and ", sortCollection.Select(x => $"{GetFilter(x)} {GetDirection(x)}"));
         }
 
-        private static string GetFilter(SortingCollectionItem item, bool useSiteContext)
+        private static string GetDirection(SortingCollectionItem item)
+        {
+            var direction = item.direction.ToLower();
+            if (direction == "desc" || direction == "asc")
+            {
+                return direction;
+            }
+
+            return item.IsAscending ? " asc" : " desc";
+        }
+
+        private static string GetFilter(SortingCollectionItem item)
         {
             if (item.property.StartsWith("primary", StringComparison.OrdinalIgnoreCase))
             {
@@ -37,6 +46,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return "id";
                 case "userid":
                     return "userid";
+                case "isactive":
+                    return "isactive";
+                case "companyororganization":
+                    return "companyororganization";
                 case "wishlistcount":
                     return "commercesummary.wishlistcount";
                 case "ordercount":
@@ -47,12 +60,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     return "createdate";
                 case "commercesummary.lastorderdate":
                     return "lastorderdate";
-                //case "firstname":
-                //    return "contact.firstname";
-                //case "lastname":
-                //    return "contact.lastname";
-                //case "emailaddress":
-                //    return "contact.emailaddress";
                 default:
                     return propName;
             }

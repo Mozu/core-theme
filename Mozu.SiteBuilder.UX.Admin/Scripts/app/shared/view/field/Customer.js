@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
  * @class Taco.shared.view.field.Customer
  */
 
@@ -9,7 +8,7 @@ Ext.define('Taco.shared.view.field.Customer', {
     requires: ['Taco.model.CustomerAccount', 'Taco.store.Customers'],
 
   //  displayField: 'primaryEmail',
-    valueField: 'id',
+    valueField: 'accountAndUserId',
 
     emptyText: 'Search',
     remoteFilter: true,
@@ -19,7 +18,7 @@ Ext.define('Taco.shared.view.field.Customer', {
     showAnonymousCustomers: false,
     filterByCustomerSet:false,
     enableKeyboardPaging: true,
-   
+
     tpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
             '<div class="x-boundlist-item taco-boundlist-item-customer">',
@@ -52,7 +51,7 @@ Ext.define('Taco.shared.view.field.Customer', {
             }
         }
     ),
-    
+
     // Looks like the text here is already htmlEncoded, don't need to do it again.
     displayTpl: Ext.create('Ext.XTemplate',
         '<tpl for=".">',
@@ -86,13 +85,13 @@ Ext.define('Taco.shared.view.field.Customer', {
         } else {
             this.callParent(arguments);
         }
-        
+
     },
     initComponent: function () {
         var me = this;
 
         if (!me.store) {
-           
+
             me.store = Taco.core.data.StoreManager.getOrCreate({
                 type: 'Taco.store.Customers',
                 pageSize: me.pageSize,
@@ -103,18 +102,17 @@ Ext.define('Taco.shared.view.field.Customer', {
             if (me.filterByCustomerSet) {
               proxy.setExtraParam("filterByCustomerSet", 'true');
             } else {
-              delete proxy.extraParams["filterByCustomerSet"]
+                delete proxy.extraParams["filterByCustomerSet"];
             }
-            if (me.showAnonymousCustomers) {                
+            if (me.showAnonymousCustomers) {
                 proxy.setExtraParam("showAnonymous", 'true');
             } else {
                 if (proxy.extraParams["showAnonymous"]) {
-                    delete proxy.extraParams["showAnonymous"]
+                    delete proxy.extraParams["showAnonymous"];
                 }
 
             }
             this.store.load();
-
         }
 
         this.callParent(arguments);
@@ -131,10 +129,11 @@ Ext.define('Taco.shared.view.field.Customer', {
         queryEvent.forceAll = queryText === '';
 
         if (!queryEvent.forceAll) {
-            queryEvent.query = '[{ "property": "all", "value": "' + queryText + '" }]';
+            queryEvent.query = '[{ "property": "all", "value": "' +
+                queryText +
+                '" }, { "property": "isactive", "value": "true" }]';
         }
 
         return true;
-
     }
 })

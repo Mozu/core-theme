@@ -74,6 +74,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         public int? CustomerId { get; set; }
 
+        public string UserId { get; set; }
+
         public Contact BillingContact { get; set; }
 
         public Contact FulfillmentContact { get; set; }

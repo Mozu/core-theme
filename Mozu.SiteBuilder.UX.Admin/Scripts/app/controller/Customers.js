@@ -12,5 +12,9 @@ Ext.define('Taco.controller.Customers', {
     editorView: 'Taco.view.customers.Edit',
     segments: function () {
         this.createContentView('Taco.view.customers.Segments.Index');
+    },
+
+    edit: function() {
+        // Do nothing; let react view do it's thing.
     }
 });

@@ -20,6 +20,8 @@ Ext.application({
         'ActionManagement',
         'Analytics',
         'Attributes',
+        'B2BAccounts',
+        'B2BAttributes',
         'BusinessIntelligence',
         'Capability',
         'Catalog',

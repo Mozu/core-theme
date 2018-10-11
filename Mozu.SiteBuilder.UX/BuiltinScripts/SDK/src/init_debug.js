@@ -2,6 +2,7 @@
 var _init = require('./init');
 
 _init.Utils = require('./utils');
+_init.MozuUtilities = require('./utilities');
 _init.ApiContext = require('./context');
 _init.ApiInterface = require('./interface');
 

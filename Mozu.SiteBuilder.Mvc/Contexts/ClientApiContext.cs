@@ -216,8 +216,20 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         },
                         new ServiceInfo
                         {
+                            Id = "B2BAccountService",
+                            InternalUrl = settings.Urls("service-url-B2BAccountWebApi"),
+                            RequiresSsl = true
+                        },
+                        new ServiceInfo
+                        {
                             Id = "CustomerAttributeDefService",
                             InternalUrl = settings.Urls("service-url-CustomerAttributeDefinitionWebApi"),
+                            RequiresSsl = true
+                        },
+                         new ServiceInfo
+                        {
+                            Id = "AccountAttributeDefService",
+                            InternalUrl = settings.Urls("service-url-AccountAttributeDefinitionWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo

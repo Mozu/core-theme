@@ -14,7 +14,7 @@ nuget Microsoft.AspNet.WebPages 3.2.2
 nuget Microsoft.AspNet.Mvc 5.2.2
 
 
-nuget Mozu.Core.Prime >= 1.1827.7
+nuget Mozu.Core.Prime 1.1851.0-b2b-294
 nuget Mozu.ScheduledEvent.Contracts
 nuget Mozu.VS.PowerShell
 nuget OctoPack 2.1.3
@@ -31,12 +31,12 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
-nuget Mozu.CommerceRuntime.Contracts 1.1846.2
+nuget Mozu.CommerceRuntime.Contracts 1.1848.0-reorder-68
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
 nuget Mozu.Core.Test >= 1.1731
-nuget Mozu.Customer.Contracts 1.1804.1
+nuget Mozu.Customer.Contracts 1.1903.0-b2bnew-22
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20

@@ -539,7 +539,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "StoreFront_default",
                 "{controller}/{action}/{id}",
                 new { action = "Index", id = RouteParameter.Optional },
-                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing"}
+                new {controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing" }
                 );
 
 

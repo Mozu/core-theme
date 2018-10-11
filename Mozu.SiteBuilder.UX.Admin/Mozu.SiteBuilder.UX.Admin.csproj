@@ -165,10 +165,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\AccountAttributeController.cs" />
     <Compile Include="Api\ActionConfiguration.cs" />
     <Compile Include="Api\AddressController.cs" />
     <Compile Include="Api\ApiAuthorizeAttribute.cs" />
     <Compile Include="Api\AttributeController.cs" />
+    <Compile Include="Api\B2BAccountController.cs" />
     <Compile Include="Api\BaseController.cs" />
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Api\ChannelController.cs" />
     <Compile Include="Api\DiscountSettingsController.cs" />
     <Compile Include="Api\LocationAttributeController.cs" />
+    <Compile Include="Api\ModelMapping\B2BAccountMapping.cs" />
     <Compile Include="Api\ModelMapping\DiscountSettingsMapping.cs" />
     <Compile Include="Api\ModelMapping\ProductSortDefinitionMapping.cs" />
     <Compile Include="Api\ModelMapping\SiteBuilderSearchItemMapping.cs" />
@@ -186,6 +189,8 @@
     <Compile Include="Api\Models\Account\CustomerPoTransactionsCsvFileResult.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderTransaction.cs" />
     <Compile Include="Api\Models\Account\CustomerPurchaseOrderAccount.cs" />
+    <Compile Include="Api\Models\B2BAccount\B2BAccount.cs" />
+    <Compile Include="Api\Models\B2BAccount\B2BAccountUser.cs" />
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
     <Compile Include="Api\Models\Checkout\SupportedCard.cs" />
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
@@ -474,6 +479,8 @@
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventorySortExtensions.cs" />
+    <Compile Include="Helpers\WishlistHelpers\WishlistFilterExtensions.cs" />
+    <Compile Include="Helpers\WishlistHelpers\WishlistSortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderSortExtensions.cs" />
     <Compile Include="Helpers\IPasswordHelper.cs" />
@@ -539,6 +546,8 @@
     <Content Include="Scripts\.sencha\app\watch-impl.xml" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\controller\ActionManagement.js" />
+    <Content Include="Scripts\app\controller\B2BAccounts.js" />
+    <Content Include="Scripts\app\controller\B2BAttributes.js" />
     <Content Include="Scripts\app\controller\Category.js" />
     <Content Include="Scripts\app\controller\CustomerSets.js" />
     <Content Include="Scripts\app\controller\PriceListEntries.js" />
@@ -629,6 +638,7 @@
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
+    <Content Include="Scripts\app\model\LocationAttribute.js" />
     <Content Include="Scripts\app\model\PaymentActionTarget.js" />
     <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
@@ -818,6 +828,7 @@
     <Content Include="Scripts\app\store\PackagingTypes.js" />
     <Content Include="Scripts\app\store\StoreCreditsGrid.js" />
     <Content Include="Scripts\app\store\StoreCredits.js" />
+    <Content Include="Scripts\app\store\SubnavLinks.js" />
     <Content Include="Scripts\app\store\TooltipHelp.js" />
     <Content Include="Scripts\app\store\Wishlists.js" />
     <Content Include="Scripts\app\view\account\userFormModal.js" />
@@ -826,6 +837,12 @@
     <Content Include="Scripts\app\view\attribute\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\attribute\Grid.js" />
     <Content Include="Scripts\app\view\attribute\AttributeValueGrid.js" />
+    <Content Include="Scripts\app\view\b2baccounts\Create.js" />
+    <Content Include="Scripts\app\view\b2baccounts\Edit.js" />
+    <Content Include="Scripts\app\view\b2baccounts\Index.js" />
+    <Content Include="Scripts\app\view\b2bAttribute\Edit.js" />
+    <Content Include="Scripts\app\view\b2bAttribute\Form.js" />
+    <Content Include="Scripts\app\view\b2bAttribute\Index.js" />
     <Content Include="Scripts\app\view\businessIntelligence\Index.js" />
     <Content Include="Scripts\app\view\capability\Edit.js" />
     <Content Include="Scripts\app\view\capability\Form.js" />
@@ -847,6 +864,7 @@
     <Content Include="Scripts\app\view\customSchema\SchemaList.js" />
     <Content Include="Scripts\app\view\customSchema\Split.js" />
     <Content Include="Scripts\app\view\location\inventory\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\merchandising\Index.js" />
     <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
@@ -1858,7 +1876,9 @@
     <Content Include="Scripts\packages\mozuadmintheme\resources\css\ExtUx\css\TabScrollerMenu.css" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\css\taco\widgets\tfs2609084916238200047.css" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\journal-webfont.svg" />
-    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.svg" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\mozicons.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadwebpro-bold-webfont.svg" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\fonts\myriadwebpro-italic-webfont.svg" />
@@ -1936,7 +1956,9 @@
     <Content Include="Scripts\packages\mozuadmintheme\sass\example\render.js" />
     <Content Include="Scripts\packages\mozuadmintheme\sass\example\theme.html" />
     <Content Include="Scripts\resources\css\taco.css" />
-    <Content Include="Scripts\resources\fonts\mozicons.svg" />
+    <Content Include="Scripts\resources\fonts\mozicons.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\resources\fonts\myriadpro-semibold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-Black-webfont.svg" />
     <Content Include="Scripts\resources\fonts\SourceSansPro-BlackIt-webfont.svg" />
@@ -2524,6 +2546,7 @@
     <Folder Include="Scripts\app\view\product\option\" />
     <Folder Include="Scripts\app\view\settings\publishing\" />
     <Folder Include="Scripts\app\view\storefrontProduct\modal\" />
+    <Folder Include="Scripts\build\resources\fonts\" />
     <Folder Include="Scripts\packages\mozuadmintheme\sass\etc\siteBuilder\" />
     <Folder Include="Scripts\resources\scss\taco\widgets\" />
     <Folder Include="Scripts\sass\src\core\ux\window\" />
@@ -2531,6 +2554,8 @@
     <Folder Include="Scripts\stylesheets\etc\" />
     <Folder Include="Tests\customunit\view\website\settings\" />
     <Folder Include="Views\AccountUserTreeNode\" />
+    <Folder Include="Views\B2BAccountMapping\" />
+    <Folder Include="Views\B2BAccount\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

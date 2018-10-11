@@ -1270,7 +1270,40 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
             scope: me
         });
     },
+    reOrder: function () {
+        var me = this;
 
+        me.ownerCt.setLoading({
+            maskCls: 'x-mask taco-white-mask'
+        });
+
+        me.record.reOrder({
+            jsonData: {
+                orderId: me.record.get('id')
+            },
+            success: function (response) {
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', 'Error re-ordering', 'error');
+                    return;
+                }
+                me.ownerCt.setLoading(false);
+                var order = json.items[0];
+                Taco.core.StateManager.attemptNavigate('s-' + order.siteId + '/orders/edit/' + order.id);
+                //me.fireEvent('reOrder', json);
+            },
+            failure: function (response) {
+                me.setLoading(false);
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : 'Error reordering';
+                Taco.app.fireEvent('setmessage', msg, 'error');
+                me.ownerCt.setLoading(false);
+            },
+            scope: me
+        });
+    },
     cancelOrder: function () {
         var me = this;
         

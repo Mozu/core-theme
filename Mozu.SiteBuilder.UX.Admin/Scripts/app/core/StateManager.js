@@ -128,6 +128,8 @@ Ext.define('Taco.core.StateManager', {
     isReactView: function(uriOrState) {
 
         var VIEWS = [
+            '/b2baccounts',
+            '/b2battributes',
             '/capability',
             '/categories',
             '/customers',

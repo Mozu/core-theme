@@ -172,6 +172,7 @@ Ext.define('Taco.Application', {
         //'GeneralSettings',
         //'Tests',
         'Orders',
+        'B2BAccounts'
         //'OrderAttributes',
         //'Errors',
         //'Roles',

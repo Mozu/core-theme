@@ -22,6 +22,7 @@ using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
 using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.ErrorHandling;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
@@ -179,6 +180,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     {
                         userCache[userId] = null;
                     }
+                    else if (appException is ApiWebClientException && ((ApiWebClientException)appException).RemoteError.Items.Any(x => x.ErrorCode == ErrorCodes.ITEM_NOT_FOUND))
+                    {
+                        userCache[userId] = null;
+                    }
                     else
                     {
                         throw;
@@ -190,30 +195,30 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
+        public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams,
+            [FromUri] FilterCollection extFilter, 
+            [FromUri] bool draft = false)
         {
-            // TODO: Do we need to clone the _returnWebApiClient to clear out the siteId?
-
-            // Get a single return
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
                 return await GetSingleReturn(pagingParams.id);
             }
 
-            int? startIndex = pagingParams?.startIndex;
-            int? pageSize = pagingParams?.pageSize ?? 20;
+            var startIndex = pagingParams?.startIndex;
+            var pageSize = pagingParams?.pageSize ?? 20;
             var sort = pagingParams?.sort.ToSortString() ?? "returnNumber desc";
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
-            // TODO: Should we do this other stuff used by the OrderController?
-            //int? qLimit = q == null ? (int?)null : 26;
-            //var responseGroups = "header,payment,packageheaders,availableactions";
 
-            var dcReturns = (await _returnWebApiClient.GetReturns(startIndex: startIndex, pageSize: pageSize, sortBy: sort, filter: filter, q: q)).ReadAsSync();
+            var dcReturns = (await _returnWebApiClient.GetReturns(startIndex: startIndex,
+                pageSize: pageSize,
+                sortBy: sort,
+                filter: filter,
+                q: q)).ReadAsSync();
 
             var returns = await MultiMapFromContract(dcReturns.Items);
 
-            return List2(returns, total: (int)dcReturns.TotalCount);
+            return List2(returns, dcReturns.TotalCount);
         }
 
         private async Task<Response<List<Return>>> GetSingleReturn(string returnId)

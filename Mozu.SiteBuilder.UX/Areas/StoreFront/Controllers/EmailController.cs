@@ -53,6 +53,7 @@ using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Newtonsoft.Json.Linq;
+using Mozu.CommerceRuntime.Contracts.Wishlists;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {

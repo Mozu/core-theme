@@ -213,13 +213,19 @@ Ext.define('Taco.view.order.Header', {
         });
         modalConfigWindow.center();
     },
+    getCustomer : function() {
+        return this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+    },
     loadItems: function () {
         this.customerLink = Ext.widget({
             xtype: 'component',
             itemId: 'customerLink',
             tpl: [
                 '<tpl if="id">',
-                '<a href="/admin/customers/edit/{id}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
+                    '<a href="/admin/customers/edit/{id}/{userId}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
+                    '<tpl if="accountType === \'B2B\' ">',
+                        '<br/><br/>B2B Account: <a href="/admin/b2baccounts/edit/{id}">{companyOrOrganization}</a>',
+                    '</tpl>',
                 '</tpl>'
             ],
             margin: '0, 20, 0, 0',
@@ -235,7 +241,7 @@ Ext.define('Taco.view.order.Header', {
             // Customer update behavior required for impersonation.
             requiredBehaviors: [{ model: 'Taco.model.CustomerAccount', behavior: 'update' }],
             handler: function() {
-                var custRecord = this.record.getCustomer() ? this.record.getCustomer().getData() : {};
+                var custRecord = this.getCustomer();
                 this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
             },
             scope: this
@@ -249,7 +255,7 @@ Ext.define('Taco.view.order.Header', {
             items: [
                 {
                     xtype: 'label',
-                    text: 'Account:',
+                    text: (this.getCustomer().accountType === 'B2B' ? 'User' : 'Account:'),
                     cls: 'label label-light'
                 },
                 {
@@ -733,7 +739,8 @@ Ext.define('Taco.view.order.Header', {
         this.record.setCustomer({
             jsonData: {
                 orderId: this.record.getId(),
-                customerAccountId: customerRecord.getId()
+                customerAccountId: customerRecord.get('id'),
+                userId: customerRecord.get('userId')
             },
             callback: function (options, success, response) {
                 if (!success) {

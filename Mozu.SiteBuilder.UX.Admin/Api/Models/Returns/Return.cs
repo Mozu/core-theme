@@ -17,6 +17,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         public string ChannelName { get; set; }
 
+        public string CompanyName { get; set; }
+
         public string ReturnType { get; set; }
 
         public string OriginalOrderId { get; set; }

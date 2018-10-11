@@ -188,5 +188,11 @@
             top: 46px;
             width: 74px;
         }
+
+        .#{$vprefix}icon-b2baccount {
+            @include icon-font($glyph-b2baccount, 70px, $valid-green);
+            top: 46px;
+            width: 74px;
+        }
     }
 }

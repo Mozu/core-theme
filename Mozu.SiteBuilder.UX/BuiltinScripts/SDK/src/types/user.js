@@ -1,3 +1,5 @@
+var CONSTANTS = require('../constants/default');
+
 module.exports = {
     postconstruct: function () {
         var self = this;
@@ -32,5 +34,18 @@ module.exports = {
                 address: {}
             });
         });
+    },
+    behaviorsById: function () {
+        return CONSTANTS.USER_BEHAVIORS_ID
+    },
+    behaviorsByName: function () {
+        return CONSTANTS.USER_BEHAVIORS_Name
+    },
+    getBehaviorById: function(id){
+        return CONSTANTS.USER_BEHAVIORS_ID[id];
+    },
+    getBehaviorByName: function (name) {
+        var behaviorName = name.replace(" ", "_")
+        return CONSTANTS.USER_BEHAVIORS_NAME[behaviorName];
     }
 };

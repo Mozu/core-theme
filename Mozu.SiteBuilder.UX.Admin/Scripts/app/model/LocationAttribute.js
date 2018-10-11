@@ -1,5 +1,5 @@
 /**
- * @class Taco.model.OrderAttribute
+ * @class Taco.model.LocationAttribute
  */
 Ext.define('Taco.model.LocationAttribute', {
     extend: 'Taco.model.Attribute',

@@ -74,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CustomerFirstName, op => op.ResolveUsing(dc => dc.Contact?.FirstName))
             .ForMember(x => x.CustomerLastName, op => op.ResolveUsing(dc => dc.Contact?.LastNameOrSurname))
             .ForMember(x => x.CustomerEmail, op => op.ResolveUsing(dc => dc.Contact?.Email))
+            .ForMember(x => x.CompanyName, op => op.ResolveUsing(dc => dc.Contact?.CompanyOrOrganization))
             .ForMember(x => x.UpdatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.UpdateBy))
             .ForMember(x => x.CreatedBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))
             .ForMember(x => x.TotalItemsToRefund, op => op.ResolveUsing(dc => dc.Items.Where(x => x.ReturnType == "Refund").Sum(x => x.Reasons?.Sum(y => y.Quantity) ?? 0)))

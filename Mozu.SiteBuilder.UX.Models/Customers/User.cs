@@ -26,8 +26,12 @@ namespace Mozu.SiteBuilder.UX.Models.Customers
          public bool IsAnonymous { get; set; }
          [DataMember(Name = "accountId")]
         public int? AccountId { get; set; }
+
         [IgnoreDataMember()]
         [JsonIgnore()]
         public List<string> Segments { get; set; }
+
+        [DataMember(Name = "behaviors")]
+        public List<int> Behaviors { get; set; }
     }
 }

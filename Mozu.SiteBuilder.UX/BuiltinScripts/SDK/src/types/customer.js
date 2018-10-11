@@ -38,6 +38,14 @@ module.exports = (function () {
             errors.passFrom(credits, this);
             return credits.get();
         },
+        getPurchaseOrderTransactions: function () {
+            var self = this;
+            return this.api.action(this, 'getPurchaseOrderTransactions', { accountId: this.data.id }).then(function (response) {
+                return response.data;
+            }, function (error) {
+                console.log(error)
+            });
+        },
         getDigitalCredit: function (id) {
             var credit = this.api.createSync('storecredit', { code: id });
             errors.passFrom(credit, this);

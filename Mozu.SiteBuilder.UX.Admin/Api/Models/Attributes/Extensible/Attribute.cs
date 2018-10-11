@@ -4,15 +4,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible
-{
-    
+{   
     public class Attribute
     {
         public string Id { get; set; }
 
         public int? AttributeId { get; set; }
-
-
 
         [JsonProperty(PropertyName = "code")]
         public string AttributeCode { get; set; }
@@ -25,7 +22,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible
          [JsonConverter(typeof(StringEnumConverter))]
         public AttributeDataType DataType { get; set; }
 
-
         public bool IsOption { get; set; }
 
         public bool? IsExtra { get; set; }
@@ -33,23 +29,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible
         public bool? IsProperty { get; set; }
 
         public bool? IsActive { get; set; }
+
         public bool IsRequired { get; set; }
+
         public bool IsVisible { get; set; }
-
-        
-
+       
         public string DisplayGroup { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
         public AttributeValueType ValueType { get; set; }
 
-
         public List<AttributeMetadataItem> AttributeMetadata { get; set; }
-
-        
-
- 
-
+      
         public decimal? Min { get; set; }
 
         public DateTime? MinDate { get; set; }
@@ -65,11 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Attributes.Extensible
         public List<AttributeValue> Values { get; set; }
 
         public bool? IsReadOnly { get; set; }
-
     }
-
-
-    
+   
     public class AttributeMetadataItem
     {
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

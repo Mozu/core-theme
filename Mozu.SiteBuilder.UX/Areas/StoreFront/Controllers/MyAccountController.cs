@@ -87,25 +87,34 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return redir;
             }
 
-            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
+            var account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId, null, this.PageContext.User.UserId)).ReadAsSync();
 
             if (account == null)
             {
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
             }
 
+            var pageType = "my-account";
+            var pagePath = "myaccount";
+
+            if (account.AccountType == "B2B")
+            {
+               pageType = "b2b-account";
+               pagePath = "b2baccount";
+            }
+            
 
             var pc = this.PageContext;
             pc.CmsContext = new CmsPageContext()
             {
                 Template = new DocumentRequest()
                 {
-                    Path = "my-account",
+                    Path = pagePath,
                     DocumentTypeFQN = "pageTemplateContent@mozu"
                 }
 
             };
-            pc.PageType = "my_account";
+            pc.PageType = pageType;
 
 
 
@@ -199,7 +208,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jAccount.Add("wishlist", wishlistObj);
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK,  View("my-account", jAccount));
+            return this.Request.CreateResponse(HttpStatusCode.OK,  View(pageType, jAccount));
         }
 
         //private string BuildOpenOrdersFilter(int accountId)

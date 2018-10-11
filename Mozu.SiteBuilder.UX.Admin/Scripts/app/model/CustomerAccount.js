@@ -16,20 +16,27 @@ Ext.define('Taco.model.CustomerAccount', {
         'Taco.store.StoreCredits',
         'Taco.model.CustomerSegment'
     ],
+    idProperty: 'accountAndUserId',
     fields: [
         {
-            name: 'id',            
+            name: 'id',
             type: 'int'
         }, {
             name: 'userId',
             type: 'string'
         }, {
+            name: 'accountAndUserId',
+            type: 'string',
+            convert: function(value, record) {
+                return record.get('id') + '-' + record.get('userId');
+            }
+        }, {
             name: 'firstName',
-            type: 'string'        
+            type: 'string'
         }, {
             name: 'firstNameSafe',
             type: 'string',
-            convert: function(value, record) {
+            convert: function (value, record) {
                 return Ext.util.Format.htmlEncode(record.get('firstName'));
             }
         }, {
@@ -38,7 +45,7 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'lastNameSafe',
             type: 'string',
-            convert: function(value, record) {
+            convert: function (value, record) {
                 return Ext.util.Format.htmlEncode(record.get('lastName'));
             }
         },
@@ -64,17 +71,17 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'emailAddressSafe',
             type: 'string',
-            convert: function(value, record) {
+            convert: function (value, record) {
                 return Ext.util.Format.htmlEncode(record.get('emailAddress'));
             }
         }, {
-             name: 'segments',
-             type: 'auto',
-             defaultValue:[]
-         }, {
-             name: 'segmentIds',
-             type: 'auto',
-             defaultValue:[]
+            name: 'segments',
+            type: 'auto',
+            defaultValue: []
+        }, {
+            name: 'segmentIds',
+            type: 'auto',
+            defaultValue: []
         }, {
             name: 'userName',
             type: 'string'
@@ -87,7 +94,7 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'isAnonymous',
             type: 'boolean',
-            defaultValue:true
+            defaultValue: true
         }, {
             name: 'groups',
             type: 'auto',
@@ -151,10 +158,14 @@ Ext.define('Taco.model.CustomerAccount', {
         }, {
             name: 'externalId',
             type: 'string'
+        },
+        {
+            name: 'accountType',
+            type: 'string'
         }
 
     ],
-   
+
     getOrders: function () {
 
         if (!this.orders) {
@@ -184,8 +195,8 @@ Ext.define('Taco.model.CustomerAccount', {
             foreignProperty: 'account'
         });
     },
-    
-    getStoreCredits: function (config ) {
+
+    getStoreCredits: function (config) {
         if (this.storeCreditsStore) {
             return this.storeCreditsStore;
         }
@@ -207,7 +218,7 @@ Ext.define('Taco.model.CustomerAccount', {
             root: 'items',
             successProperty: 'success',
             messageProperty: 'message'
-           
+
         },
         writer: {
             allowSingle: false,

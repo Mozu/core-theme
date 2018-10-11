@@ -19,78 +19,81 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ICustomerAttributeDefinitionWebApiClient _customerAttributeDefinitionWebApiClient;
 
-        public CustomerAttributeController(ICustomerAttributeDefinitionWebApiClient  customerAttributeDefinitionWebApiClient)
+        public CustomerAttributeController(
+            ICustomerAttributeDefinitionWebApiClient customerAttributeDefinitionWebApiClient)
         {
-            _customerAttributeDefinitionWebApiClient = customerAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
-
+            _customerAttributeDefinitionWebApiClient =
+                customerAttributeDefinitionWebApiClient.CloneWithApiContext(x => x.LocaleCode = "en-US");
         }
 
         [HttpGetRoute(UriTemplate = "list")]
-        public async Task<Response<List<AttributeModel>>> List([FromUri] PagingParamaters pagingParams, [FromUri] FilterCollection extFilter)
+        public async Task<Response<List<AttributeModel>>> List([FromUri] PagingParamaters pagingParams,
+            [FromUri] FilterCollection extFilter)
         {
-           
-
-             if (!String.IsNullOrEmpty(pagingParams.id))
+            if (!string.IsNullOrEmpty(pagingParams.id))
             {
-                var dcitem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(pagingParams.id)).ReadAsSync();
-                var vmitem = Mapper.Map<AttributeModel>(dcitem);
-                return this.List2(vmitem);
+                var dcItem = (await _customerAttributeDefinitionWebApiClient.GetAttribute(pagingParams.id))
+                    .ReadAsSync();
+                var vmItem = Mapper.Map<AttributeModel>(dcItem);
+                return List2(vmItem);
             }
-            else
-            {
-                var results = (await _customerAttributeDefinitionWebApiClient.GetAttributes(startIndex: pagingParams.startIndex, pageSize: pagingParams.pageSize)).ReadAsSync();
-                var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);
-                return this.List2(vmItems, (int) results.TotalCount);
+            var results = (await _customerAttributeDefinitionWebApiClient.GetAttributes(
+                startIndex: pagingParams.startIndex,
+                pageSize: pagingParams.pageSize)).ReadAsSync();
 
-
-            }
+            var vmItems = Mapper.Map<List<AttributeModel>>(results.Items);
+            return List2(vmItems, results.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<List<AttributeModel>>> CreateAttribute([FromBody] List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.CreateAttribute(_)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>)
+                .Select(a => _customerAttributeDefinitionWebApiClient.CreateAttribute(a))
+                .ToList();
             await Task.WhenAll(tasks);
 
-            var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
-            return this.List2(newAttributes);
-
+            var newAttributes = tasks.Select(t => t.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
+            return List2(newAttributes);
         }
 
         [HttpPostRoute(UriTemplate = "edit")]
         public async Task<Response<List<AttributeModel>>> EditAttribute(List<AttributeModel> attributes)
         {
-           
-           
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ =>
-            {
-                _.AttributeCode = string.IsNullOrEmpty(_.AttributeCode) ? _.AttributeFQN.Split('~')[1] : _.AttributeCode;
-                return _customerAttributeDefinitionWebApiClient.UpdateAttribute(_.AttributeFQN, _);
-            }
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(a =>
+                {
+                    a.AttributeCode = string.IsNullOrEmpty(a.AttributeCode)
+                        ? a.AttributeFQN.Split('~')[1]
+                        : a.AttributeCode;
+                    return _customerAttributeDefinitionWebApiClient.UpdateAttribute(a.AttributeFQN, a);
+                }
             ).ToList();
             await Task.WhenAll(tasks);
             
-            var newAttributes = tasks.Select(x => x.Result.ReadAsSync()).Select(Mapper.Map<AttributeModel>).ToList();
-            return this.List2(newAttributes);
-
+            var newAttributes = tasks.Select(t => t.Result.ReadAsSync())
+                .Select(Mapper.Map<AttributeModel>)
+                .ToList();
+            return List2(newAttributes);
         }
 
         [HttpPostRoute(UriTemplate = "delete")]
         public async Task<Response<List<AttributeModel>>> DeleteAttribute(List<AttributeModel> attributes)
         {
-            var tasks = attributes.Select(Mapper.Map<AttributeDC>).Select(_ => _customerAttributeDefinitionWebApiClient.DeleteAttribute(_.AttributeFQN)).ToList();
+            var tasks = attributes.Select(Mapper.Map<AttributeDC>)
+                .Select(a => _customerAttributeDefinitionWebApiClient.DeleteAttribute(a.AttributeFQN))
+                .ToList();
             await Task.WhenAll(tasks);
-             
-            tasks.ForEach(x =>
+
+            tasks.ForEach(t =>
             {
-                if (!x.Result.ResponseMessage.IsSuccessStatusCode)
+                if (!t.Result.ResponseMessage.IsSuccessStatusCode)
                 {
-                    throw x.Result.ReadException();
+                    throw t.Result.ReadException();
                 }
             });
-            
-            var newAttributes = tasks.Select(x => x.Result.ResponseMessage.IsSuccessStatusCode ).ToList();
-            return this.List2<AttributeModel>(attributes);
+
+            var deletedAttributes = tasks.Select(t => t.Result.ResponseMessage.IsSuccessStatusCode).ToList();
+            return List2(attributes);
         }
     }
 }
