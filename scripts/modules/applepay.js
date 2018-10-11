@@ -96,7 +96,6 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
               //This handler gets called after the user authorizes the wallet payment
               //on their phone. This is when we receive the payment token from apple.
               self.session.onpaymentauthorized = function(event) {
-                var status = 0; // This is a 'successful' status. 'failure' is 1
                 self.applePayToken.set('tokenObject', event.payment.token);
                 self.applePayToken.apiCreate().then(function(response){
                   if (!response.isSuccessful){
@@ -106,23 +105,15 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
                     var appleShippingContact = event.payment.shippingContact;
                     var createPaymentPayload = self.buildCreatePaymentPayload(appleBillingContact, appleShippingContact, response.id);
                     var currentPayment = self.orderModel.apiModel.getCurrentPayment() || {};
-
                     self.setShippingContact(appleShippingContact).then(function(shippingContactResponse){
                         self.setShippingMethod().then(function(shippingMethodResponse){
-                            self.orderModel.apiVoidPayment(currentPayment.id).ensure(function(){
-                                self.orderModel.apiCreatePayment(createPaymentPayload).then(function(order){
-                                    self.orderModel.set(order.data);
-                                    self.session.completePayment({"status": status});
-                                    var id = self.orderModel.get('id');
-                                    var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
-                                    var checkoutUrl = self.multishipEnabled ? "/checkoutv2" : "/checkout";
-                                    redirectUrl += checkoutUrl + '/' + id;
-                                    window.location.href = redirectUrl;
-
-                                }, function(createPaymentError){
-                                    self.handleError(createPaymentError);
-                                });
-                            });
+                            if (!currentPayment.id){
+                              self.applyPayment(createPaymentPayload);
+                            } else {
+                              self.orderModel.apiVoidPayment(currentPayment.id).ensure(function(){
+                                  self.applyPayment(createPaymentPayload);
+                              });
+                          }
                         }, function(shippingMethodError){
                             self.handleError(shippingMethodError);
                         });
@@ -181,6 +172,20 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
         // Apple has its own cool error handling functionality which entirely
         // did not work at all. I think it's an issue with Apple. So we aren't using it.
         // Its future implementation isn't off the table though.
+    },
+    applyPayment: function(createPaymentPayload){
+      var self = this;
+      self.orderModel.apiCreatePayment(createPaymentPayload).then(function(order){
+          self.orderModel.set(order.data);
+          self.session.completePayment({"status": 0});
+          var id = self.orderModel.get('id');
+          var redirectUrl = hyprlivecontext.locals.pageContext.secureHost;
+          var checkoutUrl = self.multishipEnabled ? "/checkoutv2" : "/checkout";
+          redirectUrl += checkoutUrl + '/' + id;
+          window.location.href = redirectUrl;
+      }, function(createPaymentError){
+          self.handleError(createPaymentError);
+      });
     },
     setStyle: function(style){
         var self = this;
@@ -528,7 +533,7 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
       //meant to be called on cart page render; hides the button if total is 0
       if (this.getTotal() === 0){
         $('#applePayButton').hide();
-      } else {
+      } else if (ApplePaySession && ApplePaySession.canMakePayments()) {
         $('#applePayButton').show();
       }
     }
