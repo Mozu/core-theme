@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-10-09
+ * Mozu JavaScript SDK - v0.3.0 - 2018-10-18
  *
  * Copyright (c) 2018 Volusion, Inc.
  *
@@ -3476,8 +3476,11 @@ ApiInterfaceConstructor.prototype = {
     getRequestHeaders: function() {
         return this.context.asHeaders();
     },
-    all: function() {
+    all: function () {
         return utils.when.join.apply(utils.when, arguments);
+    },
+    allResolutions: function () {
+        return utils.when.all.apply(utils.when, arguments);
     },
     steps: function() {
         var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
@@ -3654,8 +3657,8 @@ module.exports=
     "collectionOf": "order"
   },
   "product": {
-    "get": {
-      "template": "{+productService}{productCode}?{&allowInactive*}",
+   "get": {
+      "template": "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
       "shortcutParam": "productCode",
       "defaultParams": {
         "allowInactive": false
@@ -3778,6 +3781,10 @@ module.exports=
       "verb": "DELETE",
       "template": "{+cartService}{id}/coupons",
       "includeSelf": true
+    },
+    "reject-suggested-discount": {
+      "verb": "POST",
+      "template": "{+cartService}{id}/rejectautodiscount/{discountId}"
     }
   },
   "cartitem": {
@@ -4484,6 +4491,13 @@ module.exports=
       "includeSelf": true,
       "template": "{+checkoutService}{id}/returnableitems",
       "returnType": "json"
+    }
+  },
+  "discounts": {
+    "get": {
+      "returnType": "discount",
+      "template": "{+discountService}autoaddtarget/{discountId}",
+      "shortcutParam": "discountId"
     }
   }
 }

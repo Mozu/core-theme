@@ -131,8 +131,8 @@
     "collectionOf": "order"
   },
   "product": {
-    "get": {
-      "template": "{+productService}{productCode}?{&allowInactive*}",
+   "get": {
+      "template": "{+productService}{productCode}?{&allowInactive,acceptVariantProductCode}",
       "shortcutParam": "productCode",
       "defaultParams": {
         "allowInactive": false
@@ -255,6 +255,10 @@
       "verb": "DELETE",
       "template": "{+cartService}{id}/coupons",
       "includeSelf": true
+    },
+    "reject-suggested-discount": {
+      "verb": "POST",
+      "template": "{+cartService}{id}/rejectautodiscount/{discountId}"
     }
   },
   "cartitem": {
@@ -961,6 +965,13 @@
       "includeSelf": true,
       "template": "{+checkoutService}{id}/returnableitems",
       "returnType": "json"
+    }
+  },
+  "discounts": {
+    "get": {
+      "returnType": "discount",
+      "template": "{+discountService}autoaddtarget/{discountId}",
+      "shortcutParam": "discountId"
     }
   }
 }

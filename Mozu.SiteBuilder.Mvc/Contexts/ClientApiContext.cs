@@ -304,19 +304,26 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                             InternalUrl = settings.Urls("service-url-LocationAttributeDefinitionWebApi"),
                             RequiresSsl = true
                         },
-                         new ServiceInfo
+                        new ServiceInfo
                         {
                             Id = "CheckoutService",
                             InternalUrl = settings.Urls("service-url-CheckoutWebApi"),
                             RequiresSsl = true
                         }, 
-                         new ServiceInfo
-                         {
+                        new ServiceInfo
+                        {
                              Id = "tokenService",
                              InternalUrl = settings.Urls("service-url-StorefrontTokensWebApi"),
                              SkipRename = true,
                              RequiresSsl = true
-                         }
+                        },
+                        new ServiceInfo
+                        {
+                            Id = "DiscountService",
+                            InternalUrl = settings.Urls("service-url-DiscountRuntimeSecondaryWebApi"),
+                            RequiresSsl = true
+                        }
+
                     };
                 foreach (ServiceInfo si in sis)
                 {

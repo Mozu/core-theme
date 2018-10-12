@@ -187,8 +187,11 @@ ApiInterfaceConstructor.prototype = {
     getRequestHeaders: function() {
         return this.context.asHeaders();
     },
-    all: function() {
+    all: function () {
         return utils.when.join.apply(utils.when, arguments);
+    },
+    allResolutions: function () {
+        return utils.when.all.apply(utils.when, arguments);
     },
     steps: function() {
         var args = Object.prototype.toString.call(arguments[0]) === "[object Array]" ? arguments[0] : Array.prototype.slice.call(arguments);
