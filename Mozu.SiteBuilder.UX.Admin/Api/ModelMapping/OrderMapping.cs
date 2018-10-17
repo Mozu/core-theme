@@ -829,8 +829,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
                 .ForMember(x => x.AvailableActions, op => op.ResolveUsing(dc => dc.AvailableActions))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
-                .ForMember(x => x.TokenType, op => op.ResolveUsing(dc => dc.BillingInfo.Token?.Type))
-                .ForMember(x => x.TokenId, op => op.ResolveUsing(dc => dc.BillingInfo.Token?.PaymentServiceTokenId))
+                .ForMember(x => x.TokenType, op => op.ResolveUsing(dc => dc.BillingInfo?.Token?.Type))
+                .ForMember(x => x.TokenId, op => op.ResolveUsing(dc => dc.BillingInfo?.Token?.PaymentServiceTokenId))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc =>
                 {
                     // the createby in the Audit Info is the GUID .. on the other hand the change messages has the name for that user. So replace it with that if we find the user in the change messages.
