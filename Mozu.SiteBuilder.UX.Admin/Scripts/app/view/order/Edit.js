@@ -49,6 +49,10 @@ Ext.define('Taco.view.order.Edit', {
         title: 'Orders',
         controller: 'orders'
     },
+    contextConfig: {
+        supportedLevels: ['s'],
+        requiresContextOfType: ['s']
+    },
 
     initComponent: function () {
         this.saveHidden
