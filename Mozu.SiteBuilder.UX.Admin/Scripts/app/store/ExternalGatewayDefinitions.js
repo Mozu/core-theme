@@ -4,7 +4,6 @@ Ext.define('Taco.store.ExternalGatewayDefinitions', {
     storeManagerConfig: {
         clearFilters: true,
         clearSort: true,
-        autoLoad: true,
-        contextLevel: 's'
+        autoLoad: true
     }
 });
