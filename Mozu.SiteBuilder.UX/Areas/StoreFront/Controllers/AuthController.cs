@@ -326,8 +326,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
        Task<CaptchResponse> ValidateToken( string token)
         {
+            var captchaEnabled = _siteContext.ThemeSettings.Get<bool>("recaptchaEnabled", false);
             var secret = _siteContext.ThemeSettings.Get<string>("__recaptchaSecrete", null);
-            if ( secret == null)
+            if (!captchaEnabled || secret == null)
             {
                 return Task.FromResult(new CaptchResponse { NoOp = true });
             }
