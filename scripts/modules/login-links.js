@@ -261,7 +261,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 password: this.$parent.find('[data-mz-login-password]').val()
             };
 
-            if (token) {
+            if (token && typeof token === 'string') {
                 data.token = token;
             } else if (window.captchaToken) {
                 data.token = window.captchaToken;
