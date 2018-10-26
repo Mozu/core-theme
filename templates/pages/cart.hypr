@@ -4,7 +4,7 @@
 
 {% block head-tag-scripts %}
 {% parent %}
-{% if siteContext.checkoutSettings.visaCheckout.isEnabled and not pageContext.isEditMode %}
+{% if siteContext.checkoutSettings.visaCheckout.isEnabled and not pageContext.isEditMode and not pageContext.isAdminMode %}
 {% include "modules/common/anti-clickjacking-script" %}
 {% endif %}
 {% endblock head-tag-scripts %}
