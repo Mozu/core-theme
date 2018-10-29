@@ -40,7 +40,17 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext) {
         },
         isAwsCheckout: function() {
             var activePayments = this.getCheckout().apiModel.getActivePayments();
-            return activePayments && !!_.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+            if (activePayments) {
+                var tokenPayment = _.findWhere(activePayments, { paymentType: 'token' });
+                if (tokenPayment && tokenPayment.billingInfo.token && tokenPayment.billingInfo.token.type.toLowerCase() == "paywithamazon")
+                    return true;
+
+                var legacyPWA = _.findWhere(activePayments, { paymentType: 'PayWithAmazon' });
+                if (legacyPWA) return true;
+                
+                return false;
+            } else
+               return false;
         },
         isNonMozuCheckout: function() {
             var activePayments = this.getCheckout().apiModel.getActivePayments();

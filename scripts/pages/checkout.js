@@ -8,8 +8,9 @@ require(["modules/jquery-mozu",
     'modules/editable-view',
     'modules/preserve-element-through-render',
     'modules/xpress-paypal',
-    'modules/amazonpay'],
-    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,PayPal,AmazonPay) {
+    'modules/amazonpay',
+    'modules/applepay'],
+    function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements, PayPal, AmazonPay, ApplePay) {
 
 
     var ThresholdMessageView = Backbone.MozuView.extend({
@@ -236,7 +237,7 @@ require(["modules/jquery-mozu",
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
-            preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection'], function() {
+            preserveElements(this, ['.v-button', '.p-button','#amazonButtonPaymentSection', '.apple-pay-button'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
             });
             var status = this.model.stepStatus();
@@ -249,8 +250,12 @@ require(["modules/jquery-mozu",
                 this.visaCheckoutInitialized = true;
             }
 
+            if (this.$(".apple-pay-button").length > 0)
+                ApplePay.init();
+
             if (this.$(".p-button").length > 0)
                 PayPal.loadScript();
+
         },
         updateAcceptsMarketing: function(e) {
             this.model.getOrder().set('acceptsMarketing', $(e.currentTarget).prop('checked'));
@@ -617,6 +622,7 @@ require(["modules/jquery-mozu",
             checkoutData = require.mozuData('checkout');
 
         AmazonPay.init(true);
+
         checkoutData.isAmazonPayEnable = AmazonPay.isEnabled;
 
         var checkoutModel = window.order = new CheckoutModels.CheckoutPage(checkoutData),
@@ -666,7 +672,7 @@ require(["modules/jquery-mozu",
 
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
-            if (window.amazon) 
+            if (window.amazon)
                 window.amazon.Login.logout();
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + "/checkout/" + checkoutModel.get('id') + "/confirmation";
         });

@@ -10,8 +10,9 @@ define(['modules/api',
         'modules/modal-dialog',
         'modules/xpress-paypal',
         'modules/models-location',
-        'modules/amazonPay'
-      ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels,AmazonPay) {
+        'modules/amazonPay',
+        'modules/applepay'
+      ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -52,10 +53,12 @@ define(['modules/api',
             });
         },
         render: function() {
-            preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton'], function() {
+            preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
-
+            // normally we preserveElement on the apple pay button, but we hide it if a change to the cart 
+            // has lead the total price to be $0. Apple doesn't like $0 orders
+            if (ApplePay && ApplePay.scriptLoaded) ApplePay.hideOrShowButton();
             // this.messageView.render();
         },
         updateQuantity: _.debounce(function (e) {
@@ -419,6 +422,9 @@ define(['modules/api',
 
         renderVisaCheckout(cartModel);
         paypal.loadScript();
+        if (cartModel.count() > 0){
+          ApplePay.init();
+        }
         if (AmazonPay.isEnabled && cartModel.count() > 0)
             AmazonPay.addCheckoutButton(cartModel.id, true);
     });
