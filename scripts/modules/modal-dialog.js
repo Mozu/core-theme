@@ -156,12 +156,10 @@ define(['modules/jquery-mozu', 'shim!vendor/bootstrap/js/modal[jquery=jQuery]'],
 
          show: function(){
            if (me.options.backdrop===null || me.options.backdrop===undefined){
-              theElement.modal();
+             theElement.modal();
            } else {
              theElement.modal({backdrop: me.options.backdrop});
            }
-
-
          },
 
          hide: function(){

@@ -62,3 +62,19 @@
     <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
   </td>
 </tr>
+{% if item.productDiscount %}
+  <tr class="mz-carttable-item-autoAddActions ">
+    <td colspan="6">
+      <div class="mz-carttable-item-autoAddDiscount">
+        <span class="mz-carttable-item-autoAddDiscount-name">{{ item.productDiscount.discount.name }}</span>
+        
+          <span class="mz-carttable-item-autoAddDiscount-actions">
+            {% if item.productDiscount.discount.hasMultipleTargetProducts %}
+              <a href="javascript:;" class="mz-carttable-item-autoAddDiscount-actions" data-mz-action="updateAutoAddItem"  data-mz-cart-item="{{ item.id }}" data-mz-discount-id="{{ item.productDiscount.discount.id }}">Update</a>
+            {% endif %}
+            <a href="javascript:;" class="mz-carttable-item-autoAddDiscount-actions" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}">Remove</a>
+          </span>
+      </div>
+    </td>
+  </tr>
+{% endif %}

@@ -1,0 +1,10 @@
+{% require_script "pages/location" %}
+
+<div class="mz-discount-product-location">
+    <p class="mz-locationsearch-pleasewait">
+        {{ labels.locationWaitProd|string_format(model.content.productName)|safe }}
+    </p>
+    <div class="mz-l-stack-section mz-locationsearch fades-in" id="location-list">
+        {% include "modules/location/location-search" with model=model.locations %}
+    </div>
+</div>

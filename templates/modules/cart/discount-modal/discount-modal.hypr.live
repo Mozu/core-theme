@@ -1,0 +1,18 @@
+{% extends "modules/common/modal-dialog" %}
+
+{% block modal-header %} 
+    <h3 class="modal-title">{{labels.bogaModalHeading}}</h3>
+{% endblock modal-header %}
+ 
+{% block modal-body %}
+
+{% include "modules/common/message-bar" with model=model.messages %}
+
+<div id="mzDiscountModal" data-mz-discount-modal-content class="mz-discount-modal-content">
+</div>
+
+{% endblock modal-body %} 
+     
+{% block modal-footer %}
+    <button type="button" class="mz-button" data-mz-action="handleDialogCancel">Decline Discount</button>
+{% endblock modal-footer %}

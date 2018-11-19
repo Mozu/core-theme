@@ -173,6 +173,17 @@
                 this.$('.mz-drop-zone').each(function() {
                     if (dropzones[this.id]) $(this).replaceWith(dropzones[this.id]);
                 });
+            },
+
+            removeInner: function () {
+                this._removeInnerElements();
+                this.stopListening();
+                return this;
+            },
+
+            _removeInnerElements: function () {
+                this.$el.off();
+                this.$el.empty();
             }
 
             /**
