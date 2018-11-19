@@ -43,6 +43,7 @@
     "billingPhone": "Billing Phone",
     "billingPhoneNumber": "Billing Phone Number",
     "billingPostalCode": "Billing Zip Code",
+    "bogaModalHeading": "Your Free BOGA Item",
     "bundleContents": "Bundle Contents",
     "bundleExtraPartOf": "Bought as optional extra for <a href=\"{0}\">{1}</a> bundle",
     "bundlePartOf": "Bought as part of <a href=\"{0}\">{1}</a> bundle",

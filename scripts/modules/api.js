@@ -4,7 +4,7 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
+define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) { 
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();

@@ -88,11 +88,14 @@
     $(document).ready(function () {
         var product = ProductModels.Product.fromCurrent();
 
-        product.on('addedtocart', function (cartitem) {
+        product.on('addedtocart', function (cartitem, stopRedirect) {
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
                 CartMonitor.addToCount(product.get('quantity'));
-                window.location.href = (HyprLiveContext.locals.pageContext.secureHost||HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
+                if(stopRedirect) {
+                    window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
+                }
+                
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }

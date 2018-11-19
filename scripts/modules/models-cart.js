@@ -1,7 +1,7 @@
 define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modules/models-product",
-    "hyprlivecontext", 'modules/models-location'
+    "hyprlivecontext", 'modules/models-location', 'modules/cart/discount-dialog/models-discount-dialog'
   ], function (_, Backbone, Hypr, api, ProductModels,
-        HyprLiveContext, LocationModels) {
+      HyprLiveContext, LocationModels, DiscountDialogModels) {
 
     var CartItemProduct = ProductModels.Product.extend({
         helpers: ['mainImage','directShipSupported', 'inStorePickupSupported'],
@@ -21,12 +21,12 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
         inStorePickupSupported: function(){
             return (_.indexOf(this.get('fulfillmentTypesSupported'), "InStorePickup") !== -1) ? true : false;
         }
+        
     }),
 
     CartItem = Backbone.MozuModel.extend({
         relations: {
             product: CartItemProduct
-
         },
         validation: {
             quantity: {
@@ -50,7 +50,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                 this.apiModel.updateQuantity(this.get("quantity"))
                     .then(
                         function() {
-                            self.collection.parent.checkBOGA();
+                            //self.collection.parent.checkBOGA();
                         },
                         function() {
                             // Quantity update failed, e.g. due to limited quantity or min. quantity not met. Roll back.
@@ -67,7 +67,6 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             }
             return;
         }
-
     }),
     StoreLocationsCache = Backbone.Collection.extend({
         addLocation : function(location){
@@ -91,7 +90,8 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             items: Backbone.Collection.extend({
                 model: CartItem
             }),
-            storeLocationsCache : StoreLocationsCache
+            storeLocationsCache : StoreLocationsCache,
+            discountModal: DiscountDialogModels
         },
         initialize: function() {
             var self = this;
@@ -106,6 +106,21 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     });
                 }
             });
+
+            this.get('discountModal').set('discounts', this.getSuggestedDiscounts());
+        },
+        getSuggestedDiscounts: function(){
+            var self = this;
+            
+            var rejectedDiscounts = self.get('rejectedDiscounts') || [];
+            var suggestedDiscounts = self.get('suggestedDiscounts') || [];
+            var filteredDiscounts = [];
+            if (suggestedDiscounts.length) {
+                filteredDiscounts = _.filter(suggestedDiscounts, function(discount){
+                    return !_.findWhere(rejectedDiscounts, {discountId: discount.discountId});
+                });
+            }
+            return filteredDiscounts;
         },
         checkBOGA: function(){
           //Called whenever we would need to add an additional item to the cart
@@ -222,7 +237,10 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
                     return d.couponCode && d.couponCode.toLowerCase() === lowerCode;
                 }));
                 me.set('tentativeCoupon', couponExists && couponIsNotApplied ? code : undefined);
-                me.checkBOGA();
+                if (me.getSuggestedDiscounts().length) {
+                    me.get('discountModal').set('discounts', me.getSuggestedDiscounts());
+                    window.cartView.discountModalView.render();
+                }
                 me.isLoading(false);
             });
         },

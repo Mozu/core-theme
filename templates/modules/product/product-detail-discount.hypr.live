@@ -1,0 +1,10 @@
+{% extends "modules/product/product-detail" %}
+
+{% block in-store-pickup %}
+     {% if siteContext.supportsInStorePickup %}
+            <button type="submit" {% if model.notDoneConfiguring or not model.isPurchasable or not model.supportsInStorePickup %} disabled="disabled"
+                {% endif %} class="mz-button mz-instorepickuplink-button {% if model.notDoneConfiguring or not model.isPurchasable or not model.supportsInStorePickup %}is-disabled{% endif %}"
+                data-mz-action="checkLocalStores">{{ labels.checkLocalStores }}</button>
+    {% endif %}
+    <div class="mz-product-locations"></div>
+{% endblock in-store-pickup %}
