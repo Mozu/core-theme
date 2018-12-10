@@ -244,6 +244,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISettings _settings;
         private readonly IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
+        private readonly ISiteContext _siteContext;
         LocationInfo _location;
 
         public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
@@ -256,6 +257,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _settings = settings;
             _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
+            this._siteContext = siteContext;
             _crawlerInfo = new CrawlerInfo()
             {
                 IsCrawler = IsCrawler
@@ -275,13 +277,21 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _location = string.IsNullOrWhiteSpace(apiContext.PurchaseLocation) ? null : new LocationInfo() { Code = apiContext.PurchaseLocation };
             _user = new Lazy<User>(() => CreateUserFromClaims(_apiContext.UserClaims, _userProfile));
             IpAddress = ipAddressFinderOuter.IpAddress;
+        }
 
-
+        bool _initCurrency = false;
+        void InitCurrencySettings()
+        {
+            if (_initCurrency == true)
+            {
+                return;
+            }
+            _initCurrency = true;
             Mozu.Core.Money.CurrencyCode cc;
-          
-           
-            if (siteContext.CurrencyExchangeRate != null &&
-                Mozu.Core.Money.CurrencyCode.TryParse(siteContext.CurrencyExchangeRate.ToCurrencyCode, out cc))
+
+
+            if (_siteContext.CurrencyExchangeRate != null &&
+                Mozu.Core.Money.CurrencyCode.TryParse(_siteContext.CurrencyExchangeRate.ToCurrencyCode, out cc))
             {
                 CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
 
@@ -290,18 +300,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     CurrencyDecimalDigits = CurrencyInfo.Precision,
                     CurrencySymbol = CurrencyInfo.Symbol
                 };
-                ConversionRate = siteContext.CurrencyExchangeRate.Rate;
+                ConversionRate = _siteContext.CurrencyExchangeRate.Rate;
             }
             else
             {
-                NumberFormat = siteContext.NumberFormat;
-                CurrencyInfo = siteContext.CurrencyInfo;
+                NumberFormat = _siteContext.NumberFormat;
+                CurrencyInfo = _siteContext.CurrencyInfo;
                 ConversionRate = 1;
             }
-
-
-
         }
+
         [JsonPreloadFilter]
         public string CorrelationId
         {
@@ -616,22 +624,47 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return _crawlerInfo;
             }
-        }
 
+        }
+        Currency _currency;
         public Currency CurrencyInfo
         {
-            get; set;
-        }
-        
-       
-        public NumberFormatInfo NumberFormat
-        {
-            get;set;
+            get
+            {
+                InitCurrencySettings();
+                return _currency;
+            }
+            set
+            {
+                _currency = value;
+            }
         }
 
+        NumberFormatInfo _numberFormatInfo;
+        public NumberFormatInfo NumberFormat
+        {
+            get
+            {
+                InitCurrencySettings();
+                return _numberFormatInfo;
+            }
+            set
+            {
+                _numberFormatInfo = value;
+            }
+        }
+        decimal? _conversionRate;
         public decimal? ConversionRate
         {
-            get;set;
+            get
+            {
+                InitCurrencySettings();
+                return _conversionRate;
+            }
+            set
+            {
+                _conversionRate = value;
+            }
         }
     }
     public class LocationInfo

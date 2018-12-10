@@ -443,7 +443,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             if (!string.IsNullOrEmpty(_siteBuilderApiContext.CurrencyCodeOverride))
             {
-                data.CurrencyExchangeRates?.FirstOrDefault(_ => _.FromCurrencyCode == _siteBuilderApiContext.CurrencyCodeOverride);
+                CurrencyExchangeRate = data.CurrencyExchangeRates?.FirstOrDefault(_ => _.ToCurrencyCode == _siteBuilderApiContext.CurrencyCodeOverride);
             }
 
             HashString = hash + _themeOverrideId;
