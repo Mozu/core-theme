@@ -865,6 +865,17 @@
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
       <ItemGroup>
+        <Reference Include="Mozu.Log4net.Gelf">
+          <HintPath>..\packages\Mozu.Log4net.Gelf\lib\net451\Mozu.Log4net.Gelf.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+      <ItemGroup>
         <Reference Include="Mozu.MZDB.Contracts">
           <HintPath>..\packages\Mozu.MZDB.Contracts\lib\net451\Mozu.MZDB.Contracts.dll</HintPath>
           <Private>True</Private>
