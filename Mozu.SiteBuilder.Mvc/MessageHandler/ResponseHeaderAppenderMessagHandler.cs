@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
                 }
 
                 resp.Headers.AddCookies(new CookieHeaderValue[] {
-                    new CookieHeaderValue("_mzPc", Convert.ToBase64String(ms.ToArray()))
+                    new CookieHeaderValue("_mzPc", Convert.ToBase64String(ms.ToArray())){ Path ="/"}
                 });
             }
             catch (Exception ex)
