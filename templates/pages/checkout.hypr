@@ -32,50 +32,48 @@
     <div id="mz-discount-threshold-messages">
         {% include "modules/checkout/checkout-discount-threshold-messages" with model=model %}
     </div>
-
     <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right fades-in" method="post" onsubmit="return false;">
 
-    {% include "modules/common/message-bar" with model=model.messages %}
-    <div class="mz-l-column" id="checkout-rightcol">
-      <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
-        {% include "modules/checkout/checkout-order-summary" %}
-      </div>
-
-        <div class="mz-l-formfieldgroup">
-            <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
-                {% include "modules/checkout/coupon-code-field" %}
+        {% include "modules/common/message-bar" with model=model.messages %}
+        <div class="mz-l-column" id="checkout-rightcol">
+            <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
+            {% include "modules/checkout/checkout-order-summary" %}
             </div>
-            {% if themeSettings.showCheckoutCommentsField %}
-            <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
-                {% include "modules/checkout/comments-field" %}
+
+            <div class="mz-l-formfieldgroup">
+                <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
+                    {% include "modules/checkout/coupon-code-field" %}
+                </div>
+                {% if themeSettings.showCheckoutCommentsField %}
+                <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
+                    {% include "modules/checkout/comments-field" %}
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
+
         </div>
 
-    </div>
+        <div class="mz-l-column">
 
-    <div class="mz-l-column">
+            <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
+                {% include "modules/checkout/step-shipping-address" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
-            {% include "modules/checkout/step-shipping-address" %}
-        </div>
+            <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
+                {% include "modules/checkout/step-shipping-method" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
-            {% include "modules/checkout/step-shipping-method" %}
-        </div>
+            <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
+                {% include "modules/checkout/step-payment-info" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
-            {% include "modules/checkout/step-payment-info" %}
-        </div>
+            <div class="mz-formstep mz-checkoutform-review" id="step-review">
+                {% include "modules/checkout/step-review" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-review" id="step-review">
-            {% include "modules/checkout/step-review" %}
-        </div>
-
-    </div><!-- left .column -->
-    <div id="AmazonPayButton" style="display:none;"/>
-</form>
-
+        </div><!-- left .column -->
+        <div id="AmazonPayButton" style="display:none;"/>
+    </form>
 </div>
 
 {% endblock body-content %}

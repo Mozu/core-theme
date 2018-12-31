@@ -63,7 +63,7 @@
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
       <button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
-      {% if not model.isEmpty %}
+      {% if not model.isEmpty and not model.bf_ext_enabled %}
         {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
           {% if externalPaymentWorkflowsEnabled %}
             <div>

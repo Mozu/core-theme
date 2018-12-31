@@ -1,6 +1,9 @@
 ﻿<nav class="mz-utilitynav">
     <ul class="mz-utilitynav-list">
         <li class="mz-utilitynav-item">
+            {% dropzone "border-free-widget" scope="site" %}
+        </li>
+        <li class="mz-utilitynav-item">
             <a href="{{siteContext.siteSubdirectory}}/user/order-status?returnUrl={{siteContext.siteSubdirectory}}/myaccount" data-mz-action="anon-order" class="mz-utilitynav-link">{{ labels.orderStatus }}</a>
         </li>
         {% comment %}

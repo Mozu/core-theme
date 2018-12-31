@@ -113,6 +113,10 @@
                     </div>
                 </form>
             </div>
+
+            <div class="mz-l-column">
+              {% dropzone "border-free-order-tracking" scope="site" %}
+            </div>
         </div>
     </div>
 {% endblock body-content %}
