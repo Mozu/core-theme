@@ -80,7 +80,13 @@ ApiContextConstructor.prototype = {
         return obj;
     },
     asHeaders: function() {
-        return this.asObject(ApiReference.headerPrefix);
+        var headers = this.asObject(ApiReference.headerPrefix);
+        Object.keys(headers).forEach(function (key) {
+            if (headers[key] === '__mzrpt__') {
+                delete headers[key];
+             }
+        });
+        return headers;
     },
     setServiceUrls: function(urls) {
         ApiReference.urls = urls;

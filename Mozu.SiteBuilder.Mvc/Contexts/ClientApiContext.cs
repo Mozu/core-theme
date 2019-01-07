@@ -134,10 +134,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private Dictionary<string, string> BuildHeaders(IApiContext apiContext)
         {
             var header = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            if (!OmitUserFields)
-            {
-                header[APIConstants.Headers.APP_CLAIMS] = _apiClaims.Value;
-            }
+      
 
             header[APIConstants.Headers.CURRENCY] = apiContext.CurrencyCode;
             header[APIConstants.Headers.LOCALE] = apiContext.LocaleCode;
@@ -147,10 +144,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             header[APIConstants.Headers.TENANT] = apiContext.TenantId.ToString();
 
             //food/
-            if (!OmitUserFields)
+            if (OmitUserFields)
+            {
+                header[APIConstants.Headers.USER_CLAIMS] = "__mzrpt__";
+                header[APIConstants.Headers.APP_CLAIMS] = "__mzrpt__";
+            }
+            else
             {
                 header[APIConstants.Headers.PURCHASE_LOCATION] = apiContext.PurchaseLocation?.ToString();
                 header[APIConstants.Headers.USER_CLAIMS] = GetUserClaims(apiContext);
+                header[APIConstants.Headers.APP_CLAIMS] = _apiClaims.Value;
             }
          //   header[APIConstants.Headers.BYPASS_CACHE] = apiContext.ShouldBypassCache.ToString();
             if (apiContext.DataViewMode == DataViewModeType.Pending)

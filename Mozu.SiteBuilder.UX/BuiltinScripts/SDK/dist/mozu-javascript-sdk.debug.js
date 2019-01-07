@@ -1,7 +1,7 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2018-10-18
+ * Mozu JavaScript SDK - v0.3.0 - 2019-01-07
  *
- * Copyright (c) 2018 Volusion, Inc.
+ * Copyright (c) 2019 Volusion, Inc.
  *
  */
 
@@ -3001,7 +3001,13 @@ ApiContextConstructor.prototype = {
         return obj;
     },
     asHeaders: function() {
-        return this.asObject(ApiReference.headerPrefix);
+        var headers = this.asObject(ApiReference.headerPrefix);
+        Object.keys(headers).forEach(function (key) {
+            if (headers[key] === '__mzrpt__') {
+                delete headers[key];
+             }
+        });
+        return headers;
     },
     setServiceUrls: function(urls) {
         ApiReference.urls = urls;

@@ -12,6 +12,8 @@ using Mozu.Core.Mongo;
 using MongoDB.Driver.GridFS;
 using MongoDB.Driver;
 using System.Threading;
+using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
@@ -50,9 +52,32 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         Tuple<TextReader, DateTime> ITemplateLoader.GetTemplate(string path)
         {
             var themeInfo = ThemeFileSystemInfoHelper.ToInfo(path);
-            var text = _contentRetriever.Value.GetContent(themeInfo, CancellationToken.None);
+            var text = TryAddCbToRequireScript(path, _contentRetriever.Value.GetContent(themeInfo, CancellationToken.None));
+            
             var timestamp = _themeRepo.Value.GetLastWriteTime(themeInfo.ThemeId, themeInfo.VirtualPath);
             return new Tuple<TextReader, DateTime>(new StringReader(text), timestamp);
+
+        }
+        static Regex RequireRegex = new Regex(@"<script.*require.*(?<dotjs>\.js\"")");
+
+
+
+
+        //adds ver on require script for cache busting with CDN's
+        static string TryAddCbToRequireScript( string path, string content)
+        {
+            if (path.IndexOf("trailing-scripts.hypr", StringComparison.OrdinalIgnoreCase) ==-1)
+            {
+                return content;
+            }
+            var match = RequireRegex.Match(content);
+            if(match.Success)
+            {
+                var g = match.Groups["dotjs"];
+                return new StringBuilder(content.Substring(0, g.Index)).Append(".js?ver=1.0").Append(content.Substring(g.Index + 3)).ToString();
+            }
+            return content;
+
 
         }
 
