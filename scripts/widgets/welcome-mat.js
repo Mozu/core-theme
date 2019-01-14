@@ -34,7 +34,8 @@ require([
             "mzWelcomeMatRequest"
           ),
           selectedCurrency = $.cookie("currency_code_override"),
-          selectedCountry = $.cookie("selected_country");
+          selectedCountry = $.cookie("selected_country"),
+          selectedCountryCode = $.cookie("currency_country_code");
         if (_.isUndefined($.cookie("selected_country"))) selectedCountry = "";
         if (_.isUndefined($.cookie("currency_code_override")))
           selectedCurrency = appConfig.currency;
@@ -42,6 +43,7 @@ require([
           country: hasCountries,
           selectedCountry: selectedCountry,
           selectedCurrency: selectedCurrency,
+          selectedCountryCode: selectedCountryCode,
           currency: hasCurrencies,
           defaultCountry: appConfig.country
         });
@@ -60,7 +62,7 @@ require([
               ) {
                 var rawRespData =
                   resp.message.payload.getLocalizationDataResponse;
-                //console.log(rawRespData);
+                console.log(rawRespData);
                 //Filter responseData and make countriesData
                 var borderFreeCountries = _.map(
                   _.where(rawRespData.countries.country, {}),
@@ -89,31 +91,24 @@ require([
                 //save currencies
                 self.setSessionStorage("currencies", borderFreeCurrencies);
 
-                var appConfig = $("[data-mz-welcome-mat-request]").data(
-                  "mzWelcomeMatRequest"
+                //call getLocaleByIpAddress to set default country and currency
+                self.getLocaleByIpAddress(
+                  borderFreeCountries,
+                  borderFreeCurrencies
                 );
-                //set model data and render
-                self.model.set({
-                  country: borderFreeCountries,
-                  selectedCountry: "",
-                  selectedCurrency: appConfig.currency,
-                  defaultCountry: appConfig.country,
-                  currency: borderFreeCurrencies
-                });
-                self.render();
-                //hide/show welcome mat widget
-                if (self.$el.find(".welcome-mat-wrapper").hasClass("hidden")) {
-                  self.$el.find(".welcome-mat-wrapper").removeClass("hidden");
-                }
               } else {
-                console.log("Unexpected error occured, Please check app configuration!!"); // jshint ignore:line
+                console.log(
+                  "Unexpected error occured, Please check app configuration!!"
+                );
               }
             } else {
-              console.log("Unable to conenct, Please check app configuration!!"); // jshint ignore:line
+              console.log(
+                "Unable to conenct, Please check app configuration!!"
+              );
             }
           },
           function(e) {
-            console.log(e); // jshint ignore:line
+            console.log(e);
           }
         );
       }
@@ -160,12 +155,12 @@ require([
               1
             );
             self.setCookies("currency_QuoteId", resp.referenceData, 1);
-            self.$el.find(".selectedCountry").text(selectedCountryName.text());
+            //self.$el.find(".selectedCountry").text(selectedCountryName.text());
             //console.log(selectedCountryName.text());
             window.location.reload();
           },
           function(e) {
-            console.log(e); // jshint ignore:line
+            console.log(e);
           }
         );
     },
@@ -190,6 +185,68 @@ require([
       } else {
         currencySelect.prop("disabled", false);
       }
+    },
+    getLocaleByIpAddress: function(borderFreeCountries, borderFreeCurrencies) {
+      console.log("called!!");
+      var self = this,
+        pageContext = require.mozuData("pagecontext"),
+        postData = {
+          buyerIpAddress: pageContext.ipAddress
+        };
+      api.request("POST", baseURL + "getGeoLocaleByIpAddress", postData).then(
+        function(resp) {
+          console.log(resp);
+          if (
+            resp &&
+            resp.message &&
+            resp.message.payload &&
+            resp.message.payload.getLocalizationParamsResponse
+          ) {
+            var rawRespData =
+              resp.message.payload.getLocalizationParamsResponse;
+            //console.log(rawRespData);
+            //Filter responseData and make countriesData
+            var defaultCountryData = {
+              countryName: rawRespData.country.name,
+              countryCodeName: rawRespData.country.$.code,
+              currencyCode: rawRespData.country.currencyCode,
+              locale: rawRespData.country.locale,
+              currencyQuoteId: rawRespData.fxRate.quote.$.id
+            };
+            console.log("defaultCountryData", defaultCountryData);
+            //set IP Address base data into cookies and reload page
+            self.setCookies(
+              "currency_code_override",
+              defaultCountryData.currencyCode,
+              1
+            );
+            self.setCookies(
+              "selected_country",
+              defaultCountryData.countryName,
+              1
+            );
+            self.setCookies(
+              "currency_country_code",
+              defaultCountryData.countryCodeName,
+              1
+            );
+            self.setCookies(
+              "currency_QuoteId",
+              defaultCountryData.currencyQuoteId,
+              1
+            );
+            //reload the page to reflect the currency exchange rates
+            window.location.reload();
+          } else {
+            console.log(
+              "Unexpected error occured, Please check app configuration!!"
+            );
+          }
+        },
+        function(e) {
+          console.log(e);
+        }
+      );
     }
   });
 

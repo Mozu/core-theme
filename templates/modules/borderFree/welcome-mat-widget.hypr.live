@@ -3,7 +3,10 @@
         <a href="javascript:void(0);" id="btnCountrySelect" class="country-select">
             <span>{{ labels.deliverTo }}:</span>
             <span class="selectedCountry">
-                <b>
+                {% if model.selectedCountryCode %}
+                    <img src="../../resources/images/borderFree/flags/{{ model.selectedCountryCode }}.gif" class="countries-icon">
+                {% endif %}
+                <!--<b>
                     {% if model.selectedCountry %}
                         {{ model.selectedCountry }} 
                     {% else %}
@@ -17,7 +20,7 @@
                             {% endwith %}
                         {% endfor %} 
                     {% endif %}
-                </b>
+                </b>-->
             </span>
         </a>
     </div>

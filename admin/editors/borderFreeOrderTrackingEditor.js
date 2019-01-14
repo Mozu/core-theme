@@ -6,7 +6,7 @@ Ext.widget({
   initComponent: function() {
     var me = this;
     Ext.Ajax.request({
-      url: "/admin/app/entities/read?list=bfsettings@mozuadmin&entityType=mzdb",
+      url: "/admin/app/entities/read?list=bfsettings@external&entityType=mzdb",
       method: "get",
       success: function(res) {
         var response = JSON.parse(res.responseText);
@@ -14,15 +14,7 @@ Ext.widget({
           var isValid = me.checkValidation(response.items[0].item);
           if (isValid) {
             try {
-              var countryCodeInput = me.down("#countrycode"),
-              currencyCodeInput = me.down("#currencycode"),
-              environment = me.down("#environment");
-              countryCodeInput.setValue(
-                response.items[0].item.bf_merchant_country_code
-              );
-              currencyCodeInput.setValue(
-                response.items[0].item.bf_merchant_currency_code
-              );
+              var environment = me.down("#environment");
               environment.setValue(
                 response.items[0].item.bf_environment
               );
@@ -43,24 +35,6 @@ Ext.widget({
       {
         xtype: "panel",
         items: [
-          {
-            xtype: "mz-input-text",
-            fieldLabel: "Country",
-            itemId: "countrycode",
-            name: "country",
-            readOnly: true,
-            anchor: "100%",
-            allowBlank: false
-          },
-          {
-            xtype: "mz-input-text",
-            fieldLabel: "Currency Code",
-            itemId: "currencycode",
-            name: "currency",
-            readOnly: true,
-            anchor: "100%",
-            allowBlank: false
-          },
           {
             xtype: "mz-input-text",
             fieldLabel: "Environment",
