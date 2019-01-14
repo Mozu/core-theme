@@ -6,7 +6,7 @@ Ext.widget({
     initComponent: function () {
         var me = this;
         Ext.Ajax.request({
-            url: "/admin/app/entities/read?list=bfsettings@mozuadmin&entityType=mzdb",
+            url: "/admin/app/entities/read?list=bfsettings@external&entityType=mzdb",
             method: 'get',
             success: function (res) {
                 var response = JSON.parse(res.responseText);
@@ -21,7 +21,6 @@ Ext.widget({
                         } catch (e) {
                             console.log(e);
                         }
-                        console.log("ree");
                     }else{
                         var errormessage = me.down('#errormessage');
                         errormessage.setVisible(true);    

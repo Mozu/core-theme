@@ -26,7 +26,6 @@ require([
     getCountries: function(e) {
       // e.prevntDefault();
       var self = this;
-      //console.log("getCountries!!");
       var hasCountries = JSON.parse(window.sessionStorage.getItem("countries")),
         hasCurrencies = JSON.parse(window.sessionStorage.getItem("currencies"));
       if (hasCountries !== null && hasCurrencies !== null) {
@@ -62,7 +61,6 @@ require([
               ) {
                 var rawRespData =
                   resp.message.payload.getLocalizationDataResponse;
-                console.log(rawRespData);
                 //Filter responseData and make countriesData
                 var borderFreeCountries = _.map(
                   _.where(rawRespData.countries.country, {}),
@@ -75,6 +73,7 @@ require([
                     };
                   }
                 );
+                borderFreeCountries = _.sortBy(borderFreeCountries, 'name' );
                 //Filter responseData and make currenciesData
                 var borderFreeCurrencies = _.map(
                   _.where(rawRespData.currencies.currency, {}),
@@ -86,6 +85,7 @@ require([
                     };
                   }
                 );
+                borderFreeCurrencies = _.sortBy(borderFreeCurrencies, 'name' );
                 //save countries in localStorage
                 self.setSessionStorage("countries", borderFreeCountries);
                 //save currencies
@@ -96,32 +96,20 @@ require([
                   borderFreeCountries,
                   borderFreeCurrencies
                 );
-              } else {
-                console.log(
-                  "Unexpected error occured, Please check app configuration!!"
-                );
               }
-            } else {
-              console.log(
-                "Unable to conenct, Please check app configuration!!"
-              );
             }
           },
-          function(e) {
-            console.log(e);
-          }
+          function(e) {}
         );
       }
     },
     setSessionStorage: function(name, data) {
-      //console.log(name, data);
       window.sessionStorage.setItem(name, JSON.stringify(data));
     },
     saveCookie: function(e) {
       var btnSave = $(e.currentTarget);
       btnSave.addClass("is-loading");
       var self = this;
-      //console.log(self.$el.find("#country-select option").length);
       var selectedCountry = self.$el.find("#country-select"),
         selectedCurrency = self.$el.find("#currency-select");
 
@@ -133,8 +121,6 @@ require([
         .request("POST", baseURL + "getBorderFreeExchangeRates", postData)
         .then(
           function(resp) {
-            //console.log(resp);
-            //console.log("saving...");
             var selectedCountryName = $(selectedCountry).find(
               "option:selected"
             );
@@ -155,21 +141,15 @@ require([
               1
             );
             self.setCookies("currency_QuoteId", resp.referenceData, 1);
-            //self.$el.find(".selectedCountry").text(selectedCountryName.text());
-            //console.log(selectedCountryName.text());
             window.location.reload();
           },
-          function(e) {
-            console.log(e);
-          }
+          function(e) {}
         );
     },
     setCookies: function(cname, cvalue, exdays) {
       var d = new Date();
       d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
       var expires = "expires=" + d.toUTCString();
-      //$.cookie(cname, cvalue, expires);
-      //console.log("cookie saved!!");
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
     setCountry: function(e) {
@@ -187,7 +167,6 @@ require([
       }
     },
     getLocaleByIpAddress: function(borderFreeCountries, borderFreeCurrencies) {
-      console.log("called!!");
       var self = this,
         pageContext = require.mozuData("pagecontext"),
         postData = {
@@ -195,7 +174,6 @@ require([
         };
       api.request("POST", baseURL + "getGeoLocaleByIpAddress", postData).then(
         function(resp) {
-          console.log(resp);
           if (
             resp &&
             resp.message &&
@@ -204,7 +182,6 @@ require([
           ) {
             var rawRespData =
               resp.message.payload.getLocalizationParamsResponse;
-            //console.log(rawRespData);
             //Filter responseData and make countriesData
             var defaultCountryData = {
               countryName: rawRespData.country.name,
@@ -213,7 +190,6 @@ require([
               locale: rawRespData.country.locale,
               currencyQuoteId: rawRespData.fxRate.quote.$.id
             };
-            console.log("defaultCountryData", defaultCountryData);
             //set IP Address base data into cookies and reload page
             self.setCookies(
               "currency_code_override",
@@ -238,13 +214,32 @@ require([
             //reload the page to reflect the currency exchange rates
             window.location.reload();
           } else {
-            console.log(
-              "Unexpected error occured, Please check app configuration!!"
-            );
+            var appConfig = $("[data-mz-welcome-mat-request]").data(
+                "mzWelcomeMatRequest"
+              ),
+              selectedCurrency = $.cookie("currency_code_override"),
+              selectedCountry = $.cookie("selected_country"),
+              selectedCountryCode = $.cookie("currency_country_code");
+            if (_.isUndefined($.cookie("selected_country")))
+              selectedCountry = "";
+            if (_.isUndefined($.cookie("currency_code_override")))
+              selectedCurrency = appConfig.currency;
+            self.model.set({
+              country: borderFreeCountries,
+              selectedCountry: selectedCountry,
+              selectedCurrency: selectedCurrency,
+              selectedCountryCode: selectedCountryCode,
+              currency: borderFreeCurrencies,
+              defaultCountry: appConfig.country
+            });
+            window.view.render();
+            if (self.$el.find(".welcome-mat-wrapper").hasClass("hidden")) {
+              self.$el.find(".welcome-mat-wrapper").removeClass("hidden");
+            }
           }
         },
         function(e) {
-          console.log(e);
+          
         }
       );
     }
@@ -258,6 +253,5 @@ require([
       model: welcomeMatWidgetModel
     }));
     welcomeMatWidgetView.getCountries();
-    //welcomeMatWidgetView.render();
   });
 });

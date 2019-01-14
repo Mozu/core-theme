@@ -61,7 +61,7 @@
                                         {% for currency in model.currency %}
                                             {% if currency.isCurrencyEnabled %}
                                                 <option value="{{ currency.symbol|safe }}" {% if currency.symbol == model.selectedCurrency %}selected{% endif %}>
-                                                    {{ currency.symbol|safe }}
+                                                    {{ currency.name|safe }}
                                                 </option>
                                             {% endif %}
                                         {% endfor %}

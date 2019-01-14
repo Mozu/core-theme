@@ -333,6 +333,14 @@
       "userCreatable": false
     },
     {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "international-checkout",
+      "template": "international-checkout",
+      "title": "International Checkout",
+      "userCreatable": true
+    },
+    {
       "entityType": "customer",
       "id": "my_account",
       "template": "my-account",
@@ -700,11 +708,7 @@
     "useDebugScripts": false,
     "useSearchAutocomplete": true,
     "allowCustomerInitiatedReturns": true,
-    "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js",
-    "enableborderFree": false,
-    "merchantId": "",
-    "borderFreeUsername": "",
-    "borderFreePassword": ""
+    "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
   },
   "layoutWidgets": [
     {
@@ -1138,7 +1142,7 @@
       "validPageTypes": ["*"]
     },
     {
-      "displayName": "BorderFree Order Tracking",
+      "displayName": "International Order Tracking",
       "displayTemplate": "misc/border-free-order-tracking",
       "customEditor": "borderFreeOrderTrackingEditor",
       "icon": "/resources/admin/widgets/borderFree.png",

@@ -1,0 +1,20 @@
+{% extends "pages/checkout" %}
+
+{% block body-tag-classes %}mz-international-checkout{% endblock body-tag-classes %}
+
+{% block body-content %}
+{% require_script "pages/international-checkout" %}
+
+<div class="mz-l-container"> 
+    <h1 class="mz-pagetitle">
+        {{ labels.checkout }}
+        {% if not user.isAuthenticated %}
+        <span class="mz-pagetitle-note">
+            {{ labels.registeredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ labels.logIn }}</a>
+        </span>
+        {% endif %}
+    </h1>
+    {% include "modules/borderFree/border-free-checkout" %}	
+</div>        
+
+{% endblock body-content %}
