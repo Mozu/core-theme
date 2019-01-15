@@ -2554,6 +2554,7 @@
     <Folder Include="Scripts\stylesheets\etc\" />
     <Folder Include="Tests\customunit\view\website\settings\" />
     <Folder Include="Views\AccountUserTreeNode\" />
+    <Folder Include="Views\InternationalCheckout\" />
     <Folder Include="Views\B2BAccountMapping\" />
     <Folder Include="Views\B2BAccount\" />
   </ItemGroup>

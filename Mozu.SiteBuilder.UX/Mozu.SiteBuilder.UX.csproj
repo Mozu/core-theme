@@ -170,6 +170,7 @@
     <Compile Include="Areas\Misc\TemplateInheritanceHandler.cs" />
     <Compile Include="Areas\StoreFront\Controllers\BackOfficeController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutV2Controller.cs" />
+    <Compile Include="Areas\StoreFront\Controllers\InternationalCheckoutController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
