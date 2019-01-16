@@ -28,3 +28,4 @@ OctoPack
 Microsoft.AspNet.WebApi.Client
 JWT
 Mozu.Event.Contracts
+Mozu.Log4net.Gelf
