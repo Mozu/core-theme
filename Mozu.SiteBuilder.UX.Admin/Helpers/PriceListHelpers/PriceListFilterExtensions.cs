@@ -7,6 +7,7 @@ using Mozu.Core;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.Tenant.Contracts.Clients;
+using System.Collections;
 
 namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
 {
@@ -64,6 +65,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers
                     str += string.Join(" and ", filter.escapedValue.ToString().Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(searchString => string.Format("(({0} cont \"{2}\") or ({1} eq \"{2}\"))", NAME_PROPERTY, CODE_PROPERTY, searchString)));
                     return str;
+                case "codes":
+                    var codes = filter.escapedValue.ToString().Split(',');
+                    var codeList = codes.Select(x => string.Format("{0} eq \"{1}\"", CODE_PROPERTY, x)).ToArray();
+                    return String.Join(" or ", codeList);
                 case "name":
                     return String.Format("{0} cont \"{1}\"", NAME_PROPERTY, filter.escapedValue);
                 case "code":
