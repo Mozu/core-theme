@@ -36,6 +36,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             InitFromQstring(request);
             InitFromRouteData(request.GetRouteData());
         }
+        public static SearchContext CreateForTest()
+        {
+            return new SearchContext();
+        }
         public SearchContext Clone()
         {
             return new SearchContext() { Facets = new NameValueCollection(Facets) };
