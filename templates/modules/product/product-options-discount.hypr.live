@@ -13,7 +13,7 @@
                         {% if model.variationCollection && option.attributeDetail.usageType != 'Extra' && value.autoAddEnabled != true%}
                             
                         {% else %}
-                            <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
+                            <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected && value.isEnabled %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
                         {% endif %}
                     {% endfor %}
                 </select>

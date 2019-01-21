@@ -53,6 +53,15 @@ define(['modules/api',
               el: $('#mz-discount-threshold-messages'),
               model: this.model
             });
+
+            //var prouctDiscounts = me.model.get('items').each(function(item){
+            //    _.each(item.productDiscounts, function(prodDiscount){
+            //       var discount = new Discount(prodDiscount);
+            //       discount.getDiscountDetails().then(function(){
+
+            //       })
+            //    })
+            //})
         },
         render: function() {
             preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
@@ -426,17 +435,14 @@ define(['modules/api',
             CartMonitor.setCount(cartModel.count());
         });
 
-        //cartModel.checkBOGA();
-
-
         window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
 
         cartViews.cartView.render();
-        if (cartModel.get('discountModal').get('discounts').length) {
+        //if (cartModel.get('discountModal').get('discounts').length) {
             cartViews.discountModalView.render(); 
-        }
+        //}
         renderVisaCheckout(cartModel);
 
         MessageHandler.showMessage("BulkAddToCart");

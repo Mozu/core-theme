@@ -90,12 +90,6 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                 }
             }
         },
-        onBackToProductSelection: function (e) {
-            var self = this;
-            if (self.model._parent) {
-                self.model._parent.render();
-            }
-        },
         addToCart: function (e) {
             var self = this;
             e.preventDefault();
