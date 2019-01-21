@@ -1,10 +1,16 @@
 ﻿using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
+using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.Mobile;
 using Mozu.SiteBuilder.Mvc.Security;
+using Mozu.SiteBuilder.Mvc.Tags;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -13,6 +19,82 @@ using System.Threading.Tasks;
 namespace Mozu.SiteBuilder.UnitTests.Mvc
 {
 
+
+
+    [Category("Context")]
+    [TestFixture]
+    public class PageContextTests
+    {
+
+        [Test]
+        public void Can_Serilize_PageContext_Location()
+        {
+            var sbCtxt = Substitute.For<ISiteBuilderApiContext>();
+            var mobileDetectionProvider = Substitute.For<IMobileDetectionProvider>();
+            
+            var pc = PageContext.CreateForTesting(sbCtxt, mobileDetectionProvider);
+            pc.ThemeId = "asdf";
+            pc.Visit = new UX.Models.Visit.Visit()
+            {
+                VisitorId = "sklj;jlkfgd nl"
+            };
+            pc.CdnCacheBustKey = "asdf";
+            pc.User = new UX.Models.Customers.User()
+            {
+                AccountId = 45644768
+            };
+            pc.Search = SearchContext.CreateForTest();
+            pc.CmsContext = new UX.Models.Admin.CMS.CmsPageContext()
+            {
+                Page = new UX.Models.Admin.CMS.DocumentRequest()
+                {
+                    Id = "khsfdgsfdg"
+                }
+            };
+            pc.PurchaseLocation = new LocationInfo()
+            {
+                Code = "asdff"
+            };
+            pc.UserProfile = new Core.UserProfile()
+            {
+                UserId = "ghfjfghj"
+            };
+         
+
+
+           
+            var page = JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings
+            {
+                ContractResolver = JsonPreloadeContractResolver.DefaultResolver,
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml
+            });
+
+            var cookie = JsonSerializer.Create(new CaseInsensitiveJsonSerializerSettings
+            {
+                ContractResolver = JsonPreloadeCookieContractResolver.CookieResolver,
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml
+            });
+            var tw = new StringWriter();
+            var jwt = new JsonTextWriter(tw);
+            page.Serialize(jwt,pc);
+          // var pageTxt = tw.GetStringBuilder().ToString();
+            var pageJobj = JObject.Parse(tw.GetStringBuilder().ToString());
+
+
+            tw = new StringWriter();
+            jwt = new JsonTextWriter(tw);
+            cookie.Serialize(jwt, pc);
+            var cookieTxt = tw.GetStringBuilder().ToString();
+            var cookieObj = JObject.Parse(tw.GetStringBuilder().ToString());
+
+            Assert.AreEqual(pc.PurchaseLocation.Code, (string)cookieObj.SelectToken("purchaseLocation.code"));
+            Assert.AreEqual(pc.CmsContext.Page.Id, (string)pageJobj.SelectToken("cmsContext.page.id"));
+
+            Assert.IsNull( (string)pageJobj.SelectToken("purchaseLocation.code"));
+            Assert.IsNull((string)cookieObj.SelectToken("cmsContext.page.id"));
+
+        }
+    }
     [Category("Context")]
     [TestFixture]
     public class SiteBuilderApiContextTests

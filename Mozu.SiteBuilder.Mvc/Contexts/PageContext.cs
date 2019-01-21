@@ -238,15 +238,28 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
     public class PageContext : IEditableContext, IPageContext
     {
-        private readonly ISiteBuilderApiContext _apiContext;
+        private  ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
-        private readonly IMobileDetectionProvider _mobileDetectionProvider;
+        private IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
         private readonly ISiteContext _siteContext;
         LocationInfo _location;
 
+        private PageContext()
+        {
+
+        }
+        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null , IMobileDetectionProvider mobileDetectionProvider = null)
+        {
+            var pc = new PageContext()
+            {
+                _apiContext = apiContext,
+                _mobileDetectionProvider  = mobileDetectionProvider
+            };
+            return pc;
+        }
         public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
             , IIpAddressFinderOuter ipAddressFinderOuter,
             ISiteContext siteContext)
@@ -444,6 +457,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 return _themeId;
             }
+            set
+            {
+                _themeId = value;
+            }
         }
         [JsonPreloadFilter]
         public bool IsDebugMode 
@@ -456,10 +473,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get; set;
         }
-
+        string _cdnCacheBustKey;
         public string CdnCacheBustKey
         {
-            get { return _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey; }
+            get { return _cdnCacheBustKey ?? _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey; }
+            set { _cdnCacheBustKey = value; }
         }
 
         public PagingParameters Pagination
@@ -526,14 +544,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public CmsPageContext CmsContext {get;set;}
 
+        SearchContext _sc;
         public SearchContext  Search
         {
             get
             {
-                return SearchContext.Get(_requestMessage);
+                return _sc ?? SearchContext.Get(_requestMessage);
             }
             set
             {
+                _sc = value;
             }
         }
         [JsonPreloadFilter]
@@ -573,6 +593,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 return _userProfile.Value;
             }
+            set
+            {
+                _userProfile = new Lazy<UserProfile>(()=>value);
+            }
         }
         [JsonPreloadFilter]
         public LocationInfo PurchaseLocation
@@ -580,6 +604,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get
             {
                 return _location;
+            }
+            set
+            {
+                _location = value;
             }
         }
 
@@ -669,6 +697,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     }
     public class LocationInfo
     {
+        [JsonPreloadFilter]
         public string Code { get; set; }
     }
 

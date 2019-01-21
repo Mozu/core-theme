@@ -79,14 +79,29 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
+            if (property.Ignored)
+            {
+                return property;
+            }
             var att = member.GetCustomAttribute<JsonPreloadFilterAttribute>();
-            property.Ignored =  property.Ignored || (OmitUserFields && att?.Include == false) || (OmitUserFields && member.DeclaringType == typeof(Mozu.SiteBuilder.UX.Models.Customers.User));
+            property.Ignored = IsIgnored(member, property, att);
             if (_reverse)
             {
                 property.Ignored = !property.Ignored;
             }
             return property;
         }
+
+        public static bool IsIgnored(MemberInfo member, JsonProperty property, JsonPreloadFilterAttribute att)
+        {
+            return property.Ignored
+                            || (OmitUserFields && att?.Include == false)
+                            || (OmitUserFields && member.DeclaringType == typeof(Mozu.SiteBuilder.UX.Models.Customers.User))
+                            || (OmitUserFields && member.DeclaringType == typeof(Mozu.SiteBuilder.UX.Models.Visit.Visit))
+                            || (OmitUserFields && member.DeclaringType == typeof(Core.UserProfile))
+                            || (OmitUserFields && member.DeclaringType == typeof(Contexts.CrawlerInfo));
+        }
+      
     }
 
     public class JsonPreloadeContractResolver : CamelCasePropertyNamesContractResolver
@@ -107,14 +122,20 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
+            if (property.Ignored)
+            {
+                return property;
+            }
             var att = member.GetCustomAttribute<JsonPreloadFilterAttribute>();
-            property.Ignored = property.Ignored || (OmitUserFields && att?.Include == false) || (OmitUserFields && member.DeclaringType == typeof(Mozu.SiteBuilder.UX.Models.Customers.User));
+            property.Ignored = JsonPreloadeCookieContractResolver.IsIgnored(member, property, att);
             if (_reverse)
             {
                 property.Ignored = !property.Ignored;
             }
             return property;
         }
+
+        
     }
 
     public class JsonPreloadFilterAttribute : Attribute
