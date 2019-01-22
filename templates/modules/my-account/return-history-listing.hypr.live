@@ -19,7 +19,7 @@
                     <dd>{{ model.status }}</dd>
                 </dl>
             </li>
-        
+
 <li class="mz-orderlisting-details-item">
     {% if model.status == "Authorized" %}
         {% with model.packages|findwhere("hasLabel", "true") as packageWithLabel %}

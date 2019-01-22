@@ -1,4 +1,4 @@
-define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-product', 'modules/models-dialog'], function (Backbone, _, Hypr, api, ProductModels, Dialog) {
+define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-product'], function (Backbone, _, Hypr, api, ProductModels) {
 
     var discountModel = Backbone.MozuModel.extend({
         mozuType: 'discounts',
@@ -31,6 +31,8 @@ define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-pro
             return self.apiGet();
         },
         tagVariationOptions: function (productCode, data) {
+            var self = this;
+            var variationMap = {};
             var variation = _.find(data.variations, function (v) {
                 return v.productCode === productCode;
             });
@@ -47,8 +49,8 @@ define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-pro
                         }
                     });
                 });
+                data.variationCollection = true;
             }
-            data.variationCollection = true;
             return data;
         },
         getDiscountProducts: function () {

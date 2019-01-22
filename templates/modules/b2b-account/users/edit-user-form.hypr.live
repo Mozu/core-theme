@@ -1,0 +1,72 @@
+
+<div class=" mz-user-edit-form mz-l-2column">
+    <div class="mz-l-column">
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                <label for="firstName">
+                    {{ labels.firstName}}
+                    <span class="is-required"> *</span>:
+                </label>
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <input type="text" name="firstName" id="firstName" data-mz-value="user.firstName" value="{{ model.user.firstName }}">
+                <span class="mz-validationmessage" data-mz-validationmessage-for="user.firstName"></span>
+            </div>
+        </div>
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                <label for="lastName">
+                    {{ labels.lastName}}
+                    <span class="is-required"> *</span>:
+                </label>
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <input type="text" name="lastName" id="lastName" data-mz-value="user.lastName" value="{{ model.user.lastName }}">
+                <span class="mz-validationmessage" data-mz-validationmessage-for="user.lastName"></span>
+            </div>
+        </div>
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                <label for="emailAddress">
+                    {{ labels.email}}
+                    <span class="is-required"> *</span>:
+                </label>
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <input type="text" name="emailAddress" id="emailAddress" data-mz-value="user.emailAddress" value="{{ model.user.emailAddress }}">
+                <span class="mz-validationmessage" data-mz-validationmessage-for="user.emailAddress"></span>
+            </div>
+        </div>
+    </div><!--mz-l-column -->
+    <div class="mz-l-column">
+        {% if model.editMode == true %}
+            <div class="mz-l-formfieldgroup-row">
+                <div class="mz-l-formfieldgroup-cell">
+                    <label for="isActive">
+                        {{ labels.isActive}}
+                    </label>
+                </div>
+                <div class="mz-l-formfieldgroup-cell">
+                    <input type="checkbox" name="isActive" id="isActive" data-mz-value="user.isActive" value="true" {% if model.user.isActive %}checked="checked"{% endif %}>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="mz-l-formfieldgroup-row">
+            <div class="mz-l-formfieldgroup-cell">
+                <label for="userRole">
+                    {{ labels.userRole}}
+                </label>
+            </div>
+            <div class="mz-l-formfieldgroup-cell">
+                <ul>
+                 {% for role in model.userRoles %}
+                    <li><input data-mz-action="chooseUserRole" name="userRole" type="radio" value="{{role.role}}" {% if role.role == model.user.roleId %}checked="true"{% endif %} /> {{role.name}}</li>
+                {% endfor %}
+                <span class="mz-validationmessage" data-mz-validationmessage-for="userRole"></span>
+                </ul>
+            </div>
+        </div>
+
+    </div><!--mz-l-column -->
+</div><!--mz-user-edit-form -->

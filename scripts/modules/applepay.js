@@ -6,7 +6,7 @@ function($, Hypr, Api, hyprlivecontext, _, Backbone, CartModels, CheckoutModels,
   var ApplePayCheckout = Backbone.MozuModel.extend({ mozuType: 'checkout'});
   var ApplePayOrder = Backbone.MozuModel.extend({ mozuType: 'order' });
 
-  /*
+  /* 
     This module:
       - displays and styles an Apple Pay button
       - makes a request to apple with context-dependent info to start an Apple Pay session when the button is clicked

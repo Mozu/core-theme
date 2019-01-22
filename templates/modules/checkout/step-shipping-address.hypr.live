@@ -1,6 +1,6 @@
  <h3 class="mz-formstep-header mz-checkoutform-header">
         {{ labels.shippingInformation }}
-        {% if model.requiresFulfillmentInfo %}
+        {% if model.requiresFulfillmentInfo && model.hasRequiredBehavior %}
         <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.change }}</a>
         {% endif %}
         {% if model.isAwsCheckout and model.stepStatus == "incomplete" %}
@@ -31,7 +31,7 @@
           {%endif%}
         <div class="mz-formstep-fields mz-l-formfieldgroup mz-checkoutform  mz-checkoutform-shipping mz-checkoutform-section mz-checkoutform-active">
           {% if model.contacts %}
-            {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model %}
+            {% include "modules/checkout/checkout-shipping-contact-selector" with editingContact=model hasRequiredBehavior=model.hasRequiredBehavior %}
           {% else %}
             {% include "modules/common/address-form" with countries=pageContext.shippingCountries states=pageContext.shippingStates %}
           {% endif %}

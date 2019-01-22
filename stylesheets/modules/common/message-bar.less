@@ -74,6 +74,10 @@
             -webkit-animation: successpop 0.5s ease-out 1 normal;
         }
     }
+
+    .dismiss-message {
+        display:none;
+    }
 }
 
 .mz-message-item {
@@ -84,4 +88,24 @@
 	ul {
 		.mz-notification(@errorBackground, @errorText, @errorBorder, @errorIcon);
 	}
+}
+
+.mz-l-pagewrapper > .mz-messagebar {
+    position: absolute;
+    top: 160px;
+    width: 100%;
+
+    h4 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .dismiss-message {
+        display: inline-block;
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        font-size: 15px;
+    }
+    
 }

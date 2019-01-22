@@ -33,6 +33,7 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CustomerModels, CheckoutSt
                 }
             }
         },
+        requiredBehaviors: [1002],
         initialize : function(){
             var self = this;
             //We do not persit a Gift Card Destination Flag
@@ -78,6 +79,7 @@ function ($, _, Hypr, Backbone, api, HyprLiveContext, CustomerModels, CheckoutSt
          validation: {
             ShippingDestination : "validateShippingDestination"
         },
+        requiredBehaviors: [1002],
         validateShippingDestination : function(value, attr, computedState){
             var itemValidations =[];
             this.collection.each(function(item,idx){

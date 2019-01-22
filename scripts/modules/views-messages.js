@@ -10,6 +10,10 @@
             initialize: function() {
                 this.model.on('reset', this.render, this);
             },
+            dismissMessage: function() {
+                this.$el.fadeOut(3000); 
+                this.model.trigger('messageDismiss');
+            },
             render: function() {
                 var self = this;
                 Backbone.MozuView.prototype.render.apply(this, arguments);

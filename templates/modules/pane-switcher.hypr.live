@@ -1,0 +1,13 @@
+<div mz-pane-switcher class="mz-pane-switcher">
+     {% block pane-switcher-nav %}
+        <div id="mzPaneSwitcherNav" class="mz-pane-switcher-nav">
+            {% for pane in model.panes %}
+                <span class="nav-item" data-mz-action="handlePaneSelect" data-mz-index="{{forloop.index}}">{{pane.name}}</span>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    {% block pane-switcher-container %}
+        <div id="mzPaneSwitcherContainer" mz-pane-switcher-container></div>
+     {% endblock %}
+</div>

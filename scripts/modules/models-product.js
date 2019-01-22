@@ -80,7 +80,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
         },
         handleInvalid: function(newValObj, opt) {
-            if (this !== opt) {
+            if (this !== opt && !newValObj.autoAddEnabled) {
                 this.unset("value");
                 _.each(this.get("values"), function(value) {
                     value.isSelected = false;
@@ -387,6 +387,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
+                        me.trigger('optionsUpdated');
                      });
             } else {
                 this.isLoading(false);

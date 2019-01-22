@@ -225,6 +225,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
             defaults: {
                 "isMultiShipMode" : false
             },
+            requiredBehaviors: [1002],
             setMultiShipMode : function(){
             var directShipItems = this.get('items').where({fulfillmentMethod: "Ship"});
             var destinationCount = [];
@@ -896,7 +897,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                 }
 
                 //save contacts
-                if (isAuthenticated || isSavingNewCustomer) {
+                if ((isAuthenticated || isSavingNewCustomer) && this.hasRequiredBehavior(1014)) {
                     process.push(this.saveCustomerContacts);
                 }
 
@@ -911,7 +912,7 @@ var CheckoutPage = Backbone.MozuModel.extend({
                      }
                  }
 
-                 if (saveCreditCard && (this.get('createAccount') || isAuthenticated)) {
+                if (saveCreditCard && (this.get('createAccount') || isAuthenticated) && this.hasRequiredBehavior(1014)) {
                     isSavingCreditCard = true;
                     process.push(this.saveCustomerCard);
                 }

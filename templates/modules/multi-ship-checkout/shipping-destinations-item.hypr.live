@@ -26,20 +26,23 @@
           {% endif %}
 
           {% for destination in model.selectableDestinations %}
-          <option class="mz-shipping-destination-address-select" value="{{ destination.id }}" data-mz-customerContactId="{{destination.customerContactId}}"" {% if model.destinationId && model.destinationId == destination.id %} selected="selected" {% endif %}>{{ destination.destinationContact.address.address1 }}, {{ destination.destinationContact.address.cityOrTown }} {{ destination.destinationContact.address.stateOrProvince }}</option>
+          <option class="mz-shipping-destination-address-select" value="{{ destination.id }}" data-mz-customerContactId="{{destination.customerContactId}}" {% if model.destinationId && model.destinationId == destination.id %} selected="selected" {% endif %}>{{ destination.destinationContact.address.address1 }}, {{ destination.destinationContact.address.cityOrTown }} {{ destination.destinationContact.address.stateOrProvince }}</option>
           {% endfor %}
         </select>
       </div>
     </div>
 
     <div class="mz-shipping-row-item">
-      <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
-
-      <a class="mz-shipping-destination-edit-address-link" {% if not model.destinationId %} style="visibility:hidden" {% endif %} data-mz-action="handleEditContact" data-mz-destination-id="{{ model.destinationId }}"> | {{ labels.shippingDestinationEditAddress}}</a>
+       {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+      
+        <a class="mz-shipping-destination-edit-address-link" {% if not model.destinationId %} style="visibility:hidden" {% endif %} data-mz-action="handleEditContact" data-mz-destination-id="{{ model.destinationId }}"> | {{ labels.shippingDestinationEditAddress}}</a>
+      {% endif %}
+        
     </div>
 
     <div class="mz-shipping-row-item">
-      <button class="mz-button mz-shipping-destination-add-address-link mz-checkout-button-link" {% if model.quantity < 2  || model.selectableDestinations.length === 0%} style="visibility:hidden" {% endif %} data-mz-action="handleSplitOrderItem" {% if model.isLoading %} disabled {% endif %}> + {{ labels.shippingDestinationAddAddress }} </button>
+        <button class="mz-button mz-shipping-destination-add-address-link mz-checkout-button-link" {% if model.quantity < 2  || model.selectableDestinations.length === 0%} style="visibility:hidden" {% endif %} data-mz-action="handleSplitOrderItem" {% if model.isLoading %} disabled {% endif %}> + {{ labels.shippingDestinationAddAddress }} </button>
   </div>
 
 </div>

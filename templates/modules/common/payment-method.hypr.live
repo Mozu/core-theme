@@ -6,8 +6,8 @@
                     <br/>
                     <br/>
                     <div class="mz-paymentmethod-methodtype">{{ labels.purchaseOrderPaymentTerms }}: {% for term in model.paymentTerms %} {{ term.description }}{% if not forloop.last %},{% endif %} {% endfor %}</div>
-                    <div class="mz-paymentmethod-methodtype">{{ labels.creditLimit }} {{ model.creditLimit | currency }}</div>
-                    <div class="mz-paymentmethod-methodtype">{{ labels.availableBalance }} {{ model.availableBalance | currency }}</div>
+                    {% if not blockCreditLimit %}<div class="mz-paymentmethod-methodtype">{{ labels.creditLimit }} {{ model.creditLimit | currency }}</div>{% endif %}
+                    <div class="mz-paymentmethod-methodtype">{{ labels.availableBalance }}: {{ model.availableBalance | currency }}</div>
                     <br/>
                     <em class="is-primary">{{ labels.defaultPaymentMethod }}</em>
                 {% endblock payment-method-details %}

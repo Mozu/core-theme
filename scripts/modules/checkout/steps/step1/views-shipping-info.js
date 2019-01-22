@@ -18,6 +18,7 @@ define(["modules/jquery-mozu",
 
         var ShippingDestinationContactView = Backbone.MozuView.extend({
             templateName: 'modules/common/address-form',
+            requiredBehaviors: [1002],
             autoUpdate: [
                 'firstName',
                 'lastNameOrSurname',
@@ -39,6 +40,7 @@ define(["modules/jquery-mozu",
 
         var ShippingDestinationSingleView = Backbone.MozuView.extend({
             templateName: 'modules/multi-ship-checkout/shipping-destination-single-address',
+            requiredBehaviors: [1002],
             initialize: function(){
                 var self = this;
                 this.listenTo(this.model, 'saveSingleDestination', function() {
@@ -62,6 +64,7 @@ define(["modules/jquery-mozu",
 
         var ShippingDestinationItemView = Backbone.MozuView.extend({
             templateName: 'modules/multi-ship-checkout/shipping-destinations-item',
+            requiredBehaviors: [1002],
             additionalEvents: {
                 "change [data-mz-fulfillment-contact]": "handleChangeDestinationAddress"
             },
@@ -118,35 +121,37 @@ define(["modules/jquery-mozu",
             }
         });
 
-        var ShippingDestinationView = Backbone.MozuView.extend({
-            templateName: 'modules/multi-ship-checkout/shipping-destinations-items',
-            initialize: function(){
-                var self = this;
-                this.listenTo(this.model, 'addedNewDestination', function() {
-                    self.render();
-                });
-                this.listenTo(this.model, 'changeDestination', function() {
-                    self.render();
-                });
-                this.listenTo(this.model, 'destinationsUpdate', function() {
-                    self.render();
-                });
-            },
-            render : function() {
-                var self = this;
-                Backbone.MozuView.prototype.render.apply(this, arguments);
-                $.each(this.$el.find('[data-mz-shipping-destinations-item]'), function(index, val) {
-                    var shippingDestinationItemView = new ShippingDestinationItemView({
-                        el: $(this),
-                        model: self.model
-                    });
-                    shippingDestinationItemView.render();
-                });  
-            }
-        });
+        // var ShippingDestinationView = Backbone.MozuView.extend({
+        //     templateName: 'modules/multi-ship-checkout/shipping-destinations-items',
+        //     requiredBehaviors: [1002],
+        //     initialize: function(){
+        //         var self = this;
+        //         this.listenTo(this.model, 'addedNewDestination', function() {
+        //             self.render();
+        //         });
+        //         this.listenTo(this.model, 'changeDestination', function() {
+        //             self.render();
+        //         });
+        //         this.listenTo(this.model, 'destinationsUpdate', function() {
+        //             self.render();
+        //         });
+        //     },
+        //     render : function() {
+        //         var self = this;
+        //         Backbone.MozuView.prototype.render.apply(this, arguments);
+        //         $.each(this.$el.find('[data-mz-shipping-destinations-item]'), function(index, val) {
+        //             var shippingDestinationItemView = new ShippingDestinationItemView({
+        //                 el: $(this),
+        //                 model: self.model
+        //             });
+        //             shippingDestinationItemView.render();
+        //         });  
+        //     }
+        // });
 
          var ComboShippingAddressView = CheckoutStepView.extend({
             templateName: 'modules/multi-ship-checkout/step-shipping-destinations',
+            requiredBehaviors: [1002],
             renderOnChange: [
                 'isMultiShipMode'
             ],

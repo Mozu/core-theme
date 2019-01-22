@@ -1,0 +1,31 @@
+{% require_script "modules/b2b-account/returns" %}
+<div class="mz-l-stack-section" style="clear:none">
+<h3 class="mz-l-stack-sectiontitle">{{ labels.returns }}</h3>
+<div class="mz-b2b-returns">
+{% if model.viewReturn %}
+  <div class="mz-return-view">
+      <div class="mz-btns">
+          <button type="button" class="mz-button" data-mz-action="returnToGrid">Back</button>
+      </div>
+      <!-- <div data-mz-orderlist class="mz-l-paginatedlist-list">
+        {% include "modules/my-account/return-history-list" %}
+      </div> -->
+      <ul class="mz-orderlist">
+          <li class="mz-orderlist-item">{% include "modules/my-account/return-history-listing" with model=model.currentReturn %}</li>
+      </ul>
+  </div>
+{% else %}
+<div class="mz-return-grid-container">
+  <div class="mz-btns" style="text-align:right">
+      <label><input data-mz-action="toggleViewAllReturns" type="checkbox" {% if model.viewingAllReturns %}checked{% endif %} /> View All Returns</label>
+  </div>
+  <div class="mz-b2b-returns-grid">
+      <div class="is-loading"></div>
+      {% include "modules/b2b-account/returns/returns-grid" %}
+  </div>
+</div>
+{% endif %}
+</div>
+</div>
+
+{% include "modules/my-account/my-account-print-window" %}

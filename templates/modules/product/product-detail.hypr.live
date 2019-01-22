@@ -41,10 +41,12 @@
       {{ labels.addToCart }}
   </button>
 
-  {% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
-  <button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
-      {{ labels.addToWishlist }}
-  </button>
+  {% if model.hasRequiredBehavior %}
+    {% if siteContext.generalSettings.isWishlistCreationEnabled and not user.isAnonymous %}
+    <button id="add-to-wishlist" {% if model.notDoneConfiguring or not model.isPurchasable %} disabled="disabled" {% else %} {% if model.inventoryInfo.outOfStockBehavior == 'HideProduct' and not model.inventoryInfo.onlineStockAvailable %} disabled="disabled" {% endif %} {% endif %} class="mz-productdetail-addtowishlist mz-button {% if not model.isPurchasable %}is-disabled{% endif %}" data-mz-action="addToWishlist">
+        {{ labels.addToWishlist }}
+    </button>
+    {% endif %}
   {% endif %}
 
   {% block in-store-pickup %}

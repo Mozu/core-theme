@@ -63,7 +63,7 @@
   </td>
 </tr>
 {% if item.productDiscount %}
-  <tr class="mz-carttable-item-autoAddActions ">
+  <tr class="mz-carttable-item-autoAddActions">
     <td colspan="6">
       <div class="mz-carttable-item-autoAddDiscount">
         <span class="mz-carttable-item-autoAddDiscount-name">{{ item.productDiscount.discount.name }}</span>

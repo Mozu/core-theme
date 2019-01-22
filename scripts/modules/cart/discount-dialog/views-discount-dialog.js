@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'hyprlivecontext', 'modules/views-modal-dialog', 'modules/api', 'modules/models-product', 'modules/views-location', 'modules/models-location', 'modules/models-discount'], function (Backbone, Hypr, $, _, HyprLiveContext, ModalDialogView, Api, ProductModels, LocationViews, LocationModels, Discount) {
+define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'hyprlivecontext', 'modules/views-modal-dialog', 'modules/api', 'modules/models-product', 'modules/views-location', 'modules/models-location', 'modules/models-discount', "modules/views-productimages"], function (Backbone, Hypr, $, _, HyprLiveContext, ModalDialogView, Api, ProductModels, LocationViews, LocationModels, Discount, ProductImageViews) {
 
     var ChooseProductStepView = Backbone.MozuView.extend({
         templateName: "modules/cart/discount-modal/discount-choose-product",
@@ -55,34 +55,80 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
 
     });
 
+    var markEnabledConfigOptions = function(option){
+        var variations = this.model.get('variations');
+        if (variations.length) {
+            var filteredVaiationsBySelectedOption = _.filter(this.model.get('variations'), function(variation){
+                return _.find(variation.options, function(o){
+                    return o.attributeFQN === option.get('attributeFQN') && o.value === option.get('value');
+                });
+            });
+
+            this.model.get('options').each(function(o){
+                _.each(o.get('values'), function(value){
+                    if(o.get('attributeDetail').usageType !== 'Extra') {
+                        var foundVariationValue = _.find(filteredVaiationsBySelectedOption, function(fv){
+                            return _.find(fv.options, function(fvo){
+                                return fvo.value === value.value;
+                            });
+                        });
+                        if(!foundVariationValue){
+                            value.isEnabled = false;
+                            return;
+                        }
+                    }
+                    value.isEnabled = true;
+                });
+            });
+        }
+    };
 
     var AddProductStepView = Backbone.MozuView.extend({
         templateName: "modules/cart/discount-modal/discount-add-product",
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange",
             "change [data-mz-value='quantity']": "onQuantityChange",
             "keyup input[data-mz-value='quantity']": "onQuantityChange"
         },
         render: function () {
-            var me = this; 
-            if (this.oldOptions) {
-                me.model.get('options').map(function(option){
-                    var oldOption = _.find(me.oldOptions, function(old){
-                        return old.attributeFQN === option.get('attributeFQN');
+            var me = this;
+            if (!me.postponeRender) {
+                if (this.oldOptions) {
+                    me.model.get('options').map(function(option){
+                        var oldOption = _.find(me.oldOptions, function(old){
+                            return old.attributeFQN === option.get('attributeFQN');
+                        });
+                        if (oldOption) {
+                            option.set('values', oldOption.values);
+                        }
                     });
-                    if (oldOption) {
-                        option.set('values', oldOption.values);
+                } else {
+                    var firstSelectedOption = me.model.get('options').find(function(o){
+                        return o.get('value') && o.get('value') !== "";
+                    });
+                    if(firstSelectedOption) {
+                        markEnabledConfigOptions.call(this, firstSelectedOption);
                     }
+                }
+                
+                Backbone.MozuView.prototype.render.apply(this);
+                this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
+                    $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
+                });
+                var productImagesView = new ProductImageViews.ProductPageImagesView({
+                    el: $('[data-mz-productimages]'),
+                    model: me.model
                 });
             }
-            Backbone.MozuView.prototype.render.apply(this);
-            this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
-                $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
-            });
         },
         onOptionChange: function (e) {
             return this.configure($(e.currentTarget));
+        },
+        onBackToProductSelection: function (e) {
+            var self = this;
+            if (self.model._parent) {
+                self.model._parent.render();
+            }
         },
         onQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -97,7 +143,8 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                 id = $optionEl.data('mz-product-option'),
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
-                option = this.model.get('options').findWhere({ 'attributeFQN': id });
+                option = this.model.get('options').findWhere({ 'attributeFQN': id }),
+                self = this;
             if (option) {
                 if (option.get('attributeDetail').inputType === "YesNo") {
                     option.set("value", isPicked);
@@ -105,15 +152,15 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                     oldValue = option.get('value');
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
+                        
+                        if(option.get('attributeDetail').usageType !== 'Extra') {
+                            markEnabledConfigOptions.call(this, option);
+                        }
+                
                         this.oldOptions = this.model.get('options').toJSON();
+                        this.postponeRender = true;
                     }
                 }
-            }
-        },
-        onBackToProductSelection: function (e) {
-            var self = this;
-            if (self.model._parent) {
-                self.model._parent.render();
             }
         },
         addToCart: function (e) {
@@ -174,6 +221,18 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                             me.configure($this);
                     }
                 }
+            });
+            me._variationMap = window.cartView.discountModalView.model.get('discount').get('productCodes');
+            var selectedVariations = _.filter(me.model.get('variations'), function(variation){
+                return  _.find(me._variationMap, function(productCode){
+                    return variation.productCode === productCode;
+                });
+            });
+
+            this.model.set('variations', selectedVariations);
+            me.listenTo(me.model, 'optionsUpdated', function(){
+                me.postponeRender = false;
+                me.render();
             });
         }
     });
