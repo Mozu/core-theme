@@ -15,7 +15,9 @@
       "path": "layout.js"
     },
     {
-      "documentTypes": ["web_page@mozu"],
+      "documentTypes": [
+        "web_page@mozu"
+      ],
       "id": "web_page@mozu",
       "path": "web_page.js",
       "priority": 0.2
@@ -35,7 +37,9 @@
     {
       "id": "email@mozu",
       "path": "email.js",
-      "documentLists": ["emailTemplateContent@mozu"],
+      "documentLists": [
+        "emailTemplateContent@mozu"
+      ],
       "priority": 0.2
     },
     {
@@ -49,13 +53,17 @@
     {
       "id": "pageTemplateContent@mozu",
       "path": "pageTemplateContent.js",
-      "documentTypes": ["pageTemplateContent@mozu"],
+      "documentTypes": [
+        "pageTemplateContent@mozu"
+      ],
       "priority": 0.2
     },
     {
       "id": "productContent@mozu",
       "path": "productContent.js",
-      "documentTypes": ["productContent@mozu"],
+      "documentTypes": [
+        "productContent@mozu"
+      ],
       "priority": 0.2
     },
     {
@@ -345,6 +353,13 @@
       "id": "my_account",
       "template": "my-account",
       "title": "My Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "b2b_account",
+      "template": "b2b-account",
+      "title": "B2B Account",
       "userCreatable": false
     },
     {
@@ -1103,10 +1118,22 @@
           "name": "style",
           "fieldLabel": "AddThis Button Style",
           "store": [
-            ["1", "small"],
-            ["2", "medium"],
-            ["3", "large"],
-            ["4", "compact"]
+            [
+              "1",
+              "small"
+            ],
+            [
+              "2",
+              "medium"
+            ],
+            [
+              "3",
+              "large"
+            ],
+            [
+              "4",
+              "compact"
+            ]
           ]
         },
         {

@@ -9,7 +9,7 @@
       </p>
       {% endif %}
       {% if model.selectableDestinations.length > 1 %}
-          {% include "modules/multi-ship-checkout/checkout-shipping-contact-selector" with model=model.selectableDestinations destinationId=model.selectedDestination.id isLoading=model.isLoading%}
+          {% include "modules/multi-ship-checkout/checkout-shipping-contact-selector" with model=model.selectableDestinations destinationId=model.selectedDestination.id isLoading=model.isLoading hasRequiredBehavior=model.hasRequiredBehavior%}
       {% else %}
          <div data-mz-shipping-destination-single>
             {% include "modules/multi-ship-checkout/shipping-destination-single-address" %}

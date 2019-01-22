@@ -1,7 +1,7 @@
 define(['modules/jquery-mozu','underscore',"modules/backbone-mozu",'hyprlive', 'modules/modal-dialog'], function($, _, Backbone, Hypr, Dialog) {
     var ModalDialog = Backbone.MozuView.extend({
             templateName: 'modules/common/modal-dialog',
-            initialize: function() {
+            initialize: function() { 
                 var self = this;
                 
                 self.listenTo(this.model, 'openDialog', function () {
@@ -22,7 +22,8 @@ define(['modules/jquery-mozu','underscore',"modules/backbone-mozu",'hyprlive', '
             initDialog: function(){
                 if(!this.bootstrapInstance){
                     this.bootstrapInstance = Dialog.init({
-                        elementId: "mzModalDialog"
+                        elementId: "mzModalDialog",
+                        hasXButton: false
                     });
                 }
             },

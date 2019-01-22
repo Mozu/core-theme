@@ -13,7 +13,13 @@ define([
 ],
     function ($, _, Hypr, Backbone, api, CustomerModels, AddressModels, PaymentMethods, HyprLiveContext, CheckoutStep, ShippingDestinations) {
 
-        var BillingInfo = CheckoutStep.extend({
+        var CustomerBillingContact = CustomerModels.Contact.extend({
+            hasRequiredBehavior: function(){
+                 return true;
+             }
+         }),
+
+        BillingInfo = CheckoutStep.extend({
             mozuType: 'payment',
             validation: {
                 paymentType: {
@@ -33,7 +39,7 @@ define([
                 'creditAmountToApply': Backbone.MozuModel.DataTypes.Float
             },
             relations: {
-                billingContact: CustomerModels.Contact,
+                billingContact: CustomerBillingContact,
                 card: PaymentMethods.CreditCardWithCVV,
                 check: PaymentMethods.Check,
                 purchaseOrder: PaymentMethods.PurchaseOrder
@@ -502,7 +508,7 @@ define([
                 self.syncApiModel();
                 self.trigger('render');
               }, function(error){
-                  //console.log(error);
+                  //window.console.log(error);
               });
 
             },

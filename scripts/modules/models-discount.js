@@ -1,4 +1,4 @@
-define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-product', 'modules/models-dialog'], function (Backbone, _, Hypr, api, ProductModels, Dialog) {
+define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-product'], function (Backbone, _, Hypr, api, ProductModels) {
 
     var discountModel = Backbone.MozuModel.extend({
         mozuType: 'discounts',

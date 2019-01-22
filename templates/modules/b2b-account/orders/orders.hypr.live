@@ -1,0 +1,30 @@
+{% require_script "modules/b2b-account/orders" %}
+<div id="orders-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+<div class="mz-l-stack-section mz-orderlist" style="clear:none">
+<h3 class="mz-l-stack-sectiontitle">{{ labels.orderHistory }}</h3>
+<div class="mz-b2b-orders">
+{% if model.viewOrder %}
+<div class="mz-btns">
+    <button type="button" class="mz-button" data-mz-action="returnToGrid">Back</button>
+    {% if not model.limitPlaceOrders %}<button type="button" style="float:right" class="mz-button" data-mz-action="reorder">{{ labels.reorder }}</button>{% endif %}
+</div>
+<div class="mz-b2b-order-view">
+    <ul>
+        <li>{% include "modules/my-account/order-history-listing" %}</li>
+    </ul>
+</div>
+{% else %}
+<div class="mz-order-grid-container">
+  <div class="mz-btns" style="text-align:right">
+      <label><input data-mz-action="toggleViewAllOrders" type="checkbox" {% if model.viewingAllOrders %}checked{% endif %} />{{ labels.viewAllOrders }}</label>
+  </div>
+  <div class="mz-b2b-orders-grid">
+      <div class="is-loading"></div>
+      {% include "modules/b2b-account/orders/orders-grid" %}
+  </div>
+</div>
+{% endif %}
+</div>
+</div>

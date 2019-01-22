@@ -1,0 +1,9 @@
+<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}{% if themeSettings.allowFilterByLocationInventory %} mz-searchbox-my-store{% endif %}" action="{% make_url "search" %}">
+    <span class="mz-searchbox-field">
+        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
+    </span>
+
+    {% require_script "modules/contextify" %}
+    {% require_script "modules/search-autocomplete" %}
+</form>
+

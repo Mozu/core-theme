@@ -1,0 +1,44 @@
+.mz-b2b-orders, .mz-b2b-returns{
+   .mz-btns {
+      padding: @gutter/4 0 @gutter/4 0;
+
+      button {
+          margin: 0 @gutter/4 0 0;
+      }
+   }
+   .mz-b2b-orders-grid{
+       position: relative;
+       .is-loading {
+           display: block;
+           width: 100%;
+           position: absolute;
+           background: #ccc;
+           height: 100%;
+           opacity: .2;
+       }
+       .grid-tooltip {
+          position: relative;
+          border-bottom: 1px dotted black;
+      }
+
+      .grid-tooltip .tooltiptext {
+          visibility: hidden;
+          width: 120px;
+          background-color: #ccc;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+
+          position: absolute;
+          z-index: 1;
+          top: 100%;
+          left: 50%;
+          margin-left: -60px;
+      }
+
+      .grid-tooltip:hover .tooltiptext {
+          visibility: visible;
+      }
+   }
+}

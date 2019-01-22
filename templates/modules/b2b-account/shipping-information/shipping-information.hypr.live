@@ -1,0 +1,4 @@
+{% require_script "modules/b2b-account/shipping-information" %}
+<div class="mz-l-stack-section mz-accountaddressbook" style="clear:none">
+{% include "modules/my-account/my-account-addressbook" %}
+</div>

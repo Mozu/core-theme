@@ -1,0 +1,28 @@
+<div class="mz-b2b-customattributes mz-b2b-accountsettings mz-l-stack-section" style="clear:none">
+<h2 class="mz-l-stack-sectiontitle">{{ labels.customAttributes }}</h2>
+
+<div class="mz-accountsettings-section mz-accountsettings-attributes">
+  <h3>{{ labels.customerAttributes }} {% if not model.editingCustomerAttributes %}<a href class="mz-b2b-link-edit-accountsettings" id="customer-attrs-edit" data-mz-action="startEditAttrs">{{ labels.edit }}</a>{% endif %}</h3>
+  {% for attribute in model.attributes %}
+    {% include 'modules/b2b-account/custom-attributes/attribute' with attribute=attribute editing=model.editingCustomerAttributes %}
+  {% endfor %}
+  {% if model.editingCustomerAttributes %}
+  <button class="mz-button mz-button-small mz-accountsettings-editdone" id="save-customer-attrs" data-mz-action="finishEditAttrs">{{ labels.save }}</button>
+  <button class="mz-button mz-button-small mz-accountsettings-editdone" id="cancel-customer-attrs" data-mz-action="cancelEditAttrs">{{ labels.cancel }}</button>
+  {% endif %}
+</div>
+
+<div class="mz-accountsettings-section mz-accountsettings-attributes">
+  <h3>{{ labels.accountAttributes }} {% if not model.editingAccountAttributes and model.hasRequiredBehavior %}<a href class="mz-b2b-link-edit-accountsettings" id="account-attrs-edit" data-mz-action="startEditAttrs">{{ labels.edit }}</a>{% endif %}</h3>
+  {% for attribute in model.b2bAttributes %}
+    {% include 'modules/b2b-account/custom-attributes/attribute' with attribute=attribute editing=model.editingAccountAttributes %}
+  {% endfor %}
+  {% if model.editingAccountAttributes %}
+  <button class="mz-button mz-button-small mz-accountsettings-editdone" id="save-account-attrs" data-mz-action="finishEditAttrs">{{ labels.save }}</button>
+  <button class="mz-button mz-button-small mz-accountsettings-editdone" id="cancel-account-attrs" data-mz-action="cancelEditAttrs">{{ labels.cancel }}</button>
+  {% endif %}
+</div>
+
+
+
+</div>

@@ -9,12 +9,14 @@
                 {% endif %}
             {% endfor %}
         </select>    
-        <div> 
-            <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+        <div>
+            {% if hasRequiredBehavior %}
+                <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+            {% endif %}
         </div>
     </div>
     <div class="mz-l-formfieldgroup-cell">
-        {% if destinationId %}
+        {% if destinationId && hasRequiredBehavior %}
             <a href="javascript:;" data-mz-destinationId="{{destinationId}}" data-mz-action="handleEditContact">{{labels.editAddress}}</a>  
         {% endif %}
     </div>

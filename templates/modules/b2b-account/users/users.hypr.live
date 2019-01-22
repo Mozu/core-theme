@@ -1,0 +1,11 @@
+{% if model.hasRequiredBehavior %}
+  <button class="mz-button mz-button-large add-user-btn" data-mz-action="addNewUser">Add User</button>
+{% endif %}
+<div class="mz-b2baccount-users">
+</div>
+
+<div class="mz-b2baccount-users-modal">
+  <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+    {% include "modules/b2b-account/users/users-modal" %}
+  </div>
+</div>

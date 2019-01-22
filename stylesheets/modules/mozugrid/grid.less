@@ -1,0 +1,108 @@
+.mz-grid{
+    width: 100%;
+    margin: 15px 0;
+    border: 1px solid #999;
+    .mz-grid-table {
+
+        .mz-grid-header {
+            position: relative;
+            background-color: #eeeeee;
+            .mz-grid-row {
+                border-bottom:none;
+            }
+            .mz-grid-column {
+                font-weight: bold;
+                font-size: .8em;
+            }
+            .mz-grid-row-actions {
+                .mz-grid-column {
+                    visibility: hidden;
+                    font-size: 1em;
+                }
+            }
+        }
+        .mz-grid-body {
+            position: relative;
+        }
+        .mz-grid-body-empty {
+            text-align: center;
+            padding: 50px 10px;
+            font-size: 1.1em;
+        }
+    }
+
+    .mz-grid-row-actions{
+        position: relative;
+    }
+    .mz-grid-cols {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+        flex-grow:1;
+        .mz-grid-column {
+            flex-grow: 1;
+        }
+    }
+
+    .mz-grid-row {
+        padding: 10px;
+        margin:0px 10px;
+        border-bottom: 1px solid #ccc;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+    }
+
+     .mz-grid-row:last-child {
+        border-bottom:none;
+     }
+
+    .mz-grid-column {
+        padding: 0px 15px;
+    }
+
+    .mz-pagingcontrols {
+        float: right;
+        margin-left: @gutter;
+    }
+    .mz-pagenumbers {
+        float: right;
+        margin-top: 5px;
+        margin-left: @gutter;
+    }
+
+    .mz-grid-cols {
+        &.mz-cols-2 .mz-grid-column {
+            width: 50%;
+        }
+        &.mz-cols-3 .mz-grid-column {
+            width: 33%;
+        }
+        &.mz-cols-4 .mz-grid-column {
+            width: 25%;
+        }
+        &.mz-cols-5 .mz-grid-column {
+            width: 20%;
+        }
+        &.mz-cols-6 .mz-grid-column {
+            width: 16.5%;
+        }
+        &.mz-cols-7 .mz-grid-column {
+            width: 14.25%;
+        }
+        &.mz-cols-8 .mz-grid-column {
+            width: 15.5%;
+        }
+    }
+
+    .mz-pagingcontrols-pagesize-label {
+        display:none;
+    }
+
+}

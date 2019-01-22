@@ -135,6 +135,7 @@
             {% include "modules/page-footer" %}
             {% endblock page-footer %}
 
+            {% include "modules/common/message-bar" %}
         </div>
 
         {% block trailing-scripts %}

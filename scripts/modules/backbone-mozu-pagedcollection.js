@@ -78,10 +78,13 @@
                 var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
                     pageSize = this.get("pageSize"),
                     startIndex = this.get("startIndex"),
-                    sortBy = $.deparam().sortBy || this.currentSort() || defaultSort;
+                    sortBy = $.deparam().sortBy || this.currentSort() || this.defaultSort,
+                    filter = this.currentFilter() || this.filter;
+
                 conf.pageSize = pageSize;
                 if (startIndex) conf.startIndex = startIndex;
                 if (sortBy) conf.sortBy = sortBy;
+                if (filter) conf.filter = filter;
                 return conf;
             },
 
@@ -103,6 +106,15 @@
                     if (!isNaN(uriStartIndex) && uriStartIndex !== this.apiModel.getIndex()) {
                         this.lastRequest.startIndex = uriStartIndex;
                         return this.apiModel.setIndex(uriStartIndex, this.lastRequest);
+                    }
+                } catch (e) { }
+            },
+            
+            setIndex: function(num, config){
+                try {
+                    num = parseInt(num, 10);
+                    if (typeof num === 'number') {
+                        return this.apiModel.setIndex((num), Object.assign(this.lastRequest, config));
                     }
                 } catch (e) { }
             },
@@ -154,9 +166,18 @@
                 return (this.lastRequest && this.lastRequest.sortBy && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' ')) || '';
             },
 
+            currentFilter: function () {
+                return (this.lastRequest && this.lastRequest.filter && decodeURIComponent(this.lastRequest.filter).replace(/\+/g, ' ')) || '';
+            },
+
             sortBy: function(sortString) {
                 return this.apiGet($.extend(this.lastRequest, { sortBy: sortString }));
             },
+
+            filterBy: function (filterString) {
+                return this.apiGet($.extend(this.lastRequest, { filter: filterString }));
+            },
+
             initialize: function() {
                 this.lastRequest = this.buildRequest();
             }

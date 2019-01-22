@@ -1,0 +1,28 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.b2bAccount %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myaccount mz-b2baccount{% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "modules/b2b-account/b2b-account" %}
+
+{% preload_json model "customer" %}
+
+<div class="mz-l-container">
+    <h1 class="mz-pagetitle">
+        {{ labels.b2bAccountWelcome|string_format(model.companyOrOrganization)|safe }}
+    </h1>
+
+        <div class="mz-b2b-pane-switcher">
+             {% include "modules/pane-switcher" %}
+        </div>
+
+		{% dropzone "my-account-bottom" scope="template" %}
+
+</div>
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

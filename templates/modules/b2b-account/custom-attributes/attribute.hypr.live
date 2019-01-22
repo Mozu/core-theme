@@ -1,0 +1,56 @@
+<div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+  {% if attribute.inputType === "YesNo" %}
+    {% if attribute.valueType !== "AdminEntered" %}
+      <input type="checkbox" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.adminName }}"
+        data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" {% if attribute.values[0] === true %}checked="checked"{% endif %}
+        {% if attribute.valueType === "AdminEntered" or not editing %}disabled="disabled"{% endif %} />
+      <label for="account-attribute-{{ attribute.attributeFQN }}">{{ attribute.adminName }}</label>
+    {% else %}
+      <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+      <span class="mz-accountsettings-value">{% if attribute.values[0] %}Yes{% else %}No{% endif %}</span>
+    {% endif %}
+  {% endif %}
+  {% if attribute.inputType === "TextBox" %}
+    <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+    {% if editing and attribute.valueType !== "AdminEntered" %}
+      <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+        data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+      <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+    {% else %}
+      <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+    {% endif %}
+  {% endif %}
+  {% if attribute.inputType === "Date" %}
+    <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+    {% if editing and attribute.valueType !== "AdminEntered" %}
+      <input type="text" name="account-attribute-{{ attribute.attributeFQN }}" value="{{ attribute.values|first }}"
+        placeholder="MM/DD/YYYY" data-mz-attribute="{{ attribute.attributeFQN }}" data-mz-value="attribute" />
+      <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+    {% else %}
+      <span class="mz-accountsettings-attribute--value">{{ attribute.values|first|default("N/A") }}</span>
+    {% endif %}
+  {% endif %}
+  {% if attribute.inputType === "List" %}
+    <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+    {% if editing and attribute.valueType !== "AdminEntered" %}
+      {% for option in attribute.vocabularyValues %}
+        <input type="radio" id="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}"
+          name="account-attribute-{{ attribute.attributeFQN }}" value="{{ option.value }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+          data-mz-value="attribute" {% if attribute.values[0] === option.value %}checked="checked"{% endif %} />
+        <label for="account-attribute-{{ attribute.attributeFQN }}-{{ option.value }}">{{ option.value }}</label>
+      {% endfor %}
+    {% else %}
+      <span class="mz-accountsettings-attribute-value">{{ attribute.values|first|default("N/A") }}</span>
+    {% endif %}
+  {% endif %}
+  {% if attribute.inputType === "TextArea" %}
+    <span class="mz-accountsettings-label">{{ attribute.adminName }}</span>
+    {% if editing and attribute.valueType !== "AdminEntered" %}
+      <textarea cols="60" rows="3" name="account-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+        data-mz-value="attribute">{{ attribute.values|first }}</textarea>
+      <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+    {% else %}
+      <span class="mz-accountsettings-attribute-value">{{ attribute.values|first|default("N/A") }}</span>
+    {% endif %}
+  {% endif %}
+</div>

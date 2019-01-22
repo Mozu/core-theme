@@ -10,7 +10,7 @@
         </select>
 
         <div>
-            <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
+                <a href="javascript:;" data-mz-action="handleNewContact">{{labels.addAddress}}</a>
         </div>
 
     </div>

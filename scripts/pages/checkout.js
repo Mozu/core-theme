@@ -116,6 +116,7 @@ require(["modules/jquery-mozu",
             'address.countryCode',
             'contactId'
         ],
+        requiredBehaviors: [1003],
         beginAddContact: function () {
             this.model.set('contactId', 'new');
         }
@@ -338,7 +339,7 @@ require(["modules/jquery-mozu",
             var val = $(e.currentTarget).prop('value'),
                 creditCode = $(e.currentTarget).attr('data-mz-credit-code-target');  //target
             if (!creditCode) {
-                //console.log('checkout.applyDigitalCredit could not find target.');
+                //window.console.log('checkout.applyDigitalCredit could not find target.');
                 return;
             }
             var amtToApply = this.stripNonNumericAndParseFloat(val);
@@ -447,13 +448,13 @@ require(["modules/jquery-mozu",
 
 
             if (!window.V) {
-                //console.warn( 'visa checkout has not been initilized properly');
+                //window.console.warn( 'visa checkout has not been initilized properly');
                 return false;
             }
             // on success, attach the encoded payment data to the window
             // then call the sdk's api method for digital wallets, via models-checkout's helper
             window.V.on("payment.success", function(payment) {
-                //console.log({ success: payment });
+                //window.console.log({ success: payment });
                 me.editing.savedCard = false;
                 me.model.parent.processDigitalWallet('VisaCheckout', payment);
             });

@@ -21,7 +21,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
         inStorePickupSupported: function(){
             return (_.indexOf(this.get('fulfillmentTypesSupported'), "InStorePickup") !== -1) ? true : false;
         }
-        
+
     }),
 
     CartItem = Backbone.MozuModel.extend({
@@ -85,7 +85,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
     Cart = Backbone.MozuModel.extend({
         mozuType: 'cart',
         handlesMessages: true,
-        helpers: ['isEmpty','count'],
+        helpers: ['isEmpty','count','hasRequiredBehavior'],
         relations: {
             items: Backbone.Collection.extend({
                 model: CartItem
@@ -93,6 +93,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
             storeLocationsCache : StoreLocationsCache,
             discountModal: DiscountDialogModels
         },
+        requiredBehaviors: [ 1008 ],
         initialize: function() {
             var self = this;
             this.get("items").on('sync remove', this.fetch, this)
@@ -111,7 +112,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
         },
         getSuggestedDiscounts: function(){
             var self = this;
-            
+
             var rejectedDiscounts = self.get('rejectedDiscounts') || [];
             var suggestedDiscounts = self.get('suggestedDiscounts') || [];
             var filteredDiscounts = [];

@@ -1,0 +1,27 @@
+{% require_script "modules/b2b-account/quotes" %}
+<div class="mz-b2b-quotes">
+    {% if model.isEditMode %}
+         {% include "modules/common/message-bar" with model=model.messages %}
+        <div class="mz-b2b-quotes-product-picker">
+            {% include "modules/b2b-account/quotes/edit-quote" model=model.quote%}
+        </div>
+    {% else %}
+        <div class="quote-btns">
+            <button class="mz-button mz-button-large quote-btns" data-mz-action="newQuote">Add List</button>
+        </div>
+
+        <div class="mz-btns">
+            <label><input data-mz-action="toggleViewAllLists" type="checkbox" {% if model.viewingAllLists %}checked{% endif %} />{{ labels.viewAllLists }}</label>
+        </div>
+        <div class="mz-b2b-quotes-grid">
+            <div class="is-loading"></div>
+            {% include "modules/b2b-account/quotes/quote-grid" %}
+        </div>
+    {% endif %}
+</div>
+
+<div mz-modal-product-dialog class="mz-product-modal">
+    <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        {% include "modules/product-picker/product-modal" %}
+    </div>
+</div>
