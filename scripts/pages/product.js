@@ -92,7 +92,7 @@
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
                 CartMonitor.addToCount(product.get('quantity'));
-                if(stopRedirect) {
+                if(!stopRedirect) {
                     window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
                 }
                 

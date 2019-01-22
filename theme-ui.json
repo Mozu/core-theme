@@ -344,6 +344,33 @@
                     "allowBlank": false
                 }
             ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Border Configuration",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "enableborderFree",
+                    "fieldLabel": "Enable Border Free"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "merchantId",
+                    "fieldLabel": "MerchantId"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "borderFreeUsername",
+                    "fieldLabel": "Username for BorderFree"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "borderFreePassword",
+                    "fieldLabel": "Password for BorderFree"
+                }
+            ]
         }
     ]
 }

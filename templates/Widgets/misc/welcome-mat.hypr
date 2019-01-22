@@ -1,0 +1,8 @@
+{%if sitecontext.isEditMode %}
+<span>Welcome mat widget</span>
+{% else %}
+	<div data-mz-welcome-mat-request="{% json_attribute model.config %}">
+		{% include model.config.template|default:"modules/borderFree/welcome-mat-widget"  %}
+	</div>
+	{% require_script "widgets/welcome-mat" %}
+{% endif %}
