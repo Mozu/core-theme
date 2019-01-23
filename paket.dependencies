@@ -31,20 +31,20 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
-nuget Mozu.CommerceRuntime.Contracts 1.1848.0-reorder-68
+nuget Mozu.CommerceRuntime.Contracts 1.1903.2
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
 nuget Mozu.Core.Test >= 1.1903.1
-nuget Mozu.Customer.Contracts 1.1903.0-b2bnew-22
+nuget Mozu.Customer.Contracts 1.1903.2
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
-nuget Mozu.ProductAdmin.Contracts 1.1836.1
-nuget Mozu.ProductRuntime.Contracts 1.1847.0-rderfree-tables-83
+nuget Mozu.ProductAdmin.Contracts 1.1903.1
+nuget Mozu.ProductRuntime.Contracts 1.1903.1
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
