@@ -7,7 +7,28 @@
         <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}</label>
         <div class="mz-productoptions-valuecontainer">
             {% if option.attributeDetail.inputType == "List" %}
-                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
+                <div class="dropdown">
+                    <div class="select">
+                        {% with option.values|findwhere("isSelected", "True") as selectedValue %}
+                            {% if selectedValue %}
+                            <span>{{selectedValue.value}}</span>
+                            {% endif %}
+                        {% endwith %}
+                        <span> </span>
+                    </div>
+                    
+                    <ul class="dropdown-menu">
+                        {% for value in option.values %}
+                            {% if model.variationCollection && option.attributeDetail.usageType != 'Extra' && value.autoAddEnabled != true%}
+                                
+                            {% else %}
+                                <li id="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" class="{% if not value.isEnabled %}is-disabled {% endif %} {% if value.isSelected && value.isEnabled %}selectd{% endif %}" data-mz-value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <!-- <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
                     {% if not option.isMultiValue %}<option></option>{% endif %}
                     {% for value in option.values %}
                         {% if model.variationCollection && option.attributeDetail.usageType != 'Extra' && value.autoAddEnabled != true%}
@@ -17,6 +38,7 @@
                         {% endif %}
                     {% endfor %}
                 </select>
+            -->
             {% else %}
                 {% if option.attributeDetail.inputType == "YesNo" %}
                     <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />

@@ -1,5 +1,12 @@
 define(["backbone", 'underscore', 'hyprlive', 'modules/api', 'modules/models-product'], function (Backbone, _, Hypr, api, ProductModels) {
 
+    // var discountProductModel = ProductModels.Product.extend({
+    //     initialize: function(conf) {
+    //         Backbone.MozuView.prototype.initialize.apply(this, arguments);
+    //         if(this.get(discount))
+    //     }
+    // });
+
     var discountModel = Backbone.MozuModel.extend({
         mozuType: 'discounts',
         relations: {

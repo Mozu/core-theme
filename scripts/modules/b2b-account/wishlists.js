@@ -388,7 +388,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             {
                 displayName: 'Order',
                 action: 'addWishlistToCart',
-                isHidden: function () {
+                hidden: function () {
                     // 1008 = Can place orders
                     return !this.hasRequiredBehavior(1008);
                 }

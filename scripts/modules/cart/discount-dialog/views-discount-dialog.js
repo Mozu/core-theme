@@ -1,4 +1,4 @@
-define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'hyprlivecontext', 'modules/views-modal-dialog', 'modules/api', 'modules/models-product', 'modules/views-location', 'modules/models-location', 'modules/models-discount', "modules/views-productimages"], function (Backbone, Hypr, $, _, HyprLiveContext, ModalDialogView, Api, ProductModels, LocationViews, LocationModels, Discount, ProductImageViews) {
+define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore', 'hyprlivecontext', 'modules/views-modal-dialog', 'modules/api', 'modules/models-product', 'modules/views-location', 'modules/models-location', 'modules/models-discount', "modules/views-productimages", "modules/dropdown"], function (Backbone, Hypr, $, _, HyprLiveContext, ModalDialogView, Api, ProductModels, LocationViews, LocationModels, Discount, ProductImageViews, Dropdown) {
 
     var ChooseProductStepView = Backbone.MozuView.extend({
         templateName: "modules/cart/discount-modal/discount-choose-product",
@@ -55,31 +55,111 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
 
     });
 
-    var markEnabledConfigOptions = function(option){
-        var variations = this.model.get('variations');
-        if (variations.length) {
-            var filteredVaiationsBySelectedOption = _.filter(this.model.get('variations'), function(variation){
-                return _.find(variation.options, function(o){
+    var reduceByOption = function(option, variations) {
+        var filteredVriations = _.filter(variations, function(variation){
+            return _.find(variation.options, function(o){
+                if(option.get('value')) {
                     return o.attributeFQN === option.get('attributeFQN') && o.value === option.get('value');
+                }
+                return true;
+            });
+        });
+        return filteredVriations;     
+    };
+    
+    var hasOtherOptions = function(variation, options, selectedOptionsMap){
+        var newTestVariationList = [];
+        _.each(options, function(optionVariations, idx){
+            var otherOptions = _.filter(options, function(o, index){
+                return idx !== index;
+            });
+            _.each(optionVariations.value, function(optionVariation, idx){
+                var variationAvailable = true;
+                _.each(otherOptions, function(variations){
+                    var hasVariation = _.find(variations.value, function(variation){
+                        return variation.productCode === optionVariation.productCode;
+                    });
+                    if(!hasVariation) variationAvailable = false;
+                });
+
+                if(variationAvailable){
+                    newTestVariationList.push(optionVariation);
+                }
+            });
+        });
+        return newTestVariationList;
+    };
+
+    var markOptions = function(optionName, variationsToMark, selectedOptionsMap){
+        var reRunForSelected = false;
+        this.model.get('options').each(function(o){
+            var clearSelectedOption = false;
+            var variationOptionMap = _.map(variationsToMark, function(variation){
+                var option = _.find(variation.options, {attributeFQN: optionName});
+                if(option) return option.value;
+                
+            });
+            
+            o.get('values').forEach(function(opt){
+                var hasOption = -1;
+                
+                if( o.get('attributeFQN') === optionName) {
+                    opt.isEnabled = false;
+                    hasOption = variationOptionMap.indexOf(opt.value);
+
+                    if(hasOption != -1) {
+                        opt.isEnabled = true; 
+                    } else {
+                        if(o.get('value') === opt.value && selectedOptionsMap.get('attributeFQN') !== o.get('attributeFQN')) {
+                            clearSelectedOption = true;
+                        }
+                    }
+                }
+            });
+            if (clearSelectedOption) {
+                o.set('value', "");
+                reRunForSelected = true; 
+            }
+        });
+        return reRunForSelected;
+    };
+
+    var markEnabledConfigOptions = function(selectedOptionsMap){
+        var self = this;
+        var variations = this.model.get('variations');
+        var avaiableOptionsMap = [];
+        if (variations.length) {
+
+            //We loop through options twice in order to ensure we have selected vales accounted for
+            //Probably a better way to do this.
+            this.model.get('options').each(function(o){
+                avaiableOptionsMap.push({'key' : o.get('attributeFQN'), 'value': []});
+                self.model.get('options').each(function(o2){
+                    if(o2.get('attributeFQN') === o.get('attributeFQN')) {
+                        var option = _.find(avaiableOptionsMap, function(ao){
+                            return ao.key === o.get('attributeFQN');
+                        });
+                        option.value = reduceByOption(o, variations);
+                    }
                 });
             });
 
-            this.model.get('options').each(function(o){
-                _.each(o.get('values'), function(value){
-                    if(o.get('attributeDetail').usageType !== 'Extra') {
-                        var foundVariationValue = _.find(filteredVaiationsBySelectedOption, function(fv){
-                            return _.find(fv.options, function(fvo){
-                                return fvo.value === value.value;
-                            });
-                        });
-                        if(!foundVariationValue){
-                            value.isEnabled = false;
-                            return;
-                        }
-                    }
-                    value.isEnabled = true;
+            var rerun = false;
+            _.each(avaiableOptionsMap, function(ao, index){
+                var otherOptions = _.filter(avaiableOptionsMap, function(o, idx){
+                    return idx !== index;
                 });
+                var variation = {};
+                var otherOpts = hasOtherOptions(variation, otherOptions, selectedOptionsMap);
+
+                if(markOptions.call(self, ao.key, otherOpts, selectedOptionsMap)) {
+                    rerun = true;
+                }
             });
+
+            if(rerun) {
+                markEnabledConfigOptions.call(self, selectedOptionsMap);
+            }
         }
     };
 
@@ -103,11 +183,11 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                         }
                     });
                 } else {
-                    var firstSelectedOption = me.model.get('options').find(function(o){
-                        return o.get('value') && o.get('value') !== "";
+                    var selectedOptionsMap = me.model.get('options').map(function(o){
+                        return { attributeFQN: {value: o .value}};
                     });
-                    if(firstSelectedOption) {
-                        markEnabledConfigOptions.call(this, firstSelectedOption);
+                    if(selectedOptionsMap) {
+                        markEnabledConfigOptions.call(this, selectedOptionsMap);
                     }
                 }
                 
@@ -118,6 +198,12 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                 var productImagesView = new ProductImageViews.ProductPageImagesView({
                     el: $('[data-mz-productimages]'),
                     model: me.model
+                });
+                Dropdown.init({
+                    onSelect: function(e, value){
+                        var id = $(e.currentTarget).data('mz-product-option');
+                        me.dropdownConfig(id, value);
+                    }
                 });
             }
         },
@@ -137,6 +223,22 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                 this.model.updateQuantity(newQuantity);
             }
         }, 500),
+        dropdownConfig: function(id, value){
+            var option = this.model.get('options').findWhere({ 'attributeFQN': id });
+            if (option) {
+                var oldValue = option.get('value');
+                if (oldValue !== value && !(oldValue === undefined && value === '')) {
+                    option.set('value', value);
+                    
+                    if(option.get('attributeDetail').usageType !== 'Extra') {
+                        markEnabledConfigOptions.call(this, option);
+                    }
+            
+                    this.oldOptions = this.model.get('options').toJSON();
+                    this.postponeRender = true;
+                }
+            }
+        },
         configure: function ($optionEl) {
             var newValue = $optionEl.val(),
                 oldValue,
