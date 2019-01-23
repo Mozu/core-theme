@@ -244,19 +244,20 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly ISettings _settings;
         private IMobileDetectionProvider _mobileDetectionProvider;
         private readonly HttpContextBase _context;
-        private readonly ISiteContext _siteContext;
+        private ISiteContext _siteContext;
         LocationInfo _location;
 
         private PageContext()
         {
 
         }
-        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null , IMobileDetectionProvider mobileDetectionProvider = null)
+        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null , IMobileDetectionProvider mobileDetectionProvider = null,ISiteContext siteContext = null)
         {
             var pc = new PageContext()
             {
                 _apiContext = apiContext,
-                _mobileDetectionProvider  = mobileDetectionProvider
+                _mobileDetectionProvider  = mobileDetectionProvider,
+                _siteContext = siteContext
             };
             return pc;
         }

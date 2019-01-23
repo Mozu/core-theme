@@ -32,7 +32,8 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
             var sbCtxt = Substitute.For<ISiteBuilderApiContext>();
             var mobileDetectionProvider = Substitute.For<IMobileDetectionProvider>();
             
-            var pc = PageContext.CreateForTesting(sbCtxt, mobileDetectionProvider);
+            var siteContext = Substitute.For<ISiteContext>();
+            var pc = PageContext.CreateForTesting(sbCtxt, mobileDetectionProvider,siteContext);
             pc.ThemeId = "asdf";
             pc.Visit = new UX.Models.Visit.Visit()
             {
