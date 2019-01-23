@@ -216,7 +216,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             routes.MapHttpRoute(
                "StoreFront_international_checkout",
                "international-checkout",
-               new { controller = "InternationalCheckout", action = "Index" });
+               new { controller = "Checkout", action = "InternationalCheckout" });
 
             
 

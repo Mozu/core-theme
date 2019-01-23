@@ -479,5 +479,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             jOrder.Add("mailCheckTo", locTask.Result.ReadAsSync().ToJObject());
             return View("confirmation", jOrder);
         }
+        //Internation Checkout route is being used by the borderfree application
+        [System.Web.Http.HttpGet]
+        public ActionResult InternationalCheckout()
+        {
+            PageContext.CmsContext = new CmsPageContext()
+            {
+                Initialized = false,
+                Template = new DocumentRequest()
+                {
+                    ListFQN = "pageTemplateContent@mozu",
+                    Path = "international-checkout"
+                }
+            };
+            PageContext.PageType = string.IsNullOrEmpty(PageContext.PageType) ? "web_page" : PageContext.PageType;
+
+            return this.View("international-checkout");
+        }
     }
 }
