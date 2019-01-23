@@ -3336,7 +3336,7 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.1'">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Mozu.MZDB.Contracts">
           <HintPath>..\packages\Mozu.MZDB.Contracts\lib\net451\Mozu.MZDB.Contracts.dll</HintPath>
