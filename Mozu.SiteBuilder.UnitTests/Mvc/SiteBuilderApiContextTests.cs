@@ -96,11 +96,33 @@ namespace Mozu.SiteBuilder.UnitTests.Mvc
 
         }
     }
+
+
     [Category("Context")]
     [TestFixture]
     public class SiteBuilderApiContextTests
     {
 
+        [Test]
+        public void SiteBuilderApiContext_Can_Init_With_Token_Placeholders()
+        {
+            var cookieProvider = Substitute.For<ICookieProvider>();
+            var settings = Substitute.For<ISettings>();
+            var authenticationHelper = Substitute.For<IAuthenticationHelper>();
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, "http://foo.com/bing");// Substitute.For<HttpRequestMessage>();
+
+            var editModeGetter = Substitute.For<IEditModeFinderOuter>();
+            var dvmGetter = Substitute.For<IDataViewModeFinderOuter>();
+            httpRequestMessage.Headers.Add("x-vol-tenant", "123");
+            httpRequestMessage.Headers.Add("x-vol-app-claims", "__mzrpt__");
+            httpRequestMessage.Headers.Add("x-vol-user-claims", "__mzrpt__");
+
+
+            var ct = new SiteBuilderApiContext(cookieProvider, settings, authenticationHelper, httpRequestMessage, dvmGetter, editModeGetter);
+            Assert.AreEqual(ct.TenantId, 123);
+            
+        }
+                               
         [Test]
         public void Can_Set_Now_override_In_Staging_Via_QS()
         {

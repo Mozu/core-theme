@@ -282,8 +282,18 @@ namespace Mozu.SiteBuilder.Mvc
 
 
 
+        const string EmptyHeaderTokenValue = "__mzrpt__";
+        //remove the empty token from the headers... sometimes sent from the UI.  for backwards compatibility with older theme script.
+        static void CleanTokenValueHeaders(HttpRequestMessage request)
+        {
+            var headersToRemove = request.Headers.Where(kvp =>
+            request.Headers.GetValues(kvp.Key).FirstOrDefault() == EmptyHeaderTokenValue).ToList();
+            headersToRemove.ForEach(kvp => request.Headers.Remove(kvp.Key));
+        }
+
         public void Load()
         {
+            CleanTokenValueHeaders(_httpRequestMessage);
             // in here, if we're not behind a reverse proxy then we have to reach out to the tenant service to get some necessary context.
             // we want to skip this when we're not local, so hide these branches behind the config setting check.
 
