@@ -4,7 +4,6 @@
 <div id="bfTTContainer"></div>
 {% if model.config.environment == "staging" %}
 <!--Order tracking tool JS2 -->
-{{ model.environment}}
 <script src="https://tracking.stage.borderfree.com/public/js/merchants/borderfreeOrderTracking.min.js"></script>
 {% else %}
 <!--Order tracking tool JS1-->
