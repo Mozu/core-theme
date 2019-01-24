@@ -1,18 +1,22 @@
 .mz-b2b-quotes {
-    
     .quote-btns{
         text-align: right;
     }
+
+    .mz-b2b-quotes-grid.is-loading{
+          display: block;
+          width: 100%;
+          background-position: 50% 50%;
+          height: 100%;
+          opacity: .5;
+          animation: loadingthrob 1s linear 0s alternate infinite;
+          -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+    }
     .mz-b2b-quotes-grid{
         position: relative;
-        .is-loading {
-            display: block;
-            width: 100%;
-            position: absolute;
-            background: #ccc;
-            height: 100%;
-            opacity: .2;
-        }
+        background-image: url('../resources/images/button-loading.gif');
+        background-repeat: no-repeat;
+        background-position: -9999px -9999px;
     }
 
     .mz-itemlisting-actions {
@@ -33,7 +37,7 @@
                 margin-right: 15px;
             }
         }
-        
+
         .quote-edit-form-section.productPicker {
             .mz-button {
                 float: right;

@@ -58,6 +58,6 @@
             </div>
         {% endfor %}
     {% else %}
-        <div class="mz-grid-body-empty"> No Results </div>
+        <div class="mz-grid-body-empty">{{ labels.noResults }}</div>
     {% endif %}
 </div>

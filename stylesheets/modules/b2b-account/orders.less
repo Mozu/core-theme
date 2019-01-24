@@ -6,16 +6,22 @@
           margin: 0 @gutter/4 0 0;
       }
    }
-   .mz-b2b-orders-grid{
+   
+   .mz-b2b-orders-grid.is-loading, .mz-b2b-returns-grid.is-loading {
+       display: block;
+       width: 100%;
+       background-position: 50% 50%;
+       height: 100%;
+       opacity: .5;
+       animation: loadingthrob 1s linear 0s alternate infinite;
+       -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+   }
+
+   .mz-b2b-orders-grid, .mz-b2b-returns-grid {
        position: relative;
-       .is-loading {
-           display: block;
-           width: 100%;
-           position: absolute;
-           background: #ccc;
-           height: 100%;
-           opacity: .2;
-       }
+       background-image: url('../resources/images/button-loading.gif');
+       background-repeat: no-repeat;
+       background-position: -9999px -9999px;
        .grid-tooltip {
           position: relative;
           border-bottom: 1px dotted black;

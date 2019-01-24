@@ -12,6 +12,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "modules/v
               }
 
               try {
+                  this.$el.addClass('is-loading');
                   if (this.model.get('autoload')){
                       self.model.setIndex(0);
                   }
