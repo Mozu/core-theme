@@ -3,24 +3,7 @@
         <a href="javascript:void(0);" id="btnCountrySelect" class="country-select">
             <span>{{ labels.deliverTo }}:</span>
             <span class="selectedCountry">
-                {% if model.selectedCountryCode %}
-                    <img src="../../resources/images/borderFree/flags/{{ model.selectedCountryCode }}.gif" class="countries-icon">
-                {% endif %}
-                <!--<b>
-                    {% if model.selectedCountry %}
-                        {{ model.selectedCountry }} 
-                    {% else %}
-                        {% for country in model.country %}
-                            {% with country.locale|split("-") as code %}
-                                {% with code|last as countryCode %}
-                                    {% if countryCode == model.defaultCountry %}
-                                        {{ country.name }}
-                                    {% endif %}
-                                {% endwith %}    
-                            {% endwith %}
-                        {% endfor %} 
-                    {% endif %}
-                </b>-->
+                <img src="../../resources/images/borderFree/flags/{% if model.selectedCountryCode %}{{ model.selectedCountryCode }}{% else %}{{model.defaultCountry}}{% endif %}.gif" class="countries-icon"/>
             </span>
         </a>
     </div>

@@ -5,31 +5,8 @@ Ext.widget({
   height: 250,
   initComponent: function() {
     var me = this;
-    Ext.Ajax.request({
-      url: "/admin/app/entities/read?list=bfsettings@external&entityType=mzdb",
-      method: "get",
-      success: function(res) {
-        var response = JSON.parse(res.responseText);
-        if (response.items.length > 0) {
-          var isValid = me.checkValidation(response.items[0].item);
-          if (isValid) {
-            try {
-              var environment = me.down("#environment");
-              environment.setValue(
-                response.items[0].item.bf_environment
-              );
-            } catch (e) {
-              console.log(e);
-            }
-          } else {
-            var errormessage = me.down("#errormessage");
-            errormessage.setVisible(true);
-          }
-        } else {
-          var errormessage = me.down("#errormessage");
-          errormessage.setVisible(true);
-        }
-      }
+    var appEntity = window.Taco.customSchema.find(function(element) {
+      return element.name == "bfsettings";
     });
     this.items = [
       {
@@ -56,6 +33,40 @@ Ext.widget({
       }
     ];
     this.superclass.initComponent.apply(this, arguments);
+    if (appEntity && appEntity.nameSpace) {
+      Ext.Ajax.request({
+        url:
+          "/admin/app/entities/read?list=bfsettings@" +
+          appEntity.nameSpace +
+          "&entityType=mzdb",
+        method: "get",
+        success: function(res) {
+          var response = JSON.parse(res.responseText);
+          if (response.items.length > 0) {
+            var isValid = me.checkValidation(response.items[0].item);
+            if (isValid) {
+              try {
+                var environment = me.down("#environment");
+                environment.setValue(
+                  response.items[0].item.bf_environment
+                );
+              } catch (e) {
+                console.log(e);
+              }
+            } else {
+              var errormessage = me.down("#errormessage");
+              errormessage.setVisible(true);
+            }
+          } else {
+            var errormessage = me.down("#errormessage");
+            errormessage.setVisible(true);
+          }
+        }
+      });
+    }else{
+      var errormessage = me.down("#errormessage");
+      errormessage.setVisible(true);
+    }
   },
   checkValidation: function(configData) {
     var isValid = true;

@@ -111,10 +111,12 @@ require([
       btnSave.addClass("is-loading");
       var self = this;
       var selectedCountry = self.$el.find("#country-select"),
-        selectedCurrency = self.$el.find("#currency-select");
-
+        selectedCurrency = self.$el.find("#currency-select"),
+        appConfig = $("[data-mz-welcome-mat-request]").data(
+          "mzWelcomeMatRequest"
+        );
       var postData = {
-        currencyCode: "USD",
+        currencyCode: appConfig.currency,
         toCurrencyCode: selectedCurrency.val()
       };
       api
@@ -216,19 +218,13 @@ require([
           } else {
             var appConfig = $("[data-mz-welcome-mat-request]").data(
                 "mzWelcomeMatRequest"
-              ),
-              selectedCurrency = $.cookie("currency_code_override"),
-              selectedCountry = $.cookie("selected_country"),
-              selectedCountryCode = $.cookie("currency_country_code");
-            if (_.isUndefined($.cookie("selected_country")))
-              selectedCountry = "";
-            if (_.isUndefined($.cookie("currency_code_override")))
-              selectedCurrency = appConfig.currency;
+              );
+        
             self.model.set({
               country: borderFreeCountries,
-              selectedCountry: selectedCountry,
-              selectedCurrency: selectedCurrency,
-              selectedCountryCode: selectedCountryCode,
+              selectedCountry: '',
+              selectedCurrency: appConfig.currency,
+              selectedCountryCode: appConfig.country,
               currency: borderFreeCurrencies,
               defaultCountry: appConfig.country
             });
