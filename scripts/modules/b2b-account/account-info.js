@@ -1,4 +1,4 @@
-define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/editable-view', "modules/models-customer", "modules/models-b2b-account"], function ($, api, _, Hypr, Backbone, HyprLiveContext, EditableView, CustomerModels, B2BAccountModels) {
+define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules/backbone-mozu", "hyprlivecontext", 'modules/editable-view', "modules/models-customer", "modules/models-b2b-account", "modules/models-address"], function ($, api, _, Hypr, Backbone, HyprLiveContext, EditableView, CustomerModels, B2BAccountModels, AddressModels) {
     var InfoView = EditableView.extend({
         templateName: "modules/b2b-account/account-info/account-info",
         autoUpdate: [
@@ -14,9 +14,16 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
 
           // If we don't make sure this editingContact field is populated with an address,
           // It breaks when we try to validate a password change.
-          var toEdit = this.model.get('contacts').first();
-          if (toEdit)
-              this.model.get('editingContact').set(toEdit.toJSON({ helpers: true, ensureCopy: true }), { silent: true });
+          // This doesn't happen with the regular my account page, which is using
+          // the same models and methods and everything. I just don't know any more.
+          // I'm sorry. This is a hack.
+          var self = this;
+          var blankContact = new CustomerModels.Contact({
+              userId: self.model.get('userId'),
+              accountId: self.model.get('id'),
+              address: new AddressModels.StreetAddress({})
+          });
+          this.model.set('editingContact', blankContact);
 
           return this.model.getAttributes().then(function(customer) {
               customer.get('attributes').each(function(attribute) {
