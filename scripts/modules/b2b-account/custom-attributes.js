@@ -66,10 +66,17 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         },
         finishEditAttrs: function() {
             var self = this;
+            var payload = [];
             if (this.model.get('editingAccountAttributes')){
                 // Save b2b attributes only. found in self.model.get('b2battributes')
                 var b2bAccountModel = new B2BAccountModels.b2bAccount(this.model.toJSON());
-                b2bAccountModel.set('attributes', this.model.get('b2bAttributes'));
+                this.model.get('b2bAttributes').forEach(function(attr){
+                    payload.push({
+                        fullyQualifiedName: attr.get('attributeFQN'),
+                        values: attr.get('values')
+                    });
+                });
+                b2bAccountModel.set('attributes', payload);
                 b2bAccountModel.apiUpdate().then(function(){
                   self.model.set('editingAccountAttributes', false);
                 }).otherwise(function() {
@@ -79,6 +86,13 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                 });
             } else { // as opposed to (if this.model.get('editingCustomerAttributes'))
               // Save customer attributes only. found in self.model.get('attributes');
+              this.model.get('attributes').forEach(function(attr){
+                payload.push({
+                    fullyQualifiedName: attr.get('attributeFQN'),
+                    values: attr.get('values')
+                });
+              });
+              this.model.set('attributes', payload);
               this.doModelAction('apiUpdate').then(function() {
                   self.model.set('editingCustomerAttributes', false);
               }).otherwise(function() {
