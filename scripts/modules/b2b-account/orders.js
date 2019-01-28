@@ -88,9 +88,11 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
           var order = row || new Backbone.MozuModel(self.model.get('currentOrder').attributes);
           var cart = CartModels.Cart.fromCurrent();
           var products = order.get('items');
+          $('.mz-b2b-orders-grid').addClass('is-loading');
           cart.apiModel.addBulkProducts({ postdata: products, throwErrorOnInvalidItems: false}).then(function(){
               window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/cart";
           }, function(error){
+            $('.mz-b2b-orders-grid').removeClass('is-loading');
             if (error.items) {
                 var errorMessage = "";
                 _.each(error.items, function(error){
