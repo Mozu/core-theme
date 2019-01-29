@@ -34,13 +34,14 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
 
                 return this.saveWishlist().then(function () {
                     var payload = {
-                        wishlistId: self.get('id'),
-                        id: self.get('id'),
-                        quantity: 1,
-                        product: item
+                            wishlistId: self.get('id'),
+                            id: self.get('id'),
+                            quantity: 1,
+                            product: item
                     };
                     self.apiModel.addItemTo(payload, { silent: true }).then(function (data) {
-                        self.get('items').add(new WishlistModels.WishlistItem(data.data), { merge: true });
+                        //self.get('items').add(new WishlistModels.WishlistItem(data.data), { merge: true });
+                        return self.apiGet();
                     }).ensure(function () {
                         self.isLoading(false);
                     });
@@ -53,7 +54,8 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             };
 
             return this.apiModel.addItemTo(payload, { silent: true }).then(function (data) {
-                self.get('items').add(new WishlistModels.WishlistItem(data.data), { merge: true });
+                //self.get('items').add(new WishlistModels.WishlistItem(data.data), { merge: true });
+                return self.apiGet();
             }).ensure(function () {
                 self.isLoading(false);
             });
@@ -435,7 +437,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                         productCode : item.product.productCode,
                         variationProductCode : item.product.variationProductCode,
                         bundledProducts : item.product.bundledProducts,
-                        options : item.product.Options
+                        options : item.product.options || []
                     }
                 });
             });
