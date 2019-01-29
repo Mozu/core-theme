@@ -25,6 +25,7 @@ using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
+using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 
@@ -167,7 +168,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 FulfillmentInfo = order.FulfillmentInfo,
                 BillingInfo = order.BillingInfo,
                 OriginalCartId = order.OriginalCartId,
-                PriceListCode = order.PriceListCode,
+                //PriceListCode = order.PriceListCode,
                 CustomerAccountId = order.CustomerAccountId,
                 IsTaxExempt = order.IsTaxExempt,
                 Email = order.Email,
@@ -181,14 +182,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = order.SiteId);
 
-            if (!string.IsNullOrEmpty(order.PriceListCode))
-                orderWebApiClient = orderWebApiClient.CloneWithApiContext(ctx => ctx.PriceListCode = order.PriceListCode);
-
+ 
             var createdOrder = (await orderWebApiClient.CreateOrder(newOrder)).ReadAsAsync().Result;
-            
-
-            var single = createdOrder.Map<Order>();
-            return List2<Order>(single);
+            (_apiContext as ApiContext).SiteId = order.SiteId;
+            var returnOrder = (await SetCustomer(createdOrder,new SetCustomerAccountIdArgs { CustomerAccountId = createdOrder.CustomerAccountId.Value, OrderId = createdOrder.Id, UserId = createdOrder.UserId}));
+            return List2<Order>(returnOrder);
         }
 
         [HttpPostRoute(UriTemplate = "linkOrderToCart")]
@@ -517,6 +515,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcOrder = (await _orderWebApiClient.GetOrder(args.OrderId)).ReadAsSync();
 
+            var order = await SetCustomer(dcOrder, args);
+
+            return Single2(order);
+        }
+
+        public class SetPriceListArgs
+        {
+            public string OrderId { get; set; }
+            public string PriceListCode { get; set; }
+        }
+
+        [HttpPostRoute(UriTemplate = "setpricelist")]
+        public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
+        {
+            // TODO: Hack to set price list, using ApiContext rather than parameter.
+            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => { ctx.PriceListCode = args.PriceListCode; });
+            var dcOrder = (await orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
+            return Single2(Mapper.Map<Order>(dcOrder));
+        }
+
+
+        private async Task<Order> SetCustomer(DCo.Order dcOrder, SetCustomerAccountIdArgs args)
+        {
             CustomerAccount dcCustomer;
 
             dcCustomer = (await _customerAccountWebApiClient.GetAccount(args.CustomerAccountId, null, args.UserId)).ReadAsSync();
@@ -529,6 +550,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     throw new Exception("Customer doesn't belong to the site/customer set");
                 }
             }
+
+
 
             var priceListCode = (await GetPriceListCode(dcCustomer));
             if (!ComparePriceList(dcOrder.PriceListCode, priceListCode))
@@ -572,22 +595,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             dcOrder = (await _orderWebApiClient.UpdateOrder(args.OrderId, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
 
-            return Single2(Mapper.Map<Order>(dcOrder));
-        }
+            return Mapper.Map<Order>(dcOrder);
 
-        public class SetPriceListArgs
-        {
-            public string OrderId { get; set; }
-            public string PriceListCode { get; set; }
-        }
-
-        [HttpPostRoute(UriTemplate = "setpricelist")]
-        public async Task<Response<Order>> SetPriceList(SetPriceListArgs args, [FromUri]bool draft = false)
-        {
-            // TODO: Hack to set price list, using ApiContext rather than parameter.
-            var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => { ctx.PriceListCode = args.PriceListCode; });
-            var dcOrder = (await orderWebApiClient.ChangeOrderPriceList(args.OrderId, args.PriceListCode, draft ? APPLY_TO_DRAFT : APPLY_TO_ORIGINAL)).ReadAsSync();
-            return Single2(Mapper.Map<Order>(dcOrder));
         }
 
         /// <summary>
