@@ -38,15 +38,19 @@ module.exports = (function() {
         addItemToCartById: function (item) {
             return this.addItemToCart(getItem(this, item));
         },
-        get: function () {
+        get: function (options) {
             // overriding get to always use getItemsByName to get the items collection
             // so items are always sorted by update date
             var self = this;
-            return this.getItemsByName().then(function (items) {
-                self.prop('items', items);
-                self.fire('sync', self.data, self);
+            options = options || {};
+           
+            return this.getItemsByName().then(function (resp) {
+                if (!options.silent) {
+                    self.prop('items', resp.items);
+                    self.fire('sync', self.data, self);
+                }
                 return self;
-            });
-        }
-    };
+                });
+            }
+        };
 }());

@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2019-01-14
+ * Mozu JavaScript SDK - v0.3.0 - 2019-01-29
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -4584,6 +4584,13 @@ module.exports=
       "returnType": "json"
     }
   },
+  "discounts": {
+    "get": {
+      "returnType": "discount",
+      "template": "{+discountService}autoaddtarget/{discountId}",
+      "shortcutParam": "discountId"
+    }
+  },
   "b2baccount": {
     "get": {
       "verb": "GET",
@@ -6308,17 +6315,21 @@ module.exports = (function() {
         addItemToCartById: function (item) {
             return this.addItemToCart(getItem(this, item));
         },
-        get: function () {
+        get: function (options) {
             // overriding get to always use getItemsByName to get the items collection
             // so items are always sorted by update date
             var self = this;
-            return this.getItemsByName().then(function (items) {
-                self.prop('items', items);
-                self.fire('sync', self.data, self);
+            options = options || {};
+           
+            return this.getItemsByName().then(function (resp) {
+                if (!options.silent) {
+                    self.prop('items', resp.items);
+                    self.fire('sync', self.data, self);
+                }
                 return self;
-            });
-        }
-    };
+                });
+            }
+        };
 }());
 },{"../errors":17,"../utils":40}],38:[function(_dereq_,module,exports){
 
