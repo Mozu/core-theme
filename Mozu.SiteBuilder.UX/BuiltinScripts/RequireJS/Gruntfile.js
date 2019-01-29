@@ -25,18 +25,19 @@ module.exports = function (grunt) {
                 banner: '<%= banner %>',
             },
             min: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
+                src: ['<%= polyfills %>', 'src/wrap_header.tpl', 'lib/json2.js', 'src/vars-min.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
                 dest: "<%= releasetemp %>"
             },
             debug: {
-                src: ['src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
+                src: ['<%= polyfills %>', 'src/wrap_header.tpl', 'lib/json2.js', 'src/vars-debug.js', 'src/mozu-require.js', 'src/plugins/shim-browser.js', 'src/wrap_footer.tpl'],
                 dest: './dist/<%= pkg.name %>.debug.js'
             },
             compiler: {
-                src: ['src/wrap_header.tpl', 'src/vars-min.js', 'src/mozu-require.js', 'src/wrap_footer.tpl'],
+                src: ['<%= polyfills %>', 'src/wrap_header.tpl', 'src/vars-min.js', 'src/mozu-require.js', 'src/wrap_footer.tpl'],
                 dest: './dist/<%= pkg.name %>.compiler.js'
             }
         },
+        polyfills: ['src/plugins/polyfills/*.js'],
         uglify: {
             dist: {
                 options: {
