@@ -136,26 +136,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
             }
         }
 
-
-
-
-
         // store credit search
-
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
         public static string ToCreditFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
             if (extFilter == null || extFilter.Count == 0)
-                return null;
-
-
-            StringBuilder sb = new StringBuilder();
-            foreach (var filter in extFilter.Where(x => x.value != null && !string.IsNullOrEmpty(x.value.ToString())))
             {
+                return null;
+            }
 
-                var filterString = GetCreditFilter(filter.value, filter);
+            var sb = new StringBuilder();
+            foreach (var filter in extFilter.Where(item => !string.IsNullOrEmpty(item.value?.ToString())))
+            {
+                var filterString = GetCreditFilter(filter);
                 if (!string.IsNullOrWhiteSpace(filterString))
                 {
                     if (sb.Length > 1)
@@ -163,28 +158,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                         sb.Append(" and ");
                     }
                     sb.Append(filterString);
-
                 }
-
             }
 
             return sb.ToString().Trim();
         }
         
-        private static string GetCreditFilter(object value, FilterCollectionItem filter)
+        private static string GetCreditFilter(FilterCollectionItem filter)
         {
             switch (filter.property.ToLowerInvariant())
             {
                 case "all":
-                    var retVal = String.Format("{0} sw '{2}' or {1} eq '{2}'", CODE_PROPERTY, CUSTOMERID_PROPERTY, filter.escapedValue);
+                    var retVal =
+                        $"{CODE_PROPERTY} sw '{filter.escapedValue}' or {CUSTOMERID_PROPERTY} eq '{filter.escapedValue}'";
                     return retVal;
                 case "code":
                     return $"{CODE_PROPERTY} sw \"{filter.escapedValue}\"";
-                case "customerid":
+                case "customerid":                   
                     return $"{CUSTOMERID_PROPERTY} eq \"{filter.escapedValue}\"";
                 case "customer":
                     //this is the value coming from the customer picker field. Display value varies but it maps to a customerId
-                    return $"{CUSTOMERID_PROPERTY} eq \"{filter.escapedValue}\"";
+                    // the store credit dropdown gives customerid as accountId-userId, but we only want to filter on accountId
+                    var customerId = filter.escapedValue.ToString();
+                    var separatorIndex = customerId.IndexOf('-');
+                    if (separatorIndex > 0)
+                    {
+                        customerId = customerId.Substring(0, separatorIndex);
+                    }
+                    return $"{CUSTOMERID_PROPERTY} eq \"{customerId}\"";
                 case "activatedatefrom":
                     return
                         $"{ACTIVATEDATE_PROPERTY} ge \"{((DateTime) filter.value).ToUniversalTime().ToString("o")}\"";
@@ -222,27 +223,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                 case "updateby":
                     return $"{UPDATEBY_PROPERTY} eq \"{filter.value}\"";
                 case "modifiedby":
-                    return String.Format("({0} eq \"{2}\" or {1} eq \"{2}\")", UPDATEBY_PROPERTY, CREATEBY_PROPERTY, filter.value);
+                    return $"({UPDATEBY_PROPERTY} eq \"{filter.value}\" or {CREATEBY_PROPERTY} eq \"{filter.value}\")";
                 case "currentlyactiveonly":
                     if((bool)filter.value)
                     {
-                         return String.Format("{0} le \"{1}\" and {2} ge {1}", ACTIVATEDATE_PROPERTY, DateTime.UtcNow.ToString("o"), EXPIRATIONDATE_PROPERTY);
+                         return
+                             $"{ACTIVATEDATE_PROPERTY} le \"{DateTime.UtcNow.ToString("o")}\" and {EXPIRATIONDATE_PROPERTY} ge {DateTime.UtcNow.ToString("o")}";
                     }
                     return null;
                
-
                 // need service to add support for user name and user email address
                 //case "name":
                 //    return String.Format("{0} eq \"{1}\"", NAME_PROPERTY, filter.value);
                 //case "email":
                 //    return String.Format("{0} eq \"{1}\"", EMAIL_PROPERTY, filter.value);
-
                 default:
                     {
                         throw new NotImplementedException($"Unable to filter on property {filter.property}");
                     }
             }
         }
-
     }
 }
