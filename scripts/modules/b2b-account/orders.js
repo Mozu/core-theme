@@ -144,7 +144,9 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
               displayTemplate: function(fulfillmentInfo){
                 // Form a readable address string.
                 // TODO: WOW. This is all really bad. Try again.
-                if (fulfillmentInfo.fulfillmentContact){
+                var fulfilmentContact = fulfillmentInfo.fulfillmentContact || {};
+
+                if (fulfilmentContact.address){
                     var address = fulfillmentInfo.fulfillmentContact.address;
                     var firstLine = address.address1;
                     var tooltip = $('<span />').attr('class', 'tooltiptext').html('tooly');
