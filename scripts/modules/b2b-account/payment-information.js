@@ -33,9 +33,12 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
           'editingContact.address.countryCode'
       ],
       beginEditCard: function(e) {
-          var id = this.editing.card = e.currentTarget.getAttribute('data-mz-card');
-          this.model.beginEditCard(id);
-          this.render();
+          var self = this;
+          this.model.apiGet().then(function(){
+              var id = self.editing.card = e.currentTarget.getAttribute('data-mz-card');
+              self.model.beginEditCard(id);
+              self.render();
+          });
       },
       finishEditCard: function() {
           var self = this;
