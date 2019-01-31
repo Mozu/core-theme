@@ -225,7 +225,6 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
         //     });
         // },
         saveQuote: function () {
-            window.console.log('Create Wishlist');
             var self = this;
             this.model.saveWishlist().then(function () {
                 self.model.parent.setEditMode(false);
@@ -235,7 +234,6 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             //Just the Edit Page that is empty?
         },
         cancelQuoteEdit: function () {
-            window.console.log('Create Wishlist');
             this.model.parent.setEditMode(false);
             window.views.currentPane.render();
             //Just the Edit Page that is empty?
@@ -253,14 +251,17 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                     product = new ProductModels.Product(product);
                 }
                 this.stopListening();
+                this.isLoading(true);
                 this.listenTo(product, "configurationComplete", function () {
                     self.model.addQuoteItem(product.toJSON(), self.model.get('pickerItemQuantity')).then(function () {
                         self.model.unset('selectedProduct');
                         window.productModalView.handleDialogCancel();
                         $('.mz-b2b-quotes .mz-searchbox-input.tt-input').val('');
                         $('.mz-b2b-quotes #pickerItemQuantity').val(1);
+                        this.isLoading(false);
                     }, function (error) {
                         window.productModalView.model.messages.reset({ message: error.message });
+                        this.isLoading(false);
                     });
                 });
 

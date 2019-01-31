@@ -1,9 +1,16 @@
 {% extends "modules/common/item-listing" %}
 
 {% block item-details %}
-  {% parent %}
-  <div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ model.quantity }}</div>
-{% endblock %}
+<div class="mz-itemlisting-description">
+  {% for option in model.product.options %}{{ option.name }}: {{ option.value }}, {% endfor %}{{ model.product.variationProductCode|default(model.product.productCode) }}{% if model.product.measurements.packageWeight.value %}, {{ model.product.measurements.packageWeight.value }}{{model.measurements.packageWeight.unit }}{% endif %}
+</div>
+<div class="mz-itemlisting-price">
+    {% include "modules/common/item-price" %}
+</div>
+<div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ model.quantity }} - <span class="mz-itemlisting-item-total">
+  {% include "modules/common/item-total" %}
+</span></div>
+{% endblock item-details %}
 
 {% block item-listing-actions %}
     <input class="mz-itemlisting-action mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled" {% endif %} data-mz-cart-item="{{ item.id }}"

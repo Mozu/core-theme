@@ -1,8 +1,8 @@
 
-<div class="quote-btns">
-    <button class="mz-button mz-button-small" data-mz-action="cancelQuoteEdit">Close</button>
-</div>
 <div class="quote-edit-form">
+    <div class="quote-btns">
+        <button class="mz-button mz-button-small" data-mz-action="cancelQuoteEdit">Close</button>
+    </div>
     <div class="quote-edit-form-section">
         <span class="quote-edit-label">{{labels.b2bWishlistName}}</span>
         <input type="text" name="name" id="wishlistName" data-mz-value="name" value="{{ model.name }}">
