@@ -17,8 +17,10 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
             if (!this.get('name') || this.get('name') === " ") {
                 this.set('name', 'New List - ' + Date.now());
             }
+            if(!this.get('userId')) {
+                this.set('userId', require.mozuData('user').userId);
+            }
             this.set('customerAccountId', require.mozuData('user').accountId);
-            this.set('userId', require.mozuData('user').userId);
 
             if (this.get('id')) {
                 this.syncApiModel();
@@ -115,6 +117,9 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
 
     var QuotesView = Backbone.MozuView.extend({
         templateName: 'modules/b2b-account/quotes/my-quotes',
+        additionalEvents: {
+            "change [data-mz-value='quote-quantity']": "onQuantityChange"
+        },
         initialize: function(){
             Backbone.MozuView.prototype.initialize.apply(this, arguments);
             this.model.set('viewingAllLists', true);
@@ -296,28 +301,16 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
     var QuoteListView = Backbone.MozuView.extend({
         templateName: 'modules/b2b-account/quotes/quote-list',
         additionalEvents: {
-            "change [data-mz-value='quantity']": "onQuantityChange"
-        },
-        initialize: function () {
-            var self = this;
-            this.listenTo(this.model.get('items'), "remove", function () {
-                self.render();
-            });
-            this.listenTo(this.model.get('items'), "add", function () {
-                self.render();
-            });
-            this.listenTo(this.model.get('items'), "change", function () {
-                self.render();
-            });
+            "change [data-mz-value='quote-quantity']": "onQuantityChange"
         },
         onQuantityChange: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val(), 10);
             if (!isNaN(newQuantity)) {
-                this.updateQuantity(newQuantity);
+                this.updateQuantity(e);
             }
         }, 500),
-        updateQuantity: _.debounce(function (e) {
+        updateQuantity: function (e) {
             var self = this,
                 $qField = $(e.currentTarget),
                 newQuantity = parseInt($qField.val(), 10),
@@ -330,22 +323,20 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                 payload.id = self.model.get('id');
                 payload.itemId = item.get('id');
 
-                return this.model.apiModel.editItem(payload, { silent: true });
+                this.model.apiModel.editItem(payload, { silent: true }).then(function(){
+                    self.model.apiGet();
+                });
+
             }
-        }, 400),
+        },
         beginRemoveItem: function (e) {
             var self = this;
             var id = $(e.currentTarget).data('mzItemId');
             if (id) {
                 var removeWishId = id;
                 return this.model.apiModel.deleteItem({ id: self.model.get('id'), itemId: id }, { silent: true }).then(function () {
-                    var itemToRemove = self.model.get('items').where({
-                        id: removeWishId
-                    });
-                    if (itemToRemove) {
-                        self.model.get('items').remove(itemToRemove);
-                        self.render();
-                    }
+
+                    self.model.apiGet();
                 });
             }
         }
