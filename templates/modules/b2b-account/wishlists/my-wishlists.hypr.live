@@ -1,0 +1,27 @@
+{% require_script "modules/b2b-account/wishlists" %}
+<div class="mz-b2b-wishlists">
+    {% if model.isEditMode %}
+         {% include "modules/common/message-bar" with model=model.messages %}
+        <div class="mz-b2b-wishlists-product-picker">
+            {% include "modules/b2b-account/wishlists/edit-wishlist" model=model.wishlist%}
+        </div>
+    {% else %}
+        <div class="wishlist-btns">
+            <button class="mz-button mz-button-large wishlist-btns" data-mz-action="newWishlist">Add List</button>
+        </div>
+
+        <div class="mz-btns">
+            <label><input data-mz-action="toggleViewAllLists" type="checkbox" {% if model.viewingAllLists %}checked{% endif %} /> {{ labels.viewAllLists }}</label>
+        </div>
+        <div class="mz-b2b-wishlists-grid">
+            <div class="is-loading"></div>
+            {% include "modules/b2b-account/wishlists/wishlist-grid" %}
+        </div>
+    {% endif %}
+</div>
+
+<div mz-modal-product-dialog class="mz-product-modal">
+    <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+        {% include "modules/product-picker/product-modal" %}
+    </div>
+</div>

@@ -7,8 +7,12 @@
   {% else %}
   <li class="mz-accountaddressbook-contact">
     <div class="mz-accountaddressbook-actions">
+      {% if model.isNonPurchaser == false %}
         <a class="mz-accountaddressbook-edit" href="javascript:;" data-mz-action="beginEditContact" data-mz-contact="{{ contact.id }}">{{ labels.edit }}</a>
-      {% if model.hasRequiredBehavior %}<a class="mz-accountaddressbook-delete" href="javascript:;" data-mz-action="beginDeleteContact" data-mz-contact="{{ contact.id }}">{{ labels.del }}</a>{% endif %}
+      {% endif %}
+      {% if model.hasRequiredBehavior %}
+        <a class="mz-accountaddressbook-delete" href="javascript:;" data-mz-action="beginDeleteContact" data-mz-contact="{{ contact.id }}">{{ labels.del }}</a>
+      {% endif %}
     </div>
     <div class="mz-accountaddressbook-contactdetails mz-addresssummary">
       {% include "modules/common/address-summary" with model=contact %}

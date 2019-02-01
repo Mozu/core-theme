@@ -79,7 +79,7 @@
         mozuType: 'contact',
         requiredBehaviors: [1002],
         defaults: {
-            userId: require.mozuData('user').userId
+            userId: require.mozuData('user').userId  
         },
         relations: {
             address: AddressModels.StreetAddress,
@@ -370,6 +370,7 @@
                 editingContact: {}
             };
         },
+        helpers: ['isNonPurchaser'],
         initialize: function() {
             var self = this,
                 orderHistory = this.get('orderHistory'),
@@ -390,6 +391,9 @@
             _.defer(function (cust) {
                 cust.getCards();
             }, self);
+        },
+        isNonPurchaser: function() {
+            return (require.mozuData('user').behaviors.length) ? false : true;
         },
         changePassword: function () {
             var self = this;

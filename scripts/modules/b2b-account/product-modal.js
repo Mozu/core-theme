@@ -37,7 +37,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
 
 
     var AddProductStepView = Backbone.MozuView.extend({
-        templateName: "modules/b2b-account/quotes/product-modal",
+        templateName: "modules/b2b-account/wishlists/product-modal",
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
             "blur [data-mz-product-option]": "onOptionChange",

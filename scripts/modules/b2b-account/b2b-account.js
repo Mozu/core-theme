@@ -7,7 +7,7 @@ define([
     "hyprlivecontext",
     'modules/models-customer',
     'modules/models-b2b-account',
-    "modules/b2b-account/quotes",
+    "modules/b2b-account/wishlists",
     "modules/b2b-account/users",
     "modules/b2b-account/orders",
     "modules/b2b-account/returns",
@@ -48,9 +48,8 @@ define([
             },
             {
                 name: 'Lists',
-                view: new Lists.QuotesView({
-                    el: $('.mz-b2b-quote-wrapper'),
-                    model: new Lists.QuotesModel({})
+                view: new Lists.WishlistsView({
+                    model: new Lists.WishlistsModel({})
                 })
             },
             {

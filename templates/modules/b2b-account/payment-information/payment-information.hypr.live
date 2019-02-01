@@ -1,6 +1,10 @@
 {% require_script "modules/b2b-account/payment-information" %}
 <div class="mz-l-stack-section" style="clear:none">
-<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} {% if model.hasRequiredBehavior %}<a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a>{% endif %}</h3>
+<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} 
+    {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a>
+    {% endif %}
+</h3>
 <div class="mz-b2b-payment">
 {% if model.hasSavedCards or editing.card == "new" or model.purchaseOrder and model.purchaseOrder.isEnabled %}
 <div class="mz-accountpaymentmethods">
@@ -22,7 +26,11 @@
 </ul>
 </div>
 {% else %}
-<p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a></p>
+    <p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} 
+        {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a>
+        {% endif %}
+    </p>
 {% endif %}
 {% if model.purchaseOrder and model.purchaseOrder.isEnabled and not model.blockViewPurchaseOrders %}
 <div class="mz-purchase-order-grid-container" style="clear:left">
