@@ -85,6 +85,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                 item.get('product').url = (HyprLiveContext.locals.siteContext.siteSubdirectory || '')+'/p/'+item.get('product').productCode;
             });
             this.set('quote', quote);
+            this.get('quote').syncApiModel();
         },
         setEditMode: function (flag) {
             return this.set('isEditMode', flag);
