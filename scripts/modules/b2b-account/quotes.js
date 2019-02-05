@@ -252,17 +252,17 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
                     product = new ProductModels.Product(product);
                 }
                 this.stopListening();
-                this.isLoading(true);
+                this.model.isLoading(true);
                 this.listenTo(product, "configurationComplete", function () {
                     self.model.addQuoteItem(product.toJSON(), self.model.get('pickerItemQuantity')).then(function () {
                         self.model.unset('selectedProduct');
                         window.productModalView.handleDialogCancel();
                         $('.mz-b2b-quotes .mz-searchbox-input.tt-input').val('');
                         $('.mz-b2b-quotes #pickerItemQuantity').val(1);
-                        this.isLoading(false);
+                        self.model.isLoading(false);
                     }, function (error) {
                         window.productModalView.model.messages.reset({ message: error.message });
-                        this.isLoading(false);
+                        self.model.isLoading(false);
                     });
                 });
 
