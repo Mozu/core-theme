@@ -1,0 +1,32 @@
+{% extends "modules/cart/cart-table-item" %}
+{% block fullfillment %}
+{% endblock fullfillment %}
+
+{% block price %}
+<td class="mz-carttable-item-price">
+  {% if item.salePrice %}
+      <span class="mz-item-price">{{ item.salePrice|currency }}</span>
+  {% else %}
+      <span class="mz-item-price">{{ item.price|currency }}</span>
+  {% endif %}
+</td>
+{% endblock price %}
+{% block quantity %}
+<td class="mz-carttable-item-qty">
+    <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-index="{{ index }}" data-mz-value="quantity" value="{{ item.quantity }}" />
+</td>
+{% endblock quantity %}
+{% block removeItem %}
+<td class="mz-carttable-item-remove">
+  <a href="javascript:;" data-mz-action="removeItem" data-mz-index="{{ index }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
+</td>
+{% endblock removeItem %}
+{% block errormessages %}
+{% if item.errorMessages %}
+{% for message in item.errorMessages %}
+<tr>
+  <td class="mz-table-error">{{ message }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endblock %}

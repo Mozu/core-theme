@@ -85,7 +85,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             var self = this;
             e.preventDefault();
             self.model.trigger('configurationComplete', self);
-            
+
             // try {
             //     self.model.addToCart(true).then(function () {
             //         this.model.parent.handleDialogCancel();
@@ -147,8 +147,10 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             if (self.model.messages) {
                 self.model.messages.reset();
             }
-            self._addProductView.stopListening();
-            self._addProductView.undelegateEvents();
+            if (self._addProductView){
+              self._addProductView.stopListening();
+              self._addProductView.undelegateEvents();
+            }
             self.bootstrapInstance.hide();
         },
         handleDialogCancel: function () {
@@ -170,7 +172,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         loadAddProductView: function (product) {
             var self = this;
-            
+
             var addProductView = new AddProductView({
                 el: $(self.modalContentEl()),
                 model: product,

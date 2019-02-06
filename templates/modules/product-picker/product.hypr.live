@@ -42,7 +42,7 @@
                     <div class="mz-productdetail-conversion-buttons">
                         <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.isPurchasable %}is-disabled{% endif %}"
                             {% if not model.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="completeProductConfiguration">
-                            {{ labels.addToWishlist }}
+                            {{ labels.addItem }}
                         </button>
 
                     </div>

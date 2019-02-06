@@ -8,7 +8,7 @@
             data-mz-contextify-val='selected'>
         <option value="">{{ labels.all }}</option>
         {% for node in navigation.tree %}
-            {% if node.nodeType == "category" and not node.isEmpty %} 
+            {% if node.nodeType == "category" and not node.isEmpty %}
             <option value="{{node.originalId}}">{{node.name}}</option>
             {% endif %}
 		{% endfor %}

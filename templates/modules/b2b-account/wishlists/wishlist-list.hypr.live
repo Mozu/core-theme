@@ -1,7 +1,10 @@
-{% if model.items %}
+{% if model.items.length %}
         {% for item in model.items %}
         {% include "modules/b2b-account/wishlists/wishlist-item-listing" with model=item %}
-        {% endfor %} 
+        {% endfor %}
+        <div class="wishlist-btns">
+            <button type="button" class="mz-button" data-mz-action="addWishlistToCart">{{ labels.addAllItemsToCart }}</button>
+        </div>
 {% else %}
         {{ labels.accountNoWishlists }}
 {% endif %}
