@@ -29,9 +29,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Types, op => op.ResolveUsing(x =>
                 {
                     var types = new List<DC.ContactType>();
-                    if (x.IsPrimaryBilling)
+                    if (x.IsBilling)
                         types.Add(new DC.ContactType { Name = DC.ContactTypeConst.BILLING, IsPrimary = x.IsPrimaryBilling });
-                    if (x.IsPrimaryShipping)
+                    if (x.IsShipping)
                         types.Add(new DC.ContactType { Name = DC.ContactTypeConst.SHIPPING, IsPrimary = x.IsPrimaryShipping });
 
                     return types;
