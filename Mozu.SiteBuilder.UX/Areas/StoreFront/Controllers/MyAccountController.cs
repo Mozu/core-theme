@@ -94,12 +94,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
             }
 
-            var pageType = "my-account";
+            var pageType = "my_account";
             var pagePath = "myaccount";
 
             if (account.AccountType == "B2B")
             {
-               pageType = "b2b-account";
+               pageType = "b2b_account";
                pagePath = "b2baccount";
             }
             
