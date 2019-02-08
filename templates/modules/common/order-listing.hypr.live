@@ -75,7 +75,7 @@
                             {% else %}
                                 {% if attDef.dataType === "Bool" %}
 
-                                    {% if attributeVal == "true" || attributeVal == "True" %}
+                                    {% if attributeVal == "true" or attributeVal == "True" %}
                                     Yes
                                     {% else %}
                                     No
