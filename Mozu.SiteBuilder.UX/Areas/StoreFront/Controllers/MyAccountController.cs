@@ -95,12 +95,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var pageType = "my_account";
-            var pagePath = "myaccount";
+            var pagePath = "my-account";
 
             if (account.AccountType == "B2B")
             {
                pageType = "b2b_account";
-               pagePath = "b2baccount";
+               pagePath = "b2b-account";
             }
             
 
@@ -208,7 +208,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 jAccount.Add("wishlist", wishlistObj);
             }
 
-            return this.Request.CreateResponse(HttpStatusCode.OK,  View(pageType, jAccount));
+            return this.Request.CreateResponse(HttpStatusCode.OK,  View(pagePath, jAccount));
         }
 
         //private string BuildOpenOrdersFilter(int accountId)
