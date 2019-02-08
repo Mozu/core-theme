@@ -502,14 +502,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
 
-        private static Chorizo.ZoneRuntimeData GetRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
+        private static Chorizo.ZoneRuntimeData GetRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.IPageContext pageContext)
         {
             return (pageContext.CmsContext == null || pageContext.CmsContext.RuntimeData == null) ?
                     null :
                     pageContext.CmsContext.RuntimeData.FirstOrDefault(x => scope == x.Scope && x.Id.EqualsIgnoreCase(zoneId));
         }
 
-        private static Caliente.ZoneRuntimeData GetCalienteRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.PageContext pageContext)
+        private static Caliente.ZoneRuntimeData GetCalienteRuntimeData(ZoneScope scope, string zoneId, Mvc.Contexts.IPageContext pageContext)
         {
             return (pageContext.CmsContext == null || pageContext.CmsContext.CalienteRuntimeData == null) ?
                     null :

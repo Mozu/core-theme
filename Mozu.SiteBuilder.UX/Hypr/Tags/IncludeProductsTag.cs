@@ -199,7 +199,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             SortContext sortBy, 
             string filter, 
             IProductSearchWebApiClient productSearchWebApiClient, 
-            PageContext pageContext, 
+            IPageContext pageContext, 
             string[] productCodesFilters, 
             IEnumerable productCodes, 
             string responseFields, 
@@ -462,7 +462,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             }
         }
 
-        private static void GetCategoryCodes(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Mvc.Contexts.PageContext pageContext, out int? facetCategoryId, out int? categoryId)
+        private static void GetCategoryCodes(ArgumentCollection arguments, NDjango.Interfaces.IContext context, Mvc.Contexts.IPageContext pageContext, out int? facetCategoryId, out int? categoryId)
         {
             facetCategoryId = arguments.GetValueOrDefault<int?>("facetCategoryId");
             categoryId = arguments.GetValueOrDefault<int?>("categoryId", pageContext.CategoryId);
