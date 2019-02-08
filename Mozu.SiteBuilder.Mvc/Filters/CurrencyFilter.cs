@@ -34,9 +34,16 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         {
             throw new NotImplementedException();
         }
-        decimal DoConversion (decimal invalue, PageContext pageContext)
+        decimal DoConversion (decimal invalue, IPageContext pageContext)
         {
-           return pageContext.ConversionRate.GetValueOrDefault(1) * invalue;
+            if (pageContext.CurrencyRateInfo?.Rate.HasValue == true)
+            {
+                var price = (decimal)(pageContext.CurrencyRateInfo.Rate.Value * invalue);
+                var round = (double)pageContext.CurrencyRateInfo.Rounding.GetValueOrDefault(4);
+                return Math.Round(price * (decimal)Math.Pow(10, round), MidpointRounding.AwayFromZero) * (decimal)Math.Pow(10, -1 * round);
+            }
+
+            return invalue;
         }
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {

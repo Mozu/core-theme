@@ -175,6 +175,7 @@
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductImageJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\product\DiagramProductJs.cs" />
     <Compile Include="Diagrams\Admin\Scripts\app\view\searchTuningRule\cdSearchTuningRule.cs" />
+    <Compile Include="Mvc\Filters\MIscFilterTests.cs" />
     <Compile Include="Mvc\RedirectHandlerTests.cs" />
     <Compile Include="Mvc\SEO\CustomRouteTests.cs" />
     <Compile Include="Mvc\Tags\ArgumentCollectionTests.cs" />

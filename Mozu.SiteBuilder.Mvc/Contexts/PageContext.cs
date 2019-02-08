@@ -195,11 +195,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
             get; 
         }
-
-        decimal? ConversionRate
+        
+        CurrencyRateInfo CurrencyRateInfo
         {
             get;
         }
+        DebugModeFlagValues DebugFlags { get; }
     }
     public class CrawlerInfo: ICrawlerInfo
     {
@@ -234,11 +235,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public string IpAddress { get; set; }
     }
-    
+
 
     public class PageContext : IEditableContext, IPageContext
     {
-        private  ISiteBuilderApiContext _apiContext;
+        private ISiteBuilderApiContext _apiContext;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
@@ -251,12 +252,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
 
         }
-        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null , IMobileDetectionProvider mobileDetectionProvider = null,ISiteContext siteContext = null)
+        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null, IMobileDetectionProvider mobileDetectionProvider = null, ISiteContext siteContext = null)
         {
             var pc = new PageContext()
             {
                 _apiContext = apiContext,
-                _mobileDetectionProvider  = mobileDetectionProvider,
+                _mobileDetectionProvider = mobileDetectionProvider,
                 _siteContext = siteContext
             };
             return pc;
@@ -282,7 +283,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             IsSecure = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.SSL_HANDLED, requestMessage);
             Now = apiContext.PreviewDate.GetValueOrDefault(DateTime.UtcNow);
             Url = requestURLGetter.GetRequestUrl();
-           
+
             Sorting = SortingParameters.Create(Search);
             Pagination = PagingParameters.Create(Search);
             SecureHost = _settings.CoreSettings.IsSSLValidationEnabled ? CreateSecureUrl(Url) : CreateDefaultUrl(Url);
@@ -314,13 +315,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     CurrencyDecimalDigits = CurrencyInfo.Precision,
                     CurrencySymbol = CurrencyInfo.Symbol
                 };
-                ConversionRate = _siteContext.CurrencyExchangeRate.Rate;
+               
+                this.CurrencyRateInfo = new CurrencyRateInfo()
+                {
+                    Rate = _siteContext.CurrencyExchangeRate.Rate,
+                    Rounding = _siteContext.CurrencyExchangeRate.DecimalPlaces
+                };
             }
             else
             {
                 NumberFormat = _siteContext.NumberFormat;
                 CurrencyInfo = _siteContext.CurrencyInfo;
-                ConversionRate = 1;
+                this.CurrencyRateInfo = CurrencyRateInfo.Empty;
             }
         }
 
@@ -368,9 +374,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             int accountId = -1;
 
             //TODO: chusk 18 Nov 2015 - should maybe default to some dummy placeholder User.
-            if ( userClaims == null ) return null;
+            if (userClaims == null) return null;
             var profile = userProfile.Value;
-            if ( profile == null ) return null;
+            if (profile == null) return null;
             var segments = new List<string>();
             if (userClaims.Bag != null)
             {
@@ -396,7 +402,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 behaviors.AddRange(userClaims.BehaviorIds);
             }
-            
+
             return new User
             {
                 Email = userProfile.Value.EmailAddress,
@@ -454,7 +460,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             {
                 if (_themeId == null)
                 {
-                   _themeId = this._requestMessage.Resolve<SiteContext>().ThemeId;
+                    _themeId = this._requestMessage.Resolve<SiteContext>().ThemeId;
                 }
                 return _themeId;
             }
@@ -464,7 +470,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
         [JsonPreloadFilter]
-        public bool IsDebugMode 
+        public bool IsDebugMode
         {
             get { return _apiContext.IsDebugMode; }
         }
@@ -505,9 +511,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             return false;
             ;
         }
-       
 
-        [System.Runtime.Serialization.IgnoreDataMember]   
+
+        [System.Runtime.Serialization.IgnoreDataMember]
         public bool HandledByProxy { get; set; }
 
         /// <summary>
@@ -543,10 +549,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
 
-        public CmsPageContext CmsContext {get;set;}
+        public CmsPageContext CmsContext { get; set; }
 
         SearchContext _sc;
-        public SearchContext  Search
+        public SearchContext Search
         {
             get
             {
@@ -558,12 +564,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
         }
         [JsonPreloadFilter]
-        public Visit Visit {
+        public Visit Visit
+        {
             get; set;
         }
 
         public string Title { get; set; }
-      
+
         public string MetaDescription { get; set; }
 
         public string MetaTitle { get; set; }
@@ -596,7 +603,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             set
             {
-                _userProfile = new Lazy<UserProfile>(()=>value);
+                _userProfile = new Lazy<UserProfile>(() => value);
             }
         }
         [JsonPreloadFilter]
@@ -623,9 +630,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string DocumentId { get; set; }
         [JsonPreloadFilter]
-        public bool IsEditMode { get { return _apiContext.IsEditMode;  } set { _apiContext.IsEditMode = value; } }
+        public bool IsEditMode { get { return _apiContext.IsEditMode; } set { _apiContext.IsEditMode = value; } }
         [JsonPreloadFilter]
-        public bool IsAdminMode {  get { return _apiContext.IsAdminMode; } }
+        public bool IsAdminMode { get { return _apiContext.IsAdminMode; } }
         public string Url { get; set; }
 
         public DataViewModeType DataViewMode { get; set; }
@@ -640,11 +647,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonPreloadFilter]
         public DateTime Now { get; set; }
 
-        public  string CategoryCode { get; set; }
+        public string CategoryCode { get; set; }
         public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
         public List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
 
-        
+
         ICrawlerInfo _crawlerInfo;
         [JsonPreloadFilter]
         public ICrawlerInfo CrawlerInfo
@@ -682,26 +689,42 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 _numberFormatInfo = value;
             }
         }
-        decimal? _conversionRate;
-        public decimal? ConversionRate
+
+        
+        CurrencyRateInfo _currencyRateInfo;
+        [JsonPreloadFilter]
+        public CurrencyRateInfo CurrencyRateInfo
         {
             get
             {
                 InitCurrencySettings();
-                return _conversionRate;
+                return _currencyRateInfo;
             }
             set
             {
-                _conversionRate = value;
+                _currencyRateInfo = value;
             }
         }
+      
     }
     public class LocationInfo
     {
         [JsonPreloadFilter]
         public string Code { get; set; }
     }
+    public class CurrencyRateInfo
+    {
+        [JsonPreloadFilter]
+        public decimal? Rate { get; set; }
+        [JsonPreloadFilter]
+        public int? Rounding { get; set; }
+        public static readonly CurrencyRateInfo Empty = new CurrencyRateInfo();
+        public bool IsEmpty()
+        {
+            return Object.Equals(Empty, this);
+        }
 
+    }
 
 
 }

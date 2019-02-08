@@ -13,7 +13,7 @@
             HyprLiveContext.locals.labels = {
                 funch: 'gunch {0}'
             };
-
+            
             HyprLiveContext.templates['path/to/example'] = '{% if legaltemplate %}something{% endif %}';
             HyprLiveContext.templates['path/to/example2'] = '{{pageContext.query.funch}}';
             HyprLiveContext.templates['path/to/example3'] = '{{pageContext.query.bluch}}';
@@ -202,6 +202,33 @@
     describe('custom filters', function() {
         before(function () {
             history.replaceState({}, null, window.location.href.split('?').shift() + "?funch=wunch&gunch= spaces then brunch&htmlqs=<b>bla</b>");
+            var pc = HyprLiveContext.locals.pageContext || {};
+            pc.currencyInfo = {
+                currencyCode: 826,
+                englishName: "Pound sterling",
+                precision: 2,
+                roundingType: 0,
+                symbol: "£"
+            }
+            pc.currencyRateInfo = {
+                rate: 1.333,
+                rounding: 1
+                
+            }
+
+        });
+
+        it('has a currency filter that formats currency', function() {
+            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('£4.00');
+            HyprLiveContext.locals.pageContext.currencyRateInfo = {
+                rate: 1,
+                rounding: -2
+            }
+            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 1254.567 } })).to.equal('£1,300.00');
+
+            HyprLiveContext.locals.pageContext.currencyInfo.precision = 0;
+            HyprLiveContext.locals.pageContext.currencyRateInfo.rounding = -1;
+            expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 1254.567 } })).to.equal('£1,250');
         });
         //it('has a currency filter that formats currency (currently US only)', function() {
         //    expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('$3.00');

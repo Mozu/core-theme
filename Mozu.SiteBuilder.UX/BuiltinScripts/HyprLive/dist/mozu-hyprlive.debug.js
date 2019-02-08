@@ -1,7 +1,7 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2018-09-27
+ * Mozu Hypr Live - v1.0.0 - 2019-02-08
  *
- * Copyright (c) 2018 Volusion, Inc.
+ * Copyright (c) 2019 Volusion, Inc.
  *
  */
 
@@ -5965,7 +5965,7 @@ var util = {
 
 HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, false);
 (function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate) {
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate, conversionRateRounding) {
         var sign, i, j, s, om;
         decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
         om = Math.pow(10, decPlaces);
@@ -5975,9 +5975,13 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
         n = n * conversionRate;
         sign = n < 0 ? "-" : "";
+        if (!isNaN(conversionRateRounding)) {
+            n = Math.round(Math.abs(+n || 0) * Math.pow(10, conversionRateRounding)) * Math.pow(10, -1 * conversionRateRounding);
+        }
+        n = n + "";
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
-            s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+        s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
         return sign + (symbolIsSuffix ? s + symbol : symbol + s);
     }
 
@@ -6038,27 +6042,30 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         RoundingTypeConst = {
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
         };
-    var conversionRate;
+    
     HyprLive.engine.setFilter('currency', function(num, symbol) {
+        var conversionRate;
+        var conversionRateRounding;
         if (!currencyInfo) {
             try {
                 currencyInfo = HyprLive.engine.options.locals.pageContext.currencyInfo;
             } catch (e) {
-                currencyInfo = {
+            }
+            currencyInfo = currencyInfo || {
                     symbol: '$',
                     precision: 2,
-                    roundingType: 'upToCurrencyPrecision'
-                };
-            }
+                    roundingType: 'upToCurrencyPrecision'};
+            
         }
         if (!conversionRate) {
             try {
-                conversionRate = HyprLive.engine.options.locals.pageContext.conversionRate || 1;
+                conversionRate = (HyprLive.engine.options.locals.pageContext.currencyRateInfo || {}).rate || 1;
+                conversionRateRounding = (HyprLive.engine.options.locals.pageContext.currencyRateInfo || {}).rounding;
             } catch (e) {
                 conversionRate = 1;
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate);
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate, conversionRateRounding);
     });
 
 
