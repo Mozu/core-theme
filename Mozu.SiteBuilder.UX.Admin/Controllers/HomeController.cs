@@ -394,7 +394,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
               apiContext.CatalogId = site.CatalogId;
               apiContext.LocaleCode = site.DefaultLocaleCode;
 
-          }).GetDocumentLists();
+          }).GetDocumentLists(200);
 
             var entityListsTask = _entityListsWebApiClient.CloneWithApiContext(apiContext =>
            {
@@ -403,7 +403,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                apiContext.CatalogId = site.CatalogId;
                apiContext.LocaleCode = site.DefaultLocaleCode;
 
-           }).GetEntityLists();
+           }).GetEntityLists(200);
 
             await Task.WhenAll(docListsTask, entityListsTask).ConfigureAwait(false);
             var docLists = docListsTask.Result.ReadAsSync();
