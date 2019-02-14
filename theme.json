@@ -1,1228 +1,1180 @@
 {
-    "about": {
-        "author": "Mozu",
-        "defaultLanguage": "en-US",
-        "extends": null,
-        "isDesktop": true,
-        "isMobile": false,
-        "isTablet": false,
-        "name": "Mozu.CoreTheme",
-        "allowProduction": true
+  "about": {
+    "author": "Mozu",
+    "defaultLanguage": "en-US",
+    "extends": null,
+    "isDesktop": true,
+    "isMobile": false,
+    "isTablet": false,
+    "name": "Mozu.CoreTheme",
+    "allowProduction": true
+  },
+  "editors": [
+    {
+      "id": "layout",
+      "path": "layout.js"
     },
-    "editors": [
+    {
+      "documentTypes": [
+        "web_page@mozu"
+      ],
+      "id": "web_page@mozu",
+      "path": "web_page.js",
+      "priority": 0.2
+    },
+    {
+      "id": "about-us@mozu",
+      "path": "about-us.js"
+    },
+    {
+      "id": "email-orderconfirmation",
+      "path": "email-orderconfirmation.js"
+    },
+    {
+      "id": "back-office@mozu",
+      "path": "back-office.js"
+    },
+    {
+      "id": "email@mozu",
+      "path": "email.js",
+      "documentLists": [
+        "emailTemplateContent@mozu"
+      ],
+      "priority": 0.2
+    },
+    {
+      "id": "image",
+      "path": "image.js"
+    },
+    {
+      "id": "horizontalrule",
+      "path": "horizontalRule.js"
+    },
+    {
+      "id": "pageTemplateContent@mozu",
+      "path": "pageTemplateContent.js",
+      "documentTypes": [
+        "pageTemplateContent@mozu"
+      ],
+      "priority": 0.2
+    },
+    {
+      "id": "productContent@mozu",
+      "path": "productContent.js",
+      "documentTypes": [
+        "productContent@mozu"
+      ],
+      "priority": 0.2
+    },
+    {
+      "id": "categoryContent@mozu",
+      "path": "categoryContent.js",
+      "documentTypes": ["categoryContent@mozu"],
+      "priority": 0.2
+    },
+    {
+      "id": "welcomeMatEditor",
+      "path": "welcomeMatEditor.js",
+      "priority": 0.2
+    },
+    {
+      "id": "borderFreeOrderTrackingEditor",
+      "path": "borderFreeOrderTrackingEditor.js",
+      "priority": 0.2
+    }
+  ],
+  "emailTemplates": [
+    {
+      "id": "order.shipped",
+      "properties": {},
+      "template": "email/order-shipped",
+      "title": "Your Order Has Shipped"
+    },
+    {
+      "id": "checkout.changed",
+      "customEditor": "email-orderconfirmation-v2",
+      "properties": {},
+      "template": "email/order-confirmation-v2",
+      "title": "Order Confirmation V2"
+    },
+    {
+      "id": "order.changed",
+      "customEditor": "email-orderconfirmation",
+      "properties": {},
+      "template": "email/order-confirmation",
+      "title": "Order Confirmation"
+    },
+    {
+      "id": "refund.created",
+      "properties": {},
+      "template": "email/order-refund-issued",
+      "title": "Refund Issued"
+    },
+    {
+      "id": "return.created",
+      "properties": {},
+      "template": "email/product-return-changed",
+      "title": "Return Created"
+    },
+    {
+      "id": "return.authorized",
+      "properties": {},
+      "template": "email/product-return-authorized",
+      "title": "Return Authorized"
+    },
+    {
+      "id": "return.rejected",
+      "properties": {},
+      "template": "email/product-return-rejected",
+      "title": "Return Request Rejected"
+    },
+    {
+      "id": "return.closed",
+      "properties": {},
+      "template": "email/product-return-received",
+      "title": "Return Item Received"
+    },
+    {
+      "id": "return.changed",
+      "properties": {},
+      "template": "email/product-return-changed",
+      "title": "Return Has Been Updated"
+    },
+    {
+      "id": "user.created",
+      "properties": {},
+      "template": "email/new-user",
+      "title": "Welcome"
+    },
+    {
+      "id": "user.passwordreset",
+      "properties": {},
+      "template": "email/password-reset",
+      "title": "Password Reset"
+    },
+    {
+      "id": "product.instock",
+      "properties": {},
+      "template": "email/product-instock",
+      "title": "Back in Stock"
+    },
+    {
+      "id": "giftcard.created",
+      "properties": {},
+      "template": "email/giftcard-created",
+      "title": "Gift Card Created"
+    }
+  ],
+  "backOfficeTemplates": [
+    {
+      "id": "order-details",
+      "title": "Order Details",
+      "template": "back-office/order-details",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "packing-slip",
+      "title": "Packing Slip",
+      "template": "back-office/packing-slip",
+      "customEditor": "back-office@mozu"
+    }
+  ],
+  "pageTypes": [
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "about-us",
+      "template": "about-us",
+      "customEditor": "about-us",
+      "title": "About Us",
+      "userCreatable": true,
+      "zones": [
         {
-            "id": "layout",
-            "path": "layout.js"
-        },
-        {
-            "documentTypes": [
-                "web_page@mozu"
-            ],
-            "id": "web_page@mozu",
-            "path": "web_page.js",
-            "priority": 0.2
-        },
-        {
-            "id": "about-us@mozu",
-            "path": "about-us.js"
-        },
-        {
-            "id": "email-orderconfirmation",
-            "path": "email-orderconfirmation.js"
-        },
-        {
-            "id": "back-office@mozu",
-            "path": "back-office.js"
-        },
-        {
-            "id": "email@mozu",
-            "path": "email.js",
-            "documentLists": [
-                "emailTemplateContent@mozu"
-            ],
-            "priority": 0.2
-        },
-        {
-            "id": "image",
-            "path": "image.js"
-        },
-        {
-            "id": "horizontalrule",
-            "path": "horizontalRule.js"
-        },
-        {
-            "id": "pageTemplateContent@mozu",
-            "path": "pageTemplateContent.js",
-            "documentTypes": [
-                "pageTemplateContent@mozu"
-            ],
-            "priority": 0.2
-        },
-        {
-            "id": "productContent@mozu",
-            "path": "productContent.js",
-            "documentTypes": [
-                "productContent@mozu"
-            ],
-            "priority": 0.2
-        },
-        {
-            "id": "categoryContent@mozu",
-            "path": "categoryContent.js",
-            "documentTypes": [
-                "categoryContent@mozu"
-            ],
-            "priority": 0.2
+          "id": "body",
+          "rows": [
+            {
+              "columns": [
+                {
+                  "rows": null,
+                  "span": 12,
+                  "widgets": [
+                    {
+                      "config": {
+                        "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+                      },
+                      "definitionId": "content",
+                      "isRichText": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
-    ],
-    "emailTemplates": [
-        {
-            "id": "order.shipped",
-            "properties": { },
-            "template": "email/order-shipped",
-            "title": "Your Order Has Shipped"
-        },
-        {
-          "id": "checkout.changed",
-          "customEditor": "email-orderconfirmation-v2",
-          "properties": {},
-          "template": "email/order-confirmation-v2",
-          "title": "Order Confirmation V2"
-        },
-        {
-            "id": "order.changed",
-            "customEditor": "email-orderconfirmation",
-            "properties": { },
-            "template": "email/order-confirmation",
-            "title": "Order Confirmation"
-        },
-        {
-            "id": "refund.created",
-            "properties": { },
-            "template": "email/order-refund-issued",
-            "title": "Refund Issued"
-        },
-        {
-            "id": "return.created",
-            "properties": { },
-            "template": "email/product-return-changed",
-            "title": "Return Created"
-        },
-        {
-            "id": "return.authorized",
-            "properties": { },
-            "template": "email/product-return-authorized",
-            "title": "Return Authorized"
-        },
-        {
-            "id": "return.rejected",
-            "properties": { },
-            "template": "email/product-return-rejected",
-            "title": "Return Request Rejected"
-        },
-        {
-            "id": "return.closed",
-            "properties": { },
-            "template": "email/product-return-received",
-            "title": "Return Item Received"
-        },
-        {
-            "id": "return.changed",
-            "properties": { },
-            "template": "email/product-return-changed",
-            "title": "Return Has Been Updated"
-        },
-        {
-            "id": "user.created",
-            "properties": { },
-            "template": "email/new-user",
-            "title": "Welcome"
-        },
-        {
-            "id": "user.passwordreset",
-            "properties": { },
-            "template": "email/password-reset",
-            "title": "Password Reset"
-        },
-        {
-            "id": "product.instock",
-            "properties": { },
-            "template": "email/product-instock",
-            "title": "Back in Stock"
-        },
-        {
-            "id": "giftcard.created",
-            "properties": { },
-            "template": "email/giftcard-created",
-            "title": "Gift Card Created"
-        }
-    ],
-    "backOfficeTemplates": [
-        {
-            "id": "order-details",
-            "title": "Order Details",
-            "template": "back-office/order-details",
-            "customEditor": "back-office@mozu"
-        },
-        {
-            "id": "packing-slip",
-            "title": "Packing Slip",
-            "template": "back-office/packing-slip",
-            "customEditor": "back-office@mozu"
-        }
-    ],
-    "pageTypes": [
+      ]
+    },
+    {
+      "entityType": "siteTemplate",
+      "id": "site_page",
+      "template": "page",
+      "title": "Default Site Template"
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "blank-page",
+      "template": "blank-page",
+      "title": "Blank Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "blank-splash-page",
+      "template": "blank-splash-page",
+      "title": "Blank Splash Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "editor": "landing-page",
+      "entityType": "webpage",
+      "id": "landing",
+      "template": "blank-page",
+      "title": "Landing Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "home",
+      "template": "home",
+      "title": "Home Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "location",
+      "template": "location",
+      "title": "Store Locator",
+      "userCreatable": true
+    },
+    {
+      "entityType": "category",
+      "id": "category",
+      "template": "category",
+      "title": "Category",
+      "userCreatable": false
+    },
+    {
+      "entityType": "category",
+      "id": "parent-category",
+      "template": "parent-category",
+      "title": "ParentCategory",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "product",
+      "id": "product",
+      "template": "product",
+      "title": "Product",
+      "userCreatable": false,
+      "customEditor": "productContent@mozu"
+    },
+    {
+      "entityType": "searchresult",
+      "id": "search-results",
+      "template": "search-results",
+      "title": "Search Results",
+      "userCreatable": false
+    },
+    {
+      "entityType": "nosearchresult",
+      "id": "no-search-results",
+      "template": "no-search-results",
+      "title": "Empty Search Results",
+      "userCreatable": false
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "404",
+      "template": "404",
+      "title": "404 Not Found",
+      "userCreatable": false
+    },
+    {
+      "entityType": "cart",
+      "id": "cart",
+      "template": "cart",
+      "title": "Cart",
+      "userCreatable": false
+    },
+    {
+      "entityType": "order",
+      "id": "checkout",
+      "template": "checkout",
+      "title": "Checkout",
+      "userCreatable": false
+    },
+    {
+      "entityType": "order",
+      "id": "confirmation",
+      "template": "confirmation",
+      "title": "Confirmation",
+      "userCreatable": false
+    },
+    {
+      "entityType": "checkout",
+      "id": "confirmationv2",
+      "template": "confirmationv2",
+      "title": "ConfirmationV2",
+      "userCreatable": false
+    },
+    {
+      "entityType": "checkout",
+      "id": "checkoutv2",
+      "template": "checkoutv2",
+      "title": "Checkout V2",
+      "userCreatable": false
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "international-checkout",
+      "template": "international-checkout",
+      "title": "International Checkout",
+      "userCreatable": true
+    },
+    {
+      "entityType": "customer",
+      "id": "my_account",
+      "template": "my-account",
+      "title": "My Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "b2b_account",
+      "template": "b2b-account",
+      "title": "B2B Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "login",
+      "id": "login",
+      "template": "login",
+      "title": "Login",
+      "userCreatable": false
+    },
+    {
+      "entityType": "resetPasswordConfirmDetails",
+      "id": "reset_password",
+      "template": "reset-password",
+      "title": "Reset Password",
+      "userCreatable": false
+    },
+    {
+      "entityType": "anonymous_account",
+      "id": "my_anonymous_account",
+      "template": "my-anonymous-account",
+      "title": "Anonymous Order Status",
+      "userCreatable": false
+    },
+    {
+      "entityType": "signup",
+      "id": "signup",
+      "template": "signup",
+      "title": "Sign Up",
+      "userCreatable": false
+    },
+    {
+      "entityType": "forgotpassword",
+      "id": "forgotpassword",
+      "template": "forgot-password",
+      "title": "Forgot Password",
+      "userCreatable": false
+    },
+    {
+      "entityType": "orderStatus",
+      "id": "orderStatus",
+      "template": "order-status",
+      "title": "Order Status",
+      "userCreatable": false
+    }
+  ],
+  "settings": {
+    "enableRecaptcha": false,
+    "recaptchaSiteKey": null,
+    "__recaptchaSecrete": null,
+    "recaptchaType": "Invisible",
+    "recaptchaTheme": "light",
+    "recaptchaSize": "normal",
+    "recaptchaBadgePosition": "bottomright",
+    "allowFilterByLocationInventory": false,
+    "backofficeDateTimeFormat": "m/d/Y H:i:s O",
+    "extendedPropertiesEnabled": false,
+    "extendedPropertyParameters": "",
+    "isCvvSuppressed": false,
+    "zipCodeEnabled": true,
+    "phoneNumberEnabled": true,
+    "billingEmailEnabled": true,
+    "bannerImage": "/resources/images/banner.jpg",
+    "bannerImageEnabled": false,
+    "bannerImageRepeat": "repeat-x",
+    "bodyBackgroundColor": "#FFFFFF",
+    "cmsTextStyles": [
       {
-        "documentType": "web_page",
-        "entityType": "webpage",
-        "id": "about-us",
-        "template": "about-us",
-        "customEditor": "about-us",
-        "title": "About Us",
-        "userCreatable": true,
-        "zones": [
-          {
-            "id": "body",
-            "rows": [
-              {
-                "columns": [
-                  {
-                    "rows": null,
-                    "span": 12,
-                    "widgets": [
-                      {
-                        "config": {
-                          "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-                        },
-                        "definitionId": "content",
-                        "isRichText": true
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        "className": "mz-style-1",
+        "label": "Heading 1",
+        "tagName": "h1"
       },
-        {
-          "entityType": "siteTemplate",
-          "id": "site_page",
-          "template": "page",
-          "title": "Default Site Template"
-        },
-        {
-          "documentType": "web_page",
-          "entityType": "webpage",
-          "id": "blank-page",
-          "template": "blank-page",
-          "title": "Blank Page",
-          "userCreatable": true
-        },
-        {
-          "documentType": "web_page",
-          "entityType": "webpage",
-          "id": "blank-splash-page",
-          "template": "blank-splash-page",
-          "title": "Blank Splash Page",
-          "userCreatable": true
-        },
-        {
-            "documentType": "web_page",
-            "editor": "landing-page",
-            "entityType": "webpage",
-            "id": "landing",
-            "template": "blank-page",
-            "title": "Landing Page",
-            "userCreatable": true
-        },
-        {
-            "documentType": "web_page",
-            "entityType": "webpage",
-            "id": "home",
-            "template": "home",
-            "title": "Home Page",
-            "userCreatable": true
-        },
-        {
-            "documentType": "web_page",
-            "entityType": "webpage",
-            "id": "location",
-            "template": "location",
-            "title": "Store Locator",
-            "userCreatable": true
-        },
-        {
-            "entityType": "category",
-            "id": "category",
-            "template": "category",
-            "title": "Category",
-            "userCreatable": false
-        },
-        {
-            "entityType": "category",
-            "id": "parent-category",
-            "template": "parent-category",
-            "title": "ParentCategory",
-            "userCreatable": false,
-            "customEditor": "categoryContent@mozu"
-        },
-        {
-            "entityType": "product",
-            "id": "product",
-            "template": "product",
-            "title": "Product",
-            "userCreatable": false,
-            "customEditor": "productContent@mozu"
-        },
-        {
-            "entityType": "searchresult",
-            "id": "search-results",
-            "template": "search-results",
-            "title": "Search Results",
-            "userCreatable": false
-        },
-        {
-            "entityType": "nosearchresult",
-            "id": "no-search-results",
-            "template": "no-search-results",
-            "title": "Empty Search Results",
-            "userCreatable": false
-        },
-        {
-            "documentType": "web_page",
-            "entityType": "webpage",
-            "id": "404",
-            "template": "404",
-            "title": "404 Not Found",
-            "userCreatable": false
-        },
-        {
-            "entityType": "cart",
-            "id": "cart",
-            "template": "cart",
-            "title": "Cart",
-            "userCreatable": false
-        },
-        {
-            "entityType": "order",
-            "id": "checkout",
-            "template": "checkout",
-            "title": "Checkout",
-            "userCreatable": false
-        },
-        {
-            "entityType": "order",
-            "id": "confirmation",
-            "template": "confirmation",
-            "title": "Confirmation",
-            "userCreatable": false
-        },
-        {
-          "entityType": "checkout",
-          "id": "confirmationv2",
-          "template": "confirmationv2",
-          "title": "ConfirmationV2",
-          "userCreatable": false
-        },
-        {
-            "entityType": "checkout",
-            "id": "checkoutv2",
-            "template": "checkoutv2",
-            "title": "Checkout V2",
-            "userCreatable": false
-        },
-        {
-            "entityType": "customer",
-            "id": "my_account",
-            "template": "my-account",
-            "title": "My Account",
-            "userCreatable": false
-        },
-        {
-            "entityType": "login",
-            "id": "login",
-            "template": "login",
-            "title": "Login",
-            "userCreatable": false
-        },{
-            "entityType": "resetPasswordConfirmDetails",
-            "id": "reset_password",
-            "template": "reset-password",
-            "title": "Reset Password",
-            "userCreatable": false
-        },
-        {
-            "entityType": "anonymous_account",
-            "id": "my_anonymous_account",
-            "template": "my-anonymous-account",
-            "title": "Anonymous Order Status",
-            "userCreatable": false
-        },
-        {
-            "entityType": "signup",
-            "id": "signup",
-            "template": "signup",
-            "title": "Sign Up",
-            "userCreatable": false
-        },
-        {
-            "entityType": "forgotpassword",
-            "id": "forgotpassword",
-            "template": "forgot-password",
-            "title": "Forgot Password",
-            "userCreatable": false
-        },
-        {
-            "entityType": "orderStatus",
-            "id": "orderStatus",
-            "template": "order-status",
-            "title": "Order Status",
-            "userCreatable": false
-        }
+      {
+        "label": "Heading 2",
+        "tagName": "h2"
+      },
+      {
+        "label": "Paragraph",
+        "tagName": "p"
+      }
     ],
-    "settings": {
-        "allowFilterByLocationInventory": false,
-        "backofficeDateTimeFormat": "m/d/Y H:i:s O",
-        "extendedPropertiesEnabled": false,
-        "extendedPropertyParameters": "",
-        "isCvvSuppressed": false,
-        "zipCodeEnabled": true,
-        "phoneNumberEnabled": true,
-        "billingEmailEnabled": true,
-        "bannerImage": "/resources/images/banner.jpg",
-        "bannerImageEnabled": false,
-        "bannerImageRepeat": "repeat-x",
-        "bodyBackgroundColor": "#FFFFFF",
-        "cmsTextStyles": [
-            {
-                "className": "mz-style-1",
-                "label": "Heading 1",
-                "tagName": "h1"
-            },
-            {
-                "label": "Heading 2",
-                "tagName": "h2"
-            },
-            {
-                "label": "Paragraph",
-                "tagName": "p"
-            }
-        ],
-        "defaultPageSize": 15,
-        "defaultSort": "createDate asc",
-        "disableEditOfSavedCreditCard": true,
-        "enablePartialCaching": true,
-        "loadGoogleFonts": [
-            "Source Sans Pro"
-        ],
-        "primaryFont": "Source Sans Pro",
-        "fontSize": "14px",
-        "gutterWidth": "25px",
-        "internal-themeAddons": [ ],
-        "itemListingThumbSize": 80,
-        "listProductCode": true,
-        "listProductShortDesc": true,
-        "listVolumePricing": false,
-        "listProductThumbSize": 160,
-        "locationInventoryFilterText": "Shop My Store",
-        "maxFilterLocations": 50,
-        "maxProductImageThumbnailSize": 50,
-        "maxProductSummaryWords": 40,
-        "maxTopLevelNavItems": 8,
-        "maxTopLevelNavLabelLength": 20,
-        "pageSizeOptions": [
-            15,
-            25,
-            50,
-            100
-        ],
-        "preselectCountryCode": "US",
-        "productImagesContainerWidth": 350,
-        "requireCheckoutAgreeToTerms": true,
-        "suggestPriorSearchTerms": true,
-        "searchExpandOnFocus": true,
-        "showAddressTypeDropdown": true,
-        "showBreadcrumbs": true,
-        "showCartItemDimensions": true,
-        "showCartItemImage": true,
-        "showCartItemOptions": true,
-        "showCartItemWeight": true,
-        "showCategoryFacets": true,
-        "showChildCategoriesInFaceting": true,
-        "showCheckoutCommentsField": true,
-        "showMSRP": true,
-        "showProductDetailMeasurements": true,
-        "showProductDetailMfgPartNumber": true,
-        "showProductDetailProperties": true,
-        "showProductDetailShortDesc": true,
-        "showProductDetailUPC": true,
-        "textColor": "#444444",
-        "usStates": [
-            {
-                "abbreviation": "AL",
-                "name": "Alabama"
-            },
-            {
-                "abbreviation": "AK",
-                "name": "Alaska"
-            },
-            {
-                "abbreviation": "AS",
-                "name": "American Samoa"
-            },
-            {
-                "abbreviation": "AZ",
-                "name": "Arizona"
-            },
-            {
-                "abbreviation": "AR",
-                "name": "Arkansas"
-            },
-            {
-                "abbreviation": "CA",
-                "name": "California"
-            },
-            {
-                "abbreviation": "CO",
-                "name": "Colorado"
-            },
-            {
-                "abbreviation": "CT",
-                "name": "Connecticut"
-            },
-            {
-                "abbreviation": "DE",
-                "name": "Delaware"
-            },
-            {
-                "abbreviation": "DC",
-                "name": "District Of Columbia"
-            },
-            {
-                "abbreviation": "FM",
-                "name": "Federated States Of Micronesia"
-            },
-            {
-                "abbreviation": "FL",
-                "name": "Florida"
-            },
-            {
-                "abbreviation": "GA",
-                "name": "Georgia"
-            },
-            {
-                "abbreviation": "GU",
-                "name": "Guam"
-            },
-            {
-                "abbreviation": "HI",
-                "name": "Hawaii"
-            },
-            {
-                "abbreviation": "ID",
-                "name": "Idaho"
-            },
-            {
-                "abbreviation": "IL",
-                "name": "Illinois"
-            },
-            {
-                "abbreviation": "IN",
-                "name": "Indiana"
-            },
-            {
-                "abbreviation": "IA",
-                "name": "Iowa"
-            },
-            {
-                "abbreviation": "KS",
-                "name": "Kansas"
-            },
-            {
-                "abbreviation": "KY",
-                "name": "Kentucky"
-            },
-            {
-                "abbreviation": "LA",
-                "name": "Louisiana"
-            },
-            {
-                "abbreviation": "ME",
-                "name": "Maine"
-            },
-            {
-                "abbreviation": "MH",
-                "name": "Marshall Islands"
-            },
-            {
-                "abbreviation": "MD",
-                "name": "Maryland"
-            },
-            {
-                "abbreviation": "MA",
-                "name": "Massachusetts"
-            },
-            {
-                "abbreviation": "MI",
-                "name": "Michigan"
-            },
-            {
-                "abbreviation": "MN",
-                "name": "Minnesota"
-            },
-            {
-                "abbreviation": "MS",
-                "name": "Mississippi"
-            },
-            {
-                "abbreviation": "MO",
-                "name": "Missouri"
-            },
-            {
-                "abbreviation": "MT",
-                "name": "Montana"
-            },
-            {
-                "abbreviation": "NE",
-                "name": "Nebraska"
-            },
-            {
-                "abbreviation": "NV",
-                "name": "Nevada"
-            },
-            {
-                "abbreviation": "NH",
-                "name": "New Hampshire"
-            },
-            {
-                "abbreviation": "NJ",
-                "name": "New Jersey"
-            },
-            {
-                "abbreviation": "NM",
-                "name": "New Mexico"
-            },
-            {
-                "abbreviation": "NY",
-                "name": "New York"
-            },
-            {
-                "abbreviation": "NC",
-                "name": "North Carolina"
-            },
-            {
-                "abbreviation": "ND",
-                "name": "North Dakota"
-            },
-            {
-                "abbreviation": "MP",
-                "name": "Northern Mariana Islands"
-            },
-            {
-                "abbreviation": "OH",
-                "name": "Ohio"
-            },
-            {
-                "abbreviation": "OK",
-                "name": "Oklahoma"
-            },
-            {
-                "abbreviation": "OR",
-                "name": "Oregon"
-            },
-            {
-                "abbreviation": "PW",
-                "name": "Palau"
-            },
-            {
-                "abbreviation": "PA",
-                "name": "Pennsylvania"
-            },
-            {
-                "abbreviation": "PR",
-                "name": "Puerto Rico"
-            },
-            {
-                "abbreviation": "RI",
-                "name": "Rhode Island"
-            },
-            {
-                "abbreviation": "SC",
-                "name": "South Carolina"
-            },
-            {
-                "abbreviation": "SD",
-                "name": "South Dakota"
-            },
-            {
-                "abbreviation": "TN",
-                "name": "Tennessee"
-            },
-            {
-                "abbreviation": "TX",
-                "name": "Texas"
-            },
-            {
-                "abbreviation": "UT",
-                "name": "Utah"
-            },
-            {
-                "abbreviation": "VT",
-                "name": "Vermont"
-            },
-            {
-                "abbreviation": "VI",
-                "name": "Virgin Islands"
-            },
-            {
-                "abbreviation": "VA",
-                "name": "Virginia"
-            },
-            {
-                "abbreviation": "WA",
-                "name": "Washington"
-            },
-            {
-                "abbreviation": "WV",
-                "name": "West Virginia"
-            },
-            {
-                "abbreviation": "WI",
-                "name": "Wisconsin"
-            },
-            {
-                "abbreviation": "WY",
-                "name": "Wyoming"
-            }
-        ],
-        "useDebugScripts": false,
-        "useSearchAutocomplete": true,
-        "allowCustomerInitiatedReturns": true,
-        "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
+    "defaultPageSize": 15,
+    "defaultSort": "createDate asc",
+    "disableEditOfSavedCreditCard": true,
+    "enablePartialCaching": true,
+    "loadGoogleFonts": ["Source Sans Pro"],
+    "primaryFont": "Source Sans Pro",
+    "fontSize": "14px",
+    "gutterWidth": "25px",
+    "internal-themeAddons": [],
+    "itemListingThumbSize": 80,
+    "listProductCode": true,
+    "listProductShortDesc": true,
+    "listVolumePricing": false,
+    "listProductThumbSize": 160,
+    "locationInventoryFilterText": "Shop My Store",
+    "maxFilterLocations": 50,
+    "maxProductImageThumbnailSize": 50,
+    "maxProductSummaryWords": 40,
+    "maxTopLevelNavItems": 8,
+    "maxTopLevelNavLabelLength": 20,
+    "pageSizeOptions": [15, 25, 50, 100],
+    "preselectCountryCode": "US",
+    "productImagesContainerWidth": 350,
+    "requireCheckoutAgreeToTerms": true,
+    "suggestPriorSearchTerms": true,
+    "searchExpandOnFocus": true,
+    "showAddressTypeDropdown": true,
+    "showBreadcrumbs": true,
+    "showCartItemDimensions": true,
+    "showCartItemImage": true,
+    "showCartItemOptions": true,
+    "showCartItemWeight": true,
+    "showCategoryFacets": true,
+    "showChildCategoriesInFaceting": true,
+    "showCheckoutCommentsField": true,
+    "showMSRP": true,
+    "showProductDetailMeasurements": true,
+    "showProductDetailMfgPartNumber": true,
+    "showProductDetailProperties": true,
+    "showProductDetailShortDesc": true,
+    "showProductDetailUPC": true,
+    "textColor": "#444444",
+    "usStates": [
+      {
+        "abbreviation": "AL",
+        "name": "Alabama"
+      },
+      {
+        "abbreviation": "AK",
+        "name": "Alaska"
+      },
+      {
+        "abbreviation": "AS",
+        "name": "American Samoa"
+      },
+      {
+        "abbreviation": "AZ",
+        "name": "Arizona"
+      },
+      {
+        "abbreviation": "AR",
+        "name": "Arkansas"
+      },
+      {
+        "abbreviation": "CA",
+        "name": "California"
+      },
+      {
+        "abbreviation": "CO",
+        "name": "Colorado"
+      },
+      {
+        "abbreviation": "CT",
+        "name": "Connecticut"
+      },
+      {
+        "abbreviation": "DE",
+        "name": "Delaware"
+      },
+      {
+        "abbreviation": "DC",
+        "name": "District Of Columbia"
+      },
+      {
+        "abbreviation": "FM",
+        "name": "Federated States Of Micronesia"
+      },
+      {
+        "abbreviation": "FL",
+        "name": "Florida"
+      },
+      {
+        "abbreviation": "GA",
+        "name": "Georgia"
+      },
+      {
+        "abbreviation": "GU",
+        "name": "Guam"
+      },
+      {
+        "abbreviation": "HI",
+        "name": "Hawaii"
+      },
+      {
+        "abbreviation": "ID",
+        "name": "Idaho"
+      },
+      {
+        "abbreviation": "IL",
+        "name": "Illinois"
+      },
+      {
+        "abbreviation": "IN",
+        "name": "Indiana"
+      },
+      {
+        "abbreviation": "IA",
+        "name": "Iowa"
+      },
+      {
+        "abbreviation": "KS",
+        "name": "Kansas"
+      },
+      {
+        "abbreviation": "KY",
+        "name": "Kentucky"
+      },
+      {
+        "abbreviation": "LA",
+        "name": "Louisiana"
+      },
+      {
+        "abbreviation": "ME",
+        "name": "Maine"
+      },
+      {
+        "abbreviation": "MH",
+        "name": "Marshall Islands"
+      },
+      {
+        "abbreviation": "MD",
+        "name": "Maryland"
+      },
+      {
+        "abbreviation": "MA",
+        "name": "Massachusetts"
+      },
+      {
+        "abbreviation": "MI",
+        "name": "Michigan"
+      },
+      {
+        "abbreviation": "MN",
+        "name": "Minnesota"
+      },
+      {
+        "abbreviation": "MS",
+        "name": "Mississippi"
+      },
+      {
+        "abbreviation": "MO",
+        "name": "Missouri"
+      },
+      {
+        "abbreviation": "MT",
+        "name": "Montana"
+      },
+      {
+        "abbreviation": "NE",
+        "name": "Nebraska"
+      },
+      {
+        "abbreviation": "NV",
+        "name": "Nevada"
+      },
+      {
+        "abbreviation": "NH",
+        "name": "New Hampshire"
+      },
+      {
+        "abbreviation": "NJ",
+        "name": "New Jersey"
+      },
+      {
+        "abbreviation": "NM",
+        "name": "New Mexico"
+      },
+      {
+        "abbreviation": "NY",
+        "name": "New York"
+      },
+      {
+        "abbreviation": "NC",
+        "name": "North Carolina"
+      },
+      {
+        "abbreviation": "ND",
+        "name": "North Dakota"
+      },
+      {
+        "abbreviation": "MP",
+        "name": "Northern Mariana Islands"
+      },
+      {
+        "abbreviation": "OH",
+        "name": "Ohio"
+      },
+      {
+        "abbreviation": "OK",
+        "name": "Oklahoma"
+      },
+      {
+        "abbreviation": "OR",
+        "name": "Oregon"
+      },
+      {
+        "abbreviation": "PW",
+        "name": "Palau"
+      },
+      {
+        "abbreviation": "PA",
+        "name": "Pennsylvania"
+      },
+      {
+        "abbreviation": "PR",
+        "name": "Puerto Rico"
+      },
+      {
+        "abbreviation": "RI",
+        "name": "Rhode Island"
+      },
+      {
+        "abbreviation": "SC",
+        "name": "South Carolina"
+      },
+      {
+        "abbreviation": "SD",
+        "name": "South Dakota"
+      },
+      {
+        "abbreviation": "TN",
+        "name": "Tennessee"
+      },
+      {
+        "abbreviation": "TX",
+        "name": "Texas"
+      },
+      {
+        "abbreviation": "UT",
+        "name": "Utah"
+      },
+      {
+        "abbreviation": "VT",
+        "name": "Vermont"
+      },
+      {
+        "abbreviation": "VI",
+        "name": "Virgin Islands"
+      },
+      {
+        "abbreviation": "VA",
+        "name": "Virginia"
+      },
+      {
+        "abbreviation": "WA",
+        "name": "Washington"
+      },
+      {
+        "abbreviation": "WV",
+        "name": "West Virginia"
+      },
+      {
+        "abbreviation": "WI",
+        "name": "Wisconsin"
+      },
+      {
+        "abbreviation": "WY",
+        "name": "Wyoming"
+      }
+    ],
+    "useDebugScripts": false,
+    "useSearchAutocomplete": true,
+    "allowCustomerInitiatedReturns": true,
+    "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
+  },
+  "layoutWidgets": [
+    {
+      "id": "mz-1-col",
+      "category": "*",
+      "displayName": "1 Column 100",
+      "displayTemplate": "base",
+      "defaultConfig": {
+        "title": "Dropzone",
+        "mz-col1": 100
+      },
+      "customEditor": "layout",
+      "icon": "/resources/admin/widgets/1-col_icon.png",
+      "validPageTypes": ["*"],
+      "columns": [
+        {
+          "width": "100%"
+        }
+      ]
     },
-    "layoutWidgets": [
+    {
+      "id": "mz-2-col",
+      "category": "*",
+      "displayName": "2 Column 50/50",
+      "displayTemplate": "base",
+      "defaultConfig": {
+        "title": "Dropzone",
+        "mz-col1": 50,
+        "mz-col2": 50
+      },
+      "customEditor": "layout",
+      "icon": "/resources/admin/widgets/2-col_icon.png",
+      "validPageTypes": ["*"],
+      "columns": [
         {
-            "id": "mz-1-col",
-            "category": "*",
-            "displayName": "1 Column 100",
-            "displayTemplate": "base",
-            "defaultConfig": {
-                "title": "Dropzone",
-                "mz-col1": 100
-            },
-            "customEditor": "layout",
-            "icon": "/resources/admin/widgets/1-col_icon.png",
-            "validPageTypes": [
-                "*"
-            ],
-            "columns": [
-                {
-                    "width": "100%"
-                }
-            ]
+          "width": "50%"
         },
         {
-            "id": "mz-2-col",
-            "category": "*",
-            "displayName": "2 Column 50/50",
-            "displayTemplate": "base",
-            "defaultConfig": {
-                "title": "Dropzone",
-                "mz-col1": 50,
-                "mz-col2": 50
-            },
-            "customEditor": "layout",
-            "icon": "/resources/admin/widgets/2-col_icon.png",
-            "validPageTypes": [
-                "*"
-            ],
-            "columns": [
-                {
-                    "width": "50%"
-                },
-                {
-
-                    "width": "50%"
-                }
-            ]
-        },
-        {
-            "id": "mz-3-col",
-            "category": "*",
-            "displayName": "3 Column 33/33/33",
-            "displayTemplate": "base",
-            "defaultConfig": {
-                "title": "Dropzone",
-                "mz-col1": 33.33,
-                "mz-col2": 33.33,
-                "mz-col3": 33.33
-            },
-            "customEditor": "layout",
-            "icon": "/resources/admin/widgets/3-col_icon.png",
-            "validPageTypes": [
-                "*"
-            ],
-            "columns": [
-                {
-                    "width": "33.3%"
-                },
-                {
-
-                    "width": "33.3%"
-                },
-                {
-
-                    "width": "33.3%"
-                }
-            ]
-        },
-        {
-            "id": "mz-4-col",
-            "category": "*",
-            "displayName": "4 Column 25/25/25/25",
-            "displayTemplate": "base",
-            "defaultConfig": {
-                "title": "Dropzone",
-                "mz-col1": 25,
-                "mz-col2": 25,
-                "mz-col3": 25,
-                "mz-col4": 25
-            },
-            "customEditor": "layout",
-            "icon": "/resources/admin/widgets/4-col_icon.png",
-            "validPageTypes": [
-                "*"
-            ],
-            "columns": [
-                {
-                    "width": "25%"
-                },
-                {
-
-                    "width": "25%"
-                },
-                {
-
-                    "width": "25%"
-                },
-                {
-
-                    "width": "25%"
-                }
-            ]
+          "width": "50%"
         }
-    ],
-    "widgets": [
+      ]
+    },
+    {
+      "id": "mz-3-col",
+      "category": "*",
+      "displayName": "3 Column 33/33/33",
+      "displayTemplate": "base",
+      "defaultConfig": {
+        "title": "Dropzone",
+        "mz-col1": 33.33,
+        "mz-col2": 33.33,
+        "mz-col3": 33.33
+      },
+      "customEditor": "layout",
+      "icon": "/resources/admin/widgets/3-col_icon.png",
+      "validPageTypes": ["*"],
+      "columns": [
         {
-            "defaultConfig": {
-                "template": "modules/product/product-list"
-            },
-            "displayName": "Featured Products",
-            "displayTemplate": "catalog/featuredproducts",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Products",
-                    "name": "productCodes",
-                    "xtype": "mz-input-productmulti"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Template",
-                    "name": "template",
-                    "store": [
-                        [
-                            "modules/product/product-list-tiled",
-                            "tiled"
-                        ],
-                        [
-                            "modules/product/product-list",
-                            "list"
-                        ],
-                        [
-                            "modules/product/product-list-carousel",
-                            "carousel"
-                        ]
-                    ],
-                    "xtype": "mz-input-dropdown"
-                }
-            ],
-            "icon": "/resources/admin/widgets/01_photo_text.png",
-            "id": "featured_product",
-            "validPageTypes": [
-                "*"
-            ]
+          "width": "33.3%"
         },
         {
-            "defaultConfig": {
-                "heightResizable": false
-            },
-            "displayName": "Video",
-            "displayTemplate": "cms/video",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Video URL",
-                    "name": "url",
-                    "xtype": "mz-input-text"
-                }
-            ],
-            "icon": "/resources/admin/widgets/08_video.png",
-            "id": "video",
-            "validPageTypes": [
-                "*"
-            ]
+          "width": "33.3%"
         },
         {
-            "defaultConfig": {
-                "numberToDisplay": 4,
-                "template": "primary"
-            },
-            "displayName": "Navigation Subsection",
-            "displayTemplate": "misc/category-navigation",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Parent Navigation Node",
-                    "name": "mainCategory",
-                    "xtype": "mz-input-navnode"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Template",
-                    "name": "template",
-                    "store": [
-                        [
-                            "primary",
-                            "primary"
-                        ],
-                        [
-                            "secondary",
-                            "secondary"
-                        ],
-                        [
-                            "tertiary",
-                            "tertiary"
-                        ]
-                    ],
-                    "xtype": "mz-input-dropdown"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Number to display",
-                    "name": "numberToDisplay",
-                    "xtype": "mz-input-number"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Hide Empty Child Nodes",
-                    "name": "hideEmptyChildNodes",
-                    "xtype": "mz-input-checkbox"
-                }
-            ],
-            "icon": "/resources/admin/widgets/22_category_navigation.png",
-            "id": "catNav",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "attributeId": "tenant~product-crosssell",
-                "count": "4",
-                "template": "modules/product/product-list-carousel",
-                "title": "Related Items"
-            },
-            "displayName": "Cross Sells",
-            "displayTemplate": "catalog/related-products",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Title",
-                    "name": "title",
-                    "xtype": "mz-input-text"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Template",
-                    "name": "template",
-                    "store": [
-                        [
-                            "modules/product/product-list-carousel",
-                            "carousel"
-                        ],
-                        [
-                            "modules/product/product-list-tiled",
-                            "tiled"
-                        ],
-                        [
-                            "modules/product/product-list",
-                            "list"
-                        ]
-                    ],
-                    "xtype": "mz-input-dropdown"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Number to display",
-                    "name": "count",
-                    "xtype": "mz-input-number"
-                }
-            ],
-            "icon": "/resources/admin/widgets/23_cross_sells.png",
-            "id": "crosssells",
-            "validPageTypes": [
-                "product",
-                "cart"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "attributeId": "tenant~product-upsell",
-                "count": "4",
-                "template": "modules/product/product-list-carousel",
-                "title": "Other Items"
-            },
-            "displayName": "Up Sells",
-            "displayTemplate": "catalog/related-products",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Title",
-                    "name": "title",
-                    "xtype": "mz-input-text"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Template",
-                    "name": "template",
-                    "store": [
-                        [
-                            "modules/product/product-list-carousel",
-                            "carousel"
-                        ],
-                        [
-                            "modules/product/product-list-tiled",
-                            "tiled"
-                        ],
-                        [
-                            "modules/product/product-list",
-                            "list"
-                        ]
-                    ],
-                    "xtype": "mz-input-dropdown"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Number to display",
-                    "name": "count",
-                    "xtype": "mz-input-number"
-                }
-            ],
-            "icon": "/resources/admin/widgets/27_up_sells.png",
-            "id": "upsells",
-            "validPageTypes": [
-                "product",
-                "cart"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "attributeId": "tenant~product-related",
-                "count": "4",
-                "template": "modules/product/product-list-carousel",
-                "title": "Other Items"
-            },
-            "displayName": "Related Products",
-            "displayTemplate": "catalog/related-products",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Title",
-                    "name": "title",
-                    "xtype": "mz-input-text"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Template",
-                    "name": "template",
-                    "store": [
-                        [
-                            "modules/product/product-list-carousel",
-                            "carousel"
-                        ],
-                        [
-                            "modules/product/product-list-tiled",
-                            "tiled"
-                        ],
-                        [
-                            "modules/product/product-list",
-                            "list"
-                        ]
-                    ],
-                    "xtype": "mz-input-dropdown"
-                },
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Number to display",
-                    "name": "count",
-                    "xtype": "mz-input-number"
-                }
-            ],
-            "icon": "/resources/admin/widgets/26_related_products.png",
-            "id": "relatedproducts",
-            "validPageTypes": [
-                "product",
-                "cart"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "title": "Related Items"
-            },
-            "displayName": "Instock Request",
-            "displayTemplate": "misc/instock-request",
-            "editViewFields": [
-                {
-                    "anchor": "100%",
-                    "fieldLabel": "Title",
-                    "xtype": "mz-input-text"
-                }
-            ],
-            "icon": "/resources/admin/widgets/25_instock_requests.png",
-            "id": "instockrequest",
-            "validPageTypes": [
-                "product"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-            },
-            "displayName": "Content",
-            "displayTemplate": "cms/content",
-            "icon": "/resources/admin/widgets/03_heading_p.png",
-            "id": "content",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "height": 400,
-                "heightResizable": true,
-                "imageHeight": 400,
-                "imageSource": "file",
-                "linkSource": "externalUrl"
-            },
-            "displayName": "Image",
-            "displayTemplate": "cms/image",
-            "customEditor": "image",
-            "icon": "/resources/admin/widgets/00_photo.png",
-            "id": "cms-image",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "hrBorderColor": "#000",
-                "hrBorderStyle": "solid",
-                "hrBorderWidth": "1px",
-                "hrMarginBottom": "0px",
-                "hrMarginTop": "0px"
-            },
-            "displayName": "Horizontal Rule",
-            "displayTemplate": "cms/horizontalrule",
-            "customEditor": "horizontalrule",
-            "icon": "/resources/admin/widgets/05_horizontal_divider.png",
-            "id": "horizontal_rule",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "defaultConfig": {
-                "body": "<h2>Insert Markup</h2>"
-            },
-            "displayName": "HTML",
-            "displayTemplate": "cms/content",
-            "editViewFields": [
-                {
-                    "fieldLabel": "Enter HTML",
-                    "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%",
-                    "height": 400,
-                    "name": "body",
-                    "width": "100%",
-                    "mode": "html",
-                    "xtype": "mz-input-code"
-                }
-            ],
-            "icon": "/resources/admin/widgets/07_code.png",
-            "id": "html",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "category": "social",
-            "defaultConfig": {
-                "style": "1"
-            },
-            "displayName": "Add This",
-            "displayTemplate": "social/addthis",
-            "editViewFields": [
-                {
-                    "xtype": "mz-input-dropdown",
-                    "name": "style",
-                    "fieldLabel": "AddThis Button Style",
-                    "store": [
-                        [
-                            "1",
-                            "small"
-                        ],
-                        [
-                            "2",
-                            "medium"
-                        ],
-                        [
-                            "3",
-                            "large"
-                        ],
-                        [
-                            "4",
-                            "compact"
-                        ]
-                    ]
-                },
-                {
-                    "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic.",
-                    "xtype": "box"
-                },
-                {
-                    "allowBlank": true,
-                    "fieldLabel": "AddThis<br/> profile ID",
-                    "name": "profileId",
-                    "xtype": "mz-input-text"
-                }
-            ],
-            "icon": "/resources/admin/widgets/13_social.png",
-            "id": "addthis",
-            "validPageTypes": [
-                "*"
-            ]
-        },
-        {
-            "category": "catalog",
-            "displayName": "Deal of the Day",
-            "displayTemplate": "catalog/deal-of-the-day",
-            "editView": "taco-dealoftheday-widgeteditor",
-            "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
-            "id": "deal-of-the-day",
-            "validPageTypes": [
-                "*"
-            ]
+          "width": "33.3%"
         }
-    ]
+      ]
+    },
+    {
+      "id": "mz-4-col",
+      "category": "*",
+      "displayName": "4 Column 25/25/25/25",
+      "displayTemplate": "base",
+      "defaultConfig": {
+        "title": "Dropzone",
+        "mz-col1": 25,
+        "mz-col2": 25,
+        "mz-col3": 25,
+        "mz-col4": 25
+      },
+      "customEditor": "layout",
+      "icon": "/resources/admin/widgets/4-col_icon.png",
+      "validPageTypes": ["*"],
+      "columns": [
+        {
+          "width": "25%"
+        },
+        {
+          "width": "25%"
+        },
+        {
+          "width": "25%"
+        },
+        {
+          "width": "25%"
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "defaultConfig": {
+        "template": "modules/product/product-list"
+      },
+      "displayName": "Featured Products",
+      "displayTemplate": "catalog/featuredproducts",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Products",
+          "name": "productCodes",
+          "xtype": "mz-input-productmulti"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            ["modules/product/product-list-tiled", "tiled"],
+            ["modules/product/product-list", "list"],
+            ["modules/product/product-list-carousel", "carousel"]
+          ],
+          "xtype": "mz-input-dropdown"
+        }
+      ],
+      "icon": "/resources/admin/widgets/01_photo_text.png",
+      "id": "featured_product",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "heightResizable": false
+      },
+      "displayName": "Video",
+      "displayTemplate": "cms/video",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Video URL",
+          "name": "url",
+          "xtype": "mz-input-text"
+        }
+      ],
+      "icon": "/resources/admin/widgets/08_video.png",
+      "id": "video",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "numberToDisplay": 4,
+        "template": "primary"
+      },
+      "displayName": "Navigation Subsection",
+      "displayTemplate": "misc/category-navigation",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Parent Navigation Node",
+          "name": "mainCategory",
+          "xtype": "mz-input-navnode"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            ["primary", "primary"],
+            ["secondary", "secondary"],
+            ["tertiary", "tertiary"]
+          ],
+          "xtype": "mz-input-dropdown"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Number to display",
+          "name": "numberToDisplay",
+          "xtype": "mz-input-number"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Hide Empty Child Nodes",
+          "name": "hideEmptyChildNodes",
+          "xtype": "mz-input-checkbox"
+        }
+      ],
+      "icon": "/resources/admin/widgets/22_category_navigation.png",
+      "id": "catNav",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "attributeId": "tenant~product-crosssell",
+        "count": "4",
+        "template": "modules/product/product-list-carousel",
+        "title": "Related Items"
+      },
+      "displayName": "Cross Sells",
+      "displayTemplate": "catalog/related-products",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Title",
+          "name": "title",
+          "xtype": "mz-input-text"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            ["modules/product/product-list-carousel", "carousel"],
+            ["modules/product/product-list-tiled", "tiled"],
+            ["modules/product/product-list", "list"]
+          ],
+          "xtype": "mz-input-dropdown"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Number to display",
+          "name": "count",
+          "xtype": "mz-input-number"
+        }
+      ],
+      "icon": "/resources/admin/widgets/23_cross_sells.png",
+      "id": "crosssells",
+      "validPageTypes": ["product", "cart"]
+    },
+    {
+      "defaultConfig": {
+        "attributeId": "tenant~product-upsell",
+        "count": "4",
+        "template": "modules/product/product-list-carousel",
+        "title": "Other Items"
+      },
+      "displayName": "Up Sells",
+      "displayTemplate": "catalog/related-products",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Title",
+          "name": "title",
+          "xtype": "mz-input-text"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            ["modules/product/product-list-carousel", "carousel"],
+            ["modules/product/product-list-tiled", "tiled"],
+            ["modules/product/product-list", "list"]
+          ],
+          "xtype": "mz-input-dropdown"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Number to display",
+          "name": "count",
+          "xtype": "mz-input-number"
+        }
+      ],
+      "icon": "/resources/admin/widgets/27_up_sells.png",
+      "id": "upsells",
+      "validPageTypes": ["product", "cart"]
+    },
+    {
+      "defaultConfig": {
+        "attributeId": "tenant~product-related",
+        "count": "4",
+        "template": "modules/product/product-list-carousel",
+        "title": "Other Items"
+      },
+      "displayName": "Related Products",
+      "displayTemplate": "catalog/related-products",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Title",
+          "name": "title",
+          "xtype": "mz-input-text"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            ["modules/product/product-list-carousel", "carousel"],
+            ["modules/product/product-list-tiled", "tiled"],
+            ["modules/product/product-list", "list"]
+          ],
+          "xtype": "mz-input-dropdown"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Number to display",
+          "name": "count",
+          "xtype": "mz-input-number"
+        }
+      ],
+      "icon": "/resources/admin/widgets/26_related_products.png",
+      "id": "relatedproducts",
+      "validPageTypes": ["product", "cart"]
+    },
+    {
+      "defaultConfig": {
+        "title": "Related Items"
+      },
+      "displayName": "Instock Request",
+      "displayTemplate": "misc/instock-request",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Title",
+          "xtype": "mz-input-text"
+        }
+      ],
+      "icon": "/resources/admin/widgets/25_instock_requests.png",
+      "id": "instockrequest",
+      "validPageTypes": ["product"]
+    },
+    {
+      "defaultConfig": {
+        "body": "<h2>Insert Title</h2><p>Insert Content</p>"
+      },
+      "displayName": "Content",
+      "displayTemplate": "cms/content",
+      "icon": "/resources/admin/widgets/03_heading_p.png",
+      "id": "content",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "height": 400,
+        "heightResizable": true,
+        "imageHeight": 400,
+        "imageSource": "file",
+        "linkSource": "externalUrl"
+      },
+      "displayName": "Image",
+      "displayTemplate": "cms/image",
+      "customEditor": "image",
+      "icon": "/resources/admin/widgets/00_photo.png",
+      "id": "cms-image",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "hrBorderColor": "#000",
+        "hrBorderStyle": "solid",
+        "hrBorderWidth": "1px",
+        "hrMarginBottom": "0px",
+        "hrMarginTop": "0px"
+      },
+      "displayName": "Horizontal Rule",
+      "displayTemplate": "cms/horizontalrule",
+      "customEditor": "horizontalrule",
+      "icon": "/resources/admin/widgets/05_horizontal_divider.png",
+      "id": "horizontal_rule",
+      "validPageTypes": ["*"]
+    },
+    {
+      "defaultConfig": {
+        "body": "<h2>Insert Markup</h2>"
+      },
+      "displayName": "HTML",
+      "displayTemplate": "cms/content",
+      "editViewFields": [
+        {
+          "fieldLabel": "Enter HTML",
+          "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%",
+          "height": 400,
+          "name": "body",
+          "width": "100%",
+          "mode": "html",
+          "xtype": "mz-input-code"
+        }
+      ],
+      "icon": "/resources/admin/widgets/07_code.png",
+      "id": "html",
+      "validPageTypes": ["*"]
+    },
+    {
+      "category": "social",
+      "defaultConfig": {
+        "style": "1"
+      },
+      "displayName": "Add This",
+      "displayTemplate": "social/addthis",
+      "editViewFields": [
+        {
+          "xtype": "mz-input-dropdown",
+          "name": "style",
+          "fieldLabel": "AddThis Button Style",
+          "store": [
+            [
+              "1",
+              "small"
+            ],
+            [
+              "2",
+              "medium"
+            ],
+            [
+              "3",
+              "large"
+            ],
+            [
+              "4",
+              "compact"
+            ]
+          ]
+        },
+        {
+          "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic.",
+          "xtype": "box"
+        },
+        {
+          "allowBlank": true,
+          "fieldLabel": "AddThis<br/> profile ID",
+          "name": "profileId",
+          "xtype": "mz-input-text"
+        }
+      ],
+      "icon": "/resources/admin/widgets/13_social.png",
+      "id": "addthis",
+      "validPageTypes": ["*"]
+    },
+    {
+      "category": "catalog",
+      "displayName": "Deal of the Day",
+      "displayTemplate": "catalog/deal-of-the-day",
+      "editView": "taco-dealoftheday-widgeteditor",
+      "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
+      "id": "deal-of-the-day",
+      "validPageTypes": ["*"]
+    },
+    {
+      "displayName": "Welcome mat",
+      "displayTemplate": "misc/welcome-mat",
+      "customEditor": "welcomeMatEditor",
+      "icon": "/resources/admin/widgets/borderFree.png",
+      "id": "welcomemat",
+      "validPageTypes": ["*"]
+    },
+    {
+      "displayName": "International Order Tracking",
+      "displayTemplate": "misc/border-free-order-tracking",
+      "customEditor": "borderFreeOrderTrackingEditor",
+      "icon": "/resources/admin/widgets/borderFree.png",
+      "id": "borderfreeordertracking",
+      "validPageTypes": ["*"]
+    }
+  ]
 }

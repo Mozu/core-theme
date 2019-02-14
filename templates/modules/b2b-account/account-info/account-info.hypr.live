@@ -1,0 +1,41 @@
+<div id="account-info-messages">
+    {% include "modules/common/message-bar" with model=model.messages %}
+</div>
+<div class="mz-b2b-accountsettings mz-l-stack-section" style="clear:none">
+<h2 class="mz-l-stack-sectiontitle">{{ labels.b2bAccountWelcome|string_format(model.firstName)|safe }}</h2>
+<h3>{{ labels.b2bAccountInfo }}</h3>
+<span class="mz-accountsettings-label mz-account-settings-label-name">B2B Account ID</span>
+<div>{{ model.id }}</div>
+<h3 style="font-size: 16px">User Info{% if not model.editing %}<a href class="mz-b2b-link-edit-accountsettings" data-mz-action="startEdit">{{ labels.edit }}</a>{% endif %}</h3>
+<span class="mz-accountsettings-label mz-account-settings-label-name">{{ labels.firstName }} / {{ labels.lastName }}</span>
+{% if model.editing %}
+    <input class="mz-accountsettings-firstname" type="text" placeholder="{{ labels.firstName }}" data-mz-value="firstName" value="{{ model.firstName }}" />
+    <input class="mz-accountsettings-lastname" type="text" placeholder="{{ labels.lastName }}" data-mz-value="lastName" value="{{ model.lastName }}" />
+    <span class="mz-validationmessage" data-mz-validationmessage-for="firstName"></span>
+    <span class="mz-validationmessage" data-mz-validationmessage-for="lastName"></span>
+{% else %}
+    <div class="mz-accountsettings-displayname" id="account-settings-name">{{ model.firstName }} {{ model.lastName }}</div>
+{% endif %}
+
+<span class="mz-accountsettings-label mz-account-settings-label-name">{{ labels.emailAddress }}</span>
+{% if model.editing %}
+    <div class="mz-accountsettings-section mz-accountsettings-email">
+      <input class="mz-accountsettings-email" type="email" placeholder="{{ labels.emailAddress }}" data-mz-value="emailAddress" value="{{ model.emailAddress }}" />
+      <div class="mz-validationmessage" data-mz-validationmessage-for="emailAddress"></div>
+    </div>
+{% else %}
+    <div class="mz-accountsettings-email" id="account-settings-name">{{ model.emailAddress }}</div>
+{% endif %}
+
+<div class="mz-accountsettings-section mz-accountsettings-acceptsmarketing">
+  <input type="checkbox" id="account-acceptsmarketing" data-mz-value="acceptsMarketing" {% if model.acceptsMarketing %}checked="checked"{% endif %} {% if not model.editing %}disabled="disabled"{% endif %} />
+  <label for="account-acceptsmarketing">{{ labels.accountOptIn }}</label>
+</div>
+{% if model.editing %}
+<button class="mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="finishEdit">{{ labels.save }}</button>
+<button class="mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="cancelEdit">{{ labels.cancel }}</button>
+{% endif %}
+<div class="mz-l-stack-section mz-b2b-passwordsection" id="password-section">
+    {% include "modules/b2b-account/account-info/b2b-account-password" with editing=model.editingPassword %}
+</div>
+</div>

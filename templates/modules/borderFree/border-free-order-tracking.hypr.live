@@ -1,0 +1,11 @@
+<!--Order tracking UI DOM-->
+<h1>{{ labels.orderTrackingTitle }}</h1>
+<p>{{ labels.orderTrackingDescription }}</p>
+<div id="bfTTContainer"></div>
+{% if model.config.environment == "staging" %}
+<!--Order tracking tool JS2 -->
+<script src="https://tracking.stage.borderfree.com/public/js/merchants/borderfreeOrderTracking.min.js"></script>
+{% else %}
+<!--Order tracking tool JS1-->
+<script src="https://tracking.borderfree.com/public/js/merchants/borderfreeOrderTracking.min.js"></script>
+{% endif %}

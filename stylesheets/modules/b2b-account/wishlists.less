@@ -1,0 +1,61 @@
+.mz-b2b-wishlists {
+    .wishlist-btns{
+        text-align: right;
+    }
+
+    .mz-b2b-wishlists-grid.is-loading{
+          display: block;
+          width: 100%;
+          background-position: 50% 50%;
+          height: 100%;
+          opacity: .5;
+          animation: loadingthrob 1s linear 0s alternate infinite;
+          -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+    }
+    .mz-b2b-wishlists-grid{
+        position: relative;
+        background-image: url('../resources/images/button-loading.gif');
+        background-repeat: no-repeat;
+        background-position: -9999px -9999px;
+    }
+
+    .mz-itemlisting-actions {
+        .mz-itemlisting-action{
+            display: inline-block;
+        }
+        .mz-carttable-qty-field {
+            max-width: 75px;
+            margin: 0px 15px;
+        }
+    }
+
+    .wishlist-edit-form {
+        .wishlist-edit-form-section {
+            margin-bottom:15px;
+            & > div {
+                float: left;
+                margin-right: 15px;
+            }
+        }
+
+        .wishlist-edit-form-section.productPicker {
+            .mz-button {
+                float: right;
+            }
+        }
+        .wishlist-edit-label {
+            display: block;
+            font-size: .8em;
+            font-weight: bold;
+            margin: 6px 0;
+        }
+    }
+
+    .mz-searchbox.mz-searchbox-expands .mz-searchbox-input {
+        -webkit-transition: none;
+        -moz-transition: none;
+        -ms-transition: none;
+        -o-transition: none;
+        width: 320px;
+    }
+}

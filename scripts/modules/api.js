@@ -4,7 +4,7 @@
  * (tenant, catalog and store IDs, and authorization tickets).
  */
 
-define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
+define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) { 
     var apiConfig = require.mozuData('apicontext');
     Mozu.setServiceUrls(apiConfig.urls);
     var api = Mozu.Store(apiConfig.headers).api();
@@ -20,7 +20,7 @@ define(['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
             if (requestConf && requestConf.url) e += (" at " + requestConf.url);
             var correlation = xhr && xhr.getResponseHeader && xhr.getResponseHeader('x-vol-correlation');
             if (correlation) e += " --- Correlation ID: " + correlation;
-            //if (window && window.console) console.error(e, badPromise, xhr);
+            //if (window && window.console) window.console.error(e, badPromise, xhr);
         });
     }
     return api;

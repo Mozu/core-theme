@@ -176,7 +176,7 @@
                           {{ attributeVal|date("F j, Y") }}
                       {% else %}
                           {% if attributeDef.dataType == "Bool" %}
-                              {% if attributeVal == "True" %}
+                              {% if attributeVal == "True" or attributeVal == "true" %}
                               Yes
                               {% else %}
                               No

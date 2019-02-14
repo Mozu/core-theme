@@ -1,9 +1,12 @@
 define(["backbone", 'hyprlive', 'modules/models-customer', 'modules/models-dialog' ], function(Backbone, Hypr, CustomerModels, Dialog) {
+    var customerDialogContact = CustomerModels.Contact.extend({
+        requiredBehaviors: []
+    });
 
     var modalDialog = Dialog.extend({
         handlesMessages: true,
         relations : {
-            destinationContact : CustomerModels.Contact
+            destinationContact: customerDialogContact
         },
         resetDestinationContact: function(){
             

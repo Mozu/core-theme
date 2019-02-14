@@ -38,7 +38,7 @@ function($,EventBus, Api, hyprlivecontext, _) {
 				};
 			
 				$.getScript(payWithAmazonUrl).done(function(scrit, textStatus){
-					//console.log(textStatus);
+					//window.console.log(textStatus);
 					self.isScriptLoaded = true;
 					EventBus.trigger("aws-script-loaded");
 				}).fail(function(jqxhr, settings, exception) {

@@ -563,7 +563,7 @@
     };
 
     var draw_date = function($picker, option, date) {
-        //console.log('draw_date - ' + date.toString());
+        //window.console.log('draw_date - ' + date.toString());
         draw($picker, option, date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
     };
     var translate = function(locale, s) {
@@ -1289,7 +1289,7 @@
             /* Checking exist a picker */
             var input = this;
             if(0 < $(PickerObjects[$(input).data('pickerId')]).length) {
-                console.log('dtpicker - Already exist appended picker');
+                window.console.log('dtpicker - Already exist appended picker');
                 return;
 
             }
@@ -1337,7 +1337,7 @@
                     ) { /* beforeValue == null || beforeValue != nowValue  */
                     var format = getDateFormat($picker.data('dateFormat'), $picker.data('locale'), $picker.data('dateOnly'));
                     var date = parseDate($input.val(), format);
-                    //console.log('dtpicker - inputKeyup - format: ' + format + ', date: ' + $input.val() + ' -> ' + date);
+                    //window.console.log('dtpicker - inputKeyup - format: ' + format + ', date: ' + $input.val() + ' -> ' + date);
                     if (date) {
                         draw_date($picker, {
                             'isAnim':true,
@@ -1384,7 +1384,7 @@
                         // Call a event-hanlder
                         var func = $picker.data('onShow');
                         if (func !== null) {
-                            console.log('dtpicker- Call the onShow handler');
+                            window.console.log('dtpicker- Call the onShow handler');
                             func(handler);
                         }
                     }
@@ -1414,7 +1414,7 @@
             // Call a event-handler
             var func = $picker.data('onInit');
             if (func !== null) {
-                console.log('dtpicker- Call the onInit handler');
+                window.console.log('dtpicker- Call the onInit handler');
                 func(handler);
             }
         });
@@ -1512,7 +1512,7 @@
                         // Call a event-hanlder
                         var func = $picker.data('onHide');
                         if (func !== null) {
-                            console.log('dtpicker- Call the onHide handler');
+                            window.console.log('dtpicker- Call the onHide handler');
                             func(handler);
                         }
                     }

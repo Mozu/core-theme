@@ -1,0 +1,50 @@
+.mz-b2b-orders, .mz-b2b-returns{
+   .mz-btns {
+      padding: @gutter/4 0 @gutter/4 0;
+
+      button {
+          margin: 0 @gutter/4 0 0;
+      }
+   }
+   
+   .mz-b2b-orders-grid.is-loading, .mz-b2b-returns-grid.is-loading {
+       display: block;
+       width: 100%;
+       background-position: 50% 50%;
+       height: 100%;
+       opacity: .5;
+       animation: loadingthrob 1s linear 0s alternate infinite;
+       -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+   }
+
+   .mz-b2b-orders-grid, .mz-b2b-returns-grid {
+       position: relative;
+       background-image: url('../resources/images/button-loading.gif');
+       background-repeat: no-repeat;
+       background-position: -9999px -9999px;
+       .grid-tooltip {
+          position: relative;
+          border-bottom: 1px dotted black;
+      }
+
+      .grid-tooltip .tooltiptext {
+          visibility: hidden;
+          width: 120px;
+          background-color: #ccc;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+
+          position: absolute;
+          z-index: 1;
+          top: 100%;
+          left: 50%;
+          margin-left: -60px;
+      }
+
+      .grid-tooltip:hover .tooltiptext {
+          visibility: visible;
+      }
+   }
+}

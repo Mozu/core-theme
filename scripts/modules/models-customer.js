@@ -1,4 +1,4 @@
-﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr) {
+﻿define(['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'modules/models-returns', 'hyprlive', 'modules/models-b2b-account'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, ReturnModels, Hypr, B2BAccountModels) {
 
 
     var pageContext = require.mozuData('pagecontext'),
@@ -77,6 +77,10 @@
 
     var CustomerContact = Backbone.MozuModel.extend({
         mozuType: 'contact',
+        requiredBehaviors: [1002],
+        defaults: {
+            userId: require.mozuData('user').userId  
+        },
         relations: {
             address: AddressModels.StreetAddress,
             phoneNumbers: AddressModels.PhoneNumbers
@@ -225,6 +229,13 @@
             attributes: Backbone.Collection.extend({
                 model: CustomerAttribute
             }),
+            // We set this relationship so that b2battributes, when assigned, can
+            // function like a backbone collection. But it's only out of convenience that the model
+            // is named CustomerAttribute. This is NOT a collection of customer attributes. They are
+            // ACCOUNT attributes.
+            b2bAttributes: Backbone.Collection.extend({
+                model: CustomerAttribute
+            }),
             contacts: Backbone.Collection.extend({
                 model: CustomerContact,
                 getPrimaryShippingContact: function(){
@@ -319,6 +330,7 @@
     }),
 
     CustomerCardWithContact = PaymentMethods.CreditCard.extend({
+
         validation: _.extend({
             contactId: {
                 fn: function(value, property, model) {
@@ -331,7 +343,7 @@
     }),
 
     EditableCustomer = Customer.extend({
-        
+
         handlesMessages: true,
         relations: _.extend({
             editingCard: CustomerCardWithContact,
@@ -358,6 +370,7 @@
                 editingContact: {}
             };
         },
+        helpers: ['isNonPurchaser'],
         initialize: function() {
             var self = this,
                 orderHistory = this.get('orderHistory'),
@@ -379,14 +392,21 @@
                 cust.getCards();
             }, self);
         },
+        isNonPurchaser: function() {
+            return (require.mozuData('user').behaviors.length) ? false : true;
+        },
         changePassword: function () {
             var self = this;
             self.validatePassword = true;
             if (this.validate('password') || this.validate('confirmPassword')) return false;
-            return this.apiChangePassword({
+            var changePasswordPayload = {
                 oldPassword: this.get('oldPassword'),
                 newPassword: this.get('password')
-            }).ensure(function () {
+            };
+            if (this.get('accountType') === 'B2B'){
+                changePasswordPayload.userId = this.get('userId');
+            }
+            return this.apiChangePassword(changePasswordPayload).ensure(function () {
                 self.validatePassword = false;
             });
         },
@@ -467,7 +487,7 @@
             var self = this,
                 editingContact = this.get('editingContact'),
                 apiContact;
-            
+
             if (options && options.forceIsValid) {
                 editingContact.set('address.isValidated', true);
             }
@@ -514,9 +534,24 @@
             delete j.oldPassword;
             return j;
         }
+    }),
+    B2BCustomerAccount = B2BAccountModels.b2bUser.extend({
+        toJSON: function (options) {
+            var j = Customer.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers)
+                delete j.customer;
+            delete j.password;
+            delete j.confirmPassword;
+            delete j.oldPassword;
+
+            j.accountId = j.id;
+            j.id = j.userId;
+            return j;
+        }
     });
 
     return {
+        B2BCustomer: B2BCustomerAccount,
         Contact: CustomerContact,
         Customer: Customer,
         EditableCustomer: EditableCustomer

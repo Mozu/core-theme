@@ -1,0 +1,18 @@
+{% extends "modules/common/modal-dialog" %}
+{% block modal-header %} 
+    <h3 class="modal-title">{{labels.user}}</h3>
+{% endblock modal-header %}
+ 
+{% block modal-body %}
+
+{% include "modules/common/message-bar" with model=model.messages %}
+
+<div id="mzUserModal" data-mz-user-modal-content class="mz-user-modal-content">
+</div>
+
+{% endblock modal-body %} 
+     
+{% block modal-footer %}
+    <button type="button" class="mz-button" data-mz-action="handleDialogSave">Save</button>
+    <button type="button" class="mz-button" data-mz-action="handleDialogCancel">Cancel</button>
+{% endblock modal-footer %}

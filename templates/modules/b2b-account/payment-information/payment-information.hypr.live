@@ -1,0 +1,44 @@
+{% require_script "modules/b2b-account/payment-information" %}
+<div class="mz-l-stack-section" style="clear:none">
+<h3 class="mz-l-stack-sectiontitle">{{ labels.paymentMethods }} 
+    {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a>
+    {% endif %}
+</h3>
+<div class="mz-b2b-payment">
+{% if model.hasSavedCards or editing.card == "new" or model.purchaseOrder and model.purchaseOrder.isEnabled %}
+<div class="mz-accountpaymentmethods">
+<ul class="mz-accountpaymentmethods-list mz-l-tiles">
+    {% if model.purchaseOrder and model.purchaseOrder.isEnabled and siteContext.checkoutSettings.purchaseOrder.isEnabled %}
+        {% include "modules/my-account/my-account-paymentmethod" with model=model.purchaseOrder blockCreditLimit=model.blockCreditLimit hasRequiredBehavior=model.hasRequiredBehavior %}
+    {% endif %}
+
+    {% for card in model.cards %}
+        {% if editing.card == card.id %}
+            {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+        {% else %}
+            {% include "modules/my-account/my-account-paymentmethod" with model=card hasRequiredBehavior=model.hasRequiredBehavior %}
+        {% endif %}
+    {% endfor %}
+    {% if editing.card == "new" %}
+        {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+    {% endif %}
+</ul>
+</div>
+{% else %}
+    <p class="mz-accountpaymentmethods-empty">{{ labels.noSavedCards }} 
+        {% if model.hasRequiredBehavior %}
+        <a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard">{{ labels.addNewCard }}</a>
+        {% endif %}
+    </p>
+{% endif %}
+{% if model.purchaseOrder and model.purchaseOrder.isEnabled and not model.blockViewPurchaseOrders %}
+<div class="mz-purchase-order-grid-container" style="clear:left">
+  <div class="mz-b2b-transactions-grid">
+      <div class="is-loading"></div>
+      {% include "modules/b2b-account/payment-information/purchase-orders-grid" %}
+  </div>
+</div>
+{% endif %}
+</div>
+</div>

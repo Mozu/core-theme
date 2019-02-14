@@ -12,7 +12,9 @@
     </select> 
     
     <div>
-        <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
+        {% if model.hasRequiredBehavior %}
+            <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
+        {% endif %}
     </div>
 
     <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping">

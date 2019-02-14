@@ -1,0 +1,27 @@
+{% extends "modules/pane-switcher"%}
+
+ {% block pane-switcher-nav %}
+    <div class="mz-l-sidebar mz-myaccount-nav">
+        <div id="mzPaneSwitcherNav" class="mz-pane-switcher-nav mz-myaccount-nav">
+            {% for pane in model.panes %}
+            <nav class="mz-scrollnav affix-top" id="account-nav" data-mz-scrollnav="body">
+            <ul class="mz-scrollnav-list nav">
+                <li class="mz-scrollnav-item">
+                    <a class="mz-scrollnav-link" href="#{{pane.name}}">
+                        <span class="nav-item" data-mz-action="handlePaneSelect" data-mz-index="{{forloop.index}}"
+                            {% if pane.name == "Lists" %} data-mz-force-load="true" {% endif %} >{{pane.name}}</span>
+                    </a>
+                </li>
+            </ul>
+            </nav>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block pane-switcher-container %}
+
+    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
+        <div id="mzPaneSwitcherContainer" mz-pane-switcher-container></div>
+    </div>
+{% endblock %}

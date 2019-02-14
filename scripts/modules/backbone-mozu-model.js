@@ -171,7 +171,7 @@
                     }
 
                     options._parent = this;
-                    
+
                     if (!(val instanceof this.relations[attr])) val = new this.relations[attr](val, options);
                     val.parent = this;
                 }
@@ -193,10 +193,10 @@
                 if (!key && key !== 0) return this;
 
                 containsPrice = new RegExp('price', 'i');
-                
-                // Remove any properties from the current model 
+
+                // Remove any properties from the current model
                 // where there are properties no longer present in the latest api model.
-                // This is to fix an issue when sale price is only on certain configurations or volume price bands, 
+                // This is to fix an issue when sale price is only on certain configurations or volume price bands,
                 // so that the sale price does not persist.
                 syncRemovedKeys = function (currentModel, attrKey) {
                     _.each(_.difference(_.keys(currentModel[attrKey].toJSON()), _.keys(attrs[attrKey])), function (keyName) {
@@ -463,7 +463,33 @@
                 });
 
                 return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
+            },
+
+            hasRequiredBehavior: function(behaviorId){
+                var userBehaviors = require.mozuData('user').behaviors || [];
+                if (userBehaviors.includes(1014)) return true;
+                var requiredBehaviors = this.requiredBehaviors || [];
+
+                if (behaviorId) {
+                    requiredBehaviors = [behaviorId];
+                }
+
+                if (requiredBehaviors.length) {
+                    var match = _.intersection(userBehaviors, requiredBehaviors);
+                    if (this.requiredBehaviorsType === "AllOf") {
+                        if (match.length !== this.requiredBehaviors.length) {
+                            return false;
+                        }
+                    }
+                    if (match.length < 1) {
+                        return false;
+                    }
+                }
+                return true;
             }
+
+
+
         });
 
         // we have to attach the constructor to the prototype via direct assignment,
@@ -472,6 +498,12 @@
 
         modelProto.constructor = function(conf) {
             this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
+
+            //if (this.requiredBehaviors) {
+                this.helpers = (this.helpers || []).concat(['hasRequiredBehavior']);
+            //}
+
+
             Backbone.Model.apply(this, arguments);
             if (this.mozuType) this.initApiModel(conf);
             if (this.handlesMessages) {
@@ -489,17 +521,19 @@
              *     var Product = Backbone.MozuModel.extend({
              *         mozuType: 'product'
              *     });
-             *     
+             *
              *     // the fromCurrent static factory method is a shortcut for a common pattern.
              *     var thisProduct = Product.fromCurrent();
-             *     
+             *
              *     // the above is equivalent to:
              *     var thisProduct = new Product(require.mozuData('product'));
              * @memberof MozuModel
              * @static
              */
-            fromCurrent: function () {
-                return new this(require.mozuData(this.prototype.mozuType), { silent: true, parse: true });
+            fromCurrent: function (overRide) {
+                var mozuType = this.prototype.mozuType;
+                if (overRide) mozuType = overRide;
+                return new this(require.mozuData(mozuType), { silent: true, parse: true });
             },
             DataTypes: {
                 "Int": function (val) {

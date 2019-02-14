@@ -84,7 +84,7 @@ define(["underscore", "backbone", 'hyprlive'], function (_, Backbone, Hypr) {
                       val instanceof RegExp ||
                       val instanceof Backbone.Collection)
                     ) {
-                        flatten(val, into, prefix + key + '.', --depth);
+                        flatten(val, into, prefix + key + '.', depth - 1);
                     }
                     else {
                         into[prefix + key] = val;

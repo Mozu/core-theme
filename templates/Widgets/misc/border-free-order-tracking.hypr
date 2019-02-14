@@ -1,0 +1,8 @@
+{%if sitecontext.isEditMode %}
+<span>Order Tracking Widget</span>
+{% else %}
+	<div data-mz-welcome-mat-request="{% json_attribute model.config %}">
+		{% include model.config.template|default:"modules/borderFree/border-free-order-tracking"  %}
+	</div>
+	{% require_script "widgets/border-free-order-tracking" %}
+{% endif %}

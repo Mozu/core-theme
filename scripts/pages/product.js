@@ -1,6 +1,7 @@
 ﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages",  "hyprlivecontext"], function ($, _, Hypr, Backbone, CartMonitor, ProductModels, ProductImageViews, HyprLiveContext) {
 
     var ProductView = Backbone.MozuView.extend({
+        requiredBehaviors: [1014],
         templateName: 'modules/product/product-detail',
         additionalEvents: {
             "change [data-mz-product-option]": "onOptionChange",
@@ -88,11 +89,14 @@
     $(document).ready(function () {
         var product = ProductModels.Product.fromCurrent();
 
-        product.on('addedtocart', function (cartitem) {
+        product.on('addedtocart', function (cartitem, stopRedirect) {
             if (cartitem && cartitem.prop('id')) {
                 product.isLoading(true);
                 CartMonitor.addToCount(product.get('quantity'));
-                window.location.href = (HyprLiveContext.locals.pageContext.secureHost||HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
+                if(!stopRedirect) {
+                    window.location.href = (HyprLiveContext.locals.pageContext.secureHost || HyprLiveContext.locals.siteContext.siteSubdirectory) + "/cart";
+                }
+                
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }

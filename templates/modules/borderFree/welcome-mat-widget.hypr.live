@@ -1,0 +1,69 @@
+<div class="welcome-mat-widget">
+    <div class="welcome-mat-wrapper pull-left clearfix hidden">
+        <a href="javascript:void(0);" id="btnCountrySelect" class="country-select">
+            <span>{{ labels.deliverTo }}:</span>
+            <span class="selectedCountry">
+                <img src="../../resources/images/borderFree/flags/{% if model.selectedCountryCode %}{{ model.selectedCountryCode }}{% else %}{{model.defaultCountry}}{% endif %}.gif" class="countries-icon"/>
+            </span>
+        </a>
+    </div>
+    <div class="modal fade text-left" id="countryModal" tabindex="-1" role="dialog" aria-labelledby="countrySelectModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="changeCountryForm">
+                        <a href="#" class="close" data-dismiss="modal" aria-label="Close">X</a>
+                        <div class="bf-fields-wrapper">
+                            <h2 class="modal-title" id="countrySelectModal">
+                                <em>{{ labels.internationalSettings }}</em>
+                            </h2>
+                            <p>{{ labels.whereToShip }}</p>                                
+                            <label for="country-select">{{ labels.country }}</label>
+                            <div class="country-dropdown">
+                                <select name="country" id="country-select" class="form-control">
+                                        {% for country in model.country %}
+                                            {% with country.locale|split("-") as code %}
+                                                {% with code|last as countryCode %}
+                                                    {% if model.selectedCountry %}
+                                                        <option data-code="{{ countryCode }}" value="{{country.currencyCode|safe}}" {% if country.name == model.selectedCountry %}selected{% endif %}>
+                                                            {{country.name|safe}}
+                                                        </option>
+                                                    {% else %}
+                                                        <option data-code="{{ countryCode }}" value="{{country.currencyCode|safe}}" {% if countryCode == model.defaultCountry %}selected{% endif %}>
+                                                            {{country.name|safe}}
+                                                        </option>
+                                                    {% endif %}                                                    
+                                                {% endwith %}                                                
+                                            {% endwith %}
+                                        {% endfor %}
+                                </select>
+                            </div>
+                            <label for="currency-select">{{ labels.currency }}</label>
+                            <div class="currency-dropdown">
+                                <select name="currency" id="currency-select" class="form-control">
+                                        {% for currency in model.currency %}
+                                            {% if currency.isCurrencyEnabled %}
+                                                <option value="{{ currency.symbol|safe }}" {% if currency.symbol == model.selectedCurrency %}selected{% endif %}>
+                                                    {{ currency.name|safe }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-submit-wrapper">
+                            <p>
+                                <button type="button" data-mz-action="saveCookie" class="mz-button btnSave">
+                                    {{ labels.save }}
+                                </button>
+                                <button type="button" class="mz-button" data-dismiss="modal">
+                                    {{ labels.cancel }}
+                                </button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

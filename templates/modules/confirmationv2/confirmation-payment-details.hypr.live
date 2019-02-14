@@ -30,31 +30,7 @@
                 <div>{{ model.billingInfo.billingContact.email }}</div>
             </div>
         {% endif %}
-        {% if model.billingInfo.billingContact.address %}
-            <div class="mz-l-stack-item">
-              {% with model.billingInfo.billingContact as location %}
-                <small>{{ labels.billingAddress }}</small>
-                {% if model.billingInfo.billingContact.firstName and model.billingInfo.billingContact.lastNameOrSurname %}
-                      <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
-                {% endif %}
-                <div>{{ location.address.address1 }}</div>
-                {% if location.address.address2 %}<div> {{ location.address.address2 }}</div>{% endif %}
-                {% if location.address.address3 %}<div> {{ location.address.address3 }}</div>{% endif %}
-                {% if location.address.address4 %}<div> {{ location.address.address4 }}</div>{% endif %}
-                <div> {{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }} {{location.address.postalOrZipCode}}</div>
-              {% endwith %}
-            </div>
-        {% endif %}
-        {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" or model.paymentType|lower == "token" %}
-            <div class="mz-l-stack-item">
-                {% if model.paymentType|lower == "token" %}
-                    {%if model.billingInfo.token.type|lower == "paywithamazon" %}
-                       <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
-                    {%endif%}
-                    {% if model.billingInfo.token.type|lower == "applepay" %}
-                        <dd><img width="100px" src="../../resources/images/Apple_Pay_Mark.png"/></dd>
-                    {% endif %}
-                {%endif%}
+        {% if model.billingInfo.paymentType == "StoreCredit" or model.billingInfo.paymentType == "GiftCard" or model.billingInfo.paymentType|lower == "paypalexpress2" or model.billingInfo.paymentType|lower == "paywithamazon" %}
                   {%if model.billingInfo.paymentType|lower == "paywithamazon" %}
                        <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
                     {%endif%}
@@ -73,14 +49,24 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="mz-l-stack-item">
-                <small>{{ labels.billingName }}</small>
-                <div>{{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}</div>
-            </div>
-            <div class="mz-l-stack-item">
-                <small>{{ labels.billingAddress }}</small>
-                <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</div>
-            </div>
+            {% if model.billingInfo.billingContact.address %}
+              <div class="mz-l-stack-item">
+                  <small>{{ labels.billingAddress }}</small>
+                  <div class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</div>
+              </div>
+            {% endif %}
+            {% if model.billingInfo.paymentType == "token" %}
+                <div class="mz-l-stack-item">
+                    {% if model.paymentType|lower == "token" %}
+                        {%if model.billingInfo.token.type|lower == "paywithamazon" %}
+                           <dd><img src="../../resources/images/amazonpay60x38.png"/></dd>
+                        {%endif%}
+                        {% if model.billingInfo.token.type|lower == "applepay" %}
+                            <dd><img width="100px" src="../../resources/images/Apple_Pay_Mark.png"/></dd>
+                        {% endif %}
+                    {%endif%}
+                </div>
+            {% endif %}
         {% endif %}
         {% if model.billingInfo.paymentType == "PurchaseOrder" %}
             <div class="mz-l-stack-item">

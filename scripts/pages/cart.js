@@ -11,8 +11,11 @@ define(['modules/api',
         'modules/xpress-paypal',
         'modules/models-location',
         'modules/amazonPay',
-        'modules/applepay'
-      ], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay) {
+        'modules/applepay',
+        'modules/cart/discount-dialog/views-discount-dialog',
+        'modules/models-discount',
+        'modules/message-handler'
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, DiscountModalView, Discount, MessageHandler) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -25,7 +28,6 @@ define(['modules/api',
 
             var me = this;
 
-            //setup coupon code text box enter.
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.codeEntered = !!this.model.get('couponCode');
             this.$el.on('keypress', 'input', function (e) {
@@ -51,6 +53,15 @@ define(['modules/api',
               el: $('#mz-discount-threshold-messages'),
               model: this.model
             });
+
+            //var prouctDiscounts = me.model.get('items').each(function(item){
+            //    _.each(item.productDiscounts, function(prodDiscount){
+            //       var discount = new Discount(prodDiscount);
+            //       discount.getDiscountDetails().then(function(){
+
+            //       })
+            //    })
+            //})
         },
         render: function() {
             preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
@@ -88,10 +99,18 @@ define(['modules/api',
                 // on the cart template
                 return false;
             }
-            var $removeButton = $(e.currentTarget),
-                id = $removeButton.data('mz-cart-item');
+            var $removeButton = $(e.currentTarget);
+            var id = $removeButton.data('mz-cart-item');
             this.model.removeItem(id);
             return false;
+        },
+        updateAutoAddItem: function(e) {
+            var self = this;
+            var $target = $(e.currentTarget);
+            var discountId = $target.data('mz-discount-id');
+            var itemId = $target.data('mz-cart-item');
+
+            window.cartView.discountModalView.updateSelectedAutoAddItem(itemId, discountId);
         },
         empty: function() {
             this.model.apiDel().then(function() {
@@ -358,7 +377,7 @@ define(['modules/api',
     /* begin visa checkout */
     function initVisaCheckout () {
       if (!window.V) {
-          //console.warn( 'visa checkout has not been initilized properly');
+          //window.console.warn( 'visa checkout has not been initilized properly');
           return false;
       }
 
@@ -398,10 +417,15 @@ define(['modules/api',
                     el: $('#cart'),
                     model: cartModel,
                     messagesEl: $('[data-mz-message-bar]')
+                }),
+                discountModalView: new DiscountModalView({
+                    el: $("[mz-modal-discount-dialog]"),
+                    model: cartModel.get('discountModal'),
+                    messagesEl: $("[mz-modal-discount-dialog]").find('[data-mz-message-bar]')
                 })
 
             };
-
+ 
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + '/checkout/' + order.prop('id');
@@ -411,16 +435,18 @@ define(['modules/api',
             CartMonitor.setCount(cartModel.count());
         });
 
-        cartModel.checkBOGA();
-
-
         window.cartView = cartViews;
 
         CartMonitor.setCount(cartModel.count());
 
-        _.invoke(cartViews, 'render');
-
+        cartViews.cartView.render();
+        //if (cartModel.get('discountModal').get('discounts').length) {
+            cartViews.discountModalView.render(); 
+        //}
         renderVisaCheckout(cartModel);
+
+        MessageHandler.showMessage("BulkAddToCart");
+
         paypal.loadScript();
         if (cartModel.count() > 0){
           ApplePay.init();

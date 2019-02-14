@@ -1,0 +1,32 @@
+<div class="international-checkout">
+    {% include "modules/common/message-bar" with model=model.borderFreeData.messages %}
+    {% if model.borderFreeData %}
+        {% if model.borderFreeData.ooStatus == "CHECKOUT"%}
+            <!-- Envoy Checkout URL in iFrame tag -->
+            <div class="borderFree">
+            <iframe name="envoy" id="envoyId" src="{{model.borderFreeData.fullEnvoyUrl}}" frameBorder="0" scrolling="no" style="width: 100%;"></iframe>
+            <!--Used to call Success, Failure or Pending URL -->
+            <iframe id="__frame" width="0" height="0" frameborder="0" src="https://{{model.borderFreeData.checkoutDomain2}}.borderfree.com/utils/empty.jsp" ></iframe>
+            <!-- Your custom footer here -->
+            </div>
+            <script type="text/javascript" src="https://{{model.borderFreeData.checkoutDomain1}}.borderfree.com/htmlcheckout/resources/js/merchant.js"></script>
+        {% endif %}
+    {% endif %}
+    
+    {% if model.borderFreeData.ooStatus == "SUCCESS" %}
+        <div class="container">
+            <div class="text-center">
+                <h2>{{ labels.confirmationText }}</h2>
+                <a href="/" id="continue-shopping" class="mz-button mz-button-large mz-carttable-button-active">Continue shopping</a>
+            </div>
+        </div>
+    
+    {% endif %}
+    {% if model.borderFreeData.ooStatus == "FAILURE" %}
+        <div class="container">
+            <div class="text-center">
+                <a href="/cart" id="continue-shopping" class="mz-button mz-button-large">Back to cart</a>
+            </div>
+        </div>
+    {% endif %}
+</div>

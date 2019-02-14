@@ -80,7 +80,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
             }
         },
         handleInvalid: function(newValObj, opt) {
-            if (this !== opt) {
+            if (this !== opt && !newValObj.autoAddEnabled) {
                 this.unset("value");
                 _.each(this.get("values"), function(value) {
                     value.isSelected = false;
@@ -304,22 +304,20 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                 return biscuit;
             }, []);
         },
-
-
-        addToCart: function () {
+        addToCart: function (stopRedirect) {
             var me = this;
-            this.whenReady(function () {
+            return this.whenReady(function () {
                 if (!me.validate()) {
                     var fulfillMethod = me.get('fulfillmentMethod');
                     if (!fulfillMethod) {
                         fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
                     }
-                    me.apiAddToCart({
+                    return me.apiAddToCart({
                         options: me.getConfiguredOptions(),
                         fulfillmentMethod: fulfillMethod,
                         quantity: me.get("quantity")
                     }).then(function (item) {
-                        me.trigger('addedtocart', item);
+                        me.trigger('addedtocart', item, stopRedirect);
                     });
                 }
             });
@@ -389,6 +387,7 @@ define(["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive"
                         if (me._hasVolumePricing) {
                             me.handleMixedVolumePricingTransitions(apiModel.data);
                         }
+                        me.trigger('optionsUpdated');
                      });
             } else {
                 this.isLoading(false);

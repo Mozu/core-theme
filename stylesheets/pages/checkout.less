@@ -53,7 +53,11 @@
   width: 100%; 
   height: 228px;
 }
-
+.mz-checkout{
+    .welcome-mat-widget,.mz-breadcrumbs,.mz-pagetitle{
+        display: none;
+    }
+}
 /* Desktop and tablet */
 @media only screen and (min-width: 768px) {
     #amazonAddressBookWidgetDiv {
@@ -102,6 +106,20 @@
     display: block;
 }
 
+.mz-international-checkout{
+    .text-center{
+        text-align: center;
+    }
+    .mz-button{
+        text-decoration: none;
+    }
+    .welcome-mat-widget,.mz-breadcrumbs,.mz-pagetitle{
+        display: none;
+    }
+    .mz-messagebar{
+        margin-bottom: 50px;
+    }
+}
 
 .is-loading select {
     background-image: url('../resources/images/button-loading.gif');

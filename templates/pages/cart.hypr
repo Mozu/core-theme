@@ -32,7 +32,15 @@
         {% include "modules/common/message-bar" with model=model.messages %}
         <table class="mz-table mz-table-cart" id="cart">
             {% include "modules/cart/cart-table" %}
-        </table>
+		</table>
+		
+		 {% block modal-dialog %}
+			<div mz-modal-discount-dialog class="mz-discount-modal">
+				<div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+					{% include "modules/cart/discount-modal/discount-modal" %} 
+				</div>
+			</div>
+		{% endblock modal-dialog %}
 	</form>
 </div>
 {% endblock body-content %}

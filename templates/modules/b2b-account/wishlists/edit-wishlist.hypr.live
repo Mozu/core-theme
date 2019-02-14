@@ -1,0 +1,33 @@
+
+<div class="wishlist-edit-form">
+    <div class="wishlist-btns">
+        <button class="mz-button mz-button-small" data-mz-action="cancelWishlistEdit">Close</button>
+    </div>
+    <div class="wishlist-edit-form-section">
+        <span class="wishlist-edit-label">{{labels.b2bWishlistName}}</span>
+        <input type="text" name="name" id="wishlistName" data-mz-value="name" value="{{ model.name }}">
+        <span class="mz-validationmessage" data-mz-validationmessage-for="name"></span>
+    </div>
+
+    <div class="wishlist-edit-form-section productPicker">
+        <div>
+            <span class="wishlist-edit-label">{{labels.b2bProductPicker}}</span>
+            <div mz-wishlist-product-picker>{% include "modules/product-picker/product-picker" %}</div>
+        </div>
+        <div>
+            <span class="wishlist-edit-label">{{labels.b2bQuantity}}</span>
+            <input type="number" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="pickerItemQuantity"></span>
+            <button class="mz-button mz-button" data-mz-action="addWishlistItem" {% if productNotSelected %} disabled {% endif %}>Add To List</button>
+        </div>
+        
+        
+    </div>
+    <div class="clear"></div>
+    <h3 class="mz-l-stack-sectiontitle">{{ labels.b2bWishlist }}</h3>
+
+    <div class="mz-b2b-wishlist-list">
+        {% include "modules/b2b-account/wishlists/wishlist-list" %}
+    </div>
+</div>
+

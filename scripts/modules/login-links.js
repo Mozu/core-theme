@@ -1,3 +1,5 @@
+/* globals grecaptcha */
+
 /**
  * Adds a login popover to all login links on a page.
  */
@@ -112,14 +114,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.$el = $(el);
             this.loading = false;
             this.setMethodContext();
-            if (!this.pageType){
+            if (!this.pageType) {
                 this.$el.on('click', this.createPopover);
             }
             else {
                this.$el.on('click', _.bind(this.doFormSubmit, this));
             }
         },
-        doFormSubmit: function(e){
+        doFormSubmit: function(e) {
             e.preventDefault();
             this.$parent = this.$el.closest(this.formSelector);
             this[this.pageType]();
@@ -140,16 +142,47 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
             this.$parent[onOrOff]('click', '[data-mz-action="loginform"]', this.slideLeft);
             this.$parent[onOrOff]('click', '[data-mz-action="submitlogin"]', this.login);
+            this.$parent[onOrOff]('click', '[data-mz-action="recaptchasubmitlogin"]', this.loginRecaptcha.bind(this));
             this.$parent[onOrOff]('click', '[data-mz-action="submitforgotpassword"]', this.retrievePassword);
             this.$parent[onOrOff]('keypress', 'input', this.handleEnterKey);
         },
         onPopoverShow: function () {
+            var me = this;
             DismissablePopover.prototype.onPopoverShow.apply(this, arguments);
             this.panelWidth = this.$parent.find('.mz-l-slidebox-panel').first().outerWidth();
             this.$slideboxOuter = this.$parent.find('.mz-l-slidebox-outer');
 
             if (this.$el.hasClass('mz-forgot')){
                 this.slideRight();
+            }
+
+            var recaptchaType = HyprLiveContext.locals.themeSettings.recaptchaType;
+
+            var recaptchaContainer = recaptchaType === 'Invisible' ? 'recaptcha-container-global' : 'recaptcha-container-popup';
+
+            if (HyprLiveContext.locals.themeSettings.enableRecaptcha) {
+                if (recaptchaType !== 'Invisible' || !window.renderedRecaptcha) {
+                    grecaptcha.render(
+                        recaptchaContainer,
+                        {
+                            size: recaptchaType === 'Invisible' ? 'invisible' : 'compact',
+                            badge: HyprLiveContext.locals.themeSettings.recaptchaBadgePosition,
+                            theme: HyprLiveContext.locals.themeSettings.recaptchaTheme,
+                            sitekey: HyprLiveContext.locals.themeSettings.recaptchaSiteKey,
+                            callback: function(result) {
+                                window.captchaToken = result;
+
+                                if (recaptchaType === 'Invisible') {
+                                    me.login(result);
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+
+            if (recaptchaType === 'Invisible') {
+                window.renderedRecaptcha = true;
             }
         },
         handleEnterKey: function (e) {
@@ -174,8 +207,38 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (e) e.preventDefault();
             this.$slideboxOuter.css('left', 0);
         },
-        login: function () {
+        loginRecaptcha: function() {
+            var me = this;
 
+            if (HyprLiveContext.locals.themeSettings.recaptchaType !== 'Invisible') {
+                return me.login();
+            }
+
+            if (window.captchaToken) {
+                return me.login(window.captchaToken);
+            }
+
+            if (!window.renderedRecaptcha) {
+                grecaptcha.render(
+                    'recaptcha-container-global',
+                    {
+                        size: HyprLiveContext.locals.themeSettings.recaptchaType === 'Invisible' ? 'invisible' : HyprLiveContext.locals.themeSettings.recaptchaSize,
+                        badge: HyprLiveContext.locals.themeSettings.recaptchaBadgePosition,
+                        theme: HyprLiveContext.locals.themeSettings.recaptchaTheme,
+                        sitekey: HyprLiveContext.locals.themeSettings.recaptchaSiteKey,
+                        callback: function(result) {
+                            window.captchaToken = result;
+                            me.login(result);
+                        }
+                    }
+                );
+
+                window.renderedRecaptcha = true;
+            }
+
+            grecaptcha.execute();
+        },
+        login: function (token) {
             this.setLoading(true);
 
             //NGCOM-623
@@ -193,11 +256,18 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
               returnUrl = this.$parent.find('input[name=returnUrl]').val();
             }
 
-
-            api.action('customer', 'loginStorefront', {
+            var data = {
                 email: this.$parent.find('[data-mz-login-email]').val(),
                 password: this.$parent.find('[data-mz-login-password]').val()
-            }).then(this.handleLoginComplete.bind(this, returnUrl), this.displayApiMessage);
+            };
+
+            if (token && typeof token === 'string') {
+                data.token = token;
+            } else if (window.captchaToken) {
+                data.token = window.captchaToken;
+            }
+
+            api.action('customer', 'loginStorefront', data).then(this.handleLoginComplete.bind(this, returnUrl), this.displayApiMessage);
 
         },
         anonymousorder: function() {
@@ -402,6 +472,32 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
 
         });
-    });
 
+        $('[data-mz-action="recaptcha-submit"]').each(function() {
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-loginform"]';
+            loginPage.pageType = 'loginRecaptcha';
+            loginPage.init(this);
+
+            var recaptchaContainer = HyprLiveContext.locals.themeSettings.recaptchaType === 'Invisible' ? 'recaptcha-container-global' : 'recaptcha-container';
+
+            if (!window.renderedRecaptcha) {
+                grecaptcha.render(
+                    recaptchaContainer,
+                    {
+                        size: HyprLiveContext.locals.themeSettings.recaptchaType === 'Invisible' ? 'invisible' : HyprLiveContext.locals.themeSettings.recaptchaSize,
+                        badge: HyprLiveContext.locals.themeSettings.recaptchaBadgePosition,
+                        theme: HyprLiveContext.locals.themeSettings.recaptchaTheme,
+                        sitekey: HyprLiveContext.locals.themeSettings.recaptchaSiteKey,
+                        callback: function(result) {
+                            window.captchaToken = result;
+                            loginPage.login(result);
+                        }
+                    }
+                );
+            }
+
+            window.renderedRecaptcha = true;
+        });
+    });
 });
