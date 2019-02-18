@@ -349,6 +349,7 @@
                         <td>
                             <div class="label">Ship To</div>
                             <div>{{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                            {% if model.fulfillmentInfo.fulfillmentContact.companyOrOrganization %}<div>{{ model.fulfillmentInfo.fulfillmentContact.companyOrOrganization }}</div>{% endif %}
                             <div>{{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
                             {% if model.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
                             {% if model.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ model.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}

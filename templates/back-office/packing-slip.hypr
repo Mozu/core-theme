@@ -21,6 +21,7 @@
         <tbody><tr>
             <td>
                 <div>{{ order.billingInfo.billingContact.firstName }} {{ order.billingInfo.billingContact.lastNameOrSurname }}</div>
+                {% if order.billingInfo.billingContact.companyOrOrganization %}<div>{{ order.billingInfo.billingContact.companyOrOrganization }}</div>{% endif %}
                 <div>{{ order.billingInfo.billingContact.address.address1 }}</div>
                 {% if order.billingInfo.billingContact.address.address2 %}<div>{{ order.billingInfo.billingContact.address.address2 }}</div>{% endif %}
                 {% if order.billingInfo.billingContact.address.address3 %}<div>{{ order.billingInfo.billingContact.address.address3 }}</div>{% endif %}
@@ -32,6 +33,7 @@
                 <div>{{ order.billingInfo.billingContact.email }}</div>
             </td><td>
                 <div>{{ order.fulfillmentInfo.fulfillmentContact.firstName }} {{ order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                {% if order.fulfillmentInfo.fulfillmentContact.companyOrOrganization %}<div>{{ order.fulfillmentInfo.fulfillmentContact.companyOrOrganization }}</div>{% endif %}
                 <div>{{ order.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
                 {% if order.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ order.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
                 {% if order.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ order.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
