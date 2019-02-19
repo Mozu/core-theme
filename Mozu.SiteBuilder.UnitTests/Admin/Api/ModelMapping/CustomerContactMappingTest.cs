@@ -134,5 +134,33 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api.ModelMapping
             contractContact.Types.FirstOrDefault(x => x.Name == DC.ContactTypeConst.BILLING && x.IsPrimary).ShouldNotBeNull();
             contractContact.Types.FirstOrDefault(x => x.Name == DC.ContactTypeConst.SHIPPING && x.IsPrimary).ShouldNotBeNull();
         }
+
+        [Test]
+        public void Should_map_non_primary_contact_types_to_contract()
+        {
+            var domainContact = new CustomerContact
+            {
+                AccountId = 1100,
+                Address1 = "1835 Kramer Lane",
+                CityOrTown = "Austin",
+                StateOrProvince = "TX",
+                CountryCode = "US",
+                PostalOrZipCode = "78758",
+                AddressType = "Residential",
+                Email = "joeblow@volusion.com",
+                FirstName = "AAA",
+                LastName = "CCC",
+                HomePhone = "512-555-0000",
+                IsBilling = true,
+                IsPrimaryBilling = false,
+                IsShipping = true,
+                IsPrimaryShipping = false
+            };
+
+            var contractContact = Mapper.Map<CustomerContact, DC.CustomerContact>(domainContact);
+            contractContact.Types.Count.ShouldEqual(2);
+            contractContact.Types.FirstOrDefault(x => x.Name == DC.ContactTypeConst.BILLING && !x.IsPrimary).ShouldNotBeNull();
+            contractContact.Types.FirstOrDefault(x => x.Name == DC.ContactTypeConst.SHIPPING && !x.IsPrimary).ShouldNotBeNull();
+        }
     }
 }
