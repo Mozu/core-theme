@@ -20,6 +20,14 @@ Ext.define('Taco.view.product.SiteForm', {
         'Taco.view.product.subform.Merchandising',
         'Taco.view.product.subform.SEO'
     ],
+    listeners: {
+        beforeshow: function (tab, eOpts) {
+            if (!tab.formbuilt) {
+                this.buildForm();
+                tab.formbuilt = true;
+            }
+        },
+    },
     mixins: {
         scrollspy: 'Taco.core.ux.ScrollSpy', // TODO: resolve JS error with this and getEl()
         bundleable: 'Taco.view.product.mixins.Bundleable'
@@ -44,7 +52,6 @@ Ext.define('Taco.view.product.SiteForm', {
 
         this.callParent(arguments);
 
-        this.buildForm();
 
         this.on({
             overrideChange: this.handleOverrideChange,
@@ -55,7 +62,7 @@ Ext.define('Taco.view.product.SiteForm', {
     },
 
     buildForm: function () {
-    
+
         var items = [],
             subFormCfg = {
                 hidden:false,
@@ -66,7 +73,7 @@ Ext.define('Taco.view.product.SiteForm', {
                 isGlobal: false,
                 persistChangesToModel: true
             };
-        
+
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.General', subFormCfg)
         ]);
@@ -77,10 +84,10 @@ Ext.define('Taco.view.product.SiteForm', {
             //Ext.create('Taco.view.product.subform.Merchandising', subFormCfg),
             Ext.create('Taco.view.product.subform.SEO', subFormCfg)
         ]);
-        
+
         //Need to call loadNaveItems to intialize the loading of the subforms
         this.loadNavItems(items);
-        
+
         // Note that this method will also reload the navItems to reflect the updated visiblity.
         this.updateSubFormVisibility();
     },
