@@ -52,33 +52,8 @@ Ext.define('Taco.view.product.subform.Categories', {
                 scope: this
             },
             onLoad: function () {
-                var me = this,
-                    valueField = me.valueField,
-                    valueStore = me.valueStore,
-                    changed = false;
-
-                if (valueStore) {
-                    if (!Ext.isEmpty(me.value) && (valueStore.getCount() == 0)) {
-                        me.setValue(me.value, false, true);
-                    }
-
-                    valueStore.suspendEvents();
-                    valueStore.each(function (rec) {
-                        var r = me.findRecord(valueField, rec.get(valueField)),
-                            i = r ? valueStore.indexOf(rec) : -1;
-                        if (i >= 0) {
-                            valueStore.removeAt(i);
-                            valueStore.insert(i, r);
-                            changed = true;
-                        }
-                    });
-                    valueStore.resumeEvents();
-                    if (changed) {
-                        valueStore.fireEvent('datachanged', valueStore);
-                    }
-                }
-                this.hide();
-                this.show();
+                Ext.ux.form.field.BoxSelect.prototype.onLoad.apply(this);
+                this.up('productcategoriessubform').doLayout();
             }
         });
 
