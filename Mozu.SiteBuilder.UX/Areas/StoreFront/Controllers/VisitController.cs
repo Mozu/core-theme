@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Messaging;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -67,10 +68,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _logger.Warn("Tracking pixel requested with mismatched visit ids. Query string: " + visitId + ". Cookie: " + _pageContext.Visit.VisitId + ".");
                 return Pixel();
             }
-
-            // only log the visit if it wasn't already tracked.
+            
             bool isAlreadyTracked = _pageContext.Visit.IsTracked && (String.IsNullOrEmpty(_pageContext.Visit.UserId) || _pageContext.Visit.IsUserTracked);
-            if (!isAlreadyTracked)
+            // only log the visit if it wasn't already tracked and isn't an anonymous shopper.
+            if (!(isAlreadyTracked || _apiContext.IsAnonymousShopper()))
             {
                 // log the visit.
                 _publisher.PublishVisit(_pageContext.Visit);
