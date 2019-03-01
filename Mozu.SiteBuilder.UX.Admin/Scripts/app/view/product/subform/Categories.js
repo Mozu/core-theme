@@ -18,7 +18,6 @@ Ext.define('Taco.view.product.subform.Categories', {
     layout: {
         type: 'fit'
     },
-
     initComponent: function () {
         var me = this,
             list,
@@ -51,6 +50,10 @@ Ext.define('Taco.view.product.subform.Categories', {
             listeners: {
                 change: this.updatePrimaryCategory,
                 scope: this
+            },
+            onLoad: function () {
+                Ext.ux.form.field.BoxSelect.prototype.onLoad.apply(this);
+                this.up('productcategoriessubform').doLayout();
             }
         });
 
