@@ -491,6 +491,8 @@ Ext.define('Taco.view.order.Header', {
 
                     '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
 
+                    '<tpl if="billingContact.companyOrOrganization">{billingContact.companyOrOrganization:htmlEncode}<br></tpl>',
+
                     '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
 
                     '<tpl if="billingContact.address1">',
