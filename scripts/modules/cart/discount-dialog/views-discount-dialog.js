@@ -95,7 +95,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         this.model.get('options').each(function(o){
             var clearSelectedOption = false;
             var variationOptionMap = _.map(variationsToMark, function(variation){
-                var option = _.find(variation.options, {attributeFQN: optionName});
+                var option = _.findWhere(variation.options, {attributeFQN: optionName});
                 if(option) return option.value;
                 
             });
