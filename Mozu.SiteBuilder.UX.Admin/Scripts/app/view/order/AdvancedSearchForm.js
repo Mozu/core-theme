@@ -300,6 +300,16 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 mouseWheelEnabled: false
             },
             {
+                name: 'phonenumber',
+                fieldLabel: 'Phone Number',
+                listeners: {
+                    change: {
+                        scope: this,
+                        fn: 'formatPhoneNumber'
+                    }
+                }
+            },
+            {
                 name: 'attributeName',
                 fieldLabel: 'Attribute Name'
             }];
@@ -311,8 +321,7 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
      * @param {Ext.Component} field The field.
      * @param {Ext.EventObject} e The event object.
      */
-    escapeSpecialChars: function (field, e) {
-
+    escapeSpecialChars: function (field, e) {        
         var specialChars = /[\'\"\{\}\[\]]/g; // ' " { } [ ]
         var value = field.getValue();
 
@@ -320,6 +329,19 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
             // ^ is the escape character; $& is the matched token
             // removing the escaped chars before escaped, so not to double up if the input is blurred more than once
             field.setValue(value.replace(/\^/g, '').replace(specialChars, '^$&'));
+        }
+    },
+
+    /**
+     * Helper for escaping special characters from phone numbers, intended to be used on blur.
+     * @param {Ext.Component} field The field.
+     * @param {Ext.EventObject} e The event object.
+     */
+    formatPhoneNumber: function (field, e) {  
+        var value = field.getValue();
+        var cleaned = ('' + value).replace(/\D/g, '');
+        if (cleaned) {
+            field.setValue(cleaned);
         }
     }
 });
