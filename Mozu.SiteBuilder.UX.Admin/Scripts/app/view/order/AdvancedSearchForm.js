@@ -317,6 +317,10 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 }
             },
             {
+                name: 'externalid',
+                fieldLabel: 'External Id'
+            },
+            {
                 name: 'attributeName',
                 fieldLabel: 'Attribute Name'
             }];

@@ -169,6 +169,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.OrderHelpers
                     return string.Format("(itemFulfillmentMethod eq {0} )", filter.value);
                 case "cardnumber":
                     return string.Format("(cardnumber eq {0} )", filter.value);
+                case "externalid":
+                    return "externalid eq " + filter.value;
                 default:
                 {
                     throw new NotImplementedException("unable to filter on property " + filter.property);
