@@ -141,7 +141,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Discount
    
         public decimal? MinimumOrderAmount { get; set; }
 
-      
+        public decimal? MaximumOrderAmount { get; set; }
+
         public decimal? MinimumLifetimeValueAmount { get; set; }
 
       

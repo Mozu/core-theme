@@ -139,6 +139,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     opt => opt.ResolveUsing(x =>
                         x.Target?.ShippingZones?.Select(_ => _.Zone).ToList() ?? new List<string>()))
                 .ForMember(x => x.MinimumOrderAmount, opt => opt.ResolveUsing(x => x.Conditions?.MinimumOrderAmount))
+                .ForMember(x => x.MaximumOrderAmount, opt => opt.ResolveUsing(x => x.Conditions?.MaximumOrderAmount))
                 .ForMember(x => x.MaxRedemptionCount, opt => opt.ResolveUsing(x => x.Conditions?.MaxRedemptionCount))
                 .ForMember(x => x.MaximumRedemptionsPerOrder, opt => opt.ResolveUsing(dc => (dc.Conditions != null)
                     ? dc.MaximumRedemptionsPerOrder
@@ -259,6 +260,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     MinimumCategorySubtotalBeforeDiscounts = x.MinimumCategorySubtotalBeforeDiscounts,
                     MinimumRequiredQuantityPerRedemption = x.MinimumRequiredQuantityPerRedemption,
                     MinimumOrderAmount = x.MinimumOrderAmount == 0 ? null : x.MinimumOrderAmount,
+                    MaximumOrderAmount = x.MaximumOrderAmount == 0 ? null : x.MaximumOrderAmount,
                     MinimumLifetimeValueAmount =
                         x.MinimumLifetimeValueAmount == 0 ? null : x.MinimumLifetimeValueAmount,
                     MaxRedemptionCount = x.MaxRedemptionCount,

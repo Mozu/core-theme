@@ -43,7 +43,7 @@ nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
-nuget Mozu.ProductAdmin.Contracts 1.1903.1
+nuget Mozu.ProductAdmin.Contracts 1.1906.0-derTotalDiscount-4
 nuget Mozu.ProductRuntime.Contracts 1.1903.1
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
