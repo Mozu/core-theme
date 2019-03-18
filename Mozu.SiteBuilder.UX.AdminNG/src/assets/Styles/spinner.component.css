@@ -1,0 +1,79 @@
+﻿.spinnerImage {
+    position: relative;
+    top: 43%;
+}
+
+.productSliderSpinnerContainer {
+    width: 100%;
+    height: 200px;
+    text-align: center;
+}
+
+.generalInfoSpinnerContainer {
+    width: 100%;
+    height: 350px;
+    text-align: center;
+}
+
+.txnSummaryInfoSpinnerContainer {
+    width: 100%;
+    height: 350px;
+    text-align: center;
+}
+
+.recentTranSpinnerContainer {
+    width: 100%;
+    height: 200px;
+    text-align: center;
+}
+
+.catalogSpinnerContainer {
+    width: 100%;
+    height: 350px;
+    text-align: center;
+}
+
+.shopResultSpinnerContainer {
+    width: 100%;
+    height: 100%;
+    max-height:100%;
+    text-align: center;
+    position:absolute;
+    z-index:200;
+}
+
+.cartSummarySpinnerContainer{
+    width: 100%;
+    height: 512px;
+    text-align: center;
+    position:absolute;
+}
+.paymentSummarySpinnerContainer{
+    width: 100%;
+    height: 203px;
+    text-align: center;
+    position:absolute;
+    z-index:1;
+}
+.nciSearchSupplierSpinnerContainer{
+    width: 100%;
+    height: 300px;
+    text-align: center;
+    position:absolute;
+    z-index:1;
+    max-height:100%;
+}
+.resetPasswordSpinnerContainer {
+    width: 96%;
+    height: 194px;
+    text-align: center;
+    position: absolute;
+    z-index: 15;
+}
+checkoutInformationSpinnerContainer{
+    width: 100%;
+    height: 203px;
+    text-align: center;
+    position:absolute;
+    z-index:1;
+}

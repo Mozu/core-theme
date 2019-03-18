@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootDir>$(ProjectDir)..\</RootDir>
+    <MozuSiteBuilderRazorAppDistAssetsDir>$(RootDir)\Mozu.SiteBuilder.UX\Assets</MozuSiteBuilderRazorAppDistAssetsDir>
+    <MozuAdminRazorAppDir>$(RootDir)\Mozu.SiteBuilder.UX.Admin</MozuAdminRazorAppDir>
+    <MozuAdminDevDistAssetsFolder>$(MozuAdminRazorAppDir)\assets</MozuAdminDevDistAssetsFolder>
+    <MozuAdminDevDistFolder>$(MozuAdminRazorAppDir)\adminng</MozuAdminDevDistFolder>
+    <Configurations>Debug;Prod;CI;Demo;Dev;perf;SI;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="node_modules\**" />
+    <EmbeddedResource Remove="node_modules\**" />
+    <None Remove="node_modules\**" />
+  </ItemGroup>
+
+  <Target Name="BeforeBuildSteps" BeforeTargets="Build">
+
+    <Message Importance="high" Text="*** START $(Configuration) build process" />
+
+    <Message Importance="high" Text="*** START node module install process" />
+
+    <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
+
+    <Message Importance="high" Text="*** END node module install process" />
+
+    <Message Importance="high" Text="*** START ng build process" />
+
+    <Exec Command="ng build --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />
+
+    <Message Importance="high" Text="*** END ng build process" />
+
+    <ItemGroup>
+      <AllAdminNGDistFolderFiles Include="$(ProjectDir)dist\*.*;$(ProjectDir)dist\**\*.*;" />
+      <AllAssetFiles Include="$(ProjectDir)\src\assets\*.*;$(ProjectDir)src\assets\**\*.*;"></AllAssetFiles>
+    </ItemGroup>
+
+    <RemoveDir Directories="$(MozuAdminDevDistFolder)" />
+    <RemoveDir Directories="$(MozuAdminDevDistAssetsFolder)" />
+
+    <Message Importance="high" Text="*** START copying Asset files to admin razor host and site builder project " />
+
+    <Copy SourceFiles="@(AllAssetFiles)" DestinationFiles="@(AllAssetFiles->'$(MozuAdminDevDistAssetsFolder)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(AllAssetFiles)" DestinationFiles="@(AllAssetFiles->'$(MozuSiteBuilderRazorAppDistAssetsDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+    <Message Importance="high" Text="*** End copying Asset files to razor host project" />
+    
+    <Message Importance="high" Text="*** START copying dist files to razor host project" />
+    
+    <Copy SourceFiles="@(AllAdminNGDistFolderFiles)" DestinationFiles="@(AllAdminNGDistFolderFiles->'$(MozuAdminDevDistFolder)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+    <Message Importance="high" Text="*** END copying dist files to razor host project" />
+
+    <Message Importance="high" Text="*** END $(Configuration) build process" />
+    
+
+  </Target>
+  
+</Project>

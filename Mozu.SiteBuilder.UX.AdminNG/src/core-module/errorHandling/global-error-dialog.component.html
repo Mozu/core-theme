@@ -1,0 +1,10 @@
+﻿<p-dialog [(visible)]="_displayModal" [modal]="true" (onHide)="logout()">
+    <p-header>
+        <h4 class="modal-title" [innerText]="_dialogTitle"></h4>
+    </p-header>
+    <p [innerText]="_message"></p>
+    <p-footer>
+        <button type="button" class="btn btn-default" (click)="_displayModal=false" *ngIf="_isShowSecondaryButton == true" [innerText]="_secondaryButtonText" ></button>
+        <button type="button" class="btn btn-primary" autofocus (click)="_displayModal=false"  [innerText]="_primaryButtonText"></button>
+    </p-footer>
+</p-dialog>

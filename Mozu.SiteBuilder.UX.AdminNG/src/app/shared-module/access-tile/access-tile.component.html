@@ -1,0 +1,16 @@
+<div class="col-md-4 mt-5">
+    <p-card [style]="{height: '200px'}">
+        <p-header>
+            <div class="taco-image-holder" style="min-height: 110px;text-align: center;">
+                <a data-url="" class="fa fa-home" style="font-size: 75px;"></a>
+            </div>
+        </p-header>
+      
+        <p-footer >
+            <div><span>{{tileModel.sectionText}}</span></div>
+             <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
+              <div style="float:left; margin-left:10px;"><a [attr.data-url]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a></div>
+            </div>
+        </p-footer>
+    </p-card>
+</div>

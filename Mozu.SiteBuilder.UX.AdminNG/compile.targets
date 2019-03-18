@@ -1,0 +1,77 @@
+<Project>
+
+  <PropertyGroup>
+    <RootDir>$(ProjectDir)..\</RootDir>
+    <MozuAdminRazorAppDir>$(RootDir)\Mozu.SiteBuilder.UX.Admin</MozuAdminRazorAppDir>
+    <MozuAdminDevDistFolder>$(MozuAdminRazorAppDir)\adminng</MozuAdminDevDistFolder>
+    <MozuAdminProdDistFolder>$(MozuAdminRazorAppDir)\dist</MozuAdminProdDistFolder>
+   
+  </PropertyGroup>
+
+  <Target Name="BeforeBuild">
+
+    <Message Importance="high" Text="****START Installing Node Modules****" />
+
+    <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
+
+    <Message Importance="high" Text="****END Installing Node Modules****" />
+
+  </Target>
+
+  <Target Name="DevBuild">
+
+    <Message Importance="high" Text="**** START build:dev ****" />
+
+    <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; run build:app" />
+    
+    <Message Importance="high" Text="**** END build:dev ****" />
+
+    <ItemGroup>
+
+      <AllFiles Include="$(ProjectDir)\src\assets\*.*;$(ProjectDir)\assets\**\*.*;" />
+
+    </ItemGroup>
+
+    <Message Importance="high" Text="**** START Copying Assets and bunldes to Mozu.SiteBuilder.UX.Admin ****" />
+
+    <Copy SourceFiles="@(AllFiles)" DestinationFiles="@(AllFiles->'$(MozuAdminDevDistFolder)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
+    <Message Importance="high" Text="**** END Copying Assets and bunldes to Mozu.SiteBuilder.UX.Admin ****" />
+
+  </Target>
+
+  <Target Name="ProdBuild">
+
+    <RemoveDir Directories="$(MozuAdminProdDistFolder)"></RemoveDir>
+
+    <ItemGroup>
+
+      <Assets Include="$(ProjectDir)\assets\**\*.*" />
+
+      <AppBundle Include="$(ProjectDir)\dist\**\*.*" />
+
+    </ItemGroup>
+    
+    <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; run fix-memory-limit" />
+
+    <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; run build:prod -e $(ConfigurationName) " />
+
+    <Copy SourceFiles="@(Assets)" DestinationFiles="@(Assets->'$(MozuAdminProdDistFolder)\assets\%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <Copy SourceFiles="@(AppBundle)" DestinationFolder="$(MozuAdminProdDistFolder)\dist\" />
+    
+  </Target>
+
+  <Target Name="BeforeBuildSteps" BeforeTargets="Build">
+
+    <Message Importance="high" Text="*** START after build process" />
+
+    <CallTarget Targets="DevBuild"></CallTarget>
+
+    <!--<CallTarget Targets="ProdBuild" Condition="$(IsTFSBuild)=='True'"></CallTarget>-->
+
+    <Message Importance="high" Text="*** END after build process" />
+
+  </Target>
+  
+</Project>

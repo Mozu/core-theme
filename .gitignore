@@ -77,3 +77,9 @@ ext/
 /Mozu.SiteBuilder.sdf
 /Mozu.SiteBuilder.VC.opendb
 /paket-files/paket.restore.cached
+/Mozu.SiteBuilder.UX/Assets
+/Mozu.SiteBuilder.UX.Admin/adminng
+/Mozu.SiteBuilder.UX.Admin/assets
+UpgradeLog.htm
+UpgradeLog2.htm
+Mozu.SiteBuilder.UX.AdminNG/.editorconfig

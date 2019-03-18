@@ -92,8 +92,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             try
             {
-                ActionResult res = await GetIndex();
-                return Request.CreateResponse(HttpStatusCode.OK, res);
+                if (Convert.ToBoolean(ConfigurationManager.AppSettings["IsEnableNewAdminUI"]))
+                {
+                    ActionResult res = await GetIndexNG();
+                    return Request.CreateResponse(HttpStatusCode.OK, res);
+
+                }
+                else
+                {
+                    ActionResult res = await GetIndex();
+                    return Request.CreateResponse(HttpStatusCode.OK, res);
+                }
             }
             catch (Exception ex)
             {
@@ -162,6 +171,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             //.Where(ri => ri != null && ri.ISOCurrencySymbol == ISOCurrencySymbol)
             //.Select(ri => ri.CurrencySymbol)
             //.FirstOrDefault();
+        }
+
+        private async Task<ActionResult> GetIndexNG()
+        {
+            return RazorView("IndexNG");
         }
 
         private async Task<ActionResult> GetIndex()
@@ -347,10 +361,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string tacoAssetServer = _httpContext.Request.Cookies.Get("taco-asset-location") != null ? _httpContext.Request.Cookies.Get("taco-asset-location").Value : null;
             if (string.Equals(ConfigurationManager.AppSettings["use_compiled_taco"], "true", StringComparison.OrdinalIgnoreCase) & string.IsNullOrEmpty(tacoAssetServer))
             {
-                
                 return RazorView("Index_Compiled");
             }
-            
+
             return RazorView("index");
             
         }

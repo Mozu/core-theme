@@ -1,0 +1,15 @@
+.card {
+    height: 200px;
+}
+.subcat{
+    font-size : 12px;
+}
+.subcat-header {
+    height: 70%;
+}
+.subcat-footer {
+    height: 30%;
+}
+.subcat-main{
+    height: 100%;
+}

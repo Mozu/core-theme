@@ -1,0 +1,15 @@
+<div class="dashboard">
+  <ng-container *ngIf="isShowSystemTiles; then systemTilesTemplate; else mainTilesTemplate">
+  </ng-container>
+  
+  <ng-template #systemTilesTemplate>
+    <div *ngFor="let eachSystemTile of systemTiles;let i=index;">
+      <access-tile [Tiles]="eachSystemTile"></access-tile>
+    </div>
+  </ng-template>
+  <ng-template #mainTilesTemplate>
+    <div *ngFor="let eachMainTile of mainTiles;let i=index;">
+      <access-tile [Tiles]="eachMainTile"></access-tile>
+    </div>
+  </ng-template>    
+</div>

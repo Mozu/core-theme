@@ -128,8 +128,8 @@
     <!--<Reference Include="PhoneNumbers">
       <HintPath>..\packages\libphonenumber-csharp.4.10.0.62\lib\PhoneNumbers.dll</HintPath>
     </Reference>-->
-    <Reference Include="RestSharp, Version=106.6.9.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.6.9\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -155,7 +155,25 @@
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -1800,43 +1818,7 @@
     <Content Include="Scripts\sass\src\view\order\modal\AddPurchaseOrder.scss" />
     <Content Include="Scripts\sass\src\view\navigation\SecondaryMenu.scss" />
     <Content Include="Scripts\sass\src\shared\view\field\Customer.scss" />
-    <Content Include="assets\Fonts\Calibri.eot" />
-    <Content Include="assets\Fonts\Calibri.otf" />
-    <Content Include="assets\Fonts\Calibri.ttf" />
-    <Content Include="assets\Fonts\Calibri.woff" />
-    <Content Include="assets\Fonts\Calibri.woff2" />
-    <Content Include="assets\Fonts\fontawesome-webfont.eot" />
-    <Content Include="assets\Fonts\fontawesome-webfont.ttf" />
-    <Content Include="assets\Fonts\fontawesome-webfont.woff" />
-    <Content Include="assets\Fonts\fontawesome-webfont.woff2" />
-    <Content Include="assets\Fonts\FontAwesome.otf" />
-    <Content Include="assets\Fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="assets\Fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="assets\Fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="assets\Fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="assets\Fonts\proximanova-regular.eot" />
-    <Content Include="assets\Fonts\proximanova-regular.ttf" />
-    <Content Include="assets\Fonts\proximanova-regular.woff" />
-    <Content Include="assets\Fonts\proximanova-regular.woff2" />
-    <Content Include="assets\Fonts\segoe-ui-normal.eot" />
-    <Content Include="assets\Fonts\segoe-ui-normal.otf" />
-    <Content Include="assets\Fonts\segoe-ui-normal.ttf" />
-    <Content Include="assets\Fonts\segoe-ui-normal.woff" />
-    <Content Include="assets\Fonts\segoe-ui-normal.woff2" />
-    <Content Include="assets\i18n\en.json" />
-    <Content Include="assets\i18n\fr.json" />
-    <Content Include="assets\json\account-information.json" />
-    <Content Include="assets\json\dashboard-categories.json" />
-    <Content Include="assets\json\dashboard-menu.json" />
-    <Content Include="assets\json\leftNavigation-items.json" />
-    <Content Include="assets\json\quote-list.json" />
-    <Content Include="assets\json\secureForm.json" />
-    <Content Include="assets\json\user-data.json" />
-    <Content Include="assets\json\user-redirection.json" />
     <None Include="packages.config" />
-    <Content Include="Scripts\app\locale\en-US.json" />
-    <Content Include="Scripts\app\mocks\candidateSuggestions.json" />
-    <Content Include="Scripts\sass\src\view\order\modal\ReassignShipment.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
@@ -2493,6 +2475,7 @@
     <Content Include="Tests\Mocks\Mystic1\NavigationTreeNodes1.json" />
     <Content Include="Tests\Mocks\Mystic1\Returns2Payments.json" />
     <Content Include="Tests\Mocks\Mystic1\SingleOrder.json" />
+    <Content Include="Views\Home\IndexNG.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\jquery.ui.accordion.css" />
@@ -3168,26 +3151,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="System.Web.Mvc">
-          <HintPath>..\packages\Microsoft.AspNet.Mvc\lib\net45\System.Web.Mvc.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'" />
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="System.Web.Razor">
-          <HintPath>..\packages\Microsoft.AspNet.Razor\lib\net45\System.Web.Razor.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'" />
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
@@ -3223,41 +3190,10 @@
     </When>
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="System.Web.Helpers">
-          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.Helpers.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Web.WebPages">
-          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Web.WebPages.Deployment">
-          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-        <Reference Include="System.Web.WebPages.Razor">
-          <HintPath>..\packages\Microsoft.AspNet.WebPages\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'" />
   </Choose>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
-      <ItemGroup>
-        <Reference Include="Microsoft.Web.Infrastructure">
-          <HintPath>..\packages\Microsoft.Web.Infrastructure\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-          <Private>True</Private>
-          <Paket>True</Paket>
-        </Reference>
-      </ItemGroup>
-    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'" />
   </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">

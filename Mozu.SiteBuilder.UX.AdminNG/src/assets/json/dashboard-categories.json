@@ -1,0 +1,48 @@
+[
+    {
+        "menuid": "1",
+        "icon": "home",
+        "header": "Catlog",
+        "headeritems": [
+            {
+                "name": "Products",
+                "url": ""
+            },
+            {
+                "name": "Categories",
+                "url": ""
+            },
+            {
+                "name": "Inventory",
+                "url": ""
+            },
+            {
+                "name": "Price Lists",
+                "url": ""
+            }
+        ]
+    },
+    {
+        "menuid": "1",
+        "icon": "home",
+        "header": "Catlog",
+        "headeritems": [
+            {
+                "name": "Products",
+                "url": ""
+            },
+            {
+                "name": "Categories",
+                "url": ""
+            },
+            {
+                "name": "Inventory",
+                "url": ""
+            },
+            {
+                "name": "Price Lists",
+                "url": ""
+            }
+        ]
+    },
+]

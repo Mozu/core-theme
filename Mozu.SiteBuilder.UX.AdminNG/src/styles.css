@@ -1,0 +1,42 @@
+/* You can add global styles to this file, and also import other style files */
+.navbar{
+    max-height: 32px !important;
+    margin-bottom: 0px !important;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, body .ui-tabview.ui-tabview-top .ui-tabview-nav li{
+    width: 50% !important;
+    margin-right: 0;
+  }
+
+body .ui-tabview .ui-tabview-panels {
+    padding:0 !important;
+}
+
+.ui-menu{
+    width:100% !important;
+}
+
+.ui-widget-content {
+ border: 0 !important;
+}
+
+.ui-tabview .ui-tabview-nav li {
+ margin: 0 !important;
+   
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav {
+    margin-bottom: 0px !important;
+}
+
+.ui-tabview-panels{
+    overflow: auto;
+    position: absolute;
+    height: 100%;
+    width: 97.5%;
+  }
+
+body .ui-sidebar {
+    padding: 0em 0em !important;
+}
