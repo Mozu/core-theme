@@ -1,7 +1,8 @@
 
 export class AccessTileModel {
     sectionText : string;
-    sectionLinks : AccessTileLink []; 
+    sectionLinks : AccessTileLink [];
+    sectionImageURL : string;
 }
 
 export class AccessTileLink {

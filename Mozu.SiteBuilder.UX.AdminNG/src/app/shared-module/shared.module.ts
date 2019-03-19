@@ -1,17 +1,9 @@
-﻿import {
-    NgModule,
-    ErrorHandler
-} from '@angular/core';
-
-import { Http } from '@angular/http';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
-
+﻿import { NgModule } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-
 import {
-    Routes,
     RouterModule
 } from '@angular/router';
 
@@ -30,13 +22,10 @@ import {
     EnableDisableControls
 } from './directive/index';
 
-import { ConfigurationSettings } from './infrastructure/index';
-
 import {
     HeaderComponent
 } from './header/index';
 
-import { FooterComponent } from './footer/footer.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { 
     NavigationComponent,
@@ -101,7 +90,6 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
-        FooterComponent,
         AccessTileComponent
     ],
     providers: [
@@ -139,7 +127,6 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
-        FooterComponent,
         AccessTileComponent
     ]
 })

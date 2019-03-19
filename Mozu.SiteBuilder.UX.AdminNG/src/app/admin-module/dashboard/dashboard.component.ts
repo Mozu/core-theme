@@ -1,129 +1,110 @@
-import { 
-  Component, 
+import {
+  Component,
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
+import { 
+  LoggerService ,
+  HttpError,
+  ErrorCode, 
+  ErroNotificationType} from '@core'
 
 import { NotificationService } from '@global'
-
-import { 
-  AccessTileModel ,
-  AccessTileLink
+import {
+  AccessTileModel,
+  AccessTileLink,
+  Constants
 } from '@shared/index';
+
+import { DashboardModel } from './dashboard.model';
+
+import { DashbaordService } from './dashboard.service';
 
 @Component({
   selector: 'admin-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  providers: [DashbaordService]
 })
 export class AdminDashboardComponent implements OnInit, OnDestroy {
 
-  isShowSystemTiles : boolean;
-  systemTiles : AccessTileModel [];
-  mainTiles : AccessTileModel [];
+  model: DashboardModel;
   subscriptions: Subscription[];
 
-  constructor( 
-    private _notificationService : NotificationService,
-    private _changeDetecttionRef : ChangeDetectorRef
-  ) { 
-    this.isShowSystemTiles = true; 
+  constructor(
+    private _notificationService: NotificationService,
+    private _changeDetectionRef: ChangeDetectorRef,
+    private _dashboardService: DashbaordService,
+    private _loggerService: LoggerService
+  ) {
+
+    this._loggerService.info("AdminDashboardComponent : constructor");
+    this.model = new DashboardModel();
     this.subscriptions = [];
-
-    this.systemTiles = [];
-    this.systemTiles.push(this.GetSystemTilesModel("Catalog"));
-    this.systemTiles.push(this.GetSystemTilesModel("Order"));
-    this.systemTiles.push(this.GetSystemTilesModel("Product"));
-    this.systemTiles.push(this.GetSystemTilesModel("Items"));
-
-    this.mainTiles =[];
-    this.mainTiles.push(this.GetMainTilesModel("Product"));
-    this.mainTiles.push(this.GetMainTilesModel("Items"));
-    this.mainTiles.push(this.GetMainTilesModel("Catalog"));
-    this.mainTiles.push(this.GetMainTilesModel("Order"));
-
   }
 
   ngOnInit() {
+    this._loggerService.info("AdminDashboardComponent : ngOnInit");
+
+    this.pupulateSystemAndMainTiles();
+    this.model.isShowSystemTiles = false;
     this.subscriptions.push(
-            this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
-                this.isShowSystemTiles = (activeTab == "System");
-                this._changeDetecttionRef.detectChanges();
-            })
-        );
+      this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
+        this.model.isShowSystemTiles = (activeTab == "System");
+        this._changeDetectionRef.detectChanges();
+      })
+    );
   }
 
   ngOnDestroy() {
+    this._loggerService.info("AdminDashboardComponent : ngOnDestroy");
+
     this.subscriptions.forEach((s) => {
       s.unsubscribe();
-    }); 
+    });
   }
 
-  private GetSystemTilesModel(tileHeader : string) : AccessTileModel {
 
-      let accessTileModel = new AccessTileModel();
+  public pupulateSystemAndMainTiles = () => {
+    this._loggerService.info("AdminDashboardComponent : pupulateSystemAndMainTiles");
 
-      accessTileModel.sectionText = tileHeader;
+    this._dashboardService.fetchAllDashboardTiles().subscribe((successResponse) => {
+      this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");;
+      this.model.systemTiles = this.MapDasasboardCategoryToTiles(successResponse.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
+      this.model.mainTiles = this.MapDasasboardCategoryToTiles(successResponse.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
+      this._changeDetectionRef.detectChanges();
 
-      accessTileModel.sectionLinks= [];
-      let sectionLink1 = new AccessTileLink();
-      sectionLink1.linkDataText = "Product";
-      sectionLink1.linkDataURL  = "javascript:void(0)";
-
-      let sectionLink2 = new AccessTileLink();
-      sectionLink2.linkDataText = "Categories";
-      sectionLink2.linkDataURL  = "javascript:void(0)";
-      
-      let sectionLink3 = new AccessTileLink();
-      sectionLink3.linkDataText = "Inventory";
-      sectionLink3.linkDataURL  = "javascript:void(0)";
-
-      
-      let sectionLink4 = new AccessTileLink();
-      sectionLink4.linkDataText = "Price List";
-      sectionLink4.linkDataURL  = "javascript:void(0)";
-
-      accessTileModel.sectionLinks.push(sectionLink1);
-      accessTileModel.sectionLinks.push(sectionLink2);
-      accessTileModel.sectionLinks.push(sectionLink3);
-      accessTileModel.sectionLinks.push(sectionLink4);
-
-    return accessTileModel;
+    }, (errResponse) => {
+      this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");;
+      throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster);
+    });
   }
 
-  private GetMainTilesModel(tileHeader : string) : AccessTileModel {
-
-    let accessTileModel = new AccessTileModel();
-
-    accessTileModel.sectionText =tileHeader;
-
-    accessTileModel.sectionLinks= [];
-    let sectionLink1 = new AccessTileLink();
-    sectionLink1.linkDataText = "Product";
-    sectionLink1.linkDataURL  = "javascript:void(0)";
-
-    let sectionLink2 = new AccessTileLink();
-    sectionLink2.linkDataText = "Categories";
-    sectionLink2.linkDataURL  = "javascript:void(0)";
-    
-    let sectionLink3 = new AccessTileLink();
-    sectionLink3.linkDataText = "Inventory";
-    sectionLink3.linkDataURL  = "javascript:void(0)";
-    
-    let sectionLink4 = new AccessTileLink();
-    sectionLink4.linkDataText = "Price List";
-    sectionLink4.linkDataURL  = "javascript:void(0)";
-
-    accessTileModel.sectionLinks.push(sectionLink1);
-    accessTileModel.sectionLinks.push(sectionLink2);
-    accessTileModel.sectionLinks.push(sectionLink3);
-    accessTileModel.sectionLinks.push(sectionLink4);
-
-    return accessTileModel;
+  private MapDasasboardCategoryToTiles(dashboardCategories: any): AccessTileModel[] {
+    this._loggerService.info("AdminDashboardComponent : MapDasasboardCategoryToTiles");
+    let allAccessTiles: AccessTileModel[];
+    if (dashboardCategories != null && dashboardCategories != undefined && dashboardCategories.length > 0) {
+      allAccessTiles = [];
+      dashboardCategories.forEach(eachDasboardCategory => {
+        let accessTileModel = new AccessTileModel();
+        accessTileModel.sectionText = eachDasboardCategory.label;
+        accessTileModel.sectionImageURL = eachDasboardCategory.imageURL;
+        if (eachDasboardCategory.items != null && eachDasboardCategory.items != undefined && eachDasboardCategory.items.length > 0) {
+          accessTileModel.sectionLinks = [];
+          eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {
+            let sectionLink = new AccessTileLink();
+            sectionLink.linkDataText = eachDasbhboardCategoryItem.label;
+            sectionLink.linkDataURL = Constants.voidNavigationLink;
+            accessTileModel.sectionLinks.push(sectionLink);
+          });
+        }
+        allAccessTiles.push(accessTileModel);
+      });
+    }
+    return allAccessTiles;
   }
-
 }

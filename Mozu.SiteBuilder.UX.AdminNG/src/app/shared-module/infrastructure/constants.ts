@@ -93,4 +93,17 @@ export class Constants {
     static splitChars = {
         comma: ','
     };
+
+    static mainTileJsonNavParentPrefix : string = "main";
+    static systemTileJsonNavParentPrefix : string = "sys";
+    static systemTabDisplayText : string = "System"; // TODO : Use Enum here.
+    static voidNavigationLink : string = "javascript:void(0)";
+
+    static leftNavigationSource : string =  "./assets/json/leftNavigation-items.json";
+
+    static JsonResources = {
+        leftNavigationItems :  "./assets/json/leftNavigation-items.json",
+        tabsNames : "./assets/json/dashboard-menu.json",
+        dasbhoardTiles : "./assets/json/dashboard-categories.json"
+    }
 }

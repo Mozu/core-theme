@@ -7,17 +7,9 @@
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { Router } from '@angular/router';
-
 import { LoggerService } from '@core';
 
-import {
-    NotificationService,
-    SharedDataService
-} from '@global';
-
 import { NavigationService } from './navigation.service';
-
 
 @Component({
     moduleId: module.id,
@@ -33,22 +25,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
     cartCount: number;
 
     constructor(
-        private _router: Router,
-        private _logger: LoggerService,
-        private _sharedDataService: SharedDataService,
-        private _notificationService: NotificationService,
-
+        private _loggerService : LoggerService
     ) {
         this.subscriptions = [];
     }
 
     ngOnInit() {
-        this._logger.info('NavigationComponent : ngOnInit ');
-
+        this._loggerService.info('NavigationComponent : ngOnInit ');
     }
 
     ngOnDestroy() {
-        this._logger.info('NavigationComponent : ngOnDestroy ');
+        this._loggerService.info('NavigationComponent : ngOnDestroy ');
     }
-
 }

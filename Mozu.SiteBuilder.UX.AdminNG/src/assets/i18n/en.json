@@ -51,7 +51,8 @@
   "Toastr": {
     "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",    
     "EmptyEmailAddress": "Please enter Email Address.",
-    "EmptyPassword": "Please enter Password."       
+    "EmptyPassword": "Please enter Password.",
+    "DashboardTilesGetFailed" : "Error occured while fetching dasbhoard tiles" 
   }
 }
 }

@@ -1,48 +1,414 @@
 [
-    {
-        "menuid": "1",
-        "icon": "home",
-        "header": "Catlog",
-        "headeritems": [
-            {
-                "name": "Products",
-                "url": ""
-            },
-            {
-                "name": "Categories",
-                "url": ""
-            },
-            {
-                "name": "Inventory",
-                "url": ""
-            },
-            {
-                "name": "Price Lists",
-                "url": ""
-            }
-        ]
-    },
-    {
-        "menuid": "1",
-        "icon": "home",
-        "header": "Catlog",
-        "headeritems": [
-            {
-                "name": "Products",
-                "url": ""
-            },
-            {
-                "name": "Categories",
-                "url": ""
-            },
-            {
-                "name": "Inventory",
-                "url": ""
-            },
-            {
-                "name": "Price Lists",
-                "url": ""
-            }
-        ]
-    },
+  {
+    "id": "products",
+    "navParent": "main",
+    "label": "Catalog",
+    "imageURL": "./assets/Images/catlog.png",
+    "icon": "nav-catalog",
+    "behaviorIds": [ 4 ],
+    "items": [
+      {
+        "id": "catalogProducts",
+        "label": "Products",
+        "address": "products",
+        "behaviorIds": [ 4 ]
+      },
+      {
+        "id": "categories",
+        "label": "Categories",
+        "address": "categories",
+        "behaviorIds": [ 16 ]
+      },
+      {
+        "id": "inventory",
+        "label": "Inventory",
+        "address": "inventory",
+        "behaviorIds": [ 4 ]
+      },
+      {
+        "id": "priceLists",
+        "behaviorIds": [ 239 ],
+        "label": "Price Lists",
+        "address": "priceLists"
+      }
+    ]
+  },
+  {
+    "id": "marketing",
+    "navParent": "main",
+    "label": "Marketing",
+    "imageURL": "./assets/Images/marketing.png",
+    "icon": "nav-marketing",
+    "behaviorIds": [ 24 ],
+    "items": [
+      {
+        "id": "discounts",
+        "behaviorIds": [ 24 ],
+        "label": "Discounts",
+        "address": "discounts"
+      },
+      {
+        "id": "couponset",
+        "behaviorIds": [ 24 ],
+        "label": "Coupon Sets",
+        "address": "CouponSets"
+      },
+      {
+        "id": "productRanking",
+        "behaviorIds": [ 235 ],
+        "label": "Product Ranking",
+        "address": "ProductRankings"
+      },
+      {
+        "id": "searchSynonyms",
+        "behaviorIds": [ 24 ],
+        "label": "Search Synonyms",
+        "address": "synonyms"
+      }
+    ]
+  },
+  {
+    "id": "content",
+    "navParent": "main",
+    "label": "Site Builder",
+    "imageURL": "./assets/Images/sitebuilder.png",
+    "icon": "nav-sites",
+    "showBreadCrumbs": true,
+    "items": [
+      {
+        "id": "webedit",
+        "label": "Editor",
+        "address": "website"
+      },
+      {
+        "id": "themes",
+        "label": "Themes",
+        "address": "themes"
+      },
+      {
+        "id": "redirects",
+        "label": "Redirects",
+        "address": "redirects"
+      },
+      {
+        "id": "fileManager",
+        "label": "Files",
+        "address": "fileManager"
+      }
+    ]
+  },
+  {
+    "id": "publishing",
+    "navParent": "main",
+    "label": "Publishing ",
+    "imageURL": "./assets/Images/publishing.png",
+    "icon": "nav-publishing",
+    "behaviorIds": [ 8 ],
+    "items": [
+      {
+        "id": "drafts",
+        "label": "Drafts",
+        "address": "publishing/drafts"
+      },
+      {
+        "id": "publishSets",
+        "label": "Publish Sets",
+        "address": "publishing/publishsets"
+      }
+    ]
+  },
+  {
+    "id": "order",
+    "navParent": "main",
+    "label": "Fulfillment",
+    "imageURL": "./assets/Images/fullfillment.png",
+    "icon": "nav-orders",
+    "behaviorIds": [ 73 ],
+    "items": [
+      {
+        "id": "orders",
+        "label": "Orders",
+        "address": "orders",
+        "behaviorIds": [ 73 ]
+      },
+      {
+        "id": "returns",
+        "label": "Returns",
+        "address": "returns",
+        "behaviorIds": [ 73 ]
+      },
+      {
+        "id": "locations-inventory",
+        "label": "Inventory",
+        "address": "locationInventory"
+      },
+      {
+        "id": "locations",
+        "label": "Locations",
+        "address": "locations",
+        "behaviorIds": [ 186 ]
+      }
+    ]
+  },
+  {
+    "id": "customer",
+    "navParent": "main",
+    "label": "Customers",
+    "imageURL": "./assets/Images/customers.png",
+    "icon": "nav-customers",
+    "items": [
+      {
+        "id": "customers",
+        "label": "Customers",
+        "address": "customers",
+        "behaviorIds": [ 41 ]
+      },
+      {
+        "id": "customerSegments",
+        "label": "Customer Segments",
+        "address": "customer/segments"
+      },
+      {
+        "id": "storecredit",
+        "label": "Store Credit",
+        "address": "StoreCredits"
+      }
+    ]
+  },
+  {
+    "id": "b2baccount",
+    "navParent": "main",
+    "label": "B2B",
+    "imageURL": "./assets/Images/b2b.png",
+    "behaviorIds": [ 188 ],
+    "items": [
+      {
+        "id": "b2b-accounts",
+        "label": "B2B Accounts",
+        "address": "b2baccounts"
+      }
+    ]
+  },
+  {
+    "id": "report",
+    "navParent": "main",
+    "label": "Reporting",
+    "imageURL": "./assets/Images/reporting.png",
+    "behaviorIds": [ 188 ],
+    "items": [
+      {
+        "id": "report-sales",
+        "label": "Reports",
+        "address": "reports"
+      }
+    ]
+  },
+  {
+    "id": "settings",
+    "navParent": "sys",
+    "label": "Settings",
+    "imageURL": "./assets/Images/settings.png",
+    "icon": "nav-settings",
+    "items": [
+      {
+        "id": "generalsettings",
+        "label": "General",
+        "address": "generalsettings"
+      },
+      {
+        "id": "paymentgateways",
+        "label": "Payment Gateways",
+        "address": "settings/paymentGateways"
+      },
+      {
+        "id": "paymenttypes",
+        "label": "Payment Types",
+        "address": "settings/paymentTypes"
+      },
+      {
+        "id": "discountsettings",
+        "label": "Discount Settings",
+        "address": "settings/discounts"
+      },
+      {
+        "id": "tax",
+        "label": "Tax",
+        "address": "settings/tax"
+      },
+      {
+        "id": "shippingMain",
+        "label": "Shipping",
+        "address": "shipping"
+      },
+      {
+        "id": "publishing",
+        "label": "Publishing",
+        "address": "settings/publishing"
+      }
+    ]
+  },
+  {
+    "id": "schema",
+    "navParent": "sys",
+    "label": "Schema",
+    "imageURL": "./assets/Images/schema.png",
+    "behaviorIds": [ 4 ],
+    "items": [
+      {
+        "id": "productTypes",
+        "label": "Product Types",
+        "address": "producttypes"
+      },
+      {
+        "id": "productAttributes",
+        "label": "Product Attributes",
+        "address": "attributes"
+      },
+      {
+        "id": "orderAttributes",
+        "label": "Order Attributes",
+        "address": "orderattributes"
+      },
+      {
+        "id": "customerAttributes",
+        "label": "Customer Attributes",
+        "address": "CustomerAttributes"
+      },
+      {
+        "id": "b2bAttributes",
+        "label": "B2B Attributes",
+        "address": "b2battributes"
+      },
+      {
+        "id": "locationTypes",
+        "label": "Location Types",
+        "address": "locationTypes"
+      },
+      {
+        "id": "locationAttributes",
+        "label": "Location Attributes",
+        "address": "locationattributes"
+      },
+      {
+        "id": "customSchema",
+        "label": "Custom Schema",
+        "address": "customSchema"
+      }
+    ]
+  },
+  {
+    "id": "customization",
+    "navParent": "sys",
+    "label": "Customization",
+    "imageURL": "./assets/Images/customization.png",
+    "behaviorIds": [ 4 ],
+    "items": [
+      {
+        "id": "applications-manage",
+        "label": "Applications",
+        "address": "capability"
+      },
+      {
+        "id": "actionmanagement",
+        "label": "Arc.js",
+        "address": "actionmanagement"
+      },
+      {
+        "id": "customroutes",
+        "label": "Custom Routes",
+        "address": "customroutes"
+      }
+    ]
+  },
+  {
+    "id": "structure",
+    "navParent": "sys",
+    "label": "Structure",
+    "imageURL": "./assets/Images/structure.png",
+    "behaviorIds": [ 4 ],
+    "items": [
+      {
+        "id": "siteprovisioning",
+        "label": "Sites",
+        "address": "provisioning/sites"
+      },
+      {
+        "id": "catalogprovisioning",
+        "label": "Catalogs",
+        "address": "provisioning/catalogs"
+      },
+      {
+        "id": "channels",
+        "label": "Channels",
+        "address": "channels"
+      },
+      {
+        "id": "customersets",
+        "label": "Customer Sets",
+        "address": "customersets"
+      }
+    ]
+  },
+  {
+    "id": "permissions",
+    "navParent": "sys",
+    "label": "Permissions",
+    "imageURL": "./assets/Images/permissions.png",
+    "items": [
+      {
+        "id": "users",
+        "label": "Users",
+        "address": "account/users"
+      },
+      {
+        "id": "roles",
+        "label": "Roles",
+        "address": "roles"
+      },
+      {
+        "id": "ipblocking",
+        "label": "IP Restrictions",
+        "address": "ipblocking"
+      }
+    ]
+  },
+  {
+    "id": "localization",
+    "navParent": "sys",
+    "locAtts": [ "multiLang", "multCurrency" ],
+    "label": "Localization",
+    "imageURL": "./assets/Images/schema.png",
+    "items": [
+      {
+        "id": "localizationAttr",
+        "label": "Attributes",
+        "address": "Localization",
+        "locAtts": [ "multiLang" ]
+      },
+      {
+        "id": "localizationAttrVal",
+        "label": "Attribute Values",
+        "address": "Localization/attributeValues",
+        "locAtts": [ "multiLang" ]
+      },
+      {
+        "id": "localizationProp",
+        "label": "Product Properties",
+        "address": "Localization/productProperties",
+        "locAtts": [ "multiLang" ]
+      },
+      {
+        "id": "localizationExtra",
+        "label": "Product Extras",
+        "address": "Localization/productExtras",
+        "locAtts": [ "multCurrency" ]
+      },
+      {
+        "id": "localizationVar",
+        "label": "Product Variants",
+        "address": "Localization/productVariants",
+        "locAtts": [ "multCurrency" ]
+      }
+    ]
+  }
 ]

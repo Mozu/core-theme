@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -7,7 +7,7 @@
     <MozuAdminRazorAppDir>$(RootDir)\Mozu.SiteBuilder.UX.Admin</MozuAdminRazorAppDir>
     <MozuAdminDevDistAssetsFolder>$(MozuAdminRazorAppDir)\assets</MozuAdminDevDistAssetsFolder>
     <MozuAdminDevDistFolder>$(MozuAdminRazorAppDir)\adminng</MozuAdminDevDistFolder>
-    <Configurations>Debug;Prod;CI;Demo;Dev;perf;SI;Release</Configurations>
+    <Configurations>Debug;Prod;CI;Demo;QA;Dev;perf;SI;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

@@ -40,3 +40,10 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav {
 body .ui-sidebar {
     padding: 0em 0em !important;
 }
+
+.ui-card-subtitle {
+    font-size: 0.85em;
+}
+.ui-card-body{
+    background: #fafafa;
+}

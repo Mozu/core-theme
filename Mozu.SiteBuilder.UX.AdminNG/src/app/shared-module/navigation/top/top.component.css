@@ -16,9 +16,9 @@
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     color:#333333;
-   
+    font-size: 13px;
 }
-a.tab-link :hover {
+a:hover {
     color:#000000;
 }
 .ink-bar {
@@ -34,6 +34,8 @@ a.tab-link :hover {
     margin-bottom: 0px !important;
 }
 
-a.active {
-    border-bottom: 3px solid #2ea195;
+.active{
+    border-bottom: 2px solid #2ea195;
+    color:#333333;
+    opacity: 1;
 }

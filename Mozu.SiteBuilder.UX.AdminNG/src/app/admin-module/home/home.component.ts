@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {  LoggerService } from '@core'
 
 @Component({
   selector: 'admin-home',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminHomeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _loggerService : LoggerService) {
+    this._loggerService.info("AdminHomeComponent : constructor");
+   }
 
   ngOnInit() {
+    this._loggerService.info("AdminHomeComponent : ngOnInit");
   }
 
 }

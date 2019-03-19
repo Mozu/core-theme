@@ -9,7 +9,7 @@ import {
     AdminHomeComponent,
     AdminDashboardComponent 
 } from './index';
-import { SharedModule } from '../shared-module/shared.module';
+import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
     imports: [

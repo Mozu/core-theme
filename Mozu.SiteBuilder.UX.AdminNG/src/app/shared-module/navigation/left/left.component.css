@@ -1,9 +1,13 @@
 .hamburgerMenu {
     padding-top : 22px;
     font-size : 22px;
+    cursor: pointer;
+    color:#666;
 }
 .primeSidebar {
     height: 100%;
+    width: 20%;
+    border-right: 1px solid #f5f5f5;
 }
 .sidebar {
     height: 100%;

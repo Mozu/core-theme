@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Constants } from '@shared';
+import { Constants } from '../infrastructure/constants';
 import { HttpClient } from '@angular/common/http';
 
 import {
   HttpService
 } from '@core';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class NavigationService {
 
   constructor( private _http: HttpClient ) { }
 
   public fetchTabsName = () => { 
-    return this._http.get(`./assets/json/dashboard-menu.json`);
+    return this._http.get(Constants.JsonResources.tabsNames);
   }
 
-  public fetchCategories = () => {
-    return this._http.get(`./assets/json/dashboard-categories.json`);
+  public fetchLeftNavigationItems= () => {
+    return this._http.get(Constants.JsonResources.leftNavigationItems);
   }
 }
 

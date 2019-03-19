@@ -3,6 +3,8 @@ import { Component,
   Input
 } from '@angular/core';
 
+import {  LoggerService } from '@core'
+
 import { AccessTileModel } from './access-tile.model'
 
 @Component({
@@ -14,9 +16,12 @@ export class AccessTileComponent implements OnInit {
 
   @Input('Tiles') tileModel : AccessTileModel;
 
-  constructor() { }
+  constructor(private _loggerService : LoggerService) { 
+    this._loggerService.info("AccessTileComponent : constructor");
+  }
 
   ngOnInit() {
+    this._loggerService.info("AccessTileComponent : ngOnInit");
   }
 
 }
