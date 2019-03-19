@@ -296,6 +296,7 @@ Ext.define('Taco.model.Product', {
             "name": "productImages",
             "type": "auto",
             "useNull": true,
+            defaultValue: [],
             convert: function (v) {
                 if (!v) {
                     return [];
@@ -563,7 +564,8 @@ Ext.define('Taco.model.Product', {
             defaultValue: "CUSTOM"
         }, {
             name: 'productImageGroups',
-            type: 'auto'
+            type: 'auto',
+            defaultValue: []
         }, {
             name: 'dirtyControl',
             type: 'auto',

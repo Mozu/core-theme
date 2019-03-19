@@ -64,8 +64,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductLocalizedImage> ProductImages { get; set; }
 
-
-
         /// <summary>
         /// The product short description.
         /// </summary>

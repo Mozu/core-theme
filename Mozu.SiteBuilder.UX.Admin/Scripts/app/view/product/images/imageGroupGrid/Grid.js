@@ -94,7 +94,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ImageGroup',
-            createOnly: false,
+            createOnly: true,
             pageSize: this.pageSize,
             autoLoad: true,
             clearFilters: true,
@@ -146,7 +146,8 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
             actions.push({
                 text: 'Edit',
                 menuColumnHandler: me.doEdit,
-                scope: me
+                scope: me,
+                disabled: !me.isGlobal
             });
         }
 
@@ -155,7 +156,8 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
                 text: 'Delete',
                 itemId: 'deleteMenuItem',
                 menuColumnHandler: me.doDelete,
-                scope: me
+                scope: me,
+                disabled: !me.isGlobal
             });
         }
 

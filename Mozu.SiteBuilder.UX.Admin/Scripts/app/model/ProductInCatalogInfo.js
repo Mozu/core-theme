@@ -86,7 +86,8 @@ Ext.define('Taco.model.ProductInCatalogInfo', {
         {
             "name": "productImages",
             "type": "auto",
-            "useNull": true
+            "useNull": true,
+            defaultValue: []
         },
         {
             "name": "slug",

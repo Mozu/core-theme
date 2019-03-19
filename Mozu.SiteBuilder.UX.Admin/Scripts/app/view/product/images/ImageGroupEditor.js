@@ -109,6 +109,8 @@ Ext.define('Taco.view.product.images.ImageGroupEditor', {
             isPopUp: true,
             enableScrollSpy: false,
             layout: 'fit',
+            productInCatalogInfo: me.productInCatalogInfo,
+            isGlobal: me.isGlobal,
             getWrapper: function() {
                 return this;
             }

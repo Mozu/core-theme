@@ -271,10 +271,29 @@
             }
         };
 
+        this.resetImages = function(options){
+            var layoutItems = me.down('#productFormLayout').getLayout().getLayoutItems();
+            Ext.Array.each(layoutItems, function(item, idx){
+                if(idx > 0 && item.productInCatalogInfo) {
+
+                    var selectedOption = layoutItems[0].record.get('options').filter(function(attribute) {
+                        return attribute.isProductImageGroupSelector === true;
+                    });
+
+                    item.down('.productimagessubform').fireEvent('resetFormImages', {
+                        images: layoutItems[0].record.get('productImages'),
+                        groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
+                    });
+                }
+            })
+            me.down('.productimagessubform').fireEvent('resetImagesComplete');
+        }
+
         this.navHeaderSubConfig = Ext.create('Taco.view.product.widget.CatalogAssignmentBar', {
             catalogs: this.record.productInCatalogsStore(),
             listeners: {
                 select: function (assignmentBarView, record) {
+                    var layoutItems = me.down('#productFormLayout').getLayout().getLayoutItems();
                     var tabItems = me.down('#productFormLayout').up().tabItems;
                     var index = 0;
 
@@ -284,7 +303,24 @@
                         }
                     });
 
+                    
+
                     if (record.get('type') === 'master') index = 0;
+
+                    if(!layoutItems[index].record.get('isContentOverridden') && index != 0){
+                        var selectedOption = layoutItems[0].record.get('options').filter(function(attribute) {
+                            return attribute.isProductImageGroupSelector === true;
+                        });
+                        
+                        layoutItems[index].down('.productimagessubform').fireEvent('resetFormImages', {
+                            images: layoutItems[0].record.get('productImages'),
+                            groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
+                        });
+                        
+                        me.down('.productimagessubform').fireEvent('resetImagesComplete');
+                        layoutItems[index].down('.productimagessubform').updateLayout();
+                    }
+
 
                     me.down('#productFormLayout').getLayout().setActiveItem(index);
                 },
@@ -369,6 +405,37 @@
 
                     this.setPublishStatus();
                     this.publishButton.addRecord(this.record);
+                },
+                resetImages: function(options) {
+                    var me = this;
+                    Ext.create('Taco.core.ux.window.Modal', {
+                        scale: 'small',
+                        title: 'Reset Images',
+                        modal: true,
+                        closeAction: 'destroy',
+                        height: 200,
+                        primaryText: 'Yes ',
+                        secondaryText: 'Cancel',
+                        primaryHandler: function() {
+                            options.callback();
+                            me.resetImages();
+                            this.close();
+                            //this.save();
+                        },
+                        items: [{
+                            xtype: 'container',
+                            layout: { 
+                                type: 'hbox' 
+                            },
+                            items: [
+                                Ext.create('Ext.panel.Panel', {
+                                    width: '100%',
+                                    html: options.message || 'Are you sure you want to ...'
+                                })
+                            ]
+                        }],
+                    }).show();
+                    
                 },
             scope: this
         });

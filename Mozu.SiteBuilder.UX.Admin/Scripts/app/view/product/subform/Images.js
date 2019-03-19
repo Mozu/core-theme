@@ -18,18 +18,33 @@ Ext.define('Taco.view.product.subform.Images', {
         me.dirtyCounter = 0;
 
         this.record = this.product;
+        var product = (me.isGlobal || typeof me.isGlobal === "undefined") ? me.product : me.productInCatalogInfo;
 
-        var productTypeOptionsStore = this.product.data.options
-        ? this.product.data.options.map(function(item) {
-            var found = me.record.productTypeRecord.data.options.find(function(option) {
-                return option.attributeFQN === item.attributeFQN;
-            });
-
-            return [item.attributeFQN, found.adminName];
-        })
-        : [];
+        this.enableBubble('resetImages');
 
         var attributeValuesMap = {};
+
+
+        this.hasOverriddenContent =  function(){
+            if(me.isGlobal && me.product.get('productInCatalogs')) {
+                var hasOverriddenContent = false;
+                if(me.product.get('productInCatalogs').length) {
+                    me.product.get('productInCatalogs').forEach(function(catalog){
+                        if (catalog.isContentOverridden) {
+                            hasOverriddenContent = true;
+                            return false;
+                        }
+                    });
+                } else {
+                    if (product.get('productInCatalogs').isContentOverridden) {
+                        hasOverriddenContent = true;
+                    }
+                }
+
+                return hasOverriddenContent;
+            }
+            return false;
+        }
 
         if (this.product.data.options) {
             this.product.data.options.forEach(function(option) {
@@ -49,9 +64,13 @@ Ext.define('Taco.view.product.subform.Images', {
 
         this.record.productTypeAttributes = attributeValuesMap;
 
-        var activeOption = this.record.get('options').find(function(attribute) {
-            return attribute.isProductImageGroupSelector;
-        });
+        var activeOption = function() {
+            return me.record.get('options').find(function(attribute) {
+                return attribute.isProductImageGroupSelector;
+            });
+        }
+
+        var initActiveOption = activeOption();
 
         this.addImageGroupButton = Ext.widget({
             xtype: 'button',
@@ -60,18 +79,18 @@ Ext.define('Taco.view.product.subform.Images', {
             text: 'Create Image Group',
             itemId: 'addImageGroupButton',
             scope: me,
-            hidden: activeOption === undefined,
+            hidden: initActiveOption === undefined,
             margin: '0 0 15 10',
             padding: '10 25',
             style: { "float": 'right' },
             handler: function() {
-                me.createPopup(null, true);
+               me.createPopup(null, true);
             },
-            hidden: true
+            hidden: true,
+            disabled: !this.isGlobal
         });
 
         this.imageGroupGrid = Ext.create('Taco.view.product.images.imageGroupGrid.Grid', {
-            id:'image-group-grid',
             hideSubnavLinks: true,
             margin: '30 0 20 0',
             useWhiteContainer: true,
@@ -84,10 +103,12 @@ Ext.define('Taco.view.product.subform.Images', {
             isPopUp: true,
             pageSize: 50,
             minHeight: 150,
-            hidden: activeOption === undefined,
+            hidden: initActiveOption === undefined,
             onItemClick: this.onImageGroupItemClick.bind(me),
             onItemDelete: this.onImageGroupDelete.bind(me),
-            hidden: true
+            hidden: true,
+            productInCatalogInfo: me.productInCatalogInfo,
+            isGlobal: this.isGlobal
         });
 
         this.imagesField = Ext.widget({
@@ -95,9 +116,9 @@ Ext.define('Taco.view.product.subform.Images', {
             xtype: 'taco.imagefield',
             width: '100%',
             margin: '20 0 0 15',
-            imageMetadata: this.record.get('productImages'),
+            imageMetadata: product.get('productImages'),
             onValueChanged: function(value) {
-                var defaultImages = me.record.get('productImages').filter(function(image) {
+                var defaultImages = product.get('productImages').filter(function(image) {
                     return image.productImageGroupId === undefined || image.productImageGroupId === 'default';
                 });    
                 
@@ -130,7 +151,7 @@ Ext.define('Taco.view.product.subform.Images', {
                     }
                 });
 
-                var filteredImages = me.record.get('productImages').filter(function(image) {
+                var filteredImages = product.get('productImages').filter(function(image) {
                     return !remove[image.cmsId];
                 }).concat(add);
                 
@@ -139,32 +160,50 @@ Ext.define('Taco.view.product.subform.Images', {
                     orderedImages.splice(image.sequence, 0, image);
                 });
 
-                me.record.set('productImages', orderedImages);
-                me.record.set('_override', filteredImages);
+                product.set('productImages', orderedImages);
+                product.set('_override', filteredImages);
             }
         });
 
         this.useImageGroupsCheckbox = Ext.create('Ext.form.field.Checkbox', {
             margin: '0 25 0 20',
             boxLabel: 'Assign images to Options',
+            disabled: !this.isGlobal,
             handler: function() {
-                me.productTypeOptions.setVisible(this.checked);
-                me.imagesField.setVisible(!this.checked);
+                var self = this;
+                var toggleImageOptions = function() {
+                    me.productTypeOptions.setVisible(self.checked);
+                    me.imagesField.setVisible(!self.checked);
+                    me.imageGroupGrid.setVisible(self.checked);
+                    me.addImageGroupButton.setVisible(self.checked);
 
-                if (!this.checked) {
-                    // loop through image groups and set each group is isProductImageGroupSelector = false
-                    Ext.Array.forEach(me.record.get('options'), function(attribute) {
-                        attribute.isProductImageGroupSelector = false;
-                    });
+                    if (!self.checked) {
+                        // loop through image groups and set each group is isProductImageGroupSelector = false
+                        Ext.Array.forEach(me.record.get('options'), function(attribute) {
+                            attribute.isProductImageGroupSelector = false;
+                        });
 
-                    // update images if changes were made in ImageGroupSelector
-                    var defaultImages = me.record.data.productImages.filter(function(image) {
-                        return image.productImageGroupId === 'default'
-                    });
-                    me.imagesField.setValue(defaultImages);
+                        Ext.Array.forEach(me.product.get('options'), function(attribute) {
+                            attribute.isProductImageGroupSelector = false;
+                        });
 
-                    me.productTypeOptions.setValue(null);
+                        // update images if changes were made in ImageGroupSelector
+                        var defaultImages = product.get('productImages').filter(function(image) {
+                            return image.productImageGroupId === 'default'
+                        });
+                        me.imagesField.setValue(defaultImages);
+                    }
                 }
+
+                if(me.hasOverriddenContent()){
+                    me.fireEvent('resetImages', {
+                        message: "This will also change product groups in all overridden catalogs. Would you like to proceed?",
+                        callback: toggleImageOptions
+                    });
+                    return;
+                }
+
+                toggleImageOptions();
             },
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'use-prod-image-groups',
@@ -175,6 +214,7 @@ Ext.define('Taco.view.product.subform.Images', {
             })
         });
 
+        
         this.productTypeOptions = Ext.widget({
             xtype: 'selectfield',
             fieldLabel: 'Selected option',
@@ -182,20 +222,41 @@ Ext.define('Taco.view.product.subform.Images', {
             allowBlank: true,
             margin: '0 0 0 15',
             queryMode: 'local',
-            store: productTypeOptionsStore,
-            value: null,
+            store: this.productTypeOptionsStore,
+            displayField: 'name', 
+            valueField: 'attributeFQN',
             name:'productTypeOption',
-            hidden: activeOption === undefined,
+            hidden: initActiveOption === undefined,
+            disabled: !this.isGlobal,
+            value: (initActiveOption) ? initActiveOption.attributeFQN: null,
             listeners: {
                 change: function(cmp, value) {
-                    Ext.Array.forEach(me.record.get('options'), function(attribute) {
-                        attribute.isProductImageGroupSelector = attribute.attributeFQN === value;
-                    });
 
-                    me.imageGroupGrid.setVisible(value !== null);
-                    me.addImageGroupButton.setVisible(value !== null);
-                    var gridEntries = me.getGridEntries(value);
-                    me.imageGroupGrid.store.loadData(gridEntries);
+                    var setNewOption = function() {
+                        Ext.Array.forEach(me.record.get('options'), function(attribute) {
+                            attribute.isProductImageGroupSelector = attribute.attributeFQN === value;
+                        });
+    
+                        me.imageGroupGrid.setVisible(value !== null);
+                        me.addImageGroupButton.setVisible(value !== null);
+                        var gridEntries = me.getGridEntries.call(me, value);
+                        me.imageGroupGrid.store.loadData(gridEntries);
+                    };
+
+                   
+                    if(me.hasOverriddenContent()) {
+                        me.fireEvent('resetImages', {
+                            message: 'This will remove product groups in all overridden catalogs. Would you like to proceed?',
+                            callback: setNewOption
+                        });
+                        return;
+                    }
+
+                    setNewOption();
+                },
+                beforeRender: function(){
+                    //re
+                    console.log('asdf');
                 }
             },
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
@@ -215,10 +276,11 @@ Ext.define('Taco.view.product.subform.Images', {
             items: [
                 this.useImageGroupsCheckbox,
                 this.productTypeOptions
+                
             ]
         });
 
-        var defaultImages = me.record.data.productImages.filter(function(image) {
+        var defaultImages = product.get('productImages').filter(function(image) {
             return image.productImageGroupId === 'default'
         });
 
@@ -231,13 +293,21 @@ Ext.define('Taco.view.product.subform.Images', {
             this.imagesField
         ];
 
-        if (activeOption) {
-            // Check the checkbox
-            this.useImageGroupsCheckbox.setValue(true);
+        var setIntiGridState = function(){
+            var attributeFQN = (initActiveOption) ? initActiveOption.attributeFQN : null,
+                gridEntries = me.getGridEntries.call(me, attributeFQN);
 
-            // Set dropdown value
-            this.productTypeOptions.setValue(activeOption.attributeFQN);
-        }
+            me.imageGroupGrid.setVisible(attributeFQN !== null);
+            me.addImageGroupButton.setVisible(attributeFQN !== null);
+            me.useImageGroupsCheckbox.setValue(attributeFQN !== null);
+            me.imagesField.setVisible(attributeFQN == null);
+
+            if(attributeFQN) {
+                me.imageGroupGrid.store.loadData(gridEntries);
+            }
+        };
+        
+        setIntiGridState();
 
         this.callParent(arguments);
         this.updateFieldVisibility();
@@ -245,17 +315,47 @@ Ext.define('Taco.view.product.subform.Images', {
         me.on('afterrender', function () {
             var productForm = me.up("productform");
             me.mon(productForm, 'productusagechange', me.onProductUsageChange, me);
+            me.mon(productForm, 'resetImagesComplete', me.createPopup, me);
         });
+
+        me.on('resetFormImages', function(options){
+            product.set('productImages', options.images.slice());
+            var defaultImages = product.get('productImages').filter(function(image) {
+                return image.productImageGroupId === 'default'
+            });
+    
+            me.imagesField.setValue(defaultImages)
+
+            if(options.groupFqn) {
+                Ext.Array.forEach(me.record.get('options'), function(attribute) {
+                    attribute.isProductImageGroupSelector = attribute.attributeFQN === options.groupFqn;
+                });
+                var gridEntries = me.getGridEntries.call(me, options.groupFqn);
+                me.imageGroupGrid.store.loadData(gridEntries);
+            }
+
+            if (activeOption()) {
+                // Check the checkbox
+                me.useImageGroupsCheckbox.setValue(true);
+                
+                // Set dropdown value
+                me.productTypeOptions.setValue(activeOption().attributeFQN);
+            } else {
+                me.useImageGroupsCheckbox.setValue(false);
+            }
+            
+        })
     },
 
     getGridEntries: function(fqn) {
         var entries = [];
+        var product = this.product
 
-        if (!this.record.data.productImageGroups) {
+        if (!product.get('productImageGroups')) {
             return entries;
         }
 
-        this.record.data.productImageGroups.forEach(function(group) {
+        product.get('productImageGroups').forEach(function(group) {
             var tagEntry = group.productImageGroupTags && group.productImageGroupTags.find(function(tag) {
                 return tag.fqn === fqn;
             });
@@ -285,20 +385,38 @@ Ext.define('Taco.view.product.subform.Images', {
     },
 
     onImageGroupDelete: function(cmp, record) {
-        this.record.data.productImageGroups = this.record.data.productImageGroups.filter(function(group) {
-            return group.productImageGroupId !== record.data.groupName;
-        });
 
-        var removeIdx = this.imageGroupGrid.store.find('groupName', record.data.groupName);
-        this.imageGroupGrid.store.removeAt(removeIdx);
+        var product = this.product;
+        var self = this;
 
-        this.dirtyCounter += 1;
-        this.productForm.findField('dirtyControl').setValue(this.dirtyCounter);
+        var deleteGroup = function() {
+           
+            product.set('productImageGroups', product.get('productImageGroups').filter(function(group) {
+                return group.productImageGroupId !== record.data.groupName;
+            }));
+    
+            var removeIdx = self.imageGroupGrid.store.find('groupName', record.data.groupName);
+            self.imageGroupGrid.store.removeAt(removeIdx);
+    
+            self.dirtyCounter += 1;
+            self.productForm.findField('dirtyControl').setValue(self.dirtyCounter);
+    
+            // delete all associated images from the product record
+            product.set('productImages', product.get('productImages').filter(function(image) {
+                return image.productImageGroupId !== record.data.groupName;
+            }));
+        }
+        
+        if(self.hasOverriddenContent()){
+            self.fireEvent('resetImages', {
+                message: "This will delete product groups in all overridden catalogs. Would you like to proceed?",
+                callback: deleteGroup
+            });
+            return;
+        }
 
-        // delete all associated images from the product record
-        this.record.set('productImages', this.record.data.productImages.filter(function(image) {
-            return image.productImageGroupId !== record.data.groupName;
-        }));
+        deleteGroup();
+       
     },
 
     onDestroy: function() {
@@ -327,11 +445,14 @@ Ext.define('Taco.view.product.subform.Images', {
                 this.productTypeOptions.value
             ],
             record: record,
-            product: me.record,
+            product: me.product,
+            productInCatalogInfo: me.productInCatalogInfo,
             parentForm: this,
             isCreateMode: isNew,
+            isGlobal: this.isGlobal,
             listeners: {
                 savesuccess: function(editor) {
+                    var product = (me.isGlobal || typeof me.isGlobal === "undefined") ? me.product : me.productInCatalogInfo
                     var values = editor.form.getValues();
                     
                     var store = me.imageGroupGrid.store;
@@ -347,7 +468,7 @@ Ext.define('Taco.view.product.subform.Images', {
                     // then just add a new tag. Otherwise, add new entry to image
                     // groups array
                     
-                    var existingGroup = me.record.data.productImageGroups.find(function(item) {
+                    var existingGroup = me.product.get('productImageGroups').find(function(item) {
                         return item.productImageGroupId === values.groupName;
                     });
 
@@ -379,7 +500,7 @@ Ext.define('Taco.view.product.subform.Images', {
                         }
                     } else {
                         // This group does not exist yet, push new group
-                        me.record.data.productImageGroups.push({
+                        me.product.get('productImageGroups').push({
                             productImageGroupId: values.groupName,
                             productImageGroupTags: [{
                                 fqn: me.form.getValues().productTypeOption,
@@ -401,7 +522,7 @@ Ext.define('Taco.view.product.subform.Images', {
 
                         var existingId = -1;
 
-                        Ext.Array.forEach(me.product.data.productImages, function(image, idx) {
+                        Ext.Array.forEach(product.get('productImages'), function(image, idx) {
                             if (
                                 image.productImageGroupId === newImage.productImageGroupId &&
                                 image.cmsId === newImage.cmsId
@@ -411,14 +532,14 @@ Ext.define('Taco.view.product.subform.Images', {
                         });
 
                         if (existingId < 0) {
-                            me.product.data.productImages.splice(idx, 0, newImage);
+                            product.get('productImages').splice(idx, 0, newImage);
                         } else {
-                            Ext.Object.merge(me.product.data.productImages[existingId], newImage);
+                            Ext.Object.merge(product.get('productImages')[existingId], newImage);
                         }
                     });
 
                     // Determine which images to remove
-                    var groupImages = me.record.get('productImages').filter(function(image) {
+                    var groupImages = product.get('productImages').filter(function(image) {
                         return image.productImageGroupId === editor.record.get('groupName');
                     });
 
@@ -436,7 +557,7 @@ Ext.define('Taco.view.product.subform.Images', {
                         }
                     });
 
-                    var filteredImages = me.record.get('productImages').filter(function(image) {
+                    var filteredImages = product.get('productImages').filter(function(image) {
                         return !remove[image.id];
                     });
                     
@@ -449,23 +570,17 @@ Ext.define('Taco.view.product.subform.Images', {
                     me.record.data.productImageGroups.splice(0, 0, defaultGroup);
                     
                     var orderedImages = [];
-                    Ext.Array.forEach(me.record.data.productImageGroups, function(group) {
-                        var orderedGroup = [];
-                        Ext.Array.forEach(filteredImages, function(image, idx) {
-                            if (image.productImageGroupId === group.productImageGroupId) {
-                                orderedGroup.splice(image.sequence, 0, image);
-                            }
-                        });
-                        orderedImages = orderedImages.concat(orderedGroup);
-                    });
-
+                    Ext.Array.forEach(filteredImages, function(image, idx) {
+                        orderedImages.splice(image.sequence, 0, image);
+                    });      
+                                  
                     me.record.set('productImages', orderedImages);
 
                     // HACK: productImages data is overwritten by Ext, use this to guarantee the correct data is sent
-                    me.record.set('_override', { productImages: orderedImages });
+                    product.set('_override', { productImages: orderedImages });
 
                     me.dirtyCounter += 1;
-                    this.parentForm.globalForm.findField('dirtyControl').setValue(me.dirtyCounter);
+                    //this.parentForm.globalForm.findField('dirtyControl').setValue(me.dirtyCounter);
                 }
             }
         });

@@ -23,6 +23,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
         // Each subform will listen for and react to these changes.
 
         me.sectionNavTopOffset = me.isPopUp ? -12 : 9;
+        var product = (me.isGlobal || typeof me.isGlobal === "undefined") ? me.product : me.productInCatalogInfo;
 
         this.selectOptionValues = Ext.create('Ext.ux.form.field.BoxSelect', {
             name: 'optionValues',
@@ -41,7 +42,8 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             triggerOnClick: false,
             forceSelection: false,
             disableKeyFilter: true,
-            typeAhead: true
+            typeAhead: true,
+            disabled: !this.isGlobal
         });
 
         if (this.record.data.groupName === 'default') {
@@ -61,6 +63,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             enforceMaxLength: true,
             readOnly: this.record.data.groupName === 'default',
             required: true,
+            disabled: !this.isGlobal,
             valueField: 'groupName',
             regex: /^[a-z0-9_\-]+$/i,
             regexText: 'Invalid character. Please choose from alphanumeric, underscore, or hyphen characters.',
@@ -95,10 +98,10 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             width: '100%',
             minHeight: 250,
             margin: '20 0 0 15',
-            imageMetadata: me.product.data.productImages
+            imageMetadata: product.get('productImages')
         });
 
-        var groupImages = me.product.data.productImages.filter(function(image) {
+        var groupImages = product.get('productImages').filter(function(image) {
             return image.productImageGroupId === me.record.data.groupName
         });
 

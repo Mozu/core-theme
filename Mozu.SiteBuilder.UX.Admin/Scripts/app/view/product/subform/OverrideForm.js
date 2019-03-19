@@ -48,16 +48,23 @@ Ext.define('Taco.view.product.subform.OverrideForm', {
             if ((this.overrideFieldName == 'isContentOverridden' || this.overrideFieldName == 'isSEOContentOverridden')
                 && this.productInCatalogInfo.getCatalog
                 && this.productInCatalogInfo.getCatalog()
-                && this.productInCatalogInfo.getCatalog().localeCode != this.product.getMasterCatalog().localeCode) {
+                && this.productInCatalogInfo.getCatalog().localeCode != this.product.getMasterCatalog().localeCode
+                && this.productInCatalogInfo.get('isContentOverridden')) {
                 this.isOverridden = true;
                 this.overrideChangeDisabled = true;
             }
             else if (this.overrideFieldName == 'isPriceOverridden'
                 && this.productInCatalogInfo.getCatalog
                 && this.productInCatalogInfo.getCatalog()
-                && this.productInCatalogInfo.getCatalog().currencyCode != this.product.getMasterCatalog().currencyCode) {
+                && this.productInCatalogInfo.getCatalog().currencyCode != this.product.getMasterCatalog().currencyCode
+                && this.productInCatalogInfo.get('isContentOverridden')) {
                 this.isOverridden = true;
                 this.overrideChangeDisabled = true;
+            }
+            else if ( this.overrideFieldName == 'isImagesOverridden') {
+                //Has ImageGroups in productInCatalogInfo
+                //this.isOverridden = true;
+                //this.overrideChangeDisabled = true;
             }
         }
 

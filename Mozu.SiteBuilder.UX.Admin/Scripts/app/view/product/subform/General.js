@@ -21,7 +21,8 @@ Ext.define('Taco.view.product.subform.General', {
         'Taco.core.ux.form.CurrencyField',
         'Taco.shared.view.field.ProductTypePickerField',
         'Taco.core.ux.form.DateTime',
-        'Taco.core.util.Validation'
+        'Taco.core.util.Validation',
+        'Taco.view.product.subform.Images',
         //'Taco.core.ux.form.DateRangeContainer'
     ],
     statics: {
@@ -633,7 +634,7 @@ Ext.define('Taco.view.product.subform.General', {
             xtype: 'productoverride',
             itemId: 'contentOverride',
             overrideFieldName: 'isContentOverridden',
-            hideOverride: (this.isGlobal),
+            hideOverride: (me.isGlobal),
             width: '100%',
             items: []
         };
@@ -680,7 +681,39 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             ]
         });
-        // productOverride.items.push(this.imagesConfig);
+
+        this.productTypeOptionsStore = Ext.create('Ext.data.Store',
+            {
+                fields: ['attributeFQN', "name"],
+                data: (function() {
+                    if(me.product.get('options')) {
+                       return me.product.get('options').map(function(item) {
+                            var found = me.record.productTypeRecord.get('options').find(function(option) {
+                                return option.attributeFQN === item.attributeFQN;
+                            });
+                
+                            return {
+                                    id: item.attributeFQN,
+                                    attributeFQN : item.attributeFQN,
+                                    name: found.adminName 
+                            };
+                        })
+                    } else {
+                        return [];
+                    }
+                })()
+            });
+
+        productOverride.items.push(Ext.create('Taco.view.product.subform.Images', {
+            isGlobal: this.isGlobal,
+            product: this.product,
+            productForm: this.productForm,
+            productTypeOptionsStore: this.productTypeOptionsStore,
+            persistChangesToModel: this.persistChangesToModel,
+            productInCatalogInfo: this.productInCatalogInfo,
+            hidden: this.hidden,
+            globalForm: this.globalForm
+        }));
 
         if (this.isGlobal) {
             this.items = [
@@ -770,7 +803,7 @@ Ext.define('Taco.view.product.subform.General', {
             //width: classDef.getBufferedWidth(),
             width: '100%',
             overrideFieldName: 'isPriceOverridden',
-            hideOverride: (this.isGlobal),
+            hideOverride: (me.isGlobal),
             margin: '10 0 0 0',
             items: [
                 {
@@ -949,6 +982,8 @@ Ext.define('Taco.view.product.subform.General', {
                     me.filterProductUsageField(productTypeRecord.get("productUsages"));
                 }
             }
+
+
 
             var productForm = me.up("productform");
             if (productForm) {

@@ -50,7 +50,8 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 shipping: me.down('productshippingsubform'),
                 seo: me.down('productseosubform'),
                 categories: me.down('productcategoriessubform'),
-                merchandising: me.down('productmerchandisingsubform')
+                merchandising: me.down('productmerchandisingsubform'),
+                images: me.down('productimagessubform'),
             },
             value = productUsageValue || this.product.get('productUsage');
         
@@ -147,7 +148,8 @@ Ext.define('Taco.view.product.mixins.Bundleable', {
                 shipping: false,
                 seo: true,
                 categories: true,
-                merchandising: true
+                merchandising: true,
+                images: true
             };
         
         }
