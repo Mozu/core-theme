@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Script.Serialization;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
 {
@@ -23,10 +26,33 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
                 var formDataCollection = (FormDataCollection) await 
                     formatter.ReadFromStreamAsync(typeof(FormDataCollection), stream, request.Content, null);
 
+                
                 var sb = new StringBuilder();
                 foreach (var kvp in formDataCollection)
                 {
-                    sb.Append("&").Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value));
+                    if (IsJson(kvp.Key))
+                    {
+                        try
+                        {
+                            var jsonObject = JsonConvert.DeserializeObject(kvp.Key);
+                            
+                            foreach (var prop in jsonObject.ToJObject())
+                            {
+                                
+                                sb.Append("&").Append(prop.Key).Append("=").Append(HttpUtility.UrlEncode(prop.Value.ToString()));
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                           
+                        }
+                
+                    }
+                    else
+                    {
+                        sb.Append("&").Append(kvp.Key).Append("=").Append(HttpUtility.UrlEncode(kvp.Value));
+                    }
+                    
                 }
 
                 var uriBuilder = new UriBuilder(request.RequestUri)
@@ -44,6 +70,13 @@ namespace Mozu.SiteBuilder.UX.Admin.MessageHandlers
             }
 
             return await base.SendAsync(request, cancellationToken);
+        }
+
+        private static bool IsJson(string input)
+        {
+            input = input.Trim();
+            return input.StartsWith("{") && input.EndsWith("}")
+                   || input.StartsWith("[") && input.EndsWith("]");
         }
     }
 }
