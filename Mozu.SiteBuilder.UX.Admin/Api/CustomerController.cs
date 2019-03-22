@@ -288,8 +288,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             // getting a single account
-            if (customerId > 0 && extFilter.TryGetValue("userId", out userId))
+            if (customerId > 0)
             {
+                extFilter.TryGetValue("userId", out userId);
                 var dcCustomer = await GetAccountWithAttributes(customerId, userId);
 
                 if (dcCustomer == null)
