@@ -13,7 +13,7 @@
                         <div class="taco-dashboard-item-item"
                                 *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
                                 <div class="tiles-item"><a
-                                                [attr.data-url]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
+                                                [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
                                 </div>
                         </div>
                 </p-footer>

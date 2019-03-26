@@ -98,7 +98,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {
             let sectionLink = new AccessTileLink();
             sectionLink.linkDataText = eachDasbhboardCategoryItem.label;
-            sectionLink.linkDataURL = Constants.voidNavigationLink;
+            sectionLink.linkDataURL = eachDasbhboardCategoryItem.navUrl;//Constants.voidNavigationLink; 
             accessTileModel.sectionLinks.push(sectionLink);
           });
         }
