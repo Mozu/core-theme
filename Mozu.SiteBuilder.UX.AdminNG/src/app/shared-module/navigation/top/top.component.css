@@ -39,3 +39,10 @@ a:hover {
     color:#333333;
     opacity: 1;
 }
+
+@media screen and (max-width: 480px) {
+    .tab-link{
+    min-width: 72px;
+    margin-left: 50px;
+    }
+  }

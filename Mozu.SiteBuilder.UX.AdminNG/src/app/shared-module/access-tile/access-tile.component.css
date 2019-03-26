@@ -13,11 +13,11 @@
 
 .tiles-item{
     float: left;
-    margin-left: 2px;
+    margin-left: 3px;
     bottom: 18px;
     position: relative;
     font-size: 0.85em;
-    padding-left: 0.5em;
+    padding-left: 0.51em;
     cursor: pointer;
 }
 

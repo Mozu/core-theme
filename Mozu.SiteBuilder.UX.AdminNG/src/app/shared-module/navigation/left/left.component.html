@@ -3,10 +3,12 @@
     <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000" [showCloseIcon]="false" [blockScroll]="true">
         <p-tabView>
             <p-tabPanel header="Main">
-                <p-menu [model]="items"></p-menu>
+                <p-menu [model]="mainItems" href = url></p-menu>
+                <!-- <p-panelMenu [model]="mainItems" [style]="{'width':'273px'}"></p-panelMenu> -->
             </p-tabPanel>
             <p-tabPanel header="System">
                 <p-menu [model]="systemItems"></p-menu>
+                <!-- <p-panelMenu [model]="systemItems" [style]="{'width':'300px'}"></p-panelMenu> -->
             </p-tabPanel>
         </p-tabView>
     </p-sidebar>

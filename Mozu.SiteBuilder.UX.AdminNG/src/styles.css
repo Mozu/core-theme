@@ -9,8 +9,56 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, body .ui-tab
     margin-right: 0;
   }
 
+body .ui-menu .ui-submenu-header{
+    font-size:11px;
+    color: #a3a3a3 !important;
+    background-color: transparent !important;
+    margin-top: 5% !important;
+    padding: 0em 0.857em !important;
+}
+
+body .ui-menu .ui-menuitem-link{
+    padding: 0em 0.757em !important;
+    font-size: 13px;
+}
+
 body .ui-tabview .ui-tabview-panels {
     padding:0 !important;
+    margin-top: 5%;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active{
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    color: #000000 !important;
+
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a{
+    color: #000000 !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+    border: 1px solid transparent !important; 
+    background: transparent !important;
+ 
+}
+
+ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all.ng-star-inserted{
+    text-align: center;
+    color: #a5a5a5;
+    font-size: 13px;
+    position: relative;
+    bottom: 4px;
+    height: 32px;
+}
+
+body .ui-tabview .ui-tabview-panels{
+    border: 0px solid transparent !important;
+}
+
+.ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top{
+    background: #eef0f0;
 }
 
 .ui-menu{
@@ -30,10 +78,14 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav {
     margin-bottom: 0px !important;
 }
 
+li.ui-state-default.ui-corner-top.ng-star-inserted.ui-tabview-selected.ui-state-active{
+    border-bottom: 2px solid #2ea195 !important;
+}
+
 .ui-tabview-panels{
     overflow: auto;
     position: absolute;
-    height: 100%;
+    height: 93%;
     width: 97.5%;
   }
 
@@ -46,4 +98,43 @@ body .ui-sidebar {
 }
 .ui-card-body{
     background: #fafafa;
+    margin-top: 5.1%;
+    height: 80px;
 }
+
+@media screen and (max-width: 480px) {
+    navigation-left{
+        float: left;
+    }
+    navigation-top{
+        float: left;
+    }
+    .ui-card-body{
+        font-size: 0.88em;
+    }
+  }
+
+  /***********Custom Code Collapsible left menu*******************/
+
+  body .ui-panelmenu .ui-panelmenu-header > a {
+    padding: 0.5em 0.857em !important;
+    font-size: 13px !important;
+  }
+
+  
+ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link{
+    padding: 0.1em 2.757em !important;
+    font-size: 13px !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+    border: 1px solid #2ea195 !important;
+    background-color: #2ea195 !important;
+    color: #ffffff;
+}
+
+/* .ui-panelmenu .ui-menuitem-icon {
+    margin-right: .5em !important;
+    margin-left: .5em !important;
+} */
+

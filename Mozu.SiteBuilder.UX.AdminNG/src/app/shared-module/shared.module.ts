@@ -45,6 +45,7 @@ import {SidebarModule} from 'primeng/sidebar';
 import {TabViewModule} from 'primeng/tabview';
 import {MenuModule} from 'primeng/menu';;
 import {CardModule } from 'primeng/card'
+import {PanelMenuModule} from 'primeng/panelmenu';
 
 declare var resourcesVersion: any;
 
@@ -65,6 +66,7 @@ export function createTranslateLoader(http: HttpClient) {
         DialogModule,
         ToastModule,
         NgbCarouselModule,
+        PanelMenuModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -111,6 +113,7 @@ export function createTranslateLoader(http: HttpClient) {
         SidebarModule,
         CardModule,
         TabViewModule,
+        PanelMenuModule,
         // pipes
         DatexPipe,
         EllipsisPipe,

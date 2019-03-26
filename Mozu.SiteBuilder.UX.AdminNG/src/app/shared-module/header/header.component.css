@@ -87,7 +87,7 @@
     bottom: 10px;
     position: relative;
     background-color: #2b2b2b;
-    z-index:999;
+    z-index: 9999;
 }
 
 .navbar-collapse.in .nav>li>a, .navbar-collapse.collapsing .nav>li>a{
