@@ -9,10 +9,10 @@ Ext.define('Taco.shared.view.form.Address', {
 
     requires: [
         'Taco.store.StatesStatic',
-  'Taco.model.Contact',
-  'Taco.core.ux.form.SelectField',
+        'Taco.model.Contact',
+        'Taco.core.ux.form.SelectField',
         'Taco.core.ux.form.PhoneNumberField'
- ],
+    ],
 
     title: 'Edit Address',
 
@@ -280,20 +280,49 @@ Ext.define('Taco.shared.view.form.Address', {
                     type: 'hbox',
                     align: 'stretch'
                 },
-                items: [{
-                    xtype: 'checkbox',
-                    boxLabel: 'Default Billing Address',
-                    name: 'isPrimaryBilling',
-                    inputValue: true,
-                    checked: this.record.get('isPrimaryBilling')
-                }, {
-                    xtype: 'checkbox',
-                    padding: '0 0 0 20',
-                    boxLabel: 'Default Shipping Address',
-                    name: 'isPrimaryShipping',
-                    inputValue: true,
-                    checked: this.record.get('isPrimaryShipping')
-                }]
+                items: [
+                    {
+                        xtype: 'checkbox',
+                        margin: '0,10,0,0',
+                        boxLabel: 'Billing Address',
+                        name: 'isBilling',
+                        inputValue: true,
+                        listeners: {
+                            change: me.onBillingOrShippingChange,
+                            scope:me
+                        }
+                    },
+                    {
+                        xtype: 'checkbox',
+                        margin: '0 10',
+                        boxLabel: 'Default Billing Address',
+                        name: 'isPrimaryBilling',
+                        inputValue: true,
+                        listeners: {
+                            change: me.onBillingOrShippingChange,
+                            scope: me
+                        }
+                    }, {
+                        xtype: 'checkbox',
+                        margin: '0 10',
+                        boxLabel: 'Shipping Address',
+                        name: 'isShipping',
+                        inputValue: true,
+                        listeners: {
+                            change: me.onBillingOrShippingChange,
+                            scope: me
+                        }
+                    }, {
+                        xtype: 'checkbox',
+                        margin: '0,0,0,10',
+                        boxLabel: 'Default Shipping Address',
+                        name: 'isPrimaryShipping',
+                        inputValue: true,
+                        listeners: {
+                            change: me.onBillingOrShippingChange,
+                            scope: me
+                        }
+                    }]
             });
         }
 
@@ -314,6 +343,8 @@ Ext.define('Taco.shared.view.form.Address', {
         if (this.showDefaultOptions) {
             this.record.set('isPrimaryBilling', this.down('[name="isPrimaryBilling"]').getValue());
             this.record.set('isPrimaryShipping', this.down('[name="isPrimaryShipping"]').getValue());
+            this.record.set('isBilling', this.down('[name="isBilling"]').getValue());
+            this.record.set('isShipping', this.down('[name="isShipping"]').getValue());
         }
 
         // convert state to 2 digit value if the countryCode is US
@@ -348,7 +379,7 @@ Ext.define('Taco.shared.view.form.Address', {
 
     onCountryChange: function (scope, newVal, oldVal, eOpts) {
         var isUsaOrCanada = (!newVal || newVal === 'US' || newVal === 'CA');
-        
+
         if (isUsaOrCanada) {
             this.postalRegion.setFieldLabel('State');
             //this.postalRegion.setFieldStyle('text-transform:uppercase');
@@ -363,5 +394,20 @@ Ext.define('Taco.shared.view.form.Address', {
         }
         this.postalRegion.setAllowBlank(!isUsaOrCanada);
         this.postalCode.setAllowBlank(!isUsaOrCanada);
+    },
+    onBillingOrShippingChange: function (scope, newValue) {
+        // (using billing but same for shipping)
+        // If the name doesn't contain primary and its being unchecked
+        // we want to uncheck the isPrimaryBilling else if the name contains primary and its being checked
+        // we want to make sure to check the IsBilling
+        var name = scope.name.indexOf('Primary') == -1 && !newValue
+            ? 'isPrimary' + scope.name.substr(2)
+            : scope.name.indexOf('Primary') > -1 && newValue
+                ? scope.name.replace('Primary', '')
+                : null;
+
+        if (name) {
+            scope.up().down('[name=' + name + ']').setValue(newValue);
+        }
     }
 });
