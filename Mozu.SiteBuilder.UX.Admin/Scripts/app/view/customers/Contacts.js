@@ -242,11 +242,14 @@ Ext.define('Taco.view.customers.Contacts', {
     },
 
     createNewContact: function () {
+        var isFirstContact = this.contacts.length === 0;
         this.editContact({
             id: Ext.id(),
             isNewContact: true,
-            isPrimaryShipping: this.contacts.length === 0,
-            isPrimaryBilling: this.contacts.length === 0,
+            isBilling: true,
+            isShipping: true,
+            isPrimaryShipping: isFirstContact,
+            isPrimaryBilling: isFirstContact,
             firstName: this.record.get('firstName'),
             lastName: this.record.get('lastName'),
             email: this.record.get('emailAddress')
