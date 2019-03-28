@@ -284,6 +284,13 @@ Ext.define('Taco.view.order.AdvancedSearchForm', {
                 ]
             },
             {
+                name: 'cardnumber',
+                fieldLabel: 'Last Four Digits of Credit Card Number',
+                hideTrigger: true,
+                keyNavEnabled: false,
+                mouseWheelEnabled: false
+            },
+            {
                 name: 'returnNumber',
                 fieldLabel: 'Return Number',
                 xtype: 'numberfield',
