@@ -65,6 +65,11 @@ body .ui-tabview .ui-tabview-panels{
     width:100% !important;
 }
 
+
+.ui-card-body {
+    padding: 0.78em !important;
+}
+
 .ui-widget-content {
  border: 0 !important;
 }
@@ -111,6 +116,7 @@ body .ui-sidebar {
     }
     .ui-card-body{
         font-size: 0.88em;
+        padding: 1em !important;
     }
   }
 
@@ -133,8 +139,12 @@ body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
     color: #ffffff;
 }
 
-/* .ui-panelmenu .ui-menuitem-icon {
-    margin-right: .5em !important;
-    margin-left: .5em !important;
-} */
+li.ui-state-active:focus{
+    outline-color: transparent !important;
+}
+
+li.ui-state-default:active{
+    outline-color: transparent !important;
+}
+
 

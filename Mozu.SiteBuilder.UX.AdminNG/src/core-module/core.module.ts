@@ -66,7 +66,7 @@ export function httpServiceFactory(backend: XHRBackend, options: RequestOptions,
             {
                 serverLoggingUrl: '/api/logs',
                 level: NgxLoggerLevel.TRACE,
-                serverLogLevel: NgxLoggerLevel.ERROR
+                serverLogLevel: NgxLoggerLevel.INFO
             }),
         DialogModule,
         ToastModule
