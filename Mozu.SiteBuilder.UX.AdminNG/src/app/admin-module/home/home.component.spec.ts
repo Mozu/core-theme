@@ -6,7 +6,7 @@ import { LoggerService } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
  
-describe('DashboardComponent', () => {
+describe('Home Component', () => {
 
  let component: AdminHomeComponent;
  let fixture: ComponentFixture<AdminHomeComponent>;

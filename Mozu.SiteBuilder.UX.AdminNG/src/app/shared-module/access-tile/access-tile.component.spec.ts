@@ -9,7 +9,7 @@ import { LoggerService } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
 
-describe('HeaderComponent', () => {
+describe('Access-tile component', () => {
 
     let component: AccessTileComponent;
     let fixture: ComponentFixture<AccessTileComponent>;
