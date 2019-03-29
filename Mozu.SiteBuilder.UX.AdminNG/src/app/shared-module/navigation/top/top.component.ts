@@ -45,10 +45,10 @@ export class NavigationTopComponent implements OnInit {
   public fetchHomeTabsName = () => {
     this._loggerService.info("NavigationTopComponent : fetchHomeTabsName");
     this.navigationService.fetchTabsName().subscribe((successResponse) => {
-      this._loggerService.info("NavigationTopComponent : navigationService.fetchTabsName_SuccessResponse"); 
-     this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
-     this.activeTab = this.model.navigationTabs[0];
-     this.changeDetectorRef.detectChanges();
+    this._loggerService.info("NavigationTopComponent : navigationService.fetchTabsName_SuccessResponse"); 
+    this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
+    this.activeTab = this.model.navigationTabs[0];
+    this.changeDetectorRef.detectChanges();
     },(errorResponse) => {
       this._loggerService.info("NavigationTopComponent : navigationService.fetchTabsName_ErrorResponse"); 
     });

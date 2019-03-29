@@ -37,6 +37,7 @@ export class NavigationLeftComponent implements OnInit {
 
   public fetchNavigationItem = () => {
     this.navigationService.fetchLeftNavigationItems().subscribe(data => {
+      this._loggerService.info("NavigationLeftComponent : fetchLeftNavigationItems");
       this.model.navigationTabs = JSON.parse(JSON.stringify(data));
       this.mainItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'main' });
       this.systemItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'sys' });

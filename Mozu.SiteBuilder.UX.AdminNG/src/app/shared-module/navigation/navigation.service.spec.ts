@@ -3,11 +3,15 @@ import {
 } from '@angular/core/testing';
 import { NavigationService } from '@shared';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { LoggerService } from '@core';
+import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 
 describe('NavigationService', () => {
     let injector: TestBed;
     let service: NavigationService;
     let httpMock: HttpTestingController;
+    let loggerService: LoggerService;
+    let loggerServiceSpy: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,21 +19,22 @@ describe('NavigationService', () => {
             HttpClientTestingModule,    
           ],
       providers: [
-        NavigationService
+        NavigationService, LoggerService, CustomNGXLoggerService, NGXLoggerHttpService
       ]
     });
 
     service = TestBed.get(NavigationService);
+    loggerService = TestBed.get(LoggerService);
     httpMock = TestBed.get(HttpTestingController);
+
+    loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
   });
 
   afterEach(() => {
     httpMock.verify();
     });
 
-    
-
-    it('Application should return an tab name Observable<any>', () => {
+  it('Application should return an tab name Observable<any>', () => {
         let dummyTabsName = [
           {
             "tabID": "1",

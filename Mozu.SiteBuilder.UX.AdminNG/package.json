@@ -17,7 +17,8 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "custombuild": "npm run test -- --no-watch --browsers ChromeHeadless --code-coverage && npm run build:Prod"
   },
   "private": true,
   "dependencies": {
