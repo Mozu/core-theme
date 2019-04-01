@@ -549,6 +549,7 @@
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
+    <Compile Include="Models\UserNgViewModel.cs" />
     <Compile Include="Modules\BetaControlVersionModule.cs" />
     <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2735,7 +2736,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Api\Models\Cms\" />
-    <Folder Include="Models\" />
     <Folder Include="Scripts\app\core\ux\selector\" />
     <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />

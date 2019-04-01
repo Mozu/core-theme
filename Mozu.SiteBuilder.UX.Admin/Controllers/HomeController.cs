@@ -92,7 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         {
             try
             {
-                if (Convert.ToBoolean(ConfigurationManager.AppSettings["IsEnableNewAdminUI"]))
+                var routeURLData = Convert.ToString(this.ControllerContext.RouteData.Values["url"]);
+
+                if (string.IsNullOrEmpty(routeURLData))
                 {
                     ActionResult res = await GetIndexNG();
                     return Request.CreateResponse(HttpStatusCode.OK, res);
