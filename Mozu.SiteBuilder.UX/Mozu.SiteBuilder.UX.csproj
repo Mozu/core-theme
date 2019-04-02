@@ -407,8 +407,8 @@
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets. -->
   <Target Name="BeforeBuild">
-      <Message Text="VisualStudioVersion = $(VisualStudioVersion)" />  
-      <Message Text="VSToolsPath = $(VSToolsPath)" />  
+    <Message Text="VisualStudioVersion = $(VisualStudioVersion)" />
+    <Message Text="VSToolsPath = $(VSToolsPath)" />
   </Target>
   <Target Name="AfterBuild">
   </Target>
