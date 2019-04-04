@@ -140,22 +140,21 @@ define([
                   }
               });
           });
-          cart.apiModel.addBulkProducts({ postdata: products, throwErrorOnInvalidItems: false}).then(function(){
-                  window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/cart";
-              }, function (error) {
-                  self.isLoading(false);
-                  if (error.items) {
-                      var errorMessage = "";
-                      _.each(error.items, function(error){
-                          var errorProp = _.find(error.additionalErrorData, function(errorData){
-                              return errorData.name === "Property";
-                          });
-                          errorMessage += ('</br ><strong>' + errorProp.value + '</strong> : ' + error.message);
-                      });
-                      MessageHandler.saveMessage('BulkAddToCart', 'BulkAddToCartErrors', errorMessage);
-                      window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/cart";
-                  }
-          });
+          cart.apiModel.addBulkProducts({ postdata: products, throwErrorOnInvalidItems: true}).then(function(){
+                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/cart";
+            }, function (error) {
+                self.isLoading(false);
+                if (error.items) {
+                    var errorMessage = "";
+                    _.each(error.items, function(error){
+                        var errorProp = _.find(error.additionalErrorData, function(errorData){
+                            return errorData.name === "Property";
+                        });
+                        errorMessage += (errorProp.value + ': ' + error.message);
+                    });
+                    self.messages.reset({ messageType: 'BulkAddToCartErrors', message: errorMessage });
+                }
+            });
         }
     });
 
