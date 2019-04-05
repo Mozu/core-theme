@@ -536,7 +536,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "StoreFront_Prefixed_default",
                 "storefront/{controller}/{action}",
                 new {action = "Index"},
-                new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing" }
+                new { controller = @"catalog|pages|email|cart|auth|checkout|cmspages|myaccount|localization|sitemap|template|widget|testing|health" }
                 );
             //removing default... add a matching route above
             routes.MapHttpRoute(

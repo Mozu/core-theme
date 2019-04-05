@@ -15,9 +15,54 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Context;
+using Mozu.Core.Caching;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
+    public class RedisHelthCheckMessageHandler : DelegatingHandler
+    {
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            if (string.Equals(request.RequestUri.LocalPath, "/mozdef/ping", StringComparison.OrdinalIgnoreCase) &&
+                Mozu.Core.Settings.MozuConfigurationManager.Settings.AppSettings("redis_health_check") == "true")
+            {
+                try
+                {
+                    var cacheProvider = request.Resolve<ICacheProvider>();
+                    var cache = cacheProvider.GetCache(SitebuilderContextCacheRepository.CacheName, new Core.ApiContext() { TenantId = 1 });
+                    var key = $"HealthCheck-{Environment.MachineName}";
+                    var data = DateTime.Now.ToString() + "-" + new Random().NextDouble();
+                    await cache.PutAsync<string>(
+                        data,
+                        key,
+                        new List<string>() { "a" },
+                        new Core.Caching.CachePolicy() { AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(15)) })
+                        .ConfigureAwait(false);
+                    var gotit = (await cache.GetAsync<string>(key).ConfigureAwait(false))?.Item;
+                    if (data == gotit)
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.OK)
+                        {
+                            Content = new StringContent("ok")
+                        };
+                    }
+                    return new HttpResponseMessage(HttpStatusCode.NotFound)
+                    {
+                        Content = new StringContent($"got weird response {data}!={gotit}")
+                    };
+                }
+                catch(Exception ex)
+                {
+                    Core.Logging.LoggingService.LoggerFor<RedisHelthCheckMessageHandler>().Error(ex);
+                    var err = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                    err.Content = new StringContent(ex.ToString());
+                    return err;
+                }
+            }
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
     public class SiteContextInitializationHandler : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

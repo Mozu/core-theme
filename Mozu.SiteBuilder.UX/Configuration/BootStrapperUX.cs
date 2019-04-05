@@ -49,6 +49,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             base.AddMessageHandlers(httpConfiguration);
             httpConfiguration.MessageHandlers.Insert(0, new HttpContextInjectingMessageHandler());
+            httpConfiguration.MessageHandlers.Insert(0, new RedisHelthCheckMessageHandler());
             
             
             httpConfiguration.MessageHandlers.Add( new SessionHandler());

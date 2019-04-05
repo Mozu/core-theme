@@ -26,9 +26,41 @@ using Mozu.Tenant.Contracts.Clients;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Headers = Mozu.Core.Api.Contracts.Constants.Headers;
+using Mozu.SiteBuilder.Mvc.Context;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
+    public class HealthController: ApiControllerBase
+    {
+        public HealthController (Mozu.Core.Caching.ICacheProvider cacheProvider)
+        {
+            CacheProvider = cacheProvider;
+        }
+
+        public Core.Caching.ICacheProvider CacheProvider { get; }
+
+        [HttpGet()]
+        public async Task<HttpResponseMessage> Redis()
+        {
+           var cache = CacheProvider.GetCache(SitebuilderContextCacheRepository.CacheName, new ApiContext() { TenantId = 1 });
+            var key = $"HealthCheck-{Environment.MachineName}";
+            var data = DateTime.Now.ToString() +"-"+ new Random().NextDouble();
+            await cache.PutAsync<string>(
+                data,
+                key,
+                new List<string>() { "a" },
+                new Core.Caching.CachePolicy() { AbsoluteExpiration = new DateTimeOffset(DateTime.Now.AddMinutes(15)) })
+                .ConfigureAwait(false);
+            var gotit = (await cache.GetAsync<string>(key).ConfigureAwait(false))?.Item;
+            if ( data == gotit)
+            {
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+
+        }
+    }
     public class TestingController : ApiControllerBase
     {
         private readonly ISitesWebApiClient _wsRepo;
