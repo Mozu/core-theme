@@ -1,4 +1,6 @@
 ﻿<div class="toolbar-main">
 <navigation-left></navigation-left>
-<navigation-top></navigation-top>
+<navigation-top-shell *ngIf="navigationFlag == allNavigationFlag.dashboard"></navigation-top-shell> 
+<navigation-top-quote *ngIf="navigationFlag == allNavigationFlag.quotes"></navigation-top-quote>
+
 </div>

@@ -51,7 +51,8 @@ export class Constants {
         product: 'product',
         order: 'order',
         offer: 'offer',
-        invoice : 'invoice'
+        invoice : 'invoice',
+        quotes : 'quotes'
     };
 
     static webApis = {

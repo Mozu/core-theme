@@ -11,3 +11,10 @@ export enum RegExType {
     negativedecimalPrecisionFour = <any>'negativedecimalPrecisionFour',
     decimalPrecisionFour = <any>'decimalPrecisionFour'
 }
+
+export enum TopNavigationFlag {
+    dashboard = 'dashboard',
+    product = 'product',
+    order = 'order',
+    quotes = 'quotes'
+}

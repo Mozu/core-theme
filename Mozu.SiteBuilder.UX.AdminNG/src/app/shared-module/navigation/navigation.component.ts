@@ -2,7 +2,8 @@
     Component,
     OnInit,
     OnDestroy,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    Input
 } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -10,6 +11,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { LoggerService } from '@core';
 
 import { NavigationService } from './navigation.service';
+
+import { TopNavigationFlag } from '@shared/infrastructure/enums';
 
 @Component({
     moduleId: module.id,
@@ -23,6 +26,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     subscriptions: Subscription[];
     cartCount: number;
+    @Input() navigationFlag: string;
+    allNavigationFlag = TopNavigationFlag;
 
     constructor(
         private _loggerService : LoggerService

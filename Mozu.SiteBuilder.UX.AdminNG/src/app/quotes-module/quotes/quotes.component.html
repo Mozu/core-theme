@@ -1,0 +1,63 @@
+
+<div class="col-md-12 container-margin">
+
+
+<!-- <p-table [columns]="cols" [paginator]="true" [value]="quotesList" >
+  <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th style="width: 3em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>B2B Account Name</th>
+        <th>Quote Name</th>
+        <th>Buyer Name</th>
+        <th>Status</th>
+        <th>Last Modified Date</th>
+        <th>Quote Total </th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-columns="columns">
+      <tr>
+        <td>sdf</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+      </tr>
+      <tr>
+        <td>sdfs</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+      </tr>
+  </ng-template>
+</p-table> -->
+
+<p-table  [value]="quotes">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Account Name</th>
+            <th>Quote Name</th>
+            <th>Buyer Name</th>
+            <th>Status</th>
+            <th>Last Modified Date</th>
+            <th>Quote Total </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-quote >
+        <tr>
+            <td>{{quote.b2bAccountName}}</td>
+            <td>{{quote.quoteName}}</td>
+            <td>{{quote.buyerName}}</td>
+            <td>{{quote.status}}</td>
+            <td>{{quote.lastModifiedDate}}</td>
+            <td>{{quote.quoteTotal}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>

@@ -208,6 +208,12 @@
         "label": "B2B Accounts",
         "address": "b2baccounts",
         "navUrl":"http://sb.ngdev06.kibong-dev.com/admin/m-1/b2baccounts"
+      },
+      {
+        "id": "quotes",
+        "label": "Quotes",
+        "address": "quotes",
+        "navUrl":"http://localhost:4200/quotes"
       }
     ]
   },

@@ -29,9 +29,10 @@ import {
 import { SpinnerComponent } from './spinner/spinner.component';
 import { 
     NavigationComponent,
-    NavigationTopComponent,
+    NavigationTopShellComponent,
     NavigationLeftComponent,
-    AccessTileComponent
+    AccessTileComponent,
+    NavigationTopQuotesComponent
  } from './index';
 
 import {
@@ -88,11 +89,12 @@ export function createTranslateLoader(http: HttpClient) {
 
         // components
         NavigationComponent,
-        NavigationTopComponent,
+        NavigationTopShellComponent,
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
-        AccessTileComponent
+        AccessTileComponent,
+        NavigationTopQuotesComponent
     ],
     providers: [
         
@@ -126,11 +128,12 @@ export function createTranslateLoader(http: HttpClient) {
 
         // shared components
         NavigationComponent,
-        NavigationTopComponent,
+        NavigationTopShellComponent,
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
-        AccessTileComponent
+        AccessTileComponent,
+        NavigationTopQuotesComponent
     ]
 })
 

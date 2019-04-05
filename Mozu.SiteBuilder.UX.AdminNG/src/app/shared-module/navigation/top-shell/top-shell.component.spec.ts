@@ -7,13 +7,13 @@ import { NotificationService } from '@global';
 import { LoggerService } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationTopComponent } from '@shared';
+import { NavigationTopShellComponent } from './top-shell.component';
 import { NavigationService } from '@shared/navigation/navigation.service';
-import { TopNavigationModel } from './top.model';
+import { TopNavigationModel } from './top-shell.model';
 
 describe('top navigation component', () => {
-  let component: NavigationTopComponent;
-  let fixture: ComponentFixture<NavigationTopComponent>;
+  let component: NavigationTopShellComponent;
+  let fixture: ComponentFixture<NavigationTopShellComponent>;
   let debugElement: DebugElement;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
@@ -36,13 +36,13 @@ describe('top navigation component', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule,HttpClientTestingModule],
-      declarations: [ NavigationTopComponent],
+      declarations: [ NavigationTopShellComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [NotificationService, LoggerService,CustomNGXLoggerService,NGXLoggerHttpService, NavigationService]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavigationTopComponent);
+    fixture = TestBed.createComponent(NavigationTopShellComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 

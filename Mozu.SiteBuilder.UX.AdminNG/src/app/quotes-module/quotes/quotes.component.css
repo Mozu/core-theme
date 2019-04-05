@@ -1,0 +1,8 @@
+.container-margin{
+    margin: 15px 0;
+}
+
+.ui-chkbox .ui-chkbox-box {
+    border: 1px solid #a6a6a6 !important;
+    background-color: #ffffff !important;
+}

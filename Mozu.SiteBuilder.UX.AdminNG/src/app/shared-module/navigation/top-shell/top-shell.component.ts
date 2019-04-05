@@ -8,15 +8,15 @@ import {
 import {  LoggerService } from '@core'
 import { NotificationService } from '@global/services/notifications.service';
 import { NavigationService } from '../navigation.service';
-import { TopNavigationModel, TopNavigationTabs } from './top.model';
+import { TopNavigationModel, TopNavigationTabs } from './top-shell.model';
 
 @Component({
-  selector: 'navigation-top',
+  selector: 'navigation-top-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './top.component.html',
-  styleUrls: ['./top.component.css']
+  templateUrl: './top-shell.component.html',
+  styleUrls: ['./top-shell.component.css']
 })
-export class NavigationTopComponent implements OnInit {
+export class NavigationTopShellComponent implements OnInit {
 
   public model : TopNavigationModel;
   activeTab : TopNavigationTabs

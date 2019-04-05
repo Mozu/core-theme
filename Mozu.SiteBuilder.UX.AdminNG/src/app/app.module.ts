@@ -7,6 +7,7 @@ import { CoreModule } from '@core/core.module';
 import { GlobalModule } from '@global/global.module';
 import { SharedModule } from '@shared/shared.module';
 import { AdminModule } from 'app/admin-module/admin.module';
+import { QuotesModule } from 'app/quotes-module/quotes.module';
 
 import { routing } from './app.routing';
 
@@ -30,6 +31,7 @@ import { environment } from '../environments/environment';
     GlobalModule.forRoot(),
     SharedModule,
     AdminModule,
+    QuotesModule,
     routing,
   ],
   providers: [],
