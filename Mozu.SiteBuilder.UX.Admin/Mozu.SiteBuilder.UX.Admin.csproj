@@ -232,8 +232,7 @@
     <Compile Include="Api\Models\Reports\ReportParams.cs" />
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
-    <Compile Include="Api\OrderCancelController.cs" />
-    <Compile Include="Api\OrderShipmentItemController.cs" />
+    <Compile Include="Api\Models\User\UserIdentity.cs" />
     <Compile Include="Api\ProductSortDefinitionController.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
@@ -456,6 +455,7 @@
     <Compile Include="Api\TaxController.cs" />
     <Compile Include="Api\TestingController.cs" />
     <Compile Include="Api\ThemeSettingController.cs" />
+    <Compile Include="Api\UserController.cs" />
     <Compile Include="Api\UserHelper.cs" />
     <Compile Include="Api\WebToolsController.cs" />
     <Compile Include="Api\WidgetDefinitionController.cs" />
@@ -549,7 +549,6 @@
     <Compile Include="MockServices\InMemoryProductWebApiClient.cs" />
     <Compile Include="MockServices\Mocks\Attributes.cs" />
     <Compile Include="MockServices\TestResponse.cs" />
-    <Compile Include="Models\UserNgViewModel.cs" />
     <Compile Include="Modules\BetaControlVersionModule.cs" />
     <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -2736,6 +2735,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Api\Models\Cms\" />
+    <Folder Include="Models\" />
     <Folder Include="Scripts\app\core\ux\selector\" />
     <Folder Include="Scripts\app\exported\" />
     <Folder Include="Scripts\app\model\Context\" />

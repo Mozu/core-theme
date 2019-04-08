@@ -17,16 +17,16 @@ export class Constants {
     };
 
     static webApis = {
-        getSharedData: environment.apiUrl + 'account/getUserData'
+        getSharedData: environment.apiUrl + '/user/identity'
     };
 
     static queryString = {
         SessionExpired: 'SessionExpired=true'
     };
 
-    static localStorageKeys = {
-        sessionId: 'sessionId'
-    };
+    // static localStorageKeys = {
+    //     sessionId: 'sessionId'
+    // };
 
     static cookies =
     {
