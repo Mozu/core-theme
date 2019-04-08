@@ -260,7 +260,7 @@ define([
       },
       updateItemTotal: function(item){
           item.set('subtotal', (item.get('quantity') * item.get('price')));
-          if (item.get('discountedPrice')){
+          if (item.get('discountedTotal')){
               item.set('discountedTotal', (item.get('quantity') * item.get('salePrice')));
           } else {
               item.set('discountedTotal', false);

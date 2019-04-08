@@ -461,6 +461,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
               // If we're already on the my account page we ensure the page reloads.
               var isMyAccount = window.location.href.indexOf("myaccount") > 0;
               if (isMyAccount){
+                  //window.location.reload(false);
+                  window.location.assign((HyprLiveContext.locals.siteContext.siteSubdirectory || '') + "/myaccount#QuickOrder");
                   window.location.reload(false);
               }
         });
