@@ -1,10 +1,25 @@
 /*! 
- * Mozu Require - v0.2.0 - 2019-01-29
+ * Mozu Require - v0.2.0 - 2019-03-29
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
  */
 
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
+})(window)
 //Resource copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 if (typeof Object.assign != 'function') {
     // Must be writable: true, enumerable: false, configurable: true
