@@ -322,6 +322,7 @@
     "genericNotFound"   : "Artikel wurde nicht gefunden",
     "phoneMissing"   : "Telefonnummer erforderlich",
     "streetMissing"   : "Erforderlich, Straße, Hausnummer",
+    "addressTypeMissing": "Erforderlich, Adresstyp",
     "cityMissing"   : "Stadt oder Gemeinde erforderlich",
     "stateProvMissing"   : "Bundes erforderlich",
     "postalCodeMissing"   : "PLZ erforderlich",

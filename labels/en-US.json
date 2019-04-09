@@ -488,6 +488,7 @@
   "storePickupAt": "In-Store Pickup at <strong>{0}</strong>",
   "storePickupFor": "Store Pickup for <strong>{0}</strong>",
   "streetMissing": "Street address required",
+  "addressTypeMissing": "Address type required",
   "submit": "Submit",
   "subtotal": "Subtotal",
   "suggestionNum": "Suggestion #{0}",
