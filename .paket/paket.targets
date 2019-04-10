@@ -14,7 +14,7 @@
     <PaketBootStrapperExePath Condition=" '$(PaketBootStrapperExePath)' == '' ">$(PaketToolsPath)paket.bootstrapper.exe</PaketBootStrapperExePath>
     <PaketCommand Condition=" '$(OS)' == 'Windows_NT'">"$(PaketExePath)"</PaketCommand>
     <PaketCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(PaketExePath)</PaketCommand>
-    <PaketBootStrapperCommand Condition=" '$(OS)' == 'Windows_NT'">"$(PaketBootStrapperExePath)"</PaketBootStrapperCommand>
+    <PaketBootStrapperCommand Condition=" '$(OS)' == 'Windows_NT'">"$(PaketBootStrapperExePath)" 5.201.1</PaketBootStrapperCommand>
     <PaketBootStrapperCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(PaketBootStrapperExePath)</PaketBootStrapperCommand>
     <!-- Commands -->
     <PaketReferences Condition="!Exists('$(MSBuildProjectFullPath).paket.references')">$(MSBuildProjectDirectory)\paket.references</PaketReferences>
@@ -35,7 +35,7 @@
     <!-- <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true' AND !Exists('$(PaketExePath)')" /> -->
   </Target>
   <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
-  
+
     <Exec Command="$(RestoreCommand)" WorkingDirectory="$(PaketRootPath)" Condition="Exists('$(PaketReferences)')" />
   </Target>
 </Project>
