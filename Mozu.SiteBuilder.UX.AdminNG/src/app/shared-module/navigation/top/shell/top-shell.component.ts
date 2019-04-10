@@ -7,10 +7,9 @@ import {
 
 import {  LoggerService } from '@core'
 import { NotificationService } from '@global/services/notifications.service';
-import { NavigationService } from '@shared/navigation/navigation.service';
-import { TopNavigationModel, 
-  TopNavigationTabs } from './top-shell.model';
-
+import { NavigationService } from '../navigation.service';
+import { TopNavigationModel, TopNavigationTabs } from './top.model';
+import { Response } from '@angular/http';
 
 @Component({
   selector: 'navigation-top-shell',
@@ -45,10 +44,11 @@ export class NavigationTopShellComponent implements OnInit {
   }
 
   public fetchHomeTabsName = () => {
-    this._loggerService.info("NavigationTopShellComponent : fetchHomeTabsName");
-    this.navigationService.fetchTabsName().subscribe((successResponse) => {
-    this._loggerService.info("NavigationTopShellComponent : navigationService.fetchTabsName_SuccessResponse"); 
-    this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
+    this._loggerService.info("NavigationTopComponent : fetchHomeTabsName");
+    this.navigationService.fetchTabsName().subscribe((successResponse : Response) => {
+    this._loggerService.info("NavigationTopComponent : navigationService.fetchTabsName_SuccessResponse");
+    let responseJson = successResponse.json(); 
+    this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
     this.activeTab = this.model.navigationTabs[0];
     this.changeDetectorRef.detectChanges();
     },(errorResponse) => {

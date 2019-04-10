@@ -9,6 +9,7 @@ import { MenuItem } from 'primeng/api';
 import { LoggerService } from '@core'
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, LeftNavigationTabs } from './left.model';
+import { Response } from '@angular/http';
 
 @Component({
   selector: 'navigation-left',
@@ -36,9 +37,10 @@ export class NavigationLeftComponent implements OnInit {
   }
 
   public fetchNavigationItem = () => {
-    this.navigationService.fetchLeftNavigationItems().subscribe(data => {
+    this.navigationService.fetchLeftNavigationItems().subscribe(( data : Response )=> {
       this._loggerService.info("NavigationLeftComponent : fetchLeftNavigationItems");
-      this.model.navigationTabs = JSON.parse(JSON.stringify(data));
+      let responseJson = data.json(); 
+      this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
       this.mainItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'main' });
       this.systemItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'sys' });
       this.changeDetectorRef.detectChanges();

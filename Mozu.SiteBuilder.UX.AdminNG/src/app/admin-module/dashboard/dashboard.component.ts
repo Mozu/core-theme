@@ -17,9 +17,13 @@ import {
   Constants
 } from '@shared/index';
 
+import {Response} from '@angular/http';
+
 import { DashboardModel } from './dashboard.model';
 
 import { DashbaordService } from './dashboard.service';
+
+import { CookieService as Cookie } from 'ngx-cookie-service';
 
 @Component({
   selector: 'admin-dashboard',
@@ -37,7 +41,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private _notificationService: NotificationService,
     private _changeDetectionRef: ChangeDetectorRef,
     private _dashboardService: DashbaordService,
-    private _loggerService: LoggerService
+    private _loggerService: LoggerService,
+    private _cookie: Cookie
   ) {
 
     this._loggerService.info("AdminDashboardComponent : constructor");
@@ -47,7 +52,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._loggerService.info("AdminDashboardComponent : ngOnInit");
-
     this.pupulateSystemAndMainTiles();
     this.model.isShowSystemTiles = false;
     this.subscriptions.push(
@@ -70,10 +74,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public pupulateSystemAndMainTiles = () => {
     this._loggerService.info("AdminDashboardComponent : pupulateSystemAndMainTiles");
 
-    this._dashboardService.fetchAllDashboardTiles().subscribe((successResponse) => {
+    this._dashboardService.fetchAllDashboardTiles().subscribe((successResponse : Response) => {
+      let responseJson = successResponse.json();
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");;
-      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles(successResponse.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
-      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles(successResponse.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
+      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles(responseJson.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
+      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles(responseJson.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
       this._changeDetectionRef.detectChanges();
 
     }, (errResponse) => {
@@ -81,4 +86,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster);
     });
   }
+
+      
 }
