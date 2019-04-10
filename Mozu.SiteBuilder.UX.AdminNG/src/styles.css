@@ -55,6 +55,7 @@ ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-
 
 body .ui-tabview .ui-tabview-panels{
     border: 0px solid transparent !important;
+    text-align: left !important;
 }
 
 .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top{
@@ -147,4 +148,88 @@ li.ui-state-default:active{
     outline-color: transparent !important;
 }
 
+
+/* PrimeNG Table CSS*/
+body{
+    background-color: #eaeaea !important;
+}
+p-table table{
+    border-radius: 5px !important;
+}
+p-table .ui-chkbox .ui-chkbox-box {
+    width: 14px !important;
+    height: 14px !important;    
+    margin-top: 3px !important;
+    border: 1px solid #e9e9e9 !important;
+    background-color: #ffffff !important;
+}
+.ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
+    width: 14px !important;
+    height: 14px !important;   
+    font-size: 12px  !important;
+}
+.pi-check:before {
+    content: "\e909";
+    width: 14px !important;
+    height: 14px !important;  
+    background-color: #2ea195!important;
+    text-align: center!important;
+    border-radius: 3px!important;
+}
+.ui-chkbox .ui-chkbox-box.ui-state-active {
+    border-color: #007ad9;
+    background-color: #007ad9;
+    color: #2ea195;
+}
+
+p-table .ui-table .ui-table-thead{
+    background-color: #f7f7f7  !important; 
+}
+p-table .ui-table .ui-table-thead > tr > th {
+    padding: 10px 15px !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+    font-weight: normal !important;
+    color: #333333 !important;
+    font-size: 12px !important;
+    color: #7c7c7c !important;
+    background-color: transparent !important;
+    border: 0px !important;
+}
+
+p-table .ui-table .ui-table-tbody > tr > td {
+    background-color: white !important;
+    font-size: 13px !important;    
+    border: 0px !important;
+    border-bottom: 1px solid #f2f2f2 !important;
+    padding: 10px 15px !important;
+
+}
+p-table .ui-table .ui-table-tbody > tr:hover {
+    background-color: #f7f7f7 !important;
+}
+.ui-paginator {
+    padding: 8px !important;
+    background-color: white !important;
+    border: 0px  !important;
+    border-top: 1px solid #f1f1f1 !important;
+    text-align: left !important;
+}
+
+.ui-paginator .ui-paginator-element{
+    height: 0px !important;
+    padding: 0px !important;
+    min-width: 1.7em !important;
+    min-height: 22px;
+}
+
+.ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
+    background-color: #2ea195 !important;
+    color: #ffffff;
+    border-radius: 2px;
+}
+.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    line-height: 1.5em !important;
+    font-size: 13px !important;    
+
+}
 

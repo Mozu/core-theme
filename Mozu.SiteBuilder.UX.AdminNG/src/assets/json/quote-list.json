@@ -1,404 +1,88 @@
 {
-    "id": "System.String",
-    "name": "System.String",
-    "siteId": "System.Int32",
-    "tenantId": "System.Int32",
-    "number": "System.Int32",
-    "submittedDate": "/Date(-62135575200000-0600)/",
-    "items":  [
-      {
-          "id": "System.String",
-          "destinationId": "System.String",
-          "originalCartItemId": "System.String",
-          "fulfillmentLocationCode": "System.String",
-          "fulfillmentMethod": "System.String",
-          "dutyAmount": "System.Decimal",
-          "localeCode": "System.String",
-          "purchaseLocation": "System.String",
-          "lineId": "System.Int32",
-          "product":           {
-              "mfgPartNumber": "System.String",
-              "upc": "System.String",
-              "fulfillmentTypesSupported":  [
-                {
-
-                }
-              ],
-              "imageAlternateText": "System.String",
-              "imageUrl": "System.String",
-              "variationProductCode": "System.String",
-              "options":  [
-                {
-                    "name": "System.String",
-                    "value": "System.Object",
-                    "shopperEnteredValue": "System.Object",
-                    "attributeFQN": "System.String",
-                    "dataType": "System.String",
-                    "stringValue": "System.String"
-                }
-              ],
-              "properties":  [
-                {
-                    "attributeFQN": "System.String",
-                    "name": "System.String",
-                    "dataType": "System.String",
-                    "isMultiValue": "System.Boolean",
-                    "values":  [
-                      {
-                          "stringValue": "System.String",
-                          "value": "System.Object"
-                      }
-                    ]
-                }
-              ],
-              "categories":  [
-                {
-                    "id": "System.Int32",
-                    "parent": "Note: this is a circular structure, the definition for 'Category' is defined in a parent element contained in this body"
-                }
-              ],
-              "price":               {
-                  "price": "System.Decimal",
-                  "salePrice": "System.Decimal",
-                  "tenantOverridePrice": "System.Decimal",
-                  "msrp": "System.Decimal",
-                  "creditValue": "System.Decimal",
-                  "priceListCode": "System.String",
-                  "priceListEntryMode": "System.String"
-              },
-              "discountsRestricted": "System.Boolean",
-              "discountsRestrictedStartDate": "/Date(-62135575200000-0600)/",
-              "discountsRestrictedEndDate": "/Date(-62135575200000-0600)/",
-              "isRecurring": "System.Boolean",
-              "isTaxable": "System.Boolean",
-              "productType": "System.String",
-              "productUsage": "System.String",
-              "bundledProducts":  [
-                {
-                    "quantity": "System.Int32",
-                    "optionAttributeFQN": "System.String",
-                    "optionValue": "System.Object",
-                    "creditValue": "System.Decimal",
-                    "deltaPrice": "System.Decimal",
-                    "productCode": "System.String",
-                    "name": "System.String",
-                    "description": "System.String",
-                    "goodsType": "System.String",
-                    "isPackagedStandAlone": "System.Boolean",
-                    "productReservationId": "System.Int32",
-                    "allocationId": "System.Int32",
-                    "allocationExpiration": "/Date(-62135575200000-0600)/",
-                    "measurements":                     {
-                        "height":                         {
-                            "unit": "System.String",
-                            "value": "System.Decimal"
-                        },
-                        "width":                         {
-                            "unit": "System.String",
-                            "value": "System.Decimal"
-                        },
-                        "length":                         {
-                            "unit": "System.String",
-                            "value": "System.Decimal"
-                        },
-                        "weight":                         {
-                            "unit": "System.String",
-                            "value": "System.Decimal"
-                        }
-                    },
-                    "fulfillmentStatus": "System.String"
-                }
-              ],
-              "productCode": "System.String",
-              "name": "System.String",
-              "description": "System.String",
-              "goodsType": "System.String",
-              "isPackagedStandAlone": "System.Boolean",
-              "productReservationId": "System.Int32",
-              "allocationId": "System.Int32",
-              "allocationExpiration": "/Date(-62135575200000-0600)/",
-              "measurements":               {
-                  "height":                   {
-                      "unit": "System.String",
-                      "value": "System.Decimal"
-                  },
-                  "width":                   {
-                      "unit": "System.String",
-                      "value": "System.Decimal"
-                  },
-                  "length":                   {
-                      "unit": "System.String",
-                      "value": "System.Decimal"
-                  },
-                  "weight":                   {
-                      "unit": "System.String",
-                      "value": "System.Decimal"
-                  }
-              },
-              "fulfillmentStatus": "System.String"
-          },
-          "quantity": "System.Int32",
-          "isRecurring": "System.Boolean",
-          "isTaxable": "System.Boolean",
-          "subtotal": "System.Decimal",
-          "extendedTotal": "System.Decimal",
-          "taxableTotal": "System.Decimal",
-          "discountTotal": "System.Decimal",
-          "discountedTotal": "System.Decimal",
-          "itemTaxTotal": "System.Decimal",
-          "shippingTaxTotal": "System.Decimal",
-          "shippingTotal": "System.Decimal",
-          "handlingAmount": "System.Decimal",
-          "feeTotal": "System.Decimal",
-          "total": "System.Decimal",
-          "unitPrice":           {
-              "extendedAmount": "System.Decimal",
-              "listAmount": "System.Decimal",
-              "saleAmount": "System.Decimal",
-              "overrideAmount": "System.Decimal"
-          },
-          "productDiscount":           {
-              "appliesToSalePrice": "System.Boolean",
-              "discountQuantity": "System.Int32",
-              "productQuantity": "System.Int32",
-              "impactPerUnit": "System.Decimal",
-              "impact": "System.Decimal",
-              "discount":               {
-                  "id": "System.Int32",
-                  "name": "System.String",
-                  "itemIds":  [
-                    {
-
-                    }
-                  ],
-                  "expirationDate": "/Date(-62135575200000-0600)/",
-                  "hasMultipleTargetProducts": "System.Boolean"
-              },
-              "couponCode": "System.String",
-              "excluded": "System.Boolean"
-          },
-          "productDiscounts":  [
-            {
-                "appliesToSalePrice": "System.Boolean",
-                "discountQuantity": "System.Int32",
-                "productQuantity": "System.Int32",
-                "impactPerUnit": "System.Decimal",
-                "impact": "System.Decimal",
-                "discount":                 {
-                    "id": "System.Int32",
-                    "name": "System.String",
-                    "itemIds":  [
-                      {
-
-                      }
-                    ],
-                    "expirationDate": "/Date(-62135575200000-0600)/",
-                    "hasMultipleTargetProducts": "System.Boolean"
-                },
-                "couponCode": "System.String",
-                "excluded": "System.Boolean"
-            }
-          ],
-          "shippingDiscounts":  [
-            {
-                "methodCode": "System.String",
-                "discount":                 {
-                    "impact": "System.Decimal",
-                    "discount":                     {
-                        "id": "System.Int32",
-                        "name": "System.String",
-                        "itemIds":  [
-                          {
-
-                          }
-                        ],
-                        "expirationDate": "/Date(-62135575200000-0600)/",
-                        "hasMultipleTargetProducts": "System.Boolean"
-                    },
-                    "couponCode": "System.String",
-                    "excluded": "System.Boolean"
-                },
-                "discountQuantity": "System.Int32",
-                "impactPerUnit": "System.Decimal"
-            }
-          ],
-          "data":           {
-
-          },
-          "taxData":           {
-
-          },
-          "auditInfo":           {
-              "updateDate": "/Date(-62135575200000-0600)/",
-              "createDate": "/Date(-62135575200000-0600)/",
-              "updateBy": "System.String",
-              "createBy": "System.String"
-          },
-          "shippingAmountBeforeDiscountsAndAdjustments": "System.Decimal",
-          "weightedOrderAdjustment": "System.Decimal",
-          "weightedOrderDiscount": "System.Decimal",
-          "adjustedLineItemSubtotal": "System.Decimal",
-          "totalWithoutWeightedShippingAndHandling": "System.Decimal",
-          "weightedOrderTax": "System.Decimal",
-          "weightedOrderShipping": "System.Decimal",
-          "weightedOrderShippingDiscount": "System.Decimal",
-          "weightedOrderShippingManualAdjustment": "System.Decimal",
-          "weightedOrderShippingTax": "System.Decimal",
-          "weightedOrderHandlingFee": "System.Decimal",
-          "weightedOrderHandlingFeeTax": "System.Decimal",
-          "weightedOrderHandlingFeeDiscount": "System.Decimal",
-          "weightedOrderDuty": "System.Decimal",
-          "totalWithWeightedShippingAndHandling": "System.Decimal",
-          "weightedOrderHandlingAdjustment": "System.Decimal",
-          "autoAddDiscountId": "System.Int32"
-      }
-    ],
-    "auditInfo":     {
-        "updateDate": "/Date(-62135575200000-0600)/",
-        "createDate": "/Date(-62135575200000-0600)/",
-        "updateBy": "System.String",
-        "createBy": "System.String"
+  "startIndex": 0,
+  "pageSize": 10,
+  "pageCount": 1,
+  "totalCount": 2,
+  "items": [
+   {
+    "id": "0da178726c6b9e27784ebfec0000432a",
+    "name": "Test Quote One",
+    "siteId": 21127,
+    "tenantId": 17194,
+    "number": 1,
+    "items": [],
+    "auditInfo": {
+     "updateDate": "2019-03-31T19:52:25.091Z",
+     "createDate": "2019-03-31T19:52:25.091Z",
+     "updateBy": "1",
+     "createBy": "1"
     },
-    "comments":  [
-      {
-
-      }
-    ],
-    "expirationDate": "/Date(-62135575200000-0600)/",
-    "destinations":  [
-      {
-          "id": "System.String",
-          "destinationContact":           {
-              "id": "System.Int32",
-              "email": "System.String",
-              "firstName": "System.String",
-              "middleNameOrInitial": "System.String",
-              "lastNameOrSurname": "System.String",
-              "companyOrOrganization": "System.String",
-              "phoneNumbers":               {
-                  "home": "System.String",
-                  "mobile": "System.String",
-                  "work": "System.String"
-              },
-              "address":               {
-                  "address1": "System.String",
-                  "address2": "System.String",
-                  "address3": "System.String",
-                  "address4": "System.String",
-                  "cityOrTown": "System.String",
-                  "stateOrProvince": "System.String",
-                  "postalOrZipCode": "System.String",
-                  "countryCode": "System.String",
-                  "addressType": "System.String",
-                  "isValidated": "System.Boolean"
-              }
-          },
-          "isDestinationCommercial": "System.Boolean",
-          "data":           {
-
-          }
-      }
-    ],
-    "userId": "System.String",
-    "customerAccountId": "System.Int32",
-    "email": "System.String",
-    "customerTaxId": "System.String",
-    "isTaxExempt": "System.Boolean",
-    "currencyCode": "System.String",
-    "priceListCode": "System.String",
-    "data":     {
-
+    "destinations": [],
+    "isTaxExempt": false,
+    "currencyCode": "USD",
+    "customerInteractionType": "Unknown",
+    "orderDiscounts": [],
+    "subTotal": 0,
+    "itemLevelProductDiscountTotal": 0,
+    "orderLevelProductDiscountTotal": 0,
+    "itemTaxTotal": 0,
+    "itemTotal": 0,
+    "total": 0,
+    "shippingDiscounts": [],
+    "itemLevelShippingDiscountTotal": 0,
+    "orderLevelShippingDiscountTotal": 0,
+    "shippingAmount": 0,
+    "shippingSubTotal": 0,
+    "shippingTaxTotal": 0,
+    "shippingTotal": 0,
+    "handlingDiscounts": [],
+    "itemLevelHandlingDiscountTotal": 0,
+    "orderLevelHandlingDiscountTotal": 0,
+    "handlingSubTotal": 0,
+    "handlingTaxTotal": 0,
+    "handlingTotal": 0,
+    "dutyTotal": 0,
+    "feeTotal": 0
+   },
+   {
+    "id": "0da178826c6b9e27784ebfed0000432a",
+    "name": "Test Quote Two",
+    "siteId": 21127,
+    "tenantId": 17194,
+    "number": 2,
+    "items": [],
+    "auditInfo": {
+     "updateDate": "2019-03-31T19:52:34.565Z",
+     "createDate": "2019-03-31T19:52:34.565Z",
+     "updateBy": "1",
+     "createBy": "1"
     },
-    "taxData":     {
-
-    },
-    "channelCode": "System.String",
-    "locationCode": "System.String",
-    "ipAddress": "System.String",
-    "sourceDevice": "System.String",
-    "visitId": "System.String",
-    "webSessionId": "System.String",
-    "customerInteractionType": "System.String",
-    "orderDiscounts":  [
-      {
-          "impact": "System.Decimal",
-          "discount":           {
-              "id": "System.Int32",
-              "name": "System.String",
-              "itemIds":  [
-                {
-
-                }
-              ],
-              "expirationDate": "/Date(-62135575200000-0600)/",
-              "hasMultipleTargetProducts": "System.Boolean"
-          },
-          "couponCode": "System.String",
-          "excluded": "System.Boolean"
-      }
-    ],
-    "subTotal": "System.Decimal",
-    "itemLevelProductDiscountTotal": "System.Decimal",
-    "orderLevelProductDiscountTotal": "System.Decimal",
-    "itemTaxTotal": "System.Decimal",
-    "itemTotal": "System.Decimal",
-    "total": "System.Decimal",
-    "shippingDiscounts":  [
-      {
-          "methodCode": "System.String",
-          "discount":           {
-              "impact": "System.Decimal",
-              "discount":               {
-                  "id": "System.Int32",
-                  "name": "System.String",
-                  "itemIds":  [
-                    {
-
-                    }
-                  ],
-                  "expirationDate": "/Date(-62135575200000-0600)/",
-                  "hasMultipleTargetProducts": "System.Boolean"
-              },
-              "couponCode": "System.String",
-              "excluded": "System.Boolean"
-          }
-      }
-    ],
-    "itemLevelShippingDiscountTotal": "System.Decimal",
-    "orderLevelShippingDiscountTotal": "System.Decimal",
-    "shippingAmount": "System.Decimal",
-    "shippingSubTotal": "System.Decimal",
-    "shippingTax": "System.Decimal",
-    "shippingTaxTotal": "System.Decimal",
-    "shippingTotal": "System.Decimal",
-    "handlingDiscounts":  [
-      {
-          "impact": "System.Decimal",
-          "discount":           {
-              "id": "System.Int32",
-              "name": "System.String",
-              "itemIds":  [
-                {
-
-                }
-              ],
-              "expirationDate": "/Date(-62135575200000-0600)/",
-              "hasMultipleTargetProducts": "System.Boolean"
-          },
-          "couponCode": "System.String",
-          "excluded": "System.Boolean"
-      }
-    ],
-    "itemLevelHandlingDiscountTotal": "System.Decimal",
-    "orderLevelHandlingDiscountTotal": "System.Decimal",
-    "handlingAmount": "System.Decimal",
-    "handlingSubTotal": "System.Decimal",
-    "handlingTax": "System.Decimal",
-    "handlingTaxTotal": "System.Decimal",
-    "handlingTotal": "System.Decimal",
-    "dutyAmount": "System.Decimal",
-    "dutyTotal": "System.Decimal",
-    "feeTotal": "System.Decimal",
-    "shippingMethodCode": "System.String",
-    "shippingMethodName": "System.String"
-}
+    "destinations": [],
+    "isTaxExempt": false,
+    "currencyCode": "USD",
+    "customerInteractionType": "Unknown",
+    "orderDiscounts": [],
+    "subTotal": 0,
+    "itemLevelProductDiscountTotal": 0,
+    "orderLevelProductDiscountTotal": 0,
+    "itemTaxTotal": 0,
+    "itemTotal": 0,
+    "total": 0,
+    "shippingDiscounts": [],
+    "itemLevelShippingDiscountTotal": 0,
+    "orderLevelShippingDiscountTotal": 0,
+    "shippingAmount": 0,
+    "shippingSubTotal": 0,
+    "shippingTaxTotal": 0,
+    "shippingTotal": 0,
+    "handlingDiscounts": [],
+    "itemLevelHandlingDiscountTotal": 0,
+    "orderLevelHandlingDiscountTotal": 0,
+    "handlingSubTotal": 0,
+    "handlingTaxTotal": 0,
+    "handlingTotal": 0,
+    "dutyTotal": 0,
+    "feeTotal": 0
+   }
+  ]
+ }

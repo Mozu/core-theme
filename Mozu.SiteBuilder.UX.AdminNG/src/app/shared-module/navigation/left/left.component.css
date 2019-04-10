@@ -12,6 +12,7 @@
 }
 .sidebar {
     height: 100%;
+    border-right: 1px solid #f5f5f5;
 }
 @media screen and (max-width: 480px) {
     .primeSidebar {
@@ -21,3 +22,17 @@
 .ui-menu .ui-submenu-heade{
     font-size: 11px !important;
 }
+
+.col-md-half, .col-sm-half{
+    width: 4%;
+    float: left;
+    text-align: center;
+}
+.ui-submenu-header{
+    text-align: left !important;
+}
+@media screen and (max-width:900px){
+    .col-md-half, .col-sm-half {
+        width: 6% !important;
+    }
+  }

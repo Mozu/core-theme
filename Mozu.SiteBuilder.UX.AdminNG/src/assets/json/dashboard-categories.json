@@ -213,7 +213,7 @@
         "id": "quotes",
         "label": "Quotes",
         "address": "quotes",
-        "navUrl":"http://localhost:4200/quotes"
+        "navUrl":"quotes"
       }
     ]
   },

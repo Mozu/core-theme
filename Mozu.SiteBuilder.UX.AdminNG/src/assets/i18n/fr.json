@@ -61,6 +61,16 @@
       "message": "Veuillez entrer le mot de passe.",
       "messageType": "Warning"
     }  
+  },
+  "QUOTES": {
+    "QUOTES": {
+      "b2bAccountName": "B2B Account Name",
+      "quoteName": "Quote Name",
+      "buyerName": "Buyer Name",
+      "status": "Status",
+      "lastModifiedDate": "Last Modified Date",
+      "quoteTotal": "Quote Total"      
+    }
   }
 }
 }

@@ -1,62 +1,41 @@
 
 <div class="col-md-12 container-margin">
 
-
-<!-- <p-table [columns]="cols" [paginator]="true" [value]="quotesList" >
-  <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th style="width: 3em">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th>B2B Account Name</th>
-        <th>Quote Name</th>
-        <th>Buyer Name</th>
-        <th>Status</th>
-        <th>Last Modified Date</th>
-        <th>Quote Total </th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-columns="columns">
-      <tr>
-        <td>sdf</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-      </tr>
-      <tr>
-        <td>sdfs</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-      </tr>
-  </ng-template>
-</p-table> -->
-
-<p-table  [value]="quotes">
-    <ng-template pTemplate="header">
+<p-table [columns]="cols" [value]="model.items" [responsive]="true" [paginator]="true" [rows]="25">
+    <ng-template pTemplate="header" let-columns>
         <tr>
-            <th>Account Name</th>
-            <th>Quote Name</th>
-            <th>Buyer Name</th>
-            <th>Status</th>
-            <th>Last Modified Date</th>
-            <th>Quote Total </th>
+            <th style="width: 4em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <!-- <th *ngFor="let col of columns">
+                  {{col.header}}
+              </th> -->
+            <th>{{'QUOTES.QUOTES.b2bAccountName' | translate }}</th>
+            <th>{{'QUOTES.QUOTES.quoteName' | translate }}</th>
+            <th>{{'QUOTES.QUOTES.buyerName' | translate }}</th>
+            <th>{{'QUOTES.QUOTES.status' | translate }}</th>
+            <th>{{'QUOTES.QUOTES.lastModifiedDate' | translate }}</th>
+            <th>{{'QUOTES.QUOTES.quoteTotal' | translate }}</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-quote >
+    <ng-template pTemplate="body" let-quote let-columns="columns">
         <tr>
-            <td>{{quote.b2bAccountName}}</td>
-            <td>{{quote.quoteName}}</td>
-            <td>{{quote.buyerName}}</td>
-            <td>{{quote.status}}</td>
-            <td>{{quote.lastModifiedDate}}</td>
-            <td>{{quote.quoteTotal}}</td>
+            <td>
+              <p-tableCheckbox></p-tableCheckbox>
+            </td>
+            <td><span>{{quote.tenantId}}</span></td>
+            <td><span>{{quote.customerInteractionType}}</span></td>
+            <td><span>{{quote.name}}</span></td>
+            <td><span class="content-pill">{{quote.currencyCode}}</span></td>
+            <td><span>{{quote.auditInfo.createDate}}</span></td>
+            <td><span>{{quote.feeTotal}}</span></td>
+
+            <!-- <td><span>{{quote.b2bAccountName}}</span></td>
+            <td><span>{{quote.quoteName}}</span></td>
+            <td><span>{{quote.buyerName}}</span></td>
+            <td><span class="content-pill">{{quote.status}}</span></td>
+            <td><span>{{quote.lastModifiedDate}}</span></td>
+            <td><span>{{quote.quoteTotal}}</span></td> -->
         </tr>
     </ng-template>
 </p-table>

@@ -1,8 +1,13 @@
 .container-margin{
-    margin: 15px 0;
+    margin: 20px 0 10px;
+    padding: 0px 20px;
 }
 
-.ui-chkbox .ui-chkbox-box {
-    border: 1px solid #a6a6a6 !important;
-    background-color: #ffffff !important;
+.content-pill{
+    background-color: #f3f3f3;
+    color: #7c7c7c;
+    border-radius: 9px;
+    cursor: default;
+    padding: 3px 5px;
+    font-size: 11px;
 }
