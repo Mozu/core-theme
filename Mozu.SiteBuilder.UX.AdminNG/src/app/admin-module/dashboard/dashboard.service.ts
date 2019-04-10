@@ -19,7 +19,6 @@ export class DashbaordService {
     }
 
     public MapDasasboardCategoryToTiles(dashboardCategories: any): AccessTileModel[] {
-      console.log(dashboardCategories);
         this._loggerService.info("AdminDashboardComponent : MapDasasboardCategoryToTiles");
         let allAccessTiles: AccessTileModel[];
         if (dashboardCategories != null && dashboardCategories != undefined && dashboardCategories.length > 0) {
