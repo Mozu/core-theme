@@ -52,7 +52,8 @@
     "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",    
     "EmptyEmailAddress": "Please enter Email Address.",
     "EmptyPassword": "Please enter Password.",
-    "DashboardTilesGetFailed" : "Error occured while fetching dasbhoard tiles" 
+    "DashboardTilesGetFailed" : "Error occured while fetching dasbhoard tiles",
+    "QuoteListGetFailed" : "Error occured while fetching quote list" 
   }
 },
 "QUOTES": {

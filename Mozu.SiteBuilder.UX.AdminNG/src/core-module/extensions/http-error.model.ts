@@ -21,7 +21,8 @@ export enum ErrorCode {
 
     AuthFailedInvalidAuthResponse = <any>"AuthFailedInvalidAuthResponse",
     UserSessionExpired = <any>"UserSessionExpired",
-    DashboardTilesGetFailed= <any>"DashboardTilesGetFailed"
+    DashboardTilesGetFailed= <any>"DashboardTilesGetFailed",
+    QuoteListGetFailed= <any>"QuoteListGetFailed"
 }
 
 export enum ToastrCode {

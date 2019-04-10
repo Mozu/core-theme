@@ -1,8 +1,8 @@
 
 <div class="col-md-12 container-margin">
 
-<p-table [columns]="cols" [value]="model.items" [responsive]="true" [paginator]="true" [rows]="25">
-    <ng-template pTemplate="header" let-columns>
+<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="5">
+    <ng-template pTemplate="header">
         <tr>
             <th style="width: 4em">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
@@ -18,14 +18,14 @@
             <th>{{'QUOTES.QUOTES.quoteTotal' | translate }}</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-quote let-columns="columns">
+    <ng-template pTemplate="body" let-quote>
         <tr>
             <td>
               <p-tableCheckbox></p-tableCheckbox>
             </td>
             <td><span>{{quote.tenantId}}</span></td>
-            <td><span>{{quote.customerInteractionType}}</span></td>
             <td><span>{{quote.name}}</span></td>
+            <td><span>{{quote.customerInteractionType}}</span></td>
             <td><span class="content-pill">{{quote.currencyCode}}</span></td>
             <td><span>{{quote.auditInfo.createDate}}</span></td>
             <td><span>{{quote.feeTotal}}</span></td>

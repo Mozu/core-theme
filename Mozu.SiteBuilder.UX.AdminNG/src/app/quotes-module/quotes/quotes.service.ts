@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpService } from '@core/extensions/http.service';
 import { LoggerService } from '@core';
 import { Observable } from 'rxjs';
-import { httpFactory } from '@angular/http/src/http_module';
 
 @Injectable()
 export class QuotesService{
-    constructor(private _http: HttpClient,   
+    constructor(private _http: HttpService,   
         private _loggerService: LoggerService){
             this._loggerService.info("QuotesService : constructor");
     }
