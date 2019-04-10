@@ -9,6 +9,7 @@ Ext.define('Taco.controller.B2BAccounts', {
     editorView: 'Taco.view.b2baccounts.Edit',
     views: ['b2baccounts.Index'],
      edit: function () {
+         this.requiresSiteContext();
          this.createContentView('Taco.view.b2baccounts.Edit', {
              contextConfig: {
                  supportedLevels: ['c'],
@@ -17,6 +18,7 @@ Ext.define('Taco.controller.B2BAccounts', {
          });
     },
      create: function () {
+         this.requiresSiteContext();
          this.createContentView('Taco.view.b2baccounts.Create', {
              contextConfig: {
                  supportedLevels: ['c'],
