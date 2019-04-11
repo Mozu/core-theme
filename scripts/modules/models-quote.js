@@ -1,17 +1,17 @@
 define(["underscore", "modules/backbone-mozu", "modules/models-product"], function (_, Backbone, ProductModels) {
-    var wishlistItem = Backbone.MozuModel.extend({});
+    var quoteItem = Backbone.MozuModel.extend({});
 
-    var wishlist = Backbone.MozuModel.extend({
-        mozuType: 'wishlist',
+    var quote = Backbone.MozuModel.extend({
+        mozuType: 'quote',
         relations: {
             items: Backbone.Collection.extend({
-                model: wishlistItem
+                model: quoteItem
             })
         }
     });
 
     return {
-        Wishlist: wishlist,
-        WishlistItem: wishlistItem
+        Quote: quote,
+        QuoteItem: quoteItem
     };
 });

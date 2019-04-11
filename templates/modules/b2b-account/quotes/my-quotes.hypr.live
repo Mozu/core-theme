@@ -1,0 +1,19 @@
+<div class="mz-b2b-quotes">
+    {% if model.isDetailMode %}
+        <div class="mz-b2b-wishlists-product-picker">
+            {% include "modules/b2b-account/quotes/quote-detail" model=model.quote %}
+        </div>
+    {% else %}
+        <div class="wishlist-btns">
+            <button class="mz-button" data-mz-action="newWishlist">{{ labels.addList }}</button>
+        </div>
+
+        <div class="mz-btns">
+            <label><input data-mz-action="toggleViewAllQuotes" type="checkbox" {% if model.viewingAllQuotes %}checked{% endif %} /> {{ labels.viewAllLists }}</label>
+        </div>
+        <div class="mz-b2b-quotes-grid">
+            <div class="is-loading"></div>
+            {% include "modules/mozugrid/grid" %}
+            </div>
+    {% endif %}
+</div>
