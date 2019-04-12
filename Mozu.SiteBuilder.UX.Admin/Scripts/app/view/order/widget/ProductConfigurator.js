@@ -384,7 +384,6 @@
 
         this.optionsHeading.show();
         this.optionsContainer.removeAll();
-
         if (options && options.length) {
             Ext.each(options, function (option) {
                 items.push(this.buildOption(option));
@@ -409,11 +408,12 @@
             if (!value.StringValue) value.StringValue = value.Value;
             if (value.IsSelected) option.Value = value.Value;
         });
-
         return Ext.apply(builds['Default'](option), builds[inputType](option), {
             listeners: {
                 change: function (field, value) {
+                    var self = this;
                     this.getForm().checkValidity();
+                    var request = { Options: [] };
 
                     Ext.each(this.runtimeData.Options, function (option) {
                         if (option.AttributeFQN !== field.name) return;
@@ -424,10 +424,48 @@
                             this.lastUpdatedOption = option;
                         }
 
+                        if (option.Value === undefined || option.Value === ' ') return;
+                        delete option.Values;
+
+                        if (option.AttributeDetail.InputType !== 'List') {
+                            option.ShopperEnteredValue = option.Value;
+                        } else {
+                            delete option.ShopperEnteredValue;
+                        }
+
+                        request.Options.push(option);
                         return false;
                     }, this);
 
-                    //if ( === 'List') this.lastUpdatedOption
+                    this.setLoading(true);
+                    this.isUpdating = true;
+                        this.record.configureRuntimeProduct({
+                            jsonData: request,
+                            success: function (response) {
+                                var self = this;
+                                var responseData = JSON.parse(response.responseText).items;
+                                Ext.each(responseData.Options, function (option) {
+                                    if (option.AttributeDetail.InputType == "List" && field.name !== option.AttributeFQN) {
+                                        self.filterForEnabledValues(option);
+                                    }
+                                });
+
+
+                                self.setLoading(false);
+                                self.isUpdating = false;
+                                self.getForm().checkValidity();
+                            },
+                            failure: function (response) {
+                                this.setLoading(false);
+                                this.isUpdating = false;
+
+                                var error = JSON.parse(response.responseText);
+                                Taco.app.fireEvent('setmessage', error, 'error');
+                                this.fireEvent('loadFailure');
+
+                            },
+                            scope: self
+                        });
                 },
                 buffer: 400,
                 scope: this
@@ -464,13 +502,22 @@
 
         if (updates[field.optionInputType]) updates[field.optionInputType](option, field);
 
-        field.setValue(option.Value);
-
+        if (option.Value !== undefined) {
+            field.setValue(option.Value);
+        }
+        option.Values.unshift({ Value: ' ', StringValue: '\u00A0', IsSelected: false, IsEnabled: true })
         field.suspendCheckChange--;
 
         if (repostOptions) this.postOptions();
     },
+    filterForEnabledValues: function (option) {
+        this.updateOption(option);
+        var field = this.findField(option.AttributeFQN);
+        field.store.clearFilter(true);
+        field.store.filter("IsEnabled", true);
+        field.store.insert(0, { Value: ' ', StringValue: '\u00A0', IsSelected: false, IsEnabled: true });
 
+    },
     postOptions: function (callback) {
         var me = this;
         var request = { Options: [] };
