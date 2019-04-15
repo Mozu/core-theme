@@ -356,7 +356,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
 
             CreateMap<ProductProperty, DC.ProductOption>()
-                //.ForMember(x => x., op => op.Ignore())
                   .ForMember(x => x.AttributeFQN, op => op.ResolveUsing(x => x.AttributeFQN))
                   .ForMember(x => x.Values, op => op.ResolveUsing(x =>
                   {
@@ -381,36 +380,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Content, op => op.Ignore())
                 ;
             CreateMap<DC.ProductVariationOption, ProductVariationOption>();
-
-
-
-            //CreateMap<ProductPropertyValue, DC.ProductPropertyValue>()
-            //      .ForMember(x => x.AttributeVocabularyValueDetail, op => op.Ignore())
-            //      .ForMember( x=> x.Value, op=> op.ResolveUsing( x=> x.Value ))
-            //      .ForMember(x => x.Content, op => op.ResolveUsing(x =>
-            //          {
-            //              if (!string.IsNullOrEmpty( x.LocalizedValue ))
-            //              {
-            //                  return new DC.ProductPropertyValueLocalizedContent()
-            //                             {
-            //                                 StringValue = x.LocalizedValue
-            //                             };
-            //              }
-            //              return null;
-            //          }));
-
-            //CreateMap<DC.ProductPropertyValue, ProductPropertyValue>()
-            //      .ForMember(x => x.Value, op => op.ResolveUsing(x => x.Value))
-            //      .ForMember(x => x.LocalizedValue, op => op.ResolveUsing(x =>
-            //          {
-            //              if (x.Content != null)
-            //              {
-            //                  return x.Content.StringValue;
-            //              }
-            //              return null;
-            //          }));
-
-
 
             CreateMap<DC.ProductInCatalogInfo , ProductInCatalogInfo>()
                 .ForMember(x => x.CatalogId, op => op.ResolveUsing(dc => dc.CatalogId ))
@@ -542,6 +511,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.ProductCode, op => op.Ignore())
                 ;
 
+            CreateMap<DC.ProductImageGroup, ProductImageGroup>();
+            CreateMap<ProductImageGroup, DC.ProductImageGroup>();
+
+            CreateMap<DC.ProductImageGroupTag, ProductImageGroupTag>();
+            CreateMap<ProductImageGroupTag, DC.ProductImageGroupTag>();
 
             CreateMap<Mozu.Core.Api.Contracts.Measurement, UnitOfMeasure>()
                 //todo: confirm unit -> symbol mappings Greg Murray on 2014-01-24 

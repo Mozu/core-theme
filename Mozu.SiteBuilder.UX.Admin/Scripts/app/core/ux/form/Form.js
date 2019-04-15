@@ -21,6 +21,7 @@ Ext.define('Taco.core.ux.form.Form', {
 
     createTitle: 'Create',
     editTitle: 'Edit',
+    showTitle: true,
     model: '',
     storeType: '',
     tasksKeyPrefix: '',
@@ -54,11 +55,11 @@ Ext.define('Taco.core.ux.form.Form', {
     componentCls: Taco.baseCSSPrefix + 'formform',
 
     basicFormConfigs: [
-        'api', 
-        'baseParams', 
-        'errorReader', 
+        'api',
+        'baseParams',
+        'errorReader',
         'jsonSubmit',
-        'method', 
+        'method',
         'paramOrder',
         'paramsAsHash',
         'reader',
@@ -82,7 +83,7 @@ Ext.define('Taco.core.ux.form.Form', {
             record: this.record
         });
 
-        if (this.title) {
+        if (this.showTitle && this.title) {
             this.originalTitle = this.title;
         }
 
@@ -170,6 +171,19 @@ Ext.define('Taco.core.ux.form.Form', {
         if (this.cascadeChildTasks) {
             this.addChildSaveTasks(tasks);
         }
+
+        if (this.record) {
+            var override = this.record.get('_override');
+
+            if (override !== null && override !== undefined) {
+                for (var property in override) {
+                    if (override.hasOwnProperty(property)) {
+                        this.record.set(property, override[property]);
+                    }
+                }
+            }
+        }
+
         if (updateRecord !== false) {
             tasks.add({
                 updateRecord: this.record,
@@ -180,7 +194,7 @@ Ext.define('Taco.core.ux.form.Form', {
             saveTask = {
                 saveRecord: this.record
             };
-            
+
             tasks.add(saveTask);
         }
         this.addStoreSaveTasks(tasks);
@@ -224,8 +238,6 @@ Ext.define('Taco.core.ux.form.Form', {
         return res;
     },
 
-    
-
     findField: function (id) {
         return this.getForm().findField(id);
     },
@@ -245,8 +257,8 @@ Ext.define('Taco.core.ux.form.Form', {
         field, data, val, bucket, name;
 
         for (f = 0; f < fLen; f++) {
-            field = fields[f];            
-            
+            field = fields[f];
+
             if (!dirtyOnly || field.isDirty()) {
                 data = field[useDataValues ? 'getModelData' : 'getSubmitData'](includeEmptyText);
 
@@ -292,6 +304,7 @@ Ext.define('Taco.core.ux.form.Form', {
         if (asString) {
             values = Ext.Object.toQueryString(values);
         }
+
         return values;
     },
 
@@ -304,11 +317,14 @@ Ext.define('Taco.core.ux.form.Form', {
     initTitle: function () {
         var tplInput, data, tpl;
 
+        if (!this.showTitle) {
+            return;
+        }
 
         if (this.originalTitle) {
             return;
         }
-        
+
         tplInput = this.isEdit() ? this.editTitle : this.createTitle;
         data = Ext.apply({}, {
             record: this.record
@@ -389,11 +405,14 @@ Ext.define('Taco.core.ux.form.Form', {
 
         if (field) {
             field.batchChanges(function () {
-                field.setValue(value);
-                field.initValue();
-                if (me.getForm().trackResetOnLoad) {
-                    field.resetOriginalValue();
+                try {
+                    field.setValue(value);
+                    field.initValue();
+                    if (me.getForm().trackResetOnLoad) {
+                        field.resetOriginalValue();
+                    }
                 }
+                catch(error) {}
             });
         }
     },
@@ -438,8 +457,8 @@ Ext.define('Taco.core.ux.form.Form', {
         if (this.beforeAsyncSave) {
             this.beforeAsyncSave().then(function (result) {
                 if (result) {
-                    me.addSaveTasks(me.saveTasks);            
-                    me.fireEvent('beforesaveexecute', me);            
+                    me.addSaveTasks(me.saveTasks);
+                    me.fireEvent('beforesaveexecute', me);
                     me.saveTasks.execute();
                 }
 
@@ -450,8 +469,8 @@ Ext.define('Taco.core.ux.form.Form', {
         }
 
         else if (this.beforeSave() !== false) {
-            this.addSaveTasks(this.saveTasks);            
-            this.fireEvent('beforesaveexecute', this);            
+            this.addSaveTasks(this.saveTasks);
+            this.fireEvent('beforesaveexecute', this);
             this.saveTasks.execute();
         }
     },

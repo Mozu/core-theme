@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.view.fileManager.Associator
  * @author Travis Johnson
  * The File Manager Browser Modal
@@ -29,9 +29,11 @@ Ext.define('Taco.view.fileManager.Associator', {
     },
     initComponent: function () {
         var selModel = this.selModel || new Ext.selection.CheckboxModel;
+        selModel.pruneRemoved = false;
+        selModel.checkOnly = true;
 
         this.selected = selModel.selected;
-
+        
         this.store = Taco.core.data.StoreManager.getOrCreate('Taco.shared.store.Files', {
             autoSync: true
         });

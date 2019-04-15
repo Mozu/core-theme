@@ -145,6 +145,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ProductLocalizedImage> ProductImages { get; set; }
 
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ProductImageGroup> ProductImageGroups { get; set; }
+
         #endregion
 
         #region Price

@@ -1,24 +1,23 @@
-﻿
+
 /**
- * @class Taco.view.productRanking.modal.ProductRankingEditor
+ * @class Taco.view.product.images.ImageGroupEditor
  */
 
-Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
+Ext.define('Taco.view.product.images.ImageGroupEditor', {
     extend: 'Taco.core.ux.window.Drawer',
 
     requires: [
-        'Taco.view.productRanking.Form',
+        'Taco.view.product.images.ImageGroupForm',
         'Taco.core.util.ExceptionWhiner'
     ],
 
-    // this should really be the default;
     closeAction: 'destroy',
-
+    primaryText: 'Update',
     autoShow: true,
     closable: true,
-    cls: Taco.baseCSSPrefix + 'orderform-editor',
+    cls: Taco.baseCSSPrefix + 'imagegroup-editor',
     height: '90%',
-    title: 'New Product Ranking Rule',
+    title: 'Add Image Group',
     width: '80%',
     isCreateMode: true,
     record: null,
@@ -26,6 +25,7 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
     closeOnSave: true,
 
     actionColumnWidth: 50,
+    margin: '20 0 0 0',
 
     resizable: {
         dynamic: true,
@@ -36,31 +36,27 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         preserveRatio: false,
         widthIncrement: 1
     },
-    
+
     initComponent: function (eOpts) {
         var me = this;
 
         this.layout = {
             type: 'fit'
         };
-        
-        // Todo: Need to listen for a navigation (via backbutton) and cancel the navigation if editor is dirty or prompt user to cancel and navigate.
-        // Todo: Create override/mixin/plugin for Ext.Window to add support for relative height and width with min max values.
 
-        this.title = (me.isCreateMode ? 'New Product Ranking Rule' : me.record.get('name'));
+        this.title = (me.isCreateMode ? 'Add Image Group' : 'Edit Image Group');
 
         this.initUi();
 
         this.callParent(arguments);
     },
 
-    onEsc : Ext.emptyFn,
+    onEsc: Ext.emptyFn,
 
     /**
      * Show the loading mask while we wait for the service to respond with the draft record.
      */
-    show: function () {
-
+    show: function() {
         this.callParent(arguments);
 
         if (!this.isCreateMode) {
@@ -70,27 +66,23 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         }
 
     },
-    
+
     /**
      * Call the service to reload the data.
      */
-    reloadData: function () {
+    reloadData: function() {
         this.loadRecord();
     },
 
     /**
      * Call the service and get an updated record.
      */
-    loadRecord: function () {
+    loadRecord: function() {
         var me = this;
 
         if (me.isCreateMode) return;
 
         this.setLoading(true);
-        var blockedProductGrid = this.down("#taco-grid-blockedproduct");
-        blockedProductGrid.fireEvent('reloadData', this.record);
-        var pinnedProductGrid = this.down("#taco-grid-pinnedproduct");
-        pinnedProductGrid.fireEvent('reloadData', this.record);
         me.onLoadRecord();
     },
 
@@ -104,68 +96,40 @@ Ext.define('Taco.view.productRanking.modal.ProductRankingEditor', {
         var me = this;
 
         if (me.isCreateMode && !me.record) {
-            me.record = Ext.create('Taco.model.ProductRanking', {});
+            me.record = Ext.create('Taco.model.ImageGroup', {});
         }
 
-        me.container = Ext.create('Taco.view.productRanking.Form', {
+        me.form = Ext.create('Taco.view.product.images.ImageGroupForm', {
             autoScroll:true,
             useFixedPosition: false,
+            attributes: me.attributes,
             record: me.record,
+            product: me.product,
             isCreate: me.isCreateMode,
-            isCatalogLevel: true,
-            categoryCode: me.categoryCode,
             isPopUp: true,
             enableScrollSpy: false,
-            layout: 'card',
+            layout: 'fit',
             getWrapper: function() {
                 return this;
             }
         });
 
         me.items = [
-            me.container
+            me.form
         ];
-
-        this.dockedItems.push({
-            xtype: 'taco-cardtabtoolbar',
-            cls: 'taco-modal-toolbar',
-            cardPanel: this.container,
-            items: [{
-                title: 'General'
-            }, {
-                title: 'Context'
-            }, {
-                title: 'Promoted Products'
-            }, {
-                title: 'Blocked Products'
-            }]
-        });
-
     },
 
-    onCreate: function(data) {
-        this.saveSuccess(data);
-        this.record = data;
-        Taco.app.fireEvent('productrankingrulecreated', this.record);
-        this.isCreateMode = false;
-        Ext.defer(function() {
-            this.focusEl.focus();
-        }, 1, this);
-    },
-
-    doSave: function () {
-        var me = this,
-            onSuccess = (!me.isCreateMode)
-                    ? me.saveSuccess
-                    : me.onCreate;
-
+    doSave: function() {
+        var me = this;
         var okToSave = me.form.beforeSave();
+
         if (!okToSave) {
             return false;
         }
+
         this.record = me.form.record;
         this.record.save({
-            success: onSuccess,
+            success: me.saveSuccess,
             failure: function(item, response) {
                 Taco.core.util.ExceptionWhiner.handleRemoteFailure(response);
             },

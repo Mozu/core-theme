@@ -49,6 +49,7 @@ Ext.define('Taco.view.product.Form', {
                 items: this.tabItems
             })
         ];
+
         this.callParent(arguments);
     },
 
@@ -172,11 +173,43 @@ Ext.define('Taco.view.product.Form', {
     /**
      * Tamper with the model before it saves to the server.
      */
-    beforeSave: function () {
+    beforeSave: function() {
         // when saving a product which is a BundleComponent, we cannot include any extras or the service will shit a brick. bug #27643
         if (this.record.get('productUsage') === 'Component') {
             this.record.set('extras', []);
         }
+
+        var selectedOption = this.record.get('options').find(function(option) {
+            return option.isProductImageGroupSelector;
+        });
+
+        if (selectedOption) {
+            var imageGroups = this.record.get('productImageGroups');
+
+            this.record.set('productImageGroups', imageGroups.filter(function(group) {
+                group.productImageGroupTags = group.productImageGroupTags.filter(function(tag) {
+                    return tag.fqn === selectedOption.attributeFQN;
+                });
+
+                return (
+                    group.productImageGroupId === 'default' ||
+                    group.productImageGroupTags.length !== 0
+                );
+            }));
+        }
+
+        var productImages = this.record.get('productImages');
+        var sequence = 0
+        Ext.Array.each(productImages, function(image, idx){
+            if(idx > 0 && image.productImageGroupId !== productImages[idx-1].productImageGroupId){
+                sequence = 0;
+            }
+            image.sequence = sequence;
+            sequence++;
+            return
+        });
+
+        this.record.set('productImage', productImages); 
 
         return this.callParent(arguments);
     },
@@ -191,23 +224,23 @@ Ext.define('Taco.view.product.Form', {
         var productRecord = this.record,
             variantStore = this.record.getVariations(false),
             variantSaveTask;
-        
+
         this.callParent(arguments);
 
-       
         variantSaveTask = tasks.tasks.findBy(function (innerTask) {
             return innerTask.store == variantStore;
-        })
+        });
+
         if (variantSaveTask) {
             tasks.tasks.remove(variantSaveTask);
         }
+
         tasks.add({
             store: variantStore,
             dependencyFilter: function (innerTask) {
                 return innerTask.saveRecord == productRecord;
             }
         });
-        
 
         return tasks;
     },
@@ -220,14 +253,12 @@ Ext.define('Taco.view.product.Form', {
         if (this.inSitesStore.getById(catalogId)) {
             return;
         }
-        
-        
 
         var siteInfo = Ext.create('Taco.model.ProductInCatalogInfo', {
             catalogId: catalogId,
             productCode:this.record.getId()
         });
-        
+
         //  Crazy Thom code, to get magical things to happen....but not really
         siteInfo.phantom = true;
         this.inSitesStore.add(siteInfo);
@@ -242,7 +273,6 @@ Ext.define('Taco.view.product.Form', {
      * @param  {String} siteId The ID of the site to remove the product from
      */
     resetCatalogs: function (catalogIds) {
- 
         var inactiveRecords = [];
         var newRecords = [];
         var currentRecordIds = this.inSitesStore.data.items.map(function(rec) { return rec.get('catalogId');});
@@ -250,16 +280,16 @@ Ext.define('Taco.view.product.Form', {
         var addCatalogs = Ext.Array.difference(catalogIds, currentRecordIds);
         var removeCatalogs = Ext.Array.difference(currentRecordIds, catalogIds);
 
-        this.inSitesStore.each(function(rec) { 
+        this.inSitesStore.each(function(rec) {
             if (removeCatalogs.indexOf(rec.get('catalogId')) !== -1) {
-                inactiveRecords.push(rec); 
+                inactiveRecords.push(rec);
             }
         });
 
         Ext.Array.each(addCatalogs, function(id) {
             newRecords.push(this.getNewCatalog(id));
         }, this);
-        
+
         this.inSitesStore.remove(inactiveRecords);
 
         this.inSitesStore.add(newRecords);
@@ -272,7 +302,6 @@ Ext.define('Taco.view.product.Form', {
                 this.tabItems.push(siteForm)
             }, this);
         }
-       
     },
 
     onTabClose: function (tab, catalogId) {

@@ -36,5 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "imageName")]
         public string ImageName { get; internal set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string ProductImageGroupId { get; set; }
     }
 }

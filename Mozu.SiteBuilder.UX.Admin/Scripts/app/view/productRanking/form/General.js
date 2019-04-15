@@ -177,7 +177,7 @@ Ext.define('Taco.view.productRanking.form.General', {
                                     minLength: 3,
                                     maxLength: 200,
                                     enforceMaxLength: true
-                                }, 
+                                },
                                 {
                                     name: 'code',
                                     fieldLabel: 'Code',

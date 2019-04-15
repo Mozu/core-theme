@@ -63,13 +63,11 @@ Ext.define('Taco.shared.view.field.Image', {
     filters: null,
     imageMetadata: null,
     isMetadataMerged: false,
-    
+
     initComponent: function () {
         this.selectedImages = Ext.create('Taco.shared.store.Files', {
-
             listeners: {
                 datachanged: this.onSelectedImagesDataChanged,
-               
                 scope:this
             }
         });
@@ -96,7 +94,7 @@ Ext.define('Taco.shared.view.field.Image', {
             hidden: true,
             selectedItemCls: 'selected',
             store: this.selectedImages,
-            tpl :[ 
+            tpl :[
                     '<tpl foreach=".">',
                         '<tpl if="isUploaded === false">',
                             '<li class="item uploading">',
@@ -104,8 +102,11 @@ Ext.define('Taco.shared.view.field.Image', {
                             '</li>',
                         '<tpl else>',
                             '<li class="item image newLoad">',
-                                '<div class="image-name">{imageName}</div>',
-                                '<div class="image-name">{name}</div>',
+                                    '<tpl if="imageName != null">',
+                                        '<div title="{imageName}" class="image-name" style="width: ' + (this.thumbnailSize) + 'px;">{imageName}</div>',  
+                                    '<tpl else>',
+                                    '<div title="{name}" class="image-name" style="width: ' + (this.thumbnailSize) + 'px;">{name}</div>',  
+                                    '</tpl>',
                                 '<div class="square" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')" title="{alt:htmlEncode}">',
                                     '<ul class="toolbar">',
                                         '<li class="drag-handle" title="Drag to Resequence">Drag</li>',
@@ -168,16 +169,16 @@ Ext.define('Taco.shared.view.field.Image', {
             { xtype: 'component', html: ' | ', autoEl: { tag: 'span' } },
             this.fileManagerAction
         ];
-       
+
         this.callParent(arguments);
-        
+
         this.mon(Taco.app, 'dragenter', function(e) {
             var el = this.getEl();
             if (el) {
                 el.addCls('drag-and-drop-active');
             }
         }, this);
-        
+
         this.mon(Taco.app, 'dragleave', function(e) {
             var el = this.getEl();
             if (el) {
@@ -305,7 +306,7 @@ Ext.define('Taco.shared.view.field.Image', {
                 data.view.store.remove(records);
 
                 index = store.indexOf(dropRecord);
-                
+
                 if (position === 'after') {
                     index++;
                 }
@@ -321,6 +322,9 @@ Ext.define('Taco.shared.view.field.Image', {
             e.stopPropagation();
             e.preventDefault();
             this.selectedImages.remove(record);
+            if (this.onImageRemoved) {
+                this.onImageRemoved(record);
+            }
         }
         else if (Ext.fly(e.target).hasCls('alt-text')) {
             e.stopPropagation();
@@ -347,14 +351,13 @@ Ext.define('Taco.shared.view.field.Image', {
         }
 
         this.imageDropZoneEl = this.imageView.getEl().down('.taco-image-drop');
-        
 
         if (!this.imageDropZoneEl || this.imageDropZoneEl.bindImageUpload) {
             return;
         }
-        
+
         this.imageDropZoneEl.bindImageUpload = true;
-    
+
 
         this.imageDropZoneEl.on({
             dragenter: function (e) {
@@ -368,7 +371,6 @@ Ext.define('Taco.shared.view.field.Image', {
                 e.stopPropagation();
                 e.preventDefault();
                 this.fireEvent('filedrop', files);
-                
                 this.onValidDragLeave(e, this.imageDropZoneEl);
                 this.getEl().removeCls('drag-and-drop-active');
             },
@@ -376,8 +378,8 @@ Ext.define('Taco.shared.view.field.Image', {
         });
     },
 
-    onBeginUpload: function (files) {
-        if ( this.allowMulti ===false) {
+    onBeginUpload: function(files) {
+        if ( this.allowMulti === false) {
             this.selectedImages.removeAll();
         }
         this.selectedImages.add(files);
@@ -418,7 +420,7 @@ Ext.define('Taco.shared.view.field.Image', {
             scope: this
         });
 
-
+        this.onSelectedImagesDataChanged();
     },
 
     isEqual: function (value1, value2) {
@@ -447,7 +449,6 @@ Ext.define('Taco.shared.view.field.Image', {
     //},
 
     onAssociatorClick: function () {
-        
         var cfg = this.allowMulti === false ? { selModel:'rowmodel'}: {};
         var associator = Ext.create('Taco.view.fileManager.Associator', cfg);
 
@@ -457,12 +458,11 @@ Ext.define('Taco.shared.view.field.Image', {
                 fn: 'onAssociatorSave'
             }
         });
-        
     },
 
     onSelectedImagesDataChanged: function () {
         var value = [];
-
+        
         //merge product/category images metadata with cms file data
         if (this.imageMetadata) {
             for (var i = 0; i < this.imageMetadata.length; i++) {
@@ -493,19 +493,23 @@ Ext.define('Taco.shared.view.field.Image', {
             this.imageView.hide();
         }
 
+        if (this.onValueChanged) {
+            this.onValueChanged(value);
+        }
+
         return this.mixins.field.setValue.call(this, value);
     },
-    
-    setValue: function (value) {
-       
+
+    setValue: function(value) {
         if (!value ) {
             value = [];
         }
+
         if (!Ext.isArray(value)) {
             value = [value];
         }
-            
-        Ext.each(value, function (val) {
+
+        Ext.each(value, function(val) {
             if (val.isModel) {
                 return;
             } else {
@@ -522,7 +526,7 @@ Ext.define('Taco.shared.view.field.Image', {
 
         return this.onSelectedImagesDataChanged();
     },
-    
+
     getValue:function () {
         var val = this.mixins.field.getValue.apply(this, arguments);
         if (this.allowMulti === false) {
@@ -535,10 +539,22 @@ Ext.define('Taco.shared.view.field.Image', {
     },
 
     onAssociatorSave: function (associator, selectedRecords) {
-        if ( this.allowMulti ===false) {
+        if (this.allowMulti === false) {
             this.selectedImages.removeAll();
         }
-        this.selectedImages.add(selectedRecords);  
+        
+        try {
+            // loop through all images and do not attempt to re-add image that already exists
+            Ext.Array.forEach(this.selectedImages.data.items, function (item) {
+                for (i = 0; i < selectedRecords.length; i++) {
+                    if (item.internalId == selectedRecords[i].internalId) {
+                        selectedRecords.splice(i, 1);
+                    }
+                }
+            });
+            this.selectedImages.add(selectedRecords);
+        }
+        catch(error) {}
     },
 
     onImageUploadComplete: function (uploadedFile) {

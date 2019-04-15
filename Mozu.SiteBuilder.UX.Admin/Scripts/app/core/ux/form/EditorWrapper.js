@@ -90,7 +90,7 @@
 
         this.relayEvents(this.form, ['beforeload', 'afterload', 'change']);
     },
-    
+
     onBeforeRender: function () {
         this.dirtybutton = this.down('button#save');
 
@@ -113,9 +113,9 @@
 
             },
             // fire when the client code cancels save during a call to the beforeSave method on the form class;
-            // Typically this is a client side validation error; 
+            // Typically this is a client side validation error;
             // The form is responsible to call setMessage to display the errors or update the form fields with error messaging where appropriate;
-            beforesavefailure: function (view, errors) {                                
+            beforesavefailure: function (view, errors) {
                 this.saveFailure(arguments)
             },
             // fire when a service returns an error saving the record;

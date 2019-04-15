@@ -299,7 +299,12 @@
             this.setPublishStatus();
         }
 
-        this.formCfg = Ext.apply(this.formCfg || {}, { options: this.options, isDuplicate:this.isDuplicate });
+        this.formCfg = Ext.apply(this.formCfg || {}, {
+            options: this.options,
+            isDuplicate:this.isDuplicate,
+            productTypeRecord: this.record.productTypeRecord
+        });
+
         this.callParent(arguments);
     },
 

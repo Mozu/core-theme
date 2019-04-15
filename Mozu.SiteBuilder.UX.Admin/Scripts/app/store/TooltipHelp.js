@@ -114,6 +114,12 @@ Ext.define('Taco.store.TooltipHelp', {
             key: 'settings.general.missingImage',
             value: 'Upload or select an image: This will be used as a replacement for all missing images on your storefront'
         }, {
+            key: 'product.images.useProductImageGroups',
+            value: 'Placeholder'
+        }, {
+            key: 'product.images.productTypeOption',
+            value: 'Placeholder'
+        }, {
             key: 'product.general.dateFirstAvailable',
             value: 'This field specifies the intended date when the product either first becomes or became available. Use this field to reference the product in an expression that uses the Days Available in Catalog entity. Setting this field to a future date doesn’t automatically publish the product live on that date.'
         }, {

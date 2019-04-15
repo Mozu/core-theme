@@ -312,6 +312,7 @@ Ext.define('Taco.model.Product', {
                 Ext.Array.forEach(v, function(img) {
                     img.alt = Ext.util.Format.htmlEncode(img.alt);
                 });
+
                 return v;
             }
         },
@@ -478,7 +479,7 @@ Ext.define('Taco.model.Product', {
         {
             name: "properties",
             type: 'auto',
-            serialize: function (v) {
+            serialize: function(v) {
                 // BUG 58777
                 // need to format any property values that are dates so we can adjust for user timezone;
                 // iterate each property looking for date values and serialize them with timezone offset;
@@ -560,11 +561,16 @@ Ext.define('Taco.model.Product', {
             name: "standAlonePackageType",
             type: "string",
             defaultValue: "CUSTOM"
+        }, {
+            name: 'productImageGroups',
+            type: 'auto'
+        }, {
+            name: 'dirtyControl',
+            type: 'auto',
+            useNull: true
         }
-        
     ],
-    loadRuntimeProduct: function (cfg) {
-
+    loadRuntimeProduct: function(cfg) {
         var me = this,
             options = Ext.apply({}, {
                 url: '/admin/app/productruntime/read?productCode=' + this.getId(),
@@ -782,10 +788,9 @@ Ext.define('Taco.model.Product', {
             proxy;
         autoLoad = (autoLoad !== false);
 
-        if (me.productVariationStore) {            
+        if (me.productVariationStore) {
             return me.productVariationStore;
         }
-        
 
         me.productVariationStore = Ext.create('Ext.data.Store', {
             model: 'Taco.model.ProductVariation',
@@ -793,7 +798,7 @@ Ext.define('Taco.model.Product', {
             pageSize: 1000,
             listeners:{
                 beforeload: function (store, operation) {
-                    
+
                     params.options = [];
                     me.getOptions().each(function (option) {
                         params.options.push({
@@ -810,7 +815,7 @@ Ext.define('Taco.model.Product', {
                     if (!proxy.extraParams) {
                         proxy.extraParams = {};
                     }
-                    
+
                     if (me.data.productCode) {
                         proxy.extraParams.productCode = me.data.productCode;
                     }
@@ -818,8 +823,6 @@ Ext.define('Taco.model.Product', {
                     proxy.extraParams.tempProductCode = params.tempProductCode;
                     proxy.extraParams.productTypeId = params.productTypeId;
                     proxy.extraParams.options = params.options;
-                    
-
                 },
                 scope: this
             }
@@ -827,10 +830,7 @@ Ext.define('Taco.model.Product', {
             //,
 
             //loadFromOptions: function () {
-                
             //    return;
-                
-
             //    var beforeState =[];
             //    //if (me.productVariationStore && me.productVariationStore.data && me.productVariationStore.data.items) {
             //    //    beforeState = Ext.Array.pluck(me.productVariationStore.data.items, 'internalId')
@@ -846,25 +846,21 @@ Ext.define('Taco.model.Product', {
             //    params.productTypeId = me.get('productTypeId');
             //    params.options = Ext.JSON.encode(params.options);
 
-                
-
             //    proxy = this.getProxy();
 
             //    if (!proxy.extraParams) {
             //        proxy.extraParams = {};
             //    }
-                
-            //    if (me.data.productCode) {                    
+            //    if (me.data.productCode) {
             //        proxy.extraParams.productCode = me.data.productCode;
             //    }
-               
             //    proxy.extraParams.tempProductCode = params.tempProductCode;
             //    proxy.extraParams.productTypeId = params.productTypeId;
             //    proxy.extraParams.options = params.options;
 
 
             //    this.load({
-            //        //params: params,                    
+            //        //params: params,
             //        callback: function (records, operation, success) {
 
             //            if (!success) {
@@ -872,12 +868,10 @@ Ext.define('Taco.model.Product', {
             //                var json = Ext.decode(operation.error.responseText, true);
             //                var msg = json.message;
             //                Taco.app.fireEvent('setmessage', msg, 'error');
-            //                return 
+            //                return
             //            }
 
-                        
-
-            //            //Ext.Array.each(records, function (newRecord) {                           
+            //            //Ext.Array.each(records, function (newRecord) {
 
             //            //    // this whole section needs to go away.
             //            //    // if this is a new product, default the enabled option on for all new options
@@ -894,7 +888,7 @@ Ext.define('Taco.model.Product', {
             //    });
             //}
         });
-        
+
         proxy = me.productVariationStore.getProxy();
         if (!proxy.extraParams) {
             proxy.extraParams = {};
@@ -914,7 +908,7 @@ Ext.define('Taco.model.Product', {
         //}
 
 
-        this.on('aftercommit', function () {            
+        this.on('aftercommit', function () {
             me.productVariationStore.proxy.extraParams.productCode = this.getId();
         }, me);
 
@@ -942,10 +936,10 @@ Ext.define('Taco.model.Product', {
     * service call to update the productCode on a product and/or its variations
     * @param {Object} config  A configuration object should contain jsonData array
     * config object:
-    * 
+    *
         {
             jsonData: [
-                {   
+                {
                     // one of these for the base product and one for each variation that has changed;
                     existingProductCode: '1234',v
                     newProductCode: "asdf",
@@ -990,7 +984,7 @@ Ext.define('Taco.model.Product', {
             }
         });
 
-        this.commit();        
+        this.commit();
     },
 
     idProperty: 'productCode',

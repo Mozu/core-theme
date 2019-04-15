@@ -481,27 +481,27 @@ Ext.define('Taco.view.product.subform.General', {
             }
         });
 
-        this.imagesConfig = {
-            fieldLabel: 'Product Image',
-            name: 'productImages',
-            xtype: 'taco.imagefield',
-            width: '100%',
-            margin: '20 0 0 0',
-            imageMetadata: me.record.get('productImages'),
-            filters: function () {
-                var existingImages = me.record.get('productImages'),
-                    result = [];
-                if (!existingImages || existingImages.length === 0) return null;
-                Ext.Array.each(existingImages, function (img) {
-                    result.push({
-                        property: 'id',
-                        value: img.cmsId,
-                        alt: img.alt
-                    });
-                });
-                return result;
-            }()
-        };
+        // this.imagesConfig = {
+        //     fieldLabel: 'Product Image',
+        //     name: 'productImages',
+        //     xtype: 'taco.imagefield',
+        //     width: '100%',
+        //     margin: '20 0 0 0',
+        //     imageMetadata: me.record.get('productImages'),
+        //     filters: function () {
+        //         var existingImages = me.record.get('productImages'),
+        //             result = [];
+        //         if (!existingImages || existingImages.length === 0) return null;
+        //         Ext.Array.each(existingImages, function (img) {
+        //             result.push({
+        //                 property: 'id',
+        //                 value: img.cmsId,
+        //                 alt: img.alt
+        //             });
+        //         });
+        //         return result;
+        //     }()
+        // };
 
         this.activeStartDateField = Ext.widget({
             xtype: 'datetime',
@@ -621,6 +621,14 @@ Ext.define('Taco.view.product.subform.General', {
             }
         };
 
+        var dirtyControl = {
+            xtype: 'textfield',
+            allowBlank: true,
+            name: 'dirtyControl',
+            hidden: true,
+            required: true
+        };
+
         var productOverride = {
             xtype: 'productoverride',
             itemId: 'contentOverride',
@@ -672,11 +680,12 @@ Ext.define('Taco.view.product.subform.General', {
                 }
             ]
         });
-        productOverride.items.push(this.imagesConfig);
+        // productOverride.items.push(this.imagesConfig);
 
         if (this.isGlobal) {
             this.items = [
                 productTitle,
+                dirtyControl,
                 {
                     xtype: 'fieldcontainer',
                     layout: 'hbox',
@@ -915,7 +924,7 @@ Ext.define('Taco.view.product.subform.General', {
         };
 
 
-        this.items.push (this.priceOverRideConfig);
+        this.items.push(this.priceOverRideConfig);
 
         var dateFirstAvailable = this.productInCatalogInfo ? this.productInCatalogInfo.get('dateFirstAvailableInCatalog') : "";
         if (Ext.isEmpty(dateFirstAvailable)) {
@@ -1199,15 +1208,19 @@ Ext.define('Taco.view.product.subform.General', {
     },
 
     beforeSave: function () {
-        var uploadedImages = [],
-            form = this.getForm(),
-            productImagesField = form.findField("productImages");
+        // var uploadedImages = [],
+        //     form = this.getForm(),
+        //     productImagesField = form.findField("productImages");
 
-        if (productImagesField) {
-            uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
-                return img.isUploaded;
-            });
-        }
+        // if (productImagesField) {
+        //     uploadedImages = Ext.Array.filter(productImagesField.getValue(), function(img) {
+        //         return img.isUploaded;
+        //     });
+        // }
+
+        var uploadedImages = Ext.Array.filter(this.record.data.productImages, function(img) {
+            return img.isUploaded;
+        });
 
         var dateFirstAvailableInCatalog = this.findField("dateFirstAvailableInCatalog");
         if (this.productInCatalogInfo) {

@@ -104,7 +104,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         {
                             xtype: 'combobox',
                             grow: false,
-                            growToLongestValue: false,                            
+                            growToLongestValue: false,
                             name: this.getFieldName(ptAttribute),
                             fieldLabel: ptAttribute.get('adminName'),
                             displayField: 'value',
@@ -180,7 +180,7 @@ Ext.define('Taco.view.product.subform.Properties', {
 
     },
 
-    beforeSave: function () {
+    beforeSave: function() {
         if (this.productType == null) {
             return;
         }
@@ -188,7 +188,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         var form = this.getForm(),
             properties = this.product.getProperties();
 
-        this.productTypeProperties.each(function (record) {
+        this.productTypeProperties.each(function(record) {
             var fieldName = this.getFieldName(record),
                 values = null,
                 field = form.findField(fieldName),
@@ -212,7 +212,7 @@ Ext.define('Taco.view.product.subform.Properties', {
         }, this);
     },
 
-    loadByProductTypeId: function (id) {
+    loadByProductTypeId: function(id) {
         var type,
             properties,
             items = [],

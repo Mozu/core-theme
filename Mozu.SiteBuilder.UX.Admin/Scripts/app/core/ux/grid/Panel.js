@@ -31,7 +31,7 @@ Ext.define('Taco.core.ux.grid.Panel', {
      * @cfg {Object} columnDefaults
      * This option is a means of applying default settings to all added columns. Defaults are applied so as not
      * to override existing properties (see {@link Ext#applyIf}).
-     */ 
+     */
     columnDefaults: {},
 
     initComponent: function () {

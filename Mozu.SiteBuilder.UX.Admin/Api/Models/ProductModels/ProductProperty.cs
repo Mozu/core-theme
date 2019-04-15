@@ -17,6 +17,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "exists")]
         public bool? VariationExists { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? IsProductImageGroupSelector { get; set; }
     }
 
 

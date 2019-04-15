@@ -43,12 +43,12 @@ nuget Mozu.InstalledApps.Contracts < 1.20
 nuget Mozu.Location.Contracts >= 1.1806.1
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
-nuget Mozu.ProductAdmin.Contracts 1.1911.1
-nuget Mozu.ProductRuntime.Contracts 1.1903.1
+nuget Mozu.ProductAdmin.Contracts 1.1916.0-develop-6
+nuget Mozu.ProductRuntime.Contracts 1.1916.0-develop-6
 nuget Mozu.Provisioning.Contracts < 1.20
 nuget Mozu.Reference.Contracts < 1.20
 nuget Mozu.ShippingAdmin.Contracts >= 1.1643
-nuget Mozu.PricingRuntime.Contracts 1.1816.1
+nuget Mozu.PricingRuntime.Contracts >= 1.1916.0-develop-6
 nuget Mozu.SiteSettings.General.Contracts 1.1840.3
 nuget Mozu.SiteSettings.Order.Contracts 1.1840.3
 nuget protobuf-net 2.0.0.668

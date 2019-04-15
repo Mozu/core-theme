@@ -54,6 +54,9 @@
                 .image-name {
                     font-size: 14px;
                     margin-bottom: 2px;
+                    overflow: hidden; 
+                    white-space: nowrap; 
+                    text-overflow: ellipsis;
                 }
 
                 &.active {

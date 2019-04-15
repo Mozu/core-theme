@@ -3,7 +3,6 @@
 */
 Ext.define('Taco.view.sortDefinition.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
-    //cls: Taco.baseCSSPrefix + 'searchlist',
 
     requires: [
         'Taco.model.SortDefinition',

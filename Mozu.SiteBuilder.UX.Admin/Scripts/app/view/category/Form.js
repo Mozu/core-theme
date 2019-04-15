@@ -396,7 +396,6 @@ Ext.define("Taco.view.category.Form", {
             })
         );
 
-
         this.callParent(arguments);
 
         me.mon(me, "boxready", function() {

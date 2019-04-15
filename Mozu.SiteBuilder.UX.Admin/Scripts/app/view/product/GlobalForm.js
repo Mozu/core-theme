@@ -10,6 +10,7 @@ Ext.define('Taco.view.product.GlobalForm', {
     alias: 'widget.productglobalform',
     requires: [
         'Taco.view.product.subform.General',
+        'Taco.view.product.subform.Images',
         'Taco.view.product.subform.Bundle',
         'Taco.view.product.subform.Options',
         'Taco.view.product.subform.Inventory',
@@ -58,7 +59,8 @@ Ext.define('Taco.view.product.GlobalForm', {
                 product: this.record,
                 productForm: this.productForm,
                 persistChangesToModel: true,
-                hidden:false
+                hidden:false,
+                globalForm: this
             },
             items = [];
 
@@ -86,6 +88,7 @@ Ext.define('Taco.view.product.GlobalForm', {
         Ext.Array.push(items, [
             Ext.create('Taco.view.product.subform.Inventory', subFormCfg),
             Ext.create('Taco.view.product.subform.Options', subFormCfg),
+            Ext.create('Taco.view.product.subform.Images', subFormCfg),
             Ext.create('Taco.view.product.subform.Properties', subFormCfg),
             Ext.create('Taco.view.product.subform.Extras', subFormCfg),
             Ext.create('Taco.view.product.subform.Shipping', subFormCfg),
