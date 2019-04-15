@@ -2,7 +2,6 @@
     Component,
     OnInit,
     OnDestroy,
-    ChangeDetectionStrategy,
     Input
 } from '@angular/core';
 
@@ -12,11 +11,10 @@ import { LoggerService } from '@core';
 
 import { NavigationService } from './navigation.service';
 
-import { TopNavigationFlag } from '@shared/infrastructure/enums';
+import { NavigationContainerType } from '@shared/infrastructure/enums';
 
 @Component({
     moduleId: module.id,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'navigation',
     templateUrl: './navigation.component.html',
     styleUrls: ['./navigation.component.css'],
@@ -26,8 +24,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     subscriptions: Subscription[];
     cartCount: number;
-    @Input() navigationFlag: string;
-    allNavigationFlag = TopNavigationFlag;
+    @Input() navigationContainerType: string;
+    navigationType = NavigationContainerType;
 
     constructor(
         private _loggerService : LoggerService

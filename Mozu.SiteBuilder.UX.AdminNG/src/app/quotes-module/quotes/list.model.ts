@@ -1,18 +1,4 @@
-// export class QuotesModel{
-//     QuoteList: QuoteData[];
-// }
-
-// export class QuoteData{
-//     b2bAccountName: string;
-//     quoteName: string;
-//     buyerName: string;
-//     status: string;
-//     lastModifiedDate: Date;
-//     quoteTotal: number;
-// }
-
-
-export class QuotesModel {
+export class QuotesListModel {
     startIndex: number;
     pageSize: number;
     pageCount: number;

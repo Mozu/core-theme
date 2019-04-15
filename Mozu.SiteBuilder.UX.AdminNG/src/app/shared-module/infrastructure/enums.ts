@@ -12,7 +12,7 @@ export enum RegExType {
     decimalPrecisionFour = <any>'decimalPrecisionFour'
 }
 
-export enum TopNavigationFlag {
+export enum NavigationContainerType {
     dashboard = 'dashboard',
     product = 'product',
     order = 'order',

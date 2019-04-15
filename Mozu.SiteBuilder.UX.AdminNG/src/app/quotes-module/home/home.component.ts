@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, 
+  OnInit } from '@angular/core';
 import { LoggerService } from '@core';
 
 import {
-  TopNavigationFlag
+  NavigationContainerType
 } from '@shared/index';
 
 @Component({
@@ -11,15 +12,10 @@ import {
   styleUrls: ['./home.component.css']
 })
 export class QuoteHomeComponent implements OnInit {
-  quotesNavigation = TopNavigationFlag.quotes;
+  navigationContainerType = NavigationContainerType;
 
-  constructor(private _loggerService : LoggerService) { 
-    this._loggerService.info("QuoteHomeComponent : constructor");
-  }
+  constructor(private _loggerService : LoggerService) { }
 
-  ngOnInit() {
-    this._loggerService.info("QuoteHomeComponent : ngOnInit");
-    
-  }
+  ngOnInit() { }
 
 }

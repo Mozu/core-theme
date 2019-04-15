@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, 
+  OnInit } from '@angular/core';
 
 @Component({
   selector: 'navigation-top-quote',
@@ -9,7 +10,6 @@ export class NavigationTopQuotesComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
 }

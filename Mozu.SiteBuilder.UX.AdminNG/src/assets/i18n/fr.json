@@ -28,7 +28,10 @@
       "helpMenu": "Help",
       "logoutMenu": "Connectez - Out",
       "userMessage": "salut"
-    }      
+    },
+    "pageTitle": {
+      "quotes": "Quotes"
+    }  
   },
   "FOOTER": {
     "proweredBy": "Powered By:",
@@ -63,7 +66,7 @@
     }  
   },
   "QUOTES": {
-    "QUOTES": {
+    "GridHeader": {
       "b2bAccountName": "B2B Account Name",
       "quoteName": "Quote Name",
       "buyerName": "Buyer Name",

@@ -1,3 +1,3 @@
-export * from './quotes.model';
-export * from './quotes.service';
-export * from './quotes.component';
+export * from './list.model';
+export * from './list.service';
+export * from './list.component';

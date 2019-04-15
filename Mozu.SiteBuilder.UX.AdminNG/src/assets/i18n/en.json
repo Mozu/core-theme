@@ -28,6 +28,9 @@
       "helpMenu": "Help",
       "logoutMenu": "Logout",
       "userMessage": "Hi"
+    },
+    "pageTitle": {
+      "quotes": "Quotes"
     }      
   },  
   "FOOTER": {
@@ -57,7 +60,7 @@
   }
 },
 "QUOTES": {
-  "QUOTES": {
+  "GridHeader": {
     "b2bAccountName": "B2B Account Name",
     "quoteName": "Quote Name",
     "buyerName": "Buyer Name",
