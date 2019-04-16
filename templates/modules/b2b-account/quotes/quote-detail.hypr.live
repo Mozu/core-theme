@@ -1,1 +1,24 @@
-{% dump model %}
+<div class="quote-detail-view">
+    <div class="wishlist-btns">
+        <button class="mz-button mz-button-small" data-mz-action="closeQuoteDetail">Back</button>
+    </div>
+    <h2>{{ model.name }} <span class="mz-status closed">STATUS HERE</span></h2>
+    <div class="mz-quote-details">
+        <span class="mz-label">{{ labels.comments }}</span>
+        <div>Here are where some comments go. If there were comment data, it would go here.</div>
+        <span class="mz-label">Request Date</span>
+        <div>{{ model.auditInfo.createDate|date("F j, Y") }}</div>
+    </div>
+    <div>
+      {% if model.items.length %}
+        <table class="mz-table mz-table-cart">
+          {% include "modules/b2b-account/quotes/quote-table" %}
+        </table>
+        {% include "modules/multi-ship-checkout/checkout-order-price-summary" %}
+      {% endif %}
+    </div>
+
+    <div class="mz-btns">
+        <button class="mz-button mz-button-small" data-mz-action="cancelQuote">{{ labels.cancelQuote }}</button>
+    </div>
+</div>

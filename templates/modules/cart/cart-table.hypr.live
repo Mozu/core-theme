@@ -23,6 +23,7 @@
   </tr>
   {% endif %}
 </tbody>
+{% block footer %}
 <tfoot>
   <tr class="mz-carttable-shipping-row">
     <td colspan="4">
@@ -100,3 +101,4 @@
   </tr>
   {% endblock footerbuttons %}
 </tfoot>
+{% endblock footer %}

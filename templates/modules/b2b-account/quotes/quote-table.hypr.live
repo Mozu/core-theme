@@ -1,0 +1,7 @@
+{% extends "modules/cart/cart-table" %}
+{% block itemlisting %}
+{% include "modules/b2b-account/quotes/quote-table-item" with item=item index=forloop.index  %}
+{% endblock itemlisting %}
+
+{% block footer %}
+{% endblock footer %}

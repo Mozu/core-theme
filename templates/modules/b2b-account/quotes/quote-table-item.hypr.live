@@ -1,0 +1,20 @@
+{% extends "modules/cart/cart-table-item" %}
+{% block fullfillment %}
+{% endblock fullfillment %}
+
+{% block quantity %}
+<td class="mz-carttable-item-qty">
+  {{ item.quantity }}
+</td>
+{% endblock quantity %}
+{% block removeItem %}
+{% endblock removeItem %}
+{% block errormessages %}
+{% if item.errorMessages %}
+{% for message in item.errorMessages %}
+<tr>
+  <td class="mz-table-error">{{ message }}</td>
+</tr>
+{% endfor %}
+{% endif %}
+{% endblock %}

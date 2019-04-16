@@ -11,15 +11,14 @@ define([
   "modules/models-product",
   "modules/models-quote",
   "modules/search-autocomplete",
-  "modules/models-cart",
-  "modules/product-picker/product-picker-view",
   "modules/backbone-pane-switcher",
-  "modules/product-picker/product-modal-view",
   "modules/mozu-utilities",
-  "modules/message-handler"
-], function ($, api, _, Hypr, Backbone, HyprLiveContext, MozuGrid, MozuGridCollection, PagingViews, ProductModels, QuoteModels, SearchAutoComplete, CartModels, ProductPicker, PaneSwitcher, ProductModalViews, MozuUtilities, MessageHandler) {
-    var ALL_LISTS_FILTER = "";
-    var USER_LISTS_FILTER = "userId eq " + require.mozuData('user').userId;
+  "modules/message-handler",
+  "modules/models-dialog",
+  "modules/views-modal-dialog"
+], function ($, api, _, Hypr, Backbone, HyprLiveContext, MozuGrid, MozuGridCollection, PagingViews, ProductModels, QuoteModels, SearchAutoComplete, PaneSwitcher, MozuUtilities, MessageHandler, DialogModels, ModalDialogView) {
+    var ALL_QUOTES_FILTER = "Status ne Cancelled";
+    var USER_QUOTES_FILTER = ALL_QUOTES_FILTER + " and userId eq " + require.mozuData('user').userId;
     var QuoteModel = QuoteModels.Quote.extend({
         handlesMessages: true,
         deleteQuote: function (id) {
@@ -80,6 +79,39 @@ define([
         }
     });
 
+    var ConfirmationModel = DialogModels.extend({});
+    var ConfirmationDialogView = ModalDialogView.extend({
+        templateName: "modules/b2b-account/quotes/confirmation-dialog",
+        handleDialogOpen: function (message) {
+            this.$el.find('.mz-confirmation-body').text(message);
+            this.bootstrapInstance.setOptions({width: "300px", hasXButton: false});
+            this.model.trigger('dialogOpen');
+            this.bootstrapInstance.show();
+        },
+        handleDialogCancel: function () {
+            var self = this;
+            this.bootstrapInstance.hide();
+        },
+        handleDialogSave: function () {
+            var self = this;
+            this.bootstrapInstance.hide();
+            var quote = window.views.currentPane.model.get('quote');
+            quote.set('status', 'Cancel');
+            quote.apiUpdate().then(function(response){
+                window.views.currentPane.model.setDetailMode(false);
+                window.views.currentPane.render();
+            });
+        },
+        setInit: function () {
+            var self = this;
+            self.handleDialogOpen();
+        },
+        render: function () {
+            var self = this;
+            self.setInit();
+        }
+    });
+
     var QuotesMozuGrid = MozuGrid.extend({
       render: function(){
           var self = this;
@@ -92,7 +124,11 @@ define([
               var userInQuestion = window.b2bUsers.find(function(user){
                   return (user.userId === quote.get('userId'));
               });
-              quote.set('userFullName', userInQuestion.firstName+' '+userInQuestion.lastName);
+              if (userInQuestion){
+                quote.set('userFullName', userInQuestion.firstName+' '+userInQuestion.lastName);
+              } else {
+                quote.set('userFullName', "N/A");
+              }
           });
           return self.model;
       }
@@ -105,14 +141,21 @@ define([
             Backbone.MozuView.prototype.initialize.apply(this, arguments);
             this.model.set('viewingAllQuotes', true);
         },
-        toggleViewAllLists: function (e) {
-          this._wishlistsGridView.model.setPage(1);
+        closeQuoteDetail: function(){
+          this.model.setDetailMode(false);
+          window.views.currentPane.render();
+        },
+        cancelQuote: function(){
+          window.confDialogView.handleDialogOpen("Are you sure you want to cancel this quote request?");
+        },
+        toggleViewAllQuotes: function (e) {
+          this._quotesGridView.model.setPage(1);
             if (e.currentTarget.checked){
               this.model.set('viewingAllQuotes', true);
-              this._wishlistsGridView.model.filterBy(ALL_LISTS_FILTER);
+              this._quotesGridView.model.filterBy(ALL_QUOTES_FILTER);
             } else {
               this.model.set('viewingAllQuotes', false);
-              this._wishlistsGridView.model.filterBy(USER_LISTS_FILTER);
+              this._quotesGridView.model.filterBy(USER_QUOTES_FILTER);
             }
         },
         render: function () {
@@ -122,13 +165,17 @@ define([
                 this._detailQuote.stopListening();
             }
             var detailQuoteView = new DetailQuoteView({
-                // TODO: CHANGE THIS EL!!
-                el: self.$el.find('.mz-b2b-wishlists-product-picker'),
-                model: self.model.get('quote'),
-                messagesEl: self.$el.find('.mz-b2b-wishlists-product-picker').parent().find('[data-mz-message-bar]')
+                model: self.model.get('quote')
             });
 
             this._detailQuote = detailQuoteView;
+
+            var confDialogView = new ConfirmationDialogView({
+                el: self.el.find('.mz-b2baccount-confirmation-modal'),
+                model: new ConfirmationModel({})
+            });
+
+            window.confDialogView = confDialogView;
 
             $(document).ready(function () {
                 if (!self.model.get('isDetailMode')) {
@@ -157,10 +204,7 @@ define([
             this.originalData = this.model.toJSON() || {};
         },
         submitOrder: function () {
-            console.log("submit order");
-        },
-        closeQuoteDetail: function () {
-          console.log("close quote");
+            window.console.log("submit order");
         },
         render: function () {
             Backbone.MozuView.prototype.render.apply(this, arguments);
@@ -174,13 +218,11 @@ define([
     });
 
     var QuoteListView = Backbone.MozuView.extend({
-        templateName: 'modules/b2b-account/quotes/quote-list'
+        templateName: 'modules/b2b-account/quotes/quote-table'
     });
-
     var MozuGridCollectionModel = MozuGridCollection.extend({
-      //TODO: change to quotes mozutype when data is available
-        mozuType: 'wishlists',
-        filter: ALL_LISTS_FILTER,
+        mozuType: 'quotes',
+        filter: ALL_QUOTES_FILTER,
         columns: [
             {
                 index: 'name',
@@ -206,14 +248,23 @@ define([
             },
             {
                 index: 'status',
-                displayName: 'Status'
+                displayName: 'Status',
+                displayTemplate: function(value){
+                  return value;
+                  //TODO: make status pill here
+                }
             },
             {
-               index: 'price',
-               displayName: 'Price'
+               index: 'total',
+               displayName: 'Price',
+               displayTemplate: function(total){
+                  // TODO: investigate sale price stuff for here?
+                    return '$'+total.toFixed(2);
+                  }
+
             }
         ],
-        defaultSort: 'updateDate desc',
+        defaultSort: 'updateDate asc',
         rowActions: [
             {
                 displayName: 'View',

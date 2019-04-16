@@ -6,15 +6,11 @@
         <button class="mz-button mz-button-small" data-mz-action="saveAndCloseWishlistEdit">Save & Close</button>
     {% endif %}
     </div>
-    {% if not model.quickOrder %}
     <div class="wishlist-edit-form-section">
         <span class="productpicker-label">{{labels.b2bWishlistName}}</span>
         <input type="text" name="name" id="wishlistName" data-mz-value="name" value="{{ model.name }}">
         <span class="mz-validationmessage" data-mz-validationmessage-for="name"></span>
     </div>
-    {% else %}
-    <h3>{{ labels.quickOrder }}</h3>
-    {% endif %}
 
     <div class="wishlist-edit-form-section productPicker">
         <div>

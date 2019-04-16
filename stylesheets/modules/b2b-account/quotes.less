@@ -1,0 +1,82 @@
+.mz-b2b-quotes {
+  .mz-btns {
+     padding: @gutter/4 0 @gutter/4 0;
+     button {
+         margin: 0 @gutter/4 0 0;
+     }
+  }
+  .mz-label {
+    display: block;
+    color: #999;
+    font-size: 80%;
+  }
+  .mz-quote-details {
+    margin-bottom: @gutter
+  }
+
+  .mz-b2b-quotes-grid {
+      position: relative;
+      background-image: url('../resources/images/button-loading.gif');
+      background-repeat: no-repeat;
+      background-position: -9999px -9999px;
+     }
+
+  .mz-b2b-quotes-grid.is-loading {
+      display: block;
+      width: 100%;
+      background-position: 50% 50%;
+      height: 100%;
+      opacity: .5;
+      animation: loadingthrob 1s linear 0s alternate infinite;
+      -webkit-animation: loadingthrob 1s linear 0s alternate infinite;
+  }
+
+
+  .quote-detail-view {
+    width: 75%;
+
+    .mz-confirmation-price-summary {
+      width: 100%;
+    }
+  }
+  @media (max-width: 800px){
+    .quote-detail-view {
+      width: auto;
+    }
+  }
+
+  .mz-status {
+    border: solid 1px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    border-radius: 10px;
+    float: none;
+    line-height: inherit;
+    margin-left: @gutter/2;
+    font-size: @fontSizeSmall;
+    font-weight: normal;
+  }
+
+  .open, .pending {
+    border-color: grey;
+    color: grey;
+  }
+
+  .submitted {
+    border-color: gold;
+    color: gold;
+  }
+  .closed {
+    border-color: green;
+    color: green;
+  }
+
+  .declined, .expired {
+    border-color: darkred;
+    color: darkred;
+  }
+
+}

@@ -88,7 +88,7 @@ define([
             {
                 name: 'Quotes',
                 view: new Quotes.QuotesView({
-                    model: Quotes.QuotesModel({})
+                    model: new Quotes.QuotesModel({})
                 })
             }
         ];

@@ -1,0 +1,12 @@
+{% extends "modules/common/modal-dialog" %}
+
+{% block modal-header-container %}
+{% endblock modal-header-container %}
+{% block modal-body %}
+<div class="mz-confirmation-body"></div>
+{% endblock modal-body %}
+
+{% block modal-footer %}
+    <button type="button" class="mz-button" data-mz-action="handleDialogSave">Cancel Quote</button>
+    <button type="button" class="mz-button" data-mz-action="handleDialogCancel">Never Mind</button>
+{% endblock modal-footer %}
