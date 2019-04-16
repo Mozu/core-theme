@@ -45,9 +45,9 @@ export class NavigationTopShellComponent implements OnInit {
 
   public fetchHomeTabsName = () => {
     this._loggerService.info("NavigationTopComponent : fetchHomeTabsName");
-    this.navigationService.fetchTabsName().subscribe((successResponse : Response) => {
+    this.navigationService.fetchTabsName().subscribe(successResponse => {
     this._loggerService.info("NavigationTopComponent : navigationService.fetchTabsName_SuccessResponse");
-    let responseJson = successResponse.json(); 
+    let responseJson = successResponse
     this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
     this.activeTab = this.model.navigationTabs[0];
     this.changeDetectorRef.detectChanges();

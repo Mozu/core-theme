@@ -74,8 +74,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public pupulateSystemAndMainTiles = () => {
     this._loggerService.info("AdminDashboardComponent : pupulateSystemAndMainTiles");
 
-    this._dashboardService.fetchAllDashboardTiles().subscribe((successResponse : Response) => {
-      let responseJson = successResponse.json();
+    this._dashboardService.fetchAllDashboardTiles().subscribe(successResponse => {
+      let responseJson = successResponse;
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");;
       this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles(responseJson.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
       this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles(responseJson.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));

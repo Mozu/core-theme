@@ -34,7 +34,7 @@ import {
 
 import {
     CustomBrowserXhr,
-    HttpService,
+    
     AuthService
 } from './extensions/index';
 
@@ -52,9 +52,12 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SpinnerService } from './spinner/spinner.service';
 import { ToastrService } from './services/toastr.service';
 
-export function httpServiceFactory(backend: XHRBackend, options: RequestOptions, utilityService: UtilityService, authService: AuthService) {
-    return new HttpService(backend, options, utilityService, authService);
-}
+import { HttpClient } from '@angular/common/http';
+import { HttpClientService, httpClientServiceCreator } from './extensions/http-client.service';
+
+// export function httpServiceFactory(backend: XHRBackend, options: RequestOptions, utilityService: UtilityService, authService: AuthService) {
+//      return new HttpService(backend, options, utilityService, authService);
+// }
 
 @NgModule({
     imports: [
@@ -107,11 +110,17 @@ export function httpServiceFactory(backend: XHRBackend, options: RequestOptions,
             provide: BrowserXhr,
             useClass: CustomBrowserXhr
         },
+        // {
+        //     provide: HttpService,
+        //     useFactory: httpServiceFactory,
+        //     deps: [XHRBackend, RequestOptions, UtilityService, AuthService]
+        // },
         {
-            provide: HttpService,
-            useFactory: httpServiceFactory,
-            deps: [XHRBackend, RequestOptions, UtilityService, AuthService]
-        }
+            provide: HttpClientService,
+            useFactory: httpClientServiceCreator,
+            deps: [HttpClient, UtilityService, AuthService]
+        },
+
     ]
 })
 

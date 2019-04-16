@@ -11,10 +11,11 @@ import { SharedData } from './index';
 
 import {
     AuthService,
-    HttpService,
     UtilityService,
     LoggerService
 } from '@core';
+
+import { HttpClientService } from '@core/extensions/http-client.service'
 
 import { environment } from '@env';
 
@@ -27,7 +28,7 @@ export class SharedDataService {
     constructor(
         private _logger: LoggerService,
         private _authService: AuthService,
-        private _https: HttpService,
+        private _https: HttpClientService,
         private _utilityService: UtilityService
     ) {
         this._logger.info('SharedDataService : constructor ');
@@ -42,14 +43,14 @@ export class SharedDataService {
         if (!this._authService.isUserLoggedIn()) {
             return;
         }
-        const promise = this._https.get(`${Constants.webApis.getSharedData}`)
-        // const promise = this._https.get(`./assets/json/user-data.json`)
+        // const promise = this._https.get(`${Constants.webApis.getSharedData}`)
+        const promise = this._https.get(`./assets/json/user-data.json`)
             .toPromise();
 
         promise.then(
             successResponse => {
                 this._logger.info('SharedDataService : populateCommonData : successResponse ' + successResponse);
-                this._sharedData = successResponse.json();
+                this._sharedData = JSON.parse(JSON.stringify(successResponse));
             })
             .catch(
             errorResponse => {

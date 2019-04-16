@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '@shared';
-import { HttpService } from '@core/extensions/http.service'
+import { HttpClientService } from '@core/extensions/http-client.service';
 import { LoggerService } from '@core'
 
 
@@ -11,7 +11,7 @@ import { AccessTileModel, AccessTileLink } from '@shared/index';
 @Injectable()
 export class DashbaordService {
 
-    constructor(private _http: HttpService,   
+    constructor(private _http: HttpClientService,   
                 private _loggerService: LoggerService) {}
 
     public fetchAllDashboardTiles(): Observable<any> {
