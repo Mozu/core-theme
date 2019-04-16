@@ -44,6 +44,7 @@ export class AuthService {
         this.apiToken = (JSON.parse(localStorage.getItem(Constants.localStorageKeys.apiToken)) as ApiTokenModel);
         this.isLoggedIn = localStorage.getItem(Constants.localStorageKeys.isLoggedIn) === 'true';
         this.sessionId = localStorage.getItem(Constants.localStorageKeys.sessionId);
+        this.isLoggedIn = true;
     }
 
     isUserLoggedIn(): boolean {

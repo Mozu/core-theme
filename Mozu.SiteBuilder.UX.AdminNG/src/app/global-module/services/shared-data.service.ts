@@ -42,40 +42,22 @@ export class SharedDataService {
         if (!this._authService.isUserLoggedIn()) {
             return;
         }
-
-        this._https.get(`${Constants.webApis.getSharedData}`)
-        .subscribe(
-            (successResponse) => {
-                this._logger.info('SharedDataService : populateCommonData : successResponse ' + successResponse);
-                this._sharedData = successResponse.json();
-            },
-            (errorResponse) => {
-                this._logger.info('SharedDataService : populateCommonData : errorResponse ' + errorResponse);
-
-                const url: string = environment.appUrl + '?' + Constants.queryString.SessionExpired;
-                this._utilityService.redirectToURL(url);
-            });
-        /*const promise = this._https.get(`${Constants.webApis.getSharedData}`)
+        const promise = this._https.get(`${Constants.webApis.getSharedData}`)
+        // const promise = this._https.get(`./assets/json/user-data.json`)
             .toPromise();
 
         promise.then(
             successResponse => {
                 this._logger.info('SharedDataService : populateCommonData : successResponse ' + successResponse);
-                console.log(successResponse.json());
                 this._sharedData = successResponse.json();
-                //this._sharedData.sessionId = localStorage.getItem(Constants.localStorageKeys.sessionId);
-                
             })
             .catch(
             errorResponse => {
                 this._logger.info('SharedDataService : populateCommonData : errorResponse ' + errorResponse);
-
-                const url: string = environment.appUrl + '?' + Constants.queryString.SessionExpired;
-                this._utilityService.redirectToURL(url);
+                // const url: string = environment.appUrl + '?' + Constants.queryString.SessionExpired;
+                // this._utilityService.redirectToURL(url);
             });
-
-        return promise;*/
-
+        return promise;
     }
 }
 

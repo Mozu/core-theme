@@ -20,7 +20,7 @@ import {
 } from './focus-manager/index';
 
 export function sharedDataServiceFactory(service: SharedDataService) {
-    return () => service.populateCommonData();
+    return () => service.populateCommonData(); 
 }
 
 @NgModule({
@@ -31,16 +31,16 @@ export function sharedDataServiceFactory(service: SharedDataService) {
         FocusManager
     ],
     providers: [
-        AuthGuardService,
         SharedDataService,
-        NotificationService,
-        FocusManagerHelperService,
         {
             provide: APP_INITIALIZER,
             useFactory: sharedDataServiceFactory,
             deps: [SharedDataService],
             multi: true
-        }
+        },
+        AuthGuardService,
+        NotificationService,
+        FocusManagerHelperService,
     ],
     exports: [
         FocusManager

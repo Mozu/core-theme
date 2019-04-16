@@ -57,7 +57,7 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
             const sessionId = localStorage.getItem(Constants.localStorageKeys.sessionId);
 
             if (this._authService.isUserLoggedIn() &&  (sessionId == null || sessionId === undefined || sessionId === '') ) {
-                this._utilityService.redirectToURL(url);
+            //    this._utilityService.redirectToURL(url);
                 return;
             }
 

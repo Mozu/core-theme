@@ -1,0 +1,1144 @@
+{
+    "success": true,
+    "total": 1,
+    "items": {
+      "ctUser": {
+        "behaviorIds": [
+          1,
+          165,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          16,
+          17,
+          18,
+          19,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          47,
+          48,
+          49,
+          51,
+          53,
+          54,
+          55,
+          56,
+          57,
+          59,
+          60,
+          61,
+          62,
+          65,
+          66,
+          67,
+          68,
+          69,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          118,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          160,
+          161,
+          162,
+          163,
+          164,
+          166,
+          167,
+          170,
+          171,
+          172,
+          173,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          204,
+          205,
+          206,
+          207,
+          210,
+          208,
+          209,
+          211,
+          212,
+          213,
+          214,
+          220,
+          222,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241
+        ],
+        "email": "admin@kibocommerce.com",
+        "expiration": "0001-01-01T00:00:00.000Z",
+        "id": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "isAuthenticated": false,
+        "firstName": "Kibo",
+        "lastName": "admin",
+        "activity": {
+          "isPasswordChangeRequired": false,
+          "lastPasswordChangeOn": "2017-06-14T21:15:21.943Z",
+          "isLocked": false,
+          "failedLoginAttemptCount": 0,
+          "remainingLoginAttempts": 15,
+          "lastLoginOn": "2019-04-09T06:23:17.875Z",
+          "createdOn": "2016-01-08T13:26:48.317Z",
+          "updatedOn": "2019-03-25T14:37:42.769Z"
+        }
+      },
+      "ctUserRoles": [
+        {
+          "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "assignedInScope": {
+            "type": "Tenant",
+            "id": 19630
+          },
+          "roleId": 1,
+          "roleName": "SuperAdmin",
+          "auditInfo": {
+            "updateDate": "2019-02-25T12:22:16.600Z",
+            "createDate": "2019-02-25T12:22:16.600Z",
+            "updateBy": "8d29e4f31df44358b472b410dc9fb052",
+            "createBy": "8d29e4f31df44358b472b410dc9fb052"
+          }
+        }
+      ],
+      "ctTenant": {
+        "scaleUnitId": "sb",
+        "devAccountId": 2159,
+        "isDevTenant": true,
+        "sites": [
+          {
+            "tenantId": 19630,
+            "masterCatalogId": 1,
+            "catalogId": 2,
+            "countryCode": "US",
+            "defaultLocaleCode": "en-US",
+            "defaultCurrencyCode": "USD",
+            "isMozuRendered": true,
+            "domains": [
+              {
+                "domainName": "t19630-s23779.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:22:17.579Z",
+                "updateDate": "2019-02-25T12:22:17.579Z",
+                "isPrimary": true,
+                "isInfrastructureRecord": false,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              },
+              {
+                "domainName": "*.t19630-s23779.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:22:17.580Z",
+                "updateDate": "2019-02-25T12:22:17.580Z",
+                "isPrimary": false,
+                "isInfrastructureRecord": true,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              }
+            ],
+            "attributes": [],
+            "createDate": "2019-02-25T12:22:17.513Z",
+            "isDeleted": false,
+            "deleteDate": "0001-01-01T00:00:00.000Z",
+            "updateDate": "2019-02-25T12:22:17.698Z",
+            "status": "Active",
+            "id": 23779,
+            "name": "Adam's Click Clacks"
+          },
+          {
+            "tenantId": 19630,
+            "masterCatalogId": 1,
+            "catalogId": 1,
+            "countryCode": "US",
+            "defaultLocaleCode": "en-US",
+            "defaultCurrencyCode": "USD",
+            "isMozuRendered": true,
+            "domains": [
+              {
+                "domainName": "t19630-s23780.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:22:17.815Z",
+                "updateDate": "2019-02-25T12:22:17.815Z",
+                "isPrimary": true,
+                "isInfrastructureRecord": false,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              },
+              {
+                "domainName": "*.t19630-s23780.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:22:17.817Z",
+                "updateDate": "2019-02-25T12:22:17.817Z",
+                "isPrimary": false,
+                "isInfrastructureRecord": true,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              }
+            ],
+            "attributes": [],
+            "createDate": "2019-02-25T12:22:17.800Z",
+            "isDeleted": false,
+            "deleteDate": "0001-01-01T00:00:00.000Z",
+            "updateDate": "2019-02-25T12:22:17.860Z",
+            "status": "Active",
+            "id": 23780,
+            "name": "Adam's Keyboards"
+          },
+          {
+            "tenantId": 19630,
+            "masterCatalogId": 2,
+            "catalogId": 3,
+            "countryCode": "IN",
+            "defaultLocaleCode": "en-US",
+            "defaultCurrencyCode": "INR",
+            "isMozuRendered": true,
+            "domains": [
+              {
+                "domainName": "*.t19630-s23781.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:40:55.515Z",
+                "updateDate": "2019-02-25T12:40:55.515Z",
+                "isPrimary": false,
+                "isInfrastructureRecord": true,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              },
+              {
+                "domainName": "t19630-s23781.NGDev06.kibong-dev.com",
+                "zone": "NGDev06.kibong-dev.com",
+                "createDate": "2019-02-25T12:40:55.514Z",
+                "updateDate": "2019-02-25T12:40:55.514Z",
+                "isPrimary": true,
+                "isInfrastructureRecord": false,
+                "isSystemAssigned": true,
+                "isDomainManaged": true,
+                "cName": "mozu-microdev01.com",
+                "tenantId": 0
+              }
+            ],
+            "attributes": [],
+            "createDate": "2019-02-25T12:40:55.499Z",
+            "isDeleted": false,
+            "deleteDate": "0001-01-01T00:00:00.000Z",
+            "updateDate": "2019-02-25T12:41:01.104Z",
+            "status": "Active",
+            "id": 23781,
+            "name": "Decathlon Sports"
+          }
+        ],
+        "masterCatalogs": [
+          {
+            "tenantId": 19630,
+            "defaultLocaleCode": "en-US",
+            "defaultCurrencyCode": "USD",
+            "catalogs": [
+              {
+                "tenantId": 19630,
+                "masterCatalogId": 1,
+                "defaultLocaleCode": "en-US",
+                "defaultCurrencyCode": "USD",
+                "createDate": "2019-02-25T12:22:17.768Z",
+                "isDeleted": false,
+                "deleteDate": "0001-01-01T00:00:00.000Z",
+                "updateDate": "2019-02-25T12:22:17.775Z",
+                "status": "Active",
+                "id": 1,
+                "name": "Adam's Keyboards"
+              },
+              {
+                "tenantId": 19630,
+                "masterCatalogId": 1,
+                "defaultLocaleCode": "en-US",
+                "defaultCurrencyCode": "USD",
+                "createDate": "2019-02-25T12:22:17.433Z",
+                "isDeleted": false,
+                "deleteDate": "0001-01-01T00:00:00.000Z",
+                "updateDate": "2019-02-25T12:22:17.462Z",
+                "status": "Active",
+                "id": 2,
+                "name": "Click Clacks"
+              }
+            ],
+            "createDate": "2019-02-25T12:22:17.333Z",
+            "isDeleted": false,
+            "deleteDate": "0001-01-01T00:00:00.000Z",
+            "updateDate": "2019-02-25T12:22:17.394Z",
+            "status": "Active",
+            "id": 1,
+            "name": "Adam's Keyboards"
+          },
+          {
+            "tenantId": 19630,
+            "defaultLocaleCode": "en-US",
+            "defaultCurrencyCode": "INR",
+            "catalogs": [
+              {
+                "tenantId": 19630,
+                "masterCatalogId": 2,
+                "defaultLocaleCode": "en-US",
+                "defaultCurrencyCode": "INR",
+                "createDate": "2019-02-25T12:39:40.817Z",
+                "isDeleted": false,
+                "deleteDate": "0001-01-01T00:00:00.000Z",
+                "updateDate": "2019-02-25T12:39:41.273Z",
+                "status": "Active",
+                "id": 4,
+                "name": "Decathlon Int"
+              },
+              {
+                "tenantId": 19630,
+                "masterCatalogId": 2,
+                "defaultLocaleCode": "en-US",
+                "defaultCurrencyCode": "INR",
+                "createDate": "2019-02-25T12:38:58.530Z",
+                "isDeleted": false,
+                "deleteDate": "0001-01-01T00:00:00.000Z",
+                "updateDate": "2019-02-25T12:38:59.165Z",
+                "status": "Active",
+                "id": 3,
+                "name": "Decathlon Sports"
+              }
+            ],
+            "createDate": "2019-02-25T12:37:01.558Z",
+            "isDeleted": false,
+            "deleteDate": "0001-01-01T00:00:00.000Z",
+            "updateDate": "2019-02-25T12:37:52.931Z",
+            "status": "Active",
+            "id": 2,
+            "name": "Decathlon"
+          }
+        ],
+        "domain": {
+          "domainName": "t19630.NGDev06.kibong-dev.com",
+          "zone": "NGDev06.kibong-dev.com",
+          "createDate": "2019-02-25T12:22:17.073Z",
+          "updateDate": "2019-02-25T12:22:17.073Z",
+          "isPrimary": false,
+          "isInfrastructureRecord": false,
+          "isSystemAssigned": true,
+          "isDomainManaged": true,
+          "cName": "mozu-microdev01.com",
+          "tenantId": 0
+        },
+        "supportsCustomExtensions": true,
+        "mozuInstanceId": "1",
+        "attributes": [],
+        "createDate": "2019-02-25T12:22:16.600Z",
+        "isDeleted": false,
+        "deleteDate": "0001-01-01T00:00:00.000Z",
+        "updateDate": "2019-02-25T12:22:53.567Z",
+        "status": "Active",
+        "id": 19630,
+        "name": "Decathlon SandBox"
+      },
+      "ctMasterCatalogs": [
+        {
+          "id": 1,
+          "name": "Adam's Keyboards",
+          "productPublishingMode": "Live",
+          "enableLiveEdit": false
+        },
+        {
+          "id": 2,
+          "name": "Decathlon",
+          "productPublishingMode": "Live"
+        }
+      ],
+      "ctEntities": [],
+      "customSchema": [
+        {
+          "name": "files",
+          "namespace": "mozu",
+          "listFQN": "files@mozu",
+          "documentTypes": [
+            "document@mozu",
+            "image@mozu"
+          ],
+          "supportsPublishing": false,
+          "enablePublishing": null,
+          "supportsActiveDateRanges": true,
+          "enableActiveDateRanges": false,
+          "views": [
+            {
+              "name": "default",
+              "usages": [],
+              "metadata": null,
+              "isVisibleInStorefront": false,
+              "filter": "",
+              "fields": [
+                {
+                  "name": "original_path",
+                  "target": "properties.original_path"
+                },
+                {
+                  "name": "alt_text",
+                  "target": "properties.alt_text"
+                },
+                {
+                  "name": "height",
+                  "target": "properties.height"
+                },
+                {
+                  "name": "width",
+                  "target": "properties.width"
+                },
+                {
+                  "name": "tags",
+                  "target": "properties.tags"
+                }
+              ]
+            }
+          ],
+          "usages": [],
+          "security": null,
+          "scopeId": 1,
+          "scopeType": "MasterCatalog",
+          "documentListType": "files@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "catalogContent",
+          "namespace": "mozu",
+          "listFQN": "catalogContent@mozu",
+          "documentTypes": [
+            "productContent@mozu",
+            "categoryContent@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": true,
+          "supportsActiveDateRanges": false,
+          "enableActiveDateRanges": false,
+          "views": [],
+          "usages": [],
+          "security": "",
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "catalogContent@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "emailTemplateContent",
+          "namespace": "mozu",
+          "listFQN": "emailTemplateContent@mozu",
+          "documentTypes": [
+            "emailTemplateContent@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": true,
+          "supportsActiveDateRanges": false,
+          "enableActiveDateRanges": false,
+          "views": [],
+          "usages": [],
+          "security": "",
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "emailTemplateContent@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "pages",
+          "namespace": "mozu",
+          "listFQN": "pages@mozu",
+          "documentTypes": [
+            "web_page@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": true,
+          "supportsActiveDateRanges": true,
+          "enableActiveDateRanges": false,
+          "views": [
+            {
+              "name": "default",
+              "usages": [
+                "usage1"
+              ],
+              "metadata": null,
+              "isVisibleInStorefront": false,
+              "filter": "",
+              "fields": [
+                {
+                  "name": "page_type_definition",
+                  "target": "properties.page_type_definition"
+                },
+                {
+                  "name": "hidden",
+                  "target": "properties.hidden"
+                },
+                {
+                  "name": "link_title",
+                  "target": "properties.link_title"
+                }
+              ]
+            }
+          ],
+          "usages": [],
+          "security": "",
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "pages@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "pageTemplateContent",
+          "namespace": "mozu",
+          "listFQN": "pageTemplateContent@mozu",
+          "documentTypes": [
+            "pageTemplateContent@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": true,
+          "supportsActiveDateRanges": false,
+          "enableActiveDateRanges": false,
+          "views": [],
+          "usages": [],
+          "security": "",
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "pageTemplateContent@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "siteSettings",
+          "namespace": "mozu",
+          "listFQN": "siteSettings@mozu",
+          "documentTypes": [
+            "document@mozu",
+            "image@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": false,
+          "supportsActiveDateRanges": false,
+          "enableActiveDateRanges": false,
+          "views": [
+            {
+              "name": "default",
+              "usages": [],
+              "metadata": null,
+              "isVisibleInStorefront": false,
+              "filter": "",
+              "fields": [
+                {
+                  "name": "name",
+                  "target": "name"
+                }
+              ]
+            }
+          ],
+          "usages": [],
+          "security": null,
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "siteSettings@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "siteSnippets",
+          "namespace": "mozu",
+          "listFQN": "siteSnippets@mozu",
+          "documentTypes": [
+            "snippets@mozu"
+          ],
+          "supportsPublishing": true,
+          "enablePublishing": true,
+          "supportsActiveDateRanges": true,
+          "enableActiveDateRanges": false,
+          "views": [
+            {
+              "name": "default",
+              "usages": [
+                "sitebuilder",
+                "entityManager"
+              ],
+              "metadata": null,
+              "isVisibleInStorefront": false,
+              "filter": "",
+              "fields": [
+                {
+                  "name": "content",
+                  "target": "properties.content"
+                }
+              ]
+            }
+          ],
+          "usages": [
+            "sitebuilder",
+            "entityManager"
+          ],
+          "security": "",
+          "scopeId": 23779,
+          "scopeType": "Site",
+          "documentListType": "siteSnippets@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "name": "entityEditors",
+          "namespace": "mozu",
+          "listFQN": "entityEditors@mozu",
+          "documentTypes": [
+            "entityEditor@mozu"
+          ],
+          "supportsPublishing": false,
+          "enablePublishing": null,
+          "supportsActiveDateRanges": false,
+          "enableActiveDateRanges": false,
+          "views": [
+            {
+              "name": "default",
+              "usages": [
+                "entityManager"
+              ],
+              "metadata": null,
+              "isVisibleInStorefront": false,
+              "filter": "",
+              "fields": [
+                {
+                  "name": "documentTypes",
+                  "target": "properties.documentTypes"
+                },
+                {
+                  "name": "documentLists",
+                  "target": "properties.documentLists"
+                },
+                {
+                  "name": "entityLists",
+                  "target": "properties.entityLists"
+                },
+                {
+                  "name": "priority",
+                  "target": "properties.priority"
+                },
+                {
+                  "name": "code",
+                  "target": "properties.code"
+                }
+              ]
+            }
+          ],
+          "usages": [],
+          "security": "",
+          "scopeId": 19630,
+          "scopeType": "Tenant",
+          "documentListType": "entityEditors@mozu",
+          "metadata": null,
+          "entityType": "cms"
+        },
+        {
+          "tenantId": 19630,
+          "nameSpace": "mozu",
+          "name": "tenantadminsettings",
+          "contextLevel": "Tenant",
+          "useSystemAssignedId": false,
+          "idProperty": {
+            "propertyName": "name",
+            "dataType": "string"
+          },
+          "indexA": null,
+          "indexB": null,
+          "indexC": null,
+          "indexD": null,
+          "isVisibleInStorefront": false,
+          "isLocaleSpecific": false,
+          "isShopperSpecific": false,
+          "isSandboxDataCloningSupported": true,
+          "views": [
+            {
+              "name": "Default",
+              "usages": [],
+              "metaData": null,
+              "security": null,
+              "filter": null,
+              "defaultSort": null,
+              "fields": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "target": "name"
+                }
+              ]
+            }
+          ],
+          "usages": [],
+          "metadata": null,
+          "createDate": "2019-02-25T12:22:31.086Z",
+          "updateDate": "2019-02-25T12:22:31.086Z",
+          "listName": "tenantadminsettings",
+          "listFQN": "tenantadminsettings@mozu",
+          "entityType": "mzdb"
+        },
+        {
+          "tenantId": 19630,
+          "nameSpace": "mozuadmin",
+          "name": "impexpsettings",
+          "contextLevel": "Tenant",
+          "useSystemAssignedId": false,
+          "idProperty": {
+            "propertyName": "id",
+            "dataType": "string"
+          },
+          "indexA": null,
+          "indexB": null,
+          "indexC": null,
+          "indexD": null,
+          "isVisibleInStorefront": false,
+          "isLocaleSpecific": false,
+          "isShopperSpecific": false,
+          "isSandboxDataCloningSupported": true,
+          "views": [],
+          "usages": [],
+          "metadata": null,
+          "createDate": "2019-02-25T12:22:31.157Z",
+          "updateDate": "2019-02-25T12:22:31.157Z",
+          "listName": "impexpsettings",
+          "listFQN": "impexpsettings@mozuadmin",
+          "entityType": "mzdb"
+        },
+        {
+          "tenantId": 19630,
+          "nameSpace": "mozuadmin",
+          "name": "impexpjobs",
+          "contextLevel": "Tenant",
+          "useSystemAssignedId": false,
+          "idProperty": {
+            "propertyName": "id",
+            "dataType": "string"
+          },
+          "indexA": {
+            "propertyName": "type",
+            "dataType": "string"
+          },
+          "indexB": {
+            "propertyName": "domain",
+            "dataType": "string"
+          },
+          "indexC": {
+            "propertyName": "status",
+            "dataType": "string"
+          },
+          "indexD": {
+            "propertyName": "createDateTime",
+            "dataType": "date"
+          },
+          "isVisibleInStorefront": false,
+          "isLocaleSpecific": false,
+          "isShopperSpecific": false,
+          "isSandboxDataCloningSupported": true,
+          "views": [],
+          "usages": [],
+          "metadata": null,
+          "createDate": "2019-02-25T12:22:31.159Z",
+          "updateDate": "2019-02-25T12:22:31.159Z",
+          "listName": "impexpjobs",
+          "listFQN": "impexpjobs@mozuadmin",
+          "entityType": "mzdb"
+        },
+        {
+          "tenantId": 19630,
+          "nameSpace": "mozuadmin",
+          "name": "impexpjoblogs",
+          "contextLevel": "Tenant",
+          "useSystemAssignedId": false,
+          "idProperty": {
+            "propertyName": "id",
+            "dataType": "string"
+          },
+          "indexA": {
+            "propertyName": "type",
+            "dataType": "string"
+          },
+          "indexB": {
+            "propertyName": "createDateTime",
+            "dataType": "date"
+          },
+          "indexC": {
+            "propertyName": "message",
+            "dataType": "string"
+          },
+          "indexD": {
+            "propertyName": "jobId",
+            "dataType": "string"
+          },
+          "isVisibleInStorefront": false,
+          "isLocaleSpecific": false,
+          "isShopperSpecific": false,
+          "isSandboxDataCloningSupported": true,
+          "views": [],
+          "usages": [],
+          "metadata": null,
+          "createDate": "2019-02-25T12:22:31.160Z",
+          "updateDate": "2019-02-25T12:22:31.160Z",
+          "listName": "impexpjoblogs",
+          "listFQN": "impexpjoblogs@mozuadmin",
+          "entityType": "mzdb"
+        },
+        {
+          "tenantId": 19630,
+          "nameSpace": "mozu",
+          "name": "subnavlinks",
+          "contextLevel": "Tenant",
+          "useSystemAssignedId": true,
+          "idProperty": null,
+          "indexA": null,
+          "indexB": null,
+          "indexC": null,
+          "indexD": null,
+          "isVisibleInStorefront": false,
+          "isLocaleSpecific": false,
+          "isShopperSpecific": false,
+          "isSandboxDataCloningSupported": false,
+          "views": [
+            {
+              "name": "Default",
+              "usages": [
+                "entityManagerAdvanced"
+              ],
+              "metaData": null,
+              "security": null,
+              "filter": null,
+              "defaultSort": null,
+              "fields": [
+                {
+                  "name": "parentId",
+                  "type": null,
+                  "target": "parentId"
+                },
+                {
+                  "name": "path",
+                  "type": null,
+                  "target": "path"
+                }
+              ]
+            }
+          ],
+          "usages": [
+            "entityManagerAdvanced"
+          ],
+          "metadata": null,
+          "createDate": "2019-02-25T12:23:17.509Z",
+          "updateDate": "2019-02-25T12:23:17.509Z",
+          "listName": "subnavlinks",
+          "listFQN": "subnavlinks@mozu",
+          "entityType": "mzdb"
+        }
+      ],
+      "ctSiteUsers": [
+        {
+          "emailAddress": "admin@kibocommerce.com",
+          "localeCode": "en-us",
+          "firstName": "Kibo",
+          "lastName": "admin",
+          "id": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "systemData": {
+            "lastPasswordChangeOn": "2017-06-14T21:15:21.943Z",
+            "remainingLoginAttempts": 15,
+            "lastLoginOn": "2019-04-09T06:23:17.875Z",
+            "createdOn": "2016-01-08T13:26:48.317Z",
+            "updatedOn": "2019-03-25T14:37:42.769Z"
+          },
+          "isActive": true
+        }
+      ],
+      "ctTaContext": {
+        "id": 19630,
+        "name": "Decathlon SandBox",
+        "masterCatalogs": [
+          {
+            "id": 1,
+            "name": "Adam's Keyboards",
+            "productPublishingMode": "Live",
+            "sites": [
+              {
+                "id": 23779,
+                "name": "Adam's Click Clacks",
+                "stagingHost": "t19630-s23779.NGDev06.kibong-dev.com",
+                "masterCatalogId": 1,
+                "catalogId": 2,
+                "isMozuRendered": true,
+                "localeCode": "en-US",
+                "currencyCode": "USD"
+              },
+              {
+                "id": 23780,
+                "name": "Adam's Keyboards",
+                "stagingHost": "t19630-s23780.NGDev06.kibong-dev.com",
+                "masterCatalogId": 1,
+                "catalogId": 1,
+                "isMozuRendered": true,
+                "localeCode": "en-US",
+                "currencyCode": "USD"
+              }
+            ],
+            "catalogs": [
+              {
+                "id": 1,
+                "name": "Adam's Keyboards",
+                "localeCode": "en-US",
+                "currencyCode": "USD",
+                "masterCatalogId": 1
+              },
+              {
+                "id": 2,
+                "name": "Click Clacks",
+                "localeCode": "en-US",
+                "currencyCode": "USD",
+                "masterCatalogId": 1
+              }
+            ],
+            "localeCode": "en-US",
+            "currencyCode": "USD",
+            "enableLiveEdit": false
+          },
+          {
+            "id": 2,
+            "name": "Decathlon",
+            "productPublishingMode": "Live",
+            "sites": [
+              {
+                "id": 23781,
+                "name": "Decathlon Sports",
+                "stagingHost": "*.t19630-s23781.NGDev06.kibong-dev.com",
+                "masterCatalogId": 2,
+                "catalogId": 3,
+                "isMozuRendered": true,
+                "localeCode": "en-US",
+                "currencyCode": "INR"
+              }
+            ],
+            "catalogs": [
+              {
+                "id": 3,
+                "name": "Decathlon Sports",
+                "localeCode": "en-US",
+                "currencyCode": "INR",
+                "masterCatalogId": 2
+              },
+              {
+                "id": 4,
+                "name": "Decathlon Int",
+                "localeCode": "en-US",
+                "currencyCode": "INR",
+                "masterCatalogId": 2
+              }
+            ],
+            "localeCode": "en-US",
+            "currencyCode": "INR",
+            "enableLiveEdit": false
+          }
+        ],
+        "currencies": {
+          "usd": {
+            "currencyCode": "usd",
+            "englishName": "US dollar",
+            "symbol": "$",
+            "precision": 2,
+            "roundingType": "upToCurrencyPrecision"
+          },
+          "inr": {
+            "currencyCode": "inr",
+            "englishName": "Indian rupee",
+            "symbol": "Rs",
+            "precision": 2,
+            "roundingType": "upToCurrencyPrecision"
+          }
+        },
+        "logzuUrl": "http://tbd:80/mozu.logzu"
+      },
+      "localizationValues": [
+        {
+          "key": "discount-name",
+          "value": "Name"
+        },
+        {
+          "key": "discount-type",
+          "value": "Type"
+        },
+        {
+          "key": "discount-off",
+          "value": "OFF"
+        },
+        {
+          "key": "discount-appliesto",
+          "value": "Applies To"
+        },
+        {
+          "key": "discount-categories",
+          "value": "Categories"
+        },
+        {
+          "key": "discount-products",
+          "value": "Products"
+        },
+        {
+          "key": "discount-shippingmethods",
+          "value": "Discounted shipping methods"
+        },
+        {
+          "key": "discount-starts",
+          "value": "Starts"
+        },
+        {
+          "key": "discount-now",
+          "value": "Now"
+        },
+        {
+          "key": "discount-ends",
+          "value": "Ends"
+        },
+        {
+          "key": "discount-never",
+          "value": "Never"
+        },
+        {
+          "key": "discount-createcoupon",
+          "value": "Create coupon"
+        },
+        {
+          "key": "discount-randomcode",
+          "value": "Random code"
+        },
+        {
+          "key": "discount-entercode",
+          "value": "Enter code"
+        },
+        {
+          "key": "discount-selectcategories",
+          "value": "Select categories"
+        },
+        {
+          "key": "discount-selectproducts",
+          "value": "Select products"
+        },
+        {
+          "key": "discount-selectshippingmethods",
+          "value": "Select Shipping Methods"
+        },
+        {
+          "key": "discount-allproducts",
+          "value": "All products"
+        },
+        {
+          "key": "discount-selectedproductsandcategories",
+          "value": "Selected products and categories"
+        },
+        {
+          "key": "discount-minimumordersof",
+          "value": "Minimum orders of"
+        },
+        {
+          "key": "discount-percentage",
+          "value": "Percentage"
+        },
+        {
+          "key": "discount-dollaramount",
+          "value": "Dollar amount"
+        },
+        {
+          "key": "discount-freeshipping",
+          "value": "Free shipping"
+        }
+      ],
+      "useGoogleAnalytics": "false",
+      "googleAnalyticsAccount": "UA-55272537-1",
+      "showBristReport": "true"
+    }
+  }
