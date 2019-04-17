@@ -52,7 +52,8 @@ export class Constants {
         order: 'order',
         offer: 'offer',
         invoice : 'invoice',
-        quotes : 'quotes'
+        quotes : 'quotes',
+        quotesView : 'quotes-view',
     };
 
     static webApis = {
@@ -108,4 +109,6 @@ export class Constants {
         dasbhoardTiles : "./assets/json/dashboard-categories.json",
         quoteList : "./assets/json/quote-list.json"
     }
+
+    static numerOfRows: number = 10;
 }

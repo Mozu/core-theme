@@ -213,7 +213,7 @@
         "id": "quotes",
         "label": "Quotes",
         "address": "quotes",
-        "navUrl":"quotes"
+        "navUrl":"quotes/list"
       }
     ]
   },

@@ -3,9 +3,11 @@ import { Component,
 import { LoggerService, 
   HttpError, 
   ErrorCode, 
-  ErroNotificationType } from '@core'
+  ErroNotificationType} from '@core'
 import { QuotesListService } from './list.service';
-import { QuotesListModel} from './list.model';
+import { QuotesListModel } from './list.model';
+import { Constants } from '@shared';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'quotes-list',
@@ -15,13 +17,20 @@ import { QuotesListModel} from './list.model';
 })
 export class QuotesListComponent implements OnInit {
   public model: QuotesListModel;
-
+  numerOfRows = Constants.numerOfRows;
+  menuItem: MenuItem[]
+  
   constructor(private _quotesListService : QuotesListService ,private _loggerService : LoggerService) { }
 
   ngOnInit() {
     this._loggerService.info("QuotesListComponent : ngOnInit");
     this.model = new QuotesListModel();
     this.populateQuoteGrid();
+
+    this.menuItem = [
+      { label: 'Edit',  routerLink: ['/quotes/edit'] }, //, queryParams: {'recent': 'true'}
+      //{ label: 'Delete', command: (event) => console.log("Delete") } //, command: (event) => this.deleteCar(this.selectedCar)
+  ];
   }
 
   public populateQuoteGrid = () => {

@@ -11,7 +11,7 @@ import { AuthGuardService } from '@global';
 
 import { Constants } from '@shared';
 import { AdminHomeComponent } from './admin-module';
-import { QuoteHomeComponent } from './quotes-module';
+import { QuoteHomeComponent, QuotesEditComponent, QuotesListComponent } from './quotes-module';
 
 const appRoutes: Routes = [
     {
@@ -21,6 +21,15 @@ const appRoutes: Routes = [
     {
         path: Constants.uiRoutes.quotes, // "http://sb.ngdev06.kibong-dev.com/Admin/qoutes"
         component: QuoteHomeComponent,
+        children: [{
+            path:  'list',
+            component:  QuotesListComponent
+            },
+            {
+            path:  'edit',
+            component:  QuotesEditComponent
+            }
+        ]
     },
     {
         path: '**',
