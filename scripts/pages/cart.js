@@ -67,7 +67,7 @@ define(['modules/api',
             preserveElement(this, ['.v-button', '.p-button', '#AmazonPayButton', '#applePayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
-            // normally we preserveElement on the apple pay button, but we hide it if a change to the cart 
+            // normally we preserveElement on the apple pay button, but we hide it if a change to the cart
             // has lead the total price to be $0. Apple doesn't like $0 orders
             if (ApplePay && ApplePay.scriptLoaded) ApplePay.hideOrShowButton();
             // this.messageView.render();
@@ -144,6 +144,10 @@ define(['modules/api',
 
           return modalDialog.init(options);
 
+        },
+        initializeQuoteDialog: function(){
+            var me = this;
+            var options
         },
         changeStore: function(e){
           //click handler for change store link.launches store picker
@@ -320,6 +324,9 @@ define(['modules/api',
             this.model.isLoading(true);
             // the rest is done through a regular HTTP POST
         },
+        openQuoteForm: function(){
+
+        },
         addCoupon: function () {
             var self = this;
             this.model.addCoupon().ensure(function () {
@@ -425,7 +432,7 @@ define(['modules/api',
                 })
 
             };
- 
+
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
             window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory||'') + '/checkout/' + order.prop('id');
@@ -441,7 +448,7 @@ define(['modules/api',
 
         cartViews.cartView.render();
         //if (cartModel.get('discountModal').get('discounts').length) {
-            cartViews.discountModalView.render(); 
+            cartViews.discountModalView.render();
         //}
         renderVisaCheckout(cartModel);
 
