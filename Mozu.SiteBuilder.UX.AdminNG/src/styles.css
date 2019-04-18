@@ -1,7 +1,21 @@
-body {
-    background-color: #eaeaea !important;
-}
 /* You can add global styles to this file, and also import other style files */
+
+@font-face{font-family:"proxima-nova";
+    src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
+    src:url("./assets/Fonts/proximanova-regular.woff") format("woff"),
+    url("./assets/Fonts/proximanova-regular.woff2") format("woff2"),
+    url("./assets/Fonts/proximanova-regular.ttf") format("truetype"),
+    url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
+    font-style:normal;
+    font-weight:normal
+}
+
+body{
+    background-color: #eaeaea !important;
+    font-family:"proxima-nova", sans-serif;
+    font-size: 13px;
+}
+
 .navbar{
     max-height: 32px !important;
     margin-bottom: 0px !important;

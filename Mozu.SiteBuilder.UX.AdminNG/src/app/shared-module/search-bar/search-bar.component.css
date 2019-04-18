@@ -1,0 +1,29 @@
+
+.searchBar .input-group-addon{
+    display: inline-block !important;
+    background-color: transparent !important;
+    border: 0px !important;
+    font-size: 20px;
+    color: #3f3f3f;
+}
+.searchBar .input-group-addon::after{
+    color: #d5d5d5;
+}
+
+
+.input-group .form-control{
+    display: inline-block !important;
+    /* width: 90% !important; */
+    font-family: "proxima-nova",sans-serif !important;
+    color: #3f3f3f !important;
+    font-size: 18px !important;
+    font-weight: 300 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    float: none !important;
+    background: transparent !important;
+}
+.input-group .form-control:focus{
+    border: 0;
+    outline: 0;
+}

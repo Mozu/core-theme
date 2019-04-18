@@ -47,6 +47,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {MenuModule} from 'primeng/menu';;
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 declare var resourcesVersion: any;
 
@@ -94,8 +95,8 @@ export function createTranslateLoader(http: HttpClient) {
         SpinnerComponent,
         HeaderComponent,
         AccessTileComponent,
-        NavigationTopQuotesComponent
-    ],
+        NavigationTopQuotesComponent,
+        SearchBarComponent    ],
     providers: [
         
     ],
@@ -133,7 +134,8 @@ export function createTranslateLoader(http: HttpClient) {
         SpinnerComponent,
         HeaderComponent,
         AccessTileComponent,
-        NavigationTopQuotesComponent
+        NavigationTopQuotesComponent,
+        SearchBarComponent
     ]
 })
 
