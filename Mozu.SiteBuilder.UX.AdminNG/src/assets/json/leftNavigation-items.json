@@ -5,7 +5,7 @@
       "label": "Catalog",
       "imageURL": "./assets/Images/catlog.png",
       "icon": "nav-catalog",
-      "behaviorIds": [ 4 ],
+      "behaviorIds": 4,
       "items": [
         {
           "id": "catalogProducts",
@@ -43,7 +43,7 @@
       "label": "Marketing",
       "imageURL": "./assets/Images/marketing.png",
       "icon": "nav-marketing",
-      "behaviorIds": [ 24 ],
+      "behaviorIds": 24,
       "items": [
         {
           "id": "discounts",

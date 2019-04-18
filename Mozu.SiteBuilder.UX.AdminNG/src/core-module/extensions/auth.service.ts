@@ -9,18 +9,21 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/delay';
 
 import { LoggerService } from '../services/logger.service';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import {
-    Http,
-    Headers,
-    RequestOptionsArgs
-} from '@angular/http';
+// import {
+//     Http,
+//     Headers,
+//     RequestOptionsArgs
+// } from '@angular/http';
 
 import {
     UtilityService,
     EnvironmentConfig,
     Constants
 } from '../infrastructure/index';
+
+import {IRequestOptions} from './http-client.service'
 
 import { ApiTokenModel } from './api-token.model';
 
@@ -36,7 +39,7 @@ export class AuthService {
     constructor(
         private _logger: LoggerService,
         private _utilityService: UtilityService,
-        private _http: Http,
+        private _http: HttpClient,
         private _config: EnvironmentConfig
     ) {
         this._logger.info('AuthService : constructor ');
@@ -55,17 +58,17 @@ export class AuthService {
         this.isLoggedIn = false;
         this._logger.info('AuthService : LogOut');
 
-        const options: RequestOptionsArgs = { headers: new Headers() };
+        const options: IRequestOptions = { headers: new HttpHeaders() };
         options.withCredentials = false;
         this.setAuthHeaders(options);
 
         return this._http.post(url, null, options);
     }
 
-    setAuthHeaders(options?: RequestOptionsArgs): void {
+    setAuthHeaders(options?: IRequestOptions): void {
 
         if (!options.headers) {
-            options.headers = new Headers();
+            options.headers = new HttpHeaders();
         }
 
         // reset password requires webapi access before login
@@ -86,7 +89,7 @@ export class AuthService {
         this._logger.info('AuthService : refreshToken');
 
         const params = Constants.apiToken.refreshToken + this.apiToken.refresh_token;
-        const headers = new Headers();
+        const headers = new HttpHeaders();
         headers.set(Constants.requestHeader.contentType, Constants.contentType.formUrlEncoded);
 
         this.isRefreshTokenCallInProgress = true;
@@ -94,18 +97,15 @@ export class AuthService {
         return this._http.post(this._config.apiTokenUrl, params, {
                 headers: headers
             })
-            .map(res => res.json())
-            .map(data => {
+            //.map(res => res.json()) not needed httpClient by default call this. 
+            .map( data => {
 
                 this.isRefreshTokenCallInProgress = false;
-
                 const token = new ApiTokenModel();
-                token.access_token = data.access_token;
-                token.refresh_token = data.refresh_token;
+                token.access_token = data['access_token'];
+                token.refresh_token = data['refresh_token'];
                 token['.expires'] = data['.expires'];
-
                 this.apiToken = token;
-
                 localStorage.setItem(Constants.localStorageKeys.apiToken, JSON.stringify(token));
             })
             .catch(

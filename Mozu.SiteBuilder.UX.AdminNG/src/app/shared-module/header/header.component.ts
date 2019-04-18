@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit {
     }
 
     public fetchloggedInUserData = () => {
-        console.log(this._sharedData._sharedData);
+    //    console.log(this._sharedData._sharedData);
         this.loggedInUserName = this._sharedData._sharedData.items.ctUser.firstName +' '+ this._sharedData._sharedData.items.ctUser.lastName; 
         this.userNameInitials = this._sharedData._sharedData.items.ctUser.firstName.charAt(0) + this._sharedData._sharedData.items.ctUser.lastName.charAt(0);
         this.tenantName = this._sharedData._sharedData.items.ctTaContext.name;

@@ -10,12 +10,13 @@ import { Constants } from '../infrastructure/constants';
 import { SharedData } from './index';
 
 import {
-    AuthService,
     UtilityService,
     LoggerService
 } from '@core';
 
 import { HttpClientService } from '@core/extensions/http-client.service'
+
+import { AuthService } from '@core/extensions/auth.service';
 
 import { environment } from '@env';
 

@@ -9,8 +9,7 @@ import { MenuItem } from 'primeng/api';
 import { LoggerService } from '@core'
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, LeftNavigationTabs } from './left.model';
-import { Response } from '@angular/http';
-import { SharedDataService, CtUser } from '@global';
+import { SharedDataService } from '@global/services/shared-data.service';
 
 @Component({
   selector: 'navigation-left',

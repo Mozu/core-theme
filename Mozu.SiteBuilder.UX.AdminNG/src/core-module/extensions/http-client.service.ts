@@ -2,7 +2,9 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Constants, UtilityService } from '../infrastructure/index';
-import { AuthService } from './auth-client.service';
+import { AuthService } from './auth.service';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/catch';
 
 //Created custom interface as RequestOptionsArgs interface deprecated.
 export interface IRequestOptions {
@@ -43,7 +45,7 @@ export class HttpClientService {
                 if (error.status == 403) {
                     return this.authService
                         .refreshApiToken()
-                        .mergeMap((accessToken) => {
+                        .map((accessToken) => {
                             this.authService.setAuthHeaders(options);
                             return this.http.get(url, options);
                         });
@@ -74,7 +76,7 @@ export class HttpClientService {
                 if (error.status == 403) {
                     return this.authService
                         .refreshApiToken()
-                        .mergeMap((accessToken) => {
+                        .map((accessToken) => {
 
                             this.authService.setAuthHeaders(options);
                             return this.http.post(url, params, options);
@@ -106,7 +108,7 @@ export class HttpClientService {
                 if (error.status == 403) {
                     return this.authService
                         .refreshApiToken()
-                        .mergeMap((accessToken) => {
+                        .map((accessToken) => {
 
                             this.authService.setAuthHeaders(options);
                             return this.http.put(url, params, options);
@@ -136,7 +138,7 @@ export class HttpClientService {
                 if (error.status == 403) {
                     return this.authService
                         .refreshApiToken()
-                        .mergeMap((accessToken) => {
+                        .map((accessToken) => {
                             this.authService.setAuthHeaders(options);
                             return this.http.delete(url, options);
                         });
