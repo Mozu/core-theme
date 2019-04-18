@@ -368,7 +368,7 @@ define([
                 this.stopListening();
                 this.model.isLoading(true);
                 this.listenTo(product, "configurationComplete", function () {
-                    self.model.addWishlistItem(product.toJSON(), self.model.get('pickerItemQuantity')).then(function () {
+                    self.model.addWishlistItem(product.toJSON(), product.get('quantity')).then(function () {
                         self.model.unset('selectedProduct');
                         window.productModalView.handleDialogCancel();
                         $('.mz-b2b-wishlists .mz-searchbox-input.tt-input').val('');
