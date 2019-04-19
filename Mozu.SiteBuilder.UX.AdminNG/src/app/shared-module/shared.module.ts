@@ -22,17 +22,16 @@ import {
     EnableDisableControls
 } from './directive/index';
 
-import {
-    HeaderComponent
-} from './header/index';
-
 import { SpinnerComponent } from './spinner/spinner.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 import { 
     NavigationComponent,
     NavigationTopShellComponent,
     NavigationLeftComponent,
     AccessTileComponent,
-    NavigationTopQuotesComponent
+    NavigationTopQuotesComponent,
+    HeaderComponent,
+    AppHomeComponent
  } from './index';
 
 import {
@@ -47,7 +46,6 @@ import {TabViewModule} from 'primeng/tabview';
 import {MenuModule} from 'primeng/menu';;
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
-import { SearchBarComponent } from './search-bar/search-bar.component'
 
 declare var resourcesVersion: any;
 
@@ -94,9 +92,11 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
+        AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        SearchBarComponent    ],
+        SearchBarComponent
+    ],
     providers: [
         
     ],
@@ -133,6 +133,7 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
+        AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
         SearchBarComponent

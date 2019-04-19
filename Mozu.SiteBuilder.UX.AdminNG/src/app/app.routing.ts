@@ -10,26 +10,25 @@ import { PageNotFoundComponent } from '@core';
 import { AuthGuardService } from '@global';
 
 import { Constants } from '@shared';
-import { AdminHomeComponent } from './admin-module';
-import { QuoteHomeComponent, QuotesEditComponent, QuotesListComponent } from './quotes-module';
+import {  AdminDashboardComponent } from './admin-module';
+import {  QuotesEditComponent, QuotesListComponent } from './quotes-module';
 
 const appRoutes: Routes = [
     {
         path: Constants.uiRoutes.empty,
-        component: AdminHomeComponent
+        component: AdminDashboardComponent
     },
     {
-        path: Constants.uiRoutes.quotes, // "http://sb.ngdev06.kibong-dev.com/Admin/qoutes"
-        component: QuoteHomeComponent,
-        children: [{
-            path:  'list',
-            component:  QuotesListComponent
-            },
-            {
-            path:  'edit',
-            component:  QuotesEditComponent
-            }
-        ]
+        path: Constants.uiRoutes.empty,
+        component: AdminDashboardComponent
+    },
+    {
+        path: Constants.uiRoutes.quotes,
+        component: QuotesListComponent
+    },
+    {
+        path: Constants.uiRoutes.quotesEdit,
+        component: QuotesEditComponent
     },
     {
         path: '**',

@@ -11,3 +11,5 @@ export * from './header/index';
 export * from './navigation/index';
 
 export * from './access-tile/index'
+
+export * from './home/home.component';

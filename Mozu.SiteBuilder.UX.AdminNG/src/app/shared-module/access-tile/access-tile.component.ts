@@ -5,6 +5,8 @@ import { Component,
 
 import {  LoggerService } from '@core'
 
+import { Constants } from '@shared/infrastructure/constants';
+
 import { AccessTileModel } from './access-tile.model'
 
 @Component({
@@ -15,7 +17,8 @@ import { AccessTileModel } from './access-tile.model'
 export class AccessTileComponent implements OnInit {
 
   @Input('Tiles') tileModel : AccessTileModel;
-
+  uiRoutes = Constants.uiRoutes.quotes;
+  
   constructor(private _loggerService : LoggerService) { 
     this._loggerService.info("AccessTileComponent : constructor");
   }

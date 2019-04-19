@@ -28,7 +28,7 @@ export class QuotesListComponent implements OnInit {
     this.populateQuoteGrid();
 
     this.menuItem = [
-      { label: 'Edit',  routerLink: ['/quotes/edit'] }, //, queryParams: {'recent': 'true'}
+      { label: 'Edit',  routerLink: ['/quotesEdit'] }, //, queryParams: {'recent': 'true'}
       //{ label: 'Delete', command: (event) => console.log("Delete") } //, command: (event) => this.deleteCar(this.selectedCar)
   ];
   }
@@ -39,7 +39,7 @@ export class QuotesListComponent implements OnInit {
 
     this._quotesListService.fetchAllQuotes().subscribe((successResponse:Response) =>{
       this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
-      let responseJson = successResponse.json();
+       let responseJson = successResponse;
         if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
           this.model.items = responseJson['items'];
         }

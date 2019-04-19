@@ -1,14 +1,6 @@
-import {
-    NgModule,
-    ModuleWithProviders,
-    SkipSelf,
-    Optional
-} from '@angular/core';
+import { NgModule } from '@angular/core';
 
-import { 
-    AdminHomeComponent,
-    AdminDashboardComponent 
-} from './index';
+import { AdminDashboardComponent } from './index';
 import { SharedModule } from '@shared/shared.module';
 
 @NgModule({
@@ -16,7 +8,6 @@ import { SharedModule } from '@shared/shared.module';
         SharedModule
     ],
     declarations: [
-        AdminHomeComponent,
         AdminDashboardComponent
     ],
     providers: [

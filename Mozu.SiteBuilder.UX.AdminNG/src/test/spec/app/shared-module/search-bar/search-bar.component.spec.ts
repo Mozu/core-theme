@@ -1,20 +1,20 @@
 // import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { NavigationTopQuotesComponent } from './top-quotes.component';
+// import { SearchBarComponent } from '@shared/search-bar/search-bar.component';
 
-// describe('NavigationTopQuotesComponent', () => {
-//   let component: NavigationTopQuotesComponent;
-//   let fixture: ComponentFixture<NavigationTopQuotesComponent>;
+// describe('SearchBarComponent', () => {
+//   let component: SearchBarComponent;
+//   let fixture: ComponentFixture<SearchBarComponent>;
 
 //   beforeEach(async(() => {
 //     TestBed.configureTestingModule({
-//       declarations: [ NavigationTopQuotesComponent ]
+//       declarations: [ SearchBarComponent ]
 //     })
 //     .compileComponents();
 //   }));
 
 //   beforeEach(() => {
-//     fixture = TestBed.createComponent(NavigationTopQuotesComponent);
+//     fixture = TestBed.createComponent(SearchBarComponent);
 //     component = fixture.componentInstance;
 //     fixture.detectChanges();
 //   });

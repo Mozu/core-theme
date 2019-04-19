@@ -1,16 +1,20 @@
 import {
-    Component
-    , OnInit
+    Component,
+    OnInit
   } from '@angular/core';
-import { LoggerService } from '@core';
+
+import {
+    Event ,
+    Router,
+    NavigationStart
+} from '@angular/router';
+
 import {TranslateService} from '@ngx-translate/core';
 
 import {
-    Event as RouterEvent,
-    Router,
-    NavigationStart,
-    NavigationEnd,
-} from '@angular/router';
+    AuthService,
+    LoggerService
+} from '@core';
 
 import {
     NotificationService,
@@ -19,12 +23,9 @@ import {
 
 import {
     ConfigurationSettings,
-    Constants
+    Constants,
+    NavigationContainerType
 } from '@shared';
-
-import {
-    AuthService
-} from '@core';
 
 @Component({
     moduleId: module.id,
@@ -34,6 +35,7 @@ import {
 export class AppComponent implements OnInit {
 
     isUserLoggedIn = false;
+    containerType : NavigationContainerType;
 
     constructor(
         private _logger: LoggerService,
@@ -43,6 +45,8 @@ export class AppComponent implements OnInit {
         private _notificationService: NotificationService,
         private _sharedDataService: SharedDataService
     ) {
+
+        this.containerType = NavigationContainerType.dashboard;
 
         this._logger.info('AppComponent : constructor ');
 
@@ -63,6 +67,17 @@ export class AppComponent implements OnInit {
 
         this._logger.info('AppComponent : constructor => Application language is set to :' + languageConfiguredForApplication);
 
+        this._router.events.subscribe( (event: Event) => {
+            if (event instanceof NavigationStart)
+            {
+                if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit)){
+                    this.containerType = NavigationContainerType.quotes;   
+                }
+                else
+                this.containerType = NavigationContainerType.dashboard;
+            }
+        });
+    
     }
 
     ngOnInit() {

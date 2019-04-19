@@ -1,21 +1,22 @@
 <div class="col-md-4 mt-5">
-        <p-card subheader="{{tileModel.sectionText}}" [style]="{'margin-top': '20px', height:'213px', 'margin-bottom': '20px'}"
-                styleClass="ui-card-shadow ">
-                <p-header>
-                        <div class="taco-image-holder tiles-align">
-                                <span data-url="" class="tiles-images-align">
-                                        <img [attr.src]="tileModel.sectionImageURL" />
-                                </span>
-                        </div>
-                </p-header>
+  <p-card subheader="{{tileModel.sectionText}}" [style]="{'margin-top': '20px', height:'213px', 'margin-bottom': '20px'}" styleClass="ui-card-shadow ">
+        <p-header>
+                <div class="taco-image-holder tiles-align">
+                        <span data-url="" class="tiles-images-align">
+                                <img [attr.src]="tileModel.sectionImageURL" />
+                        </span>
+                </div>
+        </p-header>
 
-                <p-footer>
-                        <div class="taco-dashboard-item-item"
-                                *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
-                                <div class="tiles-item"><a
-                                                [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
-                                </div>
+        <p-footer>
+                <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
+                        <div class="tiles-item">
+                                <a *ngIf="eachAccessTileLink.linkDataURL != uiRoutes; else routeLink" [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
+                                <ng-template #routeLink>
+                                        <a [routerLink]="[eachAccessTileLink.linkDataURL]"> {{eachAccessTileLink.linkDataText}}</a>
+                                </ng-template>
                         </div>
-                </p-footer>
-        </p-card>
+                </div>
+        </p-footer>
+   </p-card>
 </div>

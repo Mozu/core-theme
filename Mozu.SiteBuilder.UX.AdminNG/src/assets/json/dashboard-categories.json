@@ -242,8 +242,7 @@
         "id": "quotes",
         "label": "Quotes",
         "address": "quotes",
-        "url":"quotes",
-        "visible" : true
+        "navUrl":"quotes"
       }
     ]
   },

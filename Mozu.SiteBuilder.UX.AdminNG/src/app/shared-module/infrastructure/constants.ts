@@ -46,14 +46,8 @@ export class Constants {
     static uiRoutes = {
         empty: '',
         default: ConfigurationSettings.defaultRoutePrefix,
-        login: 'login',
-        resetpassword: 'resetpassword',
-        product: 'product',
-        order: 'order',
-        offer: 'offer',
-        invoice : 'invoice',
         quotes : 'quotes',
-        quotesView : 'quotes-view',
+        quotesEdit : 'quotesEdit'
     };
 
     static webApis = {

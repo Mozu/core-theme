@@ -9,7 +9,12 @@
 .searchBar .input-group-addon::after{
     color: #d5d5d5;
 }
-
+.search-btn{
+    border: 0px !important;
+    border-radius: 0px !important;
+    color: #818181 !important;
+    padding:0px !important;
+}
 
 .input-group .form-control{
     display: inline-block !important;
