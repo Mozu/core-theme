@@ -64,7 +64,8 @@
 }
 
 .avatar-align{
-    bottom: 6px;
+    bottom: 5px;
+    cursor: pointer;
 }
 
 .navbar-toggle {
@@ -104,6 +105,3 @@
     color: #e5e6e7;
     text-decoration: none;
 }
-
-
-

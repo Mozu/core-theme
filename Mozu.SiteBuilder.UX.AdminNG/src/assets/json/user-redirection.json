@@ -1,0 +1,10 @@
+[
+    {
+        "label": "Launchpad",
+        "url": "/admin/auth/launchpad"
+    },
+    {
+        "label": "Log Out",
+        "url": "/admin/auth/logout"
+    }
+]

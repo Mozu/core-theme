@@ -107,7 +107,8 @@ export class Constants {
         leftNavigationItems :  "./assets/json/leftNavigation-items.json",
         tabsNames : "./assets/json/dashboard-menu.json",
         dasbhoardTiles : "./assets/json/dashboard-categories.json",
-        quoteList : "./assets/json/quote-list.json"
+        quoteList : "./assets/json/quote-list.json",
+        redirectionLink : "./assets/json/user-redirection.json"
     }
 
     static numerOfRows: number = 10;

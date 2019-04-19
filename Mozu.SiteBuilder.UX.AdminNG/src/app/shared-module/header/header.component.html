@@ -19,9 +19,10 @@
             <li><a href="#"><span class=""></span> Help </a></li>
             <li><a href="#"><span class="fa fa-search"></span></a></li>
             <li class="avatar-align">
-              <a href="#">
+              <a>
               <div id="userbutton-1032-userbutton-avatar" class="user-avatar">{{userNameInitials}}</div>
-              <div id="userbutton-1032-userbutton-username" class="nav-username">{{loggedInUserName}}</div>
+              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="menu.toggle($event)">{{loggedInUserName}}</div>
+              <p-menu #menu [model]="menuItem" [popup]="true" appendTo="body"></p-menu>
               </a>
             </li>
         </ul>

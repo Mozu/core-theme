@@ -1,11 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
-@font-face{font-family:"proxima-nova";
-    src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
+@font-face{
+    font-family:"proxima-nova";
+    /* src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
     src:url("./assets/Fonts/proximanova-regular.woff") format("woff"),
     url("./assets/Fonts/proximanova-regular.woff2") format("woff2"),
     url("./assets/Fonts/proximanova-regular.ttf") format("truetype"),
-    url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
+    url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg"); */
     font-style:normal;
     font-weight:normal
 }
@@ -288,7 +289,7 @@ p-table .ui-chkbox.ui-widget {
 /* --------------Pagination CSS - End------------- */
 
 /* --------------Context Menu Ellipsis CSS - Start------------- */
-p-table .ui-table .pi-ellipsis-v{
+/* p-table .ui-table .pi-ellipsis-v{
     font-size: 16px;
     color: #c9c9c9;
     font-weight: normal !important;
@@ -326,5 +327,25 @@ p-table .ui-table .pi-ellipsis-v:hover{
     color: #3f3f3f !important;
     background-color: transparent !important;
     border:transparent  !important;
-}
+} */
 /* --------------Context Menu Ellipsis CSS - End------------- */
+
+.ng-trigger.ng-trigger-overlayAnimation.ng-tns-c7-2.ui-menu.ui-widget.ui-widget-content.ui-corner-all.ui-menu-dynamic.ui-shadow.ng-star-inserted{
+    max-width: 150px !important; 
+    right: 2.5469px !important;
+   }
+
+   li.ui-menuitem.ui-widget.ui-corner-all.ng-tns-c7-2.ng-star-inserted {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .ng-trigger.ui-menu-dynamic li{
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .ng-trigger.ui-menu .ui-menuitem-link:hover, .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text:hover, .ng-trigger.ui-widget-content .ui-state-active, .ng-trigger.ui-widget-content .ui-state-active{
+    color: #3f3f3f !important;
+    background-color: transparent !important;
+    border:transparent !important;
+   }
