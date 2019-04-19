@@ -546,7 +546,7 @@ Ext.define('Taco.shared.view.field.Image', {
         try {
             // loop through all images and do not attempt to re-add image that already exists
             Ext.Array.forEach(this.selectedImages.data.items, function (item) {
-                for (i = 0; i < selectedRecords.length; i++) {
+                for (var i = 0; i < selectedRecords.length; i++) {
                     if (item.internalId == selectedRecords[i].internalId) {
                         selectedRecords.splice(i, 1);
                     }
