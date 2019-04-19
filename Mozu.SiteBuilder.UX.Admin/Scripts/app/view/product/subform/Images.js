@@ -392,7 +392,10 @@ Ext.define('Taco.view.product.subform.Images', {
                     // then merge new images with this.product.data.productImages
                     Ext.Array.forEach(editor.record.data.imageGroupImages, function(newImage, idx) {
                         newImage.productImageGroupId = editor.record.data.groupName;
-                        newImage.name ? newImage.imageName = newImage.name : newImage.name = newImage.imageName;
+                        if(newImage.name)
+                            newImage.imageName = newImage.name 
+                        else
+                            newImage.name = newImage.imageName;
                         newImage.isMerged = true;
                         newImage.sequence = idx;
 
