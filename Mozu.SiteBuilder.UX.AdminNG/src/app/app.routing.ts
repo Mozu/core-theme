@@ -27,7 +27,7 @@ const appRoutes: Routes = [
         component: QuotesListComponent
     },
     {
-        path: Constants.uiRoutes.quotesEdit,
+        path: Constants.uiRoutes.quotesEdit+'/:id',
         component: QuotesEditComponent
     },
     {

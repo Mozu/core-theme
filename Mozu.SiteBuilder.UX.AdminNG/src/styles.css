@@ -15,6 +15,7 @@ body{
     background-color: #eaeaea !important;
     font-family:"proxima-nova", sans-serif;
     font-size: 13px;
+    height: 100%;
 }
 
 .navbar{

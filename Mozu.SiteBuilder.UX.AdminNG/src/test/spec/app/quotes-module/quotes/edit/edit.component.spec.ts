@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QuotesEditComponent } from 'app/quotes-module/quotes/edit/edit.component';
 
-describe('ViewComponent', () => {
+describe('QuotesEditComponent', () => {
   let component: QuotesEditComponent;
   let fixture: ComponentFixture<QuotesEditComponent>;
 

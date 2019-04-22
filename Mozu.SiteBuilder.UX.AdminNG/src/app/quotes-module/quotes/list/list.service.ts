@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import { LoggerService } from '@core';
+
 import { Observable } from 'rxjs';
-import { 
-LoggerService, 
-HttpClientService 
-} from '@core';
-import { Constants } from '@shared';
+
+import { LoggerService } from '@core';
+
 import { HttpClientService } from '@core/extensions/http-client.service'
+
+import { Constants } from '@shared';
 
 @Injectable()
 export class QuotesListService{

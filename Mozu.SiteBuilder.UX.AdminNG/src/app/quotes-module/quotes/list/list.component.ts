@@ -1,13 +1,20 @@
 import { Component, 
   OnInit } from '@angular/core';
+
+import { Router } from '@angular/router';
+
+import { MenuItem } from 'primeng/api';
+
 import { LoggerService, 
   HttpError, 
   ErrorCode, 
   ErroNotificationType} from '@core'
-import { QuotesListService } from './list.service';
-import { QuotesListModel } from './list.model';
+
 import { Constants } from '@shared';
-import { MenuItem } from 'primeng/api';
+
+import { QuotesListService } from './list.service';
+
+import { QuotesListModel } from './list.model';
 
 @Component({
   selector: 'quotes-list',
@@ -18,23 +25,34 @@ import { MenuItem } from 'primeng/api';
 export class QuotesListComponent implements OnInit {
   public model: QuotesListModel;
   numerOfRows = Constants.numerOfRows;
-  menuItem: MenuItem[]
+  menuItem: MenuItem[];
+  selectedQuote: any;
   
-  constructor(private _quotesListService : QuotesListService ,private _loggerService : LoggerService) { }
+  constructor(private _quotesListService : QuotesListService ,private _loggerService : LoggerService, private router: Router) { }
 
   ngOnInit() {
     this._loggerService.info("QuotesListComponent : ngOnInit");
     this.model = new QuotesListModel();
-    this.populateQuoteGrid();
-
+    this.model.items = [];
+    //p-menu items
     this.menuItem = [
-      { label: 'Edit',  routerLink: ['/quotesEdit'] }, //, queryParams: {'recent': 'true'}
-      //{ label: 'Delete', command: (event) => console.log("Delete") } //, command: (event) => this.deleteCar(this.selectedCar)
-  ];
+      { label: 'Edit', command: (event) => this.viewQuote() }
+    ];
+    this.populateQuoteGrid();    
+  }
+
+  onRowSelect(event) {
+    this.selectedQuote = event.data;
+  };
+
+  viewQuote(){
+    let tenantId =  this.selectedQuote.tenantId
+    this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + tenantId])
+    //this.menuItem[0].routerLink = ['/quotesEdit/' + this.selectedQuote.tenantId]
   }
 
   public populateQuoteGrid = () => {
-    this.model.items = [];
+    
     this._loggerService.info("QuotesListComponent : populateQuoteGrid");
 
     this._quotesListService.fetchAllQuotes().subscribe((successResponse:Response) =>{

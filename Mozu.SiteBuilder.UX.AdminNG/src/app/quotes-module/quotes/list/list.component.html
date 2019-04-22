@@ -2,7 +2,7 @@
 
 <div class="col-md-12 container-margin">
   
-<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="numerOfRows">
+<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="numerOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single" >
     <ng-template pTemplate="header">
         <tr>
             <th style="width: 4em">
@@ -21,7 +21,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-quoteModel>
         <tr [pSelectableRow]="quoteModel">
-            <td>
+            <td style="width: 4em">
                 <p-tableCheckbox [value]="quoteModel"></p-tableCheckbox>
             </td>
             <td>
