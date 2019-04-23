@@ -140,7 +140,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
             }
 
-            var editedProducts = await _productMapper.PerformAction(products, p =>
+            var result = (await _productMapper.PerformAction(products, p =>
             {
                 var pt = productTypes.FirstOrDefault(x => p.ProductTypeId == x.Id);
                 if (p.Properties != null && pt != null)
@@ -165,8 +165,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         });
                 }
                 return _productClient.UpdateProduct(p, p.ProductCode);
-            });
-            var result = editedProducts.ToList();
+            })).ToList();
+            await Task.WhenAll(result.Select(s => AppendCmsImageNames(s)));
             foreach (var editedProd in result.Where(x => x.ProductUsage.Equals("Bundle")))
             {
                 await GetBundleItemCatalogInfo(editedProd);
