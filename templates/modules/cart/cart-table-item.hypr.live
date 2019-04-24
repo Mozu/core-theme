@@ -1,4 +1,4 @@
-<tr class="mz-carttable-item">
+<tr class="mz-carttable-item">  
   <td class="mz-carttable-item-product">
     {% block image %}
     {% if item.product.imageUrl and themeSettings.showCartItemImage %}
@@ -32,6 +32,25 @@
       <span class="mz-carttable-item-code">
         {{ labels.productCode }}: <em>{{ item.product.productCode }}</em>
       </span>
+
+      {% if item.product.stock and item.product.stock.isOnBackOrder %}
+        {% if item.product.stock.stockAvailable==0 %}
+          <span class="mz-carttable-item-backorder">
+            {{labels.itemOnBackOrder}}, {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
+          </span>
+        {% else  %}
+          {% if item.product.stock.stockAvailable < item.quantity %}
+            <span class="mz-carttable-item-backorder">
+              {{ labels.productBackorderQuantity|string_format(item.product.stock.stockAvailable)|safe }}, {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
+            </span>
+            {% else %}
+            <span class="mz-carttable-item-backorder">
+              {{labels.itemOnBackOrder}}
+            </span>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+
       {% comment %}
       {% if item.fulfillmentMethod == 'Pickup' %}
       <span class="mz-carttable-item-pickuplocation">

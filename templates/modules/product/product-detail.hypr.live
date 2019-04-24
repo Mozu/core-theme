@@ -27,7 +27,6 @@
 	{% if themeSettings.showProductDetailUPC and model.upc.length == 1 %}
 	<dt class="mz-productcodes-upc-label">{{ labels.upc }}</dt>
 	<dd class="mz-productcodes-upc" itemprop="mpn">{{ model.upc|first }}</dd>
-	{% endif %}
 </dl>
 
 <section class="mz-l-stack-section mz-productdetail-conversion">
