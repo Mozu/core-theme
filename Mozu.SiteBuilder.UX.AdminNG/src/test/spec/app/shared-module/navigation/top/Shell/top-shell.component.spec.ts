@@ -7,16 +7,16 @@ import { NotificationService } from '@global';
 import { LoggerService } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationTopComponent } from '@shared';
+import { NavigationTopShellComponent } from '@shared';
 import { NavigationService } from '@shared/navigation/navigation.service';
-import { TopNavigationModel } from '@shared/navigation/top/top.model';
+import { TopNavigationModel } from '@shared/navigation/top/shell/top-shell.model';
 import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
 
 describe('top navigation component', () => {
-  let component: NavigationTopComponent;
-  let fixture: ComponentFixture<NavigationTopComponent>;
+  let component: NavigationTopShellComponent;
+  let fixture: ComponentFixture<NavigationTopShellComponent>;
   let debugElement: DebugElement;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
@@ -39,7 +39,7 @@ describe('top navigation component', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule,HttpClientTestingModule],
-      declarations: [ NavigationTopComponent],
+      declarations: [ NavigationTopShellComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [NotificationService, LoggerService,CustomNGXLoggerService,NGXLoggerHttpService, NavigationService, UtilityService, EnvironmentConfig, AuthService,
         {
@@ -50,7 +50,7 @@ describe('top navigation component', () => {
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavigationTopComponent);
+    fixture = TestBed.createComponent(NavigationTopShellComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
 
@@ -68,13 +68,13 @@ describe('top navigation component', () => {
 
     it('Application is inside top navigation component', () => {
           component.ngOnInit();
-          expect(loggerService.info).toHaveBeenCalledWith('NavigationTopComponent : ngOnInit');
+          expect(loggerService.info).toHaveBeenCalledWith('NavigationTopShellComponent : ngOnInit');
     });
 
     it('Application should call selected tab', () => {
       let selectedTab ="Main";
       component.tabSelectionChanged(selectedTab);
-      expect(loggerService.info).toHaveBeenCalledWith('NavigationTopComponent : tabSelectionChanged');
+      expect(loggerService.info).toHaveBeenCalledWith('NavigationTopShellComponent : tabSelectionChanged');
     });
 
     it('Application should call fetch tabs data function', () => {
@@ -84,7 +84,7 @@ describe('top navigation component', () => {
      expect(req.request.method).toBe("GET");
      req.flush(dummydata_tabsMenu);
      httpMock.verify();
-     expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationTopComponent : navigationService.fetchTabsName_SuccessResponse");
+     expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationTopShellComponent : navigationService.fetchTabsName_SuccessResponse");
     });
 });
 
