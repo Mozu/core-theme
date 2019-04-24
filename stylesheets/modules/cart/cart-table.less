@@ -26,6 +26,14 @@
         }
     }
 
+    .mz-cart-backorder-list::after {
+        content: '';
+    }
+
+    .mz-cart-backorder-list {
+        margin-left: 12.5px
+    }
+
     .mz-carttable-item-title {
         display: block;
         font-size: @fontSizeLarger;
@@ -35,6 +43,13 @@
         float: left;
         clear: both;
         font-size: @fontSizeSmall;
+    }
+
+    .mz-carttable-item-backorder {
+        float: left;
+        clear: both;
+        font-size: @fontSize;
+        color: red;
     }
 
     .mz-carttable-item-pickuplocation {
@@ -69,7 +84,7 @@
         vertical-align: middle;
     }
 
-        .mz-item-discount {
+    .mz-item-discount {
         font-weight: bold;
 
         .mz-item-discountamt {
@@ -77,18 +92,19 @@
         }
     }
 
-    .mz-carttable-checkout-couponcode{
-        float:left;
-        text-align:left;
+    .mz-carttable-checkout-couponcode {
+        float: left;
+        text-align: left;
     }
 
     .mz-carttable-thirdpartypayment {
-           margin-bottom:10px;
+        margin-bottom: 10px;
     }
 
     .mz-carttable-item-autoAddDiscount {
         padding: 6px 10px;
         background: @warningBackground;
+
         .mz-carttable-item-autoAddDiscount-actions {
             float: right;
             margin-right: 15px;

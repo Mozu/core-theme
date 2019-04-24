@@ -1,0 +1,8 @@
+{% if model.isCartBackorder %}
+	<section class="mz-messagebar">
+		<div class="mz-infos">
+			<h4>{{labels.temporarilyOutOfStockCart}}</h4>
+			<span><em>{{labels.temporarilyOutOfStockCartDetail}}</em></span>
+		</div>
+	</section>
+{% endif %}

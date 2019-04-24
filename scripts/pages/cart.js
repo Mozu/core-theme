@@ -21,6 +21,10 @@ define(['modules/api',
       templateName: 'modules/cart/cart-discount-threshold-messages'
     });
 
+    var BackorderMessageView = Backbone.MozuView.extend({
+        templateName: 'modules/cart/cart-backorder-messages'
+    });
+
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
         initialize: function () {
@@ -52,8 +56,12 @@ define(['modules/api',
             me.messageView = new ThresholdMessageView({
               el: $('#mz-discount-threshold-messages'),
               model: this.model
+            });            
+            me.backorderMessageView = new BackorderMessageView({
+                el: $('#mz-backorder-messages'),
+                model: this.model
             });
-
+            
             //var prouctDiscounts = me.model.get('items').each(function(item){
             //    _.each(item.productDiscounts, function(prodDiscount){
             //       var discount = new Discount(prodDiscount);
@@ -93,6 +101,7 @@ define(['modules/api',
             }
         },
         removeItem: function(e) {
+            var me = this;
             if(require.mozuData('pagecontext').isEditMode) {
                 // 65954
                 // Prevents removal of test product while in editmode
@@ -102,6 +111,10 @@ define(['modules/api',
             var $removeButton = $(e.currentTarget);
             var id = $removeButton.data('mz-cart-item');
             this.model.removeItem(id);
+            _.delay(function () {
+                me.backorderMessageView.render();
+            }, 5000);
+            
             return false;
         },
         updateAutoAddItem: function(e) {
