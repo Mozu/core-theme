@@ -18,6 +18,10 @@
     .primeSidebar {
         border-right: 0px solid transparent;
     }
+    .hamburgerMenu[_ngcontent-c8] {
+        padding-top: 16px;
+        padding-left: 14px;
+    }
 }
 .ui-menu .ui-submenu-header{
     font-size: 11px !important;

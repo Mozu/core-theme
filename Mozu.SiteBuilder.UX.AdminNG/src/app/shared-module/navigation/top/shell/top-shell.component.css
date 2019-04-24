@@ -42,7 +42,9 @@ a:hover {
 
 @media screen and (max-width: 480px) {
     .tab-link{
-    min-width: 72px;
-    margin-left: 50px;
+    min-width: 52px;
+    margin-left: 30px;
+    left: 12%;
+    height: 54px;
     }
   }

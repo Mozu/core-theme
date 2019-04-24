@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._loggerService.info("HeaderComponent : constructor");
+        this._loggerService.info("HeaderComponent : ngOnInit");
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
     }

@@ -7,3 +7,9 @@
     width: 100%;
     margin-top:0px !important; 
 }
+
+@media screen and (max-width: 480px) {
+    .toolbar-main {
+        height: 52px;
+    }
+  }
