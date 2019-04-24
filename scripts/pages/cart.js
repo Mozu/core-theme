@@ -14,8 +14,11 @@ define(['modules/api',
         'modules/applepay',
         'modules/cart/discount-dialog/views-discount-dialog',
         'modules/models-discount',
-        'modules/message-handler'
-], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, DiscountModalView, Discount, MessageHandler) {
+        'modules/message-handler',
+        'modules/models-quote',
+        'modules/cart/quote-dialog/views-quote-dialog',
+        'modules/cart/quote-dialog/models-quote-dialog'
+], function (api, Backbone, _, $, CartModels, CartMonitor, HyprLiveContext, Hypr, preserveElement, modalDialog, paypal, LocationModels, AmazonPay, ApplePay, DiscountModalView, Discount, MessageHandler, QuoteModels, QuoteModalView, QuoteModalModel) {
 
     var ThresholdMessageView = Backbone.MozuView.extend({
       templateName: 'modules/cart/cart-discount-threshold-messages'
@@ -147,7 +150,8 @@ define(['modules/api',
         },
         initializeQuoteDialog: function(){
             var me = this;
-            var options
+            var options = {};
+
         },
         changeStore: function(e){
           //click handler for change store link.launches store picker
@@ -324,8 +328,10 @@ define(['modules/api',
             this.model.isLoading(true);
             // the rest is done through a regular HTTP POST
         },
-        openQuoteForm: function(){
-
+        openQuoteForm: function(e){
+          e.preventDefault();
+          window.cartView.quoteModalView.loadQuoteFormView();
+          window.cartView.quoteModalView.handleDialogOpen();
         },
         addCoupon: function () {
             var self = this;
@@ -429,9 +435,14 @@ define(['modules/api',
                     el: $("[mz-modal-discount-dialog]"),
                     model: cartModel.get('discountModal'),
                     messagesEl: $("[mz-modal-discount-dialog]").find('[data-mz-message-bar]')
+                }),
+                quoteModalView: new QuoteModalView({
+                   el: $("[mz-modal-quote-dialog]"),
+                   model: new QuoteModalModel({elementId: 'mzQuoteDialog'})
                 })
 
             };
+
 
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);

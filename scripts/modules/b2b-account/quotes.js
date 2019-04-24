@@ -95,11 +95,15 @@ define([
         handleDialogSave: function () {
             var self = this;
             this.bootstrapInstance.hide();
-            var quote = window.views.currentPane.model.get('quote');
-            quote.set('status', 'Cancel');
+            var quoteView = window.views.currentPane;
+            var quote = quoteView.model.get('quote');
+            quote.set('status', 'Cancelled');
+            quoteView.$el.addClass('is-loading');
             quote.apiUpdate().then(function(response){
-                window.views.currentPane.model.setDetailMode(false);
-                window.views.currentPane.render();
+                quoteView.model.setDetailMode(false);
+                quoteView.$el.removeClass('is-loading');
+                quoteView.render();
+
             });
         },
         setInit: function () {
@@ -250,8 +254,8 @@ define([
                 index: 'status',
                 displayName: 'Status',
                 displayTemplate: function(value){
-                  return value;
-                  //TODO: make status pill here
+                      value = value || 'N/A';
+                      return '<span class="mz-status ' + value.toLowerCase() + '">' + value + '</span>';
                 }
             },
             {

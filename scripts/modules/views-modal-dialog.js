@@ -1,9 +1,9 @@
 define(['modules/jquery-mozu','underscore',"modules/backbone-mozu",'hyprlive', 'modules/modal-dialog'], function($, _, Backbone, Hypr, Dialog) {
     var ModalDialog = Backbone.MozuView.extend({
             templateName: 'modules/common/modal-dialog',
-            initialize: function() { 
+            initialize: function() {
                 var self = this;
-                
+
                 self.listenTo(this.model, 'openDialog', function () {
                     self.handleDialogOpen();
                 });
@@ -17,12 +17,12 @@ define(['modules/jquery-mozu','underscore',"modules/backbone-mozu",'hyprlive', '
                     self.handleDialogCancel();
                 });
 
-                this.initDialog(); 
+                this.initDialog();
             },
             initDialog: function(){
                 if(!this.bootstrapInstance){
                     this.bootstrapInstance = Dialog.init({
-                        elementId: "mzModalDialog",
+                        elementId: this.model.get('elementId') || "mzModalDialog",
                         hasXButton: false
                     });
                 }
@@ -41,7 +41,7 @@ define(['modules/jquery-mozu','underscore',"modules/backbone-mozu",'hyprlive', '
             },
             handleDialogCancel: function(){
                 this.model.trigger('dialogCancel');
-                this.handleDialogClose();  
+                this.handleDialogClose();
             },
             render: function() {
                 var self = this;

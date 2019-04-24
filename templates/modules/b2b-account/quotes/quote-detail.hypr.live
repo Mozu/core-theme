@@ -2,7 +2,7 @@
     <div class="wishlist-btns">
         <button class="mz-button mz-button-small" data-mz-action="closeQuoteDetail">Back</button>
     </div>
-    <h2>{{ model.name }} <span class="mz-status closed">STATUS HERE</span></h2>
+    <h2>{{ model.name }} <span class="mz-status {{ model.status|lower}}">{{ model.status }}</span></h2>
     <div class="mz-quote-details">
         <span class="mz-label">{{ labels.comments }}</span>
         <div>Here are where some comments go. If there were comment data, it would go here.</div>

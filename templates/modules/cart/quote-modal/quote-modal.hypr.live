@@ -1,0 +1,16 @@
+{% extends "modules/common/modal-dialog" %}
+
+{% block modal-header %}
+    <h3 class="modal-title">Request a Quote</h3>
+{% endblock modal-header %}
+
+{% block modal-body %}
+{% include "modules/common/message-bar" with model=model.messages %}
+<div data-mz-quote-modal-content class="mz-quote-modal-content">
+</div>
+{% endblock modal-body %}
+
+{% block modal-footer %}
+<button type="button" class="mz-button" data-mz-action="handleDialogCancel">Cancel</button>
+<button type="button" class="mz-button" data-mz-action="handleDialogSave">Submit</button>
+{% endblock modal-footer %}
