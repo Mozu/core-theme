@@ -682,38 +682,73 @@ Ext.define('Taco.view.product.subform.General', {
             ]
         });
 
-        this.productTypeOptionsStore = Ext.create('Ext.data.Store',
-            {
-                fields: ['attributeFQN', "name"],
-                data: (function() {
-                    if(me.product.get('options')) {
-                       return me.product.get('options').map(function(item) {
-                            var found = me.record.productTypeRecord.get('options').find(function(option) {
-                                return option.attributeFQN === item.attributeFQN;
-                            });
+        // this.productTypeOptionsStore = Ext.create('Ext.data.Store',
+        //     {
+        //         fields: ['attributeFQN', "name"],
+        //         data: (function() {
+        //             if(me.product.get('options')) {
+        //                return me.product.get('options').map(function(item) {
+        //                     var found = me.record.productTypeRecord.get('options').find(function(option) {
+        //                         return option.attributeFQN === item.attributeFQN;
+        //                     });
                 
-                            return {
-                                    id: item.attributeFQN,
-                                    attributeFQN : item.attributeFQN,
-                                    name: found.adminName 
-                            };
-                        })
-                    } else {
-                        return [];
-                    }
-                })()
+        //                     return {
+        //                             id: item.attributeFQN,
+        //                             attributeFQN : item.attributeFQN,
+        //                             name: found.adminName 
+        //                     };
+        //                 })
+        //             } else {
+        //                 return [];
+        //             }
+        //         })()
+        //     });
+
+    
+
+        me.product.getOptions().on('valuesSetComplete', function() {
+            var options = me.product.getOptions();
+
+            Ext.Array.forEach(me.product.get('productImageGroups'), function(imageGroups){
+                var tags = imageGroups.productImageGroupTags || [];
+                if(tags.length > 0) {
+                    Ext.Array.forEach(tags, function(tag){
+                        var option = options.findRecord('attributeFQN', tag.fqn);
+                        Ext.Array.forEach(tag.values, function(value, idx){
+                            if(option.get('values').indexOf(value) < 0){
+                                tag.values.splice(idx, 1)
+                            }
+                        });
+                    });
+                }
             });
 
-        productOverride.items.push(Ext.create('Taco.view.product.subform.Images', {
+            me.imageForm = Ext.create('Taco.view.product.subform.Images', {
+                isGlobal: me.isGlobal,
+                product: me.product,
+                productForm: me.productForm,
+                //productTypeOptionsStore: this.productTypeOptionsStore,
+                persistChangesToModel: me.persistChangesToModel,
+                productInCatalogInfo: me.productInCatalogInfo,
+                hidden: me.hidden,
+                globalForm: me.globalForm
+            });
+
+        });
+
+        this.imageForm = Ext.create('Taco.view.product.subform.Images', {
             isGlobal: this.isGlobal,
             product: this.product,
             productForm: this.productForm,
-            productTypeOptionsStore: this.productTypeOptionsStore,
+            //productTypeOptionsStore: this.productTypeOptionsStore,
             persistChangesToModel: this.persistChangesToModel,
             productInCatalogInfo: this.productInCatalogInfo,
             hidden: this.hidden,
             globalForm: this.globalForm
-        }));
+        });
+
+
+        productOverride.items.push(this.imageForm);
 
         if (this.isGlobal) {
             this.items = [
@@ -1263,7 +1298,7 @@ Ext.define('Taco.view.product.subform.General', {
         }
 
         // need to update the record manually. form.Form does not extract the value from the imageField automatically.
-        this.record.set("productImages", uploadedImages);
+        //this.record.set("productImages", uploadedImages);
         return true;
     }
 });

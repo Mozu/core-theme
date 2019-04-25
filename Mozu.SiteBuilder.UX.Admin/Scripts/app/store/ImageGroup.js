@@ -5,6 +5,7 @@ Ext.define('Taco.store.ImageGroup', {
     extend: 'Ext.data.Store',
     model: 'Taco.model.ImageGroup',
     remoteFilter: false,
+    createOnly: true,
     pageSize: 50,
     storeManagerConfig: {
         clearFilters: true,

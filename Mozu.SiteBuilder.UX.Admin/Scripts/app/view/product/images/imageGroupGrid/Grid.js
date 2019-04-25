@@ -3,7 +3,7 @@
 */
 Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
     extend: 'Taco.core.ux.browser.SearchList',
-
+    alias: 'widget.imageGroupGrid',
     requires: [
         'Taco.model.ImageGroup',
         'Taco.store.ImageGroup',
@@ -94,7 +94,7 @@ Ext.define('Taco.view.product.images.imageGroupGrid.Grid', {
 
         me.store = Taco.core.data.StoreManager.getOrCreate({
             type: 'Taco.store.ImageGroup',
-            createOnly: true,
+            
             pageSize: this.pageSize,
             autoLoad: true,
             clearFilters: true,

@@ -280,10 +280,12 @@
                         return attribute.isProductImageGroupSelector === true;
                     });
 
-                    item.down('.productimagessubform').fireEvent('resetFormImages', {
-                        images: layoutItems[0].record.get('productImages'),
-                        groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
-                    });
+                    if(item.down('.productimagessubform')){
+                        item.down('.productimagessubform').fireEvent('resetFormImages', {
+                            images: layoutItems[0].record.get('productImages'),
+                            groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
+                        });
+                    }
                 }
             })
             me.down('.productimagessubform').fireEvent('resetImagesComplete');
@@ -311,14 +313,17 @@
                         var selectedOption = layoutItems[0].record.get('options').filter(function(attribute) {
                             return attribute.isProductImageGroupSelector === true;
                         });
-                        
-                        layoutItems[index].down('.productimagessubform').fireEvent('resetFormImages', {
-                            images: layoutItems[0].record.get('productImages'),
-                            groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
-                        });
-                        
-                        me.down('.productimagessubform').fireEvent('resetImagesComplete');
-                        layoutItems[index].down('.productimagessubform').updateLayout();
+
+                        if(layoutItems[index].down('.productimagessubform')){
+                            
+                            layoutItems[index].down('.productimagessubform').fireEvent('resetFormImages', {
+                                images: layoutItems[0].record.get('productImages'),
+                                groupFqn: (selectedOption.length) ? selectedOption[0].attributeFQN : null
+                            });
+                            
+                            me.down('.productimagessubform').fireEvent('resetImagesComplete');
+                            layoutItems[index].down('.productimagessubform').updateLayout();
+                        }
                     }
 
 

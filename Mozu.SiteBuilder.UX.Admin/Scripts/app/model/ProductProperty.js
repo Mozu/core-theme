@@ -20,6 +20,10 @@ Ext.define('Taco.model.ProductProperty', {
             defaultValue: []
         },
         {
+            name: "isProductImageGroupSelector",
+            type: "bool"
+        },
+        {
             name: 'product',
             type: 'auto',
             persist:false

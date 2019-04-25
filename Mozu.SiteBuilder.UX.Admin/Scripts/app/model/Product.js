@@ -759,7 +759,7 @@ Ext.define('Taco.model.Product', {
             model: 'Taco.model.ProductProperty',
             associationKey: 'options',
             foreignProperty: 'product',
-            createOnly:true
+            createOnly: false
         });
     },
     getExtras: function () {

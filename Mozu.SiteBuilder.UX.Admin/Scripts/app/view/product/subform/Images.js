@@ -46,6 +46,19 @@ Ext.define('Taco.view.product.subform.Images', {
             return false;
         }
 
+       
+
+        if(me.product.getOptions()) {
+            me.product.getOptions().each(function(item) {
+                var found = me.record.productTypeRecord.get('options').find(function(option) {
+                    return option.attributeFQN === item.get('attributeFQN');
+                });
+    
+                item.set('name', found.adminName);
+            })
+        }
+
+
         if (this.product.data.options) {
             this.product.data.options.forEach(function(option) {
                 var foundFQN = me.record.productTypeRecord.data.options.find(function(rec) {
@@ -161,7 +174,7 @@ Ext.define('Taco.view.product.subform.Images', {
                 });
 
                 product.set('productImages', orderedImages);
-                product.set('_override', filteredImages);
+                product.set('_override', {productImages: filteredImages});
             }
         });
 
@@ -222,7 +235,7 @@ Ext.define('Taco.view.product.subform.Images', {
             allowBlank: true,
             margin: '0 0 0 15',
             queryMode: 'local',
-            store: this.productTypeOptionsStore,
+            store: this.product.getOptions(),
             displayField: 'name', 
             valueField: 'attributeFQN',
             name:'productTypeOption',
@@ -231,10 +244,10 @@ Ext.define('Taco.view.product.subform.Images', {
             value: (initActiveOption) ? initActiveOption.attributeFQN: null,
             listeners: {
                 change: function(cmp, value) {
-
+                    var store = me.product.getOptions()
                     var setNewOption = function() {
-                        Ext.Array.forEach(me.record.get('options'), function(attribute) {
-                            attribute.isProductImageGroupSelector = attribute.attributeFQN === value;
+                        store.each(function(attribute) {
+                            attribute.set('isProductImageGroupSelector', attribute.get('attributeFQN') === value)
                         });
     
                         me.imageGroupGrid.setVisible(value !== null);

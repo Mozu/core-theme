@@ -156,7 +156,8 @@ Ext.define('Taco.view.product.variant.Modal', {
             // don't add any options that lack values;
             if (item.values.length) {
                 var record = optionsStore.add({
-                    attributeFQN: item.attributeFQN
+                    attributeFQN: item.attributeFQN,
+                    isProductImageGroupSelector: item.isProductImageGroupSelector || false  
                 })[0];
 
                 // must set the values after create to dirty the record
@@ -164,9 +165,7 @@ Ext.define('Taco.view.product.variant.Modal', {
             }
             
         })
-
-
-        
+        optionsStore.fireEvent('valuesSetComplete');
     },
 
     isValid: function () {
