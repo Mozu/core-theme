@@ -23,6 +23,7 @@ export class NavigationLeftComponent implements OnInit {
   mainItems: MenuItem[];
   systemItems: MenuItem[];
   public filterBehaviourId_Record : any[];
+  public filterfn : any;
 
   constructor(
     private navigationService: NavigationService,
@@ -45,35 +46,34 @@ export class NavigationLeftComponent implements OnInit {
       this._loggerService.info("NavigationLeftComponent : fetchLeftNavigationItems");
       let responseJson = data
       this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
-    //  var filterfn  = this.filterBehaviourId(this.model.navigationTabs);
-    //  console.log(filterfn, "filterfn");
-      this.mainItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'main' });
-      this.systemItems = this.model.navigationTabs.filter(function (el) { return el.navParent == 'sys' });
+      /* filter the menus on the basis of logged in user behaviour id */
+      this.filterfn  = this.filterBehaviourId(this.model.navigationTabs);
+      this.mainItems = this.filterfn.filter(function (el : any) { return el.navParent == 'main' });
+      this.systemItems = this.filterfn.filter(function (el : any) { return el.navParent == 'sys' });
       this.changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
     });
   }
 
-  // public filterBehaviourId = (records) => {
-   
-  //   let sharedData_behavioursIds : any[];
-  //   this.filterBehaviourId_Record =[] ;     
-  //   sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds
-  //   if (this._sharedData._sharedData.items.ctUser.behaviorIds.length) {
-  //     records.forEach(function (record) { 
-  //            if (sharedData_behavioursIds.indexOf(record.behaviorIds) === -1) {
-  //             //return false;
-  //             records.pop(record);
-  //             }
-  //             debugger
-  //           //this.filterBehaviourId_Record.push(record); 
-  //          //console.log(this.filterBehaviourId_Record);
-  //          console.log(records);
-  //           return record;
-  //     });
-  //   //  return filterBehaviourId_Record.push(record);    
-  //   }  
-  // }
+  public filterBehaviourId = (records : any) => {
+    records = this.pruneInvalidLinks(records);
+    let sharedData_behavioursIds : any[];
+    this.filterBehaviourId_Record =[] ;     
+    sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
+    var result = [];
+    result = records.filter(function(v : any) { 
+        if (v.behaviorIds) { 
+           return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== "true");
+        }
+        else if(v.visible && v.visible== "true") {
+          return records;
+        }
+      });
+    return result;
+  }
 
+  public pruneInvalidLinks = (records : any) => {
+    return records.filter(function(v : any) { return (v.id != 'localization'); });
+  }
 }

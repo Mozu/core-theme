@@ -44,8 +44,8 @@ export class SharedDataService {
         if (!this._authService.isUserLoggedIn()) {
             return;
         }
-        // const promise = this._https.get(`${Constants.webApis.getSharedData}`)
-        const promise = this._https.get(`./assets/json/user-data.json`)
+         const promise = this._https.get(`${Constants.webApis.getSharedData}`)
+        // const promise = this._https.get(`./assets/json/user-data.json`)
             .toPromise();
 
         promise.then(
