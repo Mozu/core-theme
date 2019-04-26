@@ -37,12 +37,14 @@ export class HeaderComponent implements OnInit {
     }
 
     public fetchloggedInUserData = () => {
+        this._loggerService.info("HeaderComponent : fetchloggedInUserData");
         this.loggedInUserName = this._sharedData._sharedData.items.ctUser.firstName +' '+ this._sharedData._sharedData.items.ctUser.lastName; 
         this.userNameInitials = this._sharedData._sharedData.items.ctUser.firstName.charAt(0) + this._sharedData._sharedData.items.ctUser.lastName.charAt(0);
         this.tenantName = this._sharedData._sharedData.items.ctTaContext.name;
     }
 
     public fetchRedirectionLink = () => {
+         this._loggerService.info("HeaderComponent : fetchRedirectionLink");
         this.headerService.fetchRedirectionLinks().subscribe( data => this.menuItem = data );
       }
 }

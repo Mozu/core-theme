@@ -11,6 +11,7 @@ import { HttpClientService, httpClientServiceCreator } from '@core/extensions/ht
 import { SharedDataService, CtUser } from '@global';
 import { AuthService } from '@core/extensions/auth.service';
 import { of } from 'rxjs';
+import { GlobalModule } from "@global/global.module";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -23,21 +24,10 @@ describe('HeaderComponent', () => {
   let sharedData : SharedDataService;
   let httpMock: HttpTestingController;
 
-  const userdata = ({
-    items: of({
-      "ctUser": {
-        "firstName": "Kibo",
-        "lastName": "admin",
-      },
-      "ctTaContext": {
-        "name": "Decathlon SandBox"
-      }
-    })
-} as any) as SharedDataService;
-
-  beforeEach(async(() => {
+   beforeEach(async(() => {
+     
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,HttpClientTestingModule],
+      imports: [HttpClientModule,HttpClientTestingModule, GlobalModule],
       declarations: [ HeaderComponent ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, UtilityService, EnvironmentConfig, AuthService,
@@ -45,22 +35,31 @@ describe('HeaderComponent', () => {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
           deps: [HttpClient, UtilityService, AuthService]
-      } ,
-    {
-      provide : SharedDataService,
-      useValue : userdata
-    }]
-    })
+      }
+    ]})
     .compileComponents();
-    
   }));
 
-  beforeEach(() => {
-     fixture = TestBed.createComponent(HeaderComponent);
-     component = fixture.debugElement.componentInstance;
-   });
+  beforeEach(async(() => {
+    httpMock = TestBed.get(HttpTestingController);
+    var respData = {
+      items: {
+        "ctUser": {
+          "firstName": "Kibo",
+          "lastName": "admin",
+        },
+        "ctTaContext": {
+          "name": "Decathlon SandBox"
+        }
+      }};
 
-
+    const req = httpMock.expectOne(`./assets/json/user-data.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(respData);
+    httpMock.verify();
+    fixture = TestBed.createComponent(HeaderComponent);
+    component = fixture.debugElement.componentInstance;
+   }));
 
   it('should create Header Component', () => {
     expect(component).toBeTruthy();
@@ -81,8 +80,10 @@ describe('HeaderComponent', () => {
         expect(compiled.querySelector('img').src).toContain('http://localhost:9876/assets/Images/kibo-icon.png');
       }));
 
-      it('Application is inside fetch logged in user data', () => {
-        component.ngOnInit();
-    });   
+  it('Application is inside fetch logged in user data', () => {
+      fixture.detectChanges();
+      expect(component.loggedInUserName).toBe("Kibo admin");
+  });
+
 });
 

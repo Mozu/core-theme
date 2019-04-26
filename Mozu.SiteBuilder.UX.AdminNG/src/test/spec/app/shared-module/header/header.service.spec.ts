@@ -26,16 +26,12 @@ describe('HeaderService', () => {
                 useFactory: httpClientServiceCreator,
                 deps: [HttpClient, UtilityService, AuthService]
               }
-    ]
-
+            ]
         });
-
         headerService = TestBed.get(HeaderService);
         loggerService = TestBed.get(LoggerService);
         httpMock = TestBed.get(HttpTestingController);
-
         loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
-
     });
 
     it('Application should call HeaderService service and return json object', () => {
@@ -55,14 +51,12 @@ describe('HeaderService', () => {
         },
         err => {
             expect(err).toBe(`Invalid Data`);
-            console.log(err);
         })
 
         const req = httpMock.expectOne(`./assets/json/user-redirection.json`, "sample url test from header service");
         expect(req.request.method).toBe("GET");
         req.flush(dummyRedirectionLinks);
         httpMock.verify();
-
     });
 });
 

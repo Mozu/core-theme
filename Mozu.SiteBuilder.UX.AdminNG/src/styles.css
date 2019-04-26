@@ -330,12 +330,13 @@ p-table .ui-table .pi-ellipsis-v:hover{
 } */
 /* --------------Context Menu Ellipsis CSS - End------------- */
 
-.ng-trigger.ng-trigger-overlayAnimation.ng-tns-c7-2.ui-menu.ui-widget.ui-widget-content.ui-corner-all.ui-menu-dynamic.ui-shadow.ng-star-inserted{
+.ng-trigger.ng-trigger-overlayAnimation.ui-menu.ui-widget.ui-widget-content.ui-corner-all.ui-menu-dynamic.ui-shadow.ng-star-inserted{
     max-width: 150px !important; 
     right: 2.5469px !important;
+    z-index: 99999 !important;
    }
 
-   li.ui-menuitem.ui-widget.ui-corner-all.ng-tns-c7-2.ng-star-inserted {
+   li.ui-menuitem.ui-widget.ui-corner-all.ng-star-inserted {
     padding: 8px 12px !important;
     font-size: 12px !important;
   }
