@@ -38,7 +38,7 @@ body .ui-menu .ui-submenu-header{
 
 body .ui-menu .ui-menuitem-link{
     padding: 0em 0.757em !important;
-    font-size: 13px;
+    /* font-size: 13px; */
     font-family:"proxima-nova", sans-serif !important;
 }
 
@@ -306,6 +306,7 @@ p-table .ui-chkbox.ui-widget {
 }
 
 p-table .ui-table .pi-ellipsis-v:hover{
+    cursor: pointer;
     color: #666666;
 }
 .ng-trigger.ui-widget{
@@ -339,5 +340,5 @@ p-table .ui-table .pi-ellipsis-v:hover{
     background-color: transparent !important;
     border:transparent  !important;
 }
-  
+
 /* --------------Context Menu Ellipsis CSS - End------------- */

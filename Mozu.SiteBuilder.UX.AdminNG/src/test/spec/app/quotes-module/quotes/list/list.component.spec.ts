@@ -1,41 +1,36 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, DebugElement, ElementRef } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 
-import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
-import { TranslateModule } from '@ngx-translate/core';
+import { TableModule } from 'primeng/table';
 
 import { LoggerService } from '@core';
 import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
 
+import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
+import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
+
 import { QuotesListComponent } from 'app/quotes-module/quotes/list/list.component';
 import { QuotesListModel } from 'app/quotes-module/quotes/list/list.model';
 import { QuotesListService } from 'app/quotes-module/quotes/list/list.service';
 
-
-fdescribe('QuotesListComponent', () => {
+describe('QuotesListComponent', () => {
   let component: QuotesListComponent;
   let fixture: ComponentFixture<QuotesListComponent>;
-  let quotesModel: QuotesListModel;
   let debugElement: DebugElement;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
-  let quotesService: QuotesListService;
   let httpMock: HttpTestingController;
-  let selectedQuote: any; 
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
-  
-  let dummyQuoteList = {
-    "startIndex": 0,
-    "pageSize": 10,
-    "pageCount": 1,
-    "totalCount": 2,
-    "items": [
-     {
+  let element: HTMLElement;
+
+  var dummyQuoteList = {
+    "items": [{
       "id": "0da178726c6b9e27784ebfec0000432a",
       "name": "Test Quote One",
       "siteId": 21127,
@@ -43,10 +38,10 @@ fdescribe('QuotesListComponent', () => {
       "number": 1,
       "items": [],
       "auditInfo": {
-       "updateDate": "2019-03-31T19:52:25.091Z",
-       "createDate": "2019-03-31T19:52:25.091Z",
-       "updateBy": "1",
-       "createBy": "1"
+        "updateDate": "2019-03-31T19:52:25.091Z",
+        "createDate": "2019-03-31T19:52:25.091Z",
+        "updateBy": "1",
+        "createBy": "1"
       },
       "destinations": [],
       "isTaxExempt": false,
@@ -74,96 +69,125 @@ fdescribe('QuotesListComponent', () => {
       "handlingTotal": 0,
       "dutyTotal": 0,
       "feeTotal": 0
-     }]
-    };
+    }]
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule, HttpClientModule, HttpClientTestingModule ],
-      declarations: [ QuotesListComponent ],
-      schemas:[NO_ERRORS_SCHEMA],
-      providers: [QuotesListService, LoggerService, CustomNGXLoggerService, NGXLoggerHttpService, UtilityService, EnvironmentConfig, AuthService,
+      imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, TableModule],
+      declarations: [QuotesListComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [By, TranslateService, LoggerService, CustomNGXLoggerService,
+        NGXLoggerHttpService, UtilityService, EnvironmentConfig, AuthService, QuotesListModel, QuotesListService,
         {
-            provide: HttpClientService,
-            useFactory: httpClientServiceCreator,
-            deps: [HttpClient, UtilityService, AuthService]
+          provide: HttpClientService,
+          useFactory: httpClientServiceCreator,
+          deps: [HttpClient, UtilityService, AuthService]
         },
         {
-            provide: Router, 
-            useValue: class { navigate = jasmine.createSpy("navigate"); } 
-        },
-        {
-          provide: QuotesListModel, 
-          userClass: QuotesListModel
-      }]
+          provide: Router,
+          useValue: class { navigate = jasmine.createSpy("navigate"); }
+        }
+      ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(QuotesListComponent);
-    component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    //To access external model class
-    quotesModel = new QuotesListModel();
-    quotesModel.items = [];
-
-     //To inject services using spyOn
-    quotesService = TestBed.get(QuotesListService);
+    //To inject services using spyOn
     loggerService = TestBed.get(LoggerService);
     httpMock = TestBed.get(HttpTestingController);
 
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
   }));
 
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
-
-    it('Application should call onRowSelect()', () => {
-      component.onRowSelect(dummyQuoteList);
-      selectedQuote = dummyQuoteList;
-      expect(selectedQuote.items.length).toBe(1);
-    });
-
-    it("Application should call viewQuote()", function() {
-        component.viewQuote();
-        let router = {
-          navigate: jasmine.createSpy('navigate')
-        };
-        selectedQuote = dummyQuoteList;
-       // selectedQuote.tenantId = dummyQuoteList.items[0].tenantId;
-        let tenantId =  selectedQuote.tenantId
-        expect(router.navigate).toHaveBeenCalledWith(['/quotesEdit/' + tenantId]);
-    });
-
-    it("Application should call ngOnInit()", function() {
-      component.ngOnInit();
-      expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : ngOnInit');
+  beforeEach(() => {
+    fixture = TestBed.createComponent(QuotesListComponent);
+    component = fixture.componentInstance;
+    debugElement = fixture.debugElement;
+    element = debugElement.nativeElement;
   });
 
-    it("Application should call populateQuoteGrid()", function() {
-        component.populateQuoteGrid();
-        expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : populateQuoteGrid');
-    });
-
-    it('Application should call populateQuoteGrid() for success response of mock http json (quote-list)', () => {
-      component.populateQuoteGrid();
-      const req = httpMock.expectOne(`./assets/json/quote-list.json`, "Quote List Sample");
-      expect(req.request.method).toBe("GET");
-      req.flush(dummyQuoteList);
-      httpMock.verify();
-      expect(loggerServiceSpy).toHaveBeenCalledWith("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('Application should call populateQuoteGrid() for error response of mock http json (quote-list)', () => {
-   
-    component.populateQuoteGrid();
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`, "Quote List Sample");
+  it("should call ngOnInit()", function () {
+    fixture.detectChanges();
+    expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : ngOnInit');
+  });
+
+  it("should call populateQuoteGrid()", function () {
+    fixture.detectChanges();
+    expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : populateQuoteGrid');
+  });
+
+  it('should get grid items from qoute component', async(() => {
+    fixture.detectChanges();
+    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
-    req.flush(dummyQuoteList), mockErrorResponse;
+    req.flush(dummyQuoteList);
     httpMock.verify();
+    fixture.whenStable().then(() => {
+      expect(component.model.items.length).toBe(1);
+    });
+  }));
+
+  it('should display Quote grid', async(() => {
+    fixture.detectChanges();
+    expect(debugElement.queryAll(By.css('.ui-table-wrapper')).length).toEqual(1);
+  }));
+
+  it('should display data in Quote grid', async(() => {
+    fixture.detectChanges();
+    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList);
+    httpMock.verify();
+
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      const cells = fixture.debugElement.queryAll(By.css('tr.ui-selectable-row'));
+      expect(cells.length).toBe(1);
+    });
+  }));
+
+  it('should call onRowSelect on row click', async(() => {
+    const spy = spyOn(component, 'onRowSelect');
+    fixture.detectChanges();
+
+    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList);
+    httpMock.verify();
+
+    fixture.detectChanges();
+    const cell = fixture.debugElement.queryAll(By.css('tr.ui-selectable-row'))[0];
+    console.log(cell);
+    cell.nativeElement.click();
+
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(spy).toHaveBeenCalled();
+    });
+  }));
+
+  it('should call service to get success response from mock http json (quote-list)', () => {
+    fixture.detectChanges();
+    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList);
+    httpMock.verify();
+    fixture.detectChanges();
+    expect(loggerServiceSpy).toHaveBeenCalledWith("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
+  });
+
+  it('should call service to get failure response from mock http json (quote-list)', () => {
+    fixture.detectChanges();
+    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList, mockErrorResponse);
+    httpMock.verify();
+    fixture.detectChanges();
     expect(loggerServiceSpy).toHaveBeenCalledWith("QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse");
-    
-});
+  });
 
 });

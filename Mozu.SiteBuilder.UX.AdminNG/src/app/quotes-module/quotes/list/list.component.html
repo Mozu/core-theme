@@ -1,13 +1,10 @@
 
 
-<div class="col-md-12 container-margin">
+<div class="col-md-12 quote-container">
   
 <p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="numerOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single" >
     <ng-template pTemplate="header">
         <tr>
-            <th style="width: 4em">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-            </th>
             <th>{{'QUOTES.GridHeader.b2bAccountName' | translate }}</th>
             <th>{{'QUOTES.GridHeader.quoteName' | translate }}</th>
             <th>{{'QUOTES.GridHeader.buyerName' | translate }}</th>
@@ -15,15 +12,12 @@
             <th>{{'QUOTES.GridHeader.lastModifiedDate' | translate }}</th>
             <th>{{'QUOTES.GridHeader.quoteTotal' | translate }}</th>
             <th style="width: 4em">
-                <i class="pi pi-ellipsis-v"></i>
+                <!-- <i class="pi pi-ellipsis-v"></i> -->
             </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-quoteModel>
         <tr [pSelectableRow]="quoteModel">
-            <td style="width: 4em">
-                <p-tableCheckbox [value]="quoteModel"></p-tableCheckbox>
-            </td>
             <td>
                 <!-- <span class="ui-column-title">{{'QUOTES.GridHeader.b2bAccountName' | translate }}</span> --> <!-- For Responsive-->
                 <span>{{quoteModel.tenantId}}</span>
@@ -35,8 +29,8 @@
             <td><span>{{quoteModel.feeTotal | currency}}</span></td>
             <td style="width: 4em">
                 <div>
-                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
-                    <p-menu #menu [model]="menuItem" [popup]="true" appendTo="body"></p-menu>
+                    <i class="pi pi-ellipsis-v" (click)="gridActionMenu.toggle($event)"></i>
+                    <p-menu #gridActionMenu [model]="menuItem" [popup]="true" appendTo="body"></p-menu>
                 </div>
             </td>
         </tr>

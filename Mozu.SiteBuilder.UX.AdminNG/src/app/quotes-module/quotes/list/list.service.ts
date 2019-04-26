@@ -14,7 +14,7 @@ export class QuotesListService{
         private _loggerService: LoggerService){ }
 
     public fetchAllQuotes(): Observable<any>{
-        this._loggerService.info("QuotesService: fetchAllQuotes");
+        this._loggerService.info("QuotesListService: fetchAllQuotes");
         return this._http.get(Constants.JsonResources.quoteList);
     }
 }

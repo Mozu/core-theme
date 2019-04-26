@@ -46,8 +46,8 @@ export class QuotesListComponent implements OnInit {
   };
 
   viewQuote(){
-    let tenantId =  this.selectedQuote.tenantId
-    this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + tenantId])
+    let tenantId =  this.selectedQuote.tenantId;
+    this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + tenantId]);
     //this.menuItem[0].routerLink = ['/quotesEdit/' + this.selectedQuote.tenantId]
   }
 
