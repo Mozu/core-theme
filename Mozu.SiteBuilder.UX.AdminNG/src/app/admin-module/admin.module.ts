@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 
-import { AdminDashboardComponent } from './index';
 import { SharedModule } from '@shared/shared.module';
+
+import { AdminDashboardComponent } from './index';
 
 @NgModule({
     imports: [

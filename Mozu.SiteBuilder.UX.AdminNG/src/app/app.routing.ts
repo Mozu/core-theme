@@ -10,8 +10,11 @@ import { PageNotFoundComponent } from '@core';
 import { AuthGuardService } from '@global';
 
 import { Constants } from '@shared';
+
 import {  AdminDashboardComponent } from './admin-module';
-import {  QuotesEditComponent, QuotesListComponent } from './quotes-module';
+
+import {  QuotesEditComponent, 
+    QuotesListComponent } from './quotes-module';
 
 const appRoutes: Routes = [
     {

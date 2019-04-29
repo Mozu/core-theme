@@ -1,9 +1,14 @@
+import { MenuItem } from 'primeng/api';
+
 export class QuotesListModel {
     startIndex: number;
     pageSize: number;
     pageCount: number;
     totalCount: number;
     items: QuoteItem[];
+    numberOfRows: number;
+    selectedQuote: any;
+    quoteGridContextMenuItem: MenuItem[];
   }
   
 export class QuoteItem {
@@ -47,4 +52,4 @@ export class AuditInfo {
     createDate: string;
     updateBy: string;
     createBy: string;
-  }
+}

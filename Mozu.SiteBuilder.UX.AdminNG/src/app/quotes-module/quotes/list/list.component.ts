@@ -10,6 +10,8 @@ import { LoggerService,
   ErrorCode, 
   ErroNotificationType} from '@core'
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { Constants } from '@shared';
 
 import { QuotesListService } from './list.service';
@@ -24,31 +26,37 @@ import { QuotesListModel } from './list.model';
 })
 export class QuotesListComponent implements OnInit {
   public model: QuotesListModel;
-  numerOfRows = Constants.numerOfRows;
-  menuItem: MenuItem[];
-  selectedQuote: any;
   
-  constructor(private _quotesListService : QuotesListService ,private _loggerService : LoggerService, private router: Router) { }
+  constructor(private _quotesListService : QuotesListService ,
+    private _loggerService : LoggerService, 
+    private _translate: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
     this._loggerService.info("QuotesListComponent : ngOnInit");
-    this.model = new QuotesListModel();
+    this.model = new QuotesListModel(); 
+    this.model.numberOfRows =  Constants.numberOfRows; 
     this.model.items = [];
-    //p-menu items
-    this.menuItem = [
-      { label: 'Edit', command: (event) => this.viewQuote() }
-    ];
+    this.model.quoteGridContextMenuItem =[];
+    
+    this._translate.get('QUOTES.GridContextMenu').subscribe((successResponse) => { 
+      this.gridContextMenu(successResponse);
+    });
+    
     this.populateQuoteGrid();    
   }
 
   onRowSelect(event) {
-    this.selectedQuote = event.data;
+    this.model.selectedQuote = event.data;
   };
 
+  public gridContextMenu = (contextMenu) => {
+    this.model.quoteGridContextMenuItem.push({ label: contextMenu.edit, command: (event) => this.viewQuote() })
+  }
+
   viewQuote(){
-    let tenantId =  this.selectedQuote.tenantId;
+    let tenantId =  this.model.selectedQuote.tenantId;
     this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + tenantId]);
-    //this.menuItem[0].routerLink = ['/quotesEdit/' + this.selectedQuote.tenantId]
   }
 
   public populateQuoteGrid = () => {

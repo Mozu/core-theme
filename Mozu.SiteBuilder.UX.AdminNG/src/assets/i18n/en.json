@@ -67,6 +67,9 @@
     "status": "Status",
     "lastModifiedDate": "Last Modified Date",
     "quoteTotal": "Quote Total"      
+  },
+  "GridContextMenu": {
+    "edit": "Edit"
   }
 }
 }

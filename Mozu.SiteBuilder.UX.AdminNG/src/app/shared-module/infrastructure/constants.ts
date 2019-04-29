@@ -107,5 +107,5 @@ export class Constants {
         redirectionLink : "./assets/json/user-redirection.json"
     }
 
-    static numerOfRows: number = 10;
+    static numberOfRows: number = 10;
 }

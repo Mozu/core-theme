@@ -120,7 +120,7 @@ describe('QuotesListComponent', () => {
     expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : populateQuoteGrid');
   });
 
-  it('should get grid items from qoute component', async(() => {
+  it('should get grid items from quote component', async(() => {
     fixture.detectChanges();
     const req = httpMock.expectOne(`./assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
@@ -131,12 +131,12 @@ describe('QuotesListComponent', () => {
     });
   }));
 
-  it('should display Quote grid', async(() => {
+  it('should display quote grid', async(() => {
     fixture.detectChanges();
     expect(debugElement.queryAll(By.css('.ui-table-wrapper')).length).toEqual(1);
   }));
 
-  it('should display data in Quote grid', async(() => {
+  it('should display data in quote grid', async(() => {
     fixture.detectChanges();
     const req = httpMock.expectOne(`./assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");

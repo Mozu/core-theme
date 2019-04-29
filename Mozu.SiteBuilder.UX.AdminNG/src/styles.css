@@ -89,7 +89,11 @@ body .ui-tabview .ui-tabview-panels{
 .ui-menu{
     width:100% !important;
 }
-
+.ui-card-shadow.ui-card {
+    margin-top: 20px !important;
+    height: 213px !important; 
+    margin-bottom: 20px !important;
+}
 
 .ui-card-body {
     padding: 0.78em !important;

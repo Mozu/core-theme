@@ -2,7 +2,7 @@
 
 <div class="col-md-12 quote-container">
   
-<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="numerOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single" >
+<p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single" >
     <ng-template pTemplate="header">
         <tr>
             <th>{{'QUOTES.GridHeader.b2bAccountName' | translate }}</th>
@@ -29,8 +29,8 @@
             <td><span>{{quoteModel.feeTotal | currency}}</span></td>
             <td style="width: 4em">
                 <div>
-                    <i class="pi pi-ellipsis-v" (click)="gridActionMenu.toggle($event)"></i>
-                    <p-menu #gridActionMenu [model]="menuItem" [popup]="true" appendTo="body"></p-menu>
+                    <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>
+                    <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
                 </div>
             </td>
         </tr>
