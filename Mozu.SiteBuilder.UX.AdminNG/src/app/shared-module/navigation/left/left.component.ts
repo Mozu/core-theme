@@ -10,6 +10,7 @@ import { LoggerService } from '@core'
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, LeftNavigationTabs } from './left.model';
 import { SharedDataService } from '@global/services/shared-data.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'navigation-left',
@@ -62,11 +63,11 @@ export class NavigationLeftComponent implements OnInit {
     this.filterBehaviourId_Record =[] ;     
     sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
     var allMenus = [];
-    allMenus = records.filter(function(v : any) { 
+    allMenus = _.filter(records, function(v : any) { 
         if (v.behaviorIds) { 
-           return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== "true");
+           return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== true);
         }
-        else if(v.visible && v.visible== "true") {
+        else if(v.visible && v.visible== true) {
           return records;
         }
       });
@@ -74,9 +75,9 @@ export class NavigationLeftComponent implements OnInit {
       var menuItems = allMenus.filter(function(menuItems : any) {    
         var filteredSubItems = menuItems.items.filter(function(el : any){
           if (el.behaviorIds) { 
-            return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == "true");
+            return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
           }
-          else if(el.visible && el.visible== "true") {
+          else if(el.visible && el.visible== true) {
             return records;
           }
         });
