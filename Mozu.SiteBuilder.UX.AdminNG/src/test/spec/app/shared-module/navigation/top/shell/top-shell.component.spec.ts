@@ -1,18 +1,18 @@
 
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { AccessTileComponent } from '@shared/access-tile/access-tile.component';
 import { NO_ERRORS_SCHEMA, DebugElement, ElementRef } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
-import { NotificationService } from '@global';
-import { LoggerService } from '@core';
-import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavigationTopShellComponent } from '@shared';
-import { NavigationService } from '@shared/navigation/navigation.service';
+import { LoggerService } from '@core';
 import { TopNavigationModel } from '@shared/navigation/top/shell/top-shell.model';
 import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
+import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
+import { NotificationService } from '@global';
+import { NavigationTopShellComponent } from '@shared';
+import { NavigationService } from '@shared/navigation/navigation.service';
+
 
 describe('top navigation component', () => {
   let component: NavigationTopShellComponent;

@@ -9,9 +9,9 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { LoggerService } from '@core';
 
-import { NavigationService } from './navigation.service';
-
 import { NavigationContainerType } from '@shared/infrastructure/enums';
+
+import { NavigationService } from './navigation.service';
 
 @Component({
     moduleId: module.id,
