@@ -8,6 +8,7 @@ import { SharedDataService, CtUser } from '@global';
 import { MenuItem } from 'primeng/api';
 import { HeaderService } from './header.service';
 
+
 @Component({
     moduleId: module.id,
     selector: 'header',
@@ -18,7 +19,8 @@ import { HeaderService } from './header.service';
 export class HeaderComponent implements OnInit {
     public tenantName: string;
     public loggedInUserName : string;
-    public userNameInitials : string;
+    public userFirstName : string;
+    public userLastName : string;
     public userContextMenuItem : MenuItem;
 
     constructor(
@@ -36,6 +38,9 @@ export class HeaderComponent implements OnInit {
 
     public fetchloggedInUserData = () => {
         this._loggerService.info("HeaderComponent : fetchloggedInUserData");
+        this.loggedInUserName = this._sharedData._sharedData.items.ctUser.firstName +' '+ this._sharedData._sharedData.items.ctUser.lastName; 
+        this.userFirstName = this._sharedData._sharedData.items.ctUser.firstName;
+        this.userLastName= this._sharedData._sharedData.items.ctUser.lastName;
         this.tenantName = this._sharedData._sharedData.items.ctTaContext.name;
     }
 
