@@ -39,7 +39,9 @@ import {
     DatexPipe,
     EllipsisPipe,
     SafeHtmlPipe,
-    SplitPipe
+    SplitPipe,
+    UserNameInitial,
+    SplitLoggedUserName
 } from './pipes/index';;
 
 import {SidebarModule} from 'primeng/sidebar';
@@ -47,7 +49,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {MenuModule} from 'primeng/menu';;
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
-import { SearchBarComponent } from './search-bar/search-bar.component';
+import { SearchBarComponent } from './search-bar/search-bar.component'
 
 declare var resourcesVersion: any;
 
@@ -83,6 +85,8 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
+        UserNameInitial,
+        SplitLoggedUserName,
 
         // directives
         RestrictInput,
@@ -122,6 +126,8 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
+        UserNameInitial,
+        SplitLoggedUserName,
 
         // directives
         RestrictInput,

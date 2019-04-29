@@ -8,11 +8,13 @@ import { LoggerService } from '@core'
 @Injectable()
 export class HeaderService {
 
-  constructor( private _http: HttpClientService, private _loggerService: LoggerService ) { }
+  constructor( 
+    private _httpClientService : HttpClientService,
+    private _loggerService: LoggerService ) { }
  
   public fetchRedirectionLinks = () => {
     this._loggerService.info("HeaderService : fetchRedirectionLink");
-    return this._http.get(Constants.JsonResources.redirectionLink);
+    return this. _httpClientService .get(Constants.JsonResources.redirectionLink);
   }
 }
 

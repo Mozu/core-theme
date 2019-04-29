@@ -20,9 +20,9 @@
             <li><a href="#"><span class="fa fa-search"></span></a></li>
             <li class="avatar-align">
               <a>
-              <div id="userbutton-1032-userbutton-avatar" class="user-avatar">{{userNameInitials}}</div>
-              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="menu.toggle($event)">{{loggedInUserName}}</div>
-              <p-menu #menu [model]="menuItem" [popup]="true" appendTo="body"></p-menu>
+              <div id="userbutton-1032-userbutton-avatar" class="user-avatar">{{userNameInitials | userinitial}}</div>
+              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="userContextMenu.toggle($event)">{{loggedInUserName | splitLoggedInUserName}}</div>
+              <p-menu #userContextMenu [model]="userContextMenuItem" [popup]="true" appendTo="body"></p-menu>
               </a>
             </li>
         </ul>

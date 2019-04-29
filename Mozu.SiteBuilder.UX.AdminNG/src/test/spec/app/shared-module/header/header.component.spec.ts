@@ -10,10 +10,11 @@ import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
 import { SharedDataService, CtUser } from '@global';
 import { AuthService } from '@core/extensions/auth.service';
-import { of } from 'rxjs';
 import { GlobalModule } from "@global/global.module";
+import { UserNameInitial } from '@shared/pipes/userNameInitial.pipe'
+import { SplitLoggedUserName } from '@shared/pipes/splitLoggedInUserName.pipe';
 
-describe('HeaderComponent', () => {
+fdescribe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let de: DebugElement;
@@ -27,8 +28,8 @@ describe('HeaderComponent', () => {
    beforeEach(async(() => {
      
     TestBed.configureTestingModule({
-      imports: [HttpClientModule,HttpClientTestingModule, GlobalModule],
-      declarations: [ HeaderComponent ],
+      imports: [HttpClientModule,HttpClientTestingModule, GlobalModule ],
+      declarations: [ HeaderComponent, UserNameInitial, SplitLoggedUserName ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, UtilityService, EnvironmentConfig, AuthService,
         {
@@ -80,10 +81,10 @@ describe('HeaderComponent', () => {
         expect(compiled.querySelector('img').src).toContain('http://localhost:9876/assets/Images/kibo-icon.png');
       }));
 
-  it('Application is inside fetch logged in user data', () => {
+  it('Application should fetch logged in user data', () => {
       fixture.detectChanges();
-      expect(component.loggedInUserName).toBe("Kibo admin");
+      expect(component.tenantName).toBe("Decathlon SandBox");
   });
-
+  
 });
 
