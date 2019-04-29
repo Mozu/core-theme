@@ -13,7 +13,7 @@
         "label": "Products",
         "address": "products",
         "behaviorIds":  4 ,
-        "visible" : "false",
+        "visible" : "true",
         "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/products"
       },
       {

@@ -54,6 +54,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this._loggerService.info("AdminDashboardComponent : constructor");
     this.model = new DashboardModel();
     this.subscriptions = [];
+    this.filterBehaviourId_Record = [];
   }
 
   ngOnInit() {
@@ -100,15 +101,28 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     let sharedData_behavioursIds : any[];
     this.filterBehaviourId_Record =[] ;     
     sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
-    var result = [];
-    result = records.filter(function(v : any) { 
+    var allMenus = [];
+    allMenus = records.filter(function(v : any) { 
         if (v.behaviorIds) { 
           return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== "true");
         } else if(v.visible && v.visible== "true") {
           return records;
         }
+    });
+
+    var menuItems = allMenus.filter(function(menuItems : any) {    
+      var filteredSubItems = menuItems.items.filter(function(el : any){
+        if (el.behaviorIds) { 
+          return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == "true");
+        }
+        else if(el.visible && el.visible== "true") {
+          return records;
+        }
       });
-    return result;
+      menuItems.items = filteredSubItems;
+    });
+
+    return allMenus;
   }
 
   public pruneInvalidLinks = (records : any) => { 
