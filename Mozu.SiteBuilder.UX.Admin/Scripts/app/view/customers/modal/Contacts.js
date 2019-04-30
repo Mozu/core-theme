@@ -36,6 +36,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
     }],
 
     initComponent: function () {
+        var me = this;
 
         this.form = Ext.create('Ext.form.Panel', {
             itemId: 'contactForm',
@@ -49,6 +50,17 @@ Ext.define('Taco.view.customers.modal.Contacts', {
                     scope: this
                 }
             ]
+        });
+
+        this.allowInvalidAddresses = false;
+        this.isAddressValidationEnabled = false;
+        Taco.model.GeneralSettings.load('', {
+            success: function (record) {                
+                me.allowInvalidAddresses = record.data.allowInvalidAddresses;
+                me.isAddressValidationEnabled = record.data.isAddressValidationEnabled;
+            },
+            failure: function () {
+            }
         });
 
         this.items = [this.form];
@@ -85,7 +97,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
     doSave: function () {
         var me = this,
             jsonData = {
-                id : this.order.data.id
+                id: this.order.data.id
             },
             count = 0,
             shipping = this.down('[name="customerShipToAddress"]{getValue()}'),
@@ -100,6 +112,8 @@ Ext.define('Taco.view.customers.modal.Contacts', {
             // need to check for the shipping contact email as its required for the order;
             if (!shipping.inputValue.email) {
                 errors.push("The selected shipping address is missing an email address.")
+            } else if (this.isAddressValidationEnabled && !this.allowInvalidAddresses && !shipping.inputValue.addressIsValidated) {
+                errors.push("The selected shipping address is not validated.")
             } else {
                 this.order.set('fulfillmentContact', shipping.inputValue);
                 jsonData.fulfillmentContact = shipping.inputValue;
@@ -107,7 +121,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
         }
 
         if (billing && (this.order.get('orderStatus') == 'Pending')) {
-            this.order.set('billingContact', billing.inputValue);            
+            this.order.set('billingContact', billing.inputValue);
             jsonData.billingContact = billing.inputValue;
         }
 
@@ -133,7 +147,7 @@ Ext.define('Taco.view.customers.modal.Contacts', {
 
 
 
-        
+
         if (this.order && this.order.dirty) {
             this.order.updateContactInfo({
                 jsonData: jsonData,
