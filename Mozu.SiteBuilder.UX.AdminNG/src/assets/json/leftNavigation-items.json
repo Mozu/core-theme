@@ -6,7 +6,7 @@
       "imageURL": "./assets/Images/catlog.png",
       "icon": "nav-catalog",
       "behaviorIds": 4,
-      "visible" : false,
+      "visible" : true,
       "items": [
         {
           "id": "catalogProducts",
@@ -37,7 +37,7 @@
           "behaviorIds":  239 ,
           "label": "Price Lists",
           "address": "priceLists",
-          "visible" : "false",
+          "visible" : true,
           "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/priceLists"
         }
       ]

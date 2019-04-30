@@ -14,7 +14,7 @@ import { GlobalModule } from "@global/global.module";
 import { UserNameInitial } from '@shared/pipes/userNameInitial.pipe'
 import { SplitLoggedUserName } from '@shared/pipes/splitLoggedInUserName.pipe';
 
-fdescribe('HeaderComponent', () => {
+describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let de: DebugElement;

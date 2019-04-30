@@ -105,26 +105,27 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
     var allMenus = [];
     allMenus = _.filter(records, function(v : any) { 
-        if (v.behaviorIds) { 
-          return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== true);
-        } else if(v.visible && v.visible== true) {
-          return records;
-        }
+      if (v.behaviorIds) { 
+         return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== true);
+      }
+      else if(v.visible && v.visible== true) {
+        return records;
+      }
     });
 
-    var menuItems = allMenus.filter(function(menuItems : any) {    
-      var filteredSubItems = menuItems.items.filter(function(el : any){
-        if (el.behaviorIds) { 
-          return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
-        }
-        else if(el.visible && el.visible== true) {
-          return records;
-        }
-      });
-      menuItems.items = filteredSubItems;
+    _.map(allMenus, function(el){
+         var filteredSubItems = _.filter(el.items, function(el : any){
+          if (el.behaviorIds) { 
+            return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
+          }
+          else if(el.visible && el.visible== true) {
+            return records;
+          }
+          return true;
+        });
+        el.items = filteredSubItems;
     });
-
-    return allMenus;
+  return allMenus;
   }
 
   public pruneInvalidLinks = (records : any) => { 

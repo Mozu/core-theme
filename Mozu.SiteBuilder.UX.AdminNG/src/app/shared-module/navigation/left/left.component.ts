@@ -49,8 +49,8 @@ export class NavigationLeftComponent implements OnInit {
       this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
       /* filter the menus on the basis of logged in user behaviour id */
       this.filterfn  = this.filterBehaviourId(this.model.navigationTabs);
-      this.mainItems = this.filterfn.filter(function (el : any) { return el.navParent == 'main' });
-      this.systemItems = this.filterfn.filter(function (el : any) { return el.navParent == 'sys' });
+      this.mainItems = _.filter(this.filterfn, function (el : any) { return el.navParent == 'main' });
+      this.systemItems = _.filter(this.filterfn, function (el : any) { return el.navParent == 'sys' });
       this.changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
@@ -72,18 +72,18 @@ export class NavigationLeftComponent implements OnInit {
         }
       });
 
-      var menuItems = allMenus.filter(function(menuItems : any) {    
-        var filteredSubItems = menuItems.items.filter(function(el : any){
-          if (el.behaviorIds) { 
-            return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
-          }
-          else if(el.visible && el.visible== true) {
-            return records;
-          }
-        });
-        menuItems.items = filteredSubItems;
+      _.map(allMenus, function(el){
+           var filteredSubItems = _.filter(el.items, function(el : any){
+            if (el.behaviorIds) { 
+              return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
+            }
+            else if(el.visible && el.visible== true) {
+              return records;
+            }
+            return true;
+          });
+          el.items = filteredSubItems;
       });
-  
     return allMenus;
   }
 
