@@ -346,6 +346,11 @@
             productTypeRecord: this.record.productTypeRecord
         });
 
+        //Workaround for how we setup product iamge groups grid
+        //Clear image groups on create
+        var store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ImageGroup');
+        store.removeAll();
+
         this.callParent(arguments);
     },
 
