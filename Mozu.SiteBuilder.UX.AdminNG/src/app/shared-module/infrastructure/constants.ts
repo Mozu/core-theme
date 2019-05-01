@@ -103,6 +103,8 @@ export class Constants {
 
     static leftNavigationSource : string =  "./assets/json/leftNavigation-items.json";
 
+    static localizationMenu : string = 'localization';
+
     static JsonResources = {
         leftNavigationItems :  "./assets/json/leftNavigation-items.json",
         tabsNames : "./assets/json/dashboard-menu.json",

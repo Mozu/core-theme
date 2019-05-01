@@ -3,9 +3,9 @@
     OnInit
 } from '@angular/core';
 
-import { LoggerService } from '@core';
-import { SharedDataService, CtUser } from '@global';
 import { MenuItem } from 'primeng/api';
+import { LoggerService } from '@core';
+import { SharedDataService } from '@global';
 import { HeaderService } from './header.service';
 
 
@@ -45,7 +45,7 @@ export class HeaderComponent implements OnInit {
     }
 
     public fetchRedirectionLink = () => {
-         this._loggerService.info("HeaderComponent : fetchRedirectionLink");
-        this._headerService.fetchRedirectionLinks().subscribe( data => this.userContextMenuItem = data );
+        this._loggerService.info("HeaderComponent : fetchRedirectionLink");
+        this._headerService.fetchRedirectionLinks().subscribe( eachLink => this.userContextMenuItem = eachLink );
       }
 }

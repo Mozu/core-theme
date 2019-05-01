@@ -6,11 +6,12 @@ import {
 } from '@angular/core';
 
 import { MenuItem } from 'primeng/api';
-import { LoggerService } from '@core'
-import { NavigationService } from '../navigation.service';
-import { LeftNavigationModel, LeftNavigationTabs } from './left.model';
-import { SharedDataService } from '@global/services/shared-data.service';
 import * as _ from 'lodash';
+import { LoggerService } from '@core'
+import { SharedDataService } from '@global/services/shared-data.service';
+import { NavigationService } from '../navigation.service';
+import { LeftNavigationModel } from './left.model';
+import { UtilityService } from '@core/infrastructure/utility.service';
 
 @Component({
   selector: 'navigation-left',
@@ -30,7 +31,8 @@ export class NavigationLeftComponent implements OnInit {
     private navigationService: NavigationService,
     private changeDetectorRef: ChangeDetectorRef,
     private _loggerService : LoggerService,
-    private _sharedData : SharedDataService
+    private _sharedData : SharedDataService,
+    private utilityService : UtilityService,
   ) { this.filterBehaviourId_Record = []; }
 
   visibleSidebar1;
@@ -48,9 +50,11 @@ export class NavigationLeftComponent implements OnInit {
       let responseJson = data
       this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
       /* filter the menus on the basis of logged in user behaviour id */
-      this.filterfn  = this.filterBehaviourId(this.model.navigationTabs);
-      this.mainItems = _.filter(this.filterfn, function (el : any) { return el.navParent == 'main' });
-      this.systemItems = _.filter(this.filterfn, function (el : any) { return el.navParent == 'sys' });
+    //  this.filterfn  = this.filterBehaviourId(this.model.navigationTabs);
+      this.model.filteredNavigationLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData._sharedData.items.ctUser.behaviorIds);
+
+      this.mainItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'main' });
+      this.systemItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'sys' });
       this.changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");

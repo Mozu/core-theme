@@ -12,7 +12,6 @@ import { SharedDataService, CtUser } from '@global';
 import { AuthService } from '@core/extensions/auth.service';
 import { GlobalModule } from "@global/global.module";
 import { UserNameInitial } from '@shared/pipes/userNameInitial.pipe'
-import { SplitLoggedUserName } from '@shared/pipes/splitLoggedInUserName.pipe';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -29,7 +28,7 @@ describe('HeaderComponent', () => {
      
     TestBed.configureTestingModule({
       imports: [HttpClientModule,HttpClientTestingModule, GlobalModule ],
-      declarations: [ HeaderComponent, UserNameInitial, SplitLoggedUserName ],
+      declarations: [ HeaderComponent, UserNameInitial ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, UtilityService, EnvironmentConfig, AuthService,
         {

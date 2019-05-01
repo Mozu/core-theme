@@ -1,5 +1,6 @@
 export class LeftNavigationModel {
     navigationTabs : LeftNavigationTabs [];
+    filteredNavigationLinks : LeftNavigationTabs [];
 }
 
 export class LeftNavigationTabs {

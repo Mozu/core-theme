@@ -27,6 +27,8 @@ import { CookieService as Cookie } from 'ngx-cookie-service';
 
 import { SharedDataService } from '@global/services/shared-data.service';
 
+import { UtilityService } from '@core/infrastructure/utility.service';
+
 import * as _ from 'lodash';
 
 
@@ -41,8 +43,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   model: DashboardModel;
   subscriptions: Subscription[];
-  public filterfn : any;
-  public filterBehaviourId_Record : any[];
 
   constructor(
     private _notificationService: NotificationService,
@@ -50,13 +50,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private _dashboardService: DashbaordService,
     private _loggerService: LoggerService,
     private _cookie: Cookie,
-    private _sharedData : SharedDataService
+    private _sharedData : SharedDataService,
+    private utilityService: UtilityService,
   ) {
 
     this._loggerService.info("AdminDashboardComponent : constructor");
     this.model = new DashboardModel();
     this.subscriptions = [];
-    this.filterBehaviourId_Record = [];
   }
 
   ngOnInit() {
@@ -86,10 +86,12 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this._dashboardService.fetchAllDashboardTiles().subscribe(successResponse => {
       let responseJson = successResponse;
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
+
       /* filter the menus on the basis of logged in user behaviour id */
-      this.filterfn  = this.filterBehaviourId(responseJson);
-      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.filterfn.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
-      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.filterfn.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
+      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData._sharedData.items.ctUser.behaviorIds);
+      
+      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
+      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
       this._changeDetectionRef.detectChanges();
 
     }, (errResponse) => {
@@ -97,40 +99,5 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster);
     });
   }
-
-  public filterBehaviourId = (records : any) => {
-    records = this.pruneInvalidLinks(records);
-    let sharedData_behavioursIds : any[];
-    this.filterBehaviourId_Record =[] ;     
-    sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
-    var allMenus = [];
-    allMenus = _.filter(records, function(v : any) { 
-      if (v.behaviorIds) { 
-         return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== true);
-      }
-      else if(v.visible && v.visible== true) {
-        return records;
-      }
-    });
-
-    _.map(allMenus, function(el){
-         var filteredSubItems = _.filter(el.items, function(el : any){
-          if (el.behaviorIds) { 
-            return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
-          }
-          else if(el.visible && el.visible== true) {
-            return records;
-          }
-          return true;
-        });
-        el.items = filteredSubItems;
-    });
-  return allMenus;
-  }
-
-  public pruneInvalidLinks = (records : any) => { 
-    return records.filter(function(v : any) { return (v.id != 'localization'); });
-  }
-
       
 }

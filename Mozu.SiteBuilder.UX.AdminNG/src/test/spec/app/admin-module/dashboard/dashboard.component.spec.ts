@@ -1,19 +1,26 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-import { AdminDashboardComponent } from '@admin/dashboard/dashboard.component';
-import { AccessTileComponent } from '@shared/access-tile/access-tile.component';
 import { NO_ERRORS_SCHEMA, DebugElement, ElementRef } from '@angular/core';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
-import { DashbaordService } from '@admin/dashboard/dashboard.service';
-import { NotificationService } from '@global';
-import { LoggerService} from '@core';
 import { By } from '@angular/platform-browser';
-import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
-import { DashboardModel } from '@admin/dashboard/dashboard.model';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+
+import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { CookieService as Cookie, CookieService } from 'ngx-cookie-service';
+
+import { LoggerService} from '@core';
 import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
+
+import { NotificationService } from '@global';
+import { SharedDataService } from '@global/services/shared-data.service';
+import { AccessTileComponent } from '@shared/access-tile/access-tile.component';
+
+import { AdminDashboardComponent } from '@admin/dashboard/dashboard.component';
+import { DashboardModel } from '@admin/dashboard/dashboard.model';
+import { DashbaordService } from '@admin/dashboard/dashboard.service';
+
+
 
 describe('DashboardComponent', () => {
   let component: AdminDashboardComponent;
@@ -26,7 +33,8 @@ describe('DashboardComponent', () => {
   let dashboardService: DashbaordService;
   let httpMock: HttpTestingController;
   let cookie:CookieService;
-  let httpClientService : HttpClientService
+  let httpClientService : HttpClientService;
+  let sharedData : SharedDataService;
 
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
   const dashboardJson = [
@@ -40,14 +48,8 @@ describe('DashboardComponent', () => {
     }
 ];
 
-let dummyData_pupulateSystemAndMainTiles = [
+let dummyData_pupulateSystemAndMainTiles = 
     {
-      "id": "products",
-      "navParent": "main",
-      "label": "Catalog",
-      "imageURL": "./assets/Images/catlog.png",
-      "icon": "nav-catalog",
-      "behaviorIds": [ 4 ],
       "items": [
         {
           "id": "catalogProducts",
@@ -62,7 +64,7 @@ let dummyData_pupulateSystemAndMainTiles = [
           "behaviorIds": [ 16 ]
         }
       ]
-    }];
+    };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -74,30 +76,29 @@ let dummyData_pupulateSystemAndMainTiles = [
         {
             provide: HttpClientService,
             useFactory: httpClientServiceCreator,
-            deps: [HttpClient, UtilityService, AuthService]
-        }
+            deps: [HttpClient, UtilityService, AuthService],
+        },
+        SharedDataService
     ]
     })
     .compileComponents();
 
+    //To inject services using spyOn
+    loggerService = TestBed.get(LoggerService);
+    httpMock = TestBed.get(HttpTestingController);
+    loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
+   
+    dashboardService = TestBed.get(DashbaordService);
+    httpClientService = TestBed.get(HttpClientService);
+    
+    dashboardModel = new DashboardModel();
+  }));
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(AdminDashboardComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
-
-    //To inject services using spyOn
-    loggerService = debugElement.injector.get(LoggerService);
-    loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
-
-    dashboardService = TestBed.get(DashbaordService);
-    httpMock = TestBed.get(HttpTestingController);
-
-    httpClientService = TestBed.get(HttpClientService);
-
-
-    //To access external model class
-    dashboardModel = new DashboardModel();
-    
-  }));
+    });
 
     it('Application should create dashboard Component', () => {
         //expect(component).toBeTruthy();
@@ -105,12 +106,12 @@ let dummyData_pupulateSystemAndMainTiles = [
     });
 
     it('Application is inside ngOnInit() of dashboard component', () => {
-        component.ngOnInit();
+        fixture.detectChanges();
         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : ngOnInit");
     });
 
     it("Application isShowSystemTiles will be false if active tab name is Main", function() {
-        component.ngOnInit();
+      fixture.detectChanges();
         dashboardModel.isShowSystemTiles = false;
         let activeTab = "Main";
         dashboardModel.isShowSystemTiles = (activeTab === "System");
@@ -118,7 +119,7 @@ let dummyData_pupulateSystemAndMainTiles = [
     });
 
     it("Application isShowSystemTiles will be true if active tab name is System", function() {
-        component.ngOnInit();
+      fixture.detectChanges();
         dashboardModel.isShowSystemTiles = false;
         let activeTab = "System";
         dashboardModel.isShowSystemTiles = (activeTab === "System");
@@ -126,19 +127,31 @@ let dummyData_pupulateSystemAndMainTiles = [
     });
 
     it('Application is inside pupulateSystemAndMainTiles() of dashboard component', () => {
-        component.pupulateSystemAndMainTiles();
+        fixture.detectChanges();
         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : pupulateSystemAndMainTiles");
     });
 
     it('Application should call fetchAllDashboardTiles() dashboard service and print success reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse"', () => {
-        component.pupulateSystemAndMainTiles();
-         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`, "sample url test from dashboard component");
+      fixture.detectChanges();
+         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`);
          expect(req.request.method).toBe("GET");
          req.flush(dummyData_pupulateSystemAndMainTiles);
          httpMock.verify();
+         fixture.detectChanges();
          expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
     });
 
+    it('Application should call fetchAllDashboardTiles() dashboard service and print error reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse"', () => {
+        fixture.detectChanges();
+         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`);
+         expect(req.request.method).toBe("GET");
+         req.flush(dummyData_pupulateSystemAndMainTiles, mockErrorResponse);
+         httpMock.verify();
+         fixture.detectChanges();
+          expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");   
+    });
+
+    
     // it('Application is inside MapDasasboardCategoryToTiles() which is calling from pupulateSystemAndMainTiles() of dashboard component', () => {
     //     component.pupulateSystemAndMainTiles();
     //     const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`, "sample url test from dashboard component");
@@ -148,14 +161,6 @@ let dummyData_pupulateSystemAndMainTiles = [
     //     expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : MapDasasboardCategoryToTiles");
     // });
 
-    it('Application should call fetchAllDashboardTiles() dashboard service and print error reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse"', () => {
-        component.pupulateSystemAndMainTiles();
-         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`, "sample url test from dashboard component");
-         expect(req.request.method).toBe("GET");
-         req.flush(dummyData_pupulateSystemAndMainTiles, mockErrorResponse);
-         httpMock.verify();
-         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");
-    });
 
     // it('Application is inside ngOnDestroy() of dashboard component', () => {
     //     component.ngOnDestroy();

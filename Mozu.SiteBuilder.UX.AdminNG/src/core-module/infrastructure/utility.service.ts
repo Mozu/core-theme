@@ -1,5 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { LoggerService } from '../services/logger.service';
+import * as _ from 'lodash';
+
 
 
 export class EnvironmentConfig {
@@ -88,4 +90,39 @@ export class UtilityService {
         }
         return false;
     }
+    public filterLinksByBehaviorId  = (accessLinks  : any, loggedInUsersBehaviorIds : any) => {
+        accessLinks  = this.pruneInvalidLinks(accessLinks);
+        var allFilteredLinks = [];
+        var isMenuVisible = false;
+        allFilteredLinks = _.filter(accessLinks , function(v : any) { 
+        if( v.visible) {
+            if (v.behaviorIds) { 
+                isMenuVisible = (loggedInUsersBehaviorIds.includes(v.behaviorIds) >= 0);
+            }
+            else {
+                isMenuVisible = true;
+            }
+          return isMenuVisible;
+        }
+        });
+    
+        _.map(allFilteredLinks, function(el){
+             var filteredSubItems = _.filter(el.items, function(el : any){
+                if(el.visible) {
+                    if (el.behaviorIds) { 
+                        isMenuVisible = (loggedInUsersBehaviorIds.indexOf(el.behaviorIds) >= 0);
+                    }
+                    else {
+                        isMenuVisible = true;
+                    }
+                    return isMenuVisible;
+                }
+            });
+            el.items = filteredSubItems;
+        });
+      return allFilteredLinks;
+    }
+      public pruneInvalidLinks = (accessLinks : any) => { 
+        return accessLinks.filter(function(v : any) { return (v.id != 'localization'); });
+      }
 }

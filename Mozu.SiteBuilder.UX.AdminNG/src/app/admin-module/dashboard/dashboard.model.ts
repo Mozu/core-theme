@@ -4,4 +4,5 @@ export class  DashboardModel {
     systemTiles: AccessTileModel[];
     mainTiles: AccessTileModel[];
     isShowSystemTiles: boolean;
+    filteredAccessLinks: AccessTileModel[];
 }
