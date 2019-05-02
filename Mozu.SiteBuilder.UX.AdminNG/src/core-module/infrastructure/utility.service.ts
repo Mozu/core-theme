@@ -1,8 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
-import { LoggerService } from '../services/logger.service';
 import * as _ from 'lodash';
-
-
+import { LoggerService } from '../services/logger.service';
 
 export class EnvironmentConfig {
     environmentName: string;
@@ -123,6 +121,6 @@ export class UtilityService {
       return allFilteredLinks;
     }
       public pruneInvalidLinks = (accessLinks : any) => { 
-        return accessLinks.filter(function(v : any) { return (v.id != 'localization'); });
+        return accessLinks.filter(function(v : any) { return (v.id != 'localization' ); });
       }
 }

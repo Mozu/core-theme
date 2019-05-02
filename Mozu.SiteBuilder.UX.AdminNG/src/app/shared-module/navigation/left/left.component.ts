@@ -50,7 +50,6 @@ export class NavigationLeftComponent implements OnInit {
       let responseJson = data
       this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
       /* filter the menus on the basis of logged in user behaviour id */
-    //  this.filterfn  = this.filterBehaviourId(this.model.navigationTabs);
       this.model.filteredNavigationLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData._sharedData.items.ctUser.behaviorIds);
 
       this.mainItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'main' });
@@ -59,39 +58,5 @@ export class NavigationLeftComponent implements OnInit {
     }, (errorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
     });
-  }
-
-  public filterBehaviourId = (records : any) => {
-    records = this.pruneInvalidLinks(records);
-    let sharedData_behavioursIds : any[];
-    this.filterBehaviourId_Record =[] ;     
-    sharedData_behavioursIds = this._sharedData._sharedData.items.ctUser.behaviorIds;
-    var allMenus = [];
-    allMenus = _.filter(records, function(v : any) { 
-        if (v.behaviorIds) { 
-           return (sharedData_behavioursIds.indexOf(v.behaviorIds) >= 0 && v.visible== true);
-        }
-        else if(v.visible && v.visible== true) {
-          return records;
-        }
-      });
-
-      _.map(allMenus, function(el){
-           var filteredSubItems = _.filter(el.items, function(el : any){
-            if (el.behaviorIds) { 
-              return (sharedData_behavioursIds.indexOf(el.behaviorIds) >= 0 && el.visible == true);
-            }
-            else if(el.visible && el.visible== true) {
-              return records;
-            }
-            return true;
-          });
-          el.items = filteredSubItems;
-      });
-    return allMenus;
-  }
-
-  public pruneInvalidLinks = (records : any) => {
-    return records.filter(function(v : any) { return (v.id != 'localization'); });
   }
 }

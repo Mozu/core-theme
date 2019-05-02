@@ -2,11 +2,11 @@
 
 @font-face{
     font-family:"proxima-nova";
-    /* src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
+    src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
     src:url("./assets/Fonts/proximanova-regular.woff") format("woff"),
     url("./assets/Fonts/proximanova-regular.woff2") format("woff2"),
     url("./assets/Fonts/proximanova-regular.ttf") format("truetype"),
-    url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg"); */
+    url("./assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
     font-style:normal;
     font-weight:normal
 }
