@@ -4,12 +4,12 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: true,
-  environmentName: 'perf',
-  domain : '.client1.com',
-  appUrl: 'http://localhost:4200/',
-  apiUrl: 'http://localhost:5100/api/',
-  errorPageUrl: 'http://localhost:4200/',
-  apiTokenUrl: 'http://localhost:5100/token'
+    production: true,
+    environmentName: 'perf',
+    domain: '.client1.com',
+    appUrl: 'http://localhost:4200/',
+    apiUrl: 'http://sb.ngdev06.kibong-dev.com/admin/app',
+    errorPageUrl: 'http://localhost:4200/',
+    apiTokenUrl: 'http://localhost:5100/token'
 };
 

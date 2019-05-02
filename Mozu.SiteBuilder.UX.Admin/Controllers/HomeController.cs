@@ -37,6 +37,7 @@ using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -58,6 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ISettings _settings;
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
+        private readonly string _adminNGBuildDirectory = "adminng";
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)
         {
@@ -177,7 +179,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
 
         private async Task<ActionResult> GetIndexNG()
         {
+            GetMinifiedAssetsGuid();
             return RazorView("IndexNG");
+        }
+
+        private void GetMinifiedAssetsGuid()
+        {
+            //DirectoryInfo adminNGDirectory = new DirectoryInfo(HttpContext.Server.MapPath(@"~\" + this._adminNGBuildDirectory));
+            var files = Directory.EnumerateFiles(HttpContext.Server.MapPath(@"~\" + this._adminNGBuildDirectory),"*.*")
+                        .Where(eachFile => eachFile.EndsWith(".js") || eachFile.EndsWith(".css")).ToList();
+
+            files.ForEach(eachFile =>
+            {
+                string fileName = eachFile.Substring(eachFile.LastIndexOf("\\") + 1);
+                ViewData["runtimejs"] = fileName.Contains("runtime") ? fileName : ViewData["runtimejs"];
+                ViewData["polyfillsjs"] = fileName.Contains("polyfills") ? fileName : ViewData["polyfillsjs"];
+                ViewData["scriptsjs"] = fileName.Contains("scripts") ? fileName : ViewData["scriptsjs"];
+                ViewData["mainjs"] = fileName.Contains("main") ? fileName : ViewData["mainjs"];
+                ViewData["stylescss"] = fileName.Contains("styles") ? fileName : ViewData["stylescss"];
+            });
+
         }
 
         private async Task<ActionResult> GetIndex()

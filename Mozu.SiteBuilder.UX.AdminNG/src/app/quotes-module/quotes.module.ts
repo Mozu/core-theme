@@ -7,7 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 import {
   QuotesListComponent,
   QuotesEditComponent
-} from './quotes';
+} from './quotes/index';
 
 @NgModule({
   declarations: [

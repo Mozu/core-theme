@@ -15,8 +15,7 @@
     <meta name="theme-color" content="#1976d2">
     <link rel="manifest" href="/admin/adminng/manifest.json">
     <link rel="json" type="json" href="/admin/adminng/assets/i18n/en.json">
-    @*<link rel="stylesheet" href="/admin/adminng/styles.6ed053ea3a35b9966960.css">*@
-    <link rel="stylesheet" href="/admin/adminng/styles.css">
+    <link rel="stylesheet" href="/admin/adminng/@ViewData["stylescss"]">
 </head>
 <body>
     <app-root>
@@ -27,18 +26,15 @@
             Sorry, but app is not available without javascript
         </h3>
     </noscript>
-    @*<script type="text/javascript" src="/admin/adminng/runtime.26209474bfa8dc87a77c.js"></script>
-    <script type="text/javascript" src="/admin/adminng/polyfills.66662ad30eadb93d4a09.js"></script>
-    <script type="text/javascript" src="/admin/adminng/scripts.8a391a1a7ba2d9f3db71.js"></script>
-    <script type="text/javascript" src="/admin/adminng/main.f4b1404a08d616b58291.js"></script>*@
 
     <script type="text/javascript" src="/admin/adminng/ngsw-worker.js"></script>
     <script type="text/javascript" src="/admin/adminng/safety-worker.js"></script>
     <script type="text/javascript" src="/admin/adminng/worker-basic.min.js"></script>
-    
-   <script type="text/javascript" src="/admin/adminng/runtime.js"></script>
-    <script type="text/javascript" src="/admin/adminng/polyfills.js"></script>
-    <script type="text/javascript" src="/admin/adminng/scripts.js"></script>
-    <script type="text/javascript" src="/admin/adminng/main.js"></script>
+
+    <script type="text/javascript" src="/admin/adminng/@ViewData["runtimejs"]"></script>
+    <script type="text/javascript" src="/admin/adminng/@ViewData["polyfillsjs"]"></script>
+    <script type="text/javascript" src="/admin/adminng/@ViewData["scriptsjs"]"></script>
+    <script type="text/javascript" src="/admin/adminng/@ViewData["mainjs"]"></script>
+
 </body>
 </html>
