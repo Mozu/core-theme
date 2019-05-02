@@ -40,7 +40,6 @@ import {
     EllipsisPipe,
     SafeHtmlPipe,
     SplitPipe,
-    UserNameInitial
 } from './pipes/index';;
 
 import {SidebarModule} from 'primeng/sidebar';
@@ -84,7 +83,6 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
-        UserNameInitial,
 
         // directives
         RestrictInput,
@@ -124,7 +122,6 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
-        UserNameInitial,
 
         // directives
         RestrictInput,

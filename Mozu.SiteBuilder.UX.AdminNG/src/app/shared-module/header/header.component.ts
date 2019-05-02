@@ -6,7 +6,9 @@
 import { MenuItem } from 'primeng/api';
 import { LoggerService } from '@core';
 import { SharedDataService } from '@global';
+import { HeaderModel } from './header.model';
 import { HeaderService } from './header.service';
+
 
 
 @Component({
@@ -17,10 +19,7 @@ import { HeaderService } from './header.service';
     providers: [HeaderService]
 })
 export class HeaderComponent implements OnInit {
-    public tenantName: string;
-    public loggedInUserName : string;
-    public userFirstName : string;
-    public userLastName : string;
+    headerModel: HeaderModel;
     public userContextMenuItem : MenuItem;
 
     constructor(
@@ -31,6 +30,7 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.headerModel = new HeaderModel();
         this._loggerService.info("HeaderComponent : ngOnInit");
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
@@ -38,10 +38,9 @@ export class HeaderComponent implements OnInit {
 
     public fetchloggedInUserData = () => {
         this._loggerService.info("HeaderComponent : fetchloggedInUserData");
-        this.loggedInUserName = this._sharedData._sharedData.items.ctUser.firstName +' '+ this._sharedData._sharedData.items.ctUser.lastName; 
-        this.userFirstName = this._sharedData._sharedData.items.ctUser.firstName;
-        this.userLastName= this._sharedData._sharedData.items.ctUser.lastName;
-        this.tenantName = this._sharedData._sharedData.items.ctTaContext.name;
+        this.headerModel.loggedInUserName = this._sharedData._sharedData.items.ctUser.firstName +' '+ this._sharedData._sharedData.items.ctUser.lastName; 
+        this.headerModel.loggedInUserInitials = this._sharedData._sharedData.items.ctUser.firstName.charAt(0) + this._sharedData._sharedData.items.ctUser.lastName.charAt(0);
+        this.headerModel.tenantName = this._sharedData._sharedData.items.ctTaContext.name;
     }
 
     public fetchRedirectionLink = () => {

@@ -11,7 +11,6 @@ import { HttpClientService, httpClientServiceCreator } from '@core/extensions/ht
 import { SharedDataService, CtUser } from '@global';
 import { AuthService } from '@core/extensions/auth.service';
 import { GlobalModule } from "@global/global.module";
-import { UserNameInitial } from '@shared/pipes/userNameInitial.pipe'
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -28,7 +27,7 @@ describe('HeaderComponent', () => {
      
     TestBed.configureTestingModule({
       imports: [HttpClientModule,HttpClientTestingModule, GlobalModule ],
-      declarations: [ HeaderComponent, UserNameInitial ],
+      declarations: [ HeaderComponent ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, UtilityService, EnvironmentConfig, AuthService,
         {
@@ -82,7 +81,7 @@ describe('HeaderComponent', () => {
 
   it('Application should fetch logged in user data', () => {
       fixture.detectChanges();
-      expect(component.tenantName).toBe("Decathlon SandBox");
+      expect(component.headerModel.tenantName).toBe("Decathlon SandBox");
   });
   
 });

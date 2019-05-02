@@ -14,14 +14,13 @@
     </div>
     <div id="collapsebar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            <li><span class="tenant-name-container"></span>{{tenantName}}</li>
-            <!-- <li><a href="#"><span class=""></span> {{'SHARED.NAVIGATION.help' | translate }}</a></li> -->
+            <li><span class="tenant-name-container"></span>{{ headerModel.tenantName }}</li>
             <li><a href="#"><span class=""></span> Help </a></li>
             <li><a href="#"><span class="fa fa-search"></span></a></li>
             <li class="avatar-align">
               <a>
-              <div id="userbutton-1032-userbutton-avatar" class="user-avatar">{{userFirstName | userinitial | uppercase}}{{userLastName | userinitial | lowercase}}</div>
-              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="userContextMenu.toggle($event)">{{ loggedInUserName }}</div>
+              <div id="userbutton-1032-userbutton-avatar" class="user-avatar" >{{ headerModel.loggedInUserInitials }}</div>
+              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="userContextMenu.toggle($event)">{{ headerModel.loggedInUserName }}</div>
               <p-menu #userContextMenu [model]="userContextMenuItem" [popup]="true" appendTo="body"></p-menu>
               </a>
             </li>
