@@ -7,12 +7,14 @@ import { SharedModule } from '@shared/shared.module';
 import {
   QuotesListComponent,
   QuotesEditComponent
-} from './quotes/index';
+} from './quotes';
+import { QuoteInformationComponent } from './quotes/edit/quote-information/quote-information.component';
 
 @NgModule({
   declarations: [
     QuotesListComponent,
-    QuotesEditComponent],
+    QuotesEditComponent,
+    QuoteInformationComponent],
   imports: [
     SharedModule,
     TableModule

@@ -30,7 +30,7 @@ const appRoutes: Routes = [
         component: QuotesListComponent
     },
     {
-        path: Constants.uiRoutes.quotesEdit+'/:id',
+        path: Constants.uiRoutes.quotesEdit+'/:quoteId',
         component: QuotesEditComponent
     },
     {

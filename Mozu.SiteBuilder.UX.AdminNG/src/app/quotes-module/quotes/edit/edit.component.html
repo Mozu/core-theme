@@ -1,5 +1,17 @@
 <div class="col-md-12 quote-container">
-  <p>
-    Quote Edit!
-  </p>
+  <div class="info-section">
+    <form class="form-horizontal">
+      <div class="main-heading">
+        <h4>{{'QUOTES.QuoteEdit.quoteAndAccountHeading' | translate }}</h4>
+      </div>
+      <div class="row">
+        <div class="sub-container">
+          <quote-information [QuoteId]=quoteId></quote-information>
+        </div>
+        <div class="sub-container">
+          <account-information [QuoteId]=quoteId></account-information>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

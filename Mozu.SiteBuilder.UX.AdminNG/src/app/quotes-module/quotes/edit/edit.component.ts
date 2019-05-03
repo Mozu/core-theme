@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'quotes-edit',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./edit.component.css']
 })
 export class QuotesEditComponent implements OnInit {
-
-  constructor() { }
+  quoteId: string;
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.quoteId = this.route.snapshot.paramMap.get("quoteId");
   }
 
 }

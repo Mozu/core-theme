@@ -76,6 +76,24 @@
     },
     "GridContextMenu": {
       "edit": "Edit"
+    },
+    "QuoteEdit": {
+      "quoteAndAccountHeading": "Quote & Account Information",
+      "QuoteInformation": {
+        "quoteInfoHeading": "Quote #",
+        "quoteName": "Name:",
+        "status": "Status:",
+        "created": "Created:",
+        "createdBy": "Created By:",
+        "expirationDate": "Expiration Date:"
+      },
+      "AccountInformation": {
+        "accountInfoHeading": "Account Information",
+        "company": "Company:",
+        "companyAdminEmail": "Company Admin Email:",
+        "salesRep": "Sales Rep:",
+        "sharedCatalog": "Shared catalog for Customer Quote:"
+      }
     }
   }
 }
