@@ -85,7 +85,7 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
     Cart = Backbone.MozuModel.extend({
         mozuType: 'cart',
         handlesMessages: true,
-        helpers: ['isEmpty','count','hasRequiredBehavior'],
+        helpers: ['isEmpty', 'count', 'hasRequiredBehavior','isCartBackorder'],
         relations: {
             items: Backbone.Collection.extend({
                 model: CartItem
@@ -248,6 +248,23 @@ define(['underscore', 'modules/backbone-mozu', 'hyprlive', "modules/api", "modul
         toJSON: function(options) {
             var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
             return j;
+        },
+        isCartBackorder: function () {            
+            var isBackorder = false;
+            this.get("items").each(function (item, el) {
+                if (item.get('product.productUsage') == 'Bundle' && !isBackorder) {
+                    var bundledProducts = item.get('product.bundledProducts');
+                    for (var bundledItemIndex = 0; bundledItemIndex < bundledProducts.length; bundledItemIndex++) {
+                        if (bundledProducts[bundledItemIndex].stock && bundledProducts[bundledItemIndex].stock.isOnBackOrder && bundledProducts[bundledItemIndex].stock.manageStock && !isBackorder) {
+                            isBackorder = true;
+                        }
+                    }
+                }
+                else if (item.get('product.stock') && item.get('product.stock').isOnBackOrder && item.get('product.stock').manageStock && !isBackorder) {
+                    isBackorder = true;
+                }
+            });
+            return isBackorder;
         }
     });
 

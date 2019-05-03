@@ -30,7 +30,12 @@
 		{% dropzone "cart-top" scope="template" %}
 		<input type="hidden" name="id" value="{{model.id}}" />
         {% include "modules/common/message-bar" with model=model.messages %}
-        <table class="mz-table mz-table-cart" id="cart">
+
+		<div id="mz-backorder-messages">
+			{% include "modules/cart/cart-backorder-messages" with model=model  %}
+		</div>
+
+		<table class="mz-table mz-table-cart" id="cart">
             {% include "modules/cart/cart-table" %}
 		</table>
 		
