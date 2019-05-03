@@ -205,15 +205,15 @@
         "address": "locations",
         "behaviorIds":  186 ,
         "visible" : true,
-        "url":""
+        "navUrl":"http://sb.ngdev06.kibong-dev.com/admin/m-1/locations"
       },
       {
         "id": "locations-group",
         "label": "Location Groups",
-        "contextType": "",
         "address": "locationGroups",
+        "behaviorIds":  186 ,
         "visible" : true,
-        "url":"locationGroups"
+        "navUrl":"locationGroups"
       }
     ]
   },

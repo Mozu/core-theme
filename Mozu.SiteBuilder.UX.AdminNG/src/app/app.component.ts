@@ -70,14 +70,15 @@ export class AppComponent implements OnInit {
         this._router.events.subscribe( (event: Event) => {
             if (event instanceof NavigationStart)
             {
-                if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit)){
+                if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit) ){
                     this.containerType = NavigationContainerType.quotes;   
                 }
-                else if (event.url.includes(Constants.uiRoutes.locationGroups)){
-                    this.containerType = NavigationContainerType.locationGroups;   
+                else if( event.url.includes(Constants.uiRoutes.locationGroups)){
+                    this.containerType = NavigationContainerType.locationGroups; 
                 }
-                else
-                this.containerType = NavigationContainerType.dashboard;
+                else {
+                    this.containerType = NavigationContainerType.dashboard;
+                }
             }
         });
     

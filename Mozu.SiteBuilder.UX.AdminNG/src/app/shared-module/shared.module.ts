@@ -35,6 +35,7 @@ import {
     NavigationLeftComponent,
     AccessTileComponent,
     NavigationTopQuotesComponent,
+    NavigationTopLocationGroupsComponent,
     HeaderComponent,
     AppHomeComponent,
     ConfirmationDialogService
@@ -107,12 +108,8 @@ export function createTranslateLoader(http: HttpClient) {
         AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        SearchBarComponent,
-        AccountInformationComponent,
-        ConfirmationDialogComponent,
-        ShippingAddressComponent,
-        ShippingMethodComponent,
-        AuditLogComponent
+        NavigationTopLocationGroupsComponent,
+        SearchBarComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -156,12 +153,8 @@ export function createTranslateLoader(http: HttpClient) {
         AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        SearchBarComponent,
-        AccountInformationComponent,
-        ConfirmationDialogComponent,
-        ShippingAddressComponent,
-        ShippingMethodComponent,
-        AuditLogComponent
+        NavigationTopLocationGroupsComponent,
+        SearchBarComponent
     ]
 })
 

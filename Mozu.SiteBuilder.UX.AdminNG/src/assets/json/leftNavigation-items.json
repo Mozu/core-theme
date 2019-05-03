@@ -204,7 +204,15 @@
           "url":""
         },
         {
-          "id": "locationsmenu",
+          "id": "locations-group",
+          "label": "Location Groups",
+          "address": "locationGroups",
+          "behaviorIds":  186 ,
+          "visible" : true,
+          "url":"locationGroups"
+        },
+        {
+          "id": "locations",
           "label": "Locations",
           "contextType": "m",
           "address": "locations",
@@ -220,6 +228,7 @@
           "visible" : true,
           "routerLink":"locationGroups"
         }
+        
       ]
     },
     {

@@ -19,13 +19,3 @@ export enum NavigationContainerType {
     quotes = 'quotes',
     locationGroups = 'locationGroups'
 }
-
-export enum ConfirmationDialogNotificationCode {
-    DeleteQuoteItem = 'DeleteQuoteItem',
-    SaveItem = 'SaveItem'
-}
-
-export enum ConfirmationDialogNotificationType{
-    Confirmation = "Confirmation",
-    Information = "Information"
-}

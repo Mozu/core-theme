@@ -33,59 +33,27 @@
         "quotes": "Quotes"
       }
     },
-    "FOOTER": {
-      "proweredBy": "Powered By:",
-      "copyRight": "© Xpanxion",
-      "customerSupport": "Customer Support at",
-      "supportEmail": "test"
-    },
-    "ACCOUNT": {
-      "Information": {
-        "heading": "Account",
-        "company": "Company:",
-        "companyAdminEmail": "Company Admin Email:",
-        "salesRep": "Sales Rep:"
-      }
-    },
-    "SHIPPING": {
-      "Address": {
-        "shippingInformation": "Shipping Information",
-        "shippingAddress": "Shipping Address",
-        "noShippingAddressMessage": "You have no shipping address."
-      },
-      "Method": {
-        "shippingMethodAndPrice": "Shipping Method & Price",
-        "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
-        "loadingText": "Loading...",
-        "notFoundText": "No shipping methods available."
-      }
-    },
-    "CONFIRMATIONDIALOG": {
-      "Confirmation": {
-        "DeleteQuoteItem": {
-          "title": " Delete Item",
-          "message": " Are you certain you want to delete this item?",
-          "primaryButtonText": "Yes",
-          "secondaryButtonText": "No",
-          "isShowSecondaryButton": "true"
-        }
-      },
-      "Information": {
-        "SaveItem": {
-          "title": " Save Item",
-          "message": " Item is saved successfully",
-          "primaryButtonText": "Ok",
-          "secondaryButtonText": "",
-          "isShowSecondaryButton": "false"
-        }
-      }
-    },
-    "AUDITLOG": {
-      "GridHeader": {
-        "date": "Date",
-        "event": "Event",
-        "user": "User"
-      }
+    "pageTitle": {
+      "quotes": "Quotes",
+      "locationGroups": "Location Groups"
+    }      
+  },  
+  "FOOTER": {
+    "proweredBy": "Powered By:",
+    "copyRight": "© Xpanxion",
+    "customerSupport": "Customer Support at",
+    "supportEmail": "test"
+  }
+},
+"MESSAGES": {
+  "Dialog": {
+    "AuthFailedInvalidAuthResponse": {
+      "title": "Authentication Failed",
+      "message": "Authentication Failed for specified user. Please enter valid credentials and try again. If you still see same problem , contact customer support team.",
+      "primaryButton": "OK",
+      "secondaryButton": "",
+      "isShowSecondaryButton": "false",
+      "isLogoutOnPrimaryButton": "false"
     }
   },
   "MESSAGES": {

@@ -8,6 +8,7 @@ import { GlobalModule } from '@global/global.module';
 import { SharedModule } from '@shared/shared.module';
 import { AdminModule } from 'app/admin-module/admin.module';
 import { QuotesModule } from 'app/quotes-module/quotes.module';
+import { LocationGroupsModule } from 'app/location-groups-module/location.groups.module';
 
 import { routing } from './app.routing';
 
@@ -31,6 +32,7 @@ import { environment } from '../environments/environment';
     SharedModule,
     AdminModule,
     QuotesModule,
+    LocationGroupsModule,
     routing,
   ],
   providers: [],

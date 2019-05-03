@@ -1,7 +1,8 @@
 ﻿<div class="toolbar-main">
     <navigation-left></navigation-left>
-    <navigation-top-quote *ngIf="(navigationContainerType == navigationType.quotes || navigationContainerType == navigationType.locationGroups); else topShell"></navigation-top-quote>
-    <ng-template #topShell>
-        <navigation-top-shell></navigation-top-shell> 
-    </ng-template>
+    <div [ngSwitch]="navigationContainerType">
+        <navigation-top-quote  *ngSwitchCase="navigationType.quotes"></navigation-top-quote>
+        <navigation-top-location-groups *ngSwitchCase="navigationType.locationGroups"></navigation-top-location-groups>
+        <navigation-top-shell *ngSwitchDefault></navigation-top-shell>
+    </div>
 </div>

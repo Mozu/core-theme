@@ -33,59 +33,27 @@
         "quotes": "Quotes"
       }
     },
-    "FOOTER": {
-      "proweredBy": "Powered By:",
-      "copyRight": "© Xpanxion",
-      "customerSupport": "Customer Support at",
-      "supportEmail": "test"
-    },
-    "ACCOUNT": {
-      "Information": {
-        "heading": "Account",
-        "company": "Company:",
-        "companyAdminEmail": "Company Admin Email:",
-        "salesRep": "Sales Rep:"
-      }
-    },
-    "SHIPPING": {
-      "Address": {
-        "shippingInformation": "Informations sur la livraison",
-        "shippingAddress": "Adresse de livraison",
-        "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison."
-      },
-      "Method": {
-        "shippingMethodAndPrice": "Méthode d'expédition et prix",
-        "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
-        "loadingText": "Chargement...",
-        "notFoundText": "Aucune méthode d'expédition disponible."
-      }
-    },
-    "CONFIRMATIONDIALOG": {
-      "Confirmation": {
-        "DeleteQuoteItem": {
-          "title": " Delete Item",
-          "message": " Are you certain you want to delete this item?",
-          "primaryButtonText": "Yes",
-          "secondaryButtonText": "No",
-          "isShowSecondaryButton": "true"
-        }
-      },
-      "Information": {
-        "SaveItem": {
-          "title": " Save Item",
-          "message": " Item is saved successfully",
-          "primaryButtonText": "Ok",
-          "secondaryButtonText": "",
-          "isShowSecondaryButton": "false"
-        }
-      }
-    },
-    "AUDITLOG": {
-      "GridHeader": {
-        "date": "Date",
-        "event": "Event",
-        "user": "User"
-      }
+    "pageTitle": {
+      "quotes": "Quotes",
+      "locationGroups": "Location Groups"
+    }  
+  },
+  "FOOTER": {
+    "proweredBy": "Powered By:",
+    "copyRight": "© Xpanxion",
+    "customerSupport": "Customer Support at",
+    "supportEmail": "test"
+  }
+},
+"MESSAGES": {
+  "Dialog": {
+    "AuthFailedInvalidAuthResponse": {
+      "title": "Authentication Failed",
+      "message": "Echec de l'authentification pour l'utilisateur spécifié. Veuillez entrer des informations d'identification valides et réessayer. Si vous rencontrez toujours le même problème, contactez l'équipe de support technique.",
+      "primaryButton": "D'accord",
+      "secondaryButton": "",
+      "isShowSecondaryButton": "false",
+      "isLogoutOnPrimaryButton": "false"
     }
   },
   "MESSAGES": {

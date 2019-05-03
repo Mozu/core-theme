@@ -16,6 +16,8 @@ import {  AdminDashboardComponent } from './admin-module';
 import {  QuoteComponent, 
     QuotesListComponent } from './quotes-module';
 
+import {LocationGroupsListComponent  
+         } from './location-groups-module';  
 
 const appRoutes: Routes = [
     {
@@ -34,6 +36,10 @@ const appRoutes: Routes = [
     {
         path: Constants.uiRoutes.quotesEdit+'/:quoteId',
         component: QuoteComponent
+    },
+    {
+        path:Constants.uiRoutes.locationGroups,
+        component: LocationGroupsListComponent
     },
     {
         path: '**',
