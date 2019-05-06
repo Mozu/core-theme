@@ -12,6 +12,10 @@
     
 }
 
+.cancelbtn{
+    margin-right: 10px; 
+}
+
 @media screen and (max-width: 480px) {
     .heading {
         border-right: 0px solid transparent;

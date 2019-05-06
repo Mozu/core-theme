@@ -5,14 +5,15 @@ import { TableModule } from 'primeng/table';
 import { SharedModule } from '@shared/shared.module';
 
 import {
-LocationGroupsListComponent
+LocationGroupsListComponent,
+LocationGroupCreateComponent
 
 } from './location-groups';
 
 @NgModule({
   declarations: [
-    LocationGroupsListComponent
-    
+    LocationGroupsListComponent,
+    LocationGroupCreateComponent
     ],
   imports: [
     SharedModule,

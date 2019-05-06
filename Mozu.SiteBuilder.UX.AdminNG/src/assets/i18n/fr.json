@@ -36,6 +36,13 @@
     "pageTitle": {
       "quotes": "Quotes",
       "locationGroups": "Location Groups"
+    },
+    "actionButtons":{
+        "locationGroups":{
+          "create" : "Create New Location Group",
+          "cancel" : "Cancel",
+          "save"   : "Save" 
+        }
     }  
   },
   "FOOTER": {

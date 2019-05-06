@@ -48,7 +48,8 @@ export class Constants {
         default: ConfigurationSettings.defaultRoutePrefix,
         quotes : 'quotes',
         quotesEdit : 'quotesEdit',
-        locationGroups : 'locationGroups'
+        locationGroups : 'locationGroups',
+        locationGroupCreate : 'locationGroupCreate'
     };
     
     static webApis = {
