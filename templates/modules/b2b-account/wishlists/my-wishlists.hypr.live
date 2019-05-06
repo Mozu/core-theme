@@ -7,7 +7,7 @@
         </div>
     {% else %}
         <div class="wishlist-btns">
-            <button class="mz-button mz-button-large wishlist-btns" data-mz-action="newWishlist">Add List</button>
+            <button class="mz-button" data-mz-action="newWishlist">{{ labels.addList }}</button>
         </div>
 
         <div class="mz-btns">

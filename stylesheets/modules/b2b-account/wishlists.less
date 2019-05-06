@@ -1,6 +1,10 @@
-.mz-b2b-wishlists {
+.mz-b2b-wishlists, .mz-b2b-quickorder {
     .wishlist-btns{
         text-align: right;
+        padding: @gutter/4 0 @gutter/4 0;
+        button {
+             margin: 0 @gutter/4 0 0;
+         }
     }
 
     .mz-b2b-wishlists-grid.is-loading{
@@ -29,8 +33,8 @@
         }
     }
 
-    .wishlist-edit-form {
-        .wishlist-edit-form-section {
+    .wishlist-edit-form, .quickorder-form {
+        .wishlist-edit-form-section, .quickorder-form-section {
             margin-bottom:15px;
             & > div {
                 float: left;
@@ -38,12 +42,12 @@
             }
         }
 
-        .wishlist-edit-form-section.productPicker {
+        .wishlist-edit-form-section.productPicker, .quickorder-form-section.productPicker {
             .mz-button {
                 float: right;
             }
         }
-        .wishlist-edit-label {
+        .productpicker-label {
             display: block;
             font-size: .8em;
             font-weight: bold;

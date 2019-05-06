@@ -11,7 +11,9 @@
 <tbody class="mz-table-cart-{%if Model.IsEmpty %}isempty{% else %}items{% endif %}">
   {% if not model.isEmpty %}
     {% for item in model.items %}
+      {% block itemlisting %}
       {% include "modules/cart/cart-table-item" with item as item %}
+      {% endblock itemlisting %}
     {% endfor %}
   {% else %}
   <tr class="mz-carttable-noitems">
@@ -31,22 +33,22 @@
 
   {% for discount in model.orderDiscounts %}
     {% if not discount.excluded %}
-  <tr class="mz-carttable-item">
-    <div class="mz-item-discount">
-    <td class="mz-carttable-total-label" colspan="4">
-    </td>
-    <td class="mz-carttable-item-total">
-      <div class="mz-item-discount">
-        <span class="mz-item-discountname">{{ discount.discount.name }}:</span>
-        <span class="mz-item-discountamt"> -{{ discount.impact|currency }}</span>
-      </div>
-    </td>
-    <td></td>
-  </tr>
+      <tr class="mz-carttable-item">
+        <div class="mz-item-discount">
+        <td class="mz-carttable-total-label" colspan="4">
+        </td>
+        <td class="mz-carttable-item-total">
+          <div class="mz-item-discount">
+            <span class="mz-item-discountname">{{ discount.discount.name }}:</span>
+            <span class="mz-item-discountamt"> -{{ discount.impact|currency }}</span>
+          </div>
+        </td>
+        <td></td>
+      </tr>
     {% endif %}
   {% endfor %}
 
-
+  {% block footerbuttons %}
   <tr class="mz-carttable-total-row">
     <td class="mz-carttable-total-wrap" colspan="5">
       {{ labels.orderTotal }}:
@@ -56,6 +58,7 @@
     </td>
     <td></td>
   </tr>
+
   <tr class="mz-carttable-checkout-row">
     <td colspan="5">
       <div class="mz-carttable-checkout-couponcode" id="coupon-code-field" >
@@ -63,7 +66,6 @@
       </div>
       {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.emptyCart }}</a>{% endif %}
       {% if model.hasRequiredBehavior %}<button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
-
 
         {% if not model.isEmpty and not model.bf_ext_enabled %}
           {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
@@ -96,4 +98,5 @@
     </td>
     <td></td>
   </tr>
+  {% endblock footerbuttons %}
 </tfoot>

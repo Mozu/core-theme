@@ -80,7 +80,7 @@ require([
                   function(item) {
                     return {
                       name: item.name,
-                      symbol: item.symbol,
+                      symbol: item.$.code,
                       isCurrencyEnabled: item.isCurrencyEnabled
                     };
                   }

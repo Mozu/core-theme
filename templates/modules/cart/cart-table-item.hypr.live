@@ -1,8 +1,10 @@
 <tr class="mz-carttable-item">
   <td class="mz-carttable-item-product">
+    {% block image %}
     {% if item.product.imageUrl and themeSettings.showCartItemImage %}
         <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% endif %} />
     {% endif %}
+    {% endblock image %}
     <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
       <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
       {% if item.product.options and themeSettings.showCartItemOptions %}
@@ -41,6 +43,7 @@
   </td>
 
   <td class="mz-carttable-item-fulfillment">
+    {% block fullfillment %}
     {% if item.fulfillmentMethod != "Digital" %}
     {% include "modules/common/choose-fulfillment-cart" with item as item %}
     {% else %}
@@ -48,28 +51,38 @@
       <p>{{ labels.digitalDeliveryOnly }}</p>
     </div>
     {% endif %}
+    {% endblock fullfillment %}
 </td>
+  {% block price %}
   <td class="mz-carttable-item-price">
     {% include "modules/common/item-price" %}
   </td>
+  {% endblock price %}
+  {% block quantity %}
   <td class="mz-carttable-item-qty">
     <input class="mz-carttable-qty-field" type="number" min="1" {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" />
   </td>
+  {% endblock quantity %}
+  {% block itemTotal %}
   <td class="mz-carttable-item-total">
       {% include "modules/common/item-total" %}
   </td>
+  {% endblock itemTotal %}
+  {% block removeItem %}
   <td class="mz-carttable-item-remove">
     <a href="javascript:;" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">{{ labels.remove }}</a>
   </td>
+  {% endblock removeItem %}
 </tr>
-{% if item.productDiscount %}
+
+{% if item.productDiscount and item.discountedTotal < 1  %}
   <tr class="mz-carttable-item-autoAddActions">
     <td colspan="6">
       <div class="mz-carttable-item-autoAddDiscount">
         <span class="mz-carttable-item-autoAddDiscount-name">{{ item.productDiscount.discount.name }}</span>
-        
+
           <span class="mz-carttable-item-autoAddDiscount-actions">
-            {% if item.productDiscount.discount.hasMultipleTargetProducts %}
+            {% if item.product.productUsage == "Configurable" %}
               <a href="javascript:;" class="mz-carttable-item-autoAddDiscount-actions" data-mz-action="updateAutoAddItem"  data-mz-cart-item="{{ item.id }}" data-mz-discount-id="{{ item.productDiscount.discount.id }}">Update</a>
             {% endif %}
             <a href="javascript:;" class="mz-carttable-item-autoAddDiscount-actions" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}">Remove</a>
@@ -78,3 +91,5 @@
     </td>
   </tr>
 {% endif %}
+{% block errormessages %}
+{% endblock %}

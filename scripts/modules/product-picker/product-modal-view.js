@@ -85,7 +85,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             var self = this;
             e.preventDefault();
             self.model.trigger('configurationComplete', self);
-            
+
             // try {
             //     self.model.addToCart(true).then(function () {
             //         this.model.parent.handleDialogCancel();
@@ -115,23 +115,44 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         initialize: function () {
             // handle preset selects, etc
             var me = this;
-            this.$('[data-mz-product-option]').each(function () {
-                var $this = $(this), isChecked, wasChecked;
-                if ($this.val()) {
-                    switch ($this.attr('type')) {
-                        case "checkbox":
-                        case "radio":
-                            isChecked = $this.prop('checked');
-                            wasChecked = !!$this.attr('checked');
-                            if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
-                                me.configure($this);
-                            }
-                            break;
-                        default:
-                            me.configure($this);
-                    }
-                }
+            var productModel = this.model;
+            var pickerItemQuantity = window.views.currentPane.model.get('pickerItemQuantity');
+            this.model.set('quantity', pickerItemQuantity);
+
+            productModel.apiConfigure().then(function(response){
+              productModel.set('volumePriceBands', response.data.volumePriceBands);
+              productModel._hasVolumePricing = false;
+              productModel._minQty = 1;
+              if (productModel.get('volumePriceBands') && productModel.get('volumePriceBands').length > 0) {
+                  productModel._hasVolumePricing = true;
+                  productModel._minQty = _.first(productModel.get('volumePriceBands')).minQty;
+                  if (productModel._minQty > 1) {
+                      if (productModel.get('quantity') <= 1) {
+                          productModel.set('quantity', productModel._minQty);
+                          me.render();
+                      }
+                      productModel.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', productModel._minQty);
+                  }
+              }
+              me.$('[data-mz-product-option]').each(function () {
+                  var $this = $(this), isChecked, wasChecked;
+                  if ($this.val()) {
+                      switch ($this.attr('type')) {
+                          case "checkbox":
+                          case "radio":
+                              isChecked = $this.prop('checked');
+                              wasChecked = !!$this.attr('checked');
+                              if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
+                                  me.configure($this);
+                              }
+                              break;
+                          default:
+                              me.configure($this);
+                      }
+                  }
+              });
             });
+
         }
     });
 
@@ -147,8 +168,10 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             if (self.model.messages) {
                 self.model.messages.reset();
             }
-            self._addProductView.stopListening();
-            self._addProductView.undelegateEvents();
+            if (self._addProductView){
+              self._addProductView.stopListening();
+              self._addProductView.undelegateEvents();
+            }
             self.bootstrapInstance.hide();
         },
         handleDialogCancel: function () {
@@ -170,7 +193,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         loadAddProductView: function (product) {
             var self = this;
-            
+
             var addProductView = new AddProductView({
                 el: $(self.modalContentEl()),
                 model: product,

@@ -1,0 +1,16 @@
+{% extends "modules/cart/cart-table" %}
+{% block itemlisting %}
+{% include "modules/b2b-account/quick-order/quick-order-table-item" with item=item index=forloop.index  %}
+{% endblock itemlisting %}
+
+{% block footerbuttons %}
+<tr class="mz-carttable-checkout-row">
+  <td colspan="5">
+    {% if model.items.length %}
+    <button class="mz-button mz-button-small" data-mz-action="clearOrder">Clear Items</button>
+    <button class="mz-button mz-button-small" data-mz-action="saveQuickOrderAsList">Save as List</button>
+    <button class="mz-button mz-button-small" data-mz-action="addAllItemsToCart">Add To Cart</button>
+    {% endif %}
+  </td>
+</tr>
+{% endblock footerbuttons %}

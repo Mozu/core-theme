@@ -5,7 +5,7 @@
 {% block body-content %}
 {% require_script "pages/international-checkout" %}
 
-<div class="mz-l-container"> 
+<div class="mz-l-container">
     <h1 class="mz-pagetitle">
         {{ labels.checkout }}
         {% if not user.isAuthenticated %}
@@ -14,7 +14,7 @@
         </span>
         {% endif %}
     </h1>
-    {% include "modules/borderFree/border-free-checkout" %}	
-</div>        
+    {% include "modules/borderFree/border-free-checkout" %}
+</div>
 
 {% endblock body-content %}

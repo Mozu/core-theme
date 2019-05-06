@@ -14,6 +14,15 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
             return this.$el.find('[data-mz-pane-switcher]');
         },
         setPane: function (idx, forceLoad) {
+            // Allows us to set pane by name.
+            if (isNaN(idx)){
+              this.get('panes').some(function(pane, index){
+                  if (pane.name === idx){
+                      idx = index;
+                      return true;
+                  }
+              });
+            }
             if (idx !== this.get('current') || forceLoad) {
                 this.set('current', idx);
                 this.trigger('newPaneSet');
@@ -47,7 +56,7 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                 pane.view.$el = this.paneEl();
                 window.views.currentPane = pane.view;
                 pane.view.render();
-                 
+
             }
         },
         render: function () {

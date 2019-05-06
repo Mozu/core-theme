@@ -1,0 +1,26 @@
+<div class="mz-b2b-quickorder mz-l-stack-section" style="clear:none">
+<h2 class="mz-l-stack-sectiontitle">{{ labels.quickOrder }}</h2>
+    <div class="quickorder-form">
+      <div class="quickorder-form-section productPicker">
+          <div>
+              <span class="productpicker-label">{{labels.b2bProductPicker}}</span>
+              <div mz-wishlist-product-picker>{% include "modules/product-picker/product-picker" %}</div>
+          </div>
+          <div>
+              <span class="productpicker-label">{{labels.b2bQuantity}}</span>
+              <input type="number" name="pickerItemQuantity" id="pickerItemQuantity" data-mz-value="pickerItemQuantity" value="{{ model.pickerItemQuantity }}">
+              <span class="mz-validationmessage" data-mz-validationmessage-for="pickerItemQuantity"></span>
+              <button class="mz-button mz-button" data-mz-action="addItemToOrder" {% if productNotSelected %} disabled {% endif %}>{{ labels.add }}</button>
+          </div>
+
+      </div>
+      <div mz-modal-product-dialog class="mz-product-modal">
+          <div id="mzModalDialog" data-backdrop="static" class="modal fade" tabindex="-1" role="dialog">
+              {% include "modules/product-picker/product-modal" %}
+          </div>
+      </div>
+    </div>
+</div>
+<table class="mz-table mz-table-cart">
+  {% include "modules/b2b-account/quick-order/quick-order-table" %}
+</table>

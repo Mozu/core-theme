@@ -119,6 +119,11 @@ require(["modules/jquery-mozu",
         requiredBehaviors: [1003],
         beginAddContact: function () {
             this.model.set('contactId', 'new');
+            var billingAddress = this.model.get('address');
+            var addressDefaults = billingAddress.defaults;
+            billingAddress.set('countryCode', addressDefaults.countryCode);
+            billingAddress.set('addressType', addressDefaults.addressType);
+            billingAddress.set('candidateValidatedAddresses', addressDefaults.candidateValidatedAddresses);
         }
     });
 

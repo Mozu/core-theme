@@ -97,7 +97,7 @@ var MozuGridPagedCollection = Backbone.MozuPagedCollection.extend({
     initialize: function () {
         var me = this;
         Backbone.MozuPagedCollection.prototype.initialize.apply(this, arguments);
-
+        
         if (this.columns) {
             this.set('columns', this.columns);
             this.set('rowActions', this.rowActions);

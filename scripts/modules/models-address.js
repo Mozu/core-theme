@@ -52,6 +52,10 @@
                 postalOrZipCode: {
                     fn: "requiresStateAndZip",
                     msg: Hypr.getLabel("postalCodeMissing")
+                },
+                addressType: {
+                    required: true,
+                    msg: Hypr.getLabel("addressTypeMissing")
                 }
             },
             requiresStateAndZip: function(value, attr) {

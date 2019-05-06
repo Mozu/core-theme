@@ -114,7 +114,6 @@
             {% endblock site-nav %}
 
             <div role="main" id="page-content" class="mz-l-pagecontent">
-
                 {% block breadcrumbs %}
                 {% if themeSettings.showBreadcrumbs %}
                 {% include "modules/breadcrumbs" %}
