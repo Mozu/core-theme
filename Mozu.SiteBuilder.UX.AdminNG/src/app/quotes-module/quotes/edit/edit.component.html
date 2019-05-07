@@ -1,12 +1,12 @@
 <div class="col-md-12 quote-container">
   <div class="info-section">
     <form class="form-horizontal">
-      <div class="main-heading">
+      <!-- <div class="main-heading">
         <h4>{{'QUOTES.QuoteEdit.quoteAndAccountHeading' | translate }}</h4>
-      </div>
+      </div> -->
       <div class="row">
         <div class="sub-container">
-          <quote-information [QuoteId]=quoteId></quote-information>
+          <quote-information [QuoteId]=quoteId [QuoteItem]=model.items></quote-information>
         </div>
         <div class="sub-container">
           <account-information [QuoteId]=quoteId></account-information>

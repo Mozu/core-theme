@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 
+import {CalendarModule} from 'primeng/calendar';
+
 import { SharedModule } from '@shared/shared.module';
 
 import {
@@ -17,7 +19,8 @@ import { QuoteInformationComponent } from './quotes/edit/quote-information/quote
     QuoteInformationComponent],
   imports: [
     SharedModule,
-    TableModule
+    TableModule,
+    CalendarModule
   ]
 })
 export class QuotesModule { }

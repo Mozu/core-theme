@@ -110,6 +110,7 @@ export class Constants {
         tabsNames : "./assets/json/dashboard-menu.json",
         dasbhoardTiles : "./assets/json/dashboard-categories.json",
         quoteList : "./assets/json/quote-list.json",
+        accountInformation : "./assets/json/account-information.json",
         redirectionLink : "./assets/json/user-redirection.json"
     }
 

@@ -78,9 +78,8 @@
       "edit": "Edit"
     },
     "QuoteEdit": {
-      "quoteAndAccountHeading": "Quote & Account Information",
       "QuoteInformation": {
-        "quoteInfoHeading": "Quote #",
+        "quoteInfoHeading": "Quote",
         "quoteName": "Name:",
         "status": "Status:",
         "created": "Created:",

@@ -1,6 +1,7 @@
 <div class="col-md-6 padding-none right-border">
   <div class="sub-heading">
-    <span>{{'QUOTES.QuoteEdit.QuoteInformation.quoteInfoHeading' | translate }} {{quoteId}}</span>
+    <p>{{'QUOTES.QuoteEdit.QuoteInformation.quoteInfoHeading' | translate }} </p>
+    <p><span class="summary-data">{{quoteId}}</span></p>
   </div>
   <div class="section col-sm-12">
     <div class="col-sm-12">
@@ -8,7 +9,7 @@
         <span>{{'QUOTES.QuoteEdit.QuoteInformation.quoteName' | translate }}</span>
       </div>
       <div class="col-sm-6 section-data">
-        <span>Otto Thornton</span>
+          <span>{{ quoteItem.name }}</span>
       </div>
     </div>
     <div class="col-sm-12">
@@ -16,7 +17,7 @@
         <span>{{'QUOTES.QuoteEdit.QuoteInformation.status' | translate }}</span>
       </div>
       <div class="col-sm-6 section-data">
-        <span>Open</span>
+          <span>Open</span>
       </div>
     </div>
     <div class="col-sm-12">
@@ -40,7 +41,10 @@
         <span>{{'QUOTES.QuoteEdit.QuoteInformation.expirationDate' | translate }}</span>
       </div>
       <div class="col-sm-6 section-data">
-        <span>May 19, 2019, 9:40:43 AM</span>
+        <span><p-calendar [(ngModel)]="value" [showIcon]="true" [showTime]="true"></p-calendar>
+          <!-- <input type="text" ngbDatepicker #d="ngbDatepicker"/>
+          <button (click)="d.toggle()">Toggle</button></span> -->
+        </span>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'quote-information',
@@ -7,11 +8,13 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class QuoteInformationComponent implements OnInit {
   @Input('QuoteId') quoteId: string;
+  @Input('QuoteItem') quoteItem: any;
+  value: Date;
 
   constructor() { }
 
   ngOnInit() {
-    
+    this.value = new Date();
   }
 
 }

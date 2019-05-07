@@ -1,0 +1,36 @@
+{
+  "users":  [
+    {
+        "emailAddress": "Turner@kibocommerce.com",
+        "userName": "Turner",
+        "firstName": "Turner",
+        "lastName": "W",
+        "localeCode": "US",
+        "userId": "1234",
+        "isLocked": true,
+        "isActive": false,
+        "isRemoved": false,
+        "acceptsMarketing": true,
+        "hasExternalPassword": true
+    }
+  ],
+  "isActive": true,
+  "priceList": "123.4",
+  "customerSet": "abc",
+  "companyOrOrganization": "B2B account",
+  "attributes":  [
+    {
+        "attributeDefinitionId": "32",
+        "values":  [
+          {
+
+          }
+        ]
+    }
+  ],
+  "taxExempt": "",
+  "taxId": "2342",
+  "externalId": "3453",
+  "customerSinceDate": "2019-03-31T19:52:25.091Z",
+  "accountType": "Saving"
+}

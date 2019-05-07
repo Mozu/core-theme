@@ -22,3 +22,11 @@
     border-bottom: 1px solid #f5f5f5;
     padding: 10px 19px;
 }
+.sub-heading p{
+    margin: 0px;
+}
+.summary-data{
+    font-size: 13px;
+    color: #3f3f3f;
+    border-bottom: #f3f3f3 1px solid;
+}
