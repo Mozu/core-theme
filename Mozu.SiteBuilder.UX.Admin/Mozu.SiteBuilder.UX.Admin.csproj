@@ -209,6 +209,7 @@
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
     <Compile Include="Api\ProductSortDefinitionController.cs" />
+    <Compile Include="Api\QuoteController.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
     <Compile Include="Api\LayoutWidgetDefinitionController.cs" />
@@ -480,6 +481,10 @@
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventorySortExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
+    <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
+    <Compile Include="Helpers\QuoteHelpers\QuoteFilterExtensions.cs" />
+    <Compile Include="Helpers\QuoteHelpers\QuoteSortExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistFilterExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistSortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
@@ -503,8 +508,6 @@
     <Compile Include="Helpers\ProductSortDefinitionHelpers\ProductSortDefinitionHelper.cs" />
     <Compile Include="Helpers\ProductSortDefinitionHelpers\ProductSortDefinitionSortExtensions.cs" />
     <Compile Include="Helpers\ProductTypeHelpers\ProductTypeFilterExtensions.cs" />
-    <Compile Include="Helpers\PublishSetHelpers\PublishSetFilterExtensions.cs" />
-    <Compile Include="Helpers\PublishSetHelpers\PublishSetSortExtensions.cs" />
     <Compile Include="Helpers\ReturnHelpers\ReturnFilterExtensions.cs" />
     <Compile Include="Helpers\ReturnHelpers\ReturnSortExtensions.cs" />
     <Compile Include="Helpers\RolesHelper.cs" />
