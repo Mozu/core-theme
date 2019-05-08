@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
-import { TableModule } from 'primeng/table';
-import {TreeTableModule} from 'primeng/treetable';
+// import { TableModule } from 'primeng/table';
+// import {TreeTableModule} from 'primeng/treetable';
 
 
 import { SharedModule } from '@shared/shared.module';
@@ -9,22 +9,22 @@ import { SharedModule } from '@shared/shared.module';
 import {
 LocationGroupsListComponent,
 LocationGroupCreateComponent,
-LocationsListComponent,
-PhysicallocationComponent
+// LocationsListComponent//,
+//PhysicallocationComponent
 
-} from './location-groups';
+} from './index';
 
 @NgModule({
   declarations: [
     LocationGroupsListComponent,
-    LocationGroupCreateComponent,
-    LocationsListComponent,
-    PhysicallocationComponent
+     LocationGroupCreateComponent,
+    // LocationsListComponent//,
+    //PhysicallocationComponent
     ],
   imports: [
     SharedModule,
-    TableModule,
-    TreeTableModule
+    // TableModule,
+    // TreeTableModule
   ]
 })
 export class LocationGroupsModule { }

@@ -8,6 +8,10 @@ import {
 } from '@angular/router';
 
 // plugins
+
+import { TableModule } from 'primeng/table';
+import {TreeTableModule} from 'primeng/treetable';
+
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
@@ -38,8 +42,9 @@ import {
     NavigationTopLocationGroupsComponent,
     HeaderComponent,
     AppHomeComponent,
-    ConfirmationDialogService
-} from './index';
+    PhysicalLocationsComponent,
+    LocationsListComponent
+ } from './index';
 
 import {
     DatexPipe,
@@ -49,12 +54,12 @@ import {
     PhonePipe
 } from './pipes/index';
 
-import { SpinnerComponent } from './spinner/spinner.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
-import { AccountInformationComponent } from './account/information/information.component';
-import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
-import { ShippingAddressComponent, ShippingMethodComponent } from './shipping';
-import { AuditLogComponent } from './audit-log/audit-log.component';
+import {SidebarModule} from 'primeng/sidebar';
+import {TabViewModule} from 'primeng/tabview';
+import {MenuModule} from 'primeng/menu';;
+import {CardModule } from 'primeng/card'
+import {PanelMenuModule} from 'primeng/panelmenu';
+//import { PhysicalLocationsComponent } from './physical/locations.component';
 
 declare var resourcesVersion: any;
 
@@ -76,7 +81,8 @@ export function createTranslateLoader(http: HttpClient) {
         ToastModule,
         NgbCarouselModule,
         PanelMenuModule,
-        NgbModule.forRoot(),
+        TreeTableModule,
+        TableModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -109,7 +115,9 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         NavigationTopLocationGroupsComponent,
-        SearchBarComponent
+        SearchBarComponent,
+        PhysicalLocationsComponent,
+        LocationsListComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -132,6 +140,7 @@ export function createTranslateLoader(http: HttpClient) {
         CardModule,
         TabViewModule,
         PanelMenuModule,
+        TreeTableModule,
         TableModule,
         // pipes
         DatexPipe,
@@ -154,7 +163,9 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         NavigationTopLocationGroupsComponent,
-        SearchBarComponent
+        SearchBarComponent,
+        PhysicalLocationsComponent,
+        LocationsListComponent
     ]
 })
 

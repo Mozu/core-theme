@@ -1,4 +1,4 @@
-export class  LocationModel {
+export class  LocationsListModel {
     code:string;
     name: string;
     address:any;

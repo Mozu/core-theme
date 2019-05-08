@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Constants } from '@shared';
+import { Constants } from '../infrastructure/constants';
 import { Observable } from 'rxjs';
-import { HttpClientService, LoggerService } from '@core';
+import { LoggerService } from '@core'
+import { HttpClientService } from '@core/extensions/http-client.service';
 
 @Injectable()
-export class LocationService {
+export class LocationsListService {
   constructor(private _http: HttpClientService,   
   private _loggerService: LoggerService) {}
 

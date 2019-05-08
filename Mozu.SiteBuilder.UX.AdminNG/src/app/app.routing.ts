@@ -13,12 +13,15 @@ import { Constants } from '@shared';
 
 import {  AdminDashboardComponent } from './admin-module';
 
-import {  QuoteComponent, 
-    QuotesListComponent } from './quotes-module';
+import {  
+    QuotesEditComponent, 
+    QuotesListComponent 
+} from './quotes-module';
 
-import {LocationGroupsListComponent,
+import {
+    LocationGroupsListComponent,
     LocationGroupCreateComponent  
-         } from './location-groups-module';  
+} from './location-groups-module';  
 
 const appRoutes: Routes = [
     {

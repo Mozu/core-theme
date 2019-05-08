@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {TreeNode} from 'primeng/components/common/api';
 
 @Component({
-  selector: 'app-physicallocation',
-  templateUrl: './physical.location.component.html',
-  styleUrls: ['./physical.location.component.css']
+  selector: 'physical-locations',
+  templateUrl: './locations.component.html',
+  styleUrls: ['./locations.component.css']
 })
-export class PhysicallocationComponent implements OnInit {
+export class PhysicalLocationsComponent implements OnInit {
   files: TreeNode[];
 
   cols: any[];

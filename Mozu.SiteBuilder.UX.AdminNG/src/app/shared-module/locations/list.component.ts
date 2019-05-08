@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
-import { LocationModel } from './location.model';
-//import { LocationService } from './location.service';
+import { LocationsListModel } from './list.model';
+import { LocationsListService } from './list.service';
 
 @Component({
     selector: 'locations-list',
-    templateUrl: './locations.component.html',
-    styleUrls: ['./locations.component.css'],
-    providers: []
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
+    providers: [LocationsListService]
 })
 export class LocationsListComponent implements OnInit {
     
-    virtualLocations: LocationModel[];
+    virtualLocations: LocationsListModel[];
     cols: any[];
     totalRecords: number;
     loading: boolean;
-    inmemoryData: LocationModel[];
-    selectedLocations: LocationModel[];
+    inmemoryData: LocationsListModel[];
+    selectedLocations: LocationsListModel[];
 
     constructor(
-        private _loggerService: LoggerService
-        //private _locationService:LocationService
+        private _loggerService: LoggerService,
+        private _locationService:LocationsListService
     ){ 
     }
 
@@ -109,8 +109,8 @@ export class LocationsListComponent implements OnInit {
         }, 250);   
     }
 
-    loadChunk(index, length): LocationModel[] {
-        let chunk: LocationModel[] = [];
+    loadChunk(index, length): LocationsListModel[] {
+        let chunk: LocationsListModel[] = [];
         for (let i = 0; i < length; i++) {
             chunk[i] = {...this.inmemoryData[i], ...{vin: (index + i)}};
         } 

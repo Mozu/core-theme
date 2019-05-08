@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'location-group-list',
-    templateUrl: './location.groups.list.component.html',
-    styleUrls: ['./location.groups.list.component.css'],
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
     providers: []
 })
 export class LocationGroupsListComponent implements OnInit {
