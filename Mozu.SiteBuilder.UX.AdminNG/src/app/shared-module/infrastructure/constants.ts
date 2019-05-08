@@ -108,16 +108,12 @@ export class Constants {
     static localizationMenu : string = 'localization';
 
     static JsonResources = {
-        leftNavigationItems: environment.appUrl + "/assets/json/leftNavigation-items.json",
-        tabsNames: environment.appUrl +"/assets/json/dashboard-menu.json",
-        dasbhoardTiles: environment.appUrl +"/assets/json/dashboard-categories.json",
-        quoteList: environment.appUrl +"/assets/json/quote-list.json",
-        accountInformation: environment.appUrl +"/assets/json/account-information.json",
-        redirectionLink: environment.appUrl +"/assets/json/user-redirection.json"
-    }
-
-    static titles = {
-        catalogImportExportTitles :  'Catalog Import/export',
+        leftNavigationItems :  "./assets/json/leftNavigation-items.json",
+        tabsNames : "./assets/json/dashboard-menu.json",
+        dasbhoardTiles : "./assets/json/dashboard-categories.json",
+        quoteList : "./assets/json/quote-list.json",
+        redirectionLink : "./assets/json/user-redirection.json",
+        locations : "./assets/json/locations.json" 
     }
 
     static lables = {

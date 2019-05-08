@@ -1,0 +1,13 @@
+.subform {
+    padding: 0 19px 19px 19px;
+    /* border-width: 1px;
+    border-style: solid; */
+    background-color: white;
+    margin: 0px 0px 20px 0px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.main-container{
+    padding: 20px;
+}

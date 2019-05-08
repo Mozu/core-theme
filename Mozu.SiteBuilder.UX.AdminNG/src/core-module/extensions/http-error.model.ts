@@ -23,7 +23,7 @@ export enum ErrorCode {
     UserSessionExpired = <any>"UserSessionExpired",
     DashboardTilesGetFailed= <any>"DashboardTilesGetFailed",
     QuoteListGetFailed= <any>"QuoteListGetFailed",
-    fetchCapabilitiesForSecureFormGetFailed= <any>"fetchCapabilitiesForSecureFormGetFailed"
+    LocationsGetFailed = <any>"LocationsGetFailed"
 }
 
 export enum ToastrCode {

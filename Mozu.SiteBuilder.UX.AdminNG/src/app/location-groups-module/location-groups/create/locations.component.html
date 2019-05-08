@@ -1,0 +1,45 @@
+<h4>Locations</h4>
+<h4>{{selected ? selectedLocations.length : 0}} Selected</h4>
+<p-table [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
+    [rows]="20" scrollHeight="200px" 
+    [virtualScroll]="true" (onLazyLoad)="loadDataOnScroll($event)"
+    [lazy]="true" 
+    [totalRecords]="totalRecords" 
+    [virtualRowHeight]="34"
+    [(selection)]="selectedLocations">
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th style="width: 3em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th *ngFor="let col of columns">
+                {{col.header}}
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr style="height:34px" [pSelectableRow]="rowData">
+            <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
+            <td *ngFor="let col of columns">
+                {{rowData[col.field]}}
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody" let-columns="columns">
+        <tr style="height:34px">
+            <td *ngFor="let col of columns">
+                <div class="loading-text"></div>
+            </td>
+        </tr>
+    </ng-template>
+    <!-- <ng-template pTemplate="summary">
+            <ul>
+                <li *ngFor="let location of selectedLocations" style="text-align: left">
+                    {{location.code + ' - ' + location.name + ' - ' + location.address}}
+                </li>
+            </ul>
+    </ng-template> -->
+</p-table>
