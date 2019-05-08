@@ -256,6 +256,11 @@ Ext.define('Taco.model.OrderItem', {
             "name": "weightedOrderHandlingAdjustment",
             "type": "float",
             "useNull": true
+        },
+        {
+            name: "stock",
+            type: "auto",
+            defaultValue: []
         }
     ],
 

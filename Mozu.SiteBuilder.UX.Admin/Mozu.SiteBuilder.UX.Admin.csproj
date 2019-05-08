@@ -200,6 +200,7 @@
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
+    <Compile Include="Api\Models\Order\OrderItemStock.cs" />
     <Compile Include="Api\Models\Order\PaymentActionTarget.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\Order\SubPayment.cs" />

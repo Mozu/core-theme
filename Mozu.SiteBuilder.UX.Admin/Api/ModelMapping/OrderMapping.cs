@@ -30,6 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcOrderReturnableItem_to_OrderReturnableItem();
             Map_BundledProduct_to_OrderItem();
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
+            Map_DcProductStock_to_OrderItemStock();
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
             Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment();
@@ -50,6 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_OrderPackageItem_to_DcPackageItem();
             Map_OrderItem_to_DcOrderItem();
             Map_OrderItemDiscount_to_DcAppliedProductDiscount();
+            Map_OrderItemStock_to_DcProductStock();
             Map_OrderPickupItem_to_DcPickupItem();
             Map_ShippingDiscount_to_DcShippingDiscount();
             Map_Adjustment_to_DcAdjustment();
@@ -577,7 +579,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Description, op => op.ResolveUsing(dc => dc.Description))
                 .ForMember(x => x.GoodsType, op => op.ResolveUsing(dc => dc.GoodsType))
                 .ForMember(x => x.Quantity, op => op.ResolveUsing(dc => dc.Quantity))
-
+                .ForMember(x => x.Stock, op => op.ResolveUsing(dc => dc.Stock))
                 .ForMember(x => x.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
                 .ForMember(x => x.ProductReservationId, op => op.ResolveUsing(dc => dc.ProductReservationId))
                 .ForMember(x => x.UnitWeight, op => op.ResolveUsing(dc => dc.Measurements?.Weight?.Value))
@@ -594,6 +596,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Name, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(dc => dc.Description))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(dc => dc.GoodsType))
+                .ForMember(dc => dc.Stock, op => op.ResolveUsing(dc => dc.Stock))
                 .ForMember(dc => dc.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
                 .ForMember(dc => dc.ProductReservationId, op => op.ResolveUsing(x => x.ProductReservationId))
                 .ForMember(dc => dc.Measurements, opt => opt.ResolveUsing(x => new CommerceDC.PackageMeasurements { Weight = new Measurement { Value = x.UnitWeight, Unit = "lb" } }))
@@ -610,6 +613,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             CreateMap<OrdersDC.OrderItem, OrderItem>()
                 .ForMember(x => x.ProductUsage, opt => opt.ResolveUsing(dc => dc.Product?.ProductUsage))
                 .ForMember(x => x.BundledProducts, op => op.ResolveUsing(dc => dc.Product?.BundledProducts))
+                .ForMember(x => x.Stock, op => op.ResolveUsing(dc => dc.Product?.Stock))
                 .ForMember(x => x.Id, op => op.ResolveUsing(dc => dc.Id))
                 .ForMember(x => x.ProductCode, op => op.ResolveUsing(dc => dc.Product != null
                     ? (dc.Product.VariationProductCode ?? dc.Product.ProductCode)
@@ -688,6 +692,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.SalePrice, op => op.Ignore())
                 .ForMember(x => x.ActiveDiscounts, op => op.Ignore())
                 .ForMember(x => x.Discounts, op => op.Ignore())
+                .ForMember(x => x.Stock, op => op.Ignore())
                 .ForMember(x => x.ActiveShippingDiscount, op => op.Ignore())
                 .ForMember(x => x.ShippingDiscounts, op => op.Ignore())
                 .ForMember(x => x.Subtotal, op => op.Ignore())
@@ -744,6 +749,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
                 .ForMember(x => x.IsActive, op => op.ResolveUsing(dc => dc.Excluded.HasValue && !dc.Excluded.Value))
                 ;
+        }
+
+        private void Map_DcProductStock_to_OrderItemStock()
+        {
+            CreateMap<ProductsDC.ProductStock, OrderItemStock>();
         }
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()
@@ -1135,7 +1145,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           ProductCode = x.ProductCode,
                           Name = x.ProductName,
                           FulfillmentStatus = x.FulfillmentStatus,
-                          Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options)
+                          Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options),
+                          Stock = Mapper.Map<ProductsDC.ProductStock>(x.Stock)
                           // other stuff (price/measurements) are not important to make service calls.
                       };
                   }))
@@ -1190,6 +1201,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.CouponCode, op => op.ResolveUsing(x => x.CouponCode))
                 .ForMember(dc => dc.Excluded, op => op.ResolveUsing(x => !x.IsActive))
                 ;
+        }
+
+        private void Map_OrderItemStock_to_DcProductStock()
+        {
+            CreateMap<OrderItemStock, ProductsDC.ProductStock>();
         }
 
         private void Map_OrderDiscount_to_DcAppliedDiscount()

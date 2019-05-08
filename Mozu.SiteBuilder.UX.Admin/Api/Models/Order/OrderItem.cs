@@ -62,6 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public decimal? DeltaPrice { get; set; }
 
+        public OrderItemStock Stock { get; set; }
+
     }
 
 
@@ -106,6 +108,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public decimal? HandlingAmount { get; set; }
 
         public List<OrderItemDiscount> ActiveDiscounts { get; set; }
+
+        public OrderItemStock Stock { get; set; }
 
         public List<OrderItemDiscount> Discounts { get; set; }
 
