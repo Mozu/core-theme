@@ -204,29 +204,21 @@
           "url":""
         },
         {
-          "id": "locations-group",
-          "label": "Location Groups",
-          "address": "locationGroups",
-          "behaviorIds":  186 ,
-          "visible" : true,
-          "url":"locationGroups"
-        },
-        {
           "id": "locations",
           "label": "Locations",
           "contextType": "m",
           "address": "locations",
           "behaviorIds":  186 ,
           "visible" : true,
-          "url":""
+          "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/locations"
         },
         {
           "id": "locations-group",
           "label": "Location Groups",
-          "contextType": "",
           "address": "locationGroups",
+          "behaviorIds":  186 ,
           "visible" : true,
-          "routerLink":"locationGroups"
+          "url":"locationGroups"
         }
         
       ]

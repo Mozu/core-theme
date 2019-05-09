@@ -1,10 +1,18 @@
 <div class="main-container">
-<div class="row subform">
-     <h4>Location Group</h4>
-</div>
-<div class="row subform">
-        <h4>Add Location(s)</h4>
-         <physical-locations class="col-md-3"></physical-locations>
-        <locations-list class="col-md-3"></locations-list> 
-</div>
+	<div class="row subform">
+		<h4>Location Group</h4>
+		<form>
+			<div class="form-row">
+				<div class="col-md-6">
+					<label for="locationName" class="subform-label">Name</label>
+					<input class="form-control subform-text" id="locationName" type="text" />
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="row subform">
+		<h4>Add Location(s)</h4>
+		<physical-locations class="col-md-3"></physical-locations>
+		<locations-list class="col-md-3"></locations-list>
+	</div>
 </div>

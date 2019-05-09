@@ -11,3 +11,25 @@
 .main-container{
     padding: 20px;
 }
+
+.subform-label{
+    color: #7c7c7c;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.subform-label:focus{
+    color: #2ea195;
+}
+
+.subform-text{
+    text-overflow: ellipsis;
+    border: 0;
+    border-bottom: 1px solid #dcdcdc;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.subform-text:focus {
+    border-bottom: 1px solid #2ea195;
+}
