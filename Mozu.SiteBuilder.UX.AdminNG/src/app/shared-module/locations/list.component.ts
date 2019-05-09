@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
 import { LocationsListModel } from './list.model';
 import { LocationsListService } from './list.service';
+import {TreeNode} from 'primeng/components/common/api';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'locations-list',
@@ -10,14 +12,16 @@ import { LocationsListService } from './list.service';
     styleUrls: ['./list.component.css'],
     providers: [LocationsListService]
 })
-export class LocationsListComponent implements OnInit {
-    
+export class LocationsListComponent implements OnInit, OnChanges {
+    @Input() physicalLocation: TreeNode;
+    physicalLocationName : string;
     virtualLocations: LocationsListModel[];
     cols: any[];
     totalRecords: number;
     loading: boolean;
     inmemoryData: LocationsListModel[];
     selectedLocations: LocationsListModel[];
+    
 
     constructor(
         private _loggerService: LoggerService,
@@ -32,65 +36,29 @@ export class LocationsListComponent implements OnInit {
         ];
         this.totalRecords = 250000;
         this.loading = true;
-        // this._locationService.getLocations().subscribe(successResponse => {
-        //     let responseJson = successResponse;
-        //     this._loggerService.info("LocationsListComponent : _locationService.getLocations_successResponse");
-        //     if(successResponse && successResponse.items){
-        //         this.inmemoryData = successResponse.items;
-        //     }
-        // }, 
-        // (errResponse) => {
-        //     this._loggerService.info("LocationsListComponent : _locationService.getLocations_errResponse");;
-        //     throw new HttpError(ErrorCode.LocationsGetFailed,ErroNotificationType.Toaster);
-        // });
+    }
 
-        this.inmemoryData = [
-            {"name": "VW", "code": "2012", "address": "Orange"},
-            {"name": "Audi", "code": "2011", "address": "Black"},
-            {"name": "Renault", "code": "2005", "address": "Gray"},
-            {"name": "BMW", "code": "2003", "address": "Blue"},
-            {"name": "Mercedes", "code": "1995", "address": "Orange"},
-            {"name": "Volvo", "code": "2005", "address": "Black"},
-            {"name": "Honda", "code": "2012", "address": "Yellow"},
-            {"name": "Jaguar", "code": "2013", "address": "Orange"},
-            {"name": "Ford", "code": "2000", "address": "Black"},
-            {"name": "Fiat", "code": "2013", "address": "Red"},
-            {"name": "VW", "code": "2012", "address": "Orange"},
-            {"name": "Audi", "code": "2011", "address": "Black"},
-            {"name": "Renault", "code": "2005", "address": "Gray"},
-            {"name": "BMW", "code": "2003", "address": "Blue"},
-            {"name": "Mercedes", "code": "1995", "address": "Orange"},
-            {"name": "Volvo", "code": "2005", "address": "Black"},
-            {"name": "Honda", "code": "2012", "address": "Yellow"},
-            {"name": "Jaguar", "code": "2013", "address": "Orange"},
-            {"name": "Ford", "code": "2000", "address": "Black"},
-            {"name": "Fiat", "code": "2013", "address": "Red"},
-            {"name": "VW", "code": "2012", "address": "Orange"},
-            {"name": "Audi", "code": "2011", "address": "Black"},
-            {"name": "Renault", "code": "2005", "address": "Gray"},
-            {"name": "BMW", "code": "2003", "address": "Blue"},
-            {"name": "Mercedes", "code": "1995", "address": "Orange"},
-            {"name": "Volvo", "code": "2005", "address": "Black"},
-            {"name": "Honda", "code": "2012", "address": "Yellow"},
-            {"name": "Jaguar", "code": "2013", "address": "Orange"},
-            {"name": "Ford", "code": "2000", "address": "Black"},
-            {"name": "Fiat", "code": "2013", "address": "Red"},
-            {"name": "VW", "code": "2012", "address": "Orange"},
-            {"name": "Audi", "code": "2011", "address": "Black"},
-            {"name": "Renault", "code": "2005", "address": "Gray"},
-            {"name": "BMW", "code": "2003", "address": "Blue"},
-            {"name": "Mercedes", "code": "1995", "address": "Orange"},
-            {"name": "Volvo", "code": "2005", "address": "Black"},
-            {"name": "Honda", "code": "2012", "address": "Yellow"},
-            {"name": "Jaguar", "code": "2013", "address": "Orange"},
-            {"name": "Ford", "code": "2000", "address": "Black"},
-            {"name": "Fiat", "code": "2013", "address": "Red"},
-            {"name": "Volvo", "code": "2005", "address": "Black"},
-            {"name": "Honda", "code": "2012", "address": "Yellow"},
-            {"name": "Jaguar", "code": "2013", "address": "Orange"},
-            {"name": "Ford", "code": "2000", "address": "Black"},
-            {"name": "Fiat", "code": "2013", "address": "Red"}
-        ];
+    ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+        this._loggerService.info("LocationsListComponent : changes"+ JSON.stringify(changes));
+        this._loggerService.info("LocationsListComponent : changes"+ JSON.stringify(changes.physicalLocation.currentValue));
+        if(changes && changes.physicalLocation && changes.physicalLocation.currentValue){
+            this.getLocations(changes.physicalLocation.currentValue.name);
+        }
+    }
+     
+    getLocations(physicalLocationName){
+        this.physicalLocationName = physicalLocationName;
+        this._locationService.getLocations(physicalLocationName).subscribe(successResponse => {
+            let responseJson = successResponse;
+            this._loggerService.info("LocationsListComponent : _locationService.getLocations_successResponse");
+            if(successResponse && (successResponse as any).items){
+                this.virtualLocations = <any>_.filter((successResponse as any).items, ['address.stateOrProvince', physicalLocationName]);
+            }
+        }, 
+        (errResponse) => {
+            this._loggerService.info("LocationsListComponent : _locationService.getLocations_errResponse");;
+            throw new HttpError(ErrorCode.LocationsGetFailed,ErroNotificationType.Toaster);
+        });
     }
 
     loadDataOnScroll(event: LazyLoadEvent) {      
@@ -111,10 +79,12 @@ export class LocationsListComponent implements OnInit {
 
     loadChunk(index, length): LocationsListModel[] {
         let chunk: LocationsListModel[] = [];
+        console.log("index ::"+index +  "  length:: "+length);
+        console.log("this.virtualLocations ::",this.virtualLocations);
         for (let i = 0; i < length; i++) {
-            chunk[i] = {...this.inmemoryData[i], ...{vin: (index + i)}};
+            chunk[i] = { "name": "Lazy Load Location "+(index + i), "code":(index + i), ...{vin: (index + i)}};
         } 
-
+        console.log("chunk ::",chunk);
         return chunk;
     }
 }

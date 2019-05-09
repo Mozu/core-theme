@@ -1,7 +1,7 @@
 export class  LocationsListModel {
     code:string;
     name: string;
-    address:any;
+    //address:any;
 
     // locationTypes:any[];
     // description:string;

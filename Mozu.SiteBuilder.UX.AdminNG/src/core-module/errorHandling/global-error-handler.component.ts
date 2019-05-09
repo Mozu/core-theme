@@ -67,7 +67,7 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
 
             if (error && error.error && error.error.status === 405) {
                 //this._utilityService.redirectToURL(url);
-               // return;
+                //return;
             }
 
             this._spinner.stop();

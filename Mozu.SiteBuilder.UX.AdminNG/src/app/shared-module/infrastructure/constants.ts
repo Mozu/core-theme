@@ -113,7 +113,8 @@ export class Constants {
         dasbhoardTiles : "./assets/json/dashboard-categories.json",
         quoteList : "./assets/json/quote-list.json",
         redirectionLink : "./assets/json/user-redirection.json",
-        locations : "./assets/json/locations.json" 
+        locations : "./assets/json/locations.json",
+        physicalLocations : './assets/json/physical-locations.json' 
     }
 
     static lables = {

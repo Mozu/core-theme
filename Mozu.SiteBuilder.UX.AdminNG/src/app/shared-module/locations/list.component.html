@@ -1,11 +1,11 @@
 <h4>Locations</h4>
-<h4>{{selected ? selectedLocations.length : 0}} Selected</h4>
+<h5>{{selectedLocations ? selectedLocations.length : 0}} Selected</h5>
 <p-table [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="200px" 
     [virtualScroll]="true" (onLazyLoad)="loadDataOnScroll($event)"
-    [lazy]="true" 
+    [lazy]="true"   [lazyLoadOnInit]="false"
     [totalRecords]="totalRecords" 
-    [virtualRowHeight]="34"
+    [virtualRowHeight]="28"
     [(selection)]="selectedLocations">
 
     <ng-template pTemplate="header" let-columns>

@@ -5,11 +5,11 @@ import { LoggerService } from '@core'
 import { HttpClientService } from '@core/extensions/http-client.service';
 
 @Injectable()
-export class LocationsListService {
+export class PhysicalLocationsService {
   constructor(private _http: HttpClientService,   
   private _loggerService: LoggerService) {}
 
-  getLocations(physicalLocationName){
-    return this._http.get(Constants.JsonResources.locations);
+  getPhysicalLocations(){
+    return this._http.get(Constants.JsonResources.physicalLocations);
   }
 }

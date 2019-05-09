@@ -14,6 +14,6 @@ export * from './access-tile/index'
 
 export * from './home/home.component';
 
-export * from './physical/locations.component';
+export * from './physical/index';
 
 export * from './locations/index';
