@@ -53,8 +53,8 @@ export class QuotesListComponent implements OnInit {
   }
 
   viewQuote(){
-    let tenantId =  this.model.selectedQuote.tenantId;
-    this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + tenantId]);
+    let quoteId =  this.model.selectedQuote.id;
+    this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + quoteId]);
   }
 
   public populateQuoteGrid = () => {

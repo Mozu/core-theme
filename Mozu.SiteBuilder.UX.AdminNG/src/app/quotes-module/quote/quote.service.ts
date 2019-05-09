@@ -7,12 +7,12 @@ HttpClientService
 import { Constants } from '@shared';
 
 @Injectable()
-export class QuotesEditService{
+export class QuoteService{
     constructor(private _http: HttpClientService,   
         private _loggerService: LoggerService){ }
 
     public fetchAllQuotes(): Observable<any>{
-        this._loggerService.info("QuotesEditService: fetchAllQuotes");
+        this._loggerService.info("QuoteService: fetchAllQuotes");
         return this._http.get(Constants.JsonResources.quoteList);
     }
 }

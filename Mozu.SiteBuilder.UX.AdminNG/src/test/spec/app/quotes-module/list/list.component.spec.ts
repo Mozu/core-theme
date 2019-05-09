@@ -15,9 +15,9 @@ import { HttpClientService, httpClientServiceCreator } from '@core/extensions/ht
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { QuotesListComponent } from 'app/quotes-module/quotes/list/list.component';
-import { QuotesListModel } from 'app/quotes-module/quotes/list/list.model';
-import { QuotesListService } from 'app/quotes-module/quotes/list/list.service';
+import { QuotesListComponent } from 'app/quotes-module/list/list.component';
+import { QuotesListModel } from 'app/quotes-module/list/list.model';
+import { QuotesListService } from 'app/quotes-module/list/list.service';
 
 describe('QuotesListComponent', () => {
   let component: QuotesListComponent;

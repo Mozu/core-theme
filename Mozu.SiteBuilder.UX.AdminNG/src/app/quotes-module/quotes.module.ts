@@ -6,17 +6,16 @@ import {CalendarModule} from 'primeng/calendar';
 
 import { SharedModule } from '@shared/shared.module';
 
-import {
-  QuotesListComponent,
-  QuotesEditComponent
-} from './quotes';
-import { QuoteInformationComponent } from './quotes/edit/quote-information/quote-information.component';
+import { QuotesListComponent } from './list';
+
+import { QuoteComponent, 
+  QuoteSummaryComponent } from './quote';
 
 @NgModule({
   declarations: [
     QuotesListComponent,
-    QuotesEditComponent,
-    QuoteInformationComponent],
+    QuoteComponent,
+    QuoteSummaryComponent],
   imports: [
     SharedModule,
     TableModule,

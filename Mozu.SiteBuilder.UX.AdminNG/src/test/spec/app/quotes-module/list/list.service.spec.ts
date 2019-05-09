@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing'
 import { LoggerService, HttpClientService, httpClientServiceCreator, UtilityService, AuthService, EnvironmentConfig } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
-import { QuotesListService } from 'app/quotes-module/quotes/list/list.service';
+import { QuotesListService } from 'app/quotes-module/list/list.service';
 import { HttpClient } from '@angular/common/http';
 
 describe('QuotesListService', () => { 

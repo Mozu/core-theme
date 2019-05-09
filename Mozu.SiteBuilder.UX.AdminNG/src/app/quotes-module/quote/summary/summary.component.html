@@ -1,0 +1,60 @@
+<div class="col-md-6 padding-none right-border">
+  <div class="summary-heading">
+    <p>{{'QUOTES.Quote.Information.heading' | translate }} </p>
+    <p><a href="#" class="summary-data">{{quoteId}}</a></p>
+  </div>
+
+  <div class="section col-sm-12">
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'QUOTES.Quote.Information.name' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ quote.name }}</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'QUOTES.Quote.Information.status' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ quote.status }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'QUOTES.Quote.Information.created' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ quote.auditInfo.createDate | date : "MMM dd yyyy h:mm a" }}</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'QUOTES.Quote.Information.createdBy' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ quote.auditInfo.createBy }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'QUOTES.Quote.Information.expirationDate' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>
+            <p-calendar [(ngModel)]="expirationDate" [showIcon]="true" [showTime]="true"></p-calendar>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="col-md-6 padding-none right-border">
+  <div class="summary-heading">
+    <p>{{'SHARED.ACCOUNT.Information.heading' | translate }}</p>
+    <p><a href="#" class="summary-data">{{ model.users.firstName }} {{ model.users.lastName }}</a></p>
+  </div>
+  <div class="section col-sm-12">
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.company' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ model.companyOrOrganization }}</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.companyAdminEmail' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ model.users.emailAddress }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 padding-none">
+      <div class="col-sm-6">
+        <div class="section-heading">
+          <span>{{'SHARED.ACCOUNT.Information.salesRep' | translate }}</span>
+        </div>
+        <div class="section-data">
+          <span>{{ model.users.userName }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

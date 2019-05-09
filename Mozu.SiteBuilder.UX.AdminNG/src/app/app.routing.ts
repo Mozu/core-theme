@@ -13,7 +13,7 @@ import { Constants } from '@shared';
 
 import {  AdminDashboardComponent } from './admin-module';
 
-import {  QuotesEditComponent, 
+import {  QuoteComponent, 
     QuotesListComponent } from './quotes-module';
 
 const appRoutes: Routes = [
@@ -31,7 +31,7 @@ const appRoutes: Routes = [
     },
     {
         path: Constants.uiRoutes.quotesEdit+'/:quoteId',
-        component: QuotesEditComponent
+        component: QuoteComponent
     },
     {
         path: '**',

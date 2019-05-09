@@ -24,9 +24,9 @@
             </td>
             <td><span>{{quoteModel.name}}</span></td>
             <td><span>{{quoteModel.customerInteractionType}}</span></td>
-            <td><span class="content-pill content-pill-blue" [class.content-pill-blue]="quoteModel.currencyCode == 'Processing'">{{quoteModel.currencyCode}}</span></td>
+            <td><span class="content-pill content-pill-blue" [class.content-pill-blue]="quoteModel.status == 'Processing'" >{{quoteModel.status}}</span></td>
             <td><span>{{quoteModel.auditInfo.createDate | date : "MMM dd yyyy h:mm a"}}</span></td>
-            <td><span>{{quoteModel.feeTotal | currency}}</span></td>
+            <td><span>{{quoteModel.total | currency}}</span></td>
             <td style="width: 4em">
                 <div>
                     <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>

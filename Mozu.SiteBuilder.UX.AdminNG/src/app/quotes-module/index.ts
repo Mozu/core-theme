@@ -1,1 +1,3 @@
-export * from './quotes/index';
+export * from './quote/index';
+
+export * from './list/index';

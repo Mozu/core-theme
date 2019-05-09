@@ -38,6 +38,14 @@
     "copyRight": "© Xpanxion",
     "customerSupport": "Customer Support at",
     "supportEmail": "test"
+  },
+  "ACCOUNT":{
+    "Information": {
+      "heading": "Account",
+      "company": "Company:",
+      "companyAdminEmail": "Company Admin Email:",
+      "salesRep": "Sales Rep:"
+    }
   }
 },
 "MESSAGES": {
@@ -72,23 +80,15 @@
   "GridContextMenu": {
     "edit": "Edit"
   },
-  "QuoteEdit": {
-    "QuoteInformation": {
-      "quoteInfoHeading": "Quote",
-      "quoteName": "Name:",
+  "Quote": {
+    "Information": {
+      "heading": "Quote",
+      "name": "Name:",
       "status": "Status:",
       "created": "Created:",
       "createdBy": "Created By:",
       "expirationDate": "Expiration Date:"
-    },
-    "AccountInformation": {
-      "accountInfoHeading": "Account Information",
-      "company": "Company:",
-      "companyAdminEmail": "Company Admin Email:",
-      "salesRep": "Sales Rep:",
-      "sharedCatalog": "Shared catalog for Customer Quote:"
     }
   }
-
 }
 }

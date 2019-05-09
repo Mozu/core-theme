@@ -179,9 +179,6 @@ li.ui-state-default:active{
 
 /* ------------------------------PrimeNG Table CSS--------------------------------*/
 /* --------------Turbo Table CSS - Start------------- */
-body .ui-widget{
-
-}
 p-table table{
     border-radius: 5px 5px 0px 0px !important;
     overflow: hidden;
@@ -362,6 +359,8 @@ p-table .ui-table .pi-ellipsis-v:hover{
     border:transparent  !important;
 }
 /* --------------Context Menu Ellipsis CSS - End------------- */
+
+/* --------------Calendar CSS - Start------------- */
 .ng-trigger.ui-datepicker{
     display: block !important;
     visibility: visible !important;
@@ -383,3 +382,10 @@ p-table .ui-table .pi-ellipsis-v:hover{
     color: #ffffff !important;
     border-radius:  50%;
 }
+.ui-calendar.ui-calendar-w-btn .ui-inputtext{
+    padding: 0px !important;
+}
+.ui-button-icon-only {
+    text-indent: 0 !important;
+}
+/* --------------Calendar CSS - End------------- */

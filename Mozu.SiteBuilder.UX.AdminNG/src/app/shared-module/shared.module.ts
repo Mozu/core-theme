@@ -8,12 +8,15 @@ import {
 } from '@angular/router';
 
 // plugins
-
 import { DialogModule } from 'primeng/dialog';
 import {ToastModule} from 'primeng/toast';
+import {SidebarModule} from 'primeng/sidebar';
+import {TabViewModule} from 'primeng/tabview';
+import {MenuModule} from 'primeng/menu';
+import {CardModule } from 'primeng/card'
+import {PanelMenuModule} from 'primeng/panelmenu';
 
-import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -22,9 +25,6 @@ import {
     EnableDisableControls
 } from './directive/index';
 
-
-import { SpinnerComponent } from './spinner/spinner.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
 import { 
     NavigationComponent,
     NavigationTopShellComponent,
@@ -40,14 +40,11 @@ import {
     EllipsisPipe,
     SafeHtmlPipe,
     SplitPipe,
-} from './pipes/index';;
+} from './pipes/index';
 
-import {SidebarModule} from 'primeng/sidebar';
-import {TabViewModule} from 'primeng/tabview';
-import {MenuModule} from 'primeng/menu';
-import {CardModule } from 'primeng/card'
-import {PanelMenuModule} from 'primeng/panelmenu';
-import { AccountInformationComponent } from './account-information/account-information.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
+import { AccountInformationComponent } from './account/information/information.component';
 
 declare var resourcesVersion: any;
 
