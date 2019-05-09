@@ -11,34 +11,38 @@
       {
         "id": "catalogProducts",
         "label": "Products",
+        "contextType": "m",
         "address": "products",
         "behaviorIds":  4 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/products"
+        "url":""
       },
       {
         "id": "categories",
         "label": "Categories",
+        "contextType": "c",
         "address": "categories",
         "behaviorIds":  16 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/c-1/categories"
+        "url":""
       },
       {
         "id": "inventory",
         "label": "Inventory",
+        "contextType": "m",
         "address": "inventory",
         "behaviorIds":  4 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/inventory"
+        "url":""
       },
       {
         "id": "priceLists",
         "behaviorIds":  239 ,
         "label": "Price Lists",
+        "contextType": "m",
         "address": "priceLists",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/priceLists"
+        "url":""
       }
     ]
   },
@@ -55,33 +59,37 @@
         "id": "discounts",
         "behaviorIds":  24 ,
         "label": "Discounts",
+        "contextType": "s",
         "address": "discounts",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23777/discounts"
+        "url":""
       },
       {
         "id": "couponset",
         "behaviorIds":  24 ,
         "label": "Coupon Sets",
+        "contextType": "c",
         "address": "CouponSets",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/c-1/CouponSets"
+        "url":""
       },
       {
         "id": "productRanking",
         "behaviorIds":  235 ,
         "label": "Product Ranking",
+        "contextType": "s",
         "address": "ProductRankings",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/ProductRankings"
+        "url":""
       },
       {
         "id": "searchSynonyms",
         "behaviorIds":  24 ,
         "label": "Search Synonyms",
+        "contextType": "s",
         "address": "synonyms",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/synonyms"
+        "url":""
       }
     ]
   },
@@ -97,30 +105,34 @@
       {
         "id": "webedit",
         "label": "Editor",
+        "contextType": "s",
         "address": "website",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/website"
+        "url":""
       },
       {
         "id": "themes",
         "label": "Themes",
+        "contextType": "s",
         "address": "themes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/themes"
+        "url":""
       },
       {
         "id": "redirects",
         "label": "Redirects",
+        "contextType": "s",
         "address": "redirects",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/redirects"
+        "url":""
       },
       {
         "id": "fileManager",
         "label": "Files",
+        "contextType": "m",
         "address": "fileManager",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/fileManager"
+        "url":""
       }
     ]
   },
@@ -136,16 +148,18 @@
       {
         "id": "drafts",
         "label": "Drafts",
+        "contextType": "m",
         "address": "publishing/drafts",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/publishing/drafts"
+        "url":""
       },
       {
         "id": "publishSets",
         "label": "Publish Sets",
+        "contextType": "m",
         "address": "publishing/publishsets",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/publishing/publishsets"
+        "url":""
       }
     ]
   },
@@ -161,33 +175,37 @@
       {
         "id": "orders",
         "label": "Orders",
+        "contextType": "m",
         "address": "orders",
         "behaviorIds":  73 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/orders"
+        "url":""
       },
       {
         "id": "returns",
         "label": "Returns",
+        "contextType": "m",
         "address": "returns",
         "behaviorIds":  73 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/returns"
+        "url":""
       },
       {
         "id": "locations-inventory",
         "label": "Inventory",
+        "contextType": "m",
         "address": "locationInventory",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/locationInventory"
+        "url":""
       },
       {
         "id": "locations",
         "label": "Locations",
+        "contextType": "m",
         "address": "locations",
         "behaviorIds":  186 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/locations"
+        "url":""
       }
     ]
   },
@@ -202,24 +220,27 @@
       {
         "id": "customers",
         "label": "Customers",
+        "contextType": "m",
         "address": "customers",
         "behaviorIds":  41 ,
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/customers"
+        "url":""
       },
       {
         "id": "customerSegments",
         "label": "Customer Segments",
+        "contextType": "m",
         "address": "customer/segments",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/customer/segments"
+        "url":""
       },
       {
         "id": "storecredit",
         "label": "Store Credit",
+        "contextType": "m",
         "address": "StoreCredits",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/StoreCredits"
+        "url":""
       }
     ]
   },
@@ -234,15 +255,18 @@
       {
         "id": "b2b-accounts",
         "label": "B2B Accounts",
+        "contextType": "m",
         "address": "b2baccounts",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/b2baccounts"
+        "url":""
       },
       {
         "id": "quotes",
         "label": "Quotes",
+        "contextType": "m",
         "address": "quotes",
-        "navUrl":"quotes"
+        "url":"quotes",
+        "visible" : true
       }
     ]
   },
@@ -257,9 +281,10 @@
       {
         "id": "report-sales",
         "label": "Reports",
+        "contextType": "s",
         "address": "reports",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23777/reports"
+        "url":""
       }
     ]
   },
@@ -274,51 +299,58 @@
       {
         "id": "generalsettings",
         "label": "General",
+        "contextType": "s",
         "address": "generalsettings",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23777/generalsettings"
+        "url":""
       },
       {
         "id": "paymentgateways",
         "label": "Payment Gateways",
+        "contextType": "s",
         "address": "settings/paymentGateways",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/settings/paymentTypes"
+        "url":""
       },
       {
         "id": "paymenttypes",
         "label": "Payment Types",
+        "contextType": "c",
         "address": "settings/paymentTypes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/c-1/settings/discounts"
+        "url":""
       },
       {
         "id": "discountsettings",
         "label": "Discount Settings",
+        "contextType": "s",
         "address": "settings/discounts",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/settings/tax"
+        "url":""
       },
       {
         "id": "tax",
         "label": "Tax",
+        "contextType": "s",
         "address": "settings/tax",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/shipping"
+        "url":""
       },
       {
         "id": "shippingMain",
         "label": "Shipping",
+        "contextType": "s",
         "address": "shipping",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/settings/publishing"
+        "url":""
       },
       {
         "id": "publishing",
         "label": "Publishing",
+        "contextType": "s",
         "address": "settings/publishing",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/settings/publishing"
+        "url":""
       }
     ]
   },
@@ -333,58 +365,66 @@
       {
         "id": "productTypes",
         "label": "Product Types",
+        "contextType": "s",
         "address": "producttypes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/producttypes"
+        "url":""
       },
       {
         "id": "productAttributes",
         "label": "Product Attributes",
+        "contextType": "s",
         "address": "attributes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/attributes"
+        "url":""
       },
       {
         "id": "orderAttributes",
         "label": "Order Attributes",
+        "contextType": "s",
         "address": "orderattributes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/orderattributes"
+        "url":""
       },
       {
         "id": "customerAttributes",
         "label": "Customer Attributes",
+        "contextType": "s",
         "address": "CustomerAttributes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/CustomerAttributes"
+        "url":""
       },
       {
         "id": "b2bAttributes",
         "label": "B2B Attributes",
+        "contextType": "s",
         "address": "b2battributes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/b2battributes"
+        "url":""
       },
       {
         "id": "locationTypes",
         "label": "Location Types",
+        "contextType": "s",
         "address": "locationTypes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/locationTypes"
+        "url":""
       },
       {
         "id": "locationAttributes",
         "label": "Location Attributes",
+        "contextType": "s",
         "address": "locationattributes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/locationattributes"
+        "url":""
       },
       {
         "id": "customSchema",
         "label": "Custom Schema",
+        "contextType": "s",
         "address": "customSchema",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/customSchema"
+        "url":""
       }
     ]
   },
@@ -399,23 +439,26 @@
       {
         "id": "applications-manage",
         "label": "Applications",
+        "contextType": "s",
         "address": "capability",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/capability"
+        "url":""
       },
       {
         "id": "actionmanagement",
         "label": "Arc.js",
+        "contextType": "s",
         "address": "actionmanagement",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/actionmanagement"
+        "url":""
       },
       {
         "id": "customroutes",
         "label": "Custom Routes",
+        "contextType": "s",
         "address": "customroutes",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/customroutes"
+        "url":""
       }
     ]
   },
@@ -430,30 +473,34 @@
       {
         "id": "siteprovisioning",
         "label": "Sites",
+        "contextType": "s",
         "address": "provisioning/sites",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/provisioning/sites"
+        "url":""
       },
       {
         "id": "catalogprovisioning",
         "label": "Catalogs",
+        "contextType": "s",
         "address": "provisioning/catalogs",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/provisioning/catalogs"
+        "url":""
       },
       {
         "id": "channels",
         "label": "Channels",
+        "contextType": "s",
         "address": "channels",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/channels"
+        "url":""
       },
       {
         "id": "customersets",
         "label": "Customer Sets",
+        "contextType": "s",
         "address": "customersets",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/customersets"
+        "url":""
       }
     ]
   },
@@ -467,23 +514,26 @@
       {
         "id": "users",
         "label": "Users",
+        "contextType": "s",
         "address": "account/users",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/account/users"
+        "url":""
       },
       {
         "id": "roles",
         "label": "Roles",
+        "contextType": "s",
         "address": "roles",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/roles"
+        "url":""
       },
       {
         "id": "ipblocking",
         "label": "IP Restrictions",
+        "contextType": "s",
         "address": "ipblocking",
         "visible" : true,
-        "url":"http://sb.ngdev06.kibong-dev.com/admin/s-23778/ipblocking"
+        "url":""
       }
     ]
   },

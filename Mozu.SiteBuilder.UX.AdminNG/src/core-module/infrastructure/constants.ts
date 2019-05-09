@@ -37,4 +37,10 @@ export class Constants {
         isLoggedIn : "isLoggedIn",
         sessionId : "sessionId"
     }
+
+    static contextTypes = {
+        catalogContextType : 'c',
+        masterCatalogContextType : 'm',
+        siteContextType : 's'
+    }
 }

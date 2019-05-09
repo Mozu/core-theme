@@ -34,13 +34,8 @@ export class NavigationLeftComponent implements OnInit {
   mainItems: MenuItem[];
   systemItems: MenuItem[];
   public filterBehaviourId_Record : any[];
-  public _isImportExportMenuLinks = false;
-  public secureFormData : any;
-  public distinctImportExportLinks;
-  public ImportExportencodedValues : string;
-  // @Output() secureFormAppId = new EventEmitter<any>();
-
-
+  public filterfn : any;
+  
   constructor(
     private navigationService: NavigationService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -66,20 +61,19 @@ export class NavigationLeftComponent implements OnInit {
   }
 
   public fetchNavigationItem = () => {
-    this.navigationService.fetchLeftNavigationItems().subscribe( data => {
+    this.navigationService.fetchLeftNavigationItems().subscribe( leftNavigationItemsSuccessResponse => {
       this._loggerService.info("NavigationLeftComponent : fetchLeftNavigationItems");
-      let responseJson = data
-      //  this.model.navigationTabs = JSON.parse(JSON.stringify(responseJson));
+      //this.utilityService.urlToken(responseJson, this._sharedData._sharedData.items.ctTaContext);
+      this.model.navigationTabs = JSON.parse(JSON.stringify(leftNavigationItemsSuccessResponse));
       /* filter the menus on the basis of logged in user behaviour id */
-      this.model.filteredNavigationLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData);
-      /*import/export*/
-      if(this._sharedData._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
-        this.model.filteredNavigationLinks = this.utilityService.mergeImportExportLinks(this.model.filteredNavigationLinks, this._sharedData);
-      }
+      this.model.filteredNavigationLinks  = this.utilityService.filterLinksByBehaviorId(leftNavigationItemsSuccessResponse, this._sharedData._sharedData.items.ctUser.behaviorIds);
+      this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(this.model.filteredNavigationLinks,this._sharedData._sharedData.items.ctTaContext);
+
       this.mainItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'main' });
       this.systemItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'sys' });
       this.changeDetectorRef.detectChanges();
-    }, (errorResponse : any) => {
+     
+    }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
     });
   }

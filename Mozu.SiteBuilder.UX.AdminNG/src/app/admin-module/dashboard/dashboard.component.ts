@@ -83,20 +83,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   public pupulateSystemAndMainTiles = () => {
     this._loggerService.info("AdminDashboardComponent : pupulateSystemAndMainTiles");
 
-    this._dashboardService.fetchAllDashboardTiles().subscribe(successResponse => {
-      let responseJson = successResponse;
+    this._dashboardService.fetchAllDashboardTiles().subscribe(dashboardTileLinksResponse => {
+      
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
 
       /* filter the menus on the basis of logged in user behaviour id */
-      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData);
+      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData._sharedData.items.ctUser.behaviorIds);
       
+      this.model.filteredAccessLinks = this.utilityService.populateNavigationLinksbyContextType(this.model.filteredAccessLinks,this._sharedData._sharedData.items.ctTaContext);
+
       this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
       this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
       this._changeDetectionRef.detectChanges();
 
-    }, (errResponse) => {
+    }, (dashboardTileLinksErrResponse) => {
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");;
-      throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster);
+      throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster,dashboardTileLinksErrResponse);
     });
   }
       

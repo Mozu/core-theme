@@ -32,7 +32,7 @@ export class DashbaordService {
               eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {
                 let sectionLink = new AccessTileLink();
                 sectionLink.linkDataText = eachDasbhboardCategoryItem.label;
-                sectionLink.linkDataURL = eachDasbhboardCategoryItem.navUrl;//Constants.voidNavigationLink; 
+                sectionLink.linkDataURL = eachDasbhboardCategoryItem.url;//Constants.voidNavigationLink; 
                 accessTileModel.sectionLinks.push(sectionLink);
               });
             }
