@@ -50,11 +50,11 @@
                     listConfig: {
                         tpl: [
                             '<ul class="taco-product-option-value-list">',
-                                '<tpl for=".">',
-                                    '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> disabled</tpl>">',
-                                        '{StringValue}',
-                                    '</li>',
-                                '</tpl>',
+                            '<tpl for=".">',
+                            '<li role="option" class="x-boundlist-item<tpl if="!IsEnabled"> disabled</tpl>">',
+                            '{StringValue}',
+                            '</li>',
+                            '</tpl>',
                             '</ul>'
                         ]
                     }
@@ -99,7 +99,7 @@
         }
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.addEvents([
@@ -107,7 +107,7 @@
         ]);
 
         me.on('loadFailure', me.onLoadFailure, me);
-        me.on('boxready', function() {
+        me.on('boxready', function () {
             this.setLoading(true);
             // Turn off after model loaded.
         }, me);
@@ -123,7 +123,7 @@
             store: this.images,
             tpl: [
                 '<tpl foreach=".">',
-                    '<li class="image-item" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')"></li>',
+                '<li class="image-item" style="background-image:url(\'{url}?size=' + this.thumbnailSize + '\')"></li>',
                 '</tpl>'
             ],
             itemSelector: 'li.image-item'
@@ -141,7 +141,7 @@
             xtype: 'container',
             cls: 'options',
             width: '100%',
-            layout:'anchor',
+            layout: 'anchor',
             items: [{
                 xtype: 'component',
                 html: ''
@@ -172,38 +172,38 @@
             cls: 'price',
             tpl: [
                 '<tpl if="Price">',
-                    '<span class="label">Price:</span><span class="price-value',
-                    '<tpl if="Price.SalePrice">',
-                    ' onsale',
-                    '</tpl>',
-                    '">',
-                    '{Price.Price:currency}</span>',
-                    '<tpl if="Price.SalePrice">',
-                    '<span class="price-value">{Price.SalePrice:currency}</span>',
-                    '</tpl>',
+                '<span class="label">Price:</span><span class="price-value',
+                '<tpl if="Price.SalePrice">',
+                ' onsale',
+                '</tpl>',
+                '">',
+                '{Price.Price:currency}</span>',
+                '<tpl if="Price.SalePrice">',
+                '<span class="price-value">{Price.SalePrice:currency}</span>',
+                '</tpl>',
                 '</tpl>',
 
                 '<tpl if="PriceRange">',
 
-                    '<span class="label">Price:</span><span class="price-value',
-                    '<tpl if="PriceRange.Lower.SalePrice">',
-                        ' onsale',
-                    '</tpl>',
-                    '">',
-                    '{PriceRange.Lower.Price:currency}</span>',
-                    '<tpl if="PriceRange.Lower.SalePrice">',
-                        '<span class="price-value">{PriceRange.Lower.SalePrice:currency}</span>',
-                    '</tpl>',
+                '<span class="label">Price:</span><span class="price-value',
+                '<tpl if="PriceRange.Lower.SalePrice">',
+                ' onsale',
+                '</tpl>',
+                '">',
+                '{PriceRange.Lower.Price:currency}</span>',
+                '<tpl if="PriceRange.Lower.SalePrice">',
+                '<span class="price-value">{PriceRange.Lower.SalePrice:currency}</span>',
+                '</tpl>',
 
-                    ' - <span class="price-value',
-                    '<tpl if="PriceRange.Upper.SalePrice">',
-                        ' onsale',
-                    '</tpl>',
-                    '">',
-                    '{PriceRange.Upper.Price:currency}</span>',
-                    '<tpl if="PriceRange.Upper.SalePrice">',
-                        '<span class="price-value">{PriceRange.Upper.SalePrice:currency}</span>',
-                    '</tpl>',
+                ' - <span class="price-value',
+                '<tpl if="PriceRange.Upper.SalePrice">',
+                ' onsale',
+                '</tpl>',
+                '">',
+                '{PriceRange.Upper.Price:currency}</span>',
+                '<tpl if="PriceRange.Upper.SalePrice">',
+                '<span class="price-value">{PriceRange.Upper.SalePrice:currency}</span>',
+                '</tpl>',
 
                 '</tpl>'
             ]
@@ -212,10 +212,10 @@
         this.items = [
             {
                 layout: 'hbox',
-                padding:20,
+                padding: 20,
                 items: [
                     {
-                            xtype: 'container',
+                        xtype: 'container',
                         cls: 'left-column',
                         width: 170,
                         items: [
@@ -233,16 +233,16 @@
                                 layout: 'hbox',
                                 items: [
                                     {
-                                        flex:1,
+                                        flex: 1,
                                         xtype: 'container',
-                                        layout:'anchor',
+                                        layout: 'anchor',
                                         items: [
                                             this.optionsHeading,
                                             this.optionsContainer
                                         ]
                                     },
                                     {
-                                        flex:1,
+                                        flex: 1,
                                         xtype: 'container',
                                         padding: '0 0 0 20',
                                         items: [
@@ -263,10 +263,10 @@
         this.callParent(arguments);
     },
 
-    areAllFieldsStatisfied: function() {
+    areAllFieldsStatisfied: function () {
         // Copied from Ext source
-        var originalHasInvalidField = function() {
-            return !!this.getFields().findBy(function(field) {
+        var originalHasInvalidField = function () {
+            return !!this.getFields().findBy(function (field) {
                 var preventMark = field.preventMark,
                     isValid;
                 field.preventMark = true;
@@ -278,12 +278,12 @@
         return Ext.bind(originalHasInvalidField, this.getForm())();
     },
 
-    onLoadFailure : function() {
+    onLoadFailure: function () {
         this.removeAll();
         this.setLoading(false);
         this.add({
             xtype: 'component',
-            flex:1,
+            flex: 1,
             cls: 'error-loading',
             html: 'Error loading this product configuration'
         });
@@ -330,7 +330,7 @@
                 if (this.ownerCt) {
                     this.ownerCt.center();
                 }
-                this.fireEvent('viewReady',this);
+                this.fireEvent('viewReady', this);
             },
 
             failure: function (response) {
@@ -345,7 +345,7 @@
         });
 
         this.productName.update(this.record.get('productName'));
-        this.productCodeField.update({ code:this.record.get('productCode') });
+        this.productCodeField.update({ code: this.record.get('productCode') });
 
         var description = '';
         var longDescription = this.record.get('productFullDescription');
@@ -416,12 +416,12 @@
                     var request = { Options: [] };
 
                     Ext.each(this.runtimeData.Options, function (option) {
-                        if (option.AttributeFQN !== field.name) return;
+                        if (option.AttributeFQN == field.name) {
+                            option.Value = saves[inputType] ? saves[inputType](value) : value;
 
-                        option.Value = saves[inputType] ? saves[inputType](value) : value;
-
-                        if (option.AttributeDetail.UsageType === 'Option') {
-                            this.lastUpdatedOption = option;
+                            if (option.AttributeDetail.UsageType === 'Option') {
+                                this.lastUpdatedOption = option;
+                            }
                         }
 
                         if (option.Value === undefined || option.Value === ' ') return;
@@ -434,38 +434,37 @@
                         }
 
                         request.Options.push(option);
-                        return false;
                     }, this);
 
                     this.setLoading(true);
                     this.isUpdating = true;
-                        this.record.configureRuntimeProduct({
-                            jsonData: request,
-                            success: function (response) {
-                                var self = this;
-                                var responseData = JSON.parse(response.responseText).items;
-                                Ext.each(responseData.Options, function (option) {
-                                    if (option.AttributeDetail.InputType == "List" && field.name !== option.AttributeFQN) {
-                                        self.filterForEnabledValues(option);
-                                    }
-                                });
+                    this.record.configureRuntimeProduct({
+                        jsonData: request,
+                        success: function (response) {
+                            var self = this;
+                            var responseData = JSON.parse(response.responseText).items;
+                            Ext.each(responseData.Options, function (option) {
+                                if (option.AttributeDetail.InputType == "List" && field.name !== option.AttributeFQN) {
+                                    self.filterForEnabledValues(option);
+                                }
+                            });
 
 
-                                self.setLoading(false);
-                                self.isUpdating = false;
-                                self.getForm().checkValidity();
-                            },
-                            failure: function (response) {
-                                this.setLoading(false);
-                                this.isUpdating = false;
+                            self.setLoading(false);
+                            self.isUpdating = false;
+                            self.getForm().checkValidity();
+                        },
+                        failure: function (response) {
+                            this.setLoading(false);
+                            this.isUpdating = false;
 
-                                var error = JSON.parse(response.responseText);
-                                Taco.app.fireEvent('setmessage', error, 'error');
-                                this.fireEvent('loadFailure');
+                            var error = JSON.parse(response.responseText);
+                            Taco.app.fireEvent('setmessage', error, 'error');
+                            this.fireEvent('loadFailure');
 
-                            },
-                            scope: self
-                        });
+                        },
+                        scope: self
+                    });
                 },
                 buffer: 400,
                 scope: this
@@ -543,18 +542,18 @@
         function configureProduct(quantity) {
             me.record.configureRuntimeProduct({
                 jsonData: request,
-                success: function(response) {
+                success: function (response) {
                     this.runtimeData = JSON.parse(response.responseText).items;
                     var state = this.runtimeData.PurchasableState;
                     try {
-                        if (!state.IsPurchasable && Ext.Array.findBy(state.Messages, function(msg) { return msg.ValidationType === 'MinQtyNotMet'; })) {
+                        if (!state.IsPurchasable && Ext.Array.findBy(state.Messages, function (msg) { return msg.ValidationType === 'MinQtyNotMet'; })) {
                             var minQty = Ext.Array.min(Ext.Array.pluck(this.runtimeData.VolumePriceBands, 'MinQty'));
                             configureProduct(minQty);
                             return;
                         }
                     } catch (e) { }
 
-                    Ext.each(this.runtimeData.Options, function(option) {
+                    Ext.each(this.runtimeData.Options, function (option) {
                         this.updateOption(option);
                     }, this);
 
@@ -571,7 +570,7 @@
                         callback();
                     }
                 },
-                failure: function(response) {
+                failure: function (response) {
                     this.setLoading(false);
                     this.isUpdating = false;
 
