@@ -1,3 +1,4 @@
+
 .subform-label{
     color: #7c7c7c;
     font-size: 14px;
@@ -31,7 +32,11 @@
 .scroll-container .subform:first-child{border-radius: 0px 0px 4px 4px;}
 .subnav + .subform{border-radius: 0px 0px 4px;}
 .main-container{
-    /* padding: 20px; */     padding: 141px 20px 0 20px; scroll-behavior: smooth;
+    padding: 0 20px 0 20px;
+    scroll-behavior: smooth;
+    height: 100vh;
+    margin-top: 141px;
+    /* overflow-y: scroll; */
 }
 .subnav{ margin: 0px 0px 0px 0px;
     padding: 20px 20px 0;

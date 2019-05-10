@@ -27,17 +27,17 @@ export class LocationGroupCreateComponent implements OnInit {
     }
     @HostListener('window:scroll', ['$event'])
     onWindowScroll(e) {
-       if (window.pageYOffset > 20) {
+       if (window.pageYOffset > 60) {
          let element = document.getElementById('stickynav');
          element.classList.add('sticky');
-         let element2 = document.getElementById('main-container');
-         element2.classList.add('forextratoppadding');
+         //let element2 = document.getElementById('main-container');
+         //element2.classList.add('forextratoppadding');
          //
        } else {
         let element = document.getElementById('stickynav');
           element.classList.remove('sticky'); 
-            let element2 = document.getElementById('main-container');
-              element2.classList.remove('forextratoppadding');
+            //let element2 = document.getElementById('main-container');
+            //element2.classList.remove('forextratoppadding');
        }
     }
     scroll(el: HTMLElement) {
