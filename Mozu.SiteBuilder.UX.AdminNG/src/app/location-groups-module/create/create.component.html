@@ -12,7 +12,8 @@
 	</div>
 	<div class="row subform">
 		<h4>Add Location(s)</h4>
-		<physical-locations class="col-md-3" (onPhysicalLocationSelect)="onPhysicalLocationSelect($event)"></physical-locations>
+		<physical-locations class="col-md-4" (onPhysicalLocationSelect)="onPhysicalLocationSelect($event)"></physical-locations>
 		<locations-list class="col-md-4" [physicalLocation]="physicalLocation"></locations-list>
+		<!-- <selected-locations-list class="col-md-4"></selected-locations-list> -->
 	</div>
 </div>

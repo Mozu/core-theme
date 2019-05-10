@@ -17,3 +17,5 @@ export * from './home/home.component';
 export * from './physical/index';
 
 export * from './locations/index';
+
+export * from './selected-locations/selected.component';

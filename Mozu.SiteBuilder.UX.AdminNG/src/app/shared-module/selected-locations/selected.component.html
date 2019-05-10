@@ -1,12 +1,9 @@
-<h4>Locations</h4>
-<h5>{{selectedLocations ? selectedLocations.length : 0}} Selected</h5>
+<h4>Selected Locations({{selectedLocations ? selectedLocations.length : 0}})</h4>
 <p-table [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="200px" 
-    [virtualScroll]="true" (onLazyLoad)="loadDataOnScroll($event)"
-    [lazy]="true"   [lazyLoadOnInit]="false"
     [totalRecords]="totalRecords" 
     [virtualRowHeight]="28"
-    [(selection)]="selectedLocations" dataKey="code">
+    [(selection)]="selectedLocations">
 
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -45,7 +42,7 @@
     <!-- <ng-template pTemplate="summary">
             <ul>
                 <li *ngFor="let location of selectedLocations" style="text-align: left">
-                    {{location.code + ' - ' + location.name }}
+                    {{location.code + ' - ' + location.name + ' - ' + location.address}}
                 </li>
             </ul>
     </ng-template> -->

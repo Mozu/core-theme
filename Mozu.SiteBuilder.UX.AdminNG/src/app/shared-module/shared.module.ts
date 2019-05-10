@@ -43,7 +43,8 @@ import {
     HeaderComponent,
     AppHomeComponent,
     PhysicalLocationsComponent,
-    LocationsListComponent
+    LocationsListComponent,
+    SelectedLocationsComponent
  } from './index';
 
 import {
@@ -117,7 +118,8 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationTopLocationGroupsComponent,
         SearchBarComponent,
         PhysicalLocationsComponent,
-        LocationsListComponent
+        LocationsListComponent,
+        SelectedLocationsComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -165,7 +167,8 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationTopLocationGroupsComponent,
         SearchBarComponent,
         PhysicalLocationsComponent,
-        LocationsListComponent
+        LocationsListComponent,
+        SelectedLocationsComponent
     ]
 })
 
