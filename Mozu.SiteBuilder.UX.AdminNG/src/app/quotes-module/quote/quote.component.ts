@@ -12,7 +12,7 @@ import { LoggerService,
 
 import { QuoteService } from './quote.service';
 
-import { QuoteItem } from './quote.model';
+import { QuoteItemModel } from './quote.model';
 
 @Component({
   selector: 'quote',
@@ -23,7 +23,8 @@ import { QuoteItem } from './quote.model';
 export class QuoteComponent implements OnInit {
   quoteId: string;
   userId: any;
-  public model: QuoteItem;
+  public model: QuoteItemModel;
+  customerAccountId: number;
 
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
@@ -31,9 +32,7 @@ export class QuoteComponent implements OnInit {
 
   ngOnInit() {
     this._loggerService.info("QuoteComponent : ngOnInit");
-    this.model = new QuoteItem();
-    this.model.items = [];
-
+    this.model = new QuoteItemModel();
     this.quoteId = this.route.snapshot.paramMap.get("quoteId");
     this.populateQuote(this.quoteId);
   }
@@ -48,6 +47,7 @@ export class QuoteComponent implements OnInit {
         if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
           this.model = _.filter(responseJson['items'], function (el : any) { return el.id == quoteId })[0];
           this.userId = this.model.userId; 
+          this.customerAccountId = this.model.customerAccountId;
         }
     }, (errResponse) => {
       this._loggerService.info("QuoteComponent : _quotesListService.fetchAllQuotes_errResponse");

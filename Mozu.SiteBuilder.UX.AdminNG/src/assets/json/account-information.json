@@ -1,10 +1,10 @@
 {
   "users":  [
     {
-        "emailAddress": "Turner@kibocommerce.com",
-        "userName": "Turner",
-        "firstName": "Turner",
-        "lastName": "W",
+        "emailAddress": "Pankaj@kibo.com",
+        "userName": "Pankaj",
+        "firstName": "Pankaj",
+        "lastName": "C",
         "localeCode": "US",
         "userId": "4588be576b7f4416a70b6d810219680e",
         "isLocked": true,

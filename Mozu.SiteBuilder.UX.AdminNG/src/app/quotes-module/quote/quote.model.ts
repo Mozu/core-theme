@@ -1,4 +1,4 @@
-export class QuoteItem {
+export class QuoteItemModel {
   id: string;
   name: string;
   siteId: number;

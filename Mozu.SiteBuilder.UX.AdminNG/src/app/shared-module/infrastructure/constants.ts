@@ -124,7 +124,9 @@ export class Constants {
 
     static numberOfRows: number = 10;
 
-    static integrationsModalClass = 'integrationsModal';
-    static messageHash = '&messageHash=';
-    static dateStamp = '?dt=';
+    static urlParameters ={
+        site: '/s-',
+        b2bAccount: '/b2baccounts',
+        edit: '/edit'
+    }
 }

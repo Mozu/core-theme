@@ -26,10 +26,4 @@
 .summary-data{
     font-size: 13px;
     color: #3f3f3f;
-    border-bottom: #f3f3f3 1px solid;
-}
-a.summary-data:hover{
-    border-bottom: #3f3f3f 1px solid;
-    outline: 0px;
-    text-decoration: none;
 }
