@@ -110,7 +110,7 @@ it('Application should call fetch tabs data function', () => {
     });
   });
 
-  fit('Should call service to get failure response from mock http json (left navigation menu items)', () => {
+  it('Should call service to get failure response from mock http json (left navigation menu items)', () => {
     fixture.detectChanges();
     const req = httpMock.expectOne(`./assets/json/leftNavigation-items.json`);
     expect(req.request.method).toBe("GET");

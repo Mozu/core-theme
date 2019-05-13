@@ -1,7 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { LoggerService } from '../services/logger.service';
-import { __makeTemplateObject } from 'tslib';
 import { Constants } from './constants';
 
 export class EnvironmentConfig {
@@ -91,9 +90,9 @@ export class UtilityService {
         return false;
     }
     public filterLinksByBehaviorId = (accessLinks: any, loggedInUsersBehaviorIds: any) => {
-        accessLinks = this.pruneInvalidLinks(accessLinks);
+        accessLinks = this.filterLocalizationLink(accessLinks);
         var allFilteredLinks = [];
-        var isMenuVisible = false;
+        var isMenuVisible = false ;
         allFilteredLinks = _.filter(accessLinks, function (v: any) {
             if (v.visible) {
                 if (v.behaviorIds) {
@@ -122,8 +121,8 @@ export class UtilityService {
         });
         return allFilteredLinks;
     }
-    public pruneInvalidLinks = (accessLinks: any) => {
-        return accessLinks.filter(function (v: any) { return (v.id != 'localization'); });
+    public filterLocalizationLink = (accessLinks: any) => {
+        return accessLinks.filter(function (v: any) { return (v.id != Constants.localization.localizationAccessLink); });
     }
 
     public populateNavigationLinksbyContextType = (navigationlinks: any, identityTaContext: any) => {

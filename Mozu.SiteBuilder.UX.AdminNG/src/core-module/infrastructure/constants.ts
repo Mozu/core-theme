@@ -43,4 +43,8 @@ export class Constants {
         masterCatalogContextType : 'm',
         siteContextType : 's'
     }
+
+    static localization = {
+        localizationAccessLink : 'localization'
+    }
 }

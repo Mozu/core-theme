@@ -15,11 +15,8 @@ import { SharedDataService } from '@global/services/shared-data.service';
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel } from './left.model';
 import { UtilityService } from '@core/infrastructure/utility.service';
-import { 
-  NgbModal, 
-  NgbModalConfig
-} from '@ng-bootstrap/ng-bootstrap';
-import { DynamicLinksComponent } from './dynamic-links/dynamic-links.component';
+import { Constants } from '@shared/infrastructure/constants';
+
 
 
 @Component({
@@ -63,16 +60,13 @@ export class NavigationLeftComponent implements OnInit {
   public fetchNavigationItem = () => {
     this.navigationService.fetchLeftNavigationItems().subscribe( leftNavigationItemsSuccessResponse => {
       this._loggerService.info("NavigationLeftComponent : fetchLeftNavigationItems");
-      //this.utilityService.urlToken(responseJson, this._sharedData._sharedData.items.ctTaContext);
-      this.model.navigationTabs = JSON.parse(JSON.stringify(leftNavigationItemsSuccessResponse));
       /* filter the menus on the basis of logged in user behaviour id */
       this.model.filteredNavigationLinks  = this.utilityService.filterLinksByBehaviorId(leftNavigationItemsSuccessResponse, this._sharedData._sharedData.items.ctUser.behaviorIds);
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(this.model.filteredNavigationLinks,this._sharedData._sharedData.items.ctTaContext);
 
-      this.mainItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'main' });
-      this.systemItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == 'sys' });
+      this.mainItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == Constants.LefMenuMainTabJsonNavParentPrefix });
+      this.systemItems = _.filter(this.model.filteredNavigationLinks, function (el : any) { return el.navParent == Constants.LefMenuSystemTabJsonNavParentPrefix});
       this.changeDetectorRef.detectChanges();
-     
     }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
     });

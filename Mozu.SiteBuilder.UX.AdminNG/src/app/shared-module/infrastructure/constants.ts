@@ -94,6 +94,8 @@ export class Constants {
     static mainTileJsonNavParentPrefix : string = "main";
     static systemTileJsonNavParentPrefix : string = "sys";
     static systemTabDisplayText : string = "System"; // TODO : Use Enum here.
+    static LefMenuMainTabJsonNavParentPrefix : string = "main";
+    static LefMenuSystemTabJsonNavParentPrefix : string = "sys";
     static voidNavigationLink : string = "javascript:void(0)";
 
     static leftNavigationSource : string =  "./assets/json/leftNavigation-items.json";
