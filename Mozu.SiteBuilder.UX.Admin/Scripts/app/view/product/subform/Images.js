@@ -109,7 +109,7 @@ Ext.define('Taco.view.product.subform.Images', {
             useWhiteContainer: true,
             viewConfig: {
                 deferEmptyText: true,
-                emptyText: me.record.phantom ? 'Save the category to add image groups' : 'None Available'
+                emptyText: me.record.phantom ? 'Create an Image Group to add images ' : 'None Available'
             },
             hideNavMenu: true,
             isCatalogLevel: true,
@@ -243,9 +243,19 @@ Ext.define('Taco.view.product.subform.Images', {
             disabled: !this.isGlobal,
             value: (initActiveOption) ? initActiveOption.attributeFQN: null,
             listeners: {
-                change: function(cmp, value) {
-                    var store = me.product.getOptions()
-                    var setNewOption = function() {
+
+                beforeselect: function(combo, record, index, eOpts){
+                    var me = this;
+                    var value = record.get('attributeFQN');
+                    var store = me.product.getOptions();
+
+                    var setNewOption = function(canceled) {
+                        if(canceled) {
+                            combo.ownerLayout.redoLayout();
+                            return false
+                        }
+
+                        combo.setValue(value);
                         store.each(function(attribute) {
                             attribute.set('isProductImageGroupSelector', attribute.get('attributeFQN') === value)
                         });
@@ -253,24 +263,32 @@ Ext.define('Taco.view.product.subform.Images', {
                         me.imageGroupGrid.setVisible(value !== null);
                         me.addImageGroupButton.setVisible(value !== null);
                         var gridEntries = me.getGridEntries.call(me, value);
+    
+                        if(value !==null && gridEntries.length === 0) {
+                            var defaultGroup = {
+                                groupName: "default",
+                                optionValues: []
+                            };
+                            product.get('productImageGroups').push({
+                                productImageGroupId: "default",
+                                productImageGroupTags: []
+                            })
+                            gridEntries.push(defaultGroup)
+                        }
                         me.imageGroupGrid.store.loadData(gridEntries);
                     };
 
-                   
                     if(me.hasOverriddenContent()) {
                         me.fireEvent('resetImages', {
                             message: 'This will remove product groups in all overridden catalogs. Would you like to proceed?',
                             callback: setNewOption
                         });
-                        return;
-                    }
-
+                        return false;
+                    };
                     setNewOption();
+                    return true;
                 },
-                beforeRender: function(){
-                    //re
-                    console.log('asdf');
-                }
+                scope: this
             },
             tooltip: Ext.create('Taco.core.ux.content.Tooltip', {
                 elementId: 'product-type-option',
@@ -367,22 +385,24 @@ Ext.define('Taco.view.product.subform.Images', {
         if (!product.get('productImageGroups')) {
             return entries;
         }
-
+        
         product.get('productImageGroups').forEach(function(group) {
-            var tagEntry = group.productImageGroupTags && group.productImageGroupTags.find(function(tag) {
-                return tag.fqn === fqn;
-            });
+            if(group){
+                var tagEntry = group.productImageGroupTags && group.productImageGroupTags.find(function(tag) {
+                    return tag.fqn === fqn;
+                });
 
-            if (group.productImageGroupId === 'default') {
-                entries.push({
-                    groupName: 'default',
-                    optionValues: []
-                });
-            } else if (tagEntry) {
-                entries.push({
-                    groupName: group.productImageGroupId,
-                    optionValues: tagEntry.values
-                });
+                if (group.productImageGroupId === 'default') {
+                    entries.push({
+                        groupName: 'default',
+                        optionValues: []
+                    });
+                } else if (tagEntry) {
+                    entries.push({
+                        groupName: group.productImageGroupId,
+                        optionValues: tagEntry.values
+                    });
+                }
             }
         });
 

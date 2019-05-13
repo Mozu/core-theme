@@ -48,6 +48,7 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
         });
 
         if (this.record.data.groupName === 'default') {
+            this.selectOptionValues.setDisabled(true);
             this.selectOptionValues.setVisible(false);
         }
 
