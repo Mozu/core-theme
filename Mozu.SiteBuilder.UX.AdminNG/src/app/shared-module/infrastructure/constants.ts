@@ -106,12 +106,12 @@ export class Constants {
     static localizationMenu : string = 'localization';
 
     static JsonResources = {
-        leftNavigationItems :  "./assets/json/leftNavigation-items.json",
-        tabsNames : "./assets/json/dashboard-menu.json",
-        dasbhoardTiles : "./assets/json/dashboard-categories.json",
-        quoteList : "./assets/json/quote-list.json",
-        accountInformation : "./assets/json/account-information.json",
-        redirectionLink : "./assets/json/user-redirection.json"
+        leftNavigationItems :  "/assets/json/leftNavigation-items.json",
+        tabsNames : "/assets/json/dashboard-menu.json",
+        dasbhoardTiles : "/assets/json/dashboard-categories.json",
+        quoteList : "/assets/json/quote-list.json",
+        accountInformation : "/assets/json/account-information.json",
+        redirectionLink : "/assets/json/user-redirection.json"
     }
 
     static titles = {
@@ -124,9 +124,9 @@ export class Constants {
 
     static numberOfRows: number = 10;
 
-    static urlParameters ={
+    static urlParameter ={
         site: '/s-',
         b2bAccount: '/b2baccounts',
-        edit: '/edit'
+        edit: '/edit/'
     }
 }

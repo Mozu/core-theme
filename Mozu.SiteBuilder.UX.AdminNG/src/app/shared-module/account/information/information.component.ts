@@ -7,6 +7,8 @@ import { Component,
 
 import * as _ from 'lodash';
 
+import { environment } from '@env';
+
 import { SharedDataService } from '@global';
 
 import {
@@ -16,10 +18,11 @@ import {
   ErroNotificationType
 } from '@core';
 
+import { Constants } from '@shared';
+
 import { AccountInfoService } from './information.service';
 
 import { AccountInfoModel } from './information.model';
-import { Constants } from '@shared';
 
 @Component({
   selector: 'account-information',
@@ -31,7 +34,7 @@ export class AccountInformationComponent implements OnChanges, OnInit {
   @Input('UserId') userId: string;
   @Input('CustomerAccountId') customerAccountId: number;
   public model: AccountInfoModel;
-  appendSiteToken: string;
+  customerAccountUrl: string;
 
   constructor(private _accountInfoService: AccountInfoService,
     private _loggerService: LoggerService,
@@ -62,8 +65,8 @@ export class AccountInformationComponent implements OnChanges, OnInit {
       let responseJson = successResponse;
       if (responseJson != null && responseJson != undefined && responseJson['users'].length > 0) {
         this.model = responseJson;
-        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId })[0];
-        this.fetchSitesFromUserIdentity();
+        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId });
+        this.generateCustomerAccountUrl();
       }
     }, (errResponse) => {
       this._loggerService.info("AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse");
@@ -71,13 +74,11 @@ export class AccountInformationComponent implements OnChanges, OnInit {
     })
   }
 
-  public fetchSitesFromUserIdentity = () => {
-      this._loggerService.info("AccountInformationComponent : fetchSitesFromUserIdentity");
+  public generateCustomerAccountUrl = () => {
+      this._loggerService.info("AccountInformationComponent : generateCustomerAccountUrl");
       let siteId = this._sharedData._sharedData.items.ctTaContext.masterCatalogs[0].sites[0].id;
-      this.appendSiteToken = Constants.urlParameters.site + siteId + Constants.urlParameters.b2bAccount 
-      + Constants.urlParameters.edit + this.customerAccountId ;
-
-      this.appendSiteToken = "https://t19636.ngdev06.kibong-dev.com/Admin/s-23790/b2baccounts/edit/1033"; // To be removed
+      this.customerAccountUrl = environment.accountUrl + Constants.urlParameter.site + siteId + Constants.urlParameter.b2bAccount 
+      + Constants.urlParameter.edit + this.customerAccountId ;
   }
 
 }

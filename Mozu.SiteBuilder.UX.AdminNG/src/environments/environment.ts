@@ -10,6 +10,7 @@ export const environment = {
     appUrl: 'http://localhost:4200/',
     apiUrl: 'http://sb.ngdev06.kibong-dev.com/admin/app',
     errorPageUrl: 'http://localhost:4200/',
-    apiTokenUrl: 'http://localhost:5100/token'
+    apiTokenUrl: 'http://localhost:5100/token',
+    accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin'
 };
 

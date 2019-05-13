@@ -10,258 +10,114 @@
       "siteId": 24299,
       "tenantId": 19524,
       "status": "Cancelled",
-      "submittedDate":"2019-05-9T12:00:40.914Z",
+      "submittedDate": "2019-05-9T12:00:40.914Z",
       "number": 2,
       "items": [
-       {
-        "id": "185bdb4fd2a744bda227aa4700736f2c",
-        "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
-        "fulfillmentMethod": "Ship",
-        "lineId": 1,
-        "product": {
-         "fulfillmentTypesSupported": [
-          "DirectShip"
-         ],
-         "options": [],
-         "properties": [],
-         "categories": [
-          {
-           "id": 1
-          }
-         ],
-         "price": {
-          "price": 5
-         },
-         "discountsRestricted": false,
-         "isTaxable": true,
-         "productType": "Product Type",
-         "productUsage": "Standard",
-         "bundledProducts": [],
-         "productCode": "test-1001",
-         "name": "Test Product 1",
-         "goodsType": "Physical",
-         "isPackagedStandAlone": false,
-         "measurements": {
-          "height": {
-           "unit": "in",
-           "value": 1
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "MOG",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 5
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "Standard",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 1",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
           },
-          "width": {
-           "unit": "in",
-           "value": 1
+          "quantity": 1,
+          "subtotal": 5,
+          "extendedTotal": 5,
+          "taxableTotal": 5,
+          "discountTotal": 0,
+          "discountedTotal": 5,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
           },
-          "length": {
-           "unit": "in",
-           "value": 1
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
           },
-          "weight": {
-           "unit": "lbs",
-           "value": 1
-          }
-         },
-         "fulfillmentStatus": "Pending"
-        },
-        "quantity": 1,
-        "subtotal": 5,
-        "extendedTotal": 5,
-        "taxableTotal": 5,
-        "discountTotal": 0,
-        "discountedTotal": 5,
-        "itemTaxTotal": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "feeTotal": 0,
-        "total": 5,
-        "unitPrice": {
-         "extendedAmount": 5,
-         "listAmount": 5
-        },
-        "productDiscounts": [],
-        "shippingDiscounts": [],
-        "auditInfo": {
-         "createDate": "2019-05-08T12:00:40.914Z",
-         "updateBy": "1",
-         "createBy": "1"
-        },
-        "shippingAmountBeforeDiscountsAndAdjustments": 0,
-        "weightedOrderDiscount": 0,
-        "weightedOrderShippingDiscount": 0,
-        "weightedOrderHandlingFeeDiscount": 0
-       }
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        }
       ],
       "auditInfo": {
-       "updateDate": "2019-05-08T12:00:40.914Z",
-       "createDate": "2019-05-08T12:00:40.914Z",
-       "updateBy": "Sam",
-       "createBy": "Sam"
+        "updateDate": "2019-05-08T12:00:40.914Z",
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "Sam",
+        "createBy": "Sam"
       },
-      "expirationDate":"2019-05-18T12:00:40.914Z",
-      "userId":"4588be576b7f4416a70b6d810219680e",
+      "expirationDate": "2019-05-18T12:00:40.914Z",
+      "userId": "4588be576b7f4416a70b6d810219680e",
       "destinations": [
-       {
-        "id": "74214a287fea408cb6f2aa4600a6e3d3",
-        "destinationContact": {
-         "firstName": "Sam",
-         "lastNameOrSurname": "Billing",
-         "phoneNumbers": {
-          "home": "1234567486"
-         },
-         "address": {
-          "address1": "1845 Kramer Ln",
-          "cityOrTown": "Austin",
-          "stateOrProvince": "TX",
-          "postalOrZipCode": "78758",
-          "countryCode": "US",
-          "addressType": "Residential",
-          "isValidated": false
-         }
-        }
-       }
-      ],
-      "customerAccountId": 1034,
-      "isTaxExempt": false,
-      "currencyCode": "USD",
-      "customerInteractionType": "Unknown",
-      "orderDiscounts": [],
-      "subTotal": 5,
-      "itemLevelProductDiscountTotal": 0,
-      "orderLevelProductDiscountTotal": 0,
-      "itemTaxTotal": 0,
-      "itemTotal": 5,
-      "total": 5,
-      "shippingDiscounts": [],
-      "itemLevelShippingDiscountTotal": 0,
-      "orderLevelShippingDiscountTotal": 0,
-      "shippingAmount": 0,
-      "shippingSubTotal": 0,
-      "shippingTax": 0,
-      "shippingTaxTotal": 0,
-      "shippingTotal": 0,
-      "handlingDiscounts": [],
-      "itemLevelHandlingDiscountTotal": 0,
-      "orderLevelHandlingDiscountTotal": 0,
-      "handlingSubTotal": 0,
-      "handlingTax": 0,
-      "handlingTaxTotal": 0,
-      "handlingTotal": 0,
-      "dutyTotal": 0,
-      "feeTotal": 0
-     },
-     {
-      "id": "0dd322d1429fe45778112b5b00004c43",
-      "name": "TestQuote2",
-      "siteId": 24299,
-      "tenantId": 19524,
-      "status": "Accepted",
-      "submittedDate":"2019-05-9T12:00:40.914Z",
-      "number": 2,
-      "items": [
-       {
-        "id": "185bdb4fd2a744bda227aa4700736f2c",
-        "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
-        "fulfillmentMethod": "Ship",
-        "lineId": 1,
-        "product": {
-         "fulfillmentTypesSupported": [
-          "DirectShip"
-         ],
-         "options": [],
-         "properties": [],
-         "categories": [
-          {
-           "id": 1
+        {
+          "id": "74214a287fea408cb6f2aa4600a6e3d3",
+          "destinationContact": {
+            "firstName": "Sam",
+            "lastNameOrSurname": "Billing",
+            "phoneNumbers": {
+              "home": "1234567486"
+            },
+            "address": {
+              "address1": "1845 Kramer Ln",
+              "cityOrTown": "Austin",
+              "stateOrProvince": "TX",
+              "postalOrZipCode": "78758",
+              "countryCode": "US",
+              "addressType": "Residential",
+              "isValidated": false
+            }
           }
-         ],
-         "price": {
-          "price": 5
-         },
-         "discountsRestricted": false,
-         "isTaxable": true,
-         "productType": "Product Type",
-         "productUsage": "Standard",
-         "bundledProducts": [],
-         "productCode": "test-1001",
-         "name": "Test Product 2",
-         "goodsType": "Physical",
-         "isPackagedStandAlone": false,
-         "measurements": {
-          "height": {
-           "unit": "in",
-           "value": 1
-          },
-          "width": {
-           "unit": "in",
-           "value": 1
-          },
-          "length": {
-           "unit": "in",
-           "value": 1
-          },
-          "weight": {
-           "unit": "lbs",
-           "value": 1
-          }
-         },
-         "fulfillmentStatus": "Pending"
-        },
-        "quantity": 1,
-        "subtotal": 5,
-        "extendedTotal": 5,
-        "taxableTotal": 5,
-        "discountTotal": 0,
-        "discountedTotal": 5,
-        "itemTaxTotal": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "feeTotal": 0,
-        "total": 5,
-        "unitPrice": {
-         "extendedAmount": 5,
-         "listAmount": 5
-        },
-        "productDiscounts": [],
-        "shippingDiscounts": [],
-        "auditInfo": {
-         "createDate": "2019-05-08T12:00:40.914Z",
-         "updateBy": "1",
-         "createBy": "1"
-        },
-        "shippingAmountBeforeDiscountsAndAdjustments": 0,
-        "weightedOrderDiscount": 0,
-        "weightedOrderShippingDiscount": 0,
-        "weightedOrderHandlingFeeDiscount": 0
-       }
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-08T12:00:40.914Z",
-       "createDate": "2019-05-08T12:00:40.914Z",
-       "updateBy": "1",
-       "createBy": "1"
-      },
-      "expirationDate":"2019-05-18T12:00:40.914Z",
-      "userId":"4588be576b7f4416a70b6d810219680e",
-      "destinations": [
-       {
-        "id": "74214a287fea408cb6f2aa4600a6e3d3",
-        "destinationContact": {
-         "firstName": "Sam",
-         "lastNameOrSurname": "Billing",
-         "phoneNumbers": {
-          "home": "1234567486"
-         },
-         "address": {
-          "address1": "1845 Kramer Ln",
-          "cityOrTown": "Austin",
-          "stateOrProvince": "TX",
-          "postalOrZipCode": "78758",
-          "countryCode": "US",
-          "addressType": "Residential",
-          "isValidated": false
-         }
         }
-       }
       ],
       "customerAccountId": 1033,
       "isTaxExempt": false,
@@ -291,123 +147,267 @@
       "handlingTotal": 0,
       "dutyTotal": 0,
       "feeTotal": 0
-     },
-     {
+    },
+    {
+      "id": "0dd322d1429fe45778112b5b00004c43",
+      "name": "TestQuote2",
+      "siteId": 24299,
+      "tenantId": 19524,
+      "status": "Accepted",
+      "submittedDate": "2019-05-9T12:00:40.914Z",
+      "number": 2,
+      "items": [
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "MOG",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 5
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "Standard",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 2",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
+          },
+          "quantity": 1,
+          "subtotal": 5,
+          "extendedTotal": 5,
+          "taxableTotal": 5,
+          "discountTotal": 0,
+          "discountedTotal": 5,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
+          },
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
+          },
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        }
+      ],
+      "auditInfo": {
+        "updateDate": "2019-05-08T12:00:40.914Z",
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "1",
+        "createBy": "1"
+      },
+      "expirationDate": "2019-05-18T12:00:40.914Z",
+      "userId": "4588be576b7f4416a70b6d810219680e",
+      "destinations": [
+        {
+          "id": "74214a287fea408cb6f2aa4600a6e3d3",
+          "destinationContact": {
+            "firstName": "Sam",
+            "lastNameOrSurname": "Billing",
+            "phoneNumbers": {
+              "home": "1234567486"
+            },
+            "address": {
+              "address1": "1845 Kramer Ln",
+              "cityOrTown": "Austin",
+              "stateOrProvince": "TX",
+              "postalOrZipCode": "78758",
+              "countryCode": "US",
+              "addressType": "Residential",
+              "isValidated": false
+            }
+          }
+        }
+      ],
+      "customerAccountId": 1033,
+      "isTaxExempt": false,
+      "currencyCode": "USD",
+      "customerInteractionType": "Unknown",
+      "orderDiscounts": [],
+      "subTotal": 5,
+      "itemLevelProductDiscountTotal": 0,
+      "orderLevelProductDiscountTotal": 0,
+      "itemTaxTotal": 0,
+      "itemTotal": 5,
+      "total": 5,
+      "shippingDiscounts": [],
+      "itemLevelShippingDiscountTotal": 0,
+      "orderLevelShippingDiscountTotal": 0,
+      "shippingAmount": 0,
+      "shippingSubTotal": 0,
+      "shippingTax": 0,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "handlingDiscounts": [],
+      "itemLevelHandlingDiscountTotal": 0,
+      "orderLevelHandlingDiscountTotal": 0,
+      "handlingSubTotal": 0,
+      "handlingTax": 0,
+      "handlingTaxTotal": 0,
+      "handlingTotal": 0,
+      "dutyTotal": 0,
+      "feeTotal": 0
+    },
+    {
       "id": "0dd322d1429fe45778112b5b00004c45",
       "name": "TestQuote3",
       "siteId": 24299,
       "tenantId": 19524,
       "status": "Processing",
-      "submittedDate":"2019-05-9T12:00:40.914Z",
+      "submittedDate": "2019-05-9T12:00:40.914Z",
       "number": 2,
       "items": [
-       {
-        "id": "185bdb4fd2a744bda227aa4700736f2c",
-        "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
-        "fulfillmentMethod": "Ship",
-        "lineId": 1,
-        "product": {
-         "fulfillmentTypesSupported": [
-          "DirectShip"
-         ],
-         "options": [],
-         "properties": [],
-         "categories": [
-          {
-           "id": 1
-          }
-         ],
-         "price": {
-          "price": 5
-         },
-         "discountsRestricted": false,
-         "isTaxable": true,
-         "productType": "Product Type",
-         "productUsage": "Standard",
-         "bundledProducts": [],
-         "productCode": "test-1001",
-         "name": "Test Product 1",
-         "goodsType": "Physical",
-         "isPackagedStandAlone": false,
-         "measurements": {
-          "height": {
-           "unit": "in",
-           "value": 1
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "MOG",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 5
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "Standard",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 1",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
           },
-          "width": {
-           "unit": "in",
-           "value": 1
+          "quantity": 1,
+          "subtotal": 5,
+          "extendedTotal": 5,
+          "taxableTotal": 5,
+          "discountTotal": 0,
+          "discountedTotal": 5,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
           },
-          "length": {
-           "unit": "in",
-           "value": 1
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
           },
-          "weight": {
-           "unit": "lbs",
-           "value": 1
-          }
-         },
-         "fulfillmentStatus": "Pending"
-        },
-        "quantity": 1,
-        "subtotal": 5,
-        "extendedTotal": 5,
-        "taxableTotal": 5,
-        "discountTotal": 0,
-        "discountedTotal": 5,
-        "itemTaxTotal": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "feeTotal": 0,
-        "total": 5,
-        "unitPrice": {
-         "extendedAmount": 5,
-         "listAmount": 5
-        },
-        "productDiscounts": [],
-        "shippingDiscounts": [],
-        "auditInfo": {
-         "createDate": "2019-05-08T12:00:40.914Z",
-         "updateBy": "1",
-         "createBy": "1"
-        },
-        "shippingAmountBeforeDiscountsAndAdjustments": 0,
-        "weightedOrderDiscount": 0,
-        "weightedOrderShippingDiscount": 0,
-        "weightedOrderHandlingFeeDiscount": 0
-       }
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        }
       ],
       "auditInfo": {
-       "updateDate": "2019-05-08T12:00:40.914Z",
-       "createDate": "2019-05-08T12:00:40.914Z",
-       "updateBy": "1",
-       "createBy": "1"
+        "updateDate": "2019-05-08T12:00:40.914Z",
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "1",
+        "createBy": "1"
       },
-      "expirationDate":"2019-05-18T12:00:40.914Z",
-      "userId":"4588be576b7f4416a70b6d810219680e",
+      "expirationDate": "2019-05-18T12:00:40.914Z",
+      "userId": "4588be576b7f4416a70b6d810219680e",
       "destinations": [
-       {
-        "id": "74214a287fea408cb6f2aa4600a6e3d3",
-        "destinationContact": {
-         "firstName": "Sam",
-         "lastNameOrSurname": "Billing",
-         "phoneNumbers": {
-          "home": "1234567486"
-         },
-         "address": {
-          "address1": "1845 Kramer Ln",
-          "cityOrTown": "Austin",
-          "stateOrProvince": "TX",
-          "postalOrZipCode": "78758",
-          "countryCode": "US",
-          "addressType": "Residential",
-          "isValidated": false
-         }
+        {
+          "id": "74214a287fea408cb6f2aa4600a6e3d3",
+          "destinationContact": {
+            "firstName": "Sam",
+            "lastNameOrSurname": "Billing",
+            "phoneNumbers": {
+              "home": "1234567486"
+            },
+            "address": {
+              "address1": "1845 Kramer Ln",
+              "cityOrTown": "Austin",
+              "stateOrProvince": "TX",
+              "postalOrZipCode": "78758",
+              "countryCode": "US",
+              "addressType": "Residential",
+              "isValidated": false
+            }
+          }
         }
-       }
       ],
-      "customerAccountId": 1034,
+      "customerAccountId": 1033,
       "isTaxExempt": false,
       "currencyCode": "USD",
       "customerInteractionType": "Unknown",
@@ -435,123 +435,123 @@
       "handlingTotal": 0,
       "dutyTotal": 0,
       "feeTotal": 0
-     },
-     {
+    },
+    {
       "id": "0dd322d1429fe45778112b5b00004c42",
       "name": "TestQuote4",
       "siteId": 24299,
       "tenantId": 19524,
       "status": "Cancelled",
-      "submittedDate":"2019-05-9T12:00:40.914Z",
+      "submittedDate": "2019-05-9T12:00:40.914Z",
       "number": 2,
       "items": [
-       {
-        "id": "185bdb4fd2a744bda227aa4700736f2c",
-        "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
-        "fulfillmentMethod": "Ship",
-        "lineId": 1,
-        "product": {
-         "fulfillmentTypesSupported": [
-          "DirectShip"
-         ],
-         "options": [],
-         "properties": [],
-         "categories": [
-          {
-           "id": 1
-          }
-         ],
-         "price": {
-          "price": 5
-         },
-         "discountsRestricted": false,
-         "isTaxable": true,
-         "productType": "Product Type",
-         "productUsage": "Standard",
-         "bundledProducts": [],
-         "productCode": "test-1001",
-         "name": "Test Product 1",
-         "goodsType": "Physical",
-         "isPackagedStandAlone": false,
-         "measurements": {
-          "height": {
-           "unit": "in",
-           "value": 1
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "MOG",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 5
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "Standard",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 1",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
           },
-          "width": {
-           "unit": "in",
-           "value": 1
+          "quantity": 1,
+          "subtotal": 5,
+          "extendedTotal": 5,
+          "taxableTotal": 5,
+          "discountTotal": 0,
+          "discountedTotal": 5,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
           },
-          "length": {
-           "unit": "in",
-           "value": 1
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
           },
-          "weight": {
-           "unit": "lbs",
-           "value": 1
-          }
-         },
-         "fulfillmentStatus": "Pending"
-        },
-        "quantity": 1,
-        "subtotal": 5,
-        "extendedTotal": 5,
-        "taxableTotal": 5,
-        "discountTotal": 0,
-        "discountedTotal": 5,
-        "itemTaxTotal": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "feeTotal": 0,
-        "total": 5,
-        "unitPrice": {
-         "extendedAmount": 5,
-         "listAmount": 5
-        },
-        "productDiscounts": [],
-        "shippingDiscounts": [],
-        "auditInfo": {
-         "createDate": "2019-05-08T12:00:40.914Z",
-         "updateBy": "1",
-         "createBy": "1"
-        },
-        "shippingAmountBeforeDiscountsAndAdjustments": 0,
-        "weightedOrderDiscount": 0,
-        "weightedOrderShippingDiscount": 0,
-        "weightedOrderHandlingFeeDiscount": 0
-       }
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        }
       ],
       "auditInfo": {
-       "updateDate": "2019-05-08T12:00:40.914Z",
-       "createDate": "2019-05-08T12:00:40.914Z",
-       "updateBy": "1",
-       "createBy": "1"
+        "updateDate": "2019-05-08T12:00:40.914Z",
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "1",
+        "createBy": "1"
       },
-      "expirationDate":"2019-05-18T12:00:40.914Z",
-      "userId":"4588be576b7f4416a70b6d810219680e",
+      "expirationDate": "2019-05-18T12:00:40.914Z",
+      "userId": "4588be576b7f4416a70b6d810219680e",
       "destinations": [
-       {
-        "id": "74214a287fea408cb6f2aa4600a6e3d3",
-        "destinationContact": {
-         "firstName": "Sam",
-         "lastNameOrSurname": "Billing",
-         "phoneNumbers": {
-          "home": "1234567486"
-         },
-         "address": {
-          "address1": "1845 Kramer Ln",
-          "cityOrTown": "Austin",
-          "stateOrProvince": "TX",
-          "postalOrZipCode": "78758",
-          "countryCode": "US",
-          "addressType": "Residential",
-          "isValidated": false
-         }
+        {
+          "id": "74214a287fea408cb6f2aa4600a6e3d3",
+          "destinationContact": {
+            "firstName": "Sam",
+            "lastNameOrSurname": "Billing",
+            "phoneNumbers": {
+              "home": "1234567486"
+            },
+            "address": {
+              "address1": "1845 Kramer Ln",
+              "cityOrTown": "Austin",
+              "stateOrProvince": "TX",
+              "postalOrZipCode": "78758",
+              "countryCode": "US",
+              "addressType": "Residential",
+              "isValidated": false
+            }
+          }
         }
-       }
       ],
-      "customerAccountId": 1035,
+      "customerAccountId": 1033,
       "isTaxExempt": false,
       "currencyCode": "USD",
       "customerInteractionType": "Unknown",
@@ -579,123 +579,123 @@
       "handlingTotal": 0,
       "dutyTotal": 0,
       "feeTotal": 0
-     },
-     {
+    },
+    {
       "id": "0dd322d1429fe45778112b5b00004c41",
       "name": "TestQuote5",
       "siteId": 24299,
       "tenantId": 19524,
       "status": "Cancelled",
-      "submittedDate":"2019-05-9T12:00:40.914Z",
+      "submittedDate": "2019-05-9T12:00:40.914Z",
       "number": 2,
       "items": [
-       {
-        "id": "185bdb4fd2a744bda227aa4700736f2c",
-        "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
-        "fulfillmentMethod": "Ship",
-        "lineId": 1,
-        "product": {
-         "fulfillmentTypesSupported": [
-          "DirectShip"
-         ],
-         "options": [],
-         "properties": [],
-         "categories": [
-          {
-           "id": 1
-          }
-         ],
-         "price": {
-          "price": 5
-         },
-         "discountsRestricted": false,
-         "isTaxable": true,
-         "productType": "Product Type",
-         "productUsage": "Standard",
-         "bundledProducts": [],
-         "productCode": "test-1001",
-         "name": "Test Product 1",
-         "goodsType": "Physical",
-         "isPackagedStandAlone": false,
-         "measurements": {
-          "height": {
-           "unit": "in",
-           "value": 1
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "MOG",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 5
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "Standard",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 1",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
           },
-          "width": {
-           "unit": "in",
-           "value": 1
+          "quantity": 1,
+          "subtotal": 5,
+          "extendedTotal": 5,
+          "taxableTotal": 5,
+          "discountTotal": 0,
+          "discountedTotal": 5,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
           },
-          "length": {
-           "unit": "in",
-           "value": 1
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
           },
-          "weight": {
-           "unit": "lbs",
-           "value": 1
-          }
-         },
-         "fulfillmentStatus": "Pending"
-        },
-        "quantity": 1,
-        "subtotal": 5,
-        "extendedTotal": 5,
-        "taxableTotal": 5,
-        "discountTotal": 0,
-        "discountedTotal": 5,
-        "itemTaxTotal": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "feeTotal": 0,
-        "total": 5,
-        "unitPrice": {
-         "extendedAmount": 5,
-         "listAmount": 5
-        },
-        "productDiscounts": [],
-        "shippingDiscounts": [],
-        "auditInfo": {
-         "createDate": "2019-05-08T12:00:40.914Z",
-         "updateBy": "1",
-         "createBy": "1"
-        },
-        "shippingAmountBeforeDiscountsAndAdjustments": 0,
-        "weightedOrderDiscount": 0,
-        "weightedOrderShippingDiscount": 0,
-        "weightedOrderHandlingFeeDiscount": 0
-       }
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        }
       ],
       "auditInfo": {
-       "updateDate": "2019-05-08T12:00:40.914Z",
-       "createDate": "2019-05-08T12:00:40.914Z",
-       "updateBy": "1",
-       "createBy": "1"
+        "updateDate": "2019-05-08T12:00:40.914Z",
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "1",
+        "createBy": "1"
       },
-      "expirationDate":"2019-05-18T12:00:40.914Z",
-      "userId":"4588be576b7f4416a70b6d810219680e",
+      "expirationDate": "2019-05-18T12:00:40.914Z",
+      "userId": "4588be576b7f4416a70b6d810219680e",
       "destinations": [
-       {
-        "id": "74214a287fea408cb6f2aa4600a6e3d3",
-        "destinationContact": {
-         "firstName": "Sam",
-         "lastNameOrSurname": "Billing",
-         "phoneNumbers": {
-          "home": "1234567486"
-         },
-         "address": {
-          "address1": "1845 Kramer Ln",
-          "cityOrTown": "Austin",
-          "stateOrProvince": "TX",
-          "postalOrZipCode": "78758",
-          "countryCode": "US",
-          "addressType": "Residential",
-          "isValidated": false
-         }
+        {
+          "id": "74214a287fea408cb6f2aa4600a6e3d3",
+          "destinationContact": {
+            "firstName": "Sam",
+            "lastNameOrSurname": "Billing",
+            "phoneNumbers": {
+              "home": "1234567486"
+            },
+            "address": {
+              "address1": "1845 Kramer Ln",
+              "cityOrTown": "Austin",
+              "stateOrProvince": "TX",
+              "postalOrZipCode": "78758",
+              "countryCode": "US",
+              "addressType": "Residential",
+              "isValidated": false
+            }
+          }
         }
-       }
       ],
-      "customerAccountId": 1035,
+      "customerAccountId": 1033,
       "isTaxExempt": false,
       "currencyCode": "USD",
       "customerInteractionType": "Unknown",
@@ -723,7 +723,7 @@
       "handlingTotal": 0,
       "dutyTotal": 0,
       "feeTotal": 0
-     },
+    },
      {
       "id": "0dd322d1429fe45778112b5b00004c46",
       "name": "TestQuote6",
