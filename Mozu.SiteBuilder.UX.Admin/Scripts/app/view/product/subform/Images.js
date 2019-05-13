@@ -413,11 +413,24 @@ Ext.define('Taco.view.product.subform.Images', {
     
             self.dirtyCounter += 1;
             self.productForm.findField('dirtyControl').setValue(self.dirtyCounter);
-    
+
             // delete all associated images from the product record
             product.set('productImages', product.get('productImages').filter(function(image) {
                 return image.productImageGroupId !== record.data.groupName;
             }));
+
+            //This is stuid, why are we using _override in the first place?
+            if(product.get('_override')){
+                if(product.get('_override').productImages)
+                {
+                    product.set('_override', { 
+                        productImages: Ext.Array.filter(product.get('_override').productImages, function(image) {
+                            return image.productImageGroupId !== record.data.groupName;
+                        })
+                    })   
+                }
+            }
+           
         }
         
         if(self.hasOverriddenContent()){

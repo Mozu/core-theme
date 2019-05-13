@@ -209,7 +209,7 @@ Ext.define('Taco.view.product.Form', {
             return
         });
 
-        this.record.set('productImage', productImages); 
+        this.record.set('productImages', productImages); 
 
         return this.callParent(arguments);
     },
