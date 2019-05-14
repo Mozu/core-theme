@@ -19,36 +19,37 @@
 
 <div class="clearfix"></div>
 <div>
-        <div (scroll)="onWindowScroll($event);">
-                <div class="row subnav animated fadeInDown" id="stickynav">
-                        <ul>
-                                <li><a (click)="scroll(form1)">Location Group</a></li>
-                                <li><a (click)="scroll(form2)">Add Locations</a></li>
-                        </ul>
-                </div>
-        </div>
-        <div class="main-container" id="main-container">
-                <div class="scroll-container">
-                        <div #form1 id="form1" class="row subform scroll-page">
-                            <h4>Location Group</h4>
-							<form>
-								<div class="form-row">
-									<div class="col-md-6">
-										<!-- <label for="locationName" class="subform-label">Name</label>
-										<input class="form-control subform-text" id="locationName" type="text" /> -->
-										<input type="text" class=" inputText form-control subform-text" id="locationName" />
-  										<span class="floating-label">Name</span>
-										<hr class="underline-from-left">
-									</div>
-								</div>
-							</form>
-                        </div>
-                        <div #form2 id="form2" class="row subform scroll-page">
-                                <h4>Add Location(s)</h4>
-                                <physical-locations class="col-md-4" (onPhysicalLocationSelect)="onPhysicalLocationSelect($event)"></physical-locations>
-								<locations-list class="col-md-4" [physicalLocation]="physicalLocation"></locations-list>
-								<!-- <selected-locations-list class="col-md-4"></selected-locations-list> -->
-                        </div>
-                </div>
-        </div>
+	<div (scroll)="onWindowScroll($event);">
+		<div class="row subnav animated fadeInDown" id="stickynav">
+			<ul>
+				<li><a (click)="scroll(form1)">Location Group</a></li>
+				<li><a (click)="scroll(form2)">Add Locations</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-container" id="main-container">
+		<div class="scroll-container">
+			<div #form1 id="form1" class="row subform scroll-page">
+				<h4>Location Group</h4>
+				<form>
+					<div class="form-row">
+						<div class="col-md-6">
+							<label for="locationName" class="subform-label">Name</label>
+							<input class="form-control subform-text" id="locationName" type="text" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<div #form2 id="form2" class="row subform scroll-page">
+				<h4>Add Location(s)</h4>
+				<physical-locations class="col-md-4" (onPhysicalLocationSelect)="onPhysicalLocationSelect($event)">
+				</physical-locations>
+				<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
+					(onLocationSelect)="onLocationSelect($event)" (onLocationUnselect)="onLocationUnselect($event)">
+				</locations-list>
+				<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
+				</selected-locations-list>
+			</div>
+		</div>
+	</div>
 </div>

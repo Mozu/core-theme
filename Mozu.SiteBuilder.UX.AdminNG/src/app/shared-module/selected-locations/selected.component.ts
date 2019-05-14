@@ -1,7 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
-import { LazyLoadEvent } from 'primeng/api';
-import {TreeNode} from 'primeng/components/common/api';
 import * as _ from 'lodash';
 import { LocationsListModel } from '@shared/locations';
 
@@ -14,8 +12,10 @@ import { LocationsListModel } from '@shared/locations';
 export class SelectedLocationsComponent implements OnInit, OnChanges {
     
     cols: any[];
+    virtualLocations: LocationsListModel[];
     selectedLocations: LocationsListModel[];
-    
+    @Input()
+    selectedLocationsLst: LocationsListModel[];
 
     constructor(
         private _loggerService: LoggerService
@@ -32,6 +32,9 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
         this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes));
         //this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes.physicalLocation.currentValue));
+        if(changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
+            this.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];
+            this.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
+        }
     }
-    
 }

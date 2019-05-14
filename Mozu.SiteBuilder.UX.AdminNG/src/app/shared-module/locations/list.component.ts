@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
 import { LocationsListModel } from './list.model';
@@ -22,7 +22,11 @@ export class LocationsListComponent implements OnInit, OnChanges {
     inmemoryData: LocationsListModel[];
     selectedLocations: LocationsListModel[];
     
-
+    @Output() 
+    onLocationSelect: EventEmitter<any> = new EventEmitter<any>();
+    @Output() 
+    onLocationUnselect: EventEmitter<any> = new EventEmitter<any>();
+    
     constructor(
         private _loggerService: LoggerService,
         private _locationService:LocationsListService
@@ -87,4 +91,18 @@ export class LocationsListComponent implements OnInit, OnChanges {
         console.log("chunk ::",chunk);
         return chunk;
     }
+
+    onRowSelect(event) {
+        this._loggerService.info("Selected row is :::"+ JSON.stringify(event.data));
+        this.onLocationSelect.emit(event.data);
+    }
+
+    onRowUnselect(event) {
+        this._loggerService.info("Unselected row is :::"+ JSON.stringify(event.data));
+        this.onLocationUnselect.emit(event.data);
+    }
+
+    onHeaderClick(event) {
+        this._loggerService.info("onHeaderClick row is :::"+ JSON.stringify(event));
+    }   
 }

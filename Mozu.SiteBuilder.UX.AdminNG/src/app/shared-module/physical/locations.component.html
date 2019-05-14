@@ -3,7 +3,7 @@
 <p-treeTable #tt id="physicallocationdiv" [value]="physicalLocations" [columns]="cols" selectionMode="single" 
     [(selection)]="selectedPhysicalLocNode" 
     dataKey="name" 
-    [scrollable]="true" scrollHeight="210px"
+    [scrollable]="true" scrollHeight="360px"
     (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)">
     <!-- <ng-template pTemplate="header" let-columns>
         <tr>
