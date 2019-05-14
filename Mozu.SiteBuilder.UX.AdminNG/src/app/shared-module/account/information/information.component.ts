@@ -7,10 +7,6 @@ import { Component,
 
 import * as _ from 'lodash';
 
-import { environment } from '@env';
-
-import { SharedDataService } from '@global';
-
 import {
   LoggerService,
   HttpError,
@@ -18,7 +14,11 @@ import {
   ErroNotificationType
 } from '@core';
 
+import { SharedDataService } from '@global';
+
 import { Constants } from '@shared';
+
+import { environment } from '@env';
 
 import { AccountInfoService } from './information.service';
 
@@ -52,12 +52,9 @@ export class AccountInformationComponent implements OnChanges, OnInit {
   ngOnInit() {
     this.model = new AccountInfoModel();
     this.model.users = [];
-    
   }
 
-
   public populateAccountInfo = (userId: string) => {
-
     this._loggerService.info("AccountInformationComponent : populateAccountInfo");
 
     this._accountInfoService.fetchAccountInformation().subscribe((successResponse: any) => {
