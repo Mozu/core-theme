@@ -24,8 +24,10 @@
             <td style="width: 3em">
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
-            <td *ngFor="let col of columns">
-                {{rowData[col.field]}}
+            <td class="row" *ngFor="let col of columns">
+                <div class="col-md-7">{{rowData[col.field]}}</div>
+                <div class="col-md-3 text-right">{{rowData.code}}</div>
+                <div class="col-md-1"><i class="pi pi-info-circle" data-toggle="tooltip" data-placement="right" title="{{rowData.address.address1 + ', ' + rowData.address.cityOrTown + ', ' + rowData.address.stateOrProvince }}"></i></div>
             </td>
         </tr>
     </ng-template>
