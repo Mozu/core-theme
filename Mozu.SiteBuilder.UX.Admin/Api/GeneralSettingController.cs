@@ -43,6 +43,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var channels = channelsTask.Result.ReadAsSync().Items;
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
+
+            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+            settings.DefaultBackOrderDays = orderProcessingSettings.DefaultBackOrderDays;
+
             return List2(settings);
         }
 
@@ -62,14 +66,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var previousSettings = (await _wrapper.ReadSettings());
             var cdnCacheKey = previousSettings.CdnCacheBustKey;
+            var paymentProcessingFlowType = string.Empty;
             settingsToSave.CdnCacheBustKey = cdnCacheKey;
 
             if (!previousSettings.IsMultishipEnabled.GetValueOrDefault() && settingsToSave.IsMultishipEnabled.GetValueOrDefault())
-            {
-                var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+                paymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
+
+            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+            if (!string.IsNullOrWhiteSpace(paymentProcessingFlowType))
                 orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
-                var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
-            }
+            orderProcessingSettings.DefaultBackOrderDays = settingsToSave.DefaultBackOrderDays;
+            var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
+
 
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
             if (settingsToSave.ChannelId != null)
