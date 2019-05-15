@@ -1,6 +1,6 @@
-<h4>Physical Location</h4>
+<h5 class="physicalloc">Physical Location</h5>
 <!-- <h5>&nbsp;</h5> -->
-<p-treeTable [value]="physicalLocations" [columns]="cols" selectionMode="single" 
+<p-treeTable #tt id="physicallocationdiv" [value]="physicalLocations" [columns]="cols" selectionMode="single" 
     [(selection)]="selectedPhysicalLocNode" 
     dataKey="name" 
     [scrollable]="true" scrollHeight="210px"

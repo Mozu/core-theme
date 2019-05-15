@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import {TreeNode} from 'primeng/components/common/api';
 import { PhysicalLocationsService } from './locations.service';
 import { LoggerService } from '@core';
@@ -8,7 +8,11 @@ import { LoggerService } from '@core';
   selector: 'physical-locations',
   templateUrl: './locations.component.html',
   styleUrls: ['./locations.component.css'],
-  providers:[PhysicalLocationsService]
+  providers:[PhysicalLocationsService],
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+  
+`]
 })
 export class PhysicalLocationsComponent implements OnInit {
   physicalLocations: TreeNode[];

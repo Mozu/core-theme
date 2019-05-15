@@ -28,6 +28,7 @@ body{
     font-size: 13px;
     height: 100%;
 }
+
 .navbar{
     max-height: 32px !important;
     margin-bottom: 0px !important;
@@ -69,7 +70,9 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a{
     font-family:"proxima-nova", sans-serif !important;
 }
 
-.ui-state-default, .ui-widget-header, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+h4{ font-size: 12px; }
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
     border: 1px solid transparent !important; 
     background: transparent !important;
  
@@ -229,24 +232,29 @@ p-table .ui-table .ui-table-tbody > tr > td {
     padding: 8px 20px !important;
     color: #3f3f3f !important;
     font-family:"proxima-nova", sans-serif !important;
+    font-weight: 600;
 }
 
-/* --------------Turbo Table Edit Page CSS ---------------- */
-.quote-items-grid p-table .ui-table .ui-table-thead > tr > th {
-    background-color: #ffffff !important;
-    color: #7c7c7c !important;
-    padding: 20px 10px !important;
-    border-bottom: 1px solid #e9e9e9 !important;
+
+.ui-table-scrollable-body::-webkit-scrollbar-track
+{	
+	border-radius: 10px;
+	/* background-color: #F5F5F5; */
 }
-.quote-items-grid p-table .ui-table .ui-table-tbody > tr > td {
-    vertical-align: top !important;
-    padding: 10px  !important;
+
+.ui-table-scrollable-body::-webkit-scrollbar
+{
+	width: 8px;
+	/* background-color: #F5F5F5; */
 }
-.quote-items-grid p-table .ui-table .ui-table-tbody > tr > td input{
-    width: 60% !important;
-    outline: none !important;
-    padding: 0px 5px;
+
+.ui-table-scrollable-body::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;	
+	background-color: #9f9b9b;
 }
+
+
 /* --------------Turbo Table CSS - End------------- */
 
 /* --------------Checkbox CSS - Start------------- */

@@ -1,0 +1,7 @@
+.main-container{  
+    padding: 0 20px 0 20px;
+    scroll-behavior: smooth;
+    margin-top: 141px;  
+    position: absolute;
+    width: 100%;
+}
