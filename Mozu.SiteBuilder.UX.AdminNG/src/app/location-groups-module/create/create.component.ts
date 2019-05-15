@@ -6,6 +6,7 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
 import { DOCUMENT } from '@angular/common';
 import { LocationsListModel } from '@shared';
 import * as _ from 'lodash';
+import { SharedDataService } from '@global';
 
 @Component({
     selector: 'location-group-create',
@@ -16,25 +17,33 @@ import * as _ from 'lodash';
 export class LocationGroupCreateComponent implements OnInit {
     physicalLocation : TreeNode;
     selectedLocations: LocationsListModel[];
-    cities1: SelectItem[];
     selectedCities1: LocationsListModel[];
+    sitesLst : any[];
+    sitesRows : any[];    
     constructor(
         private _loggerService: LoggerService,
+        private _sharedData : SharedDataService,
         private router: Router) { }
 
     ngOnInit() {
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
         this.selectedLocations = [];
-
-        this.cities1 = [
-            {label:'New York', value:{id:1, name: 'New York', code: 'NY'}},
-            {label:'Rome', value:{id:2, name: 'Rome', code: 'RM'}},
-            {label:'London', value:{id:3, name: 'London', code: 'LDN'}},
-            {label:'Istanbul', value:{id:4, name: 'Istanbul', code: 'IST'}},
-            {label:'Paris', value:{id:5, name: 'Paris', code: 'PRS'}}
-        ];
+        this.fetchSitesData();        
     }
     
+    public fetchSitesData = () => {
+        this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
+        this.sitesRows = [];
+        if(this._sharedData._sharedData.items.ctTenant.sites){
+            this.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
+            if(this.sitesLst){
+                for(var cnt = 0; cnt<this.sitesLst.length; cnt+=3){
+                    this.sitesRows.push(this.sitesLst.slice(cnt, cnt+3))
+                }
+            }
+        }
+    }
+
     onPhysicalLocationSelect(physicalLocation:TreeNode){
         this._loggerService.info("LocationGroupCreateComponent : onPhysicalLocationSelect"+ JSON.stringify(physicalLocation));
         this.physicalLocation = physicalLocation;
