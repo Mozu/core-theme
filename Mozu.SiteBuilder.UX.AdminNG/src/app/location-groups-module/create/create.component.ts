@@ -2,8 +2,6 @@ import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core'
 import {TreeNode, SelectItem} from 'primeng/components/common/api';
-import { trigger, state, transition, style, animate } from '@angular/animations';  
-import { DOCUMENT } from '@angular/common';
 import { LocationsListModel } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService } from '@global';
@@ -23,7 +21,9 @@ export class LocationGroupCreateComponent implements OnInit {
     constructor(
         private _loggerService: LoggerService,
         private _sharedData : SharedDataService,
-        private router: Router) { }
+        private router: Router) { 
+
+    }
 
     ngOnInit() {
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
@@ -44,7 +44,7 @@ export class LocationGroupCreateComponent implements OnInit {
         }
     }
 
-    onPhysicalLocationSelect(physicalLocation:TreeNode){
+    physicalLocationSelected(physicalLocation:TreeNode){
         this._loggerService.info("LocationGroupCreateComponent : onPhysicalLocationSelect"+ JSON.stringify(physicalLocation));
         this.physicalLocation = physicalLocation;
     }

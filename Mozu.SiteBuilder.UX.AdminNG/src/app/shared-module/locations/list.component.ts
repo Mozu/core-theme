@@ -23,9 +23,9 @@ export class LocationsListComponent implements OnInit, OnChanges {
     selectedLocations: LocationsListModel[];
     
     @Output() 
-    onLocationSelect: EventEmitter<any> = new EventEmitter<any>();
+    locationSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() 
-    onLocationUnselect: EventEmitter<any> = new EventEmitter<any>();
+    locationUnselected: EventEmitter<any> = new EventEmitter<any>();
     
     constructor(
         private _loggerService: LoggerService,
@@ -94,12 +94,12 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     onRowSelect(event) {
         this._loggerService.info("Selected row is :::"+ JSON.stringify(event.data));
-        this.onLocationSelect.emit(event.data);
+        this.locationSelected.emit(event.data);
     }
 
     onRowUnselect(event) {
         this._loggerService.info("Unselected row is :::"+ JSON.stringify(event.data));
-        this.onLocationUnselect.emit(event.data);
+        this.locationUnselected.emit(event.data);
     }
 
     onHeaderClick(event) {

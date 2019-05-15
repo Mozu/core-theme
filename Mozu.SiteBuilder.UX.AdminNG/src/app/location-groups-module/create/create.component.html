@@ -35,10 +35,10 @@
 			</div>
 			<div #form2 id="form2" class="row subform scroll-page">
 				<h4>Add Location(s)</h4>
-				<physical-locations class="col-md-4" (onPhysicalLocationSelect)="onPhysicalLocationSelect($event)">
+				<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
 				</physical-locations>
 				<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
-					(onLocationSelect)="onLocationSelect($event)" (onLocationUnselect)="onLocationUnselect($event)">
+					(locationSelected)="onLocationSelect($event)" (locationUnselected)="onLocationUnselect($event)">
 				</locations-list>
 				<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
 				</selected-locations-list>

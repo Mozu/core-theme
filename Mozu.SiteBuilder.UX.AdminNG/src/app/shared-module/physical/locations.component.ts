@@ -17,7 +17,8 @@ import { LoggerService } from '@core';
 export class PhysicalLocationsComponent implements OnInit {
   physicalLocations: TreeNode[];
   selectedPhysicalLocNode : TreeNode;
-  @Output() onPhysicalLocationSelect: EventEmitter<any> = new EventEmitter<any>();
+  @Output() 
+  physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
 
   cols: any[];
   constructor( private _loggerService: LoggerService,
@@ -33,13 +34,11 @@ export class PhysicalLocationsComponent implements OnInit {
   }
 
   nodeSelect(event) {
-      //this.messageService.add({severity: 'info', summary: 'Node Selected', detail: event.node.data.name});
       this._loggerService.info("Node Selected"+ event.node.data.name);
-      this.onPhysicalLocationSelect.emit(event.node.data);
+      this.physicalLocationSelected.emit(event.node.data);
   }
 
   nodeUnselect(event) {
-    //this.messageService.add({severity: 'info', summary: 'Node Unselected', detail: event.node.data.name});
     this._loggerService.info("Node Unselected"+ event.node.data.name);
   }
 }
