@@ -40,6 +40,7 @@
 				<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
 				</physical-locations>
 				<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
+					[selectedLocationsLst]="selectedLocations"
 					(locationSelected)="locationSelected($event)" 
 					(locationUnselected)="locationUnselected($event)"
 					(locationsChanged)="locationsChanged($event)" >
