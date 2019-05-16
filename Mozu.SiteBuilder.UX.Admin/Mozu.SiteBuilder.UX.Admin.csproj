@@ -200,6 +200,7 @@
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\Order\SubPayment.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
+    <Compile Include="Api\Models\ProductModels\IProductWithImages.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageGroup.cs" />
     <Compile Include="Api\Models\ProductSortDefinitions\ProductSortDefinitionPreviewProduct.cs" />
     <Compile Include="Api\Models\ProductSortDefinitions\ProductSortPosition.cs" />

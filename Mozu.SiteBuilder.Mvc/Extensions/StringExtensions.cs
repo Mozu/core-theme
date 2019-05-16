@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
@@ -47,6 +48,15 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                     return true;
                 default:
                     return false;
+            }
+        }
+        public static string ToDelimited(this IEnumerable<string> source, string delimiter = ", ", string lastDelimitor = "")
+        {
+            if (string.IsNullOrEmpty(lastDelimitor) || source.Count() == 1)
+                return string.Join(delimiter, source);
+            else
+            {
+                return source.ToList().GetRange(0, source.Count() - 1).ToDelimited(delimiter) + lastDelimitor + source.ElementAt(source.Count() - 1);
             }
         }
     }

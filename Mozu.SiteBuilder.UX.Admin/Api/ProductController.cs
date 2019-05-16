@@ -20,6 +20,7 @@ using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels.Product;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
+using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -166,7 +167,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 return _productClient.UpdateProduct(p, p.ProductCode);
             })).ToList();
-            await Task.WhenAll(result.Select(s => AppendCmsImageNames(s)));
+            try
+            {
+                await Task.WhenAll(result.Select(s => AppendCmsImageNamesForAllCatalogs(s)));
+            }
+            catch (Exception ex)
+            {
+                _logger.Warn($"error fetching product Images", ex);
+            }
+            
             foreach (var editedProd in result.Where(x => x.ProductUsage.Equals("Bundle")))
             {
                 await GetBundleItemCatalogInfo(editedProd);
@@ -297,7 +306,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             try
             {
-                await AppendCmsImageNames(productModel).ConfigureAwait(false);
+                await AppendCmsImageNamesForAllCatalogs(productModel).ConfigureAwait(false);
             }
             catch( Exception ex )
             {
@@ -323,34 +332,62 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return List2(productModel);
         }
 
-        private async Task AppendCmsImageNames(Product product)
+        private async Task AppendCmsImageNamesForAllCatalogs(Product product)
         {
-            Guid g;
-            var images = product?.ProductImages?
-                .Where(_ => !string.IsNullOrEmpty(_.CmsId))?
-                .Select(_ =>                   
-                    Guid.TryParse(_.CmsId, out g)?
-                    $"id eq \"{_.CmsId}\"":
-                    $"name eq \"{_.CmsId}\""
-                    )?.ToList();
+            await AppendCmsImageNames(product).ConfigureAwait(false);
+            await Task.WhenAll(product.ProductInCatalogs.Select(s => AppendCmsImageNames(s)));
+        }
 
-            if (images == null || !images.Any())
+        private async Task AppendCmsImageNames(Models.ProductModels.IProductWithImages product)
+        {
+            if (!product?.ProductImages?.Any() ?? false)
             {
                 return;
             }
 
-            var filter = string.Join(" or ", images);
-            var cmsImages = (await _documentListWebApiClient.CloneWithoutUserClaims().GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)").ConfigureAwait(false)).ReadAsSync()?.Items;
+            var images = product.ProductImages
+                .Where(w => !string.IsNullOrEmpty(w.CmsId))
+                .Select(s => s.CmsId)
+                .Chunk(10);
 
-            if (cmsImages == null)
+            var tasks = new List<Task<List<Document>>>();
+            foreach (var chunk in images)
             {
-                return ;
+                // TODO: See why id $in [......] throws an error
+                //tasks.Add(GetCmsImageNames(chunk.Partition(nameOrId => Guid.TryParse(nameOrId, out Guid _))));
+                tasks.Add(GetCmsImageNames(chunk));
             }
-            foreach (var image in product.ProductImages.Where( _=> !string.IsNullOrEmpty(_.CmsId)))
+            Task.WaitAll(tasks.ToArray());
+            var cmsImages = tasks.SelectMany(s => s.Result);
+
+            foreach (var image in product.ProductImages.Where(_ => !string.IsNullOrEmpty(_.CmsId)))
             {
-                image.ImageName = cmsImages.Where(cmsImage => string.Equals(image.CmsId, cmsImage.Id, StringComparison.OrdinalIgnoreCase)).Select(cmsImage => cmsImage.Name).FirstOrDefault();
+                image.ImageName = cmsImages
+                    .Where(cmsImage => string.Equals(image.CmsId, cmsImage.Id, StringComparison.OrdinalIgnoreCase))
+                    .Select(cmsImage => cmsImage.Name)
+                    .FirstOrDefault();
             }
         }
+
+        private async Task<List<Document>> GetCmsImageNames(IEnumerable<string> cmsIds)
+        {
+            var ids = cmsIds
+                .Select(s => Guid.TryParse(s, out var _) ?
+                    $"id eq \"{s}\"" :
+                    $"name eq \"{s}\""
+                 );
+            // TODO: See why id $in [......] throws an error
+            //var filter = $"id in [{cmsIds.True.ToDelimited()}] or name in [{cmsIds.False.ToDelimited()}]";
+            var filter = string.Join(" or ", ids); 
+
+
+            return (await _documentListWebApiClient.CloneWithoutUserClaims()
+                .GetDocuments("files@mozu", filter: filter, responseFields: "items(id, name)")
+                .ConfigureAwait(false))
+                .ReadAsSync()
+                ?.Items;
+        }
+
 
         private async Task<ProductCollection> GetBundleItems(string productCodes)
         {

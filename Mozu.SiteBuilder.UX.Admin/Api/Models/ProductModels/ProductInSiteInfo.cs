@@ -8,7 +8,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     /// Represents the site-specific overrides configurable for a product.
     /// </summary>
     
-    public class ProductInCatalogInfo
+    public class ProductInCatalogInfo : IProductWithImages
     {
         /// <summary>
         /// The product these overrides belong to.

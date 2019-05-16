@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
 {
-
-
+    
     public static class EnumerableExtension
     {
         public struct PartitionResult<T>
@@ -68,5 +65,32 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 
             return dictionary;
         }
+
+        /// <summary>
+        /// Splits or chunks a list out into several smaller list limited to a cirtain size
+        /// </summary>
+        /// <typeparam name="T">The generic type the list contains</typeparam>
+        /// <param name="source">the list of items to chunk out into smaller list</param>
+        /// <param name="size">the size limit of the smaller lists</param>
+        /// <returns>A IEnumerable containing the smaller lists</returns>
+        public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int size) =>
+            source is T[] array
+                ? array.Chunk(size)
+                : source.ToArray().Chunk(size);
+        
+        static IEnumerable<IEnumerable<T>> Chunk<T>(this T[] source, int size)
+        {
+            var chunks = new List<IEnumerable<T>>();
+            T[] buffer;
+            for (int i = 0; i < source.Length; i += size)
+            {
+                var iterationSize = source.Length - i > size ? size : source.Length - i;
+                buffer = new T[iterationSize];
+                Array.Copy(source.ToArray(), i, buffer, 0, iterationSize);
+                chunks.Add(buffer);
+            }
+            return chunks;
+        }
+
     }
 }

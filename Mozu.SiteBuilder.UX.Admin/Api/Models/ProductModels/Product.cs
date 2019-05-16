@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels
     /// See http://vconfluence.ads.volusion.com/display/Product/Product+-+v1#Product-v1-ProductDetails
     /// </summary>
     
-    public class Product
+    public class Product : IProductWithImages
     {
         #region General
         /// <summary>
