@@ -6,14 +6,13 @@ import { HttpTestingController, HttpClientTestingModule } from '@angular/common/
 import { Router } from '@angular/router';
 
 import { TableModule } from 'primeng/table';
+import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
+import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { LoggerService } from '@core';
 import { UtilityService, EnvironmentConfig } from '@core/infrastructure/utility.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { HttpClientService, httpClientServiceCreator } from '@core/extensions/http-client.service';
-
-import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
-import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { QuotesListComponent } from 'app/quotes-module/list/list.component';
 import { QuotesListModel } from 'app/quotes-module/list/list.model';
@@ -74,15 +73,28 @@ describe('QuotesListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, TableModule],
+      imports: [TranslateModule.forRoot(), 
+        HttpClientModule, 
+        HttpClientTestingModule, 
+        TableModule],
       declarations: [QuotesListComponent],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [By, TranslateService, LoggerService, CustomNGXLoggerService,
-        NGXLoggerHttpService, UtilityService, EnvironmentConfig, AuthService, QuotesListModel, QuotesListService,
+      providers: [By, 
+        TranslateService, 
+        LoggerService,
+        CustomNGXLoggerService,
+        NGXLoggerHttpService, 
+        UtilityService, 
+        EnvironmentConfig, 
+        AuthService, 
+        QuotesListModel, 
+        QuotesListService,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
-          deps: [HttpClient, UtilityService, AuthService]
+          deps: [HttpClient, 
+            UtilityService, 
+            AuthService]
         },
         {
           provide: Router,
@@ -122,7 +134,7 @@ describe('QuotesListComponent', () => {
 
   it('should get grid items from quote component', async(() => {
     fixture.detectChanges();
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList);
     httpMock.verify();
@@ -138,7 +150,7 @@ describe('QuotesListComponent', () => {
 
   it('should display data in quote grid', async(() => {
     fixture.detectChanges();
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList);
     httpMock.verify();
@@ -154,14 +166,13 @@ describe('QuotesListComponent', () => {
     const spy = spyOn(component, 'onRowSelect');
     fixture.detectChanges();
 
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList);
     httpMock.verify();
 
     fixture.detectChanges();
     const cell = fixture.debugElement.queryAll(By.css('tr.ui-selectable-row'))[0];
-    console.log(cell);
     cell.nativeElement.click();
 
     fixture.detectChanges();
@@ -172,7 +183,7 @@ describe('QuotesListComponent', () => {
 
   it('should call service to get success response from mock http json (quote-list)', () => {
     fixture.detectChanges();
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList);
     httpMock.verify();
@@ -182,7 +193,7 @@ describe('QuotesListComponent', () => {
 
   it('should call service to get failure response from mock http json (quote-list)', () => {
     fixture.detectChanges();
-    const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList, mockErrorResponse);
     httpMock.verify();

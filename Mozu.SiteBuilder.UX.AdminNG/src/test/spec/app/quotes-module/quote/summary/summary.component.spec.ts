@@ -1,11 +1,25 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, DebugElement, SimpleChange } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { NGXLoggerHttpService, CustomNGXLoggerService } from 'ngx-logger';
-import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { LoggerService, UtilityService, EnvironmentConfig, AuthService, HttpClientService, httpClientServiceCreator } from '@core';
+import { async, 
+  ComponentFixture, 
+  TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA, 
+  DebugElement, 
+  SimpleChange } from '@angular/core';
+import { HttpClient, 
+  HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, 
+  HttpTestingController } from '@angular/common/http/testing';
+import { NGXLoggerHttpService, 
+  CustomNGXLoggerService } from 'ngx-logger';
+import { TranslateLoader, 
+  TranslateModule, 
+  TranslatePipe, 
+  TranslateService } from '@ngx-translate/core';
+import { LoggerService, 
+  UtilityService, 
+  EnvironmentConfig, 
+  AuthService, 
+  HttpClientService, 
+  httpClientServiceCreator } from '@core';
 import { GlobalModule } from '@global/global.module';
 import { QuoteSummaryComponent } from 'app/quotes-module/quote/summary/summary.component';
 
@@ -15,6 +29,7 @@ describe('QuoteSummaryComponent', () => {
   let element;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
+
   let dummyQuote = {
     "id": "0da178726c6b9e27784ebfec0000432a",
     "name": "TestQuote1",
@@ -58,14 +73,24 @@ describe('QuoteSummaryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), HttpClientTestingModule, GlobalModule ],
+      imports: [TranslateModule.forRoot(),
+        HttpClientTestingModule, 
+        GlobalModule ],
       declarations: [ QuoteSummaryComponent ],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [TranslateService, LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, UtilityService, EnvironmentConfig, AuthService,
+      providers: [TranslateService, 
+        LoggerService,
+        NGXLoggerHttpService, 
+        CustomNGXLoggerService, 
+        UtilityService, 
+        EnvironmentConfig, 
+        AuthService,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
-          deps: [HttpClient, UtilityService, AuthService]
+          deps: [HttpClient, 
+            UtilityService, 
+            AuthService]
       }]
     })
     .compileComponents();

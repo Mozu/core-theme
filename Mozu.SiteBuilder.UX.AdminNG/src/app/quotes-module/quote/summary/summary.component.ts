@@ -22,8 +22,7 @@ export class QuoteSummaryComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges){
     this._loggerService.info("QuoteSummaryComponent : ngOnChanges");
-    const date: SimpleChange = changes.quote;
-    this.expirationDate = new Date(date.currentValue.expirationDate);
+    this.expirationDate = new Date(changes["quote"].currentValue.expirationDate);
   }
 
   ngOnInit() {

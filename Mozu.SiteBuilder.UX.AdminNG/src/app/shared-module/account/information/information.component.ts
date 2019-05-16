@@ -42,8 +42,8 @@ export class AccountInformationComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info("AccountInformationComponent : ngOnChanges");
-    const user: SimpleChange = changes.userId;
-    this.userId = user.currentValue;
+    this.userId = changes["userId"].currentValue;
+    console.log("this.userId::",this.userId);
     if (this.userId != undefined) {
       this.populateAccountInfo(this.userId);
     }
@@ -62,7 +62,7 @@ export class AccountInformationComponent implements OnChanges, OnInit {
       let responseJson = successResponse;
       if (responseJson != null && responseJson != undefined && responseJson['users'].length > 0) {
         this.model = responseJson;
-        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId });
+        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId })[0];
         this.generateCustomerAccountUrl();
       }
     }, (errResponse) => {
