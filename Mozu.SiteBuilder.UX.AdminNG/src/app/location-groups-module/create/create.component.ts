@@ -49,16 +49,27 @@ export class LocationGroupCreateComponent implements OnInit {
         this.physicalLocation = physicalLocation;
     }
 
-    onLocationSelect(location:LocationsListModel){
+    locationSelected(location:LocationsListModel){
         this._loggerService.info("LocationGroupCreateComponent : onLocationSelect"+ JSON.stringify(location));
         let arr = this.selectedLocations.slice();
         arr.push(location);
         this.selectedLocations = arr;
     }
 
-    onLocationUnselect(location:LocationsListModel){
+    locationUnselected(location:LocationsListModel){
         this._loggerService.info("LocationGroupCreateComponent : onLocationUnselect"+ JSON.stringify(location));
-        this.selectedLocations = _.remove(this.selectedLocations, ["code",_.toString(location.code)]);
+        this.selectedLocations = _.difference(this.selectedLocations, [location]);
+    }
+
+    locationsChanged(event){
+        this._loggerService.info("locationsChanged :"+ JSON.stringify(event));
+        if(event.operation === "add"){
+            var arr = [...this.selectedLocations, ...event.data];
+            this.selectedLocations = arr;
+        }
+        else{
+            this.selectedLocations  = _.difference(this.selectedLocations, event.data);
+        }
     }
 
     @HostListener('window:scroll', ['$event'])

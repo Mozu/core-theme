@@ -26,7 +26,10 @@ export class LocationsListComponent implements OnInit, OnChanges {
     locationSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() 
     locationUnselected: EventEmitter<any> = new EventEmitter<any>();
-    
+
+    @Output()
+    locationsChanged:EventEmitter<any> = new EventEmitter<any>();
+        
     constructor(
         private _loggerService: LoggerService,
         private _locationService:LocationsListService
@@ -56,6 +59,7 @@ export class LocationsListComponent implements OnInit, OnChanges {
             let responseJson = successResponse;
             this._loggerService.info("LocationsListComponent : _locationService.getLocations_successResponse");
             if(successResponse && (successResponse as any).items){
+                this.selectedLocations = [];
                 this.virtualLocations = <any>_.filter((successResponse as any).items, ['address.stateOrProvince', physicalLocationName]);
             }
         }, 
@@ -83,26 +87,28 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     loadChunk(index, length): LocationsListModel[] {
         let chunk: LocationsListModel[] = [];
-        console.log("index ::"+index +  "  length:: "+length);
-        console.log("this.virtualLocations ::",this.virtualLocations);
         for (let i = 0; i < length; i++) {
             chunk[i] = { "name": "Lazy Load Location "+(index + i), "code":(index + i), ...{vin: (index + i)}};
         } 
-        console.log("chunk ::",chunk);
         return chunk;
     }
 
-    onRowSelect(event) {
+    rowSelected(event) {
         this._loggerService.info("Selected row is :::"+ JSON.stringify(event.data));
         this.locationSelected.emit(event.data);
     }
 
-    onRowUnselect(event) {
+    rowUnselected(event) {
         this._loggerService.info("Unselected row is :::"+ JSON.stringify(event.data));
         this.locationUnselected.emit(event.data);
     }
 
-    onHeaderClick(event) {
-        this._loggerService.info("onHeaderClick row is :::"+ JSON.stringify(event));
+    tableHeaderCheckboxToggle(event: any) {
+        this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+ JSON.stringify(event));
+        if(event.checked === true){
+            this.locationsChanged.emit({data: this.virtualLocations, operation:"add"});
+        } else {
+            this.locationsChanged.emit({data: this.virtualLocations, operation:"remove"});
+        }
     }   
 }
