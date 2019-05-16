@@ -13,7 +13,11 @@ import * as _ from 'lodash';
     providers: [LocationsListService]
 })
 export class LocationsListComponent implements OnInit, OnChanges {
-    @Input() physicalLocation: TreeNode;
+    @Input() 
+    physicalLocation: TreeNode;
+    @Input()
+    selectedLocationsLst: LocationsListModel[];
+
     physicalLocationName : string;
     virtualLocations: LocationsListModel[];
     cols: any[];
@@ -21,6 +25,10 @@ export class LocationsListComponent implements OnInit, OnChanges {
     loading: boolean;
     inmemoryData: LocationsListModel[];
     selectedLocations: LocationsListModel[];
+
+    stateName : string;
+    setSelectedLocLst : LocationsListModel[];
+
     
     @Output() 
     locationSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -46,14 +54,18 @@ export class LocationsListComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        this._loggerService.info("LocationsListComponent : changes"+ JSON.stringify(changes));
-        this._loggerService.info("LocationsListComponent : changes"+ JSON.stringify(changes.physicalLocation.currentValue));
         if(changes && changes.physicalLocation && changes.physicalLocation.currentValue){
-            this.getLocations(changes.physicalLocation.currentValue.name);
+            this.stateName = changes.physicalLocation.currentValue.name;
+            this.getLocations(this.stateName, this.setSelectedLocLst);
+        }
+        if(changes && changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
+            this.setSelectedLocLst = changes.selectedLocationsLst.currentValue;
         }
     }
-     
-    getLocations(physicalLocationName){
+    
+    
+
+    getLocations(physicalLocationName, selectedLocLst){
         this.physicalLocationName = physicalLocationName;
         this._locationService.getLocations(physicalLocationName).subscribe(successResponse => {
             let responseJson = successResponse;
@@ -61,6 +73,8 @@ export class LocationsListComponent implements OnInit, OnChanges {
             if(successResponse && (successResponse as any).items){
                 this.selectedLocations = [];
                 this.virtualLocations = <any>_.filter((successResponse as any).items, ['address.stateOrProvince', physicalLocationName]);
+                //select selected location 
+                this.selectedLocations =  _.intersectionWith(this.virtualLocations, selectedLocLst, _.isEqual);
             }
         }, 
         (errResponse) => {
@@ -71,16 +85,12 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     loadDataOnScroll(event: LazyLoadEvent) {      
         this.loading = true;   
-
-        //for demo purposes keep loading the same dataset 
-        //in a real production application, this data should come from server by building the query with LazyLoadEvent options 
         setTimeout(() => {
             //last chunk
             if (event.first === 249980)
                 this.virtualLocations = this.loadChunk(event.first, 20);
             else
                 this.virtualLocations = this.loadChunk(event.first, event.rows);        
-            
             this.loading = false;  
         }, 250);   
     }
@@ -94,17 +104,17 @@ export class LocationsListComponent implements OnInit, OnChanges {
     }
 
     rowSelected(event) {
-        this._loggerService.info("Selected row is :::"+ JSON.stringify(event.data));
+        this._loggerService.info("Selected row is :::");
         this.locationSelected.emit(event.data);
     }
 
     rowUnselected(event) {
-        this._loggerService.info("Unselected row is :::"+ JSON.stringify(event.data));
+        this._loggerService.info("Unselected row is :::");
         this.locationUnselected.emit(event.data);
     }
 
     tableHeaderCheckboxToggle(event: any) {
-        this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+ JSON.stringify(event));
+        this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+event.checked);
         if(event.checked === true){
             this.locationsChanged.emit({data: this.virtualLocations, operation:"add"});
         } else {

@@ -30,7 +30,7 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes));
+        //this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes));
         //this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes.physicalLocation.currentValue));
         if(changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
             this.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];

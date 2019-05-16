@@ -15,7 +15,7 @@ import { SharedDataService } from '@global';
 export class LocationGroupCreateComponent implements OnInit {
     physicalLocation : TreeNode;
     selectedLocations: LocationsListModel[];
-    selectedCities1: LocationsListModel[];
+    
     sitesLst : any[];
     sitesRows : any[];    
     constructor(
@@ -68,7 +68,7 @@ export class LocationGroupCreateComponent implements OnInit {
             this.selectedLocations = arr;
         }
         else{
-            this.selectedLocations  = _.difference(this.selectedLocations, event.data);
+            this.selectedLocations  = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
         }
     }
 
