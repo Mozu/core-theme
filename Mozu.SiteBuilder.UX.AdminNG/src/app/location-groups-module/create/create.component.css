@@ -22,7 +22,7 @@
 } */
 .subform-text:focus + .floating-label{
     top: -5px;
-    left: 26px;
+    left: 2px;
     font-size: 11px;
     opacity: 1;
     color: #2ea195;
@@ -36,7 +36,7 @@
   .floating-label {
       position: absolute;
       pointer-events: none;
-      left: 26px;
+      left: 2px;
       top: 8px;   
       color: #7c7c7c;
       display: block;
@@ -107,4 +107,90 @@
     transition-property: all;
     transition-timing-function: cubic-bezier(.16,.76,.27,.95);
     width: 0%;
+  }
+.scroll-y{
+    padding: 10px 5px;
+    max-height: 100px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+}
+.for-no-padding{ padding: 5px 0;}
+.scroll-y .checkbox-inline+.checkbox-inline{ margin-left: 0 !important;}
+.scroll-y .checkbox-inline{ margin-bottom: 14px;
+    font-size: 12px;
+}
+
+.scroll-y::-webkit-scrollbar-track
+{	
+	border-radius: 10px;
+	/* background-color: #F5F5F5; */
+}
+
+.scroll-y::-webkit-scrollbar
+{
+	width: 8px;
+	/* background-color: #F5F5F5; */
+}
+
+.scroll-y::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;	
+	background-color: #9f9b9b;
+}
+/* .scroll-y input[type=checkbox]:before{    content: "\e909";
+    width: 14px !important;
+    height: 14px !important;
+    background-color: #2ea195 !important;
+    text-align: center !important;
+    border-radius: 3px !important;
+}
+.scroll-y input[type=checkbox]:before {
+    content: "\e909";
+} */
+
+
+.scroll-y label:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+  
+  .scroll-y .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+        width: 12px !important;
+        height: 12px !important;
+        font-size: 10px !important;
+    float: left;
+    margin-right: .5em;
+    color: #fff;
+  }
+  
+  .scroll-y .cr .cr-icon {
+    position: absolute;
+    font-size: .8em;
+    line-height: 0;
+    top: 50%;
+    left: 15%;
+  }
+  
+  .scroll-y label input[type="checkbox"] {
+    display: none;
+  }
+  
+  .scroll-y label input[type="checkbox"]+.cr>.cr-icon {
+    opacity: 0;
+  }
+  
+.scroll-y label input[type="checkbox"]:checked+.cr>.cr-icon {
+    opacity: 1; 
+  }
+  .scroll-y label input[type="checkbox"]:checked+.cr {
+    background: #2ea195 !important;
+    border: none
+}
+  .scroll-y label input[type="checkbox"]:disabled+.cr {
+    opacity: .5;
   }

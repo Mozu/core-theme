@@ -13,24 +13,26 @@
 			<div #form1 id="form1" class="row subform scroll-page">
 				<h4>Location Group</h4>
 				<form>
-					<div class="form-row">
-						<div class="col-md-6">
-							<label for="locationName" class="subform-label">Name</label>
-							<input class="form-control subform-text" id="locationName" type="text" />
+					<div class="col-md-12 ">
+						<div class="form-row col-md-6 for-no-padding">
+							<input type="text" class=" inputText form-control subform-text" id="locationName" />
+							<span class="floating-label">Name</span>
+							<hr class="underline-from-left">
+						</div>
+						<div class="clearfix"></div>
+						<div class="form-row" >
+							<h5>Sites</h5>
+							<div class="form-row scroll-y">
+								<div *ngFor="let row of sitesRows">
+									<label *ngFor="let site of row" class="checkbox-inline col-md-4 " >
+										<input type="checkbox" class="custom-control-input" id="customCheck" value="">{{site.name}}
+										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+									</label>
+								</div>
+							</div>
 						</div>
 					</div>
-				</form>
-			</div>
-			<div #form1 id="form1" class="row subform" >
-				<h4>Sites</h4>
-				<form>
-					<div class="form-row" style="max-height: 100px;overflow-y: auto">
-						<div *ngFor="let row of sitesRows">
-							<label *ngFor="let site of row" class="checkbox-inline col-md-3" >
-								<input type="checkbox" value="">{{site.name}}
-							</label>
-						</div>
-					</div>
+				
 				</form>
 			</div>
 			<div #form2 id="form2" class="row subform scroll-page">
