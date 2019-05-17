@@ -16,6 +16,7 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     selectedLocations: LocationsListModel[];
     @Input()
     selectedLocationsLst: LocationsListModel[];
+    totalRecords: number;
 
     constructor(
         private _loggerService: LoggerService
@@ -27,6 +28,7 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
         this.cols = [
             { field: 'name', header: ''}
         ];
+        this.totalRecords = 250000;
     }
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {

@@ -224,6 +224,7 @@
     <Compile Include="Api\Models\Order\PaymentActionTarget.cs" />
     <Compile Include="Api\Models\Order\PurchaseOrderPayment.cs" />
     <Compile Include="Api\Models\Order\SubPayment.cs" />
+    <Compile Include="Api\Models\PhysicalLocation\PhysicalLocation.cs" />
     <Compile Include="Api\Models\PriceLists\PriceListEntryExtra.cs" />
     <Compile Include="Api\Models\ProductModels\IProductWithImages.cs" />
     <Compile Include="Api\Models\ProductModels\ProductImageGroup.cs" />
