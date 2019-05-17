@@ -18,6 +18,7 @@ export class AccessTileComponent implements OnInit {
 
   @Input('Tiles') tileModel : AccessTileModel;
   uiRoutes = Constants.uiRoutes.quotes;
+  uiLocationGroup =  Constants.uiRoutes.locationGroups;
   
   constructor(private _loggerService : LoggerService) { 
     this._loggerService.info("AccessTileComponent : constructor");

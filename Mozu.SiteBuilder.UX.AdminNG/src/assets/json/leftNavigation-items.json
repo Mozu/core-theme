@@ -211,6 +211,14 @@
           "behaviorIds":  186 ,
           "visible" : true,
           "url":""
+        },
+        {
+          "id": "locations-group",
+          "label": "Location Groups",
+          "contextType": "",
+          "address": "locationGroups",
+          "visible" : true,
+          "routerLink":"locationGroups"
         }
       ]
     },
@@ -270,9 +278,9 @@
         {
           "id": "quotesmenu",
           "label": "Quotes",
-          "contextType": "m",
+          "contextType": "",
           "address": "quotes",
-          "url":"quotes",
+          "routerLink":"quotes",
           "visible" : true
         }
       ]

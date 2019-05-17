@@ -343,6 +343,11 @@ Ext.define('Taco.store.Navigation', {
                         'label': 'Locations',
                         'address': 'locations',
                         'behaviorIds': [186]
+                    },
+                    {
+                        "id": "locations-group",
+                        "label": "Location Groups",
+                        "address": "/admin?locationGroups",
                     }
                 ]
             },
@@ -376,7 +381,12 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'b2b-accounts',
                     'label': 'B2B Accounts',
                     'address': 'b2baccounts'
-                }]
+                },
+                    {
+                        "id": "quotes",
+                        "label": "Quotes",
+                        "address": "/admin?quotes",
+                    }]
             },
             {
                 'id': 'report',

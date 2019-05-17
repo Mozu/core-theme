@@ -9,13 +9,14 @@
         </p-header>
 
         <p-footer>
-                <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
-                        <div class="tiles-item">
-                                <a *ngIf="eachAccessTileLink.linkDataURL != uiRoutes; else routeLink" [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
-                                <ng-template #routeLink>
-                                        <a [routerLink]="[eachAccessTileLink.linkDataURL]"> {{eachAccessTileLink.linkDataText}}</a>
-                                </ng-template>
-                        </div>
+                <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">               
+                   <div class="tiles-item">
+                      <a *ngIf="eachAccessTileLink.linkDataURL === uiRoutes || eachAccessTileLink.linkDataURL === uiLocationGroup; 
+                      else routeLink" [routerLink]="[eachAccessTileLink.linkDataURL]">{{eachAccessTileLink.linkDataText}}</a>
+                      <ng-template #routeLink>
+                         <a [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>             
+                      </ng-template>           
+                   </div>
                 </div>
         </p-footer>
    </p-card>

@@ -95,11 +95,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             try
             {
                 var routeURLData = Convert.ToString(this.ControllerContext.RouteData.Values["url"]);
-
-                if (string.IsNullOrEmpty(routeURLData))
+                var locationandQuotesFilter = (routeURLData.Contains("quotes") || routeURLData.Contains("locationGroups"));
+                if (string.IsNullOrEmpty(routeURLData) || locationandQuotesFilter)
                 {
                     ActionResult res = await GetIndexNG();
-                    return Request.CreateResponse(HttpStatusCode.OK, res);
+                   return Request.CreateResponse(HttpStatusCode.OK, res);
 
                 }
                 else

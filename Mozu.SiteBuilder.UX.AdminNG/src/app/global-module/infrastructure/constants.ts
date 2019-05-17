@@ -6,7 +6,9 @@ export class Constants {
     static uiRoutes = {
         login: 'login',
         shop: 'shop',
-        cart: 'cart'
+        cart: 'cart',
+        quotes: 'quotes',
+        locationGroups: 'locationGroups'
     };
 
     static businessExceptions = {

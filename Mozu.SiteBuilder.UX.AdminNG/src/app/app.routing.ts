@@ -7,7 +7,7 @@ import {
 
 import { PageNotFoundComponent } from '@core';
 
-import { AuthGuardService } from '@global';
+import { AuthGuardService, RoutingAuthGuardService } from '@global';
 
 import { Constants } from '@shared';
 
@@ -16,17 +16,24 @@ import {  AdminDashboardComponent } from './admin-module';
 import {  QuoteComponent, 
     QuotesListComponent } from './quotes-module';
 
+
 const appRoutes: Routes = [
     {
         path: Constants.uiRoutes.empty,
-        component: AdminDashboardComponent
+        component: AdminDashboardComponent,
+        canActivate: [RoutingAuthGuardService]
     },
     {
         path: Constants.uiRoutes.empty,
-        component: AdminDashboardComponent
+        component: AdminDashboardComponent,
+        canActivate: [RoutingAuthGuardService]
     },
     {
         path: Constants.uiRoutes.quotes,
+        component: QuotesListComponent
+    },
+    {
+        path: Constants.uiRoutes.locationGroups,
         component: QuotesListComponent
     },
     {

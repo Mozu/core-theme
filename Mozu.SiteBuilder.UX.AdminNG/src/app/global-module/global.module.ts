@@ -11,7 +11,8 @@ import {
     AuthGuardService,
     NotificationService,
     SharedData,
-    SharedDataService
+    SharedDataService,
+    RoutingAuthGuardService
 } from './services/index';
 
 import {    
@@ -41,6 +42,7 @@ export function sharedDataServiceFactory(service: SharedDataService) {
         AuthGuardService,
         NotificationService,
         FocusManagerHelperService,
+        RoutingAuthGuardService
     ],
     exports: [
         FocusManager

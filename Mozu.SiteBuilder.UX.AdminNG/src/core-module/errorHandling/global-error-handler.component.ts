@@ -58,16 +58,16 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
 
             if (this._authService.isUserLoggedIn() &&  (sessionId == null || sessionId === undefined || sessionId === '') ) {
             //    this._utilityService.redirectToURL(url);
-            //    return;
+               // return;
             }
 
             if (error && error.error && error.error.status === 0) {
-                 return;
+               //  return;
             }
 
             if (error && error.error && error.error.status === 405) {
-            //    this._utilityService.redirectToURL(url);
-            //    return;
+                //this._utilityService.redirectToURL(url);
+               // return;
             }
 
             this._spinner.stop();

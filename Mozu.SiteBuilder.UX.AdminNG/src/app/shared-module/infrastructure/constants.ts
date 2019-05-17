@@ -47,9 +47,10 @@ export class Constants {
         empty: '',
         default: ConfigurationSettings.defaultRoutePrefix,
         quotes : 'quotes',
-        quotesEdit : 'quotesEdit'
+        quotesEdit : 'quotesEdit',
+        locationGroups : 'locationGroups',
     };
-
+    
     static webApis = {
         login: environment.apiUrl + 'account/login',
         logout: environment.apiUrl + 'account/logout',

@@ -206,6 +206,14 @@
         "behaviorIds":  186 ,
         "visible" : true,
         "url":""
+      },
+      {
+        "id": "locations-group",
+        "label": "Location Groups",
+        "contextType": "",
+        "address": "locationGroups",
+        "visible" : true,
+        "url":"locationGroups"
       }
     ]
   },
@@ -263,7 +271,7 @@
       {
         "id": "quotes",
         "label": "Quotes",
-        "contextType": "m",
+        "contextType": "",
         "address": "quotes",
         "url":"quotes",
         "visible" : true
