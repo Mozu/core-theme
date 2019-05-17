@@ -53,7 +53,8 @@ export class Constants {
     static webApis = {
         login: environment.apiUrl + 'account/login',
         logout: environment.apiUrl + 'account/logout',
-        getSharedData: environment.apiUrl + 'account/getUserData'
+        getSharedData: environment.apiUrl + 'account/getUserData',
+        secureFormLink : environment.apiUrl + '/capabilities/createSecureForm?appId='
     };
 
     static businessExceptions = {

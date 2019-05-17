@@ -335,6 +335,23 @@ p-table .ui-table .pi-ellipsis-v:hover{
 .ng-trigger.ui-menu-dynamic li{
     border-bottom: 1px solid #f5f5f5;
 }
+.fade {
+        opacity: 1 !important;
+}
+.modal-backdrop.show {
+    opacity: .5 !important;
+}
+.modal {
+    position: fixed !important;
+    top: 155px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: 1050 !important;
+    display: none !important;
+    overflow: hidden !important;
+    outline: 0 !important;
+}
 /* .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text{
     color: #a3a3a3 !important;
 } */

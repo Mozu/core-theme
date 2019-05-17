@@ -88,7 +88,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
 
       /* filter the menus on the basis of logged in user behaviour id */
-      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData._sharedData.items.ctUser.behaviorIds);
+      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(responseJson, this._sharedData);
       
       this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
       this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));

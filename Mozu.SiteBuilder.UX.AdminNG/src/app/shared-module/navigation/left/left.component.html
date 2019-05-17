@@ -3,7 +3,7 @@
     <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000" [showCloseIcon]="false" [blockScroll]="true">
         <p-tabView>
             <p-tabPanel header="Main">
-                <p-menu [model]="mainItems" href = url></p-menu>
+                <p-menu  [model]="mainItems" (click)="openDialog($event, visibleSidebar1 = false)" label="label"></p-menu>
                 <!-- <p-panelMenu [model]="mainItems" [style]="{'width':'273px'}"></p-panelMenu> -->
             </p-tabPanel>
             <p-tabPanel header="System">

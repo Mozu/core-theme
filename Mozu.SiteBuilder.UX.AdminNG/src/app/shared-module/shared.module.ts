@@ -12,7 +12,7 @@ import {
 import { DialogModule } from 'primeng/dialog';
 import {ToastModule} from 'primeng/toast';
 
-import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -21,6 +21,7 @@ import {
     RestrictInput,
     EnableDisableControls
 } from './directive/index';
+
 
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
@@ -43,9 +44,10 @@ import {
 
 import {SidebarModule} from 'primeng/sidebar';
 import {TabViewModule} from 'primeng/tabview';
-import {MenuModule} from 'primeng/menu';;
+import {MenuModule} from 'primeng/menu';
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
+import { DynamicLinksComponent } from './navigation/left/dynamic-links/dynamic-links.component';
 
 declare var resourcesVersion: any;
 
@@ -66,7 +68,8 @@ export function createTranslateLoader(http: HttpClient) {
         DialogModule,
         ToastModule,
         NgbCarouselModule,
-        PanelMenuModule,
+        PanelMenuModule, 
+        NgbModule.forRoot(), 
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -95,11 +98,13 @@ export function createTranslateLoader(http: HttpClient) {
         AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        SearchBarComponent
+        SearchBarComponent,
+        DynamicLinksComponent,
     ],
     providers: [
         
     ],
+    entryComponents:[DynamicLinksComponent],
     exports: [
         // Angular modules
         BrowserModule,
@@ -136,7 +141,8 @@ export function createTranslateLoader(http: HttpClient) {
         AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        SearchBarComponent
+        SearchBarComponent,
+        DynamicLinksComponent
     ]
 })
 

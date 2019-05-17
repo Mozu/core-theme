@@ -1,6 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { LoggerService } from '../services/logger.service';
+import { 
+    NgbModal, 
+    ModalDismissReasons 
+  } from '@ng-bootstrap/ng-bootstrap';
 
 export class EnvironmentConfig {
     environmentName: string;
@@ -17,7 +21,8 @@ export class UtilityService {
 
     constructor(
         private _logger: LoggerService,
-        private _config: EnvironmentConfig
+        private _config: EnvironmentConfig,
+        private modalService: NgbModal
     ) {
         this._logger.info("UtilityService : constructor ");
         this.environmentName = _config.environmentName;
@@ -88,7 +93,8 @@ export class UtilityService {
         }
         return false;
     }
-    public filterLinksByBehaviorId  = (accessLinks  : any, loggedInUsersBehaviorIds : any) => {
+    public filterLinksByBehaviorId  = (accessLinks  : any, loggedInUsersData : any) => {
+        var loggedInUsersBehaviorIds =loggedInUsersData._sharedData.items.ctUser.behaviorIds;
         accessLinks  = this.pruneInvalidLinks(accessLinks);
         var allFilteredLinks = [];
         var isMenuVisible = false;
@@ -118,9 +124,51 @@ export class UtilityService {
             });
             el.items = filteredSubItems;
         });
+
+      //  allFilteredLinks = this.mergeImportExportLinks(allFilteredLinks, loggedInUsersData);//import/export
       return allFilteredLinks;
     }
-      public pruneInvalidLinks = (accessLinks : any) => { 
+    
+    public pruneInvalidLinks = (accessLinks : any) => { 
         return accessLinks.filter(function(v : any) { return (v.id != 'localization' ); });
-      }
+    }
+
+    
+    public distictImportExportLinks = (loggedInUsersData : any) => {
+        let distinctImportExportLinks= _.uniqBy(loggedInUsersData._sharedData.items.ctEntities, function (e : any) {
+        return e.location;
+     });
+     return distinctImportExportLinks;
+    }
+
+    public mergeImportExportLinks = (allFilteredLinks  : any, loggedInUsersData : any) => {
+        var DistinctImportExportLinks = this.distictImportExportLinks(loggedInUsersData);
+        DistinctImportExportLinks = _.map(DistinctImportExportLinks, function(item){
+            return {
+            label: item.modalWindowTitle,
+            // routerLink : 'integrations',
+            navUrl : item.href,
+            location: item.location,
+            appId : item.appId,
+            _isImportExportMenuLinks : true,
+            command: function() {
+                // const modalRef = this.modalService.open(ModalComponent);
+                // modalRef.componentInstance.src = "hello";
+            }, //primeng property to call function   
+            };
+    }); 
+
+    for(var i=0; i<allFilteredLinks.length; i++) {
+        _.filter(DistinctImportExportLinks, function(v) {
+                        if(allFilteredLinks[i].id == v.location) {
+                        v._isImportExportMenuLinks = true;
+                        allFilteredLinks[i].items.push(v);
+                        return true;
+                        }
+                    });
+    }
+    //  console.log(allFilteredLinks, "updated");
+    return allFilteredLinks;
+    }
+       
 }

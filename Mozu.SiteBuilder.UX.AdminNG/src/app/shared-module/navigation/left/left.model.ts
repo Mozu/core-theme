@@ -1,6 +1,7 @@
 export class LeftNavigationModel {
     navigationTabs : LeftNavigationTabs [];
     filteredNavigationLinks : LeftNavigationTabs [];
+    secureForm : SecureForm[];
 }
 
 export class LeftNavigationTabs {
@@ -29,4 +30,9 @@ export class LeftNavigationTabs {
     constructor() {
         this.visible = true;
     }
+}
+
+export interface SecureForm {
+    dateStamp : Date;
+    messageHash : string;
 }
