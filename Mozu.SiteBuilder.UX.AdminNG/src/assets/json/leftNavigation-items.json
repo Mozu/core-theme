@@ -216,7 +216,6 @@
           "id": "locations-group",
           "label": "Location Groups",
           "address": "locationGroups",
-          "behaviorIds":  186 ,
           "visible" : true,
           "url":"locationGroups"
         }
