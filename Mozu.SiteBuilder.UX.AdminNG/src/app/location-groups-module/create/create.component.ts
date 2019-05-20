@@ -45,26 +45,26 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     physicalLocationSelected(physicalLocation:TreeNode){
-        this._loggerService.info("LocationGroupCreateComponent : onPhysicalLocationSelect"+ JSON.stringify(physicalLocation));
+        this._loggerService.info("LocationGroupCreateComponent : physicalLocationSelected");
         this.physicalLocation = physicalLocation;
     }
 
     locationSelected(location:LocationsListModel){
-        this._loggerService.info("LocationGroupCreateComponent : onLocationSelect"+ JSON.stringify(location));
+        this._loggerService.info("LocationGroupCreateComponent : locationSelected");
         let arr = this.selectedLocations.slice();
         arr.push(location);
         this.selectedLocations = arr;
     }
 
     locationUnselected(location:LocationsListModel){
-        this._loggerService.info("LocationGroupCreateComponent : onLocationUnselect"+ JSON.stringify(location));
+        this._loggerService.info("LocationGroupCreateComponent : locationUnselected");
         this.selectedLocations = _.difference(this.selectedLocations, [location]);
     }
 
     locationsChanged(event){
-        this._loggerService.info("locationsChanged :"+ JSON.stringify(event));
+        this._loggerService.info("LocationGroupCreateComponent : locationsChanged");
         if(event.operation === "add"){
-            var arr = [...this.selectedLocations, ...event.data];
+            var arr = _.unionWith(this.selectedLocations, event.data, _.isEqual);
             this.selectedLocations = arr;
         }
         else{
