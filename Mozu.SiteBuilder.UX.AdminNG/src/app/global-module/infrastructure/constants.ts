@@ -19,7 +19,8 @@ export class Constants {
     };
 
     static webApis = {
-        getSharedData: environment.apiUrl + '/user/identity'
+        getSharedData: environment.apiUrl + '/user/identity',
+        getPhysicalLocations : environment.apiUrl + '/location/physical'
     };
 
     static queryString = {
