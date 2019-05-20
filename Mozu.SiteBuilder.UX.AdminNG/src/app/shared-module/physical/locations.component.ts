@@ -37,24 +37,32 @@ export class PhysicalLocationsComponent implements OnInit {
     let treeNodeArr = [];
     if(locations && locations.items){
       for(let locCnt = 0; locCnt<locations.items.length; locCnt++){
-          var treenodeObj = <TreeNode>new Object();
+          let treenodeObj = <TreeNode>new Object();
           treenodeObj.data = {};
-          treenodeObj.data.name = locations.items[locCnt].name;
+          let totalLocationsCnt = 0;
+         
           treenodeObj.data.code = locations.items[locCnt].code;
           if(locations.items[locCnt].code === "US"){
             treenodeObj.expanded = true;
           }
           if(locations.items[locCnt].states){
             treenodeObj.children = [];
+            
             for(let stateCnt =0; stateCnt<locations.items[locCnt].states.length; stateCnt++){
               var stateTreeNodeObj = <TreeNode>new Object();
               stateTreeNodeObj.data = {};
-              stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name;
               stateTreeNodeObj.data.code = locations.items[locCnt].states[stateCnt].code;
+              if(locations.items[locCnt].states[stateCnt].locations){
+                stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name+" ("+locations.items[locCnt].states[stateCnt].locations.length+")";
+                totalLocationsCnt += locations.items[locCnt].states[stateCnt].locations.length;
+              }else{
+                stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name+" (0)";
+              }
               stateTreeNodeObj.data.locations = locations.items[locCnt].states[stateCnt].locations;
               treenodeObj.children.push(stateTreeNodeObj);
             }
           }
+          treenodeObj.data.name = locations.items[locCnt].name+" ("+totalLocationsCnt+")";
           treeNodeArr.push(treenodeObj);
       }
     }
