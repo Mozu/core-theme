@@ -17,7 +17,12 @@ export class LocationGroupCreateComponent implements OnInit {
     selectedLocations: LocationsListModel[];
     
     sitesLst : any[];
-    sitesRows : any[];    
+    sitesRows : any[];
+    
+    @ViewChild('stickyMenu') menuElement: ElementRef;
+    menuPosition: any;
+    sticky: boolean = false;
+
     constructor(
         private _loggerService: LoggerService,
         private _sharedData : SharedDataService,
@@ -31,6 +36,10 @@ export class LocationGroupCreateComponent implements OnInit {
         this.fetchSitesData();        
     }
     
+    ngAfterViewInit(){
+        this.menuPosition = this.menuElement.nativeElement.offsetTop;
+    }
+
     public fetchSitesData = () => {
         this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
         this.sitesRows = [];
@@ -71,36 +80,29 @@ export class LocationGroupCreateComponent implements OnInit {
             this.selectedLocations  = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
         }
     }
-    @ViewChild('stickyMenu') menuElement: ElementRef;
-    menuPosition: any;
-    sticky: boolean = false;
-    ngAfterViewInit(){
-        this.menuPosition = this.menuElement.nativeElement.offsetTop
-    }
     
     @HostListener('scroll', ['$event'])
     scrollHandler(event){
-        
-        const windowScroll = window.pageYOffset;
-        console.log(windowScroll+" xxxx "+this.menuPosition);
-        // if(windowScroll >= this.menuPosition){
-            this.sticky = true;
-        //} else {
-        //    this.sticky = false;
-        //}
+        let windowScroll = event.srcElement.scrollTop;
+        if(windowScroll >= this.menuPosition){
+           this.sticky = true;
+        } else {
+           this.sticky = false;
+        }
     }
 
-    // @HostListener('window:scroll', ['$event'])
-    // onWindowScroll(e) {
-    //    if (window.pageYOffset > 60) {
-    //      let element = document.getElementById('stickynav');
-    //      element.classList.add('sticky');
-    //    } else {
-    //     let element = document.getElementById('stickynav');
-    //       element.classList.remove('sticky'); 
-    //    }
-    // }
-    // scroll(el: HTMLElement) {
-    //     el.scrollIntoView({behavior: 'smooth'});
-    //   }
+    scrollToTop(el: HTMLElement) {
+        //el.scrollIntoView({behavior: 'smooth'});
+        el.scrollIntoView(false);
+    }
+
+    scrollToLocationGrid(el: HTMLElement) {
+        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+        //https://stackoverflow.com/questions/51618548/scrollintoview-is-not-working-does-not-taking-in-account-fixed-element
+        //el.scrollIntoView({behavior: 'smooth', block: "end", inline: "nearest"});
+        //behavior --One of "auto" or "smooth". Defaults to "auto".
+        //block -- One of "start", "center", "end", or "nearest". Defaults to "start".
+        //inline -- One of "start", "center", "end", or "nearest". Defaults to "nearest".
+        el.scrollIntoView(false);
+    }
 }
