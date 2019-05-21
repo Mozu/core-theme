@@ -36,11 +36,11 @@
             "discountsRestricted": false,
             "isTaxable": true,
             "productType": "Product Type",
-            "productUsage": "Standard",
+            "productUsage": "S",
             "bundledProducts": [],
             "productCode": "test-1001",
             "name": "Test Product 1",
-            "goodsType": "Physical",
+            "goodsType": "Green",
             "isPackagedStandAlone": false,
             "measurements": {
               "height": {
@@ -180,11 +180,11 @@
             "discountsRestricted": false,
             "isTaxable": true,
             "productType": "Product Type",
-            "productUsage": "Standard",
+            "productUsage": "S",
             "bundledProducts": [],
             "productCode": "test-1001",
             "name": "Test Product 2",
-            "goodsType": "Physical",
+            "goodsType": "Red",
             "isPackagedStandAlone": false,
             "measurements": {
               "height": {
@@ -324,11 +324,11 @@
             "discountsRestricted": false,
             "isTaxable": true,
             "productType": "Product Type",
-            "productUsage": "Standard",
+            "productUsage": "M",
             "bundledProducts": [],
             "productCode": "test-1001",
             "name": "Test Product 1",
-            "goodsType": "Physical",
+            "goodsType": "Blue",
             "isPackagedStandAlone": false,
             "measurements": {
               "height": {
@@ -468,11 +468,11 @@
             "discountsRestricted": false,
             "isTaxable": true,
             "productType": "Product Type",
-            "productUsage": "Standard",
+            "productUsage": "L",
             "bundledProducts": [],
             "productCode": "test-1001",
             "name": "Test Product 1",
-            "goodsType": "Physical",
+            "goodsType": "Green",
             "isPackagedStandAlone": false,
             "measurements": {
               "height": {
@@ -612,11 +612,11 @@
             "discountsRestricted": false,
             "isTaxable": true,
             "productType": "Product Type",
-            "productUsage": "Standard",
+            "productUsage": "M",
             "bundledProducts": [],
             "productCode": "test-1001",
             "name": "Test Product 1",
-            "goodsType": "Physical",
+            "goodsType": "Blue",
             "isPackagedStandAlone": false,
             "measurements": {
               "height": {

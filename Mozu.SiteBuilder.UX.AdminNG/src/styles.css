@@ -194,7 +194,7 @@ p-table .ui-table .ui-table-thead{
     background-color: #f7f7f7  !important; 
 }
 p-table .ui-table .ui-table-thead > tr{
-    border-bottom: 1px solid #e9e9e9 !important;
+    border-bottom: 1.5px solid #e9e9e9 !important;
 }
 p-table .ui-table .ui-table-tbody > tr.ui-selectable-row:hover {
     background-color: #f7f7f7 !important;
@@ -215,10 +215,26 @@ p-table .ui-table .ui-table-tbody > tr > td {
     background-color: white !important;
     font-size: 13px !important;    
     border: 0px !important;
-    border-bottom: 1px solid #f2f2f2 !important;
+    border-bottom: 1.5px solid #f2f2f2 !important;
     padding: 8px 20px !important;
     color: #3f3f3f !important;
     font-family:"proxima-nova", sans-serif !important;
+}
+
+/* --------------Turbo Table Edit Page CSS ---------------- */
+.quote-items-grid p-table .ui-table .ui-table-thead > tr > th {
+    background-color: #ffffff !important;
+    color: #7c7c7c !important;
+    padding: 20px 10px !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+}
+.quote-items-grid p-table .ui-table .ui-table-tbody > tr > td {
+    vertical-align: top !important;
+    padding: 10px  !important;
+}
+.quote-items-grid p-table .ui-table .ui-table-tbody > tr > td input{
+    width: 60% !important;
+    outline: none !important;
 }
 /* --------------Turbo Table CSS - End------------- */
 

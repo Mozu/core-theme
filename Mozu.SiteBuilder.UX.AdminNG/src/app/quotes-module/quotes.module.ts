@@ -10,12 +10,15 @@ import { QuotesListComponent } from './list';
 
 import { QuoteComponent, 
   QuoteSummaryComponent } from './quote';
+  
+import { QuoteItemsComponent } from './quote/items/items.component';
 
 @NgModule({
   declarations: [
     QuotesListComponent,
     QuoteComponent,
-    QuoteSummaryComponent],
+    QuoteSummaryComponent,
+    QuoteItemsComponent],
   imports: [
     SharedModule,
     TableModule,

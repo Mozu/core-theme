@@ -43,7 +43,6 @@ export class AccountInformationComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info("AccountInformationComponent : ngOnChanges");
     this.userId = changes["userId"].currentValue;
-    console.log("this.userId::",this.userId);
     if (this.userId != undefined) {
       this.populateAccountInfo(this.userId);
     }

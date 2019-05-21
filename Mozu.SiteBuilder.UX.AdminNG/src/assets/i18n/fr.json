@@ -94,6 +94,32 @@
       "created": "Created:",
       "createdBy": "Created By:",
       "expirationDate": "Expiration Date:"
+    },
+    "Items":{
+      "heading": "Items Quoted",
+      "GridHeader": {
+        "nameAndSKU": "Name & SKU",
+        "stock": "Stock",
+        "cost": "Cost",
+        "catalogPrice": "Catalog Price",
+        "cartPrice": "Cart Price",
+        "proposedPrice": "Proposed Price",
+        "qty": "Qty",
+        "subtotal": "Subtotal",
+        "estimatedTax": "Estimated Tax",
+        "subtotalExclTax": "Subtotal (Excl. Tax)" 
+      },
+      "GridLabels": {
+        "sku": "SKU:",
+        "size": "Size:",
+        "color": "Color:"
+      },
+      "GridButtons": {
+        "addProduct": "Add Product By SKU",
+        "configure": "Configure",
+        "updatePrices": "Update Prices",
+        "recalculateQuote": "Recalculate Quote"
+      }
     }
   }
 }
