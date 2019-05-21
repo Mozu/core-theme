@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener  } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core'
 import {TreeNode, SelectItem} from 'primeng/components/common/api';
@@ -71,23 +71,36 @@ export class LocationGroupCreateComponent implements OnInit {
             this.selectedLocations  = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
         }
     }
-
-    @HostListener('window:scroll', ['$event'])
-    onWindowScroll(e) {
-       if (window.pageYOffset > 60) {
-         let element = document.getElementById('stickynav');
-         element.classList.add('sticky');
-         //let element2 = document.getElementById('main-container');
-         //element2.classList.add('forextratoppadding');
-         //
-       } else {
-        let element = document.getElementById('stickynav');
-          element.classList.remove('sticky'); 
-            //let element2 = document.getElementById('main-container');
-            //element2.classList.remove('forextratoppadding');
-       }
+    @ViewChild('stickyMenu') menuElement: ElementRef;
+    menuPosition: any;
+    sticky: boolean = false;
+    ngAfterViewInit(){
+        this.menuPosition = this.menuElement.nativeElement.offsetTop
     }
-    scroll(el: HTMLElement) {
-        el.scrollIntoView({behavior: 'smooth'});
-      }
+    
+    @HostListener('scroll', ['$event'])
+    scrollHandler(event){
+        
+        const windowScroll = window.pageYOffset;
+        console.log(windowScroll+" xxxx "+this.menuPosition);
+        // if(windowScroll >= this.menuPosition){
+            this.sticky = true;
+        //} else {
+        //    this.sticky = false;
+        //}
+    }
+
+    // @HostListener('window:scroll', ['$event'])
+    // onWindowScroll(e) {
+    //    if (window.pageYOffset > 60) {
+    //      let element = document.getElementById('stickynav');
+    //      element.classList.add('sticky');
+    //    } else {
+    //     let element = document.getElementById('stickynav');
+    //       element.classList.remove('sticky'); 
+    //    }
+    // }
+    // scroll(el: HTMLElement) {
+    //     el.scrollIntoView({behavior: 'smooth'});
+    //   }
 }
