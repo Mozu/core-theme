@@ -22,15 +22,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
     {
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly IReferenceDataWebApiClient _referenceDataWebApi;
+        private readonly ILocationGroupWebApiClient _locationGroupWebApiClient;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public LocationController(ILocationAdminWebApiClient locationWebApiClient,
-            IReferenceDataWebApiClient referenceDataWebApi)
+            IReferenceDataWebApiClient referenceDataWebApi,
+            ILocationGroupWebApiClient locationGroupWebApiClient)
         {
             _locationWebApiClient = locationWebApiClient;
             _referenceDataWebApi = referenceDataWebApi;
+            _locationGroupWebApiClient = locationGroupWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "{locationCode}/enable")]
@@ -210,6 +213,49 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             Ensure.That(loc.Code, "location code").IsNotNullOrEmpty();
             var resp = (await _locationWebApiClient.UpdateLocation(loc.Code, loc)).ReadAsSync();
             EnsureLocationContract(resp);
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+        }
+
+        [HttpGetRoute(UriTemplate = "groups/list")]
+        public async Task<HttpResponseMessage> ListGroup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
+        {
+            DC.LocationGroupCollection locationGroups;
+            if (pagingParams.NumericId != null)
+            {
+                var group = (await _locationGroupWebApiClient.GetLocationGroup(pagingParams.NumericId)).ReadAsSync();
+
+                locationGroups = new DC.LocationGroupCollection { Items = new List<DC.LocationGroup> { group }, TotalCount = 1 };
+            }
+            else
+            {
+                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address)";
+                string filter = extFilter.ToFilterString();
+                string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
+                locationGroups = (await _locationGroupWebApiClient.GetLocationGroups(startIndex: pagingParams.startIndex,
+                    pageSize: pagingParams.pageSize,
+                    sortBy: sort,
+                    filter: filter,
+                    responseFields: responseFields
+                    )).ReadAsSync();
+            }
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, List2(locationGroups.Items, (int)locationGroups.TotalCount));
+        }
+
+        [HttpPostRoute(UriTemplate = "groups/create")]
+        public async Task<HttpResponseMessage> CreateGroup(DC.LocationGroup lg)
+        {
+            var resp = (await _locationGroupWebApiClient.AddLocationGroup(lg)).ReadAsSync();
+
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+        }
+
+
+        [HttpPostRoute(UriTemplate = "groups/edit")]
+        public async Task<HttpResponseMessage> EditGroup(DC.LocationGroup loc)
+        {           
+            var resp = (await _locationGroupWebApiClient.UpdateLocationGroup(loc.LocationGroupId, loc)).ReadAsSync();
+
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
