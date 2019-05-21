@@ -22,7 +22,12 @@
     }
 }
 .sbbtn{background:#2ea195}
-.sbbtn:visited{ }
+.sbbtn:visited{ border-color:#2ea195;border-color:#299086;}
+.sbbtn:focus,.sbbtn:active{
+    background-color: #299086;
+    opacity: 1;border-color:#299086;
+    outline: none !important;
+}
 .sbbtn:hover{ border-color:#2ea195; opacity: .8;}
 @media screen and (min-width: 768px) {
 .forlineheight{ line-height: 2.3}
