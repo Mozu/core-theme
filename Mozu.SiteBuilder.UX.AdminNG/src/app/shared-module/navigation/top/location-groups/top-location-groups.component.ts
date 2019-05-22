@@ -1,6 +1,7 @@
 import { Component, 
     OnInit } from '@angular/core';
   import { Router } from '@angular/router';  
+import { NotificationService } from '@global';
 
   @Component({
     selector: 'navigation-top-location-groups',
@@ -8,12 +9,22 @@ import { Component,
     styleUrls: ['./top-location-groups.component.css']
   })
   export class NavigationTopLocationGroupsComponent implements OnInit {
+    
     createMode: boolean;
     
-    constructor(private router: Router) { }
+    constructor(private router: Router,
+      private _notificationService:NotificationService) { 
+
+    }
   
     ngOnInit() { 
       this.createMode = false;
+      if(this.router.url === '/locationGroups'){
+          this.createMode = false;
+      }
+      if(this.router.url === '/locationGroupCreate'){
+        this.createMode = true;
+      }
     }
 
     showCreateLG(){
@@ -23,12 +34,12 @@ import { Component,
   
     cancelCreateLG(){
       this.createMode = false;
-      this.router.navigate(['/locationGroups']);
+      this._notificationService.notifyAddLocationGroup("Cancel");
     }
 
     saveCreateLG(){
       this.createMode = false;
-      this.router.navigate(['/locationGroups']);
+      this._notificationService.notifyAddLocationGroup("Save");
     }
   }
   

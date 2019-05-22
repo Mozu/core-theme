@@ -11,7 +11,7 @@ export class PhysicalLocationsService {
   private _loggerService: LoggerService) {}
 
   getPhysicalLocations(){
-    //return this._http.get(Constants.JsonResources.physicalLocations);//NOTE - use it while running angular on localhost
-    return this._http.get(GlobalConstant.webApis.getPhysicalLocations);
+    return this._http.get(Constants.JsonResources.physicalLocations);//NOTE - use it while running angular on localhost
+    //return this._http.get(GlobalConstant.webApis.getPhysicalLocations);
   }
 }

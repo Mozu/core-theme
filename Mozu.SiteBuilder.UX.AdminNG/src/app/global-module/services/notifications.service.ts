@@ -14,6 +14,7 @@ export class NotificationService {
     productAddedToCartFromDialogNotification: Subject<null> = new Subject<null>();
     disableUINotification: Subject<null> = new Subject<null>();
     loadAccessTileCategories : Subject<string> = new Subject<string>();
+    addLocationGroup : Subject<string> = new Subject<string>();
 
     //Confirmation Dialog Notification
     QuoteItemDeleteConfirmation : Subject<any> = new Subject<any>();
@@ -44,9 +45,8 @@ export class NotificationService {
         this.loadAccessTileCategories.next(accesTileName);
     }
 
-    //Confirmation Dialog Notification
-    notifyQuoteItemDeleteConfirmation(actionName: string){
-        this._logger.info('NotificationService : notifyQuoteItemDeleteConfirmation');
-        this.QuoteItemDeleteConfirmation.next(actionName);
+    notifyAddLocationGroup(actionName:string){
+        this._logger.info('NotificationService : notifyAddLocationGroup');
+        this.addLocationGroup.next(actionName);
     }
 }

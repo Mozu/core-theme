@@ -2,9 +2,9 @@ import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostLi
 import { Router } from '@angular/router';
 import { LoggerService } from '@core'
 import {TreeNode, SelectItem} from 'primeng/components/common/api';
-import { LocationsListModel } from '@shared';
+import { LocationsListModel, Constants } from '@shared';
 import * as _ from 'lodash';
-import { SharedDataService } from '@global';
+import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
 import { LocationGroupModel } from './location.group.model';
 
@@ -26,11 +26,13 @@ export class LocationGroupCreateComponent implements OnInit {
     sticky: boolean = false;
 
     isSaving: boolean;
+    subscriptions = [];
 
     constructor(
         private _loggerService: LoggerService,
         private _sharedData : SharedDataService,
         private createService : CreateLocationGroupService,
+        private _notificationService:NotificationService,
         private router: Router) { 
 
     }
@@ -38,11 +40,28 @@ export class LocationGroupCreateComponent implements OnInit {
     ngOnInit() {
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
         this.selectedLocations = [];
-        this.fetchSitesData();        
+        this.fetchSitesData();
+        this.subscriptions.push(
+            this._notificationService.addLocationGroup.subscribe((action: string) => {
+                if(action === "Save"){
+                    this.save();
+                }
+                else{
+                    this.cancel();    
+                }
+            })
+        );
     }
     
     ngAfterViewInit(){
         this.menuPosition = this.menuElement.nativeElement.offsetTop;
+    }
+
+    ngOnDestroy() {
+        this._loggerService.info("LocationGroupCreateComponent : ngOnDestroy");
+        this.subscriptions.forEach((s) => {
+            s.unsubscribe();
+        });
     }
 
     public fetchSitesData = () => {
@@ -113,6 +132,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
 
     save(){
+        this._loggerService.info("LocationGroupCreateComponent : save");
         this.isSaving  = true;
         let lgModel : LocationGroupModel = new LocationGroupModel();
         this.createLocationGroups(lgModel);
@@ -121,21 +141,26 @@ export class LocationGroupCreateComponent implements OnInit {
             () => this.onSaveError());
     }
 
+    cancel(){
+        this._loggerService.info("LocationGroupCreateComponent : cancel");
+        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
+    }
 
     private createLocationGroups(lgModel: LocationGroupModel): void {
-        
         lgModel.sitesIds = [23779, 23780];
         lgModel.name = "Amol Test 1";
         lgModel.locationCodes = ['4TXmkoTLiA', 'CiCrK396LQ'];
-
     }
 
     private onSaveSuccess(result) {
-       this.isSaving = false;
-       console.log("result::",result);
+        this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess");
+        this.isSaving = false;
+        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
     }
 
     private onSaveError() {
+        this._loggerService.info("LocationGroupCreateComponent : onSaveError");
         this.isSaving = false;
+        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
     }
 }
