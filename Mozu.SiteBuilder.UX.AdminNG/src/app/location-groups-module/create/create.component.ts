@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
 import { LocationGroupModel } from './location.group.model';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 
 @Component({
     selector: 'location-group-create',
@@ -28,11 +29,14 @@ export class LocationGroupCreateComponent implements OnInit {
     isSaving: boolean;
     subscriptions = [];
 
+    locationGroupForm: FormGroup;
+
     constructor(
         private _loggerService: LoggerService,
         private _sharedData : SharedDataService,
         private createService : CreateLocationGroupService,
         private _notificationService:NotificationService,
+        private fb: FormBuilder,
         private router: Router) { 
 
     }
@@ -51,6 +55,14 @@ export class LocationGroupCreateComponent implements OnInit {
                 }
             })
         );
+
+        this.locationGroupForm = this.fb.group({
+            locationGroupName:  ['', [Validators.required, Validators.maxLength(50)]],
+            
+        });
+
+        
+
     }
     
     ngAfterViewInit(){
@@ -148,7 +160,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     private createLocationGroups(lgModel: LocationGroupModel): void {
         lgModel.sitesIds = [23779, 23780];
-        lgModel.name = "Amol Test 1";
+        lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = ['4TXmkoTLiA', 'CiCrK396LQ'];
     }
 

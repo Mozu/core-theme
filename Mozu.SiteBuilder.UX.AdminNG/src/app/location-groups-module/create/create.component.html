@@ -1,54 +1,56 @@
 <div class="clearfix"></div>
-<div>	
-	<div class="scroll-container" id="scroll-container" (scroll)="scrollHandler($event)">		
-		<div >
-			<div class="row subnav animated fadeInDown" #stickyMenu	[class.sticky] = "sticky" > 
+<div>
+	<div class="scroll-container" id="scroll-container" (scroll)="scrollHandler($event)">
+		<div>
+			<div class="row subnav animated fadeInDown" #stickyMenu [class.sticky]="sticky">
 				<ul>
 					<li><a (click)="scrollToTop(form1)">Location Group</a></li>
 					<li><a (click)="scrollToLocationGrid(form2)">Add Locations</a></li>
 				</ul>
 			</div>
 		</div>
-		<div class="main-container" id="main-container">
-			<div #form1 id="form1" class="row subform scroll-page">
-				<h4>Location Group</h4>
-				<form>
+		<form [formGroup]="locationGroupForm">
+			<div class="main-container" id="main-container">
+				<div #form1 id="form1" class="row subform scroll-page">
+					<h4>Location Group</h4>
+
 					<div class="col-md-12 ">
 						<div class="form-row col-md-6 for-no-padding">
-							<input type="text" required class=" inputText form-control subform-text" id="locationName" />
+							<input type="text" required class=" inputText form-control subform-text" id="locationGroupName"
+								name="locationGroupName" formControlName="locationGroupName" />
 							<span class="floating-label">Name*</span>
 							<hr class="underline-from-left">
 							<span class="error">Input is Required. </span>
 						</div>
 						<div class="clearfix"></div>
-						<div class="form-row" >
+						<div class="form-row">
 							<h5>Sites</h5>
 							<div class="form-row scroll-y">
 								<div *ngFor="let row of sitesRows">
-									<label *ngFor="let site of row" class="checkbox-inline col-md-4 " >
-										<input type="checkbox" class="custom-control-input" id="customCheck" value="">{{site.name}}
+									<label *ngFor="let site of row" class="checkbox-inline col-md-4 ">
+										<input type="checkbox" class="custom-control-input" id="customCheck"
+											value="">{{site.name}}
 										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 									</label>
 								</div>
 							</div>
 						</div>
 					</div>
-				
-				</form>
+
+
+				</div>
+				<div #form2 id="form2" class="row subform scroll-page">
+					<h4>Add Location(s)</h4>
+					<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
+					</physical-locations>
+					<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
+						[selectedLocationsLst]="selectedLocations" (locationSelected)="locationSelected($event)"
+						(locationUnselected)="locationUnselected($event)" (locationsChanged)="locationsChanged($event)">
+					</locations-list>
+					<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
+					</selected-locations-list>
+				</div>
 			</div>
-			<div #form2 id="form2" class="row subform scroll-page">
-				<h4>Add Location(s)</h4>
-				<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
-				</physical-locations>
-				<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
-					[selectedLocationsLst]="selectedLocations"
-					(locationSelected)="locationSelected($event)" 
-					(locationUnselected)="locationUnselected($event)"
-					(locationsChanged)="locationsChanged($event)" >
-				</locations-list>
-				<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
-				</selected-locations-list>
-			</div>
-		</div>
+		</form>
 	</div>
 </div>
