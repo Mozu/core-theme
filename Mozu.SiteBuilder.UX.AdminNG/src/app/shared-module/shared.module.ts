@@ -23,8 +23,7 @@ import { TableModule } from 'primeng/table';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { environment } from '../../environments/environment';
 
@@ -84,6 +83,7 @@ export function createTranslateLoader(http: HttpClient) {
         PanelMenuModule,
         TreeTableModule,
         TableModule,
+        NgbModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

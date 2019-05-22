@@ -1,15 +1,17 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
 import { LocationsListModel } from './list.model';
 import {TreeNode} from 'primeng/components/common/api';
+import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 
 @Component({
     selector: 'locations-list',
     templateUrl: './list.component.html',
     styleUrls: ['./list.component.css'],
-    providers: []
+    providers: [NgbTooltipConfig],
+    encapsulation: ViewEncapsulation.None
 })
 export class LocationsListComponent implements OnInit, OnChanges {
     @Input() 
@@ -38,8 +40,10 @@ export class LocationsListComponent implements OnInit, OnChanges {
     locationsChanged:EventEmitter<any> = new EventEmitter<any>();
         
     constructor(
-        private _loggerService: LoggerService
+        private _loggerService: LoggerService, config: NgbTooltipConfig
     ){ 
+        config.placement = 'right';
+        config.triggers = 'click';
     }
 
     ngOnInit() {

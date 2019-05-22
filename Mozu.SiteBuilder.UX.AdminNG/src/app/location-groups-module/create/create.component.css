@@ -97,7 +97,7 @@ span.error{display: none; color: #ff0000; font-size: 10px;}
 .subnav ul li:active a,.subnav ul li:hover a{text-decoration: none;}
 .subnav ul li a{ color: #666;  font-size: 12px; line-height: 17px;}
 .sticky { 
-  top: 93px;
+  top: 80px;
   margin: 0px 0px 0px 0px;
   position: fixed;
   width: 99%;
@@ -176,9 +176,9 @@ background-color: #9f9b9b;
   display: inline-block;
   border: 1px solid #a9a9a9;
   border-radius: .25em;
-      width: 12px !important;
-      height: 12px !important;
-      font-size: 10px !important;
+  width: 12px !important;
+  height: 12px !important;
+  font-size: 10px !important;
   float: left;
   margin-right: .5em;
   color: #fff;
@@ -213,5 +213,6 @@ background-color: #9f9b9b;
 
 .scroll-container{     
 overflow-y: scroll;
-height: calc(100vh - 80px);
+height: calc(100vh - 90px);
 }
+.subform:hover{}
