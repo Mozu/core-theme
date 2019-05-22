@@ -5,12 +5,14 @@ import {TreeNode, SelectItem} from 'primeng/components/common/api';
 import { LocationsListModel } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService } from '@global';
+import { CreateLocationGroupService } from './create.service';
+import { LocationGroupModel } from './location.group.model';
 
 @Component({
     selector: 'location-group-create',
     templateUrl: './create.component.html',
     styleUrls: ['./create.component.css'],
-    providers: []
+    providers: [CreateLocationGroupService]
 })
 export class LocationGroupCreateComponent implements OnInit {
     physicalLocation : TreeNode;
@@ -23,9 +25,12 @@ export class LocationGroupCreateComponent implements OnInit {
     menuPosition: any;
     sticky: boolean = false;
 
+    isSaving: boolean;
+
     constructor(
         private _loggerService: LoggerService,
         private _sharedData : SharedDataService,
+        private createService : CreateLocationGroupService,
         private router: Router) { 
 
     }
@@ -104,5 +109,33 @@ export class LocationGroupCreateComponent implements OnInit {
         //block -- One of "start", "center", "end", or "nearest". Defaults to "start".
         //inline -- One of "start", "center", "end", or "nearest". Defaults to "nearest".
         el.scrollIntoView(false);
+    }
+
+
+    save(){
+        this.isSaving  = true;
+        let lgModel : LocationGroupModel = new LocationGroupModel();
+        this.createLocationGroups(lgModel);
+        this.createService.addLocationGroup(lgModel).subscribe(response => 
+            this.onSaveSuccess(response), 
+            () => this.onSaveError());
+    }
+
+
+    private createLocationGroups(lgModel: LocationGroupModel): void {
+        
+        lgModel.sitesIds = [23779, 23780];
+        lgModel.name = "Amol Test 1";
+        lgModel.locationCodes = ['4TXmkoTLiA', 'CiCrK396LQ'];
+
+    }
+
+    private onSaveSuccess(result) {
+       this.isSaving = false;
+       console.log("result::",result);
+    }
+
+    private onSaveError() {
+        this.isSaving = false;
     }
 }
