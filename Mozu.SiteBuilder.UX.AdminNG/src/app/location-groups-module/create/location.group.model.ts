@@ -1,6 +1,6 @@
 export class  LocationGroupModel {
     locationGroupId: any;
-    sitesIds:any[];
+    siteIds:any[];
     name: string;
     locationCodes : any[];
 }

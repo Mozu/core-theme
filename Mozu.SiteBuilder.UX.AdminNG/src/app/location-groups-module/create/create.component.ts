@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener  } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService } from '@core'
-import {TreeNode, SelectItem} from 'primeng/components/common/api';
+import { TreeNode, SelectItem } from 'primeng/components/common/api';
 import { LocationsListModel, Constants } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
@@ -16,12 +16,12 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
     providers: [CreateLocationGroupService]
 })
 export class LocationGroupCreateComponent implements OnInit {
-    physicalLocation : TreeNode;
+    physicalLocation: TreeNode;
     selectedLocations: LocationsListModel[];
-    
-    sitesLst : any[];
-    sitesRows : any[];
-    
+
+    sitesLst: any[];
+    sitesRows: any[];
+
     @ViewChild('stickyMenu') menuElement: ElementRef;
     menuPosition: any;
     sticky: boolean = false;
@@ -33,39 +33,45 @@ export class LocationGroupCreateComponent implements OnInit {
 
     constructor(
         private _loggerService: LoggerService,
-        private _sharedData : SharedDataService,
-        private createService : CreateLocationGroupService,
-        private _notificationService:NotificationService,
+        private _sharedData: SharedDataService,
+        private createService: CreateLocationGroupService,
+        private _notificationService: NotificationService,
         private fb: FormBuilder,
-        private router: Router) { 
+        private router: Router) {
 
     }
 
     ngOnInit() {
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
         this.selectedLocations = [];
+
+        this.locationGroupForm = this.fb.group({
+            locationGroupName: ['', [Validators.required, Validators.maxLength(50)]],
+            locationSites: new FormArray([])
+        });
+
+
         this.fetchSitesData();
         this.subscriptions.push(
             this._notificationService.addLocationGroup.subscribe((action: string) => {
-                if(action === "Save"){
+                if (action === "Save") {
                     this.save();
                 }
-                else{
-                    this.cancel();    
+                else {
+                    this.cancel();
                 }
             })
         );
-
-        this.locationGroupForm = this.fb.group({
-            locationGroupName:  ['', [Validators.required, Validators.maxLength(50)]],
-            
-        });
-
-        
-
     }
-    
-    ngAfterViewInit(){
+
+    private addCheckboxes() {
+        this.sitesLst.map((o, i) => {
+            const control = new FormControl(false); // if first item set to true, else false
+            (this.locationGroupForm.controls.locationSites as FormArray).push(control);
+        });
+    }
+
+    ngAfterViewInit() {
         this.menuPosition = this.menuElement.nativeElement.offsetTop;
     }
 
@@ -78,52 +84,47 @@ export class LocationGroupCreateComponent implements OnInit {
 
     public fetchSitesData = () => {
         this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
-        this.sitesRows = [];
-        if(this._sharedData._sharedData.items.ctTenant.sites){
+        if (this._sharedData._sharedData.items.ctTenant.sites) {
             this.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
-            if(this.sitesLst){
-                for(var cnt = 0; cnt<this.sitesLst.length; cnt+=3){
-                    this.sitesRows.push(this.sitesLst.slice(cnt, cnt+3))
-                }
-            }
+            this.addCheckboxes();
         }
     }
 
-    physicalLocationSelected(physicalLocation:TreeNode){
+    physicalLocationSelected(physicalLocation: TreeNode) {
         this._loggerService.info("LocationGroupCreateComponent : physicalLocationSelected");
         this.physicalLocation = physicalLocation;
     }
 
-    locationSelected(location:LocationsListModel){
+    locationSelected(location: LocationsListModel) {
         this._loggerService.info("LocationGroupCreateComponent : locationSelected");
         let arr = this.selectedLocations.slice();
         arr.push(location);
         this.selectedLocations = arr;
     }
 
-    locationUnselected(location:LocationsListModel){
+    locationUnselected(location: LocationsListModel) {
         this._loggerService.info("LocationGroupCreateComponent : locationUnselected");
         this.selectedLocations = _.difference(this.selectedLocations, [location]);
     }
 
-    locationsChanged(event){
+    locationsChanged(event) {
         this._loggerService.info("LocationGroupCreateComponent : locationsChanged");
-        if(event.operation === "add"){
+        if (event.operation === "add") {
             var arr = _.unionWith(this.selectedLocations, event.data, _.isEqual);
             this.selectedLocations = arr;
         }
-        else{
-            this.selectedLocations  = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
+        else {
+            this.selectedLocations = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
         }
     }
-    
+
     @HostListener('scroll', ['$event'])
-    scrollHandler(event){
+    scrollHandler(event) {
         let windowScroll = event.srcElement.scrollTop;
-        if(windowScroll >= this.menuPosition){
-           this.sticky = true;
+        if (windowScroll >= this.menuPosition) {
+            this.sticky = true;
         } else {
-           this.sticky = false;
+            this.sticky = false;
         }
     }
 
@@ -143,23 +144,32 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
 
-    save(){
-        this._loggerService.info("LocationGroupCreateComponent : save");
-        this.isSaving  = true;
-        let lgModel : LocationGroupModel = new LocationGroupModel();
+    save() {
+        this._loggerService.info("LocationGroupCreateComponent : save"+JSON.stringify(this.locationGroupForm.value));
+        this.isSaving = true;
+        let lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroups(lgModel);
-        this.createService.addLocationGroup(lgModel).subscribe(response => 
-            this.onSaveSuccess(response), 
+        this.createService.addLocationGroup(lgModel).subscribe(response =>
+            this.onSaveSuccess(response),
             () => this.onSaveError());
     }
 
-    cancel(){
+    cancel() {
         this._loggerService.info("LocationGroupCreateComponent : cancel");
-        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
     private createLocationGroups(lgModel: LocationGroupModel): void {
-        lgModel.sitesIds = [23779, 23780];
+        if(this.locationGroupForm.value && this.locationGroupForm.value.locationSites){
+            let sitesArr = this.locationGroupForm.value.locationSites.map((selected, i) => {
+                return {
+                  id: this.sitesLst[i].id,
+                  selected : selected
+               }
+            });                
+            sitesArr = _.filter(sitesArr, { selected: true});
+            lgModel.siteIds = _.map(sitesArr, 'id');
+        }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = ['4TXmkoTLiA', 'CiCrK396LQ'];
     }
@@ -167,12 +177,12 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveSuccess(result) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess");
         this.isSaving = false;
-        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
     private onSaveError() {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
         this.isSaving = false;
-        this.router.navigate(['/'+Constants.uiRoutes.locationGroups]);
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 }

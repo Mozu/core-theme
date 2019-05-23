@@ -26,13 +26,19 @@
 						<div class="form-row">
 							<h5>Sites</h5>
 							<div class="form-row scroll-y">
-								<div *ngFor="let row of sitesRows">
+								<!-- <div *ngFor="let row of sitesRows">
 									<label *ngFor="let site of row" class="checkbox-inline col-md-4 ">
-										<input type="checkbox" class="custom-control-input" id="customCheck"
-											value="">{{site.name}}
+										<input type="checkbox" class="custom-control-input" 
+										id="customCheck"	>{{site.name}}
 										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 									</label>
-								</div>
+								</div> -->
+								<label formArrayName="locationSites" class="checkbox-inline col-md-4" 
+									*ngFor="let site of locationGroupForm.get('locationSites')['controls']; let i = index">
+									<input type="checkbox" [formControlName]="i" [formControl]="site" class="custom-control-input">
+									{{sitesLst[i].name}}
+									<span class="cr"><i class="cr-icon fa fa-check"></i></span>
+								</label>
 							</div>
 						</div>
 					</div>
