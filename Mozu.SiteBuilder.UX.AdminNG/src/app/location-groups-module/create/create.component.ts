@@ -180,7 +180,7 @@ export class LocationGroupCreateComponent implements OnInit {
             lgModel.siteIds = _.map(sitesArr, 'id');
         }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
-        lgModel.locationCodes = ['4TXmkoTLiA', 'CiCrK396LQ'];
+        lgModel.locationCodes = _.map(this.selectedLocations, 'code');
     }
 
     private onSaveSuccess(result) {
