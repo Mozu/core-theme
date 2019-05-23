@@ -70,9 +70,30 @@ span.error{display: none; color: #ff0000; font-size: 10px;}
   margin: 0px 0px 20px 0px;
   width: 100%;
   border-radius: 4px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
 }
 .scroll-container .subform:first-child{border-radius: 0px 0px 4px 4px;}
 .subnav + .subform{border-radius: 0px 0px 4px;}
+
+.divani{
+  animation-name: borderanimation;
+  animation-duration: 4s;
+}
+@keyframes borderanimation {
+  0%   { 
+    border:2px solid #2ea195;
+    -webkit-box-shadow: 0px 0px 21px 8px rgba(0,0,0,0.28);
+    -moz-box-shadow: 0px 0px 21px 8px rgba(0,0,0,0.28);
+    box-shadow: 0px 0px 21px 8px rgba(0,0,0,0.28);
+  }
+  100% { 
+    border:2px solid transparent;    
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+}
 .main-container{
   padding: 0 20px 0 20px;
   scroll-behavior: smooth;
@@ -215,4 +236,3 @@ background-color: #9f9b9b;
 overflow-y: scroll;
 height: calc(100vh - 90px);
 }
-.subform:hover{}

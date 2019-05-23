@@ -129,8 +129,12 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     scrollToTop(el: HTMLElement) {
-        //el.scrollIntoView({behavior: 'smooth'});
+        el.scrollIntoView({behavior: 'smooth'});
         el.scrollIntoView(false);
+        el.classList.add('divani');
+        setTimeout(function() {
+            el.classList.remove('divani');
+          }, 4000);
     }
 
     scrollToLocationGrid(el: HTMLElement) {
@@ -141,6 +145,11 @@ export class LocationGroupCreateComponent implements OnInit {
         //block -- One of "start", "center", "end", or "nearest". Defaults to "start".
         //inline -- One of "start", "center", "end", or "nearest". Defaults to "nearest".
         el.scrollIntoView(false);
+        el.scrollIntoView({behavior: 'smooth'});
+        el.classList.add('divani');
+        setTimeout(function() {
+            el.classList.remove('divani');
+          }, 4000);
     }
 
 
