@@ -61,7 +61,7 @@ export class AccountInformationComponent implements OnChanges, OnInit {
       let responseJson = successResponse;
       if (responseJson != null && responseJson != undefined && responseJson['users'].length > 0) {
         this.model = responseJson;
-        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId })[0];
+        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId });
         this.generateCustomerAccountUrl();
       }
     }, (errResponse) => {

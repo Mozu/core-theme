@@ -58,15 +58,15 @@
 
 <confirmation-dialog ref="confirmationModal" *ngIf="showModal" size="modal-sm">
         <ng-template #modalHeader>
-             Delete Item
+            {{'MESSAGES.Dialog.Confirmation.title' | translate }}
         </ng-template>   
         <ng-template #modalBody>  
-                Are you certain you want to delete this item?
+            {{'MESSAGES.Dialog.Confirmation.message' | translate }}
         </ng-template>    
         <ng-template #modalFooter>
             <div>
-                <button class="btn btn-default" (click)="closeModal()">No</button>
-                <button class="btn btn-success" (click)="deleteItem()">Yes</button>
+                <button class="btn btn-default" (click)="closeModal()">{{'MESSAGES.Dialog.Confirmation.secondaryButton' | translate }}</button>
+                <button class="btn btn-success" (click)="deleteItem()">{{'MESSAGES.Dialog.Confirmation.primaryButton' | translate }}</button>
             </div>
         </ng-template>
 </confirmation-dialog>
