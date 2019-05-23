@@ -30,6 +30,18 @@
 }
 .sbbtn:hover{ border-color:#2ea195; opacity: .8;}
 @media screen and (min-width: 768px) {
-.forlineheight{ line-height: 2.3}
 .sbbtn{margin-right:35px }
+}
+@media screen and (max-width: 768px) {
+    .forlineheight{ line-height: 2.2}  
+    
+}
+@media screen and (max-width: 320px) {
+    .forlineheight{    line-height: 1.8;}
+    .sidebar .pull-right{ margin: -43px 2px 0 0;}
+    
+}
+
+@media screen and (min-width: 1024px) {
+    .heading{ padding-right: 9px;}
 }
