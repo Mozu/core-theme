@@ -22,3 +22,4 @@ body .ui-treetable .ui-treetable-tbody > tr > td{font-size: 12px; font-weight: 6
 .pi-chevron-down:before{ content: "\e906" !important;}
 
 .pi-chevron-down:parent body .ui-treetable .ui-treetable-tbody > tr > td{ font-weight: normal;}
+.ui-treetable-scrollable-body{ overflow-x: hidden; min-height: 350px;}

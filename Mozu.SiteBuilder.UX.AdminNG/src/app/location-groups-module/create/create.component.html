@@ -1,13 +1,11 @@
 <div class="clearfix"></div>
 <div>	
 	<div class="scroll-container" id="scroll-container" (scroll)="scrollHandler($event)">		
-		<div >
-			<div class="row subnav animated fadeInDown" #stickyMenu	[class.sticky] = "sticky" > 
-				<ul>
-					<li><a (click)="scrollToTop(form1)">Location Group</a></li>
-					<li><a (click)="scrollToLocationGrid(form2)">Add Locations</a></li>
-				</ul>
-			</div>
+		<div class="row subnav animated fadeInDown" #stickyMenu	[class.sticky] = "sticky" > 
+			<ul>
+				<li><a (click)="scrollToTop(form1)">Location Group</a></li>
+				<li><a (click)="scrollToLocationGrid(form2)">Add Locations</a></li>
+			</ul>
 		</div>
 		<div class="main-container" id="main-container">
 			<div #form1 id="form1" class="row subform scroll-page">
