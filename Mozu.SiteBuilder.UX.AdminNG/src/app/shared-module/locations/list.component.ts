@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
 import { LocationsListModel } from './list.model';
 import {TreeNode} from 'primeng/components/common/api';
 import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'locations-list',
@@ -38,6 +39,8 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     @Output()
     locationsChanged:EventEmitter<any> = new EventEmitter<any>();
+
+    @ViewChild('dt') turboTable: Table;
         
     constructor(
         private _loggerService: LoggerService, config: NgbTooltipConfig
@@ -49,7 +52,7 @@ export class LocationsListComponent implements OnInit, OnChanges {
     ngOnInit() {
         this._loggerService.info("LocationsListComponent : ngOnInit");
         this.cols = [
-            { field: 'name', header: ''}
+            { field: 'name', header: '', filterMatchMode:'contains'}
         ];
         this.totalRecords = 250000;
         this.loading = true;
@@ -86,9 +89,17 @@ export class LocationsListComponent implements OnInit, OnChanges {
     tableHeaderCheckboxToggle(event: any) {
         this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+event.checked);
         if(event.checked === true){
-            this.locationsChanged.emit({data: this.virtualLocations, operation:"add"});
+            if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
+                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:"add"});
+            }else{
+                this.locationsChanged.emit({data: this.virtualLocations, operation:"add"});
+            }
         } else {
-            this.locationsChanged.emit({data: this.virtualLocations, operation:"remove"});
+            if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
+                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:"remove"});
+            }else{
+                this.locationsChanged.emit({data: this.virtualLocations, operation:"remove"});
+            }
         }
     }   
 }

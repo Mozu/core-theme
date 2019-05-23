@@ -21,3 +21,7 @@
 .myposi{
     position: relative;
 }
+
+.table-column-filter{
+    width: 100%;
+}

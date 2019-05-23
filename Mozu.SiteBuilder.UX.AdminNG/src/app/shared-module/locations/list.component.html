@@ -1,6 +1,6 @@
 <h5>Locations</h5>
 <!-- <h5>{{selectedLocations ? selectedLocations.length : 0}} Selected</h5> -->
-<p-table [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
+<p-table #dt [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="300px" 
     (onRowSelect)="rowSelected($event)" (onRowUnselect)="rowUnselected($event)"
     (onHeaderCheckboxToggle)="tableHeaderCheckboxToggle($event)"
@@ -11,10 +11,16 @@
             <th style="width: 3em">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
-            <th *ngFor="let col of columns">
-                {{col.header}}
+            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <input *ngSwitchCase="'name'" class="table-column-filter" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
             </th>
         </tr>
+        <!-- <tr>
+            <th style="width: 3em"></th>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                <input *ngSwitchCase="'name'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+            </th>
+        </tr> -->
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr style="height:34px" [pSelectableRow]="rowData">
