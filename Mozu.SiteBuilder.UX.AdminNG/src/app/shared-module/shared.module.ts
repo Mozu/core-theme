@@ -16,7 +16,7 @@ import {MenuModule} from 'primeng/menu';
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
 
-import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -45,6 +45,7 @@ import {
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 declare var resourcesVersion: any;
 
@@ -73,7 +74,8 @@ export function createTranslateLoader(http: HttpClient) {
                 useFactory: (createTranslateLoader),
                 deps: [HttpClient]
             }
-        })
+        }),
+        NgbModule
     ],
     declarations: [
         // pipes
@@ -96,7 +98,8 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         SearchBarComponent,
-        AccountInformationComponent
+        AccountInformationComponent,
+        ConfirmationDialogComponent
     ],
     providers: [
         
@@ -119,6 +122,7 @@ export function createTranslateLoader(http: HttpClient) {
         CardModule,
         TabViewModule,
         PanelMenuModule,
+        NgbModule,
         // pipes
         DatexPipe,
         EllipsisPipe,
@@ -139,7 +143,8 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         SearchBarComponent,
-        AccountInformationComponent
+        AccountInformationComponent,
+        ConfirmationDialogComponent
     ]
 })
 

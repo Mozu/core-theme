@@ -1,0 +1,6 @@
+.modal{
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(236,236,236,0.9);
+}

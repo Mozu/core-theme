@@ -23,12 +23,12 @@
 .summary-heading p{
     margin: 0px;
 }
-.summary-data{
+.summary-link{
     font-size: 13px;
     color: #3f3f3f;
     border-bottom: #f3f3f3 1px solid;
 }
-a.summary-data:hover{
+a.summary-link:hover{
     border-bottom: #3f3f3f 1px solid;
     outline: 0px;
     text-decoration: none;

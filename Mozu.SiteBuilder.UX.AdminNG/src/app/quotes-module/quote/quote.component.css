@@ -14,7 +14,9 @@
     border: 1px solid #f5f5f5;
     min-height: 200px;
 }
-
+.top-margin{
+    margin-top: 10px;
+}
 .main-heading{
     border-bottom: 1px solid #f5f5f5;
     padding: 0px 20px;

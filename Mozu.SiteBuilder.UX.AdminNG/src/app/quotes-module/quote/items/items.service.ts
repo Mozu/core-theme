@@ -11,8 +11,8 @@ export class QuoteItemsService{
     constructor(private _http: HttpClientService,   
         private _loggerService: LoggerService){ }
 
-    public fetchAllQuotes(): Observable<any>{
-        this._loggerService.info("QuoteItemsService: fetchAllQuotes");
+    public deleteItem(itemId: string): Observable<any>{
+        this._loggerService.info("QuoteItemsService: deleteItem");
         return this._http.get(Constants.JsonResources.quoteList);
     }
 }

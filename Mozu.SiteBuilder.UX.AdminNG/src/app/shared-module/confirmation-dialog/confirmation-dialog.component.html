@@ -1,0 +1,24 @@
+<!-- The Modal -->
+<div class="modal" [id]="ref"> 
+    <div class="modal-dialog {{size}}" >
+      <div class="modal-content">
+  
+  <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">
+            <ng-container *ngTemplateOutlet="modalHeader"></ng-container>
+          </h4>
+        </div>
+  
+  <!-- Modal body -->
+        <div class="modal-body">
+          <ng-container *ngTemplateOutlet="modalBody"></ng-container>
+        </div>
+  
+  <!-- Modal footer -->
+        <div class="modal-footer">
+          <ng-container *ngTemplateOutlet="modalFooter"></ng-container>
+        </div>
+      </div>
+    </div>
+  </div> 

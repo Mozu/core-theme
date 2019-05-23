@@ -235,6 +235,7 @@ p-table .ui-table .ui-table-tbody > tr > td {
 .quote-items-grid p-table .ui-table .ui-table-tbody > tr > td input{
     width: 60% !important;
     outline: none !important;
+    padding: 0px 5px;
 }
 /* --------------Turbo Table CSS - End------------- */
 
@@ -375,33 +376,3 @@ p-table .ui-table .pi-ellipsis-v:hover{
     border:transparent  !important;
 }
 /* --------------Context Menu Ellipsis CSS - End------------- */
-
-/* --------------Calendar CSS - Start------------- */
-.ng-trigger.ui-datepicker{
-    display: block !important;
-    visibility: visible !important;
-    top: 40px !important;
-}
-
-.ui-calendar.ui-calendar-w-btn{
-    border-bottom: 2px solid #2ea195 !important;
-
-}
-.ui-datepicker table td{
-    padding: 0px !important;
-}
-.ui-button-icon-left.ui-clickable.pi.pi-calendar, body .ui-button:enabled:active, .ui-button-text.ui-clickable{
-    color:#3f3f3f;
-}
-.ui-datepicker table td.ui-datepicker-today a.ui-state-active{
-    background: #2ea195 !important;
-    color: #ffffff !important;
-    border-radius:  50%;
-}
-.ui-calendar.ui-calendar-w-btn .ui-inputtext{
-    padding: 0px !important;
-}
-.ui-button-icon-only {
-    text-indent: 0 !important;
-}
-/* --------------Calendar CSS - End------------- */
