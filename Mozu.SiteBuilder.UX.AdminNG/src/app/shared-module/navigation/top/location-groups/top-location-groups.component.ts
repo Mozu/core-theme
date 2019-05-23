@@ -19,12 +19,18 @@ import { NotificationService } from '@global';
   
     ngOnInit() { 
       this.createMode = false;
-      if(this.router.url === '/locationGroups'){
+      this.checkCreateMode();
+    }
+
+    checkCreateMode(){
+      setTimeout(() => {
+        if(this.router.url === '/locationGroups'){
           this.createMode = false;
-      }
-      if(this.router.url === '/locationGroupCreate'){
-        this.createMode = true;
-      }
+        }
+        if(this.router.url === '/locationGroupCreate'){
+          this.createMode = true;
+        }
+      }, 0);
     }
 
     showCreateLG(){
@@ -33,12 +39,14 @@ import { NotificationService } from '@global';
     }
   
     cancelCreateLG(){
-      this.createMode = false;
+      //this.createMode = false;
+      this.checkCreateMode();
       this._notificationService.notifyAddLocationGroup("Cancel");
     }
 
     saveCreateLG(){
-      this.createMode = false;
+      //this.createMode = false;
+      this.checkCreateMode();
       this._notificationService.notifyAddLocationGroup("Save");
     }
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoggerService } from '@core'
+import { LoggerService, ToastrService } from '@core'
 import { TreeNode, SelectItem } from 'primeng/components/common/api';
 import { LocationsListModel, Constants } from '@shared';
 import * as _ from 'lodash';
@@ -37,6 +37,7 @@ export class LocationGroupCreateComponent implements OnInit {
         private createService: CreateLocationGroupService,
         private _notificationService: NotificationService,
         private fb: FormBuilder,
+        private _toastrService:ToastrService,
         private router: Router) {
 
     }
@@ -157,10 +158,12 @@ export class LocationGroupCreateComponent implements OnInit {
         this._loggerService.info("LocationGroupCreateComponent : save"+JSON.stringify(this.locationGroupForm.value));
         this.isSaving = true;
         let lgModel: LocationGroupModel = new LocationGroupModel();
-        this.createLocationGroups(lgModel);
-        this.createService.addLocationGroup(lgModel).subscribe(response =>
-            this.onSaveSuccess(response),
-            () => this.onSaveError());
+        this.createLocationGroup(lgModel);
+        if(this.validateLocationGroup(lgModel)){
+            this.createService.addLocationGroup(lgModel).subscribe(response =>
+                this.onSaveSuccess(response),
+                () => this.onSaveError());
+        }
     }
 
     cancel() {
@@ -168,7 +171,7 @@ export class LocationGroupCreateComponent implements OnInit {
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
-    private createLocationGroups(lgModel: LocationGroupModel): void {
+    private createLocationGroup(lgModel: LocationGroupModel): void {
         if(this.locationGroupForm.value && this.locationGroupForm.value.locationSites){
             let sitesArr = this.locationGroupForm.value.locationSites.map((selected, i) => {
                 return {
@@ -181,6 +184,22 @@ export class LocationGroupCreateComponent implements OnInit {
         }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = _.map(this.selectedLocations, 'code');
+    }
+
+    private validateLocationGroup(lgModel: LocationGroupModel):boolean{
+        if(lgModel && _.isEmpty(lgModel.name)){
+            this._toastrService.showError("EmptyLocationGroupName");
+            return false;
+        }
+        if(lgModel && _.isEmpty(lgModel.siteIds)){
+            this._toastrService.showError("EmptyLocationGroupSites");
+            return false;
+        }
+        if(lgModel && _.isEmpty(lgModel.locationCodes)){
+            this._toastrService.showError("EmptyLocationGroupCodes");
+            return false;
+        }
+        return true;
     }
 
     private onSaveSuccess(result) {

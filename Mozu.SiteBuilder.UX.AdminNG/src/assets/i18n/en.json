@@ -63,25 +63,26 @@
       "isLogoutOnPrimaryButton": "false"
     }
   },
-  "MESSAGES": {
-    "Dialog": {
-      "AuthFailedInvalidAuthResponse": {
-        "title": "Authentication Failed",
-        "message": "Authentication Failed for specified user. Please enter valid credentials and try again. If you still see same problem , contact customer support team.",
-        "primaryButton": "OK",
-        "secondaryButton": "",
-        "isShowSecondaryButton": "false",
-        "isLogoutOnPrimaryButton": "false"
-      }
-    },
-    "Toastr": {
-      "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-      "EmptyEmailAddress": "Please enter Email Address.",
-      "EmptyPassword": "Please enter Password.",
-      "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-      "QuoteListGetFailed": "Error occured while fetching quote list",
-      "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
-    }
+  "Toastr": {
+    "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",    
+    "EmptyEmailAddress": "Please enter Email Address.",
+    "EmptyPassword": "Please enter Password.",
+    "DashboardTilesGetFailed" : "Error occured while fetching dasbhoard tiles",
+    "QuoteListGetFailed" : "Error occured while fetching quote list",
+    "EmptyLocationGroupName":"Please enter Name.",
+    "EmptyLocationGroupSites":"Please select Site.",
+    "EmptyLocationGroupCodes":"Please select Location(s)"
+     
+  }
+},
+"QUOTES": {
+  "GridHeader": {
+    "b2bAccountName": "B2B Account Name",
+    "quoteName": "Quote Name",
+    "buyerName": "Buyer Name",
+    "status": "Status",
+    "lastModifiedDate": "Last Modified Date",
+    "quoteTotal": "Quote Total"      
   },
   "QUOTES": {
     "GridHeader": {
