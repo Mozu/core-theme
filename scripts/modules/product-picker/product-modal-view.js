@@ -31,16 +31,16 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         render: function () {
             var me = this;
-            if (this.oldOptions) {
-                me.model.get('options').map(function (option) {
-                    var oldOption = _.find(me.oldOptions, function (old) {
-                        return old.attributeFQN === option.get('attributeFQN');
-                    });
-                    if (oldOption) {
-                        option.set('values', oldOption.values);
-                    }
-                });
-            }
+            // if (this.oldOptions) {
+            //     me.model.get('options').map(function (option) {
+            //         var oldOption = _.find(me.oldOptions, function (old) {
+            //             return old.attributeFQN === option.get('attributeFQN');
+            //         });
+            //         if (oldOption) {
+            //             option.set('values', oldOption.values);
+            //         }
+            //     });
+            // }
             Backbone.MozuView.prototype.render.apply(this);
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
@@ -151,6 +151,12 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
                       }
                   }
               });
+
+              me.listenTo(me.model, 'optionsUpdated', function(){
+                  me.postponeRender = false;
+                  me.render();
+              });
+
             });
 
         }
