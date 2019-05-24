@@ -12,15 +12,11 @@
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
             <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                    <i class="pi pi-fw pi-fw pi-filter filtericon"></i><input *ngSwitchCase="'name'" placeholder="Filter" class="table-column-filter" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                    <i class="pi pi-fw pi-fw pi-filter filtericon"></i>
+                    <input *ngSwitchCase="'name'" placeholder="Filter" class="table-column-filter" 
+                       pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
             </th>
         </tr>
-        <!-- <tr>
-            <th style="width: 3em"></th>
-            <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                <input *ngSwitchCase="'name'" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
-            </th>
-        </tr> -->
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr style="height:34px" [pSelectableRow]="rowData">

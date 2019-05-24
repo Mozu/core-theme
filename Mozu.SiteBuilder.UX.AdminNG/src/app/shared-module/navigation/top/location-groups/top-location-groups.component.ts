@@ -11,7 +11,8 @@ import { NotificationService } from '@global';
   export class NavigationTopLocationGroupsComponent implements OnInit {
     
     createMode: boolean;
-    
+    subscriptions = [];
+
     constructor(private router: Router,
       private _notificationService:NotificationService) { 
 
@@ -20,17 +21,29 @@ import { NotificationService } from '@global';
     ngOnInit() { 
       this.createMode = false;
       this.checkCreateMode();
+
+      this.subscriptions.push(
+        this._notificationService.addLocationGroup.subscribe((action: string) => {
+            if(action === "Save Success" || action === "Cancel Success"){
+              this.createMode = false;
+            }
+        })
+      );
+    }
+    
+    ngOnDestroy() {
+      this.subscriptions.forEach((s) => {
+          s.unsubscribe();
+      });
     }
 
     checkCreateMode(){
-      setTimeout(() => {
         if(this.router.url === '/locationGroups'){
           this.createMode = false;
         }
         if(this.router.url === '/locationGroupCreate'){
           this.createMode = true;
         }
-      }, 0);
     }
 
     showCreateLG(){
@@ -39,14 +52,10 @@ import { NotificationService } from '@global';
     }
   
     cancelCreateLG(){
-      //this.createMode = false;
-      this.checkCreateMode();
       this._notificationService.notifyAddLocationGroup("Cancel");
     }
 
     saveCreateLG(){
-      //this.createMode = false;
-      this.checkCreateMode();
       this._notificationService.notifyAddLocationGroup("Save");
     }
   }

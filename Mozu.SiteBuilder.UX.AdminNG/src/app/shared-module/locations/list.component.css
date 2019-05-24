@@ -25,24 +25,22 @@
 .table-column-filter{
     width: 100%;
 }
+
 .filtericon{
     position: absolute;
     top:17px;
     color:#333;
 }
+   
 .filtericon + input{
     border-left:1px solid #ccc;
     border-bottom:1px solid #ccc;
     border-right:1px solid transparent;
-    border-top:1px solid transparent;    
+    border-top:1px solid transparent; 
     padding: 7px 17px;
     font-size: 13px;
 }
+   
 .filtericon + input:focus{
     outline: none;
-}
-p-table .ui-table .ui-table-thead > tr{
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-left-color: transparent !important; 
 }

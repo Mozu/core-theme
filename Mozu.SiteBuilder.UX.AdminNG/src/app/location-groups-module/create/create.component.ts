@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoggerService, ToastrService } from '@core'
-import { TreeNode, SelectItem } from 'primeng/components/common/api';
+import { TreeNode, SelectItem, MessageService } from 'primeng/components/common/api';
 import { LocationsListModel, Constants } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
@@ -39,6 +39,7 @@ export class LocationGroupCreateComponent implements OnInit {
         private _notificationService: NotificationService,
         private fb: FormBuilder,
         private _toastrService:ToastrService,
+        private _messageService: MessageService,
         private router: Router) {
 
     }
@@ -56,10 +57,10 @@ export class LocationGroupCreateComponent implements OnInit {
         this.fetchSitesData();
         this.subscriptions.push(
             this._notificationService.addLocationGroup.subscribe((action: string) => {
-                if (action === "Save") {
+                if(action === "Save") {
                     this.save();
                 }
-                else {
+                else if(action === "Cancel") {
                     this.cancel();
                 }
             })
@@ -86,7 +87,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     public fetchSitesData = () => {
         this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
-        if (this._sharedData._sharedData.items.ctTenant.sites) {
+        if(this._sharedData._sharedData.items.ctTenant.sites) {
             this.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
             this.addCheckboxes();
         }
@@ -111,7 +112,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     locationsChanged(event) {
         this._loggerService.info("LocationGroupCreateComponent : locationsChanged");
-        if (event.operation === "add") {
+        if(event.operation === "add") {
             var arr = _.unionWith(this.selectedLocations, event.data, _.isEqual);
             this.selectedLocations = arr;
         }
@@ -140,12 +141,6 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     scrollToLocationGrid(el: HTMLElement) {
-        //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-        //https://stackoverflow.com/questions/51618548/scrollintoview-is-not-working-does-not-taking-in-account-fixed-element
-        //el.scrollIntoView({behavior: 'smooth', block: "end", inline: "nearest"});
-        //behavior --One of "auto" or "smooth". Defaults to "auto".
-        //block -- One of "start", "center", "end", or "nearest". Defaults to "start".
-        //inline -- One of "start", "center", "end", or "nearest". Defaults to "nearest".
         el.scrollIntoView(false);
         el.scrollIntoView({behavior: 'smooth'});
         el.classList.add('divani');
@@ -153,7 +148,6 @@ export class LocationGroupCreateComponent implements OnInit {
             el.classList.remove('divani');
           }, 4000);
     }
-
 
     save() {
         this._loggerService.info("LocationGroupCreateComponent : save"+JSON.stringify(this.locationGroupForm.value));
@@ -163,13 +157,14 @@ export class LocationGroupCreateComponent implements OnInit {
         if(this.validateLocationGroup(lgModel)){
             this.createService.addLocationGroup(lgModel).subscribe(response =>
                 this.onSaveSuccess(response),
-                () => this.onSaveError());
+                (response) => this.onSaveError(response.error.message));
         }
     }
 
     cancel() {
         this._loggerService.info("LocationGroupCreateComponent : cancel");
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
+        this._notificationService.notifyAddLocationGroup("Cancel Success");
     }
 
     private createLocationGroup(lgModel: LocationGroupModel): void {
@@ -206,12 +201,14 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveSuccess(result) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess");
         this.isSaving = false;
+        this._notificationService.notifyAddLocationGroup("Save Success");
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
+        
     }
 
-    private onSaveError() {
+    private onSaveError(errmsg:string) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
         this.isSaving = false;
-        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
+        this._messageService.add({severity: 'error', summary: 'Error Message', detail: errmsg});
     }
 }
