@@ -19,15 +19,18 @@ export class PhysicalLocationsComponent implements OnInit {
   selectedPhysicalLocNode : TreeNode;
   @Output() 
   physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
-
+  loading: boolean;
   cols: any[];
   constructor( private _loggerService: LoggerService,
     private _physicalLocationsService:PhysicalLocationsService) { }
 
   ngOnInit() {
+        this.loading = true;
         this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
             this.convertJsonToTreeNodeArr(locations);
+            this.loading = false;
         });
+        
         this.cols = [
             { field: 'name', header: '' }
         ];

@@ -1,9 +1,10 @@
 <h5 class="physicalloc">Physical Location</h5>
 <!-- <h5>&nbsp;</h5> -->
-<p-treeTable #tt id="physicallocationdiv" [value]="physicalLocations" [columns]="cols" selectionMode="single" 
+<p-treeTable #tt id="physicallocationdiv" [value]="physicalLocations" [columns]="cols" 
+    selectionMode="single" 
     [(selection)]="selectedPhysicalLocNode" 
     dataKey="name" 
-    [scrollable]="true" scrollHeight="360px"
+    [scrollable]="true" scrollHeight="360px" [loading]="loading"
     (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)">
     <!-- <ng-template pTemplate="header" let-columns>
         <tr>
@@ -22,7 +23,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>        
-            <td [attr.colspan]="cols.length">No data found.</td>
+            <td [attr.colspan]="cols.length">No records found.</td>
         </tr>
     </ng-template>
     <!-- <ng-template pTemplate="summary">

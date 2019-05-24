@@ -60,7 +60,12 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
         if(changes && changes.physicalLocation && changes.physicalLocation.currentValue){
+            //reset filter.
+            if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
+                this.turboTable.filters['name'].value = "";
+            }
             this.getLocations(changes.physicalLocation.currentValue.locations, this.setSelectedLocLst);
+            
         }
         if(changes && changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
             this.setSelectedLocLst = changes.selectedLocationsLst.currentValue;
