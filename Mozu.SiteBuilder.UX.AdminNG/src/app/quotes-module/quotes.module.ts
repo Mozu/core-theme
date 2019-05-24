@@ -4,6 +4,8 @@ import { TableModule } from 'primeng/table';
 
 import {CalendarModule} from 'primeng/calendar';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { SharedModule } from '@shared/shared.module';
 
 import { QuotesListComponent } from './list';
@@ -18,11 +20,16 @@ import { QuoteItemsComponent } from './quote/items/items.component';
     QuotesListComponent,
     QuoteComponent,
     QuoteSummaryComponent,
-    QuoteItemsComponent],
+    QuoteItemsComponent
+  ],
   imports: [
     SharedModule,
     TableModule,
-    CalendarModule
+    CalendarModule,
+    NgbModule.forRoot()
+  ],
+  entryComponents: [
+    QuoteItemsComponent
   ]
 })
 export class QuotesModule { }

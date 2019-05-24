@@ -16,7 +16,7 @@ import {MenuModule} from 'primeng/menu';
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
 
-import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -74,8 +74,7 @@ export function createTranslateLoader(http: HttpClient) {
                 useFactory: (createTranslateLoader),
                 deps: [HttpClient]
             }
-        }),
-        NgbModule
+        })
     ],
     declarations: [
         // pipes
@@ -122,7 +121,6 @@ export function createTranslateLoader(http: HttpClient) {
         CardModule,
         TabViewModule,
         PanelMenuModule,
-        NgbModule,
         // pipes
         DatexPipe,
         EllipsisPipe,

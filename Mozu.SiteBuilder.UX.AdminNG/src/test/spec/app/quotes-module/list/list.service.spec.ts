@@ -89,7 +89,7 @@ describe('QuotesListService', () => {
             err => {
                 expect(err).toBe(`Error on data fetching.`)
             })
-            const req = httpMock.expectOne(`./assets/json/quote-list.json`);
+            const req = httpMock.expectOne(`/assets/json/quote-list.json`);
             expect(req.request.method).toBe("GET");
             req.flush(dummyQuoteList);
             httpMock.verify();

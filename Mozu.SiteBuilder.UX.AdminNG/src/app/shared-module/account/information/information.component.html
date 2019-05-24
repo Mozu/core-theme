@@ -1,7 +1,7 @@
 <div class="col-md-6 padding-none right-border">
   <div class="summary-heading">
     <p>{{'SHARED.ACCOUNT.Information.heading' | translate }}</p>
-    <p><a href="{{customerAccountUrl}}"  class="summary-link">{{ model.users[0].firstName }} {{ model.users[0].lastName }}</a></p>
+    <p><a href="{{customerAccountUrl}}"  class="summary-link" *ngIf="model.users && model.users.length > 0">{{ model.users[0].firstName }} {{ model.users[0].lastName }}</a></p>
   </div>
   <div class="section col-sm-12">
     <div class="col-sm-12 padding-none">
@@ -18,7 +18,7 @@
           <span>{{'SHARED.ACCOUNT.Information.companyAdminEmail' | translate }}</span>
         </div>
         <div class="section-data">
-          <span>{{ model.users[0].emailAddress }}</span>
+          <span *ngIf="model.users && model.users.length > 0">{{ model.users[0].emailAddress }}</span>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
           <span>{{'SHARED.ACCOUNT.Information.salesRep' | translate }}</span>
         </div>
         <div class="section-data">
-          <span>{{ model.users[0].userName }}</span>
+          <span *ngIf="model.users && model.users.length > 0">{{ model.users[0].userName }}</span>
         </div>
       </div>
     </div>

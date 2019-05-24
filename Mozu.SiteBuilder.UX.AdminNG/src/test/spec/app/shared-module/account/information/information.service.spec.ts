@@ -69,7 +69,6 @@ describe('AccountInfoService', () => {
                 expect(err).toBe(`Error on data fetching.`)
             })
             const req = httpMock.expectOne(`/assets/json/account-information.json`);
-            console.log(req.request.url);
             expect(req.request.method).toBe("GET");
             req.flush(dummyAccountInfo);
             httpMock.verify();

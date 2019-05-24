@@ -1,12 +1,16 @@
-import { Component, OnInit, Input, SimpleChanges, ViewChild } from '@angular/core';
-
-import { LoggerService, HttpError, ErrorCode, ErroNotificationType } from '@core';
+import { Component, 
+  OnInit, 
+  Input, 
+  SimpleChanges, 
+  OnChanges } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { QuoteItemsService } from './items.service';
+import { LoggerService, 
+  HttpError, 
+  ErrorCode, ErroNotificationType } from '@core';
 
-//import { ConfirmationDialogComponent } from '@shared';
+import { QuoteItemsService } from './items.service';
 
 @Component({
   selector: 'quote-items',
@@ -14,13 +18,13 @@ import { QuoteItemsService } from './items.service';
   styleUrls: ['./items.component.css'],
   providers: [QuoteItemsService]
 })
-export class QuoteItemsComponent implements OnInit {
+export class QuoteItemsComponent implements OnChanges, OnInit {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
-  //@ViewChild('ref') modalRef: any;
 
   public showModal: boolean = false;
   public itemId: string;
+  public deleteRow: any;
   quoteItems = [];
 
   constructor(private _loggerService : LoggerService,
@@ -35,24 +39,29 @@ export class QuoteItemsComponent implements OnInit {
   ngOnInit() {
   }
 
-  openModal(id: string) {
+  openModal(id: string, row: any) {
     this.itemId = id;
+    this.deleteRow = row;
     this.showModal = true;
     this._modalService.open('confirmationModal');
   }
 
   closeModal(){
-    //this.modalRef.closeModal();
     this.showModal = false;
   }
 
   deleteItem(){
+    this._loggerService.info("QuoteItemsComponent : deleteItem");
     this.showModal = false;
-    this._quoteItemsService.deleteItem(this.itemId).subscribe((successResponse:any) =>{
+    this._quoteItemsService.deleteItem(this.quoteId, this.itemId).subscribe((successResponse:any) =>{
+      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse");
       let responseJson = successResponse;
       if (responseJson != null && responseJson != undefined) {
-          console.log(this.itemId); //do delete logic here
+        this.quoteItems.splice(this.deleteRow ,1);
       }
+    }, (errResponse) => {
+      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_errResponse");
+      throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
     })
   }
 }

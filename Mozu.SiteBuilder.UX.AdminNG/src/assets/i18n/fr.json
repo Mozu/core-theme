@@ -125,6 +125,9 @@
         "configure": "Configure",
         "updatePrices": "Update Prices",
         "recalculateQuote": "Recalculate Quote"
+      },
+      "GridMessages": {
+        "emptyMessage": "No quote items to display"
       }
     }
   }

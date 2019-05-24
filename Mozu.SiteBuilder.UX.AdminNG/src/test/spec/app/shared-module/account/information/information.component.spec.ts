@@ -111,7 +111,7 @@ describe('AccountInformationComponent', () => {
     });
    });
 
-  it('should call service to get success response from mock http json (account-information)', () => {
+  it('should call service to get success response from mock http json (account-information)', async(() => {
     component.userId = '4588be576b7f4416a70b6d810219680e';
     component.customerAccountId = 123;
     component.populateAccountInfo(component.userId);
@@ -122,7 +122,7 @@ describe('AccountInformationComponent', () => {
     
     httpMock.verify();
     expect(loggerServiceSpy).toHaveBeenCalledWith("AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse");
-  });
+  }));
 
   it('should get customer account URL from account information component', () => {
     component.generateCustomerAccountUrl();

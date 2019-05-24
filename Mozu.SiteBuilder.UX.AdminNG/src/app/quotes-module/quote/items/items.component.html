@@ -49,10 +49,17 @@
                 <td>{{rowData.itemTaxTotal | currency}}</td>
                 <td>{{rowData.total | currency}}</td>
                 <td style="width: 4em">
-                   <button class="btn-delete-icon"><i class="pi pi-times" (click)="openModal(rowData.id)"></i></button>
+                   <button class="btn-delete-icon"><i class="pi pi-times" (click)="openModal(rowData.id, rowIndex)"></i></button>
                 </td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="11">
+                            {{'QUOTES.Quote.Items.GridMessages.emptyMessage' | translate }}
+                    </td>
+                </tr>
+            </ng-template>
     </p-table>
 </div>
 
