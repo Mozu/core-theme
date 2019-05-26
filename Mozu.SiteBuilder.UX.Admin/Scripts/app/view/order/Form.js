@@ -16,6 +16,7 @@ Ext.define('Taco.view.order.Form', {
         'Taco.view.order.subform.Return',
         'Taco.view.order.subform.InternalNotes',
         'Taco.view.order.subform.Fulfillment',
+        'Taco.view.order.subform.FulfillmentNew',
         'Taco.view.order.subform.Attributes',
         'Taco.view.order.subform.AuditLog',
         'Taco.view.order.subform.fulfillment.DirectShip',
@@ -259,8 +260,9 @@ Ext.define('Taco.view.order.Form', {
             items.push(this.orderDetailPanel);
         }
 
+        //Todo:here we have to switch new or old tabs based on tenant configs
         if (this.isEdit()) {
-            items.push(Ext.create('Taco.view.order.subform.Fulfillment', subformCfg));
+            items.push(Ext.create('Taco.view.order.subform.FulfillmentNew', subformCfg));
         }
 
         // we always show for online orders and conditionaly show for offline orders

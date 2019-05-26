@@ -25,7 +25,6 @@
     }
 
     a.label-link {
-        
         padding: 0;
 
         .#{$prefix}btn-inner {
@@ -34,7 +33,7 @@
             font-weight: normal;
         }
 
-        .#{$prefix}btn-arrow{
+        .#{$prefix}btn-arrow {
             &:after {
                 content: $glyph-chevrondown;
                 color: $light-link-color;
@@ -88,7 +87,7 @@
     }
 
     table.section-summary {
-        
+
         td {
             text-align: right;
         }
@@ -128,4 +127,72 @@
             right: -13px;
         }
     }
+}
+
+.taco-order-fulfillment {
+    border-top-width: 0px;
+}
+
+.taco-order-fulfillment {
+    border: none !important;
+    padding: 0 0 0 0 !important;
+    border-color: #e9e9e9 !important;
+}
+
+.taco-order-fulfillment-info-header {
+    /*border-bottom: 20px solid #e9e9e9;*/
+}
+
+.taco-order-fulfillment-info-header .x-btn-arrow-right::after,
+.taco-order-fulfillment-package-header .x-btn-arrow-right::after {
+    top: 0;
+}
+
+.taco-order-fulfillment-package-header {
+    @extend .taco-order-fulfillment-info-header;
+    border-bottom: none !important;
+}
+
+.shipping-packages-grid {
+    border: 1px solid #e9e9e9;
+}
+
+.shipping-packages-grid .x-grid-header-ct {
+    background-color: #f7f7f7 !important;
+}
+
+.taco-order-fulfillment-shipments .label {
+    color: #7c7c7c;
+    font-size: 12px;
+    font-weight: normal;
+    margin-right: 3px;
+}
+
+.taco-shipmentform-packages {
+    .taco-link-button {
+        background-color: white;
+        border: 1px solid #e9e9e9;
+        padding: 8px 15px 9px 15px;
+    }
+
+    .x-component taco-form-nav, .taco-form-nav {
+        background-color: white;
+    }
+
+    .taco-link-button.active, .taco-link-button.x-active, .taco-link-button.x-focus {
+        border-color: #e9e9e9 !important;
+        border-bottom: 2px solid #2ea195 !important;
+    }
+
+    .x-tool {
+        left: 98% !important;
+    }
+
+    .x-panel-header-text-container-default {
+        border-bottom-width: 0px !important;
+    }
+}
+
+.taco-order-fulfillment-shipments {
+    border-top: 20px solid #e9e9e9;
 }
