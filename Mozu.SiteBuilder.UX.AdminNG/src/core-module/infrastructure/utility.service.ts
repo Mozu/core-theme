@@ -1,7 +1,11 @@
 ﻿import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { LoggerService } from '../services/logger.service';
+import { 
+    NgbModal 
+  } from '@ng-bootstrap/ng-bootstrap';
 import { Constants } from './constants';
+
 
 export class EnvironmentConfig {
     environmentName: string;
@@ -119,8 +123,10 @@ export class UtilityService {
             });
             el.items = filteredSubItems;
         });
-        return allFilteredLinks;
+
+      return allFilteredLinks;
     }
+       
     public filterLocalizationLink = (accessLinks: any) => {
         return accessLinks.filter(function (v: any) { return (v.id != Constants.localization.localizationAccessLink); });
     }
@@ -146,4 +152,5 @@ export class UtilityService {
 
         return navigationlinks;
     }
+
 }

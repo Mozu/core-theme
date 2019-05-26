@@ -44,8 +44,8 @@ export class SharedDataService {
         if (!this._authService.isUserLoggedIn()) {
             return;
         }
-        const promise = this._https.get(`${Constants.webApis.getSharedData}`) //NOTE - comment it while running angular on localhost
-        // const promise = this._https.get(`./assets/json/user-data.json`) //NOTE - use it while running angular on localhost
+         const promise = this._https.get(`${Constants.webApis.getSharedData}`) //NOTE - comment it while running angular on localhost
+        //const promise = this._https.get(`./assets/json/user-data.json`) //NOTE - use it while running angular on localhost
             .toPromise();
 
         promise.then(

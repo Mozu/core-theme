@@ -53,6 +53,9 @@ export class Constants {
     static webApis = {
         login: environment.apiUrl + 'account/login',
         logout: environment.apiUrl + 'account/logout',
+    };
+
+    static webUrls = {
         getSharedData: environment.apiUrl + 'account/getUserData',
         secureFormLink : environment.apiUrl + '/capabilities/createSecureForm?appId='
     };
@@ -110,5 +113,17 @@ export class Constants {
         redirectionLink : "./assets/json/user-redirection.json"
     }
 
+    static titles = {
+        catalogImportExportTitles :  'Catalog Import/export',
+    }
+
+    static lables = {
+        closeLabel :  'close'
+    }
+
     static numberOfRows: number = 10;
+
+    static integrationsModalClass = 'integrationsModal';
+    static messageHash = '&messageHash=';
+    static dateStamp = '?dt=';
 }

@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
+import * as _ from 'lodash';
 import { Constants } from '../infrastructure/constants';
 import { HttpClientService } from '@core/extensions/http-client.service'
 import { LoggerService } from '@core'
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { LeftNavigationModel, SecureForm } from './left/left.model';
-
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class NavigationService {
-  public secureForm: SecureForm;
 
   constructor( private _http: HttpClientService, private _loggerService: LoggerService ) { }
 
@@ -25,8 +23,34 @@ export class NavigationService {
   public fetchCapabilitiesForSecureForm = (appId) => { 
     this._loggerService.info("NavigationService : fetchCapabilitiesForSecureForm");
     const headers = new HttpHeaders();
-    // return this._http.post(Constants.webApis.secureFormLink +`${appId}`, null, { headers: headers } );
-     return this._http.get(`./assets/json/secureForm.json`);
+     return this._http.post(Constants.webUrls.secureFormLink +`${appId}`, null, { headers: headers });
+  
   }
+
+  public fetchIntegrationResponse = (ImportExportLink) => {
+    this._loggerService.info("NavigationService : fetchIntegrationResponse");
+    const headers = new HttpHeaders();
+    return this._http.post(ImportExportLink, null, { headers: headers } );
+  }
+  
+  public distictImportExportLinks = (loggedInUsersData : any) => {
+    let distinctImportExportLinks= _.uniqBy(loggedInUsersData._sharedData.items.ctEntities, function (e : any) {
+    return e.location;
+  });
+  return distinctImportExportLinks;
+  }
+
+  public mergeDynamicLinks = (allFilteredLinks  : any, ImportExportLinks : any) => {
+    for(var i=0; i<allFilteredLinks.length; i++) {
+            _.filter(ImportExportLinks, function(v) {
+                            if(allFilteredLinks[i].menuid == v.location) {
+                            allFilteredLinks[i].items.push(v);
+                            return true;
+                            }
+                        });
+        }
+        return allFilteredLinks;
+    }
+  
 }
 

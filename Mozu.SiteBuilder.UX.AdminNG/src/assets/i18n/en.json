@@ -56,7 +56,8 @@
     "EmptyEmailAddress": "Please enter Email Address.",
     "EmptyPassword": "Please enter Password.",
     "DashboardTilesGetFailed" : "Error occured while fetching dasbhoard tiles",
-    "QuoteListGetFailed" : "Error occured while fetching quote list" 
+    "QuoteListGetFailed" : "Error occured while fetching quote list" ,
+    "fetchCapabilitiesForSecureFormGetFailed" : "Error occured while fetching capabilities data"
   }
 },
 "QUOTES": {

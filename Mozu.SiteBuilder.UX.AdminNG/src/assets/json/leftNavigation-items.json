@@ -1,6 +1,7 @@
 [
     {
-      "id": "productsmenu",
+      "id": "products",
+      "menuid": "productsmenu",
       "navParent": "main",
       "label": "Catalog",
       "imageURL": "./assets/Images/catlog.png",
@@ -47,7 +48,8 @@
       ]
     },
     {
-      "id": "marketingmenu",
+      "id": "marketing",
+      "menuid": "marketingmenu",
       "navParent": "main",
       "label": "Marketing",
       "imageURL": "./assets/Images/marketing.png",
@@ -94,7 +96,8 @@
       ]
     },
     {
-      "id": "contentmenu",
+      "id": "content",
+      "menuid": "contentmenu",
       "navParent": "main",
       "label": "Site Builder",
       "imageURL": "./assets/Images/sitebuilder.png",
@@ -137,7 +140,8 @@
       ]
     },
     {
-      "id": "publishingmenu",
+      "id": "publishing",
+      "menuid": "publishingmenu",      
       "navParent": "main",
       "label": "Publishing ",
       "imageURL": "./assets/Images/publishing.png",
@@ -164,7 +168,8 @@
       ]
     },
     {
-      "id": "ordermenu",
+      "id": "order",
+      "menuid": "ordermenu",
       "navParent": "main",
       "label": "Fulfillment",
       "imageURL": "./assets/Images/fullfillment.png",
@@ -210,7 +215,8 @@
       ]
     },
     {
-      "id": "customermenu",
+      "id": "customer",
+      "menuid": "customermenu",
       "navParent": "main",
       "label": "Customers",
       "imageURL": "./assets/Images/customers.png",
@@ -245,7 +251,8 @@
       ]
     },
     {
-      "id": "b2baccountmenu",
+      "id": "b2baccount",
+      "menuid": "b2baccountmenu",
       "navParent": "main",
       "label": "B2B",
       "imageURL": "./assets/Images/b2b.png",
@@ -271,7 +278,8 @@
       ]
     },
     {
-      "id": "reportmenu",
+      "id": "report",
+      "menuid": "reportmenu",
       "navParent": "main",
       "label": "Reporting",
       "imageURL": "./assets/Images/reporting.png",
@@ -289,7 +297,8 @@
       ]
     },
     {
-      "id": "settingsmenu",
+      "id": "settings",
+      "menuid": "settingsmenu",
       "navParent": "sys",
       "label": "Settings",
       "imageURL": "./assets/Images/settings.png",
@@ -355,7 +364,8 @@
       ]
     },
     {
-      "id": "schemamenu",
+      "id": "schema",
+      "menuid": "schemamenu",
       "navParent": "sys",
       "label": "Schema",
       "imageURL": "./assets/Images/schema.png",
@@ -429,7 +439,8 @@
       ]
     },
     {
-      "id": "customizationmenu",
+      "id": "customization",
+      "menuid": "customizationmenu",
       "navParent": "sys",
       "label": "Customization",
       "imageURL": "./assets/Images/customization.png",
@@ -463,7 +474,8 @@
       ]
     },
     {
-      "id": "structuremenu",
+      "id": "structure",
+      "menuid": "structuremenu",
       "navParent": "sys",
       "label": "Structure",
       "imageURL": "./assets/Images/structure.png",
@@ -505,7 +517,8 @@
       ]
     },
     {
-      "id": "permissionsmenu",
+      "id": "permissions",
+      "menuid": "permissionsmenu",
       "navParent": "sys",
       "label": "Permissions",
       "visible" : true,
@@ -538,7 +551,8 @@
       ]
     },
     {
-      "id": "localizationmenu",
+      "id": "localization",
+      "menuid": "localizationmenu",      
       "navParent": "sys",
       "locAtts": [ "multiLang", "multCurrency" ],
       "label": "Localization",

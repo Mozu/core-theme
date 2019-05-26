@@ -106,4 +106,14 @@ describe('NavigationService', () => {
           req.flush(dummyMenuitems);
           httpMock.verify();
           });
+
+          it('should return true if secureform get called successfully', () => {
+            let appId : string;
+            expect(service.fetchCapabilitiesForSecureForm(appId)).toBeTruthy();
+          });
+
+          it('should return false from isAuthenticated when there is no token', () => {
+            let ImportExportLink : string;
+            expect(service.fetchIntegrationResponse(ImportExportLink)).toBeTruthy();
+          });
 });

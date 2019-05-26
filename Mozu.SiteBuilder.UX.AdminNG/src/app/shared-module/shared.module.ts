@@ -47,7 +47,7 @@ import {TabViewModule} from 'primeng/tabview';
 import {MenuModule} from 'primeng/menu';
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
-import { DynamicLinksComponent } from './navigation/left/dynamic-links/dynamic-links.component';
+import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
 
 declare var resourcesVersion: any;
 
@@ -99,12 +99,12 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         SearchBarComponent,
-        DynamicLinksComponent,
+        DynamicLinksDialogComponent,
     ],
     providers: [
         
     ],
-    entryComponents:[DynamicLinksComponent],
+    entryComponents:[DynamicLinksDialogComponent],
     exports: [
         // Angular modules
         BrowserModule,
@@ -142,7 +142,7 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         SearchBarComponent,
-        DynamicLinksComponent
+        DynamicLinksDialogComponent
     ]
 })
 
