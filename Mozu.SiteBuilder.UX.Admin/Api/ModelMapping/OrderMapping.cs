@@ -51,7 +51,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_OrderPackageItem_to_DcPackageItem();
             Map_OrderItem_to_DcOrderItem();
             Map_OrderItemDiscount_to_DcAppliedProductDiscount();
-            Map_OrderItemStock_to_DcProductStock();
             Map_OrderPickupItem_to_DcPickupItem();
             Map_ShippingDiscount_to_DcShippingDiscount();
             Map_Adjustment_to_DcAdjustment();
@@ -596,7 +595,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.Name, op => op.ResolveUsing(dc => dc.Name))
                 .ForMember(dc => dc.Description, op => op.ResolveUsing(dc => dc.Description))
                 .ForMember(dc => dc.Quantity, op => op.ResolveUsing(dc => dc.GoodsType))
-                .ForMember(dc => dc.Stock, op => op.ResolveUsing(dc => dc.Stock))
                 .ForMember(dc => dc.IsPackagedStandAlone, op => op.ResolveUsing(dc => dc.IsPackagedStandAlone))
                 .ForMember(dc => dc.ProductReservationId, op => op.ResolveUsing(x => x.ProductReservationId))
                 .ForMember(dc => dc.Measurements, opt => opt.ResolveUsing(x => new CommerceDC.PackageMeasurements { Weight = new Measurement { Value = x.UnitWeight, Unit = "lb" } }))
@@ -1146,7 +1144,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                           Name = x.ProductName,
                           FulfillmentStatus = x.FulfillmentStatus,
                           Options = Mapper.Map<List<ProductsDC.ProductOption>>(x.Options),
-                          Stock = Mapper.Map<ProductsDC.ProductStock>(x.Stock)
                           // other stuff (price/measurements) are not important to make service calls.
                       };
                   }))
@@ -1201,11 +1198,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.CouponCode, op => op.ResolveUsing(x => x.CouponCode))
                 .ForMember(dc => dc.Excluded, op => op.ResolveUsing(x => !x.IsActive))
                 ;
-        }
-
-        private void Map_OrderItemStock_to_DcProductStock()
-        {
-            CreateMap<OrderItemStock, ProductsDC.ProductStock>();
         }
 
         private void Map_OrderDiscount_to_DcAppliedDiscount()
