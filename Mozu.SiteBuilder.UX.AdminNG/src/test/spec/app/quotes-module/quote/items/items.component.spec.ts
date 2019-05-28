@@ -1,12 +1,14 @@
 import { async, 
   ComponentFixture, 
   TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA, 
   DebugElement } from '@angular/core';
 import { HttpClient, 
   HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, 
   HttpTestingController } from '@angular/common/http/testing';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NGXLoggerHttpService, 
   CustomNGXLoggerService } from 'ngx-logger';
 import { TranslateLoader, 
@@ -22,18 +24,66 @@ import { LoggerService,
 import { GlobalModule } from '@global/global.module';
 import { QuoteItemsComponent } from 'app/quotes-module/quote/items/items.component';
 
+
 describe('QuoteItemsComponent', () => {
   let component: QuoteItemsComponent;
   let fixture: ComponentFixture<QuoteItemsComponent>;
   let element;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
+  let httpMock: HttpTestingController;
+  const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
+
+  var dummyQuoteList = {
+    "items": [{
+      "id": "0da178726c6b9e27784ebfec0000432a",
+      "name": "Test Quote One",
+      "siteId": 21127,
+      "tenantId": 17194,
+      "number": 1,
+      "items": [],
+      "auditInfo": {
+        "updateDate": "2019-03-31T19:52:25.091Z",
+        "createDate": "2019-03-31T19:52:25.091Z",
+        "updateBy": "1",
+        "createBy": "1"
+      },
+      "destinations": [],
+      "isTaxExempt": false,
+      "currencyCode": "USD",
+      "customerInteractionType": "Unknown",
+      "orderDiscounts": [],
+      "subTotal": 0,
+      "itemLevelProductDiscountTotal": 0,
+      "orderLevelProductDiscountTotal": 0,
+      "itemTaxTotal": 0,
+      "itemTotal": 0,
+      "total": 0,
+      "shippingDiscounts": [],
+      "itemLevelShippingDiscountTotal": 0,
+      "orderLevelShippingDiscountTotal": 0,
+      "shippingAmount": 0,
+      "shippingSubTotal": 0,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "handlingDiscounts": [],
+      "itemLevelHandlingDiscountTotal": 0,
+      "orderLevelHandlingDiscountTotal": 0,
+      "handlingSubTotal": 0,
+      "handlingTaxTotal": 0,
+      "handlingTotal": 0,
+      "dutyTotal": 0,
+      "feeTotal": 0
+    }]
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(),
         HttpClientTestingModule, 
-        GlobalModule ],
+        GlobalModule,
+        NgbModule.forRoot() 
+      ],
       declarations: [ QuoteItemsComponent ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [TranslateService, 
@@ -43,6 +93,7 @@ describe('QuoteItemsComponent', () => {
         UtilityService, 
         EnvironmentConfig, 
         AuthService,
+        NgbModal,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
@@ -55,9 +106,27 @@ describe('QuoteItemsComponent', () => {
 
     loggerService = TestBed.get(LoggerService);
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
+    httpMock = TestBed.get(HttpTestingController);
   }));
 
   beforeEach(() => {
+    var respData = {
+      items: {
+        "ctTaContext": {
+          "masterCatalogs": [{
+            "sites": [{
+              "id": "1234"
+            }]
+          }]
+        }
+      }};
+
+    httpMock = TestBed.get(HttpTestingController);
+    const req = httpMock.expectOne(`./assets/json/user-data.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(respData);
+    httpMock.verify();
+
     fixture = TestBed.createComponent(QuoteItemsComponent);
     component = fixture.componentInstance;
     element = fixture.nativeElement;
@@ -67,4 +136,42 @@ describe('QuoteItemsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should get open confirmation dialog', () => {
+    let itemId ="185bdb4fd2a744bda227aa4700736f2c";
+    let row = 1;
+    component.openModal(itemId, row);
+    component.itemId = itemId;
+    component.showModal = true;
+    expect(component.showModal).toBe(true);
+  });
+
+  it('should get close confirmation dialog', () => {
+    component.closeModal();
+    component.showModal = false;
+    expect(component.showModal).toBe(false);
+  });
+
+  it('should call service to get success response from mock http json (quote-list)', () => {
+    component.quoteId = "0dd322d1429fe45778112b5b00004c44";
+    component.deleteItem();
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList);
+    httpMock.verify();
+    fixture.detectChanges();
+    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse");
+  });
+
+  it('should call service to get failure response from mock http json (quote-list)', () => {
+    component.quoteId = "0dd322d1429fe45778112b5b00004c44";
+    component.deleteItem();
+    const req = httpMock.expectOne(`/assets/json/quote-list.json`);
+    expect(req.request.method).toBe("GET");
+    req.flush(dummyQuoteList, mockErrorResponse);
+    httpMock.verify();
+    fixture.detectChanges();
+    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteItemsComponent : _quoteItemsService.deleteItem_errResponse");
+  });
+
 });

@@ -3,7 +3,6 @@ import { Component,
   ContentChild, 
   TemplateRef, 
   Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'confirmation-dialog',
@@ -18,12 +17,9 @@ export class ConfirmationDialogComponent implements OnInit {
   @Input('ref') ref : string;
   @Input('size') size : string;
 
-  constructor() { }//public _activeModal: NgbActiveModal
+  constructor() { }
 
   ngOnInit() {
   }
 
-  closeModal(){
-    //this._activeModal.dismiss();
-  }
 }

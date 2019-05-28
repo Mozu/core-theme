@@ -13,6 +13,6 @@ export class QuoteItemsService{
 
     public deleteItem(quoteId: string, itemId: string): Observable<any>{
         this._loggerService.info("QuoteItemsService: deleteItem");
-        return this._http.get(Constants.JsonResources.quoteList);
+        return this._http.get(Constants.JsonResources.quoteList); // to-do: delete api call
     }
 }
