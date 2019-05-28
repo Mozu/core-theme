@@ -43,7 +43,8 @@ Ext.define('Taco.view.product.images.ImageGroupForm', {
             forceSelection: false,
             disableKeyFilter: true,
             typeAhead: true,
-            disabled: !this.isGlobal
+            disabled: !this.isGlobal,
+            allowBlank: false
         });
 
         if (this.record.data.groupName === 'default') {
