@@ -45,8 +45,8 @@ export class LocationsListComponent implements OnInit, OnChanges {
     constructor(
         private _loggerService: LoggerService, config: NgbTooltipConfig
     ){ 
-        config.placement = 'right';
-        config.triggers = 'click';
+        config.placement = 'left';
+        config.triggers = 'hover';
     }
 
     ngOnInit() {

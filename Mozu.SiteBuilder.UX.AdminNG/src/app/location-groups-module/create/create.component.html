@@ -13,10 +13,12 @@
 				<form>
 					<div class="col-md-12 ">
 						<div class="form-row col-md-6 for-no-padding">
-							<input type="text" required class=" inputText form-control subform-text" id="locationName" />
-							<span class="floating-label">Name*</span>
-							<hr class="underline-from-left">
-							<span class="error">Input is Required. </span>
+							<input type="text" required class=" inputText form-control subform-text" id="locationGroupName"
+								name="locationGroupName" formControlName="locationGroupName" />
+							<span class="floating-label" [ngClass]="{'redfont':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >Name*</span>
+							<hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >
+							<!-- <span class="error">Input is Required. </span> -->
+							<span class="error" *ngIf="!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched">Input is Required.</span>
 						</div>
 						<div class="clearfix"></div>
 						<div class="form-row" >

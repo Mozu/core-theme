@@ -8,11 +8,11 @@
     
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th style="width: 3em">
+            <th style="width: 1.5em">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
             <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                    <input *ngSwitchCase="'name'" class="table-column-filter" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
+                    <i class="pi pi-fw pi-fw pi-filter filtericon"></i><input *ngSwitchCase="'name'" placeholder="Filter" class="table-column-filter" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
             </th>
         </tr>
         <!-- <tr>
@@ -31,12 +31,14 @@
                 <div>{{rowData[col.field]}}</div>
             </td>
             <td>               
-                <div class="myposi text-right">
+                <div class="myposi">
                     {{rowData.code}}
-                    <i class="pi pi-info-circle" 
-                    ngbTooltip="{{rowData.address ? rowData.address.address1 + ', ' + rowData.address.cityOrTown + ', ' + rowData.address.stateOrProvince : ''}}">
-                    </i>
                 </div>
+            </td>
+            <td style="width: 20px;">
+                <i class="pi pi-info-circle" 
+                ngbTooltip="{{rowData.address ? rowData.address.address1 + ', ' + rowData.address.cityOrTown + ', ' + rowData.address.stateOrProvince : ''}}">
+                </i>
             </td>
         </tr>
     </ng-template>

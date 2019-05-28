@@ -13,7 +13,8 @@ import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@ang
     selector: 'location-group-create',
     templateUrl: './create.component.html',
     styleUrls: ['./create.component.css'],
-    providers: [CreateLocationGroupService]
+    providers: [CreateLocationGroupService],
+    //encapsulation: ViewEncapsulation.None
 })
 export class LocationGroupCreateComponent implements OnInit {
     physicalLocation: TreeNode;

@@ -204,7 +204,8 @@ p-table .ui-table .ui-table-tbody > tr.ui-selectable-row, p-table .ui-table .ui-
     border: 0px !important;
 }
 p-table .ui-table .ui-table-thead{
-    background-color: #f7f7f7  !important; 
+    /* background-color: #f7f7f7  !important;  */
+    background-color: #ffffff !important;
 }
 p-table .ui-table .ui-table-thead > tr{
     border-bottom: 1.5px solid #e9e9e9 !important;
@@ -213,7 +214,7 @@ p-table .ui-table .ui-table-tbody > tr.ui-selectable-row:hover {
     background-color: #f7f7f7 !important;
 }
 p-table .ui-table .ui-table-thead > tr > th {
-    padding: 8px 20px !important;
+    padding: 8px 2px !important;
     border-bottom: 1px solid #e9e9e9 !important;
     font-weight: normal !important;
     color: #333333 !important;
@@ -228,11 +229,12 @@ p-table .ui-table .ui-table-tbody > tr > td {
     background-color: white !important;
     font-size: 13px !important;    
     border: 0px !important;
-    border-bottom: 1.5px solid #f2f2f2 !important;
-    padding: 8px 20px !important;
+    border-bottom: 1px solid #f2f2f2 !important;
+    padding: 8px 2px !important;
     color: #3f3f3f !important;
     font-family:"proxima-nova", sans-serif !important;
     font-weight: 600;
+    word-break: break-all;
 }
 
 
@@ -407,3 +409,10 @@ p-table .ui-table .pi-ellipsis-v:hover{
 html{ overflow: hidden;}
 body{ overflow: hidden;}
 
+
+.ui-table-scrollable-header-box{
+    background-color: #fff
+  }
+  .ui-widget-header {
+    background: #ffffff;
+  }
