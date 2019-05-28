@@ -6,9 +6,10 @@ Ext.define('Taco.view.discount.Index', {
     extend: 'Taco.view.react.Index',
     alias: 'widget.discountlist',
     contextConfig: {
-        supportedLevels: ['s'],
+        supportedLevels: ['s', 'c'],
         requiresContextOfType: ['s']
-    }//,
-    //stateful:true,
-    //stateId: 'statefulDiscountGrid'
+    },
+    initComponent: function () {
+        this.callParent(arguments);
+    }
 });

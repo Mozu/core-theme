@@ -35,6 +35,7 @@ using Mozu.Core.Collections;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Helpers.ContentHelpers;
 using Mozu.ProductAdmin.Contracts.Clients;
+using Mozu.ProductRuntime.Contracts;
 using Mozu.SiteBuilder.UX.Admin.Helpers.CategoryHelpers;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.SiteBuilder;
 
@@ -180,6 +181,201 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
             }
+        }
+
+        [HttpPostRoute(UriTemplate = "variations/update")]
+        public async Task<Response<List<DC.Document>>> VariationsUpdate(List<JObject> documents)
+        {
+     
+            var updateDoc = new DC.Document();
+
+            if (documents.Count > 0)
+            {
+                var doc = documents.First();
+                var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+                var parentDoc = (await _documentListWebApiClient.GetDocument(documentListName: cmsDoc.ListFQN, documentId: doc.Value<string>("parentId"))).ReadAsSync();
+                
+                if(parentDoc.IsTruthy()) { 
+
+                    parentDoc.Properties.Property("variations").Value = documents.ToJArray();
+
+                    updateDoc = (await _documentListWebApiClient.UpdateDocument(documentListName: parentDoc.ListFQN, documentId: parentDoc.Id, document: parentDoc)).ReadAsSync();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Parent Document for Variation Not Found");
+                }
+
+                //var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+
+
+
+                //await Task.WhenAll(updateTasks);
+
+                return List2(updateDoc);
+            }
+            else
+            {
+                throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
+            }
+        }
+
+        [HttpPostRoute(UriTemplate = "variation/update")]
+        public async Task<Response<List<DC.Document>>> VariationUpdate(List<JObject> documents)
+        {
+            var doc = documents.First();
+            var updateDoc = new DC.Document();
+            var parentDoc = new DC.Document();
+            var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+
+            if (documents.First().Value<string>("entityType") == "cms")
+            {
+                
+                if (String.IsNullOrEmpty(documents.First().Value<string>("parentId")) && documents.First().Value<string>("documentTypeFQN") == "categoryContent@mozu")
+                {
+                    var parentDocToSave = Mapper.Map<JObject, DC.Document>(doc);
+                    parentDocToSave.Properties.Remove("variations");
+                    parentDocToSave.Name = parentDocToSave.Id;
+                    parentDocToSave.Id = null;
+
+                    parentDoc = (await _documentListWebApiClient.CreateDocument(documentListName: cmsDoc.ListFQN, document: parentDocToSave)).ReadAsSync();
+                } else
+                {
+                    parentDoc = (await _documentListWebApiClient.GetDocument(documentListName: cmsDoc.ListFQN, documentId: doc.Value<string>("parentId"))).ReadAsSync();
+                }
+   
+                //return List2(tasks.Select(x => (object)x.Result.ReadAsSync()).ToList());
+
+                if (parentDoc.IsTruthy())
+                {
+                    if (parentDoc.Properties.Property("variations").NotIsNullOrEmpty())
+                    {
+                        var variations = parentDoc.Properties.GetValue("variations").ToJArray();
+                        var foundVariationIdx = -1;
+                        if (variations.Count() > 0)
+                        {
+                            int count = 0;
+                            foreach (var variation in variations)
+                            {
+                                var variationDoc = variation.ToObject<DC.Document>();
+                                if (variationDoc.Id == cmsDoc.Id)
+                                {
+                                    foundVariationIdx = count;
+                                    break;
+                                }
+                                count++;
+                            }
+
+                            //Backup remove variations if still on child object
+                            cmsDoc.Properties.Remove("variations");
+
+                            if (foundVariationIdx > -1)
+                            {
+                                variations[foundVariationIdx] = cmsDoc.ToJObject();
+                            }
+                            else
+                            {
+                                variations.Add(cmsDoc.ToJObject());
+                            }
+                            parentDoc.Properties.Property("variations").Value = variations;
+                        } 
+                        else
+                        {
+                            variations.Add(cmsDoc.ToJObject());
+                            parentDoc.Properties.Property("variations").Value = variations;
+                        }
+                    }
+                    else
+                    {
+                        new JArray(cmsDoc.ToJObject());
+                        parentDoc.Properties.Add("variations", new JArray(cmsDoc.ToJObject()));
+                    }
+                    
+                    if(parentDoc.Properties.Property("variationId").NotIsNullOrEmpty())
+                    {
+                        parentDoc.Properties.Property("variationId").Value = cmsDoc.Id;
+                    } else {
+                        parentDoc.Properties.Add("variationId", cmsDoc.Id);
+                    }
+                    
+                    
+
+                    updateDoc = (await _documentListWebApiClient.UpdateDocument(documentListName: parentDoc.ListFQN, documentId: parentDoc.Id, document: parentDoc)).ReadAsSync();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Parent Document for Variation Not Found");
+                }
+                
+
+                //var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+
+
+
+                //await Task.WhenAll(updateTasks);
+
+                return List2(cmsDoc);
+            }
+            else
+            {
+                throw new InvalidOperationException("unknonw entityType [" + documents.First().Value<string>("entityType") + "]");
+            }
+        }
+
+        [HttpPostRoute(UriTemplate = "variation/delete")]
+        public async Task<Response<List<DC.Document>>> VariationDelete(List<JObject> documents)
+        {
+            var doc = documents.First();
+            var updateDoc = new DC.Document();
+
+           
+
+                var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+                var parentDoc = (await _documentListWebApiClient.GetDocument(documentListName: cmsDoc.ListFQN, documentId: doc.Value<string>("parentId"))).ReadAsSync();
+
+                //return List2(tasks.Select(x => (object)x.Result.ReadAsSync()).ToList());
+
+                if (parentDoc.IsTruthy())
+                {
+                    var variations = parentDoc.Properties.GetValue("variations").ToJArray();
+                    var foundVariationIdx = -1;
+                    if (variations.Count() > 0)
+                    {
+                        int count = 0;
+                        foreach (var variation in variations)
+                        {
+                            var variationDoc = variation.ToObject<DC.Document>();
+                            if (variationDoc.Id == cmsDoc.Id)
+                            {
+                                foundVariationIdx = count;
+                                break;
+                            }
+                            count++;
+                        }
+
+                        if (foundVariationIdx > -1)
+                        {
+                            variations.RemoveAt(foundVariationIdx);
+                        }
+
+                        parentDoc.Properties.Property("variations").Value = variations;
+
+                    }
+                    updateDoc = (await _documentListWebApiClient.UpdateDocument(documentListName: parentDoc.ListFQN, documentId: parentDoc.Id, document: parentDoc)).ReadAsSync();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Parent Document for Variation Not Found");
+                }
+
+                //var cmsDoc = Mapper.Map<JObject, DC.Document>(doc);
+
+
+
+                //await Task.WhenAll(updateTasks);
+
+                return List2(updateDoc);
+            
         }
 
         [HttpGetRoute(UriTemplate = "sitebuilder/search")]

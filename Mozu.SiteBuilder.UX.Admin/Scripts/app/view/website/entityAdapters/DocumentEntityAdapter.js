@@ -9,14 +9,19 @@ Ext.define('Taco.view.website.entityAdapters.DocumentEntityAdapter', {
         'Taco.view.customSchema.DynamicFormContainer',
         'Taco.core.ux.HtmlEditor'
     ],
-
-
+    supportsPageVariations: true,
    
     addSaveTasks: function (tasks) {
         this.callParent(arguments);
-        
-        tasks.on('complete', function () {
-            if(this.pageContext && this.pageContext.cmsContext && this.pageContext.cmsContext.page.path != this.get().data.name) {
+        var me = this;
+        var isVariation = function(){
+            if(me.variationStore.originalDocument) {
+                return me.variationStore.originalDocument.get('properties').variationId;
+            }
+            return false;
+        }
+        tasks.on('complete', function (data) {
+            if(this.pageContext && this.pageContext.cmsContext && !isVariation() && this.pageContext.cmsContext.page.path != this.get().data.name ) {
                 Taco.core.StateManager.attemptNavigate('/website/page/cms/' + this.get().data.listFQN + '/' + this.get().data.name);
             } 
         }, this, {

@@ -1,7 +1,7 @@
 /**
  * The discount editor view
  */
-Ext.define('Taco.view.filter.Form', {   
+Ext.define('Taco.view.filter.Form', {
     extend: 'Taco.core.ux.form.Form',
     requires: [
         'Taco.model.Attribute',
@@ -12,34 +12,34 @@ Ext.define('Taco.view.filter.Form', {
         'Taco.view.filter.Schema'
     ],
 
-    addContentViewPadding:false,
+    addContentViewPadding: false,
 
-    rejectRecordOnCancel:false,
+    rejectRecordOnCancel: false,
 
     originalTitle: true,
 
     config: {
         // DynamicPreComputed or DynamicRealTime
-        fieldRecord :null,
-        type:null
+        fieldRecord: null,
+        type: null
     },
 
     layout: {
         type: "vbox",
-        align:"stretch"
+        align: "stretch"
     },
 
     initComponent: function () {
         var me = this;
-        
+
         this.callParent(arguments);
 
-        this.mon(me, 'boxready', function() {
+        this.mon(me, 'boxready', function () {
 
             // if the left member is "properties." we will end up with two fields that define the left member;
 
-            var fieldStoreCfg = Taco.filter.getFieldStoreCfg();
-            this.fieldStore = Ext.create('Ext.data.Store', fieldStoreCfg);
+            var fieldStore = Taco.filter.getFieldStore(Taco.filter.getFieldStoreCfg());
+            this.fieldStore = fieldStore
             // filter out the real time fields from the dynamicPrecomputedExpressions
             if (this.getType() === "DynamicPreComputed") {
                 this.fieldStore.filterBy(function (filter) {
@@ -60,35 +60,35 @@ Ext.define('Taco.view.filter.Form', {
 
                 if (isAttributeProperty) {
 
-                    
-                    
 
-                        // call to attribute service; init on callback;q
-                        var attributeId = this.getAttributeId(fieldValue);
-                        if (attributeId) {
-                            var attributeRecord = Ext.ModelManager.getModel("Taco.model.Attribute");
 
-                            me.setLoading(true, me.body);
-                            attributeRecord.load(attributeId, {
-                                failure: function(record, operation) {
-                                    Taco.app.fireEvent('setmessage', "Error loading attribute", 'error');
-                                    me.setLoading(false, me.body);
-                                },
-                                success: function(record, operation) {
 
-                                    me.setLoading(false, me.body);
-                                    // need to map the attribute record into a filterField model;
-                                    me.attributeRecord = record;
+                    // call to attribute service; init on callback;q
+                    var attributeId = this.getAttributeId(fieldValue);
+                    if (attributeId) {
+                        var attributeRecord = Ext.ModelManager.getModel("Taco.model.Attribute");
 
-                                    me.fieldRecord = me.getFieldRecordFromAttribute(record);
+                        me.setLoading(true, me.body);
+                        attributeRecord.load(attributeId, {
+                            failure: function (record, operation) {
+                                Taco.app.fireEvent('setmessage', "Error loading attribute", 'error');
+                                me.setLoading(false, me.body);
+                            },
+                            success: function (record, operation) {
 
-                                    me.initUI();
+                                me.setLoading(false, me.body);
+                                // need to map the attribute record into a filterField model;
+                                me.attributeRecord = record;
 
-                                },
-                            });
-                        }
+                                me.fieldRecord = me.getFieldRecordFromAttribute(record);
 
-                
+                                me.initUI();
+
+                            },
+                        });
+                    }
+
+
 
                 } else {
                     //error handling;
@@ -103,7 +103,7 @@ Ext.define('Taco.view.filter.Form', {
     },
 
     getFieldRecordFromAttribute: function (record) {
-        
+
         var me = this,
             uicontrol = null,
             editorCfg = null,
@@ -116,7 +116,7 @@ Ext.define('Taco.view.filter.Form', {
                 }
                 return false;
             }, me);
-           
+
             if (uicontrol) {
                 editorCfg = {
                     xtype: "taco-productpickerfield",
@@ -124,7 +124,7 @@ Ext.define('Taco.view.filter.Form', {
                 }
             }
         }
-        
+
         if (!editorCfg) {
             editorCfg = (record.data.inputType === "List") ? { xtype: "combo", displayField: "value" } : null;
         }
@@ -147,15 +147,15 @@ Ext.define('Taco.view.filter.Form', {
             validEnumValues: record.data.values,
             editorCfg: editorCfg,
             //filterType: "DynamicPreComputed" },
-            allowBlank:true
+            allowBlank: true
         });
 
-        
+
 
         // if the attribute requires a picker override the editorCfg; This will be based on the attributeMetadata
         // if the inputType=="List" set the editorCfg to combo that loads the validEnumValues;
 
-        
+
         return fieldRecord;
 
         /*
@@ -187,12 +187,12 @@ Ext.define('Taco.view.filter.Form', {
 
     },
 
-    initUI : function() {
-        var me = this;    
+    initUI: function () {
+        var me = this;
 
         var fieldValue = this.record.get("left").toLowerCase();
 
-        
+
         if (this.fieldRecord) {
 
         } else {
@@ -205,7 +205,7 @@ Ext.define('Taco.view.filter.Form', {
 
         var leftFieldValue = (fieldValue && fieldValue.indexOf("properties.") === 0) ? "properties." : fieldValue;
 
-        
+
         this.leftField = Ext.widget({
             //    xtype: 'filterfield',
             xtype: "combo",
@@ -236,7 +236,7 @@ Ext.define('Taco.view.filter.Form', {
             includeExtraAttributes: false,
             includeOptionAttributes: false,
             allowBlank: false,
-            value:this.getAttributeId(this.record.get("left")),
+            value: this.getAttributeId(this.record.get("left")),
             fieldLabel: "Attribute"
         });
 
@@ -270,12 +270,12 @@ Ext.define('Taco.view.filter.Form', {
 
 
 
-        
-            me.mon(me.leftField, 'change', me.onFieldChange, me);
-            me.mon(me.attributePickerField, 'select', me.onAttributeChange, me);
-            me.mon(me.operatorField, 'change', me.onOperatorFieldChange, me);
-            me.refreshOperatorField();
-        
+
+        me.mon(me.leftField, 'change', me.onFieldChange, me);
+        me.mon(me.attributePickerField, 'select', me.onAttributeChange, me);
+        me.mon(me.operatorField, 'change', me.onOperatorFieldChange, me);
+        me.refreshOperatorField();
+
     },
 
 
@@ -312,24 +312,24 @@ Ext.define('Taco.view.filter.Form', {
     //    this.rightField.setOperatorRecord(operatorRecord);
     //},
 
-    getOperatorRecord : function() {
+    getOperatorRecord: function () {
         var me = this,
             operatorValue = (this.operatorField) ? this.operatorField.getValue() : this.record.get("operator");
 
         return Taco.filter.operatorStore.getById(operatorValue);
     },
 
-    onOperatorFieldChange: function (field, newValue, oldValue, eOpts ) {
+    onOperatorFieldChange: function (field, newValue, oldValue, eOpts) {
         var me = this,
             operatorRecord;
-        
+
 
         operatorRecord = this.getOperatorRecord();
         this.rightField.setValue(null);
         this.rightField.setOperatorRecord(operatorRecord);
     },
 
-    refreshOperatorField: function() {
+    refreshOperatorField: function () {
         var me = this,
             fieldRecord = this.getFieldRecord();
 
@@ -346,7 +346,7 @@ Ext.define('Taco.view.filter.Form', {
         // first check to see if the field has specified supporte operators
         var supportedOperators = fieldRecord.get("supportedOperators");
 
-        
+
         if (supportedOperators.length == 0) {
             // get the operators based on the editorCfg or by using the dataType;
             var type = (fieldRecord.editorCfg && fieldRecord.editorCfg.isPickerField) ? "pickerfield" : fieldRecord.get("dataType");
@@ -358,8 +358,8 @@ Ext.define('Taco.view.filter.Form', {
         }
     },
 
-    beforeSave: function () {
-
+    beforeSave: function (modal) {
+        var me = this;
         var operator = this.operatorField.getValue();
         this.record.set("operator", operator);
 
@@ -373,10 +373,59 @@ Ext.define('Taco.view.filter.Form', {
         }
         this.record.set("left", newLeftValue);
 
+
+        this.record.set("rightType", this.getFieldRecord().get('dataType'))
+
+
         var rightValue = this.rightField.getValue();
+        if (this.record.get("rightType") === 'stringarray') {
+            if (typeof rightValue !== 'object') {
+                rightValue = [rightValue];
+            }
+        }
+
+        if (this.record.get("rightType") === "datetime" && rightValue) {
+            var date = new Date(rightValue);
+            rightValue = date.toISOString();
+        }
+
+        var oldRightValue = this.record.get("right");
         this.record.set("right", rightValue);
 
-        return true;
+        this.record.set("rightType", this.getFieldRecord().get('dataType') || "string")
+
+        if (this.record.validatePageRule) {
+
+            if (rightValue.length > 30) {
+                Taco.app.fireEvent('setmessage', 'You have selected ' + rightValue.length + ' customer segments. Please select 30 or fewer customer segments.', 'error');
+                this.record.set("right", oldRightValue);
+                return false;
+            }
+            var onRuleValidated = function () {
+                Taco.app.fireEvent('setmessage', 'Rule Validated.', 'success');
+                modal.saveSuccess(me.record);
+                me.record.un('PageRuleValidated', onRuleValidated);
+            }
+
+            var onRuleValidationFailure = function () {
+                me.record.set("right", oldRightValue);
+                me.record.un('PageRuleValidationError');
+            }
+
+            this.record.on({
+                'PageRuleValidated': onRuleValidated
+            });
+
+            this.record.on({
+                'PageRuleValidationError': onRuleValidationFailure
+            });
+
+            this.record.validatePageRule();
+
+
+        } else {
+            return true;
+        }
     },
 
     //getFieldRecord: function () {
@@ -384,25 +433,25 @@ Ext.define('Taco.view.filter.Form', {
     //        fieldRecord,
     //        fieldValue = (this.leftField) ? this.leftField.getValue() : this.record.get("left");
 
-        
+
     //        fieldRecord = Taco.filter.fieldStore.getById(fieldValue);
-        
+
 
 
     //    return fieldRecord;
     //},
 
-    doFieldChange: function(fieldRecord) {
+    doFieldChange: function (fieldRecord) {
         this.setFieldRecord(fieldRecord);
         this.refreshOperatorField();
         this.rightField.setValue(null);
         this.rightField.setFieldRecord(fieldRecord);
     },
-    
+
     // when user changes which attribute is selected;
     onAttributeChange: function (combo, records) {
         var me = this;
-        
+
 
         me.attributeRecord = records[0];
         var fieldRecord = me.getFieldRecordFromAttribute(me.attributeRecord);
@@ -417,14 +466,14 @@ Ext.define('Taco.view.filter.Form', {
     onFieldChange: function (field, newValue, oldValue, e) {
         var me = this,
             isAttributeProperty = this.isAttributeProperty(newValue);
-        
+
         // store the field locally
         var fieldRecord = this.fieldStore.getById(newValue);
-        
+
         this.attributePickerField.setVisible(isAttributeProperty);
-        
+
         this.attributePickerField.setDisabled(!isAttributeProperty);
-        
+
         // if no field record, the left field isn't valid or the field is a attribute and we need to get the attribute record before procedding.
         if (isAttributeProperty) {
             // call attribute service and then doFieldChange on Callback
@@ -435,7 +484,7 @@ Ext.define('Taco.view.filter.Form', {
         }
     },
 
-    
+
     onDestroy: function () {
         var me = this;
         this.callParent(arguments);

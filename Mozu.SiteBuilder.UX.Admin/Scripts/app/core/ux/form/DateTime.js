@@ -12,8 +12,12 @@ Ext.define('Taco.core.ux.form.DateTime', {
     pickerOffset: [0,7],
     emptyText: 'mm/dd/yy 12:00am',
     format: 'n/j/Y g:i a',
-    
+
     initComponent: function () {
+        if(this.value) {
+            this.value = Ext.Date.format(new Date(this.value), this.format);
+        } 
+        
         this.callParent(arguments);
 
         this.addCls('taco-date-field');

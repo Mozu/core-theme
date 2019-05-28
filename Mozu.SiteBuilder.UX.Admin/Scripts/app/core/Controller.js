@@ -172,7 +172,7 @@ Ext.define('Taco.core.Controller', {
                     Ext.data.Model.id(record);
                     this.ensureRequiredStores(function () {
                         this.createContentView(viewName, {
-                            isDuplicate:true,
+                            isDuplicate: true,
                             record: record,
                             options: options
                         });
@@ -217,7 +217,7 @@ Ext.define('Taco.core.Controller', {
         }
     },
 
-    edit: function (id, additionalParams, appState) {        
+    edit: function (id, additionalParams, appState) {
         return this.doEdit(id, additionalParams, appState, this.getEditorView(), Taco.model[this.modelName]);
     },
     doEdit: function (id, additionalParams, appState, viewName) {
@@ -412,7 +412,7 @@ Ext.define('Taco.core.Controller', {
         return false;
     },
 
-    requiresCatalogContext: function() {
+    requiresCatalogContext: function () {
         var context = Taco.app.context.getCurrentContext(),
             newContext = null;
 
@@ -454,9 +454,9 @@ Ext.define('Taco.core.Controller', {
             if (context.contextType == 't') {
                 newContext = context.masterCatalogs[0].sites[0];
             } else if (context.contextType == 'm' || context.contextType == 'c') {
-                newContext = context.sites[0];
+                newContext = context.sites[0] || context.masterCatalog.sites[0];
             } else if (context.contextType == 's') {
-                newContext = context.catalog.sites[0];
+                newContext = context.catalog.sites[0] || context.masterCatalog.sites[0];
             }
         }
 

@@ -39,3 +39,12 @@
         }
     }
 }
+
+.#{$vprefix}variations-dropdown-item-manage .#{$prefix}menu-item-text {
+    @include icon-font('\E929');
+    padding-left: 20px;
+}
+
+.#{$vprefix}variations-dropdown-item-selected {
+    background: #f3f3f3;
+}

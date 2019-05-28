@@ -1,15 +1,13 @@
-﻿using Autofac;
-using Mozu.Content.Contracts.Clients;
+﻿using AutoMapper;
+using Mozu.Content.Contracts;
 using Mozu.Core.Actions;
-using Mozu.Core.Api.Client;
-using Mozu.Customer.Contracts.Clients;
+using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -21,68 +19,50 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Mozu.SiteBuilder.Mvc.OAF;
-using Newtonsoft.Json.Linq;
-using Mozu.SiteBuilder.Mvc.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
+        ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
+        Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CmsPagesController : BaseApiController
     {
-
-        protected IDocumentListWebApiClient _docRepo;
-        protected IDocumentTypeWebApiClient _docTypeRepo;
-        protected ICmsServiceWrapper _cmsService;
-        readonly HyprViewEngine _hyprViewEngine;
-        readonly ICustomRouteHandler _customRouteHandler;
-        private readonly UrlHelper _urlhelper;
-
+        private readonly ICustomRouteHandler _customRouteHandler;
+        private readonly Lazy<UrlHelper> _urlhelper;
 
         public CmsPagesController(
-            IDocumentListWebApiClient docRepo,
-            IDocumentTypeWebApiClient docTypeRepo,
-            ICmsServiceWrapper cmsService,
-            ICustomerAccountWebApiClient customerAccountWebApiClient,
-            HyprViewEngine hyprViewEngine,
-            ICustomRouteHandler customRouteHandler,
-            UrlHelper urlhelper)
+            ICustomRouteHandler customRouteHandler, 
+            Lazy<UrlHelper> urlhelper, 
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
+            Lazy<IExpressionEvaluator> expressionEvaluator)
         {
-            _docRepo = docRepo.CloneWithoutUserClaims();
-            _docTypeRepo = docTypeRepo;
-            _cmsService = cmsService;
-            _hyprViewEngine = hyprViewEngine;
             _customRouteHandler = customRouteHandler;
             _urlhelper = urlhelper;
+            PageRuleVisitor = pageRuleVisitor;
+            ExpressionEvaluator = expressionEvaluator;
         }
 
         [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
         {
-            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList, () => new Dictionary<string, object> { { "listName", documentListName }, { "listView", listView } });
+            var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList,
+                () => new Dictionary<string, object> {{"listName", documentListName}, {"listView", listView}});
 
-            if (redirect != null)
-            {
-                return redirect;
-            }
-            if (Request.Method == HttpMethod.Head)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            if (redirect != null) return redirect;
+            if (Request.Method == HttpMethod.Head) return Request.CreateResponse(HttpStatusCode.OK);
 
-            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.ListFQN == documentListName && string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
+            var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x =>
+                x.ListFQN == documentListName &&
+                string.Equals(x.EntityType, "contentIndex", StringComparison.OrdinalIgnoreCase));
             var template = pageType != null ? pageType.Template : "document-list";
 
-
-
-
-            this.PageContext.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext
             {
-                Page = new DocumentRequest()
+                Page = new DocumentRequest
                 {
                     Path = documentListName + (!string.IsNullOrEmpty(listView) ? "-" + listView : "") + ".index",
                     ListFQN = "pages@mozu",
@@ -93,53 +73,40 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     Path = template,
                     IncludeInactiveDocument = SiteContext.IsEditMode
                 }
-
             };
 
 
-            await Task.WhenAll(this.ContextInitializationTasks);
-            if (this.PageContext.CmsContext.Page.Document != null)
+            await ContextInitializationTasks;
+            if (PageContext.CmsContext.Page.Document != null)
             {
                 PageTypeDefinition pageDefinition = null;
                 var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
                 if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
-                {
-                    pageDefinition = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
-                }
+                    pageDefinition = SiteContext.Theme.PageTypes.FirstOrDefault(x =>
+                        string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
                 template = pageDefinition != null ? pageDefinition.Template : template;
             }
 
-            this.PageContext.PageType = "documentList";
-            this.PageContext.ListName = documentListName;
-            this.PageContext.ListViewName = listView;
+            PageContext.PageType = "documentList";
+            PageContext.ListName = documentListName;
+            PageContext.ListViewName = listView;
 
-            await Task.WhenAll(this.ContextInitializationTasks);
-            var view = View(template, new { listFQN = documentListName });
-            return this.Request.CreateResponse(HttpStatusCode.OK, view);
+            await ContextInitializationTasks;
+            var view = View(template, new {listFQN = documentListName});
+            return Request.CreateResponse(HttpStatusCode.OK, view);
         }
-
-
-
-
-        IDictionary<string, object> ToRouteDictionary(Mozu.Content.Contracts.Document doc)
-        {
-            return AutoMapper.Mapper.Map<IDictionary<string, object>>(doc);
-        }
-
 
         [HttpHead]
         [HttpGet]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CmsPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CmsPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        public async Task<HttpResponseMessage> Page(string documentListName, string documentName)
+        [SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
+            ActionExtensionExecutionTypes.BeforeController)]
+        [SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
+            ActionExtensionExecutionTypes.AfterController)]
+        public async Task<HttpResponseMessage> Page(string documentListName, string documentName, string variationId = "")
         {
-
-
-
-            var pc = this.PageContext;
-            pc.CmsContext = new CmsPageContext()
+            PageContext.CmsContext = new CmsPageContext
             {
-                Page = new DocumentRequest()
+                Page = new DocumentRequest
                 {
                     Path = documentName,
                     ListFQN = documentListName,
@@ -147,102 +114,85 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-
-            await Task.WhenAll(this.ContextInitializationTasks);
-
-            if (pc.CmsContext.Page.Document == null)
+            if (!String.IsNullOrEmpty(variationId))
             {
-                return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+                PageContext.VariationId = variationId;
             }
 
-            var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage, () => ToRouteDictionary(pc.CmsContext.Page.Document));
-            if (redirect != null)
-            {
-                return redirect;
-            }
-            if (Request.Method == HttpMethod.Head)
-            {
-                return this.Request.CreateResponse(HttpStatusCode.OK);
-            }
+            await ContextInitializationTasks;
 
-            var vm = pc.CmsContext.Page.Document;
+            if (PageContext.CmsContext.Page.Document == null)
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
 
+            var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsPage,
+                () => ToRouteDictionary(PageContext.CmsContext.Page.Document));
+            
+            if (redirect != null) return redirect;
+            
+            if (Request.Method == HttpMethod.Head) return Request.CreateResponse(HttpStatusCode.OK);
+            
+            var vm = PageContext.CmsContext.Page.Document;
+        
             NavigationContext.SetContext(vm);
 
-            pc.ListName = documentListName;
-            pc.DocumentId = pc.CmsContext.Page.Document.Id;
-            pc.Title = vm.Get<string>("title") as string;
-            pc.MetaDescription = vm.Get<string>("meta_description") as string;
-            pc.MetaTitle = vm.Get<string>("meta_title") as string;
-            pc.PageType = "web_page";
+            PageContext.ListName = documentListName;
+            PageContext.DocumentId = PageContext.CmsContext.Page.Document.Id;
+            PageContext.Title = vm.Get<string>("title");
+            PageContext.MetaDescription = vm.Get<string>("meta_description");
+            PageContext.MetaTitle = vm.Get<string>("meta_title");
+            PageContext.PageType = "web_page";
 
-            if (!this.PageContext.IsEditMode)
+            if (!PageContext.IsEditMode)
             {
-                if (pc.CmsContext.Page.Document.Get<bool>("hidden", false))
-                {
-                    return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, " not found");
-                }
-                string redir;
-                if (pc.CmsContext.Page.Document.TryGet<string>("redirect_url", out redir) && !string.IsNullOrEmpty(redir))
-                {
-                    return this.Request.CreateResponse(HttpStatusCode.OK, this.Redirect(redir));
-                }
+                if (PageContext.CmsContext.Page.Document.Get("hidden", false))
+                    return Request.CreateErrorResponse(HttpStatusCode.NotFound, " not found");
+                if (PageContext.CmsContext.Page.Document.TryGet("redirect_url", out string redir) &&
+                    !string.IsNullOrEmpty(redir)) return Request.CreateResponse(HttpStatusCode.OK, Redirect(redir));
             }
 
             PageTypeDefinition pageDefinition = null;
             var pageTypeDefinitionKey = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition");
             if (!string.IsNullOrEmpty(pageTypeDefinitionKey))
-            {
-                pageDefinition = this.SiteContext.Theme.PageTypes.FirstOrDefault(x => string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
-            }
+                pageDefinition = SiteContext.Theme.PageTypes.FirstOrDefault(x =>
+                    string.Equals(x.Id, pageTypeDefinitionKey, StringComparison.OrdinalIgnoreCase));
             if (pageDefinition == null)
             {
-                pageDefinition = this.SiteContext.Theme.PageTypes.Where(x =>
+                pageDefinition = SiteContext.Theme.PageTypes.Where(x =>
                     !string.IsNullOrEmpty(x.Template)
                     &&
                     (!string.IsNullOrEmpty(x.DocumentTypeFQN) || !string.IsNullOrEmpty(x.ListFQN))
                     &&
-                    (string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals(x.DocumentTypeFQN, vm.DocumentTypeFQN, StringComparison.OrdinalIgnoreCase))
+                    (string.IsNullOrEmpty(x.DocumentTypeFQN) || string.Equals(x.DocumentTypeFQN, vm.DocumentTypeFQN,
+                         StringComparison.OrdinalIgnoreCase))
                     &&
-                    (string.IsNullOrEmpty(x.ListFQN) || string.Equals(x.ListFQN, vm.ListFQN, StringComparison.OrdinalIgnoreCase))
-                    ).OrderByDescending(
-                        x =>
-                        {
-                            return ((string.IsNullOrEmpty(x.DocumentTypeFQN) ? 0 : 1)) + ((string.IsNullOrEmpty(x.ListFQN) ? 0 : 2));
-                        }
-                    ).ToList().FirstOrDefault();
-                ;
+                    (string.IsNullOrEmpty(x.ListFQN) ||
+                     string.Equals(x.ListFQN, vm.ListFQN, StringComparison.OrdinalIgnoreCase))
+                ).OrderByDescending(
+                    x => (string.IsNullOrEmpty(x.DocumentTypeFQN) ? 0 : 1) +
+                         (string.IsNullOrEmpty(x.ListFQN) ? 0 : 2)).ToList().FirstOrDefault();
             }
+
             var template = pageDefinition != null ? pageDefinition.Template : "blank-page";
 
-
             if (PageContext.CmsContext.Template == null || PageContext.CmsContext.Template.Path != template)
-            {
-                this.PageContext.CmsContext.Template = new DocumentRequest()
+                PageContext.CmsContext.Template = new DocumentRequest
                 {
                     Path = template
                 };
-
-
-            }
-            if ( ((this.Request.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage)).GetValueOrDefault(false ))
-            {
-                PageContext.CrawlerInfo.CanonicalUrl = this.Request.RequestUri.AbsolutePath;
-            }
+            if (((Request.GetRouteData().Route as CustomRoute)?.IsCanonicalFor(FancyRoute.CmsPage))
+                .GetValueOrDefault(false))
+                PageContext.CrawlerInfo.CanonicalUrl = Request.RequestUri.AbsolutePath;
             else
-            {
-                PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Document, pc.CmsContext.Page.Document, null);
-            }
-                
-
+                PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.Value.MakeUrl(UrlHelper.UrlType.Document,
+                    PageContext.CmsContext.Page.Document, null);
             
-
-
             var result = View(template, vm);
+            return Request.CreateResponse(HttpStatusCode.OK, result);
+        }
 
-
-            return this.Request.CreateResponse(HttpStatusCode.OK, result);
-
+        private static IDictionary<string, object> ToRouteDictionary(Document doc)
+        {
+            return Mapper.Map<IDictionary<string, object>>(doc);
         }
     }
 }

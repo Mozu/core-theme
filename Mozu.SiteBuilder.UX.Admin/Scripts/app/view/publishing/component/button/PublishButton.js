@@ -79,6 +79,11 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
     afterEnable: function(argument) {
         var me = this;
+        
+        if(!argument.isDisabled()) {
+            return false;
+        }
+
 
         // on validty change events
         // check after the event, to confirm actual buttonstate

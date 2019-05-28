@@ -44,6 +44,18 @@
             innerForm,
             adrPanel;
 
+
+        //SUSE-160
+        // After giving a default value to properties on the Entity model 
+        // Some entities could have been saved with an empty properties field
+        this.record.getFields = function () {
+            var properties = this.get('properties');
+            if(properties && Ext.Object.getSize(properties)) {
+                return properties;
+            }
+            return this.get('item') || {};
+        };
+
         this.data = Ext.clone(this.record.getFields() || {});
         for (var name in this.record.data) {
             if (this.record.data.hasOwnProperty(name) && name !== 'properties' && name !== 'item') {

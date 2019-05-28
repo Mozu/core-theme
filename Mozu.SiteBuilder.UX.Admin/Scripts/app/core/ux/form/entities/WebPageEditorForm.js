@@ -27,17 +27,20 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
             fieldLabel: 'Page Name',
             name: 'document.name',
             xtype: 'slugfield',
-            allowOnlyWhitespace: false
+            allowOnlyWhitespace: false,
+            disabled: false
 
         }, {
             xtype: 'checkboxfield',
             name: 'hidden',
-            boxLabel: 'Hide in website'
+            boxLabel: 'Hide in website',
+            disabled: false
         }, {
             xtype: 'textfield',
             name: 'link_title',
             emptyText: '[page name]',
-            fieldLabel: 'Navigation Link Name'
+            fieldLabel: 'Navigation Link Name',
+            disabled: false
         }, {
             xtype: 'taco-field-pagetypes',
             name: 'page_type_definition',
@@ -65,7 +68,7 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
             fieldLabel: 'Additional Header Tags',
             emptyText: '[none]'
         }]
-    },{
+    }, {
         margin: '10 0 0 0',
         xtype: 'panel',
         collapsible: 'true',
@@ -82,7 +85,7 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
             fieldLabel: 'Meta Description'
         }]
     }],
-    initComponent: function() {
+    initComponent: function () {
         this.items = (this.items || []).concat(this.containers || []);
         this.callParent(arguments);
 
@@ -91,11 +94,29 @@ Ext.define('Taco.core.ux.form.entities.WebPageEditorForm', {
 
     },
 
-    setData: function(data) {
+    setData: function (data) {
+        this.data = data;
+
+        if (this.generalPanel.items.length) {
+            var pageNameField = this.generalPanel.items.findBy(function (item) { return item.name === 'document.name'; });
+            var hideInWebsiteField = this.generalPanel.items.findBy(function (item) { return item.name === 'hidden'; });
+            var linkNameField = this.generalPanel.items.findBy(function (item) { return item.name === 'link_title'; });
+
+            // Base pages seem to not be ranked. There should be a better way to know. There isn't!   
+            var isBasePage = !data.rank;
+
+            if (!isBasePage) {
+                pageNameField.disabled = true;
+                hideInWebsiteField.disabled = true;
+                linkNameField.disabled = true;
+            }
+        }
+
+
         if (this.getForm()) {
             this.getForm().setValues(data);
         }
-        this.data = data;
+
     },
     getData: function () {
         return this.getValues(false, false, false, true);

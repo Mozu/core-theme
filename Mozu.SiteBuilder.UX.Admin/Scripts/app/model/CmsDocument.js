@@ -105,8 +105,29 @@ Ext.define('Taco.model.CmsDocument', {
             name: 'properties',
             type: 'auto',
             useNull: true,
-            defaultValue: {}
-
+            defaultValue: {},
+            convert: function(v, record) {
+                var variations = new Array();
+                if(v.variations) {
+                    Ext.Array.forEach(v.variations, function(variation){
+                        variations.push(
+                            Ext.create('Taco.model.Entity', variation)
+                        );
+                    });
+                }
+                v.variations = variations;
+                return v;
+            },
+            serialize: function(v,record){
+                if(v.variations) {
+                    var rawVariations = []
+                    Ext.Array.forEach(v.variations, function(variation){
+                        rawVariations.push(variation.raw)
+                    });
+                    v.variations = rawVariations;
+                }
+                return v;
+            }
         },
         {
             name: 'publishState',

@@ -36,7 +36,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
     getMenu: function (eventData) {
         var me = this,
             menuColumnHandler, recurseItemFn,
-            getHandler = function(handler) {
+            getHandler = function (handler) {
                 if (Ext.isString(handler)) {
                     return function (item, eventData) {
                         var fnHandler, scope;
@@ -51,21 +51,21 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
                 }
                 return handler;
             };
-        
+
         menuColumnHandler = function (item) {
             item.menuColumnHandler(item, item.eventData);
             me.menu.destroy();
         };
 
-        recurseItemFn = function(item) {
+        recurseItemFn = function (item) {
             item.eventData = eventData;
 
             item.menuColumnHandler = getHandler(item.menuColumnHandler);
-            
+
             if (item.menuColumnHandler && !item.menuColumnHandlerEvent) {
                 item.menuColumnHandlerEvent = true;
-                
-                item.on('click', menuColumnHandler, item.scope || item );
+
+                item.on('click', menuColumnHandler, item.scope || item);
             }
             if (item.menu) {
                 recurseItemFn(item.menu);
@@ -74,7 +74,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
                 item.items.each(recurseItemFn);
             }
         };
-        
+
         //clear out old version of menu; need to recreate it each time to allow it to change its content based on instance specific logic.
         if (this.menu) {
             this.menu.destroy();
@@ -89,7 +89,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
             cls: Taco.baseCSSPrefix + 'grid-row-menu',
             items: this.getMenuItems(items),
             listeners: {
-                beforehide: function(eOpts) {
+                beforehide: function (eOpts) {
                     if (this.gridColumnHeaderTrigger) {
                         Ext.fly(this.gridColumnHeaderTrigger).removeCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
                     }
@@ -98,14 +98,14 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         });
 
         this.onMenuShow(this.menu, eventData);
-        
+
         recurseItemFn(this.menu);
         if (this.menu.shouldExpand == false) {
             return;
         }
         return this.menu;
     },
-    
+
 
     /**
      * Template method that allows the items to be pre processed by the instance to alter its contents prior to generating the menu
@@ -113,7 +113,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      * @return {Array} The array of menu items
      * @private
      */
-    preProcessMenuItems : function(items, menuColumn, eventData) {
+    preProcessMenuItems: function (items, menuColumn, eventData) {
         return items;
     },
 
@@ -123,7 +123,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      * @return {Object} The eventData from the selection
      * @private
      */
-    onMenuShow : Ext.emptyFn,
+    onMenuShow: Ext.emptyFn,
 
     /**
      * Returns an array of items to populate the menu.
@@ -139,7 +139,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
         return items;
     },
 
-    handler: function(grid, rowIndex, colIndex, header, e, record, item) {
+    handler: function (grid, rowIndex, colIndex, header, e, record, item) {
         var trigger = e.getTarget('div.' + this.iconCls, 10),
             eventData = {
                 menuPosition: 'tr-br',
@@ -175,7 +175,7 @@ Ext.define('Taco.core.ux.grid.MenuColumn', {
      */
     showMenuBy: function (el, eventData) {
         var menu = this.getMenu(eventData);
-        Ext.apply(menu, {gridColumnHeaderTrigger: el});
+        Ext.apply(menu, { gridColumnHeaderTrigger: el });
 
         Ext.fly(el).addCls(Taco.baseCSSPrefix + 'grid-row-menu-trigger-active');
         menu.showBy(el, eventData.menuPosition, eventData.menuOffsets);

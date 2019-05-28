@@ -10,7 +10,6 @@ Ext.define('Taco.view.website.entityAdapters.DocumentListEntityAdapter', {
         'Taco.core.ux.HtmlEditor'
     ],
     showNameEditor:false,
-
    
     addSaveTasks: function (tasks) {
         this.callParent(arguments);

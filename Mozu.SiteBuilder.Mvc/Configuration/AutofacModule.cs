@@ -1,32 +1,32 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Mozu.Core;
 using Mozu.Core.Configuration;
+using Mozu.Core.Expressions;
+using Mozu.Core.Settings;
 using Mozu.Location.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
 using Mozu.ShippingRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Catalog;
+using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Helpers;
+using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Users;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.UX.Models.StoreFront.CMS;
-
 using NDjango;
 using NDjango.FiltersCS;
-using Module = Autofac.Module;
-using Mozu.SiteBuilder.Mvc.Logging;
 using NDjango.Interfaces;
-using Mozu.SiteBuilder.Mvc.Context;
-using Mozu.Core.Settings;
-using Mozu.Core.Mongo;
+using System;
+using System.Linq;
+using System.Reflection;
+using Module = Autofac.Module;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
@@ -36,7 +36,6 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
         {
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Core.CodeBlocks.CodeBlockDescriptor	).Assembly);
              
             builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
             
@@ -84,9 +83,45 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterType<SitebuilderContextCacheRepository>().As<ISitebuilderContextCacheRepository>().SingleInstance();
 
             builder.RegisterType<StorageGatewayConnectionWarmer>().As<INfsConnectionWarmer>().SingleInstance();
-        }
 
-      
+            //Rule based page stuff
+            //static property provider
+            builder.RegisterType<StaticMetadataProvider<CmsPageRuleContext>>().AsSelf().SingleInstance();
+
+            //dynamic property provider
+            builder.RegisterType<CmsPageRuleDynamicMetadataProvider>()  //todo: update when we add customer attributes
+                .As<IDynamicContextPropertyMetadataProvider<CmsPageRuleContext>>()
+                .InstancePerLifetimeScope();
+
+            //metadata provider facade
+            builder.RegisterType<ExpressionContextMetadataProvider<CmsPageRuleContext>>()
+                .As<IExpressionContextMetadataProvider<CmsPageRuleContext>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CmsPageRuleContextFactory>()
+                .As<IExpressionContextFactory<CmsPageRuleContext>>()
+                .InstancePerLifetimeScope();
+
+            //expression evaluator visitor
+            builder.RegisterType<ExpressionEvaluatorVisitor<CmsPageRuleContext>>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            //evaluator
+            builder.RegisterType<CmsPageRelationalExpressionEvaluator>()
+                .As<IRelationalExpressionEvaluator<CmsPageRuleContext>>()
+                .InstancePerLifetimeScope();
+            
+            //expression validator visitor
+            builder.RegisterType<CmsPageRuleExpressionValidator>()
+                .AsSelf()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<CmsPageRuleRelationalExpressionValidator>().AsSelf()
+                .InstancePerLifetimeScope();
+        }
 
         private static void RegisterThemeInfrastructure(ContainerBuilder builder)
         {
