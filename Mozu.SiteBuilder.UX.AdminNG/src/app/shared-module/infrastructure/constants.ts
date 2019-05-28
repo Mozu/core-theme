@@ -114,7 +114,8 @@ export class Constants {
         quoteList : "./assets/json/quote-list.json",
         redirectionLink : "./assets/json/user-redirection.json",
         locations : "./assets/json/locations.json",
-        physicalLocations : './assets/json/physical-locations.json' 
+        physicalLocations : './assets/json/physical-locations.json',
+        locationGroupList : './assets/json/location-group-list.json' 
     }
 
     static lables = {

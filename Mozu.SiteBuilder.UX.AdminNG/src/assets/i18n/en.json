@@ -153,4 +153,14 @@
       }
     }
   }
+},
+"LOCATIONGROUP":{
+  "GridHeader": {
+    "Code": "Code",
+    "Name": "Name"
+  },
+  "GridContextMenu": {
+    "edit": "Edit"
+  }
+}
 }

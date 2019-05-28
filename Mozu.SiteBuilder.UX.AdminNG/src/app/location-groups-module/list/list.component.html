@@ -1,3 +1,35 @@
-<div class="main-container">
-    <h1>Location group list component...</h1>
-</div>
+<div class="col-md-12 location-group-container">
+    <p-table [value]="model.items" [responsive]="true" [paginator]="true" 
+        [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" 
+        selectionMode="single" >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>{{'LOCATIONGROUP.GridHeader.Code' | translate }}</th>
+                <th>{{'LOCATIONGROUP.GridHeader.Name' | translate }}</th>
+                <th style="width: 4em">
+                    <!-- <i class="pi pi-ellipsis-v"></i> -->
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-quoteModel>
+            <tr [pSelectableRow]="quoteModel">
+                <td>
+                    <!-- <span class="ui-column-title">{{'QUOTES.GridHeader.b2bAccountName' | translate }}</span> --> <!-- For Responsive-->
+                    <span>{{quoteModel.locationGroupId}}</span>
+                </td>
+                <td><span>{{quoteModel.name}}</span></td>
+                <td style="width: 4em">
+                    <div>
+                        <i class="pi pi-ellipsis-v" (click)="locationGridContextMenu.toggle($event)"></i>
+                        <p-menu #locationGridContextMenu [model]="model.locationGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr class="text-center">        
+                <td [attr.colspan]="3">No Data Available.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
