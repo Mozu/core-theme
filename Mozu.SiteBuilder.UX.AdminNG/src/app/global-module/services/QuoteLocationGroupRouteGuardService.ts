@@ -13,17 +13,17 @@ import {
 } from '@core';
 
 @Injectable()
-export class RoutingAuthGuardService implements CanActivate {
+export class QuoteLocationGroupRouteGuardService implements CanActivate {
     constructor(
         private _router: Router,
         private _logger: LoggerService
     ) {
-        this._logger.info('RoutingAuthGuard : constructor ');
+        this._logger.info('QuoteLocationGroupRouteGuardService : constructor ');
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
-        this._logger.info('RoutingAuthGuard : canActivate');
+        this._logger.info('QuoteLocationGroupRouteGuardService : canActivate');
 
         if (state != undefined && state.url.includes(Constants.uiRoutes.quotes)) {
             this._router.navigate([Constants.uiRoutes.quotes]);

@@ -21,7 +21,11 @@ Ext.define('Taco.view.navigation.PrimarySubMenu', {
         this.tpl = [
             '<tpl for=".">',
                 '<li class="taco-menu-item {[this.checkActive(values.address)]}" style="{[(values.visible && !values.breadCrumbOnly) ? "" : "display:none" ]}">',
-                    '<a href="{address}" class="taco-primary-menu-item-link">{label}</a>',
+                    '<tpl if="values.address == \'/admin?quotes\' || values.address == \'/admin?locationGroups\'">',
+                    '<a class="taco-primary-menu-item-link" onClick="window.location.href=\'{address}\'">{label}</a>',
+                    '<tpl else>',
+                    '<a href="{address}" class="taco-primary-menu-item-link">{[values.label]}</a>',
+                    '</tpl>',
                 '</li>',
             '</tpl>',
             {

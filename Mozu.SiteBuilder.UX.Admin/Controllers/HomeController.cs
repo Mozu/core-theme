@@ -39,6 +39,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 
+
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
 //    [Mozu.SiteBuilder.Mvc.ActionFilters.AddCorrelationHeaderFilter]
@@ -60,6 +61,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly ITenantsWebApiClient _tenantsWebApi;
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private readonly string _adminNGBuildDirectory = "adminng";
+        private readonly string _quotes = "quotes";
+        private readonly string _locationGroups = "locationGroups";
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)
         {
@@ -95,12 +98,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             try
             {
                 var routeURLData = Convert.ToString(this.ControllerContext.RouteData.Values["url"]);
-                var locationandQuotesFilter = (routeURLData.Contains("quotes") || routeURLData.Contains("locationGroups"));
+                var locationandQuotesFilter = !string.IsNullOrEmpty(routeURLData)?(routeURLData.Contains(_quotes) || routeURLData.Contains(_locationGroups)):false;
                 if (string.IsNullOrEmpty(routeURLData) || locationandQuotesFilter)
                 {
                     ActionResult res = await GetIndexNG();
                    return Request.CreateResponse(HttpStatusCode.OK, res);
-
                 }
                 else
                 {

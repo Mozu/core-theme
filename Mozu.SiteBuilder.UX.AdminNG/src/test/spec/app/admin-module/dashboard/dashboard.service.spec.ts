@@ -38,77 +38,49 @@ describe('DashboardService', () => {
 
     });
 
-    // it('Application should call dashboard service and return json object', () => {
-    //     let dummyDashboardTiles = [
-    //         {
-    //           "id": "products",
-    //           "navParent": "main",
-    //           "label": "Catalog",
-    //           "imageURL": "./assets/Images/catlog.png",
-    //           "icon": "nav-catalog",
-    //           "behaviorIds": [ 4 ],
-    //           "items": [
-    //             {
-    //               "id": "catalogProducts",
-    //               "label": "Products",
-    //               "address": "products",
-    //               "behaviorIds": [ 4 ]
-    //             },
-    //             {
-    //               "id": "categories",
-    //               "label": "Categories",
-    //               "address": "categories",
-    //               "behaviorIds": [ 16 ]
-    //             }
-    //           ]
-    //         }];
-
-    //         dashbaordService.fetchAllDashboardTiles().subscribe(dashboardTiles => {
-    //         //console.log(dashboardTiles);
-    //         expect(dashboardTiles.length).toBe(1);
-    //         expect(dashboardTiles[0].label).toBe("Catalog");
-    //         expect(dashboardTiles[0].items[1].label).toBe("Categories"); //links
-    //     },
-    //     err => {
-    //         expect(err).toBe(`Invalid Data`);
-    //         console.log(err);
-    //     })
-
-    //     const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`, "sample url test from dashboard service");
-    //     expect(req.request.method).toBe("GET");
-    //     req.flush(dummyDashboardTiles);
-    //     //req.flush(dummyDashboardTiles, mockErrorResponse);
-    //     httpMock.verify();
-
-    // });
+    let dummyData_pupulateSystemAndMainTiles = [
+      {
+        "id": "products",
+        "navParent": "main",
+        "label": "Catalog",
+        "imageURL": "./assets/Images/catlog.png",
+        "icon": "nav-catalog",
+        "behaviorIds": [ 4 ],
+        "items": [
+          {
+            "id": "catalogProducts",
+            "label": "Products",
+            "address": "products",
+            "behaviorIds": [ 4 ]
+          },
+          {
+            "id": "categories",
+            "label": "Categories",
+            "address": "categories",
+            "behaviorIds": [ 16 ]
+          }
+        ]
+      }];  
 
     it('Application is inside MapDasasboardCategoryToTiles() which is calling from pupulateSystemAndMainTiles() of dashboard component', () => {
-      let dummyData_pupulateSystemAndMainTiles = [
-        {
-          "id": "products",
-          "navParent": "main",
-          "label": "Catalog",
-          "imageURL": "./assets/Images/catlog.png",
-          "icon": "nav-catalog",
-          "behaviorIds": [ 4 ],
-          "items": [
-            {
-              "id": "catalogProducts",
-              "label": "Products",
-              "address": "products",
-              "behaviorIds": [ 4 ]
-            },
-            {
-              "id": "categories",
-              "label": "Categories",
-              "address": "categories",
-              "behaviorIds": [ 16 ]
-            }
-          ]
-        }];  
       dashbaordService.MapDasasboardCategoryToTiles(dummyData_pupulateSystemAndMainTiles);
         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : MapDasasboardCategoryToTiles");
     });
+
+    it('Should return an Dashboard tiles list as Observable', () => {
+      dashbaordService.fetchAllDashboardTiles().subscribe(quotes => {
+          expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : fetchAllDashboardTiles");
+      },
+      err => {
+          expect(err).toBe(`Error on data fetching.`)
+      })
+      const req = httpMock.expectOne(`/assets/json/dashboard-categories.json`);
+      expect(req.request.method).toBe("GET");
+      req.flush(dummyData_pupulateSystemAndMainTiles);
+      httpMock.verify();
+});
+
+   
 
 });
 

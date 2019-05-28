@@ -131,46 +131,24 @@ let dummyData_pupulateSystemAndMainTiles =
         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : pupulateSystemAndMainTiles");
     });
 
-    it('Application should call fetchAllDashboardTiles() dashboard service and print success reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse"', () => {
-      fixture.detectChanges();
-         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`);
-         expect(req.request.method).toBe("GET");
-         req.flush(dummyData_pupulateSystemAndMainTiles);
-         httpMock.verify();
-         fixture.detectChanges();
-         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
-    });
-
     it('Application should call fetchAllDashboardTiles() dashboard service and print error reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse"', () => {
-        fixture.detectChanges();
-         const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`);
-         expect(req.request.method).toBe("GET");
-         req.flush(dummyData_pupulateSystemAndMainTiles, mockErrorResponse);
-         httpMock.verify();
-         fixture.detectChanges();
-          expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");   
-    });
+      fixture.detectChanges();
+       const req = httpMock.expectOne(`/assets/json/dashboard-categories.json`);
+       expect(req.request.method).toBe("GET");
+       req.flush(dummyData_pupulateSystemAndMainTiles, mockErrorResponse);
+       httpMock.verify();
+       fixture.detectChanges();
+        expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");   
+  });
 
-    
-    // it('Application is inside MapDasasboardCategoryToTiles() which is calling from pupulateSystemAndMainTiles() of dashboard component', () => {
-    //     component.pupulateSystemAndMainTiles();
-    //     const req = httpMock.expectOne(`./assets/json/dashboard-categories.json`, "sample url test from dashboard component");
+    // it('Application should call fetchAllDashboardTiles() dashboard service and print success reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse"', () => {
+    //   fixture.detectChanges();
+    //      const req = httpMock.expectOne(`/assets/json/dashboard-categories.json`);
     //      expect(req.request.method).toBe("GET");
     //      req.flush(dummyData_pupulateSystemAndMainTiles);
     //      httpMock.verify();
-    //     expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : MapDasasboardCategoryToTiles");
-    // });
-
-
-    // it('Application is inside ngOnDestroy() of dashboard component', () => {
-    //     component.ngOnDestroy();
-    //     expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : ngOnDestroy");
-    // });
-
-    // it('Application toolbar should have dashboard class', () => {
-    //     const fixture = TestBed.createComponent(AdminDashboardComponent);
-    //     const el = fixture.debugElement.query(By.css('.dashboard'));
-    //     expect(el).toBeTruthy();
+    //      fixture.detectChanges();
+    //      expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
     // });
   
     afterEach(() => {

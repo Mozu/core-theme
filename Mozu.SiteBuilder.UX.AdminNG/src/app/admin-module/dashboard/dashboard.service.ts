@@ -15,6 +15,7 @@ export class DashbaordService {
                 private _loggerService: LoggerService) {}
 
     public fetchAllDashboardTiles(): Observable<any> {
+      this._loggerService.info("AdminDashboardComponent : fetchAllDashboardTiles");
         return this._http.get(Constants.JsonResources.dasbhoardTiles);
     }
 

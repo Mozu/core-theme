@@ -15,7 +15,7 @@ export class HeaderService {
  
   public fetchRedirectionLinks = () => {
     this._loggerService.info("HeaderService : fetchRedirectionLink");
-    return this. _httpClientService .get(Constants.JsonResources.redirectionLink);
+    return this._httpClientService.get(Constants.JsonResources.redirectionLink);
   }
 }
 

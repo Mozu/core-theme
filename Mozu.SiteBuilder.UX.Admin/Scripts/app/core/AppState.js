@@ -72,13 +72,6 @@ Ext.define('Taco.core.AppState', {
                 uri = Taco.app.context.getCurrent().urlToken + '/' + uri;
             }
 
-            if (uri.includes('quotes')) {
-                uri = 'quotes'
-            }
-            else if (uri.includes('locationGroups')) {
-                uri = 'locationGroups'
-            }
-
             return uri;
         }
     },

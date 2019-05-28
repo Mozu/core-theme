@@ -78,7 +78,7 @@ navigationServiceSpy=spyOn(navigationService, 'fetchLeftNavigationItems').and.ca
  //To access external model class
  leftNavigationModel = new LeftNavigationModel();
  component.model = leftNavigationModel;
- 
+
 }));
  
 
@@ -91,28 +91,10 @@ it('Application is inside ngOnInit method of left navigation component', () => {
   expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationLeftComponent : ngOnInit");
 });
 
-it('Application should call fetch tabs data function', () => {
-  component.fetchNavigationItem();
-   const req = httpMock.expectOne(`./assets/json/leftNavigation-items.json`, "sample url test from navigation component");
-   expect(req.request.method).toBe("GET");
-   req.flush(dummydata_leftNavMenu);
-   httpMock.verify();
-   expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationLeftComponent : fetchLeftNavigationItems");
-  });
- 
-  it('Left menu link should contain appended URL token', () => {
-    fixture.detectChanges();
-
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      const compiled = fixture.debugElement.nativeElement;
-      expect(compiled.querySelector('a').href).toContain('/m-1/products');
-    });
-  });
 
   it('Should call service to get failure response from mock http json (left navigation menu items)', () => {
     fixture.detectChanges();
-    const req = httpMock.expectOne(`./assets/json/leftNavigation-items.json`);
+    const req = httpMock.expectOne(`/assets/json/leftNavigation-items.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummydata_leftNavMenu, mockErrorResponse);
     httpMock.verify();
@@ -120,13 +102,13 @@ it('Application should call fetch tabs data function', () => {
     expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse");
   });
 
-  it('Should call service to get success response from mock http json (left navigation menu items)', () => {
-    fixture.detectChanges();
-     const req = httpMock.expectOne(`./assets/json/leftNavigation-items.json`, "sample url test from navigation component");
-     expect(req.request.method).toBe("GET");
-     req.flush(dummydata_leftNavMenu);
-     httpMock.verify();
-     expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationLeftComponent : fetchLeftNavigationItems");
-    });
-
+it('Application should call fetch tabs data function', () => {
+  component.fetchNavigationItem();
+   const req = httpMock.expectOne(`/assets/json/leftNavigation-items.json`, "sample url test from navigation component");
+   expect(req.request.method).toBe("GET");
+   req.flush(dummydata_leftNavMenu);
+   httpMock.verify();
+   expect(loggerServiceSpy).toHaveBeenCalledWith("NavigationLeftComponent : fetchLeftNavigationItems");
+  });
+ 
 });
