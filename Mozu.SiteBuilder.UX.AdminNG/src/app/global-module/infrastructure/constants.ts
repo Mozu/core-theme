@@ -29,6 +29,9 @@ export class Constants {
         getQuoteList : environment.apiUrl + '/quote/list',
     };
 
+    static JsonResources = {
+        userIdentity: "/assets/json/user-data.json"
+    }
     static queryString = {
         SessionExpired: 'SessionExpired=true'
     };

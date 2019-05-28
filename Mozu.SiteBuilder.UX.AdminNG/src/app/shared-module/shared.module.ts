@@ -17,9 +17,11 @@ import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
 import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
-import { CardModule } from 'primeng/card'
+import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import { TableModule } from 'primeng/table';
+import { DropdownModule } from 'primeng/dropdown';
+import { SelectItem } from 'primeng/api';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -89,7 +91,9 @@ export function createTranslateLoader(http: HttpClient) {
         PanelMenuModule,
         TreeTableModule,
         TableModule,
-        NgbModule,
+        NgbModule.forRoot(),
+        DropdownModule,
+        AutoCompleteModule, 
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

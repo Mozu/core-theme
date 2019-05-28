@@ -1,6 +1,7 @@
 <nav class="navbar navbar-inverse">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsebar" aria-expanded="false" aria-controls="navbar">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsebar"
+            aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -16,13 +17,65 @@
         <ul class="nav navbar-nav navbar-right">
             <li><span class="tenant-name-container"></span>{{ headerModel.tenantName }}</li>
             <li><a href="#"><span class=""></span> Help </a></li>
-            <li><a href="#"><span class="fa fa-search"></span></a></li>
+            <li class="navbar-search-align">
+                <span *ngIf="!headerModel.showSearchInput" (click)="toggleVisible()" class="fa fa-search"></span>
+                <div *ngIf="headerModel.showSearchInput" class="ui-inputgroup navbar-search">
+                    <span (click)="clearInput()" class="navbar-search-addon"><i class="fa fa-times"></i></span>
+                    <p-autoComplete id="globalSearch" [(ngModel)]="selectedSearchedItem" 
+                        [suggestions]="headerModel.searchResult.items" (completeMethod)="lookUpSuggestion($event)" 
+                        field="name" minLength="3" (onSelect)="onSuggestionSelected($event)" inputId="globalSearchInput" autofocus>
+                        <ng-template let-selectedSearchedItem pTemplate="item">
+                            <div [ngSwitch]="selectedSearchedItem.type">
+                                <ng-template [ngSwitchCase]="'none'">
+                                    <div class="navbar-search-li navbar-search-tab">
+                                        No matching items found.
+                                    </div>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="'orders'">
+                                    <div class="navbar-search-li navbar-search-tab"
+                                        *ngIf="!selectedSearchedItem.isHeader">
+                                        {{ selectedSearchedItem.item.orderNumber }}- {{ selectedSearchedItem.item.name }}
+                                    </div>
+                                    <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
+                                                all</i></b>
+                                    </div>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="'customers'">
+                                    <div class="navbar-search-li navbar-search-tab"
+                                        *ngIf="!selectedSearchedItem.isHeader">
+                                        {{ selectedSearchedItem.item.id }}- {{ selectedSearchedItem.item.firstName }}
+                                        {{ selectedSearchedItem.item.lastName }}
+                                    </div>
+                                    <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
+                                                all</i></b>
+                                    </div>
+                                </ng-template>
+                                <ng-template [ngSwitchCase]="'products'">
+                                    <div class="navbar-search-li navbar-search-tab"
+                                        *ngIf="!selectedSearchedItem.isHeader">
+                                        {{ selectedSearchedItem.item.productCode }}-
+                                        {{ selectedSearchedItem.item.productName }}
+                                    </div>
+                                     <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
+                                                all</i></b>
+                                    </div> 
+                                </ng-template>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </li>
             <li class="avatar-align">
-              <a>
-              <div id="userbutton-1032-userbutton-avatar" class="user-avatar" >{{ headerModel.loggedInUserInitials }}</div>
-              <div id="userbutton-1032-userbutton-username" class="nav-username"  (click)="userContextMenu.toggle($event)">{{ headerModel.loggedInUserName }}</div>
-              <p-menu #userContextMenu [model]="userContextMenuItem" [popup]="true" appendTo="body"></p-menu>
-              </a>
+                <a>
+                    <div id="userbutton-1032-userbutton-avatar" class="user-avatar">
+                        {{ headerModel.loggedInUserInitials }}</div>
+                    <div id="userbutton-1032-userbutton-username" class="nav-username"
+                        (click)="userContextMenu.toggle($event)">{{ headerModel.loggedInUserName }}</div>
+                    <p-menu #userContextMenu [model]="userContextMenuItem" [popup]="true" appendTo="body"></p-menu>
+                </a>
             </li>
         </ul>
     </div>

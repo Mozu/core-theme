@@ -62,7 +62,10 @@ export class Constants {
 
     static webUrls = {
         getSharedData: environment.apiUrl + 'account/getUserData',
-        secureFormLink : environment.apiUrl + '/capabilities/createSecureForm?appId='
+        secureFormLink : environment.apiUrl + '/capabilities/createSecureForm?appId=',
+        getOrderData: environment.apiUrl + '/order/list',
+        getCustomerData: environment.apiUrl + '/customer/list',
+        getProductData: environment.apiUrl + '/Product/list'
     };
 
     static businessExceptions = {
@@ -74,7 +77,8 @@ export class Constants {
 
     static queryString = {
         SessionExpired: 'SessionExpired=true',
-        SessionKilled: 'SessionKilled=true'
+        SessionKilled: 'SessionKilled=true',
+        GlobalSearchParams: 'searchType=global&page=1&start=0&limit=5'
     };
 
     static localStorageKeys = {
@@ -122,7 +126,10 @@ export class Constants {
         locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
         getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
         shippingMethods: '/assets/json/shipping-methods.json',
-        auditLog: '/assets/json/audit-log.json'
+        auditLog: '/assets/json/audit-log.json',
+        orderSearchResults: '/assets/json/orders-searchresult.json',
+        customerSearchResults: '/assets/json/customers-searchresult.json',
+        productsSearchResults: '/assets/json/products-searchresult.json'
     };
 
     static numberOfRows = 15;

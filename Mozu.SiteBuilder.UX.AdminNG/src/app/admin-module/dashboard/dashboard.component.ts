@@ -6,33 +6,26 @@ import {
   OnDestroy
 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { 
-  LoggerService ,
+import {
+  LoggerService,
   HttpError,
-  ErrorCode, 
-  ErroNotificationType} from '@core'
-
-import { NotificationService } from '@global'
+  ErrorCode,
+  ErroNotificationType
+} from '@core';
+import { NotificationService } from '@global';
 import {
   Constants
 } from '@shared/index';
-
 import {Response} from '@angular/http';
-
 import { DashboardModel } from './dashboard.model';
-
 import { DashbaordService } from './dashboard.service';
-
 import { CookieService as Cookie } from 'ngx-cookie-service';
-
 import { SharedDataService } from '@global/services/shared-data.service';
-
 import { UtilityService } from '@core/infrastructure/utility.service';
-
 import * as _ from 'lodash';
 
-
 @Component({
+// tslint:disable-next-line: component-selector
   selector: 'admin-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
@@ -50,29 +43,29 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private _dashboardService: DashbaordService,
     private _loggerService: LoggerService,
     private _cookie: Cookie,
-    private _sharedData : SharedDataService,
-    private utilityService: UtilityService,
+    private _sharedData: SharedDataService,
+    private utilityService: UtilityService
   ) {
 
-    this._loggerService.info("AdminDashboardComponent : constructor");
+    this._loggerService.info('AdminDashboardComponent : constructor');
     this.model = new DashboardModel();
     this.subscriptions = [];
   }
 
   ngOnInit() {
-    this._loggerService.info("AdminDashboardComponent : ngOnInit");
+    this._loggerService.info('AdminDashboardComponent : ngOnInit');
     this.pupulateSystemAndMainTiles();
     this.model.isShowSystemTiles = false;
     this.subscriptions.push(
       this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
-        this.model.isShowSystemTiles = (activeTab == "System");
+        this.model.isShowSystemTiles = (activeTab === 'System');
         this._changeDetectionRef.detectChanges();
       })
     );
   }
 
   ngOnDestroy() {
-    this._loggerService.info("AdminDashboardComponent : ngOnDestroy");
+    this._loggerService.info('AdminDashboardComponent : ngOnDestroy');
 
     this.subscriptions.forEach((s) => {
       s.unsubscribe();
@@ -81,11 +74,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
 
   public pupulateSystemAndMainTiles = () => {
-    this._loggerService.info("AdminDashboardComponent : pupulateSystemAndMainTiles");
+    this._loggerService.info('AdminDashboardComponent : pupulateSystemAndMainTiles');
 
     this._dashboardService.fetchAllDashboardTiles().subscribe(dashboardTileLinksResponse => {
       
-      this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
+      this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse');
 
       /* filter the menus on the basis of logged in user behaviour id */
       this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData._sharedData.items.ctUser.behaviorIds);
@@ -97,7 +90,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this._changeDetectionRef.detectChanges();
 
     }, (dashboardTileLinksErrResponse) => {
-      this._loggerService.info("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");;
+      this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse');;
       throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster,dashboardTileLinksErrResponse);
     });
   }

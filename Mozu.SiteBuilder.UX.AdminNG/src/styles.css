@@ -72,15 +72,7 @@ h4 {
     font-size: 12px;
 }
 
-.ui-state-default,
-.ui-widget-header,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-    border: 1px solid transparent !important;
-    background: transparent !important;
-}
-
-body .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li a{
     padding: 0.8em 1em !important;
 }
 

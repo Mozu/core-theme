@@ -5,11 +5,15 @@
 export const debugUrl = false;
 
 export const environment = {
-    production: true,
+    production: false,
     environmentName: 'Debug',
     debug: false,
     domain: '.client1.com',
+<<<<<<< HEAD
     appUrl: debugUrl ? window.location.origin : window.location.origin + '/admin/',
+=======
+    appUrl: window.location.origin + '/admin/',
+>>>>>>> AUAU-73 Global Search Bar functionality and UI added
     apiUrl: window.location.origin + '/admin/app',
     errorPageUrl: window.location.origin + '/admin/',
     apiTokenUrl: 'http://localhost:5100/token',
