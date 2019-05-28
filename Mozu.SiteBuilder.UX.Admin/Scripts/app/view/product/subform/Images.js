@@ -574,12 +574,15 @@ Ext.define('Taco.view.product.subform.Images', {
                         return !remove[image.id];
                     });
                     
-                    var defaultGroup = me.record.data.productImageGroups.find(function(item, idx) {
+                    var defaultGroup = me.record.data.productImageGroups.find(function (item, idx) {
                         if (item.productImageGroupId === "default") {
                             me.record.data.productImageGroups.splice(idx, 1);
-                            return item;                          
+                            return item;
                         }
-                    });
+                    }) || {
+                        productImageGroupId: "default",
+                        productImageGroupTags: []
+                        };
                     me.record.data.productImageGroups.splice(0, 0, defaultGroup);
                     
                     var orderedImages = [];
