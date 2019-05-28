@@ -19,22 +19,23 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
             if (controller != null || !controller.ContextInitializationTasks.IsCompleted)
             {
-                return continuation().ContinueWith(x => 
+
+                return continuation().ContinueWith(x =>
                     
-                    {
-                        if (controller.ContextInitializationTasks.IsCompleted &&
+                {
+                    if (controller.ContextInitializationTasks.IsCompleted && 
                             controller.PageContext != null &&
                             controller.PageContext.CmsContext != null &&
                             !controller.PageContext.CmsContext.Initialized)
-                        {
-                            return new CmsHelper(controller.CmsService, controller.EntityListService).InitCmsPageContext(controller.PageContext, controller.SiteContext  ).ContinueWith(y => x.Result);
+                    {
+                            return new CmsHelper(controller.CmsService).InitCmsPageContext(controller.PageContext, controller.SiteContext, controller.SbApiContext, controller.ExpressionEvaluaton, controller.PageRuleVisitor).ContinueWith(y => x.Result);
 
                         }
                         else
                         {
                             return controller.ContextInitializationTasks.ContinueWith(y => x.Result);    
-                        }
-                        
+                    }
+
                     }).Unwrap();
             }
             return continuation();

@@ -15,7 +15,7 @@ Ext.define('Taco.view.filter.EditFilterModal', {
 
     form: 'Taco.view.filter.Form',
 
-    autoShow:true,
+    autoShow: true,
 
     title: "Edit Condition",
 
@@ -23,18 +23,18 @@ Ext.define('Taco.view.filter.EditFilterModal', {
 
     scale: "large",
 
-    layout:"fit",
+    layout: "fit",
 
     config: {
         // DynamicPreComputed or DynamicRealTime
-        type:null
+        type: null
     },
 
-    initComponent: function(eOpts) {
+    initComponent: function (eOpts) {
         var me = this;
-        
+
         this.form = Ext.create(me.form, {
-            type:this.getType(),
+            type: this.getType(),
             record: me.record
         });
 
@@ -45,14 +45,16 @@ Ext.define('Taco.view.filter.EditFilterModal', {
 
     doSave: function () {
 
-        this.form.beforeSave();
-        this.saveSuccess(this.record);
+        if (this.form.beforeSave(this)) {
+            this.saveSuccess(this.record);
+        }
+
     },
-    
+
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
-    onDestroy : function (destroy) {
+    onDestroy: function (destroy) {
         this.callParent(arguments);
     }
 });

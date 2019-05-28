@@ -129,6 +129,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                     {
                         return $"customeraccountid eq {value}";
                     }
+                case "code":
+                    return $"code {filter.comparison} {filter.value}";
+                case "nameorcode":
+                    return $"name {filter.comparison} {filter.value} or code {filter.comparison} {filter.value}";
                 default:
                 {
                     throw new NotImplementedException($"Unable to filter on property {filter.property}");
@@ -173,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.CustomerHelpers
                         $"{CODE_PROPERTY} sw '{filter.escapedValue}' or {CUSTOMERID_PROPERTY} eq '{filter.escapedValue}'";
                     return retVal;
                 case "code":
-                    return $"{CODE_PROPERTY} sw \"{filter.escapedValue}\"";
+                    return $"{CODE_PROPERTY} \"{filter.comparison}\" \"{filter.escapedValue}\"";
                 case "customerid":                   
                     return $"{CUSTOMERID_PROPERTY} eq \"{filter.escapedValue}\"";
                 case "customer":

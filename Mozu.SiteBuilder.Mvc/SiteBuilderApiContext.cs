@@ -352,6 +352,10 @@ namespace Mozu.SiteBuilder.Mvc
                 {
                     this.IsAdminMode = bool.Parse(cookie["adminmode"]);
                 }
+                if(!string.IsNullOrEmpty(cookie["variationId"]))
+                {
+                    this.VariationId = cookie["variationId"];
+                }
             }
         }
         private void LoadFromCookie(ICookieProvider cookieProvider)
@@ -431,6 +435,7 @@ namespace Mozu.SiteBuilder.Mvc
 
         public bool IsEditMode { get; set; }
         public bool IsAdminMode { get; set; }
+        public string VariationId { get; set; }
        
 
        

@@ -14,7 +14,7 @@ Ext.define('Taco.view.website.Tree', {
         'Taco.core.ux.form.SlugField'
     ],
     itemId: 'taco-nav-tree',
-    animate:false,
+    animate: false,
     border: false,
     componentCls: 'taco-website-tree',
     hideHeaders: true,
@@ -32,6 +32,8 @@ Ext.define('Taco.view.website.Tree', {
     initComponent: function () {
         var me = this;
 
+        this.variationStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.EntityVariations');
+
         this.addEvents('urlclick', 'additemclick');
 
         this.cellEditor = Ext.create('Ext.grid.plugin.CellEditing', {
@@ -47,7 +49,7 @@ Ext.define('Taco.view.website.Tree', {
             }
         });
 
-        this.mon(this.store, 'load', Ext.Function.createSequence(this.showNavState, this.onTreeNodesLoad), this, {single: true});
+        this.mon(this.store, 'load', Ext.Function.createSequence(this.showNavState, this.onTreeNodesLoad), this, { single: true });
 
         this.plugins = this.plugins || [];
         this.plugins.push(this.cellEditor);
@@ -60,12 +62,12 @@ Ext.define('Taco.view.website.Tree', {
                 var output = me.getNavIcon(value, record);
 
                 if (record.get('nodeType') === 'contentlist' && record.get('name') === 'Content Lists') {
-                    metaData.tdCls+= ' taco-website-tree-node-group';
+                    metaData.tdCls += ' taco-website-tree-node-group';
                 }
 
                 if (Ext.Array.contains(['_navigation', '_unlinked'], record.getId()) || Ext.Array.contains(['category', 'link', 'page'], record.data.nodeType) || record.data.parentId === '_emailTemplates') {
 
-                    
+
                     /**
                      * Split the output in order
                      * to insert buttons between
@@ -111,7 +113,7 @@ Ext.define('Taco.view.website.Tree', {
             shadow: false,
             items: [],
             listeners: {
-                hide: function() {
+                hide: function () {
                     if (this.menuTrigger && this.menuTrigger.classList) {
                         this.menuTrigger.classList.remove('active');
                     }
@@ -130,7 +132,7 @@ Ext.define('Taco.view.website.Tree', {
                     tooltip: 'Refresh',
                     overflowText: 'Refresh',
                     iconCls: 'x-refresh-btn x-sidebar-refresh-btn',
-                   // disabled: this.store.isLoading(),
+                    // disabled: this.store.isLoading(),
                     handler: this.store.reload,
                     scope: this.store
                 }
@@ -168,10 +170,27 @@ Ext.define('Taco.view.website.Tree', {
                     }
 
                     else if (url) {
-                        if (originalDocumentListName && name)
-                        {
-                            url = '/cms/' + originalDocumentListName + '/' + name;
+
+                        var recordIdentifier = (record.get('categoryCode'))
+                            ? 'category-' + record.get('originalId')
+                            : record.get('originalId');
+
+                        var activeVariations = window.sessionStorage.getItem('activeVariations');
+                        activeVariations = JSON.parse(activeVariations) || {};
+                        var activeVariationId = activeVariations[recordIdentifier];
+
+                        //var currentVariation = this.variationStore.getActiveVariation();
+                        record.set('isVariation', false);
+                        if (activeVariationId) {
+                            if (record.get('categoryCode')) {
+                                url += '?variationId=' + activeVariationId;
+                            } else {
+                                url += '/variation/' + activeVariationId;
+                            }
+                            record.set('isVariation', true);
+
                         }
+
                         this.fireEvent('urlclick', this, url, record, item, index, e, eOpts);
                     }
                 }
@@ -184,16 +203,16 @@ Ext.define('Taco.view.website.Tree', {
         });
 
         this.mon(this.getView(), {
-            beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
+            beforedrop: function (node, data, overModel, dropPosition, dropHandlers) {
 
                 if (data.records && data.records.length && data.records[0].get('nodeType') === 'contentlist') {
                     dropHandlers.cancelDrop();
                     var nodeData = {
-                            nodeType: 'link',
-                            iconCls: 'link',
-                            name: data.records[0].raw.metaData.name,
-                            url: '/cms/' + data.records[0].raw.metaData.listFQN
-                        },
+                        nodeType: 'link',
+                        iconCls: 'link',
+                        name: data.records[0].raw.metaData.name,
+                        url: '/cms/' + data.records[0].raw.metaData.listFQN
+                    },
 
                         overIndex = overModel.parentNode.indexOf(overModel);
                     if (dropPosition === 'append') {
@@ -208,7 +227,7 @@ Ext.define('Taco.view.website.Tree', {
                     node.save();
                 }
             },
-            drop: function(node, data, overModel, dropPosition, eOpts) {
+            drop: function (node, data, overModel, dropPosition, eOpts) {
                 var selModel = this.getSelectionModel(),
                     navItems = me.store.tree.nodeHash,
                     current = me.getCurrentNode.call(me, navItems);
@@ -263,13 +282,13 @@ Ext.define('Taco.view.website.Tree', {
     },
 
     getMenuItems: function (record, scope) {
-        var menuItem = function(text, scope, handler) {
-                return {
-                    text: text,
-                    scope: scope,
-                    handler: handler
-                };
+        var menuItem = function (text, scope, handler) {
+            return {
+                text: text,
+                scope: scope,
+                handler: handler
             };
+        };
 
         var addLink = menuItem('Add Link', scope, this.showLinkEditor.bind(scope, null, record)),
             editLink = menuItem('Edit Link', scope, this.showLinkEditor.bind(scope, record, record.parentNode)),
@@ -281,13 +300,13 @@ Ext.define('Taco.view.website.Tree', {
             emailtest = menuItem('Send Test Email', scope, this.onTestEmail.bind(scope, record));
 
         var itemsDict = {
-                _navigation: [addLink, addPage],
-                _unlinked: [addLink, addPage],
-                category: [showProducts, addLink, addPage],
-                link: [editLink, rename, deleteLink, addLink, addPage],
-                page: [rename, addLink, addPage, deletePage],
-                _emailTemplates: [emailtest]
-            };
+            _navigation: [addLink, addPage],
+            _unlinked: [addLink, addPage],
+            category: [showProducts, addLink, addPage],
+            link: [editLink, rename, deleteLink, addLink, addPage],
+            page: [rename, addLink, addPage, deletePage],
+            _emailTemplates: [emailtest]
+        };
 
         var key = record.getId() === '_navigation' || record.getId() === '_unlinked' ? record.getId() : undefined;
 
@@ -303,7 +322,7 @@ Ext.define('Taco.view.website.Tree', {
 
     },
 
-    getIconClass: function(record) {
+    getIconClass: function (record) {
 
         var descriptor = record.get('nodeType'),
             iconDefinitions = {
@@ -314,7 +333,7 @@ Ext.define('Taco.view.website.Tree', {
                 template: 'template-icon',
                 ordertemplate: 'template-icon',
                 contentlist: 'template-icon',
-                group: function(record) {return this['parent' + record.data.id];},
+                group: function (record) { return this['parent' + record.data.id]; },
                 parent_navigation: 'folder-icon',
                 parent_unlinked: 'folder-icon',
                 parent_backOffice: 'folder-icon',
@@ -326,17 +345,17 @@ Ext.define('Taco.view.website.Tree', {
 
     },
 
-    getNavIcon: function(value, record) {
+    getNavIcon: function (value, record) {
         return '<span class="taco-website-tree-icon ' + this.getIconClass(record) + '"></span><span>' + value + '</span>';
     },
 
-    getNavOptions: function(record) {
+    getNavOptions: function (record) {
         var cls = Ext.Array.contains(['page', 'link'], record.get('nodeType')) ? 'visible' : 'invisible';
 
         return '<span class="taco-website-tree-icon drag-icon ' + cls + '">';
     },
 
-    showNavState: function(records, success) {
+    showNavState: function (records, success) {
         var me = this,
             navItems = this.store.tree.nodeHash,
             current = this.getCurrentNode.call(me, navItems);
@@ -348,12 +367,12 @@ Ext.define('Taco.view.website.Tree', {
 
     },
 
-    getHomePage: function() {
+    getHomePage: function () {
         var treeArr = this.store.tree.nodeHash,
             keys = Object.keys(treeArr),
             homePageNode = null;
 
-        keys.some(function(k) {
+        keys.some(function (k) {
             if (treeArr[k].get('isHomePage')) {
                 homePageNode = treeArr[k];
                 return true;
@@ -363,14 +382,14 @@ Ext.define('Taco.view.website.Tree', {
         return homePageNode;
     },
 
-    getCurrentNode: function(navItems){
+    getCurrentNode: function (navItems) {
 
         var me = this,
             currentKey = null;
 
         if (me.url === '/') return this.getHomePage();
 
-        Object.keys(navItems).some(function(k) {
+        Object.keys(navItems).some(function (k) {
             if (navItems[k] && (navItems[k].data.url === me.url || navItems[k].data.url.indexOf(me.url) !== -1)) {
                 currentKey = navItems[k];
                 return true;
@@ -413,8 +432,8 @@ Ext.define('Taco.view.website.Tree', {
             primaryText: 'Delete',
             items: [{
                 xtype: 'container',
-                layout: { 
-                    type: 'hbox' 
+                layout: {
+                    type: 'hbox'
                 },
                 items: [
                     Ext.create('Ext.panel.Panel', {
@@ -433,7 +452,7 @@ Ext.define('Taco.view.website.Tree', {
                         listFQN: record.get('originalDocumentListName')
                     });
 
-                    var destroy = function() {
+                    var destroy = function () {
                         cmsDoc.destroy({
                             success: function () {
                                 record.destroy();
@@ -446,7 +465,7 @@ Ext.define('Taco.view.website.Tree', {
                     var request = {
                         url: '/admin/app/entities/read?list=pages@mozu&entityType=cms&id=' + record.get('originalId'),
                         method: 'GET',
-                        success: function(operation, res) {
+                        success: function (operation, res) {
 
                             var pubRecord = JSON.parse(operation.responseText);
                             pubRecord = pubRecord.items && pubRecord.items[0] ? pubRecord.items[0] : null;
@@ -459,7 +478,7 @@ Ext.define('Taco.view.website.Tree', {
                             destroy();
 
                         },
-                        failure: function() {
+                        failure: function () {
                             destroy();
                         }
                     };
@@ -467,7 +486,7 @@ Ext.define('Taco.view.website.Tree', {
                     Ext.Ajax.request(request);
 
                 }
-                
+
             }
         });
 
@@ -560,43 +579,43 @@ Ext.define('Taco.view.website.Tree', {
             items: [{
                 xtype: 'form',
                 items: [{
-                        xtype: 'textfield',
-                        allowBlank: false,
-                        allowOnlyWhitespace: false,
-                        name: 'title',
-                        width: '100%',
-                        fieldLabel: 'Page Title',
-                        listeners: {
-                            change: function (cmp, newValue) {
-                                cmp.slugField = cmp.slugField || cmp.up('form').down('taco-slugfield');
-                                var previous = cmp.slugField.onNameChangeValue,
-                                    current = cmp.slugField.getValue();
-                                if (current && previous !== current) {
-                                    return;
-                                }
-                                cmp.slugField.setValue(newValue);
-                                cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
+                    xtype: 'textfield',
+                    allowBlank: false,
+                    allowOnlyWhitespace: false,
+                    name: 'title',
+                    width: '100%',
+                    fieldLabel: 'Page Title',
+                    listeners: {
+                        change: function (cmp, newValue) {
+                            cmp.slugField = cmp.slugField || cmp.up('form').down('taco-slugfield');
+                            var previous = cmp.slugField.onNameChangeValue,
+                                current = cmp.slugField.getValue();
+                            if (current && previous !== current) {
+                                return;
                             }
+                            cmp.slugField.setValue(newValue);
+                            cmp.slugField.onNameChangeValue = cmp.slugField.getValue();
                         }
-                    },
-                    {
-                        xtype: 'taco-slugfield',
-                        allowBlank: false,
-                        allowOnlyWhitespace: false,
-                        name: 'name',
-                        width: '100%',
-                        fieldLabel: 'Page Url'
-                    }, {
-                        name: 'docInfo',
-                        xtype: 'selectfield',
-                        fieldLabel: 'Choose type',
-                        queryMode: 'local',
-                        valueField: 'id',
-                        displayField: 'title',
-                        width: '100%',
-                        emptyText: 'Select',
-                        store: pageTypeDefinitionStore
-                    }]
+                    }
+                },
+                {
+                    xtype: 'taco-slugfield',
+                    allowBlank: false,
+                    allowOnlyWhitespace: false,
+                    name: 'name',
+                    width: '100%',
+                    fieldLabel: 'Page Url'
+                }, {
+                    name: 'docInfo',
+                    xtype: 'selectfield',
+                    fieldLabel: 'Choose type',
+                    queryMode: 'local',
+                    valueField: 'id',
+                    displayField: 'title',
+                    width: '100%',
+                    emptyText: 'Select',
+                    store: pageTypeDefinitionStore
+                }]
             }],
             listeners: {
                 beforesave: {
@@ -609,8 +628,8 @@ Ext.define('Taco.view.website.Tree', {
                             cmsDoc;
 
                         cmsDoc = Ext.create('Taco.model.CmsDocument', {
-                          //  documentTypeFQN: values.docInfo.documentTypeFQN,
-                        //    listFQN: values.docInfo.listFQN,
+                            //  documentTypeFQN: values.docInfo.documentTypeFQN,
+                            //    listFQN: values.docInfo.listFQN,
                             name: values.name,
                             properties: {
                                 title: values.title,
@@ -628,7 +647,7 @@ Ext.define('Taco.view.website.Tree', {
                                     editAction: 'move',
                                     nodeType: 'page',
                                     originalDocumentListName: cmsRecord.get('listFQN'),
-                                    url: '/cms/' + cmsRecord.get('listFQN') +'/' + cmsRecord.get('name'),
+                                    url: '/cms/' + cmsRecord.get('listFQN') + '/' + cmsRecord.get('name'),
                                     name: values.title
                                 });
                                 navRecord.setDirty();

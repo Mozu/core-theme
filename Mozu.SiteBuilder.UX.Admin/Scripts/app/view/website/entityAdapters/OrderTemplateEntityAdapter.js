@@ -17,7 +17,6 @@ Ext.define('Taco.view.website.entityAdapters.OrderTemplateEntityAdapter', {
 
 
 
-
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();

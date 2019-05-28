@@ -15,7 +15,7 @@ Ext.define('Taco.view.filter.OperatorField', {
         allowBlank: false,
         value: null,
         supportedOperators: [
-            "eq", "ne", "req", "lt", "le", "gt", "ge", "in"
+            "eq", "ne", "req", "lt", "le", "gt", "ge", "in", "nin"
         ],
         recurseText: 'Include Child Categories'
     },
@@ -123,7 +123,7 @@ Ext.define('Taco.view.filter.OperatorField', {
 
     isRecursiveOperator : function(value) {
         value = value || this.getValue();
-        if (value === 'in') {
+        if (value === 'in' || value === 'nin') {
             return false;
         }
         return (this.isRecursiveAllowed() && value && (value == "eq" || value == "req"));

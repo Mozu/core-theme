@@ -36,7 +36,7 @@ Ext.define('Taco.view.filter.BulkEditModal', {
         var me = this;
 
         var recsToStrings = this.values.map(function(rec) {
-            return rec.get('id');
+            return rec.get('id') || rec.get('code');
         });
 
         var values = Ext.isArray(recsToStrings)

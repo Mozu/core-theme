@@ -11,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System;
+using Mozu.Core.Expressions;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
 {
@@ -56,6 +57,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set { _siteBuilderApiContext = value; }
         }
 
+     
         private Task _contextInitTasks;
 
         public Task ContextInitializationTasks
@@ -64,7 +66,9 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             {
                 if (_contextInitTasks == null)
                 {
-                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService, this.EntityListService).InitCmsPageContext(this.PageContext, this.SiteContext ), this.SiteContext.Init());
+                _contextInitTasks = Task.WhenAll(
+                    new CmsHelper(CmsService).InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluaton, PageRuleVisitor), 
+                    SiteContext.Init());
                 }
                 return _contextInitTasks;
             }
@@ -108,7 +112,32 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             }
         }
 
+        //private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
 
+        private ExpressionEvaluatorVisitor<CmsPageRuleContext> _pageRuleVisitor;
+        public ExpressionEvaluatorVisitor<CmsPageRuleContext> PageRuleVisitor
+        {
+            get
+            {
+                return _pageRuleVisitor ?? (_pageRuleVisitor =
+                           LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>().Value);
+            }
+
+            set { _pageRuleVisitor = value; }
+        }
+
+        private IExpressionEvaluator _expressionEvaluator;
+        public IExpressionEvaluator ExpressionEvaluaton
+        {
+            get
+            {
+                return _expressionEvaluator ?? (_expressionEvaluator = LifetimeScope.Resolve<IExpressionEvaluator>());
+            }
+            set
+            {
+                _expressionEvaluator = value;
+            }
+        }
 
         PageContext _pc;
         public PageContext PageContext

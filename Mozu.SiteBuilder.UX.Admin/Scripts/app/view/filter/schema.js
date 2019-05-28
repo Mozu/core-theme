@@ -268,6 +268,9 @@ Ext.define('Taco.view.filter.Schema', {
         "string": {
             xtype:"textfield"
         },
+        "stringarray": {
+            xtype:"textfield"
+        },
         "float": {
             xtype: "numberfield"
         },

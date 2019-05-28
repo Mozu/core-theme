@@ -5,25 +5,16 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Burrows.Publishing;
 using Mozu.Core;
-using Mozu.Core.Api;
-using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts.Client;
 using Mozu.Core.Api.ErrorHandler;
-using Mozu.Core.Api.Handlers.Message;
-using Mozu.Core.Behaviors;
 using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Publish;
 using Mozu.Core.Settings;
-using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Catalog;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.Mobile;
-using Mozu.SiteBuilder.Mvc.Navigation;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-using Mozu.InstalledApplications.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.UX.Admin.Api;
@@ -44,57 +35,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
         protected override void Load(ContainerBuilder builder)
         {
             RegisterServiceContracts(builder);
-         
-            
+
+
             RegisterServiceClients(builder);
         }
 
         private void RegisterServiceContracts(ContainerBuilder builder)
         {
             builder.ScanAssemblyAndRegisterTypes(ThisAssembly,
-                                                 f => f.GetCustomAttributes(typeof(ServiceContractAttribute), false).Any());
+                f => f.GetCustomAttributes(typeof(ServiceContractAttribute), false).Any());
         }
+
         void RegisterServiceClients(ContainerBuilder builder)
         {
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductAdmin.Contracts.Category  ).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteBuilder.Mvc.ISiteBuilderApiContext ).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AdminUser.Contracts.Clients.IMultiScopeInvitationWebApiClient ).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Content.Contracts.Clients.DocumentListWebApiClient  ).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingAdmin.Contracts.CarrierConfiguration).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ScheduledEvent.Contracts.Clients.IPublishSetWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.InstalledApplications.Contracts.Clients.IApplicationsWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ShippingRuntime.Contracts.Clients.ShippingWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.Clients.CheckoutSettingsWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.General.Contracts.Clients.GeneralSettingsWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Customer.Contracts.Clients.CustomerAccountWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Location.Contracts.Clients.ILocationAdminWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.CommerceRuntime.Contracts.Products.Product).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mvc.CookieProvider).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Provisioning.Contracts.Clients.IProvisioningWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.AppDev.Contracts.Clients.IAppsWebApiClient).Assembly);
-            //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.ProductRuntime.Contracts.Clients.PriceListRuntimeWebApiClient).Assembly);
-
             builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
-            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().As<ISiteBuilderApiContext>().InstancePerLifetimeScope()
+            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().As<ISiteBuilderApiContext>()
+                .InstancePerLifetimeScope()
                 .WithProperty("CmsDraftState", "latest");
-
-            //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerDependency();
 
             builder.RegisterType<NavigationController.AdminRouteConfig>().As<IRouteConfig>().SingleInstance();
 
             builder.RegisterInstance<System.Runtime.Caching.ObjectCache>(System.Runtime.Caching.MemoryCache.Default);
 
-            //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
+            builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>()
+                .InstancePerLifetimeScope();
 
-            builder.RegisterType<NoOpMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerLifetimeScope();
-
-            //builder.Register(c => new ProductRuntimeWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductRuntimeWebApiClient>().InstancePerLifetimeScope();
-            //builder.Register(c => new ProductSearchWebApiClient(c.Resolve<IServiceClientMessageHandler>())).As<IProductSearchWebApiClient>().InstancePerLifetimeScope();
-            
-
-            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>()
+                .WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
             //todo: remove once core updated.
             //remove web.config setting.
@@ -111,57 +79,58 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 return pcrc;
             }).As<IProductCategoryRuntimeWebApiClient>();
 
-
-            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX.Admin"))
+            builder.Register(c =>
+                    c.Resolve<ISettings>()
+                        .CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX.Admin"))
                 .As<IPublisher>().SingleInstance();
 
             builder.RegisterType<SearchTuningRuleFilterBuilder>().As<ISearchTuningRuleFilterBuilder>().SingleInstance();
 
             builder.RegisterType<AdminStorefrontCache>().As<IStorefrontCache>();
-            builder.RegisterInstance<AdminCache>(AdminCache.Instace).SingleInstance();
-            
+            builder.RegisterInstance(AdminCache.Instace).SingleInstance();
+
             builder
                 .Register(c =>
-            {
-                var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
-                var conString = string.Format(format.Value, Guid.NewGuid().ToString("N"));
-                var cacheInvalidator = new AdminCacheItemsInvalidConsumer();
-                var lifeTimeScope = c.Resolve<ILifetimeScope>();
-                var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator, ComponentRegistry = lifeTimeScope.ComponentRegistry };
+                {
+                    var format = c.Resolve<ISettings>()
+                        .ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
+                    var conString = string.Format(format.Value, Guid.NewGuid().ToString("N"));
+                    var cacheInvalidator = new AdminCacheItemsInvalidConsumer();
+                    var lifeTimeScope = c.Resolve<ILifetimeScope>();
+                    var burrowsScope = new BurrowsConumerScope()
+                    {
+                        Thing = cacheInvalidator,
+                        ComponentRegistry = lifeTimeScope.ComponentRegistry
+                    };
 
-                var factory = ServiceBusFactory.New(sbc =>
-                sbc
-                  .Configure(conString, subs => subs.Consumer<AdminCacheItemsInvalidConsumer>(() => cacheInvalidator))
-                  .SetConcurrentConsumerLimit(2)
-
-                );
-
-
-                return factory;
-            })
-
-            .AutoActivate();
-
-
+                    var factory = ServiceBusFactory.New(sbc =>
+                        sbc
+                            .Configure(conString,
+                                subs => subs.Consumer<AdminCacheItemsInvalidConsumer>(() => cacheInvalidator))
+                            .SetConcurrentConsumerLimit(2)
+                    );
+                    return factory;
+                })
+                .AutoActivate();
         }
 
         class BurrowsConumerScope : ILifetimeScope, IDisposer
         {
             public object Thing { get; set; }
+
             public object ResolveComponent(IComponentRegistration registration, IEnumerable<Parameter> parameters)
             {
                 return Thing;
             }
 
             public IComponentRegistry ComponentRegistry { get; set; }
+
             public void Dispose()
             {
-
             }
 
             public void AddInstanceForDisposal(IDisposable instance)
             {
-
             }
 
             public ILifetimeScope BeginLifetimeScope()
@@ -186,11 +155,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
 
             public IDisposer Disposer
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
+
             public object Tag { get; set; }
             public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning;
             public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding;

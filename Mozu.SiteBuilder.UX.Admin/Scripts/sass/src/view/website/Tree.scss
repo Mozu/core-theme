@@ -1,265 +1,263 @@
 .#{$vprefix}website-tree {
+  table tbody tr {
+    &:last-child {
+      .#{$vprefix}website-tree-node-group {
+        border-bottom-width: 1px;
+      }
+    }
+  }
 
-    table tbody tr {
-        &:last-child {
-
-            .#{$vprefix}website-tree-node-group {
-                border-bottom-width: 1px;
-            }
-        }
+  .#{$vprefix}sidebar-refresh-btn {
+    &:active,
+    &.#{$prefix}btn-default-toolbar-small-pressed {
+      background-color: $light-bg;
+      text-decoration: none;
     }
 
-    .#{$vprefix}sidebar-refresh-btn {
-        &:active,
-        &.#{$prefix}btn-default-toolbar-small-pressed {
-            background-color: $light-bg;
-            text-decoration: none;
-        }
-
-        .#{$prefix}refresh-btn {
-            &:active {
-                &::after {
-                    background-color: $light-bg;
-                }
-            }
-        }
-
-        &:focus,
-        &:hover {
-            background-image: none;
-            background-color: $light-bg;
-            border-color: transparent;
-            text-decoration: none;
-        }
-    }
-
-    .#{$prefix}sidebar-refresh-btn {
+    .#{$prefix}refresh-btn {
+      &:active {
         &::after {
-            padding: 0;
-            top: -14px;
+          background-color: $light-bg;
         }
+      }
     }
 
-    .#{$prefix}grid-body,
-    .#{$prefix}panel-body,
+    &:focus,
+    &:hover {
+      background-image: none;
+      background-color: $light-bg;
+      border-color: transparent;
+      text-decoration: none;
+    }
+  }
+
+  .#{$prefix}sidebar-refresh-btn {
+    &::after {
+      padding: 0;
+      top: -14px;
+    }
+  }
+
+  .#{$prefix}grid-body,
+  .#{$prefix}panel-body,
+  .#{$prefix}grid-td {
+    background-color: $card-button-bg;
+
+    &.#{$vprefix}website-tree-node-group {
+      background-color: $white-color;
+      border-color: $nav-element-active-border;
+      border-top-width: 1px;
+
+      .#{$prefix}tree-node-text {
+        padding: 5px 0px 5px 16px;
+      }
+    }
+  }
+
+  .#{$prefix}grid-tree-node-expanded {
     .#{$prefix}grid-td {
-        background-color: $card-button-bg;
+      &.#{$vprefix}website-tree-node-group {
+        border-bottom-width: 1px;
+      }
+    }
+  }
 
-        &.#{$vprefix}website-tree-node-group {
-            background-color: $white-color;
-            border-color: $nav-element-active-border;
-            border-top-width: 1px;
+  .#{$prefix}grid-cell {
+    background-color: $card-button-bg;
 
-            .#{$prefix}tree-node-text {
-                padding: 5px 0px 5px 16px;
-            }
-        }
+    &:hover {
+      background-color: $card-btn-disabled-border;
+    }
+  }
 
+  .#{$prefix}grid-cell-treecolumn {
+    font-size: 14px;
+  }
+
+  .#{$prefix}grid-cell-inner-treecolumn {
+    padding: 3px 5px 2px 0px;
+
+    &:hover {
+      .#{$vprefix}website-tree-menu-trigger {
+        display: block;
+      }
     }
 
-    .#{$prefix}grid-tree-node-expanded {
-        .#{$prefix}grid-td {
-
-            &.#{$vprefix}website-tree-node-group {
-                border-bottom-width: 1px;
-            }
-        }
-    }
-
-    .#{$prefix}grid-cell {
-        background-color: $card-button-bg;
-
-        &:hover {
-            background-color: $card-btn-disabled-border;
-        }
-    }
-
-
-    .#{$prefix}grid-cell-treecolumn {
-        font-size: 14px;
-    }
-
-    .#{$prefix}grid-cell-inner-treecolumn {
-        padding: 3px 5px 2px 0px;
-
-        &:hover {
-            .#{$vprefix}website-tree-menu-trigger {
-                display: block;
-            }
-        }
-
-        /**
+    /**
          * Added 10/08/2015
          * 
          * Modify tree spacer images to float left
          * TODO: Put this in the right place (not here)
          */
-        .#{$prefix}tree-elbow-img {
-            float: left;
-        }
-
+    .#{$prefix}tree-elbow-img {
+      float: left;
     }
+  }
 
-    .#{$prefix}tree-node-text {
-        font-size: 12px;
+  .#{$prefix}tree-node-text {
+    font-size: 12px;
 
-            /**
+    /**
              * Updated 10/08/2015
              */
 
-            display: block;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            text-overflow: "...            ";
-            overflow: hidden;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-overflow: "...            ";
+    overflow: hidden;
 
-        span {
-            vertical-align: top;
-        }
+    span {
+      vertical-align: top;
     }
+  }
 
-    .#{$prefix}grid-row-alt {
-        .#{$prefix}grid-td {
-            background-color: $white-color;
-        }
+  .#{$prefix}grid-row-alt {
+    .#{$prefix}grid-td {
+      background-color: $white-color;
     }
-    .#{$prefix}grid-row-selected {
-        .#{$prefix}grid-td {
-            background-color: $pill-bg-gray !important;
-        }
-
-        .#{$vprefix}website-tree-menu-trigger {
-
-            &::after {
-                color: $color-neutral-40;
-            }
-
-        }
-
-        .#{$vprefix}website-tree-icon.drag-icon {
-
-            &::after {
-                color: $color-neutral-40;
-            }
-        }
-    }
-
-    .#{$prefix}grid-row-focused {
-        .#{$vprefix}website-tree-icon.drag-icon {
-            background-color: transparent;
-        }
-    }
-
-    .#{$vprefix}website-tree-icon {
-        display: inline-block;
-        margin-right: 4px;
-        overflow: hidden;
-        height: 13px;
-        width: 12px;
-
-        &.page-icon {
-            @include icon-font($glyph-tree-page, 18px, rgb(179, 179, 179));
-            top: -1.5px;
-        }
-
-        &.template-icon {
-            @include icon-font($glyph-tree-template, 16px, rgb(179, 179, 179));
-        }
-
-        &.category-icon {
-            @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
-        }
-
-        &.folder-icon {
-            @include icon-font($glyph-tree-folder, 16px, rgb(179, 179, 179));
-        }
-
-        &.link-icon {
-            @include icon-font($glyph-link, 13px, rgb(179, 179, 179));
-        }
-
-        &.drag-icon {
-            @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
-            background-color: transparent;
-            float: right;
-
-            &.invisible {
-                visibility: hidden;
-            }
-
-            &::after {
-                cursor: pointer;
-                left: initial;
-                right: 0px;
-            }
-        }
-
-        &::after {
-            color: $color-neutral-40;
-            left: auto;
-            right: 0px;
-        }
-    }
-
-    .#{$vprefix}website-tree-sublink {
-        float: right;
+  }
+  .#{$prefix}grid-row-selected {
+    .#{$prefix}grid-td {
+      background-color: $pill-bg-gray !important;
     }
 
     .#{$vprefix}website-tree-menu-trigger {
-        float: right;
-        background-color: transparent;
-        border: 1px solid transparent;
-        height: 16px !important;
-        width: 9px !important;
-        @include border-radius(3px);
-        @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
-
-        &::after {
-            cursor: pointer;
-            left: 1px;
-            top: 0.5px;
-        }
-
-        &.active {
-            box-shadow: rgba(0,0,0,0.09) 0 0 0 1px inset;
-        }
-
-        &:hover {
-            &::after {
-                color: $color-neutral-40;
-            }
-        }
+      &::after {
+        color: $color-neutral-40;
+      }
     }
+
+    .#{$vprefix}website-tree-icon.drag-icon {
+      &::after {
+        color: $color-neutral-40;
+      }
+    }
+  }
+
+  .#{$prefix}grid-row-focused {
+    .#{$vprefix}website-tree-icon.drag-icon {
+      background-color: transparent;
+    }
+  }
+
+  .#{$vprefix}website-tree-icon {
+    display: inline-block;
+    margin-right: 4px;
+    overflow: hidden;
+    height: 13px;
+    width: 12px;
+
+    &.page-icon {
+      @include icon-font($glyph-tree-page, 18px, rgb(179, 179, 179));
+      top: -1.5px;
+    }
+
+    &.template-icon {
+      @include icon-font($glyph-tree-template, 16px, rgb(179, 179, 179));
+    }
+
+    &.category-icon {
+      @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
+    }
+
+    &.folder-icon {
+      @include icon-font($glyph-tree-folder, 16px, rgb(179, 179, 179));
+    }
+
+    &.link-icon {
+      @include icon-font($glyph-link, 13px, rgb(179, 179, 179));
+    }
+
+    &.drag-icon {
+      @include icon-font($glyph-reorder, 13px, rgb(179, 179, 179));
+      background-color: transparent;
+      float: right;
+
+      &.invisible {
+        visibility: hidden;
+      }
+
+      &::after {
+        cursor: pointer;
+        left: initial;
+        right: 0px;
+      }
+    }
+
+    &::after {
+      color: $color-neutral-40;
+      left: auto;
+      right: 0px;
+    }
+  }
+
+  .#{$vprefix}website-tree-sublink {
+    float: right;
+  }
+
+  .#{$vprefix}website-tree-menu-trigger {
+    float: right;
+    background-color: transparent;
+    border: 1px solid transparent;
+    height: 16px !important;
+    width: 9px !important;
+    @include border-radius(3px);
+    @include icon-font($glyph-more-vert, 13px, $color-neutral-75);
+
+    &::after {
+      cursor: pointer;
+      left: 1px;
+      top: 0.5px;
+    }
+
+    &.active {
+      box-shadow: rgba(0, 0, 0, 0.09) 0 0 0 1px inset;
+    }
+
+    &:hover {
+      &::after {
+        color: $color-neutral-40;
+      }
+    }
+  }
 }
 
 // search items
 .#{$vprefix}search-item-grid {
-    
-    .x-column-header-trigger {
-        visibility: hidden;
-    }
+  .x-column-header-trigger {
+    visibility: hidden;
+  }
 
-    .x-grid-cell-inner {
-        padding: initial;
-        font-size: 12px;
-    }
+  .x-grid-cell-inner {
+    padding: initial;
+    font-size: 12px;
+  }
 }
 
 .#{$vprefix}tree-icon {
-    display: inline-block;
-    margin-right: 5px;
+  display: inline-block;
+  margin-right: 5px;
 
-    &.cat {
-        @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
-        &::after {
-            top: 4px;
-        }
+  &.cat {
+    @include icon-font($glyph-tree-layers, 16px, rgb(179, 179, 179));
+    &::after {
+      top: 4px;
     }
-    &.doc {
-        @include icon-font($glyph-tree-page, 16px, rgb(179, 179, 179));
-        &::after {
-            top: 3px;
-        }   
+  }
+  &.doc {
+    @include icon-font($glyph-tree-page, 16px, rgb(179, 179, 179));
+    &::after {
+      top: 3px;
     }
+  }
 }
 
+.variationGrid .x-grid-body {
+  overflow: hidden !important;
+}
+
+.variationGrid .x-column-header-last,
+.variationGrid .x-grid-body .x-grid-cell-last {
+  padding: 3px 14px !important;
+}

@@ -238,7 +238,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
         [HttpGet]
-        public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null)
+        public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null, string variationId = "")
         {
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
@@ -257,7 +257,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         invalidator.Invalidate();
                         viewMode = DataViewModeType.Pending;
                         domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
-                        break;
+                        if (!String.IsNullOrEmpty(variationId))
+                        {
+                            var qstring = new NameValueCollection();
+                            var queryPosition = redir.IndexOf("?");
+                            if (!string.IsNullOrEmpty(redir) && queryPosition > -1)
+                            {
+                                qstring = HttpUtility.ParseQueryString(redir.Substring(redir.IndexOf("?")));
+                                qstring.Add("variationId", variationId);
+                            }
+                            else
+                            {
+                                qstring.Add("variationId", variationId);
+                            }
+                            var endPosition = (queryPosition > -1) ? queryPosition : redir.Length;
+                            redir = redir.Substring(0, endPosition) + "?" + string.Join("&", qstring.AllKeys.Select(key => key + "=" + qstring[key]).ToArray());
+                        }
+                            break;
+
                     }
                 case "editing":
                     {
@@ -310,6 +327,23 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                 authHelper.ClearStorefrontTokens();
                                 authHelper.ClearSessionToken();
                             }
+                            if (!String.IsNullOrEmpty(variationId))
+                            {
+                                qstring = new NameValueCollection();
+                                var queryPosition = redir.IndexOf("?");
+                                if (!string.IsNullOrEmpty(redir) && queryPosition > -1)
+                                {
+                                    qstring = HttpUtility.ParseQueryString(redir.Substring(redir.IndexOf("?")));
+                                    qstring.Add("variationId", variationId);
+                                }
+                                else
+                                {
+                                    qstring.Add("variationId", variationId);
+                                }
+                                var endPosition = (queryPosition > -1) ? queryPosition : redir.Length;
+                                redir = redir.Substring(0, endPosition) + "?" + string.Join("&", qstring.AllKeys.Select(key => key + "=" + qstring[key]).ToArray());
+                            }
+
                         }
                         break;
                     }
@@ -323,6 +357,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
 
             string newHostname = (domainList.FirstOrDefault());
+
+            if(!String.IsNullOrEmpty(variationId))
+            {
+                this.PageContext.VariationId = variationId;
+            }
+            
+
             bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
 
             if (!string.IsNullOrEmpty(transfer))
@@ -339,7 +380,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 headers[Headers.LOCALE] = site.DefaultLocaleCode;
                 headers[Headers.CURRENCY] = site.DefaultCurrencyCode;
                 headers[Headers.DATA_VIEW_MODE] = viewMode.ToString();
-
+                
                 return new TransferResult(redirUrl)
                 {
                     Headers = headers

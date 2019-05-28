@@ -157,6 +157,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CMS\CmsPageRule.cs" />
+    <Compile Include="Admin\CMS\CmsPageRuleContext.cs" />
     <Compile Include="Admin\CMS\DocumentRequest.cs" />
     <Compile Include="Admin\CMS\CmsPageContext.cs" />
     <Compile Include="Admin\CMS\DocumentDraft.cs" />
@@ -193,19 +195,13 @@
     <Compile Include="Settings\Settings.cs" />
     <Compile Include="Settings\TimeZone.cs" />
     <Compile Include="StoreFront\Catalog\Product.cs" />
-    <Compile Include="Admin\CMS\Document.cs" />
-    <Compile Include="Admin\CMS\DocumentProperty.cs" />
     <Compile Include="Admin\CMS\WidgetPreviewContext.cs" />
-    <Compile Include="StoreFront\CMS\CmsDocumentBase.cs" />
-    <Compile Include="StoreFront\CMS\CmsExtensions.cs" />
     <Compile Include="StoreFront\CMS\Constants.cs" />
-    <Compile Include="StoreFront\CMS\Document.cs" />
     <Compile Include="StoreFront\CMS\Facet.cs" />
     <Compile Include="StoreFront\CMS\ImageUrl.cs" />
     <Compile Include="StoreFront\CMS\LayoutDefinition.cs" />
     <Compile Include="StoreFront\CMS\PageDefault.cs" />
     <Compile Include="StoreFront\CMS\PageTypeDefinition.cs" />
-    <Compile Include="StoreFront\CMS\Post.cs" />
     <Compile Include="StoreFront\CMS\WidgetDefinition.cs" />
     <Compile Include="StoreFront\CMS\ICmsTypeHelper.cs" />
     <Compile Include="StoreFront\Commerce\Cart.cs" />

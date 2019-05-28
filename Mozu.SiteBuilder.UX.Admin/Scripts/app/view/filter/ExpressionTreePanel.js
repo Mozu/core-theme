@@ -37,15 +37,15 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
     singleExpand: true,
 
-    editable :false,
-        
+    editable: false,
+
     // shows a button that allows user to manually enter the data in a code editor;
     showCodeButton: true,
 
     //shows preview button
     showPreviewButton: true,
 
-    disableContextMenuClick : false,
+    disableContextMenuClick: false,
 
     // puts the tools into a header toolbar with overflow management and default button configuration; 
     headerToolbar: true,
@@ -56,7 +56,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         type: null
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
         me.title = "Expression";
         me.tools = me.tools || [];
@@ -70,25 +70,30 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 text: 'Name',
                 xtype: "treecolumn",
                 menuDisabled: true,
-                renderer: function(value, metaData, record, rowIndex, colIndex, store, view) {
+                renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
                     if (record.data.type == "container") {
-                        return (record.data.logicalOperator == "or") ? "Any of the following" : "All of the following";
+                        return (record.data.operator == "or") ? "Any of the following" : "All of the following";
                     } else {
                         var operator = Taco.filter.operatorStore.getById(record.get("operator"));
                         var field = Taco.filter.fieldStore.getById(record.get("left"));
                         var filterTpl = new Ext.XTemplate('{left} {operator} {right}');
                         var leftText = (field) ? field.get("text") : record.get("left");
                         var retVal = "";
+                        var right = record.get("right");
+
+                        if (record.get('rightType') === 'datetime') {
+                            right = Ext.Date.format(new Date(record.get("right")), 'n/j/Y g:i a');
+                        }
 
                         if (record.get("right")) {
                             retVal = filterTpl.apply({
                                 left: leftText,
                                 operator: operator.get("text"),
-                                right: record.get("right")
+                                right: right
                             });
                         } else {
                             // null value use case.
-                            retVal = (operator.get("id") === "eq") ? leftText + " has no value" : leftText +" has a value";
+                            retVal = (operator.get("id") === "eq") ? leftText + " has no value" : leftText + " has a value";
                         }
                         return retVal;
                     }
@@ -96,7 +101,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 flex: 1,
                 dataIndex: 'text',
                 sortable: false
-            } 
+            }
         ];
 
         if (this.showTypeColumn) {
@@ -117,7 +122,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 onMenuShow: function (menu, eventData) {
                     var deleteMenuItem = menu.down("#deleteMenuItem"),
                         createFilterMenuItem = menu.down("#createFilterMenuItem"),
-                        createContainerMenuItem= menu.down("#createContainerMenuItem"),
+                        createContainerMenuItem = menu.down("#createContainerMenuItem"),
                         record = eventData.record;
 
                     createFilterMenuItem.hidden = (record.get('type') != "container");
@@ -128,12 +133,12 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     {
                         text: 'Edit',
                         width: 260,
-                        accelerator:"ENTER",
+                        accelerator: "ENTER",
                         //requiredBehaviors: {
                         //    model: 'Taco.model.Discount',
                         //    behavior: 'update'
                         //},
-                        menuColumnHandler: function(item, eventData) {
+                        menuColumnHandler: function (item, eventData) {
                             var record = eventData.record;
                             me.editNode(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
 
@@ -172,9 +177,9 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
                         text: 'Add Group',
                         itemId: "createContainerMenuItem",
-                        width:260,
+                        width: 260,
                         accelerator: "G",
-                        menuColumnHandler: function(item, eventData) {
+                        menuColumnHandler: function (item, eventData) {
                             var record = eventData.record;
                             me.createContainer(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
 
@@ -187,7 +192,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                         width: 260,
                         itemId: "deleteMenuItem",
                         accelerator: "DELETE",
-                        menuColumnHandler: function(item, eventData) {
+                        menuColumnHandler: function (item, eventData) {
                             var record = eventData.record;
                             me.deleteNode(record.get("id"), eventData.record, eventData.item, eventData.rowIndex, eventData.e);
 
@@ -218,7 +223,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             this.initEditableEvents();
         }
 
-        
+
         if (this.showCodeButton) {
             this.tools.push(
                 {
@@ -227,7 +232,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     scale: 'medium',
                     text: 'Advanced',
                     handler: this.openCodeEditor,
-                    scope:me
+                    scope: me
                 }
             );
         }
@@ -242,10 +247,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 scope: me
             });
         }
-        
-        this.store = Ext.create('Ext.data.TreeStore', {
+
+        this.store = this.store || Ext.create('Ext.data.TreeStore', {
             model: "Taco.model.ExpressionTree",
-            
+
             //model: treeModel,
             defaultRootProperty: "nodes"
         });
@@ -266,14 +271,14 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var selMod = me.getSelectionModel();
         var selectedRecords = selMod.getSelection() || me.getRootNode();
         selMod.deselectAll();
-        
-        
-        
+
+
+
         //var rootNode = me.getRootNode();
         //me.getSelectionModel().select(rootNode);
         selMod.select(selectedRecords);
     },
-    
+
     onBoxReady: function () {
         var me = this;
 
@@ -285,10 +290,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             var selMod = me.getSelectionModel(),
                 selectedRecords = me.getRootNode();
 
-            selMod.select(selectedRecords);
+            //selMod.select(selectedRecords);
         }
 
-        this.mon(this.view.el, 'focusin', function() {
+        this.mon(this.view.el, 'focusin', function () {
             this.onFocusIn();
         }, this);
 
@@ -305,16 +310,16 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             ignoreInputFields: true,
 
             binding: [
-                 {
-                     // Backspace on windows and delete key on mac. need to prevent the navigate
-                     key: 8,
+                {
+                    // Backspace on windows and delete key on mac. need to prevent the navigate
+                    key: 8,
 
-                     fn: function () {
-                     },
-                     // prevents the event from bubbling past the modal;
-                     defaultEventAction: 'stopEvent',
-                     scope: me
-                 }
+                    fn: function () {
+                    },
+                    // prevents the event from bubbling past the modal;
+                    defaultEventAction: 'stopEvent',
+                    scope: me
+                }
             ]
         });
 
@@ -331,10 +336,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         var menuColumns = Ext.Array.filter(me.columns, function (col) { return col.isXType && col.isXType('taco.menucolumn'); });
 
-        
+
         if (me.disableContextMenuClick !== true && menuColumns && menuColumns.length == 1) {
-        
-        
+
+
 
             me.mon(me, 'itemcontextmenu', function (cmp, record, item, index, e) {
                 var eventData = {
@@ -345,8 +350,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     record: record,
                     item: item
                 },
-                menu = menuColumns[0].getMenu(eventData);
-                
+                    menu = menuColumns[0].getMenu(eventData);
+
                 menu.on('beforehide', function () {
                     me.refreshFocus();
                 }, me);
@@ -359,13 +364,13 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     },
     // template method that gets called when their is a change to the expression data. This includes node move, node create, node edit, node delete, and advanced edit;
     // returns the this
-    onDataChanged : Ext.emptyFn,
+    onDataChanged: Ext.emptyFn,
 
     initEditableEvents: function () {
         var me = this;
 
         this.mon(me, "itemdblclick", function (view, record, item, index, e) {
-            me.editNode(record.get("id"),record, item, index, e);
+            me.editNode(record.get("id"), record, item, index, e);
         });
 
         this.mon(me, "itemMove", function (view, oldParent, newParent, index, e) {
@@ -373,23 +378,23 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         });
 
         //this.mon(me, "itemcontextmenu", function (view, record, item, index, e) {
-            
+
         //});
 
         var xOffset = 150,
             yOffset = 10;
 
 
-        
+
 
         this.mon(me, "itemkeydown", function (view, record, item, index, e) {
-            
+
             switch (e.getKey()) {
                 // add condition
                 case Ext.EventObject.C:
                     me.createFilter();
                     break;
-                    // create group
+                // create group
                 case Ext.EventObject.G:
                     me.createContainer();
                     break;
@@ -403,17 +408,17 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                 case 8:
                 case e.DELETE:
                     me.deleteNode(record.get("id"), record, item, index, e);
-                    
+
                     break;
             }
-        },me, {
-            buffer:100
+        }, me, {
+            buffer: 100
         });
     },
 
     editNode: function (nodeId, record, item, index, e) {
         var me = this;
-        // if editing a filter container. need to show a menu to change the nodes logicalOperator
+        // if editing a filter container. need to show a menu to change the nodes operator
         if (record.get("type") == "container") {
             me.editContainer(nodeId, record, item, index, e);
         } else {
@@ -436,23 +441,25 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     editFilter: function (nodeId, record, item, index, e) {
         var me = this;
 
-         var win = Ext.create('Taco.view.filter.EditFilterModal', {
-             record: record,
-             type: this.getType(),
-             listeners: {
-                 scope:me,
-                 'aftersaveclose': function () {
-                     this.fireEvent("dataChanged", this);
-                     me.refreshFocus();
-                 },
-                 'aftercancelclose': function () {
-                     me.refreshFocus();
-                 }
-             }
-         });
+        var win = Ext.create('Taco.view.filter.EditFilterModal', {
+            id: "editFilterModal",
+            record: record,
+            type: this.getType(),
+            listeners: {
+                scope: me,
+                'aftersaveclose': function () {
+                    this.fireEvent("dataChanged", this);
+                    me.refreshFocus();
+                },
+                'aftercancelclose': function () {
+                    me.refreshFocus();
+                }
+            },
+            primaryText: me.primaryModalButtonText || 'Save'
+        });
 
     },
-    
+
     createFilter: function (id, record, item, rowIndex, e) {
         var me = this;
         if (!record) {
@@ -462,9 +469,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         if (record.get("type") !== "container") {
             return;
         }
-        
-        var newRecord = Ext.create('Taco.model.ExpressionTree', {
-            leaf:true,
+
+
+        var newRecord = Ext.create(me.store.model.modelName, me.defaultExpression || {
+            leaf: true,
             left: "ProductCode",
             operator: "eq",
             right: "",
@@ -473,7 +481,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         var win = Ext.create('Taco.view.filter.EditFilterModal', {
             record: newRecord,
-            type:this.getType(),
+            type: this.getType(),
             listeners: {
                 scope: me,
                 'aftersaveclose': function () {
@@ -485,20 +493,22 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     newRecord.destroy();
                     me.refreshFocus();
                 }
-            }
+            },
+            primaryText: me.primaryModalButtonText || 'Save'
         });
     },
 
-    deleteFilter: function() {
+    deleteFilter: function () {
     },
 
-    containerDataTpl : {
+    containerDataTpl: {
         "expanded": true,
         "type": "container",
         "logicalOperator": "or",
         "nodes": []
     },
 
+    containerDataOperatorName: 'logicalOperator',
 
     createContainer: function (id, record, item, rowIndex, e) {
         if (!record) {
@@ -512,7 +522,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         }
     },
     deleteContainer: function () {
-        
+
     },
     editContainer: function (nodeId, record, item, index, e) {
         var me = this,
@@ -520,10 +530,18 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         position = (e) ? e.getXY() : [0, 0];
 
+        var item1 = {};
+        item1.text = "Any of the following";
+        item1[me.containerDataOperatorName] = "or";
+
+        var item2 = {};
+        item2.text = "All of the following";
+        item2[me.containerDataOperatorName] = "and";
+
         var menu = Ext.create('Ext.menu.Menu', {
             listeners: {
                 click: function (menu, item, e, eOpts) {
-                    record.set("logicalOperator", item.logicalOperator);
+                    record.set(me.containerDataOperatorName, item.operator);
                     this.fireEvent("dataChanged", this);
                 },
                 beforehide: function () {
@@ -533,26 +551,20 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             },
             showSeparator: false,
             items: [
-                {
-                    text: "Any of the following",
-                    logicalOperator:"or"
-                },
-                {
-                    text: "All of the following",
-                    logicalOperator: "and"
-                }
+                item1,
+                item2
             ],
             cls: 'dc-flydown-menu',
             shadow: false,
             plain: true
         });
 
-        
+
         menu.showAt(position);
     },
 
     // extracts the full data from the store
-    getValue : function() {
+    getValue: function () {
         var root = this.store.getRootNode();
         return this.serializeNode(root);
     },
@@ -574,10 +586,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             f,
             i,
             name;
-        
+
         // get persistable fields from the model to add to our persistance json
         for (f = 0; f < fields.length; f++) {
-            if (model.prototype.isFieldPersistable(fields[f],node)) {
+            if (model.prototype.isFieldPersistable(fields[f], node)) {
                 name = fields[f].name;
                 data[name] = node.data[name];
             }
@@ -585,10 +597,15 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         if (length) {
             // process the child nodes recursively
-            data.nodes = [];
+            var nodes = "nodes"
+            if (this.store) {
+                nodes = this.store.defaultRootProperty;
+            }
+
+            data[nodes] = [];
             for (i = 0; i < length; i++) {
-                data.nodes[i] = {};
-                this.serializeNode(childNodes[i], data.nodes[i]);
+                data[nodes][i] = {};
+                this.serializeNode(childNodes[i], data[nodes][i]);
             }
         }
 
@@ -597,7 +614,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     // need to do some data manipulation to get the tree data in a format that the tree store needs.
     // specifically adding expanded and leaf members;
     preProcessTreeData: function (data) {
-        
+
 
 
         return data;
@@ -605,7 +622,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     },
 
     // loads full data object into the store
-    setValue: function (data,focus) {
+    setValue: function (data, focus) {
         var me = this;
 
         // make sure the root has expanded = true
@@ -614,8 +631,8 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
 
         //if (focus) {
         //    this.store.on('rootchange', function() {
-        
-                
+
+
         //        me.view.body.focus();
         //    }, me, {
         //        single: true,
@@ -634,25 +651,25 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         var root = this.store.setRootNode(data);
         // if reselection is needed then reselect the root node for now.
         // todo try and maintain the path to the new
-        
+
         if (focus) {
-          //  this.getSelectionModel().select(root);
+            //  this.getSelectionModel().select(root);
             //this.selectPath(selectedPath);
         }
 
-        
+
 
     },
 
-    validateExpression : function(categoryType) {
-      
+    validateExpression: function (categoryType) {
+
 
     },
 
-    getExpressionText: function(jsonData, callback) {
+    getExpressionText: function (jsonData, callback) {
         var me = this;
 
-        
+
         var config = {
             url: '/admin/app/category/validateexpression',
             method: 'POST',
@@ -689,10 +706,10 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         Ext.Ajax.request(config);
     },
 
-    
 
-    applyType: function(value) {
-        this.fireEvent("needsvalidation",value);
+
+    applyType: function (value) {
+        this.fireEvent("needsvalidation", value);
         return value;
 
     },
@@ -700,13 +717,13 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     openCodeEditor: function (focusCmp) {
         var me = this;
 
-        
+
         Ext.create('Taco.view.filter.EditCodeModal', {
-            type:this.getType(),
+            type: this.getType(),
             data: {
                 tree: this.getValue(),
                 text: "need to load this",
-                type:this.getType()
+                type: this.getType()
             },
             listeners: {
                 scope: me,
@@ -726,7 +743,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     var selMod = me.getSelectionModel();
                     selMod.deselectAll();
                     me.setValue(data, true);
-                    
+
                     var rootNode = me.getRootNode();
                     selMod.select(rootNode);
                     selMod.refresh();
@@ -734,7 +751,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
                     this.fireEvent("dataChanged", this);
                 },
                 aftercancelclose: function (win) {
-                    
+
                     if (focusCmp) {
                         focusCmp.focus();
                     } else {
@@ -745,9 +762,9 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
         });
     },
 
-    
 
-    openPreview: function(previewButton, evt) {
+
+    openPreview: function (previewButton, evt) {
 
         var me = this,
             treeData = this.getValue(),
@@ -762,7 +779,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
             },
             listeners: {
                 scope: me,
-                aftersaveclose: function(component, data) {
+                aftersaveclose: function (component, data) {
                     me.setValue(data.tree);
                     // set focus back on the preview button. lets not forget keyboard navigation. 
                     previewButton.focus();
@@ -776,7 +793,7 @@ Ext.define('Taco.view.filter.ExpressionTreePanel', {
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
     onDestroy: function (destroy) {
-        
+
         this.callParent(arguments);
     }
 });

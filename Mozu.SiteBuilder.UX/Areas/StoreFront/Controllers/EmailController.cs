@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,10 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
-using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api.Client;
-using Mozu.Core.Api.Contracts.Client;
-using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Messaging.Contracts.Notification;
@@ -22,7 +18,6 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.TestData;
@@ -33,42 +28,17 @@ using Mozu.SiteBuilder.UX.Models.Customers;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Mozu.CommerceRuntime.Contracts.Checkouts;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
-using Mozu.SiteBuilder.Mvc.SEO;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
+using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Newtonsoft.Json.Linq;
-using Mozu.CommerceRuntime.Contracts.Wishlists;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
-    public class ReturnEmail : Mozu.CommerceRuntime.Contracts.Returns.Return
-    {
-        public bool isMock { get; set; }
-        public Mozu.CommerceRuntime.Contracts.Orders.Order order { get; set; }
-    }
-
-    public class CheckoutEmail : Mozu.CommerceRuntime.Contracts.Checkouts.Checkout
-    {
-        public List<Order> Orders { get; set; }
-        public List<Location.Contracts.Location>  Locations { get; set; }
-    }
-
     [ContextInitialization]
     [IgnoreDataViewMode]
     public class EmailController : CmsPagesController
@@ -79,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
-        private IOrderWebApiClient _orderWebApiClient;
+        private readonly IOrderWebApiClient _orderWebApiClient;
 
         static EmailController()
         {
@@ -144,21 +114,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         public EmailController(
-            IDocumentListWebApiClient docRepo,
-            IDocumentTypeWebApiClient docTypeRepo,
-            ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
-            HyprViewEngine hyprViewEngine,
             ISitesWebApiClient sitesWebApiClient,
             ILogger logger,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
-             UrlHelper urlhelper
-            )
-            : base(docRepo, docTypeRepo, cmsService,
-                customerAccountWebApiClient, hyprViewEngine, customRouteHandler, urlhelper)
+            Lazy<UrlHelper> urlhelper,
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
+            Lazy<IExpressionEvaluator> pageRuleEvaluator
+            ) //why does this extend CMSPageController??  Ugh...
+            : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
@@ -226,18 +193,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
-        }
-
-        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
-        {
-
-            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
-
-            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
-
-            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
-            returnObj.Merge(emailParams);
-            return returnObj;
         }
 
         [HttpPost]
@@ -446,10 +401,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return obj;
         }
 
-        public class MyPackageItem : PackageItem    
+        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
         {
-            public object Product { get; set; }
+
+            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
+
+            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
+
+            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
+            returnObj.Merge(emailParams);
+            return returnObj;
         }
+
         private static string GetCmsPage(VM.PageTypeDefinition def)
         {
             return def.Id;
@@ -472,9 +435,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string GiftCardCreated = "giftcard.created";
         }
 
+        public class ReturnEmail : Mozu.CommerceRuntime.Contracts.Returns.Return
+        {
+            public bool isMock { get; set; }
+            public Mozu.CommerceRuntime.Contracts.Orders.Order order { get; set; }
+        }
 
+        public class CheckoutEmail : Mozu.CommerceRuntime.Contracts.Checkouts.Checkout
+        {
+            public List<Order> Orders { get; set; }
+            public List<Location.Contracts.Location>  Locations { get; set; }
+        }
+
+        public class MyPackageItem : PackageItem    
+        {
+            public object Product { get; set; }
+        }
     }
 
+   
     public class EmailResponse
     {
         public string Subject { get; set; }

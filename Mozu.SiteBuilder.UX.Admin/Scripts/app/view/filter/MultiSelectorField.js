@@ -14,7 +14,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         'Ext.form.field.ComboBox',
         'Taco.core.ux.form.CurrencyField',
         'Taco.view.filter.MultiSelectorGrid',
-        'Taco.view.filter.BulkEditModal'
+        'Taco.view.filter.BulkEditModal', 
+        'Taco.shared.view.field.CustomerSegmentPickerField'
     ],
 
 
@@ -143,6 +144,33 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
 
                                 Ext.Array.each(json.items, function (record) {
                                     var model = me.store.findRecord('categoryCode', record.categoryCode, 0, false, false, true);
+                                    if (model) {
+                                        model.set(record);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                    break;
+                case 'Taco.store.CustomerSegments':
+                    me.store.on('add', function (store, segRecord) {
+                        if (!me.store.data || (segRecord && segRecord.length > 0)) {
+                            return;
+                        }
+                        var searchCodes = me.store.data.items.map( function (record) {
+                            return record.get('code');
+                        });
+
+                        Ext.Ajax.request({
+                            method: 'GET',
+                            url: window.location.protocol+'//'+window.location.hostname+'/admin/app/customer/segments/list',
+                            params: 'filter=[{"property":"code","comparison":"in","value":"['+searchCodes.join(',')+']"}]',
+                            success: function (response) {
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success || !json.items) return;
+
+                                Ext.Array.each(json.items, function (record) {
+                                    var model = me.store.findRecord('code', record.code, 0, false, false, true);
                                     if (model) {
                                         model.set(record);
                                     }
@@ -367,6 +395,7 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
         configs['producttypeid'] = 'Taco.store.ProductTypes';
         configs['categories.categorycode'] = 'Taco.store.Categories';
         configs['properties.'] = 'Taco.store.Attributes';
+        configs['customer.customersegments'] = 'Taco.store.CustomerSegments';
 
         return val && configs[val] ? configs[val] : configs['default'];
     },
@@ -378,6 +407,8 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
                 return 'productCode';
             case 'Taco.store.Categories':
                 return 'categoryCode';
+            case 'Taco.store.CustomerSegments':
+                return 'code';
         }
         return 'id';
     },
@@ -472,6 +503,21 @@ Ext.define('Taco.view.filter.MultiSelectorField', {
             {
                 dataIndex: 'id',
                 text: 'Value',
+                flex: 1
+            }
+        ];
+
+        configs['customer.customersegments'] = [
+            {
+                dataIndex: 'code',
+                text: 'Code',
+                hideable: false,
+                flex: 1,
+                minWidth: 150
+            },
+            {
+                dataIndex: 'name',
+                text: 'Name',
                 flex: 1
             }
         ];

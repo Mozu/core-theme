@@ -401,7 +401,7 @@ Ext.define('Taco.view.customSchema.Grid', {
             ]
         });
 
-        if (Ext.util.Cookies.get('debugext') === 'true') {
+        if (Ext.util.Cookies.get('debugExt') || Ext.util.Cookies.get('debugext')) {
             columns[columns.length - 1].menuItems.push({
                 text: 'Edit Raw',
                 hideOnClick: false,

@@ -20,9 +20,7 @@ Ext.define('Taco.view.website.entityAdapters.ProductEntityAdapter', {
             modelFactory = Ext.ModelManager.getModel(this.modelName),
             store = this.getStore();
 
-
         me.record = store.getById(key);
-
 
         if (me.record === null) {
             me.isLoading = true;

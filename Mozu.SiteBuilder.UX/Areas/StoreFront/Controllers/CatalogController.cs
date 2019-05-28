@@ -27,7 +27,9 @@ using ProductCollection = Mozu.ProductRuntime.Contracts.ProductCollection;
 using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
+using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.Mvc.Caching;
+using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.OAF;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
@@ -54,19 +56,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         readonly ICustomRouteHandler _customRouteHandler;
         private readonly IStorefrontCache _storeFrontCache;
         private readonly UrlHelper _urlhelper;
-        static readonly JsonSerializer _productSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
-        Mozu.Core.Logging.ILogger _logger;
-        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient, IProductSearchWebApiClient searchClient,  ICustomRouteHandler customRouteHandler , IStorefrontCache storeFrontCache , UrlHelper urlhelper
-            , Mozu.Core.Logging.ILogger logger)
+        private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
+        private readonly Lazy<IExpressionEvaluator> _expressionEvaluator;
+        private static readonly JsonSerializer ProductSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
+        private readonly Core.Logging.ILogger _logger;
+        public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient,
+            IProductSearchWebApiClient searchClient, ICustomRouteHandler customRouteHandler,
+            IStorefrontCache storeFrontCache, UrlHelper urlhelper,
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
+            Lazy<IExpressionEvaluator> expressionEvaluator, Mozu.Core.Logging.ILogger logger)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
-  
             _productClient = productClient;
             _logger = logger;
             _customRouteHandler = customRouteHandler;
             _storeFrontCache = storeFrontCache;
             _urlhelper = urlhelper;
+            _pageRuleVisitor = pageRuleVisitor;
+            _expressionEvaluator = expressionEvaluator;
         }
 
         /// <summary>
@@ -152,7 +160,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             
             SetCatalogContext(product);
-            var dynamicProd = JObject.FromObject(product, _productSerializer).ToObject<ExpandoObject>(_productSerializer);
+            var dynamicProd = JObject.FromObject(product, ProductSerializer).ToObject<ExpandoObject>(ProductSerializer);
             var result = View(template, dynamicProd);
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }
@@ -324,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null)
+        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
         {
 
             var catTree = ( _categoryTreeProvider.GetAllCategories());
@@ -332,6 +340,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (cat == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
+            }
+
+            if (!String.IsNullOrEmpty(variationId))
+            {
+                PageContext.VariationId = variationId;
             }
 
             var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Category, () => Mapper.Map<IDictionary<string,object>>(cat));
@@ -343,11 +356,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return this.Request.CreateResponse(HttpStatusCode.OK);
             }
-            
-            
-
-
-
 
             PageContext.PageType = "category";
             PageContext.CategoryId = cat.CategoryId;
@@ -369,21 +377,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-            await ContextInitializationTasks;
+            await Task.WhenAll(ContextInitializationTasks);
+
+            //await _expressionEvaluator.Value.EvaluatePageRules(PageContext, _pageRuleVisitor.Value);
 
             PageContext.CmsContext.Template = new DocumentRequest
             {
-                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "category") ,
+                Path = PageContext.CmsContext.Page.Document.Get<string>("page_type_definition", "category"),
                 IncludeInactiveDocument = PageContext.IsEditMode
             };
 
 
             string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
-
-
-
-
-
 
             var result = View(template, cat);
 
@@ -393,8 +398,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 await AddCrawlerLinks(cat).ConfigureAwait(false);
             }
-
-
 
             return Request.CreateResponse(HttpStatusCode.OK, result);
         }

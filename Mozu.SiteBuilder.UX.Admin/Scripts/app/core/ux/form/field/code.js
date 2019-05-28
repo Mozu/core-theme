@@ -24,12 +24,12 @@ Ext.define('Taco.core.ux.form.field.Code', {
     showPrintMargin: true,
     fontSize: '16px',
     selectOnRender: true,
-    
+
     setReadOnly: function (value) {
         this.readOnly = value;
         if (this.editor) {
             this.editor.setReadOnly(this.readOnly);
-        } 
+        }
     },
     initComponent: function () {
         var me = this;
@@ -39,7 +39,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
             }
         });
 
-        
+
 
         me.on('render', function (cmp) {
             //if (!me.width) {
@@ -81,19 +81,19 @@ Ext.define('Taco.core.ux.form.field.Code', {
             me.editor.setFontSize(me.fontSize);
 
             me.editor.setOptions({
-                enableBasicAutocompletion: true, 
+                enableBasicAutocompletion: true,
                 enableSnippets: true,
                 enableLiveAutocompletion: false,
                 scrollPastEnd: 0.7
             });
 
             if (!me.selectOnRender) {
-                Ext.defer(function() {
+                Ext.defer(function () {
                     me.editor.clearSelection();
                     me.editor.scrollToLine(0);
                 }, 10);
             }
-            
+
             //listen for the esc key to set focus on the components el;
             this.keyNav = Ext.create('Ext.util.KeyNav', this.el, {
                 // target: this.getEl(),
@@ -105,7 +105,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
             });
 
 
-            me.fireEvent('editorready',this,this.editor);
+            me.fireEvent('editorready', this, this.editor);
 
             me.editor.on('change', function (e) {
                 var actualValue = me.editor.getValue();
@@ -118,12 +118,12 @@ Ext.define('Taco.core.ux.form.field.Code', {
                 e.text = e.text.replace(/”/g, "\"");
             });
 
-            
+
         });
         this.callParent(arguments);
     },
     getEditorId: function () {
-        return this.getInputId() ;
+        return this.getInputId();
     },
 
     getEditorEl: function () {
@@ -144,7 +144,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
         if (me.editor) {
             me.editor.setValue(me.getValue());
             if (!me.selectOnRender) {
-                Ext.defer(function() {
+                Ext.defer(function () {
                     me.editor.clearSelection();
                     me.editor.scrollToLine(0);
                 }, 10);
@@ -162,7 +162,7 @@ Ext.define('Taco.core.ux.form.field.Code', {
 
     fieldSubTpl: ['<div style="border: 1px solid #cccccc" id="{id}">{value}</div>'],
 
-    
+
 });
 
 

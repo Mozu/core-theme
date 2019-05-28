@@ -876,20 +876,20 @@ namespace Mozu.SiteBuilder.Mvc.Context
             var tasks = new List<System.Threading.Tasks.Task>();
 
             tasks.Add(_tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId)
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.TenantInfo = x.Result ?? existing?.TenantInfo, TaskContinuationOptions.OnlyOnRanToCompletion)
             );
             tasks.Add(_currencyRuntimeWebApiClient.GetCurrencyExchangeRates()
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.CurrencyExchangeRates = x.Result ?? existing?.CurrencyExchangeRates, TaskContinuationOptions.OnlyOnRanToCompletion)
             );
             tasks.Add(_locationSettingsWebApiClient.GetLocationUsages()
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.LocationUsages = x.Result ?? existing?.LocationUsages, TaskContinuationOptions.OnlyOnRanToCompletion)
             );
 
             tasks.Add(_productCategoryRuntimeWebApiClient.GetCategoryTree()
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => x.Result?.Items)
                 //  .ContinueWith(MapperContinuation<List<Mozu.ProductRuntime.Contracts.Category>, List<SBCategory>>)
                 .ContinueWith(ProcessCategories)
@@ -897,12 +897,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
             );
 
             tasks.Add(_generalSettingsWebApiClient.GetGeneralSettings()
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.GeneralSettings = x.Result ?? existing?.GeneralSettings, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
             tasks.Add(_checkoutSettingsWebApiClient.GetCheckoutSettings()
-                .ContinueWith(GenericServiceContinuation)
+                .ContinueWith(GenericServiceContinuationAllow404)
                 .ContinueWith(x => ret.CheckoutSettings = x.Result ?? existing?.CheckoutSettings, TaskContinuationOptions.OnlyOnRanToCompletion)
                 );
 
@@ -927,7 +927,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
 
                 )
-                 .ContinueWith(GenericServiceContinuation)
+                 .ContinueWith(GenericServiceContinuationAllow404)
                  .ContinueWith(x => ret.NavWebPages = x.Result ?? existing?.NavWebPages, TaskContinuationOptions.OnlyOnRanToCompletion)
                  );
 
@@ -995,7 +995,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
        public  async Task<List<SBCategory>> BuildCategoryTree()
         {
             return await _productCategoryRuntimeWebApiClient.GetCategoryTree()
-                 .ContinueWith(GenericServiceContinuation)
+                 .ContinueWith(GenericServiceContinuationAllow404)
                  .ContinueWith(x => x.Result?.Items)
                  .ContinueWith(ProcessCategories);
         }

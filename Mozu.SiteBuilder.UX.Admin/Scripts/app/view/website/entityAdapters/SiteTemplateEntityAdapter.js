@@ -13,11 +13,6 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
         destroy: true,
         publishPage: true
     },
-
-
-
-
-
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();
@@ -27,8 +22,6 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
         }
         return { listFQN: this.pageContext.cmsContext.site.listFQN, id: this.pageContext.cmsContext.site.id };
     },
-
-
 
 
     load: function () {
@@ -55,9 +48,4 @@ Ext.define('Taco.view.website.entityAdapters.SiteTemplateEntityAdapter', {
             me.set(cmsDoc);
         }
     }
-
-
-
-
-
 });

@@ -161,6 +161,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string Title { get; set; }
         string MetaDescription { get; set; }
         string MetaTitle { get; set; }
+        string VariationId { get; set; }
+        JArray Variations { get; set; }
         string MetaKeywords { get; set; }
         EditModes? EditMode { get; set; }
         UX.Models.Customers.User User { get; set; }
@@ -642,6 +644,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public bool IsEditMode { get { return _apiContext.IsEditMode; } set { _apiContext.IsEditMode = value; } }
         [JsonPreloadFilter]
         public bool IsAdminMode { get { return _apiContext.IsAdminMode; } }
+        public string VariationId { get; set; }
+        public JArray Variations { get; set; }
         public string Url { get; set; }
 
         public DataViewModeType DataViewMode { get; set; }

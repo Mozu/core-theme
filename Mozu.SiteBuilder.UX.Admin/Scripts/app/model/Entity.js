@@ -63,6 +63,12 @@ Ext.define('Taco.model.Entity', {
     },
     fields: [
         {
+            name: 'id',
+            type: 'string',
+            useNull: true,
+            defaultValue:null
+        },
+        {
             name: 'entityId',
             type: 'string',
             convert: function (v, rec) {
@@ -185,7 +191,8 @@ Ext.define('Taco.model.Entity', {
         {
             name: 'properties',
             type: 'auto',
-            useNull: true
+            useNull: true,
+            defaultValue: {}
         },
         {
             name: 'startDate',
@@ -326,7 +333,19 @@ Ext.define('Taco.model.Entity', {
         },
         writer: {
             allowSingle: false,
-            type: 'json'
+            type: 'json',
+            write: function (request) {
+                
+                var operation = request.operation,
+                    records = operation.records || [],
+                    data = [];
+
+                for (var i = 0; i < records.length; i++) {
+                    data.push(this.getRecordData(records[i], operation));
+                }
+
+                return this.writeRecords(request, data);
+            }
         }
     }
 });
