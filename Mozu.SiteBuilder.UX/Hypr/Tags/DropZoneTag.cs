@@ -219,6 +219,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var siteContext = context.SiteContext();
             var pageContext = context.PageContext();
             var viewContext = context.ViewContext();
+            var sbApiContext = context.SiteBuilderApiContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
             ZoneScope scope = ParseZoneScopeString(arguments);
             var zoneSpan = arguments.GetValueOrDefault("span", 12);
@@ -226,7 +227,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
             {
                 var cmsHelper = context.Resolve<CmsHelper>();
-                await cmsHelper.InitCmsPageContext(pageContext, siteContext).ConfigureAwait(false);
+                await cmsHelper.InitCmsPageContext(pageContext, siteContext, sbApiContext).ConfigureAwait(false);
             }
 
             var isEditmode = pageContext.IsEditMode && scope.ToStringQuickly().EqualsIgnoreCase(pageContext.EditMode.GetValueOrDefault(EditModes.page).ToString());

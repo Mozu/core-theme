@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using Autofac;
+﻿using Autofac;
+using Mozu.Core.Expressions;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
 {
@@ -56,6 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             set { _siteBuilderApiContext = value; }
         }
 
+     
         private Task _contextInitTasks;
 
         public Task ContextInitializationTasks
@@ -64,7 +65,12 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             {
                 if (_contextInitTasks == null)
                 {
-                    _contextInitTasks = Task.WhenAll(new CmsHelper(this.CmsService, this.EntityListService).InitCmsPageContext(this.PageContext, this.SiteContext ), this.SiteContext.Init());
+                    //returns a Task that will complete when ALL tasks within it complete.  await Task.WhenAll()
+                    _contextInitTasks = 
+                        Task.WhenAll(
+                            new CmsHelper(CmsService)
+                                .InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluator, PageRuleVisitor), 
+                            SiteContext.Init());
                 }
                 return _contextInitTasks;
             }
@@ -108,7 +114,26 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             }
         }
 
+        private 
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
+        public Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> PageRuleVisitor
+        {
+            get =>
+                _pageRuleVisitor;
+            //?? (_pageRuleVisitor = LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>());
 
+            set => _pageRuleVisitor = value;
+        }
+
+        private Lazy<IExpressionEvaluator> _expressionEvaluator;
+        public Lazy<IExpressionEvaluator> ExpressionEvaluator
+        {
+            get =>
+                _expressionEvaluator;
+                //?? (_expressionEvaluator = LifetimeScope.Resolve<Lazy<IExpressionEvaluator>>());
+
+            set => _expressionEvaluator = value;
+        }
 
         PageContext _pc;
         public PageContext PageContext

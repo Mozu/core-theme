@@ -1,14 +1,11 @@
-﻿using System;
+﻿using Mozu.SiteBuilder.Mvc.CMS;
+using Mozu.SiteBuilder.Mvc.Controllers;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using System.Web.Mvc;
-using System.Web.UI;
-using Mozu.SiteBuilder.Mvc.CMS;
-using Mozu.SiteBuilder.Mvc.Controllers;
 using IActionFilter = System.Web.Http.Filters.IActionFilter;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
@@ -19,22 +16,26 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
             if (controller != null || !controller.ContextInitializationTasks.IsCompleted)
             {
-                return continuation().ContinueWith(x => 
+                return continuation().ContinueWith(x =>
                     
-                    {
-                        if (controller.ContextInitializationTasks.IsCompleted &&
+                {
+                    if (controller.ContextInitializationTasks.IsCompleted && 
                             controller.PageContext != null &&
                             controller.PageContext.CmsContext != null &&
                             !controller.PageContext.CmsContext.Initialized)
-                        {
-                            return new CmsHelper(controller.CmsService, controller.EntityListService).InitCmsPageContext(controller.PageContext, controller.SiteContext  ).ContinueWith(y => x.Result);
+                    {
+                            return 
+                                new CmsHelper(controller.CmsService).InitCmsPageContext(
+                                    controller.PageContext, controller.SiteContext, controller.SbApiContext,
+                                    controller.ExpressionEvaluator, controller.PageRuleVisitor)
+                                .ContinueWith(y => x.Result);
 
                         }
                         else
                         {
                             return controller.ContextInitializationTasks.ContinueWith(y => x.Result);    
-                        }
-                        
+                    }
+
                     }).Unwrap();
             }
             return continuation();

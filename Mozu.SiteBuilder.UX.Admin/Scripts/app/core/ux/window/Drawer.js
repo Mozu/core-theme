@@ -15,7 +15,7 @@ Ext.define('Taco.core.ux.window.Drawer', {
 
     constrain: false,
 
-    minHeight: 600,
+    minHeight: 500,
     minWidth: 800,
     y: 0,
 
@@ -30,7 +30,7 @@ Ext.define('Taco.core.ux.window.Drawer', {
         dynamic: true,
         handles: 'sw s se',
         heightIncrement: 1,
-        minHeight: 600,
+        minHeight: 500,
         minWidth: 800,
         preserveRatio: true,
         widthIncrement: 1

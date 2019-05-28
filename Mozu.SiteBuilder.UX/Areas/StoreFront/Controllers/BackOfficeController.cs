@@ -477,8 +477,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "order";
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
-            return Task.WhenAll(ContextInitializationTasks).ContinueWith(_ =>
-            {
+            //Should this be WhenAll?
+            return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
                 ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
                 return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
             });

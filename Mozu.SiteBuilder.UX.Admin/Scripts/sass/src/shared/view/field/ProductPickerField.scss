@@ -1,10 +1,10 @@
 ﻿.product-picker-menu{
-    .product-code{
+    .product-code, segment-code{
 		color: $color-theme-base-dark;
 		padding-right:10px;
     }
 
-    .product-name{		
+    .product-name, segment-name{		
 		padding-right:5px;		
 	}
 }

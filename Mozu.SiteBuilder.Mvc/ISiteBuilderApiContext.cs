@@ -8,6 +8,7 @@ namespace Mozu.SiteBuilder.Mvc
         bool IsEditMode { get; set; }
         bool IsAdminMode { get; }
         bool IsDebugMode { get; set; }
+        string VariationId { get; set; }
 
         DebugModeFlagValues DebugFlags { get; set; }
         void SetUser(LightweightUserClaims user);

@@ -72,7 +72,7 @@ Ext.define('Taco.view.filter.ValueField', {
         this.field = Ext.create('Taco.view.filter.MultiSelectorField', {
             allowBlank : allowBlank,
             valueType: this.fieldRecord.get("dataType"),
-            singleSelect: this.operatorRecord.get("id") != "in",
+            singleSelect: this.operatorRecord.get("id") != "in" && this.operatorRecord.get("id") != "nin",
             fieldCfg:fieldCfg,
             flex: 1,
             listeners: {
@@ -130,7 +130,7 @@ Ext.define('Taco.view.filter.ValueField', {
         // if we are using a picker field to select the values we need to show the multiSelectGrid to display the selected value. The persisted value will be the id, but the grid 
         // will display more useful information about the record;
         
-        if (operatorRecord && (operatorRecord.get("id") == "in" || fieldCfg.isPickerField)) {
+        if (operatorRecord && (operatorRecord.get("id") == "in" || operatorRecord.get("id") == "nin" || fieldCfg.isPickerField)) {
             this.createMultiField(allowBlank);
             return;
         }
@@ -213,6 +213,11 @@ Ext.define('Taco.view.filter.ValueField', {
         
         switch (dataType) {
             case "string":
+                Ext.apply(fieldCfg, {
+                    xtype: "textfield"
+                });
+                break;
+            case "stringarray":
                 Ext.apply(fieldCfg, {
                     xtype: "textfield"
                 });

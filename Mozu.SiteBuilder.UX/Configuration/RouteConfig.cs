@@ -421,14 +421,18 @@ namespace Mozu.SiteBuilder.UX.Configuration
                new { controller = "cmspages", action = "Page", documentListName = "pages@mozu" });
 
 
-          
-
-            
 
             routes.MapHttpRoute(
                "cms_page",
                "cms/{documentListName}/{documentName}",
                new { controller = "cmspages", action = "Page" });
+
+            routes.MapHttpRoute(
+               "cms_page_variation",
+               "cms/{documentListName}/{documentName}/variation/{variationId}",
+               new { controller = "cmspages", action = "Page" });
+
+
 
             routes.MapHttpRoute(
                "StoreFront_pages_list",

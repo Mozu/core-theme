@@ -127,7 +127,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
             });
         }
 
-        this.mixins.rowEditable.constructor.apply(this);
+        
 
         // initialize the search toolbar mixin
         if (me.enableSearch) {
@@ -147,7 +147,7 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
         this.callParent(arguments);
 
-
+        this.mixins.rowEditable.constructor.apply(this);
         //this.mixins.gridcontextmenu.constructor.apply(this);
 
     },

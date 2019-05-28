@@ -228,6 +228,8 @@
     <Compile Include="Api\Models\B2BAccount\B2BAccountUser.cs" />
     <Compile Include="Api\Models\Category\CategoryNode.cs" />
     <Compile Include="Api\Models\Checkout\SupportedCard.cs" />
+    <Compile Include="Api\Models\Cms\CmsPageRulePropertyDescriptor.cs" />
+    <Compile Include="Api\Models\Cms\CmsPageRuleValidationResult.cs" />
     <Compile Include="Api\Models\DiscountSettings\DiscountSettings.cs" />
     <Compile Include="Api\Models\DiscountSettings\StackingConfiguration.cs" />
     <Compile Include="Api\Models\Discount\ThresholdMessage.cs" />
@@ -734,6 +736,7 @@
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
     <Content Include="Scripts\app\model\LocationAttribute.js" />
+    <Content Include="Scripts\app\model\PageRuleExpression.js" />
     <Content Include="Scripts\app\model\Resource.js" />
     <Content Include="Scripts\app\model\ShipmentItem.js" />
     <Content Include="Scripts\app\model\PaymentActionTarget.js" />
@@ -1134,6 +1137,7 @@
     <Content Include="Scripts\app\view\synonyms\Index.js" />
     <Content Include="Scripts\app\view\website\entityAdapters\OrderTemplateEntityAdapter.js" />
     <Content Include="Scripts\app\view\settings\shipping\subform\EligibleShippingAddressLocations.js" />
+    <Content Include="Scripts\app\view\website\misc\VariationsDropdown.js" />
     <Content Include="Scripts\app\view\website\NavigationTreeModal.js" />
     <Content Include="Scripts\app\view\entityManager\DynamicFormContainer.js" />
     <Content Include="Scripts\app\view\entityManager\Index.js" />
@@ -7630,7 +7634,6 @@
     <Content Include="Scripts\app\mocks\themefonts.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Api\Models\Cms\" />
     <Folder Include="Models\" />
     <Folder Include="Scripts\app\core\ux\selector\" />
     <Folder Include="Scripts\app\exported\" />

@@ -6,7 +6,8 @@ Ext.define('Taco.view.category.Index', {
     requires: [
         'Taco.core.ux.TreeList',
         'Taco.view.category.AdvancedSearchForm',
-        'Taco.store.CategoriesTree'
+        'Taco.store.CategoriesTree',
+        'Taco.view.filter.Schema'
     ],
 
     createButtonText: "Create New Category",
@@ -14,7 +15,7 @@ Ext.define('Taco.view.category.Index', {
 
     contextConfig: {
         supportedLevels: ['c'],
-        requiresContextOfType: [ 'c', 's']
+        requiresContextOfType: ['c', 's']
     },
 
     advancedSearchConfig: {
@@ -81,7 +82,7 @@ Ext.define('Taco.view.category.Index', {
                 items: [
                     {
                         text: "Static Category",
-                        itemId:"Static"
+                        itemId: "Static"
                     }, {
                         text: "Dynamic Category",
                         itemId: "Dynamic"
@@ -116,76 +117,76 @@ Ext.define('Taco.view.category.Index', {
         });
 
         me.columns = [
-        {
-            xtype: 'treecolumn',
-            text: 'Code',
-            flex: 1,
-            checkboxText:'',
-            dataIndex: 'categoryCode',
-            renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-            }
-        },
-        {
-            xtype: 'treecolumn',
-            text: 'Name',
-            flex: 3,
-            checkboxText:'',
-            dataIndex: 'name',
-            renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
-            }
-        },
-        {
-            xtype: 'treecolumn',
-            text: 'Type',
-            flex: 2,
-            checkboxText: '',
-            dataIndex: 'categoryType',
-            renderer: function (value) {
-                return '<a href="#" class="taco-launch-editor">' + me.parseCategoryType(value) + '</a>';
-            }
-        }, {
-            xtype: 'treecolumn',
-            text: 'Status',
-            flex: 1,
-            checkboxText: '',
-            dataIndex: 'isActive',
-            renderer: function (value) {
-                var activeDisplayText = (value ? 'Active' : 'Disabled');
-                return '<a href="#" class="taco-launch-editor">' + activeDisplayText + '</a>';
-            }
-        }, {
-            xtype: 'treecolumn',
-            text: 'Hidden on Storefront',
-            flex: 1,
-            checkboxText: '',
-            dataIndex: 'isHidden',
-            renderer: function (value) {
-                var hiddenDisplayText = (value ? 'Y' : 'N');
-                return '<a href="#" class="taco-launch-editor">' + hiddenDisplayText + '</a>';
-            }
-        },
-        {
-            xtype: 'taco.menucolumn',
-            text: '<span class="taco-grid-row-menu-trigger" />',
-            onMenuShow: function (menu, e) {
-                var previewItem = menu.items.get('preview'),
-                    liveItems = menu.items.get('live'),
-                    previewMenu,
-                    liveMenu,
-                    previewSites = [],
-                    liveSites = [];
+            {
+                xtype: 'treecolumn',
+                text: 'Code',
+                flex: 1,
+                checkboxText: '',
+                dataIndex: 'categoryCode',
+                renderer: function (value) {
+                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+                }
+            },
+            {
+                xtype: 'treecolumn',
+                text: 'Name',
+                flex: 3,
+                checkboxText: '',
+                dataIndex: 'name',
+                renderer: function (value) {
+                    return '<a href="#" class="taco-launch-editor">' + (value + '</a>');
+                }
+            },
+            {
+                xtype: 'treecolumn',
+                text: 'Type',
+                flex: 2,
+                checkboxText: '',
+                dataIndex: 'categoryType',
+                renderer: function (value) {
+                    return '<a href="#" class="taco-launch-editor">' + me.parseCategoryType(value) + '</a>';
+                }
+            }, {
+                xtype: 'treecolumn',
+                text: 'Status',
+                flex: 1,
+                checkboxText: '',
+                dataIndex: 'isActive',
+                renderer: function (value) {
+                    var activeDisplayText = (value ? 'Active' : 'Disabled');
+                    return '<a href="#" class="taco-launch-editor">' + activeDisplayText + '</a>';
+                }
+            }, {
+                xtype: 'treecolumn',
+                text: 'Hidden on Storefront',
+                flex: 1,
+                checkboxText: '',
+                dataIndex: 'isHidden',
+                renderer: function (value) {
+                    var hiddenDisplayText = (value ? 'Y' : 'N');
+                    return '<a href="#" class="taco-launch-editor">' + hiddenDisplayText + '</a>';
+                }
+            },
+            {
+                xtype: 'taco.menucolumn',
+                text: '<span class="taco-grid-row-menu-trigger" />',
+                onMenuShow: function (menu, e) {
+                    var previewItem = menu.items.get('preview'),
+                        liveItems = menu.items.get('live'),
+                        previewMenu,
+                        liveMenu,
+                        previewSites = [],
+                        liveSites = [];
 
-                var ctx = Taco.app.context.getCurrentContext();
+                    var ctx = Taco.app.context.getCurrentContext();
 
-                if (previewItem && previewItem.menu) {
-                    previewMenu = previewItem.menu;
-                    liveMenu = liveItems.menu;
-                    
-                    var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
+                    if (previewItem && previewItem.menu) {
+                        previewMenu = previewItem.menu;
+                        liveMenu = liveItems.menu;
 
-                    Ext.each(sites, function (site) {
+                        var sites = (ctx.sites) ? ctx.sites : (ctx.catalog && ctx.catalog.sites) ? ctx.catalog.sites : [];
+
+                        Ext.each(sites, function (site) {
                             if (site.isMozuRendered) {
                                 previewSites.push({
                                     itemId: site.id,
@@ -201,71 +202,71 @@ Ext.define('Taco.view.category.Index', {
                             }
                         });
 
-                    if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
-                        previewMenu.removeAll();
-                        previewMenu.add(previewSites);
-                        liveMenu.removeAll();
-                        liveMenu.add(liveSites);
+                        if (!Ext.Array.equals(Ext.Array.pluck(previewSites, 'itemId'), previewMenu.items.keys)) {
+                            previewMenu.removeAll();
+                            previewMenu.add(previewSites);
+                            liveMenu.removeAll();
+                            liveMenu.add(liveSites);
+                        }
+
                     }
+                },
+                menuItems: [
+                    {
+                        itemId: 'live',
+                        text: 'View Live',
+                        menu: {
+                            plain: true,
+                            shadow: false,
+                            items: []
+                        }
+                    }, {
+                        itemId: 'preview',
+                        text: 'View Staged',
+                        menu: {
+                            plain: true,
+                            shadow: false,
+                            items: []
+                        }
+                    },
+                    {
+                        text: 'Edit',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Category',
+                            behavior: 'update'
+                        },
 
-                }
-            },
-            menuItems: [
-            {
-                itemId: 'live',
-                text: 'View Live',
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    items: []
-                }
-            }, {
-                itemId: 'preview',
-                text: 'View Staged',                        
-                menu: {
-                    plain: true,
-                    shadow: false,
-                    items: []
-                }
-            },
-            {
-                text: 'Edit',
-                requiredBehaviors: {
-                    model: 'Taco.model.Category',
-                    behavior: 'update'
-                },
-                
-                menuColumnHandler: function (item, eventData) {
-                    var record = eventData.record;
-                    Ext.defer(function () {
-                        me.addRecordToBrowserHistory(record);
-                        Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
-                    }, 1, this);
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record;
+                            Ext.defer(function () {
+                                me.addRecordToBrowserHistory(record);
+                                Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
+                            }, 1, this);
 
-                }
-            },
-            {
-                text: 'Duplicate',
-                requiredBehaviors: {
-                    model: 'Taco.model.Category',
-                    behavior: 'create'
-                },
-                menuColumnHandler: function (item, eventData) {                        
-                    var record = eventData.record,
-                        metaData = {
-                            id: record.getId()
-                        };
-                    Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
-                }
-            }, {
-                text: 'Delete',
-                requiredBehaviors: {
-                    model: 'Taco.model.Category',
-                    behavior: 'destroy'
-                },
-                menuColumnHandler: 'destroyMenuColumnHandler'
-            }]
-        }];
+                        }
+                    },
+                    {
+                        text: 'Duplicate',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Category',
+                            behavior: 'create'
+                        },
+                        menuColumnHandler: function (item, eventData) {
+                            var record = eventData.record,
+                                metaData = {
+                                    id: record.getId()
+                                };
+                            Taco.app.StateManager.attemptNavigate('categories/duplicate/' + record.getId(), metaData);
+                        }
+                    }, {
+                        text: 'Delete',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Category',
+                            behavior: 'destroy'
+                        },
+                        menuColumnHandler: 'destroyMenuColumnHandler'
+                    }]
+            }];
 
         me.moreButtonCfg = {
             scope: this,
@@ -276,10 +277,10 @@ Ext.define('Taco.view.category.Index', {
                     {
                         text: 'Expand All',
                         handler: function () {
-                           this.expandAll()
+                            this.expandAll()
                         },
                         scope: this
-                    }, 
+                    },
                     {
                         text: 'Collapse All',
                         handler: function (menuItem) {
@@ -291,7 +292,7 @@ Ext.define('Taco.view.category.Index', {
             }
         };
 
-        me.listeners ={
+        me.listeners = {
             cellclick: me.onCellClick,
             itemmove: me.onItemMove,
             scope: me
@@ -304,17 +305,17 @@ Ext.define('Taco.view.category.Index', {
         me.selectCurrentPath();
     },
 
-    selectCurrentPath: function() {
+    selectCurrentPath: function () {
 
         var me = this;
         var currentState = Taco.app.StateManager.getCurrentState().getMetaData().args;
         var id = null;
 
-        var doSelect = function() {
+        var doSelect = function () {
             var cmp = this;
             var node = this.getNodeById(id);
-            
-            
+
+
             if (node && node.getPath) {
                 var fixed = node.getPath();
 
@@ -324,14 +325,14 @@ Ext.define('Taco.view.category.Index', {
 
                 var parts = fixed.split('/');
 
-                parts.forEach ( function (part){
+                parts.forEach(function (part) {
                     cmp.getNodeById(part).expand();
                 });
 
                 me.getSelectionModel().select(node);
             }
         };
-        
+
         if (currentState && currentState[0] && currentState[0].view) {
             id = currentState[0].view;
         }
@@ -348,7 +349,7 @@ Ext.define('Taco.view.category.Index', {
 
     },
 
-    parseCategoryType: function(value) {
+    parseCategoryType: function (value) {
 
         switch (value) {
             case 'DynamicPreComputed':
@@ -363,7 +364,7 @@ Ext.define('Taco.view.category.Index', {
 
     },
 
-    addRecordToBrowserHistory: function(record) {
+    addRecordToBrowserHistory: function (record) {
 
         var URIStem = '/categories?view=';
         var id = record.get('id');
@@ -382,7 +383,7 @@ Ext.define('Taco.view.category.Index', {
             return;                     // if the user has highlighted text, do not launch editor
         }
 
-        var target= Ext.fly(e.getTarget()),
+        var target = Ext.fly(e.getTarget()),
             metaData = { id: record.getId() },
             header = view.getHeaderAtIndex(cellIndex);
         if (target.hasCls('x-tree-expander')) {
@@ -446,15 +447,15 @@ Ext.define('Taco.view.category.Index', {
                 title: 'Delete Category',
                 confirmMessage: 'Are you sure you want to delete this category?',
                 record: record,
-                onDeleteIt: function(modal, cascadeDelete) {
+                onDeleteIt: function (modal, cascadeDelete) {
                     record.set('cascadeDelete', cascadeDelete);
                     me.syncRemoveRecordFromStore(grid, record, !cascadeDelete);
                 }
             }
-        );
+            );
     },
 
-    deleteLeafNode: function(record, grid) {
+    deleteLeafNode: function (record, grid) {
         var me = this;
         Ext.MessageBox.show({
             title: 'Delete Category',
@@ -481,7 +482,7 @@ Ext.define('Taco.view.category.Index', {
             success: function () {
                 grid.setLoading(false);
                 if (reloadGridToMoveSubcategoryUp) {
-                    grid.getStore().load(); 
+                    grid.getStore().load();
                 }
             },
             failure: function (m) {
@@ -496,7 +497,7 @@ Ext.define('Taco.view.category.Index', {
     launchEditor: function (record) {
         Ext.defer(function () {
             Taco.core.StateManager.attemptNavigate('categories/edit/' + record.getId(), { complexMetaData: { record: record } });
-            }, 1, this);
+        }, 1, this);
         return;
     },
 
@@ -515,7 +516,7 @@ Ext.define('Taco.view.category.Index', {
             }
         });
     },
-    viewInSite: function(site, env, record) {
+    viewInSite: function (site, env, record) {
         var url = '/_gosite/' + site.id + '?environment=' + env + '&redir=' + encodeURIComponent('/c/' + record.getId());
         window.open(url);
     }

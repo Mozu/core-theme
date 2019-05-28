@@ -16,7 +16,6 @@ Ext.define('Taco.view.website.entityAdapters.EmailTemplateEntityAdapter', {
 
 
 
-
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();

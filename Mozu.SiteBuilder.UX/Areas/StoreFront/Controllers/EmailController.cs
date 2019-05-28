@@ -1,5 +1,14 @@
 ﻿using Mozu.CommerceRuntime.Contracts.Checkouts;
 using Mozu.CommerceRuntime.Contracts.Clients;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.CommerceRuntime.Contracts.Returns;
@@ -13,7 +22,6 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
-using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.SiteBuilder.Mvc.SEO;
@@ -28,17 +36,10 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
 using DC = Mozu.Content.Contracts;
 using VM = Mozu.SiteBuilder.Mvc.Models.CMS;
+using Mozu.Core.Expressions;
+using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -213,22 +214,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         public EmailController(
-            IDocumentListWebApiClient docRepo,
-            IDocumentTypeWebApiClient docTypeRepo,
-            ICmsServiceWrapper cmsService,
             ICustomerAccountWebApiClient customerAccountWebApiClient,
-            HyprViewEngine hyprViewEngine,
             ISitesWebApiClient sitesWebApiClient,
             ILogger logger,
             ILocationRuntimeWebApiClient locationRuntimeWebApiClient,
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
-             UrlHelper urlhelper,
-             IReturnSettingsWebApiClient returnSettingsWebApiClient
-            )
-            : base(docRepo, docTypeRepo, cmsService,
-                customerAccountWebApiClient, hyprViewEngine, customRouteHandler, urlhelper)
+            IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            Lazy<UrlHelper> urlhelper,
+            Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
+            Lazy<IExpressionEvaluator> pageRuleEvaluator
+            ) //why does this extend CMSPageController??  Ugh...
+            : base(customRouteHandler, urlhelper, pageRuleVisitor, pageRuleEvaluator)
         {
             _sitesWebApiClient = sitesWebApiClient.CloneWithoutUserClaims();
             _logger = logger;
@@ -297,18 +295,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
             return Request.CreateResponse(HttpStatusCode.OK, View(emailTemplate.Template, model));
-        }
-
-        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
-        {
-
-            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
-
-            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
-
-            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
-            returnObj.Merge(emailParams);
-            return returnObj;
         }
 
         [HttpPost]
@@ -554,10 +540,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return obj;
         }
 
+        private JObject MergeEmailParams(IEnumerable<KeyValuePair<string, string>> query, object model)
+        {
+
+            var z = query.FirstOrDefault(y => y.Key.EqualsIgnoreCase("queryParams"), new KeyValuePair<string, string>("", ""));
+
+            var emailParams = JsonConvert.DeserializeObject<JObject>(z.Value, CaseInsensitiveJsonSerializerSettings.Default);
+
+            var returnObj = model is JObject ? ((JObject)model) : JObject.FromObject(model);
+            returnObj.Merge(emailParams);
+            return returnObj;
+        }
         public class MyPackageItem : PackageItem
         {
             public object Product { get; set; }
         }
+
         private static string GetCmsPage(VM.PageTypeDefinition def)
         {
             return def.Id;
@@ -594,9 +592,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string PartialPickupReady = "shipment.partialpickupready";
         }
 
-
     }
 
+   
     public class EmailResponse
     {
         public string Subject { get; set; }

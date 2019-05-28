@@ -73,7 +73,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             // var ret =(await _customerGroupWebApiClient.GetGroups(0, 200)).ReadAsSync().Items.OrderBy(x => x.Name).Select(x => new KeyValuePair<int, string>(x.Id, x.Name)).ToList();
             var pageSize = pagingParameters.pageSize <= 200 ? pagingParameters.pageSize : 200;
-            var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pageSize)).ReadAsSync();
+            var q = extFilter.ToQString();
+            var filter = extFilter.ToFilterString();
+            var segments = (await _customerSegmentWebApiClient.GetSegments(startIndex: pagingParameters.startIndex, pageSize: pageSize, filter:filter)).ReadAsSync();
+
             if (pageSize >= 200)
             {
                 for (int currentPage = 1; segments.TotalCount > (currentPage * pageSize); currentPage++)

@@ -25,6 +25,16 @@ Ext.define('Taco.model.CustomerSegment', {
             type: 'string'        
         },
         {
+            name: 'nameCodeCombo',
+            type: 'string',
+            convert: function(value, record) {
+                var name  = record.get('name'),
+                    code = record.get('code');
+
+                return code + ' - ' + name;
+            }       
+        },
+        {
             name: 'description',
             type: 'string'
         }

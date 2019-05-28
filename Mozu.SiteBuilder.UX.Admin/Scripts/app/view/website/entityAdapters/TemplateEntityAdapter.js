@@ -13,11 +13,6 @@ Ext.define('Taco.view.website.entityAdapters.TemplateEntityAdapter', {
         destroy: true,
         publishPage: true
     },
-
-  
-
-  
-
     getId: function () {
         if (this.record) {
             return this.record.getLoadParams();

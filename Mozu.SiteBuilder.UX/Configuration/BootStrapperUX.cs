@@ -1,12 +1,9 @@
-﻿using System.Net.Http.Formatting;
-using System.Reflection;
-using System.Web.Http;
-using System.Web.WebPages;
+﻿using Autofac;
+using AutoMapper;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Api;
-using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Mozu.Customer.Contracts.Clients;
@@ -15,22 +12,22 @@ using Mozu.MZDB.Contracts.Clients;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.Reference.Contracts.Clients;
-using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.Logging;
 using Mozu.SiteBuilder.Mvc.MediaTypeFormatters;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
+using Mozu.SiteBuilder.Mvc.Themes;
 using Mozu.SiteBuilder.Mvc.Users;
-
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json.Serialization;
-using System.Diagnostics;
-using Mozu.SiteBuilder.Mvc.Themes;
-using Autofac;
+using System.Net.Http.Formatting;
+using System.Reflection;
+using System.Web.Http;
+using System.Web.WebPages;
+
 //using Mozu.SiteBuilder.UX.MessageHandlers;
 
 namespace Mozu.SiteBuilder.UX.Configuration
@@ -133,11 +130,12 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
         }
 
-
-        public override void InitializeAutoMapperProfiles(System.Web.Http.HttpConfiguration httpConfiguration)
+        /// <inheritdoc />
+        public override void InitializeAutoMapperProfiles(IMapperConfigurationExpression exp)
         {
-            base.InitializeAutoMapperProfiles(httpConfiguration);
+            base.InitializeAutoMapperProfiles(exp);
         }
+
         protected override void AddFilters(HttpConfiguration httpConfiguration,  Core.Api.Routing.ReflectedControllerIndex controllers)
         {
 
