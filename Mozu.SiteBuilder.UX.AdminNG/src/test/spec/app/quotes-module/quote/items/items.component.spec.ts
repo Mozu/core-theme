@@ -140,21 +140,21 @@ describe('QuoteItemsComponent', () => {
   it('should get open confirmation dialog', () => {
     let itemId ="185bdb4fd2a744bda227aa4700736f2c";
     let row = 1;
-    component.openModal(itemId, row);
+    component.openQuoteDeleteConfirmationDialog(itemId, row);
     component.itemId = itemId;
-    component.showModal = true;
-    expect(component.showModal).toBe(true);
+    component.isShowModel = true;
+    expect(component.isShowModel).toBe(true);
   });
 
   it('should get close confirmation dialog', () => {
-    component.closeModal();
-    component.showModal = false;
-    expect(component.showModal).toBe(false);
+    component.closeQuoteDeleteConfirmationDialog();
+    component.isShowModel = false;
+    expect(component.isShowModel).toBe(false);
   });
 
   it('should call service to get success response from mock http json (quote-list)', () => {
     component.quoteId = "0dd322d1429fe45778112b5b00004c44";
-    component.deleteItem();
+    component.deleteQuoteItem();
     const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList);
@@ -165,7 +165,7 @@ describe('QuoteItemsComponent', () => {
 
   it('should call service to get failure response from mock http json (quote-list)', () => {
     component.quoteId = "0dd322d1429fe45778112b5b00004c44";
-    component.deleteItem();
+    component.deleteQuoteItem();
     const req = httpMock.expectOne(`/assets/json/quote-list.json`);
     expect(req.request.method).toBe("GET");
     req.flush(dummyQuoteList, mockErrorResponse);

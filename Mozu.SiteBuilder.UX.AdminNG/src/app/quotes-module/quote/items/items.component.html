@@ -49,7 +49,7 @@
                 <td>{{rowData.itemTaxTotal | currency}}</td>
                 <td>{{rowData.total | currency}}</td>
                 <td style="width: 4em">
-                   <button class="btn-delete-icon"><i class="pi pi-times" (click)="openModal(rowData.id, rowIndex)"></i></button>
+                   <button class="btn-delete-icon"><i class="pi pi-times" (click)="openQuoteDeleteConfirmationDialog(rowData.id, rowIndex)"></i></button>
                 </td>
             </tr>
         </ng-template>
@@ -63,7 +63,7 @@
     </p-table>
 </div>
 
-<confirmation-dialog ref="confirmationModal" *ngIf="showModal" size="modal-sm">
+<confirmation-dialog ref="confirmationModal" *ngIf="isShowModel" size="modal-sm">
         <ng-template #modalHeader>
             {{'MESSAGES.Dialog.Confirmation.title' | translate }}
         </ng-template>   
@@ -72,8 +72,8 @@
         </ng-template>    
         <ng-template #modalFooter>
             <div>
-                <button class="btn btn-default" (click)="closeModal()">{{'MESSAGES.Dialog.Confirmation.secondaryButton' | translate }}</button>
-                <button class="btn btn-success" (click)="deleteItem()">{{'MESSAGES.Dialog.Confirmation.primaryButton' | translate }}</button>
+                <button class="btn btn-default" (click)="closeQuoteDeleteConfirmationDialog()">{{'MESSAGES.Dialog.Confirmation.secondaryButton' | translate }}</button>
+                <button class="btn btn-success" (click)="deleteQuoteItem()">{{'MESSAGES.Dialog.Confirmation.primaryButton' | translate }}</button>
             </div>
         </ng-template>
 </confirmation-dialog>

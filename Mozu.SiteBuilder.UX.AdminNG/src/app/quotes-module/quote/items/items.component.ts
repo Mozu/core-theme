@@ -22,9 +22,9 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
 
-  public showModal: boolean = false;
+  public isShowModel: boolean = false;
   public itemId: string;
-  public deleteRow: any;
+  public quoteItemTobeDeleted: any;
   quoteItems = [];
 
   constructor(private _loggerService : LoggerService,
@@ -39,28 +39,27 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   ngOnInit() {
   }
 
-  openModal(id: string, row: any) {
+  openQuoteDeleteConfirmationDialog(id: string, row: any) {
     this.itemId = id;
-    this.deleteRow = row;
-    this.showModal = true;
+    this.quoteItemTobeDeleted = row;
+    this.isShowModel = true;
     this._modalService.open('confirmationModal');
   }
 
-  closeModal(){
-    this.showModal = false;
+  closeQuoteDeleteConfirmationDialog(){
+    this.isShowModel = false;
   }
 
-  deleteItem(){
+  deleteQuoteItem(){
     this._loggerService.info("QuoteItemsComponent : deleteItem");
-    this.showModal = false;
-    this._quoteItemsService.deleteItem(this.quoteId, this.itemId).subscribe((successResponse:any) =>{
+    this.isShowModel  = false;
+    this._quoteItemsService.deleteQuoteItem(this.quoteId, this.itemId).subscribe((deleteQuoteItemSuccessResponse :any) =>{
       this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse");
-      let responseJson = successResponse;
-      if (responseJson != null && responseJson != undefined) {
-        this.quoteItems.splice(this.deleteRow ,1);
+      if (deleteQuoteItemSuccessResponse != null && deleteQuoteItemSuccessResponse != undefined) {
+        this.quoteItems.splice(this.quoteItemTobeDeleted, 1);
       }
-    }, (errResponse) => {
-      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_errResponse");
+    }, (deleteQuoteItemErrorResponse) => {
+      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_deleteQuoteItemErrorResponse");
       throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
     })
   }

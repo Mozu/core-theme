@@ -82,7 +82,7 @@ describe('QuoteItemsService', () => {
     it('should return an deleted quote item response', () => {
       let quoteId ="0dd322d1429fe45778112b5b00004c44";
       let itemId ="185bdb4fd2a744bda227aa4700736f2c";
-      quotesService.deleteItem(quoteId, itemId).subscribe(quotes => {
+      quotesService.deleteQuoteItem(quoteId, itemId).subscribe(quotes => {
           expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteItemsService: deleteItem");
           expect(quotes[1].subtotal).toBe(5);
       },

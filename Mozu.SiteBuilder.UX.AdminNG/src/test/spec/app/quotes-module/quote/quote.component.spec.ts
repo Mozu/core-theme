@@ -158,7 +158,7 @@ describe('QuoteComponent', () => {
     req.flush(dummyQuoteList);
     httpMock.verify();
     
-    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteComponent : _quotesListService.fetchAllQuotes_quotesResponse");
+    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse");
   });
 
   it('should call service to get failure response from mock http json (quote-list)', () => {
@@ -169,7 +169,7 @@ describe('QuoteComponent', () => {
     req.flush(dummyQuoteList, mockErrorResponse);
     httpMock.verify();
     fixture.detectChanges();
-    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteComponent : _quotesListService.fetchAllQuotes_errResponse");
+    expect(loggerServiceSpy).toHaveBeenCalledWith("QuoteComponent : _quoteListService.fetchAllQuotes_errResponse");
   });
 });
 

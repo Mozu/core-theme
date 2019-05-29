@@ -61,9 +61,9 @@ export class QuotesListComponent implements OnInit {
     
     this._loggerService.info("QuotesListComponent : populateQuoteGrid");
 
-    this._quotesListService.fetchAllQuotes().subscribe((successResponse:Response) =>{
+    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse:Response) =>{
       this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
-       let responseJson = successResponse;
+       let responseJson = quotesListSuccessResponse;
         if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
           this.model.items = responseJson['items'];
         }

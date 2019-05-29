@@ -41,9 +41,9 @@ export class QuoteComponent implements OnInit {
     
     this._loggerService.info("QuoteComponent : populateQuote");
 
-    this._quoteService.fetchAllQuotes().subscribe((successResponse:Response) =>{
-      this._loggerService.info("QuoteComponent : _quotesListService.fetchAllQuotes_quotesResponse");
-       let responseJson = successResponse;
+    this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse:Response) =>{
+      this._loggerService.info("QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse");
+       let responseJson = quoteListSuccessResponse;
         if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
           this.model = _.filter(responseJson['items'], function (el : any) { return el.id == quoteId })[0];
           this.userId = this.model.userId; 

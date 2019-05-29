@@ -11,7 +11,7 @@ export class QuoteItemsService{
     constructor(private _http: HttpClientService,   
         private _loggerService: LoggerService){ }
 
-    public deleteItem(quoteId: string, itemId: string): Observable<any>{
+    public deleteQuoteItem(quoteId: string, itemId: string): Observable<any>{
         this._loggerService.info("QuoteItemsService: deleteItem");
         return this._http.get(Constants.JsonResources.quoteList); // to-do: delete api call
     }
