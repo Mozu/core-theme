@@ -25,10 +25,7 @@ import { Constants } from '@shared/infrastructure/constants';
 
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, SecureForm } from './left.model';
-import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
-
-
-
+import { DynamicLinksComponent } from './dynamic-links/dynamic-links.component';
 
 @Component({
   selector: 'navigation-left',

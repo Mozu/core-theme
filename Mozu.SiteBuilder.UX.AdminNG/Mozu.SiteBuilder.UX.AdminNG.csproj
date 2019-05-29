@@ -427,7 +427,7 @@
     <Exec Command="&quot;C:\Program Files\nodejs\npm&quot; --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END node module install process" />
     <Message Importance="high" Text="*** START ng build process" />
-    <Exec Command="ng build --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm run ng build --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END ng build process" />
     <ItemGroup>
       <AllAdminNGDistFolderFiles Include="$(ProjectDir)dist\*.*;$(ProjectDir)dist\**\*.*;" />
