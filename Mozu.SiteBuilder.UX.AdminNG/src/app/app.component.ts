@@ -74,7 +74,9 @@ export class AppComponent implements OnInit {
                 if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit) ){
                     this.containerType = NavigationContainerType.quotes;   
                 }
-                else if( event.url.includes(Constants.uiRoutes.locationGroups) ||  event.url.includes(Constants.uiRoutes.locationGroupCreate)){
+                else if( event.url.includes(Constants.uiRoutes.locationGroups) ||  
+                        event.url.includes(Constants.uiRoutes.locationGroupCreate)||
+                        event.url.includes(Constants.uiRoutes.locationGroupEdit)){
                     this.containerType = NavigationContainerType.locationGroups; 
                 }
                 else {

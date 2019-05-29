@@ -11,6 +11,7 @@ import { Constants } from '@shared';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
+import { NotificationService } from '@global';
 
 @Component({
     selector: 'location-group-list',
@@ -25,6 +26,7 @@ export class LocationGroupsListComponent implements OnInit {
         private _loggerService: LoggerService,
         private _locationGroupsListService: LocationGroupsListService,
         private _translate: TranslateService,
+        private _notificationService: NotificationService,
         private router: Router) { }
 
     ngOnInit() {
@@ -52,7 +54,8 @@ export class LocationGroupsListComponent implements OnInit {
 
     viewLocationGroup() {
         let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
-        this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + locationGroupId]);
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupId]);
+        this._notificationService.notifyAddLocationGroup("Edit");
     }
 
     public populateLocationGroupGrid = () => {

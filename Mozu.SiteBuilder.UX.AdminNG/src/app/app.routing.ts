@@ -20,7 +20,8 @@ import {
 
 import {
     LocationGroupsListComponent,
-    LocationGroupCreateComponent  
+    LocationGroupCreateComponent,  
+    LocationGroupEditComponent
 } from './location-groups-module';  
 
 const appRoutes: Routes = [
@@ -48,6 +49,10 @@ const appRoutes: Routes = [
     {
         path:Constants.uiRoutes.locationGroupCreate,
         component: LocationGroupCreateComponent
+    },
+    {
+        path: Constants.uiRoutes.locationGroupEdit+'/:id',
+        component: LocationGroupEditComponent
     },
     {
         path: '**',

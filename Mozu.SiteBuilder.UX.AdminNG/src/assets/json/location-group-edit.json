@@ -1,0 +1,18 @@
+{
+    "locationGroupId": 5,
+    "siteIds": [
+     21550
+    ],
+    "name": "Another Group of Locations",
+    "locationCodes": [
+     "roletest10",
+     "roletest11",
+     "roletest12"
+    ],
+    "auditInfo": {
+     "updateDate": "2019-04-26T15:26:46.969Z",
+     "createDate": "2019-04-26T15:26:46.969Z",
+     "updateBy": "1",
+     "createBy": "1"
+    }
+   }

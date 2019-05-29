@@ -49,7 +49,9 @@ export class Constants {
         quotes : 'quotes',
         quotesEdit : 'quotesEdit',
         locationGroups : 'locationGroups',
-        locationGroupCreate : 'locationGroupCreate'
+        locationGroupCreate : 'locationGroupCreate',
+        locationGroupEdit : 'locationGroupEdit',
+        
     };
     
     static webApis = {

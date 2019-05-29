@@ -1,7 +1,8 @@
 import { Component, 
     OnInit } from '@angular/core';
-  import { Router } from '@angular/router';  
+  import { Router, PRIMARY_OUTLET, UrlSegmentGroup, UrlSegment } from '@angular/router';  
 import { NotificationService } from '@global';
+import { Constants } from '@shared/infrastructure';
 
   @Component({
     selector: 'navigation-top-location-groups',
@@ -10,7 +11,7 @@ import { NotificationService } from '@global';
   })
   export class NavigationTopLocationGroupsComponent implements OnInit {
     
-    createMode: boolean;
+    createOrEditMode: boolean;
     subscriptions = [];
 
     constructor(private router: Router,
@@ -19,13 +20,16 @@ import { NotificationService } from '@global';
     }
   
     ngOnInit() { 
-      this.createMode = false;
-      this.checkCreateMode();
+      this.createOrEditMode = false;
+      this.checkMode();
 
       this.subscriptions.push(
         this._notificationService.addLocationGroup.subscribe((action: string) => {
             if(action === "Save Success" || action === "Cancel Success"){
-              this.createMode = false;
+              this.createOrEditMode = false;
+            }
+            if(action === "Edit"){
+              this.createOrEditMode = true;
             }
         })
       );
@@ -37,17 +41,27 @@ import { NotificationService } from '@global';
       });
     }
 
-    checkCreateMode(){
-        if(this.router.url === '/locationGroups'){
-          this.createMode = false;
-        }
-        if(this.router.url === '/locationGroupCreate'){
-          this.createMode = true;
+    checkMode(){
+        const urltree = this.router.parseUrl(this.router.url);
+        const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
+        const primarySegments: UrlSegment[] = primary.segments;
+        
+        if(primarySegments && primarySegments.length){
+          const path =  primarySegments[0].path;
+          if(path === Constants.uiRoutes.locationGroups){
+            this.createOrEditMode = false;
+          }
+          if(path === Constants.uiRoutes.locationGroupCreate){
+            this.createOrEditMode = true;
+          }
+          if(path === Constants.uiRoutes.locationGroupEdit){
+            this.createOrEditMode = true;
+          }
         }
     }
 
     showCreateLG(){
-      this.createMode = true;
+      this.createOrEditMode = true;
       this.router.navigate(['/locationGroupCreate']);
     }
   
