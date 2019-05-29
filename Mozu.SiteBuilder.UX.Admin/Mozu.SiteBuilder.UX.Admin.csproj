@@ -2862,6 +2862,10 @@
       <Project>{BFF6E39B-C66A-4D99-8B72-934BEEA4906B}</Project>
       <Name>Mozu.SiteBuilder.Mvc</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mozu.SiteBuilder.UX.AdminNG\Mozu.SiteBuilder.UX.AdminNG.csproj">
+      <Project>{0ec8109f-e99d-480f-8d42-cf51a75dd315}</Project>
+      <Name>Mozu.SiteBuilder.UX.AdminNG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj">
       <Project>{FE9DA6F5-3477-48A3-8314-572CE5C308FB}</Project>
       <Name>Mozu.SiteBuilder.UX.Models</Name>
@@ -3191,7 +3195,7 @@
       </ItemGroup>
     </When>
   </Choose>
-   <Choose>
+  <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="System.Web.Helpers">
@@ -3239,7 +3243,7 @@
       </ItemGroup>
     </When>
   </Choose>
-   <Choose>
+  <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
       <ItemGroup>
         <Reference Include="Microsoft.Web.Infrastructure">
