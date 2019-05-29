@@ -16,7 +16,7 @@ export class CreateLocationGroupService{
 
     public addLocationGroup(lgModel: LocationGroupModel): Observable<any>{
         this._loggerService.info("CreateLocationGroupService: addLocationGroup"+JSON.stringify(lgModel));
-        return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
-        //return of(new HttpResponse({ status: 200 })); // dummy response to test.
+        //return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
+        return of(new HttpResponse({ status: 200 })); // dummy response to test.
     }
 }
