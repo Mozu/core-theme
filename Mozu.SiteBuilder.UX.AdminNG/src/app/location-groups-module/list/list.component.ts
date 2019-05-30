@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
 import { NotificationService } from '@global';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'location-group-list',
@@ -45,12 +46,24 @@ export class LocationGroupsListComponent implements OnInit {
 
     public gridContextMenu = (contextMenu) => {
         this.model.locationGridContextMenuItem.push({ label: contextMenu.edit, command: (event) => this.viewLocationGroup() })
+        this.model.locationGridContextMenuItem.push({ label: contextMenu.delete, command: (event) => this.deleteLocationGroup() })
     }
 
     onRowSelect(event) {
         this.model.selectedLocationGroup = event.data;
     };
-
+    
+    deleteLocationGroup(){
+        let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
+        this._locationGroupsListService.deleteLocationGroup(locationGroupId).subscribe((successResponse: Response) => {
+            this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_successResponse");
+            this.populateLocationGroupGrid();
+            
+        }, (errResponse) => {
+            this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_errResponse");
+            throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+        });
+    }
 
     viewLocationGroup() {
         let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
@@ -66,7 +79,7 @@ export class LocationGroupsListComponent implements OnInit {
             this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_successResponse");
             let responseJson = successResponse;
             if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
-                this.model.items = responseJson['items'];
+                this.model.items = _.sortBy(responseJson['items'],['locationGroupId']);
             }
         }, (errResponse) => {
             this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_errResponse");
