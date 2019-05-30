@@ -71,7 +71,6 @@ Ext.define('Taco.core.AppState', {
             if (! this.contextRE.test(uri) ) {
                 uri = Taco.app.context.getCurrent().urlToken + '/' + uri;
             }
-
             return uri;
         }
     },
