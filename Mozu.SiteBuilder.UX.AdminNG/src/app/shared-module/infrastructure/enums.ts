@@ -16,5 +16,6 @@ export enum NavigationContainerType {
     dashboard = 'dashboard',
     product = 'product',
     order = 'order',
-    quotes = 'quotes'
+    quotes = 'quotes',
+    locationGroups = 'locationGroups'
 }

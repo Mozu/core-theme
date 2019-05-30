@@ -16,7 +16,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "2",
+          "fulfillmentLocationCode": "1",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -73,6 +73,82 @@
           "shippingTotal": 0,
           "feeTotal": 0,
           "total": 5,
+          "unitPrice": {
+            "extendedAmount": 5,
+            "listAmount": 5
+          },
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:40.914Z",
+            "updateBy": "1",
+            "createBy": "1"
+          },
+          "shippingAmountBeforeDiscountsAndAdjustments": 0,
+          "weightedOrderDiscount": 0,
+          "weightedOrderShippingDiscount": 0,
+          "weightedOrderHandlingFeeDiscount": 0
+        },
+        {
+          "id": "185bdb4fd2a744bda227aa4700736f2c",
+          "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+          "fulfillmentLocationCode": "1",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "fulfillmentTypesSupported": [
+              "DirectShip"
+            ],
+            "options": [],
+            "properties": [],
+            "categories": [
+              {
+                "id": 1
+              }
+            ],
+            "price": {
+              "price": 10
+            },
+            "discountsRestricted": false,
+            "isTaxable": true,
+            "productType": "Product Type",
+            "productUsage": "M",
+            "bundledProducts": [],
+            "productCode": "test-1001",
+            "name": "Test Product 1",
+            "goodsType": "Red",
+            "isPackagedStandAlone": false,
+            "measurements": {
+              "height": {
+                "unit": "in",
+                "value": 1
+              },
+              "width": {
+                "unit": "in",
+                "value": 1
+              },
+              "length": {
+                "unit": "in",
+                "value": 1
+              },
+              "weight": {
+                "unit": "lbs",
+                "value": 1
+              }
+            },
+            "fulfillmentStatus": "Pending"
+          },
+          "quantity": 1,
+          "subtotal": 10,
+          "extendedTotal": 10,
+          "taxableTotal": 10,
+          "discountTotal": 0,
+          "discountedTotal": 10,
+          "itemTaxTotal": 0,
+          "shippingTaxTotal": 0,
+          "shippingTotal": 0,
+          "feeTotal": 0,
+          "total": 10,
           "unitPrice": {
             "extendedAmount": 5,
             "listAmount": 5

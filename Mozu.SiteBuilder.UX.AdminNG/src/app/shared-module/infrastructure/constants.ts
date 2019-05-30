@@ -125,6 +125,10 @@ export class Constants {
 
     static numberOfRows: number = 10;
 
+    static integrationsModalClass = 'integrationsModal';
+    static integrationsBackdropModalClass = 'integrationsBackdropModal';
+    static messageHash = '&messageHash=';
+    static dateStamp = '?dt=';
     static urlParameter ={
         site: '/s-',
         b2bAccount: '/b2baccounts',

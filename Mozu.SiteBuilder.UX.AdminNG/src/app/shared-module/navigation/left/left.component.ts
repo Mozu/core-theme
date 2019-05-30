@@ -98,7 +98,7 @@ export class NavigationLeftComponent implements OnInit {
         var secureForm = JSON.parse(JSON.stringify(data));
         if(secureForm.items) {
         this.model.dynamicLinkIframeURL = url + Constants.dateStamp + encodeURIComponent(secureForm.items.dateStamp) + Constants.messageHash + encodeURIComponent(secureForm.items.messageHash);
-        const modalRef = this.modalService.open(DynamicLinksDialogComponent, { windowClass: Constants.integrationsModalClass});
+        const modalRef = this.modalService.open(DynamicLinksDialogComponent, { windowClass: Constants.integrationsModalClass, backdropClass: Constants.integrationsBackdropModalClass});
         modalRef.componentInstance.iframeResourceURL =  this.model.dynamicLinkIframeURL;
      }
     }, (errResponse) => {

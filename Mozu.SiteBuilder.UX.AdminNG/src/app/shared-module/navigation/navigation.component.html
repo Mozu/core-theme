@@ -1,6 +1,6 @@
 ﻿<div class="toolbar-main">
     <navigation-left></navigation-left>
-    <navigation-top-quote *ngIf="navigationContainerType == navigationType.quotes; else topShell"></navigation-top-quote>
+    <navigation-top-quote *ngIf="(navigationContainerType == navigationType.quotes || navigationContainerType == navigationType.locationGroups); else topShell"></navigation-top-quote>
     <ng-template #topShell>
         <navigation-top-shell></navigation-top-shell> 
     </ng-template>

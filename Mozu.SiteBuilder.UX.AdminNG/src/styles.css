@@ -349,15 +349,24 @@ p-table .ui-table .pi-ellipsis-v:hover{
 .ng-trigger.ui-menu-dynamic li{
     border-bottom: 1px solid #f5f5f5;
 }
-.fade {
-        opacity: 1 !important;
+
+.integrationsBackdropModal.fade {
+    opacity: 1 !important;
 }
-.modal-backdrop.show {
+
+.integrationsBackdropModal.show {
     opacity: .5 !important;
+}
+
+.integrationsModal.show{
+    opacity: 1 !important;
 }
 
 .integrationsModal {
     z-index: 19021 !important;
+}
+.integrationsModal .modal-body{
+    height: 400px;
 }
 .integrationsModal .modal-header .close {
     margin-top: -25px;
