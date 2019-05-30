@@ -16,7 +16,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "MOG",
+          "fulfillmentLocationCode": "2",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -160,7 +160,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "MOG",
+          "fulfillmentLocationCode": "3",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -304,7 +304,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "MOG",
+          "fulfillmentLocationCode": "4",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -448,7 +448,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "MOG",
+          "fulfillmentLocationCode": "1",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -592,7 +592,7 @@
         {
           "id": "185bdb4fd2a744bda227aa4700736f2c",
           "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-          "fulfillmentLocationCode": "MOG",
+          "fulfillmentLocationCode": "5",
           "fulfillmentMethod": "Ship",
           "lineId": 1,
           "product": {
@@ -736,7 +736,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "6",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -880,7 +880,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "7",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1024,7 +1024,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "8",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1168,7 +1168,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "2",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1312,7 +1312,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "5",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1456,7 +1456,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "9",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1600,7 +1600,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "12",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1744,7 +1744,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "19",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -1888,7 +1888,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "13",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -2032,7 +2032,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "45",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -2176,7 +2176,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "23",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -2320,7 +2320,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "22",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -2464,7 +2464,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "11",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
@@ -2608,7 +2608,7 @@
        {
         "id": "185bdb4fd2a744bda227aa4700736f2c",
         "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
-        "fulfillmentLocationCode": "MOG",
+        "fulfillmentLocationCode": "42",
         "fulfillmentMethod": "Ship",
         "lineId": 1,
         "product": {
