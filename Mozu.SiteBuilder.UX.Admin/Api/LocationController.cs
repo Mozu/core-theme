@@ -227,15 +227,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 locationGroups = new DC.LocationGroupCollection { Items = new List<DC.LocationGroup> { group }, TotalCount = 1 };
             }
             else
-            {
-                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address)";
+            {               
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
                 locationGroups = (await _locationGroupWebApiClient.GetLocationGroups(startIndex: pagingParams.startIndex,
                     pageSize: pagingParams.pageSize,
                     sortBy: sort,
-                    filter: filter,
-                    responseFields: responseFields
+                    filter: filter                    
                     )).ReadAsSync();
             }
 
@@ -257,6 +255,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var resp = (await _locationGroupWebApiClient.UpdateLocationGroup(loc.LocationGroupId, loc)).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+        }
+
+        [HttpGetRoute(UriTemplate = "groups/get/{groupId}")]
+        public async Task<Response<DC.LocationGroup>> GetGroup([FromUri]int groupId)
+        {
+            var resp = (await _locationGroupWebApiClient.GetLocationGroup(groupId)).ReadAsSync();
+            return Single2(resp);
+        }
+
+        [HttpDeleteRoute(UriTemplate = "groups/delete/{groupId}")]
+        public async Task<Response<DC.LocationGroup>> DeleteGroup([FromUri]int groupId)
+        {
+            var resp = (await _locationGroupWebApiClient.DeleteLocationGroup(groupId)).ReadAsSync();
+            return Message3<DC.LocationGroup>(true, "Location Group Successfully Deleted");
         }
 
         /// <summary>
