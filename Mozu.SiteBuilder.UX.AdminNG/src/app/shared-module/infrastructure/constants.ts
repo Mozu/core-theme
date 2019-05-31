@@ -117,7 +117,8 @@ export class Constants {
         redirectionLink : "./assets/json/user-redirection.json",
         locations : "./assets/json/locations.json",
         physicalLocations : './assets/json/physical-locations.json',
-        locationGroupList : './assets/json/location-group-list.json' 
+        locationGroupList : './assets/json/location-group-list.json',
+        getLocationGroup : "./assets/json/location-group-edit.json" 
     }
 
     static lables = {

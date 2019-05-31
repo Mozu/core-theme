@@ -19,4 +19,15 @@ export class CreateLocationGroupService{
         return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
         //return of(new HttpResponse({ status: 200 })); // dummy response to test.
     }
+
+    public getLocationGroup(locationGroupId: string): Observable<any>{
+        this._loggerService.info("EditLocationGroupService: getLocationGroup");
+        return this._http.get(GlobalConstant.webApis.getLocationGroup + "/"+ locationGroupId);
+        //return this._http.get(Constants.JsonResources.getLocationGroup);
+    }
+
+    public updateLocationGroup(lgModel: LocationGroupModel): Observable<any>{
+        this._loggerService.info("CreateLocationGroupService: updateLocationGroup"+JSON.stringify(lgModel));
+        return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
+    }
 }

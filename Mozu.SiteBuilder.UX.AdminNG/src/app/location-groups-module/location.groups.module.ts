@@ -8,8 +8,8 @@ import { SharedModule } from '@shared/shared.module';
 
 import {
 LocationGroupsListComponent,
-LocationGroupCreateComponent,
-LocationGroupEditComponent
+LocationGroupCreateComponent
+
 // LocationsListComponent//,
 //PhysicallocationComponent
 
@@ -18,8 +18,8 @@ LocationGroupEditComponent
 @NgModule({
   declarations: [
     LocationGroupsListComponent,
-    LocationGroupCreateComponent,
-    LocationGroupEditComponent
+    LocationGroupCreateComponent
+    
     // LocationsListComponent//,
     //PhysicallocationComponent
     ],
