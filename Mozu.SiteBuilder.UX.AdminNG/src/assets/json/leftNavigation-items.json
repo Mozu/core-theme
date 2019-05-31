@@ -4,7 +4,7 @@
       "menuid": "productsmenu",
       "navParent": "main",
       "label": "Catalog",
-      "imageURL": "./assets/Images/catlog.png",
+      "imageURL": "/admin/assets/Images/catlog.png",
       "icon": "nav-catalog",
       "behaviorIds": 4,
       "visible" : true,
@@ -52,7 +52,7 @@
       "menuid": "marketingmenu",
       "navParent": "main",
       "label": "Marketing",
-      "imageURL": "./assets/Images/marketing.png",
+      "imageURL": "/admin/assets/Images/marketing.png",
       "icon": "nav-marketing",
       "behaviorIds": 24,
       "visible" : true,
@@ -100,7 +100,7 @@
       "menuid": "contentmenu",
       "navParent": "main",
       "label": "Site Builder",
-      "imageURL": "./assets/Images/sitebuilder.png",
+      "imageURL": "/admin/assets/Images/sitebuilder.png",
       "icon": "nav-sites",
       "showBreadCrumbs": true,
       "visible" : true,
@@ -144,7 +144,7 @@
       "menuid": "publishingmenu",      
       "navParent": "main",
       "label": "Publishing ",
-      "imageURL": "./assets/Images/publishing.png",
+      "imageURL": "/admin/assets/Images/publishing.png",
       "icon": "nav-publishing",
       "behaviorIds":  8 ,
       "visible" : true,
@@ -172,7 +172,7 @@
       "menuid": "ordermenu",
       "navParent": "main",
       "label": "Fulfillment",
-      "imageURL": "./assets/Images/fullfillment.png",
+      "imageURL": "/admin/assets/Images/fullfillment.png",
       "icon": "nav-orders",
       "behaviorIds":  73 ,
       "visible" : true,
@@ -227,7 +227,7 @@
       "menuid": "customermenu",
       "navParent": "main",
       "label": "Customers",
-      "imageURL": "./assets/Images/customers.png",
+      "imageURL": "/admin/assets/Images/customers.png",
       "icon": "nav-customers",
       "visible" : true,
       "items": [
@@ -263,7 +263,7 @@
       "menuid": "b2baccountmenu",
       "navParent": "main",
       "label": "B2B",
-      "imageURL": "./assets/Images/b2b.png",
+      "imageURL": "/admin/assets/Images/b2b.png",
       "behaviorIds":  188 ,
       "visible" : true,
       "items": [
@@ -290,7 +290,7 @@
       "menuid": "reportmenu",
       "navParent": "main",
       "label": "Reporting",
-      "imageURL": "./assets/Images/reporting.png",
+      "imageURL": "/admin/assets/Images/reporting.png",
       "behaviorIds":  188 ,
       "visible" : true,
       "items": [
@@ -309,7 +309,7 @@
       "menuid": "settingsmenu",
       "navParent": "sys",
       "label": "Settings",
-      "imageURL": "./assets/Images/settings.png",
+      "imageURL": "/admin/assets/Images/settings.png",
       "icon": "nav-settings",
       "visible" : true,
       "items": [
@@ -376,7 +376,7 @@
       "menuid": "schemamenu",
       "navParent": "sys",
       "label": "Schema",
-      "imageURL": "./assets/Images/schema.png",
+      "imageURL": "/admin/assets/Images/schema.png",
       "behaviorIds":  4 ,
       "visible" : true,
       "items": [
@@ -451,7 +451,7 @@
       "menuid": "customizationmenu",
       "navParent": "sys",
       "label": "Customization",
-      "imageURL": "./assets/Images/customization.png",
+      "imageURL": "/admin/assets/Images/customization.png",
       "behaviorIds":  4 ,
       "visible" : true,
       "items": [
@@ -486,7 +486,7 @@
       "menuid": "structuremenu",
       "navParent": "sys",
       "label": "Structure",
-      "imageURL": "./assets/Images/structure.png",
+      "imageURL": "/admin/assets/Images/structure.png",
       "behaviorIds":  4 ,
       "visible" : true,
       "items": [
@@ -530,7 +530,7 @@
       "navParent": "sys",
       "label": "Permissions",
       "visible" : true,
-      "imageURL": "./assets/Images/permissions.png",
+      "imageURL": "/admin/assets/Images/permissions.png",
       "items": [
         {
           "id": "usersmenu",
@@ -564,7 +564,7 @@
       "navParent": "sys",
       "locAtts": [ "multiLang", "multCurrency" ],
       "label": "Localization",
-      "imageURL": "./assets/Images/schema.png",
+      "imageURL": "/admin/assets/Images/schema.png",
       "visible" : true,
       "items": [
         {

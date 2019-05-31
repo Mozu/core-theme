@@ -22,6 +22,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { environment } from '../../environments/environment';
+
 import {
     RestrictInput,
     EnableDisableControls
@@ -56,7 +58,7 @@ import { AuditLogComponent } from './audit-log/audit-log.component';
 declare var resourcesVersion: any;
 
 export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json?v=' + resourcesVersion);
+    return new TranslateHttpLoader(http, environment.appUrl + '/assets/i18n/', '.json?v=' + resourcesVersion);
 }
 
 @NgModule({
