@@ -15,10 +15,6 @@ import {
     QuoteLocationGroupRouteGuardService 
 } from './services/index';
 
-import {    
-    FocusManager,
-    FocusManagerHelperService
-} from './focus-manager/index';
 
 export function sharedDataServiceFactory(service: SharedDataService) {
     return () => service.populateCommonData(); 
@@ -29,7 +25,7 @@ export function sharedDataServiceFactory(service: SharedDataService) {
 
     ],
     declarations: [
-        FocusManager
+        
     ],
     providers: [
         SharedDataService,
@@ -41,11 +37,9 @@ export function sharedDataServiceFactory(service: SharedDataService) {
         },
         AuthGuardService,
         NotificationService,
-        FocusManagerHelperService,
         QuoteLocationGroupRouteGuardService
     ],
     exports: [
-        FocusManager
     ]
 })
 

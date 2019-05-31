@@ -6,7 +6,6 @@ import { LoggerService } from '@core';
 
 import { Subject } from 'rxjs/Subject';
 
-import { FocusManagerModel } from '../focus-manager/index';
 
 @Injectable()
 export class NotificationService {
@@ -14,7 +13,6 @@ export class NotificationService {
     productAddedToCartNotification: Subject<null> = new Subject<null>();
     productAddedToCartFromDialogNotification: Subject<null> = new Subject<null>();
     disableUINotification: Subject<null> = new Subject<null>();
-    contentLoadedNotification: Subject<FocusManagerModel> = new Subject<FocusManagerModel>();
     loadAccessTileCategories : Subject<string> = new Subject<string>();
 
     constructor(
@@ -31,11 +29,6 @@ export class NotificationService {
     notifyProductAddedToCartFromDialog() {
         this._logger.info('NotificationService : notifyNonCatalogProductAddedToCart');
         this.productAddedToCartFromDialogNotification.next();
-    }
-
-    notifyEventContentLoaded(focusManagerModel?: FocusManagerModel) {
-        this._logger.info('NotificationService : notifyEventContentLoaded');
-        this.contentLoadedNotification.next(focusManagerModel);
     }
 
     notifyDisableUI() {
