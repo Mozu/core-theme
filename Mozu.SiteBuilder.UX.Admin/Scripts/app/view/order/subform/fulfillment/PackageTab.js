@@ -9,6 +9,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
 
     initComponent: function () {
         this.tabTitle = this.packageRecord.code;
+        this.title = this.packageRecord.code;
 
         this.cls += " " + Taco.baseCSSPrefix + 'orderform-package';
         this.initUI();
@@ -53,21 +54,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
 
     addTracking: function () {
         alert('Add Tracking click');
-    },
-
-    buildShippingMethods: function () {
-        var ret = [];
-
-        this.shippingMethodsStore.each(function (method) {
-            ret.push({
-                text: method.get('shippingMethodName'),
-                methodName: method.get('shippingMethodName'),
-                methodCode: method.get('shippingMethodCode')
-            });
-        });
-
-        return ret;
-    },
+    },    
 
     buildPackagingTypes: function () {
         var ret = [];
@@ -80,20 +67,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
         });
 
         return ret;
-    },
-
-    handleShippingMethod: function (menu, item) {
-        if (!item.methodCode) return;
-
-        this.packageRecord.shippingMethodCode = item.methodCode;
-        this.packageRecord.shippingMethodName = item.methodName;
-
-        this.updateOrder({
-            methodName: 'changeShippingMethod',
-            errorMsg: 'Error changing shipping method on package',
-            data: [this.packageRecord]
-        });
-    },
+    },    
 
     handlePackagingType: function (menu, item) {
         this.packageRecord.packagingType = item.packagingType;
@@ -103,15 +77,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             errorMsg: 'Error changing packaging type on package',
             data: [this.packageRecord]
         });
-    },
-
-    handleAddTrackingNumber: function () {
-        Ext.create('Taco.view.order.modal.EditTrackingNumber', {
-            packageData: this.packageRecord,
-            record: this.record,
-            autoShow: true
-        });
-    },
+    },    
 
     handleOverrideWeight: function () {
         Ext.create('Taco.view.order.modal.OverrideTotalWeight', {
@@ -143,8 +109,8 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
             'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
         );
-    },
-
+    },  
+    
     buildTrackingHeader: function () {
         return Ext.widget({
             xtype: 'container',
@@ -161,93 +127,6 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             items: [
                 {
                     xtype: 'container',
-                    padding: '0 10 0 0',
-                    defaults: {
-                        xtype: 'component'
-                    },
-                    items: [
-                        {
-                            xtype: 'button',
-                            ui: 'link',
-                            scale: 'medium',
-                            html: 'Method:',
-                            cls: 'label label-link',
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update',
-                                disable: true
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            hidden: !!this.packageRecord.shipmentId,
-                            listeners: {
-                                menushow: function (button, menu) {
-                                    // Removed if check, this should always fire!
-                                    this.shippingMethodsStore.load({
-                                        scope: this,
-                                        callback: function () {
-                                            menu.removeAll();
-                                            menu.add(this.buildShippingMethods());
-                                        }
-                                    });
-                                },
-                                scope: this
-                            },
-                            menu: {
-                                plain: true,
-                                baseCls: 'taco-shipping-menu',
-                                listeners: {
-                                    click: this.handleShippingMethod,
-                                    scope: this,
-                                    delegate: 'x-menu-item-link'
-                                },
-                                items: [{
-                                    text: 'loading..'
-                                }]
-                            }
-                        },
-                        {
-                            html: this.packageRecord.shippingMethodName,
-                            padding: '0 0 0 10',
-                        }]
-                },
-
-                {
-                    xtype: 'container',
-                    padding: '0 10 0 0',
-                    items: [{
-                        xtype: 'component',
-                        html: 'Tracking Number:',
-                        cls: 'label',
-                        padding: '5 0 0 0'
-                    }, {
-                        xtype: 'button',
-                        ui: 'link',
-                        scale: 'medium',
-                        cls: 'button-link',
-                        text: this.packageRecord.trackingNumber || '(Add)',
-                        handler: this.handleAddTrackingNumber,
-                        hidden: !!this.packageRecord.shipmentId,
-                        scope: this,
-                        requiredBehaviors: [{
-                            model: 'Taco.model.Order',
-                            behavior: 'update',
-                            disable: this.packageRecord.trackingNumber ? true : false
-                        },
-                        {
-                            model: 'Taco.model.Order',
-                            behavior: 'fulfill'
-                        }]
-                    }, {
-                        xtype: 'component',
-                        html: this.packageRecord.trackingNumber || '(n/a)',
-                        hidden: !this.packageRecord.shipmentId
-                    }]
-                },
-                {
-                    xtype: 'container',
                     defaults: {
                         xtype: 'component'
                     },
@@ -258,19 +137,14 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             defaults: {
                                 xtype: 'component'
                             },
-                            items: [
-                                {
-                                    html: 'Packaging Type:',
-                                    cls: 'label',
-                                    hidden: !this.packageRecord.shipmentId
-                                },
+                            items: [                                
                                 {
                                     xtype: 'button',
                                     ui: 'link',
                                     html: 'Packaging Type:',
                                     scale: 'medium',
                                     cls: 'label label-link',
-                                    hidden: !!this.packageRecord.shipmentId,
+                                    hidden: !!this.record.shipmentId,
                                     requiredBehaviors: [{
                                         model: 'Taco.model.Order',
                                         behavior: 'update',
@@ -299,7 +173,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                                         }]
                                     }
                                 }, {
-                                    html: this.packageRecord.packagingType,
+                                    html: this.record.packagingType,
                                     padding: '0 0 0 10',
                                 }]
                         }
@@ -317,7 +191,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             tpl: [
                                 '<span class="label">Total Weight:</span>'
                             ],
-                            data: this.packageRecord
+                            data: this.record
                         }, {
                             xtype: 'container',
                             layout: 'hbox',
@@ -327,12 +201,12 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                                 tpl: [
                                     '{weight} lbs'
                                 ],
-                                data: this.packageRecord
+                                data: this.record
                             }, {
                                 xtype: 'button',
                                 text: '(Edit)',
                                 ui: 'link',
-                                hidden: !!this.packageRecord.shipmentId,
+                                hidden: !!this.record.shipmentId,
                                 handler: this.handleOverrideWeight,
                                 scope: this,
                                 requiredBehaviors: [{
@@ -376,8 +250,8 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             scale: 'medium',
                             text: 'Get Shipping Labels',
                             margin: '0 15 0 0',
-                            //hidden: !!this.packageRecord.shipmentId,
-                            //disabled: !this.packageRecord.hasLabel,
+                            //hidden: !!this.record.shipmentId,
+                            //disabled: !this.record.hasLabel,
                             requiredBehaviors: [{
                                 model: 'Taco.model.Order',
                                 behavior: 'update'
@@ -394,8 +268,8 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             scale: 'medium',
                             text: 'Edit Items',
                             margin: '0 15 0 0',
-                            //hidden: !!this.packageRecord.shipmentId,
-                            //disabled: !this.packageRecord.hasLabel,
+                            //hidden: !!this.record.shipmentId,
+                            //disabled: !this.record.hasLabel,
                             requiredBehaviors: [{
                                 model: 'Taco.model.Order',
                                 behavior: 'update'
@@ -412,8 +286,8 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             scale: 'medium',
                             text: 'Reassign Items',
                             margin: '0 15 0 0',
-                            //hidden: !!this.packageRecord.shipmentId,
-                            //disabled: !this.packageRecord.hasLabel,
+                            //hidden: !!this.record.shipmentId,
+                            //disabled: !this.record.hasLabel,
                             requiredBehaviors: [{
                                 model: 'Taco.model.Order',
                                 behavior: 'update'
@@ -455,7 +329,6 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             ]
         });
     },
-
     onDestroy: function () {
         this.callParent(arguments);
     }

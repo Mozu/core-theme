@@ -597,6 +597,7 @@
     <Content Include="Scripts\app\core\ux\form\field\BaseImageField.js" />
     <Content Include="Scripts\app\core\ux\form\field\code.js" />
     <Content Include="Scripts\app\core\ux\form\field\QuickFilter.js" />
+    <Content Include="Scripts\app\core\ux\form\TabFormNew.js" />
     <Content Include="Scripts\app\core\ux\form\TabForm.js" />
     <Content Include="Scripts\app\core\ux\form\field\AdminUser.js" />
     <Content Include="Scripts\app\core\ux\form\field\plugins\InputMask.js" />
@@ -875,14 +876,16 @@
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Storefront.js" />
+    <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Packages.js" />
-    <Content Include="Scripts\app\view\order\subform\fulfillment\MorePackageTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\PackageTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Shipment.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentDetails.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentHeader.js" />
     <Content Include="Scripts\app\view\order\widget\AttributeDropdown.js" />
     <Content Include="Scripts\app\view\order\widget\EcommerceGiftCardForm.js" />
     <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
+    <Content Include="Scripts\app\view\order\widget\ShipmentTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingPackagesGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnableItemTree.js" />

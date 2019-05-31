@@ -295,42 +295,42 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                     return this.record.formatCurrency(value);
                 }
             },
-            //{
-            //    xtype: 'taco.menucolumn',
-            //    stateId: 'actionsColumn',
-            //    menuItems: [
-            //        {
-            //            text: 'Edit Details',
-            //            requiredBehaviors: {
-            //                model: 'Taco.model.Product',
-            //                behavior: 'update'
-            //            },
-            //            menuColumnHandler: function (item, eventData) {
+            {
+                xtype: 'taco.menucolumn',
+                stateId: 'actionsColumn',
+                menuItems: [
+                    {
+                        text: 'Edit Item',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
 
-            //            }
-            //        },
-            //        {
-            //            text: 'Cancel Item',
-            //            requiredBehaviors: {
-            //                model: 'Taco.model.Product',
-            //                behavior: 'update'
-            //            },
-            //            menuColumnHandler: function (item, eventData) {
+                        }
+                    },
+                    {
+                        text: 'Cancel Item',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
 
-            //            }
-            //        },
-            //        {
-            //            text: 'Move Item',
-            //            requiredBehaviors: {
-            //                model: 'Taco.model.Product',
-            //                behavior: 'update'
-            //            },
-            //            menuColumnHandler: function (item, eventData) {
+                        }
+                    },
+                    {
+                        text: 'Reassign Item',
+                        requiredBehaviors: {
+                            model: 'Taco.model.Product',
+                            behavior: 'update'
+                        },
+                        menuColumnHandler: function (item, eventData) {
 
-            //            }
-            //        }
-            //    ]
-            //}
+                        }
+                    }
+                ]
+            }
         ];
     }
 

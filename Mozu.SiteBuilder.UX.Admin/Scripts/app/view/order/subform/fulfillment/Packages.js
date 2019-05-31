@@ -2,19 +2,20 @@
  * @class Taco.view.order.subform.fulfillment.Packages
  */
 Ext.define('Taco.view.order.subform.fulfillment.Packages', {
-    extend: 'Taco.core.ux.form.TabForm',
+    extend: 'Taco.core.ux.form.TabFormNew',
 
     alias: 'widget.taco-shipmentform',
     requires: [
         'Taco.view.order.subform.fulfillment.PackageTab',
-        'Taco.view.order.widget.OrderTotalPanel'
+        'Taco.view.order.widget.ShipmentTotalPanel'
     ],
 
     //model: 'Taco.model.Order',
-    showTitle:false,
+    //this will hide Edit header
+    showTitle: false,
     stickyClass: 'taco-fixed-navForm2-no-padding',
     cls: 'taco-shipmentform-packages',
-    collapsible:true,
+    
     setNavDimensions: function () {
         var navStyle = this.sectionNav.getEl().dom.style;
 
@@ -49,34 +50,27 @@ Ext.define('Taco.view.order.subform.fulfillment.Packages', {
         };
 
         //Loop through all packages and 
+        var packages = this.record.get('packages');
+        if (packages && packages.length > 0) {
+            for (var packageCount = 0; packageCount < packages.length; packageCount++) {
+                items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
+                    record: this.record,
+                    packageRecord: packages[packageCount]
+                }));
+            }
+        }
+        //Following are only for demo
         //var packages = this.record.get('packages');
-        //for (var packageCount = 0; packageCount < packages.length; packageCount++) {
+        ////var temp = Math.floor(Math.random() * 10);
+        //for (var packageCount = 0; packageCount < 10; packageCount++) {
+
+        //    var name = packageCount == 0 ? 'All Items' : 'package-' + packageCount;            
+        //    packages[0].code = name;
         //    items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
         //        record: this.record,
-        //        packageRecord: packages[packageCount]
-        //    }));
+        //        packageRecord: packages[0]
+        //    }));            
         //}
-
-
-        //Following are only for demo
-        var packages = this.record.get('packages');
-        for (var packageCount = 0; packageCount <= Math.floor(Math.random() * 10); packageCount++) {
-
-            var name = packageCount == 0 ? 'All Items' : 'package-' + packageCount;
-            packages[0].code = name;
-            items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
-                record: this.record,
-                packageRecord: packages[0]
-            }));
-        }
-
-        // subtotals, orderlevel discounts, tax shipping, and totals
-        //this.orderTotals = Ext.create('Taco.view.order.widget.OrderTotalPanel', {
-        //    margin: '0 0 20 0',
-        //    record: this.record
-        //});
-        //items.push(this.orderTotals);
-
         this.items = items;
     }
     

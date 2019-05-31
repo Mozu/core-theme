@@ -175,6 +175,10 @@
         padding: 8px 15px 9px 15px;
     }
 
+    .taco-link-button-more {
+        padding: 0 !important;
+    }
+
     .x-component taco-form-nav, .taco-form-nav {
         background-color: white;
     }
@@ -191,8 +195,30 @@
     .x-panel-header-text-container-default {
         border-bottom-width: 0px !important;
     }
+
+    .taco-splitbutton {
+        border-color: #e9e9e9 !important;
+        padding-top: 8px;
+        padding-bottom: 7px;
+        border: none !important;
+        background-color: white;
+    }
+
+    .x-btn-split-right {
+        padding-right: 25px;
+    }
+
+    .x-btn-split-right::after {
+        border-left: none !important;
+    }
 }
 
 .taco-order-fulfillment-shipments {
     border-top: 20px solid #e9e9e9;
+}
+
+.taco-order-fulfillment-ShipmentDetails {
+    .x-tool {
+        left: 98% !important;
+    }
 }

@@ -33,8 +33,8 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
             record: this.record
         }));       
 
-        this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-            record: this.record
-        })); 
+        //this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
+        //    record: this.record
+        //})); 
     }
 });
