@@ -15,9 +15,9 @@ export class EditLocationGroupService{
     constructor(private _http: HttpClientService,   
         private _loggerService: LoggerService){ }
 
-    public getLocationGroup(lgModel: LocationGroupModel): Observable<any>{
-        this._loggerService.info("EditLocationGroupService: getLocationGroup"+JSON.stringify(lgModel));
-        return this._http.get(GlobalConstant.webApis.addLocationGroup + "/"+ lgModel.locationGroupId);
+    public getLocationGroup(locationGroupId: string): Observable<any>{
+        this._loggerService.info("EditLocationGroupService: getLocationGroup");
+        return this._http.get(GlobalConstant.webApis.getLocationGroup + "/"+ locationGroupId);
         //return of(new HttpResponse({ status: 200 })); // dummy response to test.
     }
 

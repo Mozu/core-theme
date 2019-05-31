@@ -1,18 +1,20 @@
 {
-    "locationGroupId": 5,
-    "siteIds": [
-     21550
-    ],
-    "name": "Another Group of Locations",
-    "locationCodes": [
-     "roletest10",
-     "roletest11",
-     "roletest12"
-    ],
-    "auditInfo": {
-     "updateDate": "2019-04-26T15:26:46.969Z",
-     "createDate": "2019-04-26T15:26:46.969Z",
-     "updateBy": "1",
-     "createBy": "1"
+    "success": true,
+    "total": 1,
+    "items": {
+        "locationGroupId": 24,
+        "siteIds": [
+            21577
+        ],
+        "name": "Test Location Group 1",
+        "locationCodes": [
+            "timroletest6"
+        ],
+        "auditInfo": {
+            "updateDate": "2019-05-30T07:26:06.360Z",
+            "createDate": "2019-05-30T07:26:06.360Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
     }
-   }
+}
