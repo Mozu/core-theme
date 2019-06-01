@@ -8,6 +8,7 @@ import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
 import { LocationGroupModel } from './location.group.model';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'location-group-create',
@@ -44,7 +45,8 @@ export class LocationGroupCreateComponent implements OnInit {
         private _toastrService: ToastrService,
         private _messageService: MessageService,
         private router: Router,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private _translate: TranslateService) {
 
     }
 
@@ -60,7 +62,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
         this.fetchSitesData();
         this.subscriptions.push(
-            this._notificationService.addLocationGroup.subscribe((action: string) => {
+            this._notificationService.locationGroupAdded.subscribe((action: string) => {
                 if (action === "Save") {
                     if(this.mode === Constants.gridActionItem.New){ 
                         this.saveLocationGroup ();
@@ -76,7 +78,7 @@ export class LocationGroupCreateComponent implements OnInit {
         );
 
         this.subscriptions.push(
-            this._notificationService.editLocationGroup.subscribe((action:any) => {
+            this._notificationService.locationGroupEdited.subscribe((action:any) => {
                 if (action.name === "detailSelectedLocation") {
                    this.selectedLocations = action.data; 
                 }
@@ -97,7 +99,7 @@ export class LocationGroupCreateComponent implements OnInit {
         this._loggerService.info("LocationGroupCreateComponent : getLocationGroupSuccess" + JSON.stringify(result));
         if(result && result.items){
             let lgModel : LocationGroupModel =   <LocationGroupModel>result.items;
-            this._notificationService.notifyEditLocationGroup({name:"EditDataLoaded", data:lgModel.locationCodes});
+            this._notificationService.notifyLocationGroupEdited({name:"EditDataLoaded", data:lgModel.locationCodes});
             this.updateLocationGroupForm(lgModel);
         }
     }
@@ -232,7 +234,7 @@ export class LocationGroupCreateComponent implements OnInit {
     cancel() {
         this._loggerService.info("LocationGroupCreateComponent : cancel");
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
-        this._notificationService.notifyAddLocationGroup("Cancel Success");
+        this._notificationService.notifyLocationGroupAdded("Cancel Success");
     }
 
     private createLocationGroup(lgModel: LocationGroupModel): void {
@@ -272,9 +274,8 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveSuccess(result) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess");
         this.isSaving = false;
-        this._notificationService.notifyAddLocationGroup("Save Success");
+        this._notificationService.notifyLocationGroupAdded("Save Success");
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
-
     }
 
     private onSaveError(errmsg: string) {

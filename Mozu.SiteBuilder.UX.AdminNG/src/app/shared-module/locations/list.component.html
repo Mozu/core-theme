@@ -1,5 +1,4 @@
-<h5>Locations</h5>
-<!-- <h5>{{selectedLocations ? selectedLocations.length : 0}} Selected</h5> -->
+<h5>{{'LOCATIONGROUP.FormLabels.locations' | translate }}</h5>
 <p-table #dt [columns]="cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="300px" 
     (onRowSelect)="rowSelected($event)" (onRowUnselect)="rowUnselected($event)"
@@ -49,15 +48,8 @@
     <ng-template pTemplate="emptymessage" let-columns>
         <tr>
             <td [attr.colspan]="columns.length">
-                No records found.
+                {{'LOCATIONGROUP.GridMessages.emptyMessage' | translate }}
             </td>
         </tr>
     </ng-template>
-    <!-- <ng-template pTemplate="summary">
-            <ul>
-                <li *ngFor="let location of selectedLocations" style="text-align: left">
-                    {{location.code + ' - ' + location.name }}
-                </li>
-            </ul>
-    </ng-template> -->
 </p-table>

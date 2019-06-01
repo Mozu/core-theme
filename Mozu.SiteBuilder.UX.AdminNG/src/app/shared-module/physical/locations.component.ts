@@ -43,7 +43,7 @@ export class PhysicalLocationsComponent implements OnInit {
     }
     else if (this.mode === Constants.gridActionItem.Edit) {
       this.subscriptions.push(
-        this._notificationService.editLocationGroup.subscribe((action: any) => {
+        this._notificationService.locationGroupEdited.subscribe((action: any) => {
           if (action && action.name === "EditDataLoaded") {
             this.selectedLoctions = action.data;
             this.getPhysicalLocations();
@@ -71,7 +71,7 @@ export class PhysicalLocationsComponent implements OnInit {
         //prepare selected location detials array :
         this.getSelectedLocationDetailsArr(locations);
         //send notification to main page.
-        this._notificationService.notifyEditLocationGroup({name:"detailSelectedLocation", data:this.selectedLoctionsDetailsArr});
+        this._notificationService.notifyLocationGroupEdited({name:"detailSelectedLocation", data:this.selectedLoctionsDetailsArr});
       }
       this.loading = false;
     });

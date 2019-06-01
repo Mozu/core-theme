@@ -68,7 +68,7 @@ export class LocationGroupsListComponent implements OnInit {
     viewLocationGroup() {
         let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
         this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupId]);
-        this._notificationService.notifyAddLocationGroup("Edit");
+        this._notificationService.notifyLocationGroupAdded("Edit");
     }
 
     public populateLocationGroupGrid = () => {

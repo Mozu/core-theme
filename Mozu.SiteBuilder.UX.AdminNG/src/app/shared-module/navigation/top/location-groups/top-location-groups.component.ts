@@ -27,7 +27,7 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
       this.checkMode();
 
       this.subscriptions.push(
-        this._notificationService.addLocationGroup.subscribe((action: string) => {
+        this._notificationService.locationGroupAdded.subscribe((action: string) => {
             if(action === "Save Success" || action === "Cancel Success"){
               this.model.isEditMode = false;
             }
@@ -69,11 +69,11 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     }
   
     cancelCreateLG(){
-      this._notificationService.notifyAddLocationGroup("Cancel");
+      this._notificationService.notifyLocationGroupAdded("Cancel");
     }
 
     saveCreateLG(){
-      this._notificationService.notifyAddLocationGroup("Save");
+      this._notificationService.notifyLocationGroupAdded("Save");
     }
   }
   

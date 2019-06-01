@@ -7,7 +7,6 @@
                 <th>{{'LOCATIONGROUP.GridHeader.Code' | translate }}</th>
                 <th>{{'LOCATIONGROUP.GridHeader.Name' | translate }}</th>
                 <th style="width: 4em">
-                    <!-- <i class="pi pi-ellipsis-v"></i> -->
                 </th>
             </tr>
         </ng-template>
@@ -27,7 +26,7 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr class="text-center">        
-                <td [attr.colspan]="3">No Data Available.</td>
+                <td [attr.colspan]="3">{{'LOCATIONGROUP.GridMessages.emptyMessage1' | translate}}</td>
             </tr>
         </ng-template>
     </p-table>
