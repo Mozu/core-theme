@@ -70,22 +70,42 @@ export class LocationGroupCreateComponent implements OnInit {
             })
         );
 
+        this.subscriptions.push(
+            this._notificationService.editLocationGroup.subscribe((action:any) => {
+                if (action.name === "detailSelectedLocation") {
+                   this.selectedLocations = action.data; 
+                }
+            })
+        );
+
         this.locationGroupId = this.route.snapshot.paramMap.get("id");
         this.mode = this.route.snapshot.data["mode"];
 
-        if (this.mode === Constants.gridActionItem.Edit) {
+        if(this.mode === Constants.gridActionItem.Edit) {
             this.createService.getLocationGroup(this.locationGroupId).subscribe(
-                (response) => this.onGetLocationGroupSuccess(response),
-                (response) => this.onGetLocationGroupError(response.error.message)
+                (response) => this.getLocationGroupSuccess(response),
+                (response) => this.getLocationGroupError(response.error.message)
             );
         }
     }
 
-    private onGetLocationGroupSuccess(result) {
+    private getLocationGroupSuccess(result) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess" + JSON.stringify(result));
+        if(result && result.items){
+            let lgModel : LocationGroupModel =   <LocationGroupModel>result.items;
+            this._notificationService.notifyEditLocationGroup({name:"EditDataLoaded", data:lgModel.locationCodes});
+            this.updateForm(lgModel);
+        }
     }
 
-    private onGetLocationGroupError(errmsg: string) {
+    private updateForm(lgModel: LocationGroupModel): void {
+        this.locationGroupForm.patchValue({
+            locationGroupName: lgModel.name,
+            locationSites: lgModel.siteIds
+        });
+    }
+
+    private getLocationGroupError(errmsg: string) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
     }
 

@@ -15,6 +15,7 @@ export class NotificationService {
     disableUINotification: Subject<null> = new Subject<null>();
     loadAccessTileCategories : Subject<string> = new Subject<string>();
     addLocationGroup : Subject<string> = new Subject<string>();
+    editLocationGroup : Subject<any> = new Subject<any>();
 
     //Confirmation Dialog Notification
     QuoteItemDeleteConfirmation : Subject<any> = new Subject<any>();
@@ -48,5 +49,10 @@ export class NotificationService {
     notifyAddLocationGroup(actionName:string){
         this._logger.info('NotificationService : notifyAddLocationGroup');
         this.addLocationGroup.next(actionName);
+    }
+    
+    notifyEditLocationGroup(action:any){
+        this._logger.info('NotificationService : notifyEditLocationGroup');
+        this.editLocationGroup.next(action);
     }
 }
