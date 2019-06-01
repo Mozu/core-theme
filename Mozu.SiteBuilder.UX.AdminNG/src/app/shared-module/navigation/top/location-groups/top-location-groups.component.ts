@@ -2,7 +2,7 @@ import { Component,
     OnInit } from '@angular/core';
   import { Router, PRIMARY_OUTLET, UrlSegmentGroup, UrlSegment } from '@angular/router';  
 import { NotificationService } from '@global';
-import { Constants } from '@shared/infrastructure';
+import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { TopLocationGroupsModel } from './top-location-groups.model';
 
   @Component({
@@ -28,10 +28,10 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
 
       this.subscriptions.push(
         this._notificationService.locationGroupAdded.subscribe((action: string) => {
-            if(action === "Save Success" || action === "Cancel Success"){
+            if(action === NotificationLGActions.saveSucceess || action === NotificationLGActions.cancelSuccess){
               this.model.isEditMode = false;
             }
-            if(action === "Edit"){
+            if(action === NotificationLGActions.edit){
               this.model.isEditMode = true;
             }
         })
@@ -69,11 +69,11 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     }
   
     cancelCreateLG(){
-      this._notificationService.notifyLocationGroupAdded("Cancel");
+      this._notificationService.notifyLocationGroupAdded(NotificationLGActions.cancel);
     }
 
     saveCreateLG(){
-      this._notificationService.notifyLocationGroupAdded("Save");
+      this._notificationService.notifyLocationGroupAdded(NotificationLGActions.save);
     }
   }
   

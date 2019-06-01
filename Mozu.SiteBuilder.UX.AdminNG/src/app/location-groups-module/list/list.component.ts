@@ -7,7 +7,7 @@ import { LoggerService,
          ErrorCode, 
          ErroNotificationType } from '@core'
 
-import { Constants } from '@shared';
+import { Constants, NotificationLGActions } from '@shared';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
@@ -68,7 +68,7 @@ export class LocationGroupsListComponent implements OnInit {
     viewLocationGroup() {
         let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
         this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupId]);
-        this._notificationService.notifyLocationGroupAdded("Edit");
+        this._notificationService.notifyLocationGroupAdded(NotificationLGActions.edit);
     }
 
     public populateLocationGroupGrid = () => {

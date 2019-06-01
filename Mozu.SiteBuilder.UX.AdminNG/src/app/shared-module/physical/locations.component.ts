@@ -3,7 +3,7 @@ import { TreeNode } from 'primeng/components/common/api';
 import { PhysicalLocationsService } from './locations.service';
 import { LoggerService } from '@core';
 import { ActivatedRoute } from '@angular/router';
-import { Constants } from '@shared/infrastructure';
+import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
 
@@ -44,7 +44,7 @@ export class PhysicalLocationsComponent implements OnInit {
     else if (this.mode === Constants.gridActionItem.Edit) {
       this.subscriptions.push(
         this._notificationService.locationGroupEdited.subscribe((action: any) => {
-          if (action && action.name === "EditDataLoaded") {
+          if (action && action.name === NotificationLGActions.editDataLoaded) {
             this.selectedLoctions = action.data;
             this.getPhysicalLocations();
           }
@@ -71,12 +71,11 @@ export class PhysicalLocationsComponent implements OnInit {
         //prepare selected location detials array :
         this.getSelectedLocationDetailsArr(locations);
         //send notification to main page.
-        this._notificationService.notifyLocationGroupEdited({name:"detailSelectedLocation", data:this.selectedLoctionsDetailsArr});
+        this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.selectedLoctionsDetailsArr});
       }
       this.loading = false;
     });
   };
-
   convertJsonToTreeNodeArr(locations) {
     let treeNodeArr = [];
     if (locations && locations.items) {

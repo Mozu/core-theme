@@ -19,3 +19,14 @@ export enum NavigationContainerType {
     quotes = 'quotes',
     locationGroups = 'locationGroups'
 }
+
+export enum NotificationLGActions {
+    save = "Save",
+    cancel = "Cancel",
+    edit = "Edit",
+    selectedLocationWithDetails ="selectedLocationWithDetails",
+    editDataLoaded = "EditDataLoaded",
+    cancelSuccess = "Cancel Success",
+    saveSucceess = "Save Success"
+
+}
