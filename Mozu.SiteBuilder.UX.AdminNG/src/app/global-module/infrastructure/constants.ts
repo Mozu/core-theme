@@ -22,6 +22,7 @@ export class Constants {
         getSharedData: environment.apiUrl + '/user/identity',
         getPhysicalLocations : environment.apiUrl + '/location/physical',
         addLocationGroup : environment.apiUrl + '/location/groups/create',
+        editLocationGroup : environment.apiUrl + '/location/groups/edit',
         getLocationGroups : environment.apiUrl + '/location/groups/list',
         getLocationGroup : environment.apiUrl + '/location/groups/get', 
         deleteLocationGroup : environment.apiUrl + '/location/groups/delete',

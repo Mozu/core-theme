@@ -4,10 +4,10 @@
             <h4 class="forlineheight">{{'SHARED.HEADER.pageTitle.locationGroups' | translate }}</h4>
         </div>
         
-        <button type="button" class="sbbtn btn btn-success pull-right"  (click)="showCreateLG()" *ngIf="!createOrEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.create' | translate}}</button>
+        <button type="button" class="sbbtn btn btn-success pull-right"  (click)="showCreateLG()" *ngIf="!model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.create' | translate}}</button>
         <div class="pull-right">
-            <button type="button" class="btn cancelbtn" (click)="cancelCreateLG()" *ngIf="createOrEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.cancel' | translate}}</button>
-            <button type="button" class="sbbtn btn btn-success" (click)="saveCreateLG()" *ngIf="createOrEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+            <button type="button" class="btn cancelbtn" (click)="cancelCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.cancel' | translate}}</button>
+            <button type="button" class="sbbtn btn btn-success" (click)="saveCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
         </div>
     </div>
 </div>

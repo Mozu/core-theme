@@ -3,6 +3,7 @@ import { Component,
   import { Router, PRIMARY_OUTLET, UrlSegmentGroup, UrlSegment } from '@angular/router';  
 import { NotificationService } from '@global';
 import { Constants } from '@shared/infrastructure';
+import { TopLocationGroupsModel } from './top-location-groups.model';
 
   @Component({
     selector: 'navigation-top-location-groups',
@@ -11,7 +12,7 @@ import { Constants } from '@shared/infrastructure';
   })
   export class NavigationTopLocationGroupsComponent implements OnInit {
     
-    createOrEditMode: boolean;
+    public model : TopLocationGroupsModel;
     subscriptions = [];
 
     constructor(private router: Router,
@@ -19,17 +20,19 @@ import { Constants } from '@shared/infrastructure';
 
     }
   
-    ngOnInit() { 
-      this.createOrEditMode = false;
+    ngOnInit() {
+      this.model = new TopLocationGroupsModel();
+      
+      this.model.isEditMode = false;
       this.checkMode();
 
       this.subscriptions.push(
         this._notificationService.addLocationGroup.subscribe((action: string) => {
             if(action === "Save Success" || action === "Cancel Success"){
-              this.createOrEditMode = false;
+              this.model.isEditMode = false;
             }
             if(action === "Edit"){
-              this.createOrEditMode = true;
+              this.model.isEditMode = true;
             }
         })
       );
@@ -49,20 +52,20 @@ import { Constants } from '@shared/infrastructure';
         if(primarySegments && primarySegments.length){
           const path =  primarySegments[0].path;
           if(path === Constants.uiRoutes.locationGroups){
-            this.createOrEditMode = false;
+            this.model.isEditMode = false;
           }
           if(path === Constants.uiRoutes.locationGroupCreate){
-            this.createOrEditMode = true;
+            this.model.isEditMode = true;
           }
           if(path === Constants.uiRoutes.locationGroupEdit){
-            this.createOrEditMode = true;
+            this.model.isEditMode = true;
           }
         }
     }
 
     showCreateLG(){
-      this.createOrEditMode = true;
-      this.router.navigate(['/locationGroupCreate']);
+      this.model.isEditMode = true;
+      this.router.navigate(['/'+ Constants.uiRoutes.locationGroupCreate]);
     }
   
     cancelCreateLG(){

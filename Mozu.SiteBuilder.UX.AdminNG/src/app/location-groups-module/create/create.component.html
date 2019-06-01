@@ -17,19 +17,12 @@
 								name="locationGroupName" formControlName="locationGroupName" />
 							<span class="floating-label" [ngClass]="{'redfont':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >Name*</span>
 							<hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >
-							<!-- <span class="error">Input is Required. </span> -->
 							<span class="error" *ngIf="!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched">Input is Required.</span>
 						</div>
 						<div class="clearfix"></div>
 						<div class="form-row" >
 							<h5>Sites</h5>
 							<div class="form-row scroll-y">
-								<div *ngFor="let row of sitesRows">
-									<label *ngFor="let site of row" class="checkbox-inline col-md-4 " >
-										<input type="checkbox" class="custom-control-input" id="customCheck" value="">{{site.name}}
-										<span class="cr"><i class="cr-icon fa fa-check"></i></span>
-									</label>
-								</div> -->
 								<label formArrayName="locationSites" class="checkbox-inline col-md-4" 
 									*ngFor="let site of locationGroupForm.get('locationSites')['controls']; let i = index">
 									<input type="checkbox" [formControlName]="i" [formControl]="site" class="custom-control-input">
@@ -39,21 +32,18 @@
 							</div>
 						</div>
 					</div>
-				
-				</form>
-			</div>
-			<div #form2 id="form2" class="row subform scroll-page">
-				<h4>Add Location(s)</h4>
-				<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
-				</physical-locations>
-				<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
-					[selectedLocationsLst]="selectedLocations"
-					(locationSelected)="locationSelected($event)" 
-					(locationUnselected)="locationUnselected($event)"
-					(locationsChanged)="locationsChanged($event)" >
-				</locations-list>
-				<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
-				</selected-locations-list>
+				</div>
+				<div #form2 id="form2" class="row subform scroll-page">
+					<h4>Add Location(s)</h4>
+					<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
+					</physical-locations>
+					<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
+						[selectedLocationsLst]="selectedLocations" (locationSelected)="locationSelected($event)"
+						(locationUnselected)="locationUnselected($event)" (locationsChanged)="locationsChanged($event)">
+					</locations-list>
+					<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
+					</selected-locations-list>
+				</div>
 			</div>
 		</div>
 	</div>

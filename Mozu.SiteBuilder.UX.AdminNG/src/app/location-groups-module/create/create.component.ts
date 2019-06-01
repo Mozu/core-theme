@@ -62,7 +62,12 @@ export class LocationGroupCreateComponent implements OnInit {
         this.subscriptions.push(
             this._notificationService.addLocationGroup.subscribe((action: string) => {
                 if (action === "Save") {
-                    this.save();
+                    if(this.mode === Constants.gridActionItem.New){ 
+                        this.saveLocationGroup ();
+                    }
+                    else if(this.mode === Constants.gridActionItem.Edit){
+                        this.updateLocationGroup ();
+                    }
                 }
                 else if (action === "Cancel") {
                     this.cancel();
@@ -94,14 +99,24 @@ export class LocationGroupCreateComponent implements OnInit {
         if(result && result.items){
             let lgModel : LocationGroupModel =   <LocationGroupModel>result.items;
             this._notificationService.notifyEditLocationGroup({name:"EditDataLoaded", data:lgModel.locationCodes});
-            this.updateForm(lgModel);
+            this.updateLocationGroupForm(lgModel);
         }
     }
 
-    private updateForm(lgModel: LocationGroupModel): void {
+    private updateLocationGroupForm(lgModel: LocationGroupModel): void {
+        let locationSites = [];
+        this.sitesLst.map((o, i) => {
+           let isSiteSelected =  _.indexOf(lgModel.siteIds, o.id);
+           if(isSiteSelected !== -1){
+                locationSites.push(true);
+           }
+           else{
+                locationSites.push(false);
+           }
+        });
         this.locationGroupForm.patchValue({
             locationGroupName: lgModel.name,
-            locationSites: lgModel.siteIds
+            locationSites: locationSites
         });
     }
 
@@ -191,13 +206,25 @@ export class LocationGroupCreateComponent implements OnInit {
         }, 4000);
     }
 
-    save() {
-        this._loggerService.info("LocationGroupCreateComponent : save" + JSON.stringify(this.locationGroupForm.value));
+    saveLocationGroup() {
+        this._loggerService.info("LocationGroupCreateComponent : saveLocationGroup" + JSON.stringify(this.locationGroupForm.value));
         this.isSaving = true;
         let lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
             this.createService.addLocationGroup(lgModel).subscribe(response =>
+                this.onSaveSuccess(response),
+                (response) => this.onSaveError(response.error.message));
+        }
+    }
+
+    updateLocationGroup(){
+        this._loggerService.info("LocationGroupCreateComponent : updateLocationGroup");
+        this.isSaving = true;
+        let lgModel: LocationGroupModel = new LocationGroupModel();
+        this.createLocationGroup(lgModel);
+        if (this.validateLocationGroup(lgModel)) {
+            this.createService.updateLocationGroup(lgModel).subscribe(response =>
                 this.onSaveSuccess(response),
                 (response) => this.onSaveError(response.error.message));
         }
