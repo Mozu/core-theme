@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService, ToastrService } from '@core'
 import { TreeNode, SelectItem, MessageService } from 'primeng/components/common/api';
 import { LocationsListModel, Constants } from '@shared';
@@ -31,6 +31,9 @@ export class LocationGroupCreateComponent implements OnInit {
     subscriptions = [];
 
     locationGroupForm: FormGroup;
+    locationGroupId: string;
+    mode: string;
+
 
     constructor(
         private _loggerService: LoggerService,
@@ -38,9 +41,10 @@ export class LocationGroupCreateComponent implements OnInit {
         private createService: CreateLocationGroupService,
         private _notificationService: NotificationService,
         private fb: FormBuilder,
-        private _toastrService:ToastrService,
+        private _toastrService: ToastrService,
         private _messageService: MessageService,
-        private router: Router) {
+        private router: Router,
+        private route: ActivatedRoute) {
 
     }
 
@@ -57,14 +61,32 @@ export class LocationGroupCreateComponent implements OnInit {
         this.fetchSitesData();
         this.subscriptions.push(
             this._notificationService.addLocationGroup.subscribe((action: string) => {
-                if(action === "Save") {
+                if (action === "Save") {
                     this.save();
                 }
-                else if(action === "Cancel") {
+                else if (action === "Cancel") {
                     this.cancel();
                 }
             })
         );
+
+        this.locationGroupId = this.route.snapshot.paramMap.get("id");
+        this.mode = this.route.snapshot.data["mode"];
+
+        if (this.mode === Constants.gridActionItem.Edit) {
+            this.createService.getLocationGroup(this.locationGroupId).subscribe(
+                (response) => this.onGetLocationGroupSuccess(response),
+                (response) => this.onGetLocationGroupError(response.error.message)
+            );
+        }
+    }
+
+    private onGetLocationGroupSuccess(result) {
+        this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess" + JSON.stringify(result));
+    }
+
+    private onGetLocationGroupError(errmsg: string) {
+        this._loggerService.info("LocationGroupCreateComponent : onSaveError");
     }
 
     private addCheckboxes() {
@@ -87,7 +109,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     public fetchSitesData = () => {
         this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
-        if(this._sharedData._sharedData.items.ctTenant.sites) {
+        if (this._sharedData._sharedData.items.ctTenant.sites) {
             this.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
             this.addCheckboxes();
         }
@@ -112,7 +134,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     locationsChanged(event) {
         this._loggerService.info("LocationGroupCreateComponent : locationsChanged");
-        if(event.operation === "add") {
+        if (event.operation === "add") {
             var arr = _.unionWith(this.selectedLocations, event.data, _.isEqual);
             this.selectedLocations = arr;
         }
@@ -132,29 +154,29 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     scrollToTop(el: HTMLElement) {
-        el.scrollIntoView({behavior: 'smooth'});
+        el.scrollIntoView({ behavior: 'smooth' });
         el.scrollIntoView(false);
         el.classList.add('divani');
-        setTimeout(function() {
+        setTimeout(function () {
             el.classList.remove('divani');
-          }, 4000);
+        }, 4000);
     }
 
     scrollToLocationGrid(el: HTMLElement) {
         el.scrollIntoView(false);
-        el.scrollIntoView({behavior: 'smooth'});
+        el.scrollIntoView({ behavior: 'smooth' });
         el.classList.add('divani');
-        setTimeout(function() {
+        setTimeout(function () {
             el.classList.remove('divani');
-          }, 4000);
+        }, 4000);
     }
 
     save() {
-        this._loggerService.info("LocationGroupCreateComponent : save"+JSON.stringify(this.locationGroupForm.value));
+        this._loggerService.info("LocationGroupCreateComponent : save" + JSON.stringify(this.locationGroupForm.value));
         this.isSaving = true;
         let lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
-        if(this.validateLocationGroup(lgModel)){
+        if (this.validateLocationGroup(lgModel)) {
             this.createService.addLocationGroup(lgModel).subscribe(response =>
                 this.onSaveSuccess(response),
                 (response) => this.onSaveError(response.error.message));
@@ -168,30 +190,30 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private createLocationGroup(lgModel: LocationGroupModel): void {
-        if(this.locationGroupForm.value && this.locationGroupForm.value.locationSites){
+        if (this.locationGroupForm.value && this.locationGroupForm.value.locationSites) {
             let sitesArr = this.locationGroupForm.value.locationSites.map((selected, i) => {
                 return {
-                  id: this.sitesLst[i].id,
-                  selected : selected
-               }
-            });                
-            sitesArr = _.filter(sitesArr, { selected: true});
+                    id: this.sitesLst[i].id,
+                    selected: selected
+                }
+            });
+            sitesArr = _.filter(sitesArr, { selected: true });
             lgModel.siteIds = _.map(sitesArr, 'id');
         }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = _.map(this.selectedLocations, 'code');
     }
 
-    private validateLocationGroup(lgModel: LocationGroupModel):boolean{
-        if(lgModel && _.isEmpty(lgModel.name)){
+    private validateLocationGroup(lgModel: LocationGroupModel): boolean {
+        if (lgModel && _.isEmpty(lgModel.name)) {
             this._toastrService.showError("EmptyLocationGroupName");
             return false;
         }
-        if(lgModel && _.isEmpty(lgModel.siteIds)){
+        if (lgModel && _.isEmpty(lgModel.siteIds)) {
             this._toastrService.showError("EmptyLocationGroupSites");
             return false;
         }
-        if(lgModel && _.isEmpty(lgModel.locationCodes)){
+        if (lgModel && _.isEmpty(lgModel.locationCodes)) {
             this._toastrService.showError("EmptyLocationGroupCodes");
             return false;
         }
@@ -203,12 +225,12 @@ export class LocationGroupCreateComponent implements OnInit {
         this.isSaving = false;
         this._notificationService.notifyAddLocationGroup("Save Success");
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
-        
+
     }
 
-    private onSaveError(errmsg:string) {
+    private onSaveError(errmsg: string) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
         this.isSaving = false;
-        this._messageService.add({severity: 'error', summary: 'Error Message', detail: errmsg});
+        this._messageService.add({ severity: 'error', summary: 'Error Message', detail: errmsg });
     }
 }

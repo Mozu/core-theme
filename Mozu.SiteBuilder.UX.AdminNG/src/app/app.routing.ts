@@ -47,11 +47,17 @@ const appRoutes: Routes = [
     },
     {
         path:Constants.uiRoutes.locationGroupCreate,
-        component: LocationGroupCreateComponent
+        component: LocationGroupCreateComponent,
+        data: {
+            mode: Constants.gridActionItem.New
+          }
     },
     {
         path: Constants.uiRoutes.locationGroupEdit+'/:id',
-        component: LocationGroupCreateComponent
+        component: LocationGroupCreateComponent,
+        data: {
+            mode: Constants.gridActionItem.Edit
+          }
     },
     {
         path: '**',

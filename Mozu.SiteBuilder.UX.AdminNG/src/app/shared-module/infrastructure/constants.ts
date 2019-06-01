@@ -121,19 +121,11 @@ export class Constants {
         getLocationGroup : "./assets/json/location-group-edit.json" 
     }
 
-    static lables = {
-        closeLabel :  'close'
-    }
+    static numberOfRows: number = 10;
 
-    static numberOfRows: number = 15;
-
-    static integrationsModalClass = 'integrationsModal';
-    static integrationsBackdropModalClass = 'integrationsBackdropModal';
-    static messageHash = '&messageHash=';
-    static dateStamp = '?dt=';
-    static urlParameter ={
-        site: '/s-',
-        b2bAccount: '/b2baccounts',
-        edit: '/edit/'
+    static gridActionItem = {
+        Edit :"Edit",
+        New : "New",
+        Delete : "Delete"
     }
 }
