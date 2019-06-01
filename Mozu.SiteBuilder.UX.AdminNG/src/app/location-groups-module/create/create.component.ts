@@ -83,10 +83,9 @@ export class LocationGroupCreateComponent implements OnInit {
             })
         );
 
-        this.locationGroupId = this.route.snapshot.paramMap.get("id");
         this.mode = this.route.snapshot.data["mode"];
-
         if(this.mode === Constants.gridActionItem.Edit) {
+            this.locationGroupId = this.route.snapshot.paramMap.get("id");
             this.createService.getLocationGroup(this.locationGroupId).subscribe(
                 (response) => this.getLocationGroupSuccess(response),
                 (response) => this.getLocationGroupError(response.error.message)
@@ -95,7 +94,7 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private getLocationGroupSuccess(result) {
-        this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess" + JSON.stringify(result));
+        this._loggerService.info("LocationGroupCreateComponent : getLocationGroupSuccess" + JSON.stringify(result));
         if(result && result.items){
             let lgModel : LocationGroupModel =   <LocationGroupModel>result.items;
             this._notificationService.notifyEditLocationGroup({name:"EditDataLoaded", data:lgModel.locationCodes});
@@ -121,7 +120,7 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private getLocationGroupError(errmsg: string) {
-        this._loggerService.info("LocationGroupCreateComponent : onSaveError");
+        this._loggerService.info("LocationGroupCreateComponent : getLocationGroupError");
     }
 
     private addCheckboxes() {
@@ -249,6 +248,9 @@ export class LocationGroupCreateComponent implements OnInit {
         }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = _.map(this.selectedLocations, 'code');
+        if(this.locationGroupId){
+            lgModel.locationGroupId = this.locationGroupId;
+        }
     }
 
     private validateLocationGroup(lgModel: LocationGroupModel): boolean {

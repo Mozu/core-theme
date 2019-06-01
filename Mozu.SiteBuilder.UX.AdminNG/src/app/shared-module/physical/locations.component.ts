@@ -56,6 +56,13 @@ export class PhysicalLocationsComponent implements OnInit {
     ];
   }
 
+  ngOnDestroy() {
+    this._loggerService.info("PhysicalLocationsComponent : ngOnDestroy");
+    this.subscriptions.forEach((s) => {
+        s.unsubscribe();
+    });
+  }
+
   private getPhysicalLocations() {
     this.loading = true;
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
