@@ -6,7 +6,7 @@ import { LocationsListModel, Constants } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
-import { LocationGroupModel } from './location.group.model';
+import { LocationGroupModel, LocationGroupCreateModel } from './location.group.model';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -18,8 +18,8 @@ import { TranslateService } from '@ngx-translate/core';
     //encapsulation: ViewEncapsulation.None
 })
 export class LocationGroupCreateComponent implements OnInit {
-    physicalLocation: TreeNode;
-    selectedLocations: LocationsListModel[];
+    
+    public model: LocationGroupCreateModel;
 
     sitesLst: any[];
     sitesRows: any[];
@@ -51,8 +51,10 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.model = new LocationGroupCreateModel();
+
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
-        this.selectedLocations = [];
+        this.model.selectedLocations = [];
 
         this.locationGroupForm = this.fb.group({
             locationGroupName: ['', [Validators.required, Validators.maxLength(50)]],
@@ -80,7 +82,7 @@ export class LocationGroupCreateComponent implements OnInit {
         this.subscriptions.push(
             this._notificationService.locationGroupEdited.subscribe((action:any) => {
                 if (action.name === "detailSelectedLocation") {
-                   this.selectedLocations = action.data; 
+                   this.model.selectedLocations = action.data; 
                 }
             })
         );
@@ -153,29 +155,29 @@ export class LocationGroupCreateComponent implements OnInit {
 
     physicalLocationSelected(physicalLocation: TreeNode) {
         this._loggerService.info("LocationGroupCreateComponent : physicalLocationSelected");
-        this.physicalLocation = physicalLocation;
+        this.model.physicalLocation = physicalLocation;
     }
 
     locationSelected(location: LocationsListModel) {
         this._loggerService.info("LocationGroupCreateComponent : locationSelected");
-        let arr = this.selectedLocations.slice();
+        let arr = this.model.selectedLocations.slice();
         arr.push(location);
-        this.selectedLocations = arr;
+        this.model.selectedLocations = arr;
     }
 
     locationUnselected(location: LocationsListModel) {
         this._loggerService.info("LocationGroupCreateComponent : locationUnselected");
-        this.selectedLocations = _.difference(this.selectedLocations, [location]);
+        this.model.selectedLocations = _.difference(this.model.selectedLocations, [location]);
     }
 
     locationsChanged(event) {
         this._loggerService.info("LocationGroupCreateComponent : locationsChanged");
         if (event.operation === "add") {
-            var arr = _.unionWith(this.selectedLocations, event.data, _.isEqual);
-            this.selectedLocations = arr;
+            var arr = _.unionWith(this.model.selectedLocations, event.data, _.isEqual);
+            this.model.selectedLocations = arr;
         }
         else {
-            this.selectedLocations = _.differenceWith(this.selectedLocations, event.data, _.isEqual);
+            this.model.selectedLocations = _.differenceWith(this.model.selectedLocations, event.data, _.isEqual);
         }
     }
 
@@ -249,7 +251,7 @@ export class LocationGroupCreateComponent implements OnInit {
             lgModel.siteIds = _.map(sitesArr, 'id');
         }
         lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
-        lgModel.locationCodes = _.map(this.selectedLocations, 'code');
+        lgModel.locationCodes = _.map(this.model.selectedLocations, 'code');
         if(this.locationGroupId){
             lgModel.locationGroupId = this.locationGroupId;
         }

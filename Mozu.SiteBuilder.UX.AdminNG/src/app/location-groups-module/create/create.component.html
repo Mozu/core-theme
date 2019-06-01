@@ -27,9 +27,9 @@
 							<h5>{{'LOCATIONGROUP.FormLabels.sites' | translate }}</h5>
 							<div class="form-row scroll-y">
 								<label formArrayName="locationSites" class="checkbox-inline col-md-4" 
-									*ngFor="let site of locationGroupForm.get('locationSites')['controls']; let i = index">
-									<input type="checkbox" [formControlName]="i" [formControl]="site" class="custom-control-input">
-									{{sitesLst[i].name}}
+									*ngFor="let site of locationGroupForm.get('locationSites')['controls']; let eachSiteIndex = index">
+									<input type="checkbox" [formControlName]="eachSiteIndex" [formControl]="site" class="custom-control-input">
+									{{sitesLst[eachSiteIndex].name}}
 									<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								</label>
 							</div>
@@ -40,11 +40,11 @@
 					<h4>{{'LOCATIONGROUP.FormLabels.addLocations' | translate }}</h4>
 					<physical-locations class="col-md-4" (physicalLocationSelected)="physicalLocationSelected($event)">
 					</physical-locations>
-					<locations-list class="col-md-4" [physicalLocation]="physicalLocation"
-						[selectedLocationsLst]="selectedLocations" (locationSelected)="locationSelected($event)"
+					<locations-list class="col-md-4" [physicalLocation]="model.physicalLocation"
+						[selectedLocationsLst]="model.selectedLocations" (locationSelected)="locationSelected($event)"
 						(locationUnselected)="locationUnselected($event)" (locationsChanged)="locationsChanged($event)">
 					</locations-list>
-					<selected-locations-list class="col-md-4" [selectedLocationsLst]="selectedLocations">
+					<selected-locations-list class="col-md-4" [selectedLocationsLst]="model.selectedLocations">
 					</selected-locations-list>
 				</div>
 			</div>
