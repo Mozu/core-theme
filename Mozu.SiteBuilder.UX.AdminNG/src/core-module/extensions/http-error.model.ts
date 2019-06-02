@@ -24,7 +24,8 @@ export enum ErrorCode {
     DashboardTilesGetFailed= <any>"DashboardTilesGetFailed",
     QuoteListGetFailed= <any>"QuoteListGetFailed",
     LocationsGetFailed = <any>"LocationsGetFailed",
-    LocationGroupsListGetFailed = <any>"LocationGroupsListGetFailed"
+    LocationGroupsListGetFailed = <any>"LocationGroupsListGetFailed",
+    GetLocationGroupDetailFailed = <any>"GetLocationGroupDetailFailed"
 }
 
 export enum ToastrCode {

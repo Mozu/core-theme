@@ -6,6 +6,7 @@ import {TreeNode} from 'primeng/components/common/api';
 import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 import { Table } from 'primeng/table';
+import { LocationGroupEventOperations } from '@shared/infrastructure';
 
 @Component({
     selector: 'locations-list',
@@ -95,15 +96,15 @@ export class LocationsListComponent implements OnInit, OnChanges {
         this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+event.checked);
         if(event.checked === true){
             if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
-                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:"add"});
+                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:LocationGroupEventOperations.add});
             }else{
-                this.locationsChanged.emit({data: this.virtualLocations, operation:"add"});
+                this.locationsChanged.emit({data: this.virtualLocations, operation:LocationGroupEventOperations.add});
             }
         } else {
             if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
-                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:"remove"});
+                this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:LocationGroupEventOperations.remove});
             }else{
-                this.locationsChanged.emit({data: this.virtualLocations, operation:"remove"});
+                this.locationsChanged.emit({data: this.virtualLocations, operation:LocationGroupEventOperations.remove});
             }
         }
     }   

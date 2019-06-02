@@ -29,6 +29,10 @@ export class ToastrService {
         this._messageService.add({severity: 'error', summary: 'Error Message', detail: this.getMessage(toastrCode)});
     }
 
+    showErrorWithMsg(toastrMsg) {
+        this._messageService.add({severity: 'error', summary: 'Error Message', detail: toastrMsg});
+    }
+
     getMessage(toastrCode) {
         let message = '';
 

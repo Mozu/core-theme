@@ -68,7 +68,8 @@
       "EmptyLocationGroupName": "Please enter Name.",
       "EmptyLocationGroupSites": "Please select Site.",
       "EmptyLocationGroupCodes": "Please select Location(s)",
-      "LocationGroupsListGetFailed" : "Error occured while fetching location group list."
+      "LocationGroupsListGetFailed" : "Error occured while fetching location group list.",
+      "GetLocationGroupDetailFailed" : "Error occured while fetching location group details."
     }
   },
   "QUOTES": {

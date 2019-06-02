@@ -28,7 +28,7 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
 
       this.subscriptions.push(
         this._notificationService.locationGroupAdded.subscribe((action: string) => {
-            if(action === NotificationLGActions.saveSucceess || action === NotificationLGActions.cancelSuccess){
+            if(action === NotificationLGActions.saved || action === NotificationLGActions.cancelled){
               this.model.isEditMode = false;
             }
             if(action === NotificationLGActions.edit){

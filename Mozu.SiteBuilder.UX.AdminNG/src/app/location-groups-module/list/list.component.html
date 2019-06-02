@@ -2,7 +2,7 @@
     <p-table [value]="model.items" [responsive]="true" [paginator]="true" 
         [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" 
         selectionMode="single" 
-        [loading]="isLoading">
+        [loading]="model.isLoading">
         <ng-template pTemplate="header">
             <tr>
                 <th>{{'LOCATIONGROUP.GridHeader.Code' | translate }}</th>

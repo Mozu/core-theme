@@ -26,7 +26,12 @@ export enum NotificationLGActions {
     edit = "Edit",
     selectedLocationWithDetails ="selectedLocationWithDetails",
     editDataLoaded = "EditDataLoaded",
-    cancelSuccess = "Cancel Success",
-    saveSucceess = "Save Success"
+    cancelled = "Cancelled",
+    saved = "Saved"
 
+}
+
+export enum LocationGroupEventOperations {
+    add = "add",
+    remove = "remove"
 }

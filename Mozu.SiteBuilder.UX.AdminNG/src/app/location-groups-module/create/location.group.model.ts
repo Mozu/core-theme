@@ -10,7 +10,7 @@ export class  LocationGroupModel {
 }
 
 export class LocationGroupCreateModel {
-    physicalLocation: TreeNode;
+    selectedPhysicalLocation: TreeNode;
     selectedLocations: LocationsListModel[];
     sitesLst: SiteModel[];
     menuPosition: number;
