@@ -6,74 +6,69 @@ import { ActivatedRoute } from '@angular/router';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
+import { PhysicalLocationsModel } from './locations.model';
+import { LocationListGridModel } from '@shared/locations';
 
 @Component({
   selector: 'physical-locations',
   templateUrl: './locations.component.html',
   styleUrls: ['./locations.component.css'],
   providers: [PhysicalLocationsService],
-  encapsulation: ViewEncapsulation.None,
-  styles: [`
-  
-`]
+  encapsulation: ViewEncapsulation.None
 })
 export class PhysicalLocationsComponent implements OnInit {
-  physicalLocations: TreeNode[];
-  selectedPhysicalLocNode: TreeNode;
+  public model: PhysicalLocationsModel;
   @Output()
   physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
-  isLoading: boolean;
-  cols: any[];
-  mode: string;
-  subscriptions = [];
-  selectedLoctions = [];
-  selectedLoctionsDetailsArr = [];
-
-
+  
   constructor(private _loggerService: LoggerService,
     private _physicalLocationsService: PhysicalLocationsService,
     private _notificationService: NotificationService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.model = new PhysicalLocationsModel();
+    this.model.subscriptions = []; 
+    this.model.formMode = this.route.snapshot.data["mode"];
+    this.model.selectedLoctions = [];
+    this.model.selectedLoctionsDetailsArr = [];
 
-    this.mode = this.route.snapshot.data["mode"];
-    if (this.mode === Constants.gridActionItem.New) {
+    if (this.model.formMode === Constants.gridActionItem.New) {
       this.getPhysicalLocations();
     }
-    else if (this.mode === Constants.gridActionItem.Edit) {
-      this.subscriptions.push(
+    else if (this.model.formMode === Constants.gridActionItem.Edit) {
+      this.model.subscriptions.push(
         this._notificationService.locationGroupEdited.subscribe((action: any) => {
           if (action && action.name === NotificationLGActions.editDataLoaded) {
-            this.selectedLoctions = action.data;
+            this.model.selectedLoctions = action.data;
             this.getPhysicalLocations();
           }
         })
       );
     }
-    this.cols = [
+    this.model.cols = [
       { field: 'name', header: '' }
     ];
   }
 
   ngOnDestroy() {
     this._loggerService.info("PhysicalLocationsComponent : ngOnDestroy");
-    this.subscriptions.forEach((s) => {
+    this.model.subscriptions.forEach((s) => {
         s.unsubscribe();
     });
   }
 
   private getPhysicalLocations() {
-    this.isLoading = true;
+    this.model.isLoading = true;
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
       this.convertJsonToTreeNodeArr(locations);
-      if (this.mode === Constants.gridActionItem.Edit) {
+      if (this.model.formMode === Constants.gridActionItem.Edit) {
         //prepare selected location detials array :
         this.getSelectedLocationDetailsArr(locations);
         //send notification to main page.
-        this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.selectedLoctionsDetailsArr});
+        this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.model.selectedLoctionsDetailsArr});
       }
-      this.isLoading = false;
+      this.model.isLoading = false;
     });
   };
   convertJsonToTreeNodeArr(locations) {
@@ -85,7 +80,7 @@ export class PhysicalLocationsComponent implements OnInit {
         let totalLocationsCnt = 0;
 
         treenodeObj.data.code = locations.items[locCnt].code;
-        if (locations.items[locCnt].code === "US") {
+        if (locations.items[locCnt].code === Constants.locationGroupDefaultCountry) {
           treenodeObj.expanded = true;
         }
         if (locations.items[locCnt].states) {
@@ -109,20 +104,20 @@ export class PhysicalLocationsComponent implements OnInit {
         treeNodeArr.push(treenodeObj);
       }
     }
-    this.physicalLocations = treeNodeArr;
+    this.model.physicalLocations = treeNodeArr;
   };
 
   private getSelectedLocationDetailsArr(locations) {
     let selectedLocationsArr = [];
-    if (locations && locations.items && this.selectedLoctions) {
-      for (let selLocCnt = 0; selLocCnt < this.selectedLoctions.length; selLocCnt++) {
+    if (locations && locations.items && this.model.selectedLoctions) {
+      for (let selLocCnt = 0; selLocCnt < this.model.selectedLoctions.length; selLocCnt++) {
         for (let locCnt = 0; locCnt < locations.items.length; locCnt++) {
           if (locations.items[locCnt].states) {
             for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
               if (locations.items[locCnt].states[stateCnt].locations) {
-                var locationObj = _.find(locations.items[locCnt].states[stateCnt].locations, { "code": this.selectedLoctions[selLocCnt] });
+                var locationObj = _.find(locations.items[locCnt].states[stateCnt].locations, { "code": this.model.selectedLoctions[selLocCnt] });
                 if(locationObj){
-                  this.selectedLoctionsDetailsArr.push(locationObj);
+                  this.model.selectedLoctionsDetailsArr.push(locationObj);
                 }
               }
             }

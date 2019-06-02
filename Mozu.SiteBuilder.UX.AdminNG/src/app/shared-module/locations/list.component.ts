@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange, EventEmitter, Output, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
 import { LazyLoadEvent } from 'primeng/api';
-import { LocationsListModel } from './list.model';
+import { LocationsListModel, LocationListGridModel } from './list.model';
 import {TreeNode} from 'primeng/components/common/api';
 import {NgbTooltipConfig} from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
@@ -20,29 +20,16 @@ export class LocationsListComponent implements OnInit, OnChanges {
     physicalLocation: TreeNode;
     @Input()
     selectedLocationsLst: LocationsListModel[];
-
-    physicalLocationName : string;
-    virtualLocations: LocationsListModel[];
-    cols: any[];
-    totalRecords: number;
-    loading: boolean;
-    inmemoryData: LocationsListModel[];
-    selectedLocations: LocationsListModel[];
-
-    stateName : string;
-    setSelectedLocLst : LocationsListModel[];
-
-    
     @Output() 
     locationSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() 
     locationUnselected: EventEmitter<any> = new EventEmitter<any>();
-
     @Output()
     locationsChanged:EventEmitter<any> = new EventEmitter<any>();
-
     @ViewChild('dt') turboTable: Table;
-        
+    public model: LocationListGridModel;
+    setSelectedLocLst : LocationsListModel[]; //can't set on model as used in ng on changes
+
     constructor(
         private _loggerService: LoggerService, config: NgbTooltipConfig
     ){ 
@@ -52,11 +39,13 @@ export class LocationsListComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this._loggerService.info("LocationsListComponent : ngOnInit");
-        this.cols = [
+        this.model = new LocationListGridModel();
+
+        this.model.cols = [
             { field: 'name', header: '', filterMatchMode:'contains'}
         ];
-        this.totalRecords = 250000;
-        this.loading = true;
+        this.model.totalRecords = 250000;
+        this.model.isLoading = true;
     }
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
@@ -66,7 +55,6 @@ export class LocationsListComponent implements OnInit, OnChanges {
                 this.turboTable.filters['name'].value = "";
             }
             this.getLocations(changes.physicalLocation.currentValue.locations, this.setSelectedLocLst);
-            
         }
         if(changes && changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
             this.setSelectedLocLst = changes.selectedLocationsLst.currentValue;
@@ -75,10 +63,9 @@ export class LocationsListComponent implements OnInit, OnChanges {
     
     getLocations(locations, selectedLocLst){
         if(locations){
-            this.selectedLocations = [];
-            this.virtualLocations = <any>locations;
-            //set selected location 
-            this.selectedLocations =  _.intersectionWith(this.virtualLocations, selectedLocLst, _.isEqual);
+            this.model.selectedLocations = [];
+            this.model.virtualLocations = <any>locations;
+            this.model.selectedLocations =  _.intersectionWith(this.model.virtualLocations, selectedLocLst, _.isEqual);
         }
     }
             
@@ -98,13 +85,13 @@ export class LocationsListComponent implements OnInit, OnChanges {
             if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
                 this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:LocationGroupEventOperations.add});
             }else{
-                this.locationsChanged.emit({data: this.virtualLocations, operation:LocationGroupEventOperations.add});
+                this.locationsChanged.emit({data: this.model.virtualLocations, operation:LocationGroupEventOperations.add});
             }
         } else {
             if(this.turboTable.filters['name'] && this.turboTable.filters['name'].value){
                 this.locationsChanged.emit({data: this.turboTable.filteredValue, operation:LocationGroupEventOperations.remove});
             }else{
-                this.locationsChanged.emit({data: this.virtualLocations, operation:LocationGroupEventOperations.remove});
+                this.locationsChanged.emit({data: this.model.virtualLocations, operation:LocationGroupEventOperations.remove});
             }
         }
     }   

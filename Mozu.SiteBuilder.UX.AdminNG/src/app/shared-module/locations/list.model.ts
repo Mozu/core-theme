@@ -1,17 +1,16 @@
 export class  LocationsListModel {
     code:string;
     name: string;
-    //address:any;
+}
 
-    // locationTypes:any[];
-    // description:string;
-    // geo:any;
-    // phone:string;
-    // fax:string;
-    // supportInventory:boolean;
-    // fulFillmentTypes :any;
-    // regularHours : any;
-    // shippingOriginContract:any;
-    // note:string;
-    // isDisabled:boolean;
+export class LocationListGridModel{
+    physicalLocationName : string;
+    virtualLocations: LocationsListModel[];
+    cols: any[];
+    totalRecords: number;
+    isLoading: boolean;
+    inmemoryData: LocationsListModel[];
+    selectedLocations: LocationsListModel[];
+    stateName : string;
+    
 }

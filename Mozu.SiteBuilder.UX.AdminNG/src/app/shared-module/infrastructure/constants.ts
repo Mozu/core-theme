@@ -122,7 +122,7 @@ export class Constants {
     }
 
     static numberOfRows: number = 10;
-
+    static locationGroupDefaultCountry = "US";
     static gridActionItem = {
         Edit :"Edit",
         New : "New",
