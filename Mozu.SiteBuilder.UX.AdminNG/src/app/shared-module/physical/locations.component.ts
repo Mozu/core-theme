@@ -22,7 +22,7 @@ export class PhysicalLocationsComponent implements OnInit {
   selectedPhysicalLocNode: TreeNode;
   @Output()
   physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
-  loading: boolean;
+  isLoading: boolean;
   cols: any[];
   mode: string;
   subscriptions = [];
@@ -64,7 +64,7 @@ export class PhysicalLocationsComponent implements OnInit {
   }
 
   private getPhysicalLocations() {
-    this.loading = true;
+    this.isLoading = true;
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
       this.convertJsonToTreeNodeArr(locations);
       if (this.mode === Constants.gridActionItem.Edit) {
@@ -73,7 +73,7 @@ export class PhysicalLocationsComponent implements OnInit {
         //send notification to main page.
         this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.selectedLoctionsDetailsArr});
       }
-      this.loading = false;
+      this.isLoading = false;
     });
   };
   convertJsonToTreeNodeArr(locations) {

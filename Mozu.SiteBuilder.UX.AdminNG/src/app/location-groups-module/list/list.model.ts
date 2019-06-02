@@ -9,6 +9,7 @@ export class LocationGroupListModel {
     numberOfRows: number;
     selectedLocationGroup: any;
     locationGridContextMenuItem: MenuItem[];
+    isLoading : boolean;
   }
 
   export class LocationGroupItem {

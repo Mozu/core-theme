@@ -2,14 +2,14 @@
 <div>
 	<div class="scroll-container" id="scroll-container" (scroll)="scrollHandler($event)">
 		<div>
-			<div class="row subnav animated fadeInDown" #stickyMenu [class.sticky]="sticky">
+			<div class="row subnav animated fadeInDown" #stickyMenu [class.sticky]="model.isSticky">
 				<ul>
 					<li><a (click)="scrollToTop(form1)">{{'LOCATIONGROUP.Tabs.locationGroup' | translate }}</a></li>
 					<li><a (click)="scrollToLocationGrid(form2)">{{'LOCATIONGROUP.Tabs.addLocations' | translate }}</a></li>
 				</ul>
 			</div>
 		</div>
-		<form [formGroup]="locationGroupForm">
+		<form [formGroup]="model.locationGroupForm">
 			<div class="main-container" id="main-container">
 				<div #form1 id="form1" class="row subform scroll-page">
 					<h4>{{'LOCATIONGROUP.FormLabels.locationGroup' | translate }}</h4>
@@ -18,18 +18,18 @@
 						<div class="form-row col-md-6 for-no-padding">
 							<input type="text" required class=" inputText form-control subform-text" id="locationGroupName"
 								name="locationGroupName" formControlName="locationGroupName" />
-							<span class="floating-label" [ngClass]="{'redfont':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >{{'LOCATIONGROUP.FormLabels.name' | translate }}*</span>
-							<hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched)}" >
-							<span class="error" *ngIf="!locationGroupForm.get('locationGroupName').valid && locationGroupForm.get('locationGroupName').touched">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
+							<span class="floating-label" [ngClass]="{'redfont':(!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched)}" >{{'LOCATIONGROUP.FormLabels.name' | translate }}*</span>
+							<hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched)}" >
+							<span class="error" *ngIf="!model.locationGroupForm.get('locationGroupName').valid && model.locationGroupForm.get('locationGroupName').touched">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
 						</div>
 						<div class="clearfix"></div>
 						<div class="form-row">
 							<h5>{{'LOCATIONGROUP.FormLabels.sites' | translate }}</h5>
 							<div class="form-row scroll-y">
 								<label formArrayName="locationSites" class="checkbox-inline col-md-4" 
-									*ngFor="let site of locationGroupForm.get('locationSites')['controls']; let eachSiteIndex = index">
+									*ngFor="let site of model.locationGroupForm.get('locationSites')['controls']; let eachSiteIndex = index">
 									<input type="checkbox" [formControlName]="eachSiteIndex" [formControl]="site" class="custom-control-input">
-									{{sitesLst[eachSiteIndex].name}}
+									{{model.sitesLst[eachSiteIndex].name}}
 									<span class="cr"><i class="cr-icon fa fa-check"></i></span>
 								</label>
 							</div>

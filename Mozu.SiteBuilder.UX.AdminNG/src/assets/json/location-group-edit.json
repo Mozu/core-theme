@@ -2,17 +2,20 @@
     "success": true,
     "total": 1,
     "items": {
-        "locationGroupId": 24,
+        "locationGroupId": 32,
         "siteIds": [
+            21576,
             21577
         ],
-        "name": "Test Location Group 1",
+        "name": "south North LG 1 ",
         "locationCodes": [
-            "timroletest6"
+            "warehouse_815",
+            "warehouse_417",
+            "warehouse_925"
         ],
         "auditInfo": {
-            "updateDate": "2019-05-30T07:26:06.360Z",
-            "createDate": "2019-05-30T07:26:06.360Z",
+            "updateDate": "2019-06-02T06:02:37.447Z",
+            "createDate": "2019-06-02T06:02:28.860Z",
             "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
             "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }

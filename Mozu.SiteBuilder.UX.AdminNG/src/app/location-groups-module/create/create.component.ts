@@ -6,7 +6,7 @@ import { LocationsListModel, Constants, NotificationLGActions } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
-import { LocationGroupModel, LocationGroupCreateModel } from './location.group.model';
+import { LocationGroupModel, LocationGroupCreateModel, SiteModel } from './location.group.model';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -20,21 +20,8 @@ import { TranslateService } from '@ngx-translate/core';
 export class LocationGroupCreateComponent implements OnInit {
     
     public model: LocationGroupCreateModel;
-
-    sitesLst: any[];
-    sitesRows: any[];
-
     @ViewChild('stickyMenu') menuElement: ElementRef;
-    menuPosition: any;
-    sticky: boolean = false;
-
-    isSaving: boolean;
-    subscriptions = [];
-
-    locationGroupForm: FormGroup;
-    locationGroupId: string;
-    mode: string;
-
+    
 
     constructor(
         private _loggerService: LoggerService,
@@ -55,21 +42,23 @@ export class LocationGroupCreateComponent implements OnInit {
 
         this._loggerService.info("LocationGroupCreateComponent : ngOnInit");
         this.model.selectedLocations = [];
+        this.model.isSticky = false;
+        this.model.subscriptions = [];
 
-        this.locationGroupForm = this.fb.group({
+        this.model.locationGroupForm = this.fb.group({
             locationGroupName: ['', [Validators.required, Validators.maxLength(50)]],
             locationSites: new FormArray([])
         });
 
 
         this.fetchSitesData();
-        this.subscriptions.push(
+        this.model.subscriptions.push(
             this._notificationService.locationGroupAdded.subscribe((action: string) => {
                 if (action === NotificationLGActions.save) {
-                    if(this.mode === Constants.gridActionItem.New){ 
+                    if(this.model.formMode === Constants.gridActionItem.New){ 
                         this.saveLocationGroup ();
                     }
-                    else if(this.mode === Constants.gridActionItem.Edit){
+                    else if(this.model.formMode === Constants.gridActionItem.Edit){
                         this.updateLocationGroup ();
                     }
                 }
@@ -79,7 +68,7 @@ export class LocationGroupCreateComponent implements OnInit {
             })
         );
 
-        this.subscriptions.push(
+        this.model.subscriptions.push(
             this._notificationService.locationGroupEdited.subscribe((action:any) => {
                 if (action.name === NotificationLGActions.selectedLocationWithDetails) {
                    this.model.selectedLocations = action.data; 
@@ -87,10 +76,10 @@ export class LocationGroupCreateComponent implements OnInit {
             })
         );
 
-        this.mode = this.route.snapshot.data["mode"];
-        if(this.mode === Constants.gridActionItem.Edit) {
-            this.locationGroupId = this.route.snapshot.paramMap.get("id");
-            this.createService.getLocationGroup(this.locationGroupId).subscribe(
+        this.model.formMode = this.route.snapshot.data["mode"];
+        if(this.model.formMode === Constants.gridActionItem.Edit) {
+            this.model.locationGroupId = this.route.snapshot.paramMap.get("id");
+            this.createService.getLocationGroup(this.model.locationGroupId).subscribe(
                 (response) => this.getLocationGroupSuccess(response),
                 (response) => this.getLocationGroupError(response.error.message)
             );
@@ -108,7 +97,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     private updateLocationGroupForm(lgModel: LocationGroupModel): void {
         let locationSites = [];
-        this.sitesLst.map((o, i) => {
+        this.model.sitesLst.map((o, i) => {
            let isSiteSelected =  _.indexOf(lgModel.siteIds, o.id);
            if(isSiteSelected !== -1){
                 locationSites.push(true);
@@ -117,7 +106,7 @@ export class LocationGroupCreateComponent implements OnInit {
                 locationSites.push(false);
            }
         });
-        this.locationGroupForm.patchValue({
+        this.model.locationGroupForm.patchValue({
             locationGroupName: lgModel.name,
             locationSites: locationSites
         });
@@ -128,19 +117,19 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private addSiteSelectionOptions () {
-        this.sitesLst.map((o, i) => {
+        this.model.sitesLst.map((o, i) => {
             const control = new FormControl(false); // if first item set to true, else false
-            (this.locationGroupForm.controls.locationSites as FormArray).push(control);
+            (this.model.locationGroupForm.controls.locationSites as FormArray).push(control);
         });
     }
 
     ngAfterViewInit() {
-        this.menuPosition = this.menuElement.nativeElement.offsetTop;
+        this.model.menuPosition = this.menuElement.nativeElement.offsetTop;
     }
 
     ngOnDestroy() {
         this._loggerService.info("LocationGroupCreateComponent : ngOnDestroy");
-        this.subscriptions.forEach((s) => {
+        this.model.subscriptions.forEach((s) => {
             s.unsubscribe();
         });
     }
@@ -148,7 +137,7 @@ export class LocationGroupCreateComponent implements OnInit {
     public fetchSitesData = () => {
         this._loggerService.info("LocationGroupCreateComponent : fetchSitesData");
         if (this._sharedData._sharedData.items.ctTenant.sites) {
-            this.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
+            this.model.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
             this.addSiteSelectionOptions();
         }
     }
@@ -184,10 +173,10 @@ export class LocationGroupCreateComponent implements OnInit {
     @HostListener('scroll', ['$event'])
     scrollHandler(event) {
         let windowScroll = event.srcElement.scrollTop;
-        if (windowScroll >= this.menuPosition) {
-            this.sticky = true;
+        if (windowScroll >= this.model.menuPosition) {
+            this.model.isSticky = true;
         } else {
-            this.sticky = false;
+            this.model.isSticky = false;
         }
     }
 
@@ -210,8 +199,8 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     saveLocationGroup() {
-        this._loggerService.info("LocationGroupCreateComponent : saveLocationGroup" + JSON.stringify(this.locationGroupForm.value));
-        this.isSaving = true;
+        this._loggerService.info("LocationGroupCreateComponent : saveLocationGroup");
+        this.model.isSaving = true;
         let lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
@@ -223,7 +212,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     updateLocationGroup(){
         this._loggerService.info("LocationGroupCreateComponent : updateLocationGroup");
-        this.isSaving = true;
+        this.model.isSaving = true;
         let lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
@@ -240,20 +229,20 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private createLocationGroup(lgModel: LocationGroupModel): void {
-        if (this.locationGroupForm.value && this.locationGroupForm.value.locationSites) {
-            let sitesArr = this.locationGroupForm.value.locationSites.map((selected, i) => {
+        if (this.model.locationGroupForm.value && this.model.locationGroupForm.value.locationSites) {
+            let sitesArr = this.model.locationGroupForm.value.locationSites.map((selected, i) => {
                 return {
-                    id: this.sitesLst[i].id,
+                    id: this.model.sitesLst[i].id,
                     selected: selected
                 }
             });
             sitesArr = _.filter(sitesArr, { selected: true });
             lgModel.siteIds = _.map(sitesArr, 'id');
         }
-        lgModel.name = this.locationGroupForm.get(['locationGroupName']).value;
+        lgModel.name = this.model.locationGroupForm.get(['locationGroupName']).value;
         lgModel.locationCodes = _.map(this.model.selectedLocations, 'code');
-        if(this.locationGroupId){
-            lgModel.locationGroupId = this.locationGroupId;
+        if(this.model.locationGroupId){
+            lgModel.locationGroupId = this.model.locationGroupId;
         }
     }
 
@@ -275,14 +264,14 @@ export class LocationGroupCreateComponent implements OnInit {
 
     private onSaveSuccess(result) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveSuccess");
-        this.isSaving = false;
+        this.model.isSaving = false;
         this._notificationService.notifyLocationGroupAdded(NotificationLGActions.saveSucceess);
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
     private onSaveError(errmsg: string) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
-        this.isSaving = false;
+        this.model.isSaving = false;
         this._messageService.add({ severity: 'error', summary: 'Error Message', detail: errmsg });
     }
 }

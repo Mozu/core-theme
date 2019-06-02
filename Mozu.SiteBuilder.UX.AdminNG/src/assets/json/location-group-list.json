@@ -1,384 +1,166 @@
 {
-    "startIndex": 0,
-    "pageSize": 100,
-    "pageCount": 1,
-    "totalCount": 23,
+    "success": true,
+    "total": 9,
     "items": [
-     {
-      "locationGroupId": 0,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "timdemo201905241",
-       "timdemo20190524"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-24T15:58:47.337Z",
-       "createDate": "2019-05-24T15:57:54.144Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 1,
-      "siteIds": [
-       21583
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "roletest10"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-09T20:39:32.331Z",
-       "createDate": "2019-05-09T20:39:32.331Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 2,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-09T20:43:53.380Z",
-       "createDate": "2019-05-09T20:43:53.380Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 3,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-09T20:44:20.987Z",
-       "createDate": "2019-05-09T20:44:20.987Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 4,
-      "siteIds": [
-       21550
-      ],
-      "name": "LocationGroup4Update",
-      "locationCodes": [
-       "roletest6",
-       "roletest8",
-       "roletest9",
-       "LG0001",
-       "roletest6"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T22:02:38.227Z",
-       "createDate": "2019-04-25T21:24:46.041Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 5,
-      "siteIds": [
-       21550
-      ],
-      "name": "Another Group of Locations",
-      "locationCodes": [
-       "roletest10",
-       "roletest11",
-       "roletest12"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-04-26T15:26:46.969Z",
-       "createDate": "2019-04-26T15:26:46.969Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 6,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-09T20:44:35.626Z",
-       "createDate": "2019-05-09T20:44:35.626Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 7,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-10T13:48:12.556Z",
-       "createDate": "2019-05-10T13:48:12.556Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 8,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-10T13:49:54.214Z",
-       "createDate": "2019-05-10T13:49:54.214Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 9,
-      "siteIds": [
-       21550
-      ],
-      "name": "LocationGroup4Update",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T19:51:56.547Z",
-       "createDate": "2019-05-01T19:51:56.547Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 10,
-      "siteIds": [
-       21550
-      ],
-      "name": "LocationGroup4Update",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T19:53:56.480Z",
-       "createDate": "2019-05-01T19:53:56.480Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 11,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:19:15.606Z",
-       "createDate": "2019-05-01T20:19:15.606Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 12,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:19:22.993Z",
-       "createDate": "2019-05-01T20:19:22.993Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 13,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:19:24.051Z",
-       "createDate": "2019-05-01T20:19:24.051Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 14,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:19:24.637Z",
-       "createDate": "2019-05-01T20:19:24.637Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 15,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:24:28.623Z",
-       "createDate": "2019-05-01T20:24:28.623Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 16,
-      "siteIds": [
-       21550
-      ],
-      "name": "site id and location codes?",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:26:28.727Z",
-       "createDate": "2019-05-01T20:26:28.727Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 17,
-      "siteIds": [
-       21550
-      ],
-      "name": "site id and location codes? 2",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T20:27:50.066Z",
-       "createDate": "2019-05-01T20:27:50.066Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 18,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-10T13:52:02.311Z",
-       "createDate": "2019-05-10T13:52:02.311Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 19,
-      "siteIds": [
-       21550
-      ],
-      "name": "Updategroup19",
-      "locationCodes": [
-       "LG0001",
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-01T22:16:04.106Z",
-       "createDate": "2019-05-01T21:41:25.911Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 20,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-10T14:00:17.072Z",
-       "createDate": "2019-05-10T14:00:17.072Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 21,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "roletest2"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-24T15:19:17.119Z",
-       "createDate": "2019-05-10T14:00:32.199Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     },
-     {
-      "locationGroupId": 22,
-      "siteIds": [
-       21550
-      ],
-      "name": "System.String",
-      "locationCodes": [
-       "LG0001"
-      ],
-      "auditInfo": {
-       "updateDate": "2019-05-10T15:49:42.877Z",
-       "createDate": "2019-05-10T15:49:42.877Z",
-       "updateBy": "1",
-       "createBy": "1"
-      }
-     }
+        {
+            "locationGroupId": 32,
+            "siteIds": [
+                21576,
+                21577
+            ],
+            "name": "south North LG 1 ",
+            "locationCodes": [
+                "warehouse_815",
+                "warehouse_417",
+                "warehouse_925"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-06-02T06:02:37.447Z",
+                "createDate": "2019-06-02T06:02:28.860Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 27,
+            "siteIds": [
+                21574
+            ],
+            "name": "US Central",
+            "locationCodes": [
+                "mqa-l-warehouse2",
+                "mqa-l-warehouse5",
+                "warehouse_803"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-30T09:17:37.017Z",
+                "createDate": "2019-05-30T09:17:37.017Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 29,
+            "siteIds": [
+                21575
+            ],
+            "name": "Texas ware house ",
+            "locationCodes": [
+                "warehouse_467",
+                "warehouse_275",
+                "warehouse_870"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-06-01T14:51:44.776Z",
+                "createDate": "2019-05-30T10:52:23.317Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 28,
+            "siteIds": [
+                21577
+            ],
+            "name": "Texas Child Catalog LG",
+            "locationCodes": [
+                "warehouse_645",
+                "warehouse_122",
+                "retailstore_207"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-30T10:39:16.181Z",
+                "createDate": "2019-05-30T10:39:16.181Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 30,
+            "siteIds": [
+                21574
+            ],
+            "name": "Test update 1",
+            "locationCodes": [
+                "warehouselocation1",
+                "CiCrK396LQ",
+                "4TXmkoTLiA"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-06-01T13:21:17.772Z",
+                "createDate": "2019-06-01T13:05:21.650Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 31,
+            "siteIds": [
+                21575,
+                21576
+            ],
+            "name": "Test Location Group 22",
+            "locationCodes": [
+                "mqa-l-warehouse2",
+                "mqa-l-warehouse5",
+                "warehouse_803",
+                "warehouse_717"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-06-01T17:16:06.907Z",
+                "createDate": "2019-06-01T17:12:49.441Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 24,
+            "siteIds": [
+                21577
+            ],
+            "name": "Test Location Group 1",
+            "locationCodes": [
+                "timroletest6"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-30T07:26:06.360Z",
+                "createDate": "2019-05-30T07:26:06.360Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 26,
+            "siteIds": [
+                21576
+            ],
+            "name": "Sout west",
+            "locationCodes": [
+                "warehouselocation2"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-30T09:16:24.029Z",
+                "createDate": "2019-05-30T09:16:24.029Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
+            "locationGroupId": 25,
+            "siteIds": [
+                21576
+            ],
+            "name": "Automation Location group",
+            "locationCodes": [
+                "4TXmkoTLiA",
+                "CiCrK396LQ"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-30T08:40:03.034Z",
+                "createDate": "2019-05-30T08:40:03.034Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        }
     ]
-   }
+}

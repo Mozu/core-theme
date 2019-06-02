@@ -72,7 +72,7 @@ export class LocationGroupsListComponent implements OnInit {
     }
 
     public populateLocationGroupGrid = () => {
-
+        this.model.isLoading = true;
         this._loggerService.info("LocationGroupsListComponent : populateLocationGroupGrid");
 
         this._locationGroupsListService.fetchAllLocationGroups().subscribe((successResponse: Response) => {
@@ -81,9 +81,11 @@ export class LocationGroupsListComponent implements OnInit {
             if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
                 this.model.items = _.sortBy(responseJson['items'],['locationGroupId']);
             }
+            this.model.isLoading = false;
         }, (errResponse) => {
+            this.model.isLoading = false;
             this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_errResponse");
-            throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+            throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
         })
     }
 

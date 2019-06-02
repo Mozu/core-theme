@@ -74,7 +74,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "CiCrK396LQ",
@@ -140,7 +144,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouselocation1",
@@ -227,7 +235,11 @@
                                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "mqa-l-warehouse2",
@@ -307,7 +319,11 @@
                                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "mqa-l-warehouse5",
@@ -373,7 +389,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_803",
@@ -435,7 +455,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_717",
@@ -497,7 +521,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_912",
@@ -559,7 +587,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "kkk_kibo",
@@ -621,7 +653,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_854",
@@ -683,7 +719,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_809",
@@ -745,7 +785,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_309",
@@ -807,7 +851,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_624",
@@ -869,7 +917,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_291",
@@ -931,7 +983,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_693",
@@ -997,7 +1053,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_707",
@@ -1059,7 +1119,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_939",
@@ -1121,7 +1185,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_574",
@@ -1187,7 +1255,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_627",
@@ -1253,7 +1325,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_366",
@@ -1319,7 +1395,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_815",
@@ -1381,7 +1461,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_417",
@@ -1443,7 +1527,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_925",
@@ -1505,7 +1593,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_487",
@@ -1567,7 +1659,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_845",
@@ -1633,7 +1729,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_369",
@@ -1695,7 +1795,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_645",
@@ -1757,7 +1861,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_122",
@@ -1819,7 +1927,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_207",
@@ -1881,7 +1993,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_870",
@@ -1947,7 +2063,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_467",
@@ -2013,7 +2133,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_275",
@@ -2079,7 +2203,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "warehouse_143",
@@ -2141,7 +2269,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_408",
@@ -2204,7 +2336,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_896",
@@ -2267,7 +2403,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_764",
@@ -2329,7 +2469,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_941",
@@ -2392,7 +2536,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_801",
@@ -2455,7 +2603,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_821",
@@ -2518,7 +2670,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_867",
@@ -2581,7 +2737,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_188",
@@ -2644,7 +2804,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_623",
@@ -2707,7 +2871,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_146",
@@ -2770,7 +2938,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_343",
@@ -2833,7 +3005,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_627",
@@ -2896,7 +3072,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "retailstore_808",
@@ -2959,7 +3139,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "storelocation1",
@@ -3042,7 +3226,11 @@
                                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "Z8d1wChmSS",
@@ -3104,7 +3292,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "nWcXhYArCu",
@@ -3170,7 +3362,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "5RRDPmepIk",
@@ -3236,7 +3432,11 @@
                                 "createBy": "c0208388c97142f9bc48e1ce9bb3d6e1"
                             },
                             "allowFulfillmentWithNoStock": false,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         }
                     ]
                 },
@@ -3244,6 +3444,706 @@
                     "name": "California",
                     "code": "CA",
                     "locations": [
+                        {
+                            "code": "warehouselocation999",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation999",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:37:52.878Z",
+                                "createDate": "2019-05-29T20:37:52.878Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation666",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation666",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:37:25.255Z",
+                                "createDate": "2019-05-29T20:37:25.255Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation3",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation3",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:08:15.331Z",
+                                "createDate": "2019-05-29T20:08:15.331Z",
+                                "updateBy": "UNKNOWN",
+                                "createBy": "UNKNOWN"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation4",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation3",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-30T19:03:25.657Z",
+                                "createDate": "2019-05-30T19:03:25.657Z",
+                                "updateBy": "UNKNOWN",
+                                "createBy": "UNKNOWN"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation1011111",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation1011111",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T21:40:15.962Z",
+                                "createDate": "2019-05-29T21:40:15.962Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation101111",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation101111",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T21:17:22.388Z",
+                                "createDate": "2019-05-29T21:17:22.388Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation10111",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation10111",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T21:15:04.552Z",
+                                "createDate": "2019-05-29T21:15:04.552Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation1011",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation1011",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:42:55.804Z",
+                                "createDate": "2019-05-29T20:42:55.804Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation1010",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation1010",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:41:28.596Z",
+                                "createDate": "2019-05-29T20:41:28.596Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
+                        {
+                            "code": "warehouselocation101",
+                            "locationTypes": [
+                                {
+                                    "code": "warehouselocationtype1",
+                                    "name": "Warehouse Location Type 1",
+                                    "auditInfo": {
+                                        "updateDate": "2016-05-04T20:06:53.353Z",
+                                        "createDate": "2016-05-04T20:06:53.353Z",
+                                        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                                        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                                    }
+                                }
+                            ],
+                            "name": "WarehouseLocation101",
+                            "address": {
+                                "address1": "State Capital, Suite 1173",
+                                "address2": "",
+                                "address3": "",
+                                "address4": "",
+                                "cityOrTown": "Sacramento",
+                                "stateOrProvince": "CA",
+                                "postalOrZipCode": "95814",
+                                "countryCode": "US",
+                                "isValidated": false
+                            },
+                            "geo": {
+                                "lat": 0.0,
+                                "lng": 0.0
+                            },
+                            "phone": "999-999-99999",
+                            "supportsInventory": true,
+                            "fulfillmentTypes": [
+                                {
+                                    "code": "DS",
+                                    "name": "Direct Ship"
+                                }
+                            ],
+                            "regularHours": {
+                                "sunday": {},
+                                "monday": {},
+                                "tuesday": {},
+                                "wednesday": {},
+                                "thursday": {},
+                                "friday": {},
+                                "saturday": {}
+                            },
+                            "shippingOriginContact": {
+                                "firstName": "Nancy",
+                                "middleNameOrInitial": "",
+                                "lastNameOrSurname": "Lee",
+                                "companyOrOrganization": "Kibo",
+                                "phoneNumber": "999-999-9999",
+                                "email": "a_b@kibo.com"
+                            },
+                            "tags": [],
+                            "attributes": [],
+                            "auditInfo": {
+                                "updateDate": "2019-05-29T20:45:24.545Z",
+                                "createDate": "2019-05-29T20:45:24.545Z",
+                                "updateBy": "1",
+                                "createBy": "1"
+                            },
+                            "allowFulfillmentWithNoStock": false,
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
+                        },
                         {
                             "code": "warehouselocation2",
                             "locationTypes": [
@@ -3324,7 +4224,11 @@
                                 "createBy": "UNKNOWN"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": true,
+                            "transferEnabled": true,
+                            "includeInInventoryAggregrate": true,
+                            "includeInLocationExport": false
                         }
                     ]
                 },
@@ -3399,7 +4303,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest5",
@@ -3468,7 +4376,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest6",
@@ -3537,7 +4449,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timtestrole1",
@@ -3606,7 +4522,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timtestrole",
@@ -3675,7 +4595,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest2",
@@ -3744,7 +4668,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest3",
@@ -3813,7 +4741,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest8",
@@ -3882,7 +4814,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest7",
@@ -3951,7 +4887,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest9",
@@ -4020,7 +4960,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         },
                         {
                             "code": "timroletest4",
@@ -4089,7 +5033,11 @@
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": true,
-                            "isDisabled": false
+                            "isDisabled": false,
+                            "express": false,
+                            "transferEnabled": false,
+                            "includeInInventoryAggregrate": false,
+                            "includeInLocationExport": false
                         }
                     ]
                 }

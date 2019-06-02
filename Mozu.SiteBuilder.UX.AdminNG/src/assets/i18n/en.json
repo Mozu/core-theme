@@ -67,7 +67,8 @@
       "QuoteListGetFailed": "Error occured while fetching quote list",
       "EmptyLocationGroupName": "Please enter Name.",
       "EmptyLocationGroupSites": "Please select Site.",
-      "EmptyLocationGroupCodes": "Please select Location(s)"
+      "EmptyLocationGroupCodes": "Please select Location(s)",
+      "LocationGroupsListGetFailed" : "Error occured while fetching location group list."
     }
   },
   "QUOTES": {

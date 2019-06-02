@@ -1,7 +1,8 @@
 <div class="col-md-12 location-group-container">
     <p-table [value]="model.items" [responsive]="true" [paginator]="true" 
         [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" 
-        selectionMode="single" >
+        selectionMode="single" 
+        [loading]="isLoading">
         <ng-template pTemplate="header">
             <tr>
                 <th>{{'LOCATIONGROUP.GridHeader.Code' | translate }}</th>
