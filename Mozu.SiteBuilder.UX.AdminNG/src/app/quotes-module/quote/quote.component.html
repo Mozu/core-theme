@@ -1,21 +1,37 @@
 <div class="col-md-12 quote-container">
   <div class="info-section">
-      <div class="row">
-        <div class="sub-container">
-          <quote-summary [QuoteId]=quoteId [Quote]=model></quote-summary>
-        </div>
-        <div class="sub-container">
-          <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
-        </div>
+    <div class="row">
+      <div class="sub-container">
+        <quote-summary [QuoteId]=quoteId [Quote]=model></quote-summary>
       </div>
+      <div class="sub-container">
+        <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
+      </div>
+    </div>
   </div>
 </div>
 <div class="col-md-12 quote-container top-margin">
   <div class="info-section">
-      <div class="row">
-        <div class="sub-container">
-          <quote-items [QuoteId]=quoteId [Quote]=model.items></quote-items>
+    <div class="row">
+      <div class="sub-container">
+        <quote-items [QuoteId]=quoteId [Quote]=model.items></quote-items>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sub-container">
+        <div class="col-sm-12 quote-heading">
+          <p>{{'SHARED.SHIPPING.Address.shippingInformation' | translate }} </p>
+        </div>
+        <div class="col-sm-12">
+          <div *ngIf="model.destinations" class="col-sm-6">
+            <shipping-address [Destinations]=model.destinations[0].destinationContact></shipping-address>
+          </div>
+          <div class="col-sm-6">
+            <h5>{{'SHARED.SHIPPING.Address.shippingMethodAndPrice' | translate }} </h5>
+            <shipping-method [QuoteId]=quoteId></shipping-method>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</div>

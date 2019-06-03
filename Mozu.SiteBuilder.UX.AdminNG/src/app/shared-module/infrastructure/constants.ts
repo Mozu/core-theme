@@ -112,7 +112,8 @@ export class Constants {
         dasbhoardTiles : "/assets/json/dashboard-categories.json",
         quoteList : "/assets/json/quote-list.json",
         accountInformation : "/assets/json/account-information.json",
-        redirectionLink : "/assets/json/user-redirection.json"
+        redirectionLink : "/assets/json/user-redirection.json",
+        shippingMethods:"/assets/json/shipping-methods.json"
     }
 
     static titles = {

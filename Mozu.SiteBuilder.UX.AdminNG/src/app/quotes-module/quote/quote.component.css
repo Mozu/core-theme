@@ -25,3 +25,10 @@
     padding: 0px 15px;
     color: #7c7c7c;
 }
+.quote-heading{
+    font-size: 15px !important;    
+    padding: 20px 0px 4px 15px;    
+}
+.quote-heading p{
+    margin: 0px;
+}

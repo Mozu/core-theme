@@ -38,6 +38,7 @@
     "bootstrap": "4.0.0",
     "core-js": "2.5.3",
     "intl": "1.2.5",
+    "libphonenumber-js": "^1.7.18",
     "lodash": "^4.17.11",
     "moment": "2.20.1",
     "ngx-cookie-service": "2.1.0",

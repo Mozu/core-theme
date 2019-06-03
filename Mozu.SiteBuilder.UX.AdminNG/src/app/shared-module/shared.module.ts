@@ -1,7 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import {
     RouterModule
@@ -9,23 +9,24 @@ import {
 
 // plugins
 import { DialogModule } from 'primeng/dialog';
-import {ToastModule} from 'primeng/toast';
-import {SidebarModule} from 'primeng/sidebar';
-import {TabViewModule} from 'primeng/tabview';
-import {MenuModule} from 'primeng/menu';
-import {CardModule } from 'primeng/card'
-import {PanelMenuModule} from 'primeng/panelmenu';
+import { ToastModule } from 'primeng/toast';
+import { SidebarModule } from 'primeng/sidebar';
+import { TabViewModule } from 'primeng/tabview';
+import { MenuModule } from 'primeng/menu';
+import { CardModule } from 'primeng/card'
+import { PanelMenuModule } from 'primeng/panelmenu';
 
-import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import {
     RestrictInput,
     EnableDisableControls
 } from './directive/index';
 
-import { 
+import {
     NavigationComponent,
     NavigationTopShellComponent,
     NavigationLeftComponent,
@@ -33,19 +34,21 @@ import {
     NavigationTopQuotesComponent,
     HeaderComponent,
     AppHomeComponent
- } from './index';
+} from './index';
 
 import {
     DatexPipe,
     EllipsisPipe,
     SafeHtmlPipe,
     SplitPipe,
+    PhonePipe
 } from './pipes/index';
 
 import { SpinnerComponent } from './spinner/spinner.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ShippingAddressComponent, ShippingMethodComponent } from './shipping';
 
 declare var resourcesVersion: any;
 
@@ -66,8 +69,8 @@ export function createTranslateLoader(http: HttpClient) {
         DialogModule,
         ToastModule,
         NgbCarouselModule,
-        PanelMenuModule, 
-        NgbModule.forRoot(), 
+        PanelMenuModule,
+        NgbModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -82,6 +85,7 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
+        PhonePipe,
 
         // directives
         RestrictInput,
@@ -98,12 +102,14 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationTopQuotesComponent,
         SearchBarComponent,
         AccountInformationComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        ShippingAddressComponent,
+        ShippingMethodComponent
     ],
     providers: [
-        
+
     ],
-    entryComponents:[DynamicLinksDialogComponent],
+    entryComponents: [DynamicLinksDialogComponent],
     exports: [
         // Angular modules
         BrowserModule,
@@ -126,7 +132,8 @@ export function createTranslateLoader(http: HttpClient) {
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
-
+        PhonePipe,
+        
         // directives
         RestrictInput,
         EnableDisableControls,
@@ -142,7 +149,9 @@ export function createTranslateLoader(http: HttpClient) {
         NavigationTopQuotesComponent,
         SearchBarComponent,
         AccountInformationComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        ShippingAddressComponent,
+        ShippingMethodComponent
     ]
 })
 

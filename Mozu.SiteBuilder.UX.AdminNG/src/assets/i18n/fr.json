@@ -46,6 +46,13 @@
       "companyAdminEmail": "Company Admin Email:",
       "salesRep": "Sales Rep:"
     }
+  },
+  "SHIPPING":{
+    "Address": {
+      "shippingInformation": "Informations sur la livraison",
+      "shippingAddress": "Adresse de livraison",
+      "shippingMethodAndPrice": "Méthode d'expédition et prix"      
+    }
   }
 },
 "MESSAGES": {
