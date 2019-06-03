@@ -15,6 +15,9 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     public model: SelectedLocationModel;
     @Input()
     selectedLocationsLst: LocationsListModel[];
+    //below properties not able to move to model level as used in ngOnChanges methods.
+    selectedLocations: LocationsListModel[];
+    virtualLocations: LocationsListModel[];
 
     constructor(
         private _loggerService: LoggerService
@@ -31,8 +34,8 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
         if (changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue) {
-            this.model.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];
-            this.model.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
+            this.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];
+            this.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
         }
     }
 }
