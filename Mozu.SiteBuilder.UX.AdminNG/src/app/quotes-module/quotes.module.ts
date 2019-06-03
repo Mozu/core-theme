@@ -4,6 +4,8 @@ import { TableModule } from 'primeng/table';
 
 import {CalendarModule} from 'primeng/calendar';
 
+import {FileUploadModule} from 'primeng/fileupload';
+
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { SharedModule } from '@shared/shared.module';
@@ -15,17 +17,25 @@ import { QuoteComponent,
   
 import { QuoteItemsComponent } from './quote/items/items.component';
 
+import { QuoteNegotiationCommentsComponent, 
+  QuoteNegotiationComponent, 
+  QuoteNegotiationHistoryComponent } from './quote/negotiation';
+
 @NgModule({
   declarations: [
     QuotesListComponent,
     QuoteComponent,
     QuoteSummaryComponent,
-    QuoteItemsComponent
+    QuoteItemsComponent,
+    QuoteNegotiationComponent,
+    QuoteNegotiationCommentsComponent,
+    QuoteNegotiationHistoryComponent
   ],
   imports: [
     SharedModule,
     TableModule,
     CalendarModule,
+    FileUploadModule,
     NgbModule.forRoot()
   ],
   entryComponents: [

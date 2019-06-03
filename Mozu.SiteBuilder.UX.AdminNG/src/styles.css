@@ -385,3 +385,45 @@ p-table .ui-table .pi-ellipsis-v:hover{
     border:transparent  !important;
 }
 /* --------------Context Menu Ellipsis CSS - End------------- */
+
+/* -----------------------PrimeNG Tab CSS - Start---------------------------*/
+.quote-tabview .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
+    background: transparent;
+    margin-top: 10px;
+}
+.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, body .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    width: auto !important; 
+}
+.quote-tabview .ui-tabview-panels {
+    overflow: auto;
+    position: relative;
+    height: auto;
+    width: auto;
+    margin-top: 3% !important;
+    margin-bottom: 2%;
+
+}
+.ui-widget{
+    color: #3f3f3f;
+    font-family: "proxima-nova",sans-serif !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+}
+.quote-tabview .ui-table .ui-table-thead {
+    background-color: #ffffff !important;
+}
+
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled) {
+    font-size: 13px !important;
+    color: #3f3f3f !important;
+    /* border-bottom: #f3f3f3 1px solid !important; */
+}
+
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled):hover, 
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled):active {
+    /* border-bottom: #3f3f3f 1px solid !important; */
+    outline: 0px !important;
+    color: #2ea195  !important;
+}
+
+/* -----------------------PrimeNG TabView CSS  - End ---------------------------*/

@@ -27,10 +27,14 @@
             <shipping-address [Destinations]=model.destinations[0].destinationContact></shipping-address>
           </div>
           <div class="col-sm-6">
-            <h5>{{'SHARED.SHIPPING.Address.shippingMethodAndPrice' | translate }} </h5>
+            <h5>{{'SHARED.SHIPPING.Method.shippingMethodAndPrice' | translate }} </h5>
             <shipping-method [QuoteId]=quoteId></shipping-method>
           </div>
         </div>
+      </div>
+
+      <div class="sub-container">
+        <quote-negotiation [QuoteId]=quoteId></quote-negotiation>
       </div>
     </div>
   </div>

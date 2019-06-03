@@ -1,0 +1,21 @@
+<div class="col-md-12">
+  <div class="col-sm-12 summary-heading">
+    <p>{{'QUOTES.Quote.Negotiation.heading' | translate }} </p>
+  </div>
+
+  <div class="col-sm-6 padding-none">
+    <p-tabView class="quote-tabview" (onChange)="onTabChange($event)">
+      <p-tabPanel header="{{'QUOTES.Quote.Negotiation.TabContent.CommentTab.heading' | translate }}" [selected]="true">
+        <quote-negotiaition-comments></quote-negotiaition-comments>
+      </p-tabPanel>
+      
+      <p-tabPanel header="{{'QUOTES.Quote.Negotiation.TabContent.HistoryTab.heading' | translate }}">
+        <quote-negotiaition-history></quote-negotiaition-history>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <div class="col-sm-6">
+    <p>{{'QUOTES.Quote.Negotiation.Total.heading' | translate }}</p>
+  </div>
+</div>

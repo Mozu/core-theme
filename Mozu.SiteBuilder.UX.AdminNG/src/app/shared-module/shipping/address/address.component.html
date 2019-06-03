@@ -14,5 +14,5 @@
     <div *ngIf="destinationContact.phoneNumbers.home">{{destinationContact.phoneNumbers.home | phone:'US' }}</div>    
   </div>
 
-  <div *ngIf="!destinationContact">You have no shipping address.</div>  
+  <div *ngIf="!destinationContact">{{'SHARED.SHIPPING.Address.noShippingAddressMessage' | translate }}</div>  
 </div>

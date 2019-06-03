@@ -51,7 +51,11 @@
     "Address": {
       "shippingInformation": "Shipping Information",
       "shippingAddress": "Shipping Address",
-      "shippingMethodAndPrice": "Shipping Method & Price"      
+      "noShippingAddressMessage":"You have no shipping address."           
+    },
+    "Method":{
+      "shippingMethodAndPrice": "Shipping Method & Price",
+      "noShippingRatesAvailableMessage":"Sorry, rates are not available for this quote."
     }
   }
 },
@@ -129,6 +133,20 @@
       },
       "GridMessages": {
         "emptyMessage": "No quote items to display"
+      }
+    },
+    "Negotiation": {
+      "heading": "Negotiation",
+      "TabContent": {
+        "CommentTab": {
+          "heading": "Comments"
+        },
+        "HistoryTab": {
+          "heading": "History Log"
+        }
+      },
+      "Total": {
+        "heading": "Quote Total"
       }
     }
   }
