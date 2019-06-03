@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Web.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Routing;
-using Mozu.ProductAdmin.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists;
-using Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers;
-using DC = Mozu.ProductAdmin.Contracts;
 using Mozu.Core.Extensions;
+using Mozu.ProductAdmin.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.PriceLists;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
 using Mozu.SiteBuilder.UX.Admin.Helpers;
+using Mozu.SiteBuilder.UX.Admin.Helpers.PriceListHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http;
+using DC = Mozu.ProductAdmin.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -244,18 +244,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             priceListEntry.ProductInCatalogInfo = dcProduct.ProductInCatalogs.Select(x => new ProductInCatalogInfo
             {
-                ActiveStartDate = (x.ActiveDateRange != null) ? x.ActiveDateRange.StartDate : null,
-                ActiveEndDate = (x.ActiveDateRange != null) ? x.ActiveDateRange.EndDate : null,
+                ActiveStartDate = x.ActiveDateRange?.StartDate,
+                ActiveEndDate = x.ActiveDateRange?.EndDate,
                 IsActive = x.IsActive.GetValueOrDefault(),
                 CatalogId = x.CatalogId,
                 IsPriceOverridden = x.IsPriceOverridden.GetValueOrDefault(),
-                ISOCurrencyCode = x.Price.ISOCurrencyCode,
-                ListPrice = x.Price.Price,
-                SalePrice = x.Price.SalePrice,
-                MAP = x.Price.MAP,
-                MAPStartDate = x.Price.MAPStartDate,
-                MAPEndDate = x.Price.MAPEndDate,
-                MSRP = x.Price.MSRP
+                ISOCurrencyCode = x.Price?.ISOCurrencyCode,
+                ListPrice = x.Price?.Price,
+                SalePrice = x.Price?.SalePrice,
+                MAP = x.Price?.MAP,
+                MAPStartDate = x.Price?.MAPStartDate,
+                MAPEndDate = x.Price?.MAPEndDate,
+                MSRP = x.Price?.MSRP
             }).ToList();
         }
 
