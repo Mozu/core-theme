@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { LoggerService,HttpError, ErrorCode, ErroNotificationType } from '@core';
+import { LoggerService } from '@core';
 import * as _ from 'lodash';
 import { LocationsListModel } from '@shared/locations';
+import { SelectedLocationModel } from './selected.model';
 
 @Component({
     selector: 'selected-locations-list',
@@ -10,33 +11,28 @@ import { LocationsListModel } from '@shared/locations';
     providers: []
 })
 export class SelectedLocationsComponent implements OnInit, OnChanges {
-    
-    cols: any[];
-    virtualLocations: LocationsListModel[];
-    selectedLocations: LocationsListModel[];
+
+    public model: SelectedLocationModel;
     @Input()
     selectedLocationsLst: LocationsListModel[];
-    totalRecords: number;
 
     constructor(
         private _loggerService: LoggerService
-    ){ 
-    }
+    ) {}
 
     ngOnInit() {
         this._loggerService.info("SelectedLocationsComponent : ngOnInit");
-        this.cols = [
-            { field: 'name', header: ''}
+        this.model = new SelectedLocationModel();
+        this.model.cols = [
+            { field: 'name', header: '' }
         ];
-        this.totalRecords = 250000;
+        this.model.totalRecords = 250000;
     }
 
-    ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        //this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes));
-        //this._loggerService.info("SelectedLocationsComponent : changes"+ JSON.stringify(changes.physicalLocation.currentValue));
-        if(changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
-            this.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];
-            this.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
+    ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+        if (changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue) {
+            this.model.virtualLocations = [...<any>changes.selectedLocationsLst.currentValue];
+            this.model.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
         }
     }
 }
