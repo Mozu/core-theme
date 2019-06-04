@@ -110,15 +110,16 @@ export class Constants {
     static localizationMenu : string = 'localization';
 
     static JsonResources = {
-        leftNavigationItems :  "./assets/json/leftNavigation-items.json",
-        tabsNames : "./assets/json/dashboard-menu.json",
-        dasbhoardTiles : "./assets/json/dashboard-categories.json",
-        quoteList : "./assets/json/quote-list.json",
-        redirectionLink : "./assets/json/user-redirection.json",
-        locations : "./assets/json/locations.json",
-        physicalLocations : './assets/json/physical-locations.json',
-        locationGroupList : './assets/json/location-group-list.json',
-        getLocationGroup : "./assets/json/location-group-edit.json" 
+        leftNavigationItems : environment.appUrl + "/assets/json/leftNavigation-items.json",
+        tabsNames : environment.appUrl + "/assets/json/dashboard-menu.json",
+        dasbhoardTiles : environment.appUrl + "/assets/json/dashboard-categories.json",
+        quoteList : environment.appUrl + "/assets/json/quote-list.json",
+        accountInformation: environment.appUrl +"/assets/json/account-information.json",
+        redirectionLink : environment.appUrl + "/assets/json/user-redirection.json",
+        locations : environment.appUrl + "/assets/json/locations.json",
+        physicalLocations : environment.appUrl + '/assets/json/physical-locations.json',
+        locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
+        getLocationGroup : environment.appUrl + "/assets/json/location-group-edit.json" 
     }
 
     static numberOfRows: number = 10;
