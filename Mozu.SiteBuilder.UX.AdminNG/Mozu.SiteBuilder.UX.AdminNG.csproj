@@ -147,6 +147,12 @@
     <Content Include="src\app\quotes-module\quote\summary\summary.component.html" />
     <Content Include="src\app\shared-module\access-tile\access-tile.component.css" />
     <Content Include="src\app\shared-module\access-tile\access-tile.component.html" />
+    <Content Include="src\app\shared-module\account\information\information.component.css" />
+    <Content Include="src\app\shared-module\account\information\information.component.html" />
+    <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.css" />
+    <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.html" />
+    <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.css" />
+    <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.html" />
     <Content Include="src\app\shared-module\header\header.component.css" />
     <Content Include="src\app\shared-module\header\header.component.html" />
     <Content Include="src\app\shared-module\home\home.component.css" />
@@ -215,7 +221,6 @@
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <None Include="packages.config" />
-    <Content Include="src\app\global-module\focus-manager\PagewiseFocusIndexes.json" />
     <Content Include="src\assets\Fonts\Calibri.eot" />
     <Content Include="src\assets\Fonts\Calibri.otf" />
     <Content Include="src\assets\Fonts\Calibri.ttf" />
@@ -255,6 +260,8 @@
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />
     <Content Include="tslint.json" />
+    <Content Include="src\assets\json\account-information.json" />
+    <Content Include="src\assets\json\secureForm.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -274,16 +281,13 @@
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\app.routing.ts" />
-    <TypeScriptCompile Include="src\app\global-module\focus-manager\focus-manager-helper.service.ts" />
-    <TypeScriptCompile Include="src\app\global-module\focus-manager\focus-manager.directive.ts" />
-    <TypeScriptCompile Include="src\app\global-module\focus-manager\focus-manager.model.ts" />
-    <TypeScriptCompile Include="src\app\global-module\focus-manager\index.ts" />
     <TypeScriptCompile Include="src\app\global-module\global.module.ts" />
     <TypeScriptCompile Include="src\app\global-module\index.ts" />
     <TypeScriptCompile Include="src\app\global-module\infrastructure\constants.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\auth-guard.service.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\index.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\notifications.service.ts" />
+    <TypeScriptCompile Include="src\app\global-module\services\QuoteLocationGroupRouteGuardService.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\shared-data.service.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\shared-data.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\index.ts" />
@@ -302,9 +306,15 @@
     <TypeScriptCompile Include="src\app\shared-module\access-tile\access-tile.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\access-tile\access-tile.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\access-tile\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\account\information\information.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\enable-disable-controls.directive.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\restrict-input.directive.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.service.ts" />
