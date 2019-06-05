@@ -291,6 +291,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         return ret;
     },
+
     handleShippingMethod: function (menu, item) {
         if (!item.methodCode) return;
 
@@ -305,7 +306,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     },
     
     handleAddTrackingNumber: function () {
-        Ext.create('Taco.view.order.modal.EditTrackingNumber', {
+        Ext.create('Taco.view.order.modal.EditTrackingNumberNew', {
             packageData: this.record,
             record: this.record,
             autoShow: true

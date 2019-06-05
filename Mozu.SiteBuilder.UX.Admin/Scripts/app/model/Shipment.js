@@ -4,61 +4,139 @@
 Ext.define('Taco.model.Shipment', {
     extend: 'Taco.core.data.Model',
 
-    fields: [{
-        "name": "id",
-        "type": "int",
-        "useNull": true
-    }, {
-        "name": "shippingAddress",
-        "type": "auto",
-        "useNull": true
-    }, {
-        "name": "shippingMethodCode",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "carrier",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "status",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "trackingCodeOrNumber",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "trackingLink",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "price",
-        "type": "auto",
-        "useNull": true
-    }, {
-        "name": "estimatedDeliveryDate",
-        "type": "date",
-        "useNull": true
-    }, {
-        "name": "createDate",
-        "type": "date",
-        "useNull": true,
-        dateFormat: 'c'
-    }, {
-        "name": "createBy",
-        "type": "string",
-        "useNull": true
-    }, {
-        "name": "updateDate",
-        "type": "date",
-        "useNull": true,
-        dateFormat: 'c'
-    }, {
-        "name": "updateBy",
-        "type": "string",
-        "useNull": true
-    }],
+    fields: [
+        {
+            "name": "id",
+            "type": "int",
+            "useNull": true
+        },
+        {
+            "name": "currencyCode",
+            'type': 'string',
+            "useNull": true
+        },
+        {
+            "name": "cost",
+            'type': 'float',
+            "useNull": true
+        },
+        {
+            "name": "shippingMethodCode",
+            'type': 'string',
+            "useNull": true
+        },
+        {
+            "name": "trackingNumber",
+            'type': 'string',
+            "useNull": true
+        },
+        {
+            "name": "signatureRequired",
+            'type': 'boolean',
+            "useNull": true
+        },
+        {
+            "name": "originAddress",
+            'type': 'auto',
+            "useNull": true
+        },
+        {
+            "name": "destinationAddress",
+            'type': 'auto',
+            "useNull": true
+        },
+        {
+            "name": "packageIds",
+            'type': 'auto',
+            "useNull": true
+        },
+        {
+            "name": "number",
+            'type': 'int',
+            "useNull": true
+        },
+        {
+            "name": "originalOrderId",
+            'type': 'string',
+            "useNull": true
+        },
+        {
+            "name": "orderNumber",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "customerAccountId",
+            "type": "int",
+            "useNull": true
+        }, {
+            "name": "customerTaxId",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "shippingMethodName",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "shipmentStatus",
+            "type": "string",
+            "useNull": true
+        }, {
+            "name": "packages",
+            "type": "auto",
+            "useNull": true
+        },
+        {
+            'name': 'items',
+            'type': 'hasMany',
+            'model': 'Taco.model.ShipmentItem',            
+            'reader': 'json'
+        },
+        {
+            'name': 'canceledItems',
+            'type': 'hasMany',
+            'model': 'Taco.model.ShipmentItem',            
+            'reader': 'json'
+        },
+        {
+            "name": "auditInfo",
+            "type": "auto",
+            "useNull": true
+        },
+        {
+            "name": "shipmentAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "lineItemTaxAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "shippingAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "shippingTaxAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "handlingAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "handlingTaxAdjustment",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "dutyAdjustment",
+            "type": "float",
+            "useNull": true
+        }],
 
     proxy: {
         type: 'ajaxproxy',

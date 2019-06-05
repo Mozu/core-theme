@@ -50,27 +50,28 @@ Ext.define('Taco.view.order.subform.fulfillment.Packages', {
         };
 
         //Loop through all packages and 
-        var packages = this.record.get('packages');
-        if (packages && packages.length > 0) {
-            for (var packageCount = 0; packageCount < packages.length; packageCount++) {
-                items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
-                    record: this.record,
-                    packageRecord: packages[packageCount]
-                }));
-            }
-        }
-        //Following are only for demo
         //var packages = this.record.get('packages');
-        ////var temp = Math.floor(Math.random() * 10);
-        //for (var packageCount = 0; packageCount < 10; packageCount++) {
-
-        //    var name = packageCount == 0 ? 'All Items' : 'package-' + packageCount;            
-        //    packages[0].code = name;
-        //    items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
-        //        record: this.record,
-        //        packageRecord: packages[0]
-        //    }));            
+        //if (packages && packages.length > 0) {
+        //    for (var packageCount = 0; packageCount < packages.length; packageCount++) {
+        //        items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
+        //            record: this.record,
+        //            packageRecord: packages[packageCount]
+        //        }));
+        //    }
         //}
+
+        //Following are only for demo
+        var packages = this.record.get('packages');
+        //var temp = Math.floor(Math.random() * 10);
+        for (var packageCount = 0; packageCount < 10; packageCount++) {
+
+            var name = packageCount == 0 ? 'All Items' : 'package-' + packageCount;            
+            packages[0].code = name;
+            items.push(Ext.create('Taco.view.order.subform.fulfillment.PackageTab', {
+                record: this.record,
+                packageRecord: packages[0]
+            }));            
+        }
         this.items = items;
     }
     

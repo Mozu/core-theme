@@ -12,9 +12,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     layout: {
         type: 'hbox',
         align: 'stretch',
-        pack: 'start'
+        pack: 'end'
     },
     defaults: { xtype: "component" },
+
     config: {
         record: null,
         /**
@@ -40,6 +41,56 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         me.cls = 'orderform-detail-totalpanel x-grid-row';
         this.initUI();
         me.callParent(arguments);
+    },
+
+    initUI: function () {
+        this.items = [];
+        this.tools = [
+            Ext.widget('button', {
+                itemId: 'refundButton',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Refund',
+                requiredBehaviors: [{
+                    model: 'Taco.model.Order',
+                    behavior: 'update'
+                },
+                {
+                    model: 'Taco.model.Order',
+                    behavior: 'paymentUpdate'
+                }],
+                margin: '0 10 0 0',
+                handler: function () {
+                    Ext.create('Taco.view.order.modal.Refund', {
+                        order: record
+                    });
+                },
+                //disabled: isUnpaid
+            })
+        ];
+        var me = this,
+            isEditable = me.isEditable,
+            flex = (isEditable) ? .5 : 1;
+
+        this.masterTable = Ext.create("Ext.Component", {
+            width: 700,
+            layout: {
+                type: 'hbox',
+                align: 'right'
+            },
+            data: this.record.getData(),
+            tpl: this.getMasterTemplate(),
+            listeners: {
+                boxready: {
+                    fn: function () {
+                        me.initSummaryToggleButtons();
+                    },
+                    scope: me
+                }
+            }
+        });
+
+        this.items.push(this.masterTable);
     },
 
     applyRecord: function (record) {
@@ -106,39 +157,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
     },
 
-    initUI: function () {
-        var me = this,
-            isEditable = me.isEditable,
-            flex = (isEditable) ? .5 : 1;
 
-        this.initLeftPanel();
-
-        this.masterTable = Ext.create("Ext.Component", {
-            data: this.record.getData(),
-            flex: flex,
-            tpl: this.getMasterTemplate(),
-            listeners: {
-                boxready: {
-                    fn: function () {
-                        me.initSummaryToggleButtons();
-                    },
-                    scope: me
-                }
-            }
-        });
-
-        this.items = [
-            this.leftPanel,
-            {
-                xtype: "container",
-                flex: .5,
-                items: [
-                    this.masterTable
-                ]
-            }
-        ];
-
-    },
 
     toggleAdjustmentDetails: function (btn, e) {
 
@@ -244,103 +263,6 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         this.record.reload();
     },
 
-    initLeftPanel: function () {
-        var me = this;
-
-        var items = [];
-
-        me.allowInvalidAddresses = false;
-        me.isAddressValidationEnabled = false;
-        Taco.model.GeneralSettings.load('', {
-            success: function (record1) {
-                me.allowInvalidAddresses = record1.data.allowInvalidAddresses;
-                me.isAddressValidationEnabled = record1.data.isAddressValidationEnabled;
-            },
-            failure: function () {
-            }
-        });
-
-        //only show this field if this is a phone order in pending status or when editing a draft;
-        if (this.record.get("orderStatus") === "Pending" || this.record.get("isDraft")) {
-            var shippingMethodButton = Ext.widget({
-                itemId: "shippingMethodButton",
-                cls: 'order-shipping-method',
-                xtype: 'button',
-                ui: "action",
-                scale: "medium",
-                requiredBehaviors: [{
-                    model: 'Taco.model.Order',
-                    behavior: 'update',
-                    disable: true
-                },
-                {
-                    model: 'Taco.model.Order',
-                    behavior: 'fulfill'
-                }],
-                // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
-                disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
-                text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
-                menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
-                    showRuntimePricing: true,
-                    orderId: me.record.getId(),
-                    isDraft: this.record.get("isDraft"),
-                    onShippingMethodChange: function (menu, selection) {
-
-                        if (me.isAddressValidationEnabled && !me.allowInvalidAddresses && !me.record.get("fulfillmentContact").addressIsValidated) {
-                            Taco.app.fireEvent('setmessage', 'The selected shipping address is not validated.', 'error');
-                        } else if (selection && (selection.shippingMethodName || Ext.isNumeric(selection.price))) {
-                            var data = {
-                                shippingMethodName: selection.shippingMethodName,
-                                shippingMethodCode: selection.shippingMethodCode
-                            };
-                            me.setShippingInfo(data);
-                        }
-                    }
-                })
-            });
-
-
-            items.push({
-                xtype: 'label',
-                itemId: "shippingMethodLabel",
-                cls: "x-form-item-label",
-                html: this.getShippingLabelText()
-            });
-
-            items.push(shippingMethodButton);
-        } else {
-            // need to add a filler to get the panel to layout. weird.
-            items.push({
-                xtype: "component",
-                html: ""
-            });
-        };
-
-        this.leftPanel = Ext.create("Ext.container.Container", {
-            cls: "orderform-detail-totalpanel-leftpanel",
-            layout: {
-                type: 'form'
-            },
-            items: items,
-            flex: .5
-        });
-
-    },
-
-    getShippingLabelText: function () {
-        return (!this.record.isPickupOnlyOrder() && Ext.Object.isEmpty(this.record.data.fulfillmentContact))
-            ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>"
-            : "Shipping Method";
-    },
-
-    // update the shipping method label based on the presence of a shipping Address Contact
-    updateShippingMethodLabel: function () {
-        var label = this.down("#shippingMethodLabel");
-        if (label) {
-            label.update(this.getShippingLabelText());
-        }
-
-    },
 
     tableStartTpl: new Ext.XTemplate(
         '<table class="x-grid-table x-grid-with-row-lines collapsed {isEditableCls} {classNames}" border="0" cellspacing="0" cellpadding="0" style="width:90%; margin-left: auto;">',

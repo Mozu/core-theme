@@ -131,7 +131,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
             this.leftPanel,
             {
                 xtype: "container",
-                flex: .5,
+                flex: 1,
                 items: [
                     this.masterTable
                 ]

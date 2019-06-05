@@ -643,6 +643,7 @@
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
     <Content Include="Scripts\app\model\LocationAttribute.js" />
+    <Content Include="Scripts\app\model\ShipmentItem.js" />
     <Content Include="Scripts\app\model\PaymentActionTarget.js" />
     <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
     <Content Include="Scripts\app\model\PaymentGateway.js" />
@@ -872,6 +873,7 @@
     <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
+    <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
