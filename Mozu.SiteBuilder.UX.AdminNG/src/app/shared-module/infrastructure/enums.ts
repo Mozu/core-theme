@@ -19,3 +19,11 @@ export enum NavigationContainerType {
     quotes = 'quotes',
     locationGroups = 'locationGroups'
 }
+
+export enum DialogCode {
+    Delete= <any>"Delete"
+}
+
+export enum ConfirmationDialogNotificationType{
+    Dialog
+}

@@ -33,7 +33,8 @@ import {
     AccessTileComponent,
     NavigationTopQuotesComponent,
     HeaderComponent,
-    AppHomeComponent
+    AppHomeComponent,
+    ConfirmationDialogService
 } from './index';
 
 import {
@@ -107,7 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
         ShippingMethodComponent
     ],
     providers: [
-
+        ConfirmationDialogService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [

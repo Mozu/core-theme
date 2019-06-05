@@ -1,24 +1,27 @@
 <!-- The Modal -->
-<div class="modal" [id]="ref"> 
-    <div class="modal-dialog {{size}}" >
-      <div class="modal-content">
-  
-  <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">
-            <ng-container *ngTemplateOutlet="modalHeader"></ng-container>
-          </h4>
-        </div>
-  
-  <!-- Modal body -->
-        <div class="modal-body">
-          <ng-container *ngTemplateOutlet="modalBody"></ng-container>
-        </div>
-  
-  <!-- Modal footer -->
-        <div class="modal-footer">
-          <ng-container *ngTemplateOutlet="modalFooter"></ng-container>
-        </div>
+<div class="modal" *ngIf="_displayModal"> 
+  <div class="modal-dialog modal-sm" >
+    <div class="modal-content">
+
+<!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">
+          {{ _dialogTitle }}
+        </h4>
+      </div>
+
+<!-- Modal body -->
+      <div class="modal-body">
+        {{ _message }}
+      </div>
+
+<!-- Modal footer -->
+      <div class="modal-footer">
+        <div>
+          <button class="btn btn-default" *ngIf="_isShowSecondaryButton == true" (click)="_displayModal = false">{{ _secondaryButtonText }}</button>
+          <button class="btn btn-success" (click)="confirm()">{{ _primaryButtonText }}</button>
+      </div>
       </div>
     </div>
-  </div> 
+  </div>
+</div> 

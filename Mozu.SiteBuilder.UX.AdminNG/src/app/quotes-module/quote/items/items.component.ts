@@ -8,7 +8,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoggerService, 
   HttpError, 
-  ErrorCode, ErroNotificationType } from '@core';
+  ErrorCode, 
+  ErroNotificationType } from '@core';
+
+import { DialogCode, 
+  ConfirmationDialogNotificationType } from '@shared';
+
+import { ConfirmationDialogService } from '@shared/confirmation-dialog/confirmation-dialog.service';
 
 import { QuoteItemsService } from './items.service';
 
@@ -22,14 +28,18 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
 
-  public isShowModel: boolean = false;
   public itemId: string;
   public quoteItemTobeDeleted: any;
   quoteItems = [];
 
   constructor(private _loggerService : LoggerService,
     public _quoteItemsService: QuoteItemsService,
-    public _modalService: NgbModal ) { }
+    private _confirmationDialogService: ConfirmationDialogService,
+    public _modalService: NgbModal ) { 
+      this._confirmationDialogService.listen().subscribe(() => {
+        this.deleteQuoteItem();
+      })
+    }
   
     ngOnChanges(changes: SimpleChanges){
       this._loggerService.info("QuoteItemsComponent : ngOnChanges");
@@ -42,17 +52,11 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   openQuoteDeleteConfirmationDialog(id: string, row: any) {
     this.itemId = id;
     this.quoteItemTobeDeleted = row;
-    this.isShowModel = true;
-    this._modalService.open('confirmationModal');
-  }
-
-  closeQuoteDeleteConfirmationDialog(){
-    this.isShowModel = false;
+    this._confirmationDialogService.openConfirmationDialog(DialogCode.Delete, ConfirmationDialogNotificationType.Dialog);
   }
 
   deleteQuoteItem(){
     this._loggerService.info("QuoteItemsComponent : deleteItem");
-    this.isShowModel  = false;
     this._quoteItemsService.deleteQuoteItem(this.quoteId, this.itemId).subscribe((deleteQuoteItemSuccessResponse :any) =>{
       this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse");
       if (deleteQuoteItemSuccessResponse != null && deleteQuoteItemSuccessResponse != undefined) {

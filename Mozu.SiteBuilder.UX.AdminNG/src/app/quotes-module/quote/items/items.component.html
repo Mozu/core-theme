@@ -62,18 +62,3 @@
             </ng-template>
     </p-table>
 </div>
-
-<confirmation-dialog ref="confirmationModal" *ngIf="isShowModel" size="modal-sm">
-        <ng-template #modalHeader>
-            {{'MESSAGES.Dialog.Confirmation.title' | translate }}
-        </ng-template>   
-        <ng-template #modalBody>  
-            {{'MESSAGES.Dialog.Confirmation.message' | translate }}
-        </ng-template>    
-        <ng-template #modalFooter>
-            <div>
-                <button class="btn btn-default" (click)="closeQuoteDeleteConfirmationDialog()">{{'MESSAGES.Dialog.Confirmation.secondaryButton' | translate }}</button>
-                <button class="btn btn-success" (click)="deleteQuoteItem()">{{'MESSAGES.Dialog.Confirmation.primaryButton' | translate }}</button>
-            </div>
-        </ng-template>
-</confirmation-dialog>

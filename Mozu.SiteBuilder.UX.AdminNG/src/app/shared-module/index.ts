@@ -14,4 +14,6 @@ export * from './access-tile/index'
 
 export * from './home/home.component';
 
-export * from './confirmation-dialog/confirmation-dialog.component';
+export * from './dynamic-links-dialog/dynamic-links-dialog.component';
+
+export * from './confirmation-dialog/index';
