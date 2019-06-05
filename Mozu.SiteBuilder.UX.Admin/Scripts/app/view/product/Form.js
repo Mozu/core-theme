@@ -198,18 +198,27 @@ Ext.define('Taco.view.product.Form', {
             }));
         }
 
-        var productImages = this.record.get('productImages');
-        var sequence = 0
-        Ext.Array.each(productImages, function(image, idx){
-            if(idx > 0 && image.productImageGroupId !== productImages[idx-1].productImageGroupId){
-                sequence = 0;
-            }
-            image.sequence = sequence;
-            sequence++;
-            return
-        });
+        // var productImages = this.record.get('productImages');
+        // var sequence = 0
+        // Ext.Array.each(productImages, function(image, idx){
+        //     if(idx > 0 && image.productImageGroupId !== productImages[idx-1].productImageGroupId){
+        //         sequence = 0;
+        //     }
+        //     image.sequence = sequence;
+        //     sequence++;
+        //     return
+        // });
 
-        this.record.set('productImages', productImages); 
+        function compare(a, b){
+            return a.sequence - b.sequence;
+        }
+          
+          var productImages = this.record.get('productImages')
+          productImages.sort(compare);
+
+
+        this.record.set('productImages', productImages);
+        this.record.set('_override', {productImages: productImages}); 
 
         return this.callParent(arguments);
     },
