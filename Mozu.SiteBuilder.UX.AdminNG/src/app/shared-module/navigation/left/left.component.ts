@@ -35,6 +35,8 @@ import { DynamicLinksComponent } from './dynamic-links/dynamic-links.component';
 })
 export class NavigationLeftComponent implements OnInit {
   public model: LeftNavigationModel;
+  uiRoutes = Constants.uiRoutes.quotes;
+  uiLocationGroup =  Constants.uiRoutes.locationGroups;
   
   constructor(
     private navigationService: NavigationService,
@@ -83,9 +85,9 @@ export class NavigationLeftComponent implements OnInit {
           filteredDynamicLinks.push({
                 label: element.modalWindowTitle,  
                 location: element.location,
-                navUrl : element.href,
+                url : element.href,
                 appId : element.appId,
-                command: (event : any) => { this.openDynamicLinksDialog(element.href, element.appId) }
+                // command: (event : any) => { this.openDynamicLinksDialog(element.href, element.appId) }
             });
         });
         this.model.filteredNavigationLinks = this.navigationService.mergeDynamicLinks(allFilteredLinks, filteredDynamicLinks);
@@ -106,4 +108,10 @@ export class NavigationLeftComponent implements OnInit {
       throw new HttpError(ErrorCode.fetchCapabilitiesForSecureFormGetFailed,ErroNotificationType.Toaster);
     });
   }
+
+  public megaMenuToggleIcon = (event) => {
+    var element = event.target;
+    element.classList.toggle("active");
+  }
+
 }

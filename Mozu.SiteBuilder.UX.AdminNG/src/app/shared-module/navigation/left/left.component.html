@@ -3,10 +3,41 @@
     <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="1" [showCloseIcon]="false" [blockScroll]="true">
         <p-tabView>
             <p-tabPanel header="Main">
-                <p-menu  [model]="model.mainItems" ></p-menu>
+                <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
+                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign">{{menuHeader.label}}
+                </div>
+                 <ul id="{{menuHeader.id}}"  class="collapse in">
+                        <li *ngFor="let menuOptions of menuHeader.items">
+                                <a *ngIf="menuOptions.address === uiRoutes || menuOptions.address === uiLocationGroup; else routeLink" [routerLink]="[menuOptions.routerLink]">
+                                 {{menuOptions.label}}
+                                </a>
+                                <ng-template #routeLink >
+                                <ng-container *ngIf="menuOptions.label !== 'Import/Export'; else importExportDynamicLink">     
+                                   <a [attr.href]="menuOptions.url">
+                                {{menuOptions.label}}
+                                 </a> </ng-container>
+                                </ng-template>
+                                <ng-template #importExportDynamicLink>
+                                    <a class="import-export-cursor" (click)="openDynamicLinksDialog(menuOptions.url, menuOptions.appId)">
+                                   {{menuOptions.label}}
+                                    </a>
+                                </ng-template>
+                         </li>
+                    </ul>
+               </div>
             </p-tabPanel>
             <p-tabPanel header="System">
-                <p-menu [model]="model.systemItems"></p-menu>
+               <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">    
+                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id"><span class="menuHeaderAlign">{{menuHeader.label}}</span>
+                </div>
+                <ul id="{{menuHeader.id}}"  class="collapse in">
+                        <li *ngFor="let menuOptions of menuHeader.items">
+                            <a [attr.href]="menuOptions.url">
+                             {{menuOptions.label}}
+                            </a>
+                        </li>
+                </ul>
+            </div>
             </p-tabPanel>
         </p-tabView>
     </p-sidebar>

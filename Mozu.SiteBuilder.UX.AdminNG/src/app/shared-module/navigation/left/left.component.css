@@ -40,3 +40,62 @@
         width: 6% !important;
     }
   }
+
+.menuHeader {
+    padding: .3em 0.96em;
+}
+
+.menuHeaderAlign{
+    font-size: 0.8em;
+    color: #a3a3a3;
+    background-color: transparent;
+    margin-top: 5%;
+    cursor: pointer;
+}
+
+.import-export-cursor{
+    cursor: pointer;
+}
+
+ul li {
+    list-style-type: none;
+    right: 2.8em;
+    position: relative;
+    color: #333333;
+    list-style-type: none;
+    font-family: "proxima-nova", sans-serif !important;
+}
+ul{
+    margin-bottom: 0px !important;
+}
+
+a{
+    text-decoration: none;
+}
+
+a:hover{
+    color: #333333;
+}
+
+.menuHeader:before{
+  color: #777;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+  margin-top: 2px;
+}
+
+.active:after {
+    content: "\E900";
+    vertical-align: baseline;
+    -webkit-font-smoothing: antialiased;
+    left: 4px;
+    position: relative;
+    top: 3px;
+    line-height: 1;
+    font-family: mozicons;
+    font-size: 1.3em;
+    font-weight: 400!important;
+}
+
+

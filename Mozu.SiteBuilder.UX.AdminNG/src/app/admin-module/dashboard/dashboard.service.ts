@@ -28,6 +28,7 @@ export class DashbaordService {
             let accessTileModel = new AccessTileModel();
             accessTileModel.sectionText = eachDasboardCategory.label;
             accessTileModel.sectionImageURL = eachDasboardCategory.imageURL;
+            accessTileModel.id = eachDasboardCategory.id;
             if (eachDasboardCategory.items != null && eachDasboardCategory.items != undefined && eachDasboardCategory.items.length > 0) {
               accessTileModel.sectionLinks = [];
               eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {

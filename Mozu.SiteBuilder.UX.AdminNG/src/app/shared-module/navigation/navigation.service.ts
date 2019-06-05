@@ -23,8 +23,8 @@ export class NavigationService {
   public fetchCapabilitiesForSecureForm = (appId) => { 
     this._loggerService.info("NavigationService : fetchCapabilitiesForSecureForm");
     const headers = new HttpHeaders();
-     return this._http.post(Constants.webUrls.secureFormLink +`${appId}`, null, { headers: headers });
-  
+    return this._http.post(Constants.webUrls.secureFormLink +`${appId}`, null, { headers: headers });
+    //return this._http.get(`./assets/json/secureForm.json`);
   }
 
   public fetchIntegrationResponse = (ImportExportLink) => {

@@ -4,6 +4,7 @@ export class AccessTileModel {
     sectionLinks : AccessTileLink [];
     sectionImageURL : string;
     navParent : string;
+    id : string;
 }
 
 export class AccessTileLink {
