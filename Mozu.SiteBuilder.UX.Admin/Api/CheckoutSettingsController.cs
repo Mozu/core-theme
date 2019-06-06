@@ -223,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var settings = await (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetCheckoutSettings()).ReadAsAsync();
             var cards = settings.PaymentSettings.Gateways.SelectMany(g => g.SiteGatewaySupportedCards).ToList();
 
-            var ret = cards.Where(x=>x.CardTypeId != CARD_TYPE.OTHER && x.PaymentType=="CC").Select(x => new KeyValuePair<string, string>(x.CardTypeId, x.CardTypeId)).ToList();
+            var ret = cards.Where(x=> x.PaymentType=="CC").Select(x => new KeyValuePair<string, string>(x.CardTypeId, x.CardTypeId)).ToList();
             return List2(ret);
         }
 
