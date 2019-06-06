@@ -20,10 +20,17 @@ export enum NavigationContainerType {
     locationGroups = 'locationGroups'
 }
 
-export enum DialogCode {
-    Delete= <any>"Delete"
+export enum ConfirmationDialogNotificationCode {
+    DeleteItem = "DeleteItem",
+    SaveItem = "SaveItem"
 }
 
 export enum ConfirmationDialogNotificationType{
-    Dialog
+    Confirmation = "Confirmation",
+    Information = "Information"
+}
+
+export enum NotificationDialogActions {
+    confirm = "Confirm",
+
 }

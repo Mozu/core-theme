@@ -18,8 +18,7 @@ import { QuoteComponent,
 import { QuoteItemsComponent } from './quote/items/items.component';
 
 import { QuoteNegotiationCommentsComponent, 
-  QuoteNegotiationComponent, 
-  QuoteNegotiationHistoryComponent } from './quote/negotiation';
+  QuoteNegotiationComponent } from './quote/negotiation';
 
 @NgModule({
   declarations: [
@@ -28,8 +27,7 @@ import { QuoteNegotiationCommentsComponent,
     QuoteSummaryComponent,
     QuoteItemsComponent,
     QuoteNegotiationComponent,
-    QuoteNegotiationCommentsComponent,
-    QuoteNegotiationHistoryComponent
+    QuoteNegotiationCommentsComponent
   ],
   imports: [
     SharedModule,

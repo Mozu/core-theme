@@ -137,20 +137,14 @@ describe('QuoteItemsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get open confirmation dialog', () => {
-    let itemId ="185bdb4fd2a744bda227aa4700736f2c";
-    let row = 1;
-    component.openQuoteDeleteConfirmationDialog(itemId, row);
-    component.itemId = itemId;
-    component.isShowModel = true;
-    expect(component.isShowModel).toBe(true);
-  });
-
-  it('should get close confirmation dialog', () => {
-    component.closeQuoteDeleteConfirmationDialog();
-    component.isShowModel = false;
-    expect(component.isShowModel).toBe(false);
-  });
+  // it('should get open confirmation dialog', () => {
+  //   let itemId ="185bdb4fd2a744bda227aa4700736f2c";
+  //   let row = 1;
+  //   component.openQuoteDeleteConfirmationDialog(itemId, row);
+  //   component.itemId = itemId;
+  //   component.isShowModel = true;
+  //   expect(component.isShowModel).toBe(true);
+  // });
 
   it('should call service to get success response from mock http json (quote-list)', () => {
     component.quoteId = "0dd322d1429fe45778112b5b00004c44";

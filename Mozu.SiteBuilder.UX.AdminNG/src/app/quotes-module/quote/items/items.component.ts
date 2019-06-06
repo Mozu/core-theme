@@ -11,10 +11,12 @@ import { LoggerService,
   ErrorCode, 
   ErroNotificationType } from '@core';
 
-import { DialogCode, 
-  ConfirmationDialogNotificationType } from '@shared';
+import { NotificationService } from '@global';
 
-import { ConfirmationDialogService } from '@shared/confirmation-dialog/confirmation-dialog.service';
+import { ConfirmationDialogNotificationType, 
+  ConfirmationDialogNotificationCode,
+  NotificationDialogActions,
+  ConfirmationDialogService} from '@shared';
 
 import { QuoteItemsService } from './items.service';
 
@@ -31,14 +33,13 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   public itemId: string;
   public quoteItemTobeDeleted: any;
   quoteItems = [];
+  subscriptions = [];
 
   constructor(private _loggerService : LoggerService,
     public _quoteItemsService: QuoteItemsService,
     private _confirmationDialogService: ConfirmationDialogService,
+    private _notificationService: NotificationService,
     public _modalService: NgbModal ) { 
-      this._confirmationDialogService.listen().subscribe(() => {
-        this.deleteQuoteItem();
-      })
     }
   
     ngOnChanges(changes: SimpleChanges){
@@ -47,12 +48,19 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
     }
 
   ngOnInit() {
+    this.subscriptions.push(
+      this._notificationService.ConfirmationActionFromDialog.subscribe((action: string) => {
+        if (action === NotificationDialogActions.confirm) {
+          this.deleteQuoteItem();
+        }
+      })
+    );
   }
 
   openQuoteDeleteConfirmationDialog(id: string, row: any) {
     this.itemId = id;
     this.quoteItemTobeDeleted = row;
-    this._confirmationDialogService.openConfirmationDialog(DialogCode.Delete, ConfirmationDialogNotificationType.Dialog);
+    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteItem, ConfirmationDialogNotificationType.Confirmation);
   }
 
   deleteQuoteItem(){
@@ -67,4 +75,12 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
       throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
     })
   }
+  
+  ngOnDestroy() {
+    this._loggerService.info("QuoteItemsComponent : ngOnDestroy");
+    this.subscriptions.forEach((s) => {
+        s.unsubscribe();
+    });
+  }
+
 }

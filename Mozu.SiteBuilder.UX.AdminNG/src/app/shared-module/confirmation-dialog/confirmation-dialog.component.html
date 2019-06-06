@@ -1,25 +1,25 @@
 <!-- The Modal -->
-<div class="modal" *ngIf="_displayModal"> 
+<div class="modal" *ngIf="displayModal"> 
   <div class="modal-dialog modal-sm" >
     <div class="modal-content">
 
 <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">
-          {{ _dialogTitle }}
+          {{ dialogTitle }}
         </h4>
       </div>
 
 <!-- Modal body -->
       <div class="modal-body">
-        {{ _message }}
+        {{ message }}
       </div>
 
 <!-- Modal footer -->
       <div class="modal-footer">
         <div>
-          <button class="btn btn-default" *ngIf="_isShowSecondaryButton == true" (click)="_displayModal = false">{{ _secondaryButtonText }}</button>
-          <button class="btn btn-success" (click)="confirm()">{{ _primaryButtonText }}</button>
+          <button class="btn btn-default" *ngIf="isShowSecondaryButton == true" (click)="displayModal = false">{{ secondaryButtonText }}</button>
+          <button class="btn btn-success" (click)="confirm()">{{ primaryButtonText }}</button>
       </div>
       </div>
     </div>

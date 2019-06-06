@@ -113,7 +113,8 @@ export class Constants {
         quoteList : "/assets/json/quote-list.json",
         accountInformation : "/assets/json/account-information.json",
         redirectionLink : "/assets/json/user-redirection.json",
-        shippingMethods:"/assets/json/shipping-methods.json"
+        shippingMethods:"/assets/json/shipping-methods.json",
+        auditLog:"/assets/json/audit-log.json"
     }
 
     static titles = {

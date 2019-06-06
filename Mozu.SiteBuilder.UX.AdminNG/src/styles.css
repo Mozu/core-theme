@@ -425,5 +425,18 @@ p-table .ui-table .pi-ellipsis-v:hover{
     outline: 0px !important;
     color: #2ea195  !important;
 }
-
+/* quotes file upload */
+.pi-plus:before{
+    content: "\e97b" !important;
+    color: #2ea195;
+    font-size: 18px;
+}
+.ui-button-text{
+   visibility: hidden;
+}
+.ui-button-text::before{
+   content: "Attach File" !important;
+   color: #2ea195;
+   visibility: visible;
+}
 /* -----------------------PrimeNG TabView CSS  - End ---------------------------*/

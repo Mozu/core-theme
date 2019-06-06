@@ -15,7 +15,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
 import { CardModule } from 'primeng/card'
 import { PanelMenuModule } from 'primeng/panelmenu';
-
+import { TableModule } from 'primeng/table';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -50,6 +50,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { ShippingAddressComponent, ShippingMethodComponent } from './shipping';
+import { AuditLogComponent } from './audit-log/audit-log.component';
 
 declare var resourcesVersion: any;
 
@@ -78,7 +79,8 @@ export function createTranslateLoader(http: HttpClient) {
                 useFactory: (createTranslateLoader),
                 deps: [HttpClient]
             }
-        })
+        }),
+        TableModule
     ],
     declarations: [
         // pipes
@@ -105,7 +107,8 @@ export function createTranslateLoader(http: HttpClient) {
         AccountInformationComponent,
         ConfirmationDialogComponent,
         ShippingAddressComponent,
-        ShippingMethodComponent
+        ShippingMethodComponent,
+        AuditLogComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -128,6 +131,7 @@ export function createTranslateLoader(http: HttpClient) {
         CardModule,
         TabViewModule,
         PanelMenuModule,
+        TableModule,
         // pipes
         DatexPipe,
         EllipsisPipe,
@@ -152,7 +156,8 @@ export function createTranslateLoader(http: HttpClient) {
         AccountInformationComponent,
         ConfirmationDialogComponent,
         ShippingAddressComponent,
-        ShippingMethodComponent
+        ShippingMethodComponent,
+        AuditLogComponent
     ]
 })
 

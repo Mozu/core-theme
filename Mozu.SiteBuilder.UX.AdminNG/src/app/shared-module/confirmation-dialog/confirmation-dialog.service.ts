@@ -1,52 +1,48 @@
 import { Injectable } from '@angular/core';
-import { Observable, 
-    Subject } from 'rxjs';
+
 import { TranslateService } from '@ngx-translate/core';
 import {
     LoggerService,
 } from '@core';
-import { ConfirmationDialogNotificationType } from '@shared/infrastructure';
+import { NotificationService } from '@global';
+import {  NotificationDialogActions } from '@shared/infrastructure';
+
 
 @Injectable()
 export class ConfirmationDialogService {
 
-    _confirmationDialogTitle: string;
-    _confirmationDialogMessage: string;
-    _primaryButtton: string;
-    _secondaryButton: string;
-    _isShowSecondaryButton: boolean;
-    private _listners = new Subject<any>();
+    confirmationDialogTitle: string;
+    confirmationDialogMessage: string;
+    primaryButttonText: string;
+    secondaryButtonText: string;
+    isShowSecondaryButton: boolean;
     
     showConfirmationDialog: (confirmationDialogTitle: string, confirmationDialogMessage: string, primaryButtonText: string, isShowSecondaryButton: boolean, secondaryButtonText: string) => void;
 
     constructor(private _translate: TranslateService,
+        private _notificationService: NotificationService,
         private _loggerService: LoggerService) { }
 
-    public openConfirmationDialog(dialog: any, notificationType: any): void {
+    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any): void {
         this._loggerService.info("ConfirmationDialogService : openConfirmationDialog ");
 
-        if (notificationType == ConfirmationDialogNotificationType.Dialog) {
-            this._translate.get('SHARED.CONFIRMATION.DIALOG.' + dialog)
+            this._translate.get('SHARED.CONFIRMATIONDIALOG.' + dialogNotificationType + '.' + dialogNotificationCode)
                 .subscribe((successResponse) => {
-                    this._confirmationDialogTitle = successResponse.title;
-                    this._confirmationDialogMessage = successResponse.message;
-                    this._primaryButtton = successResponse.primaryButton;
-                    this._secondaryButton = successResponse.secondaryButton;
-                    this._isShowSecondaryButton = JSON.parse(successResponse.isShowSecondaryButton);
+                    this.confirmationDialogTitle = successResponse.title;
+                    this.confirmationDialogMessage = successResponse.message;
+                    this.primaryButttonText = successResponse.primaryButtonText;
+                    this.secondaryButtonText = successResponse.secondaryButtonText;
+                    this.isShowSecondaryButton = JSON.parse(successResponse.isShowSecondaryButton);
                 }, (errorResponse) => {
 
                 });
-        }
-        this.showConfirmationDialog(this._confirmationDialogTitle, this._confirmationDialogMessage, this._primaryButtton, this._isShowSecondaryButton, this._secondaryButton);
+
+        this.showConfirmationDialog(this.confirmationDialogTitle, this.confirmationDialogMessage, this.primaryButttonText, this.isShowSecondaryButton, this.secondaryButtonText);
 
     }
 
-    listen(): Observable<any> {
-        return this._listners.asObservable();
-     }
-
     confirm() {
-        this._listners.next("ConfirmationEvent");
-     }
+        this._notificationService.notifyConfirmationActionFromDailog(NotificationDialogActions.confirm);
+    }
 
 }

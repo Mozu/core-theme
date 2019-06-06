@@ -4,13 +4,13 @@
   </div>
 
   <div class="col-sm-6 padding-none">
-    <p-tabView class="quote-tabview" (onChange)="onTabChange($event)">
+    <p-tabView class="quote-tabview">
       <p-tabPanel header="{{'QUOTES.Quote.Negotiation.TabContent.CommentTab.heading' | translate }}" [selected]="true">
         <quote-negotiaition-comments></quote-negotiaition-comments>
       </p-tabPanel>
       
       <p-tabPanel header="{{'QUOTES.Quote.Negotiation.TabContent.HistoryTab.heading' | translate }}">
-        <quote-negotiaition-history></quote-negotiaition-history>
+        <audit-log [QuoteId]=quoteId></audit-log>
       </p-tabPanel>
     </p-tabView>
   </div>

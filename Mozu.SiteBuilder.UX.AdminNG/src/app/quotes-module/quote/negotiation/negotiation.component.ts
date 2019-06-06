@@ -12,8 +12,4 @@ export class QuoteNegotiationComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  public onTabChange(event){
-    console.log(event);
-  }
 }

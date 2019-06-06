@@ -116,7 +116,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "{quoteId}/items/{quoteItemId}")]
-        public async Task<Response<DCOrderItem>> getWishlist([FromUri]string quoteId, [FromUri]string quoteItemId)
+        public async Task<Response<DCOrderItem>> GetQuoteItemWishlist([FromUri]string quoteId, [FromUri]string quoteItemId)
         {
             var resp = (await _quoteWebApiClient.GetQuoteItem(quoteId, quoteItemId)).ReadAsSync();
             return Single2(resp);
