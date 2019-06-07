@@ -1,5 +1,6 @@
 h4.physicalloc{margin-bottom: 10px;}
-body .ui-treetable .ui-treetable-tbody > tr > td{font-size: 12px; font-weight: 600; border-width: 0 0 0.5px 0; border-color:#9f9b9b21; border-style: solid;  }
+body .ui-treetable .ui-treetable-tbody > tr > td{font-size: 12px;  border-width: 0 0 0.5px 0; border-color:#9f9b9b57; border-style: solid;  }
+body .ui-treetable .ui-treetable-tbody > tr > th{font-weight: 600}
 .ui-treetable-scrollable-body::-webkit-scrollbar-track
 {	
 	border-radius: 10px;

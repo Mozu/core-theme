@@ -6,3 +6,15 @@
     text-indent: -99999px;
     overflow: hidden;
 }
+
+.forwidth {
+    width: 1.5em;
+}
+
+.forwidth1 {
+    width: 3em;
+}
+
+.forheight {
+    height:34px
+}

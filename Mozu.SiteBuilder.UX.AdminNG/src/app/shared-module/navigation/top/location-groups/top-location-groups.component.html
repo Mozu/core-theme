@@ -1,13 +1,16 @@
 <div class="col-md-11 sidebar">
     <div class="row">
-        <div class=" heading col-md-2 col-xs-6 col-sm-6">
+        <div class=" heading col-md-3 col-xs-2 col-sm-2">
             <h4 class="forlineheight">{{'SHARED.HEADER.pageTitle.locationGroups' | translate }}</h4>
         </div>
-        
-        <button type="button" class="sbbtn btn btn-success pull-right"  (click)="showCreateLG()" *ngIf="!model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.create' | translate}}</button>
-        <div class="pull-right">
-            <button type="button" class="btn cancelbtn" (click)="cancelCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.cancel' | translate}}</button>
-            <button type="button" class="sbbtn btn btn-success" (click)="saveCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+        <div class="col-md-9 col-sm-8 col-xs-7 pull-right">
+            <button type="button" class="sbbtn btn btn-success pull-right"  (click)="showCreateLG()" *ngIf="!model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.create' | translate}}</button>
+        </div>
+        <div class="col-md-8 col-sm-8 col-xs-7 pull-right">
+            <div class="pull-right">
+                <button type="button" class="btn cancelbtn" (click)="cancelCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.cancel' | translate}}</button>
+                <button type="button" class="sbbtn btn btn-success" (click)="saveCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+            </div>
         </div>
     </div>
 </div>

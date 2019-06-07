@@ -233,7 +233,7 @@ p-table .ui-table .ui-table-tbody > tr > td {
     padding: 8px 2px !important;
     color: #3f3f3f !important;
     font-family:"proxima-nova", sans-serif !important;
-    font-weight: 600;
+    /* font-weight: 600; */
     word-break: break-all;
 }
 
@@ -570,3 +570,37 @@ quote-summary .summary-link:hover, account-information .summary-link:hover{
   .ui-widget-header {
     background: #ffffff;
   }
+
+.location-group-container .ui-table-wrapper{ height: 100%; background: #fff; border-radius: 5px 5px 0 0;}
+.location-group-container p-table .ui-widget,.location-group-container table { height: calc(100% - 35px) !important;}
+.location-group-container p-table .ui-table .ui-table-thead>tr>th{padding: 8px 20px !important; width: 49%;font-weight: 600 !important;}
+.location-group-container p-table .ui-table .ui-table-thead>tr>td{ font-weight: normal !important;}
+.location-group-container p-table .ui-table .ui-table-thead{background:#f7f7f7 !important;  border-radius: 5px 5px 0 0; }
+.location-group-container p-table .ui-table .ui-table-tbody > tr:hover td{
+    cursor: pointer;
+    /* background-color: #eaeaea !important; */
+    background-color: rgb(250, 250, 250) !important;
+    color: #333333 !important;
+}
+.location-group-container p-table tbody.ui-table-tbody{ display: table-footer-group;}
+locations-list p-table .ui-table .ui-table-thead>tr>td{padding: 8px 0 !important; font-weight: normal !important;}
+
+.selected-locations-list p-table .ui-table .ui-table-tbody > tr > td {
+    font-weight: normal !important;
+    border-color: #9f9b9b57 !important;
+}
+
+@media screen and (min-width: 768px) {
+    .location-group-container p-table tbody.ui-table-tbody{ display: table-footer-group;}
+}
+@media screen and (max-width: 40em){
+    .location-group-container p-table .ui-table .ui-table-tbody > tr > td{
+        padding: 8px 15px !important;
+        display: table-cell;
+        width: auto !important;
+        float: none !important;
+    }
+    .location-group-container .ui-table-responsive .ui-table-thead>tr>th, .location-group-container  .ui-table-responsive .ui-table-tfoot>tr>td {
+        display: table-cell !important;
+    }
+}
