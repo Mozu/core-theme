@@ -47,7 +47,7 @@ export class Constants {
         empty: '',
         default: ConfigurationSettings.defaultRoutePrefix,
         quotes : 'quotes',
-        quotesEdit : 'quotesEdit',
+        quotesEdit : 'quotes/edit',
         locationGroups : 'locationGroups',
     };
     

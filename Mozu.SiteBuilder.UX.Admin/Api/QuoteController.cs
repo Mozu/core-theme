@@ -36,6 +36,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 var quote = (await _quoteWebApiClient.GetQuote(pagingParams.id)).ReadAsSync();
 
+                if (quote == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
                 quotes = new DC.QuoteCollection { Items = new List<DC.Quote> { quote }, TotalCount = 1 };
             }
             else
@@ -56,8 +58,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<HttpResponseMessage> Create(DC.Quote quote)
         {
-            var resp = (await _quoteWebApiClient.CreateQuote(quote)).ReadAsSync();
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+            var quoteCreateResponse = (await _quoteWebApiClient.CreateQuote(quote)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(quoteCreateResponse));
         }
 
 
@@ -69,22 +71,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new ArgumentException("Quote Id required");
             }
 
-            var resp = (await _quoteWebApiClient.UpdateQuote(quote.Id, quote)).ReadAsSync();
-            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
+            var quoteUpdateResponse = (await _quoteWebApiClient.UpdateQuote(quote.Id, quote)).ReadAsSync();
+            return this.Request.CreateResponse(HttpStatusCode.OK, Single2(quoteUpdateResponse));
         }
 
         [HttpGetRoute(UriTemplate = "{quoteId}")]
-        public async Task<Response<DC.Quote>> getWishlist([FromUri]string quoteId)
+        public async Task<Response<DC.Quote>> GetWishlist([FromUri]string quoteId)
         {
-            var resp = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
-            return Single2(resp);
+            var quoteGetResponse = (await _quoteWebApiClient.GetQuote(quoteId)).ReadAsSync();
+            return Single2(quoteGetResponse);
         }
 
         [HttpDeleteRoute(UriTemplate = "{quoteId}")]
         public async Task<Response<DC.Quote>> DeleteQuote([FromUri]string quoteId)
         {
-
-            var response = (await _quoteWebApiClient.DeleteQuote(quoteId)).ReadAsSync();
+            var quoteDeleteResponse = (await _quoteWebApiClient.DeleteQuote(quoteId)).ReadAsSync();
             return Message3<DC.Quote>(true, "Quote Successfully Deleted");
         }
 
@@ -99,7 +100,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 quoteItems = new DC.QuoteItemCollection();
                 quoteItems.Items.Add(quoteItem);
                 quoteItems.TotalCount = 1;
-
             }
             else
             {
@@ -118,14 +118,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "{quoteId}/items/{quoteItemId}")]
         public async Task<Response<DCOrderItem>> GetQuoteItemWishlist([FromUri]string quoteId, [FromUri]string quoteItemId)
         {
-            var resp = (await _quoteWebApiClient.GetQuoteItem(quoteId, quoteItemId)).ReadAsSync();
-            return Single2(resp);
+            var quoteItemGetResponse = (await _quoteWebApiClient.GetQuoteItem(quoteId, quoteItemId)).ReadAsSync();
+            return Single2(quoteItemGetResponse);
         }
 
         [HttpDeleteRoute(UriTemplate = "{quoteId}/items/{quoteItemId}")]
         public async Task<Response<DC.Quote>> DeleteQuoteItem([FromUri]string quoteId, [FromUri]string quoteItemId)
         {
-            var response = (await _quoteWebApiClient.DeleteQuoteItem(quoteId, quoteItemId)).ReadAsSync();
+            var quoteItemDeleteResponse = (await _quoteWebApiClient.DeleteQuoteItem(quoteId, quoteItemId)).ReadAsSync();
             return Message3<DC.Quote>(true, "QuoteItem Successfully Deleted");
         }
     }

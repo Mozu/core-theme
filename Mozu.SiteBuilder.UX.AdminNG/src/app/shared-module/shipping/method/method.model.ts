@@ -1,4 +1,4 @@
-export class ShippingRate {
+export class ShippingRateModel {
     shippingMethodCode: string;
     shippingMethodName: string;
     shippingZoneCode: string;

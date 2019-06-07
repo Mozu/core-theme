@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
 @font-face{
     font-family:"proxima-nova";
     src:url("./assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
@@ -440,3 +442,9 @@ p-table .ui-table .pi-ellipsis-v:hover{
    visibility: visible;
 }
 /* -----------------------PrimeNG TabView CSS  - End ---------------------------*/
+
+/* shipping information css start */
+shipping-method .ng-select{
+    width: 275px;
+}
+/* shipping information css end */

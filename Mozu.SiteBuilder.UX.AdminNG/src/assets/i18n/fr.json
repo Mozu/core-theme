@@ -1,181 +1,183 @@
 ﻿{
-"PUBLIC": {
-  "Login": {
-    "pageTitle": "Xpanxion Connexion",
-    "title": "Bienvenue à Xpanxion",
-    "emailAddressPlaceHolder": "Adresse e-mail",
-    "passwordPlaceHolder": "Mot de passe",
-    "loginButton": "S'identifier"      
-  }
-},
-"SHARED": {
-  "NAVIGATION": {
-    "productMenu": "product",
-    "offerMenu": "offer",
-    "orderMenu": "order",
-    "invoiceMenu": "invoice",
-    "help": "Help"
-  },
-  "HEADER": {
-    "logoutConfirmation": {
-      "dialogTitle": "Connectez - Out",
-      "dialogMessage": "Voulez-vous quitter l'application?",
-      "primaryButton": "Oui",
-      "secondaryButton": "Non"
-    },
-    "userMenu": {
-      "profileMenu": "Profile",
-      "helpMenu": "Help",
-      "logoutMenu": "Connectez - Out",
-      "userMessage": "salut"
-    },
-    "pageTitle": {
-      "quotes": "Quotes"
-    }  
-  },
-  "FOOTER": {
-    "proweredBy": "Powered By:",
-    "copyRight": "© Xpanxion",
-    "customerSupport": "Customer Support at",
-    "supportEmail": "test"
-  },
-  "ACCOUNT":{
-    "Information": {
-      "heading": "Account",
-      "company": "Company:",
-      "companyAdminEmail": "Company Admin Email:",
-      "salesRep": "Sales Rep:"
+  "PUBLIC": {
+    "Login": {
+      "pageTitle": "Xpanxion Connexion",
+      "title": "Bienvenue à Xpanxion",
+      "emailAddressPlaceHolder": "Adresse e-mail",
+      "passwordPlaceHolder": "Mot de passe",
+      "loginButton": "S'identifier"
     }
   },
-  "SHIPPING":{
-    "Address": {
-      "shippingInformation": "Informations sur la livraison",
-      "shippingAddress": "Adresse de livraison",
-      "noShippingAddressMessage":"Vous n'avez pas d'adresse de livraison."            
+  "SHARED": {
+    "NAVIGATION": {
+      "productMenu": "product",
+      "offerMenu": "offer",
+      "orderMenu": "order",
+      "invoiceMenu": "invoice",
+      "help": "Help"
     },
-    "Method":{
-      "shippingMethodAndPrice": "Méthode d'expédition et prix",
-      "noShippingRatesAvailableMessage":"Désolé, les tarifs ne sont pas disponibles pour cette citation."
-    }
-  },
-  "CONFIRMATIONDIALOG":{
-    "Confirmation":{
-      "DeleteItem": {
-        "title": " Delete Item",
-        "message": " Are you certain you want to delete this item?",
-        "primaryButtonText": "Yes",
-        "secondaryButtonText": "No",
-        "isShowSecondaryButton": "true"
+    "HEADER": {
+      "logoutConfirmation": {
+        "dialogTitle": "Connectez - Out",
+        "dialogMessage": "Voulez-vous quitter l'application?",
+        "primaryButton": "Oui",
+        "secondaryButton": "Non"
+      },
+      "userMenu": {
+        "profileMenu": "Profile",
+        "helpMenu": "Help",
+        "logoutMenu": "Connectez - Out",
+        "userMessage": "salut"
+      },
+      "pageTitle": {
+        "quotes": "Quotes"
       }
     },
-    "Information":{
-      "SaveItem": {
-        "title": " Save Item",
-        "message": " Item is saved successfully",
-        "primaryButtonText": "Ok",
-        "secondaryButtonText": "",
-        "isShowSecondaryButton": "false"
-      }
-    }
-  },
-  "AUDITLOG": {
-    "GridHeader": {
-      "date": "Date",
-      "event": "Event",
-      "user": "User"    
-    }
-  }
-},
-"MESSAGES": {
-  "Dialog": {
-    "AuthFailedInvalidAuthResponse": {
-      "title": "Authentication Failed",
-      "message": "Echec de l'authentification pour l'utilisateur spécifié. Veuillez entrer des informations d'identification valides et réessayer. Si vous rencontrez toujours le même problème, contactez l'équipe de support technique.",
-      "primaryButton": "D'accord",
-      "secondaryButton": "",
-      "isShowSecondaryButton": "false",
-      "isLogoutOnPrimaryButton": "false"
-    }
-  },
-  "Toastr": {
-    "Fatal": {
-      "message": "Une erreur s'est produite lors du traitement de votre demande. Réessayez ultérieurement ou contactez l'équipe du support client.",
-      "messageType": "Error"
+    "FOOTER": {
+      "proweredBy": "Powered By:",
+      "copyRight": "© Xpanxion",
+      "customerSupport": "Customer Support at",
+      "supportEmail": "test"
     },
-    "EmptyEmailAddress": {
-      "message": "Veuillez entrer l'adresse e-mail.",
-      "messageType": "Warning"
-    },
-    "EmptyPassword": {
-      "message": "Veuillez entrer le mot de passe.",
-      "messageType": "Warning"
-    }  
-  }
-},
-"QUOTES": {
-  "GridHeader": {
-    "b2bAccountName": "B2B Account Name",
-    "quoteName": "Quote Name",
-    "buyerName": "Buyer Name",
-    "status": "Status",
-    "lastModifiedDate": "Last Modified Date",
-    "quoteTotal": "Quote Total"      
-  },
-  "GridContextMenu": {
-    "edit": "Edit"
-  },
-  "Quote": {
-    "Information": {
-      "heading": "Quote",
-      "name": "Name:",
-      "status": "Status:",
-      "created": "Created:",
-      "createdBy": "Created By:",
-      "expirationDate": "Expiration Date:"
-    },
-    "Items":{
-      "heading": "Items Quoted",
-      "GridHeader": {
-        "nameAndSKU": "Name & SKU",
-        "stock": "Stock",
-        "cost": "Cost",
-        "catalogPrice": "Catalog Price",
-        "cartPrice": "Cart Price",
-        "proposedPrice": "Proposed Price",
-        "qty": "Qty",
-        "subtotal": "Subtotal",
-        "estimatedTax": "Estimated Tax",
-        "subtotalExclTax": "Subtotal (Excl. Tax)" 
-      },
-      "GridLabels": {
-        "sku": "SKU:",
-        "size": "Size:",
-        "color": "Color:"
-      },
-      "GridButtons": {
-        "addProduct": "Add Product By SKU",
-        "configure": "Configure",
-        "updatePrices": "Update Prices",
-        "recalculateQuote": "Recalculate Quote"
-      },
-      "GridMessages": {
-        "emptyMessage": "No quote items to display"
+    "ACCOUNT": {
+      "Information": {
+        "heading": "Account",
+        "company": "Company:",
+        "companyAdminEmail": "Company Admin Email:",
+        "salesRep": "Sales Rep:"
       }
     },
-    "Negotiation": {
-      "heading": "Negotiation",
-      "TabContent": {
-        "CommentTab": {
-          "heading": "Comments"
-        },
-        "HistoryTab": {
-          "heading": "History Log"
+    "SHIPPING": {
+      "Address": {
+        "shippingInformation": "Informations sur la livraison",
+        "shippingAddress": "Adresse de livraison",
+        "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison."
+      },
+      "Method": {
+        "shippingMethodAndPrice": "Méthode d'expédition et prix",
+        "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
+        "loadingText": "Chargement...",
+        "notFoundText": "Aucune méthode d'expédition disponible."
+      }
+    },
+    "CONFIRMATIONDIALOG": {
+      "Confirmation": {
+        "DeleteItem": {
+          "title": " Delete Item",
+          "message": " Are you certain you want to delete this item?",
+          "primaryButtonText": "Yes",
+          "secondaryButtonText": "No",
+          "isShowSecondaryButton": "true"
         }
       },
-      "Total": {
-        "heading": "Quote Total"
+      "Information": {
+        "SaveItem": {
+          "title": " Save Item",
+          "message": " Item is saved successfully",
+          "primaryButtonText": "Ok",
+          "secondaryButtonText": "",
+          "isShowSecondaryButton": "false"
+        }
+      }
+    },
+    "AUDITLOG": {
+      "GridHeader": {
+        "date": "Date",
+        "event": "Event",
+        "user": "User"
+      }
+    }
+  },
+  "MESSAGES": {
+    "Dialog": {
+      "AuthFailedInvalidAuthResponse": {
+        "title": "Authentication Failed",
+        "message": "Echec de l'authentification pour l'utilisateur spécifié. Veuillez entrer des informations d'identification valides et réessayer. Si vous rencontrez toujours le même problème, contactez l'équipe de support technique.",
+        "primaryButton": "D'accord",
+        "secondaryButton": "",
+        "isShowSecondaryButton": "false",
+        "isLogoutOnPrimaryButton": "false"
+      }
+    },
+    "Toastr": {
+      "Fatal": {
+        "message": "Une erreur s'est produite lors du traitement de votre demande. Réessayez ultérieurement ou contactez l'équipe du support client.",
+        "messageType": "Error"
+      },
+      "EmptyEmailAddress": {
+        "message": "Veuillez entrer l'adresse e-mail.",
+        "messageType": "Warning"
+      },
+      "EmptyPassword": {
+        "message": "Veuillez entrer le mot de passe.",
+        "messageType": "Warning"
+      }
+    }
+  },
+  "QUOTES": {
+    "GridHeader": {
+      "b2bAccountName": "B2B Account Name",
+      "quoteName": "Quote Name",
+      "buyerName": "Buyer Name",
+      "status": "Status",
+      "lastModifiedDate": "Last Modified Date",
+      "quoteTotal": "Quote Total"
+    },
+    "GridContextMenu": {
+      "edit": "Edit"
+    },
+    "Quote": {
+      "Information": {
+        "heading": "Quote",
+        "name": "Name:",
+        "status": "Status:",
+        "created": "Created:",
+        "createdBy": "Created By:",
+        "expirationDate": "Expiration Date:"
+      },
+      "Items": {
+        "heading": "Items Quoted",
+        "GridHeader": {
+          "nameAndSKU": "Name & SKU",
+          "stock": "Stock",
+          "cost": "Cost",
+          "catalogPrice": "Catalog Price",
+          "cartPrice": "Cart Price",
+          "proposedPrice": "Proposed Price",
+          "qty": "Qty",
+          "subtotal": "Subtotal",
+          "estimatedTax": "Estimated Tax",
+          "subtotalExclTax": "Subtotal (Excl. Tax)"
+        },
+        "GridLabels": {
+          "sku": "SKU:",
+          "size": "Size:",
+          "color": "Color:"
+        },
+        "GridButtons": {
+          "addProduct": "Add Product By SKU",
+          "configure": "Configure",
+          "updatePrices": "Update Prices",
+          "recalculateQuote": "Recalculate Quote"
+        },
+        "GridMessages": {
+          "emptyMessage": "No quote items to display"
+        }
+      },
+      "Negotiation": {
+        "heading": "Negotiation",
+        "TabContent": {
+          "CommentTab": {
+            "heading": "Comments"
+          },
+          "HistoryTab": {
+            "heading": "History Log"
+          }
+        },
+        "Total": {
+          "heading": "Quote Total"
+        }
       }
     }
   }
-}
 }

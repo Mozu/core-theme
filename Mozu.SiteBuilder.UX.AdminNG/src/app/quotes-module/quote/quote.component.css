@@ -27,7 +27,8 @@
 }
 .quote-heading{
     font-size: 15px !important;    
-    padding: 20px 0px 4px 15px;    
+    padding: 20px 0px 4px 15px;
+    border-bottom: 1.5px solid #f2f2f2;    
 }
 .quote-heading p{
     margin: 0px;
