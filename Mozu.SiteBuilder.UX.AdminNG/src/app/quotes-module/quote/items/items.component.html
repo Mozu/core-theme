@@ -1,13 +1,13 @@
 <div class="col-sm-12 summary-heading">
-    <div class="col-sm-6">
+    <div class="col-md-6 col-sm-12">
         <p>{{'QUOTES.Quote.Items.heading' | translate }} </p>
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-6 col-sm-12">
         <button class="btn btn-add">{{'QUOTES.Quote.Items.GridButtons.addProduct' | translate }}</button>
         <button class="btn btn-add">{{'QUOTES.Quote.Items.GridButtons.updatePrices' | translate }}</button>
     </div>
 </div>
-<div class="col-sm-12 quote-items-grid">
+<div class="col-sm-12 quote-items-grid" id="quotedItemsGrid">
     <p-table [value]="quoteItems" [responsive]="true">
         <ng-template pTemplate="header">
             <tr>
@@ -49,13 +49,13 @@
                 <td>{{rowData.itemTaxTotal | currency}}</td>
                 <td>{{rowData.total | currency}}</td>
                 <td style="width: 4em">
-                   <button class="btn-delete-icon"><i class="pi pi-times" (click)="openQuoteDeleteConfirmationDialog(rowData.id, rowIndex)"></i></button>
+                   <button class="btn-delete-icon" id="deleteQuoteItem"><i class="pi pi-times" (click)="openQuoteDeleteConfirmationDialog(rowData.id, rowIndex)"></i></button>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td [attr.colspan]="11">
+                    <td [attr.colspan]="11" id="emptyQuotedItemsGrid">
                             {{'QUOTES.Quote.Items.GridMessages.emptyMessage' | translate }}
                     </td>
                 </tr>

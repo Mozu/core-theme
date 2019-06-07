@@ -1,8 +1,14 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { Logs } from 'selenium-webdriver';
-import { AuditLogModel } from './audit-log.model';
-import { LoggerService, ErrorCode, HttpError, ErroNotificationType } from '@core';
-import { AuditLogService } from './audit-log.service';
+import { Component, 
+  OnInit, 
+  Input, 
+  SimpleChanges, 
+  OnChanges } from '@angular/core';
+import { LoggerService, 
+  ErrorCode, 
+  HttpError, 
+  ErroNotificationType } from '@core';
+import { AuditLogModel, 
+  AuditLogService } from './index';
 
 @Component({
   selector: 'audit-log',
@@ -10,7 +16,7 @@ import { AuditLogService } from './audit-log.service';
   styleUrls: ['./audit-log.component.css'],
   providers: [AuditLogService]
 })
-export class AuditLogComponent implements OnInit {
+export class AuditLogComponent implements OnChanges, OnInit {
   public model: AuditLogModel;
   @Input('QuoteId') quoteId: string;
 

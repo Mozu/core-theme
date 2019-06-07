@@ -1,19 +1,22 @@
 export class AuditLogModel {
-    success: boolean;
-    total: number;
+    startIndex: number;
+    pageSize: number;
+    pageCount: number;
+    totalCount: number;
     items: Item[];
 }
 
     export class PhoneNumbers {
         Home: string;
         Mobile: string;
+        Work: string;
     }
 
     export class Address {
         Address1: string;
-        Address2?: any;
-        Address3?: any;
-        Address4?: any;
+        Address2: string;
+        Address3: string;
+        Address4: string;
         CityOrTown: string;
         StateOrProvince: string;
         PostalOrZipCode: string;
@@ -23,10 +26,11 @@ export class AuditLogModel {
     }
 
     export class FulfillmentContact {
-        Id: number;
         Email: string;
         FirstName: string;
+        MiddleNameOrInitial: string;
         LastNameOrSurname: string;
+        CompanyOrOrganization: string;
         PhoneNumbers: PhoneNumbers;
         Address: Address;
     }
@@ -40,78 +44,24 @@ export class AuditLogModel {
 
     export class UpdatedFulfillment {
         FulfillmentContact: FulfillmentContact;
-        ShippingMethodCode: string;
-        ShippingMethodName: string;
+        ShippingMethodCode?: any;
+        ShippingMethodName?: any;
         IsDestinationCommercial?: any;
         Data?: any;
         AuditInfo: AuditInfo;
     }
 
-    export class PhoneNumbers2 {
-        Home: string;
-        Mobile: string;
-    }
-
-    export class Address2 {
-        Address1: string;
-        Address2?: any;
-        Address3?: any;
-        Address4?: any;
-        CityOrTown: string;
-        StateOrProvince: string;
-        PostalOrZipCode: string;
-        CountryCode: string;
-        AddressType: string;
-        IsValidated: boolean;
-    }
-
-    export class FulfillmentContact2 {
-        Id: number;
-        Email: string;
-        FirstName: string;
-        LastNameOrSurname: string;
-        PhoneNumbers: PhoneNumbers2;
-        Address: Address2;
-    }
-
-    export class AuditInfo2 {
-        UpdateDate: Date;
-        CreateDate: Date;
-        UpdateBy: string;
-        CreateBy: string;
-    }
-
-    export class OriginalFulfillment {
-        FulfillmentContact: FulfillmentContact2;
-        ShippingMethodCode?: any;
-        ShippingMethodName?: any;
-        IsDestinationCommercial?: any;
-        Data?: any;
-        AuditInfo: AuditInfo2;
-    }
-
     export class Metadata {
-        transactionId: string;
-        paymentServiceTransactionId?: any;
-        paymentType: string;
-        amountCollected: number;
-        amountCredited: number;
-        amountRequested: number;
         oldValue: string;
         newValue: string;
         updatedFulfillment: UpdatedFulfillment;
-        originalFulfillment: OriginalFulfillment;
+        oldPriceListCode?: any;
+        newPriceListCode: string;
     }
 
     export class Item {
         id: string;
         correlationId: string;
-        userId: string;
-        userFirstName: string;
-        userLastName: string;
-        userScopeType: string;
-        appId: string;
-        appKey: string;
         subjectType: string;
         success: boolean;
         identifier: string;
@@ -122,9 +72,12 @@ export class AuditLogModel {
         oldValue: string;
         newValue: string;
         createDate: Date;
+        userId: string;
+        userFirstName: string;
+        userLastName: string;
+        userScopeType: string;
+        appId: string;
+        appKey: string;
     }
-
-
-
 
 

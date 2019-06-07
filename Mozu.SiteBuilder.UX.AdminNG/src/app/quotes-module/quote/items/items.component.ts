@@ -4,8 +4,6 @@ import { Component,
   SimpleChanges, 
   OnChanges } from '@angular/core';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { LoggerService, 
   HttpError, 
   ErrorCode, 
@@ -38,8 +36,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   constructor(private _loggerService : LoggerService,
     public _quoteItemsService: QuoteItemsService,
     private _confirmationDialogService: ConfirmationDialogService,
-    private _notificationService: NotificationService,
-    public _modalService: NgbModal ) { 
+    private _notificationService: NotificationService ) { 
     }
   
     ngOnChanges(changes: SimpleChanges){

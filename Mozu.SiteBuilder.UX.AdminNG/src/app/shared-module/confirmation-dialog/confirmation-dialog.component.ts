@@ -3,8 +3,6 @@ import {
   OnInit
 } from '@angular/core';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { LoggerService } from '@core/services';
 
 import { ConfirmationDialogService } from './confirmation-dialog.service';
@@ -26,7 +24,6 @@ export class ConfirmationDialogComponent implements OnInit {
   secondaryButtonText: string;
 
   constructor(private _loggerService: LoggerService,
-    private _modalService: NgbModal,
     private _confirmationDialogService: ConfirmationDialogService) {
     this._loggerService.info("ConfirmationDialogComponent : constructor ");
   }
@@ -39,7 +36,6 @@ export class ConfirmationDialogComponent implements OnInit {
     this.primaryButtonText = primaryButtonText;
     this.secondaryButtonText = secondaryButtonText;
     this.displayModal = true;
-    this._modalService.open('confirmationModal');
   }
 
   ngOnInit() {

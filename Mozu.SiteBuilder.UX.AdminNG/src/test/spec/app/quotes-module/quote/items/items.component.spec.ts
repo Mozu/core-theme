@@ -3,7 +3,8 @@ import { async,
   TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA, 
-  DebugElement } from '@angular/core';
+  DebugElement, 
+  SimpleChange} from '@angular/core';
 import { HttpClient, 
   HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, 
@@ -22,8 +23,10 @@ import { LoggerService,
   HttpClientService, 
   httpClientServiceCreator } from '@core';
 import { GlobalModule } from '@global/global.module';
+import { NotificationService } from '@global/services';
+import { ConfirmationDialogService } from '@shared';
 import { QuoteItemsComponent } from 'app/quotes-module/quote/items/items.component';
-
+import { QuoteItemsService } from 'app/quotes-module/quote';
 
 describe('QuoteItemsComponent', () => {
   let component: QuoteItemsComponent;
@@ -31,6 +34,7 @@ describe('QuoteItemsComponent', () => {
   let element;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
+  let notificationService: NotificationService;
   let httpMock: HttpTestingController;
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
 
@@ -93,7 +97,9 @@ describe('QuoteItemsComponent', () => {
         UtilityService, 
         EnvironmentConfig, 
         AuthService,
-        NgbModal,
+        QuoteItemsService,
+        ConfirmationDialogService,
+        NotificationService,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
@@ -107,6 +113,7 @@ describe('QuoteItemsComponent', () => {
     loggerService = TestBed.get(LoggerService);
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
     httpMock = TestBed.get(HttpTestingController);
+    notificationService = TestBed.get(NotificationService);
   }));
 
   beforeEach(() => {
@@ -137,14 +144,41 @@ describe('QuoteItemsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should get open confirmation dialog', () => {
-  //   let itemId ="185bdb4fd2a744bda227aa4700736f2c";
-  //   let row = 1;
-  //   component.openQuoteDeleteConfirmationDialog(itemId, row);
-  //   component.itemId = itemId;
-  //   component.isShowModel = true;
-  //   expect(component.isShowModel).toBe(true);
-  // });
+  it('should fetch quoteItems from ngOnChange()',  () => {
+    component.quote = dummyQuoteList;
+    component.ngOnChanges({
+      quote: new SimpleChange(null, component.quote, true)
+    });
+    component.quoteItems = component.quote;
+    fixture.detectChanges(); 
+    fixture.whenStable().then(() => {
+      expect(component.quoteItems['items'].length).toBe(1);
+    });
+   });
+
+  it('should call notification subject from ngOnInit()',  () => {
+    component.ngOnInit();
+  });
+
+  //  it('should call openQuoteDeleteConfirmationDialog on click of cross icon to delete quoted item', async(() => {
+  //   const spy = spyOn(component, 'openQuoteDeleteConfirmationDialog');
+  //   fixture.detectChanges();
+
+  //   component.itemId = "";
+  //   component.quoteItemTobeDeleted = "";
+
+  //   fixture.detectChanges();
+  //   const cell = fixture.debugElement.query(By.css('#deleteQuoteItem'));
+  //   cell.nativeElement.click();
+
+  //   fixture.detectChanges();
+  //   fixture.whenStable().then(() => {
+  //     expect(spy).toHaveBeenCalled();
+  //   });
+
+  //let action = "";
+  //notificationService.ConfirmationActionFromDialog.subscribe()
+  // }));
 
   it('should call service to get success response from mock http json (quote-list)', () => {
     component.quoteId = "0dd322d1429fe45778112b5b00004c44";

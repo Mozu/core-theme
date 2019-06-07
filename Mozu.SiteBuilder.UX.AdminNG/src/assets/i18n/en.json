@@ -161,10 +161,13 @@
       "Negotiation": {
         "heading": "Negotiation",
         "TabContent": {
-          "CommentTab": {
-            "heading": "Comments"
+          "Comments": {
+            "heading": "Comments",
+            "createdDate": "19, 2017, 9:13:23 AM (Lois Price)",
+            "message": "Can you give us a volume discount on this product? Thanks - Lois Price",
+            "addCommentLabel": "Add your comment"
           },
-          "HistoryTab": {
+          "AuditLog": {
             "heading": "History Log"
           }
         },

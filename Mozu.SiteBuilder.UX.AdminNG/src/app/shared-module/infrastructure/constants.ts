@@ -125,7 +125,7 @@ export class Constants {
         closeLabel :  'close'
     }
 
-    static numberOfRows: number = 10;
+    static numberOfRows: number = 15;
 
     static integrationsModalClass = 'integrationsModal';
     static integrationsBackdropModalClass = 'integrationsBackdropModal';
