@@ -54,6 +54,7 @@ export class NavigationLeftComponent implements OnInit {
     this._loggerService.info("NavigationLeftComponent : ngOnInit");
     this.model = new LeftNavigationModel();
     this.fetchNavigationItem();
+    this.model.filteredNavigationLinks = [];
   }
 
   public fetchNavigationItem = () => {
@@ -78,7 +79,7 @@ export class NavigationLeftComponent implements OnInit {
   public appendDynamicLinks = (allFilteredLinks) => {
     this._loggerService.info("NavigationLeftComponent : appendDynamicLinks");
     var distinctDynamicLinks = this.navigationService.distictImportExportLinks(this._sharedData);
-       
+       console.log(distinctDynamicLinks);
         var filteredDynamicLinks = [];
         
         distinctDynamicLinks.forEach(element => {
@@ -104,12 +105,13 @@ export class NavigationLeftComponent implements OnInit {
         modalRef.componentInstance.iframeResourceURL =  this.model.dynamicLinkIframeURL;
      }
     }, (errResponse) => {
-      this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse");
+      this._loggerService.info("NavigationLeftComponent : navigationService.fetchCapabilitiesForSecureForm_errResponse");
       throw new HttpError(ErrorCode.fetchCapabilitiesForSecureFormGetFailed,ErroNotificationType.Toaster);
     });
   }
 
   public megaMenuToggleIcon = (event) => {
+    this._loggerService.info("NavigationLeftComponent : megaMenuToggleIcon");
     var element = event.target;
     element.classList.toggle("active");
   }

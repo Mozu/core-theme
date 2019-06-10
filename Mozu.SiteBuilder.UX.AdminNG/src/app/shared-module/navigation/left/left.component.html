@@ -4,7 +4,7 @@
         <p-tabView>
             <p-tabPanel header="Main">
                 <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
-                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign">{{menuHeader.label}}
+                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign button">{{menuHeader.label}}
                 </div>
                  <ul id="{{menuHeader.id}}"  class="collapse in">
                         <li *ngFor="let menuOptions of menuHeader.items">
@@ -27,8 +27,8 @@
                </div>
             </p-tabPanel>
             <p-tabPanel header="System">
-               <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">    
-                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id"><span class="menuHeaderAlign">{{menuHeader.label}}</span>
+               <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">
+                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign">{{menuHeader.label}}
                 </div>
                 <ul id="{{menuHeader.id}}"  class="collapse in">
                         <li *ngFor="let menuOptions of menuHeader.items">
