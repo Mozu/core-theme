@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.modal.EditTrackingNumberNew', {
                     fieldLabel: 'Tracking Number',
                     required: false,
                     value: trackingNumber,
-                    width: '100%'
+                    width: 270,
                 },
                 {
                     xtype: 'combobox',

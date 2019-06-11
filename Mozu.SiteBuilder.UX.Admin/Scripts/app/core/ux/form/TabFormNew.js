@@ -33,7 +33,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 //item.minHeight = this.subPanelMinHeight;
                 originalItems.push(item)
             }
-        })
+        });
 
         this.formContainer = Ext.widget({
             xtype: 'container',
@@ -52,7 +52,6 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             }
         });
 
-
         this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
@@ -63,7 +62,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             xtype: 'dataview',
             store: this.navStore,
             itemId: 'navFormNav',
-            cls: 'taco-form-nav',
+            cls: 'taco-form-nav-new',
             autoShow: true,
             itemSelector: '.taco-link-button',
             plugins: ["autoselect"],
@@ -74,7 +73,8 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             }),
             listeners: {
                 itemclick: function (view, record, item, index, e, eOpts) {
-                    if (item.innerText != 'More Packages')
+                    this.setActiveItemUI(item);
+                    if (item && item.innerText != 'More Packages' && !item.className.includes('taco-link-button-packages-collapsable'))
                         this.onNavClick(view, record, item, index, e);
                 },
                 itemkeydown: function (view, record, item, index, e) {
@@ -83,14 +83,16 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     }
                 },
                 viewready: function (obj) {
+
                     var d = obj.el.dom.getElementsByClassName('taco-link-more-container')[0];
                     Ext.create('Ext.button.Split', {
+                        formContainer: me.formContainer,
                         menuAlign: 'tr-br?',
                         text: 'More Packages',
                         itemId: 'packagesSplitButton',
-                        handler: function () {
-                            this.showMenu();
-                        },
+                        //handler: function () {
+                        //    this.showMenu();
+                        //},
                         menu: me.getMorePackagesMenu(me),
                         listeners: {
                             menushow: function (cmp, menu) {
@@ -101,17 +103,41 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                         scale: 'medium',
                         margin: '0 2px 0 0',
                         renderTo: d
+                    });
+                    var collapse = obj.el.dom.getElementsByClassName('taco-link-collapsable')[0];
+                    Ext.create('Ext.Button', {
+                        cls: 'package-tab-details',
+                        glyph: 'XE92A@mozicons',
+                        width: 28,
+                        ui: 'action',
+                        scale: 'small',
+                        margin: '0 10 0 0',
+                        renderTo: collapse,
+                        handler: function (button, event) {
+
+                            if (me.formContainer.hidden) {
+                                button.setGlyph('XE92A@mozicons');
+                                me.formContainer.show(true);
+                                me.shipmentTotals.show(true);
+                            }
+                            else {
+                                button.setGlyph('XE927@mozicons');
+                                me.formContainer.hide(true);
+                                me.shipmentTotals.hide(true);
+                            }
+                        },
                     })
                 },
                 scope: this
             },
             tpl: [
                 '<ul>',
+                '<li tabIndex="0" class="taco-link-button taco-link-button-packages-collapsable"><div class="taco-link-collapsable"></div></li>',
                 '<tpl for=".">',
                 '<tpl if="xindex &lt;= ' + this.numberOfTabsToShow + '">',
-                '<li tabIndex="0" class="taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
+                '<li tabIndex="1" class="taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                 '<tpl else>',
-                '<li tabIndex="0" class="taco-link-button taco-link-button-more"><div class="taco-link-more-container"></div></li>',
+                '<li tabIndex="2" class="taco-link-button taco-link-button-more"><div class="taco-link-more-container"></div></li>',
                 '{% break; %}',
                 '</tpl>',
                 '</tpl>',
@@ -139,51 +165,24 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         items.push(this.scrollSpacer);
         items.push(this.formContainer);
 
+        //subtotals, orderlevel discounts, tax shipping, and totals
+        this.shipmentTotals = Ext.create('Taco.view.order.widget.ShipmentTotalPanel', {
+            margin: '0 0 20 0',
+            record: this.record
+        });
+
+        items.push(this.shipmentTotals);
+
         this.items = items;
 
         this.callParent(arguments);
 
         this.nav = this.down('#navFormNav');
-
-        this.on({
-            boxready: function () {
-                this.getWrapper().body.el.on('scroll', this.checkScroll, this);
-            },
-            afterlayout: this.checkScroll,
-            scope: this
-        });
-        console.log(this.leftNav.tpl);
     },
 
     initPosition: function () {
         this.formContainer.getPosition();
-    },
-
-    checkScroll: function () {
-        var formTop = this.formContainer.getPosition()[1],
-            editorTop = this.getWrapper().getPosition()[1],
-            height = 39;
-
-        if (formTop < editorTop + height) {
-            this.leftNav.getEl().setStyle({
-                position: 'fixed',
-                top: editorTop + 'px',
-                width: this.getWrapper().getWidth() + 'px'
-            });
-            this.scrollSpacer.getEl().setStyle({
-                height: height + 'px'
-            });
-        } else {
-            this.scrollSpacer.getEl().setStyle({
-                height: '0px'
-            });
-            this.leftNav.getEl().setStyle({
-                position: 'relative',
-                top: 'auto',
-                width: '100%'
-            });
-        }
-    },
+    },    
 
     getWrapper: function () {
         if (!this._wrapper) {
@@ -192,31 +191,37 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         return this._wrapper;
     },
 
+    setActiveItemUI: function (item) {
+        if (item) {
+            Ext.each(this.getEl().query('li.active'), function (dom) {
+                Ext.fly(dom).removeCls('active');
+            });
+
+            if (item)
+                Ext.fly(item).focus().addCls('active');
+        }
+    },
     onNavClick: function (view, record, item) {
-        var wrapper = this.getWrapper().body.el,
-            targetY;
+        //if (item &&  !item.className.includes('taco-link-button-packages-collapsable')) {
 
-        Ext.each(this.getEl().query('li.active'), function (dom) {
-            Ext.fly(dom).removeCls('active');
-        });
-
-        if (item)
-            Ext.fly(item).focus().addCls('active');
-
-
-        if (record.raw.getEl) {
+        if (record.raw.getEl && !item) {
             var panel = Ext.getCmp(record.get('id'));
             var layout = this.formContainer.getLayout();
-
             layout.setActiveItem(panel);
-
-            /*
-            targetY = view.store.indexOf(record)
-                        ? record.raw.getEl().dom.offsetTop + this.sectionOffset - this.leftNavTopOffset
-                        : 0;
-            wrapper.scrollTo('top', targetY - this.topOffset, true);
-            */
         }
+        else {
+            var layout = this.formContainer.getLayout();
+            layout.setActiveItem(this.getItemIndex(item.innerText));
+        }
+        //}
+    },
+
+    getItemIndex: function (itemName) {
+        for (var i = 0; i < this.formContainer.items.items.length; i++) {
+            if (this.formContainer.items.items[i].tabTitle == itemName)
+                return i;
+        }
+        return 0;
     },
 
     loadNavItems: function (items) {

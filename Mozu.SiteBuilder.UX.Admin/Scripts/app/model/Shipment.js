@@ -103,6 +103,18 @@ Ext.define('Taco.model.Shipment', {
             "useNull": true
         },
         {
+            name: 'lastUpdated',
+            //type: 'date',
+            type:'string',
+            //dateFormat: 'c',
+            //d M, Y, g:i a
+            convert: function (value, model) {
+                console.log('sagar' + model.get('auditInfo').updateDate);
+                return model.get('auditInfo').updateDate;
+            },
+            defaultValue: null
+        },
+        {
             "name": "shipmentAdjustment",
             "type": "float",
             "useNull": true
@@ -138,23 +150,23 @@ Ext.define('Taco.model.Shipment', {
             "useNull": true
         }],
 
-    proxy: {
-        type: 'ajaxproxy',
-        api: {
-            read: '/admin/app/order/shipment/list',
-            create: '/admin/app/order/shipment/create',
-            update: '/admin/app/order/shipment/edit',
-            destroy: '/admin/app/order/shipment/delete'
-        },
-        reader: {
-            type: 'json',
-            root: 'items',
-            successProperty: 'success',
-            messageProperty: "message"
-        },
-        writer: {
-            allowSingle: true,
-            type: 'json'
-        }
-    }
+    //proxy: {
+    //    type: 'ajaxproxy',
+    //    api: {
+    //        read: '/admin/app/order/shipment/list',
+    //        create: '/admin/app/order/shipment/create',
+    //        update: '/admin/app/order/shipment/edit',
+    //        destroy: '/admin/app/order/shipment/delete'
+    //    },
+    //    reader: {
+    //        type: 'json',
+    //        root: 'items',
+    //        successProperty: 'success',
+    //        messageProperty: "message"
+    //    },
+    //    writer: {
+    //        allowSingle: true,
+    //        type: 'json'
+    //    }
+    //}
 });

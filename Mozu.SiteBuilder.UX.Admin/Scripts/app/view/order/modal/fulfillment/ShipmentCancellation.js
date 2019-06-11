@@ -6,9 +6,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Cancel Shipment',
+    primaryText: 'Cancel shipment',
     secondaryText: 'Nevermind',
-    scale: 'medium',
+    scale: 'small',
     title: 'Cancel Shipment?',
     isRecordSaved: false,
     layout: {
@@ -18,7 +18,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     initComponent: function () {
 
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
-            name: 'cancelOrder',
+            name: 'cancelShipment',
             monitorValid: true,
             width: '100%',
             items:
@@ -51,13 +51,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                                     listeners: {
                                         change: {
                                             scope: this,
-                                            //fn: function (combobox, newValue) {
-                                            //    var newRecord = combobox.findRecordByValue(newValue);
-                                            //    if (newRecord) {
-                                            //        this.down('[name=otherReason]').setVisible(newRecord.get('needsMoreInfo'));
-                                            //        this.down("#primaryAction").setDisabled(!this.validateModal());
-                                            //    }
-                                            //}
+                                            fn: function (combobox, newValue) {
+                                                var newRecord = combobox.findRecordByValue(newValue);
+                                                if (newRecord) {
+                                                    this.down('[name=otherReason]').setVisible(newRecord.get('needsMoreInfo'));
+                                                    this.down("#primaryAction").setDisabled(!this.validateModal());
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -69,14 +69,14 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
                                     fieldLabel: 'Specify Reason *',
-                                    //hidden: true,
+                                    hidden: true,
                                     listeners: {
-                                        //change: {
-                                        //    scope: this,
-                                        //    fn: function (field, value) {
-                                        //        this.down("#primaryAction").setDisabled(!this.validateModal());
-                                        //    }
-                                        //}
+                                        change: {
+                                            scope: this,
+                                            fn: function (field, value) {
+                                                this.down("#primaryAction").setDisabled(!this.validateModal());
+                                            }
+                                        }
                                     }
                                 }
                             ]
@@ -92,24 +92,17 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     },
 
     validateModal: function () {
-        //verify quantity is not null and less than 0 and should not be greater than max quantity
-        var quantity = this.down('#cancelQuantity').getValue();
-
-        if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
-            return false;
-
         //verify cancel reason should be filled
         var reason = (this.down('#cancelReason').getValue() === 'Other'
             ? this.down('#otherReason').getValue()
             : this.down('#cancelReason').getValue());
-
         if (!reason)
             return false;
 
         return true;
     },
 
-    getCancelItemQuantityPayload: function () {
+    getCancelShipmentPayload: function () {
         var me = this;
         var order = this.record;
         var reason = this.down('#cancelReason').getValue();
@@ -119,7 +112,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
         return {
             orderId: order.get('taco.model.order_id'),
             orderItemId: order.get('id'),
-            quantity: this.down('#cancelQuantity').getValue(),
             reason: {
                 reasonCode: reason,
                 description: description
@@ -133,38 +125,45 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
             var me = this;
 
             Ext.MessageBox.show({
-                title: 'Cancel Item',
+                title: 'Cancel Shipment',
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'Are you certain you want to Cancel this item?',
+                msg: 'Are you certain you want to Cancel this Shipment?',
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
                     if (val === 'yes') {
-
                         me.setLoading(true, me.body);
-                        var order = me.parentRecord;
-                        var payloadData = me.getCancelItemQuantityPayload();
-                        order.cancelItemQuantity({
-                            jsonData: payloadData,
+                        var order = me.record;
+                        var payloadData = me.getCancelShipmentPayload();
+
+                        order.cancelShipment({
+                            jsonData: {
+                                //orderId: order.get('id')
+                                orderId: 1
+                            },
                             success: function (response) {
-                                me.isRecordSaved = true;
-                                me.setLoading(false, me.body);
+                                // success handling here
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success) {
+                                    Taco.app.fireEvent('setmessage', 'Error canceling shipment', 'error');
+                                    me.fireEvent('saveFailure');
                                     return;
                                 }
-                                me.saveSuccess(json);
-                                // close the dialog
-                                me.close();
+                                me.ownerCt.setLoading(false);
+                                me.fireEvent('orderCancelled', json);
                             },
                             failure: function (response) {
-                                me.setLoading(false, me.body);
-                                // close the dialog
-                                me.close();
-                            }
+                                me.setLoading(false);
+                                // error handling here
+                                var json = Ext.decode(response.responseText, true),
+                                    msg = (json && json.message) ? json.message : 'Error canceling shipment';
+                                Taco.app.fireEvent('setmessage', msg, 'error');
+                                me.fireEvent('saveFailure');
+                            },
+                            scope: me
                         });
                     }
                 }
@@ -175,8 +174,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     * Do any class level cleanup. Destroy and null any scoped refs.     
     */
     onDestroy: function (destroy) {
-        if (!this.isRecordSaved && this.originalQuantity)
-            this.record.set('quantity', this.originalQuantity);
         this.callParent(arguments);
     }
 });

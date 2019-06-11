@@ -547,16 +547,33 @@
         "id": null,
         "currencyCode": null,
         "cost": null,
-        "shippingMethodCode": null,        
+        "shippingMethodCode": null,
+        "trackingNumber": "#TR123455",
         "signatureRequired": null,
+        "originAddress": {
+          "id": 1000,
+          "email": "email@name.com",
+          "firstName": "Dallas",
+          "lastName": "Warehouse",
+          "address1": "1100 N Royal Ln",
+          "cityOrTown": "Dallas",
+          "countryCode": "US",
+          "postalOrZipCode": "75261",
+          "stateOrProvince": "TX",
+          "addressIsValidated": false,
+          "addressType": "Commercial",
+          "homePhone": "312-555-5555",
+          "mobilePhone": "312-555-5555"
+        },
+        "destinationAddress": null,
         "packageIds": null,
-        "number": null,
+        "number": 1,
         "originalOrderId": null,
         "orderNumber": 0,
         "customerAccountId": null,
         "customerTaxId": null,
         "shippingMethodName": null,
-        "shipmentStatus": null,
+        "shipmentStatus": "Ready",
         "packages": [
           {
             "id": "10d73a63279a4c6898f1a72100d92dd2",
@@ -569,17 +586,181 @@
             "shippingMethodName": "UPS Ground",
             "packagingType": "CUSTOM",
             "weight": 175.0,
+            "items": [
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "das-4-pro-blue",
+                "productName": "Das Keyboard 4 Pro (Cherry MX Blue)",
+                "quantity": 5,
+                "weight": 20.000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 1,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "case-felt-full",
+                "productName": "Felt Case - Full Size",
+                "quantity": 5,
+                "weight": 5.000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 1,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "cap-pumpkin",
+                "productName": "Pumpkin Key Cap",
+                "quantity": 15,
+                "weight": 7.500,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 1,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "wrist-rest-leather-tkl-brg",
+                "productName": "TKL Leather Wrist Rest (color: Burgundy)",
+                "quantity": 5,
+                "weight": 20.0000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 1,
+                "optionAttributeFQN": "tenant~wrist-rest-add-on",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "ergo-inf-clr",
+                "productName": "Ergodox Infinity Keyboard",
+                "quantity": 5,
+                "weight": 30.000,
+                "unitPrice": 352.5,
+                "total": 1971.94,
+                "lineId": 2,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "caps-ergo-carbon",
+                "productName": "Carbon Key Caps for Ergodox",
+                "quantity": 5,
+                "weight": 5.0000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 2,
+                "optionAttributeFQN": "tenant~ergodox-key-set-add-on",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "sticker-cherry",
+                "productName": "Cherry Sticker",
+                "quantity": 25,
+                "weight": 2.5000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 2,
+                "optionAttributeFQN": "tenant~sticker-add-on",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "corsair-k95-blue",
+                "productName": "Corsair K95 RGB Keyboard",
+                "quantity": 5,
+                "weight": 25.000,
+                "unitPrice": 245.0,
+                "total": 1394.01,
+                "lineId": 3,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "case-hard-full",
+                "productName": "Hard Keyboard Carrying Case - Full",
+                "quantity": 5,
+                "weight": 10.0000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 3,
+                "optionAttributeFQN": "tenant~case-add-on",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "case-hard-full",
+                "productName": "Hard Keyboard Carrying Case - Full",
+                "quantity": 5,
+                "weight": 10.0000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 3,
+                "optionAttributeFQN": "tenant~second-case-add-on",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "oring",
+                "productName": "Cherry MX Rubber O-Ring Switch Dampener (125pcs)",
+                "quantity": 10,
+                "weight": 5.000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 4,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "gift-card-addon-10",
+                "productName": "$10 Gift Card",
+                "quantity": 10,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 4,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "Fulfilled"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "ducky-shine-5-blu",
+                "productName": "Ducky Shine 5 Blue",
+                "quantity": 5,
+                "weight": 25.000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 4,
+                "optionAttributeFQN": "",
+                "fulfillmentStatus": "PartiallyReturned"
+              },
+              {
+                "isPackagedStandAlone": false,
+                "productCode": "case-hard-full",
+                "productName": "Hard Keyboard Carrying Case - Full",
+                "quantity": 5,
+                "weight": 10.0000,
+                "unitPrice": 0.0,
+                "total": 0.0,
+                "lineId": 4,
+                "optionAttributeFQN": "tenant~case-add-on",
+                "fulfillmentStatus": "Fulfilled"
+              }
+            ],
             "totalQuantity": 110,
             "availableActions": [],
             "createDate": "2017-02-21T19:10:43.460Z",
             "fulfillmentDate": "2017-02-21T19:10:47.270Z",
             "shipDate": "2017-02-21T19:10:47.270Z",
-            "trackingNumber": null,
-            "changeMessages": [],
-            "productCode": "das-4-pro-blue",
-            "quantity": 2,
-            "lineId": 1,
-            "optionAttributeFQN": ""
+            "changeMessages": []
           }
         ],
         "items": [
@@ -630,8 +811,14 @@
         "shippingTaxAdjustment": 0.0,
         "handlingAdjustment": 0.0,
         "handlingTaxAdjustment": 0.0,
-        "dutyAdjustment": 0.0
-      }
+        "dutyAdjustment": 0.0,
+        "auditInfo": {
+          "updateDate": "2016-08-19T22:30:38.070Z",
+          "createDate": "2016-08-19T22:30:38.070Z",
+          "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+          "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
+      }      
     ],
     "packages": [
       {

@@ -215,7 +215,13 @@ Ext.define('Taco.model.Order', {
             name: 'items',
             type: 'auto',
             useNull: true
-        }, {
+        },
+        {
+            name: 'shipments',
+            'type': 'hasMany',
+            'model': 'Taco.model.ShipmentItem',
+            'reader': 'json'
+        },{
             name: 'priceListCode',
             type: 'string',
             useNull: true
@@ -1086,7 +1092,13 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.OrderShippingDiscount',
             name: 'shippingDiscounts',
             reader: 'json'
-        }
+        },
+        //{
+        //    type: 'hasMany',
+        //    model: 'Taco.model.Shipment',
+        //    name: 'shipments',
+        //    reader: 'json'
+        //},
     ],
 
     proxy: {
@@ -2772,5 +2784,58 @@ Ext.define('Taco.model.Order', {
         config.errorMsg = config.errorMsg || 'Error resending email';
         this.addErrorHandling(config);            
         Ext.Ajax.request(config);
-    }
+    },
+
+    getCancellationReasons: function () {
+        if (!this.cancellationReasons) {
+            this.cancellationReasons = Ext.create('Ext.data.Store', {
+                autoLoad: true,
+                fields: [
+                    {
+                        name: 'reasonCode',
+                        type: 'string'
+                    },
+                    {
+                        name: 'needsMoreInfo',
+                        type: 'boolean'
+                    }
+                ],
+                proxy: {
+                    type: 'ajax',
+                    url: '/admin/app/order/cancel/reasons',
+                    reader: {
+                        type: 'json',
+                        root: 'items'
+                    }
+                }
+            });
+        }
+        return this.cancellationReasons;
+    },
+
+    cancelShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/shipment/cancel',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelItemQuantity: function (config) {
+        var me = this;
+
+        Ext.apply(config, {
+            url: '/admin/app/order/items/cancelquantity',
+            params: {
+                'draft': me.get('isDraft')
+            },
+            method: 'POST'
+        });
+
+        // add in boilerplate error handling code;
+        config.errorMsg = config.errorMsg || 'Error cancelling quantity';
+        this.addErrorHandling(config);
+        Ext.Ajax.request(config);
+    },
 });

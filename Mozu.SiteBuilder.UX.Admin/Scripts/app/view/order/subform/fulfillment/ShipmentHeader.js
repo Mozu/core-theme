@@ -12,6 +12,11 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
     },
 
     buildOrderInfoHeader: function () {
+        var me = this;
+        var fulfillmentStatus = this.record.get('fulfillmentStatus');
+        fulfillmentStatus = Taco.core.util.Common.camelToSpace(fulfillmentStatus);
+
+
         this.infoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-info-header',
@@ -28,8 +33,8 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                 padding: '0 50 0 0',
                 tpl: [
                     '<span class="label">Shipment Status</span><br>',
-                    '<span class="x-column-content-pill x-column-content-pill-false">1 Ready</span>&nbsp;&nbsp;&nbsp;',
-                    '<span class="x-column-content-pill x-column-content-pill-false">1 Fullfilled</span>'
+                    '<span class="x-column-content-pill x-column-content-pill-false">' + fulfillmentStatus + '</span>&nbsp;&nbsp;&nbsp;',
+                    //'<span class="x-column-content-pill x-column-content-pill-false">1 Fullfilled</span>'
                 ]
             }, {
                 flex: 1,
@@ -48,10 +53,8 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                                 layout: 'hbox',
                                 width: 600,
                                 height: 400,
-                                //record: record,
-                                //parentRecord: me.record,
-                                //store: me.record.getCancellationReasons(),
-                                //originalQuantity: originalQuantity,
+                                record: me.record,
+                                store: me.record.getCancellationReasons(),
                                 listeners: {
                                     saveSuccess: {
                                         fn: function (json) {

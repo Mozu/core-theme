@@ -10,9 +10,6 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     packageContainer: {},
 
     initComponent: function () {
-        console.log(this.record);
-        this.fulfillmentStatus = Taco.core.util.Common.camelToSpace(this.record.get('fulfillmentStatus'));
-
         this.items = [];
 
         this.buildShipmentInfoHeader();
@@ -21,7 +18,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     },
 
     buildShipmentInfoHeader: function () {
-
+        var me = this;
+        //if (this.shipmentRecord.shipmentStatus)
+        //    this.shipmentStatus = Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus);
         //if (!this.record.shipmentId)
         this.shippingMethodsStore = this.record.getShippingMethods();
 
@@ -38,103 +37,106 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 data: this.record.getData()
             },
             items:
-                [{
-                    padding: '0 50 0 0',
-                    tpl: [
-                        '<span class="label">Shipment</span><br/><br/>',
-                        '#TBD'
-                    ]
-                },
-                {
-                    padding: '0 50 0 0',
-                    tpl: [
-                        '<span class="label">Status</span><br/><br/>',
-                        ' <span class="x-column-content-pill x-column-content-pill-false">' + this.fulfillmentStatus + '</span>'
-                    ]
-                },
-                {
-                    padding: '0 50 0 0',
-                    tpl: [
-                        '<span class="label">Code</span><br/><br/>',
-                        '1-400'
-                    ]
-                },
-                {
-                    padding: '0 50 0 0',
-                    tpl: [
-                        '<span class="label">Total</span><br/><br/>',
-                        '$XXX.XX'
-                    ]
-                },
-                {
-                    flex: 1,
-                    html: '',
-                },
-                {
-                    xtype: 'container',
-                    padding: '0 20 0 0',
-                    items: [
-                        Ext.widget('button', {
-                            itemId: 'cancelShipment',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Cancel Shipment',
-                            handler: function (evt) {
-                                Ext.create('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
-                                    layout: 'hbox',
-                                    width: 600,
-                                    height: 400,
-                                    //record: record,
-                                    //parentRecord: me.record,
-                                    //store: me.record.getCancellationReasons(),
-                                    //originalQuantity: originalQuantity,
-                                    //listeners: {
-                                    //    saveSuccess: {
-                                    //        fn: function (json) {
-                                    //            //me.fireEvent('orderCancelled', json);
-                                    //        },
-                                    //        //scope: me
+                [
+                    {
+                        padding: '0 50 0 0',
+                        tpl: [
+                            '<span class="label">Shipment</span>',
+                            '<div class="labelvalue">' + this.shipmentRecord.number + '</div>'
+                        ]
+                    },
+                    {
+                        padding: '0 50 0 0',
+                        tpl: [
+                            '<span class="label">Status</span>',
+                            '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + this.shipmentRecord.shipmentStatus + '</div>'
+                        ]
+                    },
+                    {
+                        padding: '0 50 0 0',
+                        tpl: [
+                            '<span class="label">Code</span>',
+                            '<div class="labelvalue">1-400</div>'
+                        ]
+                    },
+                    {
+                        padding: '0 50 0 0',
+                        tpl: [
+                            '<span class="label">Total</span>',
+                            '<div class="labelvalue">$XXX.XX</div>'
+                        ]
+                    },
+                    {
+                        flex: 1,
+                        html: '',
+                    },
+                    {
+                        xtype: 'container',
+                        padding: '0 20 0 0',
+                        items: [
+                            Ext.widget('button', {
+                                itemId: 'cancelShipment',
+                                ui: 'action',
+                                scale: 'medium',
+                                text: 'Cancel Shipment',
+                                handler: function (evt) {
+                                    //Ext.create('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
+                                    //    layout: 'hbox',
+                                    //    width: 600,
+                                    //    height: 400,
+                                    //    record: me.record,
+                                    //    store: me.record.getCancellationReasons(),
+                                    //    listeners: {
+                                    //        saveSuccess: {
+                                    //            fn: function (json) {
+                                    //                //me.fireEvent('orderCancelled', json);
+                                    //            },
+                                    //            //scope: me
+                                    //        }
                                     //    }
-                                    //}
-                                });
-                            }
-                        }),
+                                    //});
 
-                    ]
-                },
-                {
-                    xtype: 'container',
-                    items: [
-                        Ext.widget('button', {
-                            itemId: 'reassignShipment',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Reassign Shipment',
-                            handler: function (evt) {
-                                Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
-                                    layout: 'hbox',
-                                    width: 600,
-                                    height: 400,
-                                    //record: record,
-                                    //parentRecord: me.record,
-                                    //store: me.record.getCancellationReasons(),
-                                    //originalQuantity: originalQuantity,
-                                    listeners: {
-                                        saveSuccess: {
-                                            fn: function (json) {
-                                                //me.fireEvent('orderCancelled', json);
-                                            },
-                                            //scope: me
+                                                                   
+
+                                }
+                            }),
+
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        items: [
+                            Ext.widget('button', {
+                                itemId: 'reassignShipment',
+                                ui: 'action',
+                                scale: 'medium',
+                                text: 'Reassign Shipment',
+                                handler: function (evt) {
+                                    Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
+                                        layout: 'hbox',
+                                        width: 600,
+                                        height: 400,
+                                        //record: record,
+                                        //parentRecord: me.record,
+                                        //store: me.record.getCancellationReasons(),
+                                        //originalQuantity: originalQuantity,
+                                        listeners: {
+                                            saveSuccess: {
+                                                fn: function (json) {
+                                                    //me.fireEvent('orderCancelled', json);
+                                                },
+                                                //scope: me
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        }),
+                                    });
+                                }
+                            }),
 
-                    ]
-                }
+                        ]
+                    }
                 ]
         });
+
         this.items.push(this.infoContainer);
 
         this.infoContainerNew = Ext.widget({
@@ -150,13 +152,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 data: this.record.getData()
             },
             items:
-                [{
-                    padding: '0 20 0 0',
-                    tpl: [
-                        '<span class="label">Last Updated</span><br/>',
-                        '05/02/2019 20:22:44 UTC'
-                    ]
-                },
+                [
+                    {
+                        padding: '0 20 0 0',
+                        tpl: [
+                            '<span class="label">Last Updated</span>',
+                            '<div class="customfont">' + (this.shipmentRecord.auditInfo && this.shipmentRecord.auditInfo.updateDate ? this.shipmentRecord.auditInfo.updateDate : '') +'</div>'
+                        ]
+                    },
                 {
                     xtype: 'container',
                     padding: '0 10 0 0',
@@ -196,6 +199,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                             {
                                 plain: true,
                                 baseCls: 'taco-shipping-menu',
+
                                 listeners: {
                                     click: this.handleShippingMethod,
                                     scope: this,
@@ -223,10 +227,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         xtype: 'button',
                         ui: 'link',
                         scale: 'medium',
-                            cls: 'button-link',
-                            text: this.record.trackingNumber || '(Add)',
-                            handler: this.handleAddTrackingNumber,
-                            //hidden: !!this.record.shipmentId,
+                        cls: 'button-link',
+                        text: this.record.trackingNumber || '(Add)',
+                        handler: this.handleAddTrackingNumber,
+                        //hidden: !!this.record.shipmentId,
                         scope: this,
                         requiredBehaviors: [{
                             model: 'Taco.model.Order',
@@ -247,9 +251,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     padding: '0 50 0 0',
                     tpl: [
                         '<span class="label">Fulfilled From</span><br/>',
-                        'Dallas Warehouse <br/>',
-                        '1100 N Royal Ln, Dallas, TX 75261 <br/>',
-                        '123-456-7890 * email@name.com'
+                        this.getFullfillmentFromAddress()
                     ]
                 },
                 {
@@ -260,20 +262,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         this.items.push(this.infoContainerNew);
 
-        //this.packageContainer = Ext.create('Taco.view.order.subform.fulfillment.Packages', {
-        //    record: this.record
-        //});        
-
-        ////this.items.push(this.packageContainer);
-
-        ////subtotals, orderlevel discounts, tax shipping, and totals
-        //this.shipmentTotals = Ext.create('Taco.view.order.widget.ShipmentTotalPanel', {
-        //    margin: '0 0 20 0',
-        //    record: this.record
-        //});
-        //this.items.push(this.shipmentTotals);
         this.shipmentTotals = Ext.create('Taco.view.order.subform.fulfillment.ShipmentDetails', {
-            record: this.record
+            record: this.record,
+            shipmentRecord: this.shipmentRecord
         });
         this.items.push(this.shipmentTotals);
     },
@@ -304,7 +295,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             data: [this.record]
         });
     },
-    
+
     handleAddTrackingNumber: function () {
         Ext.create('Taco.view.order.modal.EditTrackingNumberNew', {
             packageData: this.record,
@@ -312,6 +303,21 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             autoShow: true
         });
     },
+
+    getFullfillmentFromAddress: function () {
+        var address = "";
+        var originAddress = this.shipmentRecord.originAddress;
+        if (originAddress)
+            //return originAddress.firstName + ' ' + originAddress.lastName + ' <br/>' +
+            //    originAddress.address1 + ', ' + originAddress.cityOrTown + ', ' + originAddress.stateOrProvince + ' ' + originAddress.postalOrZipCode + '<br/>' +
+            //    originAddress.mobilePhone + ' * ' + originAddress.email;
+
+            return '<div class="addressdiv">' + originAddress.firstName + ' ' + originAddress.lastName + ' <br/>' +
+                originAddress.address1 + ', ' + originAddress.cityOrTown + ', ' + originAddress.stateOrProvince + ' ' + originAddress.postalOrZipCode + '<br/>' +
+                originAddress.mobilePhone + ' * ' + originAddress.email + '</div>';
+
+        return address;
+    }
 });
 
 

@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var sort = pagingParams?.sort?.ToSortString();
             var filter = extFilter.ToFilterString();
             var q = extFilter.ToQString();
-            var qLimit = q == null ? (int?) null : 26;
+            var qLimit = q == null ? (int?)null : 26;
             var responseGroups = "header,payment,packageheaders,availableactions";
 
             var dcOrders = (await orderWebApiClient.GetOrders(
@@ -159,7 +159,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 Items = order.Items.Select(x => new CommerceRuntime.Contracts.Orders.OrderItem
                 {
-                    Product = new Product { ProductCode = x.Product.ProductCode, VariationProductCode = x.Product.VariationProductCode, BundledProducts = x.Product.BundledProducts, Options = x.Product.Options},
+                    Product = new Product { ProductCode = x.Product.ProductCode, VariationProductCode = x.Product.VariationProductCode, BundledProducts = x.Product.BundledProducts, Options = x.Product.Options },
                     Quantity = x.Quantity,
                     Data = x.Data,
                     FulfillmentLocationCode = x.FulfillmentLocationCode,
@@ -178,14 +178,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 CurrencyCode = order.CurrencyCode
             };
 
-            
+
 
             orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = order.SiteId);
 
- 
+
             var createdOrder = (await orderWebApiClient.CreateOrder(newOrder)).ReadAsAsync().Result;
             (_apiContext as ApiContext).SiteId = order.SiteId;
-            var returnOrder = (await SetCustomer(createdOrder,new SetCustomerAccountIdArgs { CustomerAccountId = createdOrder.CustomerAccountId.Value, OrderId = createdOrder.Id, UserId = createdOrder.UserId}));
+            var returnOrder = (await SetCustomer(createdOrder, new SetCustomerAccountIdArgs { CustomerAccountId = createdOrder.CustomerAccountId.Value, OrderId = createdOrder.Id, UserId = createdOrder.UserId }));
             return List2<Order>(returnOrder);
         }
 
@@ -649,5 +649,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var returnableItems = (await orderWebApiClient.GetOrderReturnableItems(orderId)).ReadAsSync();
             return List2(Mapper.Map<List<OrderReturnableItem>>(returnableItems.Items), (int)returnableItems.TotalCount);
         }
+
+        [HttpGetRoute(UriTemplate = "cancel/reasons")]
+        public Response<List<CancelReasonItem>> GetReasons()
+        {
+            var cancellationReasons = new List<CancelReasonItem>();
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Found Cheaper Somewhere Else", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Item Price Too High", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Item Will Not Arrive on Time", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Billing Address", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Payment Method", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Shipping Address", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Shipping Speed", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Order Created by Mistake", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Shipping Cost Too High", NeedsMoreInfo = false });
+            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Other", NeedsMoreInfo = true });
+            return List2(cancellationReasons);
+        }
     }
+}
+
+
+public class CancelReasonItem
+{
+    public string ReasonCode { get; set; }
+    public bool NeedsMoreInfo { get; set; }
 }

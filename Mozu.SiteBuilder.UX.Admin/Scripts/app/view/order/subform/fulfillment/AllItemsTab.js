@@ -1,17 +1,17 @@
 /**
  * @class Taco.view.order.subform.fulfillment.Packages
  */
-Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
+Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.view.order.modal.OverrideTotalWeight',
     ],
 
     initComponent: function () {
-        this.tabTitle = this.packageRecord.code;
-        this.title = this.packageRecord.code;
+        //this.tabTitle = this.packageRecord.code;
+        //this.title = this.packageRecord.code;
 
-        this.cls += ' orderform-package-packagetab';
+        this.cls += " " + Taco.baseCSSPrefix + 'orderform-package';
         this.initUI();
         this.callParent(arguments);
 
@@ -32,10 +32,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
         itemId: this.packageRecord.code + 'shipment';
 
         if (!this.packageRecord.shipmentId) {
-            this.shippingMethodsStore = this.record.getShippingMethods();
-
             this.packagingTypeStore = Ext.create('Taco.store.PackagingTypes');
-
             this.packagingTypeStore.load();
         }
 
@@ -114,7 +111,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
     buildTrackingHeader: function () {
         return Ext.widget({
             xtype: 'container',
-            cls: 'taco-order-fulfillment-package-body',
+            cls: 'taco-order-fulfillment-package-header',
             padding: '0 0 10 0',
             layout: {
                 type: 'hbox',
@@ -229,6 +226,22 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                     padding: '8 0 0 0',
                     items: [
                         Ext.widget('button', {
+                            itemId: 'printPacking',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Print Packing Slip',
+                            handler: this.handlePrintPackingSlip,
+                            requiredBehaviors: [{
+                                model: 'Taco.model.Order',
+                                behavior: 'update'
+                            },
+                            {
+                                model: 'Taco.model.Order',
+                                behavior: 'fulfill'
+                            }],
+                            margin: '0 15 0 0'
+                        }),
+                        Ext.widget('button', {
                             itemId: 'shippingLabels',
                             ui: 'action',
                             scale: 'medium',
@@ -246,23 +259,6 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             }],
                             handler: this.handleViewShippingLabel
                         }),
-                        Ext.widget('button', {
-                            itemId: 'printPacking',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Print Packing Slip',
-                            handler: this.handlePrintPackingSlip,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            margin: '0 15 0 0'
-                        }),
-                        
                         Ext.widget('button', {
                             itemId: 'editItems',
                             ui: 'action',
@@ -299,32 +295,32 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                             }],
                             handler: this.handleViewShippingLabel
                         }),
-                        //Ext.widget('button', {
-                        //    itemId: 'cancelItem',
-                        //    ui: 'action',
-                        //    scale: 'medium',
-                        //    text: 'Cancel Items',
+                        Ext.widget('button', {
+                            itemId: 'cancelItem',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Cancel Item',
 
-                        //    handler: function () {
-                        //        Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
-                        //            layout: 'hbox',
-                        //            width: 600,
-                        //            height: 400,
-                        //            //record: record,
-                        //            //parentRecord: me.record,
-                        //            //store: me.record.getCancellationReasons(),
-                        //            //originalQuantity: originalQuantity,
-                        //            listeners: {
-                        //                saveSuccess: {
-                        //                    fn: function (json) {
-                        //                        //me.fireEvent('orderCancelled', json);
-                        //                    },
-                        //                    //scope: me
-                        //                }
-                        //            }
-                        //        });
-                        //    }
-                        //})
+                            handler: function () {
+                                Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
+                                    layout: 'hbox',
+                                    width: 600,
+                                    height: 400,
+                                    //record: record,
+                                    //parentRecord: me.record,
+                                    //store: me.record.getCancellationReasons(),
+                                    //originalQuantity: originalQuantity,
+                                    listeners: {
+                                        saveSuccess: {
+                                            fn: function (json) {
+                                                //me.fireEvent('orderCancelled', json);
+                                            },
+                                            //scope: me
+                                        }
+                                    }
+                                });
+                            }
+                        })
                     ]
                 }
             ]

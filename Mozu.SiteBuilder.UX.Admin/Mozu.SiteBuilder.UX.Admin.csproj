@@ -880,6 +880,7 @@
     <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Packages.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\AllItemsTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\PackageTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Shipment.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentDetails.js" />

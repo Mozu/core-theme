@@ -6,8 +6,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Packages', {
 
     alias: 'widget.taco-shipmentform',
     requires: [
-        'Taco.view.order.subform.fulfillment.PackageTab',
-        'Taco.view.order.widget.ShipmentTotalPanel'
+        'Taco.view.order.subform.fulfillment.PackageTab'
     ],
 
     //model: 'Taco.model.Order',
@@ -48,6 +47,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Packages', {
         var subformCfg = {
             record: this.record
         };
+
+
+        //Show All items
+        //items.push(Ext.create('Taco.view.order.subform.fulfillment.AllItemsTab', {
+        //    record: this.record,
+        //    shipmentRecord: this.shipmentRecord
+        //}));
 
         //Loop through all packages and 
         //var packages = this.record.get('packages');

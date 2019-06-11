@@ -24,17 +24,19 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
     },
 
     buildComponents: function () {
-
+        console.log(this.record);
         this.add(Ext.create('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             record: this.record
         }));
-
-        this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-            record: this.record
-        }));       
-
-        //this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-        //    record: this.record
-        //})); 
+        
+        var shipments = this.record.get('shipments');
+        if (shipments) {
+            for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
+                this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
+                    record: this.record,
+                    shipmentRecord: shipments[shipmentCount]
+                }));
+            }
+        }
     }
 });
