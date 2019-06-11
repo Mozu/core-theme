@@ -13,7 +13,6 @@ import { NotificationService } from '@global';
 
 import { ConfirmationDialogNotificationType, 
   ConfirmationDialogNotificationCode,
-  NotificationDialogActions,
   ConfirmationDialogService} from '@shared';
 
 import { QuoteItemsService } from './items.service';
@@ -46,8 +45,8 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
 
   ngOnInit() {
     this.subscriptions.push(
-      this._notificationService.ConfirmationActionFromDialog.subscribe((action: string) => {
-        if (action === NotificationDialogActions.confirm) {
+      this._notificationService.QuoteItemDeleteConfirmation.subscribe((action: string) => {
+        if (action === ConfirmationDialogNotificationCode.DeleteQuoteItem) {
           this.deleteQuoteItem();
         }
       })
@@ -57,7 +56,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   openQuoteDeleteConfirmationDialog(id: string, row: any) {
     this.itemId = id;
     this.quoteItemTobeDeleted = row;
-    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteItem, ConfirmationDialogNotificationType.Confirmation);
+    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteQuoteItem, ConfirmationDialogNotificationType.Confirmation);
   }
 
   deleteQuoteItem(){

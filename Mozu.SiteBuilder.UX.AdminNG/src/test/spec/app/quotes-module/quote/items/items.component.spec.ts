@@ -27,6 +27,7 @@ import { NotificationService } from '@global/services';
 import { ConfirmationDialogService } from '@shared';
 import { QuoteItemsComponent } from 'app/quotes-module/quote/items/items.component';
 import { QuoteItemsService } from 'app/quotes-module/quote';
+import { TableModule } from 'primeng/components/table/table';
 
 describe('QuoteItemsComponent', () => {
   let component: QuoteItemsComponent;
@@ -34,6 +35,8 @@ describe('QuoteItemsComponent', () => {
   let element;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
+  let confirmationDialogService: ConfirmationDialogService;
+  let confirmationDialogServiceSpy: any;
   let notificationService: NotificationService;
   let httpMock: HttpTestingController;
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
@@ -81,11 +84,62 @@ describe('QuoteItemsComponent', () => {
     }]
   };
 
+  var dummyQuoteArray = [
+    {
+      "id": "185bdb4fd2a744bda227aa4700736f2c",
+      "destinationId": "74214a287fea408cb6f2aa4600a6e3d3",
+      "fulfillmentLocationCode": "1",
+      "fulfillmentMethod": "Ship",
+      "lineId": 1,
+      "product": {
+        "fulfillmentTypesSupported": [
+          "DirectShip"
+        ],
+        "options": [],
+        "properties": [],
+        "categories": [],
+        "price": {
+          "price": 5
+        },
+        "discountsRestricted": false,
+        "isTaxable": true,
+        "productType": "Product Type",
+        "productUsage": "S",
+        "bundledProducts": [],
+        "productCode": "test-1001",
+        "name": "Test Product 1",
+        "goodsType": "Green",
+        "isPackagedStandAlone": false,
+        "measurements": {},
+        "fulfillmentStatus": "Pending"
+      },
+      "quantity": 1,
+      "subtotal": 5,
+      "extendedTotal": 5,
+      "taxableTotal": 5,
+      "discountTotal": 0,
+      "discountedTotal": 5,
+      "itemTaxTotal": 0,
+      "shippingTaxTotal": 0,
+      "shippingTotal": 0,
+      "feeTotal": 0,
+      "total": 5,
+      "unitPrice": {},
+      "productDiscounts": [],
+      "shippingDiscounts": [],
+      "auditInfo": {
+        "createDate": "2019-05-08T12:00:40.914Z",
+        "updateBy": "1",
+        "createBy": "1"
+      }
+    }];
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(),
         HttpClientTestingModule, 
         GlobalModule,
+        TableModule,
         NgbModule.forRoot() 
       ],
       declarations: [ QuoteItemsComponent ],
@@ -114,8 +168,10 @@ describe('QuoteItemsComponent', () => {
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
     httpMock = TestBed.get(HttpTestingController);
     notificationService = TestBed.get(NotificationService);
+    confirmationDialogService = TestBed.get(ConfirmationDialogService);
+    httpMock = TestBed.get(HttpTestingController);
   }));
-
+  
   beforeEach(() => {
     var respData = {
       items: {
@@ -145,40 +201,38 @@ describe('QuoteItemsComponent', () => {
   });
 
   it('should fetch quoteItems from ngOnChange()',  () => {
-    component.quote = dummyQuoteList;
+    component.quote = dummyQuoteArray;
     component.ngOnChanges({
       quote: new SimpleChange(null, component.quote, true)
     });
     component.quoteItems = component.quote;
     fixture.detectChanges(); 
     fixture.whenStable().then(() => {
-      expect(component.quoteItems['items'].length).toBe(1);
+      expect(component.quoteItems.length).toBe(1);
     });
    });
 
-  it('should call notification subject from ngOnInit()',  () => {
-    component.ngOnInit();
-  });
-
-  //  it('should call openQuoteDeleteConfirmationDialog on click of cross icon to delete quoted item', async(() => {
-  //   const spy = spyOn(component, 'openQuoteDeleteConfirmationDialog');
-  //   fixture.detectChanges();
-
-  //   component.itemId = "";
-  //   component.quoteItemTobeDeleted = "";
-
-  //   fixture.detectChanges();
-  //   const cell = fixture.debugElement.query(By.css('#deleteQuoteItem'));
-  //   cell.nativeElement.click();
-
-  //   fixture.detectChanges();
-  //   fixture.whenStable().then(() => {
-  //     expect(spy).toHaveBeenCalled();
-  //   });
-
+  // it('should call notification subject from ngOnInit()',  () => {
+  //   component.ngOnInit();
   //let action = "";
   //notificationService.ConfirmationActionFromDialog.subscribe()
-  // }));
+  // });
+
+  it('should call openQuoteDeleteConfirmationDialog on clicking of cross icon to delete quoted item', async(() => {
+    component.quoteItems = dummyQuoteArray;
+    const spy = spyOn(component, 'openQuoteDeleteConfirmationDialog');
+    component.itemId = "";
+    component.quoteItemTobeDeleted = "";
+    fixture.detectChanges();
+    const cell = fixture.debugElement.query(By.css('button#deleteQuoteItem'));
+    //cell.triggerEventHandler('click', {'id': component.itemId, 'row': component.quoteItemTobeDeleted})
+    cell.nativeElement.click();
+
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(spy).toHaveBeenCalledWith(component.itemId, component.quoteItemTobeDeleted);
+    });
+  }));
 
   it('should call service to get success response from mock http json (quote-list)', () => {
     component.quoteId = "0dd322d1429fe45778112b5b00004c44";

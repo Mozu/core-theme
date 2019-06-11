@@ -21,16 +21,11 @@ export enum NavigationContainerType {
 }
 
 export enum ConfirmationDialogNotificationCode {
-    DeleteItem = "DeleteItem",
-    SaveItem = "SaveItem"
+    DeleteQuoteItem = 'DeleteQuoteItem',
+    SaveItem = 'SaveItem'
 }
 
 export enum ConfirmationDialogNotificationType{
     Confirmation = "Confirmation",
     Information = "Information"
-}
-
-export enum NotificationDialogActions {
-    confirm = "Confirm",
-
 }

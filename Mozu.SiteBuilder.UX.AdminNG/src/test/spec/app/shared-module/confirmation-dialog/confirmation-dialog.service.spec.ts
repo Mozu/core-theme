@@ -12,7 +12,7 @@ import { TranslateStore } from '@ngx-translate/core/src/translate.store';
 import { GlobalModule } from '@global/global.module';
 import { Observable } from 'rxjs';
 
-fdescribe('ConfirmationDialogService', () => { 
+describe('ConfirmationDialogService', () => { 
     let confirmationDialogService: ConfirmationDialogService;
     let loggerService: LoggerService;
     let loggerServiceSpy: any;
@@ -49,7 +49,7 @@ fdescribe('ConfirmationDialogService', () => {
          .and.callThrough();                   
 
         let notificationType=ConfirmationDialogNotificationType.Confirmation;
-        let dialogType = ConfirmationDialogNotificationCode.DeleteItem;
+        let dialogType = ConfirmationDialogNotificationCode.DeleteQuoteItem;
 
         confirmationDialogService.openConfirmationDialog(dialogType,notificationType);
         

@@ -17,7 +17,7 @@ import { ShippingAddressComponent } from '@shared/shipping/address/address.compo
 import { TableModule } from 'primeng/table';
 import {  MessageService } from 'primeng/components/common/api';
 
-fdescribe('AddressComponent', () => {
+describe('AddressComponent', () => {
   let component: ShippingAddressComponent;
   let fixture: ComponentFixture<ShippingAddressComponent>;
   let debugElement: DebugElement;
