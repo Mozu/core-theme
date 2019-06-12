@@ -29,7 +29,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         totalColumnWidth: 100
     },
 
-    isEditable: true,
+    isEditable: false,
 
     /**
     * width of the actions column in the associated order item grid. this keeps the labels and values aligned with the associated grid;   
@@ -47,11 +47,13 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         this.items = [];
 
         var me = this,
-            isEditable = me.isEditable;        
+            isEditable = me.isEditable;
+
+
 
         this.masterTable = Ext.create("Ext.Component", {
-            width: 700, 
-            id:'shipmentform-detail-totalpanel',
+            width: 700,
+            id: 'shipmentform-detail-totalpanel',
             layout: {
                 type: 'hbox',
                 align: 'right'
@@ -65,52 +67,90 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                     },
                     scope: me
                 },
-                afterrender: {                     
+                afterrender: {
                     fn: function (obj) {
-                        var d = obj.el.dom.getElementsByClassName('taco-tools-buttons')[0];
-                        Ext.widget('button', {
-                            itemId: 'cancelShipmentTotals',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Cancel',
-                            renderTo: d,
-                            handler: function (evt) {
-                                //me.toggleEdit();
-                                //me.masterTable.update(me.record.getData())
-                                //me.initComponent();                                
-                                //Ext.getCmp('shipmentform-detail-totalpanel').root.reload();
-                            }
-                        });
-
-                        Ext.widget('button', {
-                            itemId: 'saveShipmentTotals',
-                            ui: 'action-primary',
-                            scale: 'medium',
-                            text: 'Save',
-                            margin: {
-                                left: 10
-                            },
-                            renderTo: d,
-                            handler: function (evt) {
-                                //me.toggleEdit();
-                                //me.masterTable.update(me.record.getData())
-                                //me.initComponent();                                
-                                //Ext.getCmp('shipmentform-detail-totalpanel').root.reload();
-                            }
-                        });                        
+                        
                     },
                     scope: me
                 },
             }
         });
 
-        this.items.push(this.masterTable);
-        
+        this.totalsContainer = Ext.widget({
+            xtype: 'container',
+            //padding: '0 20 10 20',
+            layout: {
+                type: 'vbox',
+                align: 'right'
+            },
+            items: [
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'hbox',
+                        align: 'right'
+                    },
+                    items: [
+                        Ext.widget('button', {
+                            itemId: 'cancelShipmentTotals',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Cancel',
+                            hidden: !me.isEditable,
+                            handler: function (evt) {
+                                me.toggleEdit();
+                            }
+                        }),
+                        Ext.widget('button', {
+                            itemId: 'saveShipmentTotals',
+                            ui: 'action-primary',
+                            scale: 'medium',
+                            text: 'Save',
+                            hidden: !me.isEditable,
+                            margin: {
+                                left: 10,
+                                right: 70
+                            },
+                            handler: function (evt) {
+                                me.toggleEdit();
+                            }
+                        }),
+                        Ext.widget('button', {
+                            itemId: 'editShipmentTotals',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Edit',
+                            hidden: me.isEditable,
+                            margin: {
+                                left: 10,
+                                right: 70
+                            },
+                            handler: function (evt) {
+                                me.toggleEdit();
+                            }
+                        }),
+                    ]
+                },
+                {
+                    xtype: 'container',
+                    layout: {
+                        type: 'vbox',
+                        align: 'right'
+                    },
+                    items: [
+                        this.masterTable
+                    ]
+                }
+            ]
+        });
+
+        this.items.push(this.totalsContainer);
+        //this.items.push(this.masterTable);
+
     },
 
     applyRecord: function (record) {
         this.masterTable.update(record.getData());
-        this.updateShippingMethodLabel();
         this.initSummaryToggleButtons();
         return record;
     },
@@ -143,10 +183,18 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     toggleEdit: function () {
-        if (this.isEditable)
+        if (this.isEditable) {
             this.isEditable = false;
-        else
+            this.totalsContainer.items.items[0].items.get('saveShipmentTotals').hide();
+            this.totalsContainer.items.items[0].items.get('cancelShipmentTotals').hide();
+            this.totalsContainer.items.items[0].items.get('editShipmentTotals').show();
+        }
+        else {
             this.isEditable = true;
+            this.totalsContainer.items.items[0].items.get('saveShipmentTotals').show();
+            this.totalsContainer.items.items[0].items.get('cancelShipmentTotals').show();
+            this.totalsContainer.items.items[0].items.get('editShipmentTotals').hide();
+        }
     },
 
     initSummaryToggleButtons: function () {
@@ -203,7 +251,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         me.update();
     },
-    
+
     tableStartTpl: new Ext.XTemplate(
         '<table class="x-grid-table x-grid-with-row-lines collapsed {isEditableCls} {classNames}" border="0" cellspacing="0" cellpadding="0" style="width:90%; margin-left: auto;">',
         // todo make this dynamic and pulls from grid header to get correct widths;
@@ -428,7 +476,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             tdCls = "taco-grid-cell ",
             tdInnerCls = "taco-grid-cell-inner ",
             priceCls = "price-detail "
-            isEditable = this.isEditable,
+        isEditable = this.isEditable,
             isEditableCls = (isEditable) ? "taco-editable " : "";
 
         return [
@@ -470,9 +518,9 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             //'<tpl if="orderAdjustment.amount !== 0">',
             '<tr class="adjustment-item">',
             '<td class="{tdCls}"></td>',
-                        
 
-            '<tpl if="' + isEditable + '==true">',            
+
+            '<tpl if="' + isEditable + '== true">',
             '<td><div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input type="text" placeholder="XX.XX" /></div>',
             '<div class="middle-box"> or </div>',
             '<div class="inner-addon left-addon right-box"> <span class="icon">$</span> <input type="text" class="doller" placeholder="XX.XX" /></div></td>',
@@ -493,7 +541,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             '{[this.getSubTpl("subTpl_1", values)]}',
             '</tbody>',
 
-            '</table>',            
+            '</table>',
 
             // shipping
             '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipping"})]}',
@@ -624,6 +672,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             }
         ];
     },
+
+
     /**
      * Do any class level cleanup. Destroy and null any scoped refs.     
      */

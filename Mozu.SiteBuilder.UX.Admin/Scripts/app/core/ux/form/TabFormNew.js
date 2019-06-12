@@ -16,6 +16,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
     numberOfTabsToShow: 6,
 
     initComponent: function () {
+
         var me = this;
         this.cls = this.cls || '';
         this.cls += ' taco-tabform';
@@ -202,8 +203,6 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         }
     },
     onNavClick: function (view, record, item) {
-        //if (item &&  !item.className.includes('taco-link-button-packages-collapsable')) {
-
         if (record.raw.getEl && !item) {
             var panel = Ext.getCmp(record.get('id'));
             var layout = this.formContainer.getLayout();
@@ -213,7 +212,6 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             var layout = this.formContainer.getLayout();
             layout.setActiveItem(this.getItemIndex(item.innerText));
         }
-        //}
     },
 
     getItemIndex: function (itemName) {
