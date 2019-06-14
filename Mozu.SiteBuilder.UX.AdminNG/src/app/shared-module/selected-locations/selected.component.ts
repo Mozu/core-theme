@@ -38,4 +38,9 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
             this.selectedLocations = [...<any>changes.selectedLocationsLst.currentValue];
         }
     }
+
+    rowUnselected(event) {
+        this._loggerService.info("Unselected row is :::");
+        _.pullAllWith(this.virtualLocations, [event.data], _.isEqual);
+    }
 }

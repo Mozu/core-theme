@@ -1,12 +1,14 @@
 <h5>{{'LOCATIONGROUP.FormLabels.selectedLocations' | translate}}({{selectedLocations ? selectedLocations.length : 0}})</h5>
 <p-table [columns]="model.cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="300px" 
-    [totalRecords]="model.totalRecords" 
-    [virtualRowHeight]="28"
+    (onRowUnselect)="rowUnselected($event)"
     [(selection)]="selectedLocations">
 
     <ng-template pTemplate="header" let-columns>
         <tr>
+            <th style="width: 1.5em">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
             <th *ngFor="let col of columns">
                 {{col.header}}
             </th>
@@ -14,6 +16,9 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
         <tr style="height:34px" [pSelectableRow]="rowData">
+            <td style="width: 3em">
+                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            </td>
             <td *ngFor="let col of columns">
                 {{rowData[col.field]}}
             </td>
