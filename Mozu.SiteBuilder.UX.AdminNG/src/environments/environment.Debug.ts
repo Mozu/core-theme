@@ -7,9 +7,11 @@ export const environment = {
     production: true,
     environmentName: 'Debug',
     domain: '.client1.com',
-    appUrl: 'http://localhost:4200/',
-    apiUrl: 'http://sb.dev01.kibo-dev.com/admin/app',
-    errorPageUrl: 'http://localhost:4200/',
-    apiTokenUrl: 'http://localhost:5100/token'
+    appUrl: window.location.origin + '/admin/',
+    apiUrl: window.location.origin + '/admin/app',
+    errorPageUrl: window.location.origin + '/admin/',
+    apiTokenUrl: 'http://localhost:5100/token',
+    accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin',
+    fulfillerUrl: 'http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/'
 };
 

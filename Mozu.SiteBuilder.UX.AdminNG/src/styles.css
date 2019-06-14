@@ -406,8 +406,8 @@ p-table .ui-table .pi-ellipsis-v:hover{
 }
 /* --------------Context Menu Ellipsis CSS - End------------- */
 .ui-sidebar-mask{ z-index:9 !important;}
-html{ overflow: hidden;}
-body{ overflow: hidden;}
+/* html{ overflow: hidden;} */
+/* body{ overflow: hidden;} */
 
 
 .ui-table-scrollable-header-box{

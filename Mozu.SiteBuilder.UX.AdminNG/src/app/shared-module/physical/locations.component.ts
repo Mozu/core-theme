@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { TreeNode } from 'primeng/components/common/api';
 import { PhysicalLocationsService } from './locations.service';
-import { LoggerService } from '@core';
+import { LoggerService, SpinnerService } from '@core';
 import { ActivatedRoute } from '@angular/router';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { NotificationService } from '@global';
@@ -24,7 +24,8 @@ export class PhysicalLocationsComponent implements OnInit {
   constructor(private _loggerService: LoggerService,
     private _physicalLocationsService: PhysicalLocationsService,
     private _notificationService: NotificationService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private _spinner: SpinnerService) { }
 
   ngOnInit() {
     this.model = new PhysicalLocationsModel();
@@ -59,7 +60,7 @@ export class PhysicalLocationsComponent implements OnInit {
   }
 
   private getPhysicalLocations() {
-    this.model.isLoading = true;
+    this._spinner.start();
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
       this.convertJsonToTreeNodeArr(locations);
       if (this.model.formMode === Constants.gridActionItem.Edit) {
@@ -68,7 +69,7 @@ export class PhysicalLocationsComponent implements OnInit {
         //send notification to main page.
         this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.model.selectedLoctionsDetailsArr});
       }
-      this.model.isLoading = false;
+      this._spinner.stop();
     });
   };
   convertJsonToTreeNodeArr(locations) {

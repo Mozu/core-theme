@@ -60,6 +60,12 @@ import {MenuModule} from 'primeng/menu';;
 import {CardModule } from 'primeng/card'
 import {PanelMenuModule} from 'primeng/panelmenu';
 //import { PhysicalLocationsComponent } from './physical/locations.component';
+import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
+import { AccountInformationComponent } from './account/information/information.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { FulfillerComponent } from './fulfiller/fulfiller.component';
 
 declare var resourcesVersion: any;
 
@@ -119,7 +125,11 @@ export function createTranslateLoader(http: HttpClient) {
         SearchBarComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,
-        SelectedLocationsComponent
+        SelectedLocationsComponent,
+        DynamicLinksDialogComponent,
+        AccountInformationComponent,
+        ConfirmationDialogComponent,
+        FulfillerComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -169,7 +179,11 @@ export function createTranslateLoader(http: HttpClient) {
         SearchBarComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,
-        SelectedLocationsComponent
+        SelectedLocationsComponent,
+        DynamicLinksDialogComponent,
+        AccountInformationComponent,
+        ConfirmationDialogComponent,
+        FulfillerComponent
     ]
 })
 

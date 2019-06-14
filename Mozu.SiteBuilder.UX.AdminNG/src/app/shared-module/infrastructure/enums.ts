@@ -17,7 +17,8 @@ export enum NavigationContainerType {
     product = 'product',
     order = 'order',
     quotes = 'quotes',
-    locationGroups = 'locationGroups'
+    locationGroups = 'locationGroups',
+    fulfiller = 'fulfiller'
 }
 
 export enum NotificationLGActions {

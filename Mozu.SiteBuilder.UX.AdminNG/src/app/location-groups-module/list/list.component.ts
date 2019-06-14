@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { LoggerService,
          HttpError, 
          ErrorCode, 
-         ErroNotificationType } from '@core'
+         ErroNotificationType,
+         SpinnerService } from '@core'
 
 import { Constants, NotificationLGActions } from '@shared';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,9 +29,11 @@ export class LocationGroupsListComponent implements OnInit {
         private _locationGroupsListService: LocationGroupsListService,
         private _translate: TranslateService,
         private _notificationService: NotificationService,
-        private router: Router) { }
+        private router: Router,
+        private _spinner: SpinnerService) { }
 
     ngOnInit() {
+        this._spinner.start();
         this._loggerService.info("LocationGroupsListComponent : ngOnInit");
         this.model = new LocationGroupListModel();
         this.model.numberOfRows = Constants.numberOfRows;
@@ -72,7 +75,6 @@ export class LocationGroupsListComponent implements OnInit {
     }
 
     public populateLocationGroupGrid = () => {
-        this.model.isLoading = true;
         this._loggerService.info("LocationGroupsListComponent : populateLocationGroupGrid");
 
         this._locationGroupsListService.fetchAllLocationGroups().subscribe((successResponse: Response) => {
@@ -81,9 +83,9 @@ export class LocationGroupsListComponent implements OnInit {
             if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
                 this.model.items = _.sortBy(responseJson['items'],['locationGroupId']);
             }
-            this.model.isLoading = false;
+            this._spinner.stop();
         }, (errResponse) => {
-            this.model.isLoading = false;
+            this._spinner.stop();
             this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_errResponse");
             throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
         })

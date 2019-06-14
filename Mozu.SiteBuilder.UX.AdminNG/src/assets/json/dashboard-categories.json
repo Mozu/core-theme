@@ -3,7 +3,6 @@
     "id": "products",
     "navParent": "main",
     "label": "Catalog",
-    "imageURL": "/admin/assets/Images/catlog.png",
     "icon": "nav-catalog",
     "behaviorIds": 4,
     "visible" : true,
@@ -50,7 +49,6 @@
     "id": "marketing",
     "navParent": "main",
     "label": "Marketing",
-    "imageURL": "/admin/assets/Images/marketing.png",
     "icon": "nav-marketing",
     "behaviorIds": 24,
     "visible" : true,
@@ -97,7 +95,6 @@
     "id": "content",
     "navParent": "main",
     "label": "Site Builder",
-    "imageURL": "/admin/assets/Images/sitebuilder.png",
     "icon": "nav-sites",
     "showBreadCrumbs": true,
     "visible" : true,
@@ -140,7 +137,6 @@
     "id": "publishing",
     "navParent": "main",
     "label": "Publishing ",
-    "imageURL": "/admin/assets/Images/publishing.png",
     "icon": "nav-publishing",
     "behaviorIds":  8 ,
     "visible" : true,
@@ -167,7 +163,6 @@
     "id": "order",
     "navParent": "main",
     "label": "Fulfillment",
-    "imageURL": "/admin/assets/Images/fullfillment.png",
     "icon": "nav-orders",
     "behaviorIds":  73 ,
     "visible" : true,
@@ -212,7 +207,15 @@
         "label": "Location Groups",
         "address": "locationGroups",
         "visible" : true,
-        "navUrl":"locationGroups"
+        "url":"locationGroups"
+      },
+      {
+        "id": "fulfiller",
+        "label": "Fulfiller",
+        "contextType": "",
+        "address": "fulfiller",
+        "visible" : true,
+        "url":"fulfiller"
       }
     ]
   },
@@ -255,7 +258,6 @@
     "id": "b2baccount",
     "navParent": "main",
     "label": "B2B",
-    "imageURL": "/admin/assets/Images/b2b.png",
     "behaviorIds":  188 ,
     "visible" : true,
     "items": [
@@ -281,7 +283,6 @@
     "id": "report",
     "navParent": "main",
     "label": "Reporting",
-    "imageURL": "/admin/assets/Images/reporting.png",
     "behaviorIds":  188 ,
     "visible" : true,
     "items": [
@@ -299,7 +300,6 @@
     "id": "settings",
     "navParent": "sys",
     "label": "Settings",
-    "imageURL": "/admin/assets/Images/settings.png",
     "icon": "nav-settings",
     "visible" : true,
     "items": [
@@ -365,7 +365,6 @@
     "id": "schema",
     "navParent": "sys",
     "label": "Schema",
-    "imageURL": "/admin/assets/Images/schema.png",
     "behaviorIds":  4 ,
     "visible" : true,
     "items": [
@@ -439,7 +438,6 @@
     "id": "customization",
     "navParent": "sys",
     "label": "Customization",
-    "imageURL": "/admin/assets/Images/customization.png",
     "behaviorIds":  4 ,
     "visible" : true,
     "items": [
@@ -473,7 +471,6 @@
     "id": "structure",
     "navParent": "sys",
     "label": "Structure",
-    "imageURL": "/admin/assets/Images/structure.png",
     "behaviorIds":  4 ,
     "visible" : true,
     "items": [
@@ -516,7 +513,6 @@
     "navParent": "sys",
     "label": "Permissions",
     "visible" : true,
-    "imageURL": "/admin/assets/Images/permissions.png",
     "items": [
       {
         "id": "users",
@@ -549,7 +545,6 @@
     "navParent": "sys",
     "locAtts": [ "multiLang", "multCurrency" ],
     "label": "Localization",
-    "imageURL": "/admin/assets/Images/schema.png",
     "visible" : true,
     "items": [
       {

@@ -37,7 +37,7 @@ Ext.define('Taco.view.dashboard.Index', {
                                 '<div class="taco-content-holder">',
                                     '<div class= "taco-dashboard-item-header">{[values.label]}:</div>',
                                     '<div class= "taco-dashboard-item-item"><tpl for="subNav">',
-                                    '<tpl if="values.address == \'/admin?quotes\' || values.address == \'/admin?locationGroups\'">',    
+                                    '<tpl if="values.address == \'/admin?quotes\' || values.address == \'/admin?locationGroups\' || values.label == \'Fulfiller\'">',    
                                     '<div><a href="{[values.address]}">{[values.label]}</a></div>',
                                     '<tpl else>',
                                      '<div><a data-url="{[values.address]}">{[values.label]}</a></div>',

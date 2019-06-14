@@ -51,7 +51,8 @@ export class Constants {
         locationGroups : 'locationGroups',
         locationGroupCreate : 'locationGroupCreate',
         locationGroupEdit : 'locationGroupEdit',
-        
+        fulfiller: 'fulfiller',
+        fulfillerHome: 'home'
     };
     
     static webApis = {

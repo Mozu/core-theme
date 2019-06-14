@@ -1,9 +1,10 @@
 <h5 class="physicalloc">{{'LOCATIONGROUP.FormLabels.physicalLocation' | translate }}</h5>
+<spinner></spinner>
 <p-treeTable #tt id="physicallocationdiv" [value]="model.physicalLocations" [columns]="model.cols" 
     selectionMode="single" 
     [(selection)]="model.selectedPhysicalLocNode" 
     dataKey="name" 
-    [scrollable]="true" scrollHeight="360px" [loading]="model.isLoading"
+    [scrollable]="true" scrollHeight="360px"
     (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)">
     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
         <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">

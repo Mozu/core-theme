@@ -217,7 +217,15 @@
           "label": "Location Groups",
           "address": "locationGroups",
           "visible" : true,
-          "url":"locationGroups"
+          "routerLink":"locationGroups"
+        },
+        {
+          "id": "fulfiller",
+          "label": "Fulfiller",
+          "contextType": "",
+          "address": "fulfiller",
+          "visible" : true,
+          "url":"fulfiller"
         }
         
       ]

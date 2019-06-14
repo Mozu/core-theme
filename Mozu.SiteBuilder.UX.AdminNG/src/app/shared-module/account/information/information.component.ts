@@ -11,7 +11,8 @@ import {
   LoggerService,
   HttpError,
   ErrorCode,
-  ErroNotificationType
+  ErroNotificationType,
+  SpinnerService
 } from '@core';
 
 import { SharedDataService } from '@global';
@@ -38,7 +39,8 @@ export class AccountInformationComponent implements OnChanges, OnInit {
 
   constructor(private _accountInfoService: AccountInfoService,
     private _loggerService: LoggerService,
-    private _sharedData : SharedDataService,) { }
+    private _sharedData : SharedDataService,
+    private _spinner: SpinnerService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info("AccountInformationComponent : ngOnChanges");
@@ -49,6 +51,7 @@ export class AccountInformationComponent implements OnChanges, OnInit {
   }
 
   ngOnInit() {
+    this._spinner.start();
     this.model = new AccountInfoModel();
     this.model.users = [];
   }
@@ -63,8 +66,10 @@ export class AccountInformationComponent implements OnChanges, OnInit {
         this.model = responseJson;
         this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId });
         this.generateCustomerAccountUrl();
+        this._spinner.stop();
       }
     }, (errResponse) => {
+      this._spinner.stop();
       this._loggerService.info("AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse");
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
     })

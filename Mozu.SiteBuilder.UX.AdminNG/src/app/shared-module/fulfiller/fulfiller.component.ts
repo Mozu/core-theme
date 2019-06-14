@@ -1,0 +1,38 @@
+import { Component, 
+         OnInit,
+         Input
+} from '@angular/core';
+
+import { SafeResourceUrl, 
+         DomSanitizer 
+} from '@angular/platform-browser';
+
+import {LoggerService
+} from '@core';
+
+import { environment } from '@env';
+
+import { Constants } from '@shared';
+
+
+@Component({
+  selector: 'app-fulfiller',
+  templateUrl: './fulfiller.component.html',
+  styleUrls: ['./fulfiller.component.css']
+})
+export class FulfillerComponent {
+  fulFilleriframeSrc : string;
+  @Input() iframeResourceURL : SafeResourceUrl;
+  
+  constructor(
+    public sanitizer: DomSanitizer,
+    private _logger: LoggerService
+    ) { 
+    }
+
+  ngOnInit() {
+    this._logger.info('AppComponent : ngOnInit() ');
+    this.fulFilleriframeSrc = environment.fulfillerUrl + Constants.uiRoutes.fulfillerHome;
+    this.iframeResourceURL = this.sanitizer.bypassSecurityTrustResourceUrl(this.fulFilleriframeSrc);
+  }
+}

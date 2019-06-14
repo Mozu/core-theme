@@ -348,6 +348,11 @@ Ext.define('Taco.store.Navigation', {
                         "id": "locations-group",
                         "label": "Location Groups",
                         "address": "/admin?locationGroups",
+                    },
+                    {
+                        "id": "fulfiller",
+                        "label": "Fulfiller",
+                        "address": "http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/home",
                     }
                 ]
             },

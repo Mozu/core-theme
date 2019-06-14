@@ -1,6 +1,9 @@
 ﻿.spinnerImage {
-    position: relative;
-    top: 43%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate();
+    z-index: 99999;
 }
 
 .productSliderSpinnerContainer {
@@ -70,7 +73,7 @@
     position: absolute;
     z-index: 15;
 }
-checkoutInformationSpinnerContainer{
+.checkoutInformationSpinnerContainer{
     width: 100%;
     height: 203px;
     text-align: center;

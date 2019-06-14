@@ -8,7 +8,8 @@ import * as _ from 'lodash';
 import { LoggerService, 
   HttpError, 
   ErrorCode, 
-  ErroNotificationType } from '@core';
+  ErroNotificationType,
+  SpinnerService } from '@core';
 
 import { QuoteService } from './quote.service';
 
@@ -28,9 +29,11 @@ export class QuoteComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
-    private _loggerService : LoggerService ) { }
+    private _loggerService : LoggerService,
+    private _spinner: SpinnerService ) { }
 
   ngOnInit() {
+    this._spinner.start();
     this._loggerService.info("QuoteComponent : ngOnInit");
     this.model = new QuoteItemModel();
     this.quoteId = this.route.snapshot.paramMap.get("quoteId");
@@ -49,7 +52,9 @@ export class QuoteComponent implements OnInit {
           this.userId = this.model.userId; 
           this.customerAccountId = this.model.customerAccountId;
         }
+        this._spinner.stop();
     }, (errResponse) => {
+      this._spinner.stop();
       this._loggerService.info("QuoteComponent : _quotesListService.fetchAllQuotes_errResponse");
       throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
     })
