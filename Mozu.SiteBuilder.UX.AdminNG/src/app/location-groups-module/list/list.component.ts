@@ -69,11 +69,14 @@ export class LocationGroupsListComponent implements OnInit {
     }
 
     onRowSelect(event) {
-        console.log("event -->",event);
-        console.log("event target -->",event.originalEvent.target.class);
         this.model.selectedLocationGroup = event.data;
         //open in edit mode
-        if(event.originalEvent.target.classList.value !== "pi pi-ellipsis-v"){
+        if(event && event.originalEvent &&  event.originalEvent.target && 
+            event.originalEvent.target.classList &&  
+            event.originalEvent.target.classList.value === "pi pi-ellipsis-v"){
+            //open action menu.
+        }
+        else{
             this.viewLocationGroup();
         }
     };
