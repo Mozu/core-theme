@@ -17,8 +17,19 @@ export enum NavigationContainerType {
     product = 'product',
     order = 'order',
     quotes = 'quotes',
-    locationGroups = 'locationGroups',
-    fulfiller = 'fulfiller'
+    locationGroups = 'locationGroups'
+}
+
+export enum ConfirmationDialogNotificationCode {
+    DeleteQuoteItem = 'DeleteQuoteItem',
+    SaveItem = 'SaveItem',
+    DeleteLocationGroup = "DeleteLocationGroup",
+    Cancel = "Cancel"
+}
+
+export enum ConfirmationDialogNotificationType{
+    Confirmation = "Confirmation",
+    Information = "Information"
 }
 
 export enum NotificationLGActions {

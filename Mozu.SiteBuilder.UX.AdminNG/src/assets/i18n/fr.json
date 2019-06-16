@@ -46,6 +46,61 @@
       "copyRight": "© Xpanxion",
       "customerSupport": "Customer Support at",
       "supportEmail": "test"
+    },
+    "ACCOUNT": {
+      "Information": {
+        "heading": "Account",
+        "company": "Company:",
+        "companyAdminEmail": "Company Admin Email:",
+        "salesRep": "Sales Rep:"
+      }
+    },
+    "SHIPPING": {
+      "Address": {
+        "shippingInformation": "Informations sur la livraison",
+        "shippingAddress": "Adresse de livraison",
+        "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison."
+      },
+      "Method": {
+        "shippingMethodAndPrice": "Méthode d'expédition et prix",
+        "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
+        "loadingText": "Chargement...",
+        "notFoundText": "Aucune méthode d'expédition disponible."
+      }
+    },
+    "CONFIRMATIONDIALOG": {
+      "Confirmation": {
+        "DeleteQuoteItem": {
+          "title": " Delete Item",
+          "message": " Are you certain you want to delete this item?",
+          "primaryButtonText": "Yes",
+          "secondaryButtonText": "No",
+          "isShowSecondaryButton": "true"
+        },
+        "DeleteLocationGroup": {
+          "title": " Delete Item",
+          "message": " Are you certain you want to delete this item?",
+          "primaryButtonText": "Yes",
+          "secondaryButtonText": "No",
+          "isShowSecondaryButton": "true"
+        }
+      },
+      "Information": {
+        "SaveItem": {
+          "title": " Save Item",
+          "message": " Item is saved successfully",
+          "primaryButtonText": "Ok",
+          "secondaryButtonText": "",
+          "isShowSecondaryButton": "false"
+        }
+      }
+    },
+    "AUDITLOG": {
+      "GridHeader": {
+        "date": "Date",
+        "event": "Event",
+        "user": "User"
+      }
     }
   },
   "MESSAGES": {

@@ -8,7 +8,7 @@ import { LoggerService,
          ErroNotificationType,
          SpinnerService } from '@core'
 
-import { Constants, NotificationLGActions } from '@shared';
+import { Constants, NotificationLGActions, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType } from '@shared';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
@@ -23,6 +23,7 @@ import * as _ from 'lodash';
 })
 export class LocationGroupsListComponent implements OnInit {
     public model: LocationGroupListModel;
+    subscriptions = [];
 
     constructor(
         private _loggerService: LoggerService,
@@ -30,7 +31,7 @@ export class LocationGroupsListComponent implements OnInit {
         private _translate: TranslateService,
         private _notificationService: NotificationService,
         private router: Router,
-        private _spinner: SpinnerService) { }
+        private _confirmationDialogService: ConfirmationDialogService) { }
 
     ngOnInit() {
         this._spinner.start();
@@ -45,18 +46,41 @@ export class LocationGroupsListComponent implements OnInit {
         });
 
         this.populateLocationGroupGrid();
+
+        this.subscriptions.push(
+            this._notificationService.QuoteItemDeleteConfirmation.subscribe((action: string) => {
+              if (action === ConfirmationDialogNotificationCode.DeleteLocationGroup) {
+                this.deleteLocationGroup();
+              }
+            })
+        );
+    }
+
+    ngOnDestroy() {
+        this._loggerService.info("LocationGroupsListComponent : ngOnDestroy");
+        this.subscriptions.forEach((s) => {
+            s.unsubscribe();
+        });
     }
 
     public gridContextMenu = (contextMenu) => {
         this.model.locationGridContextMenuItem.push({ label: contextMenu.edit, command: (event) => this.viewLocationGroup() })
-        this.model.locationGridContextMenuItem.push({ label: contextMenu.delete, command: (event) => this.deleteLocationGroup() })
+        this.model.locationGridContextMenuItem.push({ label: contextMenu.delete, command: (event) => this.showDeleteConfirmationDialog() })
     }
 
     onRowSelect(event) {
+        console.log("event -->",event);
+        console.log("event target -->",event.originalEvent.target.class);
         this.model.selectedLocationGroup = event.data;
         //open in edit mode
-        this.viewLocationGroup();
+        if(event.originalEvent.target.classList.value !== "pi pi-ellipsis-v"){
+            this.viewLocationGroup();
+        }
     };
+
+    showDeleteConfirmationDialog(){
+        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup, ConfirmationDialogNotificationType.Confirmation);
+    }
     
     deleteLocationGroup(){
         let locationGroupId = this.model.selectedLocationGroup.locationGroupId;
