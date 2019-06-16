@@ -54,6 +54,8 @@ export class LocationGroupsListComponent implements OnInit {
 
     onRowSelect(event) {
         this.model.selectedLocationGroup = event.data;
+        //open in edit mode
+        this.viewLocationGroup();
     };
     
     deleteLocationGroup(){
