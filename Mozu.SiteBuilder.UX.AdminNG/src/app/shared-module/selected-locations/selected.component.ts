@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { LoggerService } from '@core';
 import * as _ from 'lodash';
 import { LocationsListModel } from '@shared/locations';
 import { SelectedLocationModel } from './selected.model';
+import { LocationGroupEventOperations } from '@shared/infrastructure';
+
 
 @Component({
     selector: 'selected-locations-list',
@@ -15,6 +17,11 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     public model: SelectedLocationModel;
     @Input()
     selectedLocationsLst: LocationsListModel[];
+    @Output() 
+    locationUnselected: EventEmitter<any> = new EventEmitter<any>();
+    @Output()
+    locationsChanged:EventEmitter<any> = new EventEmitter<any>();
+    
     //below properties not able to move to model level as used in ngOnChanges methods.
     selectedLocations: LocationsListModel[];
     virtualLocations: LocationsListModel[];
@@ -42,5 +49,15 @@ export class SelectedLocationsComponent implements OnInit, OnChanges {
     rowUnselected(event) {
         this._loggerService.info("Unselected row is :::");
         _.pullAllWith(this.virtualLocations, [event.data], _.isEqual);
+        this.locationUnselected.emit(event.data);
+    }
+
+    tableHeaderCheckboxToggle(event: any) {
+        this._loggerService.info("onTableHeaderCheckboxToggle row is :::"+event.checked);
+        
+        if(event.checked === false){
+           this.locationsChanged.emit({data: this.virtualLocations, operation:LocationGroupEventOperations.remove});
+        }
+        this.virtualLocations = [];
     }
 }

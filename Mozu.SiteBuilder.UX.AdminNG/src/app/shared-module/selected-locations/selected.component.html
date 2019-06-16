@@ -2,6 +2,7 @@
 <p-table [columns]="model.cols" [value]="virtualLocations" [scrollable]="true" 
     [rows]="20" scrollHeight="300px" 
     (onRowUnselect)="rowUnselected($event)"
+    (onHeaderCheckboxToggle)="tableHeaderCheckboxToggle($event)"
     [(selection)]="selectedLocations">
 
     <ng-template pTemplate="header" let-columns>

@@ -45,7 +45,9 @@
 						[selectedLocationsLst]="model.selectedLocations" (locationSelected)="locationSelected($event)"
 						(locationUnselected)="locationUnselected($event)" (locationsChanged)="locationsChanged($event)">
 					</locations-list>
-					<selected-locations-list class="col-md-4" [selectedLocationsLst]="model.selectedLocations">
+					<selected-locations-list class="col-md-4" [selectedLocationsLst]="model.selectedLocations" 
+					(locationUnselected)="locationUnselected($event)"
+					(locationsChanged)="locationsChanged($event)">
 					</selected-locations-list>
 				</div>
 			</div>

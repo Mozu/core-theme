@@ -58,9 +58,19 @@ export class LocationsListComponent implements OnInit, OnChanges {
         }
         if(changes && changes.selectedLocationsLst && changes.selectedLocationsLst.currentValue){
             this.setSelectedLocLst = changes.selectedLocationsLst.currentValue;
+            this.updateGridCheckboxSelections();
         }
     }
     
+
+    updateGridCheckboxSelections(){
+       //unselect the removed items
+       if(this.model){
+           this.model.selectedLocations =  _.intersectionWith(this.model.selectedLocations,  this.setSelectedLocLst, _.isEqual);
+       } 
+    }
+
+
     getLocations(locations, selectedLocLst){
         if(locations){
             this.model.selectedLocations = [];
