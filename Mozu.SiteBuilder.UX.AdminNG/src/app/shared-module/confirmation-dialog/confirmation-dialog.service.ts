@@ -48,7 +48,7 @@ export class ConfirmationDialogService {
                 this._notificationService.notifyQuoteItemDeleteConfirmation(this.notificationCode);
                 break;
             case ConfirmationDialogNotificationCode.DeleteLocationGroup:
-                this._notificationService.notifyQuoteItemDeleteConfirmation(this.notificationCode);
+                this._notificationService.notifyLocationGroupDeleteConfirmation(this.notificationCode);
                 break;
             default:
                 break;

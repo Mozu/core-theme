@@ -48,7 +48,7 @@ export class LocationGroupsListComponent implements OnInit {
         this.populateLocationGroupGrid();
 
         this.subscriptions.push(
-            this._notificationService.QuoteItemDeleteConfirmation.subscribe((action: string) => {
+            this._notificationService.LocationGroupDeleteConfirmation.subscribe((action: string) => {
               if (action === ConfirmationDialogNotificationCode.DeleteLocationGroup) {
                 this.deleteLocationGroup();
               }
@@ -93,7 +93,7 @@ export class LocationGroupsListComponent implements OnInit {
             
         }, (errResponse) => {
             this._loggerService.info("LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_errResponse");
-            throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+            throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
         });
     }
 
