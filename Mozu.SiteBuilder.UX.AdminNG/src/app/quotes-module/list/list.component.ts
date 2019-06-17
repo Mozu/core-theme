@@ -62,18 +62,20 @@ export class QuotesListComponent implements OnInit {
   public populateQuoteGrid = () => {
     this._spinner.start();
     this._loggerService.info("QuotesListComponent : populateQuoteGrid");
-
-    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse:Response) =>{
-      this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
-       let responseJson = quotesListSuccessResponse;
-        if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
-          this.model.items = responseJson['items'];
-        }
-          this._spinner.stop();
-    }, (errResponse) => {
-      this._spinner.stop();
-      this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse");
-      throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
-    })
+      /** spinner ends after 2 seconds */
+    setTimeout(() => {
+      this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse:Response) =>{
+        this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse");
+         let responseJson = quotesListSuccessResponse;
+          if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
+            this.model.items = responseJson['items'];
+            this._spinner.stop();
+          } 
+      }, (errResponse) => {
+        this._spinner.stop();
+        this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse");
+        throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
+      })
+  }, 2000);
   }
 }
