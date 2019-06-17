@@ -309,13 +309,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 Mozu.Core.Money.CurrencyCode.TryParse(_siteContext.CurrencyExchangeRate.ToCurrencyCode, out cc))
             {
                 CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
+     
 
                 NumberFormat = new NumberFormatInfo()
                 {
                     CurrencyDecimalDigits = CurrencyInfo.Precision,
                     CurrencySymbol = CurrencyInfo.Symbol
                 };
-               
+
                 this.CurrencyRateInfo = new CurrencyRateInfo()
                 {
                     Rate = _siteContext.CurrencyExchangeRate.Rate,
@@ -324,7 +325,15 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
             else
             {
+                var localeCode = _apiContext.LocaleCode;
+                NumberFormatInfo cultureNumberFormatInfo;
+                cultureNumberFormatInfo = (localeCode != null) ? CultureInfo.GetCultureInfo(localeCode).NumberFormat : null;
                 NumberFormat = _siteContext.NumberFormat;
+                if (cultureNumberFormatInfo != null && NumberFormat != null)
+                {
+                    NumberFormat.CurrencyPositivePattern = cultureNumberFormatInfo.CurrencyPositivePattern;
+                    NumberFormat.CurrencyNegativePattern = cultureNumberFormatInfo.CurrencyNegativePattern;
+                }
                 CurrencyInfo = _siteContext.CurrencyInfo;
                 this.CurrencyRateInfo = CurrencyRateInfo.Empty;
             }

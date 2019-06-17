@@ -53,8 +53,32 @@ namespace Mozu.SiteBuilder.Mvc.Filters
             }
             var pageContext = context.PageContext();
 
-            var numberFormat = pageContext.NumberFormat;
-            var format = "C" + parameter.FirstOrDefault();
+         /*
+           It turns out that negative currency values can be displayed in lots of weird little
+           ways that we didn't prepare for when writing core theme. We want to give our clients
+           the option to use this special formatting without breaking/significantly changing
+           their existing themes. This is why we include the useCulturalNegativeStandard flag; if
+           it is TRUE, the filter will use whichever CurrencyNegativePattern is saved in the page
+           context for the current localecode. If it is false, we default to the pattern
+           "-$n", which is the number 1. 
+         */
+            NumberFormatInfo numberFormat = (NumberFormatInfo)pageContext.NumberFormat.Clone();
+
+            var format = "C";
+            bool useCulturalNegativeStandard = false;
+            if (parameter.Any())
+            {
+                useCulturalNegativeStandard = (bool)parameter.FirstOrDefault();
+            }
+            if (!useCulturalNegativeStandard)
+            {
+                 numberFormat.CurrencyNegativePattern = 1;   
+            } 
+            if (parameter.Count() > 1)
+            {
+                format += parameter.ElementAt(1);
+            }
+
             if (value is IConvertible)
             {
                 var formatProvider = value as IFormatProvider ?? System.Threading.Thread.CurrentThread.CurrentCulture;

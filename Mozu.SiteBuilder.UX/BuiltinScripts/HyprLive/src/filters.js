@@ -1,6 +1,6 @@
 ﻿(function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate, conversionRateRounding) {
-        var sign, i, j, s, om;
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, positivePattern, negativePattern, roundUp, conversionRate, conversionRateRounding) {
+        var isNegative, i, j, s, om, patterns, pattern, returnString;
         decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
         om = Math.pow(10, decPlaces);
 
@@ -8,7 +8,7 @@
         decSeparator = decSeparator == undefined ? "." : decSeparator;
         thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
         n = n * conversionRate;
-        sign = n < 0 ? "-" : "";
+        isNegative = !!(n < 0);
         if (!isNaN(conversionRateRounding)) {
             n = Math.round(Math.abs(+n || 0) * Math.pow(10, conversionRateRounding)) * Math.pow(10, -1 * conversionRateRounding);
         }
@@ -16,7 +16,18 @@
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
         s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-        return sign + (symbolIsSuffix ? s + symbol : symbol + s);
+
+        if (!isNegative) {
+            patterns = ['$n', 'n$', '$ n', 'n $'];
+            pattern = patterns[positivePattern];
+        } else {
+            patterns = ['($n)', '-$n', '$-n', '$n-', '(n$)', '-n$', 'n-$', 'n$-', '-n $', '-$ n', 'n $-', '$ n-', '$ -n', 'n- $', '($ n)', '(n $)'];
+            pattern = patterns[negativePattern];
+        }
+        returnString = pattern.replace('n', s);
+        returnString = returnString.replace('$', symbol);
+
+        return returnString;
     }
 
     var decimalPlacesRE = /\.\d+/;
@@ -77,12 +88,13 @@
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
         };
     
-    HyprLive.engine.setFilter('currency', function(num, symbol) {
+    HyprLive.engine.setFilter('currency', function(num, useCulturalNegativeStandard, symbol) {
         var conversionRate;
         var conversionRateRounding;
         if (!currencyInfo) {
             try {
                 currencyInfo = HyprLive.engine.options.locals.pageContext.currencyInfo;
+                
             } catch (e) {
             }
             currencyInfo = currencyInfo || {
@@ -99,7 +111,28 @@
                 conversionRate = 1;
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate, conversionRateRounding);
+
+        var positivePattern = 0;
+        var negativePattern = 1;
+        var numberFormat = HyprLive.engine.options.locals.pageContext.numberFormat;
+
+         /*
+            It turns out that negative currency values can be displayed in lots of weird little
+            ways that we didn't prepare for when writing core theme. We want to give our clients
+            the option to use this special formatting without breaking/significantly changing
+            their existing themes. This is why we include the useCulturalNegativeStandard flag; if
+            it is TRUE, the filter will use whichever CurrencyNegativePattern is saved in the page
+            context for the current localecode. If it is false, we default to the pattern
+            "-$n", which is the number 1. 
+        */
+
+        if (numberFormat) {
+            positivePattern = numberFormat.currencyPositivePattern;
+            if (useCulturalNegativeStandard) {
+                negativePattern = numberFormat.currencyNegativePattern;
+            }
+        }     
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, positivePattern, negativePattern, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate, conversionRateRounding);
     });
 
 

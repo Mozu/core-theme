@@ -1,5 +1,5 @@
 /*! 
- * Mozu Hypr Live - v1.0.0 - 2019-02-08
+ * Mozu Hypr Live - v1.0.0 - 2019-06-20
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -365,7 +365,7 @@
 	(function (exportFn) {
 		exportFn(['hyprlivecontext'], function (HyprLiveContext) {
             
-/*! Swig v1.3.6-hypr.1 | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
+/*! Swig v<%= pkg.version %> | https://paularmstrong.github.com/swig | @license https://github.com/paularmstrong/swig/blob/master/LICENSE */
 /*! DateZ (c) 2011 Tomo Universalis | @license https://github.com/TomoUniversalis/DateZ/blob/master/LISENCE */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var swig = require('../lib/swig');
@@ -2266,18 +2266,15 @@ exports.parse = function (source, opts, tags, filters) {
     varStripAfter = new RegExp('-' + escapedVarClose + '$'),
     cmtOpen = opts.cmtControls[0],
     cmtClose = opts.cmtControls[1],
-    inlineCmtOpen = opts.inlineCmtControls[0],
-    inlineCmtClose = opts.inlineCmtControls[1],
     anyChar = '[\\s\\S]*?',
     // Split the template source based on variable, tag, and comment blocks
     // /(\{%[\s\S]*?%\}|\{\{[\s\S]*?\}\}|\{#[\s\S]*?#\})/
     splitter = new RegExp(
       '(' +
-      escapedVarOpen + anyChar + escapedVarClose + '|' +
-      escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
-      escapeRegExp(inlineCmtOpen) + anyChar + escapeRegExp(inlineCmtClose) + '|' +
-      escapedTagOpen + anyChar + escapedTagClose +
-      ')'
+        escapedVarOpen + anyChar + escapedVarClose + '|' +
+        escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
+        escapedTagOpen + anyChar + escapedTagClose +
+        ')'
     ),
     // splitter = new RegExp(
     //   '(' +
@@ -2451,7 +2448,7 @@ exports.parse = function (source, opts, tags, filters) {
     }
 
     // Is a comment?
-    if ((!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) || !inRaw && utils.startsWith(chunk, inlineCmtOpen) && utils.endsWith(chunk, inlineCmtClose)) {
+    if (!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
       // do nuthin and keep going!
       return;
     }
@@ -2605,7 +2602,6 @@ var defaultOptions = {
     varControls: ['{{', '}}'],
     tagControls: ['{%', '%}'],
     cmtControls: ['{#', '#}'],
-    inlineCmtControls: ['{#', '#}'],
     locals: {},
     /**
      * Cache control for templates. Defaults to saving all templates into memory.
@@ -5499,8 +5495,7 @@ process.nextTick = (function () {
     if (canPost) {
         var queue = [];
         window.addEventListener('message', function (ev) {
-            var source = ev.source;
-            if ((source === window || source === null) && ev.data === 'process-tick') {
+            if (ev.source === window && ev.data === 'process-tick') {
                 ev.stopPropagation();
                 if (queue.length > 0) {
                     var fn = queue.shift();
@@ -5965,8 +5960,8 @@ var util = {
 
 HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, false);
 (function () {
-    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, symbolIsSuffix, roundUp, conversionRate, conversionRateRounding) {
-        var sign, i, j, s, om;
+    function formatMoney(n, decPlaces, thouSeparator, decSeparator, symbol, positivePattern, negativePattern, roundUp, conversionRate, conversionRateRounding) {
+        var isNegative, i, j, s, om, patterns, pattern, returnString;
         decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces;
         om = Math.pow(10, decPlaces);
 
@@ -5974,7 +5969,7 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         decSeparator = decSeparator == undefined ? "." : decSeparator;
         thouSeparator = thouSeparator == undefined ? "," : thouSeparator;
         n = n * conversionRate;
-        sign = n < 0 ? "-" : "";
+        isNegative = !!(n < 0);
         if (!isNaN(conversionRateRounding)) {
             n = Math.round(Math.abs(+n || 0) * Math.pow(10, conversionRateRounding)) * Math.pow(10, -1 * conversionRateRounding);
         }
@@ -5982,7 +5977,18 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
         i = parseInt(n = (Math.round(om * Math.abs(+n || 0)) / om), 10) + "";
         j = (j = i.length) > 3 ? j % 3 : 0;
         s = (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-        return sign + (symbolIsSuffix ? s + symbol : symbol + s);
+
+        if (!isNegative) {
+            patterns = ['$n', 'n$', '$ n', 'n $'];
+            pattern = patterns[positivePattern];
+        } else {
+            patterns = ['($n)', '-$n', '$-n', '$n-', '(n$)', '-n$', 'n-$', 'n$-', '-n $', '-$ n', 'n $-', '$ n-', '$ -n', 'n- $', '($ n)', '(n $)'];
+            pattern = patterns[negativePattern];
+        }
+        returnString = pattern.replace('n', s);
+        returnString = returnString.replace('$', symbol);
+
+        return returnString;
     }
 
     var decimalPlacesRE = /\.\d+/;
@@ -6043,12 +6049,13 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
             UpToCurrencyPrecision: 'upToCurrencyPrecision'
         };
     
-    HyprLive.engine.setFilter('currency', function(num, symbol) {
+    HyprLive.engine.setFilter('currency', function(num, useGlobalNegativeStandard, symbol) {
         var conversionRate;
         var conversionRateRounding;
         if (!currencyInfo) {
             try {
                 currencyInfo = HyprLive.engine.options.locals.pageContext.currencyInfo;
+                
             } catch (e) {
             }
             currencyInfo = currencyInfo || {
@@ -6065,7 +6072,28 @@ HyprLive.engine.setTag('make_url', MakeUrlTag.parse, MakeUrlTag.compile, false, 
                 conversionRate = 1;
             }
         }
-        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, false, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate, conversionRateRounding);
+
+        var positivePattern = 0;
+        var negativePattern = 1;
+        var numberFormat = HyprLive.engine.options.locals.pageContext.numberFormat;
+
+         /*
+            It turns out that negative currency values can be displayed in lots of weird little
+            ways that we didn't prepare for when writing core theme. We want to give our clients
+            the option to use this special formatting without breaking/significantly changing
+            their existing themes. This is why we include the useGlobalNegativeStandard flag; if
+            it is TRUE, the filter will use whichever CurrencyNegativePattern is saved in the page
+            context for the current localecode. If it is false, we default to the pattern
+            "-$n", which is the number 1. 
+        */
+
+        if (numberFormat) {
+            positivePattern = numberFormat.currencyPositivePattern;
+            if (useGlobalNegativeStandard) {
+                negativePattern = numberFormat.currencyNegativePattern;
+            }
+        }     
+        return formatMoney(num, currencyInfo.precision, null, null, symbol || currencyInfo.symbol, positivePattern, negativePattern, currencyInfo.roundingType === RoundingTypeConst.UpToCurrencyPrecision, conversionRate, conversionRateRounding);
     });
 
 

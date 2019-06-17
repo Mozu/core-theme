@@ -218,7 +218,7 @@
 
         });
 
-        it('has a currency filter that formats currency', function() {
+        it('has a currency filter that formats currency', function () {
             expect(Hypr.engine.render('{{ dolla|currency }}', { locals: { dolla: 3 } })).to.equal('£4.00');
             HyprLiveContext.locals.pageContext.currencyRateInfo = {
                 rate: 1,
