@@ -2668,6 +2668,7 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+
     reOrder: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/copy',
@@ -2675,16 +2676,7 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
-    },
-
-    cancelOrder: function (config) {
-        Ext.apply(config, {
-            url: '/admin/app/order/cancel',
-            method: 'POST'
-        });
-
-        Ext.Ajax.request(config);
-    },
+    },    
 
     saveAttributes: function (config) {
 
@@ -2737,7 +2729,8 @@ Ext.define('Taco.model.Order', {
     //            type:"shipment",
     //            packageId: 'asdf' 
     //        }
-    //    }
+    //    }    
+
     resendEmail: function (config) {
         var me = this,
             config = config || {},
@@ -2811,6 +2804,33 @@ Ext.define('Taco.model.Order', {
             });
         }
         return this.cancellationReasons;
+    },
+
+    cancelOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    cancelOrderItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel/items',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    getCancelItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/cancel/cancelitem',
+            method: 'GET'
+        });
+
+        Ext.Ajax.request(config);
     },
 
     cancelShipment: function (config) {

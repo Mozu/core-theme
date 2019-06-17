@@ -108,10 +108,9 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
         var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
             this.down('#otherReason').getValue() : null);
-
         return {
-            orderId: order.get('taco.model.order_id'),
-            orderItemId: order.get('id'),
+            orderId: order.get('id'),
+            //orderId: 1,
             reason: {
                 reasonCode: reason,
                 description: description
@@ -138,12 +137,8 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                         me.setLoading(true, me.body);
                         var order = me.record;
                         var payloadData = me.getCancelOrderPayload();
-
                         order.cancelOrder({
-                            jsonData: {
-                                //orderId: order.get('id')
-                                orderId: 1
-                            },
+                            jsonData: payloadData,
                             success: function (response) {
                                 // success handling here
                                 var json = Ext.decode(response.responseText, true);

@@ -209,6 +209,7 @@
     <Compile Include="Api\Models\Reports\ReportParams.cs" />
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
+    <Compile Include="Api\OrderCancelController.cs" />
     <Compile Include="Api\ProductSortDefinitionController.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />

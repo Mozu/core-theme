@@ -112,17 +112,18 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                         width: 28,
                         ui: 'action',
                         scale: 'small',
-                        margin: '0 10 0 0',
+                        margin: '0 0 0 0',
                         renderTo: collapse,
                         handler: function (button, event) {
-
                             if (me.formContainer.hidden) {
-                                button.setGlyph('XE92A@mozicons');
+                                //button.setGlyph('XE92A@mozicons');
+                                button.removeCls('rotateIcon');
                                 me.formContainer.show(true);
                                 me.shipmentTotals.show(true);
                             }
                             else {
-                                button.setGlyph('XE927@mozicons');
+                                //button.setGlyph('XE927@mozicons');
+                                button.addCls('rotateIcon');
                                 me.formContainer.hide(true);
                                 me.shipmentTotals.hide(true);
                             }
@@ -132,7 +133,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 scope: this
             },
             tpl: [
-                '<ul>',
+                '<ul class="package-tab-parent">',
                 '<li tabIndex="0" class="taco-link-button taco-link-button-packages-collapsable"><div class="taco-link-collapsable"></div></li>',
                 '<tpl for=".">',
                 '<tpl if="xindex &lt;= ' + this.numberOfTabsToShow + '">',

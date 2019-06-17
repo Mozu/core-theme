@@ -262,14 +262,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(dc.Map<Order>());
         }
 
-        [HttpPostRoute(UriTemplate = "cancel")]
-        public async Task<Response<Order>> CancelOrder(OrderIdArgs args)
-        {
-            var dc = (await _orderWebApiClient.PerformOrderAction(args.OrderId, new DCo.OrderAction { ActionName = "CancelOrder" })).ReadAsSync();
-
-            return Single2(dc.Map<Order>());
-        }
-
         [HttpPostRoute(UriTemplate = "submit")]
         public async Task<Response<Order>> SubmitOrder(OrderIdArgs args)
         {
@@ -649,29 +641,5 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var returnableItems = (await orderWebApiClient.GetOrderReturnableItems(orderId)).ReadAsSync();
             return List2(Mapper.Map<List<OrderReturnableItem>>(returnableItems.Items), (int)returnableItems.TotalCount);
         }
-
-        [HttpGetRoute(UriTemplate = "cancel/reasons")]
-        public Response<List<CancelReasonItem>> GetReasons()
-        {
-            var cancellationReasons = new List<CancelReasonItem>();
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Found Cheaper Somewhere Else", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Item Price Too High", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Item Will Not Arrive on Time", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Billing Address", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Payment Method", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Shipping Address", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Need to Change Shipping Speed", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Order Created by Mistake", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Shipping Cost Too High", NeedsMoreInfo = false });
-            cancellationReasons.Add(new CancelReasonItem() { ReasonCode = "Other", NeedsMoreInfo = true });
-            return List2(cancellationReasons);
-        }
     }
-}
-
-
-public class CancelReasonItem
-{
-    public string ReasonCode { get; set; }
-    public bool NeedsMoreInfo { get; set; }
 }
