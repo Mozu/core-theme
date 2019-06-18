@@ -3,26 +3,27 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-// export const environment = {
-//     production: true,
-//     environmentName: 'Debug',
-//     domain: '.client1.com',
-//     appUrl: window.location.origin + '/admin/',
-//     apiUrl: window.location.origin + '/admin/app',
-//     errorPageUrl: window.location.origin + '/admin/',
-//     apiTokenUrl: 'http://localhost:5100/token',
-//     accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin'
-// };
-
-
 export const environment = {
     production: true,
     environmentName: 'Debug',
     domain: '.client1.com',
-    appUrl: 'http://localhost:4200/',
-    apiUrl: 'http://sb.dev01.kibo-dev.com/admin/app',
-    errorPageUrl: 'http://localhost:4200/',
+    appUrl: window.location.origin + '/admin/',
+    apiUrl: window.location.origin + '/admin/app',
+    errorPageUrl: window.location.origin + '/admin/',
     apiTokenUrl: 'http://localhost:5100/token',
     accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin',
     fulfillerUrl: 'http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/'
-   };
+};
+
+
+// export const environment = {
+//     production: true,
+//     environmentName: 'Debug',
+//     domain: '.client1.com',
+//     appUrl: 'http://localhost:4200/',
+//     apiUrl: 'http://sb.dev01.kibo-dev.com/admin/app',
+//     errorPageUrl: 'http://localhost:4200/',
+//     apiTokenUrl: 'http://localhost:5100/token',
+//     accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin',
+//     fulfillerUrl: 'http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/'
+//    };
