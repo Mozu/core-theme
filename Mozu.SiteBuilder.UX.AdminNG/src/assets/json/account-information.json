@@ -1,36 +1,20 @@
 {
-  "users":  [
-    {
-        "emailAddress": "Pankaj@kibo.com",
-        "userName": "Pankaj",
-        "firstName": "Pankaj",
-        "lastName": "C",
-        "localeCode": "US",
-        "userId": "4588be576b7f4416a70b6d810219680e",
-        "isLocked": true,
-        "isActive": false,
-        "isRemoved": false,
-        "acceptsMarketing": true,
-        "hasExternalPassword": true
-    }
-  ],
-  "isActive": true,
-  "priceList": "123.4",
-  "customerSet": "abc",
-  "companyOrOrganization": "B2B account",
-  "attributes":  [
-    {
-        "attributeDefinitionId": "32",
-        "values":  [
-          {
-
-          }
-        ]
-    }
-  ],
-  "taxExempt": "",
-  "taxId": "2342",
-  "externalId": "3453",
-  "customerSinceDate": "2019-03-31T19:52:25.091Z",
-  "accountType": "Saving"
-}
+  "startIndex": 0,
+  "pageSize": 20,
+  "pageCount": 1,
+  "totalCount": 1,
+  "items": [
+   {
+    "emailAddress": "tverma@kibo.com",
+    "userName": "tverma@kibo.com",
+    "firstName": "Tripti",
+    "lastName": "Verma",
+    "localeCode": "en-us",
+    "userId": "4588be576b7f4416a70b6d810219680e",
+    "isLocked": false,
+    "isActive": true,
+    "isRemoved": false,
+    "hasExternalPassword": false
+   }
+  ]
+ }

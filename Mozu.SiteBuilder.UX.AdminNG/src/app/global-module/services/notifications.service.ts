@@ -5,6 +5,7 @@
 import { LoggerService } from '@core';
 
 import { Subject } from 'rxjs/Subject';
+import { MenuItem } from 'primeng/api';
 
 
 @Injectable()
@@ -13,11 +14,12 @@ export class NotificationService {
     productAddedToCartNotification: Subject<null> = new Subject<null>();
     productAddedToCartFromDialogNotification: Subject<null> = new Subject<null>();
     disableUINotification: Subject<null> = new Subject<null>();
-    loadAccessTileCategories : Subject<string> = new Subject<string>();
-    locationGroupAdded : Subject<string> = new Subject<string>();
-    locationGroupEdited : Subject<any> = new Subject<any>();
+    loadAccessTileCategories: Subject<string> = new Subject<string>();
+    locationGroupAdded: Subject<string> = new Subject<string>();
+    locationGroupEdited: Subject<any> = new Subject<any>();
+    mainMenuLinksFilteredByContextType: Subject<MenuItem[]> = new Subject<MenuItem[]>();
 
-    //Confirmation Dialog Notification
+    // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
     LocationGroupDeleteConfirmation : Subject<any> = new Subject<any>();
 
@@ -57,14 +59,14 @@ export class NotificationService {
         this.locationGroupEdited.next(action);
     }
 
-    //Notify components for confirmation dialog
+    // Notify components for confirmation dialog
     notifyQuoteItemDeleteConfirmation(actionName: string) {
         this._logger.info('NotificationService : notifyQuoteItemDeleteConfirmation');
         this.QuoteItemDeleteConfirmation.next(actionName);
     }
 
-    notifyLocationGroupDeleteConfirmation(actionName: string){
-        this._logger.info('NotificationService : notifyLocationGroupDeleteConfirmation');
-        this.LocationGroupDeleteConfirmation.next(actionName);
+    notifyMainMenuLinksFilteredByContextType(mainMenuLinks: MenuItem[]) {
+        this._logger.info('NotificationService : notifyMainMenuLinksFilteredByContextType');
+        this.mainMenuLinksFilteredByContextType.next(mainMenuLinks);
     }
 }

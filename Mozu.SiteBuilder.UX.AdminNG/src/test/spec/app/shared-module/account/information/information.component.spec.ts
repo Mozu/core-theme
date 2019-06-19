@@ -21,40 +21,40 @@ describe('AccountInformationComponent', () => {
   let httpMock: HttpTestingController;
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
 
-  let dummyAccountInfo = {
-    "users":  [
+  const dummyAccountInfo = {
+    'users':  [
       {
-          "emailAddress": "Pankaj@kibo.com",
-          "userName": "Pankaj",
-          "firstName": "Pankaj",
-          "lastName": "C",
-          "localeCode": "US",
-          "userId": "4588be576b7f4416a70b6d810219680e",
-          "isLocked": true,
-          "isActive": false,
-          "isRemoved": false,
-          "acceptsMarketing": true,
-          "hasExternalPassword": true
+          'emailAddress': 'Pankaj@kibo.com',
+          'userName': 'Pankaj',
+          'firstName': 'Pankaj',
+          'lastName': 'C',
+          'localeCode': 'US',
+          'userId': '4588be576b7f4416a70b6d810219680e',
+          'isLocked': true,
+          'isActive': false,
+          'isRemoved': false,
+          'acceptsMarketing': true,
+          'hasExternalPassword': true
       }
     ],
-    "isActive": true,
-    "priceList": "123.4",
-    "customerSet": "abc",
-    "companyOrOrganization": "B2B account",
-    "attributes":  [],
-    "taxExempt": "",
-    "taxId": "2342",
-    "externalId": "3453",
-    "customerSinceDate": new Date(),
-    "accountType": "Saving"
+    'isActive': true,
+    'priceList': '123.4',
+    'customerSet': 'abc',
+    'companyOrOrganization': 'B2B account',
+    'attributes':  [],
+    'taxExempt': '',
+    'taxId': '2342',
+    'externalId': '3453',
+    'customerSinceDate': new Date(),
+    'accountType': 'Saving'
   };
 
-  var respData = {
+  const respData = {
     items: {
-      "ctTaContext": {
-        "masterCatalogs": [{
-          "sites": [{
-            "id": "1234"
+      'ctTaContext': {
+        'masterCatalogs': [{
+          'sites': [{
+            'id': '1234'
           }]
         }]
       }
@@ -66,7 +66,7 @@ describe('AccountInformationComponent', () => {
       imports: [TranslateModule.forRoot(), HttpClientTestingModule, GlobalModule ],
       declarations: [ AccountInformationComponent ],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [By, TranslateService, LoggerService,NGXLoggerHttpService, CustomNGXLoggerService, 
+      providers: [By, TranslateService, LoggerService, NGXLoggerHttpService, CustomNGXLoggerService,
         UtilityService, EnvironmentConfig, AuthService, AccountInfoModel, AccountInfoService,
         {
           provide: HttpClientService,
@@ -78,17 +78,17 @@ describe('AccountInformationComponent', () => {
 
     loggerService = TestBed.get(LoggerService);
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
-    
+
   }));
 
   beforeEach(async(() => {
     httpMock = TestBed.get(HttpTestingController);
-    
+
     const req = httpMock.expectOne(`./assets/json/user-data.json`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(respData);
     httpMock.verify();
-    
+
     fixture = TestBed.createComponent(AccountInformationComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
@@ -105,7 +105,7 @@ describe('AccountInformationComponent', () => {
     component.ngOnChanges({
       userId: new SimpleChange(null, component.userId, true)
     });
-    fixture.detectChanges(); 
+    fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -113,37 +113,37 @@ describe('AccountInformationComponent', () => {
 
   it('should call service to get success response from mock http json (account-information)', async(() => {
     component.userId = '4588be576b7f4416a70b6d810219680e';
-    component.customerAccountId = 123;
-    component.populateAccountInfo(component.userId);
+    component.customerAccountId = 1012;
+    component.populateAccountInfo(component.customerAccountId, component.userId);
 
     const req = httpMock.expectOne(`/assets/json/account-information.json`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(dummyAccountInfo);
-    
+
     httpMock.verify();
-    expect(loggerServiceSpy).toHaveBeenCalledWith("AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse");
+    expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse');
   }));
 
   it('should get customer account URL from account information component', () => {
     component.generateCustomerAccountUrl();
-    let siteId = respData.items.ctTaContext.masterCatalogs[0].sites[0].id;
-    expect(loggerServiceSpy).toHaveBeenCalledWith("AccountInformationComponent : generateCustomerAccountUrl");
+    const siteId = respData.items.ctTaContext.masterCatalogs[0].sites[0].id;
+    expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : generateCustomerAccountUrl');
   });
-  
+
   it('should call service to get failure response from mock http json (account-information)', () => {
     component.userId = '4588be576b7f4416a70b6d810219680e';
-    component.customerAccountId = 123;
-    component.populateAccountInfo(component.userId);
+    component.customerAccountId = 1012;
+    component.populateAccountInfo(component.customerAccountId, component.userId);
 
     const req = httpMock.expectOne(`/assets/json/account-information.json`);
-    expect(req.request.method).toBe("GET");
+    expect(req.request.method).toBe('GET');
     req.flush(dummyAccountInfo, mockErrorResponse);
-    
+
     httpMock.verify();
-    expect(loggerServiceSpy).toHaveBeenCalledWith("AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse");
+    expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse');
   });
 
-  
+
 
 
 });

@@ -1,8 +1,8 @@
-import { Component, 
-  OnInit, 
-  Input, 
-  SimpleChanges, 
-  SimpleChange, 
+import { Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  SimpleChange,
   OnChanges } from '@angular/core';
 
 import * as _ from 'lodash';
@@ -15,7 +15,7 @@ import {
   SpinnerService
 } from '@core';
 
-import { SharedDataService } from '@global';
+import { NotificationService } from '@global';
 
 import { Constants } from '@shared';
 
@@ -24,6 +24,8 @@ import { environment } from '@env';
 import { AccountInfoService } from './information.service';
 
 import { AccountInfoModel } from './information.model';
+import { Subscription } from 'rxjs';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'account-information',
@@ -35,18 +37,22 @@ export class AccountInformationComponent implements OnChanges, OnInit {
   @Input('UserId') userId: string;
   @Input('CustomerAccountId') customerAccountId: number;
   public model: AccountInfoModel;
-  customerAccountUrl: string;
+  customerAccountURL: string;
+  baseNavigationURL: string;
+  subscriptions: Subscription[];
 
   constructor(private _accountInfoService: AccountInfoService,
     private _loggerService: LoggerService,
-    private _sharedData : SharedDataService,
-    private _spinner: SpinnerService) { }
+    private _notificationService: NotificationService, ) {
+      this.subscriptions = [];
+    }
 
   ngOnChanges(changes: SimpleChanges) {
-    this._loggerService.info("AccountInformationComponent : ngOnChanges");
-    this.userId = changes["userId"].currentValue;
-    if (this.userId != undefined) {
-      this.populateAccountInfo(this.userId);
+    this._loggerService.info('AccountInformationComponent : ngOnChanges');
+    this.userId = changes['userId'].currentValue;
+    this.customerAccountId = changes['customerAccountId'].currentValue;
+    if (this.userId !== undefined && this.customerAccountId !== undefined) {
+      this.populateAccountInfo(this.customerAccountId, this.userId);
     }
   }
 
@@ -54,32 +60,43 @@ export class AccountInformationComponent implements OnChanges, OnInit {
     this._spinner.start();
     this.model = new AccountInfoModel();
     this.model.users = [];
+    this.subscriptions.push(
+      this._notificationService.mainMenuLinksFilteredByContextType.subscribe((mainMenuLinks: MenuItem[]) => {
+      this._loggerService.info('HeaderComponent : mainMenuLinksFilteredByContextType');
+      this.baseNavigationURL = this.getNavigationURL(mainMenuLinks, 'b2baccount', 'b2baccounts');
+     })
+    );
   }
 
-  public populateAccountInfo = (userId: string) => {
-    this._loggerService.info("AccountInformationComponent : populateAccountInfo");
+  getNavigationURL(menuItems: MenuItem[], parentMenuItemText: string, linkAddress: string): string {
+    const parentMenuItem = _.find(menuItems, { id: parentMenuItemText });
+    if (parentMenuItem !== null && parentMenuItem !== undefined
+    && parentMenuItem.items != null) {
+    const addressLinkMenuItem = _.find(parentMenuItem.items, { address: linkAddress }) as MenuItem;
+    if (addressLinkMenuItem !== null && addressLinkMenuItem !== undefined) {
+       return environment.appUrl + addressLinkMenuItem.url;
+     }
+    }
+  }
+  public populateAccountInfo = (customerAccountId: number, userId: string) => {
+    this._loggerService.info('AccountInformationComponent : populateAccountInfo');
 
-    this._accountInfoService.fetchAccountInformation().subscribe((successResponse: any) => {
-      this._loggerService.info("AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse");
-      let responseJson = successResponse;
-      if (responseJson != null && responseJson != undefined && responseJson['users'].length > 0) {
-        this.model = responseJson;
-        this.model.users = _.filter(responseJson['users'], function (el: any) { return el.userId == userId });
+    this._accountInfoService.fetchAccountInformation(customerAccountId, userId).subscribe((accountSuccessResponse: any) => {
+      this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse');
+      if (accountSuccessResponse !== null && accountSuccessResponse !== undefined && accountSuccessResponse['items'].length > 0) {
+        this.model = accountSuccessResponse;
+        this.model.users = _.filter(accountSuccessResponse['items'], function (el: any) { return el.userId === userId; });
         this.generateCustomerAccountUrl();
         this._spinner.stop();
       }
-    }, (errResponse) => {
-      this._spinner.stop();
-      this._loggerService.info("AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse");
+    }, (accountErrResponse) => {
+      this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse');
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
-    })
+    });
   }
 
   public generateCustomerAccountUrl = () => {
-      this._loggerService.info("AccountInformationComponent : generateCustomerAccountUrl");
-      let siteId = this._sharedData._sharedData.items.ctTaContext.masterCatalogs[0].sites[0].id;
-      this.customerAccountUrl = environment.accountUrl + Constants.urlParameter.site + siteId + Constants.urlParameter.b2bAccount 
-      + Constants.urlParameter.edit + this.customerAccountId ;
+    this.customerAccountURL =  this.baseNavigationURL + Constants.editNavigationDeepLink + this.customerAccountId ;
   }
 
 }

@@ -54,7 +54,7 @@ export class Constants {
         fulfiller: 'fulfiller',
         fulfillerHome: 'home'
     };
-    
+
     static webApis = {
         login: environment.apiUrl + 'account/login',
         logout: environment.apiUrl + 'account/logout',
@@ -99,35 +99,53 @@ export class Constants {
         comma: ','
     };
 
-    static mainTileJsonNavParentPrefix : string = "main";
-    static systemTileJsonNavParentPrefix : string = "sys";
-    static systemTabDisplayText : string = "System"; // TODO : Use Enum here.
-    static LefMenuMainTabJsonNavParentPrefix : string = "main";
-    static LefMenuSystemTabJsonNavParentPrefix : string = "sys";
-    static voidNavigationLink : string = "javascript:void(0)";
+    static mainTileJsonNavParentPrefix = 'main';
+    static systemTileJsonNavParentPrefix = 'sys';
+    static systemTabDisplayText = 'System'; // TODO : Use Enum here.
+    static LefMenuMainTabJsonNavParentPrefix = 'main';
+    static LefMenuSystemTabJsonNavParentPrefix = 'sys';
+    static voidNavigationLink = 'javascript:void(0)';
 
-    static leftNavigationSource: string = environment.appUrl + "/assets/json/leftNavigation-items.json";
+    static leftNavigationSource: string = environment.appUrl + '/assets/json/leftNavigation-items.json';
 
-    static localizationMenu : string = 'localization';
+    static localizationMenu = 'localization';
 
     static JsonResources = {
-        leftNavigationItems : environment.appUrl + "/assets/json/leftNavigation-items.json",
-        tabsNames : environment.appUrl + "/assets/json/dashboard-menu.json",
-        dasbhoardTiles : environment.appUrl + "/assets/json/dashboard-categories.json",
-        quoteList : environment.appUrl + "/assets/json/quote-list.json",
-        accountInformation: environment.appUrl +"/assets/json/account-information.json",
-        redirectionLink : environment.appUrl + "/assets/json/user-redirection.json",
-        locations : environment.appUrl + "/assets/json/locations.json",
+        leftNavigationItems : environment.appUrl + '/assets/json/leftNavigation-items.json',
+        tabsNames : environment.appUrl + '/assets/json/dashboard-menu.json',
+        dasbhoardTiles : environment.appUrl + '/assets/json/dashboard-categories.json',
+        quoteList : environment.appUrl + '/assets/json/quote-list.json',
+        accountInformation: environment.appUrl + '/assets/json/account-information.json',
+        redirectionLink : environment.appUrl + '/assets/json/user-redirection.json',
+        locations : environment.appUrl + '/assets/json/locations.json',
         physicalLocations : environment.appUrl + '/assets/json/physical-locations.json',
         locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
-        getLocationGroup : environment.appUrl + "/assets/json/location-group-edit.json" 
-    }
+        getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
+        shippingMethods: '/assets/json/shipping-methods.json',
+        auditLog: '/assets/json/audit-log.json'
+    };
 
-    static numberOfRows: number = 10;
-    static locationGroupDefaultCountry = "US";
+    static numberOfRows = 15;
+    static locationGroupDefaultCountry = 'US';
     static gridActionItem = {
-        Edit :"Edit",
-        New : "New",
-        Delete : "Delete"
-    }
+        Edit : 'Edit',
+        New : 'New',
+        Delete : 'Delete'
+    };
+
+    static titles = {
+        catalogImportExportTitles :  'Catalog Import/export',
+    };
+
+    static lables = {
+        closeLabel :  'close'
+    };
+
+    static integrationsModalClass = 'integrationsModal';
+    static integrationsBackdropModalClass = 'integrationsBackdropModal';
+    static messageHash = '&messageHash=';
+    static dateStamp = '?dt=';
+    static editNavigationDeepLink = '/edit/';
+    static filterQueryParameter = 'filter';
+    static userAPIDeepLink = '/users';
 }

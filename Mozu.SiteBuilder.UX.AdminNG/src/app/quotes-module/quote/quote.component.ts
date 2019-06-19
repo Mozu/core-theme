@@ -1,16 +1,14 @@
-import { Component, 
+import { Component,
   OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
 import * as _ from 'lodash';
 
-import { LoggerService, 
-  HttpError, 
-  ErrorCode, 
-  ErroNotificationType,
-  SpinnerService, 
-  GlobalErrorLoggingService} from '@core';
+import { LoggerService,
+  HttpError,
+  ErrorCode,
+  ErroNotificationType } from '@core';
 
 import { QuoteService } from './quote.service';
 
@@ -30,34 +28,30 @@ export class QuoteComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
-    private _loggerService : LoggerService,
-    private _spinner: SpinnerService ) { }
+    private _loggerService: LoggerService ) { }
 
   ngOnInit() {
-    this._spinner.start();
-    this._loggerService.info("QuoteComponent : ngOnInit");
+    this._loggerService.info('QuoteComponent : ngOnInit');
     this.model = new QuoteItemModel();
-    this.quoteId = this.route.snapshot.paramMap.get("quoteId");
+    this.quoteId = this.route.snapshot.paramMap.get('quoteId');
     this.populateQuote(this.quoteId);
   }
 
-  public populateQuote = (quoteId:string) => {
-    
-    this._loggerService.info("QuoteComponent : populateQuote");
+  public populateQuote = (quoteId: string) => {
 
-    this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse:Response) =>{
-      this._loggerService.info("QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse");
-       let responseJson = quoteListSuccessResponse;
-        if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
-          this.model = _.filter(responseJson['items'], function (el : any) { return el.id == quoteId })[0];
-          this.userId = this.model.userId; 
+    this._loggerService.info('QuoteComponent : populateQuote');
+
+    this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse: Response) => {
+      this._loggerService.info('QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse');
+       const responseJson = quoteListSuccessResponse;
+        if (responseJson !== null && responseJson !== undefined && responseJson['items'].length > 0) {
+          this.model = _.filter(responseJson['items'], function (el: any) { return el.id === quoteId; })[0];
+          this.userId = this.model.userId;
           this.customerAccountId = this.model.customerAccountId;
         }
-        this._spinner.stop();
-    }, (errResponse) => {
-      this._spinner.stop();
-      this._loggerService.info("QuoteComponent : _quotesListService.fetchAllQuotes_errResponse");
-      throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
-    })
+    }, (quoteListErrResponse) => {
+      this._loggerService.info('QuoteComponent : _quotesListService.fetchAllQuotes_errResponse');
+      throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+    });
   }
 }

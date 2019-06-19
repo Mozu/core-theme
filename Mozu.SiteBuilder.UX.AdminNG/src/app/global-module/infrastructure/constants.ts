@@ -24,8 +24,10 @@ export class Constants {
         addLocationGroup : environment.apiUrl + '/location/groups/create',
         editLocationGroup : environment.apiUrl + '/location/groups/edit',
         getLocationGroups : environment.apiUrl + '/location/groups/list',
-        getLocationGroup : environment.apiUrl + '/location/groups/get', 
+        getLocationGroup : environment.apiUrl + '/location/groups/get',
         deleteLocationGroup : environment.apiUrl + '/location/groups/delete',
+        getQuoteList : environment.apiUrl + '/quote/list',
+        getB2BUserAccount: environment.apiUrl + '/b2baccount',
     };
 
     static queryString = {

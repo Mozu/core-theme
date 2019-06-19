@@ -18,18 +18,18 @@ export class ConfirmationDialogComponent implements OnInit {
   displayModal = false;
   dialogTitle: string;
   message: string;
-  isShowPrimaryButton: boolean;
   isShowSecondaryButton: boolean;
   primaryButtonText: string;
   secondaryButtonText: string;
 
   constructor(private _loggerService: LoggerService,
     private _confirmationDialogService: ConfirmationDialogService) {
-    this._loggerService.info("ConfirmationDialogComponent : constructor ");
+    this._loggerService.info('ConfirmationDialogComponent : constructor ');
   }
 
-  showConfirmationDialog(confirmationDialogTitle: string, confirmationDialogMessage: string, primaryButtonText: string, isShowSecondaryButton: boolean, secondaryButtonText: string) {
-    this._loggerService.info("ConfirmationDialogComponent : showConfirmationDialog ");
+  showConfirmationDialog(confirmationDialogTitle: string, confirmationDialogMessage: string, primaryButtonText: string, 
+    isShowSecondaryButton: boolean, secondaryButtonText: string) {
+    this._loggerService.info('ConfirmationDialogComponent : showConfirmationDialog ');
     this.dialogTitle = confirmationDialogTitle;
     this.message = confirmationDialogMessage;
     this.isShowSecondaryButton = isShowSecondaryButton;
@@ -39,7 +39,7 @@ export class ConfirmationDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._loggerService.info("ConfirmationDialogComponent : ngOnInit ");
+    this._loggerService.info('ConfirmationDialogComponent : ngOnInit ');
     this._confirmationDialogService.showConfirmationDialog = this.showConfirmationDialog.bind(this);
 
   }
