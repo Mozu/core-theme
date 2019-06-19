@@ -209,6 +209,11 @@
         border-top: 1px solid transparent !important;
     }
 
+    &.borderbottom {
+        border-bottom: 0 solid transparent !important;
+        height: 40px !important;
+    }
+
     .shipping-packages-grid {
         border: none !important;
         margin-right: 0 !important;

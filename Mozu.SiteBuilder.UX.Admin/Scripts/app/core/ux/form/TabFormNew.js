@@ -118,12 +118,14 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                             if (me.formContainer.hidden) {
                                 //button.setGlyph('XE92A@mozicons');
                                 button.removeCls('rotateIcon');
+                                me.removeCls('borderbottom');
                                 me.formContainer.show(true);
                                 me.shipmentTotals.show(true);
                             }
                             else {
                                 //button.setGlyph('XE927@mozicons');
                                 button.addCls('rotateIcon');
+                                me.addCls('borderbottom');
                                 me.formContainer.hide(true);
                                 me.shipmentTotals.hide(true);
                             }
