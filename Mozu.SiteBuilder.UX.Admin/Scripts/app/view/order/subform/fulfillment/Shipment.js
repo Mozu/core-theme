@@ -304,7 +304,36 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }]
         });
 
-        this.items.push(this.infoContainerNew);
+                    ]
+                },
+                {
+                    xtype: 'container',
+                    items: [
+                        Ext.widget('button', {
+                            itemId: 'reassignShipment',
+                            ui: 'action',
+                            scale: 'medium',
+                            text: 'Reassign Shipment',
+                            handler: function (evt) {
+                                Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+                                    layout: 'hbox',
+                                    width: 1080,
+                                    height: 700,
+                                    //record: record,
+                                    //parentRecord: me.record,
+                                    //store: me.record.getCancellationReasons(),
+                                    //originalQuantity: originalQuantity,
+                                    listeners: {
+                                        saveSuccess: {
+                                            fn: function (json) {
+                                                //me.fireEvent('orderCancelled', json);
+                                            },
+                                            //scope: me
+                                        }
+                                    }
+                                });
+                            }
+                        }),
 
         this.shipmentTotals = Ext.create('Taco.view.order.subform.fulfillment.ShipmentDetails', {
             record: this.record,

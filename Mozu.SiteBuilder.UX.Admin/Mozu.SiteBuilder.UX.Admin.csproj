@@ -939,7 +939,9 @@
     <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
-    <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemCancellation.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemQtyChange.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentReassign.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />

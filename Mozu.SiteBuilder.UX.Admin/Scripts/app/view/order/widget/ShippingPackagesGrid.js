@@ -1,19 +1,87 @@
 ﻿
 Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Ext.grid.Panel', 
+    requires: ['Ext.grid.CellEditor',
+        'Ext.util.DelayedTask',
+    'Ext.form.RadioManager'],
 
-    title: '',
+    title: 'My Shipping Grid',
 
     viewConfig: {
         deferEmptyText: false,
-        emptyText: "No items available"
+        emptyText: "No items available",
     },
 
+    selType: 'cellmodel',
+   
+    plugins: [],
+    
     cls:'shipping-packages-grid',
 
     allSelected: false,
 
+    initEvents: function () {
+        var me = this;
+        me.initEditTriggers();
+    },
+    initEditTriggers: function () {
+        var me = this,
+            view = me.view;
+
+        // Listen for the edit trigger event.
+        if (me.triggerEvent == 'cellfocus') {
+            me.mon(view, 'cellfocus', me.onCellFocus, me);
+        } else if (me.triggerEvent == 'rowfocus') {
+            me.mon(view, 'rowfocus', me.onRowFocus, me);
+        } else {
+
+            // Prevent the View from processing when the SelectionModel focuses.
+            // This is because the SelectionModel processes the mousedown event, and
+            // focusing causes a scroll which means that the subsequent mouseup might
+            // take place at a different document XY position, and will therefore
+            // not trigger a click.
+            // This Editor must call the View's focusCell method directly when we recieve a request to edit
+            if (view.getSelectionModel().isCellModel) {
+                view.onCellFocus = Ext.Function.bind(me.beforeViewCellFocus, me);
+            }
+
+            // Listen for whichever click event we are configured to use
+            me.mon(view, me.triggerEvent || ('cell' + (me.clicksToEdit === 1 ? 'click' : 'dblclick')), me.onCellClick, me);
+        }
+
+        // add/remove header event listeners need to be added immediately because
+        // columns can be added/removed before render
+        //me.initAddRemoveHeaderEvents()
+        // wait until render to initialize keynav events since they are attached to an element
+        //view.on('render', me.initKeyNavHeaderEvents, me, { single: true });
+    },
+    
     initComponent: function () {
+        var me = this;
+        this.plugins.push(
+            Ext.create('Ext.grid.plugin.CellEditing', {
+                clicksToEdit: 1,
+                pluginId: 'editing',
+                listeners: {
+                    beforeedit: function (editor, context) {
+                        var me = this;
+                        var allowed = !!me.isEditAllowed;
+                        this.initEvents();
+                        if (me.grid.selModel.selected.keys[0] == context.grid.selModel.selected.keys[0]) {
+                            return;
+                            me.isEditAllowed = true;
+                           
+                        }
+                        else {
+                            return false;
+                        }
+                    },
+                    'edit': function (e) {
+                        me.onFieldEdit(e); // called to open modal pop up for quantity field
+                            this.isEditAllowed = false;
+                    }
+                }
+        }));
 
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.packageStore.items,
@@ -33,6 +101,11 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }, {
                 name: 'unitPrice',
                 type: 'float',
+                useNull: true
+            },
+            {
+                name: 'discount',
+                type: 'int',
                 useNull: true
             },
             {
@@ -78,73 +151,60 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             showHeaderCheckbox: true,
             setup: function () {
                 this.maxSelections = 0;
-                //var selections = this.store.getRange();
+                var selections = this.store.getRange();
 
-                //for (var key in selections) {
-                //    if (selections[key].data.quantityReturnable !== 0) {
-                //        this.maxSelections++;
-                //    }
-                //}
+                for (var key in selections) {
+                    if (selections[key].data.quantityReturnable !== 0) {
+                        this.maxSelections++;
+                    }
+                }
 
-                //this.isSetup = true;
+                this.isSetup = true;
             },
 
             setHeader: function (header) {
                 this.checkallBox = header;
             },
 
-            //setErrorEl: function (el) {
-            //    this.errorEl = el;
-            //},
-
+            setErrorEl: function (el) {
+                this.errorEl = el;
+            },
+            
             checkSelected: function () {
-                //if (!this.isSetup) this.setup();
-
-                //if (this.getSelection().length === this.maxSelections && this.maxSelections !== 0) {
-                //    this.allSelected = true;
-                //    this.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
-
-                //    var me = this;
-                //    setTimeout(function () {
-                //        if (me.getSelection().length === 0) return;
-                //        me.checkallBox.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
-                //    }, 100);
-                //} else {
-                //    this.allSelected = false;
-                //    this.checkallBox.el.removeCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
-                //}
+            //    console.log(this);
+                var me =this;
             },
 
             selectAll: function (suppressEvent, header) {
                 if (!this.allSelected) {
                     this.allSelected = true;
-                    //var selections = this.store.getRange();
-                    //var returnableItems = [];
+                    var selections = this.store.getRange();
+                    var returnableItems = [];
 
-                    //for (var key in selections) {
-                    //    if (selections[key].data.quantityReturnable !== 0) {
-                    //        returnableItems.push(selections[key]);
-                    //    }
-                    //}
+                    for (var key in selections) {
+                        if (selections[key].data.quantityReturnable !== 0) {
+                            returnableItems.push(selections[key]);
+                        }
+                    }
 
-                    //var len = returnableItems.length;
-                    //for (var i = 0; i < len; i++) {
-                    //    this.doSelect(returnableItems[i], true, suppressEvent);
+                    var len = returnableItems.length;
+                    for (var i = 0; i < len; i++) {
+                        this.doSelect(returnableItems[i], true, suppressEvent);
 
-                    //    var unreturned = returnableItems[i].get('quantityFulfilled') - returnableItems[i].get('quantityReturned');
+                        var unreturned = returnableItems[i].get('quantityFulfilled') - returnableItems[i].get('quantityReturned');
 
-                    //    if (!returnableItems[i].get('quantity') && unreturned > 0) {
-                    //        returnableItems[i].set('quantity', 1);
-                    //    }
-                    //}
+                        if (!returnableItems[i].get('quantity') && unreturned > 0) {
+                            returnableItems[i].set('quantity', 1);
+                        }
+                    }
 
-                    //if (this.getSelection().length !== 0) {
-                    //    header.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
-                    //} else {
-                    //    this.errorEl.setError('All items have already been returned');
-                    //    this.allSelected = false;
-                    //    return;
-                    //}
+                    if (this.getSelection().length !== 0) {
+                        header.el.addCls(Ext.baseCSSPrefix + 'grid-hd-checker-on');
+                    } else {
+                        this.errorEl.setError('All items have already been returned');
+                        this.allSelected = false;
+                        return;
+                    }
                 } else {
                     this.allSelected = false;
                     this.deselectAll(suppressEvent);
@@ -154,24 +214,26 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             },
 
             onHeaderClick: function (headerCt, header, e) {
-                //if (!header.isCheckerHd) {
-                //    return;
-                //}
+                if (!header.isCheckerHd) {
+                    return;
+                }
 
-                //e.stopEvent();
-                //this.selectAll(true, header);
+                e.stopEvent();
+                this.selectAll(true, header);
             },
 
             listeners: {
-                //deselect: function (grid, record) {
-                //    this.checkSelected();
+                deselect: function (grid, record) {
+                    this.checkSelected();
                 //    this.errorEl.setError('');
-                //},
+                },
 
-                //select: function (grid, record) {
-                //    this.checkSelected();
+                select: function (grid, record) {
+                    this.checkSelected();
                 //    this.errorEl.setError('');
-                //}
+                }
+
+                
             },
 
             renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
@@ -181,16 +243,19 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         });
 
-        this.columns = this.getColumnConfig();
+        //this.columns = this.getColumnConfig(me);
 
-        this.callParent();
-        
-        // Loading should be kicked off by the parent Return subform.
-        //this.loadReturnableItemsData();
-    },
-    
-    getColumnConfig: function () {
-        return [
+        me.customUnitTaxEditor = Ext.widget({
+            xtype: 'CustomEditorField-form',
+            showBorder: true,
+            allowBlank: false,
+            typeAhead: false,
+            msgTarget: 'qtip',
+            listeners: {
+            }
+        });
+
+        this.columns = [
             {
                 dataIndex: 'lineId',
                 text: 'Line',
@@ -241,6 +306,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: false,
+                    hideTrigger: true,
+                    minValue: 0,
+
+                },
                 renderer: function (value) {
                     return this.record.formatCurrency(value);
                 }
@@ -255,8 +327,21 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                editor: {
+                    showBorder: false
+                    //xtype: 'CustomEditorField-form',
+                    //hideTrigger: true,
+                    //minValue: 0,
+                    //text: 'Name',
+                    //dataIndex: 'name',
+                },
+                listeners: {
+                    click: {
+                        fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+                            me.customUnitTaxEditor;
+                            //var editMode = view.ownerCt.editMode,
+                        },
+                    }
                 }
             },
             {
@@ -268,7 +353,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
-                flex: 1
+                flex: 1,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: false,
+                    hideTrigger: true,
+                    minValue: 0,
+                }
             },
             {
                 dataIndex: 'quantity',
@@ -279,7 +370,27 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
-                flex: 1
+                flex: 1,
+            },
+            {
+                dataIndex: 'discount',
+                text: 'Discount',
+                draggable: false,
+                sortable: false,
+                //resizable: false,
+                align: 'center',
+                menuDisabled: true,
+                minWidth: 80,
+                flex: 1,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: false,
+                    hideTrigger: true,
+                    minValue: 0,
+                },
+                renderer: function (value) {
+                    return this.record.formatCurrency(value);
+                }
             },
             {
                 dataIndex: 'total',
@@ -316,22 +427,123 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                             behavior: 'update'
                         },
                         menuColumnHandler: function (item, eventData) {
-
-                        }
+                            Ext.create('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
+                                    layout: 'hbox',
+                                    width: 600,
+                                    height: 400,
+                                    //record: record,
+                                    //parentRecord: me.record,
+                                    //store: me.record.getCancellationReasons(),
+                                    //originalQuantity: originalQuantity,
+                                    listeners: {
+                                        saveSuccess: {
+                                            fn: function (json) {
+                                                //me.fireEvent('orderCancelled', json);
+                                            },
+                                            //scope: me
+                                        }
+                                    }
+                                });
+                            }
                     },
-                    {
-                        text: 'Reassign Item',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: function (item, eventData) {
+                    //        {
+                    //            text: 'Move Item',
+                    //            requiredBehaviors: {
+                    //                model: 'Taco.model.Product',
+                    //                behavior: 'update'
+                    //            },
+                    //            menuColumnHandler: function (item, eventData) {
 
-                        }
-                    }
+                    //            }
+                    //        }
                 ]
             }
         ];
-    }
 
+        
+
+        this.callParent();
+        
+        // Loading should be kicked off by the parent Return subform.
+        //this.loadReturnableItemsData();
+
+        var i = 0;
+        while (true) {
+            var header = this.headerCt.getHeaderAtIndex(i);
+            this.getSelectionModel().setHeader(header);
+            break;
+            i++;
+        }
+    },
+   
+    getColumnConfig: function (me) {
+    //    return 
+    },
+
+    
+
+    onFieldEdit: function (e) {
+        var me = this;
+        if (e.context.field == 'quantity') {
+            me.editOrderItem(e, {
+                data: [
+                    e.context.grid.record.getData()
+                ]
+            });
+        }
+    },
+
+    editOrderItem: function (e, config) {
+
+        var me = this;
+        field = e.context.field;
+        Ext.create('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
+            layout: 'hbox',
+            width: 600,
+            height: 400,
+            record: e.context.grid.record,
+            parentRecord: me.record,
+            //store: me.record.getCancellationReasons(),
+            originalQuantity: e.context.originalValue,
+            //listeners: {
+            //    saveSuccess: {
+            //        fn: function (json) {
+            //            me.fireEvent('orderCancelled', json);
+            //        },
+            //        scope: me
+            //    }
+            //}
+        });
+    },
 });
+
+
+
+
+Ext.define('CustomEditorField', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.CustomEditorField-form',
+    title: 'Unit Tax',
+    width: 100,
+    bodyPadding: 0,
+    border :1,
+    items: [{
+        xtype: 'fieldcontainer',
+        //fieldLabel: 'Unit Tax',
+        labelWidth: 100,
+        layout: 'hbox',
+        items: [{
+            xtype: 'textfield',
+            flex: 1
+        },
+        {
+            xtype: 'splitter'
+        },
+        {
+            xtype: 'textfield',
+            flex: 1
+        }
+        ]
+    }]
+});
+

@@ -5,7 +5,13 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
         'Taco.view.order.modal.OverrideTotalWeight',
+        'Ext.grid.CellEditor',
+        'Ext.util.DelayedTask'
     ],
+
+    selType: 'cellmodel',
+   
+    plugins: [],
 
     initComponent: function () {
         this.tabTitle = this.packageRecord.code;
@@ -45,7 +51,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             margin: '10px 0 10px 0',
             padding: '0 1px 0 0'
         });
-
+        
         this.items = [
             this.buildTrackingHeader(),
             this.packageItems
@@ -102,8 +108,16 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             orderId = this.record.getId(),
             packageId = this.packageRecord.id;
         window.open('/admin/s-' + siteId + '/orderdetails/' + orderId + '/packages/' + packageId);
-    },     
-    
+    },
+
+    handleViewShippingLabel: function () {
+    //    console.log("handleViewShippingLabel");
+        window.open(
+            '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
+            'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
+        );
+    },
+
     buildTrackingHeader: function () {
         return Ext.widget({
             xtype: 'container',
@@ -223,6 +237,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                     items: [
                         Ext.widget('button', {
                             itemId: 'editItems',
+                            packageItems: this.packageItems,
                             ui: 'action',
                             scale: 'medium',
                             text: 'Edit Items',
@@ -237,7 +252,22 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                                 model: 'Taco.model.Order',
                                 behavior: 'fulfill'
                             }],
-                            handler: this.handleViewShippingLabel
+                            //handler: this.handleViewShippingLabel
+                            handler: function () {
+                            //    console.log("Edit Button Handler","Edit Button Handler")
+
+                            //    console.log(this.packageItems);
+                                // this.handleEditLineItem(this.packageItems);
+                                var selected = this.packageItems.getSelectionModel().getSelection();
+                            //    console.log(selected);
+                                // GEt the selected row
+                                //plugins: [];
+                                //this.plugins.push(
+                                //    Ext.create('Ext.grid.plugin.CellEditing', {
+                                //        clicksToEdit: 1,
+                                //        pluginId: 'editing',
+                                //    }));
+                            }
                         }),
                         Ext.widget('button', {
                             itemId: 'reassignItems',
@@ -288,7 +318,84 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             ]
         });
     },
+
+    handleEditLineItem: function (packageItems) {
+        var me = this;
+        //this.returnableItemsErrorEl.setError('');
+        // var returnsStore = this.getReturnsStore();
+        var erroredReturns = [];
+        var selected = packageItems.getSelectionModel().getSelection();
+        // console.log(selected);
+        /*var grid = Ext.getCmp("ext-comp-1302");
+        selected = grid.getSelectionModel().getSelection();
+        console.log(selected);*/
+        //if (selected.length === 0) {
+        //    this.returnableItemsErrorEl.setError('Please select items to return.');
+        //    return;
+        //}
+
+        //if (Ext.Array.some(selected, function (item) {
+        //    var qf = item.get('quantityFulfilled');
+        //    var qr = item.get('quantityReturned');
+
+        //    return (item.get('quantity') > (qf - qr));
+        //})) {
+        //    this.returnableItemsErrorEl.setError('Item \'Quantity to Return\' exceeds \'Quantity Fulfilled\'.');
+        //    return;
+        //}
+
+        //// if any items are checked for return, but have quantity == 0, reject this call.
+        //if (Ext.Array.some(selected, function (item) {
+        //    return !item.get('quantity');
+        //})) {
+        //    this.returnableItemsErrorEl.setError('Please add a return quantity to all selected items.');
+        //    return;
+        //}
+
+        //erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('reason') === 'Select'; });
+        //if (erroredReturns.length > 0) {
+        //    this.returnableItemsErrorEl.setError('Please choose a return reason.');
+        //    return;
+        //}
+
+        //erroredReturns = Ext.Array.filter(selected, function (item) { return item.get('returnType') === 'Select'; });
+        //if (erroredReturns.length > 0) {
+        //    this.returnableItemsErrorEl.setError('Please choose a return resolution.');
+        //    return;
+        //}
+
+        //// Adds a return to the store. Need to sync the store to save it.
+        //// The Return.ReturnType is deprecated in favor of specifying return type at the item level.
+        //// Use "Replace" for backward compatibility since it provided the most flexibility in the old return state machine.
+        //var newReturnRecord = this.createReturn("Replace", selected);
+
+        //this.setLoading(true);
+        //returnsStore.sync({
+        //    callback: function () {
+        //        // Interesting note... callback is called AFTER success/failure.
+        //        this.setLoading(false);
+        //        this.createButton.setDisabled(false);
+        //    },
+        //    success: function () {
+        //        // Once the new return is created, navigate to it.
+        //        Taco.core.StateManager.attemptNavigate('/returns/edit/' + newReturnRecord.data.id);
+        //        // after we add the new return we need to reload the order and regenerate the returnable items grid store
+        //        //this.record.reload({
+        //        //    success: me.refreshReturnableItems,
+        //        //    scope: me
+        //        //});
+        //    },
+        //    failure: function (batch) {
+        //        returnsStore.remove(newReturnRecord);
+        //        var msg = batch.exceptions && batch.exceptions.length && batch.exceptions[0].error && batch.exceptions[0].error.remoteException ? batch.exceptions[0].error.remoteException.data.message : 'Error Creating the Return';
+        //        Taco.app.fireEvent('setmessage', msg, 'error');
+        //    },
+        //    scope: this
+        //});
+    },
+
     onDestroy: function () {
         this.callParent(arguments);
     }
+
 });
