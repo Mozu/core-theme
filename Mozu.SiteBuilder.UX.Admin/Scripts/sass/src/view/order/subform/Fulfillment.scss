@@ -199,7 +199,13 @@
     margin: 0 5px;
     border: 1px solid #ccc;
     overflow: hidden;
-    border-bottom-width: 0px;
+
+    .label {
+        color: #7c7c7c;
+        font-size: 12px;
+        font-weight: normal;
+        margin-right: 3px;
+    }
 
     .taco-link-button {
         background-color: white;
