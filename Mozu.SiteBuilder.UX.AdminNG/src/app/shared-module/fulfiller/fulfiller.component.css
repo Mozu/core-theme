@@ -10,4 +10,21 @@
     left: 0;
     width: 100%;
     height: 100%;
+    overflow: hidden !important;
 }
+
+.btn {
+    background-color: #f4511e;
+    border: none;
+    color: white;
+    padding: 6px 22px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 272px;
+    opacity: 0.6;
+    transition: 0.3s;
+    position: fixed;
+    z-index: 99999 !important;
+  }
+
+  .btn:hover {opacity: 1}

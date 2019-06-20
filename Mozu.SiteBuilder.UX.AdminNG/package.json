@@ -22,7 +22,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "7.2.8",
+    "@angular/animations": "^7.2.8",
     "@angular/common": "7.2.8",
     "@angular/compiler": "7.2.8",
     "@angular/core": "7.2.8",
@@ -44,6 +44,7 @@
     "moment": "2.20.1",
     "ngx-cookie-service": "2.1.0",
     "ngx-logger": "3.1.0",
+    "ngx-toastr": "^10.0.4",
     "primeicons": "1.0.0",
     "primeng": "7.0.5",
     "reflect-metadata": "0.1.12",

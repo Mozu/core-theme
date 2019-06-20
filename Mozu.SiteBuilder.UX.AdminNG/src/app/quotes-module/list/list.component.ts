@@ -7,7 +7,8 @@ import { LoggerService,
   HttpError, 
   ErrorCode, 
   ErroNotificationType,
-  SpinnerService} from '@core'
+  SpinnerService,
+  } from '@core'
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -16,6 +17,8 @@ import { Constants } from '@shared';
 import { QuotesListService } from './list.service';
 
 import { QuotesListModel } from './list.model';
+
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'quotes-list',
@@ -30,7 +33,8 @@ export class QuotesListComponent implements OnInit {
     private _loggerService : LoggerService, 
     private _translate: TranslateService,
     private router: Router,
-    private _spinner: SpinnerService) { }
+    private _spinner: SpinnerService,
+    private _toastrService: ToastrService) { }
 
   ngOnInit() {
     this._loggerService.info("QuotesListComponent : ngOnInit");
@@ -70,7 +74,7 @@ export class QuotesListComponent implements OnInit {
           if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
             this.model.items = responseJson['items'];
             this._spinner.stop();
-          } 
+          }    
       }, (errResponse) => {
         this._spinner.stop();
         this._loggerService.info("QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse");

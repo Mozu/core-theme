@@ -9,7 +9,8 @@ import { LoggerService,
   HttpError, 
   ErrorCode, 
   ErroNotificationType,
-  SpinnerService } from '@core';
+  SpinnerService, 
+  GlobalErrorLoggingService} from '@core';
 
 import { QuoteService } from './quote.service';
 

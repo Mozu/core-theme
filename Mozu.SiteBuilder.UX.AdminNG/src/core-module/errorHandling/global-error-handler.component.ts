@@ -20,6 +20,7 @@ import {
 import { SpinnerService } from '../spinner/spinner.service';
 
 import { GlobalErrorLoggingService } from './global-error-logging.service';
+import { ToastrService } from 'ngx-toastr';
 
 export class LoggingErrorHandlerOptions {
     isRethrowError: boolean;
@@ -41,7 +42,8 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
         private _spinner: SpinnerService,
         private _utilityService: UtilityService,
         private _authService: AuthService,
-        private _config: EnvironmentConfig
+        private _config: EnvironmentConfig,
+        private _toastrService: ToastrService
     ) {
         this._logger.info('ErrorHandler : constructor');
         this.options = _options;
@@ -56,10 +58,10 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
 
             const sessionId = localStorage.getItem(Constants.localStorageKeys.sessionId);
 
-            if (this._authService.isUserLoggedIn() &&  (sessionId == null || sessionId === undefined || sessionId === '') ) {
-            //    this._utilityService.redirectToURL(url);
-               // return;
-            }
+            // if (this._authService.isUserLoggedIn() &&  (sessionId == null || sessionId === undefined || sessionId === '') ) {
+            // //    this._utilityService.redirectToURL(url);
+            //    // return;
+            // }
 
             if (error && error.error && error.error.status === 0) {
                //  return;
@@ -71,12 +73,11 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
             }
 
             this._spinner.stop();
-
-            this._logger.error(error);
+            this.options.isUnwrapError? this._globalErrorLoggingService.logError(this.findOriginalError(error),this.options.isLogErrorToConsole, this.options.isSendErrorToServer): this._globalErrorLoggingService.logError(error, this.options.isLogErrorToConsole, this.options.isSendErrorToServer);
 
         } catch (loggingError) {
             this._logger.error('Error in global error handler service.');
-            this._utilityService.redirectToURL(url);
+           this._utilityService.redirectToURL(url);
             return;
         }
 

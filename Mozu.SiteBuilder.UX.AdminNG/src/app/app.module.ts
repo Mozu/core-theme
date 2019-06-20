@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 
 //import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -15,6 +15,10 @@ import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
+import { GlobalErrorHandlerComponent } from '@core';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -29,13 +33,21 @@ import { environment } from '../environments/environment';
         , domain: environment.domain
       }),
     GlobalModule.forRoot(),
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot({
+      autoDismiss:false,
+      disableTimeOut:true,
+      positionClass: 'toast-top-right'
+    }),
     SharedModule,
     AdminModule,
     QuotesModule,
     LocationGroupsModule,
     routing,
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorHandler, useClass: GlobalErrorHandlerComponent }  
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

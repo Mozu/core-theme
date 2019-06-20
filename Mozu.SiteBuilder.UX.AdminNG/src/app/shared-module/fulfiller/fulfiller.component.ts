@@ -14,6 +14,7 @@ import { environment } from '@env';
 
 import { Constants } from '@shared';
 
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-fulfiller',
@@ -23,10 +24,12 @@ import { Constants } from '@shared';
 export class FulfillerComponent {
   fulFilleriframeSrc : string;
   @Input() iframeResourceURL : SafeResourceUrl;
+  showUnifiedAdminButn: boolean = false;
   
   constructor(
     public sanitizer: DomSanitizer,
-    private _logger: LoggerService
+    private _logger: LoggerService,
+    private router: Router
     ) { 
     }
 
@@ -34,5 +37,15 @@ export class FulfillerComponent {
     this._logger.info('AppComponent : ngOnInit() ');
     this.fulFilleriframeSrc = environment.fulfillerUrl + Constants.uiRoutes.fulfillerHome;
     this.iframeResourceURL = this.sanitizer.bypassSecurityTrustResourceUrl(this.fulFilleriframeSrc);
+  }
+
+ public navigateToUnifiedAdmin = () => {
+  this.router.navigate(['/']);
+  }
+  
+  public onIframeLoaded = () => {
+    setTimeout(() => {
+      this.showUnifiedAdminButn = true;
+    }, 1100);
   }
 }

@@ -24,6 +24,7 @@
             ],
             "styles": [
               "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css",
               "src/assets/styles/jquery-ui.min.css",
               "src/assets/styles/bootstrap.min.css",
               "src/assets/styles/font-awesome.min.css",
@@ -276,6 +277,7 @@
               "src/assets/styles/spinner.component.css",
               "src/assets/styles/public.component.css"
             ],
+            
             "assets": [
               "src/assets",
               "src/favicon.ico",
