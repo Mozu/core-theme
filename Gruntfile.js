@@ -156,7 +156,7 @@ module.exports = function (grunt) {
           'templates/**/*',
           '*thumb.png',
           '*thumb.jpg',
-          '!*.orig',
+          '!**/*.orig',
           '!.inherited'
         ],
         tasks: [
@@ -187,7 +187,7 @@ module.exports = function (grunt) {
           '*thumb.png',
           '*thumb.jpg',
           'theme-ui.json',
-          '!*.orig',
+          '!**/*.orig',
           '!.inherited'
         ]
       },
