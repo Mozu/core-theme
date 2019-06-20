@@ -13,7 +13,7 @@ import {
     ToastrMessageType
 } from '../extensions/http-error.model';
 
-import { ToastrService } from 'ngx-toastr';
+import { ToastrService } from '../services/index';
 
 @Injectable()
 export class GlobalErrorLoggingService {
@@ -84,10 +84,9 @@ export class GlobalErrorLoggingService {
                 , this._isLogoutonPrimaryButton, this._isShowSecondaryButton, this._secondaryButton);
         } else if (this._notificationType === ErroNotificationType.Toaster) {
             if (this.isHandledError) {
-                debugger
-                this._toastrService.show(error.code);
+                this._toastrService.showError(error.code);
             } else {
-                this._toastrService.show(error.code);
+                this._toastrService.showError(ErrorCode.Fatal);
             }
         }
     }

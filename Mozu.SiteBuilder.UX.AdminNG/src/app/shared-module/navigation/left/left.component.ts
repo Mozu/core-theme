@@ -79,9 +79,8 @@ export class NavigationLeftComponent implements OnInit {
   public appendDynamicLinks = (allFilteredLinks) => {
     this._loggerService.info("NavigationLeftComponent : appendDynamicLinks");
     var distinctDynamicLinks = this.navigationService.distictImportExportLinks(this._sharedData);
-       console.log(distinctDynamicLinks);
         var filteredDynamicLinks = [];
-        
+  
         distinctDynamicLinks.forEach(element => {
           filteredDynamicLinks.push({
                 label: element.modalWindowTitle,  
