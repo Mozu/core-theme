@@ -46,6 +46,6 @@ export class FulfillerComponent {
   public onIframeLoaded = () => {
     setTimeout(() => {
       this.showUnifiedAdminButn = true;
-    }, 1100);
+    }, 1400);
   }
 }
