@@ -1,5 +1,4 @@
 import { Component,
-  OnInit ,
   Input
 } from '@angular/core';
 
@@ -14,7 +13,7 @@ import { AccessTileModel } from './access-tile.model';
   templateUrl: './access-tile.component.html',
   styleUrls: ['./access-tile.component.css']
 })
-export class AccessTileComponent implements OnInit {
+export class AccessTileComponent {
 
   @Input('Tiles') tileModel: AccessTileModel;
   uiRoutes = Constants.uiRoutes.quotes;
@@ -22,8 +21,4 @@ export class AccessTileComponent implements OnInit {
 
   constructor(private _loggerService: LoggerService) {
   }
-
-  ngOnInit() {
-  }
-
 }

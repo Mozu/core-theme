@@ -33,7 +33,7 @@ describe('Access-tile component', () => {
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
 
-        //To inject services using spyOn
+        // To inject services using spyOn
         loggerService = debugElement.injector.get(LoggerService);
         loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
 
@@ -41,11 +41,6 @@ describe('Access-tile component', () => {
 
     it('Application should create access tile Component', () => {
         expect(component).toBeDefined();
-    });
-
-    it('Application is inside ngOnInit method of access tile component', () => {
-        component.ngOnInit();
-        expect(loggerServiceSpy).toHaveBeenCalledWith("AccessTileComponent : ngOnInit");
     });
 
     it('Application toolbar should have p-card PrimeNG tag', async(() => {

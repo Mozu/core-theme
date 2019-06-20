@@ -1,37 +1,38 @@
 <div class="col-md-12 quote-container">
-<spinner></spinner>
-<p-table [value]="model.items" [paginator]="true" [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single" >
-    <ng-template pTemplate="header">
-        <tr>
-            <th>{{'QUOTES.GridHeader.b2bAccountName' | translate }}</th>
-            <th>{{'QUOTES.GridHeader.quoteName' | translate }}</th>
-            <th>{{'QUOTES.GridHeader.buyerName' | translate }}</th>
-            <th>{{'QUOTES.GridHeader.status' | translate }}</th>
-            <th>{{'QUOTES.GridHeader.lastModifiedDate' | translate }}</th>
-            <th>{{'QUOTES.GridHeader.quoteTotal' | translate }}</th>
-            <th style="width: 4em">
-                <!-- <i class="pi pi-ellipsis-v"></i> -->
-            </th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-quoteModel>
-        <tr [pSelectableRow]="quoteModel">
-            <td>
-                <!-- <span class="ui-column-title">{{'QUOTES.GridHeader.b2bAccountName' | translate }}</span> --> <!-- For Responsive-->
-                <span>{{quoteModel.tenantId}}</span>
-            </td>
-            <td><span>{{quoteModel.name}}</span></td>
-            <td><span>{{quoteModel.customerInteractionType}}</span></td>
-            <td><span class="content-pill content-pill-blue" [class.content-pill-blue]="quoteModel.status == 'Processing'" >{{quoteModel.status}}</span></td>
-            <td><span>{{quoteModel.auditInfo.updateDate | date : "MMM dd yyyy h:mm a"}}</span></td>
-            <td><span>{{quoteModel.total | currency}}</span></td>
-            <td style="width: 4em">
-                <div>
-                    <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>
-                    <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
-                </div>
-            </td>
-        </tr>
-    </ng-template>
-</p-table>
+
+    <p-table [value]="model.items" [responsive]="true" [paginator]="true" [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" selectionMode="single">
+        <ng-template pTemplate="header">
+            <tr>
+                <th><span>{{'QUOTES.GridHeader.b2bAccountName' | translate }}</span></th>
+                <th><span>{{'QUOTES.GridHeader.quoteName' | translate }}</span></th>
+                <th><span>{{'QUOTES.GridHeader.buyerName' | translate }}</span></th>
+                <th><span>{{'QUOTES.GridHeader.status' | translate }}</span></th>
+                <th><span>{{'QUOTES.GridHeader.lastModifiedDate' | translate }}</span></th>
+                <th><span>{{'QUOTES.GridHeader.quoteTotal' | translate }}</span></th>
+                <th style="width: 4em">
+                    <!-- <i class="pi pi-ellipsis-v"></i> -->
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-quoteModel>
+            <tr [pSelectableRow]="quoteModel">
+                <td>
+                    <!-- <span class="ui-column-title">{{'QUOTES.GridHeader.b2bAccountName' | translate }}</span> -->
+                    <!-- For Responsive-->
+                    <span>{{quoteModel.tenantId}}</span>
+                </td>
+                <td><span>{{quoteModel.name}}</span></td>
+                <td><span>{{quoteModel.customerInteractionType}}</span></td>
+                <td><span class="content-pill content-pill-blue" [class.content-pill-blue]="quoteModel.status == 'Processing'">{{quoteModel.status}}</span></td>
+                <td><span>{{quoteModel.auditInfo.updateDate | date : "MMM dd yyyy h:mm a"}}</span></td>
+                <td><span>{{quoteModel.total | currency}}</span></td>
+                <td style="width: 4em">
+                    <div>
+                        <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>
+                        <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>

@@ -1,17 +1,15 @@
-
-.tiles-align{
+.tiles-align {
     min-height: 110px;
     text-align: center;
-   
 }
 
-.tiles-images-align{
+.tiles-images-align {
     font-size: 75px;
-    margin-top:13%;
+    margin-top: 13%;
     margin-bottom: 12%;
 }
 
-.tiles-item{
+.tiles-item {
     float: left;
     margin-left: 3px;
     bottom: 18px;
@@ -21,25 +19,27 @@
     cursor: pointer;
 }
 
-a:hover{
+a:hover {
     text-decoration: none;
     border-bottom: 1px solid #2ea195;
     color: #3f3f3f;
 }
 
-.dashboard-icon-align{
+.dashboard-icon-align {
     position: relative;
     left: 38%;
     top: 30px;
 }
+
 @media screen and (max-width: 480px) {
-    .dashboard-icon-align{
+    .dashboard-icon-align {
         position: relative;
         left: 36%;
         top: 30px;
     }
-  }
-.dashboard-icon::after{
+}
+
+.dashboard-icon::after {
     color: #2ea195;
     display: block;
     font-family: mozicons;
@@ -52,53 +52,55 @@ a:hover{
     vertical-align: baseline;
     -webkit-font-smoothing: antialiased;
 }
-.dashboard-icon-products::after{
+
+.dashboard-icon-products::after {
     content: "\E91E";
 }
-.dashboard-icon-marketing::after{
+
+.dashboard-icon-marketing::after {
     content: "\E923";
 }
 
-.dashboard-icon-content::after{
+.dashboard-icon-content::after {
     content: "\E926";
 }
 
-.dashboard-icon-publishing::after{
+.dashboard-icon-publishing::after {
     content: "\E924";
 }
 
-.dashboard-icon-order::after{
+.dashboard-icon-order::after {
     content: "\E922";
 }
 
-.dashboard-icon-customer::after{
+.dashboard-icon-customer::after {
     content: "\E921";
 }
 
-.dashboard-icon-b2baccount::after{
+.dashboard-icon-b2baccount::after {
     content: "\E936";
 }
 
-.dashboard-icon-report::after{
+.dashboard-icon-report::after {
     content: "\E925";
 }
 
-.dashboard-icon-settings::after{
+.dashboard-icon-settings::after {
     content: "\E91C";
 }
 
-.dashboard-icon-schema::after{
+.dashboard-icon-schema::after {
     content: "\E91B";
 }
 
-.dashboard-icon-customization::after{
+.dashboard-icon-customization::after {
     content: "\E918";
 }
 
-.dashboard-icon-structure::after{
+.dashboard-icon-structure::after {
     content: "\E91D";
 }
 
-.dashboard-icon-permissions::after{
+.dashboard-icon-permissions::after {
     content: "\E91A";
 }

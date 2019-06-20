@@ -17,7 +17,6 @@ export class NotificationService {
     loadAccessTileCategories: Subject<string> = new Subject<string>();
     locationGroupAdded: Subject<string> = new Subject<string>();
     locationGroupEdited: Subject<any> = new Subject<any>();
-    mainMenuLinksFilteredByContextType: Subject<MenuItem[]> = new Subject<MenuItem[]>();
 
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
@@ -63,10 +62,5 @@ export class NotificationService {
     notifyQuoteItemDeleteConfirmation(actionName: string) {
         this._logger.info('NotificationService : notifyQuoteItemDeleteConfirmation');
         this.QuoteItemDeleteConfirmation.next(actionName);
-    }
-
-    notifyMainMenuLinksFilteredByContextType(mainMenuLinks: MenuItem[]) {
-        this._logger.info('NotificationService : notifyMainMenuLinksFilteredByContextType');
-        this.mainMenuLinksFilteredByContextType.next(mainMenuLinks);
     }
 }

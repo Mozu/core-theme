@@ -1,19 +1,22 @@
 .hamburgerMenu {
-    padding-top : 22px;
-    font-size : 22px;
+    padding-top: 22px;
+    font-size: 22px;
     cursor: pointer;
-    color:#666;
+    color: #666;
 }
+
 .primeSidebar {
     height: 100%;
     width: 22%;
     border-right: 1px solid #f5f5f5;
     margin-left: 5%;
 }
+
 .sidebar {
     height: 100%;
     border-right: 1px solid #f5f5f5;
 }
+
 @media screen and (max-width: 480px) {
     .primeSidebar {
         border-right: 0px solid transparent;
@@ -23,29 +26,34 @@
         padding-left: 14px;
     }
 }
-.ui-menu .ui-submenu-header{
+
+.ui-menu .ui-submenu-header {
     font-size: 11px !important;
 }
 
-.col-md-half, .col-sm-half{
+.col-md-half,
+.col-sm-half {
     width: 4%;
     float: left;
     text-align: center;
 }
-.ui-submenu-header{
+
+.ui-submenu-header {
     text-align: left !important;
 }
-@media screen and (max-width:900px){
-    .col-md-half, .col-sm-half {
+
+@media screen and (max-width:900px) {
+    .col-md-half,
+    .col-sm-half {
         width: 6% !important;
     }
-  }
+}
 
 .menuHeader {
     padding: .3em 0.96em;
 }
 
-.menuHeaderAlign{
+.menuHeaderAlign {
     font-size: 0.79em;
     color: #a3a3a3;
     background-color: transparent;
@@ -53,7 +61,7 @@
     cursor: pointer;
 }
 
-.import-export-cursor{
+.import-export-cursor {
     cursor: pointer;
 }
 
@@ -66,24 +74,25 @@ ul li {
     font-family: "proxima-nova", sans-serif !important;
     font-size: 0.95em;
 }
-ul{
+
+ul {
     margin-bottom: 0px !important;
 }
 
-a{
+a {
     text-decoration: none;
 }
 
-a:hover{
+a:hover {
     color: #333333;
 }
 
-.menuHeader:before{
-  color: #777;
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-  margin-top: 2px;
+.menuHeader:before {
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+    margin-top: 2px;
 }
 
 .active:after {
@@ -99,9 +108,9 @@ a:hover{
     font-weight: 400!important;
 }
 
-  @media screen and (max-width: 900px){
-    .col-md-half.sidebar{    
+@media screen and (max-width: 900px) {
+    .col-md-half.sidebar {
         position: relative;
         z-index: 9999;
-    }  
-}  
+    }
+}

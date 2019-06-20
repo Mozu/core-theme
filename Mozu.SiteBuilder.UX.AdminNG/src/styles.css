@@ -1,110 +1,115 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
-
-@font-face{
-    font-family:"proxima-nova";
-    src:url("/admin/assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
-    src:url("/admin/assets/Fonts/proximanova-regular.woff") format("woff"),
-    url("/admin/assets/Fonts/proximanova-regular.woff2") format("woff2"),
-    url("/admin/assets/Fonts/proximanova-regular.ttf") format("truetype"),
-    url("/admin/assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
-    font-style:normal;
-    font-weight:normal
+@font-face {
+    font-family: "proxima-nova";
+    src: url("/admin/assets/Fonts/proximanova-regular.eot?#iefix") format("embedded-opentype");
+    src: url("/admin/assets/Fonts/proximanova-regular.woff") format("woff"), url("/admin/assets/Fonts/proximanova-regular.woff2") format("woff2"), url("/admin/assets/Fonts/proximanova-regular.ttf") format("truetype"), url("/admin/assets/Fonts/proximanova-regular.svg#proxima-nova") format("svg");
+    font-style: normal;
+    font-weight: normal
 }
 
 @font-face {
     font-family: "mozicons";
-    src: url("./assets/fonts/mozicons-2014.eot"); /* IE9*/
+    src: url("./assets/fonts/mozicons-2014.eot");
+    /* IE9*/
     src: url("./assets/fonts/mozicons-2014.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
     url("./assets/fonts/mozicons.woff") format("woff"), /* chrome、firefox */
     url("./assets/fonts/mozicons-2014.ttf") format("truetype"), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-    url("./assets/fonts/mozicons.svg#mozicons") format("svg"); /* iOS 4.1- */
+    url("./assets/fonts/mozicons.svg#mozicons") format("svg");
+    /* iOS 4.1- */
 }
 
-body{
+body {
     background-color: #eaeaea !important;
-    font-family:"proxima-nova", sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
     font-size: 13px;
     height: 100%;
 }
 
-.navbar{
+.navbar {
     max-height: 32px !important;
     margin-bottom: 0px !important;
 }
 
-body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, body .ui-tabview.ui-tabview-top .ui-tabview-nav li{
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li {
     width: 50% !important;
     margin-right: 0;
-  }
+}
 
-body .ui-menu .ui-submenu-header{
-    font-size:11px;
+body .ui-menu .ui-submenu-header {
+    font-size: 11px;
     color: #a3a3a3 !important;
     background-color: transparent !important;
     margin-top: 5% !important;
     padding: 0em 0.857em !important;
 }
 
-body .ui-menu .ui-menuitem-link{
+body .ui-menu .ui-menuitem-link {
     padding: 0em 0.757em !important;
     /* font-size: 13px; */
-    font-family:"proxima-nova", sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
 }
 
 body .ui-tabview .ui-tabview-panels {
-    padding:0 !important;
+    padding: 0 !important;
     margin-top: 5%;
 }
 
-body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active{
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
     background-color: transparent !important;
     border: 1px solid transparent !important;
     color: #000000 !important;
-
 }
 
-body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a{
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active a {
     color: #000000 !important;
-    font-family:"proxima-nova", sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
 }
 
-h4{ font-size: 12px; }
+h4 {
+    font-size: 12px;
+}
 
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
-    border: 1px solid transparent !important; 
+.ui-state-default,
+.ui-widget-header,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: 1px solid transparent !important;
     background: transparent !important;
- 
 }
-body .ui-tabview.ui-tabview-top .ui-tabview-nav li a{
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
     padding: 0.8em 1em !important;
 }
-ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all.ng-star-inserted{
+
+ul.ui-tabview-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all.ng-star-inserted {
     text-align: center;
     color: #a5a5a5;
     font-size: 13px;
     position: relative;
     bottom: 4px;
     height: 32px;
-    font-family:"proxima-nova", sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
 }
 
-body .ui-tabview .ui-tabview-panels{
+body .ui-tabview .ui-tabview-panels {
     border: 0px solid transparent !important;
     text-align: left !important;
 }
 
-.ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top{
+.ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
     background: #eef0f0;
 }
 
-.ui-menu{
-    width:100% !important;
+.ui-menu {
+    width: 100% !important;
 }
+
 .ui-card-shadow.ui-card {
     margin-top: 20px !important;
-    height: 213px !important; 
+    height: 213px !important;
     margin-bottom: 20px !important;
 }
 
@@ -113,28 +118,27 @@ body .ui-tabview .ui-tabview-panels{
 }
 
 .ui-widget-content {
- border: 0 !important;
+    border: 0 !important;
 }
 
 .ui-tabview .ui-tabview-nav li {
- margin: 0 !important;
-   
+    margin: 0 !important;
 }
 
 body .ui-tabview.ui-tabview-top .ui-tabview-nav {
     margin-bottom: 0px !important;
 }
 
-li.ui-state-default.ui-corner-top.ng-star-inserted.ui-tabview-selected.ui-state-active{
+li.ui-state-default.ui-corner-top.ng-star-inserted.ui-tabview-selected.ui-state-active {
     border-bottom: 2px solid #2ea195 !important;
 }
 
-.ui-tabview-panels{
+.ui-tabview-panels {
     overflow: auto;
     position: absolute;
     height: 93%;
     width: 97.5%;
-  }
+}
 
 body .ui-sidebar {
     padding: 0em 0em !important;
@@ -143,77 +147,86 @@ body .ui-sidebar {
 .ui-card-subtitle {
     font-size: 0.85em;
 }
-.ui-card-body{
+
+.ui-card-body {
     background: #fafafa;
     margin-top: 5.1%;
     height: 80px;
 }
 
 @media screen and (max-width: 480px) {
-    navigation-left{
+    navigation-left {
         float: left;
     }
-    navigation-top{
+    navigation-top {
         float: left;
     }
-    .ui-card-body{
+    .ui-card-body {
         font-size: 0.88em;
         padding: 1em !important;
     }
-  }
+}
 
-  /***********Custom Code Collapsible left menu*******************/
 
-  body .ui-panelmenu .ui-panelmenu-header > a {
+/***********Custom Code Collapsible left menu*******************/
+
+body .ui-panelmenu .ui-panelmenu-header>a {
     padding: 0.5em 0.857em !important;
     font-size: 13px !important;
-  }
+}
 
-  
- body .ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link{
+body .ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link {
     padding: 0.1em 2.757em !important;
     font-size: 13px !important;
 }
 
-body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a {
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active>a {
     border: 1px solid #2ea195 !important;
     background-color: #2ea195 !important;
     color: #ffffff;
 }
 
-li.ui-state-active:focus{
+li.ui-state-active:focus {
     outline-color: transparent !important;
 }
 
-li.ui-state-default:active{
+li.ui-state-default:active {
     outline-color: transparent !important;
 }
 
 
 /* ------------------------------PrimeNG Table CSS--------------------------------*/
+
+
 /* --------------Turbo Table CSS - Start------------- */
-p-table table{
+
+p-table table {
     border-radius: 5px 5px 0px 0px !important;
     overflow: hidden;
 }
 
-p-table .ui-table .ui-table-tbody > tr.ui-selectable-row, p-table .ui-table .ui-table-tbody > tr.ui-selectable-row:focus {
-    background-color: white !important; 
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row,
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row:focus {
+    background-color: white !important;
     color: #3f3f3f !important;
     outline: 0px !important;
     border: 0px !important;
 }
-p-table .ui-table .ui-table-thead{
+
+p-table .ui-table .ui-table-thead {
     /* background-color: #f7f7f7  !important;  */
     background-color: #ffffff !important;
 }
-p-table .ui-table .ui-table-thead > tr{
+
+p-table .ui-table .ui-table-thead>tr {
     border-bottom: 1.5px solid #e9e9e9 !important;
 }
-p-table .ui-table .ui-table-tbody > tr.ui-selectable-row:hover {
+
+p-table .ui-table .ui-table-tbody>tr.ui-selectable-row:hover {
     background-color: #f7f7f7 !important;
 }
-p-table .ui-table .ui-table-thead > tr > th {
+
+p-table .ui-table .ui-table-thead>tr>th {
     padding: 8px 2px !important;
     border-bottom: 1px solid #e9e9e9 !important;
     font-weight: normal !important;
@@ -222,84 +235,111 @@ p-table .ui-table .ui-table-thead > tr > th {
     color: #7c7c7c !important;
     background-color: transparent !important;
     border: 0px !important;
-    font-family:"proxima-nova", sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
 }
 
-p-table .ui-table .ui-table-tbody > tr > td {
+p-table .ui-table .ui-table-tbody>tr>td {
     background-color: white !important;
-    font-size: 13px !important;    
+    font-size: 13px !important;
     border: 0px !important;
     border-bottom: 1px solid #f2f2f2 !important;
     padding: 8px 2px !important;
     color: #3f3f3f !important;
-    font-family:"proxima-nova", sans-serif !important;
-    /* font-weight: 600; */
+    font-family: "proxima-nova", sans-serif !important;
+    font-weight: 600;
     word-break: break-all;
 }
 
-
-.ui-table-scrollable-body::-webkit-scrollbar-track
-{	
-	border-radius: 10px;
-	/* background-color: #F5F5F5; */
+.ui-table-scrollable-body::-webkit-scrollbar-track {
+    border-radius: 10px;
+    /* background-color: #F5F5F5; */
 }
 
-.ui-table-scrollable-body::-webkit-scrollbar
-{
-	width: 8px;
-	/* background-color: #F5F5F5; */
+.ui-table-scrollable-body::-webkit-scrollbar {
+    width: 8px;
+    /* background-color: #F5F5F5; */
 }
 
-.ui-table-scrollable-body::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;	
-	background-color: #9f9b9b;
+.ui-table-scrollable-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #9f9b9b;
+}
+
+
+/* --------------Turbo Table Edit Page CSS ---------------- */
+
+.quote-items-grid p-table .ui-table .ui-table-thead>tr>th {
+    background-color: #ffffff !important;
+    color: #7c7c7c !important;
+    padding: 20px 10px !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+}
+
+.quote-items-grid p-table .ui-table .ui-table-tbody>tr>td {
+    vertical-align: top !important;
+    padding: 10px !important;
+}
+
+.quote-items-grid p-table .ui-table .ui-table-tbody>tr>td input {
+    width: 60% !important;
+    outline: none !important;
+    padding: 0px 5px;
 }
 
 
 /* --------------Turbo Table CSS - End------------- */
 
+
 /* --------------Checkbox CSS - Start------------- */
- p-table .ui-chkbox .ui-chkbox-box {
+
+p-table .ui-chkbox .ui-chkbox-box {
     width: 14px !important;
-    height: 14px !important;    
+    height: 14px !important;
     margin-top: 0px !important;
     border: 1px solid #e9e9e9 !important;
     background-color: #ffffff !important;
 }
+
 p-table .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {
     width: 13px !important;
-    height: 13px !important;   
-    font-size: 12px  !important;
+    height: 13px !important;
+    font-size: 12px !important;
 }
+
 p-table .pi-check:before {
     content: "\e909";
     width: 14px !important;
-    height: 14px !important;  
+    height: 14px !important;
     background-color: #2ea195 !important;
     text-align: center !important;
     border-radius: 3px !important;
 }
+
 p-table .ui-chkbox .ui-chkbox-box.ui-state-active {
     border-color: #2ea195 !important;
     background-color: #2ea195 !important;
 }
+
 p-table .ui-chkbox.ui-widget {
     padding-top: 3px !important;
-} 
+}
+
+
 /* --------------Checkbox CSS - End------------- */
 
+
 /* --------------Pagination CSS - Start------------- */
+
 .ui-paginator {
     border-radius: 0px 0px 5px 5px;
     padding: 8px !important;
     background-color: white !important;
-    border: 0px  !important;
+    border: 0px !important;
     border-top: 1px solid #f1f1f1 !important;
     text-align: left !important;
 }
 
-.ui-paginator .ui-paginator-element{
+.ui-paginator .ui-paginator-element {
     height: 0px !important;
     padding: 0px !important;
     min-width: 1.7em !important;
@@ -311,62 +351,75 @@ p-table .ui-chkbox.ui-widget {
     color: #ffffff;
     border-radius: 2px;
 }
+
 .ui-paginator .ui-paginator-pages .ui-paginator-page {
     line-height: 1.8em !important;
-    font-size: 13px !important;   
-    font-family:"proxima-nova", sans-serif !important; 
+    font-size: 13px !important;
+    font-family: "proxima-nova", sans-serif !important;
 }
 
-.ui-paginator .ui-paginator-last, .ui-paginator .ui-paginator-first{
+.ui-paginator .ui-paginator-last,
+.ui-paginator .ui-paginator-first {
     display: none !important;
 }
-.ui-paginator-element.ui-state-disabled{
+
+.ui-paginator-element.ui-state-disabled {
     color: #b1b1b1 !important;
     opacity: 9 !important;
 }
-.ui-paginator-icon.pi-caret-left::before{
+
+.ui-paginator-icon.pi-caret-left::before {
     content: "\e900";
     font-size: 14px;
     color: #b1b1b1;
 }
-.ui-paginator-icon.pi-caret-right::before{
+
+.ui-paginator-icon.pi-caret-right::before {
     content: "\e901";
     font-size: 14px;
     color: #b1b1b1;
 }
+
+
 /* --------------Pagination CSS - End------------- */
 
+
 /* --------------Context Menu Ellipsis CSS - Start------------- */
-/* p-table .ui-table .pi-ellipsis-v{
+
+p-table .ui-table .pi-ellipsis-v {
     font-size: 16px;
     color: #c9c9c9;
     font-weight: normal !important;
 }
 
-p-table .ui-table .pi-ellipsis-v:hover{
+p-table .ui-table .pi-ellipsis-v:hover {
     cursor: pointer;
     color: #666666;
 }
-.ng-trigger.ui-widget{
-    font-family:"proxima-nova", sans-serif !important;
+
+.ng-trigger.ui-widget {
+    font-family: "proxima-nova", sans-serif !important;
 }
-.ng-trigger.ui-menu-dynamic{
+
+.ng-trigger.ui-menu-dynamic {
     max-width: 139px;
     background-color: white !important;
     border: 1px solid #dadada !important;
     border-radius: 3px !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.09) !important;
-    -moz-box-shadow: 0 1px 6px rgba(0,0,0,0.09) !important;
-    -webkit-box-shadow: 0 1px 6px rgba(0,0,0,0.09) !important;
-    -o-box-shadow: 0 1px 6px rgba(0,0,0,0.09) !important;
-    -ms-box-shadow: 0 1px 6px rgba(0,0,0,0.09) !important;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -o-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
+    -ms-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.09) !important;
 }
+
 .ng-trigger.ui-menu-dynamic li.ui-menuitem.ui-widget.ui-corner-all.ng-star-inserted {
     padding: 8px 12px !important;
     font-size: 12px !important;
     color: #a3a3a3 !important;
 }
-.ng-trigger.ui-menu-dynamic li{
+
+.ng-trigger.ui-menu-dynamic li {
     border-bottom: 1px solid #f5f5f5;
 }
 
@@ -378,42 +431,57 @@ p-table .ui-table .pi-ellipsis-v:hover{
     opacity: .5 !important;
 }
 
-.integrationsModal.show{
+.integrationsModal.show {
     opacity: 1 !important;
 }
 
 .integrationsModal {
     z-index: 19021 !important;
 }
-.integrationsModal .modal-body{
+
+.integrationsModal .modal-body {
     height: 400px;
 }
+
 .integrationsModal .modal-header .close {
     margin-top: -25px;
 }
-.integrationsModal .modal-dialog{
+
+.integrationsModal .modal-dialog {
     width: 90% !important;
-    top:25%;
+    top: 25%;
 }
+
+
 /* .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text{
     color: #a3a3a3 !important;
 } */
-.ng-trigger.ui-menu .ui-menuitem-link:hover, .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text:hover,
-.ng-trigger.ui-widget-content .ui-state-active, .ng-trigger.ui-widget-content .ui-state-active{
+
+.ng-trigger.ui-menu .ui-menuitem-link:hover,
+.ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text:hover,
+.ng-trigger.ui-widget-content .ui-state-active,
+.ng-trigger.ui-widget-content .ui-state-active {
     color: #3f3f3f !important;
     background-color: transparent !important;
-    border:transparent  !important;
+    border: transparent !important;
 }
+
+
 /* --------------Context Menu Ellipsis CSS - End------------- */
 
+
 /* -----------------------PrimeNG Tab CSS - Start---------------------------*/
+
 .quote-tabview .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
     background: transparent;
     margin-top: 10px;
 }
-.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active, .quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li {
-    width: auto !important; 
+
+.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+.quote-tabview .ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    width: auto !important;
 }
+
 .quote-tabview .ui-tabview-panels {
     overflow: auto;
     position: relative;
@@ -421,14 +489,15 @@ p-table .ui-table .pi-ellipsis-v:hover{
     width: auto;
     margin-top: 3% !important;
     margin-bottom: 2%;
-
 }
-.ui-widget{
+
+.ui-widget {
     color: #3f3f3f;
-    font-family: "proxima-nova",sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
     font-size: 13px !important;
     line-height: 1.4;
 }
+
 .quote-tabview .ui-table .ui-table-thead {
     background-color: #ffffff !important;
 }
@@ -439,162 +508,208 @@ p-table .ui-table .pi-ellipsis-v:hover{
     /* border-bottom: #f3f3f3 1px solid !important; */
 }
 
-.comments-container .ui-fileupload-choose:not(.ui-state-disabled):hover, 
+.comments-container .ui-fileupload-choose:not(.ui-state-disabled):hover,
 .comments-container .ui-fileupload-choose:not(.ui-state-disabled):active {
     /* border-bottom: #3f3f3f 1px solid !important; */
     outline: 0px !important;
-    color: #2ea195  !important;
+    color: #2ea195 !important;
 }
+
+
 /* quotes file upload */
-.pi-plus:before{
+
+.pi-plus:before {
     content: "\e97b" !important;
     color: #2ea195;
     font-size: 18px;
 }
-.ui-button-text{
-   visibility: hidden;
+
+.ui-button-text {
+    visibility: hidden;
 }
-.ui-button-text::before{
-   content: "Attach File" !important;
-   color: #2ea195;
-   visibility: visible;
+
+.ui-button-text::before {
+    content: "Attach File" !important;
+    color: #2ea195;
+    visibility: visible;
 }
+
+
 /* -----------------------PrimeNG TabView CSS  - End ---------------------------*/
 
+
 /* shipping information css start */
-shipping-method .ng-select{
+
+shipping-method .ng-select {
     width: 275px;
 }
+
+
 /* shipping information css end */
+
+
 /* quotes css start*/
-.container-wrapper{
+
+.container-wrapper {
     display: flex;
     flex-direction: column;
 }
+
 quotes-list {
     height: calc(100vh - 110px);
     overflow: hidden;
 }
-quotes-list .ui-table-wrapper{
+
+quotes-list .ui-table-wrapper {
     height: calc(100vh - 170px);
     overflow: hidden;
 }
+
 quotes-list .ui-table-wrapper tbody {
-    display:block;
+    display: block;
     height: calc(100vh - 200px);
-    overflow:auto;
+    overflow: auto;
     background: #fff;
 }
-quotes-list .ui-table-wrapper thead, quotes-list .ui-table-wrapper tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
+
+quotes-list .ui-table-wrapper thead,
+quotes-list .ui-table-wrapper tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
+
 quotes-list .ui-table-wrapper thead {
-    width: calc( 100% ) 
+    width: calc( 100%)
 }
-quotes-list .ui-table-wrapper thead th{
+
+quotes-list .ui-table-wrapper thead th {
     width: 11.66%;
 }
+
+quotes-list p-table .ui-table .ui-table-thead {
+    background-color: #f7f7f7 !important;
+}
+
+quotes-list p-table .ui-table .ui-table-thead>tr>th {
+    padding: 8px 20px !important;
+}
+
+
 /* quote edit */
-quote .ui-table-responsive .ui-table-thead>tr>th{
+
+quote .ui-table-responsive .ui-table-thead>tr>th {
     display: table-cell !important;
     white-space: nowrap;
 }
-quote .ui-table-responsive .ui-table-tbody>tr>td{
+
+quote .ui-table-responsive .ui-table-tbody>tr>td {
     display: table-cell;
     float: none;
-    white-space: nowrap 
+    white-space: nowrap
 }
-quote .ui-table table{
+
+quote .ui-table table {
     table-layout: auto;
 }
-quote .ui-table-wrapper, quotes-list .ui-table-wrapper {
+
+quote .ui-table-wrapper,
+quotes-list .ui-table-wrapper {
     min-height: .01%;
     overflow-x: auto;
 }
+
+
 /* quotes summary starts*/
-quote-summary .summary-heading p, account-information .summary-heading p{
+
+quote-summary .summary-heading p,
+account-information .summary-heading p {
     font-size: 13px !important;
 }
-quote-summary .summary-link, account-information .summary-link{
+
+quote-summary .summary-link,
+account-information .summary-link {
     border-bottom: #f3f3f3 1px solid;
 }
-quote-summary .summary-link:hover, account-information .summary-link:hover{
+
+quote-summary .summary-link:hover,
+account-information .summary-link:hover {
     border-bottom: #3f3f3f 1px solid;
 }
+
+
 /* quotes summary ends*/
-@media screen and (max-width: 767px){
-    quote .ui-table-wrapper, quotes-list .ui-table-wrapper {
+
+@media screen and (max-width: 767px) {
+    quote .ui-table-wrapper,
+    quotes-list .ui-table-wrapper {
         width: 100%;
         margin-bottom: 15px;
         overflow-y: hidden;
         -ms-overflow-style: -ms-autohiding-scrollbar;
-   }
-    quote .summary-heading + .section{
+    }
+    quote .summary-heading+.section {
         border-bottom: 1px solid #f5f5f5;
-   }
-    quotes-list .ui-table-wrapper table{
+    }
+    quotes-list .ui-table-wrapper table {
         table-layout: auto;
-   }
-    quotes-list .ui-table-wrapper thead{
+    }
+    quotes-list .ui-table-wrapper thead {
         width: 100%;
         table-layout: auto;
-   }
-    quotes-list .ui-table .ui-table-thead>tr>th,quotes-list .ui-table .ui-table-tbody>tr>td,quotes-list .ui-table .ui-table-tfoot>tr>td{
+    }
+    quotes-list .ui-table .ui-table-thead>tr>th,
+    quotes-list .ui-table .ui-table-tbody>tr>td,
+    quotes-list .ui-table .ui-table-tfoot>tr>td {
         white-space: nowrap;
-   }
-    quotes-list .ui-table-wrapper thead, quotes-list .ui-table-wrapper tbody tr{
+    }
+    quotes-list .ui-table-wrapper thead,
+    quotes-list .ui-table-wrapper tbody tr {
         table-layout: auto;
-   }
-    quotes-list .ui-table-wrapper{
+    }
+    quotes-list .ui-table-wrapper {
         margin-bottom: 0;
-   }
+    }
+    quotes-list .ui-table-wrapper tbody td span,
+    quotes-list .ui-table-wrapper thead th span {
+        width: 100px !important;
+        display: inline-block !important;
+    }
 }
+
 @media screen and (max-width: 480px) {
-    quotes-list .ui-table-wrapper tbody tr:nth-child(even) td{
+    quotes-list .ui-table-wrapper tbody tr:nth-child(even) td {
         background: #f5f5f5 !important;
-   }
-    quotes-list tbody>tr>td .ui-column-title{
+    }
+    quotes-list tbody>tr>td .ui-column-title {
         min-width: 50% !important;
-   }
+    }
 }
-.ui-sidebar-mask{ z-index:9 !important;}
+
+.ui-sidebar-mask {
+    z-index: 9 !important;
+}
+
+
 /* html{ overflow: hidden;}
 body{ overflow: hidden;} */
 
-
-.ui-table-scrollable-header-box{
+.ui-table-scrollable-header-box {
     background-color: #fff
-  }
-  .ui-widget-header {
-    background: #ffffff;
-  }
+}
 
-.location-group-container .ui-table-wrapper{ height: 100%; background: #fff; border-radius: 5px 5px 0 0;}
-.location-group-container p-table .ui-widget,.location-group-container table { height: calc(100% - 35px) !important;}
-.location-group-container p-table .ui-table .ui-table-thead>tr>th{padding: 8px 20px !important; width: 49%;font-weight: 600 !important;}
-.location-group-container p-table .ui-table .ui-table-thead>tr>td{ font-weight: normal !important;}
-.location-group-container p-table .ui-table .ui-table-thead{background:#f7f7f7 !important;  border-radius: 5px 5px 0 0; }
-.location-group-container p-table .ui-table .ui-table-tbody > tr:hover td{
-    cursor: pointer;
-    /* background-color: #eaeaea !important; */
-    background-color: rgb(250, 250, 250) !important;
-    color: #333333 !important;
-}
-.location-group-container p-table tbody.ui-table-tbody{ display: table-footer-group;}
-locations-list p-table .ui-table .ui-table-thead>tr>td{padding: 8px 0 !important; font-weight: normal !important;}
-
-.selected-locations-list p-table .ui-table .ui-table-tbody > tr > td {
-    font-weight: normal !important;
-    border-color: #9f9b9b57 !important;
-}
-.ui-table-scrollable-header-box{
-   background-color: #fff
-}
 .ui-widget-header {
-   background: #ffffff;
+    background: #ffffff;
 }
+
+.ui-table-scrollable-header-box {
+    background-color: #fff
+}
+
+.ui-widget-header {
+    background: #ffffff;
+}
+
 
 /* .location-group-container .ui-table-wrapper{
      height: 100%;
@@ -605,79 +720,100 @@ locations-list p-table .ui-table .ui-table-thead>tr>td{padding: 8px 0 !important
      height: calc(100% - 35px) !important;
 }
 */
-.location-group-container p-table .ui-table .ui-table-thead>tr>th{
+
+.location-group-container p-table .ui-table .ui-table-thead>tr>th {
     padding: 8px 20px !important;
-     width: 31%;
+    width: 31%;
     font-weight: 600 !important;
 }
- .location-group-container p-table .ui-table .ui-table-thead>tr>td{
-     font-weight: normal !important;
+
+.location-group-container p-table .ui-table .ui-table-thead>tr>td {
+    font-weight: normal !important;
 }
- .location-group-container p-table .ui-table .ui-table-thead{
-    background:#f7f7f7 !important;
-     border-radius: 5px 5px 0 0;
+
+.location-group-container p-table .ui-table .ui-table-thead {
+    background: #f7f7f7 !important;
+    border-radius: 5px 5px 0 0;
 }
- .location-group-container p-table .ui-table .ui-table-tbody > tr:hover td{
-     cursor: pointer;
+
+.location-group-container p-table .ui-table .ui-table-tbody>tr:hover td {
+    cursor: pointer;
     /* background-color: #eaeaea !important;
      */
-     background-color: rgb(250, 250, 250) !important;
-     color: #333333 !important;
+    background-color: rgb(250, 250, 250) !important;
+    color: #333333 !important;
 }
+
+
 /* .location-group-container p-table tbody.ui-table-tbody{
      display: table-footer-group;
 }
  */
- locations-list p-table .ui-table .ui-table-thead>tr>td{
+
+locations-list p-table .ui-table .ui-table-thead>tr>td {
     padding: 8px 0 !important;
-     font-weight: normal !important;
+    font-weight: normal !important;
 }
- .selected-locations-list p-table .ui-table .ui-table-tbody > tr > td {
-     font-weight: normal !important;
-     border-color: #9f9b9b57 !important;
+
+.selected-locations-list p-table .ui-table .ui-table-tbody>tr>td {
+    font-weight: normal !important;
+    border-color: #9f9b9b57 !important;
 }
- @media screen and (min-width: 768px) {
+
+@media screen and (min-width: 768px) {
     /* .location-group-container p-table tbody.ui-table-tbody{
          display: table-footer-group;
     }
      */
 }
- @media screen and (max-width: 40em){
-     .location-group-container p-table .ui-table .ui-table-tbody > tr > td{
-         padding: 8px 15px !important;
-         display: table-cell;
-         width: auto !important;
-         float: none !important;
+
+@media screen and (max-width: 40em) {
+    .location-group-container p-table .ui-table .ui-table-tbody>tr>td {
+        padding: 8px 15px !important;
+        display: table-cell;
+        width: auto !important;
+        float: none !important;
     }
-     .location-group-container .ui-table-responsive .ui-table-thead>tr>th, .location-group-container .ui-table-responsive .ui-table-tfoot>tr>td {
-         display: table-cell !important;
+    .location-group-container .ui-table-responsive .ui-table-thead>tr>th,
+    .location-group-container .ui-table-responsive .ui-table-tfoot>tr>td {
+        display: table-cell !important;
     }
 }
 
+
 /* location group css starts*/
+
 location-group-list {
     height: calc(100vh - 110px);
     overflow: hidden;
 }
-location-group-list .ui-table-wrapper{
+
+location-group-list .ui-table-wrapper {
     height: calc(100vh - 170px) !important;
     overflow: hidden;
 }
+
 location-group-list .ui-table-wrapper tbody {
-    display:block;
+    display: block;
     height: calc(100vh - 200px);
-    overflow:auto;
+    overflow: auto;
     background: #fff;
 }
-location-group-list .ui-table-wrapper thead, location-group-list .ui-table-wrapper tbody tr {
-    display:table;
-    width:100%;
-    table-layout:fixed;
+
+location-group-list .ui-table-wrapper thead,
+location-group-list .ui-table-wrapper tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }
+
 location-group-list .ui-table-wrapper thead {
-    width: calc( 100% ) 
+    width: calc( 100%)
 }
-location-group-list .ui-table-wrapper thead th{
+
+location-group-list .ui-table-wrapper thead th {
     width: 11.66%;
 }
+
+
 /* location group css ends*/

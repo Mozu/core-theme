@@ -1,229 +1,225 @@
 ﻿{
-  "PUBLIC": {
-    "Login": {
-      "pageTitle": "Xpanxion Login",
-      "title": "Welcome to Xpanxion",
-      "emailAddressPlaceHolder": "Email Address",
-      "passwordPlaceHolder": "Password",
-      "loginButton": "Login"
-    }
-  },
-  "SHARED": {
-    "NAVIGATION": {
-      "productMenu": "product",
-      "offerMenu": "offer",
-      "orderMenu": "order",
-      "invoiceMenu": "invoice",
-      "help": "Help"
-    },
-    "HEADER": {
-      "logoutConfirmation": {
-        "dialogTitle": "Logout",
-        "dialogMessage": "Do you want to exit the application?",
-        "primaryButton": "Yes",
-        "secondaryButton": "No"
-      },
-      "userMenu": {
-        "profileMenu": "Profile",
-        "helpMenu": "Help",
-        "logoutMenu": "Logout",
-        "userMessage": "Hi"
-      },
-      "pageTitle": {
-        "quotes": "Quotes",
-        "locationGroups": "Location Groups"
-      },
-      "actionButtons": {
-        "locationGroups": {
-          "create": "Create New Location Group",
-          "cancel": "Cancel",
-          "save": "Save"
+    "PUBLIC": {
+        "Login": {
+            "pageTitle": "Xpanxion Login",
+            "title": "Welcome to Xpanxion",
+            "emailAddressPlaceHolder": "Email Address",
+            "passwordPlaceHolder": "Password",
+            "loginButton": "Login"
         }
-      }
     },
-    "FOOTER": {
-      "proweredBy": "Powered By:",
-      "copyRight": "© Xpanxion",
-      "customerSupport": "Customer Support at",
-      "supportEmail": "test"
-    },
-    "ACCOUNT": {
-      "Information": {
-        "heading": "Account",
-        "company": "Company:",
-        "companyAdminEmail": "Company Admin Email:",
-        "salesRep": "Sales Rep:"
-      }
-    },
-    "SHIPPING": {
-      "Address": {
-        "shippingInformation": "Shipping Information",
-        "shippingAddress": "Shipping Address",
-        "noShippingAddressMessage": "You have no shipping address."
-      },
-      "Method": {
-        "shippingMethodAndPrice": "Shipping Method & Price",
-        "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
-        "loadingText": "Loading...",
-        "notFoundText": "No shipping methods available."
-      }
-    },
-    "CONFIRMATIONDIALOG": {
-      "Confirmation": {
-        "DeleteQuoteItem": {
-          "title": " Delete Item",
-          "message": " Are you certain you want to delete this item?",
-          "primaryButtonText": "Yes",
-          "secondaryButtonText": "No",
-          "isShowSecondaryButton": "true"
+    "SHARED": {
+        "NAVIGATION": {
+            "productMenu": "product",
+            "offerMenu": "offer",
+            "orderMenu": "order",
+            "invoiceMenu": "invoice",
+            "help": "Help"
         },
-        "DeleteLocationGroup": {
-          "title": " Delete Item",
-          "message": " Are you certain you want to delete this item?",
-          "primaryButtonText": "Yes",
-          "secondaryButtonText": "No",
-          "isShowSecondaryButton": "true"
+        "HEADER": {
+            "logoutConfirmation": {
+                "dialogTitle": "Logout",
+                "dialogMessage": "Do you want to exit the application?",
+                "primaryButton": "Yes",
+                "secondaryButton": "No"
+            },
+            "userMenu": {
+                "profileMenu": "Profile",
+                "helpMenu": "Help",
+                "logoutMenu": "Logout",
+                "userMessage": "Hi"
+            },
+            "pageTitle": {
+                "quotes": "Quotes",
+                "locationGroups": "Location Groups"
+            },
+            "actionButtons": {
+                "locationGroups": {
+                    "create": "Create New Location Group",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            }
+        },
+        "FOOTER": {
+            "proweredBy": "Powered By:",
+            "copyRight": "© Xpanxion",
+            "customerSupport": "Customer Support at",
+            "supportEmail": "test"
+        },
+        "ACCOUNT": {
+            "Information": {
+                "heading": "Account",
+                "company": "Company:",
+                "companyAdminEmail": "Company Admin Email:",
+                "salesRep": "Sales Rep:"
+            }
+        },
+        "SHIPPING": {
+            "Address": {
+                "shippingInformation": "Shipping Information",
+                "shippingAddress": "Shipping Address",
+                "noShippingAddressMessage": "You have no shipping address."
+            },
+            "Method": {
+                "shippingMethodAndPrice": "Shipping Method & Price",
+                "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
+                "loadingText": "Loading...",
+                "notFoundText": "No shipping methods available."
+            }
+        },
+        "CONFIRMATIONDIALOG": {
+            "Confirmation": {
+                "DeleteQuoteItem": {
+                    "title": " Delete Item",
+                    "message": " Are you certain you want to delete this item?",
+                    "primaryButtonText": "Yes",
+                    "secondaryButtonText": "No",
+                    "isShowSecondaryButton": "true"
+                }
+            },
+            "Information": {
+                "SaveItem": {
+                    "title": " Save Item",
+                    "message": " Item is saved successfully",
+                    "primaryButtonText": "Ok",
+                    "secondaryButtonText": "",
+                    "isShowSecondaryButton": "false"
+                }
+            }
+        },
+        "AUDITLOG": {
+            "GridHeader": {
+                "date": "Date",
+                "event": "Event",
+                "user": "User"
+            }
         }
-      },
-      "Information": {
-        "SaveItem": {
-          "title": " Save Item",
-          "message": " Item is saved successfully",
-          "primaryButtonText": "Ok",
-          "secondaryButtonText": "",
-          "isShowSecondaryButton": "false"
+    },
+    "MESSAGES": {
+        "Dialog": {
+            "AuthFailedInvalidAuthResponse": {
+                "title": "Authentication Failed",
+                "message": "Authentication Failed for specified user. Please enter valid credentials and try again. If you still see same problem , contact customer support team.",
+                "primaryButton": "OK",
+                "secondaryButton": "",
+                "isShowSecondaryButton": "false",
+                "isLogoutOnPrimaryButton": "false"
+            }
+        },
+        "Toastr": {
+            "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
+            "EmptyEmailAddress": "Please enter Email Address.",
+            "EmptyPassword": "Please enter Password.",
+            "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
+            "QuoteListGetFailed": "Error occured while fetching quote list",
+            "QuoteGetFailed": "Error occured while fetching quote information",
+            "GetAccountInfoFailed": "Error occured while fetching account details",
+            "EmptyLocationGroupName": "Please enter Name.",
+            "EmptyLocationGroupSites": "Please select Site.",
+            "EmptyLocationGroupCodes": "Please select Location(s)",
+            "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
+            "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
+            "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
         }
-      }
     },
-    "AUDITLOG": {
-      "GridHeader": {
-        "date": "Date",
-        "event": "Event",
-        "user": "User"
-      }
-    }
-  },
-  "MESSAGES": {
-    "Dialog": {
-      "AuthFailedInvalidAuthResponse": {
-        "title": "Authentication Failed",
-        "message": "Authentication Failed for specified user. Please enter valid credentials and try again. If you still see same problem , contact customer support team.",
-        "primaryButton": "OK",
-        "secondaryButton": "",
-        "isShowSecondaryButton": "false",
-        "isLogoutOnPrimaryButton": "false"
-      }
-    },
-    "Toastr": {
-      "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-      "EmptyEmailAddress": "Please enter Email Address.",
-      "EmptyPassword": "Please enter Password.",
-      "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-      "QuoteListGetFailed": "Error occured while fetching quote list",
-      "EmptyLocationGroupName": "Please enter Name.",
-      "EmptyLocationGroupSites": "Please select Site.",
-      "EmptyLocationGroupCodes": "Please select Location(s)",
-      "LocationGroupsListGetFailed" : "Error occured while fetching location group list.",
-      "GetLocationGroupDetailFailed" : "Error occured while fetching location group details."
-    }
-  },
-  "QUOTES": {
-    "GridHeader": {
-      "b2bAccountName": "B2B Account Name",
-      "quoteName": "Quote Name",
-      "buyerName": "Buyer Name",
-      "status": "Status",
-      "lastModifiedDate": "Last Modified Date",
-      "quoteTotal": "Quote Total"
-    },
-    "GridContextMenu": {
-      "edit": "Edit"
-    },
-    "Quote": {
-      "Information": {
-        "heading": "Quote",
-        "name": "Name:",
-        "status": "Status:",
-        "created": "Created:",
-        "createdBy": "Created By:",
-        "expirationDate": "Expiration Date:"
-      },
-      "Items": {
-        "heading": "Items Quoted",
+    "QUOTES": {
         "GridHeader": {
-          "nameAndSKU": "Name & SKU",
-          "stock": "Stock",
-          "cost": "Cost",
-          "catalogPrice": "Catalog Price",
-          "cartPrice": "Cart Price",
-          "proposedPrice": "Proposed Price",
-          "qty": "Qty",
-          "subtotal": "Subtotal",
-          "estimatedTax": "Estimated Tax",
-          "subtotalExclTax": "Subtotal (Excl. Tax)"
+            "b2bAccountName": "B2B Account Name",
+            "quoteName": "Quote Name",
+            "buyerName": "Buyer Name",
+            "status": "Status",
+            "lastModifiedDate": "Last Modified Date",
+            "quoteTotal": "Quote Total"
         },
-        "GridLabels": {
-          "sku": "SKU:",
-          "size": "Size:",
-          "color": "Color:"
+        "GridContextMenu": {
+            "edit": "Edit"
         },
-        "GridButtons": {
-          "addProduct": "Add Product By SKU",
-          "configure": "Configure",
-          "updatePrices": "Update Prices",
-          "recalculateQuote": "Recalculate Quote"
+        "Quote": {
+            "Information": {
+                "heading": "Quote",
+                "name": "Name:",
+                "status": "Status:",
+                "created": "Created:",
+                "createdBy": "Created By:",
+                "expirationDate": "Expiration Date:"
+            },
+            "Items": {
+                "heading": "Items Quoted",
+                "GridHeader": {
+                    "nameAndSKU": "Name & SKU",
+                    "stock": "Stock",
+                    "cost": "Cost",
+                    "catalogPrice": "Catalog Price",
+                    "cartPrice": "Cart Price",
+                    "proposedPrice": "Proposed Price",
+                    "qty": "Qty",
+                    "subtotal": "Subtotal",
+                    "estimatedTax": "Estimated Tax",
+                    "subtotalExclTax": "Subtotal (Excl. Tax)"
+                },
+                "GridLabels": {
+                    "sku": "SKU:",
+                    "size": "Size:",
+                    "color": "Color:"
+                },
+                "GridButtons": {
+                    "addProduct": "Add Product By SKU",
+                    "configure": "Configure",
+                    "updatePrices": "Update Prices",
+                    "recalculateQuote": "Recalculate Quote"
+                },
+                "GridMessages": {
+                    "emptyMessage": "No Data Available"
+                }
+            },
+            "Negotiation": {
+                "heading": "Negotiation",
+                "TabContent": {
+                    "Comments": {
+                        "heading": "Comments",
+                        "createdDate": "19, 2017, 9:13:23 AM (Lois Price)",
+                        "message": "Can you give us a volume discount on this product? Thanks - Lois Price",
+                        "addCommentLabel": "Add your comment"
+                    },
+                    "AuditLog": {
+                        "heading": "History Log"
+                    }
+                },
+                "Total": {
+                    "heading": "Quote Total"
+                }
+            }
+        }
+    },
+    "LOCATIONGROUP": {
+        "GridHeader": {
+            "Code": "Code",
+            "Name": "Name"
+        },
+        "GridContextMenu": {
+            "edit": "Edit",
+            "delete": "Delete"
         },
         "GridMessages": {
-          "emptyMessage": "No Data Available"
-        }
-      },
-      "Negotiation": {
-        "heading": "Negotiation",
-        "TabContent": {
-          "Comments": {
-            "heading": "Comments",
-            "createdDate": "19, 2017, 9:13:23 AM (Lois Price)",
-            "message": "Can you give us a volume discount on this product? Thanks - Lois Price",
-            "addCommentLabel": "Add your comment"
-          },
-          "AuditLog": {
-            "heading": "History Log"
-          }
+            "emptyMessage": "No records found.",
+            "emptyMessage1": "No Data Available."
         },
-        "Total": {
-          "heading": "Quote Total"
+        "Tabs": {
+            "locationGroup": "Location Group",
+            "addLocations": "Add Locations"
+        },
+        "FormLabels": {
+            "locationGroup": "Location Group",
+            "sites": "Sites",
+            "name": "Name",
+            "addLocations": "Add Location(s)",
+            "physicalLocation": "Physical Location",
+            "locations": "Locations",
+            "selectedLocations": "Selected Locations"
+        },
+        "FormsErrorMessages": {
+            "nameRequired": "Input is Required."
         }
-      }
     }
-  },
-  "LOCATIONGROUP": {
-    "GridHeader": {
-      "Code": "Code",
-      "Name": "Name"
-    },
-    "GridContextMenu": {
-      "edit": "Edit",
-      "delete": "Delete"
-    },
-    "GridMessages": {
-      "emptyMessage": "No records found.",
-      "emptyMessage1" :"No Data Available."
-    },
-    "Tabs": {
-      "locationGroup": "Location Group",
-      "addLocations": "Add Locations"
-    },
-    "FormLabels": {
-      "locationGroup": "Location Group",
-      "sites": "Sites",
-      "name": "Name",
-      "addLocations": "Add Location(s)",
-      "physicalLocation": "Physical Location",
-      "locations": "Locations",
-      "selectedLocations": "Selected Locations"
-    },
-    "FormsErrorMessages": {
-      "nameRequired": "Input is Required."
-    }
-  }
 }

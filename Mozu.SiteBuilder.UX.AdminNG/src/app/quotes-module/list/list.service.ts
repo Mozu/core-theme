@@ -6,6 +6,7 @@ LoggerService,
 HttpClientService
 } from '@core';
 import { Constants } from '@shared';
+import { environment } from '@env';
 import { Constants as GlobalConstants} from '@global/infrastructure/constants';
 
 @Injectable()
@@ -15,7 +16,11 @@ export class QuotesListService {
 
     public fetchAllQuotes(): Observable<any> {
         this._loggerService.info('QuotesListService: fetchAllQuotes');
-        return this._http.get(Constants.JsonResources.quoteList); //NOTE - use it while running angular on localhost
-        //return this._http.get(GlobalConstants.webApis.getQuoteList); //NOTE - comment it while running angular on localhost
+        return this._http.get(Constants.JsonResources.quoteList);
+        // if (environment.debug) {
+        //     return this._http.get(Constants.JsonResources.quoteList);
+        // } else {
+        //     return this._http.get(GlobalConstants.webApis.getQuoteList);
+        // }
     }
 }

@@ -4,27 +4,29 @@
 } from '@angular/core';
 
 import 'rxjs/add/operator/toPromise';
-
-import { Constants } from '../infrastructure/constants';
-
-import { SharedData } from './index';
-
 import {
     UtilityService,
     LoggerService
 } from '@core';
-
-import { HttpClientService } from '@core/extensions/http-client.service'
-
+import { HttpClientService } from '@core/extensions/http-client.service';
 import { AuthService } from '@core/extensions/auth.service';
-
+import { Constants as GlobalConstants} from '@global/infrastructure/constants';
 import { environment } from '@env';
+import { SharedData } from './index';
+import { MenuItem } from 'primeng/api';
 
 @Injectable()
 export class SharedDataService {
 
     public _sharedData: SharedData;
     public isDisableUIElements: boolean;
+    private _leftNavigationMenuItems: MenuItem[];
+    public get leftNavigationMenuItems(): MenuItem[] {
+        return this._leftNavigationMenuItems;
+    }
+    public set leftNavigationMenuItems(value: MenuItem[]) {
+        this._leftNavigationMenuItems = value;
+    }
 
     constructor(
         private _logger: LoggerService,
@@ -35,18 +37,19 @@ export class SharedDataService {
         this._logger.info('SharedDataService : constructor ');
     }
 
-
     populateCommonData(): Promise<any> {
 
-        var that = this;
         this._logger.info('SharedDataService : populateCommonData ');
 
         if (!this._authService.isUserLoggedIn()) {
             return;
         }
-        //const promise = this._https.get(`${Constants.webApis.getSharedData}`) //NOTE - comment it while running angular on localhost
-         const promise = this._https.get(`./assets/json/user-data.json`) //NOTE - use it while running angular on localhost
-            .toPromise();
+        let promise;
+        if (environment.debug) {
+            promise = this._https.get(`./assets/json/user-data.json`).toPromise();
+        } else {
+            promise = this._https.get(`${GlobalConstants.webApis.getSharedData}`).toPromise();
+        }
 
         promise.then(
             successResponse => {
@@ -54,11 +57,11 @@ export class SharedDataService {
                 this._sharedData = JSON.parse(JSON.stringify(successResponse));
             })
             .catch(
-            errorResponse => {
-                this._logger.info('SharedDataService : populateCommonData : errorResponse ' + errorResponse);
-                // const url: string = environment.appUrl + '?' + Constants.queryString.SessionExpired;
-                // this._utilityService.redirectToURL(url);
-            });
+                errorResponse => {
+                    this._logger.info('SharedDataService : populateCommonData : errorResponse ' + errorResponse);
+                    // const url: string = environment.appUrl + '?' + Constants.queryString.SessionExpired;
+                    // this._utilityService.redirectToURL(url);
+                });
         return promise;
     }
 }

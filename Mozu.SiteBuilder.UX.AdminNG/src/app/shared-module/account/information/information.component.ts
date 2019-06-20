@@ -3,7 +3,8 @@ import { Component,
   Input,
   SimpleChanges,
   SimpleChange,
-  OnChanges } from '@angular/core';
+  OnChanges,
+  OnDestroy} from '@angular/core';
 
 import * as _ from 'lodash';
 
@@ -12,10 +13,10 @@ import {
   HttpError,
   ErrorCode,
   ErroNotificationType,
-  SpinnerService
+  UtilityService
 } from '@core';
 
-import { NotificationService } from '@global';
+import { NotificationService, SharedDataService } from '@global';
 
 import { Constants } from '@shared';
 
@@ -33,7 +34,7 @@ import { MenuItem } from 'primeng/api';
   styleUrls: ['./information.component.css'],
   providers: [AccountInfoService]
 })
-export class AccountInformationComponent implements OnChanges, OnInit {
+export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy {
   @Input('UserId') userId: string;
   @Input('CustomerAccountId') customerAccountId: number;
   public model: AccountInfoModel;
@@ -43,7 +44,9 @@ export class AccountInformationComponent implements OnChanges, OnInit {
 
   constructor(private _accountInfoService: AccountInfoService,
     private _loggerService: LoggerService,
-    private _notificationService: NotificationService, ) {
+    private _notificationService: NotificationService,
+    private _utilityService: UtilityService,
+    public _sharedData: SharedDataService ) {
       this.subscriptions = [];
     }
 
@@ -60,24 +63,9 @@ export class AccountInformationComponent implements OnChanges, OnInit {
     this._spinner.start();
     this.model = new AccountInfoModel();
     this.model.users = [];
-    this.subscriptions.push(
-      this._notificationService.mainMenuLinksFilteredByContextType.subscribe((mainMenuLinks: MenuItem[]) => {
-      this._loggerService.info('HeaderComponent : mainMenuLinksFilteredByContextType');
-      this.baseNavigationURL = this.getNavigationURL(mainMenuLinks, 'b2baccount', 'b2baccounts');
-     })
-    );
+    this.baseNavigationURL = this._utilityService.getNavigationURL(this._sharedData.leftNavigationMenuItems, 'b2baccount', 'b2baccounts');
   }
 
-  getNavigationURL(menuItems: MenuItem[], parentMenuItemText: string, linkAddress: string): string {
-    const parentMenuItem = _.find(menuItems, { id: parentMenuItemText });
-    if (parentMenuItem !== null && parentMenuItem !== undefined
-    && parentMenuItem.items != null) {
-    const addressLinkMenuItem = _.find(parentMenuItem.items, { address: linkAddress }) as MenuItem;
-    if (addressLinkMenuItem !== null && addressLinkMenuItem !== undefined) {
-       return environment.appUrl + addressLinkMenuItem.url;
-     }
-    }
-  }
   public populateAccountInfo = (customerAccountId: number, userId: string) => {
     this._loggerService.info('AccountInformationComponent : populateAccountInfo');
 
@@ -85,18 +73,28 @@ export class AccountInformationComponent implements OnChanges, OnInit {
       this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchAccountInformation_successResponse');
       if (accountSuccessResponse !== null && accountSuccessResponse !== undefined && accountSuccessResponse['items'].length > 0) {
         this.model = accountSuccessResponse;
-        this.model.users = _.filter(accountSuccessResponse['items'], function (el: any) { return el.userId === userId; });
+        this.model.users = _.filter(accountSuccessResponse['items'],
+        function (el: any) {
+          return el.userId === userId;
+        });
         this.generateCustomerAccountUrl();
         this._spinner.stop();
       }
     }, (accountErrResponse) => {
       this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse');
-      throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+      throw new HttpError(ErrorCode.GetAccountInfoFailed, ErroNotificationType.Toaster);
     });
   }
 
   public generateCustomerAccountUrl = () => {
     this.customerAccountURL =  this.baseNavigationURL + Constants.editNavigationDeepLink + this.customerAccountId ;
+  }
+
+  ngOnDestroy() {
+    this._loggerService.info('AccountInformationComponent : ngOnDestroy');
+    this.subscriptions.forEach((s) => {
+        s.unsubscribe();
+    });
   }
 
 }

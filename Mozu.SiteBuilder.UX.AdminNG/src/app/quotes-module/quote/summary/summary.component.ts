@@ -1,5 +1,4 @@
-import { Component, 
-  OnInit, 
+import { Component,
   Input,
   SimpleChanges,
   OnChanges
@@ -12,20 +11,16 @@ import { LoggerService } from '@core';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css']
 })
-export class QuoteSummaryComponent implements OnChanges, OnInit {
+export class QuoteSummaryComponent implements OnChanges {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
   quoteInfo = [];
 
-  constructor(private _loggerService : LoggerService) { }
+  constructor(private _loggerService: LoggerService) { }
 
-  ngOnChanges(changes: SimpleChanges){
-    this._loggerService.info("QuoteSummaryComponent : ngOnChanges");
-    this.quoteInfo = changes["quote"].currentValue;
-  }
-  
-  ngOnInit() {
-    
+  ngOnChanges(changes: SimpleChanges) {
+    this._loggerService.info('QuoteSummaryComponent : ngOnChanges');
+    this.quoteInfo = changes['quote'].currentValue;
   }
 
 }

@@ -1,25 +1,26 @@
-
-.searchBar .input-group-addon{
+.searchBar .input-group-addon {
     display: inline-block !important;
     background-color: transparent !important;
     border: 0px !important;
     font-size: 20px;
     color: #3f3f3f;
 }
-.searchBar .input-group-addon::after{
+
+.searchBar .input-group-addon::after {
     color: #d5d5d5;
 }
-.search-btn{
+
+.search-btn {
     border: 0px !important;
     border-radius: 0px !important;
     color: #818181 !important;
-    padding:0px !important;
+    padding: 0px !important;
 }
 
-.input-group .form-control{
+.input-group .form-control {
     display: inline-block !important;
     /* width: 90% !important; */
-    font-family: "proxima-nova",sans-serif !important;
+    font-family: "proxima-nova", sans-serif !important;
     color: #3f3f3f !important;
     font-size: 18px !important;
     font-weight: 300 !important;
@@ -28,7 +29,8 @@
     float: none !important;
     background: transparent !important;
 }
-.input-group .form-control:focus{
+
+.input-group .form-control:focus {
     border: 0;
     outline: 0;
 }

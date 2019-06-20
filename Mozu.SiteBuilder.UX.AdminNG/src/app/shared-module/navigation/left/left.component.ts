@@ -6,8 +6,6 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
-
-import { MenuItem } from 'primeng/api';
 import * as _ from 'lodash';
 import {
   NgbModal,
@@ -18,9 +16,7 @@ import { LoggerService,
   ErrorCode,
   ErroNotificationType } from '@core';
 import { UtilityService } from '@core/infrastructure/utility.service';
-import { NotificationService } from '@global';
-import { SharedDataService } from '@global/services/shared-data.service';
-
+import { SharedDataService, NotificationService } from '@global';
 import { Constants } from '@shared/infrastructure/constants';
 import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
 import { NavigationService } from '../navigation.service';
@@ -61,20 +57,21 @@ export class NavigationLeftComponent implements OnInit {
     this.navigationService.fetchLeftNavigationItems().subscribe( leftNavigationItemsSuccessResponse => {
       this._loggerService.info('NavigationLeftComponent : fetchLeftNavigationItems');
       /* filter the menus on the basis of logged in user behaviour id */
-      this.model.filteredNavigationLinks = this.utilityService.filterLinksByBehaviorId(leftNavigationItemsSuccessResponse, this._sharedData);
+      this.model.filteredNavigationLinks = this.utilityService.filterLinksByBehaviorId(
+        leftNavigationItemsSuccessResponse, this._sharedData);
        /*import/export*/
       if (this._sharedData._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
         this.model.filteredNavigationLinks = this.appendDynamicLinks(this.model.filteredNavigationLinks);
       }
-      this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(this.model.filteredNavigationLinks, this._sharedData._sharedData.items.ctTaContext);
+      this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
+        this.model.filteredNavigationLinks, this._sharedData._sharedData.items.ctTaContext);
 
-      this.model.mainItems = _.filter(this.model.filteredNavigationLinks, 
-        function (el: any) { return el.navParent == Constants.LefMenuMainTabJsonNavParentPrefix; });
-      this.model.systemItems = _.filter(this.model.filteredNavigationLinks, 
-        function (el: any) { return el.navParent == Constants.LefMenuSystemTabJsonNavParentPrefix; });
+      this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
+        function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
+      this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
+        function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();
-      this._notificationService.notifyMainMenuLinksFilteredByContextType(this.model.mainItems);
-
+      this._sharedData.leftNavigationMenuItems = this.model.mainItems;
     }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info('NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse');
     });

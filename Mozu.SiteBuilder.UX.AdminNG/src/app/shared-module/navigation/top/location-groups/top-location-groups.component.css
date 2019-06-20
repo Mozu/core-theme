@@ -1,19 +1,18 @@
-.heading{
+.heading {
     display: inline-block;
     height: 100%;
     border-right: 1px solid #f5f5f5;
     padding-right: 15px;
-    
 }
-.searchBar{
+
+.searchBar {
     display: inline-block;
     width: 90%;
     padding: 0px 15px;
-    
 }
 
-.cancelbtn{
-    margin-right: 10px; 
+.cancelbtn {
+    margin-right: 10px;
 }
 
 @media screen and (max-width: 480px) {
@@ -21,52 +20,52 @@
         border-right: 0px solid transparent;
     }
 }
-.sbbtn{background:#2ea195}
-.sbbtn:visited{ border-color:#2ea195;border-color:#299086;}
-.sbbtn:focus,.sbbtn:active{
+
+.sbbtn {
+    background: #2ea195
+}
+
+.sbbtn:visited {
+    border-color: #2ea195;
+    border-color: #299086;
+}
+
+.sbbtn:focus,
+.sbbtn:active {
     background-color: #299086;
-    opacity: 1;border-color:#299086;
+    opacity: 1;
+    border-color: #299086;
     outline: none !important;
 }
-.sbbtn:hover{ border-color:#2ea195; opacity: .8;}
-@media screen and (min-width: 1024px) {
-    .forlineheight{ font-size: 18px !important; } 
-    .sbbtn{    margin: 1px -34px 0 0 ;}
+
+.sbbtn:hover {
+    border-color: #2ea195;
+    opacity: .8;
 }
 
-/* @media screen and (min-width: 768px) {
-    .forlineheight{ font-size: 18px !important; } 
-    .sbbtn{ margin: 1px 2px 0 0; }
-} */
+@media screen and (min-width: 768px) {
+    .sbbtn {
+        margin-right: 35px
+    }
+}
+
 @media screen and (max-width: 768px) {
-    .forlineheight{ line-height: 1.1; font-size: 18px;} 
-    .sidebar .pull-right{ margin: 0 2px 0 0; } 
-    
-}
-@media screen and (max-width: 375px) {
-    .forlineheight{ line-height: 1.0; font-size: 15px;}
-    .sidebar .pull-right{ margin: 0 2px 0 0; }
-    
-}
-@media screen and (max-width: 425px) {
-    .sidebar .pull-right {
-        margin: 5px -27px 0 0;
+    .forlineheight {
+        line-height: 2.2
     }
-    
 }
-@media screen and (max-width: 320px) {
-    .forlineheight{ 
-        line-height: 1.4;
-        font-size: 13px;    
-    }
-    .sidebar .pull-right .btn {
-        font-size: 13px;
-    }
 
-    .sidebar .pull-right{ margin: 0px 2px 0 0; }
-    
+@media screen and (max-width: 320px) {
+    .forlineheight {
+        line-height: 1.8;
+    }
+    .sidebar .pull-right {
+        margin: -43px 2px 0 0;
+    }
 }
 
 @media screen and (min-width: 1024px) {
-    .heading{ padding-right: 9px;}
+    .heading {
+        padding-right: 9px;
+    }
 }

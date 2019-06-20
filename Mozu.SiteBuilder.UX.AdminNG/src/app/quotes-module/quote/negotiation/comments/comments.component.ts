@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'quote-negotiaition-comments',
   templateUrl: './comments.component.html',
   styleUrls: ['./comments.component.css']
 })
-export class QuoteNegotiationCommentsComponent implements OnInit {
+export class QuoteNegotiationCommentsComponent {
 
   constructor() { }
-
-  ngOnInit() {
-  }
 
 }

@@ -1,14 +1,18 @@
-import { Component,
-  OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 
 import * as _ from 'lodash';
 
-import { LoggerService,
+import {
+  LoggerService,
   HttpError,
   ErrorCode,
-  ErroNotificationType } from '@core';
+  ErroNotificationType
+} from '@core';
 
 import { QuoteService } from './quote.service';
 
@@ -28,7 +32,7 @@ export class QuoteComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
-    private _loggerService: LoggerService ) { }
+    private _loggerService: LoggerService) { }
 
   ngOnInit() {
     this._loggerService.info('QuoteComponent : ngOnInit');
@@ -43,12 +47,14 @@ export class QuoteComponent implements OnInit {
 
     this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse: Response) => {
       this._loggerService.info('QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse');
-       const responseJson = quoteListSuccessResponse;
-        if (responseJson !== null && responseJson !== undefined && responseJson['items'].length > 0) {
-          this.model = _.filter(responseJson['items'], function (el: any) { return el.id === quoteId; })[0];
-          this.userId = this.model.userId;
-          this.customerAccountId = this.model.customerAccountId;
-        }
+      if (quoteListSuccessResponse !== null && quoteListSuccessResponse !== undefined && quoteListSuccessResponse['items'].length > 0) {
+        this.model = _.filter(quoteListSuccessResponse['items'],
+          function (el: any) {
+            return el.id === quoteId;
+          })[0];
+        this.userId = this.model.userId;
+        this.customerAccountId = this.model.customerAccountId;
+      }
     }, (quoteListErrResponse) => {
       this._loggerService.info('QuoteComponent : _quotesListService.fetchAllQuotes_errResponse');
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);

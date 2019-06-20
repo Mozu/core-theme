@@ -1,17 +1,18 @@
-import { Component, 
-  OnInit, 
-  Input, 
-  SimpleChanges, 
-  OnChanges } from '@angular/core';
+import { Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  OnChanges,
+  OnDestroy} from '@angular/core';
 
-import { LoggerService, 
-  HttpError, 
-  ErrorCode, 
+import { LoggerService,
+  HttpError,
+  ErrorCode,
   ErroNotificationType } from '@core';
 
 import { NotificationService } from '@global';
 
-import { ConfirmationDialogNotificationType, 
+import { ConfirmationDialogNotificationType,
   ConfirmationDialogNotificationCode,
   ConfirmationDialogService} from '@shared';
 
@@ -23,7 +24,7 @@ import { QuoteItemsService } from './items.service';
   styleUrls: ['./items.component.css'],
   providers: [QuoteItemsService]
 })
-export class QuoteItemsComponent implements OnChanges, OnInit {
+export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
 
@@ -32,15 +33,15 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   quoteItems = [];
   subscriptions = [];
 
-  constructor(private _loggerService : LoggerService,
+  constructor(private _loggerService: LoggerService,
     public _quoteItemsService: QuoteItemsService,
     private _confirmationDialogService: ConfirmationDialogService,
-    private _notificationService: NotificationService ) { 
+    private _notificationService: NotificationService ) {
     }
-  
-    ngOnChanges(changes: SimpleChanges){
-      this._loggerService.info("QuoteItemsComponent : ngOnChanges");
-      this.quoteItems = changes["quote"].currentValue;
+
+    ngOnChanges(changes: SimpleChanges) {
+      this._loggerService.info('QuoteItemsComponent : ngOnChanges');
+      this.quoteItems = changes['quote'].currentValue;
     }
 
   ngOnInit() {
@@ -56,24 +57,25 @@ export class QuoteItemsComponent implements OnChanges, OnInit {
   openQuoteDeleteConfirmationDialog(id: string, row: any) {
     this.itemId = id;
     this.quoteItemTobeDeleted = row;
-    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteQuoteItem, ConfirmationDialogNotificationType.Confirmation);
+    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteQuoteItem,
+      ConfirmationDialogNotificationType.Confirmation);
   }
 
-  deleteQuoteItem(){
-    this._loggerService.info("QuoteItemsComponent : deleteItem");
-    this._quoteItemsService.deleteQuoteItem(this.quoteId, this.itemId).subscribe((deleteQuoteItemSuccessResponse :any) =>{
-      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse");
-      if (deleteQuoteItemSuccessResponse != null && deleteQuoteItemSuccessResponse != undefined) {
+  deleteQuoteItem() {
+    this._loggerService.info('QuoteItemsComponent : deleteItem');
+    this._quoteItemsService.deleteQuoteItem(this.quoteId, this.itemId).subscribe((deleteQuoteItemSuccessResponse: any) => {
+      this._loggerService.info('QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse');
+      if (deleteQuoteItemSuccessResponse !== null && deleteQuoteItemSuccessResponse !== undefined) {
         this.quoteItems.splice(this.quoteItemTobeDeleted, 1);
       }
     }, (deleteQuoteItemErrorResponse) => {
-      this._loggerService.info("QuoteItemsComponent : _quoteItemsService.deleteItem_deleteQuoteItemErrorResponse");
-      throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
-    })
+      this._loggerService.info('QuoteItemsComponent : _quoteItemsService.deleteItem_deleteQuoteItemErrorResponse');
+      throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+    });
   }
-  
+
   ngOnDestroy() {
-    this._loggerService.info("QuoteItemsComponent : ngOnDestroy");
+    this._loggerService.info('QuoteItemsComponent : ngOnDestroy');
     this.subscriptions.forEach((s) => {
         s.unsubscribe();
     });

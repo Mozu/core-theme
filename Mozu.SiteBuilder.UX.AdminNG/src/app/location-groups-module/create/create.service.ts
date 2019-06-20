@@ -1,34 +1,44 @@
 import { Injectable} from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { 
-LoggerService, 
-HttpClientService 
-} from '@core';
-import { Constants } from '@shared';
-import { Constants as GlobalConstant } from '@global/infrastructure/constants';
-import { LocationGroupModel } from './location.group.model';
 import { HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import {
+LoggerService,
+HttpClientService
+} from '@core';
+import { Constants as GlobalConstant } from '@global/infrastructure/constants';
+import { Constants } from '@shared';
+import { environment } from '@env';
+import { LocationGroupModel } from './location.group.model';
 
 @Injectable()
-export class CreateLocationGroupService{
-    constructor(private _http: HttpClientService,   
-        private _loggerService: LoggerService){ }
+export class CreateLocationGroupService {
+    constructor(private _http: HttpClientService,
+        private _loggerService: LoggerService) { }
 
-    public addLocationGroup(lgModel: LocationGroupModel): Observable<any>{
-        this._loggerService.info("CreateLocationGroupService: addLocationGroup"+JSON.stringify(lgModel));
-        return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
-        //return of(new HttpResponse({ status: 200 })); // dummy response to test.
+    public addLocationGroup(lgModel: LocationGroupModel): Observable<any> {
+        this._loggerService.info('CreateLocationGroupService: addLocationGroup' + JSON.stringify(lgModel));
+        if (environment.debug) {
+            return of(new HttpResponse({ status: 200 }));
+        } else {
+            return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
+        }
     }
 
-    public getLocationGroup(locationGroupId: string): Observable<any>{
-        this._loggerService.info("EditLocationGroupService: getLocationGroup");
-        return this._http.get(GlobalConstant.webApis.getLocationGroup + "/"+ locationGroupId);
-        //return this._http.get(Constants.JsonResources.getLocationGroup);
+    public getLocationGroup(locationGroupId: string): Observable<any> {
+        this._loggerService.info('EditLocationGroupService: getLocationGroup');
+        if (environment.debug) {
+            return this._http.get(Constants.JsonResources.getLocationGroup);
+        } else {
+            return this._http.get(GlobalConstant.webApis.getLocationGroup + '/' + locationGroupId);
+        }
     }
 
-    public updateLocationGroup(lgModel: LocationGroupModel): Observable<any>{
-        this._loggerService.info("CreateLocationGroupService: updateLocationGroup"+JSON.stringify(lgModel));
-        return this._http.post(GlobalConstant.webApis.editLocationGroup, lgModel);
-        //return of(new HttpResponse({ status: 200 })); // dummy response to test.
+    public updateLocationGroup(lgModel: LocationGroupModel): Observable<any> {
+        this._loggerService.info('CreateLocationGroupService: updateLocationGroup' + JSON.stringify(lgModel));
+        if (environment.debug) {
+            return of(new HttpResponse({ status: 200 }));
+         } else {
+            return this._http.post(GlobalConstant.webApis.editLocationGroup, lgModel);
+         }
     }
 }
