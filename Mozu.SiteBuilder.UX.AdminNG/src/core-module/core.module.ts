@@ -24,6 +24,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ToastrModule } from 'ngx-toastr';
 
 import {
     LoggingErrorHandlerOptions,
@@ -34,7 +35,6 @@ import {
 
 import {
     CustomBrowserXhr,
-    
     AuthService
 } from './extensions/index';
 
@@ -50,14 +50,13 @@ import { LoggerService } from './services/logger.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { SpinnerService } from './spinner/spinner.service';
-import { ToastrService } from './services/toastr.service';
+import { 
+    TostrManagerService,
+    ToastrComponent
+} from './toastr/index';
 
 import { HttpClient } from '@angular/common/http';
 import { HttpClientService, httpClientServiceCreator } from './extensions/http-client.service';
-
-// export function httpServiceFactory(backend: XHRBackend, options: RequestOptions, utilityService: UtilityService, authService: AuthService) {
-//      return new HttpService(backend, options, utilityService, authService);
-// }
 
 @NgModule({
     imports: [
@@ -72,20 +71,22 @@ import { HttpClientService, httpClientServiceCreator } from './extensions/http-c
                 serverLogLevel: NgxLoggerLevel.INFO
             }),
         DialogModule,
-        ToastModule
+        ToastrModule.forRoot()
     ],
     declarations: [
         GlobalErrorDialogComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        ToastrComponent
     ],
     exports: [
         GlobalErrorDialogComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        ToastrComponent
     ],
     providers: [
         LoggerService,
         MessageService,
-        ToastrService,
+        TostrManagerService,
         CookieService,
         UtilityService,
         ValidationService,

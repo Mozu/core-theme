@@ -13,7 +13,7 @@ import {
     ToastrMessageType
 } from '../extensions/http-error.model';
 
-import { ToastrService } from '../services/index';
+import { TostrManagerService } from '../toastr/index';
 
 @Injectable()
 export class GlobalErrorLoggingService {
@@ -32,7 +32,7 @@ export class GlobalErrorLoggingService {
 
     constructor(private _logger: LoggerService,
         private _translate: TranslateService,
-        private _toastrService: ToastrService
+        private _tostrManagerService: TostrManagerService
     ) {
         this._logger.info('GlobalErrorLoggingService : constructor ');
     }
@@ -84,9 +84,9 @@ export class GlobalErrorLoggingService {
                 , this._isLogoutonPrimaryButton, this._isShowSecondaryButton, this._secondaryButton);
         } else if (this._notificationType === ErroNotificationType.Toaster) {
             if (this.isHandledError) {
-                this._toastrService.showError(error.code);
+                this._tostrManagerService.showError(error.code);
             } else {
-                this._toastrService.showError(ErrorCode.Fatal);
+                this._tostrManagerService.showError(ErrorCode.Fatal);
             }
         }
     }
