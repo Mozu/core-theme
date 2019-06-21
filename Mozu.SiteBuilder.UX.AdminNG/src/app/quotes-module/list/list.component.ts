@@ -74,7 +74,6 @@ export class QuotesListComponent implements OnInit {
           if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
             this.model.items = responseJson['items'];
             this._spinner.stop();
-            throw new HttpError(ErrorCode.QuoteListGetFailed,ErroNotificationType.Toaster);
           } 
       }, (errResponse) => {
         this._spinner.stop();

@@ -28,7 +28,6 @@
               "src/assets/styles/jquery-ui.min.css",
               "src/assets/styles/bootstrap.min.css",
               "src/assets/styles/font-awesome.min.css",
-              "node_modules/ngx-toastr/toastr.css", 
               "src/assets/styles/spinner.component.css",
               "src/assets/styles/public.component.css",
               "node_modules/primeng/resources/themes/nova-light/theme.css",

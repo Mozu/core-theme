@@ -9,7 +9,7 @@ from '@angular/core';
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService, 
-         //ToastrService,  TODO : Use ToastrMessageHelperService here
+         ToastrService, 
          HttpError, 
          ErrorCode, 
          ErroNotificationType } 
@@ -45,7 +45,7 @@ export class LocationGroupCreateComponent implements OnInit {
         private createService: CreateLocationGroupService,
         private _notificationService: NotificationService,
         private fb: FormBuilder,
-        //private _toastrService: ToastrService, TODO : Use ToastrMessageHelperService here
+        private _toastrService: ToastrService,
         private router: Router,
         private route: ActivatedRoute,
         private _translate: TranslateService) {
@@ -263,16 +263,15 @@ export class LocationGroupCreateComponent implements OnInit {
 
     private validateLocationGroup(lgModel: LocationGroupModel): boolean {
         if (lgModel && _.isEmpty(lgModel.name)) {
-            //this._toastrService.showError("EmptyLocationGroupName");
-            //TODO : Use ToastrMessageHelperService here
+            this._toastrService.showError("EmptyLocationGroupName");
             return false;
         }
         if (lgModel && _.isEmpty(lgModel.siteIds)) {
-            //this._toastrService.showError("EmptyLocationGroupSites"); TODO : Use ToastrMessageHelperService here
+            this._toastrService.showError("EmptyLocationGroupSites");
             return false;
         }
         if (lgModel && _.isEmpty(lgModel.locationCodes)) {
-            //this._toastrService.showError("EmptyLocationGroupCodes"); TODO : Use ToastrMessageHelperService here
+            this._toastrService.showError("EmptyLocationGroupCodes");
             return false;
         }
         return true;
@@ -288,6 +287,6 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveError(errmsg: string) {
         this._loggerService.info("LocationGroupCreateComponent : onSaveError");
         this.model.isSaving = false;
-        //this._toastrService.showErrorWithMsg(errmsg); TODO : Use ToastrMessageHelperService here
+        this._toastrService.showErrorWithMsg(errmsg);
     }
 }
