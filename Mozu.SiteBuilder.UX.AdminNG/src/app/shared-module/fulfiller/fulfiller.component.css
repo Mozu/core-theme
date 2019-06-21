@@ -14,17 +14,22 @@
 }
 
 .btn {
-    background-color: #f4511e;
+    background-color: #2ea195;
     border: none;
     color: white;
-    padding: 6px 22px;
+    padding: 2px 14px;
     text-align: center;
     font-size: 16px;
-    margin: 4px 272px;
     opacity: 0.6;
     transition: 0.3s;
     position: absolute;
     z-index: 99999 !important;
+    left: 42%;
+    top: 2%;
   }
 
   .btn:hover {opacity: 1}
+
+.fulfiller-container  html{
+    overflow: hidden !important;
+}
