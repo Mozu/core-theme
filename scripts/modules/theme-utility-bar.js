@@ -1,5 +1,44 @@
-define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jquery' ], function ($) { 
+define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jquery', 'hyprlivecontext' ], function ($, $shim, HyprLiveContext) { 
     
+    var VariationSelector = function() {
+        var qSelector = "#mz-variation-selector";
+        var $Selector;
+        var pageContext = require.mozuData('pagecontext');
+
+        this.init = function(){
+            var me = this;
+            var selector = me.buildSelector(this.getVariations());
+            $Selector = $(qSelector).html(selector);
+
+            $('#mz-variation-selector').change(function(e){
+                var selectedId = e.target.value,
+                documentName = pageContext.cmsContext.page.path;
+
+                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/' + documentName + '?variationId=' + selectedId;
+            });
+        };
+        this.getVariations = function() {
+            return pageContext.variations || [];
+        };
+        this.buildSelector = function(items){
+            var selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
+
+            function selected(item) {
+                if (item.id === pageContext.variationId) { 
+                    return "selected";
+                }
+                return '';
+            }
+
+            items.forEach(function(item){
+                if(item.id) {
+                    selector += '<option class="mz-variation-selector-option" value="' + item.id + '"' + selected(item) +'>' + item.name + '</option>';
+                }
+            });
+            return selector;
+        };
+    };
+
     var DateTimePicker = function() {
             var me = this;
             this.handler = $('#mz-date-display');
@@ -236,11 +275,13 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
     var datetimepicker = new DateTimePicker(),
         showhideaction = new ShowHideAction('#mz-showhide-preview-bar'),
         shareaction = new ShareAction('#mz-share'),
-        priceListPicker = new PriceListPicker();
+        priceListPicker = new PriceListPicker(),
+        variationSelector = new VariationSelector();
     
     datetimepicker.init();
     showhideaction.init();
     shareaction.init();
     priceListPicker.init();
+    variationSelector.init();
 
 });
