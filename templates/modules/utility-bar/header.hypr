@@ -22,6 +22,17 @@
                         <input id='mz-pricelist-display' type="text" class='pricelist' value='{{viewData.priceListCode}}' />
                     </span>
 
+                    {% if pageContext.variations && pageContext.Variations > 0  %}
+                        <span id='mz-dropdown-variations'>
+                            <span>Variation: </span>
+                            <select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>
+                                <option class="mz-variation-selector-option" {% if model.variationId == "" %} selected="selected" {% endif %}>Base Page</option>
+                                {% for variation in model.variations %}
+                                    <option class="mz-variation-selector-option {% if model.variationId == variation.id %} selected="selected" {% endif %}>{{ variation.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </span>
+                    {% endif %}
                 </span>
 
                  <span class='hidden-input'>
