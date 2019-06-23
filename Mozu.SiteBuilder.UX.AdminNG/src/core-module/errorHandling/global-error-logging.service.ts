@@ -10,10 +10,10 @@ import {
     ErroNotificationType,
     HttpError,
     ErrorCode,
-    ToastrMessageType
+    TostrMessageType
 } from '../extensions/http-error.model';
 
-import { ToastrService } from '../services/index';
+import { TostrService } from '../tostr/index';
 
 @Injectable()
 export class GlobalErrorLoggingService {
@@ -32,7 +32,7 @@ export class GlobalErrorLoggingService {
 
     constructor(private _logger: LoggerService,
         private _translate: TranslateService,
-        private _toastrService: ToastrService
+        private _tostrService: TostrService
     ) {
         this._logger.info('GlobalErrorLoggingService : constructor ');
     }
@@ -84,9 +84,9 @@ export class GlobalErrorLoggingService {
                 , this._isLogoutonPrimaryButton, this._isShowSecondaryButton, this._secondaryButton);
         } else if (this._notificationType === ErroNotificationType.Toaster) {
             if (this.isHandledError) {
-                this._toastrService.showError(error.code);
+                this._tostrService.showError(error.code);
             } else {
-                this._toastrService.showError(ErrorCode.Fatal);
+                this._tostrService.showError(ErrorCode.Fatal.toString());
             }
         }
     }

@@ -72,7 +72,12 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
 
             this._spinner.stop();
 
-            this._logger.error(error);
+            this.options.isUnwrapError
+                ? this._globalErrorLoggingService.logError(this.findOriginalError(error),
+                                                           this.options.isLogErrorToConsole,
+                                                           this.options.isSendErrorToServer)
+            : this._globalErrorLoggingService.logError(error, this.options.isLogErrorToConsole, this.options.isSendErrorToServer);
+
 
         } catch (loggingError) {
             this._logger.error('Error in global error handler service.');

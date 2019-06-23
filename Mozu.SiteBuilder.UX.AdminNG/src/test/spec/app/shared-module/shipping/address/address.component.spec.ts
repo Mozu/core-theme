@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, DebugElement, SimpleChange, SimpleChanges  } from '@angular/core';
-import { LoggerService, ToastrService, EnvironmentConfig, HttpClientService, httpClientServiceCreator, UtilityService, AuthService } from '@core'
+import { LoggerService, TostrService, EnvironmentConfig, HttpClientService, httpClientServiceCreator, UtilityService, AuthService } from '@core'
 import { By } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
@@ -35,7 +35,7 @@ describe('AddressComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [By, TranslateService, LoggerService, 
          UtilityService, EnvironmentConfig, AuthService,   
-        SharedDataService, NotificationService, FormBuilder, ToastrService,NGXLoggerHttpService, MessageService, CustomNGXLoggerService, 
+          SharedDataService, NotificationService, FormBuilder, TostrService,NGXLoggerHttpService, MessageService, CustomNGXLoggerService, 
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,

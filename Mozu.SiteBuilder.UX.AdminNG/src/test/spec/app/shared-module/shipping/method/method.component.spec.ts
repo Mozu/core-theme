@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, DebugElement, SimpleChange } from '@angular/core';
-import { LoggerService, ToastrService } from '@core'
+import { LoggerService, TostrService } from '@core'
 import { By } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
@@ -55,7 +55,7 @@ describe('ShippingMethodComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [By, TranslateService, LoggerService, CustomNGXLoggerService,
         NGXLoggerHttpService, UtilityService, EnvironmentConfig, AuthService, TranslateService,
-        SharedDataService, NotificationService, FormBuilder, ToastrService, MessageService, ShippingMethodService,
+          SharedDataService, NotificationService, FormBuilder, TostrService, MessageService, ShippingMethodService,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,

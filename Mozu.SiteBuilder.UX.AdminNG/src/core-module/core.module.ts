@@ -50,7 +50,10 @@ import { LoggerService } from './services/logger.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { SpinnerService } from './spinner/spinner.service';
-import { ToastrService } from './services/toastr.service';
+import { 
+    TostrService,
+    ToastrComponent 
+} from './tostr/index';
 
 import { HttpClient } from '@angular/common/http';
 import { HttpClientService, httpClientServiceCreator } from './extensions/http-client.service';
@@ -76,16 +79,18 @@ import { HttpClientService, httpClientServiceCreator } from './extensions/http-c
     ],
     declarations: [
         GlobalErrorDialogComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        ToastrComponent
     ],
     exports: [
         GlobalErrorDialogComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        ToastrComponent
     ],
     providers: [
         LoggerService,
         MessageService,
-        ToastrService,
+        TostrService,
         CookieService,
         UtilityService,
         ValidationService,

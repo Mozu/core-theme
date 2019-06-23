@@ -4,7 +4,7 @@
     Swallow
 }
 
-export enum ToastrMessageType {
+export enum TostrMessageType {
     Error = <any>'Error',
     Warning = <any>'Warning',
     Information = <any>'Information',
@@ -28,7 +28,10 @@ export enum ErrorCode {
     LocationsGetFailed = <any>'LocationsGetFailed',
     LocationGroupsListGetFailed = <any>'LocationGroupsListGetFailed',
     GetLocationGroupDetailFailed = <any>'GetLocationGroupDetailFailed',
-    fetchCapabilitiesForSecureFormGetFailed= <any>'fetchCapabilitiesForSecureFormGetFailed'
+    fetchCapabilitiesForSecureFormGetFailed= <any>'fetchCapabilitiesForSecureFormGetFailed',
+    EmptyLocationGroupName= <any> 'EmptyLocationGroupName',
+    EmptyLocationGroupSites= <any> 'EmptyLocationGroupSites',
+    EmptyLocationGroupCodes= <any> 'EmptyLocationGroupCodes'
 }
 
 export enum ToastrCode {
@@ -50,6 +53,6 @@ export class HttpError {
 }
 
 export class ToastrMessage {
-    messageType: ToastrMessageType;
+    messageType: TostrMessageType;
     message: string;
 }

@@ -108,19 +108,30 @@
             }
         },
         "Toastr": {
-            "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-            "EmptyEmailAddress": "Please enter Email Address.",
-            "EmptyPassword": "Please enter Password.",
-            "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-            "QuoteListGetFailed": "Error occured while fetching quote list",
-            "QuoteGetFailed": "Error occured while fetching quote information",
-            "GetAccountInfoFailed": "Error occured while fetching account details",
-            "EmptyLocationGroupName": "Please enter Name.",
-            "EmptyLocationGroupSites": "Please select Site.",
-            "EmptyLocationGroupCodes": "Please select Location(s)",
-            "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
-            "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
-            "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
+            "Error": {
+                "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
+                "EmptyEmailAddress": "Please enter Email Address.",
+                "EmptyPassword": "Please enter Password.",
+                "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
+                "QuoteListGetFailed": "Error occured while fetching quote list",
+                "QuoteGetFailed": "Error occured while fetching quote information",
+                "GetAccountInfoFailed": "Error occured while fetching account details",
+                "EmptyLocationGroupName": "Please enter Name.",
+                "EmptyLocationGroupSites": "Please select Site.",
+                "EmptyLocationGroupCodes": "Please select Location(s)",
+                "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
+                "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
+                "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
+            },
+            "Warning": {
+                
+            },
+            "Information": {
+            },
+            "Success": {
+            },
+            "Custom": {
+            }
         }
     },
     "QUOTES": {
