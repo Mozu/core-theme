@@ -89,7 +89,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                     model: 'Taco.model.Order',
                                     behavior: 'fulfill'
                                 }],
-                                handler: this.handleViewShippingLabel(this.record,)
+                                handler: this.handleViewShippingLabel
                             }),
                         ]
                     },
@@ -393,11 +393,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     },
 
     handleViewShippingLabel: function () {
-        debugger;   
-        window.open(
-            '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
-            'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
-        );
+        //window.open(
+        //    '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
+        //    'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
+        //);
     }, 
 });
 
