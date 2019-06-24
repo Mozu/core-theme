@@ -102,14 +102,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
             orderId = this.record.getId(),
             packageId = this.packageRecord.id;
         window.open('/admin/s-' + siteId + '/orderdetails/' + orderId + '/packages/' + packageId);
-    },
-
-    handleViewShippingLabel: function () {
-        window.open(
-            '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
-            'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
-        );
-    },  
+    },     
     
     buildTrackingHeader: function () {
         return Ext.widget({
@@ -228,41 +221,6 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                     xtype: 'container',
                     padding: '8 0 0 0',
                     items: [
-                        Ext.widget('button', {
-                            itemId: 'shippingLabels',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Get Shipping Labels',
-                            margin: '0 15 0 0',
-                            //hidden: !!this.record.shipmentId,
-                            //disabled: !this.record.hasLabel,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            handler: this.handleViewShippingLabel
-                        }),
-                        Ext.widget('button', {
-                            itemId: 'printPacking',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Print Packing Slip',
-                            handler: this.handlePrintPackingSlip,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            margin: '0 15 0 0'
-                        }),
-                        
                         Ext.widget('button', {
                             itemId: 'editItems',
                             ui: 'action',

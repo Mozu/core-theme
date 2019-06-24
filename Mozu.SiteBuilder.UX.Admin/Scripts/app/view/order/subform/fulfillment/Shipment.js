@@ -75,6 +75,50 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         padding: '0 20 0 0',
                         items: [
                             Ext.widget('button', {
+                                itemId: 'shippingLabels',
+                                ui: 'action',
+                                scale: 'medium',
+                                text: 'Get Shipping Labels',
+                                //hidden: !!this.record.shipmentId,
+                                //disabled: !this.record.hasLabel,
+                                requiredBehaviors: [{
+                                    model: 'Taco.model.Order',
+                                    behavior: 'update'
+                                },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'fulfill'
+                                }],
+                                handler: this.handleViewShippingLabel(this.record,)
+                            }),
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        padding: '0 20 0 0',
+                        items: [
+                            Ext.widget('button', {
+                                itemId: 'printPacking',
+                                ui: 'action',
+                                scale: 'medium',
+                                text: 'Print Packing Slip',
+                                handler: this.handlePrintPackingSlip,
+                                requiredBehaviors: [{
+                                    model: 'Taco.model.Order',
+                                    behavior: 'update'
+                                },
+                                {
+                                    model: 'Taco.model.Order',
+                                    behavior: 'fulfill'
+                                }]
+                            }),
+                        ]
+                    },
+                    {
+                        xtype: 'container',
+                        padding: '0 20 0 0',
+                        items: [
+                            Ext.widget('button', {
                                 itemId: 'cancelShipment',
                                 ui: 'action',
                                 scale: 'medium',
@@ -317,7 +361,15 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 originAddress.mobilePhone + ' * ' + originAddress.email + '</div>';
 
         return address;
-    }
+    },
+
+    handleViewShippingLabel: function () {
+        debugger;   
+        window.open(
+            '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
+            'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
+        );
+    }, 
 });
 
 
