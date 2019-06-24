@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using IO.Swagger.Model;
 using Mozu.Core.Api.Routing;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
@@ -353,6 +354,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 return _orderWebApiClient.DeletePackage(orderId, package.Id);
             }
+        }
+
+
+        ///SHIPMENT ASSIGN
+        ///GET LOCATIONS 
+        [HttpPostRoute(UriTemplate = "shipping/inventory")]
+        public Response<CandidateSuggestionsResponse> GetLocationInventory(CandidateSuggestionsRequest request)
+        {
+            var serviceResponse = _orderRoutingApiWrapper.SuggestCandidates(request);
+            return Single2(serviceResponse);
         }
     }
 }

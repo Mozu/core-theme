@@ -28,6 +28,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
+using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -44,6 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
+        private readonly IOrderRoutingApiWrapper _orderRoutingApiWrapper;
         private readonly string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
@@ -67,7 +69,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICartWebApiClient cartWebApiClient,
             ICustomerSetWebApiClient customerSetWebApiClient,
             IReturnWebApiClient returnWebApiClient,
-            IIpAddressFinderOuter ipAddressFinderOuter
+            IIpAddressFinderOuter ipAddressFinderOuter,
+            IOrderRoutingApiWrapper orderRoutingApiWrapper
         )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -81,6 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSetWebApiClient = customerSetWebApiClient;
             _returnWebApiClient = returnWebApiClient;
             _ipAddress = ipAddressFinderOuter.IpAddress;
+            _orderRoutingApiWrapper = orderRoutingApiWrapper;
         }
 
         [HttpGetRoute(UriTemplate = "list")]

@@ -1,0 +1,106 @@
+[
+  {
+    "key": "FoundCheaperSomewhereElse",
+    "value": "Found Cheaper Somewhere Else"
+  },
+  {
+    "key": "ItemPriceTooHigh",
+    "value": "Item Price Too High"
+  },
+  {
+    "key": "ItemWillNotArriveOnTime",
+    "value": "Item Will Not Arrive On Time"
+  },
+  {
+    "key": "NeedToChangeBillingAddress",
+    "value": "Need To Change Billing Address"
+  },
+  {
+    "key": "NeedToChangePaymentMethod",
+    "value": "Need To Change Payment Method"
+  },
+  {
+    "key": "NeedToChangeShippingAddress",
+    "value": "Need To Change Shipping Address"
+  },
+  {
+    "key": "NeedToChangeShippingSpeed",
+    "value": "Need To Change Shipping Speed"
+  },
+  {
+    "key": "OrderCreatedByMistake",
+    "value": "Order Created By Mistake"
+  },
+  {
+    "key": "ShippingCostTooHigh",
+    "value": "Shipping Cost Too High"
+  },
+  {
+    "key": "Other",
+    "value": "Other"
+  },
+  {
+    "key": "AddAdditionalItems",
+    "value": "Add Additional Items"
+  },
+  {
+    "key": "ArrivedTooLate",
+    "value": "Arrived Too Late"
+  },
+  {
+    "key": "CustomerChangedTheirMind",
+    "value": "Customer Changed Their Mind"
+  },
+  {
+    "key": "DamagedOrDefectiveItem",
+    "value": "Damaged Or Defective Item"
+  },
+  {
+    "key": "FoundBetterPrice",
+    "value": "Found Better Price"
+  },
+  {
+    "key": "ItemDidNotMatchWebsite",
+    "value": "Item Did Not Match Website"
+  },
+  {
+    "key": "ItemNotAvailable",
+    "value": "Item Not Available"
+  },
+  {
+    "key": "ProductIsNotTheCorrectSize",
+    "value": "Product Is Not The Correct Size"
+  },
+  {
+    "key": "PurchaseNeverPickedUp",
+    "value": "Purchase Never Picked Up"
+  },
+  {
+    "key": "StoreError",
+    "value": "Store Error"
+  },
+  {
+    "key": "CanNotFindItem",
+    "value": "Can Not Find Item"
+  },
+  {
+    "key": "DoNotHaveEnoughQuantity",
+    "value": "Do Not Have Enough Quantity"
+  },
+  {
+    "key": "ItemIsOnReserveForOtherCustomer",
+    "value": "Item Is On Reserve For Other Customer"
+  },
+  {
+    "key": "ItemIsShopWornNotWebSellable",
+    "value": "Item Is Shop Worn Not Web Sellable"
+  },
+  {
+    "key": "NoInventory",
+    "value": "No Inventory"
+  },
+  {
+    "key": "OnMannequinOrDisplay",
+    "value": "On Mannequin Or Display"
+  }
+]

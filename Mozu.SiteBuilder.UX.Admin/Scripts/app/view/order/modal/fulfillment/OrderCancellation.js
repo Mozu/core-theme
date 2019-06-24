@@ -16,7 +16,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
     },
 
     initComponent: function () {
-
+        
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
             name: 'cancelOrder',
             monitorValid: true,
@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                     name: 'cancelReason',
                                     itemId: 'cancelReason',
                                     valueField: 'reasonCode',
-                                    displayField: 'reasonCode',
+                                    displayField: 'description',
                                     fieldLabel: 'Cancel Reason',
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',
