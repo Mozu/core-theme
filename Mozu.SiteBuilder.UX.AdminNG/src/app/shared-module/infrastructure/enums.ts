@@ -1,4 +1,4 @@
-﻿export enum BusinessRulesErrorCodes {
+export enum BusinessRulesErrorCodes {
     PasswordExpired = <any>'BR104'
 }
 
@@ -17,7 +17,8 @@ export enum NavigationContainerType {
     product = 'product',
     order = 'order',
     quotes = 'quotes',
-    locationGroups = 'locationGroups'
+    locationGroups = 'locationGroups',
+    fulfiller = 'fulfiller'
 }
 
 export enum ConfirmationDialogNotificationCode {
@@ -40,7 +41,6 @@ export enum NotificationLGActions {
     editDataLoaded = "EditDataLoaded",
     cancelled = "Cancelled",
     saved = "Saved"
-
 }
 
 export enum LocationGroupEventOperations {

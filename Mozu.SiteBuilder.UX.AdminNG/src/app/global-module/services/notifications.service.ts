@@ -63,4 +63,9 @@ export class NotificationService {
         this._logger.info('NotificationService : notifyQuoteItemDeleteConfirmation');
         this.QuoteItemDeleteConfirmation.next(actionName);
     }
+
+    notifyLocationGroupDeleteConfirmation(actionName: string){
+        this._logger.info('NotificationService : notifyLocationGroupDeleteConfirmation');
+        this.LocationGroupDeleteConfirmation.next(actionName);
+    }
 }

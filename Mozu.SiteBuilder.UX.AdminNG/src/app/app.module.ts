@@ -16,7 +16,6 @@ import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { GlobalErrorHandlerComponent } from '@core';
-import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
@@ -34,11 +33,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       }),
     GlobalModule.forRoot(),
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot({
-      autoDismiss:false,
-      disableTimeOut:true,
-      positionClass: 'toast-top-right'
-    }),
     SharedModule,
     AdminModule,
     QuotesModule,
@@ -46,7 +40,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     routing,
   ],
   providers: [
-    { provide: ErrorHandler, useClass: GlobalErrorHandlerComponent }  
   ],
   bootstrap: [AppComponent]
 })

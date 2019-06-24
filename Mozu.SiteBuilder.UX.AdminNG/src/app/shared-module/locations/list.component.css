@@ -60,3 +60,31 @@ p-table .ui-table .ui-table-thead>tr {
     padding: 7px 17px;
     font-size: 13px;
 }
+
+.locations-list-container p-table .ui-table .ui-table-tbody>tr>td {
+    padding: 8px 2px !important;
+    font-weight: normal !important;
+    border-color: #9f9b9b57 !important;
+}
+
+.locations-list-container p-table .ui-table .ui-table-tbody>tr:not(.ui-state-highlight):not(.ui-contextmenu-selected):hover {
+    cursor: pointer;
+    background-color: #eaeaea;
+    color: #333333;
+}
+
+.forwidth {
+    width: 1.5em;
+}
+
+.forwidth1 {
+    width: 2em;
+}
+
+.forwidth2 {
+    width: 20px;
+}
+
+.forheight {
+    height: 34px;
+}

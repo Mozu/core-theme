@@ -1,5 +1,6 @@
 <div class="col-md-12 location-group-container">
     <div class="inner">
+        <spinner></spinner>
         <p-table [value]="model.items" [responsive]="true" [paginator]="true" 
             [rows]="model.numberOfRows" (onRowSelect)="onRowSelect($event)" 
             selectionMode="single" 

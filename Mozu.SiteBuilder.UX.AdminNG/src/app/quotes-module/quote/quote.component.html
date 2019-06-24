@@ -15,10 +15,150 @@
 </div>
 <div class="col-md-12 quote-container top-margin">
   <div class="info-section">
-      <div class="row">
-        <div class="sub-container">
-          <spinner></spinner>
-          <quote-items [QuoteId]=quoteId [Quote]=model.items></quote-items>
+    <div class="row">
+      <div class="sub-container">
+        <quote-items [QuoteId]=quoteId [Quote]=model.items></quote-items>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sub-container">
+        <div class="col-sm-12">
+          <p class="quote-heading">{{'SHARED.SHIPPING.Address.shippingInformation' | translate }} </p>
+        </div>
+        <div class="col-sm-12">
+          <div class="col-sm-6">
+            <shipping-address [Destinations]="model.destinations ? model.destinations[0].destinationContact: []">
+            </shipping-address>
+          </div>
+          <div class="col-sm-6">
+            <h5>{{'SHARED.SHIPPING.Method.shippingMethodAndPrice' | translate }} </h5>
+            <shipping-method [QuoteId]=quoteId></shipping-method>            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="sub-container">
+        <div class="col-sm-12">
+          <p class="quote-heading">{{'QUOTES.Quote.Negotiation.heading' | translate }} </p>
+        </div>
+        <div class="col-sm-12">
+          <div class="col-sm-6 padding-none">
+            <quote-negotiation [QuoteId]=quoteId></quote-negotiation>
+          </div>
+          <div class="col-sm-6">
+            <p>{{'QUOTES.Quote.Negotiation.Total.heading' | translate }}</p>
+
+            <div class="info-section top-margin">
+              <div class="quotes-detail-wrapper">
+                <form class="form-horizontal">
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <span>Total Cost</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span> $0.00</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <select class="form-control" style="width: 275px;">
+                        <option>Catlog Total Price(Excl.Tax)</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span> $0.00</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-md-4">
+                      <span>Negotiated Price</span>
+                    </div>
+                    <div class="col-md-4">
+                      <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Percentage
+                        Discount
+                      </label>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <div class="input-group">
+                        <input type="text" class="form-control" id="">
+                        <div class="input-group-addon">%</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-4 col-md-offset-4">
+                      <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Amount
+                        Discount
+                      </label>
+                    </div>
+                    <div class="col-md-4 text-right">
+                      <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="text" class="form-control" id="">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-4 col-md-offset-4">
+                      <label>
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Amount
+                        Discount
+                      </label>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="text" class="form-control" id="">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <span>Quote Subtotal(Excl.Tax)</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span> $0.00</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <span>Shipping & Handeling</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span> $0.00</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <span>Estimated Tax</span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span> $0.00</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-md-6">
+                      <span><b>Quote Grand Total(Excl.Tax)</b></span>
+                    </div>
+                    <div class="col-md-6 text-right">
+                      <span><b>$2700.00</b></span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>

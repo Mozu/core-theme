@@ -7,12 +7,12 @@ import { ActivatedRoute } from '@angular/router';
 
 import * as _ from 'lodash';
 
-import {
-  LoggerService,
+import { LoggerService,
   HttpError,
   ErrorCode,
-  ErroNotificationType
-} from '@core';
+  ErroNotificationType,
+  SpinnerService,
+  GlobalErrorLoggingService} from '@core';
 
 import { QuoteService } from './quote.service';
 
@@ -22,7 +22,7 @@ import { QuoteItemModel } from './quote.model';
   selector: 'quote',
   templateUrl: './quote.component.html',
   styleUrls: ['./quote.component.css'],
-  providers: [QuoteService]
+  providers: [QuoteService, SpinnerService]
 })
 export class QuoteComponent implements OnInit {
   quoteId: string;
@@ -32,9 +32,11 @@ export class QuoteComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
-    private _loggerService: LoggerService) { }
+    private _loggerService: LoggerService,
+    private _spinner: SpinnerService ) { }
 
   ngOnInit() {
+    this._spinner.start();
     this._loggerService.info('QuoteComponent : ngOnInit');
     this.model = new QuoteItemModel();
     this.quoteId = this.route.snapshot.paramMap.get('quoteId');
@@ -47,15 +49,17 @@ export class QuoteComponent implements OnInit {
 
     this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse: Response) => {
       this._loggerService.info('QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse');
-      if (quoteListSuccessResponse !== null && quoteListSuccessResponse !== undefined && quoteListSuccessResponse['items'].length > 0) {
-        this.model = _.filter(quoteListSuccessResponse['items'],
-          function (el: any) {
-            return el.id === quoteId;
-          })[0];
-        this.userId = this.model.userId;
-        this.customerAccountId = this.model.customerAccountId;
-      }
+        if (quoteListSuccessResponse !== null && quoteListSuccessResponse !== undefined && quoteListSuccessResponse['items'].length > 0) {
+          this.model = _.filter(quoteListSuccessResponse['items'], function (el: any) { return el.id === quoteId; })[0];
+          this.userId = this.model.userId;
+          this.customerAccountId = this.model.customerAccountId;
+        }
+        setTimeout(() => {
+          /** spinner ends after 5 seconds */
+          this._spinner.stop();
+      }, 500);
     }, (quoteListErrResponse) => {
+      this._spinner.stop();
       this._loggerService.info('QuoteComponent : _quotesListService.fetchAllQuotes_errResponse');
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
     });

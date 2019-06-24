@@ -1,11 +1,10 @@
 import {
-    Component,   
+    Component,
     OnChanges,
     Input,
     SimpleChanges,
     LOCALE_ID,
-    Inject,
-    DoCheck
+    Inject
 } from '@angular/core';
 import {
     LoggerService,
@@ -26,10 +25,10 @@ import { CurrencyPipe } from '@angular/common';
     providers: [ShippingMethodService]
 })
 
-export class ShippingMethodComponent implements OnChanges, DoCheck {
+export class ShippingMethodComponent implements OnChanges {
     @Input('QuoteId') quoteId: string;
     public shippingRates: ShippingRateModel[];
-    public selectedShippingRate: ShippingRateModel;    
+    public selectedShippingRate: ShippingRateModel;
 
     constructor(private _shippingMethodService: ShippingMethodService,
         private _loggerService: LoggerService,
@@ -50,9 +49,6 @@ export class ShippingMethodComponent implements OnChanges, DoCheck {
         this.quoteId = changes["quoteId"].currentValue;
     }
 
-    ngDoCheck() {
-    }
-
     public populateShippingMethod = () => {
         this._loggerService.info("ShippingMethodComponent : populateShippingMethod");
 
@@ -64,15 +60,17 @@ export class ShippingMethodComponent implements OnChanges, DoCheck {
                     this.shippingRates = fetchShippingMethodResponse;
                     this.shippingRates.map((shippingRate, i) => {
                         shippingRate.shippingMethodName = shippingRate.shippingMethodName + " " + currencyPipe.transform(shippingRate.price);
-                    });                  
+                    });
                 } else {
                     this.shippingRates = [];
                 }
             },
                 (errResponse) => {
-                    this._loggerService.info("ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_errResponse");                   
+                    this._loggerService.info("ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_errResponse");
                     throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
                 })
+        } else {
+            this.shippingRates = [];
         }
     }
 }

@@ -597,8 +597,13 @@ quotes-list p-table .ui-table .ui-table-thead>tr>th {
 
 
 /* quote edit */
-
-quote .ui-table-responsive .ui-table-thead>tr>th {
+quotes-list p-table .ui-table .ui-table-thead{
+    background-color: #f7f7f7 !important;   
+   }   
+   quotes-list p-table .ui-table .ui-table-thead > tr > th{   
+    padding: 8px 20px !important;    
+   }
+quote .ui-table-responsive .ui-table-thead>tr>th{
     display: table-cell !important;
     white-space: nowrap;
 }
@@ -697,6 +702,9 @@ body{ overflow: hidden;} */
 .ui-table-scrollable-header-box {
     background-color: #fff
 }
+.ui-sidebar-mask{ z-index:9 !important;}
+/* html{ overflow: hidden;}
+body{ overflow: hidden;} */
 
 .ui-widget-header {
     background: #ffffff;

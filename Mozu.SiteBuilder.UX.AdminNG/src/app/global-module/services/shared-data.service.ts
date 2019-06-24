@@ -32,7 +32,7 @@ export class SharedDataService {
         private _logger: LoggerService,
         private _authService: AuthService,
         private _https: HttpClientService,
-        private _utilityService: UtilityService
+        private _utilityService: UtilityService,
     ) {
         this._logger.info('SharedDataService : constructor ');
     }

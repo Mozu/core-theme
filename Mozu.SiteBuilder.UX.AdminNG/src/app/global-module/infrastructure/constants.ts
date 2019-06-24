@@ -27,7 +27,6 @@ export class Constants {
         getLocationGroup : environment.apiUrl + '/location/groups/get',
         deleteLocationGroup : environment.apiUrl + '/location/groups/delete',
         getQuoteList : environment.apiUrl + '/quote/list',
-        getB2BUserAccount: environment.apiUrl + '/b2baccount',
     };
 
     static queryString = {

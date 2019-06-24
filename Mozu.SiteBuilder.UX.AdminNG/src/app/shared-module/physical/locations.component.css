@@ -10,6 +10,10 @@ body .ui-treetable .ui-treetable-tbody>tr>td {
     border-style: solid;
 }
 
+body .ui-treetable .ui-treetable-tbody>tr>th {
+    font-weight: 600
+}
+
 .ui-treetable-scrollable-body::-webkit-scrollbar-track {
     border-radius: 10px;
     /* background-color: #F5F5F5; */

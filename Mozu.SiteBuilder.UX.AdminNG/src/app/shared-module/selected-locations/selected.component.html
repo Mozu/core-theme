@@ -4,6 +4,8 @@
         [rows]="20" scrollHeight="300px" 
         [totalRecords]="model.totalRecords" 
         [virtualRowHeight]="28"
+        (onRowUnselect)="rowUnselected($event)"
+        (onHeaderCheckboxToggle)="tableHeaderCheckboxToggle($event)"
         [(selection)]="selectedLocations">
 
         <ng-template pTemplate="header" let-columns>

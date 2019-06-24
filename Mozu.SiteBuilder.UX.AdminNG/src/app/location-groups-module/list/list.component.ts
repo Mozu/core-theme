@@ -31,7 +31,8 @@ export class LocationGroupsListComponent implements OnInit {
         private _translate: TranslateService,
         private _notificationService: NotificationService,
         private router: Router,
-        private _confirmationDialogService: ConfirmationDialogService) { }
+        private _confirmationDialogService: ConfirmationDialogService,
+        private _spinner: SpinnerService) { }
 
     ngOnInit() {
         this._spinner.start();

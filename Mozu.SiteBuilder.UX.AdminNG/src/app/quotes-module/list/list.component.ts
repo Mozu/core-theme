@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { LoggerService,
   HttpError,
   ErrorCode,
-  ErroNotificationType} from '@core';
+  ErroNotificationType,
+  SpinnerService} from '@core';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -31,8 +32,7 @@ export class QuotesListComponent implements OnInit {
     private _loggerService: LoggerService,
     private _translate: TranslateService,
     private router: Router,
-    private _spinner: SpinnerService,
-    private _toastrService: ToastrService) { }
+    private _spinner: SpinnerService) { }
 
   ngOnInit() {
     this._loggerService.info('QuotesListComponent : ngOnInit');
@@ -62,18 +62,22 @@ export class QuotesListComponent implements OnInit {
   }
 
   public populateQuoteGrid = () => {
-
+    this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-
-    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: Response) => {
-      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
-        if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined
-          && quotesListSuccessResponse['items'].length > 0) {
-          this.model.items = quotesListSuccessResponse['items'];
-        }
-    }, (quotesListErrResponse) => {
-      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
-      throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
-    });
+    setTimeout(() => {
+      /** spinner ends after 1 seconds */
+      this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: Response) => {
+        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
+          if (quotesListSuccessResponse != null && quotesListSuccessResponse != undefined &&
+            quotesListSuccessResponse['items'].length > 0) {
+            this.model.items = quotesListSuccessResponse['items'];
+            this._spinner.stop();
+          }
+      }, (quotesListErrResponse) => {
+        this._spinner.stop();
+        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
+        throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+      });
+  }, 1000);
   }
 }

@@ -4,7 +4,8 @@
         [rows]="20" scrollHeight="300px" 
         (onRowSelect)="rowSelected($event)" (onRowUnselect)="rowUnselected($event)"
         (onHeaderCheckboxToggle)="tableHeaderCheckboxToggle($event)"
-        [(selection)]="model.selectedLocations" dataKey="code"  class="table-striped">
+        [(selection)]="model.selectedLocations" dataKey="code"  
+        [globalFilterFields]="['name', 'code']" class="table-striped">
         
         <ng-template pTemplate="header" let-columns>
             <tr>
@@ -14,7 +15,7 @@
                 <th *ngFor="let col of columns" [ngSwitch]="col.field">
                         <i class="pi pi-fw pi-fw pi-filter filtericon"></i>
                         <input *ngSwitchCase="'name'" placeholder="Filter" class="table-column-filter" 
-                        pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"
+                        pInputText type="text" (input)="dt.filterGlobal($event.target.value, col.filterMatchMode)"
                         [value]="dt.filters['name'] ? dt.filters['name'].value : ''">
                 </th>
             </tr>

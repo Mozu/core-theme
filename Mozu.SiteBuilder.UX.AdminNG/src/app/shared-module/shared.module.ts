@@ -129,7 +129,10 @@ export function createTranslateLoader(http: HttpClient) {
         DynamicLinksDialogComponent,
         AccountInformationComponent,
         ConfirmationDialogComponent,
-        FulfillerComponent
+        FulfillerComponent,
+        ShippingAddressComponent,
+        ShippingMethodComponent,
+        AuditLogComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -183,7 +186,10 @@ export function createTranslateLoader(http: HttpClient) {
         DynamicLinksDialogComponent,
         AccountInformationComponent,
         ConfirmationDialogComponent,
-        FulfillerComponent
+        FulfillerComponent,
+        ShippingAddressComponent,
+        ShippingMethodComponent,
+        AuditLogComponent
     ]
 })
 

@@ -13,7 +13,8 @@ import {
   HttpError,
   ErrorCode,
   ErroNotificationType,
-  UtilityService
+  UtilityService,
+  SpinnerService
 } from '@core';
 
 import { NotificationService, SharedDataService } from '@global';
@@ -32,7 +33,7 @@ import { MenuItem } from 'primeng/api';
   selector: 'account-information',
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.css'],
-  providers: [AccountInfoService]
+  providers: [AccountInfoService, SpinnerService]
 })
 export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy {
   @Input('UserId') userId: string;
@@ -46,7 +47,8 @@ export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy
     private _loggerService: LoggerService,
     private _notificationService: NotificationService,
     private _utilityService: UtilityService,
-    public _sharedData: SharedDataService ) {
+    public _sharedData: SharedDataService,
+    private _spinner: SpinnerService ) {
       this.subscriptions = [];
     }
 
@@ -78,9 +80,13 @@ export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy
           return el.userId === userId;
         });
         this.generateCustomerAccountUrl();
-        this._spinner.stop();
+        setTimeout(() => {
+          /** spinner ends after 0.5 seconds */
+          this._spinner.stop();
+      }, 500);
       }
     }, (accountErrResponse) => {
+      this._spinner.stop();
       this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse');
       throw new HttpError(ErrorCode.GetAccountInfoFailed, ErroNotificationType.Toaster);
     });
