@@ -43,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public userContextMenuItem: MenuItem;
     public selectedSearchedtem: SearchedItem;
     subscriptions: Subscription[];
+    mainMenuLinks: MenuItem[];
 
     constructor(
         private _loggerService: LoggerService,
@@ -51,9 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _notificationService: NotificationService,
         private _utilityService: UtilityService
-    ) {
-        this.subscriptions = [];
-    }
+    ) {}
 
     ngOnInit() {
         this._loggerService.info('HeaderComponent : ngOnInit');
@@ -63,14 +62,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.selectedSearchedtem = new SearchedItem();
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
-        this.subscriptions.push(
-            this._notificationService.mainMenuLinksFilteredByContextType.subscribe((mainMenuLinks: MenuItem[]) => {
-                this._loggerService.info('HeaderComponent : mainMenuLinksFilteredByContextType');
-                this.headerModel.productURL = this.getNavigationURL(mainMenuLinks, 'products', 'products');
-                this.headerModel.customerURL = this.getNavigationURL(mainMenuLinks, 'customer', 'customers');
-                this.headerModel.ordersURL = this.getNavigationURL(mainMenuLinks, 'order', 'orders');
-            })
-        );
+        this.headerModel.productURL = this.getNavigationURL(this.mainMenuLinks, 'products', 'products'),
+        this.headerModel.customerURL = this.getNavigationURL(this.mainMenuLinks, 'customer', 'customers'),
+        this.headerModel.ordersURL = this.getNavigationURL(this.mainMenuLinks, 'order', 'orders')
     }
 
     ngOnDestroy() {
@@ -205,9 +199,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
             }
             if (!event.isHeader) {
                 if (event.type === SearchedItemType.products) {
-                    navUrl = navUrl + Constants.searchNavigationEditDeepLink + event.item.productTypeId;
+                    navUrl = navUrl + Constants.editNavigationDeepLink + event.item.productTypeId;
                 } else {
-                    navUrl = navUrl + Constants.searchNavigationEditDeepLink + event.item.id;
+                    navUrl = navUrl + Constants.editNavigationDeepLink + event.item.id;
                 }
             }
             this._utilityService.redirectToURL(navUrl);
