@@ -2,13 +2,12 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
     
     var VariationSelector = function() {
         var qSelector = "#mz-variation-selector";
-        var $Selector;
         var pageContext = require.mozuData('pagecontext');
 
         this.init = function(){
             var me = this;
             var selector = me.buildSelector(this.getVariations());
-            $Selector = $(qSelector).html(selector);
+            $(qSelector).html(selector);
 
             $('#mz-variation-selector').change(function(e){
                 var selectedId = e.target.value,
@@ -21,20 +20,26 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             return pageContext.variations || [];
         };
         this.buildSelector = function(items){
-            var selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
+            var selector = "";
 
-            function selected(item) {
+            var selected = function selected(item) {
                 if (item.id === pageContext.variationId) { 
                     return "selected";
                 }
                 return '';
-            }
+            };
 
-            items.forEach(function(item){
-                if(item.id) {
-                    selector += '<option class="mz-variation-selector-option" value="' + item.id + '"' + selected(item) +'>' + item.name + '</option>';
-                }
-            });
+
+            if(items.length) {
+                selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
+
+                
+                items.forEach(function(item){
+                    if(item.id) {
+                        selector += '<option class="mz-variation-selector-option" value="' + item.id + '"' + selected(item) +'>' + item.name + '</option>';
+                    }
+                });
+            }
             return selector;
         };
     };
