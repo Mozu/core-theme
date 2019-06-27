@@ -359,10 +359,52 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         ///SHIPMENT ASSIGN
         ///GET LOCATIONS 
-        [HttpPostRoute(UriTemplate = "shipping/inventory")]
-        public Response<CandidateSuggestionsResponse> GetLocationInventory(CandidateSuggestionsRequest request)
+        ///SHIPMENT ASSIGN
+        ///GET LOCATIONS 
+        [HttpPostRoute(UriTemplate = "shipping/candidates")]
+        public Response<CandidateSuggestionsResponse> GetCandidates(CandidateSuggestionsRequest request)
         {
             var serviceResponse = _orderRoutingApiWrapper.SuggestCandidates(request);
+            return Single2(serviceResponse);
+        }
+
+
+        public class CancelShipmentArgs
+        {
+            public Swagger.Fulfiller.Model.CancelShipment CancelShipment { get; set; }
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipping/shipment/cancel")]
+        public Response<Swagger.Fulfiller.Model.ResponseEntity> CancelShipment(CancelShipmentArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.CancelShipment(args.CancelShipment, args.ShipmentNumber);
+            return Single2(serviceResponse);
+        }
+
+        public class RejectShipmentArgs
+        {
+            public Swagger.Fulfiller.Model.RejectShipment RejectShipment { get; set; }
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipping/shipment/reject")]
+        public Response<Swagger.Fulfiller.Model.ResponseEntity> RejectShipment(RejectShipmentArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.RejectShipment(args.RejectShipment, args.ShipmentNumber);
+            return Single2(serviceResponse);
+        }
+
+
+        public class FuflfillShipmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+
+        }
+        [HttpPutRoute(UriTemplate = "shipping/shipment/fulfill")]
+        public Response<Swagger.Fulfiller.Model.ResponseEntity> FuflfillShipment(FuflfillShipmentArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
             return Single2(serviceResponse);
         }
     }

@@ -2879,44 +2879,44 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    getLocationInventory: function () {
-        var config =
-        {
-            "orderType": "TRANSFER",
-            "items": [
-                {
-                    "partNumber": "mqa-p-standard0",                    
-                    "quantity": 1
-                }
-            ]
-        };
-
-        //var store = Ext.create('Ext.data.Store', {
-        //    model: 'Taco.model.SuggestCandidateResponse',            
-        //    proxy: {
-        //        type: 'ajax',
-        //        url: '/admin/app/order/shipping/inventory',
-        //        method: 'GET',
-        //        jsonData: config,
-        //        reader: {
-        //            type: 'json',
-        //            //root: 'items',
-        //            successProperty: 'success'
+    getLocationInventory: function (config) {
+        //config =
+        //{
+        //    "orderType": "TRANSFER",
+        //    "items": [
+        //        {
+        //            "partNumber": "mqa-p-standard0",                    
+        //            "quantity": 1
         //        }
+        //    ]
+        //};
+
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/candidates',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+
+        //Ext.Ajax.request({
+        //    url: '/admin/app/order/shipping/candidates',
+        //    // url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
+        //    method: 'POST',
+        //    jsonData: config,
+        //    success: function (response) {
+        //        var jsonResp = Ext.util.JSON.decode(response.responseText);
+        //        console.log(jsonResp);
         //    }
         //});
-        //store.load();
-        //return store;
-        ///admin/Scripts/app/mocks/orders.json
-        Ext.Ajax.request({
-            url: '/admin/app/order/shipping/inventory',
-            // url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
-            method: 'POST',
-            jsonData: config,
-            success: function (response) {
-                var jsonResp = Ext.util.JSON.decode(response.responseText);
-                console.log(jsonResp);
-            }
+    },
+
+    cancelShipmentNew: function (config) {
+        debugger;
+        Ext.apply(config, {
+            url: '/admin/app/order/shipping/shipment/cancel',
+            method: 'PUT'
         });
+
+        Ext.Ajax.request(config);
     },
 });

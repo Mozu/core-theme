@@ -46,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
         private readonly IOrderRoutingApiWrapper _orderRoutingApiWrapper;
+        private readonly IFulfillerApiWrapper _fulfillerApiWrapper;
         private readonly string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
@@ -70,7 +71,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICustomerSetWebApiClient customerSetWebApiClient,
             IReturnWebApiClient returnWebApiClient,
             IIpAddressFinderOuter ipAddressFinderOuter,
-            IOrderRoutingApiWrapper orderRoutingApiWrapper
+            IOrderRoutingApiWrapper orderRoutingApiWrapper,
+            IFulfillerApiWrapper fulfillerApiWrapper
         )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -85,6 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _returnWebApiClient = returnWebApiClient;
             _ipAddress = ipAddressFinderOuter.IpAddress;
             _orderRoutingApiWrapper = orderRoutingApiWrapper;
+            _fulfillerApiWrapper = fulfillerApiWrapper;
         }
 
         [HttpGetRoute(UriTemplate = "list")]

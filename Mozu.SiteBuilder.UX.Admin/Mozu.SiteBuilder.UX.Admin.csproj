@@ -168,6 +168,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiWrappers\FulfillerApiWrapper.cs" />
     <Compile Include="ApiWrappers\OrderRoutingApiWrapper.cs" />
     <Compile Include="Api\AccountAttributeController.cs" />
     <Compile Include="Api\ActionConfiguration.cs" />
@@ -533,6 +534,39 @@
     <Compile Include="Modules\VersionValidationCacheHeaderModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedirectController.cs" />
+    <Compile Include="Swagger\Fulfiller\Api\OperationHandlerApi.cs" />
+    <Compile Include="Swagger\Fulfiller\Api\PackageControllerApi.cs" />
+    <Compile Include="Swagger\Fulfiller\Api\ShipmentControllerApi.cs" />
+    <Compile Include="Swagger\Fulfiller\Api\WebMvcLinksHandlerApi.cs" />
+    <Compile Include="Swagger\Fulfiller\Api\WorkflowProcessControllerApi.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Address.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\CanceledItem.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\CancelShipment.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ChangeMessage.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Contact.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Item.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Link.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\MapstringLink.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Measurement.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Package.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\PackageMeasurements.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Phone.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\RejectShipment.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourcePackage.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourceShipment.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourcesResourcePackage.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourcesResourceShipment.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourcesResourceWorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourcesTask.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResourceWorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ResponseEntity.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Shipment.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\Task.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\TaskDefinition.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\TaskInput.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\WorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\WorkflowProcessVariable.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\WorkflowState.cs" />
     <Compile Include="Swagger\OrderRouting\Api\AfterActionControllerApi.cs" />
     <Compile Include="Swagger\OrderRouting\Api\DataListControllerApi.cs" />
     <Compile Include="Swagger\OrderRouting\Api\FilterControllerApi.cs" />

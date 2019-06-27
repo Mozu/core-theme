@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                                     name: 'cancelReason',
                                     itemId: 'cancelReason',
                                     valueField: 'reasonCode',
-                                    displayField: 'reasonCode',
+                                    displayField: 'description',
                                     fieldLabel: 'Cancel Reason',
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',
@@ -103,18 +103,19 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     },
 
     getCancelShipmentPayload: function () {
+        debugger;
         var me = this;
+        
         var order = this.record;
         var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
             this.down('#otherReason').getValue() : null);
 
         return {
-            orderId: order.get('taco.model.order_id'),
-            orderItemId: order.get('id'),
-            reason: {
-                reasonCode: reason,
-                description: description
+            shipmentNumber: me.shipmentRecord.number,
+            cancelShipment: {
+                cancelReason: reason,
+                cancelReasonDescription: description
             }
         };
     },
@@ -139,11 +140,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                         var order = me.record;
                         var payloadData = me.getCancelShipmentPayload();
 
-                        order.cancelShipment({
-                            jsonData: {
-                                //orderId: order.get('id')
-                                orderId: 1
-                            },
+                        order.cancelShipmentNew({
+                            jsonData: payloadData,
                             success: function (response) {
                                 // success handling here
                                 var json = Ext.decode(response.responseText, true);

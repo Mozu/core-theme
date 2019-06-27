@@ -49,8 +49,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                         scale: 'medium',
                         text: 'Cancel Order',
                         handler: function () {
-                            me.record.getLocationInventory();
-                            //me.openCancellationPopUp();
+                            me.openCancellationPopUp();
                         }
                     }),
                 ]
@@ -68,32 +67,33 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
         store.load({
             scope: this,
             callback: function (records, operation, success) {
-                for (var i = 0; i < records.length; i++) {
-                    me.record.localeStore.each(function (localeRecord) {
-                        if (records[i].get('reasonCode') == localeRecord.get('key')) {
-                            records[i].dirty = true;
-                            records[i].set('description', localeRecord.get('value'));
-                            records[i].setDirty('description', localeRecord.get('value'));
-                            records[i].commit();
+                if (records) {
+                    for (var i = 0; i < records.length; i++) {
+                        me.record.localeStore.each(function (localeRecord) {
+                            if (records[i].get('reasonCode') == localeRecord.get('key')) {
+                                records[i].dirty = true;
+                                records[i].set('description', localeRecord.get('value'));
+                                records[i].setDirty('description', localeRecord.get('value'));
+                                records[i].commit();
+                            }
+                        });
+                    }
+                    Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
+                        layout: 'hbox',
+                        width: 600,
+                        height: 400,
+                        record: me.record,
+                        store: store,
+                        listeners: {
+                            saveSuccess: {
+                                fn: function (json) {
+                                    //me.fireEvent('orderCancelled', json);
+                                },
+                                //scope: me
+                            }
                         }
                     });
                 }
-
-                Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
-                    layout: 'hbox',
-                    width: 600,
-                    height: 400,
-                    record: me.record,
-                    store: store,
-                    listeners: {
-                        saveSuccess: {
-                            fn: function (json) {
-                                //me.fireEvent('orderCancelled', json);
-                            },
-                            //scope: me
-                        }
-                    }
-                });
             }
         });
     }
