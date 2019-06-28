@@ -73,6 +73,7 @@ export class NavigationLeftComponent implements OnInit {
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();
       this._sharedData.leftNavigationMenuItems = this.model.mainItems;
+      this._notificationService.notifyLeftMenuItems(this._sharedData.leftNavigationMenuItems);
     }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info('NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse');
     });

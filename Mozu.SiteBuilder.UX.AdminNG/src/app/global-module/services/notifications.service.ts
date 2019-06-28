@@ -20,7 +20,8 @@ export class NotificationService {
 
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
-    LocationGroupDeleteConfirmation : Subject<any> = new Subject<any>();
+    LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
+    LeftMenuItems: Subject<any> = new Subject<any>();
 
     constructor(
         private _logger: LoggerService
@@ -67,5 +68,10 @@ export class NotificationService {
     notifyLocationGroupDeleteConfirmation(actionName: string){
         this._logger.info('NotificationService : notifyLocationGroupDeleteConfirmation');
         this.LocationGroupDeleteConfirmation.next(actionName);
+    }
+
+    notifyLeftMenuItems(actionName: any) {
+        this._logger.info('NotificationService : notifyLeftMenuItems');
+        this.LeftMenuItems.next(actionName);
     }
 }

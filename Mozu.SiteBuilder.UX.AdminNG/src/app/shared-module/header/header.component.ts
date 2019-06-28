@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public headerModel: HeaderModel;
     public userContextMenuItem: MenuItem;
     public selectedSearchedtem: SearchedItem;
-    subscriptions: Subscription[];
+    subscriptions = [];
     mainMenuLinks: MenuItem[];
 
     constructor(
@@ -62,9 +62,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.selectedSearchedtem = new SearchedItem();
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
-        this.headerModel.productURL = this.getNavigationURL(this.mainMenuLinks, 'products', 'products'),
-        this.headerModel.customerURL = this.getNavigationURL(this.mainMenuLinks, 'customer', 'customers'),
-        this.headerModel.ordersURL = this.getNavigationURL(this.mainMenuLinks, 'order', 'orders')
+        this.subscriptions.push(
+            this._notificationService.LeftMenuItems.subscribe((leftNavigationMenuItems: any) => {
+                this.headerModel.productURL = this._utilityService.
+                getNavigationURL(leftNavigationMenuItems, 'products', 'products'),
+                this.headerModel.customerURL = this._utilityService.
+                getNavigationURL(leftNavigationMenuItems, 'customer', 'customers'),
+                this.headerModel.ordersURL = this._utilityService.
+                getNavigationURL(leftNavigationMenuItems, 'order', 'orders');
+            })
+            );
     }
 
     ngOnDestroy() {
