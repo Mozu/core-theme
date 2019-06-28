@@ -116,3 +116,7 @@ a:hover {
 .dashboard-icon-permissions::after {
     content: "\E91A";
 }
+
+.dashboard-icon-fulfiller::after {
+    content: "\E91A";
+}

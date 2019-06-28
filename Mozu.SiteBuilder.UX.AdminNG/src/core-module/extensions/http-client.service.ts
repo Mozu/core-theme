@@ -1,12 +1,12 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Constants, UtilityService } from '../infrastructure/index';
+import { UtilityService } from '../infrastructure/index';
 import { AuthService } from './auth.service';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/catch';
 
-//Created custom interface as RequestOptionsArgs interface deprecated.
+// Created custom interface as RequestOptionsArgs interface deprecated.
 export interface IRequestOptions {
     headers?: HttpHeaders;
     observe?: 'body';
@@ -42,7 +42,7 @@ export class HttpClientService {
         this.authService.setAuthHeaders(options);
         return this.http.get<T>(url, options)
             .catch((error) => {
-                if (error.status == 403) {
+                if (error.status === 403) {
                     return this.authService
                         .refreshApiToken()
                         .map((accessToken) => {
@@ -73,7 +73,7 @@ export class HttpClientService {
         this.authService.setAuthHeaders(options);
         return this.http.post<T>(url, params, options)
             .catch((error) => {
-                if (error.status == 403) {
+                if (error.status === 403) {
                     return this.authService
                         .refreshApiToken()
                         .map((accessToken) => {
@@ -105,7 +105,7 @@ export class HttpClientService {
         this.authService.setAuthHeaders(options);
         return this.http.put<T>(url, params, options)
             .catch((error) => {
-                if (error.status == 403) {
+                if (error.status === 403) {
                     return this.authService
                         .refreshApiToken()
                         .map((accessToken) => {
@@ -135,7 +135,7 @@ export class HttpClientService {
         this.authService.setAuthHeaders(options);
         return this.http.delete<T>(url, options)
             .catch((error) => {
-                if (error.status == 403) {
+                if (error.status === 403) {
                     return this.authService
                         .refreshApiToken()
                         .map((accessToken) => {

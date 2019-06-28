@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-
 import { Router } from '@angular/router';
 
 import { LoggerService,
          HttpError,
          ErrorCode,
          ErroNotificationType,
-         SpinnerService } from '@core';
+         SpinnerService
+} from '@core';
 
-import { Constants, NotificationLGActions, ConfirmationDialogService, ConfirmationDialogNotificationCode, 
-         ConfirmationDialogNotificationType } from '@shared';
+import { Constants,
+         NotificationLGActions,
+         ConfirmationDialogService,
+         ConfirmationDialogNotificationCode,
+         ConfirmationDialogNotificationType
+} from '@shared';
+
 import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
@@ -23,6 +28,7 @@ import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-gro
     styleUrls: ['./list.component.css'],
     providers: [LocationGroupsListService]
 })
+
 export class LocationGroupsListComponent implements OnInit {
     public model: LocationGroupListModel;
     subscriptions = [];
@@ -74,26 +80,25 @@ export class LocationGroupsListComponent implements OnInit {
     onRowSelect(event) {
         this.model.selectedLocationGroup = event.data;
         // open in edit mode
-        if(event && event.originalEvent &&  event.originalEvent.target && 
-            event.originalEvent.target.classList &&  
+        if (event && event.originalEvent &&  event.originalEvent.target &&
+            event.originalEvent.target.classList &&
             event.originalEvent.target.classList.value === 'pi pi-ellipsis-v') {
             // open action menu.
         } else {
-            this.viewLocationGroup();
+         this.viewLocationGroup();
         }
     }
 
     showDeleteConfirmationDialog() {
-        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup, 
-                        ConfirmationDialogNotificationType.Confirmation);
+    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup,
+    ConfirmationDialogNotificationType.Confirmation);
     }
 
-    deleteLocationGroup(){
+    deleteLocationGroup() {
         const locationGroupId = this.model.selectedLocationGroup.locationGroupId;
         this._locationGroupsListService.deleteLocationGroup(locationGroupId).subscribe((successResponse: Response) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_successResponse');
             this.populateLocationGroupGrid();
-
         }, (errResponse) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_errResponse');
             throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
@@ -115,8 +120,8 @@ export class LocationGroupsListComponent implements OnInit {
         this._locationGroupsListService.fetchAllLocationGroups().subscribe((successResponse: Response) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_successResponse');
             const responseJson = successResponse;
-            if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
-                this.model.items = _.sortBy(responseJson['items'],['locationGroupId']);
+            if (responseJson != null && responseJson !== undefined && responseJson['items'].length > 0) {
+                this.model.items = _.sortBy(responseJson['items'], ['locationGroupId']);
             }
             this._spinner.stop();
         }, (errResponse) => {
@@ -125,5 +130,4 @@ export class LocationGroupsListComponent implements OnInit {
             throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
         });
     }
-
 }

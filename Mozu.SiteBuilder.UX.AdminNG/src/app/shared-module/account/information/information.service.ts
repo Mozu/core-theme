@@ -20,7 +20,7 @@ export class AccountInfoService {
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.accountInformation);
         } else {
-            return this._http.get(GlobalConstants.webApis.getB2BUserAccount + '/' + customerAccountId + Constants.userAPIDeepLink, 
+            return this._http.get(GlobalConstants.webApis.getB2BUserAccount + '/' + customerAccountId + Constants.userAPIDeepLink,
             {
                 params: filter
             });

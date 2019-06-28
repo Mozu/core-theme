@@ -1,14 +1,16 @@
-import { Component, 
-  OnInit, 
-  Input, 
-  SimpleChanges, 
-  OnChanges } from '@angular/core';
-import { LoggerService, 
-  ErrorCode, 
-  HttpError, 
-  ErroNotificationType } from '@core';
-import { AuditLogModel, 
-  AuditLogService } from './index';
+import { Component,
+         OnInit,
+         Input,
+         SimpleChanges,
+         OnChanges } from '@angular/core';
+
+import { LoggerService,
+         ErrorCode,
+         HttpError,
+          ErroNotificationType } from '@core';
+
+import { AuditLogModel,
+         AuditLogService } from './index';
 
 @Component({
   selector: 'audit-log',
@@ -16,6 +18,7 @@ import { AuditLogModel,
   styleUrls: ['./audit-log.component.css'],
   providers: [AuditLogService]
 })
+
 export class AuditLogComponent implements OnChanges, OnInit {
   public model: AuditLogModel;
   @Input('QuoteId') quoteId: string;
@@ -24,9 +27,9 @@ export class AuditLogComponent implements OnChanges, OnInit {
     private _loggerService: LoggerService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    this._loggerService.info("AuditLogComponent : ngOnChanges");
-    this.quoteId = changes["quoteId"].currentValue;
-    if (this.quoteId != undefined) {
+    this._loggerService.info('AuditLogComponent : ngOnChanges');
+    this.quoteId = changes['quoteId'].currentValue;
+    if (this.quoteId !== undefined) {
       this.populateAuditLog(this.quoteId);
     }
   }
@@ -37,17 +40,17 @@ export class AuditLogComponent implements OnChanges, OnInit {
   }
 
   public populateAuditLog = (quoteId: string) => {
-    this._loggerService.info("AuditLogComponent : populateAuditLog");
+    this._loggerService.info('AuditLogComponent : populateAuditLog');
 
     this._auditLogService.fetchAuditLog().subscribe((auditLogSuccessResponse: any) => {
-      this._loggerService.info("AuditLogComponent : _auditLogService.fetchAuditLog_auditLogSuccessResponse");
-      if (auditLogSuccessResponse != null && auditLogSuccessResponse != undefined && auditLogSuccessResponse['items'].length > 0) {
+      this._loggerService.info('AuditLogComponent : _auditLogService.fetchAuditLog_auditLogSuccessResponse');
+      if (auditLogSuccessResponse != null && auditLogSuccessResponse !== undefined && auditLogSuccessResponse['items'].length > 0) {
         this.model = auditLogSuccessResponse;
       }
     }, (errResponse) => {
-      this._loggerService.info("AuditLogComponent : _auditLogService.fetchAuditLog_errResponse");
+      this._loggerService.info('AuditLogComponent : _auditLogService.fetchAuditLog_errResponse');
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
-    })
+    });
   }
 
 }

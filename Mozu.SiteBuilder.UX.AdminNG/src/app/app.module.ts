@@ -1,10 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule,
-  ErrorHandler } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CurrencyPipe,
-  DatePipe } from '@angular/common';
-import { GlobalErrorHandlerComponent } from '@core';
+import { NgModule } from '@angular/core';
 import { CoreModule } from '@core/core.module';
 import { GlobalModule } from '@global/global.module';
 import { SharedModule } from '@shared/shared.module';
@@ -14,6 +9,8 @@ import { LocationGroupsModule } from 'app/location-groups-module/location.groups
 import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [

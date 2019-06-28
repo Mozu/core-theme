@@ -7,7 +7,7 @@
     name: 'ellipsis'
 })
 export class EllipsisPipe implements PipeTransform {
-    transform(val : any, args:any) {
+    transform(val: any, args: any) {
         if (args === undefined) {
             return val;
         }

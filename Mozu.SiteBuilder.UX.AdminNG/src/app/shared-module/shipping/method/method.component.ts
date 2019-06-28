@@ -56,11 +56,11 @@ export class ShippingMethodComponent implements OnChanges {
             const currencyPipe = new CurrencyPipe(this.locale);
             this._shippingMethodService.fetchShippingMethod(this.quoteId).subscribe((fetchShippingMethodResponse: ShippingRateModel[]) => {
                 this._loggerService.info('ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_successResponse');
-                if (fetchShippingMethodResponse !== null && fetchShippingMethodResponse !== undefined) {
+                if (fetchShippingMethodResponse != null && fetchShippingMethodResponse !== undefined) {
                     this.shippingRates = fetchShippingMethodResponse;
                     this.shippingRates.map((shippingRate, i) => {
-                        shippingRate.shippingMethodName = shippingRate.shippingMethodName + ' ' +
-                        currencyPipe.transform(shippingRate.price);
+                        shippingRate.shippingMethodName = shippingRate.shippingMethodName
+                        + ' ' + currencyPipe.transform(shippingRate.price);
                     });
                 } else {
                     this.shippingRates = [];

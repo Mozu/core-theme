@@ -1,73 +1,50 @@
-import {
-    NgModule,
-    APP_INITIALIZER,
-    ErrorHandler,
-    ModuleWithProviders,
-    SkipSelf,
-    Optional
-} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler,
+         ModuleWithProviders,
+         NgModule,
+         Optional,
+         SkipSelf } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
+import { BrowserXhr } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import {
-    HttpModule,
-    Http,
-    BrowserXhr,
-    RequestOptions,
-    XHRBackend
-} from '@angular/http';
-
-import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { CookieService } from 'ngx-cookie-service';
+
+import { LoggerModule,
+         NgxLoggerLevel } from 'ngx-logger';
+
+import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 
-import {
-    LoggingErrorHandlerOptions,
-    GlobalErrorHandlerComponent,
-    GlobalErrorLoggingService,
-    GlobalErrorDialogComponent
-} from './errorHandling/index';
+import { GlobalErrorDialogComponent,
+         GlobalErrorHandlerComponent,
+         GlobalErrorLoggingService,
+         LoggingErrorHandlerOptions } from './errorHandling/index';
 
-import {
-    CustomBrowserXhr,
-    
-    AuthService
-} from './extensions/index';
+import { HttpClientService,
+         httpClientServiceCreator } from './extensions/http-client.service';
 
-import {
-    ConfigurationSettings,
-    EnvironmentConfig,
-    UtilityService,
-    ValidationService
-} from './infrastructure/index';
+import { AuthService,
+         CustomBrowserXhr } from './extensions/index';
 
-import { LoggerService } from './services/logger.service';
+import { ConfigurationSettings,
+         EnvironmentConfig,
+         UtilityService,
+         ValidationService } from './infrastructure/index';
 
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-
+import { LoggerService } from './services/logger.service';
 import { SpinnerService } from './spinner/spinner.service';
-import { 
-    TostrService,
-    ToastrComponent 
-} from './tostr/index';
-
-import { HttpClient } from '@angular/common/http';
-import { HttpClientService, httpClientServiceCreator } from './extensions/http-client.service';
-
-// export function httpServiceFactory(backend: XHRBackend, options: RequestOptions, utilityService: UtilityService, authService: AuthService) {
-//      return new HttpService(backend, options, utilityService, authService);
-// }
+import { ToastrComponent, TostrService } from './tostr/index';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         BrowserAnimationsModule,
-        HttpModule,
         LoggerModule.forRoot(
             {
                 serverLoggingUrl: '/api/logs',
@@ -111,14 +88,9 @@ import { HttpClientService, httpClientServiceCreator } from './extensions/http-c
             provide: ErrorHandler,
             useClass: GlobalErrorHandlerComponent
         },
-        {
-            provide: BrowserXhr,
-            useClass: CustomBrowserXhr
-        },
         // {
-        //     provide: HttpService,
-        //     useFactory: httpServiceFactory,
-        //     deps: [XHRBackend, RequestOptions, UtilityService, AuthService]
+        //     provide: BrowserXhr,
+        //     useClass: CustomBrowserXhr
         // },
         {
             provide: HttpClientService,

@@ -21,9 +21,15 @@
     .primeSidebar {
         border-right: 0px solid transparent;
     }
-    .hamburgerMenu[_ngcontent-c8] {
-        padding-top: 16px;
-        padding-left: 14px;
+
+    .hamburgerMenu {
+        padding: 16px 15px;
+        border-right: 1px solid #f5f5f5;
+        margin-left: -14px;
+    }
+
+    .sidebar {
+        border-right: none;
     }
 }
 
@@ -31,11 +37,20 @@
     font-size: 11px !important;
 }
 
-.col-md-half,
-.col-sm-half {
+.col-md-half {
     width: 4%;
     float: left;
     text-align: center;
+}
+
+@media only screen 
+  and (min-width: 1024px) 
+  and (max-height: 1366px) 
+  and (orientation: portrait) 
+  and (-webkit-min-device-pixel-ratio: 1.5) {
+    .col-md-half {
+        width: 5%;
+    }
 }
 
 .ui-submenu-header {

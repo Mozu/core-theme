@@ -25,6 +25,8 @@
     transition: 0.3s;
     position: absolute;
     z-index: 99999 !important;
+    left: 45%;
+    top: 2%;
   }
 
   .btn:hover {opacity: 1}

@@ -1,8 +1,8 @@
 export class TopNavigationModel {
-    navigationTabs : TopNavigationTabs [];
+    navigationTabs: TopNavigationTabs [];
 }
 
 export class TopNavigationTabs {
-    tabID : number;
-    tabName : string;
+    tabID: number;
+    tabName: string;
 }

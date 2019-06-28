@@ -1,6 +1,6 @@
 import { TreeNode } from 'primeng/api';
 
-export class PhysicalLocationsModel{
+export class PhysicalLocationsModel {
     physicalLocations: TreeNode[];
     selectedPhysicalLocNode: TreeNode;
     isLoading: boolean;

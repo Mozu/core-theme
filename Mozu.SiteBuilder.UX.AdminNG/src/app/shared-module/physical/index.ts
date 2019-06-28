@@ -1,2 +1,2 @@
-export * from "./locations.component";
-export * from "./locations.service"
+export * from './locations.component';
+export * from './locations.service';

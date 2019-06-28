@@ -1,40 +1,40 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '@shared';
 import { HttpClientService } from '@core/extensions/http-client.service';
-import { LoggerService } from '@core'
-
-
+import { LoggerService } from '@core';
 import { Observable } from 'rxjs';
-
-import { AccessTileModel, AccessTileLink } from '@shared/index';
+import {
+         AccessTileModel,
+         AccessTileLink
+} from '@shared/index';
 
 @Injectable()
 export class DashbaordService {
 
-    constructor(private _http: HttpClientService,   
+    constructor(private _http: HttpClientService,
                 private _loggerService: LoggerService) {}
 
     public fetchAllDashboardTiles(): Observable<any> {
-      this._loggerService.info("AdminDashboardComponent : fetchAllDashboardTiles");
+      this._loggerService.info('AdminDashboardComponent : fetchAllDashboardTiles');
         return this._http.get(Constants.JsonResources.dasbhoardTiles);
     }
 
     public MapDasasboardCategoryToTiles(dashboardCategories: any): AccessTileModel[] {
-        this._loggerService.info("AdminDashboardComponent : MapDasasboardCategoryToTiles");
+        this._loggerService.info('AdminDashboardComponent : MapDasasboardCategoryToTiles');
         let allAccessTiles: AccessTileModel[];
-        if (dashboardCategories != null && dashboardCategories != undefined && dashboardCategories.length > 0) {
+        if (dashboardCategories != null && dashboardCategories !== undefined && dashboardCategories.length > 0) {
           allAccessTiles = [];
           dashboardCategories.forEach(eachDasboardCategory => {
-            let accessTileModel = new AccessTileModel();
+            const accessTileModel = new AccessTileModel();
             accessTileModel.sectionText = eachDasboardCategory.label;
             accessTileModel.sectionImageURL = eachDasboardCategory.imageURL;
             accessTileModel.id = eachDasboardCategory.id;
-            if (eachDasboardCategory.items != null && eachDasboardCategory.items != undefined && eachDasboardCategory.items.length > 0) {
+            if (eachDasboardCategory.items != null && eachDasboardCategory.items !== undefined && eachDasboardCategory.items.length > 0) {
               accessTileModel.sectionLinks = [];
               eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {
-                let sectionLink = new AccessTileLink();
+                const sectionLink = new AccessTileLink();
                 sectionLink.linkDataText = eachDasbhboardCategoryItem.label;
-                sectionLink.linkDataURL = eachDasbhboardCategoryItem.url;//Constants.voidNavigationLink; 
+                sectionLink.linkDataURL = eachDasbhboardCategoryItem.url; // Constants.voidNavigationLink;
                 accessTileModel.sectionLinks.push(sectionLink);
               });
             }

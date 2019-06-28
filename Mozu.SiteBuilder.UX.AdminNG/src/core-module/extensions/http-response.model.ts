@@ -6,8 +6,8 @@
 
 export class HttpResponse extends HttpError {
 
-    constructor(cd: ErrorCode, erroNotificationType: ErroNotificationType,msg: string = "", subcd: string = "") {
-        super(cd, erroNotificationType,msg, subcd);
+    constructor(cd: ErrorCode, erroNotificationType: ErroNotificationType, msg: string = '', subcd: string = '') {
+        super(cd, erroNotificationType, msg, subcd);
     }
 
 }

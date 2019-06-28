@@ -35,7 +35,7 @@ import {
 })
 export class AppComponent implements OnInit {
     isUserLoggedIn = false;
-    containerType : NavigationContainerType;
+    containerType: NavigationContainerType;
 
     constructor(
         private _logger: LoggerService,
@@ -68,22 +68,16 @@ export class AppComponent implements OnInit {
         this._logger.info('AppComponent : constructor => Application language is set to :' + languageConfiguredForApplication);
 
         this._router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationStart)
-            {
+            if (event instanceof NavigationStart) {
                 if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit) ){
-                    this.containerType = NavigationContainerType.quotes;   
-                }
-                else if( event.url.includes(Constants.uiRoutes.locationGroups) ||  
-                        event.url.includes(Constants.uiRoutes.locationGroupCreate)||
-                        event.url.includes(Constants.uiRoutes.locationGroupEdit) ||
-                        event.url.includes(Constants.uiRoutes.locationGroupConfig)
-                        ){
-                    this.containerType = NavigationContainerType.locationGroups; 
-                }
-                else if(event.url.includes(Constants.uiRoutes.fulfiller)){
-                    this.containerType = NavigationContainerType.fulfiller;    
-                }
-                else {
+                    this.containerType = NavigationContainerType.quotes;
+                } else if ( event.url.includes(Constants.uiRoutes.locationGroups) ||
+                        event.url.includes(Constants.uiRoutes.locationGroupCreate) ||
+                        event.url.includes(Constants.uiRoutes.locationGroupEdit)) {
+                    this.containerType = NavigationContainerType.locationGroups;
+                } else if (event.url.includes(Constants.uiRoutes.fulfiller)) {
+                    this.containerType = NavigationContainerType.fulfiller;
+                } else {
                     this.containerType = NavigationContainerType.dashboard;
                 }
             }

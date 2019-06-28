@@ -13,9 +13,14 @@ import { Constants } from '@shared';
 
 import {  AdminDashboardComponent } from './admin-module';
 
-import {  
-    QuotesEditComponent, 
-    QuotesListComponent 
+import {
+    LocationGroupsListComponent,
+    LocationGroupCreateComponent
+} from './location-groups-module';
+
+import {
+    QuoteComponent,
+    QuotesListComponent
 } from './quotes-module';
 import { LocationGroupConfigComponent } from './location-groups-module/config/config.component';
 
@@ -35,26 +40,22 @@ const appRoutes: Routes = [
         component: QuotesListComponent
     },
     {
-        path: Constants.uiRoutes.locationGroups,
-        component: QuotesListComponent
-    },
-    {
-        path: Constants.uiRoutes.quotesEdit+'/:quoteId',
+        path: Constants.uiRoutes.quotesEdit + '/:quoteId',
         component: QuoteComponent
     },
     {
-        path:Constants.uiRoutes.locationGroups,
+        path: Constants.uiRoutes.locationGroups,
         component: LocationGroupsListComponent
     },
     {
-        path:Constants.uiRoutes.locationGroupCreate,
+        path: Constants.uiRoutes.locationGroupCreate,
         component: LocationGroupCreateComponent,
         data: {
             mode: Constants.gridActionItem.New
           }
     },
     {
-        path: Constants.uiRoutes.locationGroupEdit+'/:id',
+        path: Constants.uiRoutes.locationGroupEdit + '/:id',
         component: LocationGroupCreateComponent,
         data: {
             mode: Constants.gridActionItem.Edit

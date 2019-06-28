@@ -3,9 +3,7 @@
 } from '@angular/core';
 
 import { LoggerService } from '@core';
-
 import { Subject } from 'rxjs/Subject';
-import { MenuItem } from 'primeng/api';
 
 
 @Injectable()
@@ -25,7 +23,6 @@ export class NotificationService {
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
     LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
-    LGCUnSavedChangesConfirmation: Subject<any> = new Subject<any>();
 
     constructor(
         private _logger: LoggerService

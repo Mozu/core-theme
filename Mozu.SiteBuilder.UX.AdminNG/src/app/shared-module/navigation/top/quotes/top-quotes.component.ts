@@ -1,14 +1,6 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
-import { Router,
-  UrlSegmentGroup,
-  PRIMARY_OUTLET,
-  UrlSegment } from '@angular/router';
-import { NotificationService } from '@global';
-import { LoggerService } from '@core';
+import { Component,
+         OnInit } from '@angular/core';
+
 import { Constants } from '@shared/infrastructure/constants';
 import { TopQuoteModel } from './top-quotes.model';
 import { NotificationQuoteActions, NavigationContainerType } from '@shared/infrastructure/enums';
@@ -21,43 +13,8 @@ import { NotificationQuoteActions, NavigationContainerType } from '@shared/infra
 export class NavigationTopQuotesComponent implements OnInit, OnDestroy {
   public model: TopQuoteModel;
   uiRoutes = Constants.uiRoutes.quotes;
-  navigationType = NavigationContainerType;
 
-  constructor(private _loggerService: LoggerService,
-    private router: Router,
-    private _notificationService: NotificationService) { }
-
-  ngOnInit() {
-    this._loggerService.info('NavigationTopQuotesComponent : ngOnInit');
-    this.model = new TopQuoteModel();
-
-    this.model.isEditMode = false;
-    this.model.subscriptions = [];
-    this.checkMode();
-
-    this.model.subscriptions.push(
-      this._notificationService.quoteEdited.subscribe((action: string) => {
-          if (action === NotificationQuoteActions.edit) {
-            this.model.isEditMode = true;
-          }
-          if (action === NotificationQuoteActions.list) {
-            this.model.isEditMode = false;
-          }
-      })
-    );
-
-    this.model.subscriptions.push(
-      this._notificationService.quoteHeaderToAppendValues.subscribe((event: any) => {
-        this.model.quoteNumber = event.quoteNumber;
-        this.model.quoteStatus = event.quoteStatus;
-      })
-    );
-  }
-
-  checkMode() {
-    const urltree = this.router.parseUrl(this.router.url);
-    const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
-    const primarySegments: UrlSegment[] = primary.segments;
+  constructor() { }
 
     if (primarySegments && primarySegments.length) {
       const path = primarySegments[0].path + (primarySegments[1] != null ? '/' + primarySegments[1].path : '');

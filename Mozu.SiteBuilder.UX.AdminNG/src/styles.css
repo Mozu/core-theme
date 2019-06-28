@@ -833,14 +833,20 @@ location-group-list .ui-table-wrapper thead th {
 
 /* location group css ends*/
 
-/* --------------- PrimeNg Overlay Panel CSS Start ------------------ */
-.ui-overlaypanel:before {
-    right: 1.1em !important;
-    left: auto !important;
+/* location group css ends*/
+/* Custom Toastr */
+.ui-toast .ui-toast-message.ui-toast-message-error {
+    background-color: #e53935 !important;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
+     0 6px 10px 0 rgba(0,0,0,.14),
+     0 1px 18px 0 rgba(0,0,0,.12) !important;
+     min-width: 110%;
 }
 
-.ui-overlaypanel:after {
-    right: 1.25em !important;
-    left: auto !important;
+.ui-toast .ui-toast-message.ui-toast-message-success {
+    background-color: #54A254 !important;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
+     0 6px 10px 0 rgba(0,0,0,.14),
+     0 1px 18px 0 rgba(0,0,0,.12) !important;
+
 }
-/* --------------- PrimeNg Overlay Panel CSS End ------------------ */

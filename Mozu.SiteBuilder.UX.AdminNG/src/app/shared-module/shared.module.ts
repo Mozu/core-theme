@@ -3,12 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-    RouterModule
-} from '@angular/router';
-
-// plugins
-
+import { RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import {TreeTableModule} from 'primeng/treetable';
 
@@ -57,7 +52,6 @@ import {
     PhonePipe
 } from './pipes/index';
 
-// import { PhysicalLocationsComponent } from './physical/locations.component';
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
@@ -89,10 +83,7 @@ export function createTranslateLoader(http: HttpClient) {
         ListboxModule,
         TreeTableModule,
         TableModule,
-        DropdownModule,
-        AutoCompleteModule,
-        OverlayPanelModule,
-        NgbModule.forRoot(),
+        NgbModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -170,7 +161,6 @@ export function createTranslateLoader(http: HttpClient) {
         SafeHtmlPipe,
         SplitPipe,
         PhonePipe,
-
         // directives
         RestrictInput,
         EnableDisableControls,

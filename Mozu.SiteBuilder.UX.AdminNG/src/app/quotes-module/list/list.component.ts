@@ -127,15 +127,16 @@ export class QuotesListComponent implements OnInit, OnDestroy {
   public populateQuoteGrid = (param?: string) => {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-    this._quotesListService.fetchAllQuotes(param).subscribe((quotesListSuccessResponse: QuotesListModel) => {
-      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
-      if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
-        quotesListSuccessResponse['items'].length > 0) {
-        this.model.items = [...quotesListSuccessResponse.items];
-        this.model.startIndex = quotesListSuccessResponse.startIndex;
-        this.model.pageSize = quotesListSuccessResponse.pageSize;
-        this.model.pageCount = quotesListSuccessResponse.pageCount;
-        this.model.totalCount = quotesListSuccessResponse.totalCount;
+    setTimeout(() => {
+      /** spinner ends after 1 seconds */
+      this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: Response) => {
+        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
+          if (quotesListSuccessResponse != null && quotesListSuccessResponse !== undefined &&
+            quotesListSuccessResponse['items'].length > 0) {
+            this.model.items = quotesListSuccessResponse['items'];
+            this._spinner.stop();
+          }
+      }, (quotesListErrResponse) => {
         this._spinner.stop();
       }
     }, (quotesListErrResponse) => {

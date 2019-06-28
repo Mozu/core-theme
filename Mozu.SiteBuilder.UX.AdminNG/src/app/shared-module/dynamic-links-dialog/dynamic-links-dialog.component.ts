@@ -1,9 +1,12 @@
-import { 
-Component, 
-OnInit,
-Input
+import { Component,
+         OnInit,
+         Input
 } from '@angular/core';
-import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
+
+import { SafeResourceUrl,
+         DomSanitizer
+} from '@angular/platform-browser';
+
 import * as _ from 'lodash';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService } from '@core';
@@ -16,18 +19,18 @@ import { Constants } from '@shared/infrastructure/constants';
 })
 export class DynamicLinksDialogComponent implements OnInit {
 
-  @Input() iframeResourceURL : SafeResourceUrl;
+  @Input() iframeResourceURL: SafeResourceUrl;
   catalogImportExport = Constants.titles.catalogImportExportTitles;
   close = Constants.lables.closeLabel;
-  constructor( 
+  constructor(
     public activeModal: NgbActiveModal,
     public sanitizer: DomSanitizer,
     private _loggerService: LoggerService,
   ) {  }
 
-  ngOnInit() { 
-    this._loggerService.info("DynamicLinksDialogComponent : ngOnInit");
-    let iframeSrc : any = this.iframeResourceURL;
+  ngOnInit() {
+    this._loggerService.info('DynamicLinksDialogComponent : ngOnInit');
+    const iframeSrc: any = this.iframeResourceURL;
     this.iframeResourceURL = this.sanitizer.bypassSecurityTrustResourceUrl(iframeSrc);
   }
 
@@ -35,7 +38,7 @@ export class DynamicLinksDialogComponent implements OnInit {
    * closeModal
    */
   public closeModal = () => {
-    this.activeModal.dismiss('Cross click')
+    this.activeModal.dismiss('Cross click');
   }
 
 }

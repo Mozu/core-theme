@@ -1,10 +1,9 @@
 import { Component,
          OnInit,
-         Inject,
-         AfterViewInit,
          ViewChild,
          ElementRef,
-         HostListener } from '@angular/core';
+         HostListener
+} from '@angular/core';
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService,
@@ -22,8 +21,8 @@ import { LocationsListModel,
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
 import { CreateLocationGroupService } from './create.service';
-import { LocationGroupModel, LocationGroupCreateModel, SiteModel } from './location.group.model';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { LocationGroupModel, LocationGroupCreateModel } from './location.group.model';
+import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
 
@@ -103,7 +102,7 @@ export class LocationGroupCreateComponent implements OnInit {
     private getLocationGroupSuccess(result) {
         this._loggerService.info('LocationGroupCreateComponent : getLocationGroupSuccess' + JSON.stringify(result));
         if (result && result.items) {
-            const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
+            const lgModel: LocationGroupModel = <LocationGroupModel>result.items;
             this._notificationService.notifyLocationGroupEdited({name: NotificationLGActions.editDataLoaded, data: lgModel.locationCodes});
             this.updateLocationGroupForm(lgModel);
 
@@ -174,7 +173,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     locationSelected(location: LocationsListModel) {
         this._loggerService.info('LocationGroupCreateComponent : locationSelected');
-        let arr = this.model.selectedLocations.slice();
+        const arr = this.model.selectedLocations.slice();
         arr.push(location);
         this.model.selectedLocations = arr;
     }
@@ -187,7 +186,7 @@ export class LocationGroupCreateComponent implements OnInit {
     locationsChanged(event) {
         this._loggerService.info('LocationGroupCreateComponent : locationsChanged');
         if (event.operation === LocationGroupEventOperations.add) {
-            var arr = _.unionWith(this.model.selectedLocations, event.data, _.isEqual);
+            const arr = _.unionWith(this.model.selectedLocations, event.data, _.isEqual);
             this.model.selectedLocations = arr;
         } else {
             this.model.selectedLocations = _.differenceWith(this.model.selectedLocations, event.data, _.isEqual);
@@ -196,7 +195,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
     @HostListener('scroll', ['$event'])
     scrollHandler(event) {
-        let windowScroll = event.srcElement.scrollTop;
+        const windowScroll = event.srcElement.scrollTop;
         if (windowScroll >= this.model.menuPosition) {
             this.model.isSticky = true;
         } else {
@@ -225,7 +224,7 @@ export class LocationGroupCreateComponent implements OnInit {
     saveLocationGroup() {
         this._loggerService.info('LocationGroupCreateComponent : saveLocationGroup');
         this.model.isSaving = true;
-        let lgModel: LocationGroupModel = new LocationGroupModel();
+        const lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
             this.createService.addLocationGroup(lgModel).subscribe(response =>
@@ -237,7 +236,7 @@ export class LocationGroupCreateComponent implements OnInit {
     updateLocationGroup() {
         this._loggerService.info('LocationGroupCreateComponent : updateLocationGroup');
         this.model.isSaving = true;
-        let lgModel: LocationGroupModel = new LocationGroupModel();
+        const lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
             this.createService.updateLocationGroup(lgModel).subscribe(response =>

@@ -9,13 +9,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/delay';
 
 import { LoggerService } from '../services/logger.service';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-
-// import {
-//     Http,
-//     Headers,
-//     RequestOptionsArgs
-// } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import {
     UtilityService,
@@ -23,7 +17,7 @@ import {
     Constants
 } from '../infrastructure/index';
 
-import {IRequestOptions} from './http-client.service'
+import {IRequestOptions} from './http-client.service';
 
 import { ApiTokenModel } from './api-token.model';
 
@@ -97,7 +91,7 @@ export class AuthService {
         return this._http.post(this._config.apiTokenUrl, params, {
                 headers: headers
             })
-            //.map(res => res.json()) not needed httpClient by default call this. 
+            // .map(res => res.json()) not needed httpClient by default call this.
             .map( data => {
 
                 this.isRefreshTokenCallInProgress = false;

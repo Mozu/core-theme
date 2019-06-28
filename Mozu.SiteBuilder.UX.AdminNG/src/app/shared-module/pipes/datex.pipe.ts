@@ -6,8 +6,8 @@ import * as moment from 'moment';
 })
 
 export class DatexPipe implements PipeTransform {
-    transform(value: string, format: string = ""): string {        
-        if (!value || value === "") return "";
+    transform(value: string, format: string = ''): string {
+        if (!value || value === '') {return ''}
         return moment(value).format(format);
     }
 }

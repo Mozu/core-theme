@@ -1,6 +1,5 @@
 ﻿import {
     Injectable,
-    EventEmitter
 } from '@angular/core';
 
 import {TranslateService} from '@ngx-translate/core';
@@ -14,6 +13,8 @@ import {
 } from '../extensions/http-error.model';
 
 import { TostrService } from '../tostr/index';
+
+import { Constants } from '../infrastructure/index';
 
 @Injectable()
 export class GlobalErrorLoggingService {
@@ -32,7 +33,7 @@ export class GlobalErrorLoggingService {
 
     constructor(private _logger: LoggerService,
         private _translate: TranslateService,
-        private _tostrService: TostrService
+        private _tostrService: TostrService,
     ) {
         this._logger.info('GlobalErrorLoggingService : constructor ');
     }
@@ -78,7 +79,6 @@ export class GlobalErrorLoggingService {
                 this._logger.error(error.stack);
             }
         }
-
         if (this._notificationType === ErroNotificationType.Dialog) {
             this.showErrorDialog(this._errorDialogTitle, this._errorDialogMessage, this._primaryButtton
                 , this._isLogoutonPrimaryButton, this._isShowSecondaryButton, this._secondaryButton);
@@ -86,6 +86,10 @@ export class GlobalErrorLoggingService {
             if (this.isHandledError) {
                 this._tostrService.showError(error.code);
             } else {
+                this._tostrService.showError(ErrorCode.Fatal.toString());
+                setTimeout(() => {
+                    window.location.href = Constants.fatalErrorRedirectionUrl.logout;
+                }, 3000);
             }
         }
     }

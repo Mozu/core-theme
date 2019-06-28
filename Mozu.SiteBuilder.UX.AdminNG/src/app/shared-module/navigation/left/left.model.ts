@@ -1,46 +1,45 @@
 import { MenuItem } from 'primeng/api';
 
 export class LeftNavigationModel {
-    navigationTabs : LeftNavigationTabs [];
-    filteredNavigationLinks : LeftNavigationTabs [];
-    secureForm : SecureForm[];
+    navigationTabs: LeftNavigationTabs [];
+    filteredNavigationLinks: LeftNavigationTabs [];
+    secureForm: SecureForm[];
     dynamicLinkIframeURL: any;
     mainItems: MenuItem[];
     systemItems: MenuItem[];
-    
 }
 
 export class LeftNavigationTabs {
-    navParent : string;
-    label : string;
+    navParent: string;
+    label: string;
     visible: boolean;
-    showBreadCrumbs : boolean;
-    breadCrumbOnly : boolean;
-    behaviorIds : any;
-    viewDependent : any;
-    location : string;
-    href : string;
-    _id : string;
-    isSubNavLink : boolean;
-    guid : string;
-    windowTitle : string;
-    parentId : string;
-    path : any;
-    badgeImage : string;
-    badgeInitials : string;
-    appId : string;
-    modalWindowTitle : string;
-    displayMode : string;
-    locAtts : any;
-    navUrl : string;
-    command : () => any;
-    
+    showBreadCrumbs: boolean;
+    breadCrumbOnly: boolean;
+    behaviorIds: any;
+    viewDependent: any;
+    location: string;
+    href: string;
+    _id: string;
+    isSubNavLink: boolean;
+    guid: string;
+    windowTitle: string;
+    parentId: string;
+    path: any;
+    badgeImage: string;
+    badgeInitials: string;
+    appId: string;
+    modalWindowTitle: string;
+    displayMode: string;
+    locAtts: any;
+    navUrl: string;
+    command: () => any;
+
     constructor() {
         this.visible = true;
     }
 }
 
 export interface SecureForm {
-    dateStamp : Date;
-    messageHash : string;
+    dateStamp: Date;
+    messageHash: string;
 }

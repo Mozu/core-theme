@@ -1,7 +1,10 @@
 import { Component,
-    OnInit, OnDestroy } from '@angular/core';
-import { Router, PRIMARY_OUTLET, UrlSegmentGroup,
-          UrlSegment, ActivatedRoute } from '@angular/router';
+         OnInit } from '@angular/core';
+import { Router,
+         PRIMARY_OUTLET,
+         UrlSegmentGroup,
+         UrlSegment } from '@angular/router';
+
 import { NotificationService } from '@global';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-location-groups.model';
@@ -16,50 +19,28 @@ import { TopLocationGroupsService } from './top-location-groups.service';
     styleUrls: ['./top-location-groups.component.css'],
     providers: [TopLocationGroupsService]
   })
-  export class NavigationTopLocationGroupsComponent implements OnInit, OnDestroy {
-
+  export class NavigationTopLocationGroupsComponent implements OnInit {
     public model: TopLocationGroupsModel;
     subscriptions = [];
 
     constructor(private router: Router,
-      private _notificationService: NotificationService,
-      private route: ActivatedRoute,
-      private _loggerService: LoggerService,
-      private topLocationGroupsService: TopLocationGroupsService) {
+      private _notificationService: NotificationService) {
     }
 
     ngOnInit() {
       this.model = new TopLocationGroupsModel();
-      this.model.locationGroupURL = Constants.uiRoutes.locationGroups;
       this.model.isEditMode = false;
       this.model.isConfigTabVisible = false;
       this.checkMode();
 
       this.subscriptions.push(
-        this._notificationService.locationGroupAdded.subscribe((action: any) => {
+        this._notificationService.locationGroupAdded.subscribe((action: string) => {
             if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled) {
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
             }
-        })
-      );
-
-      this.subscriptions.push(
-        this._notificationService.LocationGroupConfig.subscribe((action: any) => {
-          if (action.name === NotificationLGActions.list) {
-            this.model.isEditMode = true;
-            this.model.isConfigTabVisible  = true;
-            this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
-            this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
-          }
-          if (action.name === NotificationLGActions.edit) {
-            this.model.isEditMode = true;
-            this.model.isConfigTabVisible  = true;
-            const topLocationGroupConfigModel: TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel;
-            this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
-            this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
-            if (topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length > 0) {
-              this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
+            if (action === NotificationLGActions.edit) {
+              this.model.isEditMode = true;
             }
             this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
           }
@@ -112,21 +93,6 @@ import { TopLocationGroupsService } from './top-location-groups.service';
         }
     }
 
-    private getLocationGroupSuccess(result) {
-      this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupSuccess' + JSON.stringify(result));
-      if (result && result.items) {
-         const lgModel = result.items;
-         this.model.locationGroupId = lgModel.locationGroupId;
-         this.model.locationGroupName = lgModel.name;
-         this.model.locationGroupSiteIds = lgModel.siteIds;
-      }
-    }
-
-    private getLocationGroupError(errmsg: string) {
-      this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupError');
-      throw new HttpError(ErrorCode.GetLocationGroupDetailFailed, ErroNotificationType.Toaster);
-    }
-
     showCreateLG() {
       this.model.isEditMode = true;
       this.router.navigate(['/' + Constants.uiRoutes.locationGroupCreate]);
@@ -139,23 +105,4 @@ import { TopLocationGroupsService } from './top-location-groups.service';
     saveCreateLG() {
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.save);
     }
-
-    gotoLocationGroupList() {
-      this.model.isEditMode = false;
-      this.model.isConfigTabVisible  = false;
-      this.router.navigate([Constants.uiRoutes.locationGroups]);
-    }
-
-    gotoLocationGroupEdit() {
-      this.model.isEditMode = true;
-      this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupId]);
-    }
-
-    gotoLocationGroupConfig() {
-      this.model.isEditMode = false;
-      this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId
-                            + '/' + this.model.locationGroupSelectedSiteId]);
-    }
-}
+  }

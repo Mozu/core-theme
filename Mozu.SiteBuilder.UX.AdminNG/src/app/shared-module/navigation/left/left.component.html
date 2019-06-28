@@ -1,9 +1,10 @@
-<div class="col-md-half col-sm-half sidebar">
+<div class="col-md-half col-sm-2 sidebar">
 <div class = "">
     <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="1" [showCloseIcon]="false" [blockScroll]="true">
         <p-tabView>
             <p-tabPanel header="Main">
                 <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
+                <span [hidden]="menuHeader.items.length == 0">    
                 <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign button">{{menuHeader.label}}
                 </div>
                  <ul id="{{menuHeader.id}}"  class="collapse in">
@@ -24,10 +25,12 @@
                                 </ng-template>
                          </li>
                     </ul>
+                </span>
                </div>
             </p-tabPanel>
             <p-tabPanel header="System">
                <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">
+                 <span [hidden]="menuHeader.items.length == 0">
                 <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign">{{menuHeader.label}}
                 </div>
                 <ul id="{{menuHeader.id}}"  class="collapse in">
@@ -37,6 +40,7 @@
                             </a>
                         </li>
                 </ul>
+            </span>
             </div>
             </p-tabPanel>
         </p-tabView>

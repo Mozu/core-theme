@@ -23,15 +23,13 @@ export class ConfirmationDialogService {
                              confirmationDialogMessage: string,
                              primaryButtonText: string,
                              isShowSecondaryButton: boolean,
-                             secondaryButtonText: string,
-                             itemName: string,
-                             confirmationDialogSecondaryMessage: string) => void;
+                             secondaryButtonText: string) => void;
 
     constructor(private _translate: TranslateService,
         private _notificationService: NotificationService,
         private _loggerService: LoggerService) { }
 
-    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any, itemName?: any): void {
+    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any): void {
         this._loggerService.info('ConfirmationDialogService : openConfirmationDialog');
 
             this._translate.get('SHARED.CONFIRMATIONDIALOG.' + dialogNotificationType + '.' + dialogNotificationCode)
@@ -51,13 +49,13 @@ export class ConfirmationDialogService {
                                     this.confirmationDialogMessage,
                                     this.primaryButttonText,
                                     this.isShowSecondaryButton,
-                                    this.secondaryButtonText, this.itemName,  this.confirmationDialogSecondaryMessage);
+                                    this.secondaryButtonText);
         this.notificationCode = dialogNotificationCode;
     }
 
     confirm() {
         const confirmationDialogNotificationCode: ConfirmationDialogNotificationCode = this.notificationCode;
-        switch(confirmationDialogNotificationCode){
+        switch (confirmationDialogNotificationCode) {
             case ConfirmationDialogNotificationCode.DeleteQuoteItem:
                 this._notificationService.notifyQuoteItemDeleteConfirmation(this.notificationCode);
                 break;

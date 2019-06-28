@@ -104,7 +104,7 @@ export class UtilityService {
         allFilteredLinks = _.filter(accessLinks, function (v: any) {
             if (v.visible) {
                 if (v.behaviorIds) {
-                    isMenuVisible = (loggedInUsersBehaviorIds.includes(v.behaviorIds) >= 0);
+                    isMenuVisible = (loggedInUsersBehaviorIds.includes(v.behaviorIds));
                 } else {
                     isMenuVisible = true;
                 }

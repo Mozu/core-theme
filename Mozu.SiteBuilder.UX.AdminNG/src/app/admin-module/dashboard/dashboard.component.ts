@@ -5,18 +5,17 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
+
 import { Subscription } from 'rxjs/Subscription';
+
 import {
-  LoggerService,
+  LoggerService ,
   HttpError,
   ErrorCode,
-  ErroNotificationType
-} from '@core';
+  ErroNotificationType} from '@core';
+
 import { NotificationService } from '@global';
-import {
-  Constants
-} from '@shared/index';
-import {Response} from '@angular/http';
+import { Constants } from '@shared/index';
 import { DashboardModel } from './dashboard.model';
 import { DashbaordService } from './dashboard.service';
 import { CookieService as Cookie } from 'ngx-cookie-service';
@@ -44,7 +43,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private _loggerService: LoggerService,
     private _cookie: Cookie,
     private _sharedData: SharedDataService,
-    private utilityService: UtilityService
+    private utilityService: UtilityService,
   ) {
 
     this._loggerService.info('AdminDashboardComponent : constructor');
@@ -58,7 +57,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.model.isShowSystemTiles = false;
     this.subscriptions.push(
       this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
-        this.model.isShowSystemTiles = (activeTab === Constants.systemTabDisplayText);
+        this.model.isShowSystemTiles = (activeTab === 'System');
         this._changeDetectionRef.detectChanges();
       })
     );
@@ -75,23 +74,20 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   public pupulateSystemAndMainTiles = () => {
     this._loggerService.info('AdminDashboardComponent : pupulateSystemAndMainTiles');
-
     this._dashboardService.fetchAllDashboardTiles().subscribe(dashboardTileLinksResponse => {
-
       this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse');
-
       /* filter the menus on the basis of logged in user behaviour id */
       this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData);
-
-      this.model.filteredAccessLinks = this.utilityService.populateNavigationLinksbyContextType
+      this.model.filteredAccessLinks =
+      this.utilityService.populateNavigationLinksbyContextType
       (this.model.filteredAccessLinks, this._sharedData._sharedData.items.ctTaContext);
 
-      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles
-      ( this.model.filteredAccessLinks.filter(function (eachCategory) {
-        return eachCategory.navParent === Constants.systemTileJsonNavParentPrefix; }));
-      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles
-      ( this.model.filteredAccessLinks.filter(function (eachCategory) {
-         return eachCategory.navParent === Constants.mainTileJsonNavParentPrefix; }));
+      this.model.systemTiles = this._dashboardService.
+      MapDasasboardCategoryToTiles( this.model.filteredAccessLinks
+      .filter(function (eachCategory) { return eachCategory.navParent === Constants.systemTileJsonNavParentPrefix; }));
+      this.model.mainTiles = this._dashboardService.
+      MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.
+      filter(function (eachCategory) { return eachCategory.navParent === Constants.mainTileJsonNavParentPrefix; }));
       this._changeDetectionRef.detectChanges();
 
     }, (dashboardTileLinksErrResponse) => {

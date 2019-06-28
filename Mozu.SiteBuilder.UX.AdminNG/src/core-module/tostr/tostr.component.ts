@@ -1,30 +1,12 @@
-import {
-    ViewChild,
-    Component,
-    ViewContainerRef,
-} from '@angular/core';
-
+import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
-
-import {
-    ToastrService,
-    ToastContainerDirective
-} from 'ngx-toastr';
-import { Constants } from '../infrastructure/constants';
-import {
-    AutoCloseToastrOptions,
-    CustomToastrOptions,
-    SystemMessageToastrOptions
-} from '../infrastructure/configuration-settings';
-
- 
-
+import { TostrService } from './tostr.service';
 import { NgZone } from '@angular/core';
 import { TostrService } from './tostr.service';
 
 @Component({
     moduleId: module.id,
-    selector: 'tostr',
+    selector: 'app-tostr',
     template: `<p-toast [style]="{marginTop: '10px'}" position="top-center"></p-toast>`,
 })
 export class ToastrComponent {
@@ -32,7 +14,7 @@ export class ToastrComponent {
     constructor(
         private _globalToastrService: TostrService,
         private ngZone: NgZone,
-        private _messageService : MessageService
+        private _messageService: MessageService
     ) {
         _globalToastrService.showErrorMessage = this.showToastrError.bind(this);
         _globalToastrService.showInfoMessage = this.showInfoMessage.bind(this);
@@ -60,7 +42,7 @@ export class ToastrComponent {
 
     showSuccessMessage(successMessage: string) {
         this.ngZone.run(() => {
-            this._messageService.add({severity: 'success', summary: 'Success Message', detail: successMessage });
+        this._messageService.add({severity: 'success', summary: 'Success Message', detail: successMessage });
         });
     }
-}
+ }

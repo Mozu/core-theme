@@ -7,7 +7,6 @@ import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
 import { PhysicalLocationsModel } from './locations.model';
-import { LocationListGridModel } from '@shared/locations';
 
 @Component({
   selector: 'physical-locations',
@@ -29,15 +28,14 @@ export class PhysicalLocationsComponent implements OnInit {
 
   ngOnInit() {
     this.model = new PhysicalLocationsModel();
-    this.model.subscriptions = []; 
-    this.model.formMode = this.route.snapshot.data["mode"];
+    this.model.subscriptions = [];
+    this.model.formMode = this.route.snapshot.data['mode'];
     this.model.selectedLoctions = [];
     this.model.selectedLoctionsDetailsArr = [];
 
     if (this.model.formMode === Constants.gridActionItem.New) {
       this.getPhysicalLocations();
-    }
-    else if (this.model.formMode === Constants.gridActionItem.Edit) {
+    } else if (this.model.formMode === Constants.gridActionItem.Edit) {
       this.model.subscriptions.push(
         this._notificationService.locationGroupEdited.subscribe((action: any) => {
           if (action && action.name === NotificationLGActions.editDataLoaded) {
@@ -53,7 +51,7 @@ export class PhysicalLocationsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._loggerService.info("PhysicalLocationsComponent : ngOnDestroy");
+    this._loggerService.info('PhysicalLocationsComponent : ngOnDestroy');
     this.model.subscriptions.forEach((s) => {
         s.unsubscribe();
     });
@@ -64,22 +62,22 @@ export class PhysicalLocationsComponent implements OnInit {
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
       this.convertJsonToTreeNodeArr(locations);
       if (this.model.formMode === Constants.gridActionItem.Edit) {
-        //prepare selected location detials array :
+        // prepare selected location detials array :
         this.getSelectedLocationDetailsArr(locations);
-        //send notification to main page.
-        this._notificationService.notifyLocationGroupEdited({name:NotificationLGActions.selectedLocationWithDetails, data:this.model.selectedLoctionsDetailsArr});
+        // send notification to main page.
+        this._notificationService.notifyLocationGroupEdited({name: NotificationLGActions.selectedLocationWithDetails,
+        data: this.model.selectedLoctionsDetailsArr});
       }
       this._spinner.stop();
     });
-  };
+  }
   convertJsonToTreeNodeArr(locations) {
-    let treeNodeArr = [];
+    const treeNodeArr = [];
     if (locations && locations.items) {
       for (let locCnt = 0; locCnt < locations.items.length; locCnt++) {
-        let treenodeObj = <TreeNode>new Object();
+        const treenodeObj = <TreeNode>new Object();
         treenodeObj.data = {};
         let totalLocationsCnt = 0;
-
         treenodeObj.data.code = locations.items[locCnt].code;
         if (locations.items[locCnt].code === Constants.locationGroupDefaultCountry) {
           treenodeObj.expanded = true;
@@ -88,36 +86,37 @@ export class PhysicalLocationsComponent implements OnInit {
           treenodeObj.children = [];
 
           for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
-            var stateTreeNodeObj = <TreeNode>new Object();
+            const stateTreeNodeObj = <TreeNode>new Object();
             stateTreeNodeObj.data = {};
             stateTreeNodeObj.data.code = locations.items[locCnt].states[stateCnt].code;
             if (locations.items[locCnt].states[stateCnt].locations) {
-              stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name + " (" + locations.items[locCnt].states[stateCnt].locations.length + ")";
+              stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name +
+               '(" + locations.items[locCnt].states[stateCnt].locations.length + ")';
               totalLocationsCnt += locations.items[locCnt].states[stateCnt].locations.length;
             } else {
-              stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name + " (0)";
+              stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name + '(0)';
             }
             stateTreeNodeObj.data.locations = locations.items[locCnt].states[stateCnt].locations;
             treenodeObj.children.push(stateTreeNodeObj);
           }
         }
-        treenodeObj.data.name = locations.items[locCnt].name + " (" + totalLocationsCnt + ")";
+        treenodeObj.data.name = locations.items[locCnt].name + '(" + totalLocationsCnt + ")';
         treeNodeArr.push(treenodeObj);
       }
     }
     this.model.physicalLocations = treeNodeArr;
-  };
+  }
 
   private getSelectedLocationDetailsArr(locations) {
-    let selectedLocationsArr = [];
     if (locations && locations.items && this.model.selectedLoctions) {
       for (let selLocCnt = 0; selLocCnt < this.model.selectedLoctions.length; selLocCnt++) {
         for (let locCnt = 0; locCnt < locations.items.length; locCnt++) {
           if (locations.items[locCnt].states) {
             for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
               if (locations.items[locCnt].states[stateCnt].locations) {
-                var locationObj = _.find(locations.items[locCnt].states[stateCnt].locations, { "code": (<string>this.model.selectedLoctions[selLocCnt]).toLocaleLowerCase()});
-                if(locationObj){
+                const locationObj = _.find(locations.items[locCnt].states[stateCnt].locations,
+                  { 'code': this.model.selectedLoctions[selLocCnt] });
+                if (locationObj) {
                   this.model.selectedLoctionsDetailsArr.push(locationObj);
                 }
               }
@@ -129,11 +128,11 @@ export class PhysicalLocationsComponent implements OnInit {
   }
 
   nodeSelect(event) {
-    this._loggerService.info("Node Selected" + event.node.data.name);
+    this._loggerService.info('Node Selected' + event.node.data.name);
     this.physicalLocationSelected.emit(event.node.data);
   }
 
   nodeUnselect(event) {
-    this._loggerService.info("Node Unselected" + event.node.data.name);
+    this._loggerService.info('Node Unselected' + event.node.data.name);
   }
 }

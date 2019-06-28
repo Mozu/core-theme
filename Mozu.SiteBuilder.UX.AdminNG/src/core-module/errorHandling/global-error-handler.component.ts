@@ -1,24 +1,12 @@
-﻿import {
-    ErrorHandler,
-    Injectable,
-    Inject
-} from '@angular/core';
+﻿import { ErrorHandler, Injectable } from '@angular/core';
+import { AuthService } from '../extensions/index';
+
+import { Constants,
+         EnvironmentConfig,
+         UtilityService } from '../infrastructure/index';
 
 import { LoggerService } from '../services/logger.service';
-
-import {
-    AuthService
-} from '../extensions/index';
-
-import {
-    Constants,
-    ConfigurationSettings,
-    UtilityService,
-    EnvironmentConfig
-} from '../infrastructure/index';
-
 import { SpinnerService } from '../spinner/spinner.service';
-
 import { GlobalErrorLoggingService } from './global-error-logging.service';
 
 export class LoggingErrorHandlerOptions {
@@ -57,7 +45,7 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
             const sessionId = localStorage.getItem(Constants.localStorageKeys.sessionId);
 
             if (this._authService.isUserLoggedIn() &&  (sessionId == null || sessionId === undefined || sessionId === '') ) {
-            //    this._utilityService.redirectToURL(url);
+               // this._utilityService.redirectToURL(url);
                // return;
             }
 
@@ -66,8 +54,8 @@ export class GlobalErrorHandlerComponent implements ErrorHandler {
             }
 
             if (error && error.error && error.error.status === 405) {
-                //this._utilityService.redirectToURL(url);
-                //return;
+                // this._utilityService.redirectToURL(url);
+                // return;
             }
 
             this._spinner.stop();

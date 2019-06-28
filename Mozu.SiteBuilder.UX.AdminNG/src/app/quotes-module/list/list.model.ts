@@ -55,13 +55,7 @@ export class QuoteItem {
   customerAccountId?: number;
   shippingTax?: number;
   handlingTax?: number;
-  numberOfProducts: number;
-  totalQuantity: number;
-  accountName: string;
-  accountUser: string;
-  submitDate: string;
-  projectName: string;
-}
+  }
 
 export class AuditInfo {
   updateDate: Date;

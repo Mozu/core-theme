@@ -7,7 +7,6 @@ HttpClientService
 } from '@core';
 import { Constants } from '@shared';
 import { Constants as GlobalConstant } from '@global/infrastructure/constants';
-import { LocationGroupModel } from '../create/location.group.model';
 import { environment } from '@env';
 
 @Injectable()

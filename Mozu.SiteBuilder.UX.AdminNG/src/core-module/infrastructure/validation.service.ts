@@ -1,7 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { LoggerService } from '../services/logger.service';
- 
+
 @Injectable()
 export class ValidationService {
     constructor(

@@ -21,6 +21,6 @@ export class ShippingAddressComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.destinationContact = changes["destinations"].currentValue;    
+    this.destinationContact = changes['destinations'].currentValue;
   }
 }

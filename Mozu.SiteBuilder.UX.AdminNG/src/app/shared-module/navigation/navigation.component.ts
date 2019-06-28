@@ -28,7 +28,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     navigationType = NavigationContainerType;
 
     constructor(
-        private _loggerService : LoggerService
+        private _loggerService: LoggerService
     ) {
         this.subscriptions = [];
     }

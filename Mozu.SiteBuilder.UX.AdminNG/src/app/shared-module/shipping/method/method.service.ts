@@ -10,7 +10,7 @@ export class ShippingMethodService {
         private _loggerService: LoggerService) { }
 
     public fetchShippingMethod(quoteId: string): Observable<ShippingRateModel[]> {
-        this._loggerService.info("ShippingMethodService: fetchShippingMethod");        
+        this._loggerService.info('ShippingMethodService: fetchShippingMethod');
         return this._http.get<ShippingRateModel[]>(Constants.JsonResources.shippingMethods);
     }
 }

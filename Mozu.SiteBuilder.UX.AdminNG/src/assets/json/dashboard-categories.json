@@ -162,7 +162,7 @@
   {
     "id": "order",
     "navParent": "main",
-    "label": "Fulfillment",
+    "label": "Orders",
     "icon": "nav-orders",
     "behaviorIds":  73 ,
     "visible" : true,
@@ -208,7 +208,16 @@
         "address": "locationGroups",
         "visible" : true,
         "url":"locationGroups"
-      },
+      }
+    ]
+  },
+  {
+    "id": "fulfiller",
+    "navParent": "main",
+    "label": "Fulfillment",
+    "behaviorIds":  188 ,
+    "visible" : true,
+    "items": [
       {
         "id": "fulfiller",
         "label": "Fulfiller",

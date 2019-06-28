@@ -47,4 +47,9 @@ export class Constants {
     static localization = {
         localizationAccessLink : 'localization'
     }
+
+    static fatalErrorRedirectionUrl =
+    {
+        logout: '/admin/auth/logout',
+    };
 }

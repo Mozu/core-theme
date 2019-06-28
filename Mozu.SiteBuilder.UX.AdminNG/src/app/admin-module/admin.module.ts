@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
-
 import { SharedModule } from '@shared/shared.module';
-
 import { AdminDashboardComponent } from './index';
 
 @NgModule({
@@ -11,11 +9,8 @@ import { AdminDashboardComponent } from './index';
     declarations: [
         AdminDashboardComponent
     ],
-    providers: [
-    ],
-    exports: [
-        
-    ]
+    providers: [],
+    exports: []
 })
 
 export class AdminModule { }

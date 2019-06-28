@@ -9,9 +9,7 @@
 
 import { LoggerService } from '@core';
 import {
-    NotificationService,
-    SharedDataService,
-    SharedData
+    NotificationService
 } from '../../global-module/index';
 
 declare var $: any;

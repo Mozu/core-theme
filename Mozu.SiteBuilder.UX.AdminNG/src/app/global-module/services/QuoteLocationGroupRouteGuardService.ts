@@ -25,10 +25,10 @@ export class QuoteLocationGroupRouteGuardService implements CanActivate {
 
         this._logger.info('QuoteLocationGroupRouteGuardService : canActivate');
 
-        if (state != undefined && state.url.includes(Constants.uiRoutes.quotes)) {
+        if (state !== undefined && state.url.includes(Constants.uiRoutes.quotes)) {
             this._router.navigate([Constants.uiRoutes.quotes]);
         }
-        else if (state != undefined && state.url.includes(Constants.uiRoutes.locationGroups)) {
+        else if (state !== undefined && state.url.includes(Constants.uiRoutes.locationGroups)) {
             this._router.navigate([Constants.uiRoutes.locationGroups]);
         }
 

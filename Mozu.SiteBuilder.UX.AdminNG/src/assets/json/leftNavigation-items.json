@@ -15,8 +15,7 @@
           "contextType": "m",
           "address": "products",
           "behaviorIds":  4 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "categoriesmenu",
@@ -24,8 +23,7 @@
           "contextType": "c",
           "address": "categories",
           "behaviorIds":  16 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "inventorymenu",
@@ -33,8 +31,7 @@
           "contextType": "m",
           "address": "inventory",
           "behaviorIds":  4 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "priceListsmenu",
@@ -42,8 +39,7 @@
           "label": "Price Lists",
           "contextType": "m",
           "address": "priceLists",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -63,8 +59,7 @@
           "label": "Discounts",
           "contextType": "s",
           "address": "discounts",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "couponsetmenu",
@@ -72,8 +67,7 @@
           "label": "Coupon Sets",
           "contextType": "c",
           "address": "CouponSets",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "productRankingmenu",
@@ -81,8 +75,7 @@
           "label": "Product Ranking",
           "contextType": "s",
           "address": "ProductRankings",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "searchSynonymsmenu",
@@ -90,8 +83,7 @@
           "label": "Search Synonyms",
           "contextType": "s",
           "address": "synonyms",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -110,32 +102,28 @@
           "label": "Editor",
           "contextType": "s",
           "address": "website",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "themesmenu",
           "label": "Themes",
           "contextType": "s",
           "address": "themes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "redirectsmenu",
           "label": "Redirects",
           "contextType": "s",
           "address": "redirects",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "fileManagermenu",
           "label": "Files",
           "contextType": "m",
           "address": "fileManager",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -154,16 +142,14 @@
           "label": "Drafts",
           "contextType": "m",
           "address": "publishing/drafts",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "publishSetsmenu",
           "label": "Publish Sets",
           "contextType": "m",
           "address": "publishing/publishsets",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -171,7 +157,7 @@
       "id": "order",
       "menuid": "ordermenu",
       "navParent": "main",
-      "label": "Fulfillment",
+      "label": "Orders",
       "imageURL": "/admin/assets/Images/fullfillment.png",
       "icon": "nav-orders",
       "behaviorIds":  73 ,
@@ -183,8 +169,7 @@
           "contextType": "m",
           "address": "orders",
           "behaviorIds":  73 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "returnsmenu",
@@ -192,16 +177,14 @@
           "contextType": "m",
           "address": "returns",
           "behaviorIds":  73 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "locations-inventorymenu",
           "label": "Inventory",
           "contextType": "m",
           "address": "locationInventory",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "locations",
@@ -209,8 +192,7 @@
           "contextType": "m",
           "address": "locations",
           "behaviorIds":  186 ,
-          "visible" : true,
-          "url":"http://sb.ngdev06.kibong-dev.com/admin/m-1/locations"
+          "visible" : true
         },
         {
           "id": "locations-group",
@@ -218,7 +200,18 @@
           "address": "locationGroups",
           "visible" : true,
           "routerLink":"locationGroups"
-        },
+        }
+      ]
+    },
+    {
+      "id": "fulfiller",
+      "menuid": "fulfiller",
+      "navParent": "main",
+      "label": "Fulfillment",
+      "imageURL": "/admin/assets/Images/reporting.png",
+      "behaviorIds":  188,
+      "visible" : true,
+      "items": [
         {
           "id": "fulfiller",
           "label": "Fulfiller",
@@ -227,7 +220,6 @@
           "visible" : true,
           "url":"fulfiller"
         }
-        
       ]
     },
     {
@@ -245,24 +237,21 @@
           "contextType": "m",
           "address": "customers",
           "behaviorIds":  41 ,
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "customerSegmentsmenu",
           "label": "Customer Segments",
           "contextType": "m",
           "address": "customer/segments",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "storecreditmenu",
           "label": "Store Credit",
           "contextType": "m",
           "address": "StoreCredits",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -280,9 +269,8 @@
           "label": "B2B Accounts",
           "contextType": "m",
           "address": "b2baccounts",
-          "visible" : true,
-          "url":""
-        },
+          "visible" : true
+         },
         {
           "id": "quotesmenu",
           "label": "Quotes",
@@ -299,7 +287,7 @@
       "navParent": "main",
       "label": "Reporting",
       "imageURL": "/admin/assets/Images/reporting.png",
-      "behaviorIds":  188 ,
+      "behaviorIds":  188,
       "visible" : true,
       "items": [
         {
@@ -307,9 +295,8 @@
           "label": "Reports",
           "contextType": "s",
           "address": "reports",
-          "visible" : true,
-          "url":""
-        }
+          "visible" : true
+         }
       ]
     },
     {
@@ -326,56 +313,49 @@
           "label": "General",
           "contextType": "s",
           "address": "generalsettings",
-          "visible" : true,
-          "url":"s"
+          "visible" : true
         },
         {
           "id": "paymentgatewaysmenu",
           "label": "Payment Gateways",
           "contextType": "s",
           "address": "settings/paymentGateways",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "paymenttypesmenu",
           "label": "Payment Types",
           "contextType": "c",
           "address": "settings/paymentTypes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "discountsettingsmenu",
           "label": "Discount Settings",
           "contextType": "s",
           "address": "settings/discounts",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "taxmenu",
           "label": "Tax",
           "contextType": "s",
           "address": "settings/tax",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "shippingMainmenu",
           "label": "Shipping",
           "contextType": "s",
           "address": "shipping",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "publishingmenu",
           "label": "Publishing",
           "contextType": "s",
           "address": "settings/publishing",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -393,64 +373,56 @@
           "label": "Product Types",
           "contextType": "s",
           "address": "producttypes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "productAttributesmenu",
           "label": "Product Attributes",
           "contextType": "s",
           "address": "attributes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "orderAttributesmenu",
           "label": "Order Attributes",
           "contextType": "s",
           "address": "orderattributes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "customerAttributesmenu",
           "label": "Customer Attributes",
           "contextType": "s",
           "address": "CustomerAttributes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "b2bAttributesmenu",
           "label": "B2B Attributes",
           "contextType": "s",
           "address": "b2battributes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "locationTypesmenu",
           "label": "Location Types",
           "contextType": "s",
           "address": "locationTypes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "locationAttributesmenu",
           "label": "Location Attributes",
           "contextType": "s",
           "address": "locationattributes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "customSchemamenu",
           "label": "Custom Schema",
           "contextType": "s",
           "address": "customSchema",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -468,24 +440,21 @@
           "label": "Applications",
           "contextType": "s",
           "address": "capability",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "actionmanagementmenu",
           "label": "Arc.js",
           "contextType": "s",
           "address": "actionmanagement",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "customroutesmenu",
           "label": "Custom Routes",
           "contextType": "s",
           "address": "customroutes",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -503,32 +472,28 @@
           "label": "Sites",
           "contextType": "s",
           "address": "provisioning/sites",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "catalogprovisioningmenu",
           "label": "Catalogs",
           "contextType": "s",
           "address": "provisioning/catalogs",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "channelsmenu",
           "label": "Channels",
           "contextType": "s",
           "address": "channels",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "customersetsmenu",
           "label": "Customer Sets",
           "contextType": "s",
           "address": "customersets",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },
@@ -545,24 +510,21 @@
           "label": "Users",
           "contextType": "s",
           "address": "account/users",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "rolesmenu",
           "label": "Roles",
           "contextType": "s",
           "address": "roles",
-          "visible" : true,
-          "url":""
+          "visible" : true
         },
         {
           "id": "ipblockingmenu",
           "label": "IP Restrictions",
           "contextType": "s",
           "address": "ipblocking",
-          "visible" : true,
-          "url":""
+          "visible" : true
         }
       ]
     },

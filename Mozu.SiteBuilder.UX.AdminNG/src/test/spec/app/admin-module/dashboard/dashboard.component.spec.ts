@@ -26,15 +26,12 @@ describe('DashboardComponent', () => {
   let component: AdminDashboardComponent;
   let fixture: ComponentFixture<AdminDashboardComponent>;
   let dashboardModel: DashboardModel;
-  
   let debugElement: DebugElement;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
   let dashboardService: DashbaordService;
   let httpMock: HttpTestingController;
-  let cookie:CookieService;
-  let httpClientService : HttpClientService;
-  let sharedData : SharedDataService;
+  let httpClientService: HttpClientService;
 
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
   const dashboardJson = [
@@ -83,14 +80,12 @@ let dummyData_pupulateSystemAndMainTiles =
     })
     .compileComponents();
 
-    //To inject services using spyOn
+    // To inject services using spyOn
     loggerService = TestBed.get(LoggerService);
     httpMock = TestBed.get(HttpTestingController);
     loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
-   
     dashboardService = TestBed.get(DashbaordService);
     httpClientService = TestBed.get(HttpClientService);
-    
     dashboardModel = new DashboardModel();
   }));
 
@@ -101,7 +96,6 @@ let dummyData_pupulateSystemAndMainTiles =
     });
 
     it('Application should create dashboard Component', () => {
-        //expect(component).toBeTruthy();
         expect(component).toBeDefined();
     });
 
@@ -110,15 +104,15 @@ let dummyData_pupulateSystemAndMainTiles =
         expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : ngOnInit");
     });
 
-    it("Application isShowSystemTiles will be false if active tab name is Main", function() {
+    it('Application isShowSystemTiles will be false if active tab name is Main', function() {
       fixture.detectChanges();
         dashboardModel.isShowSystemTiles = false;
-        let activeTab = "Main";
+        let activeTab = 'Main';
         dashboardModel.isShowSystemTiles = (activeTab === "System");
         expect(dashboardModel.isShowSystemTiles).toBe(false, 'isShowSystemTiles will be false if active tab is Main');
     });
 
-    it("Application isShowSystemTiles will be true if active tab name is System", function() {
+    it('Application isShowSystemTiles will be true if active tab name is System', function() {
       fixture.detectChanges();
         dashboardModel.isShowSystemTiles = false;
         let activeTab = "System";
@@ -138,19 +132,9 @@ let dummyData_pupulateSystemAndMainTiles =
        req.flush(dummyData_pupulateSystemAndMainTiles, mockErrorResponse);
        httpMock.verify();
        fixture.detectChanges();
-        expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse");   
+        expect(loggerServiceSpy).toHaveBeenCalledWith('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse');
   });
 
-    // it('Application should call fetchAllDashboardTiles() dashboard service and print success reponse as "AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse"', () => {
-    //   fixture.detectChanges();
-    //      const req = httpMock.expectOne(`/assets/json/dashboard-categories.json`);
-    //      expect(req.request.method).toBe("GET");
-    //      req.flush(dummyData_pupulateSystemAndMainTiles);
-    //      httpMock.verify();
-    //      fixture.detectChanges();
-    //      expect(loggerServiceSpy).toHaveBeenCalledWith("AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse");
-    // });
-  
     afterEach(() => {
         fixture.destroy();
     })
