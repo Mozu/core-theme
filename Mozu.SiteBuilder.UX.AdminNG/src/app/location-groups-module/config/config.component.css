@@ -145,8 +145,24 @@ span.error {
     bottom: 0;
 }
 
+.location-config-right-container {
+    height: calc(100vh - 140px);
+    overflow: hidden;
+    overflow-y: auto;
+    margin-bottom: 0px;
+}
+
+.location-config-left-container {
+    margin-bottom: 0px;
+}
+
+
 .nopadding {
      padding: 0; 
+}
+
+.nobottommargin {
+    margin-bottom: 0px;
 }
 
 .nomargin {

@@ -1,12 +1,12 @@
 <spinner></spinner>
-<div class="row  row-eq-height location-config-container ">
-	<div class="subform col-md-2">
+<div class="row row-eq-height location-config-container">
+	<div class="subform col-md-2 location-config-left-container">
 		<h4>Site Name</h4>
 		<p-listbox [options]="model.sitesLst" [(ngModel)]="model.selectedSite" optionLabel="name"
 			[style]="{'width':'100%'}"></p-listbox>
 		<p>Selected City: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p>
 	</div>
-	<div class="col-md-10">
+	<div class="col-md-10 location-config-right-container">
 		<form [formGroup]="model.locationGroupConfigForm">
 			<div class="row subform">
 				<div class="col-md-10 nopadding">
@@ -62,7 +62,7 @@
 			<div class="subform">
 				<h4>Box Types</h4>
 			</div>
-			<div class="subform">
+			<div class="subform nobottommargin">
 				<h4>Carrier setting</h4>
 			</div>
 		</form>

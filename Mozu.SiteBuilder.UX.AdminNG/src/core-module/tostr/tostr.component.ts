@@ -17,9 +17,10 @@ import {
     SystemMessageToastrOptions
 } from '../infrastructure/configuration-settings';
 
-import { TostrService} from './index';
+ 
 
 import { NgZone } from '@angular/core';
+import { TostrService } from './tostr.service';
 
 @Component({
     moduleId: module.id,
