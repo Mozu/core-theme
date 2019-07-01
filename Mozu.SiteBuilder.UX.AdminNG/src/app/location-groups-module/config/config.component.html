@@ -53,11 +53,15 @@
 			</div>
 			<div class="subform">
 				<h4>Shipping</h4>
-					<label formArrayName="carriers" 
+				<label class="subform-label">{{'LOCATIONGROUPCONFIG.FormLabels.carriers' | translate}}</label>
+				<div class="row nomargin">
+					<label class="subform-label col-md-2 nopadding" formArrayName="carriers" 
 						*ngFor="let carrier of model.locationGroupConfigForm.get('carriers')['controls']; let carrierIndex = index">
 						<input type="checkbox" [formControlName]="carrierIndex">
 						{{model.LCCarriers[carrierIndex].CarrierTypeLabel}}
 					</label>
+				</div>
+				
 			</div>
 			<div class="subform">
 				<h4>Box Types</h4>

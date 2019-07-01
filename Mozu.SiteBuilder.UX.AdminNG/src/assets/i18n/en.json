@@ -252,7 +252,8 @@
             "sendCustomerPickupReminder": "Send Customer Pickup Reminder after the order has gone into waiting for customer pickup",
             "enableForSTH": "Enable For STH",
             "enableForISPU": "Enable For ISPU",
-            "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation"
+            "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation",
+            "carriers": "Carriers"
         },
         "FormSections": {
             "ISPU" : "ISPU"
