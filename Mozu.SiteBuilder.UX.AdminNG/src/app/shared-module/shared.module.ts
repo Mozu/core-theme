@@ -19,9 +19,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import { DropdownModule } from 'primeng/dropdown';
-import { SelectItem } from 'primeng/api';
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import {ListboxModule} from 'primeng/listbox';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -89,6 +87,7 @@ export function createTranslateLoader(http: HttpClient) {
         ToastModule,
         NgbCarouselModule,
         PanelMenuModule,
+        ListboxModule,
         TreeTableModule,
         TableModule,
         NgbModule.forRoot(),
@@ -160,6 +159,7 @@ export function createTranslateLoader(http: HttpClient) {
         CardModule,
         TabViewModule,
         PanelMenuModule,
+        ListboxModule,
         TreeTableModule,
         TableModule,
         // pipes

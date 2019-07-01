@@ -1,3 +1,70 @@
-<p>
-  config works!
-</p>
+<spinner></spinner>
+<div class="row  row-eq-height location-config-container ">
+	<div class="subform col-md-2">
+		<h4>Site Name</h4>
+		<p-listbox [options]="model.sitesLst" [(ngModel)]="model.selectedSite" optionLabel="name"
+			[style]="{'width':'100%'}"></p-listbox>
+		<p>Selected City: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p>
+	</div>
+	<div class="col-md-10">
+		<form [formGroup]="model.locationGroupConfigForm">
+			<div class="row subform">
+				<div class="col-md-10 nopadding">
+					<h4>Mystic Kids Site Config</h4>
+				</div>
+				<div class="col-md-2 nopadding">
+					<button type="button" class="sbbtn btn btn-success pull-right"
+						(click)="saveCreateLG()">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+				</div>
+			</div>
+			<div class="subform">
+				<h4>{{'LOCATIONGROUPCONFIG.FormSections.ISPU' | translate }}</h4>
+				<div class="row nomargin">
+					<div class="form-row col-md-5 for-no-padding">
+						<label class="subform-label" for="customerFailedToPickupAfterAction">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupAfterAction' | translate}}</label>
+						<select id="customerFailedToPickupAfterAction" class="form-control" formControlName="customerFailedToPickupAfterAction">
+							<option *ngFor="let action of model.LCCustomerPickupActions" [ngValue]="action.data">
+								{{ action.label }}
+							</option>
+						</select>
+					</div>
+					<div class="col-md-1"></div>
+					<div class="form-row col-md-5 for-no-padding">
+						<input type="number" required class=" inputText form-control subform-text"
+							id="customerFailedToPickupDeadline" name="customerFailedToPickupDeadline"
+							formControlName="customerFailedToPickupDeadline" />
+						<span class="floating-label"
+							[ngClass]="{'redfont':(!model.locationGroupConfigForm.get('customerFailedToPickupDeadline').valid && model.locationGroupConfigForm.get('customerFailedToPickupDeadline').touched)}">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadline' | translate }}</span>
+						<hr class="underline-from-left"
+							[ngClass]="{'redunderline-from-left':(!model.locationGroupConfigForm.get('customerFailedToPickupDeadline').valid && model.locationGroupConfigForm.get('customerFailedToPickupDeadline').touched)}">
+						<p class="redfont">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadlineWarnMsg' | translate}}</p>	
+					</div>
+				</div>	
+				<div class="row nomargin for-top-margin">
+					<div class="form-row col-md-5 for-no-padding">
+						<label class="subform-label" for="sendCustomerPickupReminder">{{'LOCATIONGROUPCONFIG.FormLabels.sendCustomerPickupReminder' | translate}}</label>
+						<select id="sendCustomerPickupReminder" class="form-control" formControlName="sendCustomerPickupReminder">
+							<option *ngFor="let action of model.LCCustomerPickupReminders" [ngValue]="action.data">
+								{{ action.label }}
+							</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="subform">
+				<h4>Shipping</h4>
+					<label formArrayName="carriers" 
+						*ngFor="let carrier of model.locationGroupConfigForm.get('carriers')['controls']; let carrierIndex = index">
+						<input type="checkbox" [formControlName]="carrierIndex">
+						{{model.LCCarriers[carrierIndex].CarrierTypeLabel}}
+					</label>
+			</div>
+			<div class="subform">
+				<h4>Box Types</h4>
+			</div>
+			<div class="subform">
+				<h4>Carrier setting</h4>
+			</div>
+		</form>
+	</div>
+</div>

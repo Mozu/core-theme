@@ -98,7 +98,7 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     gotoLocationGroupConfig(){
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
-      //this.router.navigate([Constants.uiRoutes.locationGroups]);
+      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId]);
     }
 
   }

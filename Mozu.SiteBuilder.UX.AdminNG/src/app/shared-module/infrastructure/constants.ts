@@ -153,10 +153,14 @@ export class Constants {
     static editNavigationDeepLink = '/edit/';
     static filterQueryParameter = 'filter';
     static userAPIDeepLink = '/users';
-    static searchFilterParameter = {
-        filterParam1: 'filter=%5B%7B%22property%22%3A%22all%22%2C%22value%22%3A%22',
-        filterParam2: '%22%7D%5D',
-        masterCatalogHeaderKey: 'masterCatalog',
-        tenantHeaderKey: 'tenant'
-    };
+
+
+    static LCCustomerPickupActions = [ {data : 'CUSTOMER_CARE', label: 'Customer Care'}, {data: 'CANCEL', label: 'Cancel'}];
+    static LCCustomerPickupReminders = [ {data : '1', label: '1 days'}, {data: '2', label: '2 days'}, {data: '3', label: '3 days'},
+                                        {data: '4', label: '4 days'}, {data: '5', label: '5 days'}];
+
+    static LCCarriers = [{ CarrierType:'FedEx', CarrierTypeLabel:'FedEx', IsEnabled: false},
+                         { CarrierType:'UPS', CarrierTypeLabel:'Ups', IsEnabled: false},
+                         {CarrierType:'USPS (endicia)', CarrierTypeLabel:'USPS (endicia)', IsEnabled: false},
+                         {CarrierType:'Canada Post', CarrierTypeLabel:'Canada Post', IsEnabled: false}];
 }

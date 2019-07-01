@@ -244,13 +244,19 @@
             "nameRequired": "Input is Required."
         }
     },
-    "Header": {
-        "SearchMessage": {
-            "noMatchingItem": "No matching items found."
+    "LOCATIONGROUPCONFIG":{
+        "FormLabels": {
+            "customerFailedToPickupAfterAction": "Customer Failed to Pickup After Action",
+            "customerFailedToPickupDeadline": "Customer Failed to Pickup Deadline",
+            "customerFailedToPickupDeadlineWarnMsg" : "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
+            "sendCustomerPickupReminder": "Send Customer Pickup Reminder after the order has gone into waiting for customer pickup",
+            "enableForSTH": "Enable For STH",
+            "enableForISPU": "Enable For ISPU",
+            "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation"
         },
-        "Label": {
-            "help": "Help",
-            "seeAll": "see all"
+        "FormSections": {
+            "ISPU" : "ISPU"
         }
     }
+
 }
