@@ -12,12 +12,14 @@ import { ConfirmationDialogComponent } from '@shared/confirmation-dialog/confirm
 import { By } from '@angular/platform-browser';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-fdescribe('ConfirmationDialogComponent', () => {
+describe('ConfirmationDialogComponent', () => {
   let component: ConfirmationDialogComponent;
   let fixture: ComponentFixture<ConfirmationDialogComponent>;
   let loggerService: LoggerService;
   let loggerServiceSpy: any;
   let httpMock: HttpTestingController;
+  let confirmationDialogService: ConfirmationDialogService;
+  let confirmationDialogServiceSpy: any;
 
   let displayModal = false;
   let confirmationDialogTitle: 'Delete Item';
@@ -46,7 +48,7 @@ fdescribe('ConfirmationDialogComponent', () => {
   httpMock = TestBed.get(HttpTestingController);
 
   loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
-
+  confirmationDialogService = TestBed.get(ConfirmationDialogService);
   }));
 
   beforeEach(() => {
@@ -62,11 +64,18 @@ fdescribe('ConfirmationDialogComponent', () => {
   it('should call showConfirmationDialog method', () => {
     displayModal = true;
     confirmationDialogTitle = 'Delete Item';
-    component.showConfirmationDialog(confirmationDialogTitle,
-    confirmationDialogMessage, primaryButtonText,
-    isShowSecondaryButton, secondaryButtonText, itemName, secondaryMessage);
+    component.showConfirmationDialog(confirmationDialogTitle, confirmationDialogMessage,
+      primaryButtonText, isShowSecondaryButton, secondaryButtonText);
     component.dialogTitle = confirmationDialogTitle;
     expect(confirmationDialogTitle).toBe('Delete Item');
+  });
+
+  it('should call confirm method', () => {
+    confirmationDialogServiceSpy = spyOn(confirmationDialogService, 'confirm');
+    component.confirm();
+    displayModal = false;
+    expect(confirmationDialogServiceSpy).toHaveBeenCalled();
+    expect(displayModal).toEqual(false);
   });
 
 });

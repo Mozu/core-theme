@@ -80,10 +80,7 @@ export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy
           return el.userId === userId;
         });
         this.generateCustomerAccountUrl();
-        setTimeout(() => {
-          /** spinner ends after 0.5 seconds */
           this._spinner.stop();
-      }, 500);
       }
     }, (accountErrResponse) => {
       this._spinner.stop();

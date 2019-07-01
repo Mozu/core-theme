@@ -13,7 +13,11 @@ export class QuotesListService {
         private _loggerService: LoggerService) { }
 
     public fetchAllQuotes(): Observable<any> {
-        this._loggerService.info("QuotesListService: fetchAllQuotes");
-        return this._http.get(GlobalConstant.webApis.getQuoteList);
+        this._loggerService.info('QuotesListService: fetchAllQuotes');
+        if (environment.debug) {
+            return this._http.get(Constants.JsonResources.quoteList);
+        } else {
+            return this._http.get(GlobalConstants.webApis.getQuoteList);
+        }
     }
 }

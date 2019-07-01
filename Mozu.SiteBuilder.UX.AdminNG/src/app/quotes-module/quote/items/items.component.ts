@@ -70,10 +70,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
       this._loggerService.info('QuoteItemsComponent : _quoteItemsService.deleteItem_quotesResponse');
       if (deleteQuoteItemSuccessResponse !== null && deleteQuoteItemSuccessResponse !== undefined) {
         this.quoteItems.splice(this.quoteItemTobeDeleted, 1);
-        setTimeout(() => {
-          /** spinner ends after 0.5 seconds */
-          this._spinner.stop();
-      }, 500);
+        this._spinner.stop();
       }
     }, (deleteQuoteItemErrorResponse) => {
       this._spinner.stop();

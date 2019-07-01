@@ -45,30 +45,31 @@ export class ShippingMethodComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this._loggerService.info("ShippingMethodComponent : ngOnChanges");
-        this.quoteId = changes["quoteId"].currentValue;
+        this._loggerService.info('ShippingMethodComponent : ngOnChanges');
+        this.quoteId = changes['quoteId'].currentValue;
     }
 
     public populateShippingMethod = () => {
-        this._loggerService.info("ShippingMethodComponent : populateShippingMethod");
+        this._loggerService.info('ShippingMethodComponent : populateShippingMethod');
 
         if (this.quoteId) {
-            var currencyPipe = new CurrencyPipe(this.locale);
+            const currencyPipe = new CurrencyPipe(this.locale);
             this._shippingMethodService.fetchShippingMethod(this.quoteId).subscribe((fetchShippingMethodResponse: ShippingRateModel[]) => {
-                this._loggerService.info("ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_successResponse");
-                if (fetchShippingMethodResponse != null && fetchShippingMethodResponse != undefined) {
+                this._loggerService.info('ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_successResponse');
+                if (fetchShippingMethodResponse !== null && fetchShippingMethodResponse !== undefined) {
                     this.shippingRates = fetchShippingMethodResponse;
                     this.shippingRates.map((shippingRate, i) => {
-                        shippingRate.shippingMethodName = shippingRate.shippingMethodName + " " + currencyPipe.transform(shippingRate.price);
+                        shippingRate.shippingMethodName = shippingRate.shippingMethodName + ' ' +
+                        currencyPipe.transform(shippingRate.price);
                     });
                 } else {
                     this.shippingRates = [];
                 }
             },
                 (errResponse) => {
-                    this._loggerService.info("ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_errResponse");
+                    this._loggerService.info('ShippingMethodComponent : _shippingMethodService.fetchShippingMethod_errResponse');
                     throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
-                })
+                });
         } else {
             this.shippingRates = [];
         }

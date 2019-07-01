@@ -150,12 +150,21 @@
     },
     "QUOTES": {
         "GridHeader": {
-            "b2bAccountName": "B2B Account Name",
             "quoteName": "Quote Name",
-            "buyerName": "Buyer Name",
+            "accountName": "Account Name",
+            "accountUser": "Account User",
+            "quoteID": "Quote ID",
+            "createDate": "Create Date",
+            "createdBy": "Created By",
+            "expirationDate": "Expiration Date",
             "status": "Status",
-            "lastModifiedDate": "Last Modified Date",
-            "quoteTotal": "Quote Total"
+            "submitDate": "Submit Date",
+            "updateDate": "Update Date",
+            "numProducts": "Num. Products",
+            "totalQty": "Total Qty",
+            "estimatedCharges": "Estimated shipping and tax charges $",
+            "orderTotal": "Order Total $",
+            "projectName": "Project Name"
         },
         "GridContextMenu": {
             "edit": "Edit"

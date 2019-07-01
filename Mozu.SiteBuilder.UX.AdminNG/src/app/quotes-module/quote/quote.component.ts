@@ -54,10 +54,7 @@ export class QuoteComponent implements OnInit {
           this.userId = this.model.userId;
           this.customerAccountId = this.model.customerAccountId;
         }
-        setTimeout(() => {
-          /** spinner ends after 5 seconds */
           this._spinner.stop();
-      }, 500);
     }, (quoteListErrResponse) => {
       this._spinner.stop();
       this._loggerService.info('QuoteComponent : _quotesListService.fetchAllQuotes_errResponse');

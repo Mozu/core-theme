@@ -5,11 +5,15 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { NGXLoggerHttpService, CustomNGXLoggerService } from 'ngx-logger';
 import { TranslateLoader, TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { LoggerService, UtilityService, EnvironmentConfig, AuthService, HttpClientService, httpClientServiceCreator } from '@core';
+import { LoggerService, UtilityService, EnvironmentConfig, AuthService, HttpClientService,
+  httpClientServiceCreator, SpinnerService } from '@core';
 import { GlobalModule } from '@global/global.module';
 import { AccountInformationComponent, AccountInfoModel } from '@shared/account/information';
 import { AccountInfoService } from '@shared/account/information/information.service';
 import { By } from '@angular/platform-browser';
+import { Constants } from '@shared';
+import { Constants as GlobalConstants} from '@global/infrastructure/constants';
+import { Observable } from 'rxjs';
 
 describe('AccountInformationComponent', () => {
   let component: AccountInformationComponent;
@@ -22,32 +26,25 @@ describe('AccountInformationComponent', () => {
   const mockErrorResponse = { status: 400, statusText: 'Bad Request' };
 
   const dummyAccountInfo = {
-    'users':  [
-      {
-          'emailAddress': 'Pankaj@kibo.com',
-          'userName': 'Pankaj',
-          'firstName': 'Pankaj',
-          'lastName': 'C',
-          'localeCode': 'US',
-          'userId': '4588be576b7f4416a70b6d810219680e',
-          'isLocked': true,
-          'isActive': false,
-          'isRemoved': false,
-          'acceptsMarketing': true,
-          'hasExternalPassword': true
-      }
-    ],
-    'isActive': true,
-    'priceList': '123.4',
-    'customerSet': 'abc',
-    'companyOrOrganization': 'B2B account',
-    'attributes':  [],
-    'taxExempt': '',
-    'taxId': '2342',
-    'externalId': '3453',
-    'customerSinceDate': new Date(),
-    'accountType': 'Saving'
-  };
+    'startIndex': 0,
+    'pageSize': 20,
+    'pageCount': 1,
+    'totalCount': 1,
+    'items': [
+     {
+      'emailAddress': 'tverma@kibo.com',
+      'userName': 'tverma@kibo.com',
+      'firstName': 'Tripti',
+      'lastName': 'Verma',
+      'localeCode': 'en-us',
+      'userId': '4588be576b7f4416a70b6d810219680e',
+      'isLocked': false,
+      'isActive': true,
+      'isRemoved': false,
+      'hasExternalPassword': false
+     }
+    ]
+   };
 
   const respData = {
     items: {
@@ -60,6 +57,8 @@ describe('AccountInformationComponent', () => {
       }
     }};
 
+    let userId = '4588be576b7f4416a70b6d810219680e';
+    let customerAccountId = 1012;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -67,7 +66,7 @@ describe('AccountInformationComponent', () => {
       declarations: [ AccountInformationComponent ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [By, TranslateService, LoggerService, NGXLoggerHttpService, CustomNGXLoggerService,
-        UtilityService, EnvironmentConfig, AuthService, AccountInfoModel, AccountInfoService,
+        UtilityService, EnvironmentConfig, AuthService, AccountInfoModel, AccountInfoService, SpinnerService,
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,
@@ -84,10 +83,10 @@ describe('AccountInformationComponent', () => {
   beforeEach(async(() => {
     httpMock = TestBed.get(HttpTestingController);
 
-    const req = httpMock.expectOne(`./assets/json/user-data.json`);
-    expect(req.request.method).toBe('GET');
-    req.flush(respData);
-    httpMock.verify();
+    // const req = httpMock.expectOne(`./assets/json/user-data.json`);
+    // expect(req.request.method).toBe('GET');
+    // req.flush(respData);
+    // httpMock.verify();
 
     fixture = TestBed.createComponent(AccountInformationComponent);
     component = fixture.componentInstance;
@@ -101,9 +100,11 @@ describe('AccountInformationComponent', () => {
 
   it('should fetch userId from ngOnChange()', () => {
     component.userId = '4588be576b7f4416a70b6d810219680e';
+    component.customerAccountId = 1012;
     const spy = spyOn(component, 'populateAccountInfo');
     component.ngOnChanges({
-      userId: new SimpleChange(null, component.userId, true)
+      userId: new SimpleChange(null, component.userId, true),
+      customerAccountId: new SimpleChange(null, component.customerAccountId, true)
     });
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -111,12 +112,21 @@ describe('AccountInformationComponent', () => {
     });
    });
 
+  it('should call fetchAccountInformation service method using observable', async(() => {
+    const accountInfoService = fixture.debugElement.injector.get(AccountInfoService);
+    spyOn(accountInfoService, 'fetchAccountInformation').and.returnValue(Observable.of(dummyAccountInfo));
+    component.populateAccountInfo(customerAccountId, userId);
+    expect(accountInfoService.fetchAccountInformation).toHaveBeenCalledWith(customerAccountId, userId);
+  }));
+
   it('should call service to get success response from mock http json (account-information)', async(() => {
     component.userId = '4588be576b7f4416a70b6d810219680e';
     component.customerAccountId = 1012;
     component.populateAccountInfo(component.customerAccountId, component.userId);
 
-    const req = httpMock.expectOne(`/assets/json/account-information.json`);
+    //const req = httpMock.expectOne(GlobalConstants.webApis.getB2BUserAccount
+      //+ '/' + component.customerAccountId + Constants.userAPIDeepLink);
+    const req = httpMock.expectOne(`./assets/json/user-data.json`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyAccountInfo);
 
@@ -126,8 +136,10 @@ describe('AccountInformationComponent', () => {
 
   it('should get customer account URL from account information component', () => {
     component.generateCustomerAccountUrl();
+    let baseNavigationURL = '';
+    const customerAccountURL =  component.baseNavigationURL + Constants.editNavigationDeepLink + customerAccountId ;
     const siteId = respData.items.ctTaContext.masterCatalogs[0].sites[0].id;
-    expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : generateCustomerAccountUrl');
+    expect(component.customerAccountURL).toBe(customerAccountURL);
   });
 
   it('should call service to get failure response from mock http json (account-information)', () => {
@@ -142,8 +154,4 @@ describe('AccountInformationComponent', () => {
     httpMock.verify();
     expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : _accountInfoService.fetchAccountInformation_errResponse');
   });
-
-
-
-
 });

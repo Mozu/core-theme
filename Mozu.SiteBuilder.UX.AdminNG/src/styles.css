@@ -831,4 +831,16 @@ location-group-list .ui-table-wrapper thead th {
      0 6px 10px 0 rgba(0,0,0,.14),
      0 1px 18px 0 rgba(0,0,0,.12) !important;
 
+/* location group css ends*/
+
+/* --------------- PrimeNg Overlay Panel CSS Start ------------------ */
+.ui-overlaypanel:before {
+    right: 1.1em !important;
+    left: auto !important;
 }
+
+.ui-overlaypanel:after {
+    right: 1.25em !important;
+    left: auto !important;
+}
+/* --------------- PrimeNg Overlay Panel CSS End ------------------ */

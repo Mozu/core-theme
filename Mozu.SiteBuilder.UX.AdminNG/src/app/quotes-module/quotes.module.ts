@@ -6,18 +6,20 @@ import {CalendarModule} from 'primeng/calendar';
 
 import {FileUploadModule} from 'primeng/fileupload';
 
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { SharedModule } from '@shared/shared.module';
 
 import { QuotesListComponent } from './list';
 
-import { QuoteComponent, 
+import { QuoteComponent,
   QuoteSummaryComponent } from './quote';
-  
+
 import { QuoteItemsComponent } from './quote/items/items.component';
 
-import { QuoteNegotiationCommentsComponent, 
+import { QuoteNegotiationCommentsComponent,
   QuoteNegotiationComponent } from './quote/negotiation';
 
 @NgModule({
@@ -33,6 +35,7 @@ import { QuoteNegotiationCommentsComponent,
     SharedModule,
     TableModule,
     CalendarModule,
+    OverlayPanelModule,
     FileUploadModule,
     NgbModule.forRoot()
   ],
