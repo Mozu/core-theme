@@ -58,7 +58,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.model.isShowSystemTiles = false;
     this.subscriptions.push(
       this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
-        this.model.isShowSystemTiles = (activeTab === 'System');
+        this.model.isShowSystemTiles = (activeTab === Constants.systemTabDisplayText);
         this._changeDetectionRef.detectChanges();
       })
     );
@@ -77,22 +77,26 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this._loggerService.info('AdminDashboardComponent : pupulateSystemAndMainTiles');
 
     this._dashboardService.fetchAllDashboardTiles().subscribe(dashboardTileLinksResponse => {
-      
+
       this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_successResponse');
 
       /* filter the menus on the basis of logged in user behaviour id */
-      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData._sharedData.items.ctUser.behaviorIds);
-      
-      this.model.filteredAccessLinks = this.utilityService.populateNavigationLinksbyContextType(this.model.filteredAccessLinks,this._sharedData._sharedData.items.ctTaContext);
+      this.model.filteredAccessLinks  = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData);
 
-      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.systemTileJsonNavParentPrefix; }));
-      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles( this.model.filteredAccessLinks.filter(function (eachCategory) { return eachCategory.navParent == Constants.mainTileJsonNavParentPrefix; }));
+      this.model.filteredAccessLinks = this.utilityService.populateNavigationLinksbyContextType
+      (this.model.filteredAccessLinks, this._sharedData._sharedData.items.ctTaContext);
+
+      this.model.systemTiles = this._dashboardService.MapDasasboardCategoryToTiles
+      ( this.model.filteredAccessLinks.filter(function (eachCategory) {
+        return eachCategory.navParent === Constants.systemTileJsonNavParentPrefix; }));
+      this.model.mainTiles = this._dashboardService.MapDasasboardCategoryToTiles
+      ( this.model.filteredAccessLinks.filter(function (eachCategory) {
+         return eachCategory.navParent === Constants.mainTileJsonNavParentPrefix; }));
       this._changeDetectionRef.detectChanges();
 
     }, (dashboardTileLinksErrResponse) => {
-      this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse');;
-      throw new HttpError(ErrorCode.DashboardTilesGetFailed,ErroNotificationType.Toaster,dashboardTileLinksErrResponse);
+      this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse');
+      throw new HttpError(ErrorCode.DashboardTilesGetFailed, ErroNotificationType.Toaster, dashboardTileLinksErrResponse);
     });
   }
-      
 }

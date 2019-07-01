@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { MenuItem } from 'primeng/api';
 import { MenuItemContent } from 'primeng/menu';
 import * as _ from 'lodash';
-import { 
+import {
     LoggerService,
     UtilityService
 } from '@core';
@@ -19,7 +19,6 @@ import {
     SharedDataService,
     NotificationService
 } from '@global';
-import { environment } from '../../../environments/environment';
 import { Constants } from '../infrastructure/constants';
 import {
     HeaderModel,
@@ -41,7 +40,6 @@ import { HeaderService } from './header.service';
 export class HeaderComponent implements OnInit, OnDestroy {
     public headerModel: HeaderModel;
     public userContextMenuItem: MenuItem;
-    public selectedSearchedtem: SearchedItem;
     subscriptions = [];
     mainMenuLinks: MenuItem[];
 
@@ -59,17 +57,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.headerModel = new HeaderModel();
         this.headerModel.searchResult = new SearchResults();
         this.headerModel.showSearchInput = false;
-        this.selectedSearchedtem = new SearchedItem();
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
         this.subscriptions.push(
-            this._notificationService.LeftMenuItems.subscribe((leftNavigationMenuItems: any) => {
+            this._notificationService.loadLeftMenuItems.subscribe((leftNavigationMenuItems: any) => {
                 this.headerModel.productURL = this._utilityService.
-                getNavigationURL(leftNavigationMenuItems, 'products', 'products'),
+                getNavigationURL(leftNavigationMenuItems, SearchedItemType.products, SearchedItemType.products),
                 this.headerModel.customerURL = this._utilityService.
-                getNavigationURL(leftNavigationMenuItems, 'customer', 'customers'),
+                getNavigationURL(leftNavigationMenuItems, SearchedItemType.customer, SearchedItemType.customers),
                 this.headerModel.ordersURL = this._utilityService.
-                getNavigationURL(leftNavigationMenuItems, 'order', 'orders');
+                getNavigationURL(leftNavigationMenuItems, SearchedItemType.order, SearchedItemType.orders);
             })
             );
     }
@@ -78,17 +75,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((s) => {
             s.unsubscribe();
         });
-    }
-
-    getNavigationURL(menuItems: MenuItem[], parentMenuItemText: string, linkAddress: string): string {
-        const parentMenuItem = _.find(menuItems, { id: parentMenuItemText });
-        if (parentMenuItem !== null && parentMenuItem !== undefined
-            && parentMenuItem.items != null) {
-            const addressLinkMenuItem = _.find(parentMenuItem.items, { address: linkAddress }) as MenuItem;
-            if (addressLinkMenuItem !== null && addressLinkMenuItem !== undefined) {
-                return environment.appUrl + addressLinkMenuItem.url;
-            }
-        }
     }
 
     public fetchloggedInUserData = () => {
@@ -110,18 +96,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public toggleVisible() {
         this.headerModel.showSearchInput = !this.headerModel.showSearchInput;
     }
-    
     public clearInput() {
-        if ((<HTMLInputElement>document.getElementById("globalSearchInput")).value) {
-            (<HTMLInputElement>document.getElementById("globalSearchInput")).value = "";
+        if ((<HTMLInputElement>document.getElementById('globalSearchInput')).value) {
+            (<HTMLInputElement>document.getElementById('globalSearchInput')).value = '';
         } else {
-            this.toggleVisible()
+            this.toggleVisible();
         }
     }
     public findSite(id) {
-        var match = null;
+        let match = null;
         this.headerModel.sites.forEach(function (site) {
-            if (site.id == id) {
+            if (site.id === id) {
                 match = site;
             }
         });
@@ -129,16 +114,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public lookUpSuggestion(event) {
-        const tenantId = this._sharedData._sharedData.items.ctTenant.id; 
-        const masterCatalogId = this._sharedData._sharedData.items.ctTaContext.masterCatalogs[0].id; 
+        const tenantId = this._sharedData._sharedData.items.ctTenant.id;
+        const masterCatalogId = this._sharedData._sharedData.items.ctTaContext.masterCatalogs[0].id;
         const orderSearch = this._headerService.getOrderSearchResults(event.query, tenantId, masterCatalogId, false);
         const customerSearch = this._headerService.getCustomerSearchResults(event.query, tenantId, masterCatalogId, false);
         const productSearch = this._headerService.geProductSearchResults(event.query, tenantId, masterCatalogId, false);
 
-        forkJoin(orderSearch.catch(e => Observable.of(e)), 
-                customerSearch.catch(e => Observable.of(e)), 
+        forkJoin(orderSearch.catch(e => Observable.of(e)),
+                customerSearch.catch(e => Observable.of(e)),
                 productSearch.catch(e => Observable.of(e))).subscribe(allSearchResultsResponse => {
-            
+
             const noMatch = new SearchedItem();
             noMatch.type = SearchedItemType.none;
             const mergedSearchItems: Array<any> = [];
@@ -151,7 +136,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                         const searchedItem = new SearchedItem();
                         searchedItem.item = allSearchResultsResponse[i].items[j];
                         searchedItem.isHeader = false;
-                        var site = this.findSite(searchedItem.item.siteId);
+                        const site = this.findSite(searchedItem.item.siteId);
                         switch (i) {
                             case 0: // ORDER
                                 searchedItem.type = SearchedItemType.orders;
@@ -177,7 +162,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-            if (mergedSearchItems.length == 0) {
+            if (mergedSearchItems.length === 0) {
               this.headerModel.searchResult.success = false;
               this.headerModel.searchResult.total = 0;
               this.headerModel.searchResult.items = [noMatch];
@@ -191,7 +176,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public onSuggestionSelected(event) {
-        if (event.type != SearchedItemType.none) {
+        if (event.type !== SearchedItemType.none) {
             let navUrl: string;
             switch (event.type) {
                 case SearchedItemType.customers:

@@ -17,11 +17,11 @@ export class NotificationService {
     loadAccessTileCategories: Subject<string> = new Subject<string>();
     locationGroupAdded: Subject<string> = new Subject<string>();
     locationGroupEdited: Subject<any> = new Subject<any>();
+    loadLeftMenuItems: Subject<any> = new Subject<any>();
 
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
     LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
-    LeftMenuItems: Subject<any> = new Subject<any>();
 
     constructor(
         private _logger: LoggerService
@@ -70,8 +70,8 @@ export class NotificationService {
         this.LocationGroupDeleteConfirmation.next(actionName);
     }
 
-    notifyLeftMenuItems(actionName: any) {
-        this._logger.info('NotificationService : notifyLeftMenuItems');
-        this.LeftMenuItems.next(actionName);
+    notifyLoadLeftMenuItems(actionName: any) {
+        this._logger.info('NotificationService : notifyLoadLeftMenuItems');
+        this.loadLeftMenuItems.next(actionName);
     }
 }

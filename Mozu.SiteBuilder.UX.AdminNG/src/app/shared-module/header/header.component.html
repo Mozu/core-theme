@@ -2,7 +2,7 @@
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapsebar"
             aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="sr-only"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -10,13 +10,13 @@
        <a href="#"> <img class="navbar-kibo-logo" src="/admin/assets/Images/kibo-icon.png" /> 
     </a>
     <span class="navbar-kibo-text">
-       <a href="#"> Kibo eCommerce</a>
+       <a href="#">Kibo eCommerce</a>
     </span>
     </div>
     <div id="collapsebar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
             <li><span class="tenant-name-container"></span>{{ headerModel.tenantName }}</li>
-            <li><a href="#"><span class=""></span> Help </a></li>
+            <li><a href="#"><span class=""></span> {{'Header.Label.help' | translate }} </a></li>
             <li class="navbar-search-align">
                 <span *ngIf="!headerModel.showSearchInput" (click)="toggleVisible()" class="fa fa-search"></span>
                 <div *ngIf="headerModel.showSearchInput" class="ui-inputgroup navbar-search">
@@ -28,7 +28,7 @@
                             <div [ngSwitch]="selectedSearchedItem.type">
                                 <ng-template [ngSwitchCase]="'none'">
                                     <div class="navbar-search-li navbar-search-tab">
-                                        No matching items found.
+                                        {{'Header.SearchMessage.noMatchingItem' | translate }}
                                     </div>
                                 </ng-template>
                                 <ng-template [ngSwitchCase]="'orders'">
@@ -37,8 +37,7 @@
                                         {{ selectedSearchedItem.item.orderNumber }}- {{ selectedSearchedItem.item.name }}
                                     </div>
                                     <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
-                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
-                                                all</i></b>
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">{{'Header.Label.seeAll' | translate }}</i></b>
                                     </div>
                                 </ng-template>
                                 <ng-template [ngSwitchCase]="'customers'">
@@ -48,8 +47,7 @@
                                         {{ selectedSearchedItem.item.lastName }}
                                     </div>
                                     <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
-                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
-                                                all</i></b>
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab"> {{'Header.Label.seeAll' | translate }}</i></b>
                                     </div>
                                 </ng-template>
                                 <ng-template [ngSwitchCase]="'products'">
@@ -59,8 +57,7 @@
                                         {{ selectedSearchedItem.item.productName }}
                                     </div>
                                      <div class="navbar-search-li-title" *ngIf="selectedSearchedItem.isHeader">
-                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">see
-                                                all</i></b>
+                                        <b>{{selectedSearchedItem.item.name}}<i class="navbar-search-tab">{{'Header.Label.seeAll' | translate }}</i></b>
                                     </div> 
                                 </ng-template>
                             </div>

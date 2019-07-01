@@ -152,4 +152,10 @@ export class Constants {
     static editNavigationDeepLink = '/edit/';
     static filterQueryParameter = 'filter';
     static userAPIDeepLink = '/users';
+    static searchFilterParameter = {
+        filterParam1: 'filter=%5B%7B%22property%22%3A%22all%22%2C%22value%22%3A%22',
+        filterParam2: '%22%7D%5D',
+        masterCatalogHeaderKey: 'masterCatalog',
+        tenantHeaderKey: 'tenant'
+    };
 }

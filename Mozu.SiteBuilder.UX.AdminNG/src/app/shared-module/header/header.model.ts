@@ -1,8 +1,10 @@
 export enum SearchedItemType {
-    orders = <any>'orders',
-    customers = <any>'customers',
-    products = <any>'products',
-    none = <any>'none'
+    orders = 'orders',
+    order = 'order',
+    customers = 'customers',
+    customer = 'customer',
+    products = 'products',
+    none = 'none'
 }
 
 export class SearchedItem {
@@ -22,7 +24,6 @@ export class HeaderModel {
     loggedInUserInitials: string;
     showSearchInput: boolean;
     searchResult: SearchResults;
-    selectedSearchedtem: SearchedItem;
     sites: any[];
     customerURL: string;
     productURL: string;
