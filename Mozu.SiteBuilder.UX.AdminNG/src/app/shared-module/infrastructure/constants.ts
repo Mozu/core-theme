@@ -124,9 +124,9 @@ export class Constants {
         getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
         shippingMethods: '/assets/json/shipping-methods.json',
         auditLog: '/assets/json/audit-log.json',
-        orderSearchResults: '/assets/json/orders-searchresult.json',
-        customerSearchResults: '/assets/json/customers-searchresult.json',
-        productsSearchResults: '/assets/json/products-searchresult.json'
+        orderSearchResults: environment.appUrl + '/assets/json/orders-searchresult.json',
+        customerSearchResults: environment.appUrl + '/assets/json/customers-searchresult.json',
+        productsSearchResults: environment.appUrl + '/assets/json/products-searchresult.json'
     };
 
     static numberOfRows = 15;
