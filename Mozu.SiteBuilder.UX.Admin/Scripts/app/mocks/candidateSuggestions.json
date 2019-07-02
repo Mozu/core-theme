@@ -1,0 +1,134 @@
+﻿{
+  "candidateSuggestions": [
+    {
+      "locationCode": "SAN_DIEGO_WH",
+      "locationName": "Kibo San Diego Warehouse",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "das-4-pro-blue",
+          "available": 10,
+          "upc": "das-4-pro-blue",
+          "sku": "das-4-pro-blue"
+        }
+      ]
+    },
+    {
+      "locationCode": "SAN_DIEGO_WH",
+      "locationName": "Kibo Los Angeles Warehouse",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "RedSpatula",
+          "available": 10,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        }
+      ]
+    },
+    {
+      "locationCode": "SAN_DIEGO_WH",
+      "locationName": "Kibo San Diego Warehouse",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "RedSpatula",
+          "available": 10,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        }
+      ]
+    },
+    {
+      "locationCode": "SAN_DIEGO_WH",
+      "locationName": "Kibo San Diego Warehouse",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "RedSpatula",
+          "available": 10,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        }
+      ]
+    },
+    {
+      "locationCode": "SAN_DIEGO_WH",
+      "locationName": "Kibo San Diego Warehouse",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "RedSpatula",
+          "available": 10,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        }
+      ]
+    }
+  ]
+}

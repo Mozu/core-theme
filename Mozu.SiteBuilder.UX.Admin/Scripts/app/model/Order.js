@@ -2879,39 +2879,32 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    getLocationInventory: function (config) {
-        //config =
+    getCandidateSuggestions: function (config) {
+        //payload format
         //{
-        //    "orderType": "TRANSFER",
-        //    "items": [
-        //        {
-        //            "partNumber": "mqa-p-standard0",                    
-        //            "quantity": 1
-        //        }
-        //    ]
-        //};
+        //    "pickupLocationCode": "Spatula_SLO",
+        //        "orderType": "TRANSFER",
+        //            "items": [
+        //                {
+        //                    "partNumber": "RedSpatula", //productCode
+        //                    "upc": "RedSpatula", //VariationProductCode
+        //                    "quantity": 1
+        //                }
+        //            ]
+        //}
 
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/candidates',
-            method: 'POST'
+             url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
+            //url: '/admin/app/order/shipping/candidates',
+            //method: 'POST'
+            method: 'GET'
         });
 
         Ext.Ajax.request(config);
-
-        //Ext.Ajax.request({
-        //    url: '/admin/app/order/shipping/candidates',
-        //    // url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
-        //    method: 'POST',
-        //    jsonData: config,
-        //    success: function (response) {
-        //        var jsonResp = Ext.util.JSON.decode(response.responseText);
-        //        console.log(jsonResp);
-        //    }
-        //});
     },
 
     cancelShipmentNew: function (config) {
-        debugger;
+        
         Ext.apply(config, {
             url: '/admin/app/order/shipping/shipment/cancel',
             method: 'PUT'
