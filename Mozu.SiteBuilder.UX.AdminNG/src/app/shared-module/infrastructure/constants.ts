@@ -163,4 +163,11 @@ export class Constants {
                          { CarrierType:'UPS', CarrierTypeLabel:'Ups', IsEnabled: false},
                          {CarrierType:'USPS (endicia)', CarrierTypeLabel:'USPS (endicia)', IsEnabled: false},
                          {CarrierType:'Canada Post', CarrierTypeLabel:'Canada Post', IsEnabled: false}];
+    static LCDefaultCarrier = [{data: 'None', label: 'None'},
+                               {data : 'FedEx', label: 'Fedex'},
+                               {data : 'Ups', label: 'Ups'},
+                               {data : 'USPS (endicia)', label: 'USPS (endicia)'},
+                               {data : 'Canada Post', label: 'Canada Post'}];
+    static LCPrintReturnLabel = [{data: 'Yes', label: 'Yes'}, {data: 'No', label: 'No'}];
+    static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
 }

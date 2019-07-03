@@ -6,7 +6,10 @@ export class LocationGroupConfigModel {
     sitesLst: SiteModel[];
     selectedSite: SiteModel;
     locationGroupConfigForm: FormGroup;
-    LCCustomerPickupActions : any[];
-    LCCustomerPickupReminders : any[];
-    LCCarriers : any[];
+    LCCustomerPickupActions: any[];
+    LCCustomerPickupReminders: any[];
+    LCCarriers: any[];
+    LCDefaultCarrier: any[];
+    LCPrintReturnLabel: any[];
+    LCDefaultPrinterType: any[];
 }

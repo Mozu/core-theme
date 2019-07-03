@@ -1,0 +1,33 @@
+{
+    "tenantId": 17450,
+    "siteId": 21576,
+    "locationGroupId": 36,
+    "customerFailedToPickupAfterAction": "CustomerCare",
+    "customerFailedToPickupDeadline": 3,
+    "sendCustomerPickupReminder": 2,
+    "enableForSTH": false,
+    "enableForISPU": false,
+    "enableAdvancedOptionForPickWaveCreation": true,
+    "maximumNumberOfOrdersInPickWave": 25,
+    "defaultNumberOfOrdersInPickWave": 10,
+    "pickWavePrintFormat": "Html",
+    "closePickWavePermissions": [
+     "None"
+    ],
+    "wmsEnabled": false,
+    "enableScanningOfUpcForShipToHome": false,
+    "allowReturns": true,
+    "returnRefundReduction": false,
+    "defaultReturnRefundReductionAmount": 0,
+    "maximumReturnRefundReductionAmount": 0,
+    "defaultCarrier": "None",
+    "carriers": [],
+    "boxTypes": [],
+    "attributes": [],
+    "auditInfo": {
+     "updateDate": "2019-07-02T06:01:25.554Z",
+     "createDate": "2019-07-02T06:01:25.554Z",
+     "updateBy": "1",
+     "createBy": "1"
+    }
+   }

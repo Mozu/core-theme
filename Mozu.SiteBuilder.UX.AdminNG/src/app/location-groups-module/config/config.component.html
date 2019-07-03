@@ -13,8 +13,7 @@
 					<h4>Mystic Kids Site Config</h4>
 				</div>
 				<div class="col-md-2 nopadding">
-					<button type="button" class="sbbtn btn btn-success pull-right"
-						(click)="saveCreateLG()">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+					<button type="button" class="sbbtn btn btn-success pull-right">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
 				</div>
 			</div>
 			<div class="subform">
@@ -60,6 +59,35 @@
 						<input type="checkbox" [formControlName]="carrierIndex">
 						{{model.LCCarriers[carrierIndex].CarrierTypeLabel}}
 					</label>
+				</div>
+				<div class="row nomargin for-top-margin">
+					<div class="form-row col-md-5 for-no-padding">
+						<label class="subform-label" for="defaultCarrier">{{'LOCATIONGROUPCONFIG.FormLabels.defaultCarrier' | translate}}</label>
+						<select id="defaultCarrier" class="form-control" formControlName="defaultCarrier">
+							<option *ngFor="let action of model.LCDefaultCarrier" [ngValue]="action.data">
+								{{ action.label }}
+							</option>
+						</select>
+					</div>
+					<div class="col-md-1"></div>
+					<div class="form-row col-md-5 for-no-padding">
+						<label class="subform-label" for="printReturnLabel">{{'LOCATIONGROUPCONFIG.FormLabels.printReturnLabel' | translate}}</label>
+						<select id="printReturnLabel" class="form-control" formControlName="printReturnLabel">
+							<option *ngFor="let action of model.LCPrintReturnLabel" [ngValue]="action.data">
+								{{ action.label }}
+							</option>
+						</select>
+					</div>
+				</div>
+				<div class="row nomargin for-top-margin">
+					<div class="form-row col-md-5 for-no-padding">
+						<label class="subform-label" for="defaultPrinterType">{{'LOCATIONGROUPCONFIG.FormLabels.defaultprinterType' | translate}}</label>
+						<select id="defaultPrinterType" class="form-control" formControlName="defaultPrinterType">
+							<option *ngFor="let action of model.LCDefaultPrinterType" [ngValue]="action.data">
+								{{ action.label }}
+							</option>
+						</select>
+					</div>
 				</div>
 				
 			</div>

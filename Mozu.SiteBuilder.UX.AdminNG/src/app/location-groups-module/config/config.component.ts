@@ -25,11 +25,18 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCCustomerPickupActions = Constants.LCCustomerPickupActions;
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
         this.model.LCCarriers = Constants.LCCarriers;
+        this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
+        this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
+        this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
+
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
             customerFailedToPickupDeadline: ['', []],
             sendCustomerPickupReminder: ['', []],
-            carriers: new FormArray([])
+            carriers: new FormArray([]),
+            defaultCarrier: ['', []],
+            printReturnLabel: ['', []],
+            defaultPrinterType: ['', []]
         });
 
         this.addCarriersCheckboxes();
@@ -58,7 +65,10 @@ export class LocationGroupConfigComponent implements OnInit {
     private updateLocationGroupConfigForm(): void {
         this.model.locationGroupConfigForm.patchValue({
             customerFailedToPickupAfterAction: 'CUSTOMER_CARE',
-            sendCustomerPickupReminder : '2'
+            sendCustomerPickupReminder: '2',
+            defaultCarrier: 'None',
+            printReturnLabel: 'Yes',
+            defaultPrinterType: 'Laser'
         });
     }
 

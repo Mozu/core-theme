@@ -253,7 +253,10 @@
             "enableForSTH": "Enable For STH",
             "enableForISPU": "Enable For ISPU",
             "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation",
-            "carriers": "Carriers"
+            "carriers": "Carriers",
+            "defaultCarrier": "Dafault Carrier",
+            "printReturnLabel": "Print Return Label",
+            "defaultprinterType": "Default Printer Type"
         },
         "FormSections": {
             "ISPU" : "ISPU"
