@@ -4,7 +4,7 @@
 		<h4>Site Name</h4>
 		<p-listbox [options]="model.sitesLst" [(ngModel)]="model.selectedSite" optionLabel="name"
 			[style]="{'width':'100%'}"></p-listbox>
-		<p>Selected City: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p>
+		<!-- <p>Selected Site: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p> -->
 	</div>
 	<div class="col-md-10 location-config-right-container">
 		<form [formGroup]="model.locationGroupConfigForm">
@@ -51,7 +51,7 @@
 				</div>
 			</div>
 			<div class="subform">
-				<h4>Shipping</h4>
+				<h4>{{'LOCATIONGROUPCONFIG.FormSections.Shipping' | translate}}</h4>
 				<label class="subform-label">{{'LOCATIONGROUPCONFIG.FormLabels.carriers' | translate}}</label>
 				<div class="row nomargin">
 					<label class="subform-label col-md-2 nopadding" formArrayName="carriers" 
@@ -92,7 +92,59 @@
 				
 			</div>
 			<div class="subform">
-				<h4>Box Types</h4>
+				<h4>{{'LOCATIONGROUPCONFIG.FormSections.BoxTypes' | translate}}</h4>
+				<div class="row nomargin" formArrayName="boxItems"
+					*ngFor="let item of model.locationGroupConfigForm.get('boxItems')['controls']; let rowIndex = index;">
+					<div [formGroupName]="rowIndex">
+						<div class="form-row col-md-2 for-no-padding">
+							<input class="inputText form-control subform-text" id="boxName" formControlName="name" />
+							<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value === '',
+											'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value !== '' 
+											}">{{'LOCATIONGROUPCONFIG.FormLabels.name' | translate }}</span>
+							<hr class="underline-from-left">
+						</div>
+						
+						<div class="form-row col-md-2 for-no-padding boxItemMargin">
+							<div class="col-md-9 nomargin nopadding">
+								<input class="inputText form-control subform-text" id="boxLength" formControlName="length"/>
+								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value === '',
+												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value !== '' 
+												}">{{'LOCATIONGROUPCONFIG.FormLabels.length' | translate }}</span>
+								<hr class="underline-from-left">
+							</div>
+							<div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">{{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>
+						</div>
+						
+						<div class="form-row col-md-2 for-no-padding boxItemMargin">
+							<div class="col-md-9 nomargin nopadding">
+								<input class="inputText form-control subform-text" id="boxWidth" formControlName="width"/>
+								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value === '',
+												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value !== '' 
+												}">{{'LOCATIONGROUPCONFIG.FormLabels.width' | translate }}</span>
+								<hr class="underline-from-left">
+							</div>
+							<div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">{{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>
+						</div>
+						
+						<div class="form-row col-md-2 for-no-padding boxItemMargin">
+							<div class="col-md-9 nomargin nopadding">
+								<input class="inputText form-control subform-text" id="boxHeight" formControlName="height"/>
+								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value === '',
+												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value !== '' 
+												}">{{'LOCATIONGROUPCONFIG.FormLabels.height' | translate }}</span>
+								<hr class="underline-from-left">
+							</div>
+							<div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">{{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>
+						</div>
+
+						<div class="form-row col-md-2 for-no-padding">
+								<button type="button" (click)="removeBoxItem(rowIndex)" class="btn pull-right">{{'SHARED.HEADER.actionButtons.locationGroups.remove' | translate}}</button>
+						</div>
+					</div>
+				</div>
+				<div class="row nomargin">
+					<button type="button" (click)="addBoxItem()" class="btn pull-left">{{'SHARED.HEADER.actionButtons.locationGroups.add' | translate}}</button>
+				</div>
 			</div>
 			<div class="subform nobottommargin">
 				<h4>Carrier setting</h4>

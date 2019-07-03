@@ -3,7 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { LoggerService } from '@core';
 import { SharedDataService } from '@global';
 import { LocationGroupConfigModel } from './config.model';
-import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
 
 @Component({
@@ -36,7 +36,8 @@ export class LocationGroupConfigComponent implements OnInit {
             carriers: new FormArray([]),
             defaultCarrier: ['', []],
             printReturnLabel: ['', []],
-            defaultPrinterType: ['', []]
+            defaultPrinterType: ['', []],
+            boxItems: this.fb.array([ this.createBoxItem()])
         });
 
         this.addCarriersCheckboxes();
@@ -49,6 +50,23 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCCarriers.map((o, i) => {
             const control = new FormControl(); // if first item set to true, else false
             (this.model.locationGroupConfigForm.controls.carriers as FormArray).push(control);
+        });
+    }
+
+    addBoxItem(): void {
+        (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
+    }
+
+    removeBoxItem(rowIndex){
+        (this.model.locationGroupConfigForm.controls.boxItems as FormArray).removeAt(rowIndex);
+    }
+
+    private createBoxItem(): FormGroup {
+        return this.fb.group({
+          name: '',
+          length: '',
+          width: '',
+          height: ''
         });
     }
 

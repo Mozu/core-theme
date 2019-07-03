@@ -32,13 +32,28 @@
     transition-timing-function: cubic-bezier(.27, .44, .62, .81);
 }
 
-input.inputText:not(:focus):valid+.floating-label {
+.floating-label-not-empty {
+    position: absolute;
+    pointer-events: none;
+    left: 2px;
+    top: -5px;
+    color: #2ea195;
+    display: block;
+    transition-duration: .2s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.72, .45, .72, .92);
+    order: 0;
+	opacity: 1;
+    font-size: 11px;
+}
+
+input.inputText:required:not(:focus):valid+.floating-label {
     top: -5px;
     color: #2ea195;
     left: 2px;
     font-size: 11px;
     opacity: 1;
-}
+} 
 
 .redunderline-from-left {
     border-color: #ff0000 !important;
@@ -204,4 +219,10 @@ span.error {
     height: 100%;
 }
 
+.boxItemInputUnit {
+    margin-top: 12px;
+}
 
+.boxItemMargin {
+    margin-left: 35px;
+}

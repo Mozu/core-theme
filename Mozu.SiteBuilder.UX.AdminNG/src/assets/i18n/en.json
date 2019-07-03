@@ -38,7 +38,9 @@
                 "locationGroups": {
                     "create": "Create New Location Group",
                     "cancel": "Cancel",
-                    "save": "Save"
+                    "save": "Save",
+                    "remove": "Remove",
+                    "add": "Add"
                 }
             }
         },
@@ -256,10 +258,17 @@
             "carriers": "Carriers",
             "defaultCarrier": "Dafault Carrier",
             "printReturnLabel": "Print Return Label",
-            "defaultprinterType": "Default Printer Type"
+            "defaultprinterType": "Default Printer Type",
+            "name": "Name",
+            "width": "Width",
+            "length": "Length",
+            "height": "Height",
+            "inches": "inches"
         },
         "FormSections": {
-            "ISPU" : "ISPU"
+            "ISPU" : "ISPU",
+            "BoxTypes": "Box Types",
+            "Shipping": "Shipping"
         }
     }
 
