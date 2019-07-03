@@ -30,7 +30,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./list.component.css'],
   providers: [QuotesListService, CurrencyPipe, DatePipe]
 })
-export class QuotesListComponent implements OnInit {
+export class QuotesListComponent implements OnInit  {
   public model: QuotesListModel;
   gridColumnHeader: any[];
   selectedGridColumnHeader: any[];
@@ -56,43 +56,26 @@ export class QuotesListComponent implements OnInit {
     });
 
     this.gridColumnHeader = [
-      { field: 'name', header: 'QUOTES.GridHeader.quoteName', display: 'table-cell' },
-      { field: 'customerAccountId', header: 'QUOTES.GridHeader.accountName', display: 'table-cell' },
-      { field: 'customerInteractionType', header: 'QUOTES.GridHeader.accountUser', display: 'none' },
-      { field: 'id', header: 'QUOTES.GridHeader.quoteID', display: 'none' },
-      { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', display: 'table-cell', type: this.datePipe },
-      { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', display: 'none' },
-      { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', display: 'table-cell', type: this.datePipe },
-      { field: 'status', header: 'QUOTES.GridHeader.status', display: 'table-cell', class: 'content-pill' },
-      { field: 'expirationDate', header: 'QUOTES.GridHeader.submitDate', display: 'none', type: this.datePipe },
-      { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', display: 'none', type: this.datePipe },
-      { field: 'items.quantity', header: 'QUOTES.GridHeader.numProducts', display: 'none' },
-      { field: 'name', header: 'QUOTES.GridHeader.totalQty', display: 'none' },
-      { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', display: 'table-cell', type: this.currencyPipe },
-      { field: 'number', header: 'QUOTES.GridHeader.orderTotal', display: 'table-cell', type: this.currencyPipe },
-      { field: 'customerInteractionType', header: 'QUOTES.GridHeader.projectName', display: 'table-cell' }
+      { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true },
+      { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true },
+      { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false },
+      { field: 'id', header: 'QUOTES.GridHeader.quoteID', checked: false },
+      { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true, type: this.datePipe },
+      { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false },
+      { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true, type: this.datePipe },
+      { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill' },
+      { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false, type: this.datePipe },
+      { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false, type: this.datePipe },
+      { field: 'items.quantity', header: 'QUOTES.GridHeader.numProducts', checked: false },
+      { field: 'items.quantity', header: 'QUOTES.GridHeader.totalQty', checked: false },
+      { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true, type: this.currencyPipe },
+      { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true, type: this.currencyPipe },
+      { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true }
     ];
     this.selectedGridColumnHeader = this.gridColumnHeader;
 
     this.populateQuoteGrid();
 
-    this.GridColumnsOnOverlayPanel = [
-      { name: 'QUOTES.GridHeader.quoteName', checked: true },
-      { name: 'QUOTES.GridHeader.accountName', checked: true },
-      { name: 'QUOTES.GridHeader.accountUser', checked: false },
-      { name: 'QUOTES.GridHeader.quoteID', checked: false },
-      { name: 'QUOTES.GridHeader.createDate', checked: true },
-      { name: 'QUOTES.GridHeader.createdBy', checked: false },
-      { name: 'QUOTES.GridHeader.expirationDate', checked: true },
-      { name: 'QUOTES.GridHeader.status', checked: true },
-      { name: 'QUOTES.GridHeader.submitDate', checked: false },
-      { name: 'QUOTES.GridHeader.updateDate', checked: false },
-      { name: 'QUOTES.GridHeader.numProducts', checked: false },
-      { name: 'QUOTES.GridHeader.totalQty', checked: false },
-      { name: 'QUOTES.GridHeader.estimatedCharges', checked: true },
-      { name: 'QUOTES.GridHeader.orderTotal', checked: true },
-      { name: 'QUOTES.GridHeader.projectName', checked: true }
-    ];
   }
 
   onRowSelect(event) {
@@ -125,12 +108,8 @@ export class QuotesListComponent implements OnInit {
     });
   }
 
-  toggleGridColumns(event) {
-    if (event.currentTarget.checked) {
-      this.gridColumnHeader.find(column => column.header === event.currentTarget.value).display = 'table-cell';
-    } else {
-      this.gridColumnHeader.find(column => column.header === event.currentTarget.value).display = 'none';
-    }
+  toggleGridColumns(event, col) {
+    col.checked = event.currentTarget.checked;
   }
 
   getQuoteGridData(model: any, col: any): any {

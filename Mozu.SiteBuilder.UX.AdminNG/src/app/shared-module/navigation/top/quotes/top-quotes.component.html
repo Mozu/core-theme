@@ -1,11 +1,47 @@
 <div class="col-md-11 sidebar">
   <div class="row">
-  <div class="heading col-md-1 col-xs-1 col-sm-1">
+  <div class="heading col-md-1 col-sm-1">
     <h4><a [routerLink]="[uiRoutes]">{{'SHARED.HEADER.pageTitle.quotes' | translate }}</a></h4>
   </div>
-  <!-- <div class="col-md-10 col-xs-10 col-sm-10 searchBar">
-      <search-bar ></search-bar>
+  <!-- <div class="col-md-2 col-sm-2 quote-details">
+      <span class="quote-number">#410</span>
+      <span class="content-pill">Processing</span>
+
   </div> -->
+  <div class="col-md-10 col-sm-10 searchBar">
+    <!-- search bar -->
+    <div class="input-group">
+      <div class="input-group-btn">
+        <button class="btn btn-default search-btn" type="submit">
+            <i [ngClass]="status ? 'pi-times' : 'pi-search'" class="pi" (click)="resetSerach(searchBar)"></i>
+        </button>
+      </div>
+      <input type="text" class="form-control" #searchBar placeholder="Search" (keydown)="toggleIcon(searchBar)">
+    </div>
+
+  </div>
+  <div class="col-md-1 col-md-1">
+    <span class="advance-filter" type="button" data-toggle="modal" data-target=".bs-example-modal-md"></span>
+  </div>
+  
 </div>
 </div>
 
+<!-- advance filter modal -->
+<!-- <div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Advanced Filter</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <span type="button" class="" data-dismiss="modal">Cancel</span>
+        <button type="button" class="btn btn-success">Filter</button>
+      </div>
+    </div>
+  </div>
+</div> -->

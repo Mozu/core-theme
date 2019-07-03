@@ -1,4 +1,4 @@
-import { Component, 
+import { Component,
   OnInit } from '@angular/core';
 
 import { Constants } from '@shared/infrastructure/constants';
@@ -8,11 +8,22 @@ import { Constants } from '@shared/infrastructure/constants';
   templateUrl: './top-quotes.component.html',
   styleUrls: ['./top-quotes.component.css']
 })
-export class NavigationTopQuotesComponent implements OnInit {
+export class NavigationTopQuotesComponent {
   uiRoutes = Constants.uiRoutes.quotes;
-  
+  status = false;
+
   constructor() { }
 
-  ngOnInit() { }
+  toggleIcon(searchBar: HTMLInputElement) {
+      this.status = true;
+      if(searchBar.value.length === 1) {
+        this.status = false;
+      }
+  }
+
+  resetSerach(searchBar: HTMLInputElement) {
+    searchBar.value = '';
+    this.status = false;
+  }
 
 }

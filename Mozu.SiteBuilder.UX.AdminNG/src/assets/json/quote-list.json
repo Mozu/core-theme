@@ -100,7 +100,11 @@
       "handlingTaxTotal": 0.0,
       "handlingTotal": 0.00,
       "dutyTotal": 0.0,
-      "feeTotal": 0.0
+      "feeTotal": 0.0,
+      "accountName": "Walmart",
+      "accountUser": "Sam",
+      "submitDate": "2019-05-08T12:10:46.573Z",
+      "projectName": "Roadmap"
     },
     {
       "id": "0dd322d1429fe45778112b5b00004c44",
@@ -243,7 +247,11 @@
       "handlingTaxTotal": 0.0,
       "handlingTotal": 0.00,
       "dutyTotal": 0.0,
-      "feeTotal": 0.0
+      "feeTotal": 0.0,
+      "accountName": "Walmart",
+      "accountUser": "Sam",
+      "submitDate": "2019-05-08T12:10:46.573Z",
+      "projectName": "Roadmap"
     },
     {
       "id": "0dd32b59429fe45778112b5e00004c44",
@@ -384,7 +392,11 @@
       "handlingTaxTotal": 0.0,
       "handlingTotal": 0.00,
       "dutyTotal": 0.0,
-      "feeTotal": 0.0
+      "feeTotal": 0.0,
+      "accountName": "Walmart",
+      "accountUser": "Sam",
+      "submitDate": "2019-05-08T12:10:46.573Z",
+      "projectName": "Roadmap"
     }
   ]
 }
