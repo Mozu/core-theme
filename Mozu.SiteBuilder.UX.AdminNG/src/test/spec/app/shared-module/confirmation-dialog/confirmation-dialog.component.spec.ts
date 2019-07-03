@@ -25,6 +25,8 @@ fdescribe('ConfirmationDialogComponent', () => {
   let isShowSecondaryButton = true;
   let primaryButtonText: 'Yes';
   let secondaryButtonText: 'No';
+  let itemName = 'Test'; 
+  let secondaryMessage = ''
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -60,7 +62,9 @@ fdescribe('ConfirmationDialogComponent', () => {
   it('should call showConfirmationDialog method', () => {
     displayModal = true;
     confirmationDialogTitle = 'Delete Item';
-    component.showConfirmationDialog(confirmationDialogTitle, confirmationDialogMessage, primaryButtonText, isShowSecondaryButton, secondaryButtonText);
+    component.showConfirmationDialog(confirmationDialogTitle,
+    confirmationDialogMessage, primaryButtonText,
+    isShowSecondaryButton, secondaryButtonText, itemName, secondaryMessage);
     component.dialogTitle = confirmationDialogTitle;
     expect(confirmationDialogTitle).toBe('Delete Item');
   });
