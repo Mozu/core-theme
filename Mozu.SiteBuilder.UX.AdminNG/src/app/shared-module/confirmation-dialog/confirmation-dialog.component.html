@@ -12,15 +12,16 @@
 
 <!-- Modal body -->
       <div class="modal-body">
-        {{ message }}
+        <div>  {{ message }} <b>{{itemName}}</b>?</div> <br>
+        <div>{{ secondaryMessage }}</div>
       </div>
 
 <!-- Modal footer -->
       <div class="modal-footer">
         <div>
           <button class="btn btn-default" *ngIf="isShowSecondaryButton == true" (click)="displayModal = false">{{ secondaryButtonText }}</button>
-          <button class="btn btn-success" (click)="confirm()">{{ primaryButtonText }}</button>
-      </div>
+          <button  (click)="confirm()" [ngClass]="(primaryButtonText == 'Delete') ? 'btn delete-btn' : 'btn btn-success'">{{ primaryButtonText }}</button>
+        </div>
       </div>
     </div>
   </div>

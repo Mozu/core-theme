@@ -86,7 +86,6 @@ export class GlobalErrorLoggingService {
             if (this.isHandledError) {
                 this._tostrService.showError(error.code);
             } else {
-                this._tostrService.showError(ErrorCode.Fatal.toString());
             }
         }
     }

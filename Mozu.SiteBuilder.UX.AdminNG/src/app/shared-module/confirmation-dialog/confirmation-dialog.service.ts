@@ -16,20 +16,30 @@ export class ConfirmationDialogService {
     secondaryButtonText: string;
     isShowSecondaryButton: boolean;
     notificationCode: any;
+    itemName: string;
+    confirmationDialogSecondaryMessage: string;
 
-    showConfirmationDialog: (confirmationDialogTitle: string, confirmationDialogMessage: string, primaryButtonText: string, isShowSecondaryButton: boolean, secondaryButtonText: string) => void;
+    showConfirmationDialog: (confirmationDialogTitle: string,
+                             confirmationDialogMessage: string,
+                             primaryButtonText: string,
+                             isShowSecondaryButton: boolean,
+                             secondaryButtonText: string,
+                             itemName: string,
+                             confirmationDialogSecondaryMessage: string) => void;
 
     constructor(private _translate: TranslateService,
         private _notificationService: NotificationService,
         private _loggerService: LoggerService) { }
 
-    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any): void {
-        this._loggerService.info("ConfirmationDialogService : openConfirmationDialog ");
+    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any, itemName?: any): void {
+        this._loggerService.info('ConfirmationDialogService : openConfirmationDialog');
 
             this._translate.get('SHARED.CONFIRMATIONDIALOG.' + dialogNotificationType + '.' + dialogNotificationCode)
                 .subscribe((successResponse) => {
+                    this.itemName = itemName;
                     this.confirmationDialogTitle = successResponse.title;
                     this.confirmationDialogMessage = successResponse.message;
+                    this.confirmationDialogSecondaryMessage = successResponse.secondaryMessage;
                     this.primaryButttonText = successResponse.primaryButtonText;
                     this.secondaryButtonText = successResponse.secondaryButtonText;
                     this.isShowSecondaryButton = JSON.parse(successResponse.isShowSecondaryButton);
@@ -37,7 +47,11 @@ export class ConfirmationDialogService {
 
                 });
 
-        this.showConfirmationDialog(this.confirmationDialogTitle, this.confirmationDialogMessage, this.primaryButttonText, this.isShowSecondaryButton, this.secondaryButtonText);
+        this.showConfirmationDialog(this.confirmationDialogTitle,
+                                    this.confirmationDialogMessage,
+                                    this.primaryButttonText,
+                                    this.isShowSecondaryButton,
+                                    this.secondaryButtonText, this.itemName,  this.confirmationDialogSecondaryMessage);
         this.notificationCode = dialogNotificationCode;
     }
 

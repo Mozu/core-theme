@@ -143,7 +143,7 @@ body .ui-sidebar {
 .ui-card-body {
     background: #fafafa;
     margin-top: 5.1%;
-    height: 80px;
+    height: 85px;
 }
 
 @media screen and (max-width: 480px) {
@@ -156,6 +156,7 @@ body .ui-sidebar {
     .ui-card-body {
         font-size: 0.88em;
         padding: 1em !important;
+        height: 90px;
     }
 }
 
@@ -814,6 +815,20 @@ location-group-list .ui-table-wrapper thead {
 location-group-list .ui-table-wrapper thead th {
     width: 11.66%;
 }
-
-
 /* location group css ends*/
+/* Custom Toastr */
+.ui-toast .ui-toast-message.ui-toast-message-error {
+    background-color: #E42000 !important;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
+     0 6px 10px 0 rgba(0,0,0,.14),
+     0 1px 18px 0 rgba(0,0,0,.12) !important;
+     min-width: 110%;
+}
+
+.ui-toast .ui-toast-message.ui-toast-message-success {
+    background-color: #54A254 !important;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
+     0 6px 10px 0 rgba(0,0,0,.14),
+     0 1px 18px 0 rgba(0,0,0,.12) !important;
+
+}

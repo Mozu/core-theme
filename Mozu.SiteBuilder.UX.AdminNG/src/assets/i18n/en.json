@@ -8,38 +8,102 @@
             "loginButton": "Login"
         }
     },
-    "SHIPPING": {
-      "Address": {
-        "shippingInformation": "Shipping Information",
-        "shippingAddress": "Shipping Address",
-        "noShippingAddressMessage": "You have no shipping address.",
-        "phoneNumberFormat": "US"
-      },
-      "Method": {
-        "shippingMethodAndPrice": "Shipping Method & Price",
-        "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
-        "loadingText": "Loading...",
-        "notFoundText": "No shipping methods available.",
-        "shippingMethodPlaceholder": "None Selected"
-      }
-    },
-    "CONFIRMATIONDIALOG": {
-      "Confirmation": {
-        "DeleteQuoteItem": {
-          "title": " Delete Item",
-          "message": " Are you certain you want to delete this item?",
-          "primaryButtonText": "Yes",
-          "secondaryButtonText": "No",
-          "isShowSecondaryButton": "true"
-        }
-      },
-      "Information": {
-        "SaveItem": {
-          "title": " Save Item",
-          "message": " Item is saved successfully",
-          "primaryButtonText": "Ok",
-          "secondaryButtonText": "",
-          "isShowSecondaryButton": "false"
+    "SHARED": {
+        "NAVIGATION": {
+            "productMenu": "product",
+            "offerMenu": "offer",
+            "orderMenu": "order",
+            "invoiceMenu": "invoice",
+            "help": "Help"
+        },
+        "HEADER": {
+            "logoutConfirmation": {
+                "dialogTitle": "Logout",
+                "dialogMessage": "Do you want to exit the application?",
+                "primaryButton": "Yes",
+                "secondaryButton": "No"
+            },
+            "userMenu": {
+                "profileMenu": "Profile",
+                "helpMenu": "Help",
+                "logoutMenu": "Logout",
+                "userMessage": "Hi"
+            },
+            "pageTitle": {
+                "quotes": "Quotes",
+                "locationGroups": "Location Groups"
+            },
+            "actionButtons": {
+                "locationGroups": {
+                    "create": "Create New Location Group",
+                    "cancel": "Cancel",
+                    "save": "Save"
+                }
+            }
+        },
+        "FOOTER": {
+            "proweredBy": "Powered By:",
+            "copyRight": "© Xpanxion",
+            "customerSupport": "Customer Support at",
+            "supportEmail": "test"
+        },
+        "ACCOUNT": {
+            "Information": {
+                "heading": "Account",
+                "company": "Company:",
+                "companyAdminEmail": "Company Admin Email:",
+                "salesRep": "Sales Rep:"
+            }
+        },
+        "SHIPPING": {
+            "Address": {
+              "shippingInformation": "Shipping Information",
+              "shippingAddress": "Shipping Address",
+              "noShippingAddressMessage": "You have no shipping address.",
+              "phoneNumberFormat": "US"
+            },
+            "Method": {
+              "shippingMethodAndPrice": "Shipping Method & Price",
+              "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
+              "loadingText": "Loading...",
+              "notFoundText": "No shipping methods available.",
+              "shippingMethodPlaceholder": "None Selected"
+            }
+          },
+        "CONFIRMATIONDIALOG": {
+            "Confirmation": {
+                "DeleteQuoteItem": {
+                    "title": "Delete Item",
+                    "message": " Are you certain you want to delete this item?",
+                    "primaryButtonText": "Yes",
+                    "secondaryButtonText": "No",
+                    "isShowSecondaryButton": "true"
+                },
+                "DeleteLocationGroup": {
+                    "title": "Delete Location Group",
+                    "message": "Are you sure you want to delete location group",
+                    "secondaryMessage": "Deleting the location group will also delete all the associated location group site configurations.",
+                    "primaryButtonText": "Delete",
+                    "secondaryButtonText": "Cancel",
+                    "isShowSecondaryButton": "true"
+                }
+            },
+            "Information": {
+                "SaveItem": {
+                    "title": " Save Item",
+                    "message": " Item is saved successfully",
+                    "primaryButtonText": "Ok",
+                    "secondaryButtonText": "",
+                    "isShowSecondaryButton": "false"
+                }
+            }
+        },
+        "AUDITLOG": {
+            "GridHeader": {
+                "date": "Date",
+                "event": "Event",
+                "user": "User"
+            }
         }
     },
     "MESSAGES": {

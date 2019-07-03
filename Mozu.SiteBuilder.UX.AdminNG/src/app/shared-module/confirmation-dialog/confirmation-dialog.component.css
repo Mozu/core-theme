@@ -28,3 +28,8 @@
 .modal-sm {
     width: 350px;
 }
+
+.delete-btn{
+    background-color: #e42000;
+    color: #ffffff;
+}

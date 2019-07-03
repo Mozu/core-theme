@@ -82,8 +82,9 @@ export class LocationGroupsListComponent implements OnInit {
         }
     };
 
-    showDeleteConfirmationDialog(){
-        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup, ConfirmationDialogNotificationType.Confirmation);
+    showDeleteConfirmationDialog() {
+    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup,
+    ConfirmationDialogNotificationType.Confirmation, this.model.selectedLocationGroup.name);
     }
     
     deleteLocationGroup(){

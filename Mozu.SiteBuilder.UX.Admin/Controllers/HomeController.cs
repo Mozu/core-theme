@@ -62,7 +62,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         private readonly IMultiScopeAdminUserWebApiClient _usersRepo;
         private readonly string _adminNGBuildDirectory = "adminng";
         private readonly string _quotes = "quotes";
-        private readonly string _locationGroups = "locationGroups";
+        private readonly string _locationGroups = "locationGroup";
         private readonly string _fulfiller = "fulfiller";
 
         public HomeController(IMultiScopeAdminUserWebApiClient usersRepo, IAuthenticationHelper authHelper, ITenantsWebApiClient tenantsWebApi, IApiContext apiContext, ISettings settings, HttpContextBase httpContext, IMultiScopeAdminUserWebApiClient adminUserWebApiClient, IMasterCatalogWebApiClient masterCatalogClient, ILogger logger, IEntityListsWebApiClient entityListsWebApiClient , IDocumentListWebApiClient documentListWebApiClient, ITenantAdminSettingsContext tenantAdminSettingsContext)

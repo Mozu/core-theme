@@ -37,6 +37,18 @@ a:hover {
         left: 36%;
         top: 30px;
     }
+
+    .tiles-item {
+        bottom: 13px;
+        font-size: 0.95em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .tiles-item {
+        bottom: 13px;
+        font-size: 0.95em;
+    }
 }
 
 .dashboard-icon::after {

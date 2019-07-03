@@ -75,6 +75,13 @@ ul li {
     font-size: 0.95em;
 }
 
+@media screen and (max-width: 480px) {
+    ul li {
+        font-size: 0.85em;
+        right: 3.5em;
+    }
+}
+
 ul {
     margin-bottom: 0px !important;
 }
