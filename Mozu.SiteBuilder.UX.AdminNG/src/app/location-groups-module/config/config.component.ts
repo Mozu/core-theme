@@ -37,7 +37,15 @@ export class LocationGroupConfigComponent implements OnInit {
             defaultCarrier: ['', []],
             printReturnLabel: ['', []],
             defaultPrinterType: ['', []],
-            boxItems: this.fb.array([ this.createBoxItem()])
+            boxItems: this.fb.array([ this.createBoxItem()]),
+            outboundUsername:  ['', []],
+            outboundPassword:  ['', []],
+            outboundCustomerNumber:  ['', []],
+            outboundLocale:  ['', []],
+            outboundContractID:  ['', []],
+            carsPickupNotify:  ['', []],
+            preferredPickupTime:  ['', []],
+            closingTime:  ['', []]
         });
 
         this.addCarriersCheckboxes();
@@ -86,7 +94,9 @@ export class LocationGroupConfigComponent implements OnInit {
             sendCustomerPickupReminder: '2',
             defaultCarrier: 'None',
             printReturnLabel: 'Yes',
-            defaultPrinterType: 'Laser'
+            defaultPrinterType: 'Laser',
+            preferredPickupTime: '00:00',
+            closingTime:  '00:00'
         });
     }
 

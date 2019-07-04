@@ -264,7 +264,7 @@
             "length": "Length",
             "height": "Height",
             "inches": "inches",
-            
+    
             "UPSSettingsInfo": "UPS Credentials for CARS can be found in the",
             "UPSSettingsInfoLink": "CARS interface",
             "FedExSettingsInfo": "FedEx Credentials for CARS can be found in the",
@@ -272,7 +272,16 @@
             "USPSSettingsInfo": "USPS Credentials for CARS can be found in the",
             "USPSSettingsInfoLink": "CARS interface",
             "CanadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
-            "CanadaPostSettingsInfoLink": "CARS interface"
+            "CanadaPostSettingsInfoLink": "CARS interface",
+            "OutboundUsername": "Outbound Username",
+            "OutboundPassword": "Outbound Password",
+            "OutboundCustomerNumber": "Outbound Customer Number",
+            "OutboundLocale": "Outbound Locale",
+            "OutboundContractID": "Outbound Contract ID",
+            "CarsPickupNotify": "CARS CANADA POST Automated Pickup Notify",
+            "PreferredPickupTime": "Preferred Pickup Time",
+            "ClosingTime": "Closing Time"
+
         },
         "FormSections": {
             "ISPU" : "ISPU",
