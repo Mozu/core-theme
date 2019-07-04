@@ -263,12 +263,25 @@
             "width": "Width",
             "length": "Length",
             "height": "Height",
-            "inches": "inches"
+            "inches": "inches",
+            
+            "UPSSettingsInfo": "UPS Credentials for CARS can be found in the",
+            "UPSSettingsInfoLink": "CARS interface",
+            "FedExSettingsInfo": "FedEx Credentials for CARS can be found in the",
+            "FedExSettingsInfoLink": "CARS interface",
+            "USPSSettingsInfo": "USPS Credentials for CARS can be found in the",
+            "USPSSettingsInfoLink": "CARS interface",
+            "CanadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
+            "CanadaPostSettingsInfoLink": "CARS interface"
         },
         "FormSections": {
             "ISPU" : "ISPU",
             "BoxTypes": "Box Types",
-            "Shipping": "Shipping"
+            "Shipping": "Shipping",
+            "UPSSettings": "UPS Settings",
+            "FedExSettings": "FedEx Settings",
+            "USPSSettings": "USPS Settings",
+            "CanadaPostSettings": "Canada Post Settings"
         }
     }
 

@@ -170,4 +170,26 @@ export class Constants {
                                {data : 'Canada Post', label: 'Canada Post'}];
     static LCPrintReturnLabel = [{data: 'Yes', label: 'Yes'}, {data: 'No', label: 'No'}];
     static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
+    static LCUPSUSShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_EARLY_AM', label: 'UPS_NEXT_DAY_AIR_EARLY_AM'},
+                                   {data: 'UPS_NEXT_DAY_AIR_SAVER', label: 'UPS_NEXT_DAY_AIR_SAVER'},
+                                   {data: 'UPS_NEXT_DAY_AIR', label: 'UPS_NEXT_DAY_AIR'},
+                                   {data: 'UPS_2ND_DAY_AIR_AM', label: 'UPS_2ND_DAY_AIR_AM'},
+                                   {data: 'UPS_2ND_DAY_AIR', label: 'UPS_2ND_DAY_AIR'},
+                                   {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
+                                   {data: 'UPS_GROUND', label: 'UPS_GROUND'},
+                                   {data: 'UPS_SURE_POST_LESS_THAN_1_POUND', label: 'UPS_SURE_POST_LESS_THAN_1_POUND'},
+                                   {data: 'UPS_SURE_POST_1_POUND_OR_GREATER', label: 'UPS_SURE_POST_1_POUND_OR_GREATER'}];
+
+    static LCUPSInternationalShippingTypes = [{data: 'UPS_STANDARD', label: 'UPS_STANDARD'},
+                                              {data: 'UPS_EXPRESS', label: 'UPS_EXPRESS'},
+                                              {data: 'UPS_EXPRESS_PLUS', label: 'UPS_EXPRESS_PLUS'},
+                                              {data: 'UPS_EXPEDITED', label: 'UPS_EXPEDITED'},
+                                              {data: 'UPS_SAVER', label: 'UPS_SAVER'},
+                                              {data: 'UPS_ACCESS_POINT_ECONOMY', label: 'UPS_ACCESS_POINT_ECONOMY'}];
+
+    static LCUPSCanadaShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_SAVER', label: 'UPS_NEXT_DAY_AIR_SAVER'},
+                                              {data: 'UPS_2ND_DAY_AIR', label: 'UPS_2ND_DAY_AIR'},
+                                              {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
+                                              {data: 'UPS_STANDARD', label: 'UPS_STANDARD'}];
+
 }
