@@ -273,15 +273,12 @@
             "USPSSettingsInfoLink": "CARS interface",
             "CanadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
             "CanadaPostSettingsInfoLink": "CARS interface",
-            "OutboundUsername": "Outbound Username",
-            "OutboundPassword": "Outbound Password",
-            "OutboundCustomerNumber": "Outbound Customer Number",
-            "OutboundLocale": "Outbound Locale",
-            "OutboundContractID": "Outbound Contract ID",
-            "CarsPickupNotify": "CARS CANADA POST Automated Pickup Notify",
-            "PreferredPickupTime": "Preferred Pickup Time",
-            "ClosingTime": "Closing Time"
 
+            "UPSUSShippingTypes": "UPS US Shipping Types",
+            "UPSUSStandardDefault": "UPS US Standard Default", 
+            "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
+            "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
+            "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default"
         },
         "FormSections": {
             "ISPU" : "ISPU",

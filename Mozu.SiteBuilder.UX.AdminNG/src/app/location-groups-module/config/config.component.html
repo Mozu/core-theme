@@ -81,7 +81,7 @@
 				</div>
 				<div class="row nomargin for-top-margin">
 					<div class="form-row col-md-5 for-no-padding">
-						<label class="subform-label" for="defaultPrinterType">{{'LOCATIONGROUPCONFIG.FormLabels.defaultprinterType' | translate}}</label>
+						<label class="subform-label" for="defaultPrinterType">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSStandardDefault' | translate}}</label>
 						<select id="defaultPrinterType" class="form-control" formControlName="defaultPrinterType">
 							<option *ngFor="let action of model.LCDefaultPrinterType" [ngValue]="action.data">
 								{{ action.label }}
@@ -149,6 +149,62 @@
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.UPSSettings' | translate}}</h4>
 				<h5>{{'LOCATIONGROUPCONFIG.FormLabels.UPSSettingsInfo' | translate}} <a>{{'LOCATIONGROUPCONFIG.FormLabels.UPSSettingsInfoLink' | translate}}</a>.</h5>
+				<div class="row nomargin">
+					<div class="col-md-6 for-no-padding">
+						<div class="col-md-4 for-no-padding">
+							{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSShippingTypes' | translate}}
+						</div>
+						<div class="col-md-8 for-no-padding">
+							<label class="subform-label nopadding col-md-12" formArrayName="upsUsShippingTypes" 
+								*ngFor="let shippingType of model.locationGroupConfigForm.get('upsUsShippingTypes')['controls']; let shippingTypeIndex = index">
+								<input type="checkbox" [formControlName]="shippingTypeIndex">
+								{{model.LCUPSUSShippingTypes[shippingTypeIndex].label}}
+							</label>
+						</div>	
+					</div>
+					<div class="col-md-6 for-no-padding">
+						<div class="row nomargin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label" for="upsUSStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSStandardDefault' | translate}}</label>
+								<select id="upsUSStandardDefault" class="form-control" formControlName="upsUSStandardDefault">
+									<option *ngFor="let shippingType of model.LCUPSUSShippingTypes" [ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label" for="upsUSExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSExpress1DayDefault' | translate}}</label>
+								<select id="upsUSExpress1DayDefault" class="form-control" formControlName="upsUSExpress1DayDefault">
+									<option *ngFor="let shippingType of model.LCUPSUSShippingTypes" [ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label" for="upsUSExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSExpress2DayDefault' | translate}}</label>
+								<select id="upsUSExpress2DayDefault" class="form-control" formControlName="upsUSExpress2DayDefault">
+									<option *ngFor="let shippingType of model.LCUPSUSShippingTypes" [ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label" for="upsUSExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSExpress3DayDefault' | translate}}</label>
+								<select id="upsUSExpress3DayDefault" class="form-control" formControlName="upsUSExpress3DayDefault">
+									<option *ngFor="let shippingType of model.LCUPSUSShippingTypes" [ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.FedExSettings' | translate}}</h4>

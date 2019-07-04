@@ -28,6 +28,7 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
+        this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -38,17 +39,15 @@ export class LocationGroupConfigComponent implements OnInit {
             printReturnLabel: ['', []],
             defaultPrinterType: ['', []],
             boxItems: this.fb.array([ this.createBoxItem()]),
-            outboundUsername:  ['', []],
-            outboundPassword:  ['', []],
-            outboundCustomerNumber:  ['', []],
-            outboundLocale:  ['', []],
-            outboundContractID:  ['', []],
-            carsPickupNotify:  ['', []],
-            preferredPickupTime:  ['', []],
-            closingTime:  ['', []]
+            upsUsShippingTypes: new FormArray([]),
+            upsUSStandardDefault:  ['', []],
+            upsUSExpress1DayDefault:  ['', []],
+            upsUSExpress2DayDefault:  ['', []],
+            upsUSExpress3DayDefault:  ['', []]
         });
 
         this.addCarriersCheckboxes();
+        this.addUPSUSShippingTypesCheckboxes();
         this.fetchSitesData();
         this.updateLocationGroupConfigForm();
 
@@ -58,6 +57,13 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCCarriers.map((o, i) => {
             const control = new FormControl(); // if first item set to true, else false
             (this.model.locationGroupConfigForm.controls.carriers as FormArray).push(control);
+        });
+    }
+
+    private addUPSUSShippingTypesCheckboxes(){
+        this.model.LCUPSUSShippingTypes.map((o, i) => {
+            const control = new FormControl(); // if first item set to true, else false
+            (this.model.locationGroupConfigForm.controls.upsUsShippingTypes as FormArray).push(control);
         });
     }
 
