@@ -5,6 +5,20 @@
     padding-right: 15px;
 }
 
+.heading a {
+    color: #3f3f3f;
+    font-weight: 400;
+    line-height: 23px;
+}
+
+.heading a:hover,
+.heading a:active,
+.heading a:visited,
+.heading a:link {
+    color: #3f3f3f;
+    text-decoration: none;
+}
+
 .searchBar {
     display: inline-block;
     width: 90%;

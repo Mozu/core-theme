@@ -51,6 +51,7 @@ export class Constants {
         locationGroups : 'locationGroups',
         locationGroupCreate : 'locationGroupCreate',
         locationGroupEdit : 'locationGroupEdit',
+        locationGroupConfig : 'locationGroupConfig',
         fulfiller: 'fulfiller',
         fulfillerHome: 'home'
     };

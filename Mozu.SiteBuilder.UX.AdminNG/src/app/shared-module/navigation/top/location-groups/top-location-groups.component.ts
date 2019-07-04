@@ -11,28 +11,32 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     styleUrls: ['./top-location-groups.component.css']
   })
   export class NavigationTopLocationGroupsComponent implements OnInit {
-    
-    public model : TopLocationGroupsModel;
+
+    public model: TopLocationGroupsModel;
     subscriptions = [];
 
     constructor(private router: Router,
-      private _notificationService:NotificationService) { 
-
+      private _notificationService: NotificationService) {
     }
-  
+
     ngOnInit() {
       this.model = new TopLocationGroupsModel();
-      
+      this.model.locationGroupURL = Constants.uiRoutes.locationGroups;
       this.model.isEditMode = false;
+      this.model.isConfigTabVisible = false;
       this.checkMode();
 
       this.subscriptions.push(
-        this._notificationService.locationGroupAdded.subscribe((action: string) => {
+        this._notificationService.locationGroupAdded.subscribe((action: any) => {
             if(action === NotificationLGActions.saved || action === NotificationLGActions.cancelled){
               this.model.isEditMode = false;
+              this.model.isConfigTabVisible  = false;
             }
-            if(action === NotificationLGActions.edit){
+            if(action.name === NotificationLGActions.edit){
               this.model.isEditMode = true;
+              this.model.isConfigTabVisible  = true;
+              this.model.locationGroupName = action.data.name;
+              this.model.locationGroupId = action.data.locationGroupId;
             }
         })
       );
@@ -53,12 +57,15 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
           const path =  primarySegments[0].path;
           if(path === Constants.uiRoutes.locationGroups){
             this.model.isEditMode = false;
+            this.model.isConfigTabVisible  = false;
           }
           if(path === Constants.uiRoutes.locationGroupCreate){
             this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = false;
           }
           if(path === Constants.uiRoutes.locationGroupEdit){
             this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = true;
           }
         }
     }
@@ -75,5 +82,24 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     saveCreateLG(){
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.save);
     }
+
+    gotoLocationGroupList(){
+      this.model.isEditMode = false;
+      this.model.isConfigTabVisible  = false;
+      this.router.navigate([Constants.uiRoutes.locationGroups]);
+    }
+
+    gotoLocationGroupEdit(){
+      this.model.isEditMode = true;
+      this.model.isConfigTabVisible  = true;
+      this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupId]);
+    }
+
+    gotoLocationGroupConfig(){
+      this.model.isEditMode = false;
+      this.model.isConfigTabVisible  = true;
+      //this.router.navigate([Constants.uiRoutes.locationGroups]);
+    }
+
   }
   

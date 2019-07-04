@@ -1,3 +1,7 @@
 export class TopLocationGroupsModel {
-    isEditMode : boolean;
+    isEditMode: boolean;
+    isConfigTabVisible: boolean;
+    locationGroupName: string;
+    locationGroupId: string;
+    locationGroupURL: string;
 }

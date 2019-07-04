@@ -4,11 +4,13 @@ import {
   LocationGroupsListComponent,
   LocationGroupCreateComponent
 } from './index';
+import { LocationGroupConfigComponent } from './config/config.component';
 
 @NgModule({
   declarations: [
     LocationGroupsListComponent,
-    LocationGroupCreateComponent
+    LocationGroupCreateComponent,
+    LocationGroupConfigComponent
   ],
   imports: [
     SharedModule

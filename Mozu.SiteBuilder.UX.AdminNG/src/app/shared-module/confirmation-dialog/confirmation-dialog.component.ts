@@ -7,6 +7,8 @@ import { LoggerService } from '@core/services';
 
 import { ConfirmationDialogService } from './confirmation-dialog.service';
 
+import { Constants } from '@shared/infrastructure/constants';
+
 @Component({
   selector: 'confirmation-dialog',
   templateUrl: './confirmation-dialog.component.html',
@@ -23,6 +25,7 @@ export class ConfirmationDialogComponent implements OnInit {
   secondaryButtonText: string;
   itemName: string;
   secondaryMessage: string;
+  deleteLabel = Constants.gridActionItem.Delete;
 
   constructor(private _loggerService: LoggerService,
     private _confirmationDialogService: ConfirmationDialogService) {

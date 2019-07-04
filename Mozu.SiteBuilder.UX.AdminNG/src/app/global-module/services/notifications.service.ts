@@ -15,7 +15,7 @@ export class NotificationService {
     productAddedToCartFromDialogNotification: Subject<null> = new Subject<null>();
     disableUINotification: Subject<null> = new Subject<null>();
     loadAccessTileCategories: Subject<string> = new Subject<string>();
-    locationGroupAdded: Subject<string> = new Subject<string>();
+    locationGroupAdded: Subject<any> = new Subject<any>();
     locationGroupEdited: Subject<any> = new Subject<any>();
     loadLeftMenuItems: Subject<any> = new Subject<any>();
 
@@ -49,7 +49,7 @@ export class NotificationService {
         this.loadAccessTileCategories.next(accesTileName);
     }
 
-    notifyLocationGroupAdded(actionName:string){
+    notifyLocationGroupAdded(actionName: any) {
         this._logger.info('NotificationService : notifyLocationGroupAdded');
         this.locationGroupAdded.next(actionName);
     }

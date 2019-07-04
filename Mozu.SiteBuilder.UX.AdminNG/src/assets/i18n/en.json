@@ -31,7 +31,8 @@
             },
             "pageTitle": {
                 "quotes": "Quotes",
-                "locationGroups": "Location Groups"
+                "locationGroups": "Location Groups",
+                "locationConfigs": "Config Settings"
             },
             "actionButtons": {
                 "locationGroups": {
@@ -215,7 +216,7 @@
     },
     "LOCATIONGROUP": {
         "GridHeader": {
-            "Code": "Code",
+            "ID": "ID",
             "Name": "Name"
         },
         "GridContextMenu": {

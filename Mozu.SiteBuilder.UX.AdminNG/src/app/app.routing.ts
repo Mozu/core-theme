@@ -17,6 +17,7 @@ import {
     QuotesEditComponent, 
     QuotesListComponent 
 } from './quotes-module';
+import { LocationGroupConfigComponent } from './location-groups-module/config/config.component';
 
 import {
     LocationGroupsListComponent,
@@ -55,6 +56,13 @@ const appRoutes: Routes = [
     {
         path: Constants.uiRoutes.locationGroupEdit+'/:id',
         component: LocationGroupCreateComponent,
+        data: {
+            mode: Constants.gridActionItem.Edit
+          }
+    },
+    {
+        path: Constants.uiRoutes.locationGroupConfig+'/:id',
+        component: LocationGroupConfigComponent,
         data: {
             mode: Constants.gridActionItem.Edit
           }
