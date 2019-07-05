@@ -213,6 +213,71 @@
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.USPSSettings' | translate}}</h4>
 				<h5>{{'LOCATIONGROUPCONFIG.FormLabels.USPSSettingsInfo' | translate}} <a>{{'LOCATIONGROUPCONFIG.FormLabels.USPSSettingsInfoLink' | translate}}</a>.</h5>
+				<div class="row nomargin">
+						<div class="col-md-6 for-no-padding">
+							<div class="col-md-4 for-no-padding">
+								{{'LOCATIONGROUPCONFIG.FormLabels.USPSShippingTypes' | translate}}
+							</div>
+							<div class="col-md-8 for-no-padding">
+								<label class="subform-label nopadding col-md-12" formArrayName="uspsShippingTypes" 
+									*ngFor="let shippingType of model.locationGroupConfigForm.get('uspsShippingTypes')['controls']; let shippingTypeIndex = index">
+									<input type="checkbox" [formControlName]="shippingTypeIndex">
+									{{model.LCUSPSShippingTypes[shippingTypeIndex].label}}
+								</label>
+							</div>	
+								<div class="form-row col-md-8 for-no-padding">
+										<label class="subform-label" for="uspsReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.USPSReturnLabelShippingTypes' | translate}}</label>
+										<select id="uspsReturnLabelShippingTypes" class="form-control" formControlName="uspsReturnLabelShippingTypes">
+											<option *ngFor="let shippingType of model.LCUSPSShippingTypes" [ngValue]="shippingType.data">
+												{{ shippingType.label }}
+											</option>
+										</select>
+									</div>
+							
+						</div>
+						<div class="col-md-6 for-no-padding">
+							<div class="row nomargin">
+								<div class="form-row col-md-10 for-no-padding">
+									<label class="subform-label" for="uspsStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.USPSStandardDefault' | translate}}</label>
+									<select id="uspsStandardDefault" class="form-control" formControlName="uspsStandardDefault">
+										<option *ngFor="let shippingType of model.LCUSPSShippingTypes" [ngValue]="shippingType.data">
+											{{ shippingType.label }}
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="row nomargin for-top-margin">
+								<div class="form-row col-md-10 for-no-padding">
+									<label class="subform-label" for="uspsExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.USPSExpress1DayDefault' | translate}}</label>
+									<select id="uspsExpress1DayDefault" class="form-control" formControlName="uspsExpress1DayDefault">
+										<option *ngFor="let shippingType of model.LCUSPSShippingTypes" [ngValue]="shippingType.data">
+											{{ shippingType.label }}
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="row nomargin for-top-margin">
+								<div class="form-row col-md-10 for-no-padding">
+									<label class="subform-label" for="uspsExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.USPSExpress2DayDefault' | translate}}</label>
+									<select id="uspsExpress2DayDefault" class="form-control" formControlName="uspsExpress2DayDefault">
+										<option *ngFor="let shippingType of model.LCUSPSShippingTypes" [ngValue]="shippingType.data">
+											{{ shippingType.label }}
+										</option>
+									</select>
+								</div>
+							</div>
+							<div class="row nomargin for-top-margin">
+								<div class="form-row col-md-10 for-no-padding">
+									<label class="subform-label" for="uspsExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.USPSExpress3DayDefault' | translate}}</label>
+									<select id="uspsExpress3DayDefault" class="form-control" formControlName="uspsExpress3DayDefault">
+										<option *ngFor="let shippingType of model.LCUSPSShippingTypes" [ngValue]="shippingType.data">
+											{{ shippingType.label }}
+										</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
 			</div>
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.CanadaPostSettings' | translate}}</h4>
@@ -270,7 +335,7 @@
 				</div>
 				<div class="row nomargin for-top-margin">
 						<div class="form-row col-md-5 for-no-padding">
-						<input type="text" required class=" inputText form-control subform-text"
+						<input type="number" required class=" inputText form-control subform-text"
 							id="preferredPickupTime" name="preferredPickupTime"
 							formControlName="preferredPickupTime" />
 						<span class="floating-label">{{'LOCATIONGROUPCONFIG.FormLabels.PreferredPickupTime' | translate }}</span>
@@ -278,7 +343,7 @@
 							</div>
 					<div class="col-md-1"></div>
 					<div class="form-row col-md-5 for-no-padding">
-							<input type="text" required class=" inputText form-control subform-text"
+							<input type="number" required class=" inputText form-control subform-text"
 							id="closingTime" name="closingTime"
 							formControlName="closingTime" />
 						<span class="floating-label">{{'LOCATIONGROUPCONFIG.FormLabels.ClosingTime' | translate }}</span>

@@ -29,6 +29,7 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
+        this.model.LCUSPSShippingTypes = Constants.LCUSPSShippingTypes;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -43,13 +44,28 @@ export class LocationGroupConfigComponent implements OnInit {
             upsUSStandardDefault:  ['', []],
             upsUSExpress1DayDefault:  ['', []],
             upsUSExpress2DayDefault:  ['', []],
-            upsUSExpress3DayDefault:  ['', []]
+            upsUSExpress3DayDefault:  ['', []],
+            outboundPassword:  ['', []],
+            outboundCustomerNumber:  ['', []],
+            outboundLocale:  ['', []],
+            outboundContractID:  ['', []],
+            carsPickupNotify:  ['', []],
+            preferredPickupTime:  ['', []],
+            outboundUsername:  ['', []],
+            closingTime:  ['', []],
+            uspsShippingTypes: new FormArray([]),
+            uspsStandardDefault:  ['', []],
+            uspsExpress1DayDefault:  ['', []],
+            uspsExpress2DayDefault:  ['', []],
+            uspsExpress3DayDefault:  ['', []],
+            uspsReturnLabelShippingTypes:  ['', []],
         });
 
         this.addCarriersCheckboxes();
         this.addUPSUSShippingTypesCheckboxes();
         this.fetchSitesData();
         this.updateLocationGroupConfigForm();
+        this.addUSPSShippingTypesCheckboxes();
 
     }
 
@@ -101,8 +117,15 @@ export class LocationGroupConfigComponent implements OnInit {
             defaultCarrier: 'None',
             printReturnLabel: 'Yes',
             defaultPrinterType: 'Laser',
-            preferredPickupTime: '00:00',
-            closingTime:  '00:00'
+            // preferredPickupTime: '00:00',
+            // closingTime:  '00:00'
+        });
+    }
+
+    private addUSPSShippingTypesCheckboxes(){
+        this.model.LCUSPSShippingTypes.map((o, i) => {
+            const control = new FormControl(); // if first item set to true, else false
+            (this.model.locationGroupConfigForm.controls.uspsShippingTypes as FormArray).push(control);
         });
     }
 

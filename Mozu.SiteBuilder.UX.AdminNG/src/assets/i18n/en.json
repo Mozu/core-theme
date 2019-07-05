@@ -278,7 +278,13 @@
             "UPSUSStandardDefault": "UPS US Standard Default", 
             "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
             "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
-            "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default"
+            "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default",
+            "USPSShippingTypes": "USPS Shipping Types",
+            "USPSStandardDefault": "USPS Standard Default", 
+            "USPSExpress1DayDefault": "USPS Express 1 Day Default",
+            "USPSExpress2DayDefault": "USPS Express 2 Day Default",
+            "USPSExpress3DayDefault": "USPS Express 3 Day Default",
+            "USPSReturnLabelShippingTypes": "USPS Return Label Shipping Types"
         },
         "FormSections": {
             "ISPU" : "ISPU",

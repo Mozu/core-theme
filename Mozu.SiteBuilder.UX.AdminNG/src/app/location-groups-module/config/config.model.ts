@@ -13,5 +13,6 @@ export class LocationGroupConfigModel {
     LCPrintReturnLabel: any[];
     LCDefaultPrinterType: any[];
     LCUPSUSShippingTypes: any[];
+    LCUSPSShippingTypes: any[];
 
 }
