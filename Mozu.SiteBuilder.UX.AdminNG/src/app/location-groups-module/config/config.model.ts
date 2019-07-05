@@ -15,5 +15,5 @@ export class LocationGroupConfigModel {
     LCUPSUSShippingTypes: any[];
     LCUPSInternationalShippingTypes: any[];
     LCUPSCanadaShippingTypes: any[];
-
+    LCFedExShippingType: any[];
 }

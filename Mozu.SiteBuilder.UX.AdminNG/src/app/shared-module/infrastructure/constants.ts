@@ -191,7 +191,7 @@ export class Constants {
                                               {data: 'UPS_2ND_DAY_AIR', label: 'UPS_2ND_DAY_AIR'},
                                               {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
                                               {data: 'UPS_STANDARD', label: 'UPS_STANDARD'}];
-    
+
     static LCUSPSShippingTypes = [{data: 'UPS_PRIORITYEXPRESS', label: 'PRIORITYEXPRESS'},
                                    {data: 'UPS_FIRST', label: 'FIRST'},
                                    {data: 'UPS_LIBRARYMAIL', label: 'LIBRARYMAIL'},
@@ -200,4 +200,16 @@ export class Constants {
                                    {data: 'UPS_PRIORITY', label: 'PRIORITY'},
                                   ];
 
+    static LCFedExShippingType = [{data: 'FIRST_OVERNIGHT ', label: 'FIRST_OVERNIGHT '},
+                                  {data: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY', label: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY'},
+                                  {data: 'PRIORITY_OVERNIGHT', label: 'PRIORITY_OVERNIGHT'},
+                                  {data: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY', label: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY'},
+                                  {data: 'STANDARD_OVERNIGHT', label: 'STANDARD_OVERNIGHT'},
+                                  {data: 'FEDEX_2_DAY_AM', label: 'FEDEX_2_DAY_AM'},
+                                  {data: 'FEDEX_2_DAY', label: 'FEDEX_2_DAY'},
+                                  {data: 'FEDEX_2_DAY_SATURDAY_DELIVERY', label: 'FEDEX_2_DAY_SATURDAY_DELIVERY'},
+                                  {data: 'FEDEX_EXPRESS_SAVER', label: 'FEDEX_EXPRESS_SAVER'},
+                                  {data: 'FEDEX_GROUND', label: 'FEDEX_GROUND'},
+                                  {data: 'GROUND_HOME_DELIVERY', label: 'GROUND_HOME_DELIVERY'},
+                                  {data: 'SMART_POST', label: 'SMART_POST'}];
 }

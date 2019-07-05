@@ -362,7 +362,95 @@
 			</div>
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.FedExSettings' | translate}}</h4>
-				<h5>{{'LOCATIONGROUPCONFIG.FormLabels.FedExSettingsInfo' | translate}} <a>{{'LOCATIONGROUPCONFIG.FormLabels.FedExSettingsInfoLink' | translate}}</a>.</h5>
+				<h5>{{'LOCATIONGROUPCONFIG.FormLabels.FedExSettingsInfo' | translate}}
+					<a>{{'LOCATIONGROUPCONFIG.FormLabels.FedExSettingsInfoLink' | translate}}</a>.</h5>
+					<div class="row nomargin for-no-padding">
+					<div class="col-md-6 for-no-padding">
+						<div class="col-md-4 for-no-padding">
+								{{'LOCATIONGROUPCONFIG.FormLabels.enableSmartPost' | translate}}
+						</div>
+						<div class="col-md-8 for-no-padding">
+								<input type="checkbox" [formControlName]="enableSmartPost">
+						</div>
+						<div class="col-md-4 for-no-padding">
+							{{'LOCATIONGROUPCONFIG.FormLabels.FedExShippingTypes' | translate}}
+						</div>
+						<div class="col-md-8 for-no-padding">
+							<label class="subform-label nopadding col-md-12" formArrayName="fedExShippingTypes"
+								*ngFor="let shippingType of model.locationGroupConfigForm.get('fedExShippingTypes')['controls']; let shippingTypeIndex = index">
+								<input type="checkbox" [formControlName]="shippingTypeIndex">
+								{{model.LCFedExShippingType[shippingTypeIndex].label}}
+							</label>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label"
+									for="fedExReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.FedExReturnLabelShippingTypes' | translate}}</label>
+								<select id="fedExReturnLabelShippingTypes" class="form-control"
+									formControlName="fedExReturnLabelShippingTypes">
+									<option *ngFor="let shippingType of model.LCFedExShippingType"
+										[ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 for-no-padding">
+						<div class="row nomargin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label"
+									for="fedexStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.FedexStandardDefault' | translate}}</label>
+								<select id="fedexStandardDefault" class="form-control"
+									formControlName="fedexStandardDefault">
+									<option *ngFor="let shippingType of model.LCFedExShippingType"
+										[ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label"
+									for="fedexExpress1Default">{{'LOCATIONGROUPCONFIG.FormLabels.FedexExpress1Default' | translate}}</label>
+								<select id="fedexExpress1Default" class="form-control"
+									formControlName="fedexExpress1Default">
+									<option *ngFor="let shippingType of model.LCFedExShippingType"
+										[ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label"
+									for="fedexExpress2Default">{{'LOCATIONGROUPCONFIG.FormLabels.FedexExpress2Default' | translate}}</label>
+								<select id="fedexExpress2Default" class="form-control"
+									formControlName="fedexExpress2Default">
+									<option *ngFor="let shippingType of model.LCFedExShippingType"
+										[ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="row nomargin for-top-margin">
+							<div class="form-row col-md-10 for-no-padding">
+								<label class="subform-label"
+									for="fedexExpress3Default">{{'LOCATIONGROUPCONFIG.FormLabels.FedexExpress3Default' | translate}}</label>
+								<select id="fedexExpress3Default" class="form-control"
+									formControlName="fedexExpress3Default">
+									<option *ngFor="let shippingType of model.LCFedExShippingType"
+										[ngValue]="shippingType.data">
+										{{ shippingType.label }}
+									</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>	
 			</div>
 			<div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.USPSSettings' | translate}}</h4>

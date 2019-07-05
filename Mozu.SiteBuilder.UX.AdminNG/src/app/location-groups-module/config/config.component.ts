@@ -31,6 +31,7 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
         this.model.LCUPSInternationalShippingTypes = Constants.LCUPSInternationalShippingTypes;
         this.model.LCUPSCanadaShippingTypes = Constants.LCUPSCanadaShippingTypes;
+        this.model.LCFedExShippingType = Constants.LCFedExShippingType;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -62,15 +63,38 @@ export class LocationGroupConfigComponent implements OnInit {
             upsCanadaExpress1DayDefault: ['', []],
             upsCanadaExpress2DayDefault: ['', []],
             upsCanadaExpress3DayDefault: ['', []],
-            upsCanadaReturnLabelShippingTypes: ['', []]
+            upsCanadaReturnLabelShippingTypes: ['', []],
 
+            outboundPassword:  ['', []],
+            outboundCustomerNumber:  ['', []],
+            outboundLocale:  ['', []],
+            outboundContractID:  ['', []],
+            carsPickupNotify:  ['', []],
+            preferredPickupTime:  ['', []],
+            outboundUsername:  ['', []],
 
+            uspsShippingTypes: new FormArray([]),
+            uspsStandardDefault:  ['', []],
+            uspsExpress1DayDefault:  ['', []],
+            uspsExpress2DayDefault:  ['', []],
+            uspsExpress3DayDefault:  ['', []],
+            uspsReturnLabelShippingTypes:  ['', []],
+            closingTime:  ['', []],
+
+            enableSmartPost: ['', []],
+            fedExShippingTypes: new FormArray([]),
+            fedexStandardDefault: ['', []],
+            fedexExpress1Default: ['', []],
+            fedexExpress2Default: ['', []],
+            fedexExpress3Default: ['', []],
+            fedExReturnLabelShippingTypes: ['', []]
         });
 
         this.addCarriersCheckboxes();
         this.addUPSUSShippingTypesCheckboxes();
         this.addUPSInternationalShippingTypesCheckboxes();
         this.addUPSCanadaShippingTypesCheckboxes();
+        this.addFedExShippingTypesCheckboxes();
         this.fetchSitesData();
         this.updateLocationGroupConfigForm();
         this.addUSPSShippingTypesCheckboxes();
@@ -79,29 +103,36 @@ export class LocationGroupConfigComponent implements OnInit {
 
     private addCarriersCheckboxes(){
         this.model.LCCarriers.map((o, i) => {
-            const control = new FormControl(); // if first item set to true, else false
+            const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.carriers as FormArray).push(control);
         });
     }
 
-    private addUPSUSShippingTypesCheckboxes(){
+    private addUPSUSShippingTypesCheckboxes() {
         this.model.LCUPSUSShippingTypes.map((o, i) => {
             const control = new FormControl(); // if first item set to true, else false
             (this.model.locationGroupConfigForm.controls.upsUsShippingTypes as FormArray).push(control);
         });
     }
 
-    private addUPSInternationalShippingTypesCheckboxes(){
+    private addUPSInternationalShippingTypesCheckboxes() {
         this.model.LCUPSInternationalShippingTypes.map((o, i) => {
-            const control = new FormControl(); // if first item set to true, else false
+            const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.upsInternationalShippingTypes as FormArray).push(control);
         });
     }
 
-    private addUPSCanadaShippingTypesCheckboxes(){
+    private addUPSCanadaShippingTypesCheckboxes() {
         this.model.LCUPSCanadaShippingTypes.map((o, i) => {
-            const control = new FormControl(); // if first item set to true, else false
+            const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.upsCanadaShippingTypes as FormArray).push(control);
+        });
+    }
+
+    private addFedExShippingTypesCheckboxes(){
+        this.model.LCFedExShippingType.map((o, i) => {
+            const control = new FormControl();
+            (this.model.locationGroupConfigForm.controls.fedExShippingTypes as FormArray).push(control);
         });
     }
 
@@ -151,6 +182,4 @@ export class LocationGroupConfigComponent implements OnInit {
             (this.model.locationGroupConfigForm.controls.uspsShippingTypes as FormArray).push(control);
         });
     }
-
-
 }

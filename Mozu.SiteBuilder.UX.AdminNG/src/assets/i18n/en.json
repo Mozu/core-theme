@@ -294,9 +294,15 @@
             "UPSCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
             "UPSCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
             "UPSCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
-            "UPSCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types"
-            
+            "UPSCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types",
 
+            "enableSmartPost": "Enable SmartPost",
+            "FedExShippingTypes": "FedEx Shipping Types",
+            "FedexStandardDefault": "Fedex Standard Default",
+            "FedexExpress1Default": "Fedex Express 1 Default",
+            "FedexExpress2Default": "Fedex Express 2 Default",
+            "FedexExpress3Default": "Fedex Express 3 Default",
+            "FedExReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
         },
         "FormSections": {
             "ISPU" : "ISPU",
