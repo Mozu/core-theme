@@ -41,11 +41,11 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
                                     itemId: 'cancelQuantity',
                                     hideTrigger: true,
                                     allowBlank: false,
-                                    value: this.originalQuantity,
-                                    //    this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
-                                    //        : this.record.data.quantity,
+                                    value: //this.originalQuantity,
+                                        this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
+                                            : this.record.data.quantity,
                                     minValue: 1,
-                                    //maxValue: this.originalQuantity || this.record.data.quantity,
+                                    maxValue: this.originalQuantity || this.record.data.quantity,
                                     validateOnChange: true,
                                     margin: '0px 5px 0px 5px',
                                     mouseWheelEnabled: false,
@@ -76,13 +76,13 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
                                     listeners: {
                                         change: {
                                             scope: this,
-                                            //fn: function (combobox, newValue) {
-                                            //    var newRecord = combobox.findRecordByValue(newValue);
-                                            //    if (newRecord) {
-                                            //        this.down('[name=otherReason]').setVisible(newRecord.get('needsMoreInfo'));
-                                            //        this.down("#primaryAction").setDisabled(!this.validateModal());
-                                            //    }
-                                            //}
+                                            fn: function (combobox, newValue) {
+                                                var newRecord = combobox.findRecordByValue(newValue);
+                                                if (newRecord) {
+                                                    this.down('[name=otherReason]').setVisible(newRecord.get('needsMoreInfo'));
+                                                    this.down("#primaryAction").setDisabled(!this.validateModal());
+                                                }
+                                            }
                                         }
                                     }
                                 },
@@ -94,14 +94,14 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
                                     fieldLabel: 'Specify Reason *',
-                                    //hidden: true,
+                                    hidden: true,
                                     listeners: {
-                                        //change: {
-                                        //    scope: this,
-                                        //    fn: function (field, value) {
-                                        //        this.down("#primaryAction").setDisabled(!this.validateModal());
-                                        //    }
-                                        //}
+                                        change: {
+                                            scope: this,
+                                            fn: function (field, value) {
+                                                this.down("#primaryaction").setdisabled(!this.validatemodal());
+                                            }
+                                        }
                                     }
                                 }
                             ]
@@ -140,14 +140,17 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
         var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
             this.down('#otherReason').getValue() : null);
-
+        console.log(order);
         return {
-            orderId: order.get('taco.model.order_id'),
-            orderItemId: order.get('id'),
-            quantity: this.down('#cancelQuantity').getValue(),
-            reason: {
-                reasonCode: reason,
-                description: description
+            OrderId: order.get('taco.model.order_id'),
+            Items: {
+                ItemId: order.get('id'),
+                Quantity: this.down('#cancelQuantity').getValue(),
+                ShipmentId: 1,
+                CanceledReason: {
+                    reasonCode: reason,
+                    description: description
+                }
             }
         };
     },
@@ -170,9 +173,9 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
                     if (val === 'yes') {
 
                         me.setLoading(true, me.body);
-                        var order = me.parentRecord;
+                        var order = me.record;
                         var payloadData = me.getCancelItemQuantityPayload();
-                        order.cancelItemQuantity({
+                        order.cancelOrderItems({
                             jsonData: payloadData,
                             success: function (response) {
                                 me.isRecordSaved = true;

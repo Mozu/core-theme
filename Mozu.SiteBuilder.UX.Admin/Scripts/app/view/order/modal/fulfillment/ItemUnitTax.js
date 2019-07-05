@@ -1,8 +1,8 @@
-/**
+﻿/**
  * @class Taco.view.product.Modal
  */
 
-Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
+Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.core.ux.form.TextField',
@@ -12,17 +12,22 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
     closeAction: 'destroy',
     primaryText: 'Save',
     scale: 'large',
-    title: 'Edit Item Quantity',
+    title: 'Unit Tax',
     isRecordSaved: false,
     layout: {
         type: 'fit'
     },
 
+    viewConfig: {
+        unittax: false,
+    },
+
+    
+
     initComponent: function () {
         console.log(this.originalQuantity);
-        console.log(this.record);
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
-            name: 'cancelOrderItem',
+            name: 'unittaxeditor',
             monitorValid: true,
             width: '100%',
             items:
@@ -41,73 +46,49 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
                                 {
                                     xtype: 'numberfield',
                                     width: 110,
-                                    name: 'cancelQuantity',
-                                    itemId: 'cancelQuantity',
+                                    name: 'UnitTaxPercent',
+                                    itemId: 'unittaxpercent',
                                     hideTrigger: true,
                                     allowBlank: false,
+                                 
                                     value:
                                         this.originalQuantity,
-                                        //this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
-                                        //    : this.record.data.quantity,
+                                    //this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
+                                    //    : this.record.data.quantity,
                                     minValue: 1,
                                     maxValue: this.originalQuantity || this.record.data.quantity,
                                     validateOnChange: true,
                                     margin: '0px 5px 0px 5px',
                                     mouseWheelEnabled: false,
-                                    fieldLabel: 'New Quantity',
+                                    fieldLabel: '$',
                                     listeners: {
                                         change: {
                                             scope: this,
                                             fn: function (field, value) {
-                                                this.down("#primaryAction").setDisabled(!this.validateModal());
+                                                if (value > 0)
+                                                    this.unittaxpercent = true;
                                             }
-                                        }
+                                       }
                                     }
                                 },
                                 {
-                                    xtype: 'combobox',
+                                    xtype: 'numberfield',
                                     width: 270,
-                                    name: 'cancelReason',
-                                    itemId: 'cancelReason',
-                                    valueField: 'reasonCode',
-                                    displayField: 'reasonCode',
-                                    fieldLabel: 'Change Reason',
-                                    queryMode: 'local',
-                                    margin: '0px 5px 0px 5px',
-                                    allowBlank: true,
-                                    editable: false,
-                                    forceSelection: true,
-                                    store: this.store,
-                                    listeners: {
-                                        change: {
-                                            scope: this,
-                                            fn: function (combobox, newValue) {
-                                                var newRecord = combobox.findRecordByValue(newValue);
-                                                if (newRecord) {
-                                                    this.down('[name=otherReason]').setVisible(newRecord.get('needsMoreInfo'));
-                                                    this.down("#primaryAction").setDisabled(!this.validateModal());
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
-                                {
-                                    xtype: 'textfield',
-                                    width: 270,
-                                    id: 'otherReason',
-                                    name: 'otherReason',
+                                    itemid: 'UnitTaxDollar',
+                                    name: 'UnitTaxDollar',
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
-                                    fieldLabel: 'Specify Reason',
-                                    hidden: true,
-                                    listeners: {
-                                        change: {
-                                            scope: this,
-                                            fn: function (field, value) {
-                                            //    this.down("#primaryAction").setDisabled(!this.validateModal());
-                                            }
-                                        }
-                                    }
+                                    fieldLabel: '%',
+                                    hidden: false,
+                                    disabled: this.unittaxpercent,
+                                    //listeners: {
+                                    //    change: {
+                                    //        scope: this,
+                                    //        fn: function (field, value) {
+                                    //            //    this.down("#primaryAction").setDisabled(!this.validateModal());
+                                    //        }
+                                    //    }
+                                    //}
                                 }
                             ]
                     }
@@ -123,7 +104,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
 
     validateModal: function () {
         //verify quantity is not null and less than 0 and should not be greater than max quantity
-        var quantity = this.down('#cancelQuantity').getValue();
+        var unittax = this.down('#cancelQuantity').getValue();
 
         if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
             return false;
@@ -163,7 +144,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
             var me = this;
 
             Ext.MessageBox.show({
-                title: 'Cancel Item',
+                title: 'Unit Tax',
                 // pushes the buttons to the right to be consistant with our dialog ux.
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
@@ -174,28 +155,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
                 fn: function (val) {
                     if (val === 'yes') {
 
-                        me.setLoading(true, me.body);
-                        var order = me.parentRecord;
-                        var payloadData = me.getEditItemQuantityPayload();
-                        order.editOrderItemQuantity({
-                            jsonData: payloadData,
-                            success: function (response) {
-                                me.isRecordSaved = true;
-                                me.setLoading(false, me.body);
-                                var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
-                                    return;
-                                }
-                                me.saveSuccess(json);
-                                // close the dialog
-                                me.close();
-                            },
-                            failure: function (response) {
-                                me.setLoading(false, me.body);
-                                // close the dialog
-                                me.close();
-                            }
-                        });
+                        me.close();
                     }
                 }
             });

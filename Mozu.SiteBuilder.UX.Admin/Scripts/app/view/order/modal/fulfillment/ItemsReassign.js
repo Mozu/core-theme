@@ -1,4 +1,4 @@
-Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+﻿Ext.define('Taco.view.order.modal.fulfillment.ItemsReassign', {
     extend: 'Taco.core.ux.window.Modal',
     requires: [
         'Taco.core.ux.form.Form',
@@ -8,13 +8,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         'Ext.form.field.Number',
         'Ext.toolbar.TextItem'
     ],
-    
+
     autoShow: true,
     closeAction: 'destroy',
     primaryText: 'Save',
     secondaryText: 'Cancel',
     scale: 'large',
-    title: 'Shipment Reassign',
+    title: 'Items Reassign',
     isRecordSaved: false,
     layout: {
         type: 'fit'
@@ -23,16 +23,16 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     initComponent: function () {
 
         var inventoryData = [
-            [ 'Austin warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'Houstan Warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'California Warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ]
+            ['Austin warehouse', "XXX.X Mi", "Yes"],
+            ['Houstan Warehouse', "XXX.X Mi", "Yes"],
+            ['California Warehouse', "XXX.X Mi", "Yes"],
+            ['Store name', "XXX.X Mi", "Yes"],
+            ['Store name', "XXX.X Mi", "Yes"],
+            ['Store name', "XXX.X Mi", "Yes"],
+            ['Store name', "XXX.X Mi", "Yes"]
         ];
 
-        var itemsPerPage = 2; 
+        var itemsPerPage = 2;
 
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'simpsonsStore',
@@ -48,31 +48,27 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             groupField: 'location',
             data: {
                 'items': [
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Houstan Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'California Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Houstan Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'California Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" }
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
+                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
                 ]
             },
             proxy: {
                 type: 'memory',
-               
+
                 reader: {
                     type: 'json',
                     root: 'items',
                     totalProperty: 'total',
                     enablePaging: true
-                   
+
                 }
             }
         });
@@ -121,9 +117,19 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     //    xtype: 'radiofield'
                     //}]
                 },
-                { text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+                { header: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+               
+                { text: 'Available', dataIndex: 'availableQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+                { text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+
                 {
-                    text: 'Stock', dataIndex: 'stock', width: 150,
+                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
+                    editor: {
+                        xtype: 'textfield',
+                        cls: 'x-grid-checkheader-editor',
+                        inputValue: true,
+                        uncheckedValue: false
+                    }
                 },
                 //{
                 //    xtype: 'checkcolumn',
@@ -145,7 +151,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             ],
             height: 150,
             width: 1000,
-         
+
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: inventoryStore,   // same store GridPanel is using
@@ -154,10 +160,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             selModel: {
                 selModel: 'rowmodel',
-            //    seltype: 'checkboxmodel', 
-            //    mode: 'single',    
-            //    checkonly : true
-            },   
+                //    seltype: 'checkboxmodel', 
+                //    mode: 'single',    
+                //    checkonly : true
+            },
             plugins: {
                 ptype: 'cellediting',
                 clicksToEdit: 1,
@@ -171,11 +177,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 deselect: function () {
                 },
                 //beforeload: function (store, operation, eOpts) {
-                   
+
                 //    store.proxy.data = inventoryData;
                 //}
             },
-           
+
             //listeners: {
             //    viewready: function (view) {
             //        var els = view.el.query('div[ext-xtype]');
@@ -188,7 +194,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
             //    }
             //}
-        //    renderTo: Ext.getBody()
+            //    renderTo: Ext.getBody()
         });
 
         Ext.create('Ext.data.Store', {
@@ -242,7 +248,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
-            height: 600,
+            height: 400,
             renderTo: Ext.getBody(),
             items: [
                 inventorygrid,

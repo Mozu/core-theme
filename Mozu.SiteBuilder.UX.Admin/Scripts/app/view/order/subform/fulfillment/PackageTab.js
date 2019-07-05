@@ -10,8 +10,7 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
     ],
 
     selType: 'cellmodel',
-   
-    plugins: [],
+       plugins: [],
 
     initComponent: function () {
         this.tabTitle = this.packageRecord.code;
@@ -285,7 +284,26 @@ Ext.define('Taco.view.order.subform.fulfillment.PackageTab', {
                                 model: 'Taco.model.Order',
                                 behavior: 'fulfill'
                             }],
-                            handler: this.handleViewShippingLabel
+                            //handler: this.handleViewShippingLabel
+                            handler: function (evt) {
+                                Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                                    layout: 'hbox',
+                                    width: 1080,
+                                    height: 700,
+                                    //record: record,
+                                    //parentRecord: me.record,
+                                    //store: me.record.getCancellationReasons(),
+                                    //originalQuantity: originalQuantity,
+                                    listeners: {
+                                        saveSuccess: {
+                                            fn: function (json) {
+                                                //me.fireEvent('orderCancelled', json);
+                                            },
+                                            //scope: me
+                                        }
+                                    }
+                                });
+                            }
                         }),
                         //Ext.widget('button', {
                         //    itemId: 'cancelItem',

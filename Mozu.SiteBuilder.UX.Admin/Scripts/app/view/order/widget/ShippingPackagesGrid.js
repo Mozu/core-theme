@@ -104,6 +104,11 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 useNull: true
             },
             {
+                name: 'itemTax',
+                type: 'int',
+                useNull: true
+            },
+            {
                 name: 'discount',
                 type: 'int',
                 useNull: true
@@ -145,6 +150,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
+            mode: 'single',
             injectCheckbox: 'first',
             headerWidth: 37,
             checkOnly: true,
@@ -318,7 +324,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }
             },
             {
-                dataIndex: 'unitPrice',
+                dataIndex: 'itemTax',
                 text: 'Unit Tax',
                 draggable: false,
                 sortable: false,
@@ -354,12 +360,12 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                editor: {
-                    xtype: 'numberfield',
-                    showBorder: false,
-                    hideTrigger: true,
-                    minValue: 0,
-                }
+                //editor: {
+                //    xtype: 'numberfield',
+                //    showBorder: false,
+                //    hideTrigger: true,
+                //    minValue: 0,
+                //}
             },
             {
                 dataIndex: 'quantity',
@@ -382,12 +388,12 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                editor: {
-                    xtype: 'numberfield',
-                    showBorder: false,
-                    hideTrigger: true,
-                    minValue: 0,
-                },
+                //editor: {
+                //    xtype: 'numberfield',
+                //    showBorder: false,
+                //    hideTrigger: true,
+                //    minValue: 0,
+                //},
                 renderer: function (value) {
                     return this.record.formatCurrency(value);
                 }
@@ -427,24 +433,9 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                             behavior: 'update'
                         },
                         menuColumnHandler: function (item, eventData) {
-                            Ext.create('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
-                                    layout: 'hbox',
-                                    width: 600,
-                                    height: 400,
-                                    //record: record,
-                                    //parentRecord: me.record,
-                                    //store: me.record.getCancellationReasons(),
-                                    //originalQuantity: originalQuantity,
-                                    listeners: {
-                                        saveSuccess: {
-                                            fn: function (json) {
-                                                //me.fireEvent('orderCancelled', json);
-                                            },
-                                            //scope: me
-                                        }
-                                    }
-                                });
-                            }
+                            me.openItemCancellationPopup();
+                            
+                        },
                     },
                     //        {
                     //            text: 'Move Item',
@@ -484,7 +475,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
     onFieldEdit: function (e) {
         var me = this;
-        if (e.context.field == 'quantity') {
+        if (e.context.field == 'itemTax') {
             me.editOrderItem(e, {
                 data: [
                     e.context.grid.record.getData()
@@ -497,7 +488,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
         var me = this;
         field = e.context.field;
-        Ext.create('Taco.view.order.modal.fulfillment.OrderItemQtyChange', {
+        Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
             layout: 'hbox',
             width: 600,
             height: 400,
@@ -515,6 +506,43 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             //}
         });
     },
+
+    openItemCancellationPopup: function () {
+        var me = this;
+        var store = me.record.getCancellationReasons();
+        store.load({
+            scope: this,
+            callback: function (records, operation, success) {
+                for (var i = 0; i < records.length; i++) {
+                    me.record.localeStore.each(function (localeRecord) {
+                        if (records[i].get('reasonCode') == localeRecord.get('key')) {
+                            records[i].dirty = true;
+                            records[i].set('description', localeRecord.get('value'));
+                            records[i].setDirty('description', localeRecord.get('value'));
+                            records[i].commit();
+                        }
+                    });
+                }
+                Ext.create('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
+                    layout: 'hbox',
+                    width: 600,
+                    height: 400,
+                    record: me.record,
+                    store: store,
+                    //originalQuantity: originalQuantity,
+                    listeners: {
+                        saveSuccess: {
+                            fn: function (json) {
+                                //me.fireEvent('orderCancelled', json);
+                            },
+                            //scope: me
+                        }
+                    }
+                });
+            }
+        });
+
+    }
 });
 
 
@@ -546,4 +574,6 @@ Ext.define('CustomEditorField', {
         ]
     }]
 });
+
+
 
