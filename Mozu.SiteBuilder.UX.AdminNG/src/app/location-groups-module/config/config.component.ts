@@ -29,7 +29,8 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
-        this.model.LCUSPSShippingTypes = Constants.LCUSPSShippingTypes;
+        this.model.LCUPSInternationalShippingTypes = Constants.LCUPSInternationalShippingTypes;
+        this.model.LCUPSCanadaShippingTypes = Constants.LCUPSCanadaShippingTypes;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -40,29 +41,36 @@ export class LocationGroupConfigComponent implements OnInit {
             printReturnLabel: ['', []],
             defaultPrinterType: ['', []],
             boxItems: this.fb.array([ this.createBoxItem()]),
+
             upsUsShippingTypes: new FormArray([]),
             upsUSStandardDefault:  ['', []],
             upsUSExpress1DayDefault:  ['', []],
             upsUSExpress2DayDefault:  ['', []],
             upsUSExpress3DayDefault:  ['', []],
-            outboundPassword:  ['', []],
-            outboundCustomerNumber:  ['', []],
-            outboundLocale:  ['', []],
-            outboundContractID:  ['', []],
-            carsPickupNotify:  ['', []],
-            preferredPickupTime:  ['', []],
-            outboundUsername:  ['', []],
-            closingTime:  ['', []],
-            uspsShippingTypes: new FormArray([]),
-            uspsStandardDefault:  ['', []],
-            uspsExpress1DayDefault:  ['', []],
-            uspsExpress2DayDefault:  ['', []],
-            uspsExpress3DayDefault:  ['', []],
-            uspsReturnLabelShippingTypes:  ['', []],
+            upsUSReturnLabelShippingTypes: ['', []],
+
+            upsInternationalShippingTypes: new FormArray([]),
+            upsInternationalStandardDefault: ['', []],
+            upsInternationalExpress1DayDefault: ['', []],
+            upsInternationalExpress2DayDefault: ['', []],
+            upsInternationalExpress3DayDefault: ['', []],
+            upsInternationalReturnLabelShippingTypes: ['', []],
+            upsInternationalUSReturnLabelShippingTypes: ['', []],
+
+            upsCanadaShippingTypes: new FormArray([]),
+            upsCanadaStandardDefault: ['', []],
+            upsCanadaExpress1DayDefault: ['', []],
+            upsCanadaExpress2DayDefault: ['', []],
+            upsCanadaExpress3DayDefault: ['', []],
+            upsCanadaReturnLabelShippingTypes: ['', []]
+
+
         });
 
         this.addCarriersCheckboxes();
         this.addUPSUSShippingTypesCheckboxes();
+        this.addUPSInternationalShippingTypesCheckboxes();
+        this.addUPSCanadaShippingTypesCheckboxes();
         this.fetchSitesData();
         this.updateLocationGroupConfigForm();
         this.addUSPSShippingTypesCheckboxes();
@@ -82,6 +90,21 @@ export class LocationGroupConfigComponent implements OnInit {
             (this.model.locationGroupConfigForm.controls.upsUsShippingTypes as FormArray).push(control);
         });
     }
+
+    private addUPSInternationalShippingTypesCheckboxes(){
+        this.model.LCUPSInternationalShippingTypes.map((o, i) => {
+            const control = new FormControl(); // if first item set to true, else false
+            (this.model.locationGroupConfigForm.controls.upsInternationalShippingTypes as FormArray).push(control);
+        });
+    }
+
+    private addUPSCanadaShippingTypesCheckboxes(){
+        this.model.LCUPSCanadaShippingTypes.map((o, i) => {
+            const control = new FormControl(); // if first item set to true, else false
+            (this.model.locationGroupConfigForm.controls.upsCanadaShippingTypes as FormArray).push(control);
+        });
+    }
+
 
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());

@@ -279,12 +279,24 @@
             "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
             "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
             "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default",
-            "USPSShippingTypes": "USPS Shipping Types",
-            "USPSStandardDefault": "USPS Standard Default", 
-            "USPSExpress1DayDefault": "USPS Express 1 Day Default",
-            "USPSExpress2DayDefault": "USPS Express 2 Day Default",
-            "USPSExpress3DayDefault": "USPS Express 3 Day Default",
-            "USPSReturnLabelShippingTypes": "USPS Return Label Shipping Types"
+            "UPSUSReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
+
+            "UPSInternationalShippingTypes": "UPS International Shipping Types",
+            "UPSInternationalStandardDefault": "UPS International Standard Default",
+            "UPSInternationalExpress1DayDefault": "UPS International Express 1 Day Default",
+            "UPSInternationalExpress2DayDefault": "UPS International Express 2 Day Default",
+            "UPSInternationalExpress3DayDefault": "UPS International Express 3 Day Default",
+            "UPSInternationalReturnLabelShippingTypes": "UPS International Return Label Shipping Types",
+            "UPSInternationalUSReturnLabelShippingTypes": "UPS International US Return Label Shipping Types",
+
+            "UPSCanadaShippingTypes": "UPS Canada Shipping Types",
+            "UPSCanadaStandardDefault": "UPS Canada Standard Default",
+            "UPSCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
+            "UPSCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
+            "UPSCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
+            "UPSCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types"
+            
+
         },
         "FormSections": {
             "ISPU" : "ISPU",
