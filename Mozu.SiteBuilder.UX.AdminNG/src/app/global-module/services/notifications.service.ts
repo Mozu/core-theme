@@ -18,6 +18,7 @@ export class NotificationService {
     locationGroupAdded: Subject<any> = new Subject<any>();
     locationGroupEdited: Subject<any> = new Subject<any>();
     loadLeftMenuItems: Subject<any> = new Subject<any>();
+    LocationGroupConfig: Subject<any> = new Subject<any>();
 
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
@@ -57,6 +58,11 @@ export class NotificationService {
     notifyLocationGroupEdited(action:any){
         this._logger.info('NotificationService : notifyLocationGroupEdited');
         this.locationGroupEdited.next(action);
+    }
+
+    notifyLocationGroupConfig(actionName: any) {
+        this._logger.info('NotificationService : notifyLocationGroupConfig');
+        this.LocationGroupConfig.next(actionName);
     }
 
     // Notify components for confirmation dialog

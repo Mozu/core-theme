@@ -101,9 +101,12 @@ export class LocationGroupCreateComponent implements OnInit {
     private getLocationGroupSuccess(result) {
         this._loggerService.info('LocationGroupCreateComponent : getLocationGroupSuccess' + JSON.stringify(result));
         if (result && result.items) {
-            let lgModel : LocationGroupModel =   <LocationGroupModel>result.items;
+            const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
             this._notificationService.notifyLocationGroupEdited({name: NotificationLGActions.editDataLoaded, data: lgModel.locationCodes});
             this.updateLocationGroupForm(lgModel);
+
+            // update the top header config object
+            
         }
     }
 

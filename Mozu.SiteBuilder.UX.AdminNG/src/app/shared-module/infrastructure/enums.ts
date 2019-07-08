@@ -24,26 +24,27 @@ export enum NavigationContainerType {
 export enum ConfirmationDialogNotificationCode {
     DeleteQuoteItem = 'DeleteQuoteItem',
     SaveItem = 'SaveItem',
-    DeleteLocationGroup = "DeleteLocationGroup",
-    Cancel = "Cancel"
+    DeleteLocationGroup = 'DeleteLocationGroup',
+    Cancel = 'Cancel'
 }
 
 export enum ConfirmationDialogNotificationType{
-    Confirmation = "Confirmation",
-    Information = "Information"
+    Confirmation = 'Confirmation',
+    Information = 'Information'
 }
 
 export enum NotificationLGActions {
-    save = "Save",
-    cancel = "Cancel",
-    edit = "Edit",
-    selectedLocationWithDetails ="selectedLocationWithDetails",
-    editDataLoaded = "EditDataLoaded",
-    cancelled = "Cancelled",
-    saved = "Saved"
+    save = 'Save',
+    cancel = 'Cancel',
+    edit = 'Edit',
+    selectedLocationWithDetails = 'selectedLocationWithDetails',
+    editDataLoaded = 'EditDataLoaded',
+    cancelled = 'Cancelled',
+    saved = 'Saved',
+    list = 'List'
 }
 
 export enum LocationGroupEventOperations {
-    add = "add",
-    remove = "remove"
+    add = 'add',
+    remove = 'remove'
 }

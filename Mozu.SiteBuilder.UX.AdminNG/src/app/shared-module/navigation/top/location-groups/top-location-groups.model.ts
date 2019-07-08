@@ -5,3 +5,9 @@ export class TopLocationGroupsModel {
     locationGroupId: string;
     locationGroupURL: string;
 }
+
+export class TopLocationGroupConfigModel {
+    locationGroupName: string;
+    locationGroupId: string;
+    locationGroupSiteId: string;
+}

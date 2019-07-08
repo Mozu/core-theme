@@ -61,7 +61,7 @@ const appRoutes: Routes = [
           }
     },
     {
-        path: Constants.uiRoutes.locationGroupConfig+'/:id',
+        path: Constants.uiRoutes.locationGroupConfig+'/:id'+'/:siteId',
         component: LocationGroupConfigComponent,
         data: {
             mode: Constants.gridActionItem.Edit

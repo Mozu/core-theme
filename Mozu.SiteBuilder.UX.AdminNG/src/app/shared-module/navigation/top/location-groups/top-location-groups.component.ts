@@ -3,7 +3,7 @@ import { Component,
   import { Router, PRIMARY_OUTLET, UrlSegmentGroup, UrlSegment } from '@angular/router';  
 import { NotificationService } from '@global';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
-import { TopLocationGroupsModel } from './top-location-groups.model';
+import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-location-groups.model';
 
   @Component({
     selector: 'navigation-top-location-groups',
@@ -28,20 +28,25 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
 
       this.subscriptions.push(
         this._notificationService.locationGroupAdded.subscribe((action: any) => {
-            if(action === NotificationLGActions.saved || action === NotificationLGActions.cancelled){
+            if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled) {
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
             }
-            if(action.name === NotificationLGActions.edit){
-              this.model.isEditMode = true;
-              this.model.isConfigTabVisible  = true;
-              this.model.locationGroupName = action.data.name;
-              this.model.locationGroupId = action.data.locationGroupId;
-            }
+        })
+      );
+
+      this.subscriptions.push(
+        this._notificationService.LocationGroupConfig.subscribe((action: any) => {
+          if (action.name === NotificationLGActions.list) {
+            this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = true;
+            this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
+            this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
+          }
         })
       );
     }
-    
+
     ngOnDestroy() {
       this.subscriptions.forEach((s) => {
           s.unsubscribe();
@@ -96,6 +101,7 @@ import { TopLocationGroupsModel } from './top-location-groups.model';
     }
 
     gotoLocationGroupConfig(){
+      console.log('this.model--->', this.model);
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
       this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId]);

@@ -8,16 +8,14 @@ import { LoggerService,
          ErroNotificationType,
          SpinnerService } from '@core';
 
-import { Constants,
-         NotificationLGActions,
-         ConfirmationDialogService,
-         ConfirmationDialogNotificationCode,
+import { Constants, NotificationLGActions, ConfirmationDialogService, ConfirmationDialogNotificationCode, 
          ConfirmationDialogNotificationType } from '@shared';
 import { TranslateService } from '@ngx-translate/core';
 import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
+import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
 
 @Component({
     selector: 'location-group-list',
@@ -76,8 +74,8 @@ export class LocationGroupsListComponent implements OnInit {
     onRowSelect(event) {
         this.model.selectedLocationGroup = event.data;
         // open in edit mode
-        if (event && event.originalEvent &&  event.originalEvent.target &&
-            event.originalEvent.target.classList &&
+        if(event && event.originalEvent &&  event.originalEvent.target && 
+            event.originalEvent.target.classList &&  
             event.originalEvent.target.classList.value === 'pi pi-ellipsis-v') {
             // open action menu.
         } else {
@@ -86,11 +84,11 @@ export class LocationGroupsListComponent implements OnInit {
     }
 
     showDeleteConfirmationDialog() {
-    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup,
-    ConfirmationDialogNotificationType.Confirmation, this.model.selectedLocationGroup.name);
+        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup, 
+                        ConfirmationDialogNotificationType.Confirmation);
     }
 
-    deleteLocationGroup() {
+    deleteLocationGroup(){
         const locationGroupId = this.model.selectedLocationGroup.locationGroupId;
         this._locationGroupsListService.deleteLocationGroup(locationGroupId).subscribe((successResponse: Response) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_successResponse');
@@ -105,7 +103,10 @@ export class LocationGroupsListComponent implements OnInit {
     viewLocationGroup() {
         const locationGroupId = this.model.selectedLocationGroup.locationGroupId;
         this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupId]);
-        this._notificationService.notifyLocationGroupAdded({name: NotificationLGActions.edit, data: this.model.selectedLocationGroup});
+        const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
+        topLocationGroupConfigModel.locationGroupId = locationGroupId;
+        topLocationGroupConfigModel.locationGroupName = this.model.selectedLocationGroup.name;
+        this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.list, data: topLocationGroupConfigModel});
     }
 
     public populateLocationGroupGrid = () => {
@@ -114,15 +115,15 @@ export class LocationGroupsListComponent implements OnInit {
         this._locationGroupsListService.fetchAllLocationGroups().subscribe((successResponse: Response) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_successResponse');
             const responseJson = successResponse;
-            if (responseJson != null && responseJson !== undefined && responseJson['items'].length > 0) {
-                this.model.items = _.sortBy(responseJson['items'], ['locationGroupId']);
+            if (responseJson != null && responseJson != undefined && responseJson['items'].length > 0) {
+                this.model.items = _.sortBy(responseJson['items'],['locationGroupId']);
             }
             this._spinner.stop();
         }, (errResponse) => {
             this._spinner.stop();
-            this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_successResponse');
+            this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_errResponse');
             throw new HttpError(ErrorCode.LocationGroupsListGetFailed, ErroNotificationType.Toaster);
-        })
+        });
     }
 
 }
