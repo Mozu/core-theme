@@ -43,6 +43,17 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
             this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
             this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
           }
+          if (action.name === NotificationLGActions.edit) {
+            this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = true;
+            const topLocationGroupConfigModel : TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel
+            this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
+            this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
+            if(topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length>0){
+              this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
+            }
+            this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
+          }
         })
       );
     }
@@ -101,11 +112,9 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
     }
 
     gotoLocationGroupConfig(){
-      console.log('this.model--->', this.model);
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId]);
+      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId + '/' + this.model.locationGroupSelectedSiteId]);
     }
-
-  }
+}
   

@@ -4,10 +4,12 @@ export class TopLocationGroupsModel {
     locationGroupName: string;
     locationGroupId: string;
     locationGroupURL: string;
+    locationGroupSelectedSiteId : string;
+    locationGroupSiteIds : any[];
 }
 
 export class TopLocationGroupConfigModel {
     locationGroupName: string;
     locationGroupId: string;
-    locationGroupSiteId: string;
+    locationGroupSiteIds: any[];
 }

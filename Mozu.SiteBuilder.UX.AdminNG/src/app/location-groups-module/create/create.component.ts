@@ -26,6 +26,7 @@ import { CreateLocationGroupService } from './create.service';
 import { LocationGroupModel, LocationGroupCreateModel, SiteModel } from './location.group.model';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
 
 @Component({
     selector: 'location-group-create',
@@ -106,7 +107,11 @@ export class LocationGroupCreateComponent implements OnInit {
             this.updateLocationGroupForm(lgModel);
 
             // update the top header config object
-            
+            const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
+            topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
+            topLocationGroupConfigModel.locationGroupName = lgModel.name;
+            topLocationGroupConfigModel.locationGroupSiteIds = lgModel.siteIds;
+            this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
         }
     }
 
@@ -277,10 +282,13 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private onSaveSuccess(result) {
-        this._loggerService.info('LocationGroupCreateComponent : onSaveSuccess');
+        this._loggerService.info('LocationGroupCreateComponent : onSaveSuccess' + JSON.stringify(result));
         this.model.isSaving = false;
         this._notificationService.notifyLocationGroupAdded(NotificationLGActions.saved);
         this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
+
+        // update the location config object.
+        
     }
 
     private onSaveError(errmsg: string) {
