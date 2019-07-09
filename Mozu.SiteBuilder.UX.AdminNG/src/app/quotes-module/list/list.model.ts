@@ -53,8 +53,10 @@ export class QuoteItem {
   customerAccountId?: number;
   shippingTax?: number;
   handlingTax?: number;
-  }
-  
+  numberOfProducts: number;
+  totalQuantity: number;
+}
+
 export class AuditInfo {
   updateDate: Date;
   createDate: Date;
@@ -129,6 +131,7 @@ export class UnitPrice {
 
 export class Item {
   id: string;
+  QuoteNumber: number;
   fulfillmentMethod: string;
   lineId: number;
   product: Product;

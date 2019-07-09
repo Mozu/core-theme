@@ -45,7 +45,7 @@ export class SharedDataService {
             return;
         }
         let promise;
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             promise = this._https.get(`./assets/json/user-data.json`).toPromise();
         } else {
             promise = this._https.get(`${GlobalConstants.webApis.getSharedData}`).toPromise();

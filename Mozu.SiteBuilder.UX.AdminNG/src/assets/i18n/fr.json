@@ -9,12 +9,16 @@
         }
     },
     "SHARED": {
+        "currencyCode": "USD",
         "NAVIGATION": {
             "productMenu": "product",
             "offerMenu": "offer",
             "orderMenu": "order",
             "invoiceMenu": "invoice",
-            "help": "Help"
+            "help": "Help",
+            "Top": {
+                "searchPlaceholder": "Search"
+            }
         },
         "HEADER": {
             "logoutConfirmation": {
@@ -58,19 +62,19 @@
         },
         "SHIPPING": {
             "Address": {
-              "shippingInformation": "Informations sur la livraison",
-              "shippingAddress": "Adresse de livraison",
-              "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison.",
-              "phoneNumberFormat": "FR"
+                "shippingInformation": "Informations sur la livraison",
+                "shippingAddress": "Adresse de livraison",
+                "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison.",
+                "phoneNumberFormat": "FR"
             },
             "Method": {
-              "shippingMethodAndPrice": "Méthode d'expédition et prix",
-              "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
-              "loadingText": "Chargement...",
-              "notFoundText": "Aucune méthode d'expédition disponible.",
-              "shippingMethodPlaceholder":"Aucune sélection"
+                "shippingMethodAndPrice": "Méthode d'expédition et prix",
+                "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
+                "loadingText": "Chargement...",
+                "notFoundText": "Aucune méthode d'expédition disponible.",
+                "shippingMethodPlaceholder": "Aucune sélection"
             }
-          },
+        },
         "CONFIRMATIONDIALOG": {
             "Confirmation": {
                 "DeleteQuoteItem": {
@@ -153,6 +157,10 @@
         },
         "GridContextMenu": {
             "edit": "Edit"
+        },
+        "GridFooter": {
+            "Displaying": "Affichage",
+            "of": "de"
         },
         "Quote": {
             "Information": {

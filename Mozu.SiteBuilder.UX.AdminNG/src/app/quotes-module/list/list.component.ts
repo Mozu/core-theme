@@ -4,8 +4,10 @@ import {
 } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { CurrencyPipe,
-  DatePipe } from '@angular/common';
+import {
+  CurrencyPipe,
+  DatePipe
+} from '@angular/common';
 import {
   LoggerService,
   HttpError,
@@ -28,9 +30,9 @@ import { ToastrService } from 'ngx-toastr';
   selector: 'quotes-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
-  providers: [QuotesListService, CurrencyPipe, DatePipe]
+  providers: [QuotesListService]
 })
-export class QuotesListComponent implements OnInit  {
+export class QuotesListComponent implements OnInit {
   public model: QuotesListModel;
   gridColumnHeader: any[];
   selectedGridColumnHeader: any[];
@@ -55,23 +57,28 @@ export class QuotesListComponent implements OnInit  {
       this.gridContextMenu(successResponse);
     });
 
-    this.gridColumnHeader = [
-      { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true },
-      { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true },
-      { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false },
-      { field: 'id', header: 'QUOTES.GridHeader.quoteID', checked: false },
-      { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true, type: this.datePipe },
-      { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false },
-      { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true, type: this.datePipe },
-      { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill' },
-      { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false, type: this.datePipe },
-      { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false, type: this.datePipe },
-      { field: 'items.quantity', header: 'QUOTES.GridHeader.numProducts', checked: false },
-      { field: 'items.quantity', header: 'QUOTES.GridHeader.totalQty', checked: false },
-      { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true, type: this.currencyPipe },
-      { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true, type: this.currencyPipe },
-      { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true }
-    ];
+
+    if (JSON.parse(localStorage.getItem('QuoteGridData')) != null) {
+      this.gridColumnHeader = JSON.parse(localStorage.getItem('QuoteGridData'));
+    } else {
+      this.gridColumnHeader = [
+        { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true },
+        { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true },
+        { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false },
+        { field: 'quoteNumber', header: 'QUOTES.GridHeader.quoteID', checked: false },
+        { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true },
+        { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false },
+        { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true },
+        { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill' },
+        { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false },
+        { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false },
+        { field: 'numberOfProducts', header: 'QUOTES.GridHeader.numProducts', checked: false },
+        { field: 'totalQuantity', header: 'QUOTES.GridHeader.totalQty', checked: false },
+        { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true },
+        { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true },
+        { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true }
+      ];
+    }
     this.selectedGridColumnHeader = this.gridColumnHeader;
 
     this.populateQuoteGrid();
@@ -94,11 +101,15 @@ export class QuotesListComponent implements OnInit  {
   public populateQuoteGrid = () => {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: Response) => {
+    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: QuotesListModel) => {
       this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
       if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
         quotesListSuccessResponse['items'].length > 0) {
-        this.model.items = quotesListSuccessResponse['items'];
+        this.model.items = [...quotesListSuccessResponse.items];
+        this.model.startIndex = quotesListSuccessResponse.startIndex;
+        this.model.pageSize = quotesListSuccessResponse.pageSize;
+        this.model.pageCount = quotesListSuccessResponse.pageCount;
+        this.model.totalCount = quotesListSuccessResponse.totalCount;
         this._spinner.stop();
       }
     }, (quotesListErrResponse) => {
@@ -108,35 +119,50 @@ export class QuotesListComponent implements OnInit  {
     });
   }
 
+  onColReorder(event) {
+    this.selectedGridColumnHeader = event.columns;
+    localStorage.setItem('QuoteGridData', JSON.stringify(this.selectedGridColumnHeader));
+  }
+
   toggleGridColumns(event, col) {
-    col.checked = event.currentTarget.checked;
+    const index = this.selectedGridColumnHeader.findIndex((e) => e.header === col.header);
+    if (index === -1) {
+      this.selectedGridColumnHeader.push(col);
+    } else {
+      col.checked = event.currentTarget.checked;
+      this.selectedGridColumnHeader[index] = col;
+    }
+    localStorage.setItem('QuoteGridData', JSON.stringify(this.selectedGridColumnHeader));
   }
 
   getQuoteGridData(model: any, col: any): any {
-    const colProperties: string[] = col.field.split('.');
-    let value: any = model;
-    colProperties.forEach((prop, index) => {
-      if (col.type) {
-        switch (col.type) {
-          case this.currencyPipe:
-            value = colProperties.length > 1 ?
-              (index === 0 ? value[prop] : col.type.transform(value[prop]))
-              : col.type.transform(value[prop]);
-            break;
+    let transformedValue: any;
+    const fieldName = col.field;
+    if (fieldName === 'auditInfo.createDate' || fieldName === 'auditInfo.updateDate') {
+      const colProperties: string[] = fieldName.split('.');
+      colProperties.forEach((prop, index) => {
+        transformedValue = (index === 0 ? model[prop] : this.datePipe.transform(transformedValue[prop], Constants.dateFormat));
+      });
+    } else if (fieldName === 'auditInfo.createBy') {
+      const colProperties: string[] = fieldName.split('.');
+      colProperties.forEach((prop, index) => {
+        transformedValue = (index === 0 ? model[prop] : transformedValue[prop]);
+      });
+    } else if (fieldName === 'expirationDate' || fieldName === 'submitDate') {
+      transformedValue = this.datePipe.transform(model[fieldName], Constants.dateFormat);
+    } else if (fieldName === 'shippingTaxTotal' || fieldName === 'total') {
+      this._translate.get('SHARED.currencyCode')
+        .subscribe((successResponse) => {
+          transformedValue = this.currencyPipe.transform(model[fieldName], successResponse);
+        });
+    } else if (fieldName === 'totalQuantity') {
+      transformedValue = model.items.reduce((sum, item) => sum + item.quantity, 0);
+    } else if (fieldName === 'numberOfProducts') {
+      transformedValue = model.items.length;
+    } else {
+      transformedValue = model[fieldName];
+    }
 
-          case this.datePipe:
-            value = colProperties.length > 1 ?
-              (index === 0 ? value[prop] : col.type.transform(value[prop], Constants.dateFormat))
-              : col.type.transform(value[prop]);
-            break;
-          default:
-            value = col.type.transform(value[prop]);
-            break;
-        }
-      } else {
-        value = value[prop];
-      }
-    });
-    return value;
+    return transformedValue;
   }
 }

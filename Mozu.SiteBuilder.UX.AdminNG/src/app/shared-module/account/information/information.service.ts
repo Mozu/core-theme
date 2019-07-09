@@ -17,7 +17,7 @@ export class AccountInfoService {
     public fetchAccountInformation(customerAccountId: number, userId: string): Observable<any> {
         this._loggerService.info('AccountInfoService: fetchAccountInformation');
         const filter = new HttpParams().set(Constants.filterQueryParameter, JSON.stringify({ userid : userId}));
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.accountInformation);
         } else {
             return this._http.get(GlobalConstants.webApis.getB2BUserAccount + '/' + customerAccountId + Constants.userAPIDeepLink, 

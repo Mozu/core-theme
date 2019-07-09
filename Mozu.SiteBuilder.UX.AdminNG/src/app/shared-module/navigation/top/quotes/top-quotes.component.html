@@ -16,7 +16,7 @@
             <i [ngClass]="status ? 'pi-times' : 'pi-search'" class="pi" (click)="resetSerach(searchBar)"></i>
         </button>
       </div>
-      <input type="text" class="form-control" #searchBar placeholder="Search" (keydown)="toggleIcon(searchBar)">
+      <input type="text" class="form-control" #searchBar placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)">
     </div>
 
   </div>

@@ -7,7 +7,7 @@ export const debugUrl = false;
 export const environment = {
     production: false,
     environmentName: 'Debug',
-    debug: false,
+    isUseMocks: false,
     domain: '.client1.com',
     appUrl: debugUrl ? window.location.origin : window.location.origin + '/admin/',
     apiUrl: window.location.origin + '/admin/app',

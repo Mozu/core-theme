@@ -17,7 +17,7 @@ export class LocationGroupsListService {
 
     public fetchAllLocationGroups(): Observable<any> {
         this._loggerService.info('LocationGroupsListService: fetchAllLocationGroups');
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.locationGroupList);
         } else {
             return this._http.get(GlobalConstant.webApis.getLocationGroups);
@@ -26,7 +26,7 @@ export class LocationGroupsListService {
 
     public deleteLocationGroup(locationGroupId): Observable<any> {
         this._loggerService.info('LocationGroupsListService: deleteLocationGroup');
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
         } else {
             return this._http.Delete(GlobalConstant.webApis.deleteLocationGroup + '/' + locationGroupId);

@@ -17,7 +17,7 @@ export class CreateLocationGroupService {
 
     public addLocationGroup(lgModel: LocationGroupModel): Observable<any> {
         this._loggerService.info('CreateLocationGroupService: addLocationGroup' + JSON.stringify(lgModel));
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
         } else {
             return this._http.post(GlobalConstant.webApis.addLocationGroup, lgModel);
@@ -26,7 +26,7 @@ export class CreateLocationGroupService {
 
     public getLocationGroup(locationGroupId: string): Observable<any> {
         this._loggerService.info('EditLocationGroupService: getLocationGroup');
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroup);
         } else {
             return this._http.get(GlobalConstant.webApis.getLocationGroup + '/' + locationGroupId);
@@ -35,7 +35,7 @@ export class CreateLocationGroupService {
 
     public updateLocationGroup(lgModel: LocationGroupModel): Observable<any> {
         this._loggerService.info('CreateLocationGroupService: updateLocationGroup' + JSON.stringify(lgModel));
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
          } else {
             return this._http.post(GlobalConstant.webApis.editLocationGroup, lgModel);

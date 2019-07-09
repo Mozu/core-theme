@@ -9,12 +9,16 @@
         }
     },
     "SHARED": {
+        "currencyCode": "USD",
         "NAVIGATION": {
             "productMenu": "product",
             "offerMenu": "offer",
             "orderMenu": "order",
             "invoiceMenu": "invoice",
-            "help": "Help"
+            "help": "Help",
+            "Top": {
+                "searchPlaceholder": "Search"
+            }
         },
         "HEADER": {
             "logoutConfirmation": {
@@ -60,19 +64,19 @@
         },
         "SHIPPING": {
             "Address": {
-              "shippingInformation": "Shipping Information",
-              "shippingAddress": "Shipping Address",
-              "noShippingAddressMessage": "You have no shipping address.",
-              "phoneNumberFormat": "US"
+                "shippingInformation": "Shipping Information",
+                "shippingAddress": "Shipping Address",
+                "noShippingAddressMessage": "You have no shipping address.",
+                "phoneNumberFormat": "US"
             },
             "Method": {
-              "shippingMethodAndPrice": "Shipping Method & Price",
-              "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
-              "loadingText": "Loading...",
-              "notFoundText": "No shipping methods available.",
-              "shippingMethodPlaceholder": "None Selected"
+                "shippingMethodAndPrice": "Shipping Method & Price",
+                "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
+                "loadingText": "Loading...",
+                "notFoundText": "No shipping methods available.",
+                "shippingMethodPlaceholder": "None Selected"
             }
-          },
+        },
         "CONFIRMATIONDIALOG": {
             "Confirmation": {
                 "DeleteQuoteItem": {
@@ -136,16 +140,10 @@
                 "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
                 "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
             },
-            "Warning": {
-                
-            },
-            "Information": {
-            },
-            "Success": {
-                "LGCSavedSuccessfully": "Location Group Config saved successfully."
-            },
-            "Custom": {
-            }
+            "Warning": {},
+            "Information": {},
+            "Success": {},
+            "Custom": {}
         }
     },
     "QUOTES": {
@@ -168,6 +166,10 @@
         },
         "GridContextMenu": {
             "edit": "Edit"
+        },
+        "GridFooter": {
+            "Displaying": "Displaying",
+            "of": "of"
         },
         "Quote": {
             "Information": {

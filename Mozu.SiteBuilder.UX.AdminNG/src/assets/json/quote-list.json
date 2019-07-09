@@ -6,6 +6,7 @@
   "items": [
     {
       "id": "4d8eab972bcb7441af46e03a000053d0",
+      "quoteNumber": 101,
       "name": "Updated Quote",
       "siteId": 24299,
       "tenantId": 19524,
@@ -28,7 +29,38 @@
             "isPackagedStandAlone": false,
             "fulfillmentStatus": "Pending"
           },
-          "quantity": 1,
+          "quantity": 2,
+          "subtotal": 1.0,
+          "extendedTotal": 0.0,
+          "discountTotal": 0.0,
+          "discountedTotal": 1.0,
+          "feeTotal": 0.0,
+          "total": 0.0,
+          "productDiscounts": [],
+          "shippingDiscounts": [],
+          "auditInfo": {
+            "createDate": "2019-05-08T12:00:29.912Z",
+            "updateBy": "UNKNOWN",
+            "createBy": "UNKNOWN"
+          }
+        },
+        {
+          "id": "9ac9cd822c6843899d81aa47012134e5",
+          "fulfillmentMethod": "Ship",
+          "lineId": 1,
+          "product": {
+            "options": [],
+            "properties": [],
+            "categories": [],
+            "price": {},
+            "bundledProducts": [],
+            "productCode": "new-1002",
+            "name": "New Product 2!",
+            "goodsType": "Physical",
+            "isPackagedStandAlone": false,
+            "fulfillmentStatus": "Pending"
+          },
+          "quantity": 2,
           "subtotal": 1.0,
           "extendedTotal": 0.0,
           "discountTotal": 0.0,
@@ -108,6 +140,7 @@
     },
     {
       "id": "0dd322d1429fe45778112b5b00004c44",
+      "quoteNumber": 102,
       "name": "TestQuote1",
       "siteId": 24299,
       "tenantId": 19524,
@@ -255,6 +288,7 @@
     },
     {
       "id": "0dd32b59429fe45778112b5e00004c44",
+      "quoteNumber": 103,
       "name": "TestQuote2",
       "siteId": 24299,
       "tenantId": 19524,

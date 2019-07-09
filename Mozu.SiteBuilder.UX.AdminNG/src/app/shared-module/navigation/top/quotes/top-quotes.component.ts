@@ -14,11 +14,8 @@ export class NavigationTopQuotesComponent {
 
   constructor() { }
 
-  toggleIcon(searchBar: HTMLInputElement) {
-      this.status = true;
-      if(searchBar.value.length === 1) {
-        this.status = false;
-      }
+  toggleIcon(searchBar: any) {
+      this.status = searchBar.currentTarget.value.length > 0;
   }
 
   resetSerach(searchBar: HTMLInputElement) {

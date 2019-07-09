@@ -11,7 +11,7 @@ export class PhysicalLocationsService {
     private _loggerService: LoggerService) { }
 
   getPhysicalLocations() {
-    if (environment.debug) {
+    if (environment.isUseMocks) {
       return this._http.get(Constants.JsonResources.physicalLocations);
     } else {
       return this._http.get(GlobalConstant.webApis.getPhysicalLocations);
