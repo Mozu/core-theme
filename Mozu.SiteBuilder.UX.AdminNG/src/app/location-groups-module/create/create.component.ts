@@ -107,12 +107,16 @@ export class LocationGroupCreateComponent implements OnInit {
             this.updateLocationGroupForm(lgModel);
 
             // update the top header config object
-            const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
-            topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
-            topLocationGroupConfigModel.locationGroupName = lgModel.name;
-            topLocationGroupConfigModel.locationGroupSiteIds = lgModel.siteIds;
-            this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
+            this.setConfigData(lgModel);
         }
+    }
+
+    private setConfigData(lgModel : LocationGroupModel) {
+        const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
+        topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
+        topLocationGroupConfigModel.locationGroupName = lgModel.name;
+        topLocationGroupConfigModel.locationGroupSiteIds = lgModel.siteIds;
+        this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
     }
 
     private updateLocationGroupForm(lgModel: LocationGroupModel): void {
@@ -285,10 +289,12 @@ export class LocationGroupCreateComponent implements OnInit {
         this._loggerService.info('LocationGroupCreateComponent : onSaveSuccess' + JSON.stringify(result));
         this.model.isSaving = false;
         this._notificationService.notifyLocationGroupAdded(NotificationLGActions.saved);
-        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
-
         // update the location config object.
-        
+        if (result && result.items) {
+            const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
+            this.setConfigData(lgModel);
+        }
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
     private onSaveError(errmsg: string) {

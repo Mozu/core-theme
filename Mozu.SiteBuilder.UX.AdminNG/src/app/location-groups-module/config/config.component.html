@@ -32,11 +32,11 @@
 						<input type="number" required class=" inputText form-control subform-text"
 							id="customerFailedToPickupDeadline" name="customerFailedToPickupDeadline"
 							formControlName="customerFailedToPickupDeadline" />
-						<span class="floating-label"
-							[ngClass]="{'redfont':(!model.locationGroupConfigForm.get('customerFailedToPickupDeadline').valid && model.locationGroupConfigForm.get('customerFailedToPickupDeadline').touched)}">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadline' | translate }}</span>
-						<hr class="underline-from-left"
-							[ngClass]="{'redunderline-from-left':(!model.locationGroupConfigForm.get('customerFailedToPickupDeadline').valid && model.locationGroupConfigForm.get('customerFailedToPickupDeadline').touched)}">
-						<p class="redfont">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadlineWarnMsg' | translate}}</p>	
+						<span class="floating-label">
+							{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadline' | translate }}</span>
+						<hr class="underline-from-left">
+						<p class="redfont">
+							{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadlineWarnMsg' | translate}}</p>
 					</div>
 				</div>	
 				<div class="row nomargin for-top-margin">

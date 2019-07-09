@@ -123,6 +123,7 @@ export class Constants {
         physicalLocations : environment.appUrl + '/assets/json/physical-locations.json',
         locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
         getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
+        getLocationGroupConfig : environment.appUrl + '/assets/json/location-group-configuration.json',
         shippingMethods: '/assets/json/shipping-methods.json',
         auditLog: '/assets/json/audit-log.json',
         orderSearchResults: environment.appUrl + '/assets/json/orders-searchresult.json',
