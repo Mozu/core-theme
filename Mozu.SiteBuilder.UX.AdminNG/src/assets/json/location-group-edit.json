@@ -2,22 +2,19 @@
     "success": true,
     "total": 1,
     "items": {
-        "locationGroupId": 32,
+        "locationGroupId": 182,
         "siteIds": [
-            21576,
-            21577
+            21576
         ],
-        "name": "south North LG 1 ",
+        "name": "WestLocationGrp1",
         "locationCodes": [
-            "warehouse_815",
-            "warehouse_417",
-            "warehouse_925"
+            "WAREHOUSELOCATION5"
         ],
         "auditInfo": {
-            "updateDate": "2019-06-02T06:02:37.447Z",
-            "createDate": "2019-06-02T06:02:28.860Z",
-            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            "updateDate": "2019-07-08T18:57:03.016Z",
+            "createDate": "2019-07-08T18:57:03.016Z",
+            "updateBy": "1",
+            "createBy": "1"
         }
     }
 }
