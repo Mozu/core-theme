@@ -46,10 +46,10 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
           if (action.name === NotificationLGActions.edit) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
-            const topLocationGroupConfigModel : TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel
+            const topLocationGroupConfigModel: TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel;
             this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
             this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
-            if(topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length>0){
+            if (topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length > 0) {
               this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
             }
             this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
@@ -68,7 +68,7 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
         const urltree = this.router.parseUrl(this.router.url);
         const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
         const primarySegments: UrlSegment[] = primary.segments;
-        
+
         if(primarySegments && primarySegments.length){
           const path =  primarySegments[0].path;
           if(path === Constants.uiRoutes.locationGroups){
@@ -90,7 +90,7 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
       this.model.isEditMode = true;
       this.router.navigate(['/'+ Constants.uiRoutes.locationGroupCreate]);
     }
-  
+
     cancelCreateLG(){
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.cancel);
     }
@@ -114,7 +114,7 @@ import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-locat
     gotoLocationGroupConfig(){
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId + '/' + this.model.locationGroupSelectedSiteId]);
+      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId
+                            + '/' + this.model.locationGroupSelectedSiteId]);
     }
 }
-  

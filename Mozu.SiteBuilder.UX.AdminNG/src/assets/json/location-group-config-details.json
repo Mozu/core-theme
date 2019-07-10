@@ -1462,3 +1462,96 @@
         "CreateBy" : "1"
     }
 }
+
+/* 34 */
+{
+    "_id" : ObjectId("5d2391ff7bad30000149042e"),
+    "TenantId" : 17450,
+    "SiteId" : 21576,
+    "LocationGroupId" : 182,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 50,
+    "DefaultNumberOfOrdersInPickWave" : 15,
+    "PickWavePrintFormat" : "Pdf",
+    "ClosePickWavePermissions" : [ 
+        "StoreManager", 
+        "StoreEmployee"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : [ 
+        {
+            "CarrierType" : "FedEx",
+            "IsEnabled" : true
+        }
+    ],
+    "DefaultCarrier" : "FedEx",
+    "PrintReturnLabel" : true,
+    "DefaultPrinterType" : null,
+    "Attributes" : [],
+    "BoxTypes" : [],
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : {
+        "UnitedStatesUpsSettings" : {
+            "ShippingMethods" : [ 
+                "UPS_NEXT_DAY_AIR_EARLY_AM", 
+                "UPS_NEXT_DAY_AIR", 
+                "UPS_2ND_DAY_AIR", 
+                "UPS_3_DAY_SELECT", 
+                "UPS_GROUND", 
+                "UPS_SURE_POST_LESS_THAN_1_POUND", 
+                "UPS_SURE_POST_1_POUND_OR_GREATER"
+            ],
+            "ReturnLabelShippingMethod" : "UPS_GROUND",
+            "StandardDefault" : "UPS_GROUND",
+            "Express1DayDefault" : "UPS_NEXT_DAY_AIR_EARLY_AM",
+            "Express2DayDefault" : "UPS_NEXT_DAY_AIR_EARLY_AM",
+            "Express3DayDefault" : "UPS_NEXT_DAY_AIR_EARLY_AM"
+        },
+        "InternationalUpsSettings" : {
+            "ShippingMethods" : [ 
+                "UPS_STANDARD", 
+                "UPS_EXPRESS", 
+                "UPS_EXPRESS_PLUS", 
+                "UPS_EXPEDITED", 
+                "UPS_SAVER", 
+                "UPS_ACCESS_POINT_ECONOMY"
+            ],
+            "ReturnLabelShippingMethod" : "UPS_ACCESS_POINT_ECONOMY",
+            "StandardDefault" : "UPS_STANDARD",
+            "Express1DayDefault" : "UPS_STANDARD",
+            "Express2DayDefault" : "UPS_STANDARD",
+            "Express3DayDefault" : "UPS_STANDARD",
+            "InternationalUsReturnLabelShippingMethod" : "UPS_STANDARD"
+        },
+        "CanadaUpsSettings" : {
+            "ShippingMethods" : [ 
+                "UPS_NEXT_DAY_AIR_SAVER", 
+                "UPS_2ND_DAY_AIR", 
+                "UPS_3_DAY_SELECT", 
+                "UPS_STANDARD"
+            ],
+            "ReturnLabelShippingMethod" : null,
+            "StandardDefault" : "UPS_STANDARD",
+            "Express1DayDefault" : "UPS_NEXT_DAY_AIR_SAVER",
+            "Express2DayDefault" : "UPS_NEXT_DAY_AIR_SAVER",
+            "Express3DayDefault" : "UPS_NEXT_DAY_AIR_SAVER"
+        }
+    },
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-08T19:52:14.943Z"),
+        "CreateDate" : ISODate("2019-06-27T13:45:27.914Z"),
+        "UpdateBy" : "UNKNOWN",
+        "CreateBy" : "UNKNOWN"
+    }
+}

@@ -5,11 +5,14 @@ import { SharedDataService } from '@global';
 import { LocationGroupConfigModel } from './config.model';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
+import { LocationGroupConfigService } from './config.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-locationgroup-config',
     templateUrl: './config.component.html',
-    styleUrls: ['./config.component.css']
+    styleUrls: ['./config.component.css'],
+    providers: [LocationGroupConfigService]
 })
 export class LocationGroupConfigComponent implements OnInit {
     public model: LocationGroupConfigModel;
@@ -17,7 +20,10 @@ export class LocationGroupConfigComponent implements OnInit {
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private configService: LocationGroupConfigService,
+        private router: Router,
+        private route: ActivatedRoute
     ) { }
 
     ngOnInit() {
@@ -95,9 +101,14 @@ export class LocationGroupConfigComponent implements OnInit {
         this.addUPSInternationalShippingTypesCheckboxes();
         this.addUPSCanadaShippingTypesCheckboxes();
         this.addFedExShippingTypesCheckboxes();
-        this.fetchSitesData();
         this.updateLocationGroupConfigForm();
         this.addUSPSShippingTypesCheckboxes();
+
+        this.fetchSitesData();
+
+        const locationGroupId  = this.route.snapshot.paramMap.get('id');
+        const siteId = this.route.snapshot.paramMap.get('siteId');
+        console.log('locationGroupId :' + locationGroupId + ' siteId ::' + siteId);
 
     }
 
