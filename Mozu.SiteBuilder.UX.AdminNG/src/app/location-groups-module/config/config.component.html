@@ -3,7 +3,7 @@
 	<div class="subform col-md-2 location-config-left-container">
 		<h4>Site Name</h4>
 		<p-listbox [options]="model.sitesLst" [(ngModel)]="model.selectedSite" optionLabel="name"
-			[style]="{'width':'100%'}"></p-listbox>
+			[style]="{'width':'100%'}" (onChange)="siteListChanged()"></p-listbox>
 		<!-- <p>Selected Site: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p> -->
 	</div>
 	<div class="col-md-10 location-config-right-container">

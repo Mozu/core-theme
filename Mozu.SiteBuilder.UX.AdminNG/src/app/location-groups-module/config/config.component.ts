@@ -7,6 +7,7 @@ import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@ang
 import { Constants } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-locationgroup-config',
@@ -108,11 +109,11 @@ export class LocationGroupConfigComponent implements OnInit {
 
         const locationGroupId  = this.route.snapshot.paramMap.get('id');
         const siteId = this.route.snapshot.paramMap.get('siteId');
-        console.log('locationGroupId :' + locationGroupId + ' siteId ::' + siteId);
+        this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
 
     }
 
-    private addCarriersCheckboxes(){
+    private addCarriersCheckboxes() {
         this.model.LCCarriers.map((o, i) => {
             const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.carriers as FormArray).push(control);
@@ -140,7 +141,7 @@ export class LocationGroupConfigComponent implements OnInit {
         });
     }
 
-    private addFedExShippingTypesCheckboxes(){
+    private addFedExShippingTypesCheckboxes() {
         this.model.LCFedExShippingType.map((o, i) => {
             const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.fedExShippingTypes as FormArray).push(control);
@@ -152,8 +153,14 @@ export class LocationGroupConfigComponent implements OnInit {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
 
-    removeBoxItem(rowIndex){
+    removeBoxItem(rowIndex) {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).removeAt(rowIndex);
+    }
+
+    siteListChanged() {
+        const locationGroupId  = this.route.snapshot.paramMap.get('id');
+        this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupId
+                            + '/' + this.model.selectedSite.id]);
     }
 
     private createBoxItem(): FormGroup {
@@ -169,9 +176,6 @@ export class LocationGroupConfigComponent implements OnInit {
         this._loggerService.info('LocationGroupCreateComponent : fetchSitesData');
         if (this._sharedData._sharedData.items.ctTenant.sites) {
             this.model.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
-            if (this.model.sitesLst.length > 0) {
-                this.model.selectedSite = this.model.sitesLst[0];
-            }
         }
     }
 
@@ -187,7 +191,7 @@ export class LocationGroupConfigComponent implements OnInit {
         });
     }
 
-    private addUSPSShippingTypesCheckboxes(){
+    private addUSPSShippingTypesCheckboxes() {
         this.model.LCUSPSShippingTypes.map((o, i) => {
             const control = new FormControl(); // if first item set to true, else false
             (this.model.locationGroupConfigForm.controls.uspsShippingTypes as FormArray).push(control);

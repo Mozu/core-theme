@@ -4,9 +4,9 @@ import { FormGroup } from '@angular/forms';
 
 export class  LocationGroupModel {
     locationGroupId: any;
-    siteIds:any[];
+    siteIds: any[];
     name: string;
-    locationCodes : any[];
+    locationCodes: any[];
 }
 
 export class LocationGroupCreateModel {
@@ -23,9 +23,9 @@ export class LocationGroupCreateModel {
 }
 
 export class SiteModel {
-    tenantId : number;
-    id : number;
-    name : string;
-    isDeleted : boolean;
-    masterCatalogId : number;
+    tenantId: number;
+    id: number;
+    name: string;
+    isDeleted: boolean;
+    masterCatalogId: number;
 }
