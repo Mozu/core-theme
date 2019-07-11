@@ -28,12 +28,22 @@
             ],
             "name": "WestLocationGrp1",
             "locationCodes": [
-                "WAREHOUSELOCATION5"
+                "TIMROLETEST11",
+                "TIMROLETEST5",
+                "TIMROLETEST6",
+                "TIMTESTROLE1",
+                "TIMTESTROLE",
+                "TIMROLETEST2",
+                "TIMROLETEST3",
+                "TIMROLETEST8",
+                "TIMROLETEST7",
+                "TIMROLETEST9",
+                "TIMROLETEST4"
             ],
             "auditInfo": {
-                "updateDate": "2019-07-08T18:57:03.016Z",
+                "updateDate": "2019-07-11T06:58:02.229Z",
                 "createDate": "2019-07-08T18:57:03.016Z",
-                "updateBy": "1",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                 "createBy": "1"
             }
         },
@@ -53,22 +63,6 @@
                 "createDate": "2019-05-30T09:17:37.017Z",
                 "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 0,
-            "siteIds": [
-                21574
-            ],
-            "name": "TimRenamedThis",
-            "locationCodes": [
-                "WAREHOUSE_854"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-06-21T21:18:41.436Z",
-                "createDate": "2019-06-05T20:56:03.161Z",
-                "updateBy": "1",
-                "createBy": "UNKNOWN"
             }
         },
         {
@@ -125,6 +119,24 @@
             }
         },
         {
+            "locationGroupId": 183,
+            "siteIds": [
+                21574
+            ],
+            "name": "Test Physical Location",
+            "locationCodes": [
+                "RETAILSTORE_623",
+                "WAREHOUSELOCATION1010",
+                "TIMROLETEST7"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-07-11T07:10:16.330Z",
+                "createDate": "2019-07-11T07:10:16.330Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            }
+        },
+        {
             "locationGroupId": 36,
             "siteIds": [
                 21577
@@ -168,10 +180,11 @@
             ],
             "name": "Sout west",
             "locationCodes": [
-                "WAREHOUSELOCATION2"
+                "WAREHOUSELOCATION999",
+                "WAREHOUSELOCATION8"
             ],
             "auditInfo": {
-                "updateDate": "2019-06-26T07:07:09.681Z",
+                "updateDate": "2019-07-10T13:57:37.086Z",
                 "createDate": "2019-05-30T09:16:24.029Z",
                 "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"

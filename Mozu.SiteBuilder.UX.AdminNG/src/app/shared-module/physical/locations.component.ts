@@ -20,7 +20,7 @@ export class PhysicalLocationsComponent implements OnInit {
   public model: PhysicalLocationsModel;
   @Output()
   physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
-  
+
   constructor(private _loggerService: LoggerService,
     private _physicalLocationsService: PhysicalLocationsService,
     private _notificationService: NotificationService,
@@ -116,7 +116,7 @@ export class PhysicalLocationsComponent implements OnInit {
           if (locations.items[locCnt].states) {
             for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
               if (locations.items[locCnt].states[stateCnt].locations) {
-                var locationObj = _.find(locations.items[locCnt].states[stateCnt].locations, { "code": this.model.selectedLoctions[selLocCnt] });
+                var locationObj = _.find(locations.items[locCnt].states[stateCnt].locations, { "code": (<string>this.model.selectedLoctions[selLocCnt]).toLocaleLowerCase()});
                 if(locationObj){
                   this.model.selectedLoctionsDetailsArr.push(locationObj);
                 }
