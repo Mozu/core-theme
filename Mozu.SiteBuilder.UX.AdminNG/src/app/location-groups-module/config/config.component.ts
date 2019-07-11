@@ -23,7 +23,7 @@ export class LocationGroupConfigComponent implements OnInit {
         private fb: FormBuilder,
         private configService: LocationGroupConfigService,
         private router: Router,
-        private route: ActivatedRoute,
+        private activeRoute: ActivatedRoute,
         private _tostrService: TostrService
     ) { }
 
@@ -107,11 +107,14 @@ export class LocationGroupConfigComponent implements OnInit {
 
         this.fetchSitesData();
 
-        const locationGroupId  = this.route.snapshot.paramMap.get('id');
-        const siteId = this.route.snapshot.paramMap.get('siteId');
+        const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
+        const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
         this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
 
-        this.fetchLocationGroupConfig(locationGroupId, siteId);
+        this.activeRoute.params.subscribe(routeParams => {
+            console.log('activeRoute parameters changed !!!!!');
+            this.fetchLocationGroupConfig(locationGroupId, siteId);
+        });
     }
 
     private addCarriersCheckboxes() {
@@ -159,7 +162,7 @@ export class LocationGroupConfigComponent implements OnInit {
     }
 
     siteListChanged() {
-        const locationGroupId  = this.route.snapshot.paramMap.get('id');
+        const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
         this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupId
                             + '/' + this.model.selectedSite.id]);
     }
