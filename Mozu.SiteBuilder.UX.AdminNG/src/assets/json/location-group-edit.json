@@ -2,19 +2,21 @@
     "success": true,
     "total": 1,
     "items": {
-        "locationGroupId": 182,
+        "locationGroupId": 183,
         "siteIds": [
-            21576
+            21574
         ],
-        "name": "WestLocationGrp1",
+        "name": "Test Physical Location",
         "locationCodes": [
-            "WAREHOUSELOCATION5"
+            "RETAILSTORE_623",
+            "WAREHOUSELOCATION1010",
+            "TIMROLETEST7"
         ],
         "auditInfo": {
-            "updateDate": "2019-07-08T18:57:03.016Z",
-            "createDate": "2019-07-08T18:57:03.016Z",
-            "updateBy": "1",
-            "createBy": "1"
+            "updateDate": "2019-07-11T07:10:16.330Z",
+            "createDate": "2019-07-11T07:10:16.330Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
     }
 }

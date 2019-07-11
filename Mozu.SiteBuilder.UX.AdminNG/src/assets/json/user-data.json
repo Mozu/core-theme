@@ -164,7 +164,7 @@
         "isLocked": false,
         "failedLoginAttemptCount": 0,
         "remainingLoginAttempts": 15,
-        "lastLoginOn": "2019-06-02T06:18:07.531Z",
+        "lastLoginOn": "2019-07-11T06:49:06.417Z",
         "createdOn": "2016-01-08T13:26:48.317Z",
         "updatedOn": "2017-06-14T21:16:59.603Z"
       }
@@ -389,21 +389,6 @@
           "id": 3,
           "name": "MasterCatalogTwo"
         },
-        "roleId": 5513,
-        "roleName": "Extension Log Reader",
-        "auditInfo": {
-          "updateDate": "2019-05-03T10:00:45.587Z",
-          "createDate": "2019-05-03T10:00:45.587Z",
-          "updateBy": "8d29e4f31df44358b472b410dc9fb052",
-          "createBy": "8d29e4f31df44358b472b410dc9fb052"
-        }
-      }
-    ],
-    "ctTenant": {
-      "scaleUnitId": "sb",
-      "devAccountId": 2159,
-      "isDevTenant": true,
-      "sites": [
         {
           "tenantId": 17450,
           "defaultLocaleCode": "en-US",
@@ -877,7 +862,7 @@
       {
         "emailAddress": "2Jt_T72@test.com",
         "localeCode": "en-US",
-        "firstName": "Josiane",
+        "firstName": "Josiane2",
         "lastName": "Gutmann",
         "id": "02769a9c07e54505902cf426df0f25b3",
         "systemData": {
@@ -885,7 +870,7 @@
           "remainingLoginAttempts": 15,
           "lastLoginOn": "2019-04-02T14:47:59.424Z",
           "createdOn": "2019-04-02T14:47:59.315Z",
-          "updatedOn": "2019-04-10T16:35:55.817Z"
+          "updatedOn": "2019-07-08T15:14:42.728Z"
         },
         "isActive": true
       },
@@ -1108,7 +1093,7 @@
         "systemData": {
           "lastPasswordChangeOn": "2017-06-14T21:16:59.603Z",
           "remainingLoginAttempts": 15,
-          "lastLoginOn": "2019-06-02T06:18:07.531Z",
+          "lastLoginOn": "2019-07-11T06:49:06.417Z",
           "createdOn": "2016-01-08T13:26:48.317Z",
           "updatedOn": "2017-06-14T21:16:59.603Z"
         },
@@ -1545,7 +1530,7 @@
           "remainingLoginAttempts": 15,
           "lastLoginOn": "2019-04-02T14:45:51.564Z",
           "createdOn": "2019-04-02T14:45:51.470Z",
-          "updatedOn": "2019-04-02T14:45:51.564Z"
+          "updatedOn": "2019-07-08T19:24:16.702Z"
         },
         "isActive": true
       },
@@ -1762,13 +1747,6 @@
           "currencyCode": "USD",
           "enableLiveEdit": false
         },
-        "isActive": true
-      }
-    ],
-    "ctTaContext": {
-      "id": 20072,
-      "name": "MadhuraTsandbox",
-      "masterCatalogs": [
         {
           "id": 3,
           "name": "MasterCatalogTwo",
@@ -1921,7 +1899,7 @@
         "value": "Free shipping"
       }
     ],
-    "useGoogleAnalytics": "false",
+    "useGoogleAnalytics": "true",
     "googleAnalyticsAccount": "UA-55272537-1",
     "showBristReport": "true"
   }
