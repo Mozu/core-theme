@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
-import { LoggerService } from '@core';
+import { LoggerService, TostrService } from '@core';
 import { SharedDataService } from '@global';
 import { LocationGroupConfigModel } from './config.model';
 import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -24,7 +23,8 @@ export class LocationGroupConfigComponent implements OnInit {
         private fb: FormBuilder,
         private configService: LocationGroupConfigService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private _tostrService: TostrService
     ) { }
 
     ngOnInit() {
@@ -111,6 +111,7 @@ export class LocationGroupConfigComponent implements OnInit {
         const siteId = this.route.snapshot.paramMap.get('siteId');
         this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
 
+        this.fetchLocationGroupConfig(locationGroupId, siteId);
     }
 
     private addCarriersCheckboxes() {
@@ -173,10 +174,26 @@ export class LocationGroupConfigComponent implements OnInit {
     }
 
     public fetchSitesData = () => {
-        this._loggerService.info('LocationGroupCreateComponent : fetchSitesData');
+        this._loggerService.info('LocationGroupConfigComponent : fetchSitesData');
         if (this._sharedData._sharedData.items.ctTenant.sites) {
             this.model.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
         }
+    }
+
+    public fetchLocationGroupConfig = (locationGroupId, siteId) => {
+        this._loggerService.info('LocationGroupConfigComponent : fetchLocationGroupConfig');
+        this.configService.getLocationGroupConfig(locationGroupId, siteId).subscribe(response =>
+            this.getLocationGroupConfigSuccess(response),
+            (response) => this.getLocationGroupConfigError(response.error.message));
+    }
+
+    private getLocationGroupConfigSuccess(result) {
+        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
+    }
+
+    private getLocationGroupConfigError(errmsg: string) {
+        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigError');
+        this._tostrService.showError(errmsg);
     }
 
     private updateLocationGroupConfigForm(): void {
