@@ -156,20 +156,19 @@ export class Constants {
     static userAPIDeepLink = '/users';
 
 
-    static LCCustomerPickupActions = [ {data : 'CUSTOMER_CARE', label: 'Customer Care'}, {data: 'CANCEL', label: 'Cancel'}];
-    static LCCustomerPickupReminders = [ {data : '1', label: '1 days'}, {data: '2', label: '2 days'}, {data: '3', label: '3 days'},
-                                        {data: '4', label: '4 days'}, {data: '5', label: '5 days'}];
-
-    static LCCarriers = [{ CarrierType:'FedEx', CarrierTypeLabel:'FedEx', IsEnabled: false},
-                         { CarrierType:'UPS', CarrierTypeLabel:'Ups', IsEnabled: false},
-                         {CarrierType:'USPS (endicia)', CarrierTypeLabel:'USPS (endicia)', IsEnabled: false},
-                         {CarrierType:'Canada Post', CarrierTypeLabel:'Canada Post', IsEnabled: false}];
+    static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Cancel', label: 'Cancel'}];
+    static LCCustomerPickupReminders = [ {data : 1, label: '1 days'}, {data: 2, label: '2 days'}, {data: 3, label: '3 days'},
+                                        {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
+    static LCCarriers = [{ CarrierType: 'FedEx', CarrierTypeLabel: 'FedEx', IsEnabled: false},
+                         { CarrierType: 'UPS', CarrierTypeLabel: 'Ups', IsEnabled: false},
+                         {CarrierType: 'USPS (endicia)', CarrierTypeLabel: 'USPS (endicia)', IsEnabled: false},
+                         {CarrierType: 'Canada Post', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
     static LCDefaultCarrier = [{data: 'None', label: 'None'},
-                               {data : 'FedEx', label: 'Fedex'},
-                               {data : 'Ups', label: 'Ups'},
-                               {data : 'USPS (endicia)', label: 'USPS (endicia)'},
-                               {data : 'Canada Post', label: 'Canada Post'}];
-    static LCPrintReturnLabel = [{data: 'Yes', label: 'Yes'}, {data: 'No', label: 'No'}];
+                               {data: 'FedEx', label: 'Fedex'},
+                               {data: 'Ups', label: 'Ups'},
+                               {data: 'USPS (endicia)', label: 'USPS (endicia)'},
+                               {data: 'Canada Post', label: 'Canada Post'}];
+    static LCPrintReturnLabel = [{data: true, label: 'Yes'}, {data: false, label: 'No'}];
     static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
     static LCUPSUSShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_EARLY_AM', label: 'UPS_NEXT_DAY_AIR_EARLY_AM'},
                                    {data: 'UPS_NEXT_DAY_AIR_SAVER', label: 'UPS_NEXT_DAY_AIR_SAVER'},

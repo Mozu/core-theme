@@ -86,6 +86,7 @@ export class LocationGroupConfigModel {
         defaultReturnRefundReductionAmount: number;
         maximumReturnRefundReductionAmount: number;
         defaultCarrier: string;
+        defaultPrinterType: string;
         carriers: CarrierModel[];
         printReturnLabel: boolean;
         shippingSettingsForUps: ShippingSettingsForUpsModel;

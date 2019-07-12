@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService, TostrService } from '@core';
 import { SharedDataService } from '@global';
-import { LocationGroupConfigModel } from './config.model';
-import { FormBuilder, Validators, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { LocationGroupConfigModel, LocationGroupConfigurationModel } from './config.model';
+import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -102,7 +102,6 @@ export class LocationGroupConfigComponent implements OnInit {
         this.addUPSInternationalShippingTypesCheckboxes();
         this.addUPSCanadaShippingTypesCheckboxes();
         this.addFedExShippingTypesCheckboxes();
-        this.updateLocationGroupConfigForm();
         this.addUSPSShippingTypesCheckboxes();
 
         this.fetchSitesData();
@@ -191,7 +190,11 @@ export class LocationGroupConfigComponent implements OnInit {
     }
 
     private getLocationGroupConfigSuccess(result) {
-        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
+        // this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
+        const lgConfigModel: LocationGroupConfigurationModel =   <LocationGroupConfigurationModel>result;
+        // console.log('lgConfigModel --->>>:', lgConfigModel);
+        this.resetLocationGroupConfigForm();
+        this.updateLocationGroupConfigForm(lgConfigModel);
     }
 
     private getLocationGroupConfigError(errmsg: string) {
@@ -199,16 +202,35 @@ export class LocationGroupConfigComponent implements OnInit {
         this._tostrService.showError(errmsg);
     }
 
-    private updateLocationGroupConfigForm(): void {
+    private resetLocationGroupConfigForm(): void {
         this.model.locationGroupConfigForm.patchValue({
-            customerFailedToPickupAfterAction: 'CUSTOMER_CARE',
-            sendCustomerPickupReminder: '2',
+            customerFailedToPickupAfterAction: '',
+            sendCustomerPickupReminder: '',
             defaultCarrier: 'None',
             printReturnLabel: 'Yes',
-            defaultPrinterType: 'Laser',
-            // preferredPickupTime: '00:00',
-            // closingTime:  '00:00'
+            defaultPrinterType: 'Laser'
+
         });
+        console.log('------------resetLocationGroupConfigForm--------------------');
+    }
+
+    private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
+
+        console.log('lgConfigModel --->>>:', lgConfigModel);
+        if (lgConfigModel) {
+            this.model.locationGroupConfigForm.patchValue({
+                // ISPU
+                customerFailedToPickupAfterAction: lgConfigModel.customerFailedToPickupAfterAction,
+                customerFailedToPickupDeadline: lgConfigModel.customerFailedToPickupDeadline,
+                sendCustomerPickupReminder: lgConfigModel.sendCustomerPickupReminder,
+                // Shipping
+                defaultCarrier: lgConfigModel.defaultCarrier,
+                printReturnLabel: lgConfigModel.printReturnLabel,
+                defaultPrinterType: lgConfigModel.defaultPrinterType
+
+
+            });
+        }
     }
 
     private addUSPSShippingTypesCheckboxes() {

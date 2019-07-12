@@ -10,7 +10,7 @@
 		<form [formGroup]="model.locationGroupConfigForm">
 			<div class="row subform">
 				<div class="col-md-10 nopadding">
-					<h4>Mystic Kids Site Config</h4>
+					<h4>{{this.model.selectedSite.name}} Site Config</h4>
 				</div>
 				<div class="col-md-2 nopadding">
 					<button type="button" class="sbbtn btn btn-success pull-right">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
@@ -81,7 +81,8 @@
 				</div>
 				<div class="row nomargin for-top-margin">
 					<div class="form-row col-md-5 for-no-padding">
-						<label class="subform-label" for="defaultPrinterType">{{'LOCATIONGROUPCONFIG.FormLabels.UPSUSStandardDefault' | translate}}</label>
+						<label class="subform-label"
+							for="defaultPrinterType">{{'LOCATIONGROUPCONFIG.FormLabels.defaultPrinterType' | translate}}</label>
 						<select id="defaultPrinterType" class="form-control" formControlName="defaultPrinterType">
 							<option *ngFor="let action of model.LCDefaultPrinterType" [ngValue]="action.data">
 								{{ action.label }}
