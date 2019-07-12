@@ -219,7 +219,7 @@ Ext.define('Taco.model.Order', {
     {
         name: 'shipments',
         'type': 'hasMany',
-        'model': 'Taco.model.ShipmentItem',
+        'model': 'Taco.model.Shipment',
         'reader': 'json'
     }, {
         name: 'priceListCode',
@@ -915,10 +915,9 @@ Ext.define('Taco.model.Order', {
     formatCurrency: function (value) {
         if (Taco.app.context.findSite(this.get('siteId'))) {
             return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
-        }
-
+        }        
         else {
-            return value;
+            return Taco.app.context.getCurrent().formatCurrency(value);
         }
     },
     getCurrencyCode: function () {

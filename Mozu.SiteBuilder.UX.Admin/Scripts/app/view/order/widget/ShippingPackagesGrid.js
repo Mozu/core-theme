@@ -5,7 +5,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         'Ext.util.DelayedTask',
     'Ext.form.RadioManager'],
 
-    title: 'My Shipping Grid',
+    title: '',
 
     viewConfig: {
         deferEmptyText: false,
@@ -147,7 +147,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }
             }]
         });
-
+        
         this.selModel = Ext.create('Ext.selection.CheckboxModel', {
             selType: 'checkboxmodel',
             mode: 'single',

@@ -7,6 +7,7 @@ using System.Web;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCpay = Mozu.CommerceRuntime.Contracts.Payments;
 using DCcredit = Mozu.Customer.Contracts.Credit;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 {
@@ -143,6 +144,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public List<OrderRefund> Refunds { get; set; }
 
         public List<OrderPackage> Packages { get; set; }
+
+        public List<Shipment> Shipments { get; set; }
 
         public List<OrderDigitalPackage> DigitalPackages { get; set; }
 

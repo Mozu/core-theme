@@ -1,10 +1,6 @@
 Ext.define('Taco.view.order.subform.FulfillmentNew', {
     extend: 'Taco.view.order.subform.Subform',
-    //requires: [
-    //    //'Taco.view.order.subform.fulfillment.Container',
-    //    'Taco.view.order.subform.fulfillment.Packages',
-    //    'Taco.view.order.widget.OrderTotalPanel'
-    //],
+
     alias: 'widget.taco-order-fulfillment',
 
     tabTitle: 'Fulfillment',

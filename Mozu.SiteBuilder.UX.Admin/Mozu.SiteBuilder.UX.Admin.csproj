@@ -215,6 +215,7 @@
     <Compile Include="Api\Models\Search\SynonymDefinition.cs" />
     <Compile Include="Api\Models\SiteBuilder\SearchItem.cs" />
     <Compile Include="Api\OrderCancelController.cs" />
+    <Compile Include="Api\OrderShipmentItemController.cs" />
     <Compile Include="Api\ProductSortDefinitionController.cs" />
     <Compile Include="Api\ReportGenerator.cs" />
     <Compile Include="Api\CouponCodeController.cs" />
@@ -551,6 +552,7 @@
     <Compile Include="Swagger\Fulfiller\Model\Package.cs" />
     <Compile Include="Swagger\Fulfiller\Model\PackageMeasurements.cs" />
     <Compile Include="Swagger\Fulfiller\Model\Phone.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ReassignItem.cs" />
     <Compile Include="Swagger\Fulfiller\Model\RejectShipment.cs" />
     <Compile Include="Swagger\Fulfiller\Model\ResourcePackage.cs" />
     <Compile Include="Swagger\Fulfiller\Model\ResourceShipment.cs" />
@@ -984,7 +986,10 @@
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
-    <Content Include="Scripts\app\view\order\subform\fulfillment\Packages.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\CancellationTab.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\TrackingNumberTab.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\ShippedFromTab.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentTabs.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\AllItemsTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\PackageTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Shipment.js" />
@@ -995,6 +1000,7 @@
     <Content Include="Scripts\app\view\order\widget\OrderReturns.js" />
     <Content Include="Scripts\app\view\order\widget\ShipmentTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
+    <Content Include="Scripts\app\view\order\widget\ShippingCancellationGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingPackagesGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnableItemTree.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnReplacementGrid.js" />

@@ -103,7 +103,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
     },
 
     getCancelShipmentPayload: function () {
-        debugger;
+
         var me = this;
         
         var order = this.record;

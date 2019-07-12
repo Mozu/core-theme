@@ -2,26 +2,20 @@
     extend: 'Taco.view.order.subform.fulfillment.Container',
     alias: 'taco-order-fulfillment-ShipmentDetails',
 
-    cls:'taco-order-fulfillment-ShipmentDetails',
-    //extend: 'Ext.panel.Panel',
-
-    //ui: 'subform-section-child',
-    //bodyPadding: '10 10 10 10',
+    cls: 'taco-order-fulfillment-ShipmentDetails',
 
     collapsible: false,
 
     initComponent: function () {
         this.items = [];
-        this.packageContainer = Ext.create('Taco.view.order.subform.fulfillment.Packages', {
+
+        this.shipmentTabs = Ext.create('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             record: this.record,
             shipmentRecord: this.shipmentRecord
         });
-
-        this.items.push(this.packageContainer);
-
-        
+        this.items.push(this.shipmentTabs);
 
         this.callParent(arguments);
     }
-    
+
 });

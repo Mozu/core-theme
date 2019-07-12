@@ -544,17 +544,17 @@
     "refunds": [],
     "shipments": [
       {
-        "id": null,
+        "id": "10d73a63279a4c6898f1a72100d92dd2",
         "currencyCode": null,
-        "cost": null,
+        "cost": 170.23,
         "shippingMethodCode": null,
         "trackingNumber": "#TR123455",
         "signatureRequired": null,
         "originAddress": {
           "id": 1000,
           "email": "email@name.com",
-          "firstName": "Dallas",
-          "lastName": "Warehouse",
+          "firstName": "James",
+          "lastName": "Lewis",
           "address1": "1100 N Royal Ln",
           "cityOrTown": "Dallas",
           "countryCode": "US",
@@ -565,7 +565,21 @@
           "homePhone": "312-555-5555",
           "mobilePhone": "312-555-5555"
         },
-        "destinationAddress": null,
+        "destinationAddress": {
+          "id": 1000,
+          "email": "email@name.com",
+          "firstName": "Dallas",
+          "lastName": "Warehouse",
+          "address1": "9442 N Capital of Texas Hwy",
+          "cityOrTown": "Austin",
+          "countryCode": "US",
+          "postalOrZipCode": "78759",
+          "stateOrProvince": "TX",
+          "addressIsValidated": false,
+          "addressType": "Commercial",
+          "homePhone": "312-555-5555",
+          "mobilePhone": "312-555-5555"
+        },
         "packageIds": null,
         "number": 1,
         "originalOrderId": null,
@@ -607,7 +621,7 @@
                 "weight": 5.000,
                 "unitPrice": 0.0,
                 "total": 0.0,
-                "lineId": 1,
+                "lineId": 2,
                 "optionAttributeFQN": "",
                 "fulfillmentStatus": "PartiallyReturned"
               },
@@ -619,7 +633,7 @@
                 "weight": 7.500,
                 "unitPrice": 0.0,
                 "total": 0.0,
-                "lineId": 1,
+                "lineId": 3,
                 "optionAttributeFQN": "",
                 "fulfillmentStatus": "PartiallyReturned"
               },
@@ -631,7 +645,7 @@
                 "weight": 20.0000,
                 "unitPrice": 0.0,
                 "total": 0.0,
-                "lineId": 1,
+                "lineId": 4,
                 "optionAttributeFQN": "tenant~wrist-rest-add-on",
                 "fulfillmentStatus": "PartiallyReturned"
               },
@@ -643,7 +657,7 @@
                 "weight": 30.000,
                 "unitPrice": 352.5,
                 "total": 1971.94,
-                "lineId": 2,
+                "lineId": 5,
                 "optionAttributeFQN": "",
                 "fulfillmentStatus": "Fulfilled"
               },
@@ -655,103 +669,8 @@
                 "weight": 5.0000,
                 "unitPrice": 0.0,
                 "total": 0.0,
-                "lineId": 2,
+                "lineId": 6,
                 "optionAttributeFQN": "tenant~ergodox-key-set-add-on",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "sticker-cherry",
-                "productName": "Cherry Sticker",
-                "quantity": 25,
-                "weight": 2.5000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 2,
-                "optionAttributeFQN": "tenant~sticker-add-on",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "corsair-k95-blue",
-                "productName": "Corsair K95 RGB Keyboard",
-                "quantity": 5,
-                "weight": 25.000,
-                "unitPrice": 245.0,
-                "total": 1394.01,
-                "lineId": 3,
-                "optionAttributeFQN": "",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "case-hard-full",
-                "productName": "Hard Keyboard Carrying Case - Full",
-                "quantity": 5,
-                "weight": 10.0000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 3,
-                "optionAttributeFQN": "tenant~case-add-on",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "case-hard-full",
-                "productName": "Hard Keyboard Carrying Case - Full",
-                "quantity": 5,
-                "weight": 10.0000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 3,
-                "optionAttributeFQN": "tenant~second-case-add-on",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "oring",
-                "productName": "Cherry MX Rubber O-Ring Switch Dampener (125pcs)",
-                "quantity": 10,
-                "weight": 5.000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 4,
-                "optionAttributeFQN": "",
-                "fulfillmentStatus": "PartiallyReturned"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "gift-card-addon-10",
-                "productName": "$10 Gift Card",
-                "quantity": 10,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 4,
-                "optionAttributeFQN": "",
-                "fulfillmentStatus": "Fulfilled"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "ducky-shine-5-blu",
-                "productName": "Ducky Shine 5 Blue",
-                "quantity": 5,
-                "weight": 25.000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 4,
-                "optionAttributeFQN": "",
-                "fulfillmentStatus": "PartiallyReturned"
-              },
-              {
-                "isPackagedStandAlone": false,
-                "productCode": "case-hard-full",
-                "productName": "Hard Keyboard Carrying Case - Full",
-                "quantity": 5,
-                "weight": 10.0000,
-                "unitPrice": 0.0,
-                "total": 0.0,
-                "lineId": 4,
-                "optionAttributeFQN": "tenant~case-add-on",
                 "fulfillmentStatus": "Fulfilled"
               }
             ],
@@ -806,12 +725,17 @@
           }
         ],
         "shipmentAdjustment": 0.0,
-        "lineItemTaxAdjustment": 0.0,
-        "shippingAdjustment": 0.0,
-        "shippingTaxAdjustment": 0.0,
-        "handlingAdjustment": 0.0,
-        "handlingTaxAdjustment": 0.0,
+        "lineItemTaxAdjustment": 14.0,
+        "shippingAdjustment": 13.40,
+        "shippingTaxAdjustment": 10.0,
+        "handlingAdjustment": 11.0,
+        "handlingTaxAdjustment": 13.0,
         "dutyAdjustment": 0.0,
+        "lineItemTaxTotal": 14.0,
+        "handlingTaxTotal": 13.0,
+        "handlingSubTotal": 11.0,
+        "shippingTaxTotal": 10.0,
+        "shippingSubTotal": 121.23,
         "auditInfo": {
           "updateDate": "2016-08-19T22:30:38.070Z",
           "createDate": "2016-08-19T22:30:38.070Z",
@@ -819,6 +743,7 @@
           "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
       }
+
     ],
     "packages": [
       {
@@ -853,7 +778,7 @@
             "weight": 5.000,
             "unitPrice": 0.0,
             "total": 0.0,
-            "lineId": 1,
+            "lineId": 2,
             "optionAttributeFQN": "",
             "fulfillmentStatus": "PartiallyReturned"
           },
@@ -865,7 +790,7 @@
             "weight": 7.500,
             "unitPrice": 0.0,
             "total": 0.0,
-            "lineId": 1,
+            "lineId": 3,
             "optionAttributeFQN": "",
             "fulfillmentStatus": "PartiallyReturned"
           },
@@ -877,7 +802,7 @@
             "weight": 20.0000,
             "unitPrice": 0.0,
             "total": 0.0,
-            "lineId": 1,
+            "lineId": 4,
             "optionAttributeFQN": "tenant~wrist-rest-add-on",
             "fulfillmentStatus": "PartiallyReturned"
           },
@@ -889,115 +814,8 @@
             "weight": 30.000,
             "unitPrice": 352.5,
             "total": 1971.94,
-            "lineId": 2,
+            "lineId": 5,
             "optionAttributeFQN": "",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "caps-ergo-carbon",
-            "productName": "Carbon Key Caps for Ergodox",
-            "quantity": 5,
-            "weight": 5.0000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 2,
-            "optionAttributeFQN": "tenant~ergodox-key-set-add-on",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "sticker-cherry",
-            "productName": "Cherry Sticker",
-            "quantity": 25,
-            "weight": 2.5000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 2,
-            "optionAttributeFQN": "tenant~sticker-add-on",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "corsair-k95-blue",
-            "productName": "Corsair K95 RGB Keyboard",
-            "quantity": 5,
-            "weight": 25.000,
-            "unitPrice": 245.0,
-            "total": 1394.01,
-            "lineId": 3,
-            "optionAttributeFQN": "",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "case-hard-full",
-            "productName": "Hard Keyboard Carrying Case - Full",
-            "quantity": 5,
-            "weight": 10.0000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 3,
-            "optionAttributeFQN": "tenant~case-add-on",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "case-hard-full",
-            "productName": "Hard Keyboard Carrying Case - Full",
-            "quantity": 5,
-            "weight": 10.0000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 3,
-            "optionAttributeFQN": "tenant~second-case-add-on",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "oring",
-            "productName": "Cherry MX Rubber O-Ring Switch Dampener (125pcs)",
-            "quantity": 10,
-            "weight": 5.000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 4,
-            "optionAttributeFQN": "",
-            "fulfillmentStatus": "PartiallyReturned"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "gift-card-addon-10",
-            "productName": "$10 Gift Card",
-            "quantity": 10,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 4,
-            "optionAttributeFQN": "",
-            "fulfillmentStatus": "Fulfilled"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "ducky-shine-5-blu",
-            "productName": "Ducky Shine 5 Blue",
-            "quantity": 5,
-            "weight": 25.000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 4,
-            "optionAttributeFQN": "",
-            "fulfillmentStatus": "PartiallyReturned"
-          },
-          {
-            "isPackagedStandAlone": false,
-            "productCode": "case-hard-full",
-            "productName": "Hard Keyboard Carrying Case - Full",
-            "quantity": 5,
-            "weight": 10.0000,
-            "unitPrice": 0.0,
-            "total": 0.0,
-            "lineId": 4,
-            "optionAttributeFQN": "tenant~case-add-on",
             "fulfillmentStatus": "Fulfilled"
           }
         ],

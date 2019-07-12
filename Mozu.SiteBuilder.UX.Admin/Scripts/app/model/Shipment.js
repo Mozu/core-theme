@@ -109,10 +109,14 @@ Ext.define('Taco.model.Shipment', {
             //dateFormat: 'c',
             //d M, Y, g:i a
             convert: function (value, model) {
-                console.log('sagar' + model.get('auditInfo').updateDate);
                 return model.get('auditInfo').updateDate;
             },
             defaultValue: null
+        },
+        {
+            "name": "lineItemSubtotal",
+            "type": "float",
+            "useNull": true
         },
         {
             "name": "shipmentAdjustment",
@@ -148,7 +152,34 @@ Ext.define('Taco.model.Shipment', {
             "name": "dutyAdjustment",
             "type": "float",
             "useNull": true
-        }],
+        },
+        //new fields
+        {
+            "name": "lineItemTaxTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "handlingTaxTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "handlingSubTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "shippingTaxTotal",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            "name": "shippingSubTotal",
+            "type": "float",
+            "useNull": true
+        }
+    ],
 
     //proxy: {
     //    type: 'ajaxproxy',

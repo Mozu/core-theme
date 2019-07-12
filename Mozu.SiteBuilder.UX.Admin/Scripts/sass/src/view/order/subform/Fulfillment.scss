@@ -273,24 +273,20 @@
     .x-panel-header-text-container-default {
         border-bottom-width: 0px !important;
     }
-
-    .taco-splitbutton {
+    /*.taco-splitbutton {
         border-color: #e9e9e9 !important;
         padding-top: 10px;
         padding-bottom: 7px;
         border: none !important;
         background-color: white;
         box-shadow: none !important;
-    }
-
+    }*/
     .x-btn-split-right {
-        padding-right: 25px;
+        padding-right: 25px !important;
     }
-
-    .x-btn-split-right::after {
+    /*.x-btn-split-right::after {
         border-left: none !important;
-    }
-
+    }*/
     .taco-form-nav-new {
         @extend .taco-form-nav;
         position: relative !important;
@@ -353,7 +349,7 @@
 
     .labelvalue {
         padding: 10px 0;
-        font-size: 17px;
+        font-size: 16px;
     }
 
     .x-btn-inner.x-btn-inner-center {
@@ -374,6 +370,14 @@
     .x-tool-expand-bottom::after {
         font-size: 20px !important;
     }
+
+    .taco-splitbutton {
+        padding-right: 5px;
+    }
+
+    .x-btn-split-right {
+        padding-right: 30px !important;
+    }
 }
 
 .taco-order-fulfillment-ShipmentDetails {
@@ -384,6 +388,12 @@
 
 .shipmentform-detail-totalpanel {
     @extend .orderform-detail-totalpanel;
+
+    .collapsed {
+        .shipping-handling-item {
+            display: none;
+        }
+    }
     /* text box with icon componant */
     .left-box {
         margin-left: 10px;
@@ -430,6 +440,12 @@
         width: 80px;
     }
 
+    .left-addon input[type=number]::-webkit-inner-spin-button,
+    .left-addon input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
     .left-addon input.doller {
         width: 100px;
     }
@@ -437,5 +453,9 @@
     .taco-tools-buttons {
         float: right;
         margin-right: 70px;
+    }
+
+    .totalrow .summary-price {
+        font-weight: bolder;
     }
 }

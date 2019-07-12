@@ -1,17 +1,12 @@
-/**
- * @class Taco.view.order.subform.fulfillment.Packages
- */
+
 Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     extend: 'Taco.view.order.subform.Subform',
-    requires: [
-        'Taco.view.order.modal.OverrideTotalWeight',
-    ],
+
+    tabTitle: 'All Items',
 
     initComponent: function () {
-        //this.tabTitle = this.packageRecord.code;
-        //this.title = this.packageRecord.code;
 
-        this.cls += " " + Taco.baseCSSPrefix + 'orderform-package';
+        this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);
 
@@ -22,19 +17,9 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         //}, this);
     },
 
-    //destroyUI: function() {
-    //    this.removeAll();
-    //    this.createButton = this.packageItemsErrorEl = this.packageItems = null;
-    //},
-
     initUI: function () {
 
         itemId: this.packageRecord.code + 'shipment';
-
-        if (!this.packageRecord.shipmentId) {
-            this.packagingTypeStore = Ext.create('Taco.store.PackagingTypes');
-            this.packagingTypeStore.load();
-        }
 
         this.packageItems = Ext.create('Taco.view.order.widget.ShippingPackagesGrid', {
             packageStore: this.packageRecord,
@@ -44,74 +29,16 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         });
 
         this.items = [
-            this.buildTrackingHeader(),
+            this.buildAllItemsActions(),
             this.packageItems
         ];
     },
 
-    addTracking: function () {
-        alert('Add Tracking click');
-    },    
-
-    buildPackagingTypes: function () {
-        var ret = [];
-
-        this.packagingTypeStore.each(function (type) {
-            ret.push({
-                text: type.get('text'),
-                packagingType: type.get('packagingType')
-            });
-        });
-
-        return ret;
-    },    
-
-    handlePackagingType: function (menu, item) {
-        this.packageRecord.packagingType = item.packagingType;
-
-        this.updateOrder({
-            methodName: 'changePackagingType',
-            errorMsg: 'Error changing packaging type on package',
-            data: [this.packageRecord]
-        });
-    },    
-
-    handleOverrideWeight: function () {
-        Ext.create('Taco.view.order.modal.OverrideTotalWeight', {
-            record: this.packageRecord,
-            listeners: {
-                scope: this,
-                aftersaveclose: function (dialog, data) {
-                    this.packageRecord.weight = data.weight;
-
-                    this.updateOrder({
-                        methodName: 'changePackageWeight',
-                        errorMsg: 'Error changing package weight',
-                        data: [this.packageRecord]
-                    });
-                }
-            }
-        });
-    },
-
-    handlePrintPackingSlip: function () {
-        var siteId = this.record.get('siteId'),
-            orderId = this.record.getId(),
-            packageId = this.packageRecord.id;
-        window.open('/admin/s-' + siteId + '/orderdetails/' + orderId + '/packages/' + packageId);
-    },
-
-    handleViewShippingLabel: function () {
-        window.open(
-            '/admin/app/order/shipping/package/label?orderId=' + this.record.getId() + '&packageId=' + this.packageRecord.id,
-            'mozu-shippingLabel-' + this.record.getId() + '-' + this.packageRecord.id
-        );
-    },  
-    
-    buildTrackingHeader: function () {
+    buildAllItemsActions: function () {
+        var me = this;
         return Ext.widget({
             xtype: 'container',
-            cls: 'taco-order-fulfillment-package-header',
+            cls: 'taco-order-fulfillment-package-body',
             padding: '0 0 10 0',
             layout: {
                 type: 'hbox',
@@ -119,104 +46,8 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
             },
             defaults: {
                 xtype: 'component',
-                data: this.record.getData()
             },
             items: [
-                {
-                    xtype: 'container',
-                    defaults: {
-                        xtype: 'component'
-                    },
-                    items: [
-                        {
-                            xtype: 'container',
-                            padding: '0 10 0 0',
-                            defaults: {
-                                xtype: 'component'
-                            },
-                            items: [                                
-                                {
-                                    xtype: 'button',
-                                    ui: 'link',
-                                    html: 'Packaging Type:',
-                                    scale: 'medium',
-                                    cls: 'label label-link',
-                                    hidden: !!this.record.shipmentId,
-                                    requiredBehaviors: [{
-                                        model: 'Taco.model.Order',
-                                        behavior: 'update',
-                                        disable: true
-                                    },
-                                    {
-                                        model: 'Taco.model.Order',
-                                        behavior: 'fulfill'
-                                    }],
-                                    listeners: {
-                                        menushow: function (button, menu) {
-                                            menu.removeAll();
-                                            menu.add(this.buildPackagingTypes());
-                                        },
-                                        scope: this
-                                    },
-                                    menu: {
-                                        plain: true,
-                                        listeners: {
-                                            click: this.handlePackagingType,
-                                            scope: this,
-                                            delegate: 'x-menu-item-link'
-                                        },
-                                        items: [{
-                                            text: ''
-                                        }]
-                                    }
-                                }, {
-                                    html: this.record.packagingType,
-                                    padding: '0 0 0 10',
-                                }]
-                        }
-                    ]
-                },
-                {
-                    xtype: 'container',
-                    padding: '0 10 0 0',
-                    defaults: {
-                        xtype: 'component'
-                    },
-                    items: [
-                        {
-                            margin: '5 0 0 0',
-                            tpl: [
-                                '<span class="label">Total Weight:</span>'
-                            ],
-                            data: this.record
-                        }, {
-                            xtype: 'container',
-                            layout: 'hbox',
-                            items: [{
-                                margin: '0 5 0 0',
-                                xtype: 'component',
-                                tpl: [
-                                    '{weight} lbs'
-                                ],
-                                data: this.record
-                            }, {
-                                xtype: 'button',
-                                text: '(Edit)',
-                                ui: 'link',
-                                hidden: !!this.record.shipmentId,
-                                handler: this.handleOverrideWeight,
-                                scope: this,
-                                requiredBehaviors: [{
-                                    model: 'Taco.model.Order',
-                                    behavior: 'update'
-                                },
-                                {
-                                    model: 'Taco.model.Order',
-                                    behavior: 'fulfill'
-                                }]
-                            }]
-                        }]
-                },
                 {
                     flex: 1,
                     html: '',
@@ -226,107 +57,102 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                     padding: '8 0 0 0',
                     items: [
                         Ext.widget('button', {
-                            itemId: 'printPacking',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Print Packing Slip',
-                            handler: this.handlePrintPackingSlip,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            margin: '0 15 0 0'
-                        }),
-                        Ext.widget('button', {
-                            itemId: 'shippingLabels',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Get Shipping Labels',
-                            margin: '0 15 0 0',
-                            //hidden: !!this.record.shipmentId,
-                            //disabled: !this.record.hasLabel,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            handler: this.handleViewShippingLabel
-                        }),
-                        Ext.widget('button', {
                             itemId: 'editItems',
                             ui: 'action',
                             scale: 'medium',
-                            text: 'Edit Items',
-                            margin: '0 15 0 0',
-                            //hidden: !!this.record.shipmentId,
-                            //disabled: !this.record.hasLabel,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            handler: this.handleViewShippingLabel
-                        }),
-                        Ext.widget('button', {
-                            itemId: 'reassignItems',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Reassign Items',
-                            margin: '0 15 0 0',
-                            //hidden: !!this.record.shipmentId,
-                            //disabled: !this.record.hasLabel,
-                            requiredBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'fulfill'
-                            }],
-                            handler: this.handleViewShippingLabel
-                        }),
-                        Ext.widget('button', {
-                            itemId: 'cancelItem',
-                            ui: 'action',
-                            scale: 'medium',
-                            text: 'Cancel Item',
-
+                            text: 'Edit',
+                            margin: '0 20 0 0',
+                            hidden: me.isShipmentAction(),
                             handler: function () {
-                                Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
-                                    layout: 'hbox',
-                                    width: 600,
-                                    height: 400,
-                                    //record: record,
-                                    //parentRecord: me.record,
-                                    //store: me.record.getCancellationReasons(),
-                                    //originalQuantity: originalQuantity,
-                                    listeners: {
-                                        saveSuccess: {
-                                            fn: function (json) {
-                                                //me.fireEvent('orderCancelled', json);
-                                            },
-                                            //scope: me
-                                        }
-                                    }
-                                });
+
                             }
+                        }),
+                        Ext.widget('splitbutton', {
+                            menuAlign: 'tr-br?',
+                            margin: '0 20 0 0',
+                            text: 'Reassign Item',
+                            itemId: 'reassignItemSplitButton',
+                            hidden: me.isShipmentAction(),
+                            menu: [
+                                {
+                                    text: 'Manual Reassign',
+                                    handler: function () { }
+                                },
+                                {
+                                    text: 'Auto Reassign',
+                                    handler: function () { }
+                                }
+                            ],
+
+                            ui: 'action',
+                            scale: 'medium',
+                        }),
+                        Ext.widget('splitbutton', {
+                            menuAlign: 'tr-br?',
+                            margin: '0 20 0 0',
+                            text: 'Update Item Status',
+                            itemId: 'updateItemSplitButton',
+                            handler: function () {
+
+                            },
+                            hidden: me.isShipmentAction(),
+                            menu: me.getShipmentLevelSplitMenu(),
+                            ui: 'action',
+                            scale: 'medium',
                         })
                     ]
                 }
             ]
         });
     },
+
+    getShipmentLevelSplitMenu: function () {
+
+        var actionCancelItem = {
+            text: 'Cancel Item',
+            handler: function () { }
+        };
+
+        var actionMoveToBackorder = {
+            text: 'Move To backorder',
+            handler: function () { }
+        };
+
+        var actionEditItem = {
+            text: 'Edit Item',
+            handler: function () { }
+        };
+
+        if (this.shipmentRecord.shipmentStatus == 'Ready') {
+            return [
+                actionMoveToBackorder,
+                actionEditItem,
+                actionCancelItem
+            ];
+        }
+        else if (this.shipmentRecord.shipmentStatus == 'Backorder') {
+            return [
+                actionEditItem,
+                actionCancelItem
+            ];
+        }
+        else if (this.shipmentRecord.shipmentStatus == 'Customer Care') {
+            return [
+                actionMoveToBackorder,
+                actionEditItem,
+                actionCancelItem
+            ];
+        }
+    },
+
+    isShipmentAction: function () {
+        if (this.shipmentRecord.shipmentStatus == 'Fulfilled' || this.shipmentRecord.shipmentStatus == 'Cancelled')
+            return true;
+        return false;
+    },
+
     onDestroy: function () {
         this.callParent(arguments);
     }
+
 });
