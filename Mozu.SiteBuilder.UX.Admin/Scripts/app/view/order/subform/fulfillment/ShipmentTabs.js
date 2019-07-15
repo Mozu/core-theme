@@ -70,7 +70,6 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
         items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
             record: this.record,
             shipmentRecord: this.shipmentRecord
-
         }));
 
         items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {

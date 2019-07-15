@@ -11,9 +11,9 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
     // this is primarily here to support the tabs in the product navform;
     leftNavTopOffset: 0,
 
-    subPanelMinHeight: 240, 
-
-    isCollapsed: false,
+    subPanelMinHeight: 240,
+    
+    isCollapsed: false,    
 
     initComponent: function () {
         var me = this;
@@ -22,7 +22,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
 
         var originalItems = [];
         var excludedItems = [];
-
+        
         Ext.Array.each(this.items, function (item, index) {
             if (!item) return;
 
@@ -55,7 +55,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         this.relayEvents(this.formContainer, ['add']);
 
         this.navStore = Ext.create('Ext.data.Store', {
-            fields: ['title', 'tabTitle', 'hidden']
+            fields: ['title', 'tabTitle', 'hidden','isTabTitleHtml']
         });
 
         this.leftNav = Ext.widget({
@@ -67,7 +67,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             itemSelector: '.taco-link-button-item',
             plugins: ["autoselect"],
             width: '100%',
-            height: 39,
+            height: 51,
             selModel: Ext.create('Ext.selection.DataViewModel', {
                 enableKeyNav: false
             }),
@@ -92,7 +92,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                         scale: 'small',
                         margin: '0 0 0 0',
                         renderTo: collapse,
-                        handler: function (button, event) {
+                        handler: function (button, event) {                            
                             if (me.formContainer.hidden) {
                                 button.removeCls('rotateIcon');
                                 me.removeCls('borderbottom');
@@ -114,7 +114,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 '<ul class="package-tab-parent">',
                 '<li class="taco-link-button taco-link-button-packages-collapsable"><div class="taco-link-collapsable"></div></li>',
                 '<tpl for=".">',
-                '<li class="taco-link-button-item taco-link-button <tpl if="xindex == 1">active</tpl> "><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
+                '<li class="taco-link-button-item taco-link-button <tpl if="xindex == 1">active</tpl> <tpl if="values.isTabTitleHtml">taco-link-button-html</tpl>" ><tpl if="values.tabTitle">{tabTitle}<tpl else>{title}</tpl></li>',
                 '</tpl>',
                 '</ul>',
                 {
@@ -187,7 +187,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         }
         else {
             var layout = this.formContainer.getLayout();
-            layout.setActiveItem(this.getItemIndex(item.innerText));
+            layout.setActiveItem(this.getItemIndex(item.innerHTML));
         }
     },
 

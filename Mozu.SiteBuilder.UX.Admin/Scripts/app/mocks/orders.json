@@ -548,7 +548,7 @@
         "currencyCode": null,
         "cost": 170.23,
         "shippingMethodCode": null,
-        "trackingNumber": "#TR123455",
+        "trackingNumber": "TR123455",
         "signatureRequired": null,
         "originAddress": {
           "id": 1000,
@@ -586,7 +586,7 @@
         "orderNumber": 0,
         "customerAccountId": null,
         "customerTaxId": null,
-        "shippingMethodName": null,
+        "shippingMethodName": "UPS Ground",
         "shipmentStatus": "Ready",
         "packages": [
           {
@@ -690,7 +690,7 @@
             "variationProductCode": null,
             "optionAttributeFQN": "",
             "name": "Das Keyboard 4 Pro (Cherry MX Blue)",
-            "fulfillmentLocationCode": null,
+            "fulfillmentLocationCode": "Dallas Warehouse",
             "imageUrl": "",
             "isTaxable": false,
             "quantity": 2,

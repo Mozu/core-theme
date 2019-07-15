@@ -2,7 +2,7 @@
 Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    tabTitle: 'Cancelled Items (5)',
+    
     //title: 'Cancelled Items (3)',
 
     initComponent: function () {
@@ -14,6 +14,8 @@ Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
 
     initUI: function () {
         var me = this;
+        this.tabTitle = 'Cancelled Items ' + ((this.packageRecord.items && this.packageRecord.items.length > 0) ? '(' + this.packageRecord.items.length + ')' : '');
+
         this.shippingCancellationGrid = Ext.create('Taco.view.order.widget.ShippingCancellationGrid', {
             packageStore: this.packageRecord,
             record: this.record,

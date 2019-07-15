@@ -2,11 +2,18 @@
 Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    //tabTitle: '<span>Shipped From</span> <span>Dallas Warehouse</span>',
-    tabTitle: 'Shipped From',
     title: 'Location',
 
     initComponent: function () {
+
+
+        if (this.shipmentRecord.items && this.shipmentRecord.items.length > 0 && this.shipmentRecord.items[0].fulfillmentLocationCode) {
+            this.tabTitle = '<span class="label">Shipped From</span><span class="title">' + this.shipmentRecord.items[0].fulfillmentLocationCode + '</span>';
+            this.isTabTitleHtml = true;
+        }
+        else {
+            this.tabTitle = 'Shipped From';
+        }
 
         this.cls += ' orderform-package-packagetab';
         this.initUI();

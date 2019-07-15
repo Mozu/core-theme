@@ -2,11 +2,9 @@
 Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    tabTitle: 'Tracking',
     title: 'Tracking Numbers',
 
     initComponent: function () {
-
         this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);
@@ -14,6 +12,14 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
 
     initUI: function () {
         var me = this;
+
+        if (this.shipmentRecord.trackingNumber && this.shipmentRecord.shippingMethodName) {
+            this.tabTitle = '<span class="label">Tracking</span><span class="title">' + this.shipmentRecord.shippingMethodName + ' ' + this.shipmentRecord.trackingNumber + '</span>';
+            this.isTabTitleHtml = true;
+        }
+        else {
+            this.tabTitle = 'Tracking';
+        }
         this.locationInfoContainer = Ext.widget({
             itemId: 'locationInfoContainer',
             xtype: 'container',
@@ -33,12 +39,12 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
                     {
                         minWidth: '300',
                         tpl: [
-                            '<div class="labelvalue">UPS Ground</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.shippingMethodName +'</div>'
                         ]
                     },
                     {
                         tpl: [
-                            '<div class="labelvalue">1Z204E380338723749</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.trackingNumber +'</div>'
                         ]
                     }
                 ]
