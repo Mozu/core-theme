@@ -26,9 +26,14 @@
      {
       "carrierType": "FedEx",
       "isEnabled": true
-     }
+     },
+     {
+        "carrierType": "UPS",
+        "isEnabled": true
+    }
     ],
     "printReturnLabel": true,
+    "defaultPrinterType": "Laser",
     "shippingSettingsForUps": {
      "unitedStatesUpsSettings": {
       "shippingMethods": [
@@ -72,10 +77,30 @@
       "standardDefault": "UPS_STANDARD",
       "express1DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
       "express2DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
-      "express3DayDefault": "UPS_NEXT_DAY_AIR_SAVER"
+      "express3DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
+      "returnLabelShippingMethod": "UPS_NEXT_DAY_AIR_SAVER"
      }
     },
-    "boxTypes": [],
+    "boxTypes": [
+        {
+         "name": "Small Box",
+         "height": 2,
+         "width": 2,
+         "length": 2
+        },
+        {
+         "name": "Long Box",
+         "height": 3,
+         "width": 4,
+         "length": 5
+        },
+        {
+         "name": "Large Box",
+         "height": 10,
+         "width": 15,
+         "length": 5
+        }
+       ],
     "attributes": [],
     "auditInfo": {
      "updateDate": "2019-07-08T19:52:14.943Z",

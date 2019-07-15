@@ -50,6 +50,7 @@ export class LocationGroupConfigModel {
         express1DayDefault: string;
         express2DayDefault: string;
         express3DayDefault: string;
+        returnLabelShippingMethod: string;
     }
 
     export interface ShippingSettingsForUpsModel {
@@ -63,6 +64,13 @@ export class LocationGroupConfigModel {
         createDate: Date;
         updateBy: string;
         createBy: string;
+    }
+
+    export interface BoxType {
+        name: string;
+        height: number;
+        width: number;
+        length: number;
     }
 
     export interface LocationGroupConfigurationModel {
@@ -90,7 +98,7 @@ export class LocationGroupConfigModel {
         carriers: CarrierModel[];
         printReturnLabel: boolean;
         shippingSettingsForUps: ShippingSettingsForUpsModel;
-        boxTypes: any[];
+        boxTypes: BoxType[];
         attributes: any[];
         auditInfo: AuditInfoModel;
     }

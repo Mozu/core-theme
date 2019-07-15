@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService, TostrService } from '@core';
 import { SharedDataService } from '@global';
-import { LocationGroupConfigModel, LocationGroupConfigurationModel } from './config.model';
+import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel, ShippingSettingsForUpsModel, UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
 import { LocationGroupConfigService } from './config.service';
@@ -48,7 +48,7 @@ export class LocationGroupConfigComponent implements OnInit {
             defaultCarrier: ['', []],
             printReturnLabel: ['', []],
             defaultPrinterType: ['', []],
-            boxItems: this.fb.array([ this.createBoxItem()]),
+            boxItems: this.fb.array([]),
 
             upsUsShippingTypes: new FormArray([]),
             upsUSStandardDefault:  ['', []],
@@ -111,7 +111,6 @@ export class LocationGroupConfigComponent implements OnInit {
         this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
 
         this.activeRoute.params.subscribe(routeParams => {
-            console.log('activeRoute parameters changed !!!!!');
             this.fetchLocationGroupConfig(locationGroupId, siteId);
         });
     }
@@ -190,9 +189,8 @@ export class LocationGroupConfigComponent implements OnInit {
     }
 
     private getLocationGroupConfigSuccess(result) {
-        // this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
+        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
         const lgConfigModel: LocationGroupConfigurationModel =   <LocationGroupConfigurationModel>result;
-        // console.log('lgConfigModel --->>>:', lgConfigModel);
         this.resetLocationGroupConfigForm();
         this.updateLocationGroupConfigForm(lgConfigModel);
     }
@@ -211,12 +209,32 @@ export class LocationGroupConfigComponent implements OnInit {
             defaultPrinterType: 'Laser'
 
         });
-        console.log('------------resetLocationGroupConfigForm--------------------');
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
 
-        console.log('lgConfigModel --->>>:', lgConfigModel);
+        // create box Types controllers before assign the value
+        if (lgConfigModel && lgConfigModel.boxTypes && lgConfigModel.boxTypes.length > 0) {
+            lgConfigModel.boxTypes.map(function(value, index) {
+                this.addBoxItem();
+            }, this);
+        }
+
+        let unitedStatesUpsSettings: UnitedStatesUpsSettingsModel;
+        if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings) {
+            unitedStatesUpsSettings = lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings;
+        }
+
+        let internationalUpsSettings: InternationalUpsSettingsModel;
+        if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.internationalUpsSettings) {
+            internationalUpsSettings = lgConfigModel.shippingSettingsForUps.internationalUpsSettings;
+        }
+
+        let canadaUpsSettings: CanadaUpsSettingsModel;
+        if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.canadaUpsSettings) {
+            canadaUpsSettings = lgConfigModel.shippingSettingsForUps.canadaUpsSettings;
+        }
+
         if (lgConfigModel) {
             this.model.locationGroupConfigForm.patchValue({
                 // ISPU
@@ -224,13 +242,101 @@ export class LocationGroupConfigComponent implements OnInit {
                 customerFailedToPickupDeadline: lgConfigModel.customerFailedToPickupDeadline,
                 sendCustomerPickupReminder: lgConfigModel.sendCustomerPickupReminder,
                 // Shipping
+                carriers: this.getSelectedCarriers(lgConfigModel.carriers),
                 defaultCarrier: lgConfigModel.defaultCarrier,
                 printReturnLabel: lgConfigModel.printReturnLabel,
-                defaultPrinterType: lgConfigModel.defaultPrinterType
-
+                defaultPrinterType: lgConfigModel.defaultPrinterType,
+                // Box Types
+                boxItems: lgConfigModel.boxTypes,
+                // UPS Settings
+                // UPS US Shipping Types
+                upsUsShippingTypes: this.getSelectedUpsUsShippingTypes(unitedStatesUpsSettings),
+                upsUSStandardDefault: unitedStatesUpsSettings ? unitedStatesUpsSettings.standardDefault : null,
+                upsUSExpress1DayDefault: unitedStatesUpsSettings ? unitedStatesUpsSettings.express1DayDefault : null,
+                upsUSExpress2DayDefault:  unitedStatesUpsSettings ? unitedStatesUpsSettings.express2DayDefault : null,
+                upsUSExpress3DayDefault:  unitedStatesUpsSettings ? unitedStatesUpsSettings.express3DayDefault : null,
+                upsUSReturnLabelShippingTypes: unitedStatesUpsSettings ? unitedStatesUpsSettings.returnLabelShippingMethod : null,
+                // UPS International Shipping Types
+                upsInternationalShippingTypes: this.getSelectedUpsInternationalShippingTypes(internationalUpsSettings),
+                upsInternationalStandardDefault: internationalUpsSettings ? internationalUpsSettings.standardDefault : null,
+                upsInternationalExpress1DayDefault: internationalUpsSettings ? internationalUpsSettings.express1DayDefault : null,
+                upsInternationalExpress2DayDefault: internationalUpsSettings ? internationalUpsSettings.express2DayDefault : null,
+                upsInternationalExpress3DayDefault: internationalUpsSettings ? internationalUpsSettings.express3DayDefault : null,
+                upsInternationalReturnLabelShippingTypes: internationalUpsSettings ?
+                                                                internationalUpsSettings.returnLabelShippingMethod : null,
+                upsInternationalUSReturnLabelShippingTypes: internationalUpsSettings ?
+                                                                internationalUpsSettings.internationalUsReturnLabelShippingMethod : null,
+                // UPS Canada Shipping Types
+                upsCanadaShippingTypes: this.getSelectedUpsCanadaShippingTypes(canadaUpsSettings),
+                upsCanadaStandardDefault: canadaUpsSettings ? canadaUpsSettings.standardDefault : null,
+                upsCanadaExpress1DayDefault: canadaUpsSettings ? canadaUpsSettings.express1DayDefault : null,
+                upsCanadaExpress2DayDefault: canadaUpsSettings ? canadaUpsSettings.express2DayDefault : null,
+                upsCanadaExpress3DayDefault: canadaUpsSettings ? canadaUpsSettings.express3DayDefault : null,
+                upsCanadaReturnLabelShippingTypes: canadaUpsSettings ? canadaUpsSettings.returnLabelShippingMethod : null
 
             });
         }
+    }
+
+    private getSelectedUpsCanadaShippingTypes(canadaUpsSettings: CanadaUpsSettingsModel) {
+        const shippingTypeLst: boolean[] = [];
+        if (canadaUpsSettings) {
+            const shippingMethods = canadaUpsSettings.shippingMethods;
+            this.model.LCUPSCanadaShippingTypes.map((o, i) => {
+            const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
+            if (isShippingTypeSelected !== -1) {
+                shippingTypeLst.push(true);
+            } else {
+                shippingTypeLst.push(false);
+            }
+         });
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedUpsUsShippingTypes( unitedStatesUpsSettingsModel: UnitedStatesUpsSettingsModel) {
+        const shippingTypeLst: boolean[] = [];
+        if (unitedStatesUpsSettingsModel) {
+            const shippingMethods = unitedStatesUpsSettingsModel.shippingMethods;
+            this.model.LCUPSUSShippingTypes.map((o, i) => {
+            const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
+            if (isShippingTypeSelected !== -1) {
+                shippingTypeLst.push(true);
+            } else {
+                shippingTypeLst.push(false);
+            }
+         });
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedUpsInternationalShippingTypes( internationalUpsSettings: InternationalUpsSettingsModel) {
+        const shippingTypeLst: boolean[] = [];
+        if (internationalUpsSettings) {
+            const shippingMethods = internationalUpsSettings.shippingMethods;
+            this.model.LCUPSInternationalShippingTypes.map((o, i) => {
+            const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
+            if (isShippingTypeSelected !== -1) {
+                shippingTypeLst.push(true);
+            } else {
+                shippingTypeLst.push(false);
+            }
+         });
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedCarriers( carriers: CarrierModel[]): boolean[] {
+        const carriersLst: boolean[] = [];
+        this.model.LCCarriers.map((o, i) => {
+           const carrierObj =  _.find(carriers, { 'carrierType': o.CarrierType});
+           if (carrierObj) {
+                carriersLst.push(true);
+           } else {
+                carriersLst.push(false);
+           }
+        });
+        return carriersLst;
     }
 
     private addUSPSShippingTypesCheckboxes() {

@@ -1555,3 +1555,249 @@
         "CreateBy" : "UNKNOWN"
     }
 }
+
+/* 35 */
+{
+    "_id" : ObjectId("5d26e0d80970a60001ca7d2b"),
+    "TenantId" : 17450,
+    "SiteId" : 21574,
+    "LocationGroupId" : 183,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-11T07:10:16.425Z"),
+        "CreateDate" : ISODate("2019-07-11T07:10:16.425Z"),
+        "UpdateBy" : "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "CreateBy" : "355060a60a5e48eeb7f2fb8d92af2ba5"
+    }
+}
+
+/* 36 */
+{
+    "_id" : ObjectId("5d26f8780970a60001ca7d2d"),
+    "TenantId" : 17450,
+    "SiteId" : 21574,
+    "LocationGroupId" : 184,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-11T08:51:04.213Z"),
+        "CreateDate" : ISODate("2019-07-11T08:51:04.213Z"),
+        "UpdateBy" : "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "CreateBy" : "355060a60a5e48eeb7f2fb8d92af2ba5"
+    }
+}
+
+/* 37 */
+{
+    "_id" : ObjectId("5d27b0f3645b4f00013d9b54"),
+    "TenantId" : 17194,
+    "SiteId" : 21127,
+    "LocationGroupId" : 2,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-11T21:58:11.414Z"),
+        "CreateDate" : ISODate("2019-07-11T21:58:11.414Z"),
+        "UpdateBy" : "UNKNOWN",
+        "CreateBy" : "UNKNOWN"
+    }
+}
+
+/* 38 */
+{
+    "_id" : ObjectId("5d28ef5e645b4f00013d9b58"),
+    "TenantId" : 17215,
+    "SiteId" : 21127,
+    "LocationGroupId" : 1,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-12T20:36:46.504Z"),
+        "CreateDate" : ISODate("2019-07-12T20:36:46.504Z"),
+        "UpdateBy" : "UNKNOWN",
+        "CreateBy" : "UNKNOWN"
+    }
+}
+
+/* 39 */
+{
+    "_id" : ObjectId("5d28efc8645b4f00013d9b5a"),
+    "TenantId" : 17215,
+    "SiteId" : 21127,
+    "LocationGroupId" : 2,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-12T20:38:32.003Z"),
+        "CreateDate" : ISODate("2019-07-12T20:38:32.003Z"),
+        "UpdateBy" : "UNKNOWN",
+        "CreateBy" : "UNKNOWN"
+    }
+}
+
+/* 40 */
+{
+    "_id" : ObjectId("5d28f31a645b4f00013d9b5d"),
+    "TenantId" : 17508,
+    "SiteId" : 21127,
+    "LocationGroupId" : 1,
+    "CustomerFailedToPickupAfterAction" : "CustomerCare",
+    "CustomerFailedToPickupDeadline" : 3,
+    "SendCustomerPickupReminder" : 2,
+    "EnableForSTH" : false,
+    "EnableForISPU" : false,
+    "EnableAdvancedOptionForPickWaveCreation" : true,
+    "MaximumNumberOfOrdersInPickWave" : 25,
+    "DefaultNumberOfOrdersInPickWave" : 10,
+    "PickWavePrintFormat" : "HTML",
+    "ClosePickWavePermissions" : [ 
+        "None"
+    ],
+    "WmsEnabled" : false,
+    "EnableScanningOfUpcForShipToHome" : false,
+    "AllowReturns" : true,
+    "ReturnRefundReduction" : false,
+    "DefaultReturnRefundReductionAmount" : 0,
+    "MaximumReturnRefundReductionAmount" : 0,
+    "Carriers" : null,
+    "DefaultCarrier" : "None",
+    "PrintReturnLabel" : null,
+    "DefaultPrinterType" : null,
+    "Attributes" : null,
+    "BoxTypes" : null,
+    "ShippingSettingsForUsps" : null,
+    "ShippingSettingsForFedEx" : null,
+    "ShippingSettingsForUps" : null,
+    "AuditInfo" : {
+        "UpdateDate" : ISODate("2019-07-12T20:52:42.330Z"),
+        "CreateDate" : ISODate("2019-07-12T20:52:42.330Z"),
+        "UpdateBy" : "UNKNOWN",
+        "CreateBy" : "UNKNOWN"
+    }
+}

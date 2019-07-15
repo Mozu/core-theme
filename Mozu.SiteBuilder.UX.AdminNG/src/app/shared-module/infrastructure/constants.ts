@@ -161,12 +161,12 @@ export class Constants {
                                         {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
     static LCCarriers = [{ CarrierType: 'FedEx', CarrierTypeLabel: 'FedEx', IsEnabled: false},
                          { CarrierType: 'UPS', CarrierTypeLabel: 'Ups', IsEnabled: false},
-                         {CarrierType: 'USPS (endicia)', CarrierTypeLabel: 'USPS (endicia)', IsEnabled: false},
-                         {CarrierType: 'Canada Post', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
+                         { CarrierType: 'USPS', CarrierTypeLabel: 'USPS (Endicia)', IsEnabled: false},
+                         { CarrierType: 'Canada Post', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
     static LCDefaultCarrier = [{data: 'None', label: 'None'},
                                {data: 'FedEx', label: 'Fedex'},
                                {data: 'Ups', label: 'Ups'},
-                               {data: 'USPS (endicia)', label: 'USPS (endicia)'},
+                               {data: 'USPS', label: 'USPS (Endicia)'},
                                {data: 'Canada Post', label: 'Canada Post'}];
     static LCPrintReturnLabel = [{data: true, label: 'Yes'}, {data: false, label: 'No'}];
     static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];

@@ -256,7 +256,7 @@
             "enableForISPU": "Enable For ISPU",
             "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation",
             "carriers": "Carriers",
-            "defaultCarrier": "Dafault Carrier",
+            "defaultCarrier": "Default Carrier",
             "printReturnLabel": "Print Return Label",
             "defaultPrinterType": "Default Printer Type",
             "name": "Name",
