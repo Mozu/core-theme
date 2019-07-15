@@ -192,12 +192,12 @@ export class Constants {
                                               {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
                                               {data: 'UPS_STANDARD', label: 'UPS_STANDARD'}];
 
-    static LCUSPSShippingTypes = [{data: 'UPS_PRIORITYEXPRESS', label: 'PRIORITYEXPRESS'},
-                                   {data: 'UPS_FIRST', label: 'FIRST'},
-                                   {data: 'UPS_LIBRARYMAIL', label: 'LIBRARYMAIL'},
-                                   {data: 'UPS_MEDIAMAIL', label: 'MEDIAMAIL'},
-                                   {data: 'UPS_STANDARDPOST', label: 'STANDARDPOST'},
-                                   {data: 'UPS_PRIORITY', label: 'PRIORITY'},
+    static LCUSPSShippingTypes = [{data: 'PRIORITYEXPRESS', label: 'PRIORITYEXPRESS'},
+                                   {data: 'FIRST', label: 'FIRST'},
+                                   {data: 'LIBRARYMAIL', label: 'LIBRARYMAIL'},
+                                   {data: 'MEDIAMAIL', label: 'MEDIAMAIL'},
+                                   {data: 'STANDARDPOST', label: 'STANDARDPOST'},
+                                   {data: 'PRIORITY', label: 'PRIORITY'},
                                   ];
 
     static LCFedExShippingType = [{data: 'FIRST_OVERNIGHT ', label: 'FIRST_OVERNIGHT '},

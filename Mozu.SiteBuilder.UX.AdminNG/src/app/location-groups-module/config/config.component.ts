@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService, TostrService } from '@core';
 import { SharedDataService } from '@global';
-import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel, ShippingSettingsForUpsModel, UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel } from './config.model';
+import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel, ShippingSettingsForUpsModel, UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel, ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
 import { LocationGroupConfigService } from './config.service';
@@ -72,13 +72,14 @@ export class LocationGroupConfigComponent implements OnInit {
             upsCanadaExpress3DayDefault: ['', []],
             upsCanadaReturnLabelShippingTypes: ['', []],
 
+            outboundUsername:  ['', []],
             outboundPassword:  ['', []],
             outboundCustomerNumber:  ['', []],
             outboundLocale:  ['', []],
             outboundContractID:  ['', []],
             carsPickupNotify:  ['', []],
             preferredPickupTime:  ['', []],
-            outboundUsername:  ['', []],
+            closingTime:  ['', []],
 
             uspsShippingTypes: new FormArray([]),
             uspsStandardDefault:  ['', []],
@@ -86,7 +87,6 @@ export class LocationGroupConfigComponent implements OnInit {
             uspsExpress2DayDefault:  ['', []],
             uspsExpress3DayDefault:  ['', []],
             uspsReturnLabelShippingTypes:  ['', []],
-            closingTime:  ['', []],
 
             enableSmartPost: ['', []],
             fedExShippingTypes: new FormArray([]),
@@ -235,6 +235,22 @@ export class LocationGroupConfigComponent implements OnInit {
             canadaUpsSettings = lgConfigModel.shippingSettingsForUps.canadaUpsSettings;
         }
 
+        let shippingSettingsForFedEx: ShippingSettingsForFedEx;
+        if ( lgConfigModel && lgConfigModel.shippingSettingsForFedEx ) {
+            shippingSettingsForFedEx = lgConfigModel.shippingSettingsForFedEx;
+        }
+
+        let shippingSettingsForUsps: ShippingSettingsForUsps;
+        if ( lgConfigModel && lgConfigModel.shippingSettingsForUsps ) {
+            shippingSettingsForUsps = lgConfigModel.shippingSettingsForUsps;
+        }
+
+        let canadaPostSettings: CanadaPostSettings;
+        if ( lgConfigModel && lgConfigModel.canadaPostSettings ) {
+            canadaPostSettings = lgConfigModel.canadaPostSettings;
+        }
+
+
         if (lgConfigModel) {
             this.model.locationGroupConfigForm.patchValue({
                 // ISPU
@@ -272,10 +288,66 @@ export class LocationGroupConfigComponent implements OnInit {
                 upsCanadaExpress1DayDefault: canadaUpsSettings ? canadaUpsSettings.express1DayDefault : null,
                 upsCanadaExpress2DayDefault: canadaUpsSettings ? canadaUpsSettings.express2DayDefault : null,
                 upsCanadaExpress3DayDefault: canadaUpsSettings ? canadaUpsSettings.express3DayDefault : null,
-                upsCanadaReturnLabelShippingTypes: canadaUpsSettings ? canadaUpsSettings.returnLabelShippingMethod : null
+                upsCanadaReturnLabelShippingTypes: canadaUpsSettings ? canadaUpsSettings.returnLabelShippingMethod : null,
+                // FedEx Settings
+                enableSmartPost: shippingSettingsForFedEx ? shippingSettingsForFedEx.enableSmartPost : false,
+                fedExShippingTypes: this.getSelectedFedExShippingTypes(shippingSettingsForFedEx),
+                fedexStandardDefault: shippingSettingsForFedEx ? shippingSettingsForFedEx.standardDefault : null,
+                fedexExpress1Default: shippingSettingsForFedEx ? shippingSettingsForFedEx.express1DayDefault : null,
+                fedexExpress2Default: shippingSettingsForFedEx ? shippingSettingsForFedEx.express2DayDefault : null,
+                fedexExpress3Default: shippingSettingsForFedEx ? shippingSettingsForFedEx.express3DayDefault : null,
+                fedExReturnLabelShippingTypes: shippingSettingsForFedEx ? shippingSettingsForFedEx.returnLabelShippingMethod : null,
+                // USPS Settings
+                uspsShippingTypes: this.getSelectedUspsShippingTypes(shippingSettingsForUsps),
+                uspsStandardDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.standardDefault : null,
+                uspsExpress1DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express1DayDefault : null,
+                uspsExpress2DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express2DayDefault : null,
+                uspsExpress3DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
+                uspsReturnLabelShippingTypes:  shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
+                // Canada Post Settings
+                outboundUsername:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                outboundPassword:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                outboundCustomerNumber:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                outboundLocale:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                outboundContractID:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                carsPickupNotify:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                preferredPickupTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                closingTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null
 
             });
         }
+    }
+
+    private getSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingSettingsForUsps) {
+        const shippingTypeLst: boolean[] = [];
+        if (shippingSettingsForUsps) {
+            const shippingMethods = shippingSettingsForUsps.shippingMethods;
+            this.model.LCUSPSShippingTypes.map((o, i) => {
+            const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
+            if (isShippingTypeSelected !== -1) {
+                shippingTypeLst.push(true);
+            } else {
+                shippingTypeLst.push(false);
+            }
+         });
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedFedExShippingTypes(shippingSettingsForFedEx: ShippingSettingsForFedEx) {
+        const shippingTypeLst: boolean[] = [];
+        if (shippingSettingsForFedEx) {
+            const shippingMethods = shippingSettingsForFedEx.shippingMethods;
+            this.model.LCFedExShippingType.map((o, i) => {
+            const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
+            if (isShippingTypeSelected !== -1) {
+                shippingTypeLst.push(true);
+            } else {
+                shippingTypeLst.push(false);
+            }
+         });
+        }
+        return shippingTypeLst;
     }
 
     private getSelectedUpsCanadaShippingTypes(canadaUpsSettings: CanadaUpsSettingsModel) {

@@ -59,6 +59,36 @@ export class LocationGroupConfigModel {
         canadaUpsSettings: CanadaUpsSettingsModel;
     }
 
+    export interface ShippingSettingsForFedEx {
+        shippingMethods: string[];
+        returnLabelShippingMethod: string;
+        standardDefault: string;
+        express1DayDefault: string;
+        express2DayDefault: string;
+        express3DayDefault: string;
+        enableSmartPost: boolean;
+    }
+
+    export interface ShippingSettingsForUsps {
+        shippingMethods: string[];
+        returnLabelShippingMethod: string;
+        standardDefault: string;
+        express1DayDefault: string;
+        express2DayDefault: string;
+        express3DayDefault: string;
+    }
+
+    export interface CanadaPostSettings {
+        outboundUsername: string;
+        outboundPassword: string;
+        outboundCustomerNumber: string;
+        outboundLocale: string;
+        outboundContractID: string;
+        carsPickupNotify: boolean;
+        preferredPickupTime: string;
+        closingTime: string;
+    }
+    
     export interface AuditInfoModel {
         updateDate: Date;
         createDate: Date;
@@ -98,6 +128,9 @@ export class LocationGroupConfigModel {
         carriers: CarrierModel[];
         printReturnLabel: boolean;
         shippingSettingsForUps: ShippingSettingsForUpsModel;
+        shippingSettingsForFedEx: ShippingSettingsForFedEx;
+        shippingSettingsForUsps: ShippingSettingsForUsps;
+        canadaPostSettings: CanadaPostSettings;
         boxTypes: BoxType[];
         attributes: any[];
         auditInfo: AuditInfoModel;

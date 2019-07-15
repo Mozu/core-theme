@@ -81,6 +81,38 @@
       "returnLabelShippingMethod": "UPS_NEXT_DAY_AIR_SAVER"
      }
     },
+    "shippingSettingsForFedEx" : {
+        "shippingMethods" : [ 
+            "FIRST_OVERNIGHT_SATURDAY_DELIVERY"
+        ],
+        "returnLabelShippingMethod" : "PRIORITY_OVERNIGHT",
+        "standardDefault" : "STANDARD_OVERNIGHT",
+        "express1DayDefault" : "PRIORITY_OVERNIGHT_SATURDAY_DELIVERY",
+        "express2DayDefault" : "FEDEX_2_DAY",
+        "express3DayDefault" : "GROUND_HOME_DELIVERY",
+        "enableSmartPost" : true
+    },
+    "shippingSettingsForUsps": {
+        "shippingMethods":  [
+            "PRIORITYEXPRESS", 
+            "STANDARDPOST"
+        ],
+        "returnLabelShippingMethod": "PRIORITY",
+        "standardDefault": "PRIORITY",
+        "express1DayDefault": "FIRST",
+        "express2DayDefault": "STANDARDPOST",
+        "express3DayDefault": "LIBRARYMAIL"
+    },
+    "canadaPostSettings": {
+        "outboundUsername" : "xyz",
+        "outboundPassword" : "xyz",
+        "outboundCustomerNumber" : "Cust-101",
+        "outboundLocale" : "Locale",
+        "outboundContractID" : "cont-101",
+        "carsPickupNotify": true,
+        "preferredPickupTime" : "10:00 AM",
+        "closingTime" : "10:00 PM"
+    },
     "boxTypes": [
         {
          "name": "Small Box",
