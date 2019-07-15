@@ -139,23 +139,37 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                 scale: 'medium',
                                 text: 'Reassign Shipment',
                                 handler: function (evt) {
-                                    Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
-                                        layout: 'hbox',
-                                        width: 600,
-                                        height: 400,
-                                        //record: record,
-                                        //parentRecord: me.record,
-                                        //store: me.record.getCancellationReasons(),
-                                        //originalQuantity: originalQuantity,
-                                        listeners: {
-                                            saveSuccess: {
-                                                fn: function (json) {
-                                                    //me.fireEvent('orderCancelled', json);
-                                                },
-                                                //scope: me
-                                            }
+                                    me.record.getCandidateSuggestions({
+                                        jsonData: "1",
+                                        success: function (response) {
+                                            me.isRecordSaved = true;
+                                            me.setLoading(false, me.body);
+                                            var json = Ext.decode(response.responseText, true);
+                                           
+
+                                            Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+                                                layout: 'hbox',
+                                                width: 1080,
+                                                height: 450,
+                                                record: me.record,
+                                                inventoryData: json,
+                                                listeners: {
+                                                    saveSuccess: {
+                                                        fn: function (json) {
+                                                            //me.fireEvent('orderCancelled', json);
+                                                        },
+                                                        //scope: me
+                                                    }
+                                                }
+                                            });
+                                        },
+                                        failure: function (response) {
+                                            me.setLoading(false, me.body);
+                                            // close the dialog
+                                            me.close();
                                         }
-                                    });
+                                    })
+                                    
                                 }
                             }),
 

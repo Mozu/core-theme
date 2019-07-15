@@ -21,49 +21,23 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     },
 
     initComponent: function () {
-
-        var inventoryData = [
-            [ 'Austin warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'Houstan Warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'California Warehouse',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ],
-            [  'Store name',  "XXX.X Mi",  "Yes" ]
-        ];
+        var me = this;
 
         var itemsPerPage = 2; 
 
         var inventoryStore = Ext.create('Ext.data.Store', {
-            storeId: 'simpsonsStore',
+            storeId: 'inventoryStore',
             autoLoad: false,
             //autoLoad: { start: 0, limit: 5 },
             pageSize: itemsPerPage,
             remoteSort: true,
             sorters: [{
-                property: 'location',
+                property: 'locationName',
                 direction: 'asc'
             }],
-            fields: ['location', 'distance', 'stock'],
-            groupField: 'location',
-            data: {
-                'items': [
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Houstan Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'California Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Houstan Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'California Warehouse', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" },
-                    { 'location': 'Store name', "distance": "XXX.X Mi", "stock": "Yes" }
-                ]
-            },
+            fields: ['locationName', 'distance', 'stock'],
+            groupField: 'locationName',
+            data: this.inventoryData.candidateSuggestions,
             proxy: {
                 type: 'memory',
                
@@ -85,7 +59,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }
         });
 
-
         //var nameRenderer = function () {
         //    return '<div ext-xtype="radiofield"></div>';
 
@@ -97,9 +70,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             //    ftype: 'grouping'
             //}],
 
-            store: Ext.data.StoreManager.lookup('simpsonsStore'),
+            store: Ext.data.StoreManager.lookup('inventoryStore'),
             //viewConfig: {
-
             //    listeners: {
             //        // Column Autosize to its data
             //        refresh: function (dataview) {
@@ -111,41 +83,23 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             //},
             columns: [
                 {
-                    header: 'Location',
-                    dataIndex: 'location',
+                    text: 'Location',
+                    dataIndex: 'locationName',
                     width: 500,
-                    //xtype: 'radiocolumn'
-                    //autoSizeColumn: true,
-                    //  cls: 'checkbox-overwrite',
-                    //items: [{
-                    //    xtype: 'radiofield'
-                    //}]
                 },
-                { text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+                {
+                    text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
+                },
                 {
                     text: 'Stock', dataIndex: 'stock', width: 150,
+                    renderer: function (value, metaData, record, row, col, store, gridView) {
+                        return '<img src="' + /assets/Images/checked.png + '" width="150" height="150" borer="0" />';
+                    }
                 },
-                //{
-                //    xtype: 'checkcolumn',
-                //    header: 'Stock',
-                //    dataIndex: 'stock',
-                //    listeners: {
-                //        beforecheckchange: function () {
-                //            return false;
-                //        }
-                //    },
-                //    width: 60,
-                //    editor: {
-                //        xtype: 'checkbox',
-                //        cls: 'x-grid-checkheader-editor',
-                //        inputValue: true,
-                //        uncheckedValue: false
-                //    }
-                //}
             ],
             height: 150,
             width: 1000,
-         
+            
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: inventoryStore,   // same store GridPanel is using
@@ -176,43 +130,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 //}
             },
            
-            //listeners: {
-            //    viewready: function (view) {
-            //        var els = view.el.query('div[ext-xtype]');
-            //        Ext.each(els, function (domEl) {
-            //            var xtype = Ext.get(domEl).getAttribute('ext-xtype');
-            //            Ext.widget(xtype, { renderTo: domEl });
-            //        }, this);
-            //        view.up('viewport').doLayout();
-
-
-            //    }
-            //}
-        //    renderTo: Ext.getBody()
         });
 
         Ext.create('Ext.data.Store', {
-            storeId: 'simpsonsStore2',
-            fields: ['name', 'email', 'phone'],
-            data: {
-                'items': [{
-                    'name': 'Lisa',
-                    "email": "lisa@simpsons.com",
-                    "phone": "555-111-1224"
-                }, {
-                    'name': 'Bart',
-                    "email": "bart@simpsons.com",
-                    "phone": "555-222-1234"
-                }, {
-                    'name': 'Homer',
-                    "email": "homer@simpsons.com",
-                    "phone": "555-222-1244"
-                }, {
-                    'name': 'Marge',
-                    "email": "marge@simpsons.com",
-                    "phone": "555-222-1254"
-                }]
-            },
+            storeId: 'allLocationsStore',
+            fields: ['locationName', 'distance', 'stock'],
+            groupField: 'locationName',
+            data: this.inventoryData.candidateSuggestions,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -222,31 +146,33 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }
         });
 
-        var grid2 = Ext.create('Ext.grid.Panel', {
+        var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: Ext.data.StoreManager.lookup('simpsonsStore2'),
-            columns: [{
-                text: 'Name',
-                dataIndex: 'name'
-            }, {
-                text: 'Email',
-                dataIndex: 'email',
-                flex: 1
-            }, {
-                text: 'Phone',
-                dataIndex: 'phone'
-            }],
+            store: Ext.data.StoreManager.lookup('allLocationsStore'),
+            columns: [
+                {
+                    text: 'Location',
+                    dataIndex: 'locationName',
+                    width: 500,
+                },
+                {
+                    text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
+                },
+                {
+                    text: 'Stock', dataIndex: 'stock', width: 150,
+                },
+            ],
             height: 200,
             width: 400
         });
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
-            height: 600,
+            height: 300,
             renderTo: Ext.getBody(),
             items: [
                 inventorygrid,
-                grid2
+                allLocations
             ]
         });
 
@@ -346,107 +272,3 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     //}
 });
 
-Ext.require('*');
-
-Ext.define('Ext.ux.grid.column.RadioColumn', {
-    extend: 'Ext.grid.column.CheckColumn',
-
-    alternateClassName: 'Ext.ux.RadioColumn',
-
-    alias: 'widget.radiocolumn',
-
-	/**
-	 * @cfg {String} groupField
-	 *
-	 * Name of the field used for radio groups. If left undefined, this will default to the store's
-	 * {@link Ext.data.Store#groupField}, and if this is undefined as well, then the whole data set
-	 * will be considered as one and only group.
-	 */
-    groupField: undefined,
-
-	/**
-	 * @cfg {Boolean}
-	 *
-	 * True to allow unchecking an item by click on it when it is selected. If left to false, then
-	 * an item can only be deselected by selecting another one in the group.
-	 */
-    allowUncheck: false,
-
-    renderer: function (value, meta) {
-        var cssPrefix = Ext.baseCSSPrefix,
-            cls = [
-                cssPrefix + 'form-radio', // for radio image
-                cssPrefix + 'form-field' // for disabled style
-            ];
-
-        if (this.disabled) {
-            meta.tdCls += ' ' + this.disabledCls;
-        }
-        if (value) {
-            meta.tdCls += ' ' + cssPrefix + 'form-cb-checked';
-        }
-
-        return '<img class="' + cls.join(' ') + '" src="' + Ext.BLANK_IMAGE_URL + '"/>';
-    },
-
-    initComponent: function () {
-        this.addEvents(
-			/**
-			 * @event
-			 *
-			 * Fires when the selected row in a group changes. This
-			 *
-			 * @param {Ext.ux.grid.column.RadioColumn} this RadioColumn
-			 * @param {Integer} rowIndex The selected row index.
-			 * @param {Ext.data.Record} selectedRecord The selected record.
-			 * @param {Mixed} group Value of the {@link #groupField}. If `groupField` is not defined,
-			 * this will be `undefined`.
-			 */
-            'radiocheckchange'
-        );
-
-        this.callParent(arguments);
-
-        this.on({
-            scope: this,
-            checkchange: this.onCheckChange,
-            beforecheckchange: this.onBeforeCheckChange
-        });
-    },
-
-    // private
-    onBeforeCheckChange: function (col, index, checked) {
-        if (!checked && !this.allowUncheck) {
-            return false;
-        }
-    },
-
-    // private
-    onCheckChange: function (col, index, checked) {
-
-        if (!checked) {
-            return;
-        }
-
-        var dataIndex = this.dataIndex,
-            grid = this.up('tablepanel'),
-            store = grid.getStore(),
-            record = store.getAt(index),
-            groupField = this.groupField || store.groupField,
-            group = groupField && record.get(groupField) || undefined,
-            groupItems = group
-                ? store.query(groupField, group).items
-                : store.getRange(),
-            i = groupItems.length,
-            r;
-
-        while (i--) {
-            r = groupItems[i];
-            if (r !== record) {
-                r.set(dataIndex, false);
-            }
-        }
-
-        this.fireEvent('radiocheckchange', this, index, record, group);
-    }
-});
