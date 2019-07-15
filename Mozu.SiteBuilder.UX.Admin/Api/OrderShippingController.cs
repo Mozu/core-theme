@@ -407,5 +407,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var serviceResponse = _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
             return Single2(serviceResponse);
         }
+
+        public class ReassignShipmenttArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public Swagger.Fulfiller.Model.ReassignShipment ReassignShipment { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipping/shipment/reassign")]
+        public Response<Swagger.Fulfiller.Model.ResourceShipment> ReassignShipment(ReassignShipmenttArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.ReassignShipment(args.ShipmentNumber,args.ReassignShipment);
+            return Single2(serviceResponse);
+        }
+
     }
 }

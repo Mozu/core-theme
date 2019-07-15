@@ -553,6 +553,7 @@
     <Compile Include="Swagger\Fulfiller\Model\PackageMeasurements.cs" />
     <Compile Include="Swagger\Fulfiller\Model\Phone.cs" />
     <Compile Include="Swagger\Fulfiller\Model\ReassignItem.cs" />
+    <Compile Include="Swagger\Fulfiller\Model\ReassignShipment.cs" />
     <Compile Include="Swagger\Fulfiller\Model\RejectShipment.cs" />
     <Compile Include="Swagger\Fulfiller\Model\ResourcePackage.cs" />
     <Compile Include="Swagger\Fulfiller\Model\ResourceShipment.cs" />
@@ -991,7 +992,6 @@
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShippedFromTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentTabs.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\AllItemsTab.js" />
-    <Content Include="Scripts\app\view\order\subform\fulfillment\PackageTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\Shipment.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentDetails.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShipmentHeader.js" />

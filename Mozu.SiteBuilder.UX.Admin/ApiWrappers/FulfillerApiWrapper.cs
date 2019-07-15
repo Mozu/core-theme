@@ -25,6 +25,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
         ResourcesTask GetTasks(int? shipmentNumber);
         ResourceShipment NewShipment(Shipment request);
         ResourceShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items);
+        ResourceShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment);
         ResponseEntity RejectShipment(RejectShipment request, int? shipmentNumber);
         ResourceShipment ReplaceShipment(Shipment request, int? shipmentNumber);
         Object SkipTask(int? shipmentNumber, string taskId);
@@ -104,6 +105,12 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
         public ResourceShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items)
         {
             return _shipmentController.ReassignShipmentUsingPUT(items,_apiContext.TenantId, shipmentNumber,
+                _apiContext.SiteId);
+        }
+
+        public ResourceShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment)
+        {
+            return _shipmentController.ReassignShipmentUsingPUT(reassignShipment, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 

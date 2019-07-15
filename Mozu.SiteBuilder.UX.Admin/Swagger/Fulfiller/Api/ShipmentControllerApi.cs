@@ -104,6 +104,17 @@ namespace Swagger.Fulfiller.Api
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
         ResourceShipment ReassignShipmentUsingPUT(List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        
+        /// <summary>
+        /// reassignShipment 
+        /// </summary>
+        /// <param name="body">reassignShipment</param>
+        /// <param name="xVolTenant"></param>
+        /// <param name="shipmentNumber">shipmentNumber</param>
+        /// <param name="xVolSite"></param>
+        /// <returns>ResourceOfShipment</returns>
+        ResourceShipment ReassignShipmentUsingPUT(ReassignShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+
         /// <summary>
         /// newShipment 
         /// </summary>
@@ -627,6 +638,51 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignShipmentUsingPUT");
 
             var path = "/shipments/{shipmentNumber}/reassignedItems";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
+
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+
+            if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
+            if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
+            postBody = ApiClient.Serialize(body); // http body (model) parameter
+
+            // authentication setting, if any
+            String[] authSettings = new String[] { };
+
+            // make the HTTP request
+            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException((int)response.StatusCode, "Error calling ReassignShipmentUsingPUT: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException((int)response.StatusCode, "Error calling ReassignShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
+
+            return (ResourceShipment)ApiClient.Deserialize(response.Content, typeof(ResourceShipment), response.Headers);
+        }
+
+        /// <summary>
+        /// reassignShipment 
+        /// </summary>
+        /// <param name="body">reassignShipment</param>
+        /// <param name="xVolTenant"></param>
+        /// <param name="shipmentNumber">shipmentNumber</param>
+        /// <param name="xVolSite"></param>
+        /// <returns>ResourceOfShipment</returns>
+        public ResourceShipment ReassignShipmentUsingPUT(ReassignShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        {
+            // verify the required parameter 'body' is set
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling ReassignShipmentUsingPUT");
+            // verify the required parameter 'xVolTenant' is set
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling ReassignShipmentUsingPUT");
+            // verify the required parameter 'shipmentNumber' is set
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignShipmentUsingPUT");
+
+            var path = "/shipments/{shipmentNumber}/reassigned";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
 

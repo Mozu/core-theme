@@ -24,6 +24,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         this.packageItems = Ext.create('Taco.view.order.widget.ShippingPackagesGrid', {
             packageStore: this.packageRecord,
             record: this.record,
+            hidden: this.shipmentRecord.shipmentStatus == 'Cancelled',
             margin: '10px 0 10px 0',
             padding: '0 1px 0 0'
         });
@@ -48,6 +49,15 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                 xtype: 'component',
             },
             items: [
+                {
+                    margin: {
+                        left: 500,
+                        top: 50,
+                    },
+                    hidden: this.shipmentRecord.shipmentStatus != 'Cancelled',
+                    flex: 1,
+                    html: '<h3 class="">Shipment is cancelled, see all items on the cancellation tab.</h3>',
+                },
                 {
                     flex: 1,
                     html: '',
