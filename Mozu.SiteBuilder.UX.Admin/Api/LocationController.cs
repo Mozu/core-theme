@@ -14,6 +14,8 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.PhysicalLocation;
 using Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers;
 using DC = Mozu.Location.Contracts;
 using System.Linq;
+using Mozu.Core;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -23,17 +25,23 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly IReferenceDataWebApiClient _referenceDataWebApi;
         private readonly ILocationGroupWebApiClient _locationGroupWebApiClient;
+        private readonly ILocationGroupConfigurationWebApiClient _locationGroupConfigurationWebApiClient;
+        private readonly IApiContext _apiContext;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public LocationController(ILocationAdminWebApiClient locationWebApiClient,
             IReferenceDataWebApiClient referenceDataWebApi,
-            ILocationGroupWebApiClient locationGroupWebApiClient)
+            ILocationGroupWebApiClient locationGroupWebApiClient, 
+            ILocationGroupConfigurationWebApiClient locationGroupConfigurationWebApiClient, 
+            IApiContext apiContext)
         {
             _locationWebApiClient = locationWebApiClient;
             _referenceDataWebApi = referenceDataWebApi;
             _locationGroupWebApiClient = locationGroupWebApiClient;
+            _locationGroupConfigurationWebApiClient = locationGroupConfigurationWebApiClient;
+            _apiContext = apiContext;
         }
 
         [HttpGetRoute(UriTemplate = "{locationCode}/enable")]
@@ -269,6 +277,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var resp = (await _locationGroupWebApiClient.DeleteLocationGroup(groupId)).ReadAsSync();
             return Message3<DC.LocationGroup>(true, "Location Group Successfully Deleted");
+        }
+
+        [HttpGetRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
+        public async Task<Response<DC.LocationGroupConfiguration>> GetLocationGroupConfiguration([FromUri]int groupId,[FromUri]int siteId)
+        {
+            var client =  _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
+            var resp = (await client.GetLocationGroupConfiguration(groupId)).ReadAsSync();
+            return Single2(resp);
+        }
+
+        [HttpPutRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
+        public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]int groupId,[FromUri]int siteId, DC.LocationGroupConfiguration config)
+        {
+            var client =  _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
+            var resp = (await client.SetLocationGroupConfiguration(groupId,config)).ReadAsSync();
+            return Single2(resp);
         }
 
         /// <summary>
