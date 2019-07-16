@@ -243,6 +243,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private resetLocationGroupConfigForm(): void {
         this.model.locationGroupConfigForm.reset();
+        this.model.locationGroupConfigForm.controls.boxItems = new FormArray([]);
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
