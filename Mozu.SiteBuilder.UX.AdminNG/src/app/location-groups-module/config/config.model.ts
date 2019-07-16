@@ -16,6 +16,7 @@ export class LocationGroupConfigModel {
     LCUPSInternationalShippingTypes: any[];
     LCUPSCanadaShippingTypes: any[];
     LCFedExShippingType: any[];
+    subscriptions: any[];
 }
 
 
@@ -88,7 +89,7 @@ export class LocationGroupConfigModel {
         preferredPickupTime: string;
         closingTime: string;
     }
-    
+
     export interface AuditInfoModel {
         updateDate: Date;
         createDate: Date;

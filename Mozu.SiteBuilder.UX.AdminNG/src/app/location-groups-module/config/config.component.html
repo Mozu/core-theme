@@ -10,7 +10,7 @@
 		<form [formGroup]="model.locationGroupConfigForm">
 			<div class="row subform">
 				<div class="col-md-10 nopadding">
-					<h4>{{this.model.selectedSite.name}} Site Config</h4>
+					<h4>{{this.model.selectedSite ? this.model.selectedSite.name : ''}} Site Config</h4>
 				</div>
 				<div class="col-md-2 nopadding">
 					<button type="button" class="sbbtn btn btn-success pull-right">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>

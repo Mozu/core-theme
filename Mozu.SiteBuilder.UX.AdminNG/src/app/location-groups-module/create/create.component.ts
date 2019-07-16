@@ -4,8 +4,7 @@ import { Component,
          AfterViewInit,
          ViewChild,
          ElementRef,
-         HostListener }
-from '@angular/core';
+         HostListener } from '@angular/core';
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { LoggerService,
@@ -18,7 +17,7 @@ import { TreeNode } from 'primeng/components/common/api';
 import { LocationsListModel,
          Constants,
          NotificationLGActions,
-         LocationGroupEventOperations 
+         LocationGroupEventOperations
 } from '@shared';
 import * as _ from 'lodash';
 import { SharedDataService, NotificationService } from '@global';
@@ -92,9 +91,11 @@ export class LocationGroupCreateComponent implements OnInit {
         this.model.formMode = this.route.snapshot.data['mode'];
         if (this.model.formMode === Constants.gridActionItem.Edit) {
             this.model.locationGroupId = this.route.snapshot.paramMap.get('id');
-            this.createService.getLocationGroup(this.model.locationGroupId).subscribe(
-                (response) => this.getLocationGroupSuccess(response),
-                (response) => this.getLocationGroupError(response.error.message)
+            this.model.subscriptions.push(
+                this.createService.getLocationGroup(this.model.locationGroupId).subscribe(
+                    (response) => this.getLocationGroupSuccess(response),
+                    (response) => this.getLocationGroupError(response.error.message)
+                )
             );
         }
     }
@@ -111,7 +112,7 @@ export class LocationGroupCreateComponent implements OnInit {
         }
     }
 
-    private setConfigData(lgModel : LocationGroupModel) {
+    private setConfigData(lgModel: LocationGroupModel) {
         const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
         topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
         topLocationGroupConfigModel.locationGroupName = lgModel.name;
@@ -120,9 +121,9 @@ export class LocationGroupCreateComponent implements OnInit {
     }
 
     private updateLocationGroupForm(lgModel: LocationGroupModel): void {
-        let locationSites = [];
+        const locationSites = [];
         this.model.sitesLst.map((o, i) => {
-           let isSiteSelected =  _.indexOf(lgModel.siteIds, o.id);
+           const isSiteSelected =  _.indexOf(lgModel.siteIds, o.id);
            if (isSiteSelected !== -1) {
                 locationSites.push(true);
            } else {

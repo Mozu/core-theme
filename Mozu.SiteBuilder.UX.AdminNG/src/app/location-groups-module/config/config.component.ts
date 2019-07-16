@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { LoggerService, TostrService } from '@core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType } from '@core';
 import { SharedDataService } from '@global';
-import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel, ShippingSettingsForUpsModel, UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel, ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings } from './config.model';
+import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel,
+         UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel,
+         ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
+import { CreateLocationGroupService } from '../create';
+import { LocationGroupModel, SiteModel } from '../create/location.group.model';
 
 @Component({
     selector: 'app-locationgroup-config',
     templateUrl: './config.component.html',
     styleUrls: ['./config.component.css'],
-    providers: [LocationGroupConfigService]
+    providers: [LocationGroupConfigService, CreateLocationGroupService]
 })
-export class LocationGroupConfigComponent implements OnInit {
-    public model: LocationGroupConfigModel;
+export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
+    public model: LocationGroupConfigModel;
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
@@ -24,11 +28,14 @@ export class LocationGroupConfigComponent implements OnInit {
         private configService: LocationGroupConfigService,
         private router: Router,
         private activeRoute: ActivatedRoute,
-        private _tostrService: TostrService
+        private _tostrService: TostrService,
+        private createService: CreateLocationGroupService
     ) { }
 
     ngOnInit() {
         this.model = new LocationGroupConfigModel();
+        this.model.subscriptions = [];
+        this.model.sitesLst = [];
         this.model.LCCustomerPickupActions = Constants.LCCustomerPickupActions;
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
         this.model.LCCarriers = Constants.LCCarriers;
@@ -104,15 +111,38 @@ export class LocationGroupConfigComponent implements OnInit {
         this.addFedExShippingTypesCheckboxes();
         this.addUSPSShippingTypesCheckboxes();
 
-        this.fetchSitesData();
-
         const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
-        const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
-        this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
 
-        this.activeRoute.params.subscribe(routeParams => {
-            this.fetchLocationGroupConfig(locationGroupId, siteId);
+        this.createService.getLocationGroup(locationGroupId).subscribe(
+            (response) => this.getLocationGroupSuccess(response),
+            (response) => this.getLocationGroupError(response.error.message)
+        );
+
+        const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
+        this.model.subscriptions.push(
+            this.activeRoute.params.subscribe(routeParams => {
+                this.fetchLocationGroupConfig(locationGroupId, siteId);
+            })
+        );
+    }
+
+    ngOnDestroy(): void {
+        this.model.subscriptions.forEach((s) => {
+            s.unsubscribe();
         });
+    }
+
+    private getLocationGroupSuccess(result) {
+        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupSuccess' + JSON.stringify(result));
+        if (result && result.items) {
+            const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
+            this.fetchSitesData(lgModel.siteIds);
+        }
+    }
+
+    private getLocationGroupError(errmsg: string) {
+        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupError');
+        throw new HttpError(ErrorCode.GetLocationGroupDetailFailed, ErroNotificationType.Toaster);
     }
 
     private addCarriersCheckboxes() {
@@ -174,11 +204,22 @@ export class LocationGroupConfigComponent implements OnInit {
         });
     }
 
-    public fetchSitesData = () => {
+    public fetchSitesData = (siteIds: any[]) => {
         this._loggerService.info('LocationGroupConfigComponent : fetchSitesData');
+        this.model.sitesLst = [];
         if (this._sharedData._sharedData.items.ctTenant.sites) {
-            this.model.sitesLst = this._sharedData._sharedData.items.ctTenant.sites;
+            const sites: SiteModel[] = this._sharedData._sharedData.items.ctTenant.sites;
+            if (siteIds && siteIds.length > 0) {
+                for (let cnt = 0; cnt < siteIds.length; cnt++) {
+                    const siteObj: SiteModel = _.find(sites, {'id': _.parseInt(siteIds[cnt])});
+                    if (siteObj) {
+                        this.model.sitesLst.push(siteObj);
+                    }
+                }
+            }
         }
+        const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
+        this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
     }
 
     public fetchLocationGroupConfig = (locationGroupId, siteId) => {
@@ -201,14 +242,7 @@ export class LocationGroupConfigComponent implements OnInit {
     }
 
     private resetLocationGroupConfigForm(): void {
-        this.model.locationGroupConfigForm.patchValue({
-            customerFailedToPickupAfterAction: '',
-            sendCustomerPickupReminder: '',
-            defaultCarrier: 'None',
-            printReturnLabel: 'Yes',
-            defaultPrinterType: 'Laser'
-
-        });
+        this.model.locationGroupConfigForm.reset();
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
