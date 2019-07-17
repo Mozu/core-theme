@@ -1,4 +1,7 @@
 {
+    "success": true,
+    "total": 1,
+    "items" : {
     "tenantId": 17450,
     "siteId": 21576,
     "locationGroupId": 182,
@@ -141,3 +144,4 @@
      "createBy": "UNKNOWN"
     }
    }
+}
