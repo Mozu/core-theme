@@ -93,7 +93,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 {
                     text: 'Stock', dataIndex: 'stock', width: 150,
                     renderer: function (value, metaData, record, row, col, store, gridView) {
-                        return '<img src="' + /assets/Images/checked.png + '" width="150" height="150" borer="0" />';
+                    //    return '<img src="' + /assets/Images/checked.png + '" width="150" height="150" borer="0" />';
                     }
                 },
             ],
