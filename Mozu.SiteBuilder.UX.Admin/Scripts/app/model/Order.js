@@ -2854,7 +2854,43 @@ Ext.define('Taco.model.Order', {
 
     cancelShipment: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/shipment/cancel',
+            url: '/admin/app/order/shipment/cancel',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    rejectShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/reject',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    reassignShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/reassign',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    reassignShipmentItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/items/reassign',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    fulfillShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/fulfill',
             method: 'POST'
         });
 
@@ -2900,15 +2936,33 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
-    },
+    },    
 
-    cancelShipmentNew: function (config) {
-        
+    updateShipmentAdjustments: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/order/shipping/shipment/cancel',
+            url: '/admin/app/shipment/updateShipmentAdjustments',
             method: 'PUT'
         });
 
         Ext.Ajax.request(config);
     },
+
+    updateShipmentItem: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/shipment/updateShipmentItem',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    moveItemToBackOrder: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/shipment/moveItemToBackOrder',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
 });

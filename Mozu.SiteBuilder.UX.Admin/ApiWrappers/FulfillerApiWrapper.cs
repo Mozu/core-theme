@@ -1,8 +1,8 @@
 ﻿
 using Mozu.Core;
 using Mozu.Core.Settings;
-using Swagger.Fulfiller.Api;
-using Swagger.Fulfiller.Model;
+using Mozu.Fulfillment.Contracts.Api;
+using Mozu.Fulfillment.Contracts.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +12,21 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 {
     public interface IFulfillerApiWrapper
     {
-        ResponseEntity CancelShipment(CancelShipment request, int? shipmentNumber);
-        ResponseEntity CancelItems(List<CanceledItem> request, int? shipmentNumber);
-        Object DeleteShipment(int? shipmentNumber);
-        Object Execute(Dictionary<string, Object> request, int? shipmentNumber, string taskId);
-        ResponseEntity FulfillShipment(int? shipmentNumber);
-        ResourceShipment GetShipment(int? shipmentNumber, string fields);
-
-        ResourcesResourceShipment GetShipments(string fields, string filter, bool? isLate, string locationCode,
-            int? page, string quicksearch, int size, string sort);
-
-        ResourcesTask GetTasks(int? shipmentNumber);
-        ResourceShipment NewShipment(Shipment request);
-        ResourceShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items);
-        ResourceShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment);
-        ResponseEntity RejectShipment(RejectShipment request, int? shipmentNumber);
-        ResourceShipment ReplaceShipment(Shipment request, int? shipmentNumber);
-        Object SkipTask(int? shipmentNumber, string taskId);
+        void CancelShipment(CancelShipment request, int? shipmentNumbe);
+        ResourceOfShipment CancelItems(List<CanceledItem> request, int? shipmentNumber);
+        void DeleteShipment(int? shipmentNumber);
+        ResourceOfShipment Execute(Dictionary<string, object> request, int? shipmentNumber, string taskId);
+        void FulfillShipment(int? shipmentNumber);
+        ResourceOfShipment GetShipment(int? shipmentNumber, string fields);
+        PagedResourcesOfResourceOfShipment GetShipments(string fields, string filter, bool? isLate, int? page,
+            string quicksearch, int size, string sort);
+        ResourcesOfTask GetTasks(int? shipmentNumber);
+        ResourceOfShipment NewShipment(Shipment request);
+        ResourceOfShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items);
+        ResourceOfShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment);
+        void RejectShipment(RejectShipment request, int? shipmentNumber);
+        ResourceOfShipment ReplaceShipment(Shipment request, int? shipmentNumber);
+        ResourceOfShipment SkipTask(int? shipmentNumber, string taskId);
         string GetWorkflowDefinitionImage(int? shipmentNumber);
         string GetWorkflowInstanceImage(int? shipmentNumber);
     }
@@ -50,83 +48,82 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _shipmentController.ApiClient.DefaultHeader["x-vol-catalog"] = apiContext.CatalogId.ToString();
         }
 
-        public ResponseEntity CancelShipment(CancelShipment request, int? shipmentNumber)
+        public void CancelShipment(CancelShipment request, int? shipmentNumber)
         {
-            return _shipmentController.CancelShipmentUsingPUT(request, _apiContext.TenantId, shipmentNumber,
+            _shipmentController.CancelShipmentUsingPUT(request, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public ResponseEntity CancelItems(List<CanceledItem> request, int? shipmentNumber)
+        public ResourceOfShipment CancelItems(List<CanceledItem> request, int? shipmentNumber)
         {
             return _shipmentController.CanceledItemsUsingPOST(request, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public object DeleteShipment(int? shipmentNumber)
+        public void DeleteShipment(int? shipmentNumber)
         {
-            return _shipmentController.DeleteShipmentUsingDELETE(shipmentNumber, _apiContext.TenantId,
+            _shipmentController.DeleteShipmentUsingDELETE(shipmentNumber, _apiContext.TenantId,
                 _apiContext.SiteId);
         }
 
-        public object Execute(Dictionary<string, object> request, int? shipmentNumber, string taskId)
+        public ResourceOfShipment Execute(Dictionary<string, object> request, int? shipmentNumber, string taskId)
         {
             return _shipmentController.ExecuteUsingPUT(request, _apiContext.TenantId, shipmentNumber, taskId, _apiContext.SiteId);
         }
 
-        public ResponseEntity FulfillShipment(int? shipmentNumber)
+        public void FulfillShipment(int? shipmentNumber)
         {
-            return _shipmentController.FulfillShipmentUsingPUT(shipmentNumber, _apiContext.TenantId,
+            _shipmentController.FulfillShipmentUsingPUT(shipmentNumber, _apiContext.TenantId,
                 _apiContext.SiteId);
         }
 
-        public ResourceShipment GetShipment(int? shipmentNumber, string fields)
+        public ResourceOfShipment GetShipment(int? shipmentNumber, string fields)
         {
             return _shipmentController.GetShipmentUsingGET(shipmentNumber, _apiContext.TenantId, fields,
                 _apiContext.SiteId);
         }
 
-        public ResourcesResourceShipment GetShipments(string fields, string filter, bool? isLate, string locationCode, int? page,
+        public PagedResourcesOfResourceOfShipment GetShipments(string fields, string filter, bool? isLate, int? page,
             string quicksearch, int size, string sort)
         {
-            return _shipmentController.GetShipmentsUsingGET(_apiContext.TenantId, fields, filter, isLate, locationCode,
-                page, quicksearch, size, sort, _apiContext.SiteId);
+            return _shipmentController.GetShipmentsUsingGET(_apiContext.TenantId, fields, filter, isLate,page,size,quicksearch,sort, _apiContext.SiteId);
         }
 
-        public ResourcesTask GetTasks(int? shipmentNumber)
+        public ResourcesOfTask GetTasks(int? shipmentNumber)
         {
             return _shipmentController.GetTasksUsingGET(shipmentNumber, _apiContext.TenantId, _apiContext.SiteId);
         }
 
-        public ResourceShipment NewShipment(Shipment request)
+        public ResourceOfShipment NewShipment(Shipment request)
         {
             return _shipmentController.NewShipmentUsingPOST(request, _apiContext.TenantId, _apiContext.SiteId);
         }
 
-        public ResourceShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items)
+        public ResourceOfShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items)
         {
-            return _shipmentController.ReassignShipmentUsingPUT(items,_apiContext.TenantId, shipmentNumber,
+            return _shipmentController.ReassignItemsUsingPUT(items,_apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public ResourceShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment)
+        public ResourceOfShipment ReassignShipment(int? shipmentNumber, ReassignShipment reassignShipment)
         {
             return _shipmentController.ReassignShipmentUsingPUT(reassignShipment, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public ResponseEntity RejectShipment(RejectShipment request, int? shipmentNumber)
+        public void RejectShipment(RejectShipment request, int? shipmentNumber)
         {
-            return _shipmentController.RejectShipmentUsingPUT(request, _apiContext.TenantId, shipmentNumber,
+            _shipmentController.RejectShipmentUsingPUT(request, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public ResourceShipment ReplaceShipment(Shipment request, int? shipmentNumber)
+        public ResourceOfShipment ReplaceShipment(Shipment request, int? shipmentNumber)
         {
             return _shipmentController.ReplaceShipmentUsingPUT(request, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
-        public object SkipTask(int? shipmentNumber, string taskId)
+        public ResourceOfShipment SkipTask(int? shipmentNumber, string taskId)
         {
             return _shipmentController.SkipTaskUsingPUT(shipmentNumber, taskId, _apiContext.TenantId,
                 _apiContext.SiteId);

@@ -33,8 +33,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                 padding: '0 50 0 0',
                 tpl: [
                     '<span class="label">Shipment Status</span><br>',
-                    '<span class="x-column-content-pill x-column-content-pill-false">' + fulfillmentStatus + '</span>&nbsp;&nbsp;&nbsp;',
-                    //'<span class="x-column-content-pill x-column-content-pill-false">1 Fullfilled</span>'
+                    '<span class="x-column-content-pill x-column-content-pill-false">' + fulfillmentStatus + '</span>&nbsp;&nbsp;&nbsp;'
                 ]
             }, {
                 flex: 1,
@@ -46,6 +45,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                     Ext.widget('button', {
                         itemId: 'cancelOrder',
                         ui: 'action',
+                        hidden: this.record.get('orderStatus') == 'Cancelled' ? true : false ,
                         scale: 'medium',
                         text: 'Cancel Order',
                         handler: function () {
@@ -87,9 +87,9 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) {
-                                    //me.fireEvent('orderCancelled', json);
+                                    me.fireEvent('orderCancelled', json);
                                 },
-                                //scope: me
+                                scope: me
                             }
                         }
                     });

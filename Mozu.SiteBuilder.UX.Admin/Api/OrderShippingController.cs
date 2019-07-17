@@ -371,28 +371,26 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class CancelShipmentArgs
         {
-            public Swagger.Fulfiller.Model.CancelShipment CancelShipment { get; set; }
+            public Fulfillment.Contracts.Model.CancelShipment CancelShipment { get; set; }
             public int? ShipmentNumber { get; set; }
 
         }
-        [HttpPutRoute(UriTemplate = "shipping/shipment/cancel")]
-        public Response<Swagger.Fulfiller.Model.ResponseEntity> CancelShipment(CancelShipmentArgs args)
+        [HttpPutRoute(UriTemplate = "shipment/cancel")]
+        public void CancelShipment(CancelShipmentArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.CancelShipment(args.CancelShipment, args.ShipmentNumber);
-            return Single2(serviceResponse);
+            _fulfillerApiWrapper.CancelShipment(args.CancelShipment, args.ShipmentNumber);
         }
 
         public class RejectShipmentArgs
         {
-            public Swagger.Fulfiller.Model.RejectShipment RejectShipment { get; set; }
+            public Fulfillment.Contracts.Model.RejectShipment RejectShipment { get; set; }
             public int? ShipmentNumber { get; set; }
 
         }
-        [HttpPutRoute(UriTemplate = "shipping/shipment/reject")]
-        public Response<Swagger.Fulfiller.Model.ResponseEntity> RejectShipment(RejectShipmentArgs args)
+        [HttpPutRoute(UriTemplate = "shipment/reject")]
+        public void RejectShipment(RejectShipmentArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.RejectShipment(args.RejectShipment, args.ShipmentNumber);
-            return Single2(serviceResponse);
+            _fulfillerApiWrapper.RejectShipment(args.RejectShipment, args.ShipmentNumber);
         }
 
 
@@ -401,23 +399,60 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public int? ShipmentNumber { get; set; }
 
         }
-        [HttpPutRoute(UriTemplate = "shipping/shipment/fulfill")]
-        public Response<Swagger.Fulfiller.Model.ResponseEntity> FuflfillShipment(FuflfillShipmentArgs args)
+        [HttpPutRoute(UriTemplate = "shipment/fulfill")]
+        public void FuflfillShipment(FuflfillShipmentArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
-            return Single2(serviceResponse);
+            _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
         }
 
         public class ReassignShipmenttArgs
         {
             public int? ShipmentNumber { get; set; }
-            public Swagger.Fulfiller.Model.ReassignShipment ReassignShipment { get; set; }
+            public Fulfillment.Contracts.Model.ReassignShipment ReassignShipment { get; set; }
         }
-        [HttpPutRoute(UriTemplate = "shipping/shipment/reassign")]
-        public Response<Swagger.Fulfiller.Model.ResourceShipment> ReassignShipment(ReassignShipmenttArgs args)
+        [HttpPutRoute(UriTemplate = "shipment/reassign")]
+        public Response<Fulfillment.Contracts.Model.ResourceOfShipment> ReassignShipment(ReassignShipmenttArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.ReassignShipment(args.ShipmentNumber,args.ReassignShipment);
             return Single2(serviceResponse);
+        }
+
+
+        public class ShipmentAdjustmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public DCs.ShipmentAdjustment ShipmentAdjustment { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/updateShipmentAdjustments")]
+        public async Task<Response<DCs.Shipment>> UpdateShipmentAdjustments(ShipmentAdjustmentArgs args)
+        {
+            var shipment = (await _orderWebApiClient.UpdateShipmentAdjustments(args.ShipmentNumber, args.ShipmentAdjustment)).ReadAsSync();
+            return Single2(shipment);
+        }
+
+        public class ShipmentItemAdjustmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public string ItemId { get; set; }
+            public DCs.ShipmentItemAdjustment ShipmentItemAdjustment { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/UpdateShipmentItem")]
+        public async Task<Response<DCs.Shipment>> UpdateShipmentItem(ShipmentItemAdjustmentArgs args)
+        {
+            var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
+            return Single2(shipment);
+        }
+
+        public class MoveItemToBackOrderArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public List<DCs.BackorderItem> BackorderItems { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipment/moveItemToBackOrder")]
+        public async Task<Response<List<DCs.Shipment>>> MoveItemToBackOrder(MoveItemToBackOrderArgs args)
+        {
+            var shipment = (await _orderWebApiClient.MoveItemToBackOrder(args.ShipmentNumber, args.BackorderItems)).ReadAsSync();
+            return List2(shipment);
         }
 
     }
