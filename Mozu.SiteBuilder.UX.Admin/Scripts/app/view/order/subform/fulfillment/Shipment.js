@@ -94,7 +94,38 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                 menu: [
                                     {
                                         text: 'Manual Reassign',
-                                        handler: function () { }
+                                        handler: function () {
+                                            me.record.getCandidateSuggestions({
+                                                jsonData: "1",
+                                                success: function (response) {
+                                                    me.isRecordSaved = true;
+                                                    me.setLoading(false, me.body);
+                                                    var json = Ext.decode(response.responseText, true);
+
+
+                                                    Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+                                                        layout: 'hbox',
+                                                        width: 1080,
+                                                        height: 450,
+                                                        record: me.record,
+                                                        inventoryData: json,
+                                                        listeners: {
+                                                            saveSuccess: {
+                                                                fn: function (json) {
+                                                                    //me.fireEvent('orderCancelled', json);
+                                                                },
+                                                                //scope: me
+                                                            }
+                                                        }
+                                                    });
+                                                },
+                                                failure: function (response) {
+                                                    me.setLoading(false, me.body);
+                                                    // close the dialog
+                                                    me.close();
+                                                }
+                                            })
+                                        }
                                     },
                                     {
                                         text: 'Auto Reassign',

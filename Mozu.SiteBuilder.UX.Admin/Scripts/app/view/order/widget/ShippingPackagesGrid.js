@@ -3,9 +3,16 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
     extend: 'Ext.grid.Panel', 
     requires: ['Ext.grid.CellEditor',
         'Ext.util.DelayedTask',
-    'Ext.form.RadioManager'],
+        'Ext.form.RadioManager',
+        'Ext.selection.CellModel',
+        'Ext.grid.*',
+        'Ext.data.*',
+        'Ext.util.*',
+        'Ext.form.*'],
 
     title: '',
+
+    xtype: 'cell-editing',
 
     viewConfig: {
         deferEmptyText: false,
@@ -58,33 +65,40 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
     
     initComponent: function () {
         var me = this;
+        this.initUI();
         this.plugins.push(
             Ext.create('Ext.grid.plugin.CellEditing', {
                 clicksToEdit: 1,
-                pluginId: 'editing',
-                listeners: {
-                    beforeedit: function (editor, context) {
-                        var me = this;
-                        var allowed = !!me.isEditAllowed;
-                        this.initEvents();
-                        if (me.grid.selModel.selected.keys[0] == context.grid.selModel.selected.keys[0]) {
-                            return;
-                            me.isEditAllowed = true;
+                pluginId: 'cellEditing'
+            }));
+        //this.plugins.push(
+        //    Ext.create('Ext.grid.plugin.CellEditing', {
+        //        clicksToEdit: 1,
+        //        pluginId: 'editing',
+        //        listeners: {
+        //            beforeedit: function (editor, context) {
+        //                var me = this;
+        //                var allowed = !!me.isEditAllowed;
+        //                this.initEvents();
+        //                if (me.grid.selModel.selected.keys[0] == context.grid.selModel.selected.keys[0]) {
+        //                    //return;
+        //                    me.isEditAllowed = true;
                            
-                        }
-                        else {
-                            return false;
-                        }
-                    },
-                    'edit': function (e) {
-                        me.onFieldEdit(e); // called to open modal pop up for quantity field
-                            this.isEditAllowed = false;
-                    }
-                }
-        }));
+        //                }
+        //                else {
+        //                    return false;
+        //                }
+        //            },
+        //            'edit': function (e) {
+        //                me.onFieldEdit(e); // called to open modal pop up for quantity field
+        //                    this.isEditAllowed = false;
+        //            }
+        //        }
+        //}));
 
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.packageStore.items,
+            plugins: [this.cellEditing],
             fields: [{
                 name: 'productCode',
                 type: 'string',
@@ -249,6 +263,12 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         });
 
+        this.tbar = [{
+            text: 'Edit',
+            scope: this,
+            handler: this.onAddClick
+        }];
+
         //this.columns = this.getColumnConfig(me);
 
         me.customUnitTaxEditor = Ext.widget({
@@ -260,8 +280,9 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             listeners: {
             }
         });
-
+        
         this.columns = [
+            
             {
                 dataIndex: 'lineId',
                 text: 'Line',
@@ -341,12 +362,17 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                     //text: 'Name',
                     //dataIndex: 'name',
                 },
+                //listeners: {
+                //    focus: {
+                //        fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
+                //            //me.customUnitTaxEditor;
+                //            //var editMode = view.ownerCt.editMode,
+                //        },
+                //    }
+                //}
                 listeners: {
-                    click: {
-                        fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
-                            me.customUnitTaxEditor;
-                            //var editMode = view.ownerCt.editMode,
-                        },
+                    focus: function (comp) {
+                        editOrderItem();
                     }
                 }
             },
@@ -466,10 +492,31 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             i++;
         }
     },
-   
-    getColumnConfig: function (me) {
-    //    return 
+
+    initUI: function () {
+        
+        
+            this.buildAllItemsActions()
     },
+
+    buildAllItemsActions: function () {
+        var me = this;
+        return Ext.widget('button', {
+            itemId: 'editItems',
+            ui: 'action',
+            scale: 'medium',
+            text: 'Eddddit',
+            margin: '0 20 0 0',
+            hidden: false,
+            handler: function () {
+
+            }
+        });
+    },
+   
+    //getColumnConfig: function (me) {
+    ////    return 
+    //},
 
     
 
@@ -542,7 +589,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         });
 
-    }
+    },
+
+    onAddClick: function () {
+        var grid = this.getView();
+        var cellEditing = grid.getPlugin('cellEditing');
+        grid.editingPlugin.startEditByPosition({ row: 0, column: 6 })
+    },
 });
 
 
