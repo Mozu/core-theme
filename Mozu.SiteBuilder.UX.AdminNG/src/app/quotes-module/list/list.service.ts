@@ -6,20 +6,28 @@ import {
 } from '@core';
 import { Constants } from '@shared';
 import { environment } from '@env';
-import { Constants as GlobalConstants} from '@global/infrastructure/constants';
+import { Constants as GlobalConstants } from '@global/infrastructure/constants';
 import { QuotesListModel } from './list.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class QuotesListService {
     constructor(private _http: HttpClientService,
         private _loggerService: LoggerService) { }
 
-    public fetchAllQuotes(): Observable<QuotesListModel> {
+    public fetchAllQuotes(advancedSearch?: string): Observable<QuotesListModel> {
         this._loggerService.info('QuotesListService: fetchAllQuotes');
+        let filter;
+        if (advancedSearch !== '') {
+            filter = new HttpParams().set(Constants.advancedSearchQueryParameter, JSON.stringify({ keyword: advancedSearch }));
+        }
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.quoteList);
         } else {
-            return this._http.get(GlobalConstants.webApis.getQuoteList);
+            return this._http.get(GlobalConstants.webApis.getQuoteList,
+            {
+                params: filter
+            });
         }
     }
 }

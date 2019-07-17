@@ -10,7 +10,7 @@ export * from './header/index';
 
 export * from './navigation/index';
 
-export * from './access-tile/index'
+export * from './access-tile/index';
 
 export * from './home/home.component';
 
@@ -19,3 +19,9 @@ export * from './physical/index';
 export * from './locations/index';
 
 export * from './selected-locations/selected.component';
+
+export * from './dynamic-links-dialog/dynamic-links-dialog.component';
+
+export * from './confirmation-dialog/index';
+
+export * from './toggle-grid-columns/toggle-grid-columns.component';

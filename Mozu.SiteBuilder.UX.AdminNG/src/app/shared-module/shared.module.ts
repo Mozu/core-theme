@@ -19,7 +19,10 @@ import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
-import {ListboxModule} from 'primeng/listbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { SelectItem } from 'primeng/api';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -54,18 +57,14 @@ import {
     PhonePipe
 } from './pipes/index';
 
-import {SidebarModule} from 'primeng/sidebar';
-import {TabViewModule} from 'primeng/tabview';
-import {MenuModule} from 'primeng/menu';;
-import {CardModule } from 'primeng/card'
-import {PanelMenuModule} from 'primeng/panelmenu';
-//import { PhysicalLocationsComponent } from './physical/locations.component';
+// import { PhysicalLocationsComponent } from './physical/locations.component';
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { FulfillerComponent } from './fulfiller/fulfiller.component';
+import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-columns.component';
 
 declare var resourcesVersion: any;
 
@@ -90,9 +89,10 @@ export function createTranslateLoader(http: HttpClient) {
         ListboxModule,
         TreeTableModule,
         TableModule,
-        NgbModule.forRoot(),
         DropdownModule,
-        AutoCompleteModule, 
+        AutoCompleteModule,
+        OverlayPanelModule,
+        NgbModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -135,7 +135,8 @@ export function createTranslateLoader(http: HttpClient) {
         FulfillerComponent,
         ShippingAddressComponent,
         ShippingMethodComponent,
-        AuditLogComponent
+        AuditLogComponent,
+        ToggleGridColumnsComponent
     ],
     providers: [
         ConfirmationDialogService
@@ -162,13 +163,14 @@ export function createTranslateLoader(http: HttpClient) {
         ListboxModule,
         TreeTableModule,
         TableModule,
+        OverlayPanelModule,
         // pipes
         DatexPipe,
         EllipsisPipe,
         SafeHtmlPipe,
         SplitPipe,
         PhonePipe,
-        
+
         // directives
         RestrictInput,
         EnableDisableControls,
@@ -193,7 +195,8 @@ export function createTranslateLoader(http: HttpClient) {
         FulfillerComponent,
         ShippingAddressComponent,
         ShippingMethodComponent,
-        AuditLogComponent
+        AuditLogComponent,
+        ToggleGridColumnsComponent
     ]
 })
 

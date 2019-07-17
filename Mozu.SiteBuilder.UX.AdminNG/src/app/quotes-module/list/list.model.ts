@@ -9,10 +9,12 @@ export class QuotesListModel {
     numberOfRows: number;
     selectedQuote: any;
     quoteGridContextMenuItem: MenuItem[];
+    subscriptions: any[];
   }
-  
+
 export class QuoteItem {
   id: string;
+  quoteNumber: number;
   name: string;
   siteId: number;
   tenantId: number;
@@ -55,6 +57,10 @@ export class QuoteItem {
   handlingTax?: number;
   numberOfProducts: number;
   totalQuantity: number;
+  accountName: string;
+  accountUser: string;
+  submitDate: string;
+  projectName: string;
 }
 
 export class AuditInfo {

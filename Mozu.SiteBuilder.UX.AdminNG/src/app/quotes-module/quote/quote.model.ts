@@ -1,5 +1,6 @@
 export class QuoteItemModel {
   id: string;
+  quoteNumber: number;
   name: string;
   siteId: number;
   tenantId: number;
@@ -39,6 +40,10 @@ export class QuoteItemModel {
   handlingTotal: number;
   dutyTotal: number;
   feeTotal: number;
+  accountName: string;
+  accountUser: string;
+  submitDate: string;
+  projectName: string;
 }
 
 

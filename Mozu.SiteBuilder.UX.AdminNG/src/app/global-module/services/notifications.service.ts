@@ -18,8 +18,10 @@ export class NotificationService {
     locationGroupAdded: Subject<any> = new Subject<any>();
     locationGroupEdited: Subject<any> = new Subject<any>();
     loadLeftMenuItems: Subject<any> = new Subject<any>();
-    LocationGroupConfig: Subject<any> = new Subject<any>();
-
+    quoteHeaderToAppendValues: Subject<any> = new Subject<any>();
+    quoteSearch: Subject<any> = new Subject<any>();
+    quoteEdited: Subject<any> = new Subject<any>();
+    quoteListed: Subject<any> = new Subject<any>();
     // Confirmation Dialog Notification
     QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
     LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
@@ -72,7 +74,7 @@ export class NotificationService {
         this.QuoteItemDeleteConfirmation.next(actionName);
     }
 
-    notifyLocationGroupDeleteConfirmation(actionName: string){
+    notifyLocationGroupDeleteConfirmation(actionName: string) {
         this._logger.info('NotificationService : notifyLocationGroupDeleteConfirmation');
         this.LocationGroupDeleteConfirmation.next(actionName);
     }
@@ -85,5 +87,25 @@ export class NotificationService {
     notifyLoadLeftMenuItems(actionName: any) {
         this._logger.info('NotificationService : notifyLoadLeftMenuItems');
         this.loadLeftMenuItems.next(actionName);
+    }
+    // Notify Quote from search bar
+    notifyQuoteSearch(action: string) {
+        this._logger.info('NotificationService : notifyQuoteSearch');
+        this.quoteSearch.next(action);
+    }
+
+    notifyQuoteEdited(action: any) {
+        this._logger.info('NotificationService : notifyQuoteEdited');
+        this.quoteEdited.next(action);
+    }
+
+    notifyQuoteListed(action: any) {
+        this._logger.info('NotificationService : notifyQuoteListed');
+        this.quoteListed.next(action);
+    }
+
+    notifyQuoteHeaderToAppendValues(quoteNumber: any, quoteStatus: any) {
+        this._logger.info('NotificationService : notifyQuoteHeaderData');
+        this.quoteHeaderToAppendValues.next({quoteNumber: quoteNumber, quoteStatus: quoteStatus});
     }
 }

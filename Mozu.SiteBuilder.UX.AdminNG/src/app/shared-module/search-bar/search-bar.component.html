@@ -1,17 +1,134 @@
-<div class="input-group">
-    
+<div class="col-md-8 col-sm-8 searchBar" id="searchBar">
+  <div class="input-group">
     <div class="input-group-btn">
-      <button class="btn btn-default search-btn" type="submit">
-          <i class="pi pi-search"></i>
+      <button class="btn btn-default search-btn" type="button">
+        <i [ngClass]="status ? 'pi-times' : 'pi-search'" class="pi"
+          (click)="status ? resetSerach(searchBar): ''"></i>
       </button>
     </div>
-    <input type="text" class="form-control" placeholder="Search">
+    <input type="text" class="form-control" #searchBar
+      placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)"
+      (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
   </div>
+</div>
+<div class="col-md-1 col-md-1">
+  <span class="advance-filter" type="button" data-toggle="modal" data-target=".bs-example-modal-md"></span>
+</div>
 
-  
-    <!-- <span class="input-group-addon"><i class="pi pi-search"></i></span> -->
-  <!-- <i class="pi pi-search"></i>
-  <i class="pi pi-times"></i> -->
-  <!-- <input type="text" class="form-control" name="search" placeholder="Search" /> -->
+<!-- advance filter modal -->
 
-
+<div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Advanced Filter</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="">Quick Filter</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Keyword Search</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Customer First Name</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Customer Last Name</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Customer Email Address</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Customer Account Id</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Site</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Order Status</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Payment Status</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Fulfillment Status</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Return Status</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Order Type</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Channel</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Total Price Range</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Quick Filter</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Modified By</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Modified Range</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Submitted Date Range</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Last Four Digits of Credit Card Number</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Return Number</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Order Reference Number</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Phone Number</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">External Id</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+          <div class="form-group">
+            <label for="">Attribute Name</label>
+            <input type="text" class="form-control" id="" placeholder="">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <span type="button" class="" data-dismiss="modal">Cancel</span>
+        <button type="button" class="btn btn-success">Filter</button>
+      </div>
+    </div>
+  </div>
+</div>

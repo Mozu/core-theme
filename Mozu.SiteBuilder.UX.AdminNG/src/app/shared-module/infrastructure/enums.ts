@@ -48,6 +48,11 @@ export enum NotificationLGActions {
 }
 
 export enum LocationGroupEventOperations {
-    add = 'add',
-    remove = 'remove'
+    add = "add",
+    remove = "remove"
+}
+
+export enum NotificationQuoteActions {
+    list = "List",
+    edit = "Edit"
 }

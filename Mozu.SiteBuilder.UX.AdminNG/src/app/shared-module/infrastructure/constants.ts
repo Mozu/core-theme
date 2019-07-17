@@ -83,7 +83,8 @@ export class Constants {
         userName : 'userName',
         apiToken : 'apiToken',
         isLoggedIn : 'isLoggedIn',
-        sessionId : 'sessionId'
+        sessionId : 'sessionId',
+        quoteGridData : 'QuoteGridData',
     };
 
     static imageExtension =
@@ -153,6 +154,7 @@ export class Constants {
     static dateStamp = '?dt=';
     static editNavigationDeepLink = '/edit/';
     static filterQueryParameter = 'filter';
+    static advancedSearchQueryParameter = 'advancedSearch';
     static userAPIDeepLink = '/users';
 
     static dateFormat = 'MMM dd yyyy h:mm aaaaa\'m\'';

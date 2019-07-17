@@ -6,13 +6,12 @@ import {
 import { ActivatedRoute } from '@angular/router';
 
 import * as _ from 'lodash';
-
+import { NotificationService } from '@global';
 import { LoggerService,
   HttpError,
   ErrorCode,
   ErroNotificationType,
-  SpinnerService,
-  GlobalErrorLoggingService} from '@core';
+  SpinnerService} from '@core';
 
 import { QuoteService } from './quote.service';
 
@@ -33,7 +32,8 @@ export class QuoteComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private _quoteService: QuoteService,
     private _loggerService: LoggerService,
-    private _spinner: SpinnerService ) { }
+    private _spinner: SpinnerService,
+    private _notificationService: NotificationService ) { }
 
   ngOnInit() {
     this._spinner.start();
@@ -53,6 +53,7 @@ export class QuoteComponent implements OnInit {
           this.model = _.filter(quoteListSuccessResponse['items'], function (el: any) { return el.id === quoteId; })[0];
           this.userId = this.model.userId;
           this.customerAccountId = this.model.customerAccountId;
+          this._notificationService.notifyQuoteHeaderToAppendValues(this.model.quoteNumber, this.model.status);
         }
           this._spinner.stop();
     }, (quoteListErrResponse) => {

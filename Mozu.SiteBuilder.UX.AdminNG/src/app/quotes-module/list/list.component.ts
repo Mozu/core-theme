@@ -1,6 +1,8 @@
 import {
   Component,
-  OnInit
+  OnInit,
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 
 import { Router } from '@angular/router';
@@ -17,8 +19,10 @@ import {
 } from '@core';
 
 import { TranslateService } from '@ngx-translate/core';
-
-import { Constants } from '@shared';
+import { NotificationService } from '@global';
+import { Constants,
+  ToggleGridColumnsComponent,
+  NotificationQuoteActions } from '@shared';
 
 import { QuotesListService } from './list.service';
 
@@ -32,7 +36,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./list.component.css'],
   providers: [QuotesListService]
 })
-export class QuotesListComponent implements OnInit {
+export class QuotesListComponent implements OnInit, OnDestroy {
   public model: QuotesListModel;
   gridColumnHeader: any[];
   selectedGridColumnHeader: any[];
@@ -44,7 +48,14 @@ export class QuotesListComponent implements OnInit {
     private router: Router,
     private _spinner: SpinnerService,
     private currencyPipe: CurrencyPipe,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private _notificationService: NotificationService) { }
+
+  @ViewChild(ToggleGridColumnsComponent) toggleGridColumnsComponent: ToggleGridColumnsComponent;
+
+  OpenGridColumnOverlayPanel(event: any) {
+    this.toggleGridColumnsComponent.gridColumnToggle.toggle(event);
+  }
 
   ngOnInit() {
     this._loggerService.info('QuotesListComponent : ngOnInit');
@@ -52,14 +63,14 @@ export class QuotesListComponent implements OnInit {
     this.model.numberOfRows = Constants.numberOfRows;
     this.model.items = [];
     this.model.quoteGridContextMenuItem = [];
+    this.model.subscriptions = [];
 
     this._translate.get('QUOTES.GridContextMenu').subscribe((successResponse) => {
       this.gridContextMenu(successResponse);
     });
 
-
-    if (JSON.parse(localStorage.getItem('QuoteGridData')) != null) {
-      this.gridColumnHeader = JSON.parse(localStorage.getItem('QuoteGridData'));
+    if (JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData)) != null) {
+      this.gridColumnHeader = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
     } else {
       this.gridColumnHeader = [
         { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true },
@@ -83,10 +94,24 @@ export class QuotesListComponent implements OnInit {
 
     this.populateQuoteGrid();
 
-  }
+    this.model.subscriptions.push(
+      this._notificationService.quoteSearch.subscribe((advancedSearch: string) => {
+        this.populateQuoteGrid(advancedSearch);
+      })
+    );
 
+    this._notificationService.notifyQuoteEdited(NotificationQuoteActions.list);
+  }
   onRowSelect(event) {
     this.model.selectedQuote = event.data;
+    // open in edit mode
+    if (event && event.originalEvent && event.originalEvent.target &&
+      event.originalEvent.target.classList &&
+      event.originalEvent.target.classList.value === 'pi pi-ellipsis-v') {
+      // open action menu.
+    } else {
+      this.viewQuote();
+    }
   }
 
   public gridContextMenu = (contextMenu) => {
@@ -96,12 +121,13 @@ export class QuotesListComponent implements OnInit {
   viewQuote() {
     const quoteId = this.model.selectedQuote.id;
     this.router.navigate(['/' + Constants.uiRoutes.quotesEdit + '/' + quoteId]);
+    this._notificationService.notifyQuoteEdited(NotificationQuoteActions.edit);
   }
 
-  public populateQuoteGrid = () => {
+  public populateQuoteGrid = (param?: string) => {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-    this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: QuotesListModel) => {
+    this._quotesListService.fetchAllQuotes(param).subscribe((quotesListSuccessResponse: QuotesListModel) => {
       this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
       if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
         quotesListSuccessResponse['items'].length > 0) {
@@ -121,18 +147,12 @@ export class QuotesListComponent implements OnInit {
 
   onColReorder(event) {
     this.selectedGridColumnHeader = event.columns;
-    localStorage.setItem('QuoteGridData', JSON.stringify(this.selectedGridColumnHeader));
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(this.selectedGridColumnHeader));
   }
 
-  toggleGridColumns(event, col) {
-    const index = this.selectedGridColumnHeader.findIndex((e) => e.header === col.header);
-    if (index === -1) {
-      this.selectedGridColumnHeader.push(col);
-    } else {
-      col.checked = event.currentTarget.checked;
-      this.selectedGridColumnHeader[index] = col;
-    }
-    localStorage.setItem('QuoteGridData', JSON.stringify(this.selectedGridColumnHeader));
+  toggledGridColumn(gridColumnHeader) {
+    this.selectedGridColumnHeader = gridColumnHeader;
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(this.selectedGridColumnHeader));
   }
 
   getQuoteGridData(model: any, col: any): any {
@@ -165,4 +185,12 @@ export class QuotesListComponent implements OnInit {
 
     return transformedValue;
   }
+
+  ngOnDestroy() {
+    this._loggerService.info('QuotesListComponent : ngOnDestroy');
+    this.model.subscriptions.forEach((s) => {
+        s.unsubscribe();
+    });
+  }
+
 }

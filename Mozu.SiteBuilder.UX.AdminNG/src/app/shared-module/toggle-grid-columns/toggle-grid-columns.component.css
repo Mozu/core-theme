@@ -1,0 +1,57 @@
+
+.grid-column-container{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.grid-column-container .checkbox-inline{
+    padding-left: 0px;
+    padding-bottom: 10px;
+}
+.grid-column-container .cr {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 10px !important;
+    float: left;
+    margin-right: .7em;
+    color: #fff;
+}
+
+.grid-column-container .cr .cr-icon {
+    position: absolute;
+    font-size: .8em;
+    line-height: 0;
+    top: 50%;
+    left: 15%;
+}
+
+.grid-column-container:after {
+    right: 1.25em !important;
+    left: auto !important;
+}
+
+.grid-column-container label input[type="checkbox"] {
+    display: none;
+}
+
+.grid-column-container label input[type="checkbox"]+.cr>.cr-icon {
+    opacity: 0;
+}
+
+.grid-column-container label input[type="checkbox"]:checked+.cr>.cr-icon {
+    opacity: 1;
+}
+
+.grid-column-container label input[type="checkbox"]:checked+.cr {
+    background: #2ea195 !important;
+    border: none;
+    color: white !important;
+    margin-top: 3px;
+}
+
+.grid-column-container label input[type="checkbox"]:disabled+.cr {
+    opacity: .5;
+}

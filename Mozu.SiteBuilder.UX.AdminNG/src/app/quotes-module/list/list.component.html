@@ -2,7 +2,7 @@
     <spinner></spinner>
     <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true"
         [rows]="model.pageSize" (onRowSelect)="onRowSelect($event)" selectionMode="single"
-        [reorderableColumns]="true" (onColReorder)="onColReorder($event)">
+        [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }"
@@ -10,7 +10,7 @@
                     {{(col.header) | translate}}
                 </th>
                 <th class="header-ellipsis">
-                    <div><i class="pi pi-ellipsis-v" (click)="gridColumnToggle.toggle($event)"></i></div>
+                    <div><i class="pi pi-ellipsis-v" (click)="OpenGridColumnOverlayPanel($event)"></i></div>
                 </th>
             </tr>
         </ng-template>
@@ -38,18 +38,5 @@
         </ng-template>
     </p-table>
 
-    <p-overlayPanel #gridColumnToggle [appendTo]="'body'" [dismissable]="true">
-        <div *ngFor="let col of gridColumnHeader">
-            <div class="col-sm-12 grid-column-container">
-                <div class="input-group input-group-sm">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" class="custom-control-input" value="{{col.header}}"
-                            [checked]="col.checked" (change)='toggleGridColumns($event, col)'>
-                        {{(col.header)  | translate}}
-                        <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-    </p-overlayPanel>
+    <toggle-grid-columns [gridColumnHeader]=gridColumnHeader (toggledGridColumn)="toggledGridColumn($event)"></toggle-grid-columns>
 </div>
