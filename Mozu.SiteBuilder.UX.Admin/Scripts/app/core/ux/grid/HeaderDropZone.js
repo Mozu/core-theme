@@ -20,6 +20,7 @@ Ext.define('Taco.core.ux.grid.HeaderDropZone', {
         if (data.header.el.dom === node) {
             doPosition = false;
         } else {
+            debugger
             to = me.getLocation(e, node).header;
             doPosition = (from.ownerCt === to.ownerCt) || (!from.ownerCt.sealed && !to.ownerCt.sealed);
         }
