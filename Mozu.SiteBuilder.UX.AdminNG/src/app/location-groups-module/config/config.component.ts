@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode } from '@core';
+import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode, SpinnerService } from '@core';
 import { SharedDataService } from '@global';
 import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel,
          UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel,
@@ -29,10 +29,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private router: Router,
         private activeRoute: ActivatedRoute,
         private _tostrService: TostrService,
-        private createService: CreateLocationGroupService
+        private createService: CreateLocationGroupService,
+        private _spinner: SpinnerService
     ) { }
 
     ngOnInit() {
+
+        this._spinner.start();
+
         this.model = new LocationGroupConfigModel();
         this.model.subscriptions = [];
         this.model.sitesLst = [];
@@ -224,6 +228,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     public fetchLocationGroupConfig = (locationGroupId, siteId) => {
         this._loggerService.info('LocationGroupConfigComponent : fetchLocationGroupConfig');
+        this._spinner.start();
         this.configService.getLocationGroupConfig(locationGroupId, siteId).subscribe(response =>
             this.getLocationGroupConfigSuccess(response),
             (response) => this.getLocationGroupConfigError(response.error.message));
@@ -240,6 +245,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private getLocationGroupConfigError(errmsg: string) {
         this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigError');
+        this._spinner.stop();
         this._tostrService.showError(errmsg);
     }
 
@@ -355,6 +361,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
             });
         }
+        this._spinner.stop();
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingSettingsForUsps): boolean[]  {
@@ -459,6 +466,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     saveLocationConfig() {
 
+        this._spinner.start();
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
 
@@ -547,12 +555,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     updateLocationGroupConfigError(message: any): void {
+        this._spinner.stop();
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigError');
         this._tostrService.showError(message);
     }
 
     private updateLocationGroupConfigSuccess(result: any): void {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigSuccess' + JSON.stringify(result));
+        this._spinner.stop();
         this._tostrService.showSuccess(ToastrCode.LGCSavedSuccessfully);
     }
 
