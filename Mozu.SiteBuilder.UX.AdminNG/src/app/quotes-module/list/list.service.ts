@@ -15,19 +15,22 @@ export class QuotesListService {
     constructor(private _http: HttpClientService,
         private _loggerService: LoggerService) { }
 
-    public fetchAllQuotes(advancedSearch?: string): Observable<QuotesListModel> {
+    public fetchAllQuotes(advancedSearch?: string, sort?: string): Observable<QuotesListModel> {
         this._loggerService.info('QuotesListService: fetchAllQuotes');
-        let filter;
+        let filter = new HttpParams();
         if (advancedSearch !== '') {
-            filter = new HttpParams().set(Constants.advancedSearchQueryParameter, JSON.stringify({ keyword: advancedSearch }));
+            filter = filter.append(Constants.advancedSearchQueryParameter, JSON.stringify({ keyword: advancedSearch }));
+        }
+        if (sort !== undefined) {
+            filter = filter.append(Constants.quoteSortQueryParameter, sort);
         }
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.quoteList);
         } else {
             return this._http.get(GlobalConstants.webApis.getQuoteList,
-            {
-                params: filter
-            });
+                {
+                    params: filter
+                });
         }
     }
 }

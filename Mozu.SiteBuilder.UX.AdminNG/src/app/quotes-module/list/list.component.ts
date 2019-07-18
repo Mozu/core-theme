@@ -15,7 +15,8 @@ import {
   HttpError,
   ErrorCode,
   ErroNotificationType,
-  SpinnerService
+  SpinnerService,
+  UtilityService
 } from '@core';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -27,6 +28,7 @@ import { Constants,
 import { QuotesListService } from './list.service';
 
 import { QuotesListModel } from './list.model';
+import { LazyLoadEvent } from 'primeng/api';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -49,7 +51,8 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     private _spinner: SpinnerService,
     private currencyPipe: CurrencyPipe,
     private datePipe: DatePipe,
-    private _notificationService: NotificationService) { }
+    private _notificationService: NotificationService,
+    private _utilityService: UtilityService) { }
 
   @ViewChild(ToggleGridColumnsComponent) toggleGridColumnsComponent: ToggleGridColumnsComponent;
 
@@ -73,21 +76,21 @@ export class QuotesListComponent implements OnInit, OnDestroy {
       this.gridColumnHeader = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
     } else {
       this.gridColumnHeader = [
-        { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true },
-        { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true },
-        { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false },
-        { field: 'quoteNumber', header: 'QUOTES.GridHeader.quoteID', checked: false },
-        { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true },
-        { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false },
-        { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true },
-        { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill' },
-        { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false },
-        { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false },
-        { field: 'numberOfProducts', header: 'QUOTES.GridHeader.numProducts', checked: false },
-        { field: 'totalQuantity', header: 'QUOTES.GridHeader.totalQty', checked: false },
-        { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true },
-        { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true },
-        { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true }
+        { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true, sortable: true },
+        { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true, sortable: false },
+        { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false, sortable: false },
+        { field: 'quoteNumber', header: 'QUOTES.GridHeader.quoteID', checked: false, sortable: true },
+        { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true, sortable: true },
+        { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false, sortable: true },
+        { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true, sortable: true },
+        { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill', sortable: true },
+        { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false, sortable: true },
+        { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false, sortable: true },
+        { field: 'numberOfProducts', header: 'QUOTES.GridHeader.numProducts', checked: false, sortable: false },
+        { field: 'totalQuantity', header: 'QUOTES.GridHeader.totalQty', checked: false, sortable: false },
+        { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true, sortable: false },
+        { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true, sortable: true },
+        { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true, sortable: true }
       ];
     }
     this.selectedGridColumnHeader = this.gridColumnHeader;
@@ -124,19 +127,18 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this._notificationService.notifyQuoteEdited(NotificationQuoteActions.edit);
   }
 
-  public populateQuoteGrid = (param?: string) => {
+  public populateQuoteGrid = (advSearch?: string, sort?: string) => {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-    setTimeout(() => {
-      /** spinner ends after 1 seconds */
-      this._quotesListService.fetchAllQuotes().subscribe((quotesListSuccessResponse: Response) => {
-        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
-          if (quotesListSuccessResponse != null && quotesListSuccessResponse !== undefined &&
-            quotesListSuccessResponse['items'].length > 0) {
-            this.model.items = quotesListSuccessResponse['items'];
-            this._spinner.stop();
-          }
-      }, (quotesListErrResponse) => {
+    this._quotesListService.fetchAllQuotes(advSearch, sort).subscribe((quotesListSuccessResponse: QuotesListModel) => {
+      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
+      if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
+        quotesListSuccessResponse['items'].length > 0) {
+        this.model.items = [...quotesListSuccessResponse.items];
+        this.model.startIndex = quotesListSuccessResponse.startIndex;
+        this.model.pageSize = quotesListSuccessResponse.pageSize;
+        this.model.pageCount = quotesListSuccessResponse.pageCount;
+        this.model.totalCount = quotesListSuccessResponse.totalCount;
         this._spinner.stop();
       }
     }, (quotesListErrResponse) => {
@@ -192,6 +194,16 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this.model.subscriptions.forEach((s) => {
         s.unsubscribe();
     });
+  }
+
+  customQuoteSort(event: LazyLoadEvent) {
+    const sortOrder = event.sortOrder === 1 ? Constants.sortableOrder.ASC : Constants.sortableOrder.DESC;
+    const result = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
+      { propertyName: event.sortField, sortOrder: sortOrder });
+
+    this.populateQuoteGrid(null, result);
+    event.first = this.model.startIndex;
+    event.rows = this.model.pageSize;
   }
 
 }

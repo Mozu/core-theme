@@ -1,13 +1,12 @@
 <div class="col-md-12 quote-container">
     <spinner></spinner>
-    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true"
-        [rows]="model.pageSize" (onRowSelect)="onRowSelect($event)" selectionMode="single"
-        [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped">
+    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize" (onRowSelect)="onRowSelect($event)" selectionMode="single" [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped"
+        (onLazyLoad)="customQuoteSort($event)" [lazy]="true">
         <ng-template pTemplate="header" let-columns>
             <tr>
-                <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }"
-                    pReorderableColumn>
+                <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }" pReorderableColumn [pSortableColumn]="col.sortable ? col.field: null" pReorderableColumn>
                     {{(col.header) | translate}}
+                    <p-sortIcon *ngIf="col.sortable" [field]="col.field"></p-sortIcon>
                 </th>
                 <th class="header-ellipsis">
                     <div><i class="pi pi-ellipsis-v" (click)="OpenGridColumnOverlayPanel($event)"></i></div>
@@ -24,18 +23,15 @@
                 <td class="header-ellipsis">
                     <div>
                         <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>
-                        <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true"
-                            appendTo="body"></p-menu>
+                        <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
                     </div>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state>
-            {{'QUOTES.GridFooter.Displaying' | translate }} {{model.totalCount < 1 ? 0 : state.first + 1}} -
-            {{model.totalCount > 0 ? ((rows+ state.first) <= model.totalCount ? (rows + state.first) : model.totalCount) : 0}}
-            {{'QUOTES.GridFooter.of' | translate }}
-            {{model.totalCount ? model.totalCount : 0}}
-        </ng-template>
+            {{'QUOTES.GridFooter.Displaying' | translate }} {{model.totalCount
+            < 1 ? 0 : state.first + 1}} - {{model.totalCount> 0 ? ((dt.rows+ state.first)
+                <=model.totalCount ? (dt.rows + state.first) : model.totalCount) : 0}} {{ 'QUOTES.GridFooter.of' | translate }} {{model.totalCount ? model.totalCount : 0}} </ng-template>
     </p-table>
 
     <toggle-grid-columns [gridColumnHeader]=gridColumnHeader (toggledGridColumn)="toggledGridColumn($event)"></toggle-grid-columns>

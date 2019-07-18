@@ -117,7 +117,7 @@ export class Constants {
         leftNavigationItems : environment.appUrl + '/assets/json/leftNavigation-items.json',
         tabsNames : environment.appUrl + '/assets/json/dashboard-menu.json',
         dasbhoardTiles : environment.appUrl + '/assets/json/dashboard-categories.json',
-        quoteList : environment.appUrl + 'a/assets/json/quote-list.json',
+        quoteList : environment.appUrl + '/assets/json/quote-list.json',
         accountInformation: environment.appUrl + '/assets/json/account-information.json',
         redirectionLink : environment.appUrl + '/assets/json/user-redirection.json',
         locations : environment.appUrl + '/assets/json/locations.json',
@@ -158,4 +158,13 @@ export class Constants {
     static userAPIDeepLink = '/users';
 
     static dateFormat = 'MMM dd yyyy h:mm aaaaa\'m\'';
+    static searchFilterParameter = {
+        filterParam1: 'filter=%5B%7B%22property%22%3A%22all%22%2C%22value%22%3A%22',
+        filterParam2: '%22%7D%5D',
+        masterCatalogHeaderKey: 'masterCatalog',
+        tenantHeaderKey: 'tenant'
+    };
+
+    static quoteSortQueryParameter = 'sort';
+    static sortableOrder = { ASC: 'ASC', DESC: 'DESC' };
 }

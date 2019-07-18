@@ -170,4 +170,12 @@ export class UtilityService {
         }
     }
 
+    public stringFormat(str, data) {
+        data = data || {};
+        Object.keys(data).forEach(function (key) {
+            str = str.replace(new RegExp('{{' + key + '}}', 'g'), data[key]);
+        });
+        return str;
+    }
+
 }
