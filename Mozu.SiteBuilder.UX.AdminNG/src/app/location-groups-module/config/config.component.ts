@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType } from '@core';
+import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode } from '@core';
 import { SharedDataService } from '@global';
 import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel,
          UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel,
@@ -389,7 +389,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         return shippingTypeLst;
     }
 
-    private setSelectedUpsCanadaShippingTypes(canadaUpsSettings: CanadaUpsSettingsModel): boolean[]{
+    private setSelectedUpsCanadaShippingTypes(canadaUpsSettings: CanadaUpsSettingsModel): boolean[] {
         const shippingTypeLst: boolean[] = [];
         if (canadaUpsSettings) {
             const shippingMethods = canadaUpsSettings.shippingMethods;
@@ -409,7 +409,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const shippingTypeLst: boolean[] = [];
         if (unitedStatesUpsSettingsModel) {
             const shippingMethods = unitedStatesUpsSettingsModel.shippingMethods;
-            console.log('shippingMethods', shippingMethods);
             this.model.LCUPSUSShippingTypes.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
             if (isShippingTypeSelected !== -1) {
@@ -420,7 +419,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
          });
         }
         return shippingTypeLst;
-        console.log('shippingTypeLst', shippingTypeLst);
     }
 
     private setSelectedUpsInternationalShippingTypes( internationalUpsSettings: InternationalUpsSettingsModel): boolean[] {
@@ -459,7 +457,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
     }
 
-    saveLocationConfig(){
+    saveLocationConfig() {
 
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
@@ -508,9 +506,52 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.shippingSettingsForUps.canadaUpsSettings.express2DayDefault = lgconfigForm.get(['upsCanadaExpress2DayDefault']).value;
         lgConfigModel.shippingSettingsForUps.canadaUpsSettings.express3DayDefault = lgconfigForm.get(['upsCanadaExpress3DayDefault']).value;
         // FedEx Settings
+        lgConfigModel.shippingSettingsForFedEx = {} as ShippingSettingsForFedEx;
+        lgConfigModel.shippingSettingsForFedEx.shippingMethods = this.getSelectedFedExShippingTypes(lgconfigForm.get(['fedExShippingTypes']).value);
+        lgConfigModel.shippingSettingsForFedEx.enableSmartPost = lgconfigForm.get(['enableSmartPost']).value;
+        lgConfigModel.shippingSettingsForFedEx.returnLabelShippingMethod = lgconfigForm.get(['fedExReturnLabelShippingTypes']).value;
+        lgConfigModel.shippingSettingsForFedEx.standardDefault = lgconfigForm.get(['fedexStandardDefault']).value;
+        lgConfigModel.shippingSettingsForFedEx.express1DayDefault = lgconfigForm.get(['fedexExpress1Default']).value;
+        lgConfigModel.shippingSettingsForFedEx.express2DayDefault = lgconfigForm.get(['fedexExpress2Default']).value;
+        lgConfigModel.shippingSettingsForFedEx.express3DayDefault = lgconfigForm.get(['fedexExpress3Default']).value;
+        // USPS Settings
+        lgConfigModel.shippingSettingsForUsps = {} as ShippingSettingsForUsps;
+        lgConfigModel.shippingSettingsForUsps.shippingMethods = this.getSelectedUspsShippingTypes(lgconfigForm.get(['uspsShippingTypes']).value);
+        lgConfigModel.shippingSettingsForUsps.standardDefault = lgconfigForm.get(['uspsStandardDefault']).value;
+        lgConfigModel.shippingSettingsForUsps.returnLabelShippingMethod = lgconfigForm.get(['uspsReturnLabelShippingTypes']).value;
+        lgConfigModel.shippingSettingsForUsps.express1DayDefault = lgconfigForm.get(['uspsExpress1DayDefault']).value;
+        lgConfigModel.shippingSettingsForUsps.express2DayDefault = lgconfigForm.get(['uspsExpress2DayDefault']).value;
+        lgConfigModel.shippingSettingsForUsps.express3DayDefault = lgconfigForm.get(['uspsExpress3DayDefault']).value;
+        // Canada Post Settings
+        lgConfigModel.canadaPostSettings = {} as CanadaPostSettings;
+        lgConfigModel.canadaPostSettings.outboundUsername = lgconfigForm.get(['outboundUsername']).value;
+        lgConfigModel.canadaPostSettings.outboundPassword = lgconfigForm.get(['outboundPassword']).value;
+        lgConfigModel.canadaPostSettings.outboundCustomerNumber = lgconfigForm.get(['outboundCustomerNumber']).value;
+        lgConfigModel.canadaPostSettings.outboundLocale = lgconfigForm.get(['outboundLocale']).value;
+        lgConfigModel.canadaPostSettings.outboundContractID = lgconfigForm.get(['outboundContractID']).value;
+        lgConfigModel.canadaPostSettings.carsPickupNotify = lgconfigForm.get(['carsPickupNotify']).value;
+        lgConfigModel.canadaPostSettings.preferredPickupTime = lgconfigForm.get(['preferredPickupTime']).value;
+        lgConfigModel.canadaPostSettings.closingTime = lgconfigForm.get(['closingTime']).value;
 
-        console.log('lgConfigModel ---->>>', lgConfigModel);
+        this.updateLocationGroupConfig(lgConfigModel);
+    }
 
+    private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel) {
+        this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfig');
+
+        this.configService.updateLocationGroupConfig(lgcModel).subscribe(response =>
+            this.updateLocationGroupConfigSuccess(response),
+            (response) => this.updateLocationGroupConfigError(response.error.message));
+    }
+
+    updateLocationGroupConfigError(message: any): void {
+        this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigError');
+        this._tostrService.showError(message);
+    }
+
+    private updateLocationGroupConfigSuccess(result: any): void {
+        this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigSuccess' + JSON.stringify(result));
+        this._tostrService.showSuccess(ToastrCode.LGCSavedSuccessfully);
     }
 
     private getSelectedCarriers( carriers: boolean[]): CarrierModel[] {
@@ -551,6 +592,24 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         let shippingTypeLst: string[] = [];
         if (canadaUpsSettings) {
             shippingTypeLst = canadaUpsSettings.map((v, i) => v ? this.model.LCUPSCanadaShippingTypes[i].data : null)
+            .filter(v => v !== null);
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedFedExShippingTypes(shippingSettingsForFedEx: boolean[]): string[] {
+        let shippingTypeLst: string[] = [];
+        if (shippingSettingsForFedEx) {
+            shippingTypeLst = shippingSettingsForFedEx.map((v, i) => v ? this.model.LCFedExShippingType[i].data : null)
+            .filter(v => v !== null);
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedUspsShippingTypes(shippingSettingsForUsps: boolean[]): string[] {
+        let shippingTypeLst: string[] = [];
+        if (shippingSettingsForUsps) {
+            shippingTypeLst = shippingSettingsForUsps.map((v, i) => v ? this.model.LCUSPSShippingTypes[i].data : null)
             .filter(v => v !== null);
         }
         return shippingTypeLst;

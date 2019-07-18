@@ -8,6 +8,7 @@ HttpClientService
 import { Constants as GlobalConstant } from '@global/infrastructure/constants';
 import { Constants } from '@shared';
 import { environment } from '@env';
+import { LocationGroupConfigurationModel } from './config.model';
 
 @Injectable()
 export class LocationGroupConfigService {
@@ -21,5 +22,14 @@ export class LocationGroupConfigService {
         } else {
             return this._http.get(GlobalConstant.webApis.getLocationGroupConfig + '/' + locationGroupId + '/' + siteId );
         }
+    }
+
+    public updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: updateLocationGroupConfig' + JSON.stringify(lgcModel));
+        if (environment.debug) {
+            return of(new HttpResponse({ status: 200 }));
+         } else {
+            return this._http.post(GlobalConstant.webApis.updateLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);
+         }
     }
 }

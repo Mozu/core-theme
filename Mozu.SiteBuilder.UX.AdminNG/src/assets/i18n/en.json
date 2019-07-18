@@ -142,6 +142,7 @@
             "Information": {
             },
             "Success": {
+                "LGCSavedSuccessfully": "Location Group Config saved successfully."
             },
             "Custom": {
             }

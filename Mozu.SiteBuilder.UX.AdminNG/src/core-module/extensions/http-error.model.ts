@@ -33,7 +33,8 @@ export enum ErrorCode {
 
 export enum ToastrCode {
     EmptyEmailAddress = <any>'EmptyEmailAddress',
-    EmptyPassword = <any>'EmptyPassword'
+    EmptyPassword = <any>'EmptyPassword',
+    LGCSavedSuccessfully = <any>'LGCSavedSuccessfully'
 }
 
 export class HttpError {
