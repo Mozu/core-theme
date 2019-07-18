@@ -370,10 +370,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const shippingMethods = shippingSettingsForUsps.shippingMethods;
             this.model.LCUSPSShippingTypes.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-            if (isShippingTypeSelected !== -1) {
-                shippingTypeLst.push(true);
-            } else {
+            if (isShippingTypeSelected === -1) {
                 shippingTypeLst.push(false);
+            } else {
+                shippingTypeLst.push(true);
             }
          });
         }
@@ -386,10 +386,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const shippingMethods = shippingSettingsForFedEx.shippingMethods;
             this.model.LCFedExShippingType.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-            if (isShippingTypeSelected !== -1) {
-                shippingTypeLst.push(true);
-            } else {
+            if (isShippingTypeSelected === -1) {
                 shippingTypeLst.push(false);
+            } else {
+                shippingTypeLst.push(true);
             }
          });
         }
@@ -402,10 +402,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const shippingMethods = canadaUpsSettings.shippingMethods;
             this.model.LCUPSCanadaShippingTypes.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-            if (isShippingTypeSelected !== -1) {
-                shippingTypeLst.push(true);
-            } else {
+            if (isShippingTypeSelected === -1) {
                 shippingTypeLst.push(false);
+            } else {
+                shippingTypeLst.push(true);
             }
          });
         }
@@ -418,10 +418,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const shippingMethods = unitedStatesUpsSettingsModel.shippingMethods;
             this.model.LCUPSUSShippingTypes.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-            if (isShippingTypeSelected !== -1) {
-                shippingTypeLst.push(true);
-            } else {
+            if (isShippingTypeSelected === -1) {
                 shippingTypeLst.push(false);
+            } else {
+                shippingTypeLst.push(true);
             }
          });
         }
@@ -434,10 +434,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const shippingMethods = internationalUpsSettings.shippingMethods;
             this.model.LCUPSInternationalShippingTypes.map((o, i) => {
             const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-            if (isShippingTypeSelected !== -1) {
-                shippingTypeLst.push(true);
-            } else {
+            if (isShippingTypeSelected === -1) {
                 shippingTypeLst.push(false);
+            } else {
+                shippingTypeLst.push(true);
             }
          });
         }

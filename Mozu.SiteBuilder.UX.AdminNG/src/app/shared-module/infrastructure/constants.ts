@@ -200,7 +200,7 @@ export class Constants {
                                    {data: 'PRIORITY', label: 'PRIORITY'},
                                   ];
 
-    static LCFedExShippingType = [{data: 'FIRST_OVERNIGHT ', label: 'FIRST_OVERNIGHT '},
+    static LCFedExShippingType = [{data: 'FIRST_OVERNIGHT', label: 'FIRST_OVERNIGHT'},
                                   {data: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY', label: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY'},
                                   {data: 'PRIORITY_OVERNIGHT', label: 'PRIORITY_OVERNIGHT'},
                                   {data: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY', label: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY'},

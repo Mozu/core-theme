@@ -294,8 +294,8 @@ export class LocationGroupCreateComponent implements OnInit {
         if (result && result.items) {
             const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
             this.setConfigData(lgModel);
+            this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + lgModel.locationGroupId]);
         }
-        // this.router.navigate(['/' + Constants.uiRoutes.locationGroups]);
     }
 
     private onSaveError(errmsg: string) {
