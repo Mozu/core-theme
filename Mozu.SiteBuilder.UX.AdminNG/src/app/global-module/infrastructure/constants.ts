@@ -25,8 +25,7 @@ export class Constants {
         editLocationGroup : environment.apiUrl + '/location/groups/edit',
         getLocationGroups : environment.apiUrl + '/location/groups/list',
         getLocationGroup : environment.apiUrl + '/location/groups/get',
-        getLocationGroupConfig : environment.apiUrl + '/location/group/configuration/get',
-        updateLocationGroupConfig : environment.apiUrl + '/location/group/configuration/edit',
+        getLocationGroupConfig : environment.apiUrl + '/location/group/configuration',
         deleteLocationGroup : environment.apiUrl + '/location/groups/delete',
         getQuoteList : environment.apiUrl + '/quote/list',
     };

@@ -463,7 +463,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         const lgconfigForm = this.model.locationGroupConfigForm;
 
         lgConfigModel.tenantId = this.model.lgConfigModel.tenantId;
-        lgConfigModel.siteId = this.model.lgConfigModel.tenantId;
+        lgConfigModel.siteId = this.model.lgConfigModel.siteId;
         lgConfigModel.locationGroupId = this.model.lgConfigModel.locationGroupId;
         // ISPU
         lgConfigModel.customerFailedToPickupAfterAction = lgconfigForm.get(['customerFailedToPickupAfterAction']).value;
@@ -532,6 +532,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.canadaPostSettings.carsPickupNotify = lgconfigForm.get(['carsPickupNotify']).value;
         lgConfigModel.canadaPostSettings.preferredPickupTime = lgconfigForm.get(['preferredPickupTime']).value;
         lgConfigModel.canadaPostSettings.closingTime = lgconfigForm.get(['closingTime']).value;
+        // Audit Info
+        lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
         this.updateLocationGroupConfig(lgConfigModel);
     }

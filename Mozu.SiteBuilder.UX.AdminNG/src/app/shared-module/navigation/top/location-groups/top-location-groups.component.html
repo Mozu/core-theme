@@ -5,12 +5,12 @@
                 <h4 class="forlineheight">{{'SHARED.HEADER.pageTitle.locationGroups' | translate }}</h4>
             </a>
         </div>
-        <div class=" heading col-md-2 col-xs-2 col-sm-2" *ngIf="model.isConfigTabVisible">
+        <div class=" heading col-md-2 col-xs-2 col-sm-2" *ngIf="model.isConfigTabVisible" [class.tab-active]="router.isActive('/locationGroupEdit', false)">
             <a [routerLink]="" (click)="gotoLocationGroupEdit()">
                 <h4 class="forlineheight">{{model.locationGroupName}}</h4>
             </a>
         </div>
-        <div class=" heading col-md-2 col-xs-2 col-sm-2" *ngIf="model.isConfigTabVisible">
+        <div class=" heading col-md-2 col-xs-2 col-sm-2" *ngIf="model.isConfigTabVisible" [class.tab-active]="router.isActive('/locationGroupConfig', false)">
             <a [routerLink]="" (click)="gotoLocationGroupConfig()">
                 <h4 class="forlineheight">{{'SHARED.HEADER.pageTitle.locationConfigs' | translate }}</h4>
             </a>

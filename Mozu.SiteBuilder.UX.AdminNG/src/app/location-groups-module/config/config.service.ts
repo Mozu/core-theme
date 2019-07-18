@@ -29,7 +29,7 @@ export class LocationGroupConfigService {
         if (environment.debug) {
             return of(new HttpResponse({ status: 200 }));
          } else {
-            return this._http.post(GlobalConstant.webApis.updateLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);
+            return this._http.Put(GlobalConstant.webApis.getLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);
          }
     }
 }

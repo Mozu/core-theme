@@ -33,7 +33,7 @@
 						<input class="inputText form-control subform-text"
 							id="customerFailedToPickupDeadline" name="customerFailedToPickupDeadline"
 							formControlName="customerFailedToPickupDeadline" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('customerFailedToPickupDeadline').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('customerFailedToPickupDeadline').value === '' || model.locationGroupConfigForm.get('customerFailedToPickupDeadline').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('customerFailedToPickupDeadline').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.customerFailedToPickupDeadline' | translate }}</span>
 						<hr class="underline-from-left">
@@ -531,7 +531,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input  class="inputText form-control subform-text" id="outboundUsername"
 							name="outboundUsername" formControlName="outboundUsername" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundUsername').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundUsername').value === '' || model.locationGroupConfigForm.get('outboundUsername').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('outboundUsername').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.OutboundUsername' | translate }}</span>
 						<hr class="underline-from-left">
@@ -540,7 +540,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class="inputText form-control subform-text" id="outboundPassword"
 							name="outboundPassword" formControlName="outboundPassword" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundPassword').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundPassword').value === '' || model.locationGroupConfigForm.get('outboundPassword').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('outboundPassword').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.OutboundPassword' | translate }}</span>
 						<hr class="underline-from-left">
@@ -550,7 +550,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class="inputText form-control subform-text" id="outboundCustomerNumber"
 							name="outboundCustomerNumber" formControlName="outboundCustomerNumber" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundCustomerNumber').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundCustomerNumber').value === '' || model.locationGroupConfigForm.get('outboundCustomerNumber').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('outboundCustomerNumber').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.OutboundCustomerNumber' | translate }}</span>
 						<hr class="underline-from-left">
@@ -559,7 +559,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class="inputText form-control subform-text" id="outboundLocale"
 							name="outboundLocale" formControlName="outboundLocale" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundLocale').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundLocale').value === '' || model.locationGroupConfigForm.get('outboundLocale').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('outboundLocale').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.OutboundLocale' | translate }}</span>
 						<hr class="underline-from-left">
@@ -569,7 +569,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class="inputText form-control subform-text" id="outboundContractID"
 							name="outboundContractID" formControlName="outboundContractID" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundContractID').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('outboundContractID').value === '' || model.locationGroupConfigForm.get('outboundContractID').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('outboundContractID').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.OutboundContractID' | translate }}</span>
 						<hr class="underline-from-left">
@@ -587,7 +587,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class=" inputText form-control subform-text"
 							id="preferredPickupTime" name="preferredPickupTime" formControlName="preferredPickupTime" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('preferredPickupTime').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('preferredPickupTime').value === '' || model.locationGroupConfigForm.get('preferredPickupTime').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('preferredPickupTime').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.PreferredPickupTime' | translate }}</span>
 						<hr class="underline-from-left">
@@ -596,7 +596,7 @@
 					<div class="form-row col-md-5 for-no-padding">
 						<input class=" inputText form-control subform-text" id="closingTime"
 							name="closingTime" formControlName="closingTime" />
-						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('closingTime').value === '',
+						<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('closingTime').value === '' || model.locationGroupConfigForm.get('closingTime').value === null,
 										'floating-label-not-empty': model.locationGroupConfigForm.get('closingTime').value !== '' 
 										}">{{'LOCATIONGROUPCONFIG.FormLabels.ClosingTime' | translate }}</span>
 						<hr class="underline-from-left">
