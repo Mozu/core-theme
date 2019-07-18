@@ -143,7 +143,6 @@ Ext.define('Taco.store.Navigation', {
                 }
             });
 
-
             // Ext.Array.each(Taco.extensiblity.subNavLinks, function (link) {
             //     //todo check security.
             //     //todo handle escaping of delimiter
@@ -225,7 +224,8 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'inventory',
                     'label': 'Inventory',
                     'address': 'inventory',
-                    'behaviorIds': [4]
+                    'behaviorIds': [4],
+                    'visible': Taco.user.taContext.omsEnabled === false ? true : false,
                 }, {
                     'id': 'priceLists',
                     'behaviorIds': [239],
@@ -337,7 +337,8 @@ Ext.define('Taco.store.Navigation', {
                     }, {
                         'id': 'locations-inventory',
                         'label': 'Inventory',
-                        'address': 'locationInventory'
+                        'address': 'locationInventory',
+                        'visible': Taco.user.taContext.omsEnabled === false ? true : false,
                     }, {
                         'id': 'locations',
                         'label': 'Locations',
@@ -348,7 +349,17 @@ Ext.define('Taco.store.Navigation', {
                         "id": "locations-group",
                         "label": "Location Groups",
                         "address": "/admin?locationGroups",
-                    },
+                        'visible': Taco.user.taContext.omsEnabled === false ? true : false,
+                    }
+               ]
+            },
+            {
+                'id': 'fulfillment',
+                'navParent': 'main',
+                'label': 'Fulfillment',
+                'icon': 'nav-orders',
+                'behaviorIds': [73],
+                'items': [
                     {
                         "id": "fulfiller",
                         "label": "Fulfiller",
