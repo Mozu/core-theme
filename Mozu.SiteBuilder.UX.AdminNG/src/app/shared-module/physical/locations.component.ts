@@ -91,7 +91,7 @@ export class PhysicalLocationsComponent implements OnInit {
             stateTreeNodeObj.data.code = locations.items[locCnt].states[stateCnt].code;
             if (locations.items[locCnt].states[stateCnt].locations) {
               stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name +
-               '(" + locations.items[locCnt].states[stateCnt].locations.length + ")';
+               '(' + locations.items[locCnt].states[stateCnt].locations.length + ')';
               totalLocationsCnt += locations.items[locCnt].states[stateCnt].locations.length;
             } else {
               stateTreeNodeObj.data.name = locations.items[locCnt].states[stateCnt].name + '(0)';
@@ -100,7 +100,7 @@ export class PhysicalLocationsComponent implements OnInit {
             treenodeObj.children.push(stateTreeNodeObj);
           }
         }
-        treenodeObj.data.name = locations.items[locCnt].name + '(" + totalLocationsCnt + ")';
+        treenodeObj.data.name = locations.items[locCnt].name + '(' + totalLocationsCnt + ')';
         treeNodeArr.push(treenodeObj);
       }
     }
