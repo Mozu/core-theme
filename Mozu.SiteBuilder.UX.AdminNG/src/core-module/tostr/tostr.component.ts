@@ -6,7 +6,7 @@ import { TostrService } from './tostr.service';
 
 @Component({
     moduleId: module.id,
-    selector: 'app-tostr',
+    selector: 'unified-admin-tostr',
     template: `<p-toast [style]="{marginTop: '10px'}" position="top-center"></p-toast>`,
 })
 export class ToastrComponent {

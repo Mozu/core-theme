@@ -48,7 +48,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(
-      this._notificationService.QuoteItemDeleteConfirmation.subscribe((action: string) => {
+      this._notificationService.quoteItemDeleted.subscribe((action: string) => {
         if (action === ConfirmationDialogNotificationCode.DeleteQuoteItem) {
           this.deleteQuoteItem();
         }

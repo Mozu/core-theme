@@ -30,7 +30,7 @@ import { HeaderService } from './header.service';
 
 @Component({
     moduleId: module.id,
-    selector: 'app-header',
+    selector: 'unified-admin-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css'],
     providers: [HeaderService],
@@ -54,7 +54,7 @@ export class HeaderComponent implements OnInit {
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
         this.subscriptions.push(
-            this._notificationService.loadLeftMenuItems.subscribe((leftNavigationMenuItems: any) => {
+            this._notificationService.leftMenuItemsLoaded.subscribe((leftNavigationMenuItems: any) => {
                 this.headerModel.productURL = this._utilityService.
                 getNavigationURL(leftNavigationMenuItems, SearchedItemType.products, SearchedItemType.products),
                 this.headerModel.customerURL = this._utilityService.

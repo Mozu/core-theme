@@ -14,9 +14,15 @@
     margin-left: 3px;
     bottom: 18px;
     position: relative;
-    font-size: 0.8em;
+    font-size: 13px;
     padding-left: 0.51em;
     cursor: pointer;
+}
+
+.tiles-item a {
+    color: #3f3f3f !important;
+    border-bottom: 1px solid #e9e9e9 !important;
+    line-height: 16px !important;
 }
 
 a:hover {
@@ -37,7 +43,6 @@ a:hover {
         left: 36%;
         top: 30px;
     }
-
     .tiles-item {
         bottom: 13px;
         font-size: 0.95em;

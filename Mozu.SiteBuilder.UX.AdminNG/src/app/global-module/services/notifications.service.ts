@@ -15,14 +15,14 @@ export class NotificationService {
     loadAccessTileCategories: Subject<string> = new Subject<string>();
     locationGroupAdded: Subject<any> = new Subject<any>();
     locationGroupEdited: Subject<any> = new Subject<any>();
-    loadLeftMenuItems: Subject<any> = new Subject<any>();
-    quoteHeaderToAppendValues: Subject<any> = new Subject<any>();
-    quoteSearch: Subject<any> = new Subject<any>();
+    leftMenuItemsLoaded: Subject<any> = new Subject<any>();
+    quoteHeaderValuesReceived: Subject<any> = new Subject<any>();
+    quoteSearched: Subject<any> = new Subject<any>();
     quoteEdited: Subject<any> = new Subject<any>();
     quoteListed: Subject<any> = new Subject<any>();
     // Confirmation Dialog Notification
-    QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
-    LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
+    quoteItemDeleted: Subject<any> = new Subject<any>();
+    locationGroupDeleted: Subject<any> = new Subject<any>();
 
     constructor(
         private _logger: LoggerService
@@ -66,29 +66,24 @@ export class NotificationService {
     }
 
     // Notify components for confirmation dialog
-    notifyQuoteItemDeleteConfirmation(actionName: string) {
-        this._logger.info('NotificationService : notifyQuoteItemDeleteConfirmation');
-        this.QuoteItemDeleteConfirmation.next(actionName);
+    notifyQuoteItemDeleted(actionName: string) {
+        this._logger.info('NotificationService : notifyQuoteItemDeleted');
+        this.quoteItemDeleted.next(actionName);
     }
 
-    notifyLocationGroupDeleteConfirmation(actionName: string) {
-        this._logger.info('NotificationService : notifyLocationGroupDeleteConfirmation');
-        this.LocationGroupDeleteConfirmation.next(actionName);
+    notifyLocationGroupDeleted(actionName: string) {
+        this._logger.info('NotificationService : notifyLocationGroupDeleted');
+        this.locationGroupDeleted.next(actionName);
     }
 
-    notifyLGCUnSavedChangesConfirmation(action: any){
-        this._logger.info('NotificationService : notifyLGCUnSavedChangesConfirmation');
-        this.LGCUnSavedChangesConfirmation.next(action);
-    }
-
-    notifyLoadLeftMenuItems(actionName: any) {
-        this._logger.info('NotificationService : notifyLoadLeftMenuItems');
-        this.loadLeftMenuItems.next(actionName);
+    notifyLeftMenuItemsLoaded(actionName: any) {
+        this._logger.info('NotificationService : notifyLeftMenuItemsLoaded');
+        this.leftMenuItemsLoaded.next(actionName);
     }
     // Notify Quote from search bar
-    notifyQuoteSearch(action: string) {
-        this._logger.info('NotificationService : notifyQuoteSearch');
-        this.quoteSearch.next(action);
+    notifyQuoteSearched(action: string) {
+        this._logger.info('NotificationService : notifyQuoteSearched');
+        this.quoteSearched.next(action);
     }
 
     notifyQuoteEdited(action: any) {
@@ -101,8 +96,8 @@ export class NotificationService {
         this.quoteListed.next(action);
     }
 
-    notifyQuoteHeaderToAppendValues(quoteNumber: any, quoteStatus: any) {
-        this._logger.info('NotificationService : notifyQuoteHeaderData');
-        this.quoteHeaderToAppendValues.next({quoteNumber: quoteNumber, quoteStatus: quoteStatus});
+    notifyQuoteHeaderValuesReceived(quoteNumber: any, quoteStatus: any) {
+        this._logger.info('NotificationService : notifyQuoteHeaderValuesReceived');
+        this.quoteHeaderValuesReceived.next({quoteNumber: quoteNumber, quoteStatus: quoteStatus});
     }
 }

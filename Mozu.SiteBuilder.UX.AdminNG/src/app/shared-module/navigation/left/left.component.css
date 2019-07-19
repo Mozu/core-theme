@@ -21,13 +21,11 @@
     .primeSidebar {
         border-right: 0px solid transparent;
     }
-
     .hamburgerMenu {
         padding: 16px 15px;
         border-right: 1px solid #f5f5f5;
         margin-left: -14px;
     }
-
     .sidebar {
         border-right: none;
     }
@@ -43,11 +41,7 @@
     text-align: center;
 }
 
-@media only screen 
-  and (min-width: 1024px) 
-  and (max-height: 1366px) 
-  and (orientation: portrait) 
-  and (-webkit-min-device-pixel-ratio: 1.5) {
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 1.5) {
     .col-md-half {
         width: 5%;
     }
@@ -65,11 +59,11 @@
 }
 
 .menuHeader {
-    padding: .3em 0.96em;
+    padding: 0.4em 1.3em;
 }
 
 .menuHeaderAlign {
-    font-size: 0.79em;
+    font-size: 11px;
     color: #a3a3a3;
     background-color: transparent;
     margin-top: 5%;
@@ -84,10 +78,12 @@ ul li {
     list-style-type: none;
     right: 3.1em;
     position: relative;
-    color: #333333;
+    color: #3f3f3f;
     list-style-type: none;
     font-family: "proxima-nova", sans-serif !important;
-    font-size: 0.95em;
+    font-size: 14px;
+    line-height: 24px;
+    text-indent: 4px;
 }
 
 @media screen and (max-width: 480px) {
@@ -103,6 +99,7 @@ ul {
 
 a {
     text-decoration: none;
+    color: #3f3f3f;
 }
 
 a:hover {

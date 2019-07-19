@@ -98,8 +98,9 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this.populateQuoteGrid();
 
     this.model.subscriptions.push(
-      this._notificationService.quoteSearch.subscribe((advancedSearch: string) => {
-        this.populateQuoteGrid(advancedSearch);
+      this._notificationService.quoteSearched.subscribe((advancedSearch: string) => {
+        this.model.advancedSearch = advancedSearch;
+        this.populateQuoteGrid(advancedSearch, this.model.startIndex, this.model.pageSize, this.model.sortResult);
       })
     );
 
@@ -110,7 +111,7 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     // open in edit mode
     if (event && event.originalEvent && event.originalEvent.target &&
       event.originalEvent.target.classList &&
-      event.originalEvent.target.classList.value === 'pi pi-ellipsis-v') {
+      event.originalEvent.target.classList.value === Constants.classess.ellipsis) {
       // open action menu.
     } else {
       this.viewQuote();
@@ -127,10 +128,11 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this._notificationService.notifyQuoteEdited(NotificationQuoteActions.edit);
   }
 
-  public populateQuoteGrid = (advSearch?: string, sort?: string) => {
+  public populateQuoteGrid = (advSearch?: string, startIndex?: number, pageSize?: number, sort?: string) => {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
-    this._quotesListService.fetchAllQuotes(advSearch, sort).subscribe((quotesListSuccessResponse: QuotesListModel) => {
+    this._quotesListService.fetchAllQuotes(advSearch, startIndex, pageSize, sort)
+    .subscribe((quotesListSuccessResponse: QuotesListModel) => {
       this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
       if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
         quotesListSuccessResponse['items'].length > 0) {
@@ -196,14 +198,17 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     });
   }
 
-  customQuoteSort(event: LazyLoadEvent) {
-    const sortOrder = event.sortOrder === 1 ? Constants.sortableOrder.ASC : Constants.sortableOrder.DESC;
-    const result = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
-      { propertyName: event.sortField, sortOrder: sortOrder });
+  loadQuoteLazy(event: LazyLoadEvent) {
+    this._loggerService.info('QuotesListComponent : loadQuoteLazy');
 
-    this.populateQuoteGrid(null, result);
-    event.first = this.model.startIndex;
-    event.rows = this.model.pageSize;
+    if (event.sortField) {
+      const sortOrder = event.sortOrder === 1 ? Constants.queryParameters.sortableOrder.ASC : Constants.queryParameters.sortableOrder.DESC;
+      this.model.sortResult = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
+        { propertyName: event.sortField, sortOrder: sortOrder });
+    }
+    this.model.startIndex = event.first;
+    this.model.pageSize = event.rows;
+    this.populateQuoteGrid(this.model.advancedSearch, this.model.startIndex, this.model.pageSize, this.model.sortResult);
   }
 
 }

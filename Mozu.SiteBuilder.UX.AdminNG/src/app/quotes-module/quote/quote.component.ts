@@ -53,7 +53,7 @@ export class QuoteComponent implements OnInit {
           this.model = _.filter(quoteListSuccessResponse['items'], function (el: any) { return el.id === quoteId; })[0];
           this.userId = this.model.userId;
           this.customerAccountId = this.model.customerAccountId;
-          this._notificationService.notifyQuoteHeaderToAppendValues(this.model.quoteNumber, this.model.status);
+          this._notificationService.notifyQuoteHeaderValuesReceived(this.model.quoteNumber, this.model.status);
         }
           this._spinner.stop();
     }, (quoteListErrResponse) => {

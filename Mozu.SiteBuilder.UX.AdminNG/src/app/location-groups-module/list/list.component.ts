@@ -57,10 +57,10 @@ export class LocationGroupsListComponent implements OnInit {
         this.populateLocationGroupGrid();
 
         this.subscriptions.push(
-            this._notificationService.LocationGroupDeleteConfirmation.subscribe((action: string) => {
-              if (action === ConfirmationDialogNotificationCode.DeleteLocationGroup) {
-                this.deleteLocationGroup();
-              }
+            this._notificationService.locationGroupDeleted.subscribe((action: string) => {
+                if (action === ConfirmationDialogNotificationCode.DeleteLocationGroup) {
+                    this.deleteLocationGroup();
+                }
             })
         );
     }
@@ -82,7 +82,7 @@ export class LocationGroupsListComponent implements OnInit {
         // open in edit mode
         if (event && event.originalEvent &&  event.originalEvent.target &&
             event.originalEvent.target.classList &&
-            event.originalEvent.target.classList.value === 'pi pi-ellipsis-v') {
+            event.originalEvent.target.classList.value === Constants.classess.ellipsis) {
             // open action menu.
         } else {
          this.viewLocationGroup();

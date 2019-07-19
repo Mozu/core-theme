@@ -173,9 +173,9 @@ export class LocationGroupCreateComponent implements OnInit {
 
     locationSelected(location: LocationsListModel) {
         this._loggerService.info('LocationGroupCreateComponent : locationSelected');
-        const arr = this.model.selectedLocations.slice();
-        arr.push(location);
-        this.model.selectedLocations = arr;
+        const selectedLocationsArray = this.model.selectedLocations.slice();
+        selectedLocationsArray.push(location);
+        this.model.selectedLocations = selectedLocationsArray;
     }
 
     locationUnselected(location: LocationsListModel) {
@@ -186,8 +186,8 @@ export class LocationGroupCreateComponent implements OnInit {
     locationsChanged(event) {
         this._loggerService.info('LocationGroupCreateComponent : locationsChanged');
         if (event.operation === LocationGroupEventOperations.add) {
-            const arr = _.unionWith(this.model.selectedLocations, event.data, _.isEqual);
-            this.model.selectedLocations = arr;
+            const changedLocationsArray = _.unionWith(this.model.selectedLocations, event.data, _.isEqual);
+            this.model.selectedLocations = changedLocationsArray;
         } else {
             this.model.selectedLocations = _.differenceWith(this.model.selectedLocations, event.data, _.isEqual);
         }

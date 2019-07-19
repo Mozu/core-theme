@@ -1,16 +1,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <error-dialog></error-dialog>
 <confirmation-dialog></confirmation-dialog>
-<app-tostr></app-tostr>
- <div [ngSwitch]="containerType">
-  <div *ngSwitchCase="'fulfiller'">
-    <app-fulfiller></app-fulfiller>
-  </div>
-  <div *ngSwitchDefault>
-    <div class="apphome-parent" id="apphome-parent">
-      <app-home [navContainerType]=containerType ></app-home>
+<unified-admin-tostr></unified-admin-tostr>
+<div [ngSwitch]="containerType">
+    <div *ngSwitchCase="'fulfiller'">
+        <app-fulfiller></app-fulfiller>
     </div>
-    <router-outlet></router-outlet>
-  </div>
+    <div *ngSwitchDefault>
+        <div class="apphome-parent" id="apphome-parent">
+            <app-home [navContainerType]=containerType></app-home>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
 </div>
-

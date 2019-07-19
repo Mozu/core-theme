@@ -57,10 +57,10 @@ export class ConfirmationDialogService {
         const confirmationDialogNotificationCode: ConfirmationDialogNotificationCode = this.notificationCode;
         switch (confirmationDialogNotificationCode) {
             case ConfirmationDialogNotificationCode.DeleteQuoteItem:
-                this._notificationService.notifyQuoteItemDeleteConfirmation(this.notificationCode);
+                this._notificationService.notifyQuoteItemDeleted(this.notificationCode);
                 break;
             case ConfirmationDialogNotificationCode.DeleteLocationGroup:
-                this._notificationService.notifyLocationGroupDeleteConfirmation(this.notificationCode);
+                this._notificationService.notifyLocationGroupDeleted(this.notificationCode);
                 break;
             case ConfirmationDialogNotificationCode.LGCUnSavedChanges:
                 this._notificationService.notifyLGCUnSavedChangesConfirmation({'code': this.notificationCode, 'buttonType': NotificationLGActions.ConfirmationDialogPrimaryBtnAct});

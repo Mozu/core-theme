@@ -88,17 +88,14 @@ export class LocationsListComponent implements OnInit, OnChanges {
     }
 
     rowSelected(event) {
-        this._loggerService.info('Selected row is :::');
         this.locationSelected.emit(event.data);
     }
 
     rowUnselected(event) {
-        this._loggerService.info('Unselected row is :::');
         this.locationUnselected.emit(event.data);
     }
 
     tableHeaderCheckboxToggle(event: any) {
-        this._loggerService.info('onTableHeaderCheckboxToggle row is :::' + event.checked);
         if (event.checked === true) {
             if (this.turboTable.filters['name'] && this.turboTable.filters['name'].value) {
                 this.locationsChanged.emit({data: this.turboTable.filteredValue, operation: LocationGroupEventOperations.add});

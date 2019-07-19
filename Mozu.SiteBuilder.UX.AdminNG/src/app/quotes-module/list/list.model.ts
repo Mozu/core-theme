@@ -10,6 +10,8 @@ export class QuotesListModel {
     selectedQuote: any;
     quoteGridContextMenuItem: MenuItem[];
     subscriptions: any[];
+    advancedSearch: any;
+    sortResult: any;
   }
 
 export class QuoteItem {

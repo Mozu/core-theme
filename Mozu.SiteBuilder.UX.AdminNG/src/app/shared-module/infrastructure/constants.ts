@@ -153,8 +153,6 @@ export class Constants {
     static messageHash = '&messageHash=';
     static dateStamp = '?dt=';
     static editNavigationDeepLink = '/edit/';
-    static filterQueryParameter = 'filter';
-    static advancedSearchQueryParameter = 'advancedSearch';
     static userAPIDeepLink = '/users';
 
     static dateFormat = 'MMM dd yyyy h:mm aaaaa\'m\'';
@@ -165,6 +163,16 @@ export class Constants {
         tenantHeaderKey: 'tenant'
     };
 
-    static quoteSortQueryParameter = 'sort';
-    static sortableOrder = { ASC: 'ASC', DESC: 'DESC' };
+    static classess = {
+        ellipsis: 'pi pi-ellipsis-v'
+    };
+
+    static queryParameters = {
+        filter: 'filter',
+        advancedSearch: 'advancedSearch',
+        sort: 'sort',
+        sortableOrder: { ASC: 'ASC', DESC: 'DESC' },
+        startIndex: 'startIndex',
+        pageSize: 'pageSize'
+    };
 }

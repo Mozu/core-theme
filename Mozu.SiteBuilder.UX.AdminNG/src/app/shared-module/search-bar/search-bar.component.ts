@@ -9,6 +9,7 @@ import { NavigationContainerType } from '@shared/infrastructure';
 })
 export class SearchBarComponent {
   @Input() navigationContainerType: string;
+  @Input() isEditMode: boolean;
   navigationType = NavigationContainerType;
 
   status = false;
@@ -23,7 +24,7 @@ export class SearchBarComponent {
     this.status = false;
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
-        this._notificationService.notifyQuoteSearch(searchBar.value);
+        this._notificationService.notifyQuoteSearched(searchBar.value);
         break;
     }
   }
@@ -31,7 +32,7 @@ export class SearchBarComponent {
   search(value: string) {
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
-        this._notificationService.notifyQuoteSearch(value);
+        this._notificationService.notifyQuoteSearched(value);
         break;
     }
   }

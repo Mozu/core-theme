@@ -23,7 +23,6 @@ import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, SecureForm } from './left.model';
 
 @Component({
-// tslint:disable-next-line: component-selector
   selector: 'navigation-left',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './left.component.html',
@@ -73,7 +72,7 @@ export class NavigationLeftComponent implements OnInit {
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();
       this._sharedData.leftNavigationMenuItems = this.model.mainItems;
-      this._notificationService.notifyLoadLeftMenuItems(this._sharedData.leftNavigationMenuItems);
+      this._notificationService.notifyLeftMenuItemsLoaded(this._sharedData.leftNavigationMenuItems);
     }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info('NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse');
     });

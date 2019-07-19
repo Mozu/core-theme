@@ -1,90 +1,14 @@
-<div class="col-md-8 col-sm-8 searchBar" id="searchBar">
-  <div class="input-group">
-    <div class="input-group-btn">
-      <button class="btn btn-default search-btn" type="button">
+<div class="searchBar" [ngClass]="isEditMode? 'col-md-8 col-sm-8' : 'col-md-10 col-sm-10' " id="searchBar">
+    <div class="input-group">
+        <div class="input-group-btn">
+            <button class="btn btn-default search-btn" type="button">
         <i [ngClass]="status ? 'pi-times' : 'pi-search'" class="pi"
           (click)="status ? resetSerach(searchBar): ''"></i>
       </button>
+        </div>
+        <input type="text" class="form-control" #searchBar placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
     </div>
-    <input type="text" class="form-control" #searchBar
-      placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)"
-      (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
-  </div>
 </div>
 <div class="col-md-1 col-md-1">
-  <span class="advance-filter" type="button" data-toggle="modal" data-target=".advanced-filter"></span>
+    <span class="advance-filter" type="button" data-toggle="modal" data-target=".advanced-filter"></span>
 </div>
-
-<!-- advance filter modal -->
-<!-- 
-<div class="modal fade advanced-filter" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-  <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="gridSystemModalLabel">Advanced Filter</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="">Quick Filter</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">Keyword Search</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.quoteName' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.accountName' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.accountUser' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.quoteID' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.createDate' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.createdBy' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.expirationDate' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.status' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.submitDate' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.orderTotal' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-          <div class="form-group">
-            <label for="">{{ 'QUOTES.GridHeader.projectName' | translate }}</label>
-            <input type="text" class="form-control" id="" placeholder="">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <span type="button" class="btn cancelbtn" data-dismiss="modal">Cancel</span>
-        <button type="button" class="sbbtn btn btn-success">Filter</button>
-      </div>
-    </div>
-  </div>
-</div> -->

@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-
 import { Subscription } from 'rxjs/Subscription';
 
 import {
@@ -24,7 +23,6 @@ import { UtilityService } from '@core/infrastructure/utility.service';
 import * as _ from 'lodash';
 
 @Component({
-// tslint:disable-next-line: component-selector
   selector: 'admin-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',

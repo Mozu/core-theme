@@ -1,7 +1,7 @@
 <div class="col-md-12 quote-container">
     <spinner></spinner>
-    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize" (onRowSelect)="onRowSelect($event)" selectionMode="single" [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped"
-        (onLazyLoad)="customQuoteSort($event)" [lazy]="true">
+    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize" [totalRecords]="model.totalCount" (onRowSelect)="onRowSelect($event)" selectionMode="single" [reorderableColumns]="true" (onColReorder)="onColReorder($event)"
+        class="table-striped" (onLazyLoad)="loadQuoteLazy($event)" [lazy]="true">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }" pReorderableColumn [pSortableColumn]="col.sortable ? col.field: null" pReorderableColumn>
@@ -29,10 +29,11 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state>
-            {{'QUOTES.GridFooter.Displaying' | translate }} {{model.totalCount
-            < 1 ? 0 : state.first + 1}} - {{model.totalCount> 0 ? ((dt.rows+ state.first)
-                <=model.totalCount ? (dt.rows + state.first) : model.totalCount) : 0}} {{ 'QUOTES.GridFooter.of' | translate }} {{model.totalCount ? model.totalCount : 0}} </ng-template>
+            {{'QUOTES.GridFooter.Displaying' | translate }} {{state.totalRecords
+            < 1 ? 0 : state.first + 1}} - {{state.totalRecords> 0 ? ((dt.rows+ state.first)
+                <=state.totalRecords ? (dt.rows + state.first) : state.totalRecords) : 0}} {{ 'QUOTES.GridFooter.of' | translate }} {{state.totalRecords ? state.totalRecords : 0}} </ng-template>
     </p-table>
 
-    <toggle-grid-columns [gridColumnHeader]=gridColumnHeader (toggledGridColumn)="toggledGridColumn($event)"></toggle-grid-columns>
+    <toggle-grid-columns [gridColumnHeader]=gridColumnHeader (toggledGridColumn)="toggledGridColumn($event)">
+    </toggle-grid-columns>
 </div>

@@ -14,5 +14,5 @@ export const environment = {
     errorPageUrl: window.location.origin + '/admin/',
     apiTokenUrl: 'http://localhost:5100/token',
     accountUrl: 'https://t19636.ngdev06.kibong-dev.com/Admin',
-    fulfillerUrl: 'http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/'
+    fulfillerUrl: 'https://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/'
 };
