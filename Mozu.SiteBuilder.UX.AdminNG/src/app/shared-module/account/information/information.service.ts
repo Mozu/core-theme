@@ -16,7 +16,7 @@ export class AccountInfoService {
 
     public fetchAccountInformation(customerAccountId: number, userId: string): Observable<any> {
         this._loggerService.info('AccountInfoService: fetchAccountInformation');
-        const filter = new HttpParams().set(Constants.filterQueryParameter, JSON.stringify({ userid : userId}));
+        const filter = new HttpParams().set(Constants.queryParameters.filter, JSON.stringify({ userid : userId}));
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.accountInformation);
         } else {
