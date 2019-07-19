@@ -8,7 +8,6 @@
 
     initComponent: function () {
         this.items = [];
-
         this.shipmentTabs = Ext.create('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             record: this.record,
             shipmentRecord: this.shipmentRecord

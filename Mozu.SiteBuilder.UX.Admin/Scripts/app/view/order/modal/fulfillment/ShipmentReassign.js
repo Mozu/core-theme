@@ -8,7 +8,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         'Ext.form.field.Number',
         'Ext.toolbar.TextItem'
     ],
-    
+
     autoShow: true,
     closeAction: 'destroy',
     primaryText: 'Save',
@@ -22,8 +22,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
     initComponent: function () {
         var me = this;
-
-        var itemsPerPage = 2; 
+        var itemsPerPage = 2;
+        var shipment = me.shipmentData;
 
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
@@ -40,13 +40,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             data: this.inventoryData.candidateSuggestions,
             proxy: {
                 type: 'memory',
-               
+
                 reader: {
                     type: 'json',
                     root: 'items',
                     totalProperty: 'total',
                     enablePaging: true
-                   
                 }
             }
         });
@@ -63,9 +62,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         //    return '<div ext-xtype="radiofield"></div>';
 
         //}
-
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',
+            cls: 'taco-order-fulfillment-ReassignShipment',
             //features: [{
             //    ftype: 'grouping'
             //}],
@@ -91,15 +90,79 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
                 },
                 {
-                    text: 'Stock', dataIndex: 'stock', width: 150,
-                    renderer: function (value, metaData, record, row, col, store, gridView) {
-                        return '<img src="' + /assets/Images/checked.png + '" width="150" height="150" borer="0" />';
+                    xtype: 'actioncolumn',
+                    text: 'Stock',
+                    dataIndex: 'stock',
+                    renderer: function (v, meta, rec) {
+                        var inventory = rec.raw.inventory;
+                        var type = "";
+
+                        var filteredInventory;
+                        shipment.items.forEach(function (element) {
+                            filteredInventory = inventory.filter(function (obj) {
+                                return (obj.partNumber === element.productCode);
+                            });
+                            switch (type) {
+                                case "":
+                                    if (filteredInventory.length > 0) {
+                                        if (filteredInventory[0].available >= element.quantity) {
+                                            type = "checked";
+                                        }
+                                        else if (filteredInventory[0].available > 0) {
+                                            type = "partial";
+                                        }
+                                        else {
+                                            type = "delete";
+                                        }
+                                    }
+                                    else {
+                                        type = "delete";
+                                    }
+                                    break;
+
+                                case "checked":
+                                    if (filteredInventory.length > 0) {
+                                        if (filteredInventory[0].available >= element.quantity) {
+                                            type = "checked";
+                                        }
+                                        else if (filteredInventory[0].available > 0) {
+                                            type = "partial";
+                                        }
+                                        else {
+                                            type = "delete";
+                                        }
+                                    }
+                                    else {
+                                        type = "partial";
+                                    }
+                                    break;
+
+                                case "partial":
+                                    type = "partial";
+                                    break;
+
+                                case "delete":
+                                    if (filteredInventory.length > 0 && filteredInventory[0].available > 0) {
+                                        type = "partial";
+                                    }
+                                    else {
+                                        type = "delete";
+                                    }
+                                    break;
+                            }
+                        })
+
+                        switch (type) {
+                            case 'checked': return '<button class="btn btn-yes">Yes</button>';
+                            case 'partial': return '<button class="btn btn-partial">Partial</button>';
+                            default: return '<button class="btn btn-no">No</button>';
+                        }
                     }
-                },
+                }
             ],
             height: 150,
             width: 1000,
-            
+
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: inventoryStore,   // same store GridPanel is using
@@ -108,28 +171,33 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             selModel: {
                 selModel: 'rowmodel',
-            //    seltype: 'checkboxmodel', 
-            //    mode: 'single',    
-            //    checkonly : true
-            },   
+                //    seltype: 'checkboxmodel', 
+                //    mode: 'single',    
+                //    checkonly : true
+            },
             plugins: {
                 ptype: 'cellediting',
                 clicksToEdit: 1,
                 autoCancel: false
             },
+            singleSelect: true,
             listeners: {
                 selectionchange: function () {
                 },
-                select: function () {
+                select: function (obj) {
+                    me.shipmentLocation = obj.lastSelected.raw;
+                    debugger;
                 },
                 deselect: function () {
-                },
+                    me.shipmentLocation = null;
+                    debugger;
+                }
                 //beforeload: function (store, operation, eOpts) {
-                   
+
                 //    store.proxy.data = inventoryData;
                 //}
             },
-           
+
         });
 
         Ext.create('Ext.data.Store', {
@@ -181,24 +249,57 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         this.callParent(arguments);
 
     },
+    doSave: function () {
+        if (this.validateModal()) {
+            var me = this;
 
-    //validateModal: function () {
-    //    //verify quantity is not null and less than 0 and should not be greater than max quantity
-    //    var quantity = this.down('#cancelQuantity').getValue();
+            Ext.MessageBox.show({
+                title: 'Reassign Shipment',
+                // pushes the buttons to the right to be consistant with our dialog ux.
+                rightJustifyButtons: true,
+                // reverses the order of the buttons
+                reverseOrder: true,
+                msg: 'Are you certain you want to reassign the shipment to selected location?',
+                closable: false,
+                buttons: Ext.Msg.YESNO,
+                fn: function (val) {
+                    if (val === 'yes') {
 
-    //    if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
-    //        return false;
+                        me.setLoading(true, me.body);
+                        var order = me.record;
+                        var payloadData = me.shipmentLocation;
+                        order.reassignShipment({
+                            jsonData: payloadData,
+                            success: function (response) {
+                                me.isRecordSaved = true;
+                                me.setLoading(false, me.body);
+                                var json = Ext.decode(response.responseText, true);
+                                if (!json || !json.success) {
+                                    return;
+                                }
+                                me.saveSuccess(json);
+                                // close the dialog
+                                me.close();
+                            },
+                            failure: function (response) {
+                                me.setLoading(false, me.body);
+                                // close the dialog
+                                me.close();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    },
 
-    //    //verify cancel reason should be filled
-    //    var reason = (this.down('#cancelReason').getValue() === 'Other'
-    //        ? this.down('#otherReason').getValue()
-    //        : this.down('#cancelReason').getValue());
+    validateModal: function () {     
+        var me = this;
+        if (!me.shipmentLocation)
+            return false;
 
-    //    if (!reason)
-    //        return false;
-
-    //    return true;
-    //},
+        return true;
+    },
 
     //getCancelItemQuantityPayload: function () {
     //    var me = this;

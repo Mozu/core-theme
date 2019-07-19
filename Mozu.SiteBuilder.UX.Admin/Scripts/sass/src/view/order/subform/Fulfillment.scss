@@ -476,3 +476,45 @@
         font-weight: bolder;
     }
 }
+
+.taco-order-fulfillment-ReassignShipment {
+    .btn {
+        width: 75px;
+        color: #444;
+        background: transparent;
+        background-repeat: no-repeat;
+        background-position: left;
+        background-size: 15px 15px;
+        padding-left: 10px;
+        border: none;
+        font-size: 13px;
+    }
+
+    .btn-yes {
+        background-image: url(/admin/Scripts/build/resources/images/icons/yes.png);
+    }
+
+    .btn-no {
+        background-image: url(/admin/Scripts/build/resources/images/icons/no.png);
+    }
+
+    .btn-partial {
+        background-image: url(/admin/Scripts/build/resources/images/icons/partial.png);
+    }
+
+    .icon {
+        background-size: 20px 20px;
+    }
+
+    .icon-yes {
+        background-image: url('/admin/Scripts/build/resources/images/icons/yes.png');
+    }
+
+    .icon-no {
+        background-image: url('/admin/Scripts/build/resources/images/icons/no.png');
+    }
+
+    .icon-partial {
+        background-image: url('/admin/Scripts/build/resources/images/icons/partial.png');
+    }
+}

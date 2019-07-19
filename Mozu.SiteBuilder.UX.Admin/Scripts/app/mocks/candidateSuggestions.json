@@ -20,7 +20,7 @@
       "inventory": [
         {
           "partNumber": "das-4-pro-blue",
-          "available": 10,
+          "available": 0,
           "upc": "das-4-pro-blue",
           "sku": "das-4-pro-blue"
         }
@@ -46,7 +46,7 @@
       "inventory": [
         {
           "partNumber": "RedSpatula",
-          "available": 10,
+          "available": 0,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
@@ -72,7 +72,7 @@
       "inventory": [
         {
           "partNumber": "RedSpatula",
-          "available": 10,
+          "available": 0,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
@@ -98,7 +98,7 @@
       "inventory": [
         {
           "partNumber": "RedSpatula",
-          "available": 10,
+          "available": 9,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
@@ -124,9 +124,15 @@
       "inventory": [
         {
           "partNumber": "RedSpatula",
-          "available": 10,
+          "available": 20,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
+        },
+        {
+          "partNumber": "das-4-pro-blue",
+          "available": 20,
+          "upc": "das-4-pro-blue",
+          "sku": "das-4-pro-blue"
         }
       ]
     }

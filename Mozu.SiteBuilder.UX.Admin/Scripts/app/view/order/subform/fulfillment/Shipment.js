@@ -101,14 +101,15 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                                     me.isRecordSaved = true;
                                                     me.setLoading(false, me.body);
                                                     var json = Ext.decode(response.responseText, true);
-
-
+                                                    var shipment = me.getReassignShipmentPayload();                                                    
                                                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                                         layout: 'hbox',
                                                         width: 1080,
                                                         height: 450,
                                                         record: me.record,
                                                         inventoryData: json,
+                                                        shipmentData: shipment,
+                                                        shipmentLocation: null,
                                                         listeners: {
                                                             saveSuccess: {
                                                                 fn: function (json) {
@@ -162,7 +163,6 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         });
 
         this.items.push(this.infoContainer);
-
         this.shipmentTotals = Ext.create('Taco.view.order.subform.fulfillment.ShipmentDetails', {
             record: this.record,
             shipmentRecord: this.shipmentRecord
@@ -261,6 +261,27 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }
             }
         });
+    },
+
+    getReassignShipmentPayload: function () {
+        var me = this;
+        var shipment = me.shipmentRecord;
+
+        var model = {
+            shipmentId: shipment.id,
+            items: []
+        }
+
+        shipment.items.forEach(function (element) {
+            model.items.push({
+                locationCode: element.fulfillmentLocationCode,
+                name: element.name,
+                productCode: element.productCode,
+                quantity: element.quantity
+            });
+        });
+
+        return model;
     }
 });
 

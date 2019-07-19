@@ -1315,6 +1315,9 @@
     <Content Include="Scripts\app\overrides\panel\Tool.js" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\camera.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\error-shipping-label.gif" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\checked.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\crossnew.png" />
+    <Content Include="Scripts\packages\mozuadmintheme\resources\images\icons\partial.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\image.png" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-m.gif" />
     <Content Include="Scripts\packages\mozuadmintheme\resources\images\loading-shipping-label-spinner.gif" />
@@ -1831,6 +1834,7 @@
     <None Include="packages.config" />
     <Content Include="Scripts\app\locale\en-US.json" />
     <Content Include="Scripts\app\mocks\candidateSuggestions.json" />
+    <Content Include="Scripts\sass\src\view\order\modal\ReassignShipment.scss" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
