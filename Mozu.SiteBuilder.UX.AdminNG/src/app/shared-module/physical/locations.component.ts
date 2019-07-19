@@ -115,7 +115,7 @@ export class PhysicalLocationsComponent implements OnInit {
             for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
               if (locations.items[locCnt].states[stateCnt].locations) {
                 const locationObj = _.find(locations.items[locCnt].states[stateCnt].locations,
-                  { 'code': this.model.selectedLoctions[selLocCnt] });
+                  { 'code': (<string>this.model.selectedLoctions[selLocCnt]).toLowerCase() });
                 if (locationObj) {
                   this.model.selectedLoctionsDetailsArr.push(locationObj);
                 }
