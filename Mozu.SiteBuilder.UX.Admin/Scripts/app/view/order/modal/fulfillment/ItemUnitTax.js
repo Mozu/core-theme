@@ -25,11 +25,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     
 
     initComponent: function () {
-        console.log(this.originalQuantity);
+        var me = this;
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
             name: 'unittaxeditor',
             monitorValid: true,
-            width: '100%',
+            width: '50%',
             items:
                 [
                     {
@@ -45,7 +45,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                             [
                                 {
                                     xtype: 'numberfield',
-                                    width: 110,
+                                    width: 50,
                                     name: 'UnitTaxPercent',
                                     itemId: 'unittaxpercent',
                                     hideTrigger: true,
@@ -56,31 +56,33 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                                     //this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
                                     //    : this.record.data.quantity,
                                     minValue: 1,
-                                    maxValue: this.originalQuantity || this.record.data.quantity,
+                                    //maxValue: this.originalQuantity || this.record.data.quantity,
                                     validateOnChange: true,
                                     margin: '0px 5px 0px 5px',
                                     mouseWheelEnabled: false,
-                                    fieldLabel: '$',
+                                    fieldLabel: '%',
                                     listeners: {
                                         change: {
                                             scope: this,
                                             fn: function (field, value) {
                                                 if (value > 0)
                                                     this.unittaxpercent = true;
+                                                this.calculateUnitTax(this.originalQuantity, 5);
                                             }
                                        }
                                     }
                                 },
                                 {
                                     xtype: 'numberfield',
-                                    width: 270,
+                                    width: 50,
                                     itemid: 'UnitTaxDollar',
                                     name: 'UnitTaxDollar',
                                     hideTrigger: true,
                                     margin: '0px 5px 0px 5px',
-                                    fieldLabel: '%',
+                                    fieldLabel: '$',
                                     hidden: false,
                                     disabled: this.unittaxpercent,
+                                    value: this.UnitTaxDollar,
                                     //listeners: {
                                     //    change: {
                                     //        scope: this,
@@ -102,23 +104,23 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     },
 
-    validateModal: function () {
-        //verify quantity is not null and less than 0 and should not be greater than max quantity
-        var unittax = this.down('#cancelQuantity').getValue();
+    //validateModal: function () {
+    //    //verify quantity is not null and less than 0 and should not be greater than max quantity
+    //    var unittax = this.down('#cancelQuantity').getValue();
 
-        if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
-            return false;
+    //    if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
+    //        return false;
 
-        //verify cancel reason should be filled
-        var reason = (this.down('#cancelReason').getValue() === 'Other'
-            ? this.down('#otherReason').getValue()
-            : this.down('#cancelReason').getValue());
+    //    //verify cancel reason should be filled
+    //    var reason = (this.down('#cancelReason').getValue() === 'Other'
+    //        ? this.down('#otherReason').getValue()
+    //        : this.down('#cancelReason').getValue());
 
-        if (!reason)
-            return false;
+    //    if (!reason)
+    //        return false;
 
-        return true;
-    },
+    //    return true;
+    //},
 
     getEditItemQuantityPayload: function () {
         var me = this;
@@ -140,7 +142,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     doSave: function () {
 
-        if (this.validateModal()) {
+        //if (this.validateModal()) {
             var me = this;
 
             Ext.MessageBox.show({
@@ -149,17 +151,18 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                 rightJustifyButtons: true,
                 // reverses the order of the buttons
                 reverseOrder: true,
-                msg: 'Are you certain you want to Cancel this item?',
+                msg: 'Are you certain you want to save this item?',
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
                     if (val === 'yes') {
-
+                        this.record.set('itemTax', this.unittaxpercent);
+                        this.callParent(arguments);
                         me.close();
                     }
                 }
             });
-        }
+        //}
     },
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
@@ -168,5 +171,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         if (!this.isRecordSaved && this.originalQuantity)
             this.record.set('quantity', this.originalQuantity);
         this.callParent(arguments);
+    },
+
+    calculateUnitTax: function (originalQty, enteredQty) {
+        //this.fieldContainer.set('UnitTaxDollar', 5);
+        this.fieldContainer.items.items[0].items.items[1].value = (originalQty * enteredQty) / 100;
     }
 });

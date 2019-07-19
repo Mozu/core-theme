@@ -53,14 +53,14 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
 
         //Show All items
         //Todo: needs to remove package level items to shipment level
-        var packages = this.record.get('packages');
+        // var packages = this.record.get('packages');
         items.push(Ext.create('Taco.view.order.subform.fulfillment.AllItemsTab', {
             record: this.record,
             shipmentRecord: this.shipmentRecord,
-            packageRecord: packages[0]
+        //    packageRecord: packages[0]
 
         }));
-
+        
         items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {
             record: this.record,
             shipmentRecord: this.shipmentRecord
@@ -72,12 +72,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             shipmentRecord: this.shipmentRecord
         }));
 
-        items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
-            record: this.record,
-            shipmentRecord: this.shipmentRecord,
-            packageRecord: packages[0]
+        //items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
+        //    record: this.record,
+        //    shipmentRecord: this.shipmentRecord,
+        //    packageRecord: packages[0]
 
-        }));
+        //}));
 
         this.items = items;
     }
