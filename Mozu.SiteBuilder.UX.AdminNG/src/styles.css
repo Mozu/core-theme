@@ -476,7 +476,7 @@ p-table .ui-table .pi-ellipsis-v:hover {
 /* -----------------------PrimeNG Tab CSS - Start---------------------------*/
 
 .quote-tabview .ui-tabview.ui-widget.ui-widget-content.ui-corner-all.ui-tabview-top {
-    background: transparent;
+    background: transparent !important;
     margin-top: 10px;
 }
 

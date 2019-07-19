@@ -594,6 +594,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     private updateLocationGroupConfigSuccess(result: any): void {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigSuccess' + JSON.stringify(result));
         this._spinner.stop();
+        this.model.locationGroupConfigForm.markAsPristine();
         this._tostrService.showSuccess(ToastrCode.LGCSavedSuccessfully);
     }
 
