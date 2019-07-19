@@ -56,4 +56,8 @@ export class ConfirmationDialogComponent implements OnInit {
     this.displayModal = false;
   }
 
+  cancel(): void {
+    this._confirmationDialogService.cancel();
+    this.displayModal = false;
+  }
 }

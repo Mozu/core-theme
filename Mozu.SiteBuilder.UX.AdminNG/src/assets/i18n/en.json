@@ -93,6 +93,14 @@
                     "primaryButtonText": "Delete",
                     "secondaryButtonText": "Cancel",
                     "isShowSecondaryButton": "true"
+                },
+                "LGCUnSavedChanges": {
+                    "title": "Location Group Config",
+                    "message": "Are you sure you want to leave this page?",
+                    "secondaryMessage": "If you leave this page, any changes you have made will be lost.",
+                    "primaryButtonText": "Yes",
+                    "secondaryButtonText": "No",
+                    "isShowSecondaryButton": "true"
                 }
             },
             "Information": {
@@ -260,6 +268,8 @@
     },
     "LOCATIONGROUPCONFIG":{
         "FormLabels": {
+            "siteName": "Site Name",
+            "siteConfig": "Site Config",
             "customerFailedToPickupAfterAction": "Customer Failed to Pickup After Action",
             "customerFailedToPickupDeadline": "Customer Failed to Pickup Deadline",
             "customerFailedToPickupDeadlineWarnMsg" : "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",

@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode, SpinnerService } from '@core';
-import { SharedDataService } from '@global';
+import { SharedDataService, NotificationService } from '@global';
 import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel,
          UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel,
          ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings, ShippingSettingsForUpsModel } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
-import { Constants } from '@shared';
+import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -30,7 +30,9 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private activeRoute: ActivatedRoute,
         private _tostrService: TostrService,
         private createService: CreateLocationGroupService,
-        private _spinner: SpinnerService
+        private _spinner: SpinnerService,
+        private _confirmationDialogService: ConfirmationDialogService,
+        private _notificationService: NotificationService
     ) { }
 
     ngOnInit() {
@@ -128,6 +130,21 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this.fetchLocationGroupConfig(locgroupId, siteId);
             })
         );
+
+        this.model.subscriptions.push(
+            this._notificationService.LGCUnSavedChangesConfirmation.subscribe((action: any) => {
+              if (action.code === ConfirmationDialogNotificationCode.LGCUnSavedChanges) {
+                    if ( action.buttonType === NotificationLGActions.ConfirmationDialogPrimaryBtnAct ) {
+                        this.navigateToSiteConfig();
+                    }
+                    if ( action.buttonType === NotificationLGActions.ConfirmationDialogSecondaryBtnAct) {
+                        // revert selected site
+                        const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
+                        this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId)});
+                    }
+              }
+            })
+        );
     }
 
     ngOnDestroy(): void {
@@ -194,9 +211,23 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     siteListChanged() {
+
+        if (this.model.locationGroupConfigForm.pristine) {
+            this.navigateToSiteConfig();
+        } else {
+            this.showUnsavedChangesConfirmationDialog()
+        }
+    }
+
+    private navigateToSiteConfig() {
         const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
         this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupId
                             + '/' + this.model.selectedSite.id]);
+    }
+
+    private showUnsavedChangesConfirmationDialog() {
+        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.LGCUnSavedChanges,
+        ConfirmationDialogNotificationType.Confirmation);
     }
 
     private createBoxItem(): FormGroup {

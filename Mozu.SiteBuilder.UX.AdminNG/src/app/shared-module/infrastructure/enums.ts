@@ -25,7 +25,8 @@ export enum ConfirmationDialogNotificationCode {
     DeleteQuoteItem = 'DeleteQuoteItem',
     SaveItem = 'SaveItem',
     DeleteLocationGroup = 'DeleteLocationGroup',
-    Cancel = 'Cancel'
+    Cancel = 'Cancel',
+    LGCUnSavedChanges = 'LGCUnSavedChanges'
 }
 
 export enum ConfirmationDialogNotificationType{
@@ -41,7 +42,9 @@ export enum NotificationLGActions {
     editDataLoaded = 'EditDataLoaded',
     cancelled = 'Cancelled',
     saved = 'Saved',
-    list = 'List'
+    list = 'List',
+    ConfirmationDialogPrimaryBtnAct = 'ConfirmationDialogPrimaryBtnAct',
+    ConfirmationDialogSecondaryBtnAct = 'ConfirmationDialogSecondaryBtnAct'
 }
 
 export enum LocationGroupEventOperations {

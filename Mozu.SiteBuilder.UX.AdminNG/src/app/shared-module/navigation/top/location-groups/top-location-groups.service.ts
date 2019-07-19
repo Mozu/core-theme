@@ -16,7 +16,7 @@ export class TopLocationGroupsService {
 
     public getLocationGroup(locationGroupId: string): Observable<any> {
         this._loggerService.info('TopLocationGroupsService: getLocationGroup');
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroup);
         } else {
             return this._http.get(GlobalConstant.webApis.getLocationGroup + '/' + locationGroupId);

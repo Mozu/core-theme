@@ -5,7 +5,7 @@ import {
     LoggerService,
 } from '@core';
 import { NotificationService } from '@global';
-import { ConfirmationDialogNotificationCode } from '@shared/infrastructure';
+import { ConfirmationDialogNotificationCode, NotificationLGActions } from '@shared/infrastructure';
 
 @Injectable()
 export class ConfirmationDialogService {
@@ -55,14 +55,28 @@ export class ConfirmationDialogService {
         this.notificationCode = dialogNotificationCode;
     }
 
-    confirm() { 
-        let confirmationDialogNotificationCode: ConfirmationDialogNotificationCode = this.notificationCode;
+    confirm() {
+        const confirmationDialogNotificationCode: ConfirmationDialogNotificationCode = this.notificationCode;
         switch(confirmationDialogNotificationCode){
             case ConfirmationDialogNotificationCode.DeleteQuoteItem:
                 this._notificationService.notifyQuoteItemDeleteConfirmation(this.notificationCode);
                 break;
             case ConfirmationDialogNotificationCode.DeleteLocationGroup:
                 this._notificationService.notifyLocationGroupDeleteConfirmation(this.notificationCode);
+                break;
+            case ConfirmationDialogNotificationCode.LGCUnSavedChanges:
+                this._notificationService.notifyLGCUnSavedChangesConfirmation({'code': this.notificationCode, 'buttonType': NotificationLGActions.ConfirmationDialogPrimaryBtnAct});
+                break;
+            default:
+                break;
+        }
+    }
+
+    cancel() {
+        const confirmationDialogNotificationCode: ConfirmationDialogNotificationCode = this.notificationCode;
+        switch (confirmationDialogNotificationCode) {
+            case ConfirmationDialogNotificationCode.LGCUnSavedChanges:
+                this._notificationService.notifyLGCUnSavedChangesConfirmation({'code': this.notificationCode, 'buttonType': NotificationLGActions.ConfirmationDialogSecondaryBtnAct});
                 break;
             default:
                 break;

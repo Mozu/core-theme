@@ -1,7 +1,7 @@
 <spinner></spinner>
 <div class="row row-eq-height location-config-container">
 	<div class="subform col-md-2 location-config-left-container">
-		<h4>Site Name</h4>
+		<h4>{{'LOCATIONGROUPCONFIG.FormLabels.siteName' | translate}}</h4>
 		<p-listbox [options]="model.sitesLst" [(ngModel)]="model.selectedSite" optionLabel="name"
 			[style]="{'width':'100%'}" (onChange)="siteListChanged()"></p-listbox>
 		<!-- <p>Selected Site: {{model.selectedSite ? model.selectedSite.id : 'none'}}</p> -->
@@ -10,7 +10,7 @@
 		<form [formGroup]="model.locationGroupConfigForm">
 			<div class="row subform">
 				<div class="col-md-10 nopadding">
-					<h4>{{this.model.selectedSite ? this.model.selectedSite.name : ''}} Site Config</h4>
+					<h4>{{this.model.selectedSite ? this.model.selectedSite.name : ''}} {{'LOCATIONGROUPCONFIG.FormLabels.siteConfig' | translate}}</h4>
 				</div>
 				<div class="col-md-2 nopadding">
 					<button type="button" (click)="saveLocationConfig()"  [disabled]='model.locationGroupConfigForm.pristine'

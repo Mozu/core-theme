@@ -17,7 +17,7 @@ export class LocationGroupConfigService {
 
     public getLocationGroupConfig(locationGroupId: string, siteId : string): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: getLocationGroupConfig');
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroupConfig);
         } else {
             return this._http.get(GlobalConstant.webApis.getLocationGroupConfig + '/' + locationGroupId + '/' + siteId );
@@ -26,7 +26,7 @@ export class LocationGroupConfigService {
 
     public updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: updateLocationGroupConfig' + JSON.stringify(lgcModel));
-        if (environment.debug) {
+        if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
          } else {
             return this._http.Put(GlobalConstant.webApis.getLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);

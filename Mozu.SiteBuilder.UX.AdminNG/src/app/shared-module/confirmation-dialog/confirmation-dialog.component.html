@@ -22,7 +22,7 @@
 <!-- Modal footer -->
       <div class="modal-footer">
         <div>
-          <button class="btn btn-default" *ngIf="isShowSecondaryButton == true" (click)="displayModal = false">{{ secondaryButtonText }}</button>
+          <button class="btn btn-default" *ngIf="isShowSecondaryButton == true" (click)="cancel()">{{ secondaryButtonText }}</button>
           <button  (click)="confirm()" [ngClass]="(primaryButtonText === deleteLabel) ? 'btn delete-btn' : 'btn btn-success'">{{ primaryButtonText }}</button>
         </div>
       </div>
