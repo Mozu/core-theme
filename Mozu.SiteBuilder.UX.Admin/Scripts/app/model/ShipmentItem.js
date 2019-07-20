@@ -89,9 +89,26 @@
             "useNull": true
         },
         {
-            "name": "ShipmentDiscount",
+            "name": "shipmentDiscount",
             "type": "auto",
             "defaultValue": []
+        },
+        {
+            "name": "lineItemCost",
+            "type": "float"            
+        },
+        {
+            "name": "itemDiscount",
+            "type": "float",
+            "useNull": true
+        },
+        {
+            name: 'subtotal',
+            type: 'float',
+            convert: function (value, model) {
+                return parseFloat(model.get('lineItemCost')) - parseFloat(model.get('itemDiscount'));
+            },
+            defaultValue: null
         }
     ]
 });

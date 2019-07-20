@@ -107,15 +107,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
         var me = this;
         
         var order = this.record;
-        var reason = this.down('#cancelReason').getValue();
+        //var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
-            this.down('#otherReason').getValue() : null);
+            this.down('#otherReason').getValue() : this.down('#cancelReason').rawValue);
 
         return {
             shipmentNumber: me.shipmentRecord.number,
             cancelShipment: {
-                cancelReason: reason,
-                cancelReasonDescription: description
+                cancelReason: description,
+                //cancelReasonDescription: description
             }
         };
     },
@@ -140,7 +140,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                         var order = me.record;
                         var payloadData = me.getCancelShipmentPayload();
 
-                        order.cancelShipmentNew({
+                        order.cancelShipment({
                             jsonData: payloadData,
                             success: function (response) {
                                 // success handling here

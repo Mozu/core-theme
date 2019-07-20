@@ -13,15 +13,17 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
     initUI: function () {
         var me = this;
 
-        if (this.shipmentRecord.trackingNumber && this.shipmentRecord.shippingMethodName) {
-            this.tabTitle = '<span class="label">Tracking</span><span class="title">' + this.shipmentRecord.shippingMethodName + ' ' + this.shipmentRecord.trackingNumber + '</span>';
+        if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length == 1 && this.shipmentRecord.shippingMethodCode) {
+            this.tabTitle = '<span class="label">Tracking</span><span class="title">' + this.shipmentRecord.shippingMethodCode + ' ' + this.shipmentRecord.trackingNumbers[0] + '</span>';
             this.isTabTitleHtml = true;
         }
-        else {
+        else if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length > 1) 
+            this.tabTitle = 'Tracking' + ' (' + this.shipmentRecord.trackingNumbers.length + ')';
+        else
             this.tabTitle = 'Tracking';
-        }
-        this.locationInfoContainer = Ext.widget({
-            itemId: 'locationInfoContainer',
+
+
+        this.trackingInfoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-package-body',
             padding: '20 20 25 20',
@@ -32,26 +34,28 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
             },
             defaults: {
                 xtype: 'component',
-                data: this.record.getData()
+                data: this.shipmentRecord
             },
             items:
                 [
                     {
                         minWidth: '300',
                         tpl: [
-                            '<div class="labelvalue">' + this.shipmentRecord.shippingMethodName +'</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.shippingMethodCode +'</div>'
                         ]
                     },
                     {
                         tpl: [
-                            '<div class="labelvalue">' + this.shipmentRecord.trackingNumber +'</div>'
+                            '<tpl for="values.trackingNumbers">',
+                            '<div class="labelvalue">{.}</div> <br/>',
+                            '</tpl>'
                         ]
                     }
                 ]
         });
 
         this.items = [
-            this.locationInfoContainer
+            this.trackingInfoContainer
         ];
     },
 

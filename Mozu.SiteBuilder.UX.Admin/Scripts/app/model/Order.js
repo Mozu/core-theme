@@ -9,9 +9,10 @@ Ext.define('Taco.model.Order', {
         'Taco.model.InternalNote',
         'Taco.model.OrderPayment',
         'Taco.model.OrderRefund',
+        'Taco.model.Shipment',
         'Taco.store.ShippingMethods',
         'Ext.data.association.HasOne',
-        'Ext.ux.IFrame'
+        'Ext.ux.IFrame'        
     ],
 
     statics: {
@@ -44,6 +45,7 @@ Ext.define('Taco.model.Order', {
         manualAdjustment: 246,
         createCustomer: 44
     },
+
     fields: [{
         name: 'id',
         type: 'string',
@@ -215,13 +217,13 @@ Ext.define('Taco.model.Order', {
         name: 'items',
         type: 'auto',
         useNull: true
-    },
-    {
-        name: 'shipments',
-        'type': 'hasMany',
-        'model': 'Taco.model.Shipment',
-        'reader': 'json'
-    }, {
+        },
+        {
+            name: 'shipments',
+            type: 'auto',
+            defaultValue: []
+        },
+        {
         name: 'priceListCode',
         type: 'string',
         useNull: true
@@ -1038,6 +1040,8 @@ Ext.define('Taco.model.Order', {
         return this.get('total') - this.get('authorizationInfo').amountCollected;
     },
 
+    
+
     associations: [
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
         // the entire order ui needs to be replaced with every change of order entity and its associated entities due to the display of order status in just about every component.
@@ -1049,7 +1053,14 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.OrderItem',
             name: 'items',
             reader: 'json'
-        }, {
+        },
+        //{
+        //    type: 'hasMany',
+        //    model: 'Taco.model.Shipment',
+        //    name: 'shipments',
+        //    reader: 'json'
+        //},
+        {
             type: 'hasOne',
             model: 'Taco.model.Contact',
             name: 'billingContact',
@@ -1091,20 +1102,14 @@ Ext.define('Taco.model.Order', {
             model: 'Taco.model.OrderShippingDiscount',
             name: 'shippingDiscounts',
             reader: 'json'
-        },
-        //{
-        //    type: 'hasMany',
-        //    model: 'Taco.model.Shipment',
-        //    name: 'shipments',
-        //    reader: 'json'
-        //},
+        }
     ],
 
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/Scripts/app/mocks/orders.json',
-            //read: '/admin/app/order/list',
+            //read: '/admin/Scripts/app/mocks/orders.json',
+            read: '/admin/app/order/list',
             create: '/admin/app/order/create',
             update: '/admin/app/order/edit',
             destroy: '/admin/app/order/delete'
@@ -2964,5 +2969,42 @@ Ext.define('Taco.model.Order', {
 
         Ext.Ajax.request(config);
     },
+
+    getLocations: function () {
+        var me = this;
+        me.locationsData = [];
+        if (!this.locationsStore) {
+            this.locationsStore = Taco.core.data.StoreManager.getOrCreate({
+                createOnly: true,
+                type: 'Taco.store.Locations',
+                // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+                clearSort: false,
+                remoteSort: true,
+                remoteFilter: true,
+                sorters: [{
+                    property: 'name',
+                    direction: 'ASC'
+                }],
+                //filters: [{
+                //    property: 'code',
+                //    value: true
+                //}],
+                autoLoad: false,
+                listeners: {
+                    beforeload: function (store, operation) {
+                        var proxy = store.getProxy();
+                        if (proxy.extraParams) {
+                            //reset params at proxy (e.g. advSearch)
+                            proxy.extraParams = {};
+                        }
+                        if (this.extraFilters) {
+                            store.extraFilters.add(this.extraFilters);
+                        }
+                    },
+                    scope: this
+                }
+            });
+        }
+    }
 
 });

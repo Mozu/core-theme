@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
-           
+            plugins: [this.cellEditing],
             fields: [{
                 name: 'productCode',
                 type: 'string',

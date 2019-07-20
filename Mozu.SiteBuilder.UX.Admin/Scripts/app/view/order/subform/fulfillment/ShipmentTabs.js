@@ -28,7 +28,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
 
         if (this.shipmentRecord.shipmentStatus == 'Fulfilled' || this.shipmentRecord.shipmentStatus == 'Cancelled')
             this.isCollapsed = true;
-        
+
         this.buildForm();
         this.callParent(arguments);
         this.loadNavItems();
@@ -46,40 +46,37 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
 
     buildForm: function () {
         var me = this;
-        var items = [];
+
         var subformCfg = {
             record: this.record
         };
 
-        //Show All items
-        //Todo: needs to remove package level items to shipment level
-        // var packages = this.record.get('packages');
+        var items = [];
         items.push(Ext.create('Taco.view.order.subform.fulfillment.AllItemsTab', {
             record: this.record,
-            shipmentRecord: this.shipmentRecord,
-        //    packageRecord: packages[0]
-
-        }));
-        
-        items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {
-            record: this.record,
-            shipmentRecord: this.shipmentRecord
-
-        }));
-
-        items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
-            record: this.record,
             shipmentRecord: this.shipmentRecord
         }));
+        if (this.shipmentRecord.locationCode) {
+            items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {
+                record: this.record,
+                shipmentRecord: this.shipmentRecord
 
-        //items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
-        //    record: this.record,
-        //    shipmentRecord: this.shipmentRecord,
-        //    packageRecord: packages[0]
+            }));
+        }
 
-        //}));
+        //todo: following static data is only for demo
+
+        if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length > 0) {
+            items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
+                record: this.record,
+                shipmentRecord: this.shipmentRecord
+            }));
+        }
+        items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
+            record: this.record,
+            shipmentRecord: this.shipmentRecord
+        }));
 
         this.items = items;
     }
-
 })

@@ -9,7 +9,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
     initComponent: function () {
         var me = this;
         this.store = Ext.create('Ext.data.JsonStore', {
-            data: this.packageStore.items,
+            data: this.shipmentRecord.items,
             fields: [{
                 name: 'productCode',
                 type: 'string',

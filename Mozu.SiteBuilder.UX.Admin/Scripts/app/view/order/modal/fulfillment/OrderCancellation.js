@@ -3,7 +3,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
     requires: [
         'Taco.core.ux.form.TextField',
     ],
-    
+
     autoShow: true,
     closeAction: 'destroy',
     primaryText: 'Cancel Order',
@@ -16,7 +16,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
     },
 
     initComponent: function () {
-        
+
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
             name: 'cancelOrder',
             monitorValid: true,
@@ -33,7 +33,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                             }
                         },
                         items:
-                            [                                
+                            [
                                 {
                                     xtype: 'combobox',
                                     width: 270,
@@ -104,10 +104,10 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
 
     getCancelOrderPayload: function () {
         var me = this;
-        var order = this.record;
+        var order = this.record;        
         var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
-            this.down('#otherReason').getValue() : null);
+            this.down('#otherReason').getValue() : this.down('#cancelReason').rawValue);
         return {
             orderId: order.get('id'),
             //orderId: 1,
@@ -150,7 +150,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                 me.ownerCt.setLoading(false);
                                 me.fireEvent('orderCancelled', json);
                             },
-                            failure: function (response) {
+                            failure: function (response) {                                
                                 me.setLoading(false);
                                 // error handling here
                                 var json = Ext.decode(response.responseText, true),

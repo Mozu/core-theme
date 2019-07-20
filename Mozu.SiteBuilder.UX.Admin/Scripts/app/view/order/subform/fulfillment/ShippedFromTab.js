@@ -6,16 +6,16 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
 
     initComponent: function () {
 
-
-        if (this.shipmentRecord.items && this.shipmentRecord.items.length > 0 && this.shipmentRecord.items[0].fulfillmentLocationCode) {
-            this.tabTitle = '<span class="label">Shipped From</span><span class="title">' + this.shipmentRecord.items[0].fulfillmentLocationCode + '</span>';
+        this.getLocation();
+        
+        if (this.shipmentRecord.location && this.shipmentRecord.location.displayName) {
+            this.tabTitle = '<span class="label">Shipped From</span><span class="title">' + this.shipmentRecord.location.displayName + '</span>';
             this.isTabTitleHtml = true;
         }
         else {
             this.tabTitle = 'Shipped From';
         }
 
-        this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);
     },
@@ -23,9 +23,9 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
     initUI: function () {
         var me = this;
         this.locationInfoContainer = Ext.widget({
-            itemId: 'locationInfoContainer',
+            //itemId: 'locationInfoContainer',
             xtype: 'container',
-            cls: 'taco-order-fulfillment-package-body',
+            cls: 'taco-order-fulfillment-shipped-from-tab',
             padding: '20 20 25 20',
             layout: {
                 type: 'hbox',
@@ -41,13 +41,13 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                         minWidth: '400',
                         tpl: [
                             '<span class="label">Name</span>',
-                            '<div class="labelvalue">Dallas Warehouse</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.location.displayName + '</div>'
                         ]
                     },
                     {
                         tpl: [
                             '<span class="label">Code</span>',
-                            '<div class="labelvalue">KIBODAL</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.location.displayCode + '</div>'
                         ]
                     }
                 ]
@@ -56,7 +56,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
         this.addressInfoContainer = Ext.widget({
             //itemId:'addressInfoContainer',
             xtype: 'container',
-            cls: 'taco-order-fulfillment-package-body',
+            cls: 'taco-order-fulfillment-shipped-from-tab',
             padding: '20 20 25 20',
             layout: {
                 type: 'hbox',
@@ -72,13 +72,13 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                         minWidth: '400',
                         tpl: [
                             '<span class="label">Address</span>',
-                            '<div class="labelvalue">' + me.getFullfillmentFromAddress(this.shipmentRecord.destinationAddress) + '</div>'
+                            '<div class="labelvalue">' + me.getFullfillmentFromAddress(this.shipmentRecord.location.address) + '</div>'
                         ]
                     },
                     {
                         tpl: [
                             '<span class="label">Shipping Origin Contact</span>',
-                            '<div class="labelvalue">' + me.getFullfillmentFromAddress(this.shipmentRecord.originAddress) + '</div>'
+                            '<div class="labelvalue">' + me.getFullfillmentFromContact(this.shipmentRecord.location.shippingOriginContact) + '</div>'
                         ]
                     }
                 ]
@@ -93,10 +93,48 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
     getFullfillmentFromAddress: function (originAddress) {
         var address = "";
         //var originAddress = this.shipmentRecord.originAddress;
-        if (originAddress)
-            return '<div class="addressdiv">' + originAddress.firstName + ' ' + originAddress.lastName + ' <br/>' +
-                originAddress.address1 + ', ' + '<br/>' + originAddress.cityOrTown + ', ' + originAddress.stateOrProvince + ' ' + originAddress.postalOrZipCode + '<br/>' +
-                originAddress.mobilePhone + ' * ' + originAddress.email + '</div>';
+        if (originAddress) {
+            if (originAddress.address1)
+                address += originAddress.address1 + ' <br/>';
+            if (originAddress.address2)
+                address += originAddress.address2 + ' <br/>';
+            if (originAddress.address3)
+                address += originAddress.address3 + ' <br/>';
+            if (originAddress.address4)
+                address += originAddress.address4 + ' <br/>';
+        }
+
+
+        return '<div class="addressdiv">' + address +
+            originAddress.cityOrTown + ', ' + originAddress.stateOrProvince + ' ' + originAddress.postalOrZipCode + ' ' + originAddress.countryCode + '<br/>' + '</div>';
+    },
+
+    getFullfillmentFromContact: function (contact) {
+        var tempContact = "";
+        if (contact) {
+            if (contact.firstName)
+                tempContact += 'Name: ' + contact.firstName + ' ' + contact.lastNameOrSurname + ' <br/>';
+            if (contact.companyOrOrganization)
+                tempContact += 'Company: ' + contact.companyOrOrganization + ' <br/>';
+            if (contact.phoneNumber)
+                tempContact += 'Phone Number: ' + contact.phoneNumber + ' <br/>';
+            if (contact.email)
+                tempContact += 'Email: ' + contact.email + ' <br/>';
+        }
+
+        return '<div class="addressdiv">' + tempContact +  '</div>';
+    },
+
+    getLocation: function () {
+        var locations = this.record.get('locations');        
+        if (locations) {
+            for (var count = 0; count < locations.length; count++) {                
+                if (this.shipmentRecord.locationCode == locations[count].get('code')) {
+                    this.shipmentRecord.location = locations[count].data;
+                    break;
+                }
+            }
+        }
     },
 
     onDestroy: function () {

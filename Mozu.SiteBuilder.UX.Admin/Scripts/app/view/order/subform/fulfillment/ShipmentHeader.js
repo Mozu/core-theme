@@ -15,8 +15,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
         var me = this;
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
         fulfillmentStatus = Taco.core.util.Common.camelToSpace(fulfillmentStatus);
-
-
+        
         this.infoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-info-header',

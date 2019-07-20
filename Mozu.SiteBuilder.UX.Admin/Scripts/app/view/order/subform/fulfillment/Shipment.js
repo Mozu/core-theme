@@ -2,8 +2,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     extend: 'Taco.view.order.subform.fulfillment.Container',
     alias: 'widget.taco-order-fulfillment-shipments',
     requires: [
-        'Taco.view.order.subform.fulfillment.ShipmentDetails'
-
+        'Taco.view.order.subform.fulfillment.ShipmentDetails',
+        'Taco.store.Locations'
     ],
     packageContainer: {},
 
@@ -19,8 +19,15 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var me = this;
         //if (this.shipmentRecord.shipmentStatus)
         //    this.shipmentStatus = Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus);
-        //if (!this.record.shipmentId)
-        this.shippingMethodsStore = this.record.getShippingMethods();
+        //if (!this.record.shipmentId)        
+        var lastUpdated = this.shipmentRecord.auditInfo && this.shipmentRecord.auditInfo.updateDate ? Ext.Date.format(new Date(this.shipmentRecord.auditInfo.updateDate), 'm/d/y H:i:s') : '';
+        var shipmentTypeDescription = "";
+        if (this.shipmentRecord.shipmentType) {
+            if (this.shipmentRecord.shipmentType == "STH")
+                shipmentTypeDescription = "Ship to Home";
+            else if (this.shipmentRecord.shipmentType == "BOPIS")
+                shipmentTypeDescription = "Store Pickup";
+        }
 
         this.infoContainer = Ext.widget({
             xtype: 'container',
@@ -40,7 +47,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Type</span>',
-                            '<div class="labelvalue">Ship to Home</div>'
+                            '<div class="labelvalue">' + shipmentTypeDescription + '</div>'
                         ]
                     },
                     {
@@ -54,28 +61,28 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Last Updated</span>',
-                            '<div class="labelvalue">05/02/19 20:22:44 UTC</div>'
+                            '<div class="labelvalue">' + lastUpdated + '</div>'
                         ]
                     },
                     {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Status</span>',
-                            '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + this.shipmentRecord.shipmentStatus + '</div>'
+                            '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus) + '</div>'
                         ]
                     },
                     {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Code</span>',
-                            '<div class="labelvalue">1-400</div>'
+                            '<div class="labelvalue">' + (this.shipmentRecord.locationCode ? this.shipmentRecord.locationCode : '') + '</div>'
                         ]
                     },
                     {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Total</span>',
-                            '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.cost) + '</div>'
+                            '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
                         ]
                     },
                     {
@@ -101,7 +108,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                                     me.isRecordSaved = true;
                                                     me.setLoading(false, me.body);
                                                     var json = Ext.decode(response.responseText, true);
-                                                    var shipment = me.getReassignShipmentPayload();                                                    
+
                                                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                                         layout: 'hbox',
                                                         width: 1080,
@@ -171,10 +178,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     },
 
     getShipmentLevelSplitMenu: function () {
-
+        var me = this;
         var actionCancelShipment = {
             text: 'Cancel Shipment',
-            handler: function () { }
+            handler: function () {
+                me.openShipmentCancellationPopUp();
+            }
         };
 
         var actionMarkAsShipped = {
@@ -191,26 +200,20 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             handler: function () { }
         };
 
-        var actionReleaseBackorder = {
-            text: 'Release Backorder',
-            handler: function () { }
-        };
-
-        if (this.shipmentRecord.shipmentStatus == 'Ready') {
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             return [
                 actionMarkAsShipped,
                 actionMoveToBackorder,
                 actionCancelShipment
             ];
         }
-        else if (this.shipmentRecord.shipmentStatus == 'Backorder') {
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
             return [
-                actionReleaseBackorder,
                 actionUpdateBackorderDate,
                 actionCancelShipment
             ];
         }
-        else if (this.shipmentRecord.shipmentStatus == 'Customer Care') {
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
             return [
                 actionMoveToBackorder,
                 actionMarkAsShipped,
@@ -252,9 +255,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) {
-                                    //me.fireEvent('orderCancelled', json);
+                                    me.fireEvent('orderCancelled', json);
                                 },
-                                //scope: me
+                                scope: me
                             }
                         }
                     });
@@ -263,26 +266,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         });
     },
 
-    getReassignShipmentPayload: function () {
-        var me = this;
-        var shipment = me.shipmentRecord;
-
-        var model = {
-            shipmentId: shipment.id,
-            items: []
-        }
-
-        shipment.items.forEach(function (element) {
-            model.items.push({
-                locationCode: element.fulfillmentLocationCode,
-                name: element.name,
-                productCode: element.productCode,
-                quantity: element.quantity
-            });
-        });
-
-        return model;
-    }
+    
 });
 
 

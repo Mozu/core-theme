@@ -20,18 +20,26 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
     },
 
     buildComponents: function () {
+        var me = this;
         this.add(Ext.create('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             record: this.record
         }));
         
-        var shipments = this.record.get('shipments');
-        if (shipments) {
-            for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
-                this.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-                    record: this.record,
-                    shipmentRecord: shipments[shipmentCount]
-                }));
+        this.record.getLocations();
+        this.record.locationsStore.load({
+            scope: me,
+            callback: function (records, operation, success) {
+                me.record.set('locations', records);
+                var shipments = me.record.get('shipments');
+                if (shipments) {
+                    for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
+                        me.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
+                            record: me.record,
+                            shipmentRecord: shipments[shipmentCount]
+                        }));
+                    }
+                }
             }
-        }
+        });        
     }
 });
