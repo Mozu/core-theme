@@ -74,6 +74,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
             hidden: values.getCount()==0,
             sortableColumns: false,
             disableSelection: true,
+            suspendLayout: true,
             flex:1,
             hideHeaders: false,
             enableColumnHide: false,
@@ -276,11 +277,15 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                 if (!products) {
                     return;
                 }
+                
+                me.items.items[1].suspendLayouts();
+
                 Ext.Array.each(products, function (prod) {
                     var valRec = values.getById(prod.getId()),
                       attrVal;
 
                     if (valRec) {
+                        
                         attrVal = Ext.Array.findBy(me.productTypeAttribute.get('selectedValues'), function (item) {
                             return item.id === valRec.get('value');
                         });
@@ -292,6 +297,9 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
                         valRec.commit();
                     }
                 });
+                me.items.items[1].resumeLayouts();
+                me.items.items[1].doLayout();
+
             }
         });
 
