@@ -1,12 +1,13 @@
-import { Component,
-         OnInit,
-         Input
+import {
+  Component,
+  Input,
+  SimpleChanges,
+  OnChanges,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
-
-import { SafeResourceUrl,
-         DomSanitizer
-} from '@angular/platform-browser';
-
+import { Http } from '@angular/http';
 import * as _ from 'lodash';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService } from '@core';
@@ -17,21 +18,37 @@ import { Constants } from '@shared/infrastructure/constants';
   templateUrl: './dynamic-links-dialog.component.html',
   styleUrls: ['./dynamic-links-dialog.component.css']
 })
-export class DynamicLinksDialogComponent implements OnInit {
-
-  @Input() iframeResourceURL: SafeResourceUrl;
+export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
+  @ViewChild('form') postForm: ElementRef;
+  @Input() iframeResourceURL: any;
   catalogImportExport = Constants.titles.catalogImportExportTitles;
   close = Constants.lables.closeLabel;
-  constructor(
-    public activeModal: NgbActiveModal,
-    public sanitizer: DomSanitizer,
-    private _loggerService: LoggerService,
-  ) {  }
+  private reqBody: any;
 
-  ngOnInit() {
-    this._loggerService.info('DynamicLinksDialogComponent : ngOnInit');
-    const iframeSrc: any = this.iframeResourceURL;
-    this.iframeResourceURL = this.sanitizer.bypassSecurityTrustResourceUrl(iframeSrc);
+  constructor(
+    private http: Http,
+    private _loggerService: LoggerService,
+    public activeModal: NgbActiveModal,
+  ) {
+    this.reqBody = new FormData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this._loggerService.info('DynamicLinksDialogComponent : ngOnChanges');
+    if (changes && changes.iframeResourceURL && changes.iframeResourceURL.currentValue) {
+      this.iframeResourceURL = changes.iframeResourceURL.currentValue;
+    }
+  }
+
+  ngAfterViewInit() {
+    this._loggerService.info('DynamicLinksDialogComponent : ngAfterViewInit');
+    this.postForm.nativeElement.submit();
+  }
+
+  submitForm($event): boolean {
+    $event.stopPropagation();
+    this.http.post(this.iframeResourceURL, this.reqBody);
+    return true;
   }
 
   /**
@@ -40,5 +57,6 @@ export class DynamicLinksDialogComponent implements OnInit {
   public closeModal = () => {
     this.activeModal.dismiss('Cross click');
   }
+
 
 }

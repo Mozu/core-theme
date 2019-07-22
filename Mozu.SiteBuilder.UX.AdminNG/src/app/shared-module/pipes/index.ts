@@ -3,3 +3,4 @@ export * from './ellipsis.pipe';
 export * from './safeHtml.pipe';
 export * from './datex.pipe';
 export * from './phone.pipe';
+export * from './safe-resource-url.pipe';

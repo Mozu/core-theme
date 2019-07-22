@@ -52,7 +52,7 @@ it('Application should be in dynamic Component', () => {
 });
  
 it('Application is inside ngOnInit method of dynamic link component', () => {
-    component.ngOnInit();
+    //component.ngOnInit();
     expect(loggerServiceSpy).toHaveBeenCalledWith("DynamicLinksDialogComponent : ngOnInit");
 });
  

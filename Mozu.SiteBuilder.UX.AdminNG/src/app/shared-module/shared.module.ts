@@ -1,12 +1,11 @@
 ﻿import { NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
-import {TreeTableModule} from 'primeng/treetable';
-
+import { TreeTableModule } from 'primeng/treetable';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
@@ -41,15 +40,17 @@ import {
     AppHomeComponent,
     PhysicalLocationsComponent,
     LocationsListComponent,
-    SelectedLocationsComponent
- } from './index';
+    SelectedLocationsComponent,
+    ConfirmationDialogService
+} from './index';
 
 import {
     DatexPipe,
     EllipsisPipe,
     SafeHtmlPipe,
     SplitPipe,
-    PhonePipe
+    PhonePipe,
+    SafeResourceUrlPipe
 } from './pipes/index';
 
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
@@ -83,7 +84,9 @@ export function createTranslateLoader(http: HttpClient) {
         ListboxModule,
         TreeTableModule,
         TableModule,
-        NgbModule,
+        NgbModule.forRoot(),
+        DropdownModule,
+        AutoCompleteModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -101,6 +104,7 @@ export function createTranslateLoader(http: HttpClient) {
         SafeHtmlPipe,
         SplitPipe,
         PhonePipe,
+        SafeResourceUrlPipe,
 
         // directives
         RestrictInput,
@@ -161,6 +165,8 @@ export function createTranslateLoader(http: HttpClient) {
         SafeHtmlPipe,
         SplitPipe,
         PhonePipe,
+        SafeResourceUrlPipe,
+
         // directives
         RestrictInput,
         EnableDisableControls,
