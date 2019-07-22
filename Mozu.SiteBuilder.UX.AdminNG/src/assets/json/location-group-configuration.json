@@ -1,147 +1,48 @@
 {
     "success": true,
     "total": 1,
-    "items" : {
-    "tenantId": 17450,
-    "siteId": 21576,
-    "locationGroupId": 182,
-    "customerFailedToPickupAfterAction": "CustomerCare",
-    "customerFailedToPickupDeadline": 3,
-    "sendCustomerPickupReminder": 2,
-    "enableForSTH": false,
-    "enableForISPU": false,
-    "enableAdvancedOptionForPickWaveCreation": true,
-    "maximumNumberOfOrdersInPickWave": 50,
-    "defaultNumberOfOrdersInPickWave": 15,
-    "pickWavePrintFormat": "Pdf",
-    "closePickWavePermissions": [
-     "StoreManager",
-     "StoreEmployee"
-    ],
-    "wmsEnabled": false,
-    "enableScanningOfUpcForShipToHome": false,
-    "allowReturns": true,
-    "returnRefundReduction": false,
-    "defaultReturnRefundReductionAmount": 0,
-    "maximumReturnRefundReductionAmount": 0,
-    "defaultCarrier": "FedEx",
-    "carriers": [
-     {
-      "carrierType": "FedEx",
-      "isEnabled": true
-     },
-     {
-        "carrierType": "UPS",
-        "isEnabled": true
-    }
-    ],
-    "printReturnLabel": true,
-    "defaultPrinterType": "Laser",
-    "shippingSettingsForUps": {
-     "unitedStatesUpsSettings": {
-      "shippingMethods": [
-       "UPS_NEXT_DAY_AIR_EARLY_AM",
-       "UPS_NEXT_DAY_AIR",
-       "UPS_2ND_DAY_AIR",
-       "UPS_3_DAY_SELECT",
-       "UPS_GROUND",
-       "UPS_SURE_POST_LESS_THAN_1_POUND",
-       "UPS_SURE_POST_1_POUND_OR_GREATER"
-      ],
-      "returnLabelShippingMethod": "UPS_GROUND",
-      "standardDefault": "UPS_GROUND",
-      "express1DayDefault": "UPS_NEXT_DAY_AIR_EARLY_AM",
-      "express2DayDefault": "UPS_NEXT_DAY_AIR_EARLY_AM",
-      "express3DayDefault": "UPS_NEXT_DAY_AIR_EARLY_AM"
-     },
-     "internationalUpsSettings": {
-      "internationalUsReturnLabelShippingMethod": "UPS_STANDARD",
-      "shippingMethods": [
-       "UPS_STANDARD",
-       "UPS_EXPRESS",
-       "UPS_EXPRESS_PLUS",
-       "UPS_EXPEDITED",
-       "UPS_SAVER",
-       "UPS_ACCESS_POINT_ECONOMY"
-      ],
-      "returnLabelShippingMethod": "UPS_ACCESS_POINT_ECONOMY",
-      "standardDefault": "UPS_STANDARD",
-      "express1DayDefault": "UPS_STANDARD",
-      "express2DayDefault": "UPS_STANDARD",
-      "express3DayDefault": "UPS_STANDARD"
-     },
-     "canadaUpsSettings": {
-      "shippingMethods": [
-       "UPS_NEXT_DAY_AIR_SAVER",
-       "UPS_2ND_DAY_AIR",
-       "UPS_3_DAY_SELECT",
-       "UPS_STANDARD"
-      ],
-      "standardDefault": "UPS_STANDARD",
-      "express1DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
-      "express2DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
-      "express3DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
-      "returnLabelShippingMethod": "UPS_NEXT_DAY_AIR_SAVER"
-     }
-    },
-    "shippingSettingsForFedEx" : {
-        "shippingMethods" : [ 
-            "FIRST_OVERNIGHT_SATURDAY_DELIVERY"
-        ],
-        "returnLabelShippingMethod" : "PRIORITY_OVERNIGHT",
-        "standardDefault" : "STANDARD_OVERNIGHT",
-        "express1DayDefault" : "PRIORITY_OVERNIGHT_SATURDAY_DELIVERY",
-        "express2DayDefault" : "FEDEX_2_DAY",
-        "express3DayDefault" : "GROUND_HOME_DELIVERY",
-        "enableSmartPost" : true
-    },
-    "shippingSettingsForUsps": {
-        "shippingMethods":  [
-            "PRIORITYEXPRESS", 
-            "STANDARDPOST"
-        ],
-        "returnLabelShippingMethod": "PRIORITY",
-        "standardDefault": "PRIORITY",
-        "express1DayDefault": "FIRST",
-        "express2DayDefault": "STANDARDPOST",
-        "express3DayDefault": "LIBRARYMAIL"
-    },
-    "canadaPostSettings": {
-        "outboundUsername" : "xyz",
-        "outboundPassword" : "xyz",
-        "outboundCustomerNumber" : "Cust-101",
-        "outboundLocale" : "Locale",
-        "outboundContractID" : "cont-101",
-        "carsPickupNotify": true,
-        "preferredPickupTime" : "10:00 AM",
-        "closingTime" : "10:00 PM"
-    },
-    "boxTypes": [
-        {
-         "name": "Small Box",
-         "height": 2,
-         "width": 2,
-         "length": 2
+    "items": {
+        "tenantId": 17427,
+        "siteId": 21550,
+        "locationGroupId": 27,
+        "customerFailedToPickupAfterAction": "CustomerCare",
+        "customerFailedToPickupDeadline": 3,
+        "sendCustomerPickupReminder": 4,
+        "closePickWavePermissions": [],
+        "defaultCarrier": "None",
+        "carriers": [],
+        "shippingSettingsForUsps": {
+            "shippingMethods": []
         },
-        {
-         "name": "Long Box",
-         "height": 3,
-         "width": 4,
-         "length": 5
+        "shippingSettingsForFedEx": {
+            "enableSmartPost": false,
+            "shippingMethods": []
         },
-        {
-         "name": "Large Box",
-         "height": 10,
-         "width": 15,
-         "length": 5
+        "shippingSettingsForUps": {
+            "unitedStatesUpsSettings": {
+                "shippingMethods": []
+            },
+            "internationalUpsSettings": {
+                "shippingMethods": []
+            },
+            "canadaUpsSettings": {
+                "shippingMethods": []
+            }
+        },
+        "boxTypes": [
+            {
+                "name": "small",
+                "height": 2.0,
+                "width": 2.0,
+                "length": 2.0
+            }
+        ],
+        "attributes": [],
+        "auditInfo": {
+            "updateDate": "2019-07-19T13:07:43.038Z",
+            "createDate": "2019-07-19T13:04:06.469Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
-       ],
-    "attributes": [],
-    "auditInfo": {
-     "updateDate": "2019-07-08T19:52:14.943Z",
-     "createDate": "2019-06-27T13:45:27.914Z",
-     "updateBy": "UNKNOWN",
-     "createBy": "UNKNOWN"
     }
-   }
 }

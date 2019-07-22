@@ -100,7 +100,7 @@
 					*ngFor="let item of model.locationGroupConfigForm.get('boxItems')['controls']; let rowIndex = index;">
 					<div [formGroupName]="rowIndex">
 						<div class="form-row col-md-2 for-no-padding">
-							<input class="inputText form-control subform-text" id="boxName" formControlName="name" />
+							<input class="inputText form-control subform-text" id="boxName"  (change)="markLocationGroupConfigFormDirty()" formControlName="name" />
 							<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value === '',
 											'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value !== '' 
 											}">{{'LOCATIONGROUPCONFIG.FormLabels.name' | translate }}</span>
@@ -109,7 +109,8 @@
 						
 						<div class="form-row col-md-2 for-no-padding boxItemMargin">
 							<div class="col-md-9 nomargin nopadding">
-								<input class="inputText form-control subform-text" id="boxLength" formControlName="length"/>
+								<input class="inputText form-control subform-text" id="boxLength" (change)="markLocationGroupConfigFormDirty()"
+									formControlName="length" />
 								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.length' | translate }}</span>
@@ -120,7 +121,8 @@
 						
 						<div class="form-row col-md-2 for-no-padding boxItemMargin">
 							<div class="col-md-9 nomargin nopadding">
-								<input class="inputText form-control subform-text" id="boxWidth" formControlName="width"/>
+								<input class="inputText form-control subform-text" id="boxWidth" (change)="markLocationGroupConfigFormDirty()"
+									formControlName="width" />
 								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.width' | translate }}</span>
@@ -131,7 +133,8 @@
 						
 						<div class="form-row col-md-2 for-no-padding boxItemMargin">
 							<div class="col-md-9 nomargin nopadding">
-								<input class="inputText form-control subform-text" id="boxHeight" formControlName="height"/>
+								<input class="inputText form-control subform-text" id="boxHeight" (change)="markLocationGroupConfigFormDirty()"
+									formControlName="height" />
 								<span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.height' | translate }}</span>
@@ -146,7 +149,8 @@
 					</div>
 				</div>
 				<div class="row nomargin">
-					<button type="button" (click)="addBoxItem()" class="btn pull-left">{{'SHARED.HEADER.actionButtons.locationGroups.add' | translate}}</button>
+					<button type="button" (click)="addBoxItem();markLocationGroupConfigFormDirty()"
+						class="btn pull-left">{{'SHARED.HEADER.actionButtons.locationGroups.add' | translate}}</button>
 				</div>
 			</div>
 			<div class="subform">

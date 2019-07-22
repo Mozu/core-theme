@@ -61,7 +61,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             defaultCarrier: ['', []],
             printReturnLabel: ['', []],
             defaultPrinterType: ['', []],
-            boxItems: this.fb.array([]),
+            boxItems: new FormArray([]),
 
             upsUsShippingTypes: new FormArray([]),
             upsUSStandardDefault:  ['', []],
@@ -207,7 +207,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     removeBoxItem(rowIndex) {
+        this.markLocationGroupConfigFormDirty();
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).removeAt(rowIndex);
+    }
+
+    markLocationGroupConfigFormDirty(){
+        this.model.locationGroupConfigForm.markAsDirty();
     }
 
     siteListChanged() {

@@ -1,227 +1,156 @@
 {
     "success": true,
-    "total": 12,
+    "total": 9,
     "items": [
         {
-            "locationGroupId": 32,
+            "locationGroupId": 17,
             "siteIds": [
-                21576,
-                21577
+                21550
             ],
-            "name": "south North LG 1 ",
+            "name": "site id and location codes? 2",
             "locationCodes": [
-                "warehouse_815",
-                "warehouse_417",
-                "warehouse_925"
+                "LG0001"
             ],
             "auditInfo": {
-                "updateDate": "2019-06-02T08:38:12.401Z",
-                "createDate": "2019-06-02T06:02:28.860Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                "updateDate": "2019-05-01T20:27:50.066Z",
+                "createDate": "2019-05-01T20:27:50.066Z",
+                "updateBy": "1",
+                "createBy": "1"
             }
         },
         {
-            "locationGroupId": 182,
+            "locationGroupId": 16,
             "siteIds": [
-                21576
+                21550
             ],
-            "name": "WestLocationGrp1",
+            "name": "site id and location codes?",
             "locationCodes": [
-                "TIMROLETEST11",
-                "TIMROLETEST5",
-                "TIMROLETEST6",
-                "TIMTESTROLE1",
-                "TIMTESTROLE",
-                "TIMROLETEST2",
-                "TIMROLETEST3",
-                "TIMROLETEST8",
-                "TIMROLETEST7",
-                "TIMROLETEST9",
-                "TIMROLETEST4"
+                "LG0001"
             ],
             "auditInfo": {
-                "updateDate": "2019-07-11T06:58:02.229Z",
-                "createDate": "2019-07-08T18:57:03.016Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "updateDate": "2019-05-01T20:26:28.727Z",
+                "createDate": "2019-05-01T20:26:28.727Z",
+                "updateBy": "1",
+                "createBy": "1"
+            }
+        },
+        {
+            "locationGroupId": 24,
+            "siteIds": [
+                21550
+            ],
+            "name": "cat92testsuccess",
+            "locationCodes": [],
+            "auditInfo": {
+                "updateDate": "2019-06-18T20:41:38.403Z",
+                "createDate": "2019-06-18T20:41:11.434Z",
+                "updateBy": "1",
+                "createBy": "1"
+            }
+        },
+        {
+            "locationGroupId": 19,
+            "siteIds": [
+                21550
+            ],
+            "name": "Updategroup19",
+            "locationCodes": [
+                "LG0001",
+                "LG0001"
+            ],
+            "auditInfo": {
+                "updateDate": "2019-05-01T22:16:04.106Z",
+                "createDate": "2019-05-01T21:41:25.911Z",
+                "updateBy": "1",
                 "createBy": "1"
             }
         },
         {
             "locationGroupId": 27,
             "siteIds": [
-                21574
+                21550,
+                21583
             ],
-            "name": "US Central",
+            "name": "Test demo 2",
             "locationCodes": [
-                "mqa-l-warehouse2",
-                "mqa-l-warehouse5",
-                "warehouse_803"
+                "ROLETEST3",
+                "ROLETEST4"
             ],
             "auditInfo": {
-                "updateDate": "2019-05-30T09:17:37.017Z",
-                "createDate": "2019-05-30T09:17:37.017Z",
+                "updateDate": "2019-07-19T13:04:06.392Z",
+                "createDate": "2019-07-19T13:04:06.392Z",
                 "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
             }
         },
         {
-            "locationGroupId": 28,
+            "locationGroupId": 4,
             "siteIds": [
-                21577
+                21550
             ],
-            "name": "Texas Child Catalog LG",
+            "name": "LocationGroup4Update",
             "locationCodes": [
-                "warehouse_645",
-                "warehouse_122",
-                "retailstore_207"
+                "roletest6",
+                "roletest8",
+                "roletest9",
+                "LG0001",
+                "roletest6"
             ],
             "auditInfo": {
-                "updateDate": "2019-05-30T10:39:16.181Z",
-                "createDate": "2019-05-30T10:39:16.181Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                "updateDate": "2019-05-01T22:02:38.227Z",
+                "createDate": "2019-04-25T21:24:46.041Z",
+                "updateBy": "1",
+                "createBy": "1"
             }
         },
         {
-            "locationGroupId": 30,
+            "locationGroupId": 9,
             "siteIds": [
-                21574
+                21550
             ],
-            "name": "Test update 1",
+            "name": "LocationGroup4Update",
             "locationCodes": [
-                "warehouselocation1",
-                "CiCrK396LQ",
-                "4TXmkoTLiA"
+                "LG0001"
             ],
             "auditInfo": {
-                "updateDate": "2019-06-01T13:21:17.772Z",
-                "createDate": "2019-06-01T13:05:21.650Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                "updateDate": "2019-05-01T19:51:56.547Z",
+                "createDate": "2019-05-01T19:51:56.547Z",
+                "updateBy": "1",
+                "createBy": "1"
             }
         },
         {
-            "locationGroupId": 45,
+            "locationGroupId": 10,
             "siteIds": [
-                21576
+                21550
             ],
-            "name": "Test save LG 100",
+            "name": "LocationGroup4Update",
             "locationCodes": [
-                "retailstore_896",
-                "retailstore_764"
+                "LG0001"
             ],
             "auditInfo": {
-                "updateDate": "2019-06-12T07:20:07.514Z",
-                "createDate": "2019-06-12T07:20:07.514Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                "updateDate": "2019-05-01T19:53:56.480Z",
+                "createDate": "2019-05-01T19:53:56.480Z",
+                "updateBy": "1",
+                "createBy": "1"
             }
         },
         {
-            "locationGroupId": 183,
+            "locationGroupId": 5,
             "siteIds": [
-                21574
+                21550
             ],
-            "name": "Test Physical Location",
+            "name": "Another Group of Locations",
             "locationCodes": [
-                "RETAILSTORE_623",
-                "WAREHOUSELOCATION1010",
-                "TIMROLETEST7"
+                "roletest10",
+                "roletest11",
+                "roletest12"
             ],
             "auditInfo": {
-                "updateDate": "2019-07-11T07:10:16.330Z",
-                "createDate": "2019-07-11T07:10:16.330Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 36,
-            "siteIds": [
-                21577
-            ],
-            "name": "Test Location service",
-            "locationCodes": [
-                "retailstore_896",
-                "retailstore_408"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-06-04T12:12:18.534Z",
-                "createDate": "2019-06-04T12:12:18.534Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 31,
-            "siteIds": [
-                21575,
-                21576
-            ],
-            "name": "Test Location Group 22",
-            "locationCodes": [
-                "mqa-l-warehouse2",
-                "mqa-l-warehouse5",
-                "warehouse_803",
-                "warehouse_717"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-06-01T17:16:06.907Z",
-                "createDate": "2019-06-01T17:12:49.441Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 26,
-            "siteIds": [
-                21576
-            ],
-            "name": "Sout west",
-            "locationCodes": [
-                "WAREHOUSELOCATION999",
-                "WAREHOUSELOCATION8"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-07-10T13:57:37.086Z",
-                "createDate": "2019-05-30T09:16:24.029Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 37,
-            "siteIds": [
-                21577
-            ],
-            "name": "East Texas 1",
-            "locationCodes": [
-                "nWcXhYArCu",
-                "5RRDPmepIk"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-06-05T05:00:29.104Z",
-                "createDate": "2019-06-05T05:00:02.599Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 33,
-            "siteIds": [
-                21577
-            ],
-            "name": "East LG 1",
-            "locationCodes": [
-                "timroletest3",
-                "timtestrole"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-06-02T08:38:49.769Z",
-                "createDate": "2019-06-02T08:38:49.769Z",
-                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
-                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                "updateDate": "2019-04-26T15:26:46.969Z",
+                "createDate": "2019-04-26T15:26:46.969Z",
+                "updateBy": "1",
+                "createBy": "1"
             }
         }
     ]

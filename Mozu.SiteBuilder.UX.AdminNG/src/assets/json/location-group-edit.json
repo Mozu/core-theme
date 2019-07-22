@@ -2,20 +2,19 @@
     "success": true,
     "total": 1,
     "items": {
-        "locationGroupId": 183,
+        "locationGroupId": 27,
         "siteIds": [
-            21574,
-            21575
+            21550,
+            21583
         ],
-        "name": "Test Physical Location",
+        "name": "Test demo 2",
         "locationCodes": [
-            "RETAILSTORE_623",
-            "WAREHOUSELOCATION1010",
-            "TIMROLETEST7"
+            "ROLETEST3",
+            "ROLETEST4"
         ],
         "auditInfo": {
-            "updateDate": "2019-07-11T07:10:16.330Z",
-            "createDate": "2019-07-11T07:10:16.330Z",
+            "updateDate": "2019-07-19T13:04:06.392Z",
+            "createDate": "2019-07-19T13:04:06.392Z",
             "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
             "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
