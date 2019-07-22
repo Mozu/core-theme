@@ -278,10 +278,8 @@ Ext.define('Taco.shared.view.form.ExtensibleAttribute', {
                             item['values'] = [val[fqn]];
                         }
                     }
-                    else {
-                        if (val) {
-                            item['values'] = [val];
-                        }
+                    else if (val || (field.originalValue && inputType == 'TextBox')) {
+                        item['values'] = val ? [val] : [];
                     }
 
                 } else {
