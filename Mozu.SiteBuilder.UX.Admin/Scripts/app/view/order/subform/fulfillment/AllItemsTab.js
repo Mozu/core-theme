@@ -90,6 +90,9 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                             },
                             handler: function (evt) {
                                 me.toggleEdit();
+                                var grid = me.packageItems.getView();
+                                console.log(grid);
+                                me.doSave(me.shipmentRecord.items);
                             }
                         }),
                         Ext.widget('button', {
@@ -253,5 +256,9 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         }
         this.updateUI();
     },
+
+    doSave: function (shipmentRecord) {
+        //debugger
+    }
 
 });

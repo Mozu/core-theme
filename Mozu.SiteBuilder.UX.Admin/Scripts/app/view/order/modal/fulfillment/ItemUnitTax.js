@@ -156,8 +156,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
                     if (val === 'yes') {
-                        this.record.set('itemTax', this.unittaxpercent);
-                        this.callParent(arguments);
+                        //this.record.set('itemTax', me.unittaxpercent);
+                        //this.callParent(arguments);
                         me.close();
                     }
                 }

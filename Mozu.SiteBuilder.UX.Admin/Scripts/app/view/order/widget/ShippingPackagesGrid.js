@@ -331,17 +331,17 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 //    minValue: 0,
                 //}
             },
-            {
-                dataIndex: 'quantity',
-                text: 'Avail Qty',
-                draggable: false,
-                sortable: false,
-                //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 80,
-                flex: 1,
-            },
+            //{
+            //    dataIndex: 'quantity',
+            //    text: 'Avail Qty',
+            //    draggable: false,
+            //    sortable: false,
+            //    //resizable: false,
+            //    align: 'center',
+            //    menuDisabled: true,
+            //    minWidth: 80,
+            //    flex: 1,
+            //},
             {
                 dataIndex: 'discount',
                 text: 'Discount',

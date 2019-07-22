@@ -46,7 +46,7 @@
       "inventory": [
         {
           "partNumber": "RedSpatula",
-          "available": 0,
+          "available": 0, 
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }

@@ -186,11 +186,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 },
                 select: function (obj) {
                     me.shipmentLocation = obj.lastSelected.raw;
-                    debugger;
                 },
                 deselect: function () {
                     me.shipmentLocation = null;
-                    debugger;
                 }
                 //beforeload: function (store, operation, eOpts) {
 
