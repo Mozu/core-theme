@@ -121,6 +121,24 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
+        [HttpGetRoute(UriTemplate = "paymentSettings")]
+        public async Task<Response<DC.PaymentSettings>> GetPaymentSettings()
+        {
+
+            var paymentSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+          
+            return  Single2(paymentSettings);
+        }
+
+        [HttpPutRoute(UriTemplate = "paymentSettings")]
+        public async Task<Response<DC.PaymentSettings>> UpdatePaymentSettings(DC.PaymentSettings paymentSettings)
+        {
+
+            var result = (await _checkoutSettingsWebApiClient.UpdatePaymentSettings(paymentSettings)).ReadAsSync();
+          
+            return Single2(result);
+        }
+
 
         [HttpGetRoute(UriTemplate = "read/paymentTerms/all")]
         public async Task<Response<List<SitePaymentTerm>>> GetPaymentTerms()

@@ -188,6 +188,8 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\ReturnSettingsController.cs" />
+    <Compile Include="Api\FulfillmentSettingsController.cs" />
     <Compile Include="Api\DiscountSettingsController.cs" />
     <Compile Include="Api\LocationAttributeController.cs" />
     <Compile Include="Api\ModelMapping\B2BAccountMapping.cs" />
