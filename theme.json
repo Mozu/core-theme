@@ -85,12 +85,6 @@
   ],
   "emailTemplates": [
     {
-      "id": "order.shipped",
-      "properties": {},
-      "template": "email/order-shipped",
-      "title": "Your Order Has Shipped"
-    },
-    {
       "id": "checkout.changed",
       "customEditor": "email-orderconfirmation-v2",
       "properties": {},
@@ -163,6 +157,12 @@
       "properties": {},
       "template": "email/giftcard-created",
       "title": "Gift Card Created"
+    },
+    {
+      "id": "order.shipped",
+      "properties": {},
+      "template": "email/oms-cancel-order",
+      "title": "Om Cancel Order"
     }
   ],
   "backOfficeTemplates": [
