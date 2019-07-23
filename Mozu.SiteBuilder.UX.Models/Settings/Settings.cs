@@ -339,7 +339,10 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public bool? EnforceSitewideSSL { get; set; }
-        
+
+        [DataMember]
+        public int? DefaultBackOrderDays { get; set; }
+
         public CheckoutSettings CheckoutSetting { get; set; } 
     }
 

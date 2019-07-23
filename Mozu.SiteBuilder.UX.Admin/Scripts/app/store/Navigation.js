@@ -351,7 +351,7 @@ Ext.define('Taco.store.Navigation', {
                         "address": "/admin?locationGroups",
                         'visible': Taco.user.taContext.omsEnabled === false ? true : false,
                     }
-               ]
+                ]
             },
             {
                 'id': 'fulfillment',

@@ -44,6 +44,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             settings.ChannelId = channels.Where(x => x.SiteIds != null && x.SiteIds.Contains(SbApiContext.SiteId.Value)).Select(x => x.Code).FirstOrDefault();
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
 
+            var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
+            // settings.DefaultBackOrderDays = orderProcessingSettings.DefaultBackOrderDays;
+
             return List2(settings);
         }
 
