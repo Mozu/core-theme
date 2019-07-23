@@ -116,7 +116,7 @@ export class LocationGroupCreateComponent implements OnInit {
         topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
         topLocationGroupConfigModel.locationGroupName = lgModel.name;
         topLocationGroupConfigModel.locationGroupSiteIds = lgModel.siteIds;
-        this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
+        this._notificationService.notifySetLocationGroupConfigData({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
     }
 
     private updateLocationGroupForm(lgModel: LocationGroupModel): void {

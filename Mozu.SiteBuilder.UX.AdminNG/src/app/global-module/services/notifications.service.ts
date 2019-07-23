@@ -15,6 +15,8 @@ export class NotificationService {
     loadAccessTileCategories: Subject<string> = new Subject<string>();
     locationGroupAdded: Subject<any> = new Subject<any>();
     locationGroupEdited: Subject<any> = new Subject<any>();
+    loadLeftMenuItems: Subject<any> = new Subject<any>();
+    setLocationGroupConfigData: Subject<any> = new Subject<any>();
     leftMenuItemsLoaded: Subject<any> = new Subject<any>();
     quoteHeaderValuesReceived: Subject<any> = new Subject<any>();
     quoteSearched: Subject<any> = new Subject<any>();
@@ -60,9 +62,9 @@ export class NotificationService {
         this.locationGroupEdited.next(action);
     }
 
-    notifyLocationGroupConfig(actionName: any) {
+    notifySetLocationGroupConfigData(actionName: any) {
         this._logger.info('NotificationService : notifyLocationGroupConfig');
-        this.LocationGroupConfig.next(actionName);
+        this.setLocationGroupConfigData.next(actionName);
     }
 
     // Notify components for confirmation dialog

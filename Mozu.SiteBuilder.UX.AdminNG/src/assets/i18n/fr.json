@@ -149,13 +149,15 @@
                 "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
             },
             "Warning": {
-
+                
             },
-            "Information": {},
+            "Information": {
+            },
             "Success": {
                 "LGCSavedSuccessfully": "Location Group Config saved successfully."
             },
-            "Custom": {}
+            "Custom": {
+            }
         }
     },
     "QUOTES": {
@@ -275,18 +277,17 @@
             "noMatchingItem": "No matching items found."
         },
         "Label": {
-            "kibo": "Kibo eCommerce",
             "help": "Help",
             "seeAll": "see all"
         }
     },
-    "LOCATIONGROUPCONFIG": {
+    "LOCATIONGROUPCONFIG":{
         "FormLabels": {
             "siteName": "Site Name",
             "siteConfig": "Site Config",
             "customerFailedToPickupAfterAction": "Customer Failed to Pickup After Action",
             "customerFailedToPickupDeadline": "Customer Failed to Pickup Deadline",
-            "customerFailedToPickupDeadlineWarnMsg": "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
+            "customerFailedToPickupDeadlineWarnMsg" : "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
             "sendCustomerPickupReminder": "Send Customer Pickup Reminder after the order has gone into waiting for customer pickup",
             "enableForSTH": "Enable For STH",
             "enableForISPU": "Enable For ISPU",
@@ -300,67 +301,67 @@
             "length": "Length",
             "height": "Height",
             "inches": "inches",
+    
+            "upsSettingsInfo": "UPS Credentials for CARS can be found in the",
+            "upsSettingsInfoLink": "CARS interface",
+            "fedexSettingsInfo": "FedEx Credentials for CARS can be found in the",
+            "fedexSettingsInfoLink": "CARS interface",
+            "uspsSettingsInfo": "USPS Credentials for CARS can be found in the",
+            "uspsSettingsInfoLink": "CARS interface",
+            "canadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
+            "canadaPostSettingsInfoLink": "CARS interface",
+            "outboundUsername": "Outbound Username",
+            "outboundPassword": "Outbound Password",
+            "outboundCustomerNumber": "Outbound Customer Number",
+            "outboundLocale": "Outbound Locale",
+            "outboundContractID": "Outbound Contract ID",
+            "carsPickupNotify": "CARS CANADA POST Automated Pickup Notify",
+            "preferredPickupTime": "Preferred Pickup Time",
+            "closingTime": "Closing Time",
+            "upsusShippingTypes": "UPS US Shipping Types",
+            "upsusStandardDefault": "UPS US Standard Default", 
+            "upsusExpress1DayDefault": "UPS US Express 1 Day Default",
+            "upsusExpress2DayDefault": "UPS US Express 2 Day Default",
+            "upsusExpress3DayDefault": "UPS US Express 3 Day Default",
+            "uspsShippingTypes": "USPS Shipping Types",
+            "uspsStandardDefault": "USPS Standard Default", 
+            "uspsExpress1DayDefault": "USPS Express 1 Day Default",
+            "uspsExpress2DayDefault": "USPS Express 2 Day Default",
+            "uspsExpress3DayDefault": "USPS Express 3 Day Default",
+            "uspsReturnLabelShippingTypes": "USPS Return Label Shipping Types",
+            "upsusReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
 
-            "UPSSettingsInfo": "UPS Credentials for CARS can be found in the",
-            "UPSSettingsInfoLink": "CARS interface",
-            "FedExSettingsInfo": "FedEx Credentials for CARS can be found in the",
-            "FedExSettingsInfoLink": "CARS interface",
-            "USPSSettingsInfo": "USPS Credentials for CARS can be found in the",
-            "USPSSettingsInfoLink": "CARS interface",
-            "CanadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
-            "CanadaPostSettingsInfoLink": "CARS interface",
-            "OutboundUsername": "Outbound Username",
-            "OutboundPassword": "Outbound Password",
-            "OutboundCustomerNumber": "Outbound Customer Number",
-            "OutboundLocale": "Outbound Locale",
-            "OutboundContractID": "Outbound Contract ID",
-            "CarsPickupNotify": "CARS CANADA POST Automated Pickup Notify",
-            "PreferredPickupTime": "Preferred Pickup Time",
-            "ClosingTime": "Closing Time",
-            "UPSUSShippingTypes": "UPS US Shipping Types",
-            "UPSUSStandardDefault": "UPS US Standard Default",
-            "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
-            "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
-            "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default",
-            "USPSShippingTypes": "USPS Shipping Types",
-            "USPSStandardDefault": "USPS Standard Default",
-            "USPSExpress1DayDefault": "USPS Express 1 Day Default",
-            "USPSExpress2DayDefault": "USPS Express 2 Day Default",
-            "USPSExpress3DayDefault": "USPS Express 3 Day Default",
-            "USPSReturnLabelShippingTypes": "USPS Return Label Shipping Types",
-            "UPSUSReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
+            "upsInternationalShippingTypes": "UPS International Shipping Types",
+            "upsInternationalStandardDefault": "UPS International Standard Default",
+            "upsInternationalExpress1DayDefault": "UPS International Express 1 Day Default",
+            "upsInternationalExpress2DayDefault": "UPS International Express 2 Day Default",
+            "upsInternationalExpress3DayDefault": "UPS International Express 3 Day Default",
+            "upsInternationalReturnLabelShippingTypes": "UPS International Return Label Shipping Types",
+            "upsInternationalUSReturnLabelShippingTypes": "UPS International US Return Label Shipping Types",
 
-            "UPSInternationalShippingTypes": "UPS International Shipping Types",
-            "UPSInternationalStandardDefault": "UPS International Standard Default",
-            "UPSInternationalExpress1DayDefault": "UPS International Express 1 Day Default",
-            "UPSInternationalExpress2DayDefault": "UPS International Express 2 Day Default",
-            "UPSInternationalExpress3DayDefault": "UPS International Express 3 Day Default",
-            "UPSInternationalReturnLabelShippingTypes": "UPS International Return Label Shipping Types",
-            "UPSInternationalUSReturnLabelShippingTypes": "UPS International US Return Label Shipping Types",
-
-            "UPSCanadaShippingTypes": "UPS Canada Shipping Types",
-            "UPSCanadaStandardDefault": "UPS Canada Standard Default",
-            "UPSCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
-            "UPSCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
-            "UPSCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
-            "UPSCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types",
+            "upsCanadaShippingTypes": "UPS Canada Shipping Types",
+            "upsCanadaStandardDefault": "UPS Canada Standard Default",
+            "upsCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
+            "upsCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
+            "upsCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
+            "upsCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types",
 
             "enableSmartPost": "Enable SmartPost",
-            "FedExShippingTypes": "FedEx Shipping Types",
-            "FedexStandardDefault": "Fedex Standard Default",
-            "FedexExpress1Default": "Fedex Express 1 Default",
-            "FedexExpress2Default": "Fedex Express 2 Default",
-            "FedexExpress3Default": "Fedex Express 3 Default",
-            "FedExReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
+            "fedexShippingTypes": "FedEx Shipping Types",
+            "fedexStandardDefault": "Fedex Standard Default",
+            "fedexExpress1Default": "Fedex Express 1 Default",
+            "fedexExpress2Default": "Fedex Express 2 Default",
+            "fedexExpress3Default": "Fedex Express 3 Default",
+            "fedexReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
         },
         "FormSections": {
-            "ISPU": "ISPU",
-            "BoxTypes": "Box Types",
-            "Shipping": "Shipping",
-            "UPSSettings": "UPS Settings",
-            "FedExSettings": "FedEx Settings",
-            "USPSSettings": "USPS Settings",
-            "CanadaPostSettings": "Canada Post Settings"
+            "ispu" : "ISPU",
+            "boxTypes": "Box Types",
+            "shipping": "Shipping",
+            "upsSettings": "UPS Settings",
+            "fedexSettings": "FedEx Settings",
+            "uspsSettings": "USPS Settings",
+            "canadaPostSettings": "Canada Post Settings"
         }
     }
 }

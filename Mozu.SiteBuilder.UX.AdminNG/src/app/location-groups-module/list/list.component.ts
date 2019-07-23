@@ -111,7 +111,7 @@ export class LocationGroupsListComponent implements OnInit {
         const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
         topLocationGroupConfigModel.locationGroupId = locationGroupId;
         topLocationGroupConfigModel.locationGroupName = this.model.selectedLocationGroup.name;
-        this._notificationService.notifyLocationGroupConfig({name: NotificationLGActions.list, data: topLocationGroupConfigModel});
+        this._notificationService.notifySetLocationGroupConfigData({name: NotificationLGActions.list, data: topLocationGroupConfigModel});
     }
 
     public populateLocationGroupGrid = () => {

@@ -39,8 +39,25 @@ import { TopLocationGroupsService } from './top-location-groups.service';
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
             }
-            if (action === NotificationLGActions.edit) {
-              this.model.isEditMode = true;
+        })
+      );
+
+      this.subscriptions.push(
+        this._notificationService.setLocationGroupConfigData.subscribe((action: any) => {
+          if (action.name === NotificationLGActions.list) {
+            this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = true;
+            this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
+            this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
+          }
+          if (action.name === NotificationLGActions.edit) {
+            this.model.isEditMode = true;
+            this.model.isConfigTabVisible  = true;
+            const topLocationGroupConfigModel: TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel;
+            this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
+            this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
+            if (topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length > 0) {
+              this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
             }
             this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
           }
