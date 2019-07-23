@@ -481,9 +481,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     private setSelectedCarriers( carriers: CarrierModel[]): boolean[] {
+        const carriersUpr: CarrierModel[] = [];
+        carriers.map((v) => {
+            const carrierObj : CarrierModel = {} as CarrierModel;
+            carrierObj.carrierType = v.carrierType.toUpperCase();
+            carrierObj.isEnabled = v.isEnabled;
+            carriersUpr.push(carrierObj);
+        });
         const carriersLst: boolean[] = [];
         this.model.LCCarriers.map((o, i) => {
-           const carrierObj =  _.find(carriers, { 'carrierType': o.CarrierType});
+           const carrierObj =  _.find(carriersUpr, { 'carrierType': (<string>o.CarrierType).toUpperCase()});
            if (carrierObj) {
                 carriersLst.push(true);
            } else {

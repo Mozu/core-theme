@@ -3,45 +3,113 @@
     "total": 1,
     "items": {
         "tenantId": 17427,
-        "siteId": 21550,
+        "siteId": 21583,
         "locationGroupId": 27,
         "customerFailedToPickupAfterAction": "CustomerCare",
         "customerFailedToPickupDeadline": 3,
-        "sendCustomerPickupReminder": 4,
+        "sendCustomerPickupReminder": 3,
         "closePickWavePermissions": [],
-        "defaultCarrier": "None",
-        "carriers": [],
+        "defaultCarrier": "Fedex",
+        "carriers": [
+            {
+                "carrierType": "FedEx",
+                "isEnabled": true
+            },
+            {
+                "carrierType": "Ups",
+                "isEnabled": true
+            },
+            {
+                "carrierType": "Usps",
+                "isEnabled": true
+            },
+            {
+                "carrierType": "CanadianPost",
+                "isEnabled": true
+            }
+        ],
+        "printReturnLabel": true,
+        "defaultPrinterType": "Laser",
         "shippingSettingsForUsps": {
-            "shippingMethods": []
+            "shippingMethods": [
+                "PRIORITYEXPRESS",
+                "FIRST",
+                "LIBRARYMAIL"
+            ],
+            "returnLabelShippingMethod": "LIBRARYMAIL",
+            "standardDefault": "FIRST",
+            "express1DayDefault": "FIRST",
+            "express2DayDefault": "LIBRARYMAIL",
+            "express3DayDefault": "FIRST"
         },
         "shippingSettingsForFedEx": {
-            "enableSmartPost": false,
-            "shippingMethods": []
+            "enableSmartPost": true,
+            "shippingMethods": [
+                "FIRST_OVERNIGHT",
+                "FIRST_OVERNIGHT_SATURDAY_DELIVERY",
+                "PRIORITY_OVERNIGHT",
+                "PRIORITY_OVERNIGHT_SATURDAY_DELIVERY",
+                "STANDARD_OVERNIGHT",
+                "FEDEX_2_DAY_AM",
+                "FEDEX_2_DAY",
+                "FEDEX_2_DAY_SATURDAY_DELIVERY",
+                "FEDEX_EXPRESS_SAVER",
+                "FEDEX_GROUND",
+                "GROUND_HOME_DELIVERY",
+                "SMART_POST"
+            ],
+            "returnLabelShippingMethod": "FIRST_OVERNIGHT",
+            "standardDefault": "FIRST_OVERNIGHT",
+            "express1DayDefault": "FIRST_OVERNIGHT",
+            "express2DayDefault": "FIRST_OVERNIGHT",
+            "express3DayDefault": "FIRST_OVERNIGHT"
         },
         "shippingSettingsForUps": {
             "unitedStatesUpsSettings": {
-                "shippingMethods": []
+                "shippingMethods": [
+                    "UPS_NEXT_DAY_AIR_EARLY_AM",
+                    "UPS_NEXT_DAY_AIR_SAVER",
+                    "UPS_NEXT_DAY_AIR"
+                ],
+                "returnLabelShippingMethod": "UPS_NEXT_DAY_AIR",
+                "standardDefault": "UPS_NEXT_DAY_AIR_EARLY_AM",
+                "express1DayDefault": "UPS_NEXT_DAY_AIR_EARLY_AM",
+                "express2DayDefault": "UPS_NEXT_DAY_AIR_SAVER",
+                "express3DayDefault": "UPS_NEXT_DAY_AIR"
             },
             "internationalUpsSettings": {
-                "shippingMethods": []
+                "internationalUsReturnLabelShippingMethod": "UPS_STANDARD",
+                "shippingMethods": [
+                    "UPS_STANDARD",
+                    "UPS_EXPRESS",
+                    "UPS_EXPRESS_PLUS",
+                    "UPS_EXPEDITED"
+                ],
+                "returnLabelShippingMethod": "UPS_STANDARD",
+                "standardDefault": "UPS_EXPRESS",
+                "express1DayDefault": "UPS_EXPRESS",
+                "express2DayDefault": "UPS_EXPRESS",
+                "express3DayDefault": "UPS_EXPRESS"
             },
             "canadaUpsSettings": {
-                "shippingMethods": []
+                "shippingMethods": [
+                    "UPS_NEXT_DAY_AIR_SAVER",
+                    "UPS_2ND_DAY_AIR",
+                    "UPS_3_DAY_SELECT"
+                ],
+                "returnLabelShippingMethod": "UPS_2ND_DAY_AIR",
+                "standardDefault": "UPS_NEXT_DAY_AIR_SAVER",
+                "express1DayDefault": "UPS_2ND_DAY_AIR",
+                "express2DayDefault": "UPS_2ND_DAY_AIR",
+                "express3DayDefault": "UPS_2ND_DAY_AIR"
             }
         },
-        "boxTypes": [
-            {
-                "name": "small",
-                "height": 2.0,
-                "width": 2.0,
-                "length": 2.0
-            }
-        ],
+        "boxTypes": [],
         "attributes": [],
         "auditInfo": {
-            "updateDate": "2019-07-19T13:07:43.038Z",
-            "createDate": "2019-07-19T13:04:06.469Z",
-            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "updateDate": "2019-07-23T08:37:18.902Z",
+            "createDate": "2019-07-19T13:04:06.486Z",
+            "updateBy": "1",
             "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
     }
