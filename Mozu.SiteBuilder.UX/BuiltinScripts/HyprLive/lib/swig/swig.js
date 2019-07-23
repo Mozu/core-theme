@@ -1790,6 +1790,8 @@
               varStrip = new RegExp('^' + escapedVarOpen + '-?\\s*-?|-?\\s*-?' + escapedVarClose + '$', 'g'),
               varStripBefore = new RegExp('^' + escapedVarOpen + '-'),
               varStripAfter = new RegExp('-' + escapedVarClose + '$'),
+              inlineCmtOpen = opts.inlineCmtControls[0],
+              inlineCmtClose = opts.inlineCmtControls[1],
               cmtOpen = opts.cmtControls[0],
               cmtClose = opts.cmtControls[1],
               anyChar = '[\\s\\S]*?',
@@ -1799,6 +1801,7 @@
                 '(' +
                   escapedVarOpen + anyChar + escapedVarClose + '|' +
                   escapeRegExp(cmtOpen) + anyChar + escapeRegExp(cmtClose) + '|' +
+                  escapeRegExp(inlineCmtOpen) + anyChar + escapeRegExp(inlineCmtClose) + '|' +
                   escapedTagOpen + anyChar + escapedTagClose +
                   ')'
               ),
@@ -1974,8 +1977,7 @@
                 }
 
                 // Is a comment?
-                if (!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) {
-                    // do nuthin and keep going!
+                if ((!inRaw && utils.startsWith(chunk, cmtOpen) && utils.endsWith(chunk, cmtClose)) || !inRaw && utils.startsWith(chunk, inlineCmtOpen) && utils.endsWith(chunk, inlineCmtClose)) {                    // do nuthin and keep going!
                     return;
                 }
                 // Is a variable?
@@ -2128,6 +2130,7 @@
             varControls: ['{{', '}}'],
             tagControls: ['{%', '%}'],
             cmtControls: ['{#', '#}'],
+            inlineCmtControls: ['{#', '#}'],
             locals: {},
             /**
              * Cache control for templates. Defaults to saving all templates into memory.
