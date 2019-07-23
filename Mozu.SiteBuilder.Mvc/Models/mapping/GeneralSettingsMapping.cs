@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             CreateMap<DC.PurchaseOrderPaymentDefinition, PurchaseOrderSettings>()
                 ;
 
-            CreateMap<DC.CheckoutSettings, UX.Models.Settings.CheckoutSettings>()
+            CreateMap<DC.CheckoutSettings, CheckoutSettings>()
                 .ForMember(x => x.CustomerCheckoutType, opt => opt.ResolveUsing(x => x.CustomerCheckoutSettings.CustomerCheckoutType))
                 .ForMember(x => x.IsPayPalEnabled, opt => opt.ResolveUsing(x => x.PaymentSettings.ExternalPaymentWorkflowDefinitions != null && x.PaymentSettings.ExternalPaymentWorkflowDefinitions.Any(expwd => String.Equals(expwd.Name, DC.Constants.ThirdPartyPayment.PAYPAL_EXPRESS, System.StringComparison.OrdinalIgnoreCase) && expwd.IsEnabled)))
                 .ForMember(x => x.ExternalPaymentWorkflowSettings, opt => opt.ResolveUsing(GetExternalPaymentWorkflowSettings))
@@ -81,6 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing<SupportedCardsWithCountryCodeContextResolver>())
                 .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts))
                 .ForMember(x => x.SupportedGiftCards, opt => opt.ResolveUsing<SupportedGiftCardsResolver>())
+                .ForMember(x => x.PaymentSettings, opt => opt.ResolveUsing(x => x.PaymentSettings))
                 ;
 
             CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()
@@ -100,7 +101,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(m => m.CustomCdnHostName, op => op.ResolveUsing(x => x.CustomCdnHostName))
 
                 //  .ForMember(m => m.CdnCacheBustKey, op => op.ResolveUsing(x => x.CustomCdnHostName))
-
+              //  .ForMember(m => m.CheckoutSetting, op => op.ResolveUsing(x => x.CheckoutSetting))
                 .ForMember(m => m.IsWishlistCreationEnabled, op => op.ResolveUsing(x => x.IsWishlistCreationEnabled))
                 .ForMember(m => m.IsMultishipEnabled, op => op.ResolveUsing(x => x.IsMultishipEnabled))
                 .ForMember(m => m.SupressedEmailTransactions, op => op.ResolveUsing(x => x.SupressedEmailTransactions))
@@ -261,11 +262,11 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
             {
                 List<DC.Gateway> allGateways = ((DC.CheckoutSettings)source).PaymentSettings.Gateways ?? new List<DC.Gateway>(0);
                 IEnumerable<DC.Gateway> filteredGateways = from g in allGateways
-                                                           where g.GatewayAccount != null &&(g.SiteGatewaySupportedCards != null && g.SiteGatewaySupportedCards.Any(x=>x.PaymentType.Equals("gc",StringComparison.OrdinalIgnoreCase)))
+                                                           where g.GatewayAccount != null && (g.SiteGatewaySupportedCards != null && g.SiteGatewaySupportedCards.Any(x => x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)))
                                                            select g;
 
-                
-                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x=> x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x=>x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
+
+                var cards = filteredGateways != null ? filteredGateways.SelectMany(g => g.SiteGatewaySupportedCards).Where(x => x.PaymentType.Equals("gc", StringComparison.OrdinalIgnoreCase)).Select(x => x.CardTypeId).Distinct().ToDictionary(c => c) : new Dictionary<string, string>();
 
                 return cards;
             }

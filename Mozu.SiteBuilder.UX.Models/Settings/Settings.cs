@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using Mozu.SiteSettings.Order.Contracts;
 using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
@@ -93,6 +94,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public List<ExternalPaymentWorkflowSettings> ExternalPaymentWorkflowSettings { get; set; }
 
         public Dictionary<string, string> SupportedGiftCards { get; set; }
+
+        public PaymentSettings PaymentSettings { get; set; }
     }
 
     public class ExternalPaymentWorkflowSettings
@@ -339,6 +342,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [DataMember]
         public int? DefaultBackOrderDays { get; set; }
+
+        public CheckoutSettings CheckoutSetting { get; set; } 
     }
 
     public class ViewModeToggles

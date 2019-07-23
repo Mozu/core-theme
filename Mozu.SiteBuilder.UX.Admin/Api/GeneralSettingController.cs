@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             settings.EmailTypes = (await GetEmailTypes(new PagingParamaters(), new FilterCollection())).Items;
 
             var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
-            settings.DefaultBackOrderDays = orderProcessingSettings.DefaultBackOrderDays;
+            // settings.DefaultBackOrderDays = orderProcessingSettings.DefaultBackOrderDays;
 
             return List2(settings);
         }
@@ -75,7 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
             if (!string.IsNullOrWhiteSpace(paymentProcessingFlowType))
                 orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
-            orderProcessingSettings.DefaultBackOrderDays = settingsToSave.DefaultBackOrderDays;
+         //   orderProcessingSettings.DefaultBackOrderDays = settingsToSave.DefaultBackOrderDays;
             var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
 
 
