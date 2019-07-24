@@ -87,9 +87,10 @@ export class GlobalErrorLoggingService {
                 this._tostrService.showError(error.code);
             } else {
                 this._tostrService.showError(ErrorCode.Fatal.toString());
-                setTimeout(() => {
-                    window.location.href = Constants.fatalErrorRedirectionUrl.logout;
-                }, 3000);
+                console.log(error);
+                // setTimeout(() => {
+                //     window.location.href = Constants.fatalErrorRedirectionUrl.logout;
+                // }, 3000);
             }
         }
     }
