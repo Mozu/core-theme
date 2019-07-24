@@ -23,7 +23,6 @@ export class QuotesListService {
         filter = sort && sort !== '' ? filter.append(Constants.queryParameters.sort, sort) : filter;
         filter = advancedSearch && advancedSearch !== '' ? filter.append(Constants.queryParameters.advancedSearch,
             JSON.stringify({ keyword: advancedSearch })) : filter;
-            console.log(filter);
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.quoteList);
         } else {

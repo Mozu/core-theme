@@ -1,25 +1,23 @@
 <div class="col-md-4 mt-5">
-	<p-card subheader="{{tileModel.sectionText}}" styleClass="ui-card-shadow ">
-		<p-header>
-			<div class="taco-image-holder tiles-align">
-				<span data-url="" class="tiles-images-align">
-					<img [attr.src]="tileModel.sectionImageURL" />
-				</span>
-			</div>
-		</p-header>
+    <p-card subheader="{{tileModel.sectionText}}" styleClass="ui-card-shadow">
+        <p-header>
+            <div class="taco-image-holder tiles-align">
+                <span data-url="" class="tiles-images-align">
+                                <a data-url="" class="dashboard-icon-align dashboard-icon dashboard-icon-{{tileModel.id}}"></a>
+                        </span>
+            </div>
+        </p-header>
 
-		<p-footer>
-			<div class="taco-dashboard-item-item"
-				*ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
-				<div class="tiles-item">
-					<a *ngIf="eachAccessTileLink.linkDataURL === uiRoutes || eachAccessTileLink.linkDataURL === uilocationGroups; 
-                                       else routeLink" [routerLink]="[eachAccessTileLink.linkDataURL]">
-						{{eachAccessTileLink.linkDataText}}</a>
-					<ng-template #routeLink>
-						<a [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
-					</ng-template>
-				</div>
-			</div>
-		</p-footer>
-	</p-card>
+        <p-footer>
+            <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
+                <div class="tiles-item" *ngIf="!(isOmsEnable && (eachAccessTileLink.linkDataText === inventoryTitle || eachAccessTileLink.linkDataText === locationGroupsTitle))">
+                    <a *ngIf="eachAccessTileLink.linkDataURL === uiRoutes || eachAccessTileLink.linkDataURL === uiLocationGroup; 
+                      else routeLink" [routerLink]="[eachAccessTileLink.linkDataURL]">{{eachAccessTileLink.linkDataText}}</a>
+                    <ng-template #routeLink>
+                        <a [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>
+                    </ng-template>
+                </div>
+            </div>
+        </p-footer>
+    </p-card>
 </div>

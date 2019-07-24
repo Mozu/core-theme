@@ -30,6 +30,7 @@
     right: -15px;
     top: 5px;
     position: relative;
+    margin-left: 40px;
 }
 
 .nav>li>a {
@@ -110,8 +111,8 @@
 }
 
 .navbar-search {
-    margin-top:-7px;
-    margin-bottom:-8px;
+    margin-top: -7px;
+    margin-bottom: -8px;
     line-height: 1.3;
 }
 

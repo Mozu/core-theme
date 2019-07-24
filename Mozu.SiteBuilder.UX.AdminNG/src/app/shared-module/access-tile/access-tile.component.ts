@@ -16,8 +16,11 @@ import { AccessTileModel } from './access-tile.model';
 export class AccessTileComponent {
 
   @Input('Tiles') tileModel: AccessTileModel;
+  @Input('isOmsEnable') isOmsEnable: boolean;
   uiRoutes = Constants.uiRoutes.quotes;
   uiLocationGroup =  Constants.uiRoutes.locationGroups;
+  inventoryTitle = Constants.titles.inventory;
+  locationGroupsTitle = Constants.titles.locationGroups;
 
   constructor(private _loggerService: LoggerService) {
   }

@@ -95,8 +95,6 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     }
     this.selectedGridColumnHeader = this.gridColumnHeader;
 
-    this.populateQuoteGrid();
-
     this.model.subscriptions.push(
       this._notificationService.quoteSearched.subscribe((advancedSearch: string) => {
         this.model.advancedSearch = advancedSearch;

@@ -148,9 +148,13 @@
                 "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
                 "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
             },
-            "Warning": {},
+            "Warning": {
+
+            },
             "Information": {},
-            "Success": {},
+            "Success": {
+                "LGCSavedSuccessfully": "Location Group Config saved successfully."
+            },
             "Custom": {}
         }
     },
@@ -266,13 +270,23 @@
             "nameRequired": "Input is Required."
         }
     },
-    "LOCATIONGROUPCONFIG":{
+    "Header": {
+        "SearchMessage": {
+            "noMatchingItem": "No matching items found."
+        },
+        "Label": {
+            "kibo": "Kibo eCommerce",
+            "help": "Help",
+            "seeAll": "see all"
+        }
+    },
+    "LOCATIONGROUPCONFIG": {
         "FormLabels": {
             "siteName": "Site Name",
             "siteConfig": "Site Config",
             "customerFailedToPickupAfterAction": "Customer Failed to Pickup After Action",
             "customerFailedToPickupDeadline": "Customer Failed to Pickup Deadline",
-            "customerFailedToPickupDeadlineWarnMsg" : "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
+            "customerFailedToPickupDeadlineWarnMsg": "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
             "sendCustomerPickupReminder": "Send Customer Pickup Reminder after the order has gone into waiting for customer pickup",
             "enableForSTH": "Enable For STH",
             "enableForISPU": "Enable For ISPU",
@@ -286,7 +300,7 @@
             "length": "Length",
             "height": "Height",
             "inches": "inches",
-    
+
             "UPSSettingsInfo": "UPS Credentials for CARS can be found in the",
             "UPSSettingsInfoLink": "CARS interface",
             "FedExSettingsInfo": "FedEx Credentials for CARS can be found in the",
@@ -297,10 +311,16 @@
             "CanadaPostSettingsInfoLink": "CARS interface",
 
             "UPSUSShippingTypes": "UPS US Shipping Types",
-            "UPSUSStandardDefault": "UPS US Standard Default", 
+            "UPSUSStandardDefault": "UPS US Standard Default",
             "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
             "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
             "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default",
+            "USPSShippingTypes": "USPS Shipping Types",
+            "USPSStandardDefault": "USPS Standard Default",
+            "USPSExpress1DayDefault": "USPS Express 1 Day Default",
+            "USPSExpress2DayDefault": "USPS Express 2 Day Default",
+            "USPSExpress3DayDefault": "USPS Express 3 Day Default",
+            "USPSReturnLabelShippingTypes": "USPS Return Label Shipping Types",
             "UPSUSReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
 
             "UPSInternationalShippingTypes": "UPS International Shipping Types",
@@ -327,7 +347,7 @@
             "FedExReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
         },
         "FormSections": {
-            "ISPU" : "ISPU",
+            "ISPU": "ISPU",
             "BoxTypes": "Box Types",
             "Shipping": "Shipping",
             "UPSSettings": "UPS Settings",

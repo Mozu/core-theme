@@ -42,7 +42,9 @@
                 "locationGroups": {
                     "create": "Create New Location Group",
                     "cancel": "Cancel",
-                    "save": "Save"
+                    "save": "Save",
+                    "remove": "Remove",
+                    "add": "Add"
                 }
             }
         },
@@ -62,31 +64,40 @@
         },
         "SHIPPING": {
             "Address": {
-                "shippingInformation": "Informations sur la livraison",
-                "shippingAddress": "Adresse de livraison",
-                "noShippingAddressMessage": "Vous n'avez pas d'adresse de livraison.",
-                "phoneNumberFormat": "FR"
+                "shippingInformation": "Shipping Information",
+                "shippingAddress": "Shipping Address",
+                "noShippingAddressMessage": "You have no shipping address.",
+                "phoneNumberFormat": "US"
             },
             "Method": {
-                "shippingMethodAndPrice": "Méthode d'expédition et prix",
-                "noShippingRatesAvailableMessage": "Désolé, les tarifs ne sont pas disponibles pour cette citation.",
-                "loadingText": "Chargement...",
-                "notFoundText": "Aucune méthode d'expédition disponible.",
-                "shippingMethodPlaceholder": "Aucune sélection"
+                "shippingMethodAndPrice": "Shipping Method & Price",
+                "noShippingRatesAvailableMessage": "Sorry, rates are not available for this quote.",
+                "loadingText": "Loading...",
+                "notFoundText": "No shipping methods available.",
+                "shippingMethodPlaceholder": "None Selected"
             }
         },
         "CONFIRMATIONDIALOG": {
             "Confirmation": {
                 "DeleteQuoteItem": {
-                    "title": " Delete Item",
+                    "title": "Delete Item",
                     "message": " Are you certain you want to delete this item?",
                     "primaryButtonText": "Yes",
                     "secondaryButtonText": "No",
                     "isShowSecondaryButton": "true"
                 },
                 "DeleteLocationGroup": {
-                    "title": " Delete Item",
-                    "message": " Are you certain you want to delete this item?",
+                    "title": "Delete Location Group",
+                    "message": "Are you sure you want to delete location group",
+                    "secondaryMessage": "Deleting the location group will also delete all the associated location group site configurations.",
+                    "primaryButtonText": "Delete",
+                    "secondaryButtonText": "Cancel",
+                    "isShowSecondaryButton": "true"
+                },
+                "LGCUnSavedChanges": {
+                    "title": "Location Group Config",
+                    "message": "Are you sure you want to leave this page?",
+                    "secondaryMessage": "If you leave this page, any changes you have made will be lost.",
                     "primaryButtonText": "Yes",
                     "secondaryButtonText": "No",
                     "isShowSecondaryButton": "true"
@@ -122,19 +133,29 @@
             }
         },
         "Toastr": {
-            "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-            "EmptyEmailAddress": "Please enter Email Address.",
-            "EmptyPassword": "Please enter Password.",
-            "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-            "QuoteListGetFailed": "Error occured while fetching quote list",
-            "QuoteGetFailed": "Error occured while fetching quote information",
-            "GetAccountInfoFailed": "Error occured while fetching account details",
-            "EmptyLocationGroupName": "Please enter Name.",
-            "EmptyLocationGroupSites": "Please select Site.",
-            "EmptyLocationGroupCodes": "Please select Location(s)",
-            "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
-            "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
-            "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
+            "Error": {
+                "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
+                "EmptyEmailAddress": "Please enter Email Address.",
+                "EmptyPassword": "Please enter Password.",
+                "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
+                "QuoteListGetFailed": "Error occured while fetching quote list",
+                "QuoteGetFailed": "Error occured while fetching quote information",
+                "GetAccountInfoFailed": "Error occured while fetching account details",
+                "EmptyLocationGroupName": "Please enter Name.",
+                "EmptyLocationGroupSites": "Please select Site.",
+                "EmptyLocationGroupCodes": "Please select Location(s)",
+                "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
+                "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
+                "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
+            },
+            "Warning": {
+
+            },
+            "Information": {},
+            "Success": {
+                "LGCSavedSuccessfully": "Location Group Config saved successfully."
+            },
+            "Custom": {}
         }
     },
     "QUOTES": {
@@ -159,8 +180,8 @@
             "edit": "Edit"
         },
         "GridFooter": {
-            "Displaying": "Affichage",
-            "of": "de"
+            "Displaying": "Displaying",
+            "of": "of"
         },
         "Quote": {
             "Information": {
@@ -254,7 +275,92 @@
             "noMatchingItem": "No matching items found."
         },
         "Label": {
-            "help": "Help"
+            "kibo": "Kibo eCommerce",
+            "help": "Help",
+            "seeAll": "see all"
+        }
+    },
+    "LOCATIONGROUPCONFIG": {
+        "FormLabels": {
+            "siteName": "Site Name",
+            "siteConfig": "Site Config",
+            "customerFailedToPickupAfterAction": "Customer Failed to Pickup After Action",
+            "customerFailedToPickupDeadline": "Customer Failed to Pickup Deadline",
+            "customerFailedToPickupDeadlineWarnMsg": "WARNING: Only set this value above 7 days if the client is using a NOOP gateway.",
+            "sendCustomerPickupReminder": "Send Customer Pickup Reminder after the order has gone into waiting for customer pickup",
+            "enableForSTH": "Enable For STH",
+            "enableForISPU": "Enable For ISPU",
+            "enableAdvancedOptionForPickWaveCreation": "Enable Advanced Option for Pick Wave Creation",
+            "carriers": "Carriers",
+            "defaultCarrier": "Default Carrier",
+            "printReturnLabel": "Print Return Label",
+            "defaultPrinterType": "Default Printer Type",
+            "name": "Name",
+            "width": "Width",
+            "length": "Length",
+            "height": "Height",
+            "inches": "inches",
+
+            "UPSSettingsInfo": "UPS Credentials for CARS can be found in the",
+            "UPSSettingsInfoLink": "CARS interface",
+            "FedExSettingsInfo": "FedEx Credentials for CARS can be found in the",
+            "FedExSettingsInfoLink": "CARS interface",
+            "USPSSettingsInfo": "USPS Credentials for CARS can be found in the",
+            "USPSSettingsInfoLink": "CARS interface",
+            "CanadaPostSettingsInfo": "Canada Post Credentials for CARS can be found in the",
+            "CanadaPostSettingsInfoLink": "CARS interface",
+            "OutboundUsername": "Outbound Username",
+            "OutboundPassword": "Outbound Password",
+            "OutboundCustomerNumber": "Outbound Customer Number",
+            "OutboundLocale": "Outbound Locale",
+            "OutboundContractID": "Outbound Contract ID",
+            "CarsPickupNotify": "CARS CANADA POST Automated Pickup Notify",
+            "PreferredPickupTime": "Preferred Pickup Time",
+            "ClosingTime": "Closing Time",
+            "UPSUSShippingTypes": "UPS US Shipping Types",
+            "UPSUSStandardDefault": "UPS US Standard Default",
+            "UPSUSExpress1DayDefault": "UPS US Express 1 Day Default",
+            "UPSUSExpress2DayDefault": "UPS US Express 2 Day Default",
+            "UPSUSExpress3DayDefault": "UPS US Express 3 Day Default",
+            "USPSShippingTypes": "USPS Shipping Types",
+            "USPSStandardDefault": "USPS Standard Default",
+            "USPSExpress1DayDefault": "USPS Express 1 Day Default",
+            "USPSExpress2DayDefault": "USPS Express 2 Day Default",
+            "USPSExpress3DayDefault": "USPS Express 3 Day Default",
+            "USPSReturnLabelShippingTypes": "USPS Return Label Shipping Types",
+            "UPSUSReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
+
+            "UPSInternationalShippingTypes": "UPS International Shipping Types",
+            "UPSInternationalStandardDefault": "UPS International Standard Default",
+            "UPSInternationalExpress1DayDefault": "UPS International Express 1 Day Default",
+            "UPSInternationalExpress2DayDefault": "UPS International Express 2 Day Default",
+            "UPSInternationalExpress3DayDefault": "UPS International Express 3 Day Default",
+            "UPSInternationalReturnLabelShippingTypes": "UPS International Return Label Shipping Types",
+            "UPSInternationalUSReturnLabelShippingTypes": "UPS International US Return Label Shipping Types",
+
+            "UPSCanadaShippingTypes": "UPS Canada Shipping Types",
+            "UPSCanadaStandardDefault": "UPS Canada Standard Default",
+            "UPSCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
+            "UPSCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
+            "UPSCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
+            "UPSCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types",
+
+            "enableSmartPost": "Enable SmartPost",
+            "FedExShippingTypes": "FedEx Shipping Types",
+            "FedexStandardDefault": "Fedex Standard Default",
+            "FedexExpress1Default": "Fedex Express 1 Default",
+            "FedexExpress2Default": "Fedex Express 2 Default",
+            "FedexExpress3Default": "Fedex Express 3 Default",
+            "FedExReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
+        },
+        "FormSections": {
+            "ISPU": "ISPU",
+            "BoxTypes": "Box Types",
+            "Shipping": "Shipping",
+            "UPSSettings": "UPS Settings",
+            "FedExSettings": "FedEx Settings",
+            "USPSSettings": "USPS Settings",
+            "CanadaPostSettings": "Canada Post Settings"
         }
     }
 }
