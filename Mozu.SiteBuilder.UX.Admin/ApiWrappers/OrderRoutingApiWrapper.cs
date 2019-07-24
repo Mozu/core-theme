@@ -1,13 +1,13 @@
 ﻿using IO.Swagger.Api;
 using IO.Swagger.Model;
 using Mozu.Core;
-using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.Swagger.Client;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _apiContext = apiContext;
             _settings = settings;
             //var basePath = "http://services-tp-dev01.kubedev.kibo-dev.com/order-routing/";
-            var basePath = settings.Urls("service-url-FullfilmentWebApi");
+            var basePath = settings.Services.First(x => x.Name == "OrderRouting").BaseUrl;
             _routingController = new RoutingControllerApi(basePath);
             _routingController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
             _routingController.ApiClient.DefaultHeader["x-vol-site"] = apiContext.SiteId.GetValueOrDefault(0).ToString();
