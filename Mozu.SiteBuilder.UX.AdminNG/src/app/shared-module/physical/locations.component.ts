@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { TreeNode } from 'primeng/components/common/api';
 import { PhysicalLocationsService } from './locations.service';
 import { LoggerService, SpinnerService } from '@core';
@@ -15,7 +15,7 @@ import { PhysicalLocationsModel } from './locations.model';
   providers: [PhysicalLocationsService],
   encapsulation: ViewEncapsulation.None
 })
-export class PhysicalLocationsComponent implements OnInit {
+export class PhysicalLocationsComponent implements OnInit, OnDestroy {
   public model: PhysicalLocationsModel;
   @Output()
   physicalLocationSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -62,6 +62,8 @@ export class PhysicalLocationsComponent implements OnInit {
     this._physicalLocationsService.getPhysicalLocations().subscribe(locations => {
       this.convertJsonToTreeNodeArr(locations);
       if (this.model.formMode === Constants.gridActionItem.Edit) {
+        // as Location code comes in any format either in Lower case or Upper case, always compare code in UpperCase
+        this.addLocationsCodeToUpperCase(locations);
         // prepare selected location detials array :
         this.getSelectedLocationDetailsArr(locations);
         // send notification to main page.
@@ -71,6 +73,23 @@ export class PhysicalLocationsComponent implements OnInit {
       this._spinner.stop();
     });
   }
+
+  addLocationsCodeToUpperCase(locations) {
+    if (locations && locations.items) {
+      for (let locCnt = 0; locCnt < locations.items.length; locCnt++) {
+        if (locations.items[locCnt].states) {
+          for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
+            if (locations.items[locCnt].states[stateCnt].locations) {
+              locations.items[locCnt].states[stateCnt].locations.map((element) => {
+                return element.codeUpperCase =  (<string>element.code).toUpperCase();
+              });
+            }
+          }
+        }
+      }
+    }
+  }
+
   convertJsonToTreeNodeArr(locations) {
     const treeNodeArr = [];
     if (locations && locations.items) {
@@ -115,7 +134,7 @@ export class PhysicalLocationsComponent implements OnInit {
             for (let stateCnt = 0; stateCnt < locations.items[locCnt].states.length; stateCnt++) {
               if (locations.items[locCnt].states[stateCnt].locations) {
                 const locationObj = _.find(locations.items[locCnt].states[stateCnt].locations,
-                  { 'code': (<string>this.model.selectedLoctions[selLocCnt]).toLowerCase() });
+                  { 'codeUpperCase': (<string>this.model.selectedLoctions[selLocCnt]).toUpperCase() });
                 if (locationObj) {
                   this.model.selectedLoctionsDetailsArr.push(locationObj);
                 }

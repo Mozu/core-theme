@@ -1,156 +1,22 @@
 {
     "success": true,
-    "total": 9,
+    "total": 1,
     "items": [
         {
-            "locationGroupId": 17,
+            "locationGroupId": 189,
             "siteIds": [
-                21550
+                21574
             ],
-            "name": "site id and location codes? 2",
+            "name": "test delete 1",
             "locationCodes": [
-                "LG0001"
+                "4TXMKOTLIA",
+                "CICRK396LQ"
             ],
             "auditInfo": {
-                "updateDate": "2019-05-01T20:27:50.066Z",
-                "createDate": "2019-05-01T20:27:50.066Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 16,
-            "siteIds": [
-                21550
-            ],
-            "name": "site id and location codes?",
-            "locationCodes": [
-                "LG0001"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-05-01T20:26:28.727Z",
-                "createDate": "2019-05-01T20:26:28.727Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 24,
-            "siteIds": [
-                21550
-            ],
-            "name": "cat92testsuccess",
-            "locationCodes": [],
-            "auditInfo": {
-                "updateDate": "2019-06-18T20:41:38.403Z",
-                "createDate": "2019-06-18T20:41:11.434Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 19,
-            "siteIds": [
-                21550
-            ],
-            "name": "Updategroup19",
-            "locationCodes": [
-                "LG0001",
-                "LG0001"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-05-01T22:16:04.106Z",
-                "createDate": "2019-05-01T21:41:25.911Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 27,
-            "siteIds": [
-                21550,
-                21583
-            ],
-            "name": "Test demo 2",
-            "locationCodes": [
-                "ROLETEST3",
-                "ROLETEST4"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-07-19T13:04:06.392Z",
-                "createDate": "2019-07-19T13:04:06.392Z",
+                "updateDate": "2019-07-24T08:20:38.565Z",
+                "createDate": "2019-07-24T08:20:38.565Z",
                 "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                 "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
-            }
-        },
-        {
-            "locationGroupId": 4,
-            "siteIds": [
-                21550
-            ],
-            "name": "LocationGroup4Update",
-            "locationCodes": [
-                "roletest6",
-                "roletest8",
-                "roletest9",
-                "LG0001",
-                "roletest6"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-05-01T22:02:38.227Z",
-                "createDate": "2019-04-25T21:24:46.041Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 9,
-            "siteIds": [
-                21550
-            ],
-            "name": "LocationGroup4Update",
-            "locationCodes": [
-                "LG0001"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-05-01T19:51:56.547Z",
-                "createDate": "2019-05-01T19:51:56.547Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 10,
-            "siteIds": [
-                21550
-            ],
-            "name": "LocationGroup4Update",
-            "locationCodes": [
-                "LG0001"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-05-01T19:53:56.480Z",
-                "createDate": "2019-05-01T19:53:56.480Z",
-                "updateBy": "1",
-                "createBy": "1"
-            }
-        },
-        {
-            "locationGroupId": 5,
-            "siteIds": [
-                21550
-            ],
-            "name": "Another Group of Locations",
-            "locationCodes": [
-                "roletest10",
-                "roletest11",
-                "roletest12"
-            ],
-            "auditInfo": {
-                "updateDate": "2019-04-26T15:26:46.969Z",
-                "createDate": "2019-04-26T15:26:46.969Z",
-                "updateBy": "1",
-                "createBy": "1"
             }
         }
     ]

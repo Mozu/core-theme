@@ -2,19 +2,18 @@
     "success": true,
     "total": 1,
     "items": {
-        "locationGroupId": 27,
+        "locationGroupId": 189,
         "siteIds": [
-            21550,
-            21583
+            21574
         ],
-        "name": "Test demo 2",
+        "name": "test delete 1",
         "locationCodes": [
-            "ROLETEST3",
-            "ROLETEST4"
+            "4TXMKOTLIA",
+            "CICRK396LQ"
         ],
         "auditInfo": {
-            "updateDate": "2019-07-19T13:04:06.392Z",
-            "createDate": "2019-07-19T13:04:06.392Z",
+            "updateDate": "2019-07-24T08:20:38.565Z",
+            "createDate": "2019-07-24T08:20:38.565Z",
             "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
             "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }

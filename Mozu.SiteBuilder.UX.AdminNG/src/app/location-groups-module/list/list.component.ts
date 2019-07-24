@@ -122,6 +122,8 @@ export class LocationGroupsListComponent implements OnInit {
             const responseJson = successResponse;
             if (responseJson != null && responseJson !== undefined && responseJson['items'].length > 0) {
                 this.model.items = _.sortBy(responseJson['items'], ['locationGroupId']);
+            } else {
+                this.model.items = [];
             }
             this._spinner.stop();
         }, (errResponse) => {
