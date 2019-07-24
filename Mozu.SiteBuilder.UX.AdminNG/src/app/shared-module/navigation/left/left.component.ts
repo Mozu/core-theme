@@ -32,6 +32,8 @@ export class NavigationLeftComponent implements OnInit {
   public model: LeftNavigationModel;
   uiRoutes = Constants.uiRoutes.quotes;
   uiLocationGroup =  Constants.uiRoutes.locationGroups;
+  inventoryTitle = Constants.titles.inventory;
+  locationGroupsTitle = Constants.titles.locationGroups;
 
   constructor(
     private navigationService: NavigationService,
@@ -65,8 +67,9 @@ export class NavigationLeftComponent implements OnInit {
       }
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
         this.model.filteredNavigationLinks, this._sharedData._sharedData.items.ctTaContext);
+        this.model.isOmsEnable = this._sharedData._sharedData.items.ctTaContext.omsEnabled ? this._sharedData._sharedData.items.ctTaContext.omsEnabled : false;
 
-      this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
+        this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
