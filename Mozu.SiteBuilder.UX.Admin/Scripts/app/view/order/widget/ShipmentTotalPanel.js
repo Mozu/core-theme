@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                                 right: 70
                             },
                             handler: function (evt) {
-                                me.toggleEdit();
+                                me.updateShipmentAdjustments();
                             }
                         }),
                         Ext.widget('button', {
@@ -126,6 +126,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 }
             }
         });
+
         this.items.push(this.totalsContainer);
         this.setAdjustmentInputId();
     },
@@ -194,33 +195,33 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         //Shipping
         var el = Ext.get(this.shippingAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingAdjustmentInput, '.shipping', this.shipmentRecord.shippingSubTotal, false); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingAdjustmentInput, '.shipping', this.shipmentRecord.shippingSubtotal, false); }, this);
         };
 
         //Shipping Tax
         el = Ext.get(this.shippingTaxAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingTaxAdjustmentInput, '.shipping-tax', this.shipmentRecord.shippingSubTotal, false, this.shippingTaxAdjustmentPercInput, this.shipmentRecord.shippingTaxTotal); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingTaxAdjustmentInput, '.shipping-tax', this.shipmentRecord.shippingSubtotal, false, this.shippingTaxAdjustmentPercInput, this.shipmentRecord.shippingTaxTotal); }, this);
         };
         el = Ext.get(this.shippingTaxAdjustmentPercInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingTaxAdjustmentPercInput, '.shipping-tax', this.shipmentRecord.shippingSubTotal, true, this.shippingTaxAdjustmentInput, this.shipmentRecord.shippingTaxTotals); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingTaxAdjustmentPercInput, '.shipping-tax', this.shipmentRecord.shippingSubtotal, true, this.shippingTaxAdjustmentInput, this.shipmentRecord.shippingTaxTotals); }, this);
         };
 
         //Handling
         el = Ext.get(this.handlingAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingAdjustmentInput, '.handling', this.shipmentRecord.handlingSubTotal, false); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingAdjustmentInput, '.handling', this.shipmentRecord.handlingSubtotal, false); }, this);
         };
 
         //Handling Tax
         el = Ext.get(this.handlingTaxAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingTaxAdjustmentInput, '.handling-tax', this.shipmentRecord.handlingSubTotal, false, this.handlingTaxAdjustmentPercInput, this.shipmentRecord.handlingTaxTotal); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingTaxAdjustmentInput, '.handling-tax', this.shipmentRecord.handlingSubtotal, false, this.handlingTaxAdjustmentPercInput, this.shipmentRecord.handlingTaxTotal); }, this);
         };
         el = Ext.get(this.handlingTaxAdjustmentPercInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingTaxAdjustmentPercInput, '.handling-tax', this.shipmentRecord.handlingSubTotal, true, this.handlingTaxAdjustmentInput, this.shipmentRecord.handlingTaxTotal); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingTaxAdjustmentPercInput, '.handling-tax', this.shipmentRecord.handlingSubtotal, true, this.handlingTaxAdjustmentInput, this.shipmentRecord.handlingTaxTotal); }, this);
         };
 
         //Tax
@@ -236,12 +237,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     setCalculatedSummaryValues: function (elementId, summarycls, originalValue, isPercentage, subElementId, defaultValue) {
-        
+
         var el = Ext.get(elementId);
         var calcValue = 0;
         if (el) {
             var enteredValue = parseFloat(Ext.get(elementId).getValue());
-            if (enteredValue) {                
+            if (enteredValue) {
                 if (isPercentage)
                     calcValue = (originalValue * enteredValue) / 100;
                 else
@@ -249,16 +250,16 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(calcValue);
             }
-            else { 
-                this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency( defaultValue || originalValue );
+            else {
+                this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(defaultValue || originalValue);
             }
-            
+
             //clear sub element
             if (subElementId && calcValue)
                 if (isPercentage)
                     Ext.get(subElementId).dom.value = calcValue.toFixed(2);
-                else 
-                    Ext.get(subElementId).dom.value = ((calcValue / originalValue ) * 100).toFixed(2);
+                else
+                    Ext.get(subElementId).dom.value = ((calcValue / originalValue) * 100).toFixed(2);
         }
     },
 
@@ -366,6 +367,66 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         me.update();
     },
 
+    getShippingAdjustmentsPayload: function () {
+        var me = this;
+        var taxAdjustmentValue = me.getValueOf(this.taxAdjustmentInput);
+        var shippingAdjustmentValue = me.getValueOf(this.shippingAdjustmentInput);
+        var shippingTaxAdjustmentValue = me.getValueOf(this.shippingTaxAdjustmentInput);
+        var handlingAdjustmentValue = me.getValueOf(this.handlingAdjustmentInput);
+        var handlingTaxAdjustmentValue = me.getValueOf(this.handlingTaxAdjustmentInput);
+
+        if (taxAdjustmentValue || shippingAdjustmentValue || shippingTaxAdjustmentValue || handlingAdjustmentValue || handlingTaxAdjustmentValue)
+            return {
+                "shipmentAdjustment": {
+                    orderId: this.record.get('id'),
+                    ohipmentNumber: this.shipmentRecord.number,
+                    //ItemAdjustment: this.shippingAdjustmentInput ? this.shippingAdjustmentInput : null,
+                    itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) - this.shipmentRecord.lineItemTaxTotal) : null,
+                    shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) - this.shipmentRecord.shippingSubtotal) : null,
+                    shippingTaxAdjustment: shippingTaxAdjustmentValue ? (parseFloat(shippingTaxAdjustmentValue) - this.shipmentRecord.shippingTaxTotal) : null,
+                    handlingAdjustment: handlingAdjustmentValue ? (parseFloat(handlingAdjustmentValue) - this.shipmentRecord.handlingSubtotal) : null,
+                    handlingTaxAdjustment: handlingTaxAdjustmentValue ? (parseFloat(handlingTaxAdjustmentValue) - this.shipmentRecord.handlingTaxTotal) : null
+                }
+            }
+    },
+
+    getValueOf: function (elementId) {
+        return Ext.get(elementId).getValue();
+    },
+
+    updateShipmentAdjustments: function () {
+        var me = this;
+        me.setLoading(true, this.body);
+        var payloadData = me.getShippingAdjustmentsPayload();
+        debugger;
+        this.record.updateShipmentAdjustments({
+            jsonData: payloadData,
+            success: function (response) {
+                debugger;
+                me.setLoading(false, this.body);
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                    return;
+                }
+                me.fireEvent('shipmentRefresh');
+            },
+            failure: function (response) {
+                debugger;
+                me.setLoading(false, this.body);
+                // error handling here
+                Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+            },
+            scope: me
+        });
+    },
+
+    isShipmentAction: function () {
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
+            return true;
+        return false;
+    },
+
     tableStartTpl: new Ext.XTemplate(
         '<table class="x-grid-table x-grid-with-row-lines {isEditableCls} {classNames}" border="0" cellspacing="0" cellpadding="0" style="width:90%; margin-left: auto;">',
         // todo make this dynamic and pulls from grid header to get correct widths;
@@ -470,12 +531,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     ),
 
     subTpl_7: new Ext.XTemplate(
-        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubTotal)]}</div>'
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div>'
     ),
 
     subTpl_10: new Ext.XTemplate(
 
-        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.handlingSubTotal)]}</div>'
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.handlingSubtotal)]}</div>'
 
     ),
 
@@ -566,7 +627,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                //'<th><div class="{[ (values.shippingSubTotal != 0 ) ? "shipping-summary" : "" ]}"></div></th>',
+                //'<th><div class="{[ (values.shippingSubtotal != 0 ) ? "shipping-summary" : "" ]}"></div></th>',
                 '<th><div class=""></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
                 '<th></th>',
@@ -631,7 +692,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                //'<th><div class="{[ (values.handlingSubTotal != 0 ) ? "handling-summary" : "" ]}"></div></th>',
+                //'<th><div class="{[ (values.handlingSubtotal != 0 ) ? "handling-summary" : "" ]}"></div></th>',
                 '<th><div class=""></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
                 '<th></th>',

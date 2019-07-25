@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
         {
             _apiContext = apiContext;
             _settings = settings;
-            var basePath = settings.Urls("service-url-FullfilmentWebApi");
+            var basePath = settings.Urls("service-url-ShipmentsWebAPi");
             _shipmentController = new ShipmentControllerApi(basePath);
             //_shipmentController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
             //_shipmentController.ApiClient.DefaultHeader["x-vol-Site"] = apiContext.SiteId.ToString();

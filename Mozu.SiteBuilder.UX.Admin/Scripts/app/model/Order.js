@@ -2953,7 +2953,7 @@ Ext.define('Taco.model.Order', {
 
     updateShipmentAdjustments: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/shipment/updateShipmentAdjustments',
+            url: '/admin/app/order/shipment/updateShipmentAdjustments',
             method: 'PUT'
         });
 
