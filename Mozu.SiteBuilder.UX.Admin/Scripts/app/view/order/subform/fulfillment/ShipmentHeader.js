@@ -56,7 +56,6 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             ]
         });
 
-
         this.items.push(this.infoContainer);
     },
 
@@ -84,9 +83,9 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                         record: me.record,
                         store: store,
                         listeners: {
-                            saveSuccess: {
+                            orderCancelled: {
                                 fn: function (json) {
-                                    me.fireEvent('orderCancelled', json);
+                                    me.fireEvent('shipmentRefresh', json);
                                 },
                                 scope: me
                             }

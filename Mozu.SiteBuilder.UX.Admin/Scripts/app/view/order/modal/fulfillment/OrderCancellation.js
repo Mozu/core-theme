@@ -144,10 +144,9 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                 var json = Ext.decode(response.responseText, true);
                                 if (!json || !json.success) {
                                     Taco.app.fireEvent('setmessage', 'Error canceling order', 'error');
-                                    me.fireEvent('saveFailure');
+                                    //me.fireEvent('saveFailure');
                                     return;
                                 }
-                                me.ownerCt.setLoading(false);
                                 me.fireEvent('orderCancelled', json);
                             },
                             failure: function (response) {                                
@@ -155,6 +154,7 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                 // error handling here
                                 var json = Ext.decode(response.responseText, true),
                                     msg = (json && json.message) ? json.message : 'Error canceling order';
+
                                 Taco.app.fireEvent('setmessage', msg, 'error');
                                 me.fireEvent('saveFailure');
                             },

@@ -6,8 +6,6 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
 
     initComponent: function () {
 
-        this.getLocation();
-        
         if (this.shipmentRecord.location && this.shipmentRecord.location.displayName) {
             this.tabTitle = '<span class="label">Shipped From</span><span class="title">' + this.shipmentRecord.location.displayName + '</span>';
             this.isTabTitleHtml = true;
@@ -102,11 +100,13 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                 address += originAddress.address3 + ' <br/>';
             if (originAddress.address4)
                 address += originAddress.address4 + ' <br/>';
+            return '<div class="addressdiv">' + address +
+                (originAddress.cityOrTown ? originAddress.cityOrTown : '') + ', ' +
+                (originAddress.stateOrProvince ? originAddress.stateOrProvince : '') + ', ' +
+                (originAddress.postalOrZipCode ? originAddress.postalOrZipCode : '') + ', ' +
+                (originAddress.countryCode ? originAddress.countryCode : '') +
+                '</div>';
         }
-
-
-        return '<div class="addressdiv">' + address +
-            originAddress.cityOrTown + ', ' + originAddress.stateOrProvince + ' ' + originAddress.postalOrZipCode + ' ' + originAddress.countryCode + '<br/>' + '</div>';
     },
 
     getFullfillmentFromContact: function (contact) {
@@ -125,20 +125,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
         return '<div class="addressdiv">' + tempContact +  '</div>';
     },
 
-    getLocation: function () {
-        var locations = this.record.get('locations');        
-        if (locations) {
-            for (var count = 0; count < locations.length; count++) {                
-                if (this.shipmentRecord.locationCode == locations[count].get('code')) {
-                    this.shipmentRecord.location = locations[count].data;
-                    break;
-                }
-            }
-        }
-    },
-
     onDestroy: function () {
         this.callParent(arguments);
     }
-
 });

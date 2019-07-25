@@ -12,7 +12,8 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 {
     public interface IFulfillerApiWrapper
     {
-        void CancelShipment(CancelShipment request, int? shipmentNumbe);
+        ResourceOfShipment BackorderShipment(BackorderShipmentRequest body, int? shipmentNumber);
+        void CancelShipment(CancelShipment request, int? shipmentNumber);
         ResourceOfShipment CancelItems(List<CanceledItem> request, int? shipmentNumber);
         void DeleteShipment(int? shipmentNumber);
         ResourceOfShipment Execute(Dictionary<string, object> request, int? shipmentNumber, string taskId);
@@ -42,10 +43,16 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _settings = settings;
             var basePath = settings.Urls("service-url-FullfilmentWebApi");
             _shipmentController = new ShipmentControllerApi(basePath);
-            _shipmentController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
-            _shipmentController.ApiClient.DefaultHeader["x-vol-Site"] = apiContext.SiteId.ToString();
-            _shipmentController.ApiClient.DefaultHeader["x-vol-master-catalog"] = apiContext.MasterCatalogId.ToString();
-            _shipmentController.ApiClient.DefaultHeader["x-vol-catalog"] = apiContext.CatalogId.ToString();
+            //_shipmentController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
+            //_shipmentController.ApiClient.DefaultHeader["x-vol-Site"] = apiContext.SiteId.ToString();
+            //_shipmentController.ApiClient.DefaultHeader["x-vol-master-catalog"] = apiContext.MasterCatalogId.ToString();
+            //_shipmentController.ApiClient.DefaultHeader["x-vol-catalog"] = apiContext.CatalogId.ToString();
+        }
+
+
+        public ResourceOfShipment BackorderShipment(BackorderShipmentRequest body, int? shipmentNumber)
+        {
+            return _shipmentController.BackorderShipmentUsingPUT(body, _apiContext.TenantId, shipmentNumber, _apiContext.SiteId);
         }
 
         public void CancelShipment(CancelShipment request, int? shipmentNumber)

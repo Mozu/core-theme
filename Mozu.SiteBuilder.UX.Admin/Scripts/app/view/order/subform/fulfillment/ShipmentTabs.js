@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
     initComponent: function () {
         var me = this;
 
-        if (this.shipmentRecord.shipmentStatus == 'Fulfilled' || this.shipmentRecord.shipmentStatus == 'Cancelled')
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
             this.isCollapsed = true;
 
         this.buildForm();
@@ -72,11 +72,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 shipmentRecord: this.shipmentRecord
             }));
         }
-        items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
-            record: this.record,
-            shipmentRecord: this.shipmentRecord
-        }));
-
+        if (this.shipmentRecord.CanceledItems && this.shipmentRecord.CanceledItems.length > 0) {
+            items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
+                record: this.record,
+                shipmentRecord: this.shipmentRecord
+            }));
+        }
         this.items = items;
     }
 })

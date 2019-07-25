@@ -207,20 +207,20 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
             handler: function () { }
         };
 
-        if (this.shipmentRecord.shipmentStatus == 'Ready') {
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             return [
                 actionMoveToBackorder,
                 actionEditItem,
                 actionCancelItem
             ];
         }
-        else if (this.shipmentRecord.shipmentStatus == 'Backorder') {
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
             return [
                 actionEditItem,
                 actionCancelItem
             ];
         }
-        else if (this.shipmentRecord.shipmentStatus == 'Customer Care') {
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
             return [
                 actionMoveToBackorder,
                 actionEditItem,
@@ -230,7 +230,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     },
 
     isShipmentAction: function () {
-        if (this.shipmentRecord.shipmentStatus == 'Fulfilled' || this.shipmentRecord.shipmentStatus == 'Cancelled')
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
             return true;
         return false;
     },

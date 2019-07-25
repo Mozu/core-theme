@@ -564,6 +564,7 @@
     <Compile Include="Swagger\Fulfillment\Model\ResourceOfWorkflowProcess.cs" />
     <Compile Include="Swagger\Fulfillment\Model\ResourcesOfResourceOfWorkflowProcess.cs" />
     <Compile Include="Swagger\Fulfillment\Model\ResourcesOfTask.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\BackorderShipmentRequest.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Shipment.cs" />
     <Compile Include="Swagger\Fulfillment\Model\SplitItem.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Task.cs" />
@@ -1022,6 +1023,7 @@
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ItemsReassign.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ItemUnitTax.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\UpdateBackorderDate.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemQtyChange.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentReassign.js" />

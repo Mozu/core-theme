@@ -882,8 +882,7 @@ Ext.define('Taco.model.Order', {
         loadConfig = Ext.applyIf({
             bypassCache: true,
             success: function (record) {
-
-
+                
                 if (record.getId() === me.getId()) {
                     me.beginEdit();
                     modifiedNames = me.copyFrom(record);
@@ -2884,6 +2883,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    backorderedShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/backordered',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     reassignShipmentItems: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipment/items/reassign',
@@ -2896,7 +2904,7 @@ Ext.define('Taco.model.Order', {
     fulfillShipment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipment/fulfill',
-            method: 'POST'
+            method: 'PUT'
         });
 
         Ext.Ajax.request(config);
@@ -2968,6 +2976,21 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
+    },
+
+    getLocationsByCode: function (locationCode) {
+        if (locationCode) {
+            var me = this;
+
+            return Ext.create('Taco.store.Locations', {
+                filters: [
+                    {
+                        property: 'code',
+                        value: locationCode
+                    }
+                ]
+            });
+        }
     },
 
     getLocations: function () {

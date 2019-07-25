@@ -405,6 +405,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
         }
 
+        public class BackorderShipmentArgs
+        {
+            public int? ShipmentNumber { get; set; }
+
+            public Fulfillment.Contracts.Model.BackorderShipmentRequest BackorderShipmentBody { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/backordered")]
+        public Response<Fulfillment.Contracts.Model.ResourceOfShipment> BackorderShipment(BackorderShipmentArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.BackorderShipment(args.BackorderShipmentBody, args.ShipmentNumber);
+            return Single2(serviceResponse);
+        }
+
         public class ReassignShipmenttArgs
         {
             public int? ShipmentNumber { get; set; }
@@ -442,18 +455,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
             return Single2(shipment);
         }
-
-        public class MoveItemToBackOrderArgs
-        {
-            public int? ShipmentNumber { get; set; }
-            public List<DCs.BackorderItem> BackorderItems { get; set; }
-        }
-        [HttpPostRoute(UriTemplate = "shipment/moveItemToBackOrder")]
-        public async Task<Response<List<DCs.Shipment>>> MoveItemToBackOrder(MoveItemToBackOrderArgs args)
-        {
-            var shipment = (await _orderWebApiClient.MoveItemToBackOrder(args.ShipmentNumber, args.BackorderItems)).ReadAsSync();
-            return List2(shipment);
-        }
-
+        
     }
 }
