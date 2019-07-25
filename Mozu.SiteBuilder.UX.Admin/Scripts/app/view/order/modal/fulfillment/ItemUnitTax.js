@@ -144,24 +144,24 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
         //if (this.validateModal()) {
             var me = this;
-
-            Ext.MessageBox.show({
-                title: 'Unit Tax',
-                // pushes the buttons to the right to be consistant with our dialog ux.
-                rightJustifyButtons: true,
-                // reverses the order of the buttons
-                reverseOrder: true,
-                msg: 'Are you certain you want to save this item?',
-                closable: false,
-                buttons: Ext.Msg.YESNO,
-                fn: function (val) {
-                    if (val === 'yes') {
-                        //this.record.set('itemTax', me.unittaxpercent);
-                        //this.callParent(arguments);
-                        me.close();
-                    }
-                }
-            });
+            me.close();
+            //Ext.MessageBox.show({
+            //    title: 'Unit Tax',
+            //    // pushes the buttons to the right to be consistant with our dialog ux.
+            //    rightJustifyButtons: true,
+            //    // reverses the order of the buttons
+            //    reverseOrder: true,
+            //    msg: 'Are you certain you want to save this item?',
+            //    closable: false,
+            //    buttons: Ext.Msg.YESNO,
+            //    fn: function (val) {
+            //        if (val === 'yes') {
+            //            //this.record.set('itemTax', me.unittaxpercent);
+            //            //this.callParent(arguments);
+            //            me.close();
+            //        }
+            //    }
+            //});
         //}
     },
     /**

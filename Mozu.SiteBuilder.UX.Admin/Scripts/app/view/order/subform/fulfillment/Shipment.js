@@ -103,12 +103,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                         text: 'Manual Reassign',
                                         handler: function () {
                                             me.record.getCandidateSuggestions({
-                                                jsonData: "1",
+                                                jsonData: me.getReassignShipmentPayload(),
                                                 success: function (response) {
                                                     me.isRecordSaved = true;
                                                     me.setLoading(false, me.body);
                                                     var json = Ext.decode(response.responseText, true);
-
+                                                    //var shipment = me.getReassignShipmentPayload();                                                     
                                                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                                         layout: 'hbox',
                                                         width: 1080,
@@ -116,7 +116,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                                         record: me.record,
                                                         inventoryData: json,
                                                         shipmentData: shipment,
-                                                        shipmentLocation: null,
+                                                        shipmentRecord: me.shipmentRecord,
                                                         listeners: {
                                                             saveSuccess: {
                                                                 fn: function (json) {
@@ -266,7 +266,23 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         });
     },
 
-    
+    getReassignShipmentPayload: function () {
+        var me = this;
+        var shipment = me.shipmentRecord;
+        var model = {
+            pickupLocationCode: shipment.locationCode,
+            orderType: shipment.shipmentType,
+            items: []
+        }
+        shipment.items.forEach(function (element) {
+            model.items.push({
+                partNumber: element.productCode,
+                upc: element.name,
+                quantity: element.quantity
+            });
+        });
+        return model;
+    }
 });
 
 

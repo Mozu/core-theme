@@ -24,11 +24,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var me = this;
         var itemsPerPage = 2;
         var shipment = me.shipmentData;
-
+        
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
-            autoLoad: false,
-            //autoLoad: { start: 0, limit: 5 },
+            //autoLoad: false,
+            autoLoad: { start: 0, limit: 2 },
             pageSize: itemsPerPage,
             remoteSort: true,
             sorters: [{
@@ -40,46 +40,31 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             data: this.inventoryData.candidateSuggestions,
             proxy: {
                 type: 'memory',
-
                 reader: {
                     type: 'json',
-                    root: 'items',
-                    totalProperty: 'total',
+                    root: 'rows',
+                    totalProperty: 'totalCount',
                     enablePaging: true
                 }
             }
         });
 
         // specify segment of data you want to load using params
-        inventoryStore.load({
-            params: {
-                start: 0,
-                limit: itemsPerPage
-            }
-        });
+        //inventoryStore.load({
+        //    params: {
+        //        start: 0,
+        //        limit: this.itemsPerPage
+        //    }
+        //});
 
-        //var nameRenderer = function () {
-        //    return '<div ext-xtype="radiofield"></div>';
-
-        //}
+     
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',
             cls: 'taco-order-fulfillment-ReassignShipment',
-            //features: [{
-            //    ftype: 'grouping'
-            //}],
+            itemId: 'inventoryGrid',
 
             store: Ext.data.StoreManager.lookup('inventoryStore'),
-            //viewConfig: {
-            //    listeners: {
-            //        // Column Autosize to its data
-            //        refresh: function (dataview) {
-            //            Ext.each(dataview.panel.columns, function (column) {
-            //                if (column.autoSizeColumn === true) column.autoSize();
-            //            })
-            //        }
-            //    }
-            //},
+           
             columns: [
                 {
                     text: 'Location',
@@ -162,7 +147,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             ],
             height: 150,
             width: 1000,
-
             dockedItems: [{
                 xtype: 'pagingtoolbar',
                 store: inventoryStore,   // same store GridPanel is using
@@ -171,9 +155,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             selModel: {
                 selModel: 'rowmodel',
-                //    seltype: 'checkboxmodel', 
-                //    mode: 'single',    
-                //    checkonly : true
             },
             plugins: {
                 ptype: 'cellediting',
@@ -190,19 +171,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 deselect: function () {
                     me.shipmentLocation = null;
                 }
-                //beforeload: function (store, operation, eOpts) {
-
-                //    store.proxy.data = inventoryData;
-                //}
             },
 
         });
 
-        Ext.create('Ext.data.Store', {
+        Ext.create('Ext.data.JsonStore', {
             storeId: 'allLocationsStore',
-            fields: ['locationName', 'distance', 'stock'],
-            groupField: 'locationName',
-            data: this.inventoryData.candidateSuggestions,
+            fields: ['displayName'],
+            groupField: 'displayName',
+            data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -211,22 +188,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 }
             }
         });
-
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: Ext.data.StoreManager.lookup('allLocationsStore'),
             columns: [
                 {
                     text: 'Location',
-                    dataIndex: 'locationName',
+                    dataIndex: 'displayName',
                     width: 500,
-                },
-                {
-                    text: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150
-                },
-                {
-                    text: 'Stock', dataIndex: 'stock', width: 150,
-                },
+                }
             ],
             height: 200,
             width: 400
@@ -236,6 +206,23 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             width: 1000,
             height: 300,
             renderTo: Ext.getBody(),
+            listeners: {
+                beforetabchange: function (tabs, newTab, oldTab) {
+                //    console.log(me.record.locationsStore, "jjj");
+                    if (newTab.title == 'All Locations') {
+                //        console.log(me.record.locationsStore, "in");
+                    //    me.record.getLocations({
+                    //        jsonData: "1",
+                    //        var shipment = me.getReassignShipmentPayload();
+                    //        success: function (response) {
+                    //            me.isRecordSaved = true;
+                    //            me.setLoading(false, me.body);
+                    //            var json = Ext.decode(response.responseText, true);
+                    //            console.log(json);
+                    //        });
+                    }
+                }
+            },
             items: [
                 inventorygrid,
                 allLocations
@@ -251,22 +238,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         if (this.validateModal()) {
             var me = this;
 
-            Ext.MessageBox.show({
-                title: 'Reassign Shipment',
-                // pushes the buttons to the right to be consistant with our dialog ux.
-                rightJustifyButtons: true,
-                // reverses the order of the buttons
-                reverseOrder: true,
-                msg: 'Are you certain you want to reassign the shipment to selected location?',
-                closable: false,
-                buttons: Ext.Msg.YESNO,
-                fn: function (val) {
-                    if (val === 'yes') {
-
-                        me.setLoading(true, me.body);
-                        var order = me.record;
-                        var payloadData = me.shipmentLocation;
-                        order.reassignShipment({
+            var payloadData = me.getPayloadDataInventory();
+                        me.record.reassignShipment({
                             jsonData: payloadData,
                             success: function (response) {
                                 me.isRecordSaved = true;
@@ -280,16 +253,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                 me.close();
                             },
                             failure: function (response) {
+                                debugger
                                 me.setLoading(false, me.body);
                                 // close the dialog
                                 me.close();
                             }
                         });
                     }
-                }
-            });
-        }
-    },
+        },
+    
 
     validateModal: function () {     
         var me = this;
@@ -299,69 +271,18 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         return true;
     },
 
-    //getCancelItemQuantityPayload: function () {
-    //    var me = this;
-    //    var order = this.record;
-    //    var reason = this.down('#cancelReason').getValue();
-    //    var description = (this.down('[name=otherReason]').isVisible() ?
-    //        this.down('#otherReason').getValue() : null);
+    getPayloadDataInventory: function () {
+        var me = this;
+        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var item = grid.getSelectionModel().getSelection();
+        return {
+            ShipmentNumber: me.shipmentRecord.id,
+            ReassignShipment: {
+                LocationCode: item[0].raw.locationCode
+            }
+        };
+    },
 
-    //    return {
-    //        orderId: order.get('taco.model.order_id'),
-    //        orderItemId: order.get('id'),
-    //        quantity: this.down('#cancelQuantity').getValue(),
-    //        reason: {
-    //            reasonCode: reason,
-    //            description: description
-    //        }
-    //    };
-    //},
-
-    //doSave: function () {
-
-    //    if (this.validateModal()) {
-    //        var me = this;
-
-    //        Ext.MessageBox.show({
-    //            title: 'Cancel Item',
-    //            // pushes the buttons to the right to be consistant with our dialog ux.
-    //            rightJustifyButtons: true,
-    //            // reverses the order of the buttons
-    //            reverseOrder: true,
-    //            msg: 'Are you certain you want to Cancel this item?',
-    //            closable: false,
-    //            buttons: Ext.Msg.YESNO,
-    //            fn: function (val) {
-    //                if (val === 'yes') {
-
-    //                    me.setLoading(true, me.body);
-    //                    var order = me.parentRecord;
-    //                    var payloadData = me.getCancelItemQuantityPayload();
-    //                    order.cancelItemQuantity({
-    //                        jsonData: payloadData,
-    //                        success: function (response) {
-    //                            me.isRecordSaved = true;
-    //                            me.setLoading(false, me.body);
-    //                            var json = Ext.decode(response.responseText, true);
-    //                            if (!json || !json.success) {
-    //                                return;
-    //                            }
-    //                            me.saveSuccess(json);
-    //                            // close the dialog
-    //                            me.close();
-    //                        },
-    //                        failure: function (response) {
-    //                            me.setLoading(false, me.body);
-    //                            // close the dialog
-    //                            me.close();
-    //                        }
-    //                    });
-    //                }
-    //            }
-    //        });
-    //    }
-    //},
-    ///**
     //* Do any class level cleanup. Destroy and null any scoped refs.     
     //*/
     //onDestroy: function (destroy) {

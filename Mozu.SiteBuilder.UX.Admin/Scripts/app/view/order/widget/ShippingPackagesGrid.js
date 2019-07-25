@@ -1,7 +1,8 @@
 ﻿
 Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
-    extend: 'Ext.grid.Panel', 
+    extend: 'Ext.grid.Panel',
     requires: ['Ext.grid.CellEditor',
+        'Ext.grid.RowEditor',
         'Ext.util.DelayedTask',
         'Ext.form.RadioManager',
         'Ext.selection.CellModel',
@@ -11,19 +12,19 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         'Ext.form.*'],
 
     title: '',
-
-    xtype: 'cell-editing',
+    itemId: 'ShippingPackagesGrid',
+    xtype: 'row-editing',
 
     viewConfig: {
         deferEmptyText: false,
         emptyText: "No items available",
     },
 
-    selType: 'cellmodel',
-   
+    selType: 'rowmodel',
+
     plugins: [],
-    
-    cls:'shipping-packages-grid',
+
+    cls: 'shipping-packages-grid',
 
     allSelected: false,
 
@@ -31,6 +32,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         var me = this;
         me.initEditTriggers();
     },
+
+
     initEditTriggers: function () {
         var me = this,
             view = me.view;
@@ -62,33 +65,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         // wait until render to initialize keynav events since they are attached to an element
         //view.on('render', me.initKeyNavHeaderEvents, me, { single: true });
     },
-    
+
     initComponent: function () {
         var me = this;
-       
-        this.plugins.push(
-            Ext.create('Ext.grid.plugin.CellEditing', {
-                clicksToEdit: 1,
-                pluginId: 'editing',
-                listeners: {
-                    beforeedit: function (editor, context) {
-                        var me = this;
-                        //var allowed = !!me.isEditAllowed;
-                        //this.initEvents();
-                        if (me.grid.selModel.selected.keys[0] != context.grid.selModel.selected.keys[0]) {
-                            return false;
-                        }
-                    },
-                    'edit': function (e) {
-                        me.onFieldEdit(e); // called to open modal pop up for quantity field
-                            //this.isEditAllowed = false;
-                    }
-                }
-        }));
 
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
-            plugins: [this.cellEditing],
+
             fields: [{
                 name: 'productCode',
                 type: 'string',
@@ -151,80 +134,38 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }
             }]
         });
+        //var rowedit = Ext.create('Ext.grid.plugin.RowEditing', {
+        //    pluginId: 'destinationEditor'
+        //});
+            this.plugins.push(
+                Ext.create('Ext.grid.plugin.RowEditing', {
+                    clicksToEdit: 1,
+                    pluginId: 'destinationEditor',
+                    beforeEdit: function (editor, context, eOpts) {
+                        if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
+                            || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
+                            || me.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+                }));
         
-        this.selModel = Ext.create('Ext.selection.CheckboxModel', {
-            selType: 'checkboxmodel',
-            mode: 'single',
-            injectCheckbox: 'first',
-            headerWidth: 37,
-            checkOnly: false,
-            showHeaderCheckbox: false,
-            //setup: function () {
-            //    this.maxSelections = 0;
-            //    var selections = this.store.getRange();
-
-            //    for (var key in selections) {
-            //        if (selections[key].data.quantityReturnable !== 0) {
-            //            this.maxSelections++;
-            //        }
-            //    }
-
-            //    this.isSetup = true;
-            //},
-
-            //setHeader: function (header) {
-            //    this.checkallBox = header;
-            //},
-
-            //setErrorEl: function (el) {
-            //    this.errorEl = el;
-            //},
-            
-            //checkSelected: function () {
-            ////    console.log(this);
-            //    var me =this;
-            //},
-
-            
-
-            //onHeaderClick: function (headerCt, header, e) {
-            //    if (!header.isCheckerHd) {
-            //        return;
-            //    }
-
-            //    e.stopEvent();
-            //    this.selectAll(true, header);
-            //},
-
-            //listeners: {
-            //    deselect: function (grid, record) {
-            //        this.checkSelected();
-            //    //    this.errorEl.setError('');
-            //    },
-
-            //    select: function (grid, record) {
-            //        this.checkSelected();
-            //    //    this.errorEl.setError('');
-            //    }
-
-                
-            //},
-
-            //renderer: function (value, metaData, record, rowIndex, colIndex, store, view) {
-            //    var baseCSSPrefix = Ext.baseCSSPrefix;
-            //    metaData.tdCls = baseCSSPrefix + 'grid-cell-special ' + baseCSSPrefix + 'grid-cell-row-checker';
-            //    return record.get('quantityReturnable') === 0 ? '<div class="' + baseCSSPrefix + 'grid-row-checker disabled-return-checkbox"> </div>' : '<div class="' + baseCSSPrefix + 'grid-row-checker"> </div>';
-            //}
-        });
-
-      
+        
+        //this.selModel = Ext.create('Ext.selection.CheckboxModel', {
+        //    selType: 'checkboxmodel',
+        //    mode: 'single',
+        //    injectCheckbox: 'first',
+        //    headerWidth: 37,
+        //    checkOnly: false,
+        //    showHeaderCheckbox: false,
+        //});
 
         //this.columns = this.getColumnConfig(me);
 
-       
-        
         this.columns = [
-            
             {
                 dataIndex: 'lineId',
                 text: 'Line',
@@ -297,22 +238,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 minWidth: 80,
                 flex: 1,
                 editor: {
-                    showBorder: false
-                    //xtype: 'CustomEditorField-form',
-                    //hideTrigger: true,
-                    //minValue: 0,
-                    //text: 'Name',
-                    //dataIndex: 'name',
+                    showBorder: false,
+                    listeners: {
+                        focus: function (field, event, eOpts) {
+                            me.editItemUnitTax(field);
+                        }
+                    }
                 },
-                //listeners: {
-                //    focus: {
-                //        fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
-                //            //me.customUnitTaxEditor;
-                //            //var editMode = view.ownerCt.editMode,
-                //        },
-                //    }
-                //}
-               
             },
             {
                 dataIndex: 'quantity',
@@ -324,12 +256,6 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                //editor: {
-                //    xtype: 'numberfield',
-                //    showBorder: false,
-                //    hideTrigger: true,
-                //    minValue: 0,
-                //}
             },
             //{
             //    dataIndex: 'quantity',
@@ -379,82 +305,140 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
-                menuItems: [
-                    {
-                        text: 'Edit Item',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: function (item, eventData) {
-
-                        }
-                    },
-                    {
-                        text: 'Cancel Item',
-                        requiredBehaviors: {
-                            model: 'Taco.model.Product',
-                            behavior: 'update'
-                        },
-                        menuColumnHandler: function (item, eventData) {
-                            me.openItemCancellationPopup();
-                            
-                        },
-                    },
-                    //        {
-                    //            text: 'Move Item',
-                    //            requiredBehaviors: {
-                    //                model: 'Taco.model.Product',
-                    //                behavior: 'update'
-                    //            },
-                    //            menuColumnHandler: function (item, eventData) {
-
-                    //            }
-                    //        }
-                ]
+                hidden: me.isShipmentAction(),
+                menuItems: me.getShipmentLevelSplitMenu(),
             }
         ];
-
-        
-
         this.callParent();
-        
-        // Loading should be kicked off by the parent Return subform.
-        //this.loadReturnableItemsData();
-
-        //var i = 0;
-        //while (true) {
-        //    var header = this.headerCt.getHeaderAtIndex(i);
-        //    this.getSelectionModel().setHeader(header);
-        //    break;
-        //    i++;
-        //}
     },
 
-    
-    onFieldEdit: function (e) {
+    isShipmentAction: function () {
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
+            return true;
+        return false;
+    },
+
+    getShipmentLevelSplitMenu: function () {
         var me = this;
-        if (e.context.field == 'itemTax') {
-            me.editOrderItem(e, {
-                data: [
-                    e.context.grid.record.getData()
-                ]
-            });
+        var actionCancelItem = {
+            text: 'Cancel Item',
+            handler: function () {
+                me.openItemCancellationPopup();
+            }
+        };
+
+        var actionMoveToBackorder = {
+            text: 'Move To backorder',
+            handler: function () { }
+        };
+
+        var actionEditItem = {
+            text: 'Edit Item',
+            handler: function () {
+                me.editShipmentItem();
+            }
+        };
+
+        var manualReassign = {
+            text: 'Manual Reassign',
+            handler: function () {
+                me.openItemsReassignPopup();
+            }
+        };
+
+        var autoReassign = {
+            text: 'Auto Reassign',
+            handler: function () { }
+        };
+
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
+            return [
+                manualReassign,
+                autoReassign,
+                actionMoveToBackorder,
+                actionEditItem,
+                actionCancelItem
+            ];
+        }
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
+            return [
+                manualReassign,
+                autoReassign,
+                actionEditItem,
+                actionCancelItem
+            ];
+        }
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
+            return [
+                manualReassign,
+                autoReassign,
+                actionMoveToBackorder,
+                actionEditItem,
+                actionCancelItem
+            ];
         }
     },
 
-    editOrderItem: function (e, config) {
+    openItemsReassignPopup: function () {
+        var me = this;
+        me.record.getCandidateSuggestions({
+            jsonData: "1",
+            success: function (response) {
+                me.isRecordSaved = true;
+                me.setLoading(false, me.body);
+                var json = Ext.decode(response.responseText, true);
+
+
+                Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                    layout: 'hbox',
+                    width: 1080,
+                    height: 550,
+                    record: me.record,
+                    inventoryData: json,
+                    listeners: {
+                        saveSuccess: {
+                            fn: function (json) {
+                                //me.fireEvent('orderCancelled', json);
+                            },
+                            //scope: me
+                        }
+                    }
+                });
+            },
+            failure: function (response) {
+                me.setLoading(false, me.body);
+                // close the dialog
+                me.close();
+            }
+        });
+    },
+
+    editShipmentItem: function () {
+
+        var grid = Ext.ComponentQuery.query('#ShippingPackagesGrid')[0];
+        var item = grid.getSelectionModel().getSelection();
+        grid.getPlugin('destinationEditor').startEdit(grid.store.getAt(item[0].index), grid.columns[item[0].index])
+        // grid.getPlugin('destinationEditor').startEdit(grid.JsonStore.getAt(0), grid.columns[0])
+        //Ext.getCmp(this.id);
+        //Ext.getCmp(this.id).plugins.push(
+        //    Ext.create('Ext.grid.plugin.RowEditing', {
+        //        clicksToEdit: 1,
+        //        pluginId: 'editing',
+        //    }));
+        Ext.getCmp(this.id).view.refresh();
+    },
+
+    editItemUnitTax: function (e, config) {
 
         var me = this;
-        field = e.context.field;
+        //field = e.context.field;
         Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
             layout: 'hbox',
             width: 600,
             height: 400,
-            record: e.context.grid.record,
+            record: me.record,
             parentRecord: me.record,
-            //store: me.record.getCancellationReasons(),
-            originalQuantity: e.context.originalValue,
+            originalQuantity: e.column.field.originalValue,
             //listeners: {
             //    saveSuccess: {
             //        fn: function (json) {
@@ -504,6 +488,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         });
 
     },
+
+   
     
 });
 
