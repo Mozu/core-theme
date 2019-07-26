@@ -75,8 +75,6 @@ export class AppComponent implements OnInit {
                         event.url.includes(Constants.uiRoutes.locationGroupCreate) ||
                         event.url.includes(Constants.uiRoutes.locationGroupEdit)) {
                     this.containerType = NavigationContainerType.locationGroups;
-                } else if (event.url.includes(Constants.uiRoutes.fulfiller)) {
-                    this.containerType = NavigationContainerType.fulfiller;
                 } else {
                     this.containerType = NavigationContainerType.dashboard;
                 }

@@ -17,8 +17,7 @@ export enum NavigationContainerType {
     product = 'product',
     order = 'order',
     quotes = 'quotes',
-    locationGroups = 'locationGroups',
-    fulfiller = 'fulfiller'
+    locationGroups = 'locationGroups'
 }
 
 export enum ConfirmationDialogNotificationCode {

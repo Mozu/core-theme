@@ -3,9 +3,6 @@
 <confirmation-dialog></confirmation-dialog>
 <unified-admin-tostr></unified-admin-tostr>
 <div [ngSwitch]="containerType">
-    <div *ngSwitchCase="'fulfiller'">
-        <app-fulfiller></app-fulfiller>
-    </div>
     <div *ngSwitchDefault>
         <div class="apphome-parent" id="apphome-parent">
             <app-home [navContainerType]=containerType></app-home>

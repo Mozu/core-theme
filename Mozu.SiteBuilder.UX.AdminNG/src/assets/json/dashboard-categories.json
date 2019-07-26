@@ -224,7 +224,7 @@
         "contextType": "",
         "address": "fulfiller",
         "visible" : true,
-        "url":"fulfiller"
+        "url":"/_fulfiller"
       }
     ]
   },

@@ -30,8 +30,8 @@ import { LeftNavigationModel, SecureForm } from './left.model';
 })
 export class NavigationLeftComponent implements OnInit {
   public model: LeftNavigationModel;
-  uiRoutes = Constants.uiRoutes.quotes;
-  uiLocationGroup =  Constants.uiRoutes.locationGroups;
+  quotesRoute = Constants.uiRoutes.quotes;
+  locationGroupRoute =  Constants.uiRoutes.locationGroups;
   inventoryTitle = Constants.titles.inventory;
   locationGroupsTitle = Constants.titles.locationGroups;
 

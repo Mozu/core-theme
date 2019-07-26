@@ -17,8 +17,8 @@ export class AccessTileComponent {
 
   @Input('Tiles') tileModel: AccessTileModel;
   @Input('isOmsEnable') isOmsEnable: boolean;
-  uiRoutes = Constants.uiRoutes.quotes;
-  uiLocationGroup =  Constants.uiRoutes.locationGroups;
+  quotesRoute = Constants.uiRoutes.quotes;
+  locationGroupRoute =  Constants.uiRoutes.locationGroups;
   inventoryTitle = Constants.titles.inventory;
   locationGroupsTitle = Constants.titles.locationGroups;
 

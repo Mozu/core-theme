@@ -59,7 +59,6 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
-import { FulfillerComponent } from './fulfiller/fulfiller.component';
 import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-columns.component';
 import { ProgressButtonService } from './progress-button/progress-button.service';
 
@@ -130,7 +129,6 @@ export function createTranslateLoader(http: HttpClient) {
         DynamicLinksDialogComponent,
         AccountInformationComponent,
         ConfirmationDialogComponent,
-        FulfillerComponent,
         ShippingAddressComponent,
         ShippingMethodComponent,
         AuditLogComponent,
@@ -193,7 +191,6 @@ export function createTranslateLoader(http: HttpClient) {
         DynamicLinksDialogComponent,
         AccountInformationComponent,
         ConfirmationDialogComponent,
-        FulfillerComponent,
         ShippingAddressComponent,
         ShippingMethodComponent,
         AuditLogComponent,
