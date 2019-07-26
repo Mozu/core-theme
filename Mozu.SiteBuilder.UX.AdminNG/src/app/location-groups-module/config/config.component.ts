@@ -11,6 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { CreateLocationGroupService } from '../create';
 import { LocationGroupModel, SiteModel } from '../create/location.group.model';
+import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
 
 @Component({
     selector: 'app-locationgroup-config',
@@ -31,6 +32,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         private _tostrService: TostrService,
         private createService: CreateLocationGroupService,
         private _spinner: SpinnerService,
+        private _progressButtonService: ProgressButtonService,
         private _confirmationDialogService: ConfirmationDialogService,
         private _notificationService: NotificationService
     ) { }
@@ -211,7 +213,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).removeAt(rowIndex);
     }
 
-    markLocationGroupConfigFormDirty(){
+    markLocationGroupConfigFormDirty() {
         this.model.locationGroupConfigForm.markAsDirty();
     }
 
@@ -220,7 +222,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if (this.model.locationGroupConfigForm.pristine) {
             this.navigateToSiteConfig();
         } else {
-            this.showUnsavedChangesConfirmationDialog()
+            this.showUnsavedChangesConfirmationDialog();
         }
     }
 
@@ -483,7 +485,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     private setSelectedCarriers( carriers: CarrierModel[]): boolean[] {
         const carriersUpr: CarrierModel[] = [];
         carriers.map((v) => {
-            const carrierObj : CarrierModel = {} as CarrierModel;
+            const carrierObj: CarrierModel = {} as CarrierModel;
             carrierObj.carrierType = v.carrierType.toUpperCase();
             carrierObj.isEnabled = v.isEnabled;
             carriersUpr.push(carrierObj);
@@ -510,6 +512,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     saveLocationConfig() {
 
         this._spinner.start();
+        this._progressButtonService.start();
         const lgConfigModel: LocationGroupConfigurationModel = {} as LocationGroupConfigurationModel;
         const lgconfigForm = this.model.locationGroupConfigForm;
 
@@ -599,6 +602,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     updateLocationGroupConfigError(message: any): void {
         this._spinner.stop();
+        this._progressButtonService.stop();
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigError');
         this._tostrService.showError(message);
     }
@@ -606,6 +610,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     private updateLocationGroupConfigSuccess(result: any): void {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfigSuccess' + JSON.stringify(result));
         this._spinner.stop();
+        this._progressButtonService.stop();
         this.model.locationGroupConfigForm.markAsPristine();
         this._tostrService.showSuccess(ToastrCode.LGCSavedSuccessfully);
     }

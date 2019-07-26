@@ -41,8 +41,9 @@ import {
     PhysicalLocationsComponent,
     LocationsListComponent,
     SelectedLocationsComponent,
-    ConfirmationDialogService
-} from './index';
+    ConfirmationDialogService,
+    ProgressButtonComponent
+ } from './index';
 
 import {
     DatexPipe,
@@ -60,6 +61,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { SpinnerComponent } from './spinner/spinner.component';
 import { FulfillerComponent } from './fulfiller/fulfiller.component';
 import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-columns.component';
+import { ProgressButtonService } from './progress-button/progress-button.service';
+
 
 declare var resourcesVersion: any;
 
@@ -131,10 +134,12 @@ export function createTranslateLoader(http: HttpClient) {
         ShippingAddressComponent,
         ShippingMethodComponent,
         AuditLogComponent,
-        ToggleGridColumnsComponent
+        ToggleGridColumnsComponent,
+        ProgressButtonComponent
     ],
     providers: [
-        ConfirmationDialogService
+        ConfirmationDialogService,
+        ProgressButtonService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [
@@ -192,7 +197,8 @@ export function createTranslateLoader(http: HttpClient) {
         ShippingAddressComponent,
         ShippingMethodComponent,
         AuditLogComponent,
-        ToggleGridColumnsComponent
+        ToggleGridColumnsComponent,
+        ProgressButtonComponent
     ]
 })
 

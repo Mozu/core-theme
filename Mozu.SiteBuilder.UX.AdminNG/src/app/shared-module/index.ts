@@ -25,3 +25,5 @@ export * from './dynamic-links-dialog/dynamic-links-dialog.component';
 export * from './confirmation-dialog/index';
 
 export * from './toggle-grid-columns/toggle-grid-columns.component';
+
+export * from './progress-button/progress-button.component';
