@@ -379,7 +379,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             return {
                 "shipmentAdjustment": {
                     orderId: this.record.get('id'),
-                    ohipmentNumber: this.shipmentRecord.number,
+                    shipmentNumber: this.shipmentRecord.number,
                     //ItemAdjustment: this.shippingAdjustmentInput ? this.shippingAdjustmentInput : null,
                     itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) - this.shipmentRecord.lineItemTaxTotal) : null,
                     shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) - this.shipmentRecord.shippingSubtotal) : null,
@@ -398,11 +398,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         var me = this;
         me.setLoading(true, this.body);
         var payloadData = me.getShippingAdjustmentsPayload();
-        debugger;
+        
         this.record.updateShipmentAdjustments({
             jsonData: payloadData,
             success: function (response) {
-                debugger;
                 me.setLoading(false, this.body);
                 var json = Ext.decode(response.responseText, true);
                 if (!json || !json.success) {
@@ -412,7 +411,6 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 me.fireEvent('shipmentRefresh');
             },
             failure: function (response) {
-                debugger;
                 me.setLoading(false, this.body);
                 // error handling here
                 Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');

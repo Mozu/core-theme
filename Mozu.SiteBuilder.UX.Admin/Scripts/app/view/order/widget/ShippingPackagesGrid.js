@@ -33,7 +33,6 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         me.initEditTriggers();
     },
 
-
     initEditTriggers: function () {
         var me = this,
             view = me.view;
@@ -71,14 +70,13 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
-
             fields: [{
                 name: 'productCode',
                 type: 'string',
                 useNull: false
             },
             {
-                name: 'productName',
+                name: 'name',
                 type: 'string',
                 useNull: true
             }, {
@@ -124,7 +122,64 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 name: 'optionAttributeFQN',
                 type: 'string',
                 useNull: true
-            }],
+            }, {
+                name: 'actualPrice',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'duty',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'handling',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'handlingTax',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'handlingDiscount',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'isTaxable',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'itemDiscount',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'lineItemcost',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'actualPrice',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'shipping',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'shippingDiscount',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'unitPrice',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'shippingTax',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'weight',
+                type: 'float',
+                useNull: true
+            }
+            ],
             sorters: [{
                 sorterFn: function (a, b) {
                     if (a.get('lineId') === b.get('lineId')) {
@@ -137,23 +192,23 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         //var rowedit = Ext.create('Ext.grid.plugin.RowEditing', {
         //    pluginId: 'destinationEditor'
         //});
-            this.plugins.push(
-                Ext.create('Ext.grid.plugin.RowEditing', {
-                    clicksToEdit: 1,
-                    pluginId: 'destinationEditor',
-                    beforeEdit: function (editor, context, eOpts) {
-                        if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
-                            || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
-                            || me.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
-                            return true;
-                        }
-                        else {
-                            return false;
-                        }
+        this.plugins.push(
+            Ext.create('Ext.grid.plugin.RowEditing', {
+                clicksToEdit: 1,
+                pluginId: 'destinationEditor',
+                beforeEdit: function (editor, context, eOpts) {
+                    if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
+                        || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
+                        || me.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
+                        return true;
                     }
-                }));
-        
-        
+                    else {
+                        return false;
+                    }
+                }
+            }));
+
+
         //this.selModel = Ext.create('Ext.selection.CheckboxModel', {
         //    selType: 'checkboxmodel',
         //    mode: 'single',
@@ -414,9 +469,9 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
     },
 
     editShipmentItem: function () {
-
-        var grid = Ext.ComponentQuery.query('#ShippingPackagesGrid')[0];
+        var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
+
         grid.getPlugin('destinationEditor').startEdit(grid.store.getAt(item[0].index), grid.columns[item[0].index])
         // grid.getPlugin('destinationEditor').startEdit(grid.JsonStore.getAt(0), grid.columns[0])
         //Ext.getCmp(this.id);
@@ -452,11 +507,15 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
     openItemCancellationPopup: function () {
         var me = this;
+
         var store = me.record.getCancellationReasons();
         store.load({
             scope: this,
             callback: function (records, operation, success) {
                 if (records) {
+                    var grid = Ext.getCmp(this.id);
+                    var item = grid.getSelectionModel().getSelection();
+
                     for (var i = 0; i < records.length; i++) {
                         me.record.localeStore.each(function (localeRecord) {
                             if (records[i].get('reasonCode') == localeRecord.get('key')) {
@@ -467,17 +526,18 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                             }
                         });
                     }
-                    Ext.create('Taco.view.order.modal.fulfillment.OrderItemCancellation', {
+                    Ext.create('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                         layout: 'hbox',
                         width: 600,
                         height: 400,
                         record: me.record,
                         store: store,
-                        //originalQuantity: originalQuantity,
+                        shipmentRecord: me.shipmentRecord,
+                        selectedItem: item[0].data,
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) {
-                                    //me.fireEvent('orderCancelled', json);
+                                    me.fireEvent('shipmentRefresh');
                                 },
                                 //scope: me
                             }
@@ -487,10 +547,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         });
 
-    },
+    }
 
-   
-    
 });
 
 

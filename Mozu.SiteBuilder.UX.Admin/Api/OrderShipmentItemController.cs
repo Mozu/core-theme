@@ -32,6 +32,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
 
+        public class CancelShipmentItemArgs
+        {
+            public int ShipmentNumber { get; set; }
+            public List<CanceledItem> CanceledItems { get; set; }
+
+        }
+        [HttpPostRoute(UriTemplate = "shipment/items/cancel")]
+        public Response<Mozu.Fulfillment.Contracts.Model.ResourceOfShipment> CancelShipmentItems(CancelShipmentItemArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.CancelItems(args.CanceledItems, args.ShipmentNumber);
+            return Single2(serviceResponse);
+        }
+
         public class MoveItemToBackOrderArgs
         {
             public int? ShipmentNumber { get; set; }
