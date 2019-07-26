@@ -1,0 +1,52 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+    <dl class="mz-orderheader">
+		<dt>{{ labels.backorder }}</dt>
+		<dt>{{ labels.orderNo }}</dt>
+		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
+	</dl>  
+    <br>
+    <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!</p>
+    <br>
+    <p>{{ labels.backorderUpdateBlob|string_format(siteContext.generalSettings.websiteName, model.orderNumber, domainName)|safe }}</p>
+
+    <table class="mz-ordersummary">
+    <thead>
+        <tr>
+            <th class="mz-ordersummary-header-product">{{ labels.item }}</th>
+			<th class="mz-ordersummary-header-available-on">{{ labels.availableOn }}</th>
+            <th class="mz-ordersummary-header-subtotal">{{ labels.subtotal }}</th>
+        </tr>
+    </thead>
+	<tbody>
+        {% for item in model.items %}
+            <tr>
+                <td class="mz-ordersummary-item-product">
+                    {{ item.name }}
+                    <dl class="mz-propertylist">
+                        <dt>{{ item.productCode }}</dt>&nbsp;
+                        <dt>{{ item.color }}</dt>&nbsp; 
+                        <dt>{{ item.size }}</dt>&nbsp; 
+                        <dt>{{ item.partNumber }}</dt>&nbsp; 
+                    </dl>
+                </td>
+                <td>
+                    {{ model.backorderDate }}
+                </td>
+                <td>
+                    <div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="mz-productdetail-price mz-l-stack-section">
+                    {% include "modules/product/price-stack" %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+	</tbody>
+	</table>
+
+	{{ labels.backorderNote|string_format(domainName, model.productCode)|safe }}
+
+	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}
+
