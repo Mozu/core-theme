@@ -10,6 +10,7 @@ import {
 import * as _ from 'lodash';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService, HttpClientService } from '@core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '@shared/infrastructure/constants';
 
 @Component({
@@ -28,6 +29,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
     private _http: HttpClientService,
     private _loggerService: LoggerService,
     public activeModal: NgbActiveModal,
+    private _domSanitizer: DomSanitizer
   ) {
     this.reqBody = new FormData();
   }
@@ -35,6 +37,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info('DynamicLinksDialogComponent : ngOnChanges');
     if (changes && changes.iframeResourceURL && changes.iframeResourceURL.currentValue) {
+
       this.iframeResourceURL = changes.iframeResourceURL.currentValue;
     }
   }
@@ -45,8 +48,10 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   }
 
   submitForm($event): boolean {
+    this._loggerService.info('DynamicLinksDialogComponent : submitForm');
     $event.stopPropagation();
-    this._http.post(this.iframeResourceURL, this.reqBody);
+    const url: any = this._domSanitizer.bypassSecurityTrustResourceUrl(this.iframeResourceURL);
+    this._http.post(url, this.reqBody);
     return true;
   }
 

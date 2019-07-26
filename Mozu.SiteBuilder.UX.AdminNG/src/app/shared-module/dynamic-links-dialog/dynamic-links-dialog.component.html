@@ -4,9 +4,9 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="modal-body">  
-  <iframe #frame width="100%" height="100%" id="frame" name="frame" frameborder="0" [src]="iframeResourceURL | safeResourceUrl"></iframe>
-
+<div class="modal-body"> 
   <!-- The form is hidden on purpose and automatically posting the form data to the endpoint loaded within the above iframe AfterViewInit. -->
   <form target="frame" action="{{iframeResourceURL}}" #form method="POST" (ngSubmit)="submitForm($event)"></form>
+
+  <iframe #frame width="100%" height="100%" id="frame" name="frame" frameborder="0" [src]=""></iframe>
 </div>
