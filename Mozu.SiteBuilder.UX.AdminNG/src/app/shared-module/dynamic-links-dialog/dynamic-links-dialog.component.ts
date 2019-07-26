@@ -7,10 +7,9 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
-import { Http } from '@angular/http';
 import * as _ from 'lodash';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoggerService } from '@core';
+import { LoggerService, HttpClientService } from '@core';
 import { Constants } from '@shared/infrastructure/constants';
 
 @Component({
@@ -26,7 +25,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   private reqBody: any;
 
   constructor(
-    private http: Http,
+    private _http: HttpClientService,
     private _loggerService: LoggerService,
     public activeModal: NgbActiveModal,
   ) {
@@ -47,7 +46,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
 
   submitForm($event): boolean {
     $event.stopPropagation();
-    this.http.post(this.iframeResourceURL, this.reqBody);
+    this._http.post(this.iframeResourceURL, this.reqBody);
     return true;
   }
 

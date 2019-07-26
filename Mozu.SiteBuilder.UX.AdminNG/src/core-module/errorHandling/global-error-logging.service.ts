@@ -2,7 +2,7 @@
     Injectable,
 } from '@angular/core';
 
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { LoggerService } from '../services/logger.service';
 
 import {
@@ -87,10 +87,9 @@ export class GlobalErrorLoggingService {
                 this._tostrService.showError(error.code);
             } else {
                 this._tostrService.showError(ErrorCode.Fatal.toString());
-                console.log(error);
-                // setTimeout(() => {
-                //     window.location.href = Constants.fatalErrorRedirectionUrl.logout;
-                // }, 3000);
+                setTimeout(() => {
+                    window.location.href = Constants.fatalErrorRedirectionUrl.logout;
+                }, 3000);
             }
         }
     }
