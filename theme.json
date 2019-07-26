@@ -153,6 +153,18 @@
       "title": "Password Reset"
     },
     {
+      "id": "backorder",
+      "properties": {},
+      "template": "email/backorder",
+      "title": "Backorder"
+    },
+    {
+      "id": "backorder-update",
+      "properties": {},
+      "template": "email/backorder-update",
+      "title": "Backorder Update"
+    },
+    {
       "id": "product.instock",
       "properties": {},
       "template": "email/product-instock",
