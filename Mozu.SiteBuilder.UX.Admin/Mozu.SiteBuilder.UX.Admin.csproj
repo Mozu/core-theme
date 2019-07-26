@@ -2559,6 +2559,7 @@
     <Content Include="Tests\Mocks\Mystic1\NavigationTreeNodes1.json" />
     <Content Include="Tests\Mocks\Mystic1\Returns2Payments.json" />
     <Content Include="Tests\Mocks\Mystic1\SingleOrder.json" />
+    <Compile Include="Api\OrderHelper.cs" />
     <Content Include="Views\Home\IndexNG.cshtml" />
   </ItemGroup>
   <ItemGroup>

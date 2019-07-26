@@ -185,22 +185,60 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItems.loadReturnableItemsData();
     },
 
+    createReturnableItem: function(item, shipItem, quantity){
+        return {
+            orderItemId: item.get('orderItemId'),
+            orderLineId: item.get('orderLineId'),
+            productCode: item.get('productCode'),
+            productCode: item.get('productCode'),
+            shipmentId: shipItem.get('shipmentId'),
+            shipmentItemId: shipItem.get('shipmentItemId'),
+            quantity: quantity,
+            returnReason: item.get('reason'),
+            returnType: item.get('returnType'),
+            orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
+            excludeProductExtras: item.get('excludeProductExtras')
+        };
+    },
+
     createReturn: function(type, items) {
+        var returnItems = [];
+
+        Ext.Array.each(items, function(item) {
+            //Need to split by shippingItems here
+            
+            if(items.shipItems && items.shipItems.length){
+                var quantity = item.get('quantity');
+                Ext.Array.each(items.shipItems, function(shipItem){
+                    var shipmentQuantity = shipItem.quantityReturnable
+                    if(quantity < shipmentQuantity) {
+                        shipmentQuantity = quantity;
+                    };
+                    quantity = quantity - shipmentQuantity
+                    if(quantity) {
+                        returnItems.push(createReturnableItem(item, shipItem, shipmentQuantity));
+                    }
+                })
+            } else {
+                returnItems.push(
+                    {
+                        orderItemId: item.get('orderItemId'),
+                        orderLineId: item.get('orderLineId'),
+                        productCode: item.get('productCode'),
+                        quantity: item.get('quantity'),
+                        returnReason: item.get('reason'),
+                        returnType: item.get('returnType'),
+                        orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
+                        excludeProductExtras: item.get('excludeProductExtras')
+                    }
+                )
+            }
+        });
+
         return this.getReturnsStore().add({
             originalOrderId: this.record.getId(),
             returnType: type,
-            items: Ext.Array.map(items, function(item) {
-                return {
-                    orderItemId: item.get('orderItemId'),
-                    orderLineId: item.get('orderLineId'),
-                    productCode: item.get('productCode'),
-                    quantity: item.get('quantity'),
-                    returnReason: item.get('reason'),
-                    returnType: item.get('returnType'),
-                    orderItemOptionAttributeFQN: item.get('orderItemOptionAttributeFQN'),
-                    excludeProductExtras: item.get('excludeProductExtras')
-                };
-            })
+            items: returnItems
         })[0];
     },
 

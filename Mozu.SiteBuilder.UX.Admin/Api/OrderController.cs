@@ -28,7 +28,8 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
-using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.SiteBuilder.UX.Admin.Controllers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -45,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICartWebApiClient _cartWebApiClient;
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IOrderRoutingApiWrapper _orderRoutingApiWrapper;
         private readonly IFulfillerApiWrapper _fulfillerApiWrapper;
         private readonly string _ipAddress;
@@ -73,6 +75,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IIpAddressFinderOuter ipAddressFinderOuter,
             IOrderRoutingApiWrapper orderRoutingApiWrapper,
             IFulfillerApiWrapper fulfillerApiWrapper
+            IIpAddressFinderOuter ipAddressFinderOuter,
+            ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
         )
         {
             _orderWebApiClient = orderWebApiClient;
@@ -86,6 +90,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerSetWebApiClient = customerSetWebApiClient;
             _returnWebApiClient = returnWebApiClient;
             _ipAddress = ipAddressFinderOuter.IpAddress;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _orderRoutingApiWrapper = orderRoutingApiWrapper;
             _fulfillerApiWrapper = fulfillerApiWrapper;
         }
@@ -99,7 +104,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             // get single order
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
-                return await GetSingleOrder(orderWebApiClient, pagingParams.id, draft);
+                return await GetSingleOrder(orderWebApiClient, pagingParams.id, draft, extFilter);
             }
 
             // get list of orders
@@ -120,7 +125,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 qLimit: qLimit,
                 responseGroups: responseGroups)).ReadAsSync();
 
-            return List2(Mapper.Map<List<Order>>(dcOrders.Items), dcOrders.TotalCount);
+            var mappedOrders = Mapper.Map<List<Order>>(dcOrders.Items);
+
+            
+            if (extFilter.OrderPaymentsByCatputre)
+            {
+                var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
+                var orders = (await orderHelper.OrderPaymentsByCapture(mappedOrders));
+                return List2<Order>(orders);
+            }
+
+            
+            return List2(mappedOrders, dcOrders.TotalCount);
         }
 
         [HttpPostRoute(UriTemplate = "addShoppersCartItems")]
@@ -214,7 +230,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
         }
 
-        private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft)
+        private async Task<Response<List<Order>>> GetSingleOrder(IOrderWebApiClient orderWebApiClient, string orderId, bool draft, FilterCollection callExtFilter)
         {
             var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
 
@@ -237,10 +253,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (custTask.Success)
                     single.Customer = custTask.Items.FirstOrDefault();
 
+                if (callExtFilter.OrderPaymentsByCatputre)
+                {
+                    var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
+                    var orders = (await orderHelper.OrderPaymentsByCapture(new List<Order>() { single }));
+                    return List2<Order>(orders);
+                }
             }
 
             return List2<Order>(single);
         }
+
+
+       
 
         [HttpPostRoute(UriTemplate = "create")]
         public async Task<Response<Order>> CreateOrder()

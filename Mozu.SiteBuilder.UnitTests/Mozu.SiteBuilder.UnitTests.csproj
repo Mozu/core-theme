@@ -201,6 +201,7 @@
     <Compile Include="StoreFront\ModelMapping\MvcMappingTest.cs" />
     <Compile Include="Utils\HttpRequestMessageHelpers.cs" />
     <Compile Include="Utils\MemberResolverTests.cs" />
+    <Compile Include="Admin\Api\OrderHelperTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Admin\Api\cdProductCodeUpdate.cd" />

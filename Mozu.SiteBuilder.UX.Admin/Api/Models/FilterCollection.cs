@@ -62,6 +62,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public bool ShowVariations { get; set; }
 
+        public bool OrderPaymentsByCatputre { get; set; }
+
         /// <summary>
         /// Specifies whether to only show the "live" version of items, i.e. the published version as opposed to new/draft.
         /// </summary>
@@ -277,5 +279,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
             get;
             set;
         }
+
+
     }
 }
