@@ -177,6 +177,7 @@
     <Compile Include="Areas\StoreFront\Models\CustomerPurchaseOrderPaymentTerm.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPickupItem.cs" />
+    <Compile Include="Areas\StoreFront\Models\DetailedShipmentItem.cs" />
     <Compile Include="Configuration\ApplicationConstants.cs" />
     <Compile Include="Configuration\RouteConfig.cs" />
     <Compile Include="Constants\MimeTypes.cs" />

@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
-using Mozu.CommerceRuntime.Contracts.Products;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
@@ -20,9 +11,16 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
-using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
+using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -55,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Order summary, a.k.a. "Print Order".
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
+        public async Task<HttpResponseMessage> OrderSummary(string orderId, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
@@ -63,7 +61,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("order-details"));
             if (template == null)
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order details template for the current Theme.");
+            }
 
             return await RenderWithContext(template, order);
         }
@@ -77,7 +77,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private void PopulatePackageDetails(DC.Order order)
         {
-            if (order.Packages == null) return;
+            if (order.Packages == null)
+            {
+                return;
+            }
 
             foreach (var package in order.Packages)
             {
@@ -87,15 +90,32 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private void PopulatePackageDetails(Package package, DC.Order order)
         {
-            if (package == null) return;
+            if (package == null)
+            {
+                return;
+            }
 
             IEnumerable<PackageItem> t = package.Items.Select(i => GetDetailedPackageItem(i, order));
             package.Items = t.ToList();
         }
-        
+
+        private void PopulateShipmentDetails(Shipment shipment, DC.Order order)
+        {
+            if (shipment == null)
+            {
+                return;
+            }
+
+            IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, order));
+            shipment.Items = t.ToList();
+        }
+
         private void PopulatePickupDetails(DC.Order order)
         {
-            if (order.Pickups == null) return;
+            if (order.Pickups == null)
+            {
+                return;
+            }
 
             foreach (var pickup in order.Pickups)
             {
@@ -113,6 +133,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return result;
         }
 
+        private DetailedShipmentItem GetDetailedShipmentItem(ShipmentItem shipmentItem, DC.Order order)
+        {
+            var result = Mapper.Map<DetailedShipmentItem>(shipmentItem);
+            var product = FindProduct(shipmentItem.ProductCode, order);
+            result.ProductName = product.Name;
+            result.AdjustedWeight = CalculateAdjustedWeight(product.Weight, shipmentItem.Quantity);
+            return result;
+        }
+
         private DetailedPickupItem GetDetailPickupItem(PickupItem pickupItem, DC.Order order)
         {
             var result = Mapper.Map<DetailedPickupItem>(pickupItem);
@@ -124,7 +153,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
         {
-            if (weight == null || !weight.Value.HasValue) return null;
+            if (weight == null || !weight.Value.HasValue)
+            {
+                return null;
+            }
+
             return new Measurement { Unit = weight.Unit, Value = Decimal.Round(weight.Value.Value * quantity, 1) };
         }
 
@@ -170,7 +203,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <param name="order"></param>
         private static void PopulateOptionNames(DC.Order order)
         {
-            if (order.Items == null) return;
+            if (order.Items == null)
+            {
+                return;
+            }
+
             foreach (var item in order.Items.Where(i => i.Product != null && !i.Product.Options.IsNullOrEmpty()))
             {
                 foreach (var optionWithoutName in item.Product.Options.Where(o => o.Name.IsNullOrEmpty()))
@@ -181,29 +218,58 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
+        ///// <summary>
+        ///// Packing Slip.
+        ///// </summary>
+        //[HttpGet]
+        //public async Task<HttpResponseMessage> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        //{
+        //    var order = await GetOrderWithCustomToken(orderId, token);
+        //    var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
+
+        //    if (order == null || package == null)
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
+
+        //    var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
+        //    if (template == null)
+        //        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
+
+        //    var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+        //    var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+
+        //    PopulatePackageDetails(package, order);
+
+        //    ViewData["order"] = order;
+        //    return await RenderWithContext(template, package);
+        //}
+
         /// <summary>
         /// Packing Slip.
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
-            var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
+            var shipment = order != null && order.Shipments != null ? order.Shipments.FirstOrDefault(p => p.Number == shipmentNumber) : null;
 
-            if (order == null || package == null)
+            if (order == null || shipment == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
+            }
 
             var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jo = Newtonsoft.Json.Linq.JObject.FromObject(package, ser);
+            var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
-            PopulatePackageDetails(package, order);
+            PopulateShipmentDetails(shipment, order);
 
             ViewData["order"] = order;
-            return await RenderWithContext(template, package);
+            return await RenderWithContext(template, shipment);
         }
 
         /// <summary>
@@ -214,7 +280,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(templateid));
             if (template == null)
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "could not find order template " + templateid);
+            }
 
             if (templateid == "order-details")
             {
@@ -252,7 +320,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.PageType = "order";
 
             // await the base class ContextInitializationTasks. This will fill out PageContext.CmsContext.Document if one exists.
-            return Task.WhenAll(this.ContextInitializationTasks).ContinueWith(_ => {
+            return Task.WhenAll(ContextInitializationTasks).ContinueWith(_ =>
+            {
                 ViewData["customContent"] = PageContext.CmsContext.Page.Document != null ? PageContext.CmsContext.Page.Document.Properties : null;
                 return Request.CreateResponse(HttpStatusCode.OK, View(template.Template, model));
             });
@@ -260,8 +329,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private HttpResponseException TokenExpiredException()
         {
-            var resp = new HttpResponseMessage(HttpStatusCode.NotFound);
-            resp.Content = new StringContent("Aw, poop! Your access to this page has expired. Please re-request this resource from admin.");
+            var resp = new HttpResponseMessage(HttpStatusCode.NotFound)
+            {
+                Content = new StringContent("Aw, poop! Your access to this page has expired. Please re-request this resource from admin.")
+            };
             return new HttpResponseException(resp);
         }
 
@@ -288,14 +359,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             LightweightUserClaims userClaimFromCustomToken = null;
 
-            // ensure things are on the up and up
+            //ensure things are on the up and up
             bool isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
-            if (!isAuthorized) throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource."));
+            if (!isAuthorized)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource."));
+            }
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
 
             bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
-            if (isExpired) throw TokenExpiredException();
+            if (isExpired)
+            {
+                throw TokenExpiredException();
+            }
 
             return _orderWebApiClient.GetOrder(orderId).ContinueWith(t => t.Result.ReadAsAsync()).Unwrap();
         }

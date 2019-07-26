@@ -175,7 +175,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             routes.MapHttpRoute(
                 "packing slip (back office)",
-                "back-office/orders/{orderId}/packages/{packageId}",
+                "back-office/orders/{orderId}/shipments/{shipmentNumber}",
                 new { controller = "BackOffice", action = "PackingSlip" });
 
             routes.MapHttpRoute(
