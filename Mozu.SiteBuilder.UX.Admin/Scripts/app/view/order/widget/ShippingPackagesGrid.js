@@ -403,7 +403,9 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
         var autoReassign = {
             text: 'Auto Reassign',
-            handler: function () { }
+            handler: function () {
+                me.shipmentItemAutoReassign();
+            }
         };
 
         if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
@@ -537,7 +539,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) {
-                                    me.fireEvent('shipmentRefresh');
+                                    me.fireEvent('shipmentRefresh',);
                                 },
                                 //scope: me
                             }
@@ -547,8 +549,59 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         });
 
-    }
+    },
 
+    shipmentItemAutoReassign: function () {
+        var me = this;
+
+        me.setLoading(true, this.body);
+
+        this.record.reassignShipmentItems({
+            jsonData: me.getShipmentItemReassignPayload(),
+            success: function (response) {
+                me.setLoading(false, this.body);
+                // success handling here
+                var json = Ext.decode(response.responseText, true);
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', 'Error while assigning shipment item', 'error');
+                    return;
+                }
+                me.fireEvent('shipmentRefresh', json);
+
+            },
+            failure: function (response) {
+                me.setLoading(false, this.body);
+                // error handling here
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : 'Error while assigning shipment item';
+                Taco.app.fireEvent('setmessage', msg, 'error');
+            },
+            scope: me
+        });
+    },
+
+    getShipmentItemReassignPayload: function () {
+        var me = this;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        if (selectedItem) {
+            return {
+                shipmentNumber: me.shipmentRecord.number,
+                shipmentItems: [{
+                    lineId: selectedItem.lineId,
+                    name: selectedItem.name,
+                    productCode: selectedItem.productCode,
+                    quantity: selectedItem.quantity,
+                    imageUrl: selectedItem.imageUrl,
+                    retailPrice: selectedItem.actualPrice,
+                    optionAttributeFQN: selectedItem.optionAttributeFQN,
+                    unitPrice: selectedItem.unitPrice,
+                    variationProductCode: selectedItem.variationProductCode
+                }]
+            };
+        }
+    },
 });
 
 
