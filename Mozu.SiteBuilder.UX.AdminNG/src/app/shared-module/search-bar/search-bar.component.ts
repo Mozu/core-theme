@@ -16,7 +16,7 @@ export class SearchBarComponent {
   constructor(private _notificationService: NotificationService) { }
 
   toggleIcon(searchBar: any) {
-    this.status = searchBar.currentTarget.value.length > 0;
+    this.status = searchBar.currentTarget && searchBar.currentTarget.value ? searchBar.currentTarget.value.length > 0 : false;
   }
 
   resetSerach(searchBar: HTMLInputElement) {

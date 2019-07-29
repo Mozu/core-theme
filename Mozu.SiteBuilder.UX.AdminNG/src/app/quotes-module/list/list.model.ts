@@ -12,6 +12,8 @@ export class QuotesListModel {
     subscriptions: any[];
     advancedSearch: any;
     sortResult: any;
+    sortField: string;
+    sortOrder: string;
   }
 
 export class QuoteItem {

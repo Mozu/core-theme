@@ -28,7 +28,7 @@ import { ShippingMethodComponent, ShippingRateModel } from '@shared/shipping';
 import { CurrencyPipe } from '@angular/common';
 import { Constants } from '@shared/infrastructure/constants';
 
-fdescribe('ShippingMethodComponent', () => {
+describe('ShippingMethodComponent', () => {
   let component: ShippingMethodComponent;
   let fixture: ComponentFixture<ShippingMethodComponent>;
   let debugElement: DebugElement;

@@ -72,8 +72,11 @@ export class QuotesListComponent implements OnInit, OnDestroy {
       this.gridContextMenu(successResponse);
     });
 
-    if (JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData)) != null) {
-      this.gridColumnHeader = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
+    if (localStorage.getItem(Constants.localStorageKeys.quoteGridData) != null) {
+      const gridStateValue = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
+      this.gridColumnHeader = gridStateValue['columnHeader'];
+      this.model.sortField = gridStateValue['sortField'];
+      this.model.sortOrder = gridStateValue['sortOrder'];
     } else {
       this.gridColumnHeader = [
         { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true, sortable: true },
@@ -98,6 +101,7 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this.model.subscriptions.push(
       this._notificationService.quoteSearched.subscribe((advancedSearch: string) => {
         this.model.advancedSearch = advancedSearch;
+        this.model.startIndex = 0;
         this.populateQuoteGrid(advancedSearch, this.model.startIndex, this.model.pageSize, this.model.sortResult);
       })
     );
@@ -150,12 +154,18 @@ export class QuotesListComponent implements OnInit, OnDestroy {
 
   onColReorder(event) {
     this.selectedGridColumnHeader = event.columns;
-    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(this.selectedGridColumnHeader));
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
+    + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
+    + ' }');
   }
 
   toggledGridColumn(gridColumnHeader) {
     this.selectedGridColumnHeader = gridColumnHeader;
-    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(this.selectedGridColumnHeader));
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
+    + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
+    + ' }');
   }
 
   getQuoteGridData(model: any, col: any): any {
@@ -198,11 +208,19 @@ export class QuotesListComponent implements OnInit, OnDestroy {
 
   loadQuoteLazy(event: LazyLoadEvent) {
     this._loggerService.info('QuotesListComponent : loadQuoteLazy');
-
     if (event.sortField) {
       const sortOrder = event.sortOrder === 1 ? Constants.queryParameters.sortableOrder.ASC : Constants.queryParameters.sortableOrder.DESC;
       this.model.sortResult = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
         { propertyName: event.sortField, sortOrder: sortOrder });
+      this.model.sortField = event.sortField;
+      this.model.sortOrder = sortOrder;
+      localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
+      + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
+      + ' }');
+    } else if (this.model.sortField !== undefined && this.model.sortOrder !== undefined) {
+      this.model.sortResult = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
+      { propertyName: this.model.sortField, sortOrder: this.model.sortOrder });
     }
     this.model.startIndex = event.first;
     this.model.pageSize = event.rows;
