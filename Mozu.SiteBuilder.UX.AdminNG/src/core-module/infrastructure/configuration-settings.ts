@@ -15,7 +15,8 @@ export let ToastrOptions: any = {
     dismiss: 'click',
     maxShown: 1,
     showCloseButton: true,
-    newestOnTop: true
+    newestOnTop: true,
+    toastLife: 10000
 };
 
 export let AutoCloseToastrOptions: any = {

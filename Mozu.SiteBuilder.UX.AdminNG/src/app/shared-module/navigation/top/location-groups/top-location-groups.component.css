@@ -32,6 +32,7 @@
 
 .cancelbtn {
     margin-right: 10px;
+    height: 40px;
 }
 
 @media screen and (max-width: 480px) {

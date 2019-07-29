@@ -24,7 +24,7 @@
             }">
             <div class="pull-right">
                 <button type="button" class="btn cancelbtn" (click)="cancelCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.cancel' | translate}}</button>
-                <button type="button" class="sbbtn btn btn-success" (click)="saveCreateLG()" *ngIf="model.isEditMode">{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}</button>
+                <progress-button (buttonClick)="saveCreateLG()" *ngIf="model.isEditMode" label="{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}"></progress-button>
             </div>
         </div>
     </div>

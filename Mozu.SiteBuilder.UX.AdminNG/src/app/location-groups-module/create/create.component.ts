@@ -25,6 +25,7 @@ import { LocationGroupModel, LocationGroupCreateModel } from './location.group.m
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
+import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
 
 @Component({
     selector: 'location-group-create',
@@ -47,6 +48,7 @@ export class LocationGroupCreateComponent implements OnInit {
         private _tostrService: TostrService,
         private router: Router,
         private route: ActivatedRoute,
+        private _progressButtonService: ProgressButtonService,       
         private _translate: TranslateService) {
 
     }
@@ -223,10 +225,11 @@ export class LocationGroupCreateComponent implements OnInit {
 
     saveLocationGroup() {
         this._loggerService.info('LocationGroupCreateComponent : saveLocationGroup');
-        this.model.isSaving = true;
         const lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
+            this.model.isSaving = true;
+            this._progressButtonService.start();
             this.createService.addLocationGroup(lgModel).subscribe(response =>
                 this.onSaveSuccess(response),
                 (response) => this.onSaveError(response.error.message));
@@ -235,10 +238,11 @@ export class LocationGroupCreateComponent implements OnInit {
 
     updateLocationGroup() {
         this._loggerService.info('LocationGroupCreateComponent : updateLocationGroup');
-        this.model.isSaving = true;
         const lgModel: LocationGroupModel = new LocationGroupModel();
         this.createLocationGroup(lgModel);
         if (this.validateLocationGroup(lgModel)) {
+            this.model.isSaving = true;
+            this._progressButtonService.start();
             this.createService.updateLocationGroup(lgModel).subscribe(response =>
                 this.onSaveSuccess(response),
                 (response) => this.onSaveError(response.error.message));
@@ -288,6 +292,7 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveSuccess(result) {
         this._loggerService.info('LocationGroupCreateComponent : onSaveSuccess' + JSON.stringify(result));
         this.model.isSaving = false;
+        this._progressButtonService.stop();
         this._notificationService.notifyLocationGroupAdded(NotificationLGActions.saved);
         // update the location config object.
         if (result && result.items) {
@@ -300,6 +305,7 @@ export class LocationGroupCreateComponent implements OnInit {
     private onSaveError(errmsg: string) {
         this._loggerService.info('LocationGroupCreateComponent : onSaveError');
         this.model.isSaving = false;
+        this._progressButtonService.stop();
         this._tostrService.showError(errmsg);
     }
 }

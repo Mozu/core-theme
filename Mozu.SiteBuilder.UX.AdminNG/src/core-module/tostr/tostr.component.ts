@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api';
 import { TostrService } from './tostr.service';
 import { NgZone } from '@angular/core';
 import { TostrService } from './tostr.service';
+import { Constants, ToastrOptions } from '@core/infrastructure';
 
 @Component({
     moduleId: module.id,
@@ -24,25 +25,25 @@ export class ToastrComponent {
 
     showToastrError(errorMessage: string) {
         this.ngZone.run(() => {
-            this._messageService.add({severity: 'error', summary: 'Error Message', detail: errorMessage});
+            this._messageService.add({severity: 'error', detail: errorMessage, life: ToastrOptions.toastLife, closable: true});
         });
     }
 
     showInfoMessage(infoMessage: string) {
         this.ngZone.run(() => {
-            this._messageService.add({severity: 'info', summary: 'Info Message', detail: infoMessage});
+            this._messageService.add({severity: 'info', summary: 'Info Message', detail: infoMessage, life: ToastrOptions.toastLife, closable: true});
         });
     }
 
     showWarningMessage(warningMessage: string) {
         this.ngZone.run(() => {
-            this._messageService.add({severity: 'warn', summary: 'Warn Message', detail: warningMessage});
+            this._messageService.add({severity: 'warn', summary: 'Warn Message', detail: warningMessage, life: ToastrOptions.toastLife, closable: true});
         });
     }
 
     showSuccessMessage(successMessage: string) {
         this.ngZone.run(() => {
-        this._messageService.add({severity: 'success', summary: 'Success Message', detail: successMessage });
+        this._messageService.add({severity: 'success', summary: 'Success Message', detail: successMessage, life: ToastrOptions.toastLife, closable: true });
         });
     }
  }
