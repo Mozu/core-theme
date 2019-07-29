@@ -2904,7 +2904,7 @@ Ext.define('Taco.model.Order', {
     reassignShipmentItems: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipment/items/reassign',
-            method: 'PUT'
+            method: 'POST'
         });
 
         Ext.Ajax.request(config);

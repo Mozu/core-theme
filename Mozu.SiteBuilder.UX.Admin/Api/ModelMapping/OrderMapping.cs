@@ -30,7 +30,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             Map_DcOrderReturnableItem_to_OrderReturnableItem();
             Map_BundledProduct_to_OrderItem();
             Map_DcAppliedProductDiscount_to_OrderItemDiscount();
-            Map_DcProductStock_to_OrderItemStock();
+            //Map_DcProductStock_to_OrderItemStock();
             Map_DcShippingDiscount_to_ShippingDiscount();
             Map_DcPayment_to_OrderPayment();
             Map_DcPurchaseOrderPayment_to_PurchaseOrderPayment();
@@ -749,10 +749,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 ;
         }
 
-        private void Map_DcProductStock_to_OrderItemStock()
-        {
-            CreateMap<ProductsDC.ProductStock, OrderItemStock>();
-        }
+        //private void Map_DcProductStock_to_OrderItemStock()
+        //{
+        //    CreateMap<ProductsDC.basProductStock, OrderItemStock>();
+        //}
 
         private void Map_DcAppliedDiscount_to_OrderDiscount()
         {

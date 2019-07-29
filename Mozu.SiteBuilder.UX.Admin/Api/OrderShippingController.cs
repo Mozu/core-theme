@@ -8,6 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using IO.Swagger.Model;
 using Mozu.Core.Api.Routing;
+using DCm = Mozu.Fulfiller.Contracts.Model;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -371,7 +372,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class CancelShipmentArgs
         {
-            public Fulfillment.Contracts.Model.CancelShipment CancelShipment { get; set; }
+            public DCm.CancelShipment CancelShipment { get; set; }
             public int? ShipmentNumber { get; set; }
 
         }
@@ -383,7 +384,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class RejectShipmentArgs
         {
-            public Fulfillment.Contracts.Model.RejectShipment RejectShipment { get; set; }
+            public DCm.RejectShipment RejectShipment { get; set; }
             public int? ShipmentNumber { get; set; }
 
         }
@@ -409,10 +410,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             public int? ShipmentNumber { get; set; }
 
-            public Fulfillment.Contracts.Model.BackorderShipmentRequest BackorderShipmentBody { get; set; }
+            public DCm.BackorderShipmentRequest BackorderShipmentBody { get; set; }
         }
         [HttpPutRoute(UriTemplate = "shipment/backordered")]
-        public Response<Fulfillment.Contracts.Model.ResourceOfShipment> BackorderShipment(BackorderShipmentArgs args)
+        public Response<DCm.ResourceOfShipment> BackorderShipment(BackorderShipmentArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.BackorderShipment(args.BackorderShipmentBody, args.ShipmentNumber);
             return Single2(serviceResponse);
@@ -421,10 +422,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class ReassignShipmenttArgs
         {
             public int? ShipmentNumber { get; set; }
-            public Fulfillment.Contracts.Model.ReassignShipment ReassignShipment { get; set; }
+            public DCm.ReassignShipment ReassignShipment { get; set; }
         }
         [HttpPutRoute(UriTemplate = "shipment/reassign")]
-        public Response<Fulfillment.Contracts.Model.ResourceOfShipment> ReassignShipment(ReassignShipmenttArgs args)
+        public Response<DCm.ResourceOfShipment> ReassignShipment(ReassignShipmenttArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.ReassignShipment(args.ShipmentNumber,args.ReassignShipment);
             return Single2(serviceResponse);

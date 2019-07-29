@@ -54,7 +54,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
         var items = [];
         items.push(Ext.create('Taco.view.order.subform.fulfillment.AllItemsTab', {
             record: this.record,
-            shipmentRecord: this.shipmentRecord
+            shipmentRecord: this.shipmentRecord,
+            listeners: {
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
         }));
         if (this.shipmentRecord.locationCode) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {

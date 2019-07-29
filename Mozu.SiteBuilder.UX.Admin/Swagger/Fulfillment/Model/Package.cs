@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfillment.Contracts.Model {
+namespace Mozu.Fulfiller.Contracts.Model {
 
   /// <summary>
   /// 
@@ -118,11 +118,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public string Status { get; set; }
 
     /// <summary>
-    /// Gets or Sets TrackingNumber
+    /// Gets or Sets TrackingNumbers
     /// </summary>
-    [DataMember(Name="trackingNumber", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "trackingNumber")]
-    public string TrackingNumber { get; set; }
+    [DataMember(Name="trackingNumbers", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "trackingNumbers")]
+    public List<string> TrackingNumbers { get; set; }
 
 
     /// <summary>
@@ -147,7 +147,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  ShippingMethodCode: ").Append(ShippingMethodCode).Append("\n");
       sb.Append("  ShippingMethodName: ").Append(ShippingMethodName).Append("\n");
       sb.Append("  Status: ").Append(Status).Append("\n");
-      sb.Append("  TrackingNumber: ").Append(TrackingNumber).Append("\n");
+      sb.Append("  TrackingNumbers: ").Append(TrackingNumbers).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

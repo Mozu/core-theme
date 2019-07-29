@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfillment.Contracts.Model {
+namespace Mozu.Fulfiller.Contracts.Model {
 
   /// <summary>
   /// 
@@ -60,6 +60,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="changeMessages", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "changeMessages")]
     public List<ChangeMessage> ChangeMessages { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ChildShipmentNumbers
+    /// </summary>
+    [DataMember(Name="childShipmentNumbers", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "childShipmentNumbers")]
+    public List<int?> ChildShipmentNumbers { get; set; }
 
     /// <summary>
     /// Gets or Sets Cost
@@ -356,11 +363,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public decimal TotalTax { get; set; }
 
     /// <summary>
-    /// Gets or Sets TrackingNumber
+    /// Gets or Sets TrackingNumbers
     /// </summary>
-    [DataMember(Name="trackingNumber", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "trackingNumber")]
-    public string TrackingNumber { get; set; }
+    [DataMember(Name="trackingNumbers", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "trackingNumbers")]
+    public List<string> TrackingNumbers { get; set; }
 
     /// <summary>
     /// Gets or Sets UpdateDate
@@ -391,6 +398,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  BackorderDurationDays: ").Append(BackorderDurationDays).Append("\n");
       sb.Append("  CanceledItems: ").Append(CanceledItems).Append("\n");
       sb.Append("  ChangeMessages: ").Append(ChangeMessages).Append("\n");
+      sb.Append("  ChildShipmentNumbers: ").Append(ChildShipmentNumbers).Append("\n");
       sb.Append("  Cost: ").Append(Cost).Append("\n");
       sb.Append("  CreateDate: ").Append(CreateDate).Append("\n");
       sb.Append("  CurrencyCode: ").Append(CurrencyCode).Append("\n");
@@ -433,7 +441,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  TotalShipment: ").Append(TotalShipment).Append("\n");
       sb.Append("  TotalShippingFee: ").Append(TotalShippingFee).Append("\n");
       sb.Append("  TotalTax: ").Append(TotalTax).Append("\n");
-      sb.Append("  TrackingNumber: ").Append(TrackingNumber).Append("\n");
+      sb.Append("  TrackingNumbers: ").Append(TrackingNumbers).Append("\n");
       sb.Append("  UpdateDate: ").Append(UpdateDate).Append("\n");
       sb.Append("  WorkflowState: ").Append(WorkflowState).Append("\n");
       sb.Append("}\n");

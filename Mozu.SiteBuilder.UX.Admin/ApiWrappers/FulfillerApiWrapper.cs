@@ -1,8 +1,8 @@
 ﻿
 using Mozu.Core;
 using Mozu.Core.Settings;
-using Mozu.Fulfillment.Contracts.Api;
-using Mozu.Fulfillment.Contracts.Model;
+using Mozu.Fulfiller.Contracts.Api;
+using Mozu.Fulfiller.Contracts.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +108,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 
         public ResourceOfShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items)
         {
-            return _shipmentController.ReassignItemsUsingPUT(items,_apiContext.TenantId, shipmentNumber,
+            return _shipmentController.ReassignItemsUsingPOST(items,_apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 

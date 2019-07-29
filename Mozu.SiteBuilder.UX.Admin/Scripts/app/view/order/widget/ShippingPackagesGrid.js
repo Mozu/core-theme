@@ -575,7 +575,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         var me = this;
 
         me.setLoading(true, this.body);
-
+        
         this.record.reassignShipmentItems({
             jsonData: me.getShipmentItemReassignPayload(),
             success: function (response) {
@@ -586,8 +586,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                     Taco.app.fireEvent('setmessage', 'Error while assigning shipment item', 'error');
                     return;
                 }
-                me.fireEvent('shipmentRefresh', json);
-
+                me.fireEvent('shipmentReassign');
             },
             failure: function (response) {
                 me.setLoading(false, this.body);

@@ -101,38 +101,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                     {
                                         text: 'Manual Reassign',
                                         handler: function () {
-                                            var shipment = me.getReassignShipmentPayload()
-                                            me.record.getCandidateSuggestions({
-                                                jsonData: shipment,
-                                                success: function (response) {
-                                                    me.isRecordSaved = true;
-                                                    me.setLoading(false, me.body);
-                                                    var json = Ext.decode(response.responseText, true);
-                                                    //var shipment = me.getReassignShipmentPayload();                                                     
-                                                    Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
-                                                        layout: 'hbox',
-                                                        width: 1080,
-                                                        height: 450,
-                                                        record: me.record,
-                                                        inventoryData: json,
-                                                        shipmentData: shipment,
-                                                        shipmentRecord: me.shipmentRecord,
-                                                        listeners: {
-                                                            saveSuccess: {
-                                                                fn: function (json) {
-                                                                    me.fireEvent('shipmentRefresh', json);
-                                                                },
-                                                                scope: me
-                                                            }
-                                                        }
-                                                    });
-                                                },
-                                                failure: function (response) {
-                                                    me.setLoading(false, me.body);
-                                                    // close the dialog
-                                                    me.close();
-                                                }
-                                            })
+                                            me.openManualReassignShipmentModal();
                                         }
                                     },
                                     {
@@ -174,12 +143,17 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         this.items.push(this.infoContainer);
         this.ShipmentDetails = Ext.create('Taco.view.order.subform.fulfillment.ShipmentDetails', {
             record: this.record,
-            shipmentRecord: this.shipmentRecord
+            shipmentRecord: this.shipmentRecord,
+            listeners: {
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
         });
         this.items.push(this.ShipmentDetails);
     },
 
-    shipmentAutoReassign: function () {
+    shipmentAutoReassign: function (locationCode) {
         var me = this;
 
         me.setLoading(true, this.body);
@@ -192,7 +166,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }
             }
         };
-        
+        if (locationCode)
+            payloadData.reassignShipment.locationCode = locationCode;
+
         this.record.reassignShipment({
             jsonData: payloadData,
             success: function (response) {
@@ -204,7 +180,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     return;
                 }
                 me.fireEvent('shipmentRefresh', json);
-                
+
             },
             failure: function (response) {
                 me.setLoading(false, this.body);
@@ -217,7 +193,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         });
     },
 
-    shipmentMarkAsShipped: function () {        
+    shipmentMarkAsShipped: function () {
         var me = this;
         me.setLoading(true, this.body);
         var payloadData = {
@@ -232,7 +208,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     Taco.app.fireEvent('setmessage', 'Error while fulfilling shipment', 'error');
                     return;
                 }
-                me.fireEvent('shipmentRefresh');                
+                me.fireEvent('shipmentRefresh');
             },
             failure: function (response) {
                 me.setLoading(false, this.body);
@@ -286,12 +262,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             }
         };
 
-        var actionMoveToBackorder = {
-            text: 'Move To backorder',
-            handler: function () {
-                me.openUpdateBackorderDatePopUp();
-            }
-        };
+        //var actionMoveToBackorder = {
+        //    text: 'Move To backorder',
+        //    handler: function () {
+        //        me.openUpdateBackorderDatePopUp();
+        //    }
+        //};
 
         var actionUpdateBackorderDate = {
             text: 'Update Backorder Date',
@@ -303,7 +279,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             return [
                 actionMarkAsShipped,
-                actionMoveToBackorder,
+                //actionMoveToBackorder,
                 actionCancelShipment
             ];
         }
@@ -315,7 +291,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
             return [
-                actionMoveToBackorder,
+                //actionMoveToBackorder,
                 actionMarkAsShipped,
                 actionCancelShipment
             ];
@@ -401,6 +377,46 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }
             }
         });
+    },
+
+    openManualReassignShipmentModal: function () {
+        var me = this;
+        if (Taco.user.taContext.omsEnabled) {
+            var shipment = me.getReassignShipmentPayload()
+            me.record.getCandidateSuggestions({
+                jsonData: shipment,
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
+                    Ext.create('Taco.view.order.modal.fulfillment.ShipmentReassign', {
+                        layout: 'hbox',
+                        width: 1080,
+                        height: 450,
+                        record: me.record,
+                        inventoryData: json,
+                        shipmentData: shipment,
+                        shipmentRecord: me.shipmentRecord,
+                        listeners: {
+                            saveSuccess: {
+                                fn: function (json) {
+                                    me.fireEvent('shipmentRefresh', json);
+                                },
+                                scope: me
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
+                    // close the dialog
+                    me.close();
+                }
+            });
+        }
+        else {
+            me.shipmentAutoReassign(me.shipmentRecord.locationCode);
+        }
     }
 });
 

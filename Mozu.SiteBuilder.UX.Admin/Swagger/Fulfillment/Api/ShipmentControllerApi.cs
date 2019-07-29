@@ -2,15 +2,24 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 using Mozu.Swagger.Client;
-using Mozu.Fulfillment.Contracts.Model;
+using Mozu.Fulfiller.Contracts.Model;
 
-namespace Mozu.Fulfillment.Contracts.Api
+namespace Mozu.Fulfiller.Contracts.Api
 {
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
     /// </summary>
     public interface IShipmentControllerApi
     {
+        /// <summary>
+        /// backorderItems 
+        /// </summary>
+        /// <param name="body">backorderItemsRequestDto</param>
+        /// <param name="xVolTenant"></param>
+        /// <param name="shipmentNumber">shipmentNumber</param>
+        /// <param name="xVolSite"></param>
+        /// <returns>ResourceOfShipment</returns>
+        ResourceOfShipment BackorderItemsUsingPOST (BackorderItemsRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// backorderShipment 
         /// </summary>
@@ -19,7 +28,7 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment BackorderShipmentUsingPUT(BackorderShipmentRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        ResourceOfShipment BackorderShipmentUsingPUT (BackorderShipmentRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// cancelShipment 
         /// </summary>
@@ -119,7 +128,7 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment ReassignItemsUsingPUT (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        ResourceOfShipment ReassignItemsUsingPOST (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// reassignShipment 
         /// </summary>
@@ -173,7 +182,7 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment SplitShipmentUsingPUT (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        ResourceOfShipment SplitShipmentUsingPOST (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// workflowDefinitionImage 
         /// </summary>
@@ -244,7 +253,52 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// </summary>
         /// <value>An instance of the ApiClient</value>
         public ApiClient ApiClient {get; set;}
-
+    
+        /// <summary>
+        /// backorderItems 
+        /// </summary>
+        /// <param name="body">backorderItemsRequestDto</param>
+        /// <param name="xVolTenant"></param>
+        /// <param name="shipmentNumber">shipmentNumber</param>
+        /// <param name="xVolSite"></param>
+        /// <returns>ResourceOfShipment</returns>
+        public ResourceOfShipment BackorderItemsUsingPOST (BackorderItemsRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        {
+            // verify the required parameter 'body' is set
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling BackorderItemsUsingPOST");
+            // verify the required parameter 'xVolTenant' is set
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling BackorderItemsUsingPOST");
+            // verify the required parameter 'shipmentNumber' is set
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling BackorderItemsUsingPOST");
+    
+            var path = "/shipments/{shipmentNumber}/backorderedItems";
+            path = path.Replace("{format}", "json");
+            path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
+    
+            var queryParams = new Dictionary<String, String>();
+            var headerParams = new Dictionary<String, String>();
+            var formParams = new Dictionary<String, String>();
+            var fileParams = new Dictionary<String, FileParameter>();
+            String postBody = null;
+    
+                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
+ if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
+                        postBody = ApiClient.Serialize(body); // http body (model) parameter
+    
+            // authentication setting, if any
+            String[] authSettings = new String[] {  };
+    
+            // make the HTTP request
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
+            if (((int)response.StatusCode) >= 400)
+                throw new ApiException ((int)response.StatusCode, "Error calling BackorderItemsUsingPOST: " + response.Content, response.Content);
+            else if (((int)response.StatusCode) == 0)
+                throw new ApiException ((int)response.StatusCode, "Error calling BackorderItemsUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
+        }
+    
         /// <summary>
         /// backorderShipment 
         /// </summary>
@@ -253,7 +307,7 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment BackorderShipmentUsingPUT(BackorderShipmentRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        public ResourceOfShipment BackorderShipmentUsingPUT (BackorderShipmentRequest body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling BackorderShipmentUsingPUT");
@@ -261,36 +315,35 @@ namespace Mozu.Fulfillment.Contracts.Api
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling BackorderShipmentUsingPUT");
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling BackorderShipmentUsingPUT");
-
+    
             var path = "/shipments/{shipmentNumber}/backordered";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
-
+    
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
             var formParams = new Dictionary<String, String>();
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
-
-            if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
-            if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
-            postBody = ApiClient.Serialize(body); // http body (model) parameter
-
+    
+                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
+ if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
+                        postBody = ApiClient.Serialize(body); // http body (model) parameter
+    
             // authentication setting, if any
-            String[] authSettings = new String[] { };
-
+            String[] authSettings = new String[] {  };
+    
             // make the HTTP request
-            IRestResponse response = (IRestResponse)ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+    
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException((int)response.StatusCode, "Error calling BackorderShipmentUsingPUT: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling BackorderShipmentUsingPUT: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException((int)response.StatusCode, "Error calling BackorderShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
-
-            return (ResourceOfShipment)ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
+                throw new ApiException ((int)response.StatusCode, "Error calling BackorderShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
+    
+            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
-
-
+    
         /// <summary>
         /// cancelShipment 
         /// </summary>
@@ -737,14 +790,14 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment ReassignItemsUsingPUT (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        public ResourceOfShipment ReassignItemsUsingPOST (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling ReassignItemsUsingPUT");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling ReassignItemsUsingPOST");
             // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling ReassignItemsUsingPUT");
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling ReassignItemsUsingPOST");
             // verify the required parameter 'shipmentNumber' is set
-            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignItemsUsingPUT");
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignItemsUsingPOST");
     
             var path = "/shipments/{shipmentNumber}/reassignedItems";
             path = path.Replace("{format}", "json");
@@ -764,12 +817,12 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPUT: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPOST: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
             return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
@@ -1007,14 +1060,14 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment SplitShipmentUsingPUT (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        public ResourceOfShipment SplitShipmentUsingPOST (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling SplitShipmentUsingPUT");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling SplitShipmentUsingPOST");
             // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling SplitShipmentUsingPUT");
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling SplitShipmentUsingPOST");
             // verify the required parameter 'shipmentNumber' is set
-            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling SplitShipmentUsingPUT");
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling SplitShipmentUsingPOST");
     
             var path = "/shipments/{shipmentNumber}/split";
             path = path.Replace("{format}", "json");
@@ -1034,12 +1087,12 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPUT: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPOST: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
             return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }

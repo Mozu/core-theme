@@ -11,27 +11,27 @@ namespace Mozu.Fulfiller.Contracts.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class Measurement {
+  public class BackorderItemsRequest {
     /// <summary>
-    /// Gets or Sets Attributes
+    /// Gets or Sets BackorderDate
     /// </summary>
-    [DataMember(Name="attributes", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "attributes")]
-    public Dictionary<string, Object> Attributes { get; set; }
+    [DataMember(Name="backorderDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "backorderDate")]
+    public DateTime? BackorderDate { get; set; }
 
     /// <summary>
-    /// Gets or Sets Unit
+    /// Gets or Sets BackorderReleaseDate
     /// </summary>
-    [DataMember(Name="unit", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "unit")]
-    public string Unit { get; set; }
+    [DataMember(Name="backorderReleaseDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "backorderReleaseDate")]
+    public DateTime? BackorderReleaseDate { get; set; }
 
     /// <summary>
-    /// Gets or Sets Value
+    /// Gets or Sets Items
     /// </summary>
-    [DataMember(Name="value", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "value")]
-    public decimal Value { get; set; }
+    [DataMember(Name="items", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "items")]
+    public List<BackorderItem> Items { get; set; }
 
 
     /// <summary>
@@ -40,10 +40,10 @@ namespace Mozu.Fulfiller.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class Measurement {\n");
-      sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-      sb.Append("  Unit: ").Append(Unit).Append("\n");
-      sb.Append("  Value: ").Append(Value).Append("\n");
+      sb.Append("class BackorderItemsRequest {\n");
+      sb.Append("  BackorderDate: ").Append(BackorderDate).Append("\n");
+      sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
+      sb.Append("  Items: ").Append(Items).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

@@ -30,19 +30,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             return List2(Mapper.Map<List<CancelReasonItem>>(reasons.Items), reasons.TotalCount);
         }
-
-        public class CancelOrderItemsArgs
-        {
-            public string OrderId { get; set; }
-            public List<BulkCancelItem> Items { get; set; }
-        }
-        [HttpPutRoute(UriTemplate = "cancel/items")]
-        public async Task<Response<Order>> CancelItems(CancelOrderItemsArgs args)
-        {
-            var dcOrder = (await _orderWebApiClient.CancelItems(args.OrderId, args.Items)).ReadAsSync();
-            return Single2(Mapper.Map<Order>(dcOrder));
-        }
-
         public class CancelOrderArgs
         {
             public string OrderId { get; set; }
@@ -53,24 +40,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcOrder = (await _orderWebApiClient.CancelOrder(args.OrderId, args.Reason)).ReadAsSync();
             return Single2(Mapper.Map<Order>(dcOrder));
-        }
-
-        public class OrderItemCancelArgs
-        {
-            public string OrderId { get; set; }
-            public string OrderItemId { get; set; }
-        }
-        [HttpGetRoute(UriTemplate = "cancel/cancelitem")]
-        [BehaviorAuthorization(true, typeof(Core.Behaviors.OrderReadBehavior))]
-        public async Task<Response<CanceledOrderItemCollection>> GetCanceledItems(OrderItemCancelArgs args, [FromUri]bool draft = false)
-        {
-            CanceledOrderItemCollection canceledItemCollection = null;
-            if (string.IsNullOrEmpty(args.OrderItemId))
-                canceledItemCollection = (await _orderWebApiClient.GetCanceledItems(args.OrderId, draft: draft)).ReadAsSync();
-            else
-                canceledItemCollection = (await _orderWebApiClient.GetCanceledItem(args.OrderId, args.OrderItemId, draft: draft)).ReadAsSync();
-
-            return Single2(Mapper.Map<CanceledOrderItemCollection>(canceledItemCollection));
         }
     }
 }

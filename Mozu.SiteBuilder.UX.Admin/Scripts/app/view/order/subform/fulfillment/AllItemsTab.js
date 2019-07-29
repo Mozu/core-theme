@@ -28,6 +28,11 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
             margin: '10px 0 10px 0',
             padding: '0 1px 0 0',
             minHeight: '300',
+            listeners: {
+                shipmentReassign: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
         });
         
 
@@ -41,7 +46,6 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     },
 
     doSave: function (shipmentRecord) {
-        //debugger
     }
 
 });

@@ -1,5 +1,5 @@
 ﻿using Mozu.Core.Api.Routing;
-using Mozu.Fulfillment.Contracts.Model;
+using Mozu.Fulfiller.Contracts.Model;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
@@ -24,8 +24,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public List<ReassignItem> ShipmentItems { get; set; }
 
         }
-        [HttpPutRoute(UriTemplate = "shipment/items/reassign")]
-        public Response<Mozu.Fulfillment.Contracts.Model.ResourceOfShipment> ReassignShipmentItems(ReassignShipmentItemArgs args)
+        [HttpPostRoute(UriTemplate = "shipment/items/reassign")]
+        public Response<ResourceOfShipment> ReassignShipmentItems(ReassignShipmentItemArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.ReassignShipmentItems(args.ShipmentNumber, args.ShipmentItems);
             return Single2(serviceResponse);
@@ -39,7 +39,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPostRoute(UriTemplate = "shipment/items/cancel")]
-        public Response<Mozu.Fulfillment.Contracts.Model.ResourceOfShipment> CancelShipmentItems(CancelShipmentItemArgs args)
+        public Response<ResourceOfShipment> CancelShipmentItems(CancelShipmentItemArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.CancelItems(args.CanceledItems, args.ShipmentNumber);
             return Single2(serviceResponse);

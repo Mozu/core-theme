@@ -7,10 +7,16 @@
     collapsible: false,
 
     initComponent: function () {
+        var me = this;
         this.items = [];
         this.shipmentTabs = Ext.create('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             record: this.record,
-            shipmentRecord: this.shipmentRecord
+            shipmentRecord: this.shipmentRecord,
+            listeners: {
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
         });
         this.items.push(this.shipmentTabs);
 
