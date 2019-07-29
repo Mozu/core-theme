@@ -165,7 +165,7 @@ export class Constants {
         tenantHeaderKey: 'tenant'
     };
 
-    static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Cancel', label: 'Cancel'}];
+    static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Canceled', label: 'Cancel'}];
     static LCCustomerPickupReminders = [ {data : 1, label: '1 days'}, {data: 2, label: '2 days'}, {data: 3, label: '3 days'},
                                         {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
     static LCCarriers = [{ CarrierType: 'Fedex', CarrierTypeLabel: 'FedEx', IsEnabled: false},
