@@ -179,7 +179,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             storeId: 'allLocationsStore',
             fields: ['displayName'],
             groupField: 'displayName',
-            data: me.record.locationsStore.data.items,
+            //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -210,16 +210,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 beforetabchange: function (tabs, newTab, oldTab) {
                 //    console.log(me.record.locationsStore, "jjj");
                     if (newTab.title == 'All Locations') {
-                //        console.log(me.record.locationsStore, "in");
-                    //    me.record.getLocations({
-                    //        jsonData: "1",
-                    //        var shipment = me.getReassignShipmentPayload();
-                    //        success: function (response) {
-                    //            me.isRecordSaved = true;
-                    //            me.setLoading(false, me.body);
-                    //            var json = Ext.decode(response.responseText, true);
-                    //            console.log(json);
-                    //        });
+                     console.log(me.record.locationsStore, "in");
+                        //me.record.getLocations({
+                        //    jsonData: "1",
+                        //    success: function (response) {
+                        //        me.isRecordSaved = true;
+                        //        me.setLoading(false, me.body);
+                        //        var json = Ext.decode(response.responseText, true);
+                        //        console.log(json);
+                        //    });
                     }
                 }
             },
@@ -237,25 +236,30 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     doSave: function () {
         if (this.validateModal()) {
             var me = this;
-
+            me.setLoading(true, this.body);
             var payloadData = me.getPayloadDataInventory();
-                        me.record.reassignShipment({
+
+                        this.record.reassignShipment({
                             jsonData: payloadData,
                             success: function (response) {
                                 me.isRecordSaved = true;
                                 me.setLoading(false, me.body);
                                 var json = Ext.decode(response.responseText, true);
+                                
                                 if (!json || !json.success) {
+                                    Taco.app.fireEvent('setmessage', json.response, 'error');
                                     return;
                                 }
                                 me.saveSuccess(json);
                                 // close the dialog
-                                me.close();
+                                
                             },
                             failure: function (response) {
-                                debugger
                                 me.setLoading(false, me.body);
-                                // close the dialog
+                                
+                                var json = Ext.decode(response.responseText, true),
+                                    msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                                Taco.app.fireEvent('setmessage', msg, 'error');
                                 me.close();
                             }
                         });
@@ -276,7 +280,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
         var item = grid.getSelectionModel().getSelection();
         return {
-            ShipmentNumber: me.shipmentRecord.id,
+            ShipmentNumber: me.shipmentRecord.number,
             ReassignShipment: {
                 LocationCode: item[0].raw.locationCode
             }

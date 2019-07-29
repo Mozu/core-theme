@@ -101,8 +101,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                     {
                                         text: 'Manual Reassign',
                                         handler: function () {
+                                            var shipment = me.getReassignShipmentPayload()
                                             me.record.getCandidateSuggestions({
-                                                jsonData: me.getReassignShipmentPayload(),
+                                                jsonData: shipment,
                                                 success: function (response) {
                                                     me.isRecordSaved = true;
                                                     me.setLoading(false, me.body);
@@ -119,9 +120,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                                         listeners: {
                                                             saveSuccess: {
                                                                 fn: function (json) {
-                                                                    //me.fireEvent('orderCancelled', json);
+                                                                    me.fireEvent('shipmentRefresh', json);
                                                                 },
-                                                                //scope: me
+                                                                scope: me
                                                             }
                                                         }
                                                     });
