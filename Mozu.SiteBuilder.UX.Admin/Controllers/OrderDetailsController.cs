@@ -30,14 +30,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// on storefront and sends a 302 redirects to storefront.
         /// </summary>
         [HttpGet]
-        public HttpResponseMessage Deets(int siteId, string orderId, string packageId = null)
+        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber = 0)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
             string tok = claim.ToAccessToken();
 
             string destinationUrl = "/back-office/orders/" + orderId;
-            if (!String.IsNullOrEmpty(packageId))
-                destinationUrl += "/packages/" + packageId;
+            if (shipmentNumber > 0)
+                destinationUrl += "/shipments/" + shipmentNumber;
             destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
