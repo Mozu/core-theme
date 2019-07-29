@@ -308,7 +308,7 @@
 						<div class="row nomargin for-top-margin">
 							<div class="form-row col-md-10 for-no-padding">
 								<label class="subform-label"
-									for="upsInternationalExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsInternationalExpress3DayDefault' | translate}}</label>
+									for="upsInternationalExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsInternationalExpress2DayDefault' | translate}}</label>
 								<select id="upsInternationalExpress2DayDefault" class="form-control"
 									formControlName="upsInternationalExpress2DayDefault">
 									<option *ngFor="let shippingType of model.LCUPSInternationalShippingTypes"
@@ -320,9 +320,12 @@
 						</div>
 						<div class="row nomargin for-top-margin">
 							<div class="form-row col-md-10 for-no-padding">
-								<label class="subform-label" for="upsInternationalExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.UPSInternationalExpress3DayDefault' | translate}}</label>
-								<select id="upsInternationalExpress3DayDefault" class="form-control" formControlName="upsInternationalExpress3DayDefault">
-									<option *ngFor="let shippingType of model.LCUPSInternationalShippingTypes" [ngValue]="shippingType.data">
+								<label class="subform-label"
+									for="upsInternationalExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsInternationalExpress3DayDefault' | translate}}</label>
+								<select id="upsInternationalExpress3DayDefault" class="form-control"
+									formControlName="upsInternationalExpress3DayDefault">
+									<option *ngFor="let shippingType of model.LCUPSInternationalShippingTypes"
+										[ngValue]="shippingType.data">
 										{{ shippingType.label }}
 									</option>
 								</select>
