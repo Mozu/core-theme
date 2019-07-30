@@ -1,5 +1,4 @@
-﻿
-Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
+﻿Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
     extend: 'Ext.grid.Panel',
     requires: ['Ext.grid.CellEditor',
         'Ext.grid.RowEditor',
@@ -643,7 +642,10 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }]
             };
         }
-    },
+    }
+});
+
+
 
     openUpdateBackorderDatePopUp: function () {
         var grid = Ext.getCmp(this.id);
