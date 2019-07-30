@@ -42,11 +42,20 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _apiContext = apiContext;
             _settings = settings;
             var basePath = settings.Urls("service-url-ShipmentsWebAPi");
+            if (!string.IsNullOrEmpty(basePath))
+            {
+                // In the configs...
+                // mozu:services:fulfillment = ${mozu:domains:tp}/kibo.fulfillment.webapi
+                // mozu:routes:ShipmentsWebApi: ${mozu:services:fulfillment}/commerce/shipments/
+                // mozu:routes:ShipmentProcessesWebApi: ${mozu:services:fulfillment}/commerce/processes/
+                // Fulfillment swagger specs cover both the ShipmentsWebApi and ShipmentProcessesWebApi routes.
+                // However, the specs are effectively rooted at ${mozu:domains:tp}/kibo.fulfillment.webapi/commerce
+                // which is covered by none of the config values.
+                // So, go with the ShipmentsWebApi route and strip off the "shipments/" bit.
+                basePath = basePath.Substring(0, basePath.IndexOf("shipments"));
+            }
             _shipmentController = new ShipmentControllerApi(basePath);
-            //_shipmentController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
-            //_shipmentController.ApiClient.DefaultHeader["x-vol-Site"] = apiContext.SiteId.ToString();
-            //_shipmentController.ApiClient.DefaultHeader["x-vol-master-catalog"] = apiContext.MasterCatalogId.ToString();
-            //_shipmentController.ApiClient.DefaultHeader["x-vol-catalog"] = apiContext.CatalogId.ToString();
+            
         }
 
 

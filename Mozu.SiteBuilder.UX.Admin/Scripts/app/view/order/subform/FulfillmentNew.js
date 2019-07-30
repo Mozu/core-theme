@@ -40,7 +40,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
                     scope: this,
                     params: { 'shipmentCount': shipmentCount },
                     callback: function (records, operation, success) {
-                        if (records && records[0].data) {
+                        if (records && records[0] && records[0].data) {
                             shipments[operation.params.shipmentCount].location = records[0].data;
                         }
 
