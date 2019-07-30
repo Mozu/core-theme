@@ -1,0 +1,57 @@
+﻿  {% extends "email/email" %}
+
+  {% block body-content %}
+    <br>
+    <p>
+        {{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!
+    </p>
+    <br>
+    <p>{{ labels.orderPickupReadyBlob1|string_format(siteContext.generalSettings.websiteName |safe }}</p>
+
+    <table class="mz-ordersummary">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.storeLocation }}</td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.storeHours }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.pickupDetails }}</font></td>
+            </tr>
+        </thead>
+		<tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+		</tbody>
+    </table>
+
+    <br>
+    {% for package in model.packages %}
+    <table width="100%" cellpadding="1" cellspacing="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.item }}</font></td>
+                <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.subtotal }}</font></td>
+            </tr>
+        </thead>
+        
+        {% for item in package.items %}
+			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
+				<td>
+                {{ item.name }}
+                <dl>
+                    <dd>{{ item.productCode }}</dd>&nbsp;
+                    <dd>{{ item.partNumber }}</dd>&nbsp; 
+                </dl>
+                </td>
+                <td style="text-align: right;">{{ item.subtotal }}</td>
+			</tr>
+		{% endfor %}
+    </table>
+    {% endfor %}
+
+    <p>{{ labels.orderPickupReadyBlob2 }}</p>
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+
+{% endblock body-content %}

@@ -85,7 +85,7 @@
   ],
   "emailTemplates": [
     {
-      "id": "order.shipped",
+      "id": "order.shipped1",
       "properties": {},
       "template": "email/order-shipped",
       "title": "Your Order Has Shipped"
@@ -103,6 +103,12 @@
       "properties": {},
       "template": "email/order-confirmation",
       "title": "Order Confirmation"
+    },
+    {
+      "id": "order.shipped",
+      "properties": {},
+      "template": "email/order-pickup-ready",
+      "title": "Order Pickup Ready"
     },
     {
       "id": "refund.created",
