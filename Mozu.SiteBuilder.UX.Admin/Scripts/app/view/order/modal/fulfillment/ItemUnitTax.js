@@ -81,7 +81,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     getEditUnitTaxPayload: function () {
         var me = this;
-        var unitTaxPerc = Ext.get(this.unitTaxAdjustmentInput).dom.value;
+        var unitTax = Ext.get(this.unitTaxAdjustmentInput).dom.value;
         return {
             unitTax: unitTax
         };
