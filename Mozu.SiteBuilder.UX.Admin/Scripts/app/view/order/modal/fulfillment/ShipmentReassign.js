@@ -80,6 +80,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     dataIndex: 'stock',
                     renderer: function (v, meta, rec) {
                         var inventory = rec.raw.inventory;
+                        var inventory = rec.raw.inventory;
                         var type = "";
 
                         var filteredInventory;
@@ -190,7 +191,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: Ext.data.StoreManager.lookup('allLocationsStore'),
+            store: me.record.getLocations(),
+            //store: Ext.data.StoreManager.lookup('allLocationsStore'),
             columns: [
                 {
                     text: 'Location',
@@ -201,25 +203,30 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             height: 200,
             width: 400
         });
-
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
             height: 300,
             renderTo: Ext.getBody(),
             listeners: {
                 beforetabchange: function (tabs, newTab, oldTab) {
-                //    console.log(me.record.locationsStore, "jjj");
-                    if (newTab.title == 'All Locations') {
-                     console.log(me.record.locationsStore, "in");
-                        //me.record.getLocations({
-                        //    jsonData: "1",
-                        //    success: function (response) {
-                        //        me.isRecordSaved = true;
-                        //        me.setLoading(false, me.body);
-                        //        var json = Ext.decode(response.responseText, true);
-                        //        console.log(json);
-                        //    });
-                    }
+                    //console.log(me.record.locationsStore, "jjj");
+                    //if (newtab.title == 'all locations') {
+                    //    debugger
+                    //    me.record.getlocations({
+                    //        jsondata: "1",
+                    //        success: function (response) {
+                    //            me.isrecordsaved = true;
+                    //            me.setloading(false, me.body);
+                    //            var json = ext.decode(response.responsetext, true);
+                    //            console.log(json);
+                    //        },
+                    //        failure: function (response) { debugger
+                    //            me.setloading(false, me.body);
+                    //            // close the dialog
+                    //            me.close();
+                    //        }
+                    //    });
+                    //}
                 }
             },
             items: [

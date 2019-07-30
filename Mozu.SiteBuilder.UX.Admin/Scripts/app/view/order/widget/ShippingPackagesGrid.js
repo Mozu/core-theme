@@ -438,20 +438,22 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
     openItemsReassignPopup: function () {
         var me = this;
+        var inventoryItemData = me.getReassignItemPayload()
         me.record.getCandidateSuggestions({
-            jsonData: "1",
+            jsonData: inventoryItemData,
             success: function (response) {
                 me.isRecordSaved = true;
                 me.setLoading(false, me.body);
                 var json = Ext.decode(response.responseText, true);
-
 
                 Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
                     layout: 'hbox',
                     width: 1080,
                     height: 550,
                     record: me.record,
-                    inventoryData: json,
+                    inventoryItemData: json,
+                    //shipmentData: shipment,
+                    shipmentRecord: me.shipmentRecord,
                     listeners: {
                         saveSuccess: {
                             fn: function (json) {
@@ -468,6 +470,24 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 me.close();
             }
         });
+    },
+
+    getReassignItemPayload: function () {
+        var me = this;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var model = {
+            //pickupLocationCode: shipment.locationCode,
+            orderType: 'DIRECTSHIP',//me.record.get('orderType'),
+            items: [],
+        }
+       
+        model.items.push({
+            partNumber: item[0].data.productCode,
+            upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
+            quantity: item[0].data.quantity
+        });
+        return model;
     },
 
     editShipmentItem: function () {
@@ -539,7 +559,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) {
-                                    me.fireEvent('shipmentRefresh',);
+                                    me.fireEvent('shipmentRefresh');
                                 },
                                 //scope: me
                             }

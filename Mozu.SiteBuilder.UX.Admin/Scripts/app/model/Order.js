@@ -2951,10 +2951,11 @@ Ext.define('Taco.model.Order', {
         //}
 
         Ext.apply(config, {
-             url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
-            //url: '/admin/app/order/shipping/candidates',
-            //method: 'POST'
-            method: 'GET'
+            //url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
+            //method: 'GET'
+             url: '/admin/app/order/shipping/candidates',
+             method: 'POST'
+            
         });
 
         Ext.Ajax.request(config);
@@ -3003,40 +3004,36 @@ Ext.define('Taco.model.Order', {
     },
 
     getLocations: function () {
-        var me = this;
-        me.locationsData = [];
-        if (!this.locationsStore) {
-            this.locationsStore = Taco.core.data.StoreManager.getOrCreate({
-                createOnly: true,
-                type: 'Taco.store.Locations',
-                // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
-                clearSort: false,
-                remoteSort: true,
-                remoteFilter: true,
-                sorters: [{
-                    property: 'name',
-                    direction: 'ASC'
-                }],
-                //filters: [{
-                //    property: 'code',
-                //    value: true
-                //}],
-                autoLoad: false,
-                listeners: {
-                    beforeload: function (store, operation) {
-                        var proxy = store.getProxy();
-                        if (proxy.extraParams) {
-                            //reset params at proxy (e.g. advSearch)
-                            proxy.extraParams = {};
-                        }
-                        if (this.extraFilters) {
-                            store.extraFilters.add(this.extraFilters);
-                        }
-                    },
-                    scope: this
-                }
-            });
-        }
+        return Taco.core.data.StoreManager.getOrCreate({
+            createOnly: true,
+            type: 'Taco.store.Locations',
+            // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+            clearSort: false,
+            remoteSort: true,
+            remoteFilter: true,
+            sorters: [{
+                property: 'name',
+                direction: 'ASC'
+            }],
+            //filters: [{
+            //    property: 'code',
+            //    value: true
+            //}],
+            autoLoad: true,
+            listeners: {
+                beforeload: function (store, operation) {
+                    var proxy = store.getProxy();
+                    if (proxy.extraParams) {
+                        //reset params at proxy (e.g. advSearch)
+                        proxy.extraParams = {};
+                    }
+                    if (this.extraFilters) {
+                        store.extraFilters.add(this.extraFilters);
+                    }
+                },
+                scope: this
+            }
+        })
     }
 
 });

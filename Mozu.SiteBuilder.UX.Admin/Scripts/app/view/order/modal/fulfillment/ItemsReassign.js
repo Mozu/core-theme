@@ -22,18 +22,7 @@
 
     initComponent: function () {
 
-        var inventoryData = [
-            ['Austin warehouse', "XXX.X Mi", "Yes"],
-            ['Houstan Warehouse', "XXX.X Mi", "Yes"],
-            ['California Warehouse', "XXX.X Mi", "Yes"],
-            ['Store name', "XXX.X Mi", "Yes"],
-            ['Store name', "XXX.X Mi", "Yes"],
-            ['Store name', "XXX.X Mi", "Yes"],
-            ['Store name', "XXX.X Mi", "Yes"]
-        ];
-
         var itemsPerPage = 2;
-
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'simpsonsStore',
             autoLoad: false,
@@ -46,23 +35,9 @@
             }],
             fields: ['location', 'distance', 'stock'],
             groupField: 'location',
-            data: {
-                'items': [
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                    { 'location': 'Austin warehouse', "distance": "XXX.X Mi",  "availableQty": "263 of 298", "orderedQty": "263 of 298","reassignQty":""  },
-                ]
-            },
+            data: this.inventoryItemData.candidateSuggestions,
             proxy: {
                 type: 'memory',
-
                 reader: {
                     type: 'json',
                     root: 'items',
@@ -80,12 +55,6 @@
                 limit: itemsPerPage
             }
         });
-
-
-        //var nameRenderer = function () {
-        //    return '<div ext-xtype="radiofield"></div>';
-
-        //}
 
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',

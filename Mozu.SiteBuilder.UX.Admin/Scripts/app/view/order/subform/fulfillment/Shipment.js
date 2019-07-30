@@ -371,13 +371,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var shipment = me.shipmentRecord;
         var model = {
             pickupLocationCode: shipment.locationCode,
-            orderType: shipment.shipmentType,
+            orderType: 'DIRECTSHIP', //me.record.get('orderType'),
             items: []
         }
         shipment.items.forEach(function (element) {
             model.items.push({
                 partNumber: element.productCode,
-                upc: element.name,
+                upc: element.VariationProductCode ? element.VariationProductCode : element.productCode,
                 quantity: element.quantity
             });
         });

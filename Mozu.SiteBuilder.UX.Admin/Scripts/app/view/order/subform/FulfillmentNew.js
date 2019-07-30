@@ -22,7 +22,8 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
     buildComponents: function () {
         var me = this;
         me.setLoading(true, this.body);
-
+        this.record.getLocations();
+        
         this.add(Ext.create('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             record: this.record,
             listeners: {
