@@ -12,6 +12,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoggerService, HttpClientService } from '@core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Constants } from '@shared/infrastructure/constants';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-dynamic-links',
@@ -21,24 +22,24 @@ import { Constants } from '@shared/infrastructure/constants';
 export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   @ViewChild('form') postForm: ElementRef;
   @Input() iframeResourceURL: any;
+  @Input() formBody: any;
   catalogImportExport = Constants.titles.catalogImportExportTitles;
-  close = Constants.lables.closeLabel;
-  private reqBody: any;
+  close = Constants.lables.closeLabel;  
 
   constructor(
-    private _http: HttpClientService,
+    private _http: HttpClient,
     private _loggerService: LoggerService,
     public activeModal: NgbActiveModal,
     private _domSanitizer: DomSanitizer
-  ) {
-    this.reqBody = new FormData();
-  }
+  ) {  }
 
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info('DynamicLinksDialogComponent : ngOnChanges');
     if (changes && changes.iframeResourceURL && changes.iframeResourceURL.currentValue) {
-
       this.iframeResourceURL = changes.iframeResourceURL.currentValue;
+    }
+    if (changes && changes.formBody && changes.formBody.currentValue) {
+      this.formBody = changes.formBody.currentValue;
     }
   }
 
@@ -50,8 +51,8 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   submitForm($event): boolean {
     this._loggerService.info('DynamicLinksDialogComponent : submitForm');
     $event.stopPropagation();
-    const url: any = this._domSanitizer.bypassSecurityTrustResourceUrl(this.iframeResourceURL);
-    this._http.post(url, this.reqBody);
+    this.iframeResourceURL = this._domSanitizer.bypassSecurityTrustResourceUrl(this.iframeResourceURL);
+    this._http.post(this.iframeResourceURL, this.formBody);
     return true;
   }
 
@@ -61,6 +62,4 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   public closeModal = () => {
     this.activeModal.dismiss('Cross click');
   }
-
-
 }
