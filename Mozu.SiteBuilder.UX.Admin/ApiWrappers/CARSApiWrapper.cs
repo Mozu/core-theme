@@ -17,7 +17,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 {
     public interface ICARSApiWrapper
     {
-        CallableGenerateLabelResponse GenerateLabelUsingPOST(GenerateLabelRequest body);
+        GenerateLabelResponse GenerateLabelUsingPOST(GenerateLabelRequest body);
     }
     public class CARSApiWrapper : ICARSApiWrapper
     {
@@ -32,10 +32,10 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             var basePath = settings.Services.First(x => x.Name == "CARS").BaseUrl;
             basePath = "http://services-tp-dev01.kubedev.kibo-dev.com/carrier-service";
             _generateLabelController = new GenerateLabelControllerApi(basePath);
-            _generateLabelController.ApiClient.DefaultHeader["x-vol-tenant"] = _apiContext.TenantId.ToString();
+            _generateLabelController.ApiClient.DefaultHeader["x-vol-tenant"] = "1";// _apiContext.TenantId.ToString();
         }
 
-        public CallableGenerateLabelResponse GenerateLabelUsingPOST(GenerateLabelRequest body)
+        public GenerateLabelResponse GenerateLabelUsingPOST(GenerateLabelRequest body)
         {
             return _generateLabelController.GenerateLabelUsingPOST(body);
         }

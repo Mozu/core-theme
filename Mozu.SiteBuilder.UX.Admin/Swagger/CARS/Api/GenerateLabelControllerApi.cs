@@ -16,7 +16,7 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="body">request</param>
         /// <returns>CallableGenerateLabelResponse</returns>
-        CallableGenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body);
+        GenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body);
     }
   
     /// <summary>
@@ -77,7 +77,7 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="body">request</param>
         /// <returns>CallableGenerateLabelResponse</returns>
-        public CallableGenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body)
+        public GenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling GenerateLabelUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GenerateLabelUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableGenerateLabelResponse) ApiClient.Deserialize(response.Content, typeof(CallableGenerateLabelResponse), response.Headers);
+            return (GenerateLabelResponse) ApiClient.Deserialize(response.Content, typeof(GenerateLabelResponse), response.Headers);
         }
     
     }
