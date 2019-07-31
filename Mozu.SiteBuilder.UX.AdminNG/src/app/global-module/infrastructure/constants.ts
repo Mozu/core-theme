@@ -28,6 +28,9 @@ export class Constants {
         getLocationGroupConfig : environment.apiUrl + '/location/group/configuration',
         deleteLocationGroup : environment.apiUrl + '/location/groups/delete',
         getQuoteList : environment.apiUrl + '/quote/list',
+        getB2BUserAccount: environment.apiUrl + '/b2baccount',
+        getCarrierSettings: environment.apiUrl + '/shipping/carrierSettings/read',
+        getAllCarrierRatesWithConfiguredInfo: environment.apiUrl + '/shipping/carrierRatesWithConfigured'
     };
 
     static JsonResources = {

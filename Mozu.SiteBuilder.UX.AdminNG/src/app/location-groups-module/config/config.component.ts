@@ -226,6 +226,47 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
     }
 
+    private getCarrierSettings() {
+        this._loggerService.info('LocationGroupConfigComponent : getCarrierSettings');
+        this.configService.getCarrierSettings().subscribe(response =>
+            this.getCarrierSettingsSuccess(response),
+            (response) => this.getCarrierSettingsError(response.error.message));
+    }
+
+    private getCarrierSettingsSuccess(result) {
+        this._loggerService.info('LocationGroupConfigComponent : getCarrierSettingsSuccess' + JSON.stringify(result));
+        if ( result && result.items ) {
+
+        }
+    }
+
+    private getCarrierSettingsError(errmsg: string) {
+        this._loggerService.info('LocationGroupConfigComponent : getCarrierSettingsError');
+        this._spinner.stop();
+        this._tostrService.showError(errmsg);
+    }
+
+
+    private getAllCarrierRatesWithConfiguredInfo() {
+        this._loggerService.info('LocationGroupConfigComponent : getAllCarrierRatesWithConfiguredInfo');
+        this.configService.getAllCarrierRatesWithConfiguredInfo().subscribe(response =>
+            this.getCarrierSettingsSuccess(response),
+            (response) => this.getCarrierSettingsError(response.error.message));
+    }
+
+    private getAllCarrierRatesWithConfiguredInfoSuccess( result ) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllCarrierRatesWithConfiguredInfoSuccess' + JSON.stringify(result));
+        if ( result && result.items ) {
+
+        }
+    }
+
+    private getAllCarrierRatesWithConfiguredInfoError(errmsg: string) {
+        this._loggerService.info('LocationGroupConfigComponent : getAllCarrierRatesWithConfiguredInfoError');
+        this._spinner.stop();
+        this._tostrService.showError(errmsg);
+    }
+
     private navigateToSiteConfig() {
         const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
         this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupId
@@ -249,6 +290,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     public fetchSitesData = (siteIds: any[]) => {
         this._loggerService.info('LocationGroupConfigComponent : fetchSitesData');
         this.model.sitesLst = [];
+
         if (this._sharedData._sharedData.items.ctTenant.sites) {
             const sites: SiteModel[] = this._sharedData._sharedData.items.ctTenant.sites;
             if (siteIds && siteIds.length > 0) {
@@ -274,6 +316,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private getLocationGroupConfigSuccess(result) {
         this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
+        // get carrier settings details.
+        this.getCarrierSettings();
+        // get carrier rates with configure info details.
+        this.getAllCarrierRatesWithConfiguredInfo();
+
         if ( result && result.items ) {
             const lgConfigModel: LocationGroupConfigurationModel =   <LocationGroupConfigurationModel>result.items;
             this.resetLocationGroupConfigForm();

@@ -32,4 +32,23 @@ export class LocationGroupConfigService {
             return this._http.Put(GlobalConstant.webApis.getLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);
          }
     }
+
+    public getCarrierSettings(): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: getCarrierSettings');
+        if (environment.isUseMocks) {
+            return this._http.get(Constants.JsonResources.getLocationGroupConfig);
+        } else {
+            return this._http.get(GlobalConstant.webApis.getCarrierSettings);
+        }
+    }
+
+    public getAllCarrierRatesWithConfiguredInfo(): Observable<any> {
+        this._loggerService.info('LocationGroupConfigService: getAllCarrierRatesWithConfiguredInfo');
+        if (environment.isUseMocks) {
+            return this._http.get(Constants.JsonResources.getLocationGroupConfig);
+        } else {
+            return this._http.get(GlobalConstant.webApis.getAllCarrierRatesWithConfiguredInfo);
+        }
+    }
+
 }
