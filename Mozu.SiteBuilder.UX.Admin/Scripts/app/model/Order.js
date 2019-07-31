@@ -2895,7 +2895,16 @@ Ext.define('Taco.model.Order', {
     backorderedShipment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipment/backordered',
-            method: 'PUT'
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
+    backorderItemsUpdate: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/backorderItemsUpdate',
+            method: 'POST'
         });
 
         Ext.Ajax.request(config);

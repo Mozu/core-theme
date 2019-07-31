@@ -20,6 +20,20 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
+    /// Gets or Sets AuditInfo
+    /// </summary>
+    [DataMember(Name="auditInfo", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "auditInfo")]
+    public AuditInfo AuditInfo { get; set; }
+
+    /// <summary>
+    /// Gets or Sets BackorderReleaseDate
+    /// </summary>
+    [DataMember(Name="backorderReleaseDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "backorderReleaseDate")]
+    public DateTime? BackorderReleaseDate { get; set; }
+
+    /// <summary>
     /// Gets or Sets Color
     /// </summary>
     [DataMember(Name="color", EmitDefaultValue=false)]
@@ -140,6 +154,8 @@ namespace Mozu.Fulfiller.Contracts.Model {
       var sb = new StringBuilder();
       sb.Append("class SplitItem {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
+      sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
+      sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
       sb.Append("  Color: ").Append(Color).Append("\n");
       sb.Append("  FulfillmentItemType: ").Append(FulfillmentItemType).Append("\n");
       sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");

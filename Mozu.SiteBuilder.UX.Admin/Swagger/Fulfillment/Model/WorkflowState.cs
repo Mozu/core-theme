@@ -20,6 +20,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
+    /// Gets or Sets AuditInfo
+    /// </summary>
+    [DataMember(Name="auditInfo", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "auditInfo")]
+    public AuditInfo AuditInfo { get; set; }
+
+    /// <summary>
     /// Gets or Sets CompletedDate
     /// </summary>
     [DataMember(Name="completedDate", EmitDefaultValue=false)]
@@ -56,6 +63,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       var sb = new StringBuilder();
       sb.Append("class WorkflowState {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
+      sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  CompletedDate: ").Append(CompletedDate).Append("\n");
       sb.Append("  ProcessInstanceId: ").Append(ProcessInstanceId).Append("\n");
       sb.Append("  ShipmentState: ").Append(ShipmentState).Append("\n");

@@ -41,18 +41,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
-    /// Gets or Sets BackorderDate
+    /// Gets or Sets AuditInfo
     /// </summary>
-    [DataMember(Name="backorderDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "backorderDate")]
-    public DateTime? BackorderDate { get; set; }
-
-    /// <summary>
-    /// Gets or Sets BackorderDurationDays
-    /// </summary>
-    [DataMember(Name="backorderDurationDays", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "backorderDurationDays")]
-    public int? BackorderDurationDays { get; set; }
+    [DataMember(Name="auditInfo", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "auditInfo")]
+    public AuditInfo AuditInfo { get; set; }
 
     /// <summary>
     /// Gets or Sets CanceledItems
@@ -172,6 +165,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     [DataMember(Name="orderNumber", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "orderNumber")]
     public int? OrderNumber { get; set; }
+
+    /// <summary>
+    /// Gets or Sets OrderSubmitDate
+    /// </summary>
+    [DataMember(Name="orderSubmitDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "orderSubmitDate")]
+    public DateTime? OrderSubmitDate { get; set; }
 
     /// <summary>
     /// Gets or Sets OriginContact
@@ -402,8 +402,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  AdditionalHandlingFee: ").Append(AdditionalHandlingFee).Append("\n");
       sb.Append("  AdditionalShippingFee: ").Append(AdditionalShippingFee).Append("\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-      sb.Append("  BackorderDate: ").Append(BackorderDate).Append("\n");
-      sb.Append("  BackorderDurationDays: ").Append(BackorderDurationDays).Append("\n");
+      sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  CanceledItems: ").Append(CanceledItems).Append("\n");
       sb.Append("  ChangeMessages: ").Append(ChangeMessages).Append("\n");
       sb.Append("  ChildShipmentNumbers: ").Append(ChildShipmentNumbers).Append("\n");
@@ -421,6 +420,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
       sb.Append("  OrderId: ").Append(OrderId).Append("\n");
       sb.Append("  OrderNumber: ").Append(OrderNumber).Append("\n");
+      sb.Append("  OrderSubmitDate: ").Append(OrderSubmitDate).Append("\n");
       sb.Append("  OriginContact: ").Append(OriginContact).Append("\n");
       sb.Append("  OriginalOrderId: ").Append(OriginalOrderId).Append("\n");
       sb.Append("  OriginalShipmentNumber: ").Append(OriginalShipmentNumber).Append("\n");

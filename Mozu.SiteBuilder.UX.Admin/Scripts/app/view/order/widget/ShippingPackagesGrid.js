@@ -632,22 +632,29 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
     },
 
     openUpdateBackorderDatePopUp: function () {
-        var me = this;
-        Ext.create('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
-            layout: 'hbox',
-            width: 350,
-            height: 300,
-            shipmentRecord: me.shipmentRecord,
-            record: me.record,
-            listeners: {
-                dateUpdated: {
-                    fn: function (json) {
-                        me.fireEvent('shipmentRefresh', json);
-                    },
-                    scope: me
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        if (selectedItem) {
+            var me = this;
+            Ext.create('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
+                layout: 'hbox',
+                width: 350,
+                height: 300,
+                shipmentRecord: me.shipmentRecord,
+                record: me.record,
+                isShipment: false,
+                selectedItem: selectedItem,
+                listeners: {
+                    dateUpdated: {
+                        fn: function (json) {
+                            me.fireEvent('shipmentRefresh', json);
+                        },
+                        scope: me
+                    }
                 }
-            }
-        });
+            });
+        }
     },
 });
 

@@ -13,6 +13,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
     public interface IFulfillerApiWrapper
     {
         ResourceOfShipment BackorderShipment(BackorderShipmentRequest body, int? shipmentNumber);
+        ResourceOfShipment BackorderItemsUpdate(BackorderItemsRequest body, int? shipmentNumber);
         void CancelShipment(CancelShipment request, int? shipmentNumber);
         ResourceOfShipment CancelItems(List<CanceledItem> request, int? shipmentNumber);
         void DeleteShipment(int? shipmentNumber);
@@ -61,7 +62,12 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 
         public ResourceOfShipment BackorderShipment(BackorderShipmentRequest body, int? shipmentNumber)
         {
-            return _shipmentController.BackorderShipmentUsingPUT(body, _apiContext.TenantId, shipmentNumber, _apiContext.SiteId);
+            return _shipmentController.BackorderShipmentUsingPOST(body, _apiContext.TenantId, shipmentNumber, _apiContext.SiteId);
+        }
+
+        public ResourceOfShipment BackorderItemsUpdate(BackorderItemsRequest body, int? shipmentNumber)
+        {
+            return _shipmentController.BackorderItemsUpdateUsingPUT(body, _apiContext.TenantId, shipmentNumber, _apiContext.SiteId);
         }
 
         public void CancelShipment(CancelShipment request, int? shipmentNumber)

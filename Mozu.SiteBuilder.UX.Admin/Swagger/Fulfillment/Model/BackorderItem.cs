@@ -13,6 +13,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
   [DataContract]
   public class BackorderItem {
     /// <summary>
+    /// Gets or Sets BackorderReleaseDate
+    /// </summary>
+    [DataMember(Name="backorderReleaseDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "backorderReleaseDate")]
+    public DateTime? BackorderReleaseDate { get; set; }
+
+    /// <summary>
     /// Gets or Sets LineId
     /// </summary>
     [DataMember(Name="lineId", EmitDefaultValue=false)]
@@ -34,6 +41,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public override string ToString()  {
       var sb = new StringBuilder();
       sb.Append("class BackorderItem {\n");
+      sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
       sb.Append("  LineId: ").Append(LineId).Append("\n");
       sb.Append("  Quantity: ").Append(Quantity).Append("\n");
       sb.Append("}\n");

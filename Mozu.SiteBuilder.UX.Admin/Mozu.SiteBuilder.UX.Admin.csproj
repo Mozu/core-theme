@@ -551,6 +551,7 @@
     <Compile Include="Swagger\Fulfillment\Api\ShipmentControllerApi.cs" />
     <Compile Include="Swagger\Fulfillment\Api\WorkflowProcessControllerApi.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Address.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\AuditInfo.cs" />
     <Compile Include="Swagger\Fulfillment\Model\BackorderItem.cs" />
     <Compile Include="Swagger\Fulfillment\Model\BackorderItemsRequest.cs" />
     <Compile Include="Swagger\Fulfillment\Model\BackorderShipmentRequest.cs" />

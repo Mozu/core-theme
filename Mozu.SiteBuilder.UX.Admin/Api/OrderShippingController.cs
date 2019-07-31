@@ -412,7 +412,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public DCm.BackorderShipmentRequest BackorderShipmentBody { get; set; }
         }
-        [HttpPutRoute(UriTemplate = "shipment/backordered")]
+        [HttpPostRoute(UriTemplate = "shipment/backordered")]
         public Response<DCm.ResourceOfShipment> BackorderShipment(BackorderShipmentArgs args)
         {
             var serviceResponse = _fulfillerApiWrapper.BackorderShipment(args.BackorderShipmentBody, args.ShipmentNumber);

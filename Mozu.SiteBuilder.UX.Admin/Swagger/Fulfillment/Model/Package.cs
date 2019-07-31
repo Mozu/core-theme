@@ -20,6 +20,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
+    /// Gets or Sets AuditInfo
+    /// </summary>
+    [DataMember(Name="auditInfo", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "auditInfo")]
+    public AuditInfo AuditInfo { get; set; }
+
+    /// <summary>
     /// Gets or Sets AvailableActions
     /// </summary>
     [DataMember(Name="availableActions", EmitDefaultValue=false)]
@@ -133,6 +140,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       var sb = new StringBuilder();
       sb.Append("class Package {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
+      sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  AvailableActions: ").Append(AvailableActions).Append("\n");
       sb.Append("  ChangeMessages: ").Append(ChangeMessages).Append("\n");
       sb.Append("  Code: ").Append(Code).Append("\n");

@@ -367,6 +367,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             width: 350,
             height: 300,
             shipmentRecord: me.shipmentRecord,
+            isShipment: true, // this is denotes we are updating "backorder date" on all shipment
             record: me.record,
             listeners: {
                 dateUpdated: {

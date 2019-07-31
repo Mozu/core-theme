@@ -56,5 +56,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var shipment = (await _orderWebApiClient.MoveItemToBackOrder(args.ShipmentNumber, args.BackorderItems)).ReadAsSync();
             return List2(shipment);
         }
+
+        public class BackorderItemsUpdateArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public BackorderItemsRequest BackorderItemsRequest { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipment/backorderItemsUpdate")]
+        public Response<ResourceOfShipment> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
+        {
+            var serviceResponse = _fulfillerApiWrapper.BackorderItemsUpdate(args.BackorderItemsRequest, args.ShipmentNumber);
+            return Single2(serviceResponse);
+        }
     }
 }
