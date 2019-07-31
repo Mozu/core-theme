@@ -21,7 +21,7 @@
     },
 
     initComponent: function () {
-
+        var me = this;
         var itemsPerPage = 2;
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'simpsonsStore',
@@ -122,28 +122,11 @@
             },
         });
 
-        Ext.create('Ext.data.Store', {
-            storeId: 'simpsonsStore2',
-            fields: ['name', 'email', 'phone'],
-            data: {
-                'items': [{
-                    'name': 'Lisa',
-                    "email": "lisa@simpsons.com",
-                    "phone": "555-111-1224"
-                }, {
-                    'name': 'Bart',
-                    "email": "bart@simpsons.com",
-                    "phone": "555-222-1234"
-                }, {
-                    'name': 'Homer',
-                    "email": "homer@simpsons.com",
-                    "phone": "555-222-1244"
-                }, {
-                    'name': 'Marge',
-                    "email": "marge@simpsons.com",
-                    "phone": "555-222-1254"
-                }]
-            },
+        Ext.create('Ext.data.JsonStore', {
+            storeId: 'allLocationsStore',
+            fields: ['displayName'],
+            groupField: 'displayName',
+            //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -152,22 +135,23 @@
                 }
             }
         });
-
-        var grid2 = Ext.create('Ext.grid.Panel', {
+        var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: Ext.data.StoreManager.lookup('simpsonsStore2'),
-            columns: [{
-                text: 'Name',
-                dataIndex: 'name'
-            }, {
-                text: 'Email',
-                dataIndex: 'email',
-                flex: 1
-            }, {
-                text: 'Phone',
-                dataIndex: 'phone'
-            }],
-            height: 500,
+            store: me.record.getLocations(),
+            //store: Ext.data.StoreManager.lookup('allLocationsStore'),
+            columns: [
+                {
+                    text: 'Location',
+                    dataIndex: 'displayName',
+                    width: 500,
+                },
+                {
+                    text: 'Location Code',
+                    dataIndex: 'displayName',
+                    width: 500,
+                }
+            ],
+            height: 200,
             width: 400
         });
 
@@ -177,7 +161,7 @@
             renderTo: Ext.getBody(),
             items: [
                 inventorygrid,
-                grid2
+                allLocations
             ]
         });
 

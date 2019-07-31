@@ -198,6 +198,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     text: 'Location',
                     dataIndex: 'displayName',
                     width: 500,
+                },
+                {
+                    text: 'Location Code',
+                    dataIndex: 'displayName',
+                    width: 500,
                 }
             ],
             height: 200,
