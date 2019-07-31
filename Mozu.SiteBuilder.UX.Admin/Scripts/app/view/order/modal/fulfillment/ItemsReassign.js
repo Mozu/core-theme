@@ -21,10 +21,11 @@
     },
 
     initComponent: function () {
+       
         var me = this;
         var itemsPerPage = 2;
         var inventoryStore = Ext.create('Ext.data.Store', {
-            storeId: 'simpsonsStore',
+            storeId: 'ItemInventoryStore',
             autoLoad: false,
             //autoLoad: { start: 0, limit: 5 },
             pageSize: itemsPerPage,
@@ -33,9 +34,9 @@
                 property: 'location',
                 direction: 'asc'
             }],
-            fields: ['location', 'distance', 'stock'],
-            groupField: 'location',
-            data: this.inventoryItemData.candidateSuggestions,
+            fields: ['locationName', 'distance', 'available'],
+            groupField: 'locationName',
+            data: this.inventoryItemList.candidateSuggestions,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -58,30 +59,40 @@
 
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',
-            //features: [{
-            //    ftype: 'grouping'
-            //}],
-
-            store: Ext.data.StoreManager.lookup('simpsonsStore'),
-            //viewConfig: {
-            //    listeners: {
-            //        // Column Autosize to its data
-            //        refresh: function (dataview) {
-            //            Ext.each(dataview.panel.columns, function (column) {
-            //                if (column.autoSizeColumn === true) column.autoSize();
-            //            })
-            //        }
-            //    }
-            //},
+            store: Ext.data.StoreManager.lookup('ItemInventoryStore'),
+            itemId: 'inventoryGrid',
             columns: [
                 {
                     header: 'Location',
-                    dataIndex: 'location',
+                    dataIndex: 'locationName',
                     width: 200,
                 },
-                { header: 'Distance', dataIndex: 'distance', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
-                { text: 'Available', dataIndex: 'availableQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
-                { text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150 },
+                {
+                    header: 'Distance',
+                    dataIndex: 'distance',
+                    flex: 1,
+                    width: 50,
+                    autoSizeColumn: true,
+                    minWidth: 150
+                },
+                {
+                    text: 'Available',
+                    dataIndex: 'available',
+                    flex: 1,
+                    width: 50,
+                    autoSizeColumn: true,
+                    minWidth: 150,
+                    renderer: function (val, meta, record) { 
+                            return me.available;
+                    }
+                },
+                {
+                    text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
+                    renderer: function (val, meta, record) {
+                        if (me.selectedItem)
+                            return me.selectedItem.quantity;
+                    }
+                },
                 {
                     text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
                     editor: {
@@ -147,7 +158,7 @@
                 },
                 {
                     text: 'Location Code',
-                    dataIndex: 'displayName',
+                    dataIndex: 'code',
                     width: 500,
                 }
             ],
@@ -171,30 +182,73 @@
 
     },
 
-    //validateModal: function () {
-    //    //verify quantity is not null and less than 0 and should not be greater than max quantity
-    //    var quantity = this.down('#cancelQuantity').getValue();
+    doSave: function () {
+        if (this.validateModal()) {
+            var me = this;
+            me.setLoading(true, this.body);
+            var payloadData = me.getPayloadDataItemInventory();
 
-    //    if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
-    //        return false;
+            this.record.reassignShipmentItems({
+                jsonData: payloadData,
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
 
-    //    //verify cancel reason should be filled
-    //    var reason = (this.down('#cancelReason').getValue() === 'Other'
-    //        ? this.down('#otherReason').getValue()
-    //        : this.down('#cancelReason').getValue());
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', json.response, 'error');
+                        return;
+                    }
+                    me.saveSuccess(json);
+                    // close the dialog
 
-    //    if (!reason)
-    //        return false;
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
 
-    //    return true;
-    //},
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    me.close();
+                }
+            });
+        }
+    },
+
+    getPayloadDataItemInventory: function () {
+        var me = this;
+        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var item = grid.getSelectionModel().getSelection();
+        var selectedLocation = item[0].data;
+        if (selectedLocation) {
+            return {
+                shipmentNumber: me.shipmentRecord.number,
+                shipmentItems: [{
+                    lineId: me.selectedItem.lineId,
+                    name: me.selectedItem.name,
+                    productCode: me.selectedItem.productCode,
+                    quantity: selectedLocation.reassignQty,
+                    imageUrl: me.selectedItem.imageUrl,
+                    retailPrice: me.selectedItem.actualPrice,
+                    optionAttributeFQN: me.selectedItem.optionAttributeFQN,
+                    unitPrice: me.selectedItem.unitPrice,
+                    variationProductCode: me.selectedItem.variationProductCode
+                }]
+            };
+        }
+    },
+
+    validateModal: function () {
+        var me = this;
+        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        if (selectedItem) {
+            if (selectedItem.reassignQty > 0) {
+                return true;
+            }
+            return false;
+        }
+    },
     
-    ///**
-    //* Do any class level cleanup. Destroy and null any scoped refs.     
-    //*/
-    //onDestroy: function (destroy) {
-    //    if (!this.isRecordSaved && this.originalQuantity)
-    //        this.record.set('quantity', this.originalQuantity);
-    //    this.callParent(arguments);
-    //}
 });

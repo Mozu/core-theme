@@ -76,7 +76,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 useNull: false
             },
             {
-                name: 'name',
+                name: 'productName',
                 type: 'string',
                 useNull: true
             }, {
@@ -441,38 +441,44 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
     openItemsReassignPopup: function () {
         var me = this;
-        var inventoryItemData = me.getReassignItemPayload()
-        me.record.getCandidateSuggestions({
-            jsonData: inventoryItemData,
-            success: function (response) {
-                me.isRecordSaved = true;
-                me.setLoading(false, me.body);
-                var json = Ext.decode(response.responseText, true);
-
-                Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
-                    layout: 'hbox',
-                    width: 1080,
-                    height: 550,
-                    record: me.record,
-                    inventoryItemData: json,
-                    //shipmentData: shipment,
-                    shipmentRecord: me.shipmentRecord,
-                    listeners: {
-                        saveSuccess: {
-                            fn: function (json) {
-                                //me.fireEvent('orderCancelled', json);
-                            },
-                            //scope: me
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var inventoryItemData = me.getReassignItemPayload();
+        var selectedItem = item[0].data;
+        if (selectedItem) {
+            me.record.getCandidateSuggestions({
+                jsonData: inventoryItemData,
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
+                    Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                        layout: 'hbox',
+                        width: 1080,
+                        height: 550,
+                        record: me.record,
+                        inventoryItemList: json,
+                        //shipmentData: shipment,
+                        shipmentRecord: me.shipmentRecord,
+                        selectedItem: item[0].data,
+                        available: json.candidateSuggestions[0].inventory[0].available,
+                        listeners: {
+                            saveSuccess: {
+                                fn: function (json) {
+                                    //me.fireEvent('orderCancelled', json);
+                                },
+                                //scope: me
+                            }
                         }
-                    }
-                });
-            },
-            failure: function (response) {
-                me.setLoading(false, me.body);
-                // close the dialog
-                me.close();
-            }
-        });
+                    });
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
+                    // close the dialog
+                    me.close();
+                }
+            });
+        }
     },
 
     getReassignItemPayload: function () {

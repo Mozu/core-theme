@@ -192,7 +192,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: me.record.getLocations(),
-            //store: Ext.data.StoreManager.lookup('allLocationsStore'),
             columns: [
                 {
                     text: 'Location',
@@ -212,28 +211,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             width: 1000,
             height: 300,
             renderTo: Ext.getBody(),
-            listeners: {
-                beforetabchange: function (tabs, newTab, oldTab) {
-                    //console.log(me.record.locationsStore, "jjj");
-                    //if (newtab.title == 'all locations') {
-                    //    debugger
-                    //    me.record.getlocations({
-                    //        jsondata: "1",
-                    //        success: function (response) {
-                    //            me.isrecordsaved = true;
-                    //            me.setloading(false, me.body);
-                    //            var json = ext.decode(response.responsetext, true);
-                    //            console.log(json);
-                    //        },
-                    //        failure: function (response) { debugger
-                    //            me.setloading(false, me.body);
-                    //            // close the dialog
-                    //            me.close();
-                    //        }
-                    //    });
-                    //}
-                }
-            },
+            
             items: [
                 inventorygrid,
                 allLocations
@@ -245,6 +223,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         this.callParent(arguments);
 
     },
+
     doSave: function () {
         if (this.validateModal()) {
             var me = this;
@@ -298,13 +277,5 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }
         };
     },
-
-    //* Do any class level cleanup. Destroy and null any scoped refs.     
-    //*/
-    //onDestroy: function (destroy) {
-    //    if (!this.isRecordSaved && this.originalQuantity)
-    //        this.record.set('quantity', this.originalQuantity);
-    //    this.callParent(arguments);
-    //}
 });
 
