@@ -27,6 +27,9 @@ using Mozu.Core.ErrorHandling;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
+using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
+using CARSModel = Mozu.CARS.Contracts.Model;
+using Mozu.Location.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -42,19 +45,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ConcurrentDictionary<string, string> channelCache = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, string> userCache = new ConcurrentDictionary<string, string>();
+        private readonly ICARSApiWrapper _CARSApiWrapper;
+        private readonly ILocationAdminWebApiClient _locationWebApiClient;
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient,
             ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
-            IChannelWebApiClient channelWebApiClient)
+            IChannelWebApiClient channelWebApiClient,
+            ICARSApiWrapper CARSApiWrapper,
+            ILocationAdminWebApiClient locationWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
             _customerWebApiClient = customerWebApiClient;
             _usersWebApiClient = userWebApiClient;
             _channelWebApiClient = channelWebApiClient;
+            _CARSApiWrapper = CARSApiWrapper;
+            _locationWebApiClient = locationWebApiClient;
         }
 
         /// <summary>
@@ -196,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpGetRoute(UriTemplate = "list")]
         public async Task<Response<List<Return>>> List([FromUri] PagingParamaters pagingParams,
-            [FromUri] FilterCollection extFilter, 
+            [FromUri] FilterCollection extFilter,
             [FromUri] bool draft = false)
         {
             if (!string.IsNullOrEmpty(pagingParams?.id))
@@ -548,5 +557,89 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
             return myResponse;
         }
+
+        [HttpGetRoute(UriTemplate = "shipping/label")]
+        public async Task<HttpResponseMessage> GetReturnLabel([FromUri]string returnId)
+        {
+            var returns = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
+            if (string.IsNullOrEmpty(returns.Id))
+            {
+                throw new VaeValidationConflictException($"Return {returnId} not found.");
+            }
+
+            var order = (await _orderWebApiClient.GetOrder(returns.OriginalOrderId)).ReadAsAsync().Result;
+            if (order == null)
+            {
+                throw new VaeValidationConflictException($"Order {returns.OriginalOrderId} not found.");
+            }
+
+            var location = (await _locationWebApiClient.GetLocation(returns.LocationCode)).ReadAsAsync().Result;
+            if (location == null)
+            {
+                throw new VaeValidationConflictException($"Location {returns.LocationCode} not found.");
+            }
+
+            CARSModel.GenerateLabelRequest body = new CARSModel.GenerateLabelRequest();
+            body.Currency = returns.CurrencyCode;
+
+            body.FromContact = new CARSModel.Contact()
+            {
+                PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
+                Address = new List<string>() {
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address1,
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address2,
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address3,
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address4},
+                PostalCode = order.FulfillmentInfo.FulfillmentContact?.Address?.PostalOrZipCode,
+                City = order.FulfillmentInfo.FulfillmentContact?.Address?.CityOrTown,
+                PhoneNumber = order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Home ?? order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Mobile,
+                CountryCode = order.FulfillmentInfo.FulfillmentContact?.Address?.CountryCode,
+                Residential = order.FulfillmentInfo.FulfillmentContact?.Address?.AddressType?.Equals("Residential") ?? false,
+                StateCode = order.FulfillmentInfo.FulfillmentContact?.Address?.StateOrProvince,
+                CompanyName = order.FulfillmentInfo.FulfillmentContact?.CompanyOrOrganization,
+                Email = order.FulfillmentInfo.FulfillmentContact?.Email
+            };
+
+            body.ToContact = new CARSModel.Contact()
+            {
+                PersonName = location.Name,
+                Address = new List<string>() {
+                    location.Address?.Address1},
+                //,
+                //location.Address?.Address2,
+                //location.Address?.Address3,
+                //location.Address?.Address4
+                PostalCode = location.Address?.PostalOrZipCode,
+                City = location.Address?.CityOrTown,
+                CountryCode = location.Address?.CountryCode,
+                PhoneNumber = location.Phone,
+                Residential = location.Address?.AddressType?.Equals("Residential"),
+                StateCode = location.Address.StateOrProvince,
+                CompanyName = null,
+                Email = null
+            };
+
+            body.LocationCode = returns.LocationCode;
+            body.OrderID = returns.OriginalOrderId;
+            body.PackageHeight = 2;
+            body.PackageWidth = 6;
+            body.PackageLength = 12;
+            body.PackageWeight = 2;
+            body.Price = 20;
+            body.Carrier = "UPS";
+            body.PackagingType = "UPS_CUSTOMER_SUPPLIED_PACKAGE";
+            body.ServiceType = "UPS_GROUND";
+            body.LabelFormat = "LASER";
+            body.UnitType = "IMPERIAL";
+            body.ShipmentID = "1234";
+            body.ValidateAddress = true;
+            body.CustomerReferences = null;
+            body.Test = false;
+
+            var serviceResponse = _CARSApiWrapper.GenerateLabelUsingPOST(body);
+
+            return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
+        }
+
     }
 }
