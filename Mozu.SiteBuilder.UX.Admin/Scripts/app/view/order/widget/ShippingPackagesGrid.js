@@ -382,9 +382,11 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             }
         };
 
-        var actionMoveToBackorder = {
-            text: 'Move To backorder',
-            handler: function () { }
+        var actionUpdateBackorderDate = {
+            text: 'Update Backorder Date',
+            handler: function () {
+                me.openUpdateBackorderDatePopUp();
+            }
         };
 
         var actionEditItem = {
@@ -412,7 +414,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             return [
                 manualReassign,
                 autoReassign,
-                actionMoveToBackorder,
+                //actionMoveToBackorder,
                 actionEditItem,
                 actionCancelItem
             ];
@@ -421,6 +423,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             return [
                 manualReassign,
                 autoReassign,
+                actionUpdateBackorderDate,
                 actionEditItem,
                 actionCancelItem
             ];
@@ -429,7 +432,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             return [
                 manualReassign,
                 autoReassign,
-                actionMoveToBackorder,
+                //actionMoveToBackorder,
                 actionEditItem,
                 actionCancelItem
             ];
@@ -620,6 +623,25 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }]
             };
         }
+    },
+
+    openUpdateBackorderDatePopUp: function () {
+        var me = this;
+        Ext.create('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
+            layout: 'hbox',
+            width: 350,
+            height: 300,
+            shipmentRecord: me.shipmentRecord,
+            record: me.record,
+            listeners: {
+                dateUpdated: {
+                    fn: function (json) {
+                        me.fireEvent('shipmentRefresh', json);
+                    },
+                    scope: me
+                }
+            }
+        });
     },
 });
 

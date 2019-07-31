@@ -279,7 +279,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             return [
                 actionMarkAsShipped,
-                //actionMoveToBackorder,
+                //actionUpdateBackorderDate,
                 actionCancelShipment
             ];
         }
@@ -365,7 +365,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         Ext.create('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
             layout: 'hbox',
             width: 350,
-            height: 350,
+            height: 300,
             shipmentRecord: me.shipmentRecord,
             record: me.record,
             listeners: {

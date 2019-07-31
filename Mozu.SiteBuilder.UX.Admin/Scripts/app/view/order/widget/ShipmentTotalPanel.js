@@ -237,7 +237,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     setCalculatedSummaryValues: function (elementId, summarycls, originalValue, isPercentage, subElementId, defaultValue) {
-
+        
         var el = Ext.get(elementId);
         var calcValue = 0;
         if (el) {
@@ -258,7 +258,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             if (subElementId && calcValue)
                 if (isPercentage)
                     Ext.get(subElementId).dom.value = calcValue.toFixed(2);
-                else
+                else if (originalValue!=0)
                     Ext.get(subElementId).dom.value = ((calcValue / originalValue) * 100).toFixed(2);
         }
     },

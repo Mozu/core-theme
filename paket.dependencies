@@ -31,7 +31,7 @@ nuget morelinq 1.0.16006
 nuget Mozu.AdminUser.Contracts < 1.20
 nuget Mozu.AppDev.Contracts
 nuget Mozu.BuildSupport.GetAssemblyFileVersionTask 1.0.0
-nuget Mozu.CommerceRuntime.Contracts 1.1931.0-entContractsNew-36
+nuget Mozu.CommerceRuntime.Contracts 1.1931.0-entContractsNew-38
 nuget mozu.Content.Contracts < 1.20
 nuget Mozu.Core.Messaging
 nuget Mozu.Core.Messaging.Contracts
@@ -65,3 +65,5 @@ nuget Mozu.Event.Contracts
 
 #Manually adding this so that Burrows works; Once Burrows is removed we can take this out.
 nuget Newtonsoft.Json 9.0.1
+
+nuget RestSharp 106.6.9

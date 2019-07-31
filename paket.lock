@@ -41,6 +41,7 @@ NUGET
       System.IO.Pipelines (>= 4.5.1)
     protobuf-net (2.0.0.668)
     RabbitMQ.Client (3.3.5)
+    RestSharp (106.6.9)
     StackExchange.Redis (2.0.519)
       Pipelines.Sockets.Unofficial (>= 1.0.7)
       System.Diagnostics.PerformanceCounter (>= 4.5)
@@ -134,7 +135,7 @@ NUGET
     Mozu.AppDev.Contracts (1.1835.1)
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
-    Mozu.CommerceRuntime.Contracts (1.1931.0-entContractsNew-36)
+    Mozu.CommerceRuntime.Contracts (1.1931.0-entContractsNew-38)
       Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
