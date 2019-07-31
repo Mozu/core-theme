@@ -1107,8 +1107,8 @@ Ext.define('Taco.model.Order', {
     proxy: {
         type: 'ajaxproxy',
         api: {
-            read: '/admin/Scripts/app/mocks/orders.json',
-            //read: '/admin/app/order/list',
+            //read: '/admin/Scripts/app/mocks/orders.json',
+            read: '/admin/app/order/list',
             create: '/admin/app/order/create',
             update: '/admin/app/order/edit',
             destroy: '/admin/app/order/delete'
