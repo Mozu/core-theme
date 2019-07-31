@@ -296,7 +296,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                     showBorder: false,
                     listeners: {
                         focus: function (field, event, eOpts) {
-                            me.editItemUnitTax(field);
+                            me.editItemUnitTax(field, event, eOpts);
                         }
                     }
                 },
@@ -490,7 +490,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             orderType: 'DIRECTSHIP',//me.record.get('orderType'),
             items: [],
         }
-       
+
         model.items.push({
             partNumber: item[0].data.productCode,
             upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
@@ -514,26 +514,35 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         Ext.getCmp(this.id).view.refresh();
     },
 
-    editItemUnitTax: function (e, config) {
+    editItemUnitTax: function (field, event, eOpts) {
 
         var me = this;
-        //field = e.context.field;
-        Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
-            layout: 'hbox',
-            width: 600,
-            height: 400,
-            record: me.record,
-            parentRecord: me.record,
-            originalQuantity: e.column.field.originalValue,
-            //listeners: {
-            //    saveSuccess: {
-            //        fn: function (json) {
-            //            me.fireEvent('orderCancelled', json);
-            //        },
-            //        scope: me
-            //    }
-            //}
-        });
+        me.taxFieldId = field.id;
+
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+
+        if (selectedItem) {
+            //field = e.context.field;
+            Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
+                layout: 'hbox',
+                width: 380,
+                height: 200,
+                record: me.record,
+                parentRecord: me.record,
+                shipmentRecord: me.shipmentRecord,
+                selectedItem: selectedItem,
+                listeners: {
+                    udpateTax: {
+                        fn: function (json) {
+                            Ext.getCmp(this.taxFieldId).setValue(json.unitTaxPerc);
+                        },
+                        scope: me
+                    }
+                }
+            });
+        }
     },
 
     openItemCancellationPopup: function () {
@@ -584,7 +593,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
         var me = this;
 
         me.setLoading(true, this.body);
-        
+
         this.record.reassignShipmentItems({
             jsonData: me.getShipmentItemReassignPayload(),
             success: function (response) {

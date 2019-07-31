@@ -10,10 +10,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     autoShow: true,
     closeAction: 'destroy',
-    primaryText: 'Save',
+    primaryText: 'Update',
     scale: 'large',
     title: 'Unit Tax',
     isRecordSaved: false,
+    unitTaxPerc: 0,
     layout: {
         type: 'fit'
     },
@@ -22,20 +23,21 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         unittax: false,
     },
 
-    
-
     initComponent: function () {
         var me = this;
+        
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
             name: 'unittaxeditor',
             monitorValid: true,
-            width: '50%',
+            width: '100%',
             items:
                 [
                     {
                         xtype: 'container',
-                        layout: 'vbox',
+                        layout: 'hbox',
                         width: '100%',
+                        cls: 'taco-order-fulfillment-ItemUnitTax',
+                        data: me.record,
                         defaults: {
                             style: {
                                 margin: '0 20 0 0'
@@ -44,53 +46,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                         items:
                             [
                                 {
-                                    xtype: 'numberfield',
-                                    width: 50,
-                                    name: 'UnitTaxPercent',
-                                    itemId: 'unittaxpercent',
-                                    hideTrigger: true,
-                                    allowBlank: false,
-                                 
-                                    value:
-                                        this.originalQuantity,
-                                    //this.originalQuantity ? (this.originalQuantity - this.record.data.quantity)
-                                    //    : this.record.data.quantity,
-                                    minValue: 1,
-                                    //maxValue: this.originalQuantity || this.record.data.quantity,
-                                    validateOnChange: true,
-                                    margin: '0px 5px 0px 5px',
-                                    mouseWheelEnabled: false,
-                                    fieldLabel: '%',
-                                    listeners: {
-                                        change: {
-                                            scope: this,
-                                            fn: function (field, value) {
-                                                if (value > 0)
-                                                    this.unittaxpercent = true;
-                                                this.calculateUnitTax(this.originalQuantity, 5);
-                                            }
-                                       }
-                                    }
+                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input id="unitTaxPerc" type="number" placeholder="" value="' + me.unitTaxPerc +'"></div>'
                                 },
                                 {
-                                    xtype: 'numberfield',
-                                    width: 50,
-                                    itemid: 'UnitTaxDollar',
-                                    name: 'UnitTaxDollar',
-                                    hideTrigger: true,
-                                    margin: '0px 5px 0px 5px',
-                                    fieldLabel: '$',
-                                    hidden: false,
-                                    disabled: this.unittaxpercent,
-                                    value: this.UnitTaxDollar,
-                                    //listeners: {
-                                    //    change: {
-                                    //        scope: this,
-                                    //        fn: function (field, value) {
-                                    //            //    this.down("#primaryAction").setDisabled(!this.validateModal());
-                                    //        }
-                                    //    }
-                                    //}
+                                    html: '<div style="padding: 10px;">Or</div>'
+                                },
+                                {
+                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">$</span> <input type="number" placeholder="" class="doller" id="itemTaxDoller" value="' + me.selectedItem.itemTax +'"></div>'
                                 }
                             ]
                     }
@@ -101,7 +63,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         this.items = [this.fieldContainer];
 
         this.callParent(arguments);
-
     },
 
     //validateModal: function () {
@@ -124,45 +85,17 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     getEditItemQuantityPayload: function () {
         var me = this;
-        var order = this.record;
-        var reason = this.down('#cancelReason').getValue();
-        var description = (this.down('[name=otherReason]').isVisible() ?
-            this.down('#otherReason').getValue() : null);
-
+        var order = this.record;        
+        var unitTaxPerc = Ext.get('unitTaxPerc').dom.value;
         return {
-            orderId: order.get('taco.model.order_id'),
-            orderItemId: order.get('id'),
-            quantity: this.down('#cancelQuantity').getValue(),
-            reason: {
-                reasonCode: reason,
-                description: description
-            }
+            unitTaxPerc: unitTaxPerc,
         };
     },
 
     doSave: function () {
-
-        //if (this.validateModal()) {
-            var me = this;
-            me.close();
-            //Ext.MessageBox.show({
-            //    title: 'Unit Tax',
-            //    // pushes the buttons to the right to be consistant with our dialog ux.
-            //    rightJustifyButtons: true,
-            //    // reverses the order of the buttons
-            //    reverseOrder: true,
-            //    msg: 'Are you certain you want to save this item?',
-            //    closable: false,
-            //    buttons: Ext.Msg.YESNO,
-            //    fn: function (val) {
-            //        if (val === 'yes') {
-            //            //this.record.set('itemTax', me.unittaxpercent);
-            //            //this.callParent(arguments);
-            //            me.close();
-            //        }
-            //    }
-            //});
-        //}
+        var me = this;
+        me.fireEvent('udpateTax', me.getEditItemQuantityPayload());
+        me.close();
     },
     /**
     * Do any class level cleanup. Destroy and null any scoped refs.     
@@ -174,7 +107,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     },
 
     calculateUnitTax: function (originalQty, enteredQty) {
-        //this.fieldContainer.set('UnitTaxDollar', 5);
-        this.fieldContainer.items.items[0].items.items[1].value = (originalQty * enteredQty) / 100;
+        Ext.getCmp('unittaxpercent').setValue((2 * enteredQty) / 100);
+    },
+
+    percentageChanged: function (enteredQty) {
+        Ext.getCmp('unittaxdoller').setValue((2 * enteredQty) / 100);
     }
 });
