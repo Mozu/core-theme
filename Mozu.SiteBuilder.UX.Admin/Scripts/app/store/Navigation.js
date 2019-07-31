@@ -224,9 +224,8 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'inventory',
                     'label': 'Inventory',
                     'address': 'inventory',
-                    'behaviorIds': [4],
-                    'visible': Taco.user.taContext.omsEnabled === false ? true : false,
-                }, {
+                    'behaviorIds': [4]
+                   }, {
                     'id': 'priceLists',
                     'behaviorIds': [239],
                     'label': 'Price Lists',
@@ -337,9 +336,8 @@ Ext.define('Taco.store.Navigation', {
                     }, {
                         'id': 'locations-inventory',
                         'label': 'Inventory',
-                        'address': 'locationInventory',
-                        'visible': Taco.user.taContext.omsEnabled === false ? true : false,
-                    }, {
+                        'address': 'locationInventory'
+                   }, {
                         'id': 'locations',
                         'label': 'Locations',
                         'address': 'locations',
