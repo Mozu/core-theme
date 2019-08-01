@@ -15,8 +15,8 @@ namespace Mozu.CARS.Contracts.Api
         /// notifyPickup 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableNotifyPickupResponse</returns>
-        CallableNotifyPickupResponse NotifyPickupUsingPOST (NotifyPickupRequest body);
+        /// <returns>NotifyPickupResponse</returns>
+        NotifyPickupResponse NotifyPickupUsingPOST (NotifyPickupRequest body);
     }
   
     /// <summary>
@@ -76,8 +76,8 @@ namespace Mozu.CARS.Contracts.Api
         /// notifyPickup 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableNotifyPickupResponse</returns>
-        public CallableNotifyPickupResponse NotifyPickupUsingPOST (NotifyPickupRequest body)
+        /// <returns>NotifyPickupResponse</returns>
+        public NotifyPickupResponse NotifyPickupUsingPOST (NotifyPickupRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling NotifyPickupUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling NotifyPickupUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableNotifyPickupResponse) ApiClient.Deserialize(response.Content, typeof(CallableNotifyPickupResponse), response.Headers);
+            return (NotifyPickupResponse) ApiClient.Deserialize(response.Content, typeof(NotifyPickupResponse), response.Headers);
         }
     
     }

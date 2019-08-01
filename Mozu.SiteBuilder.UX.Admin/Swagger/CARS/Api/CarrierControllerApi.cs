@@ -16,19 +16,19 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="body">carrier</param>
         /// <returns>AddCarrierResponse</returns>
-        AddCarrierResponse AddCarrierUsingPOST1 (AddCarrierRequest body);
+        AddCarrierResponse AddCarrierUsingPOST (AddCarrierRequest body);
         /// <summary>
         /// addServiceType 
         /// </summary>
         /// <param name="body">req</param>
         /// <returns>GetCarriersResponse</returns>
-        GetCarriersResponse AddServiceTypeUsingPOST1 (AddServiceTypeRequest body);
+        GetCarriersResponse AddServiceTypeUsingPOST (AddServiceTypeRequest body);
         /// <summary>
         /// deleteCarrier 
         /// </summary>
         /// <param name="carrierName">carrierName</param>
         /// <returns>DeleteCarriersResponse</returns>
-        DeleteCarriersResponse DeleteCarrierUsingDELETE1 (string carrierName);
+        DeleteCarriersResponse DeleteCarrierUsingDELETE (string carrierName);
         /// <summary>
         /// getCarriers 
         /// </summary>
@@ -94,10 +94,10 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="body">carrier</param>
         /// <returns>AddCarrierResponse</returns>
-        public AddCarrierResponse AddCarrierUsingPOST1 (AddCarrierRequest body)
+        public AddCarrierResponse AddCarrierUsingPOST (AddCarrierRequest body)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling AddCarrierUsingPOST1");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling AddCarrierUsingPOST");
     
             var path = "/api/v1/carrier";
             path = path.Replace("{format}", "json");
@@ -117,9 +117,9 @@ namespace Mozu.CARS.Contracts.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AddCarrierUsingPOST1: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling AddCarrierUsingPOST: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling AddCarrierUsingPOST1: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling AddCarrierUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
             return (AddCarrierResponse) ApiClient.Deserialize(response.Content, typeof(AddCarrierResponse), response.Headers);
         }
@@ -129,10 +129,10 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="body">req</param>
         /// <returns>GetCarriersResponse</returns>
-        public GetCarriersResponse AddServiceTypeUsingPOST1 (AddServiceTypeRequest body)
+        public GetCarriersResponse AddServiceTypeUsingPOST (AddServiceTypeRequest body)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling AddServiceTypeUsingPOST1");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling AddServiceTypeUsingPOST");
     
             var path = "/api/v1/carrier/serviceType";
             path = path.Replace("{format}", "json");
@@ -152,9 +152,9 @@ namespace Mozu.CARS.Contracts.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling AddServiceTypeUsingPOST1: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling AddServiceTypeUsingPOST: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling AddServiceTypeUsingPOST1: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling AddServiceTypeUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
             return (GetCarriersResponse) ApiClient.Deserialize(response.Content, typeof(GetCarriersResponse), response.Headers);
         }
@@ -164,10 +164,10 @@ namespace Mozu.CARS.Contracts.Api
         /// </summary>
         /// <param name="carrierName">carrierName</param>
         /// <returns>DeleteCarriersResponse</returns>
-        public DeleteCarriersResponse DeleteCarrierUsingDELETE1 (string carrierName)
+        public DeleteCarriersResponse DeleteCarrierUsingDELETE (string carrierName)
         {
             // verify the required parameter 'carrierName' is set
-            if (carrierName == null) throw new ApiException(400, "Missing required parameter 'carrierName' when calling DeleteCarrierUsingDELETE1");
+            if (carrierName == null) throw new ApiException(400, "Missing required parameter 'carrierName' when calling DeleteCarrierUsingDELETE");
     
             var path = "/api/v1/carrier/{carrierName}";
             path = path.Replace("{format}", "json");
@@ -187,9 +187,9 @@ namespace Mozu.CARS.Contracts.Api
             IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.DELETE, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling DeleteCarrierUsingDELETE1: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteCarrierUsingDELETE: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling DeleteCarrierUsingDELETE1: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling DeleteCarrierUsingDELETE: " + response.ErrorMessage, response.ErrorMessage);
     
             return (DeleteCarriersResponse) ApiClient.Deserialize(response.Content, typeof(DeleteCarriersResponse), response.Headers);
         }

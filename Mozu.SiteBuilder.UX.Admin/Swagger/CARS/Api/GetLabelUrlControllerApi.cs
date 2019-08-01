@@ -15,8 +15,8 @@ namespace Mozu.CARS.Contracts.Api
         /// getLabelURL 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGetLabelURLResponse</returns>
-        CallableGetLabelURLResponse GetLabelURLUsingPOST (GetLabelURLRequest body);
+        /// <returns>GetLabelURLResponse</returns>
+        GetLabelURLResponse GetLabelURLUsingPOST (GetLabelURLRequest body);
     }
   
     /// <summary>
@@ -76,8 +76,8 @@ namespace Mozu.CARS.Contracts.Api
         /// getLabelURL 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGetLabelURLResponse</returns>
-        public CallableGetLabelURLResponse GetLabelURLUsingPOST (GetLabelURLRequest body)
+        /// <returns>GetLabelURLResponse</returns>
+        public GetLabelURLResponse GetLabelURLUsingPOST (GetLabelURLRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling GetLabelURLUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetLabelURLUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableGetLabelURLResponse) ApiClient.Deserialize(response.Content, typeof(CallableGetLabelURLResponse), response.Headers);
+            return (GetLabelURLResponse) ApiClient.Deserialize(response.Content, typeof(GetLabelURLResponse), response.Headers);
         }
     
     }

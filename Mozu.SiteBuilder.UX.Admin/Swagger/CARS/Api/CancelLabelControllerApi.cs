@@ -15,8 +15,8 @@ namespace Mozu.CARS.Contracts.Api
         /// cancelLabel 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableCancelLabelResponse</returns>
-        CallableCancelLabelResponse CancelLabelUsingPOST (CancelLabelRequest body);
+        /// <returns>CancelLabelResponse</returns>
+        CancelLabelResponse CancelLabelUsingPOST (CancelLabelRequest body);
     }
   
     /// <summary>
@@ -76,8 +76,8 @@ namespace Mozu.CARS.Contracts.Api
         /// cancelLabel 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableCancelLabelResponse</returns>
-        public CallableCancelLabelResponse CancelLabelUsingPOST (CancelLabelRequest body)
+        /// <returns>CancelLabelResponse</returns>
+        public CancelLabelResponse CancelLabelUsingPOST (CancelLabelRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CancelLabelUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CancelLabelUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableCancelLabelResponse) ApiClient.Deserialize(response.Content, typeof(CallableCancelLabelResponse), response.Headers);
+            return (CancelLabelResponse) ApiClient.Deserialize(response.Content, typeof(CancelLabelResponse), response.Headers);
         }
     
     }

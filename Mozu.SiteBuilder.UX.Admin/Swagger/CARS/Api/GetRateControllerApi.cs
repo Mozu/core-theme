@@ -15,8 +15,8 @@ namespace Mozu.CARS.Contracts.Api
         /// getRate 
         /// </summary>
         /// <param name="body">originalRequest</param>
-        /// <returns>CallableGetRateResponse</returns>
-        CallableGetRateResponse GetRateUsingPOST (GetRateRequest body);
+        /// <returns>GetRateResponse</returns>
+        GetRateResponse GetRateUsingPOST (GetRateRequest body);
     }
   
     /// <summary>
@@ -76,8 +76,8 @@ namespace Mozu.CARS.Contracts.Api
         /// getRate 
         /// </summary>
         /// <param name="body">originalRequest</param>
-        /// <returns>CallableGetRateResponse</returns>
-        public CallableGetRateResponse GetRateUsingPOST (GetRateRequest body)
+        /// <returns>GetRateResponse</returns>
+        public GetRateResponse GetRateUsingPOST (GetRateRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling GetRateUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetRateUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableGetRateResponse) ApiClient.Deserialize(response.Content, typeof(CallableGetRateResponse), response.Headers);
+            return (GetRateResponse) ApiClient.Deserialize(response.Content, typeof(GetRateResponse), response.Headers);
         }
     
     }

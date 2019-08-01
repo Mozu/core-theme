@@ -586,10 +586,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
                 Address = new List<string>() {
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address1,
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address2,
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address3,
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address4},
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address1??"",
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address2??"",
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address3??"",
+                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address4??""},
                 PostalCode = order.FulfillmentInfo.FulfillmentContact?.Address?.PostalOrZipCode,
                 City = order.FulfillmentInfo.FulfillmentContact?.Address?.CityOrTown,
                 PhoneNumber = order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Home ?? order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Mobile,
@@ -604,15 +604,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 PersonName = location.Name,
                 Address = new List<string>() {
-                    location.Address?.Address1},
-                //,
-                //location.Address?.Address2,
-                //location.Address?.Address3,
-                //location.Address?.Address4
+                    string.Join(" ",location.Address?.Address1??""
+                    ,location.Address?.Address2??""
+                    ,location.Address?.Address3??""
+                    ,location.Address?.Address4??"")
+               },
+
                 PostalCode = location.Address?.PostalOrZipCode,
                 City = location.Address?.CityOrTown,
                 CountryCode = location.Address?.CountryCode,
-                PhoneNumber = location.Phone,
+                PhoneNumber = string.IsNullOrWhiteSpace(location.Phone) ? "55555555555" : location.Phone,
                 Residential = location.Address?.AddressType?.Equals("Residential"),
                 StateCode = location.Address.StateOrProvince,
                 CompanyName = null,

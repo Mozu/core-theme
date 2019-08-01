@@ -15,20 +15,20 @@ namespace Mozu.CARS.Contracts.Api
         /// cancelPackNotification 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableCancelLabelResponse</returns>
-        CallableCancelLabelResponse CancelPackNotificationUsingPOST (CancelPackNotificationRequest body);
+        /// <returns>CancelLabelResponse</returns>
+        CancelLabelResponse CancelPackNotificationUsingPOST (CancelPackNotificationRequest body);
         /// <summary>
         /// createPackNotification 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallablePackNotificationResponse</returns>
-        CallablePackNotificationResponse CreatePackNotificationUsingPOST (PackNotificationRequest body);
+        /// <returns>PackNotificationResponse</returns>
+        PackNotificationResponse CreatePackNotificationUsingPOST (PackNotificationRequest body);
         /// <summary>
         /// getDocuments 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGetDocumentsResponse</returns>
-        CallableGetDocumentsResponse GetDocumentsUsingPOST (GetDocumentsRequest body);
+        /// <returns>GetDocumentsResponse</returns>
+        GetDocumentsResponse GetDocumentsUsingPOST (GetDocumentsRequest body);
     }
   
     /// <summary>
@@ -88,8 +88,8 @@ namespace Mozu.CARS.Contracts.Api
         /// cancelPackNotification 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableCancelLabelResponse</returns>
-        public CallableCancelLabelResponse CancelPackNotificationUsingPOST (CancelPackNotificationRequest body)
+        /// <returns>CancelLabelResponse</returns>
+        public CancelLabelResponse CancelPackNotificationUsingPOST (CancelPackNotificationRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CancelPackNotificationUsingPOST");
@@ -116,15 +116,15 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CancelPackNotificationUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableCancelLabelResponse) ApiClient.Deserialize(response.Content, typeof(CallableCancelLabelResponse), response.Headers);
+            return (CancelLabelResponse) ApiClient.Deserialize(response.Content, typeof(CancelLabelResponse), response.Headers);
         }
     
         /// <summary>
         /// createPackNotification 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallablePackNotificationResponse</returns>
-        public CallablePackNotificationResponse CreatePackNotificationUsingPOST (PackNotificationRequest body)
+        /// <returns>PackNotificationResponse</returns>
+        public PackNotificationResponse CreatePackNotificationUsingPOST (PackNotificationRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CreatePackNotificationUsingPOST");
@@ -151,15 +151,15 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CreatePackNotificationUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallablePackNotificationResponse) ApiClient.Deserialize(response.Content, typeof(CallablePackNotificationResponse), response.Headers);
+            return (PackNotificationResponse) ApiClient.Deserialize(response.Content, typeof(PackNotificationResponse), response.Headers);
         }
     
         /// <summary>
         /// getDocuments 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGetDocumentsResponse</returns>
-        public CallableGetDocumentsResponse GetDocumentsUsingPOST (GetDocumentsRequest body)
+        /// <returns>GetDocumentsResponse</returns>
+        public GetDocumentsResponse GetDocumentsUsingPOST (GetDocumentsRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling GetDocumentsUsingPOST");
@@ -186,7 +186,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GetDocumentsUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableGetDocumentsResponse) ApiClient.Deserialize(response.Content, typeof(CallableGetDocumentsResponse), response.Headers);
+            return (GetDocumentsResponse) ApiClient.Deserialize(response.Content, typeof(GetDocumentsResponse), response.Headers);
         }
     
     }

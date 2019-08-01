@@ -15,7 +15,7 @@ namespace Mozu.CARS.Contracts.Api
         /// generateLabel 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGenerateLabelResponse</returns>
+        /// <returns>GenerateLabelResponse</returns>
         GenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body);
     }
   
@@ -76,7 +76,7 @@ namespace Mozu.CARS.Contracts.Api
         /// generateLabel 
         /// </summary>
         /// <param name="body">request</param>
-        /// <returns>CallableGenerateLabelResponse</returns>
+        /// <returns>GenerateLabelResponse</returns>
         public GenerateLabelResponse GenerateLabelUsingPOST (GenerateLabelRequest body)
         {
             // verify the required parameter 'body' is set

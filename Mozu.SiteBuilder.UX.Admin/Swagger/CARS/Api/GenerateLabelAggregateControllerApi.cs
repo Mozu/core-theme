@@ -15,8 +15,8 @@ namespace Mozu.CARS.Contracts.Api
         /// generateLabelAggregate 
         /// </summary>
         /// <param name="body">aggregateRequest</param>
-        /// <returns>CallableGenerateLabelAggregateResponse</returns>
-        CallableGenerateLabelAggregateResponse GenerateLabelAggregateUsingPOST (GenerateLabelAggregateRequest body);
+        /// <returns>GenerateLabelAggregateResponse</returns>
+        GenerateLabelAggregateResponse GenerateLabelAggregateUsingPOST (GenerateLabelAggregateRequest body);
     }
   
     /// <summary>
@@ -76,8 +76,8 @@ namespace Mozu.CARS.Contracts.Api
         /// generateLabelAggregate 
         /// </summary>
         /// <param name="body">aggregateRequest</param>
-        /// <returns>CallableGenerateLabelAggregateResponse</returns>
-        public CallableGenerateLabelAggregateResponse GenerateLabelAggregateUsingPOST (GenerateLabelAggregateRequest body)
+        /// <returns>GenerateLabelAggregateResponse</returns>
+        public GenerateLabelAggregateResponse GenerateLabelAggregateUsingPOST (GenerateLabelAggregateRequest body)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling GenerateLabelAggregateUsingPOST");
@@ -104,7 +104,7 @@ namespace Mozu.CARS.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling GenerateLabelAggregateUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
-            return (CallableGenerateLabelAggregateResponse) ApiClient.Deserialize(response.Content, typeof(CallableGenerateLabelAggregateResponse), response.Headers);
+            return (GenerateLabelAggregateResponse) ApiClient.Deserialize(response.Content, typeof(GenerateLabelAggregateResponse), response.Headers);
         }
     
     }
