@@ -19,12 +19,14 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     layout: {
         type: 'fit'
     },
+    
 
     initComponent: function () {
         var me = this;
         var itemsPerPage = 2;
         var shipment = me.shipmentData;
-        
+        var selectedTab;
+        this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
             //autoLoad: false,
@@ -180,6 +182,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             storeId: 'allLocationsStore',
             fields: ['displayName'],
             groupField: 'displayName',
+            
             //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'memory',
@@ -192,6 +195,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: me.record.getLocations(),
+            itemId: 'allLocationsGrid',
             columns: [
                 {
                     text: 'Location',
@@ -210,12 +214,24 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
             height: 300,
+            listeners: {
+                beforetabchange: function (tabs, newTab, oldTab) {
+                    if (newTab.itemId == 'allLocationsGrid') {
+                        me.selectedTab = 'allLocationsGrid';
+                    }
+                    else if (newTab.itemId == 'inventoryGrid') {
+                        me.selectedTab = 'inventoryGrid';
+                    }
+                }
+            },
             renderTo: Ext.getBody(),
             
             items: [
                 inventorygrid,
                 allLocations
-            ]
+            ],
+
+            
         });
 
         this.items = [this.fieldContainer];
@@ -260,20 +276,27 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
     validateModal: function () {     
         var me = this;
-        if (!me.shipmentLocation)
-            return false;
+        var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0] 
+            : Ext.ComponentQuery.query('#allLocationsGrid')[0]; 
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        if (selectedItem.name || selectedItem.locationName) {
+            return true;
+        }
 
         return true;
     },
 
     getPayloadDataInventory: function () {
         var me = this;
-        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0]
+            : Ext.ComponentQuery.query('#allLocationsGrid')[0]; 
         var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
         return {
             ShipmentNumber: me.shipmentRecord.number,
             ReassignShipment: {
-                LocationCode: item[0].raw.locationCode
+                LocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : selectedItem.code,
             }
         };
     },

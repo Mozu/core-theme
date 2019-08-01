@@ -6,7 +6,9 @@
         'Ext.layout.container.Card',
         'Ext.tab.Bar',
         'Ext.form.field.Number',
-        'Ext.toolbar.TextItem'
+        'Ext.toolbar.TextItem',
+        'Ext.grid.CellEditor',
+        'Ext.util.DelayedTask'
     ],
 
     autoShow: true,
@@ -21,6 +23,10 @@
     },
 
     initComponent: function () {
+
+        this.cellEditing = new Ext.grid.plugin.CellEditing({
+            clicksToEdit: 1
+        });
        
         var me = this;
         var itemsPerPage = 2;
@@ -34,7 +40,7 @@
                 property: 'location',
                 direction: 'asc'
             }],
-            fields: ['locationName', 'distance', 'available'],
+            fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
             groupField: 'locationName',
             data: this.inventoryItemList.candidateSuggestions,
             proxy: {
@@ -115,11 +121,13 @@
             selModel: {
                 selModel: 'rowmodel',
             },
-            plugins: {
-                ptype: 'cellediting',
-                clicksToEdit: 1,
-                autoCancel: false
-            },
+            plugins: [this.cellEditing],
+            //{   
+                //ptype: 'cellediting',
+                //clicksToEdit: 1,
+                //autoCancel: false,
+                //pluginId: 'ItemLocationEditing',
+            //},
             listeners: {
                 selectionchange: function () {
                 },
@@ -127,6 +135,8 @@
                 },
                 deselect: function () {
                 },
+                click: function () {
+                }
                 //beforeload: function (store, operation, eOpts) {
                 //    store.proxy.data = inventoryData;
                 //}

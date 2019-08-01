@@ -76,7 +76,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 useNull: false
             },
             {
-                name: 'productName',
+                name: 'name',
                 type: 'string',
                 useNull: true
             }, {
@@ -242,7 +242,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 }
             },
             {
-                dataIndex: 'productName',
+                dataIndex: 'name',
                 text: 'Name',
                 draggable: false,
                 sortable: false,
