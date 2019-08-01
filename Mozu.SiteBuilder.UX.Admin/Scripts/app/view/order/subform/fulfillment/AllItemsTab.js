@@ -22,7 +22,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         this.shipmentItems = Ext.create('Taco.view.order.widget.ShippingPackagesGrid', {
             shipmentRecord: this.shipmentRecord,
             record: this.record,
-            hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled' && this.shipmentRecord.items.length <= 0,
+            hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled' ,
             margin: '10px 0 10px 0',
             padding: '0 1px 0 0',
             minHeight: '300',
@@ -33,7 +33,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
             }
         });
         
-        this.totalsContainer = Ext.widget({
+        this.shipmentLabelContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-package-body',
             padding: '0 0 10 0',
@@ -62,7 +62,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
         });
 
         this.items = [
-            this.totalsContainer,
+            this.shipmentLabelContainer,
             this.shipmentItems
         ];
     },
