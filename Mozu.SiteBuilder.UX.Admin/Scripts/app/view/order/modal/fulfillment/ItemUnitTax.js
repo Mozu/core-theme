@@ -79,17 +79,17 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         this.unitTaxAdjustmentPercInput = Ext.id();
     },
 
-    getEditItemQuantityPayload: function () {
+    getEditUnitTaxPayload: function () {
         var me = this;
         var unitTaxPerc = Ext.get(this.unitTaxAdjustmentInput).dom.value;
         return {
-            unitTaxPerc: unitTaxPerc
+            unitTax: unitTax
         };
     },
 
     doSave: function () {
         var me = this;
-        me.fireEvent('udpateTax', me.getEditItemQuantityPayload());
+        me.fireEvent('udpateTax', me.getEditUnitTaxPayload());
         me.close();
     },
     /**

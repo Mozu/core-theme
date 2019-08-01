@@ -539,7 +539,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                 listeners: {
                     udpateTax: {
                         fn: function (json) {
-                            Ext.getCmp(this.taxFieldId).setValue(json.unitTaxPerc);
+                            Ext.getCmp(this.taxFieldId).setValue(json.unitTax);
                         },
                         scope: me
                     }
