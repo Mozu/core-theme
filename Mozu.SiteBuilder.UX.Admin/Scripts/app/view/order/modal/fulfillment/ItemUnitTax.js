@@ -104,24 +104,25 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     bindEventsForTextBoxes: function () {
         var me = this;
 
-        el = Ext.get(this.unitTaxAdjustmentInput);
-        if (el) {
-            el.on('keyup', function () {
+        var element = Ext.get(this.unitTaxAdjustmentInput);
+        if (element) {
+            element.on('keyup', function () {
                 me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, this.selectedItem.unitPrice, false, this.unitTaxAdjustmentPercInput);
             }, this);
         };
-        el = Ext.get(this.unitTaxAdjustmentPercInput);
-        if (el) {
-            el.on('keyup', function () {
+
+        element = Ext.get(this.unitTaxAdjustmentPercInput);
+        if (element) {
+            element.on('keyup', function () {
                 me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, this.selectedItem.unitPrice, true, this.unitTaxAdjustmentInput);
             }, this);
         };
     },
 
     setCalculatedUnitTax: function (elementId, unitPrice, isPercentage, targetElementId) {
-        var el = Ext.get(elementId);
+        var element = Ext.get(elementId);
         var calcValue = 0;
-        if (el) {
+        if (element) {
             var enteredValue = parseFloat(Ext.get(elementId).getValue());
 
             if (enteredValue) {
