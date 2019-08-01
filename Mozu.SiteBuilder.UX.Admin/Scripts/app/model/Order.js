@@ -2981,7 +2981,7 @@ Ext.define('Taco.model.Order', {
 
     updateShipmentItem: function (config) {
         Ext.apply(config, {
-            url: '/admin/app/shipment/updateShipmentItem',
+            url: '/admin/app/order/shipment/updateShipmentItem',
             method: 'PUT'
         });
 

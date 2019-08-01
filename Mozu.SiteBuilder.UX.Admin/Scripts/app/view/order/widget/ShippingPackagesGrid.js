@@ -196,6 +196,11 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             Ext.create('Ext.grid.plugin.RowEditing', {
                 clicksToEdit: 1,
                 pluginId: 'destinationEditor',
+                listeners: {
+                    edit: function (editor, context, eOpts) {
+                        me.doSave();
+                    }
+                },
                 beforeEdit: function (editor, context, eOpts) {
                     if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
@@ -205,7 +210,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                     else {
                         return false;
                     }
-                }
+                },
+                
             }));
 
 
@@ -662,6 +668,66 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             });
         }
     },
+
+    doSave: function () {
+        if (this.validateModal()) {
+            var me = this;
+            me.setLoading(true, this.body);
+            var payloadData = me.getPayloadItemUpdate();
+
+        this.record.updateShipmentItem({
+                jsonData: payloadData,
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
+
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', json.response, 'error');
+                        return;
+                    }
+                    me.fireEvent('shipmentReassign');
+                    // close the dialog
+
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
+
+                    var json = Ext.decode(response.responseText, true),
+                        msg = (json && json.message) ? json.message : 'Error deallocating inventory';
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                    me.close();
+                }
+            });
+        }
+    },
+
+    getPayloadItemUpdate: function () {
+        var me = this;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        return {
+            ShipmentNumber: me.shipmentRecord.number,
+            ItemId: selectedItem.lineId,
+            ShipmentItemAdjustment: {
+                LineId : selectedItem.lineId,
+                UnitPrice : selectedItem.unitPrice,
+                UnitTax : selectedItem.itemTax,
+            }
+        }
+    },
+
+    validateModal: function () {
+        var me = this;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        var selectedItem = item[0].data;
+        if (selectedItem.unitPrice == item[0].raw.unitPrice && selectedItem.itemTax == item[0].raw.itemTax) {
+            return false;
+        }
+        return true;
+    }
 });
 
 
