@@ -359,78 +359,6 @@
     "packages": [],
     "shipments": [
       {
-        "number": 713,
-        "orderId": "0db55d5c39f053392c8602470000432c",
-        "orderNumber": 132,
-        "currencyCode": "USD",
-        "shipmentType": "STH",
-        "shippingMethodCode": "fedex_FEDEX_2_DAY",
-        "locationCode": "atx-whse",
-        "shipmentStatus": "CANCELED",
-        "signatureRequired": true,
-        "changeMessages": [
-          {
-            "id": "5d35d1c0449bca0001a26a9d",
-            "userId": "12345",
-            "subject": "shipmentStatus",
-            "message": "'shipmentStatus' changed from 'READY' to 'CANCELED'",
-            "metadata": [
-              "Item Will Not Arrive On Time"
-            ],
-            "oldValue": "READY",
-            "newValue": "CANCELED",
-            "amount": 0
-          }
-        ],
-        "packages": [],
-        "items": [
-          {
-            "lineId": "1",
-            "productCode": "cap-troubled-minds-set",
-            "optionAttributeFQN": "",
-            "isTaxable": false,
-            "quantity": 1,
-            "unitPrice": 0,
-            "actualPrice": 0,
-            "itemDiscount": 0,
-            "lineItemCost": 0,
-            "itemTax": 0,
-            "shipping": 0,
-            "shippingDiscount": 0,
-            "shippingTax": 0,
-            "handling": 0,
-            "handlingDiscount": 0,
-            "handlingTax": 0,
-            "duty": 0,
-            "weight": 0
-          }
-        ],
-        "canceledItems": [],
-        "auditInfo": {
-          "updateDate": "2019-07-22T15:09:53.836Z",
-          "createDate": "2019-07-18T06:09:24.084Z"
-        },
-        "shipmentAdjustment": 0,
-        "lineItemSubtotal": 0,
-        "lineItemTaxAdjustment": 0,
-        "lineItemTaxTotal": 14,
-        "lineItemTotal": 0,
-        "shippingAdjustment": 0,
-        "shippingSubtotal": 10,
-        "shippingTaxAdjustment": 0,
-        "shippingTaxTotal": 11,
-        "shippingTotal": 10,
-        "handlingAdjustment": 0,
-        "handlingSubtotal": 12,
-        "handlingTaxAdjustment": 13,
-        "handlingTaxTotal": 0,
-        "handlingTotal": 0,
-        "dutyAdjustment": 0,
-        "dutyTotal": 0,
-        "total": 0,
-        "cost": 28.01
-      },
-      {
         "number": 728,
         "orderId": "0db55d5c39f053392c8602470000432c",
         "orderNumber": 132,
@@ -498,8 +426,86 @@
         "dutyTotal": 0,
         "total": 0,
         "cost": 28.01
-      }
+      },
+      {
+        "number": 713,
+        "orderId": "0db55d5c39f053392c8602470000432c",
+        "orderNumber": 132,
+        "currencyCode": "USD",
+        "shipmentType": "STH",
+        "shippingMethodCode": "fedex_FEDEX_2_DAY",
+        "locationCode": "atx-whse",
+        "shipmentStatus": "CANCELED",
+        "signatureRequired": true,
+        "changeMessages": [
+          {
+            "id": "5d35d1c0449bca0001a26a9d",
+            "userId": "12345",
+            "subject": "shipmentStatus",
+            "message": "'shipmentStatus' changed from 'READY' to 'CANCELED'",
+            "metadata": [
+              "Item Will Not Arrive On Time"
+            ],
+            "oldValue": "READY",
+            "newValue": "CANCELED",
+            "amount": 0
+          }
+        ],
+        "packages": [],
+        "items": [
+          
+        ],
+        "canceledItems": [
+          {
+            "lineId": "1",
+            "productCode": "cap-troubled-minds-set",
+            "name": "Cap troubled minds set",
+            "optionAttributeFQN": "",
+            "isTaxable": false,
+            "quantity": 12,
+            "unitPrice": 38.30,
+            "actualPrice": 0,
+            "itemDiscount": 0,
+            "lineItemCost": 0,
+            "itemTax": 0,
+            "shipping": 0,
+            "shippingDiscount": 0,
+            "shippingTax": 0,
+            "handling": 0,
+            "handlingDiscount": 0,
+            "handlingTax": 0,
+            "duty": 0,
+            "weight": 0,
+            "createdDate": "07/15/2019",
+            "cancellationReason": "Item Not Found",
+            "cancelledBy": "Adam"
 
+          }
+        ],
+        "auditInfo": {
+          "updateDate": "2019-07-22T15:09:53.836Z",
+          "createDate": "2019-07-18T06:09:24.084Z"
+        },
+        "shipmentAdjustment": 0,
+        "lineItemSubtotal": 0,
+        "lineItemTaxAdjustment": 0,
+        "lineItemTaxTotal": 14,
+        "lineItemTotal": 0,
+        "shippingAdjustment": 0,
+        "shippingSubtotal": 10,
+        "shippingTaxAdjustment": 0,
+        "shippingTaxTotal": 11,
+        "shippingTotal": 10,
+        "handlingAdjustment": 0,
+        "handlingSubtotal": 12,
+        "handlingTaxAdjustment": 13,
+        "handlingTaxTotal": 0,
+        "handlingTotal": 0,
+        "dutyAdjustment": 0,
+        "dutyTotal": 0,
+        "total": 0,
+        "cost": 28.01
+      }
     ],
     "digitalPackages": [
       {

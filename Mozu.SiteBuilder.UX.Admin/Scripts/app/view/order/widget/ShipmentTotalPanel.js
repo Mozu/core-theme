@@ -51,6 +51,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         var me = this,
             isEditable = me.isEditable;
 
+
+
         this.masterTableId = Ext.id();
         this.totalsContainer = Ext.widget({
             xtype: 'container',
@@ -62,6 +64,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             items: [
                 {
                     xtype: 'container',
+                    hidden: me.isShipmentAction(),
                     layout: {
                         type: 'hbox',
                         align: 'stretch'
@@ -129,6 +132,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         this.items.push(this.totalsContainer);
         this.setAdjustmentInputId();
+    },
+
+    isShipmentAction: function () {
+        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
+            return true;
+        return false;
     },
 
     setAdjustmentInputId: function () {

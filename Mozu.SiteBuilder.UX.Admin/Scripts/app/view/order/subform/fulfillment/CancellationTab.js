@@ -14,8 +14,8 @@ Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
 
     initUI: function () {
         var me = this;
-        this.tabTitle = 'Cancelled Items ' + ((this.shipmentRecord.cancellationItems && this.shipmentRecord.cancellationItems.length > 0) ? '(' + this.shipmentRecord.cancellationItems.length + ')' : '');
-
+        this.tabTitle = 'Cancelled Items ' + ((this.shipmentRecord.canceledItems && this.shipmentRecord.canceledItems.length > 0) ? '(' + this.shipmentRecord.canceledItems.length + ')' : '');
+        
         this.shippingCancellationGrid = Ext.create('Taco.view.order.widget.ShippingCancellationGrid', {
             shipmentRecord: this.shipmentRecord,
             record: this.record,

@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 }
             }
         }));
-        if (this.shipmentRecord.locationCode) {
+        if (this.shipmentRecord.locationCode && this.shipmentRecord.location) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                 record: this.record,
                 shipmentRecord: this.shipmentRecord
@@ -70,6 +70,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
         }
 
         //todo: following static data is only for demo
+        //this.shipmentRecord.trackingNumbers = ['TR1873917231973917', 'TR1873917231973954'];
 
         if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length > 0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
@@ -77,7 +78,11 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 shipmentRecord: this.shipmentRecord
             }));
         }
-        if (this.shipmentRecord.CanceledItems && this.shipmentRecord.CanceledItems.length > 0) {
+
+        //todo: following static data is only for demo
+        //this.shipmentRecord.canceledItems = this.shipmentRecord.items;
+        
+        if (this.shipmentRecord.canceledItems && this.shipmentRecord.canceledItems.length > 0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
                 record: this.record,
                 shipmentRecord: this.shipmentRecord

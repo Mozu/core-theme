@@ -9,14 +9,14 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
     initComponent: function () {
         var me = this;
         this.store = Ext.create('Ext.data.JsonStore', {
-            data: this.shipmentRecord.items,
+            data: this.shipmentRecord.canceledItems,
             fields: [{
                 name: 'productCode',
                 type: 'string',
                 useNull: false
             },
             {
-                name: 'productName',
+                name: 'name',
                 type: 'string',
                 useNull: true
             }, {
@@ -62,7 +62,21 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 name: 'optionAttributeFQN',
                 type: 'string',
                 useNull: true
-            }],
+                }, {
+                    name: 'createdDate',
+                    type: 'string',
+                    useNull: true
+                },
+                {
+                    name: 'cancellationReason',
+                    type: 'string',
+                    useNull: true
+                }, {
+                    name: 'cancelledBy',
+                    type: 'string',
+                    useNull: true
+                }
+            ],
             sorters: [{
                 sorterFn: function (a, b) {
                     if (a.get('lineId') === b.get('lineId')) {
@@ -81,21 +95,17 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 resizable: true,
                 width: 60,
                 sortable: false,
-                menuDisabled: true,
-                hidden: false
+                menuDisabled: true
             },
-            {
-                text: 'Image',
+            {                
+                text: 'Date Created',
+                dataIndex:'createdDate',
                 draggable: false,
                 resizable: true,
-                menuDisabled: true,
-                hidden: false,
-                renderer: function (value) {
-                    return '<img src="http://dtlr258s62w81.cloudfront.net/19638-23793/cms/23793/files/6ac0c98f-402d-4fd2-95da-a482f3520041?max=160&_mzcb=_1486049853491" style="width:60px" />';
-                }
+                menuDisabled: true
             },
             {
-                dataIndex: 'productName',
+                dataIndex: 'name',
                 text: 'Name',
                 draggable: false,
                 sortable: false,
@@ -105,50 +115,8 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 flex: 2
             },
             {
-                dataIndex: 'optionAttributeFQN',
-                text: 'Item Attributes',
-                draggable: false,
-                sortable: false,
-                resizable: true,
-                menuDisabled: false,
-                minWidth: 100,
-                flex: 2
-            },
-            {
-                dataIndex: 'unitPrice',
-                text: 'Unit Price',
-                draggable: false,
-                sortable: false,
-                //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 80,
-                flex: 1,
-                renderer: function (value) {
-                    return this.record.formatCurrency(value);
-                }
-            },
-            {
-                dataIndex: 'itemTax',
-                text: 'Unit Tax',
-                draggable: false,
-                sortable: false,
-                //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 80,
-                flex: 1,
-                listeners: {
-                    click: {
-                        fn: function (view, cell, cellIndex, rowIndex, e, record, row, eOpt) {
-                            
-                        },
-                    }
-                }
-            },
-            {
+                text: 'Qty Cancelled',
                 dataIndex: 'quantity',
-                text: 'Qty',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -158,19 +126,29 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 flex: 1
             },
             {
-                dataIndex: 'quantity',
-                text: 'Avail Qty',
+                text: 'Cancellation Reason',
+                dataIndex: 'cancellationReason',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
-                flex: 1,
+                flex: 1
             },
             {
-                dataIndex: 'discount',
-                text: 'Discount',
+                text: 'Cancelled By',
+                dataIndex: 'cancelledBy',
+                draggable: false,
+                sortable: false,
+                //resizable: false,
+                align: 'center',
+                menuDisabled: true,
+                minWidth: 80,
+                flex: 1
+            },
+            {
+                text: 'Shipment Number',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -179,12 +157,12 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 minWidth: 80,
                 flex: 1,
                 renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                    return this.shipmentRecord.number;
                 }
             },
             {
-                dataIndex: 'total',
-                text: 'Subtotal',
+                dataIndex: 'unitPrice',
+                text: 'Unit Price',
                 draggable: false,
                 sortable: false,
                 //resizable: false,

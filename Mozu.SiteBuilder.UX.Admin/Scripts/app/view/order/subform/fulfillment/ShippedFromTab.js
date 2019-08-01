@@ -5,13 +5,20 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
     title: 'Location',
 
     initComponent: function () {
+        var shipmentTypeDescription = "";
+        if (this.shipmentRecord.shipmentType) {
+            if (this.shipmentRecord.shipmentType == "STH")
+                shipmentTypeDescription = "Shipped From";
+            else if (this.shipmentRecord.shipmentType == "BOPIS")
+                shipmentTypeDescription = "Pickup From";
+        }
 
         if (this.shipmentRecord.location && this.shipmentRecord.location.displayName) {
-            this.tabTitle = '<span class="label">Shipped From</span><span class="title">' + this.shipmentRecord.location.displayName + '</span>';
+            this.tabTitle = '<span class="label">' + shipmentTypeDescription +'</span><span class="title">' + this.shipmentRecord.location.displayName + '</span>';
             this.isTabTitleHtml = true;
         }
         else {
-            this.tabTitle = 'Shipped From';
+            this.tabTitle = shipmentTypeDescription;
         }
 
         this.initUI();
@@ -75,7 +82,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                     },
                     {
                         tpl: [
-                            '<span class="label">Shipping Origin Contact</span>',
+                            '<span class="label">' + (me.shipmentRecord.shipmentType == "BOPIS" ? "Pickup" : "Shipping")  +' Origin Contact</span>',
                             '<div class="labelvalue">' + me.getFullfillmentFromContact(this.shipmentRecord.location.shippingOriginContact) + '</div>'
                         ]
                     }
