@@ -281,6 +281,8 @@
   "options": "Options",
   "or": "or",
   "order": "Order",
+  "orderCancelBlob1": "The following item(s) from order #{0} have been cancelled.",
+  "orderCancelBlob2": "Full credit for any cancelled items will be applied to the payment method you used to place your order. To place a new order, please visit {0}'s site. We apologize for any inconvenience this has caused.",
   "orderConfirmation": "Order Confirmation",
   "orderConfirmationBlob1": "Thank you for shopping with us at {0}. Your order was received and we are preparing it for shipment.  If you would like to view or manage your orders, please visit <a href=\"http://{1}/myaccount\">My Account</a>.",
   "orderCreateReturn": "Create a Return",

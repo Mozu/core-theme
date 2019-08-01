@@ -87,6 +87,12 @@
     {
       "id": "order.shipped",
       "properties": {},
+      "template": "email/order-cancel",
+      "title": "Order Cancel"
+    },
+    {
+      "id": "order.shipped1",
+      "properties": {},
       "template": "email/order-shipped",
       "title": "Your Order Has Shipped"
     },
