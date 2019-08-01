@@ -527,11 +527,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
             //field = e.context.field;
             Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                 layout: 'hbox',
-                width: 380,
+                width: 270,
                 height: 200,
-                record: me.record,
-                parentRecord: me.record,
-                shipmentRecord: me.shipmentRecord,
                 selectedItem: selectedItem,
                 listeners: {
                     udpateTax: {

@@ -25,7 +25,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     initComponent: function () {
         var me = this;
-        
+
+        this.setAdjustmentInputId();
+        this.calculatedUnitTaxPerc();
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
             name: 'unittaxeditor',
             monitorValid: true,
@@ -46,49 +48,42 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
                         items:
                             [
                                 {
-                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input id="unitTaxPerc" type="number" placeholder="" value="' + me.unitTaxPerc +'"></div>'
+                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input id="' + this.unitTaxAdjustmentPercInput + '" type="number" min="0" max="100" placeholder="" value="' + this.unitTaxPerc + '"></div>'
                                 },
                                 {
                                     html: '<div style="padding: 10px;">Or</div>'
                                 },
                                 {
-                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">$</span> <input type="number" placeholder="" class="doller" id="itemTaxDoller" value="' + me.selectedItem.itemTax +'"></div>'
+                                    html: '<div class="inner-addon left-addon left-box"> <span class="icon">$</span> <input type="number" placeholder="" required class="doller" id="' + this.unitTaxAdjustmentInput + '" value="' + me.selectedItem.itemTax + '"></div>'
                                 }
-                            ]
+                            ],
+                        listeners: {
+                            afterrender: {
+                                fn: function (obj) {
+                                    me.bindEventsForTextBoxes();
+                                },
+                                scope: me
+                            },
+                        }
                     }
                 ],
             scope: this
         }, this);
 
         this.items = [this.fieldContainer];
-
         this.callParent(arguments);
     },
 
-    //validateModal: function () {
-    //    //verify quantity is not null and less than 0 and should not be greater than max quantity
-    //    var unittax = this.down('#cancelQuantity').getValue();
-
-    //    if (!quantity || quantity <= 0 || quantity > (this.originalQuantity || this.record.data.quantity))
-    //        return false;
-
-    //    //verify cancel reason should be filled
-    //    var reason = (this.down('#cancelReason').getValue() === 'Other'
-    //        ? this.down('#otherReason').getValue()
-    //        : this.down('#cancelReason').getValue());
-
-    //    if (!reason)
-    //        return false;
-
-    //    return true;
-    //},
+    setAdjustmentInputId: function () {
+        this.unitTaxAdjustmentInput = Ext.id();
+        this.unitTaxAdjustmentPercInput = Ext.id();
+    },
 
     getEditItemQuantityPayload: function () {
         var me = this;
-        var order = this.record;        
-        var unitTaxPerc = Ext.get('unitTaxPerc').dom.value;
+        var unitTaxPerc = Ext.get(this.unitTaxAdjustmentInput).dom.value;
         return {
-            unitTaxPerc: unitTaxPerc,
+            unitTaxPerc: unitTaxPerc
         };
     },
 
@@ -106,11 +101,46 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         this.callParent(arguments);
     },
 
-    calculateUnitTax: function (originalQty, enteredQty) {
-        Ext.getCmp('unittaxpercent').setValue((2 * enteredQty) / 100);
+    bindEventsForTextBoxes: function () {
+        var me = this;
+
+        el = Ext.get(this.unitTaxAdjustmentInput);
+        if (el) {
+            el.on('keyup', function () {
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, this.selectedItem.unitPrice, false, this.unitTaxAdjustmentPercInput);
+            }, this);
+        };
+        el = Ext.get(this.unitTaxAdjustmentPercInput);
+        if (el) {
+            el.on('keyup', function () {
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, this.selectedItem.unitPrice, true, this.unitTaxAdjustmentInput);
+            }, this);
+        };
     },
 
-    percentageChanged: function (enteredQty) {
-        Ext.getCmp('unittaxdoller').setValue((2 * enteredQty) / 100);
+    setCalculatedUnitTax: function (elementId, unitPrice, isPercentage, targetElementId) {
+        var el = Ext.get(elementId);
+        var calcValue = 0;
+        if (el) {
+            var enteredValue = parseFloat(Ext.get(elementId).getValue());
+
+            if (enteredValue) {
+                if (isPercentage) {
+                    calcValue = (unitPrice * enteredValue) / 100;
+                }
+                else {
+                    calcValue = (100 * enteredValue) / unitPrice;
+                }
+
+                Ext.get(targetElementId).dom.value = calcValue;
+            }
+        }
+    },
+
+    calculatedUnitTaxPerc: function () {
+        this.unitTaxPerc = 0;
+        if (this.selectedItem.itemTax > 0) {
+            this.unitTaxPerc = (100 * this.selectedItem.itemTax) / this.selectedItem.unitPrice;
+        }
     }
 });
