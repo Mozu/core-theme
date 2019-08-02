@@ -159,3 +159,14 @@ export class LocationGroupConfigModel {
         enabledForReturns: boolean;
         areCredentialsSet: boolean;
     }
+
+    export interface CarrierShippingType {
+        code: string;
+        name: string;
+        isProvider: boolean;
+        rateProvider: string;
+        isActive: boolean;
+        isInternational: boolean;
+        sequence: number;
+        isConfigured: boolean;
+    }
