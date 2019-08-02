@@ -108,8 +108,9 @@ describe('NavigationService', () => {
           });
 
           it('should return true if secureform get called successfully', () => {
-            let appId : string;
-            expect(service.fetchCapabilitiesForSecureForm(appId)).toBeTruthy();
+              let appId: string;
+              let extLnk: any;
+              expect(service.fetchCapabilitiesForSecureForm(appId, extLnk)).toBeTruthy();
           });
 
           it('should return false from isAuthenticated when there is no token', () => {

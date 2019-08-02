@@ -24,7 +24,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   @Input() iframeResourceURL: any;
   @Input() formBody: any;
   catalogImportExport = Constants.titles.catalogImportExportTitles;
-  close = Constants.lables.closeLabel;  
+  close = Constants.lables.closeLabel;
 
   constructor(
     private _http: HttpClient,

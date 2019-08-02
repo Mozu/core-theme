@@ -94,6 +94,7 @@ export class NavigationLeftComponent implements OnInit {
         location: element.location,
         url: element.href,
         appId: element.appId,
+        _id: element._id
         // command: (event : any) => { this.openDynamicLinksDialog(element.href, element.appId) }
       });
     });
@@ -101,12 +102,23 @@ export class NavigationLeftComponent implements OnInit {
     return this.model.filteredNavigationLinks;
   }
 
-  public openDynamicLinksDialog = (url, appId) => {
+  public openDynamicLinksDialog = (extensionLink) => {
     this._loggerService.info('NavigationLeftComponent : openDynamicLinksDialog');
-    this.navigationService.fetchCapabilitiesForSecureForm(appId).subscribe(data => {
+
+    let jsonData = { 'x-vol-return-url': window.location.href };
+    let returnUrl = window.location.href.replace(window.location.search, '');
+
+    if (returnUrl[returnUrl.length - 1] === '/') {
+      returnUrl = returnUrl.substr(0, returnUrl.length - 1);     
+    }
+    
+    returnUrl += '?_mz_extlnk=' + extensionLink._id;
+    jsonData['x-vol-return-url'] = returnUrl;
+          
+    this.navigationService.fetchCapabilitiesForSecureForm(extensionLink.appId, jsonData).subscribe(data => {
       let secureForm = JSON.parse(JSON.stringify(data));
-      if (secureForm.success) {       
-        this.model.dynamicLinkIframeURL = url + Constants.dateStamp + encodeURIComponent(secureForm.items.dateStamp) + Constants.messageHash + encodeURIComponent(secureForm.items.messageHash);     
+      if (secureForm.success) {
+        this.model.dynamicLinkIframeURL = extensionLink.url + Constants.dateStamp + encodeURIComponent(secureForm.items.dateStamp) + Constants.messageHash + encodeURIComponent(secureForm.items.messageHash);
         const modalRef = this.modalService.open(DynamicLinksDialogComponent, { windowClass: Constants.integrationsModalClass, backdropClass: Constants.integrationsBackdropModalClass });
         modalRef.componentInstance.iframeResourceURL = this.model.dynamicLinkIframeURL;
         modalRef.componentInstance.formBody = secureForm.items.body;

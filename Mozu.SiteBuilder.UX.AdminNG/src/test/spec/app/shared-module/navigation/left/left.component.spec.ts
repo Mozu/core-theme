@@ -87,9 +87,8 @@ it('Application is inside ngOnInit method of left navigation component', () => {
 });
 
 it('Application is inside openDynamicLinksDialog method of left navigation component ', () => {
-  const url = '';
-  const appId = '';
-  component.openDynamicLinksDialog(url, appId);
+    let extensionLink: any;
+    component.openDynamicLinksDialog(extensionLink);
    expect(loggerServiceSpy).toHaveBeenCalledWith('NavigationLeftComponent : openDynamicLinksDialog');
   });
 
