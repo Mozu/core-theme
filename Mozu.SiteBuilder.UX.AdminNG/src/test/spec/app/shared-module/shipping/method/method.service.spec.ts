@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { LoggerService, HttpClientService, httpClientServiceCreator, UtilityService, AuthService, EnvironmentConfig } from '@core';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { ShippingMethodService } from 'app/shared-module/shipping/method/method.service';
@@ -21,7 +21,7 @@ fdescribe('ShippingMethodService', () => {
         ],
         'currencyCode': 'USD',
         'price': 27.79
-      }];
+    }];
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
@@ -47,18 +47,17 @@ fdescribe('ShippingMethodService', () => {
         const quoteId = '4588be576b7f4416a70b6d810219680e';
 
         shippingMethodService.fetchShippingMethod(quoteId).subscribe(account => {
-                expect(loggerServiceSpy).toHaveBeenCalledWith('ShippingMethodService: fetchShippingMethod');
-                expect(account[0].shippingMethodCode).toBe('fedex_FEDEX_2_DAY_AM');
-            },
+            expect(loggerServiceSpy).toHaveBeenCalledWith('ShippingMethodService: fetchShippingMethod');
+            expect(account[0].shippingMethodCode).toBe('fedex_FEDEX_2_DAY_AM');
+        },
             err => {
                 expect(err).toBe(`Error on data fetching.`);
             });
-            const req = httpMock.expectOne(Constants.JsonResources.shippingMethods);
-            expect(req.request.method).toBe('GET');
-            req.flush(dummyData);
-            httpMock.verify();
+        const req = httpMock.expectOne(Constants.JsonResources.shippingMethods);
+        expect(req.request.method).toBe('GET');
+        req.flush(dummyData);
+        httpMock.verify();
     })
     );
 
 });
-
