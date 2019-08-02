@@ -9,8 +9,8 @@
                 </div>
                  <ul id="{{menuHeader.id}}"  class="collapse in">
                         <li *ngFor="let menuOptions of menuHeader.items">
-                            <div *ngIf="!(isOmsEnable && (menuOptions.label === inventoryTitle || menuOptions.label === locationGroupsTitle))">
-                                <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]">
+                            <div *ngIf="!(model.isOmsEnable && menuOptions.label === locationGroupsTitle)">
+                                <a *ngIf="menuOptions.address === uiRoutes || menuOptions.address === uiLocationGroup; else routeLink" [routerLink]="[menuOptions.routerLink]">
                                  {{menuOptions.label}}
                                 </a>
                                 <ng-template #routeLink >
