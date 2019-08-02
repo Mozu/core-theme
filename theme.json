@@ -98,11 +98,17 @@
       "title": "Order Confirmation V2"
     },
     {
-      "id": "order.changed",
+      "id": "order.changed1",
       "customEditor": "email-orderconfirmation",
       "properties": {},
       "template": "email/order-confirmation",
       "title": "Order Confirmation"
+    },
+    {
+      "id": "order.changed",
+      "properties": {},
+      "template": "email/order-confirmation-bopis",
+      "title": "Order Confirmation - BOPIS"
     },
     {
       "id": "refund.created",
