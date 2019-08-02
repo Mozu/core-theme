@@ -145,13 +145,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                             success: function (response) {
                                 // success handling here
                                 var json = Ext.decode(response.responseText, true);
-                                if (!json || !json.success) {
+                                if (response.status != 204 && response.status != 200) {
                                     Taco.app.fireEvent('setmessage', 'Error canceling shipment', 'error');
                                     me.fireEvent('saveFailure');
                                     return;
                                 }
-                                me.ownerCt.setLoading(false);
-                                me.fireEvent('orderCancelled', json);
+                                me.fireEvent('shipmentCancelled');
+                                me.close();
                             },
                             failure: function (response) {
                                 me.setLoading(false);

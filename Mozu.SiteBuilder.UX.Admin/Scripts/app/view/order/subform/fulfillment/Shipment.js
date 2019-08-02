@@ -179,8 +179,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     Taco.app.fireEvent('setmessage', 'Error while assigning shipment', 'error');
                     return;
                 }
+                Taco.app.fireEvent('setmessage', "Shipment " + me.shipmentRecord.number + " Successfully Reassigned", 'success');
                 me.fireEvent('shipmentRefresh', json);
-
             },
             failure: function (response) {
                 me.setLoading(false, this.body);
@@ -329,9 +329,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         shipmentRecord: me.shipmentRecord,
                         store: store,
                         listeners: {
-                            saveSuccess: {
-                                fn: function (json) {
-                                    me.fireEvent('orderCancelled', json);
+                            shipmentCancelled: {
+                                fn: function () {
+                                    me.fireEvent('shipmentRefresh');
                                 },
                                 scope: me
                             }

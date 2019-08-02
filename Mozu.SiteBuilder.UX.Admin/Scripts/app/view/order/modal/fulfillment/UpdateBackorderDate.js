@@ -101,14 +101,17 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
             var payloadData = me.getUpdateBackorderDatePayload();
             order.backorderItemsUpdate({
                 jsonData: payloadData,
-                success: function (response) {
+                success: function (response) {                    
+                    me.setLoading(false, me.body);
                     // success handling here
                     var json = Ext.decode(response.responseText, true);
                     if (!json || !json.success) {
                         Taco.app.fireEvent('setmessage', 'Error while updating backorder date', 'error');
                         return;
                     }
+                    Taco.app.fireEvent('setmessage', "Backorder date Successfully Updated", 'success');
                     me.fireEvent('dateUpdated', json);
+                    me.close();
                 },
                 failure: function (response) {
                     me.setLoading(false);

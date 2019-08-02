@@ -84,8 +84,8 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                         store: store,
                         listeners: {
                             orderCancelled: {
-                                fn: function (json) {
-                                    me.fireEvent('shipmentRefresh', json);
+                                fn: function () {
+                                    me.fireEvent('shipmentRefresh');
                                 },
                                 scope: me
                             }

@@ -69,6 +69,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
                         }
                     }));
             }
+            me.setLoading(false, this.body);
         }
     },
 

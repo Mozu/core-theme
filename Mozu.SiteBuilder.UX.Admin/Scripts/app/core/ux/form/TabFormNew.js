@@ -139,7 +139,12 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         this.shipmentTotals = Ext.create('Taco.view.order.widget.ShipmentTotalPanel', {
             margin: '0 0 20 0',
             record: this.record,
-            shipmentRecord: me.shipmentRecord
+            shipmentRecord: me.shipmentRecord,
+            listeners: {
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
         });
 
         items.push(this.shipmentTotals);

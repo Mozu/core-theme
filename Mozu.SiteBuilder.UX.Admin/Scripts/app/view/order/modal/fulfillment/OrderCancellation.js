@@ -133,10 +133,10 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                 closable: false,
                 buttons: Ext.Msg.YESNO,
                 fn: function (val) {
-                    if (val === 'yes') {
-                        me.setLoading(true, me.body);
+                    if (val === 'yes') {                        
                         var order = me.record;
-                        var payloadData = me.getCancelOrderPayload();
+                        var payloadData = me.getCancelOrderPayload();                       
+
                         order.cancelOrder({
                             jsonData: payloadData,
                             success: function (response) {
@@ -147,7 +147,8 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                     //me.fireEvent('saveFailure');
                                     return;
                                 }
-                                me.fireEvent('orderCancelled', json);
+                                me.fireEvent('orderCancelled');
+                                me.close();
                             },
                             failure: function (response) {                                
                                 me.setLoading(false);
@@ -156,7 +157,6 @@ Ext.define('Taco.view.order.modal.fulfillment.OrderCancellation', {
                                     msg = (json && json.message) ? json.message : 'Error canceling order';
 
                                 Taco.app.fireEvent('setmessage', msg, 'error');
-                                me.fireEvent('saveFailure');
                             },
                             scope: me
                         });

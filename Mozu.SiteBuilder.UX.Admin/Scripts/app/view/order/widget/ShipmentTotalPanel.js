@@ -417,6 +417,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                     Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
                     return;
                 }
+                Taco.app.fireEvent('setmessage', "Shipment totals updated Successfully", 'success');
                 me.fireEvent('shipmentRefresh');
             },
             failure: function (response) {
