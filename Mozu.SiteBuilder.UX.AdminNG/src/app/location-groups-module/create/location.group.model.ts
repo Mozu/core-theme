@@ -28,4 +28,8 @@ export class SiteModel {
     name: string;
     isDeleted: boolean;
     masterCatalogId: number;
+    catalogId:       number;
+    isMozuRendered:  boolean;
+    defaultLocaleCode: string;
+    defaultCurrencyCode: string;
 }

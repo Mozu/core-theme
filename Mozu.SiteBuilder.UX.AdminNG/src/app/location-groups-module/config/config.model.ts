@@ -137,3 +137,25 @@ export class LocationGroupConfigModel {
         attributes: any[];
         auditInfo: AuditInfoModel;
     }
+
+
+    export interface Settings {
+        aesitn: string;
+        apipassword?: any;
+        apiusername: string;
+        appid: string;
+        licensekey: string;
+        shippernumber: string;
+        accountnumber: string;
+        meternumber: string;
+        pickuptype: string;
+    }
+
+    export interface CarrierSettingsModel {
+        id: string;
+        settings: Settings;
+        isConfigured: boolean;
+        enabled: boolean;
+        enabledForReturns: boolean;
+        areCredentialsSet: boolean;
+    }

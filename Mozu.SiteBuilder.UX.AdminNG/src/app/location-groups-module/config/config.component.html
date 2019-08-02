@@ -58,7 +58,7 @@
 					<label class="subform-label col-md-2 nopadding" formArrayName="carriers" 
 						*ngFor="let carrier of model.locationGroupConfigForm.get('carriers')['controls']; let carrierIndex = index">
 						<input type="checkbox" [formControlName]="carrierIndex">
-						{{model.LCCarriers[carrierIndex].CarrierTypeLabel}}
+						{{model.LCCarriers[carrierIndex] ? model.LCCarriers[carrierIndex].CarrierTypeLabel : ''}}
 					</label>
 				</div>
 				<div class="row nomargin for-top-margin">
@@ -592,7 +592,7 @@
 						</div>
 					</div>
 			</div>
-			<div class="subform">
+			<!-- <div class="subform">
 				<h4>{{'LOCATIONGROUPCONFIG.FormSections.canadaPostSettings' | translate}}</h4>
 				<h5>{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfo' | translate}}
 					<a>{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfoLink' | translate}}</a>.</h5>
@@ -671,8 +671,8 @@
 						<hr class="underline-from-left">
 					</div>
 				</div>
-			</div>
-			
+			</div> -->
+
 		</form>
 	</div>
 </div>

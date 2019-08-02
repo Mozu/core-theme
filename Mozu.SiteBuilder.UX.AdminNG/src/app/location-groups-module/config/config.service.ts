@@ -3,7 +3,8 @@ import { HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {
 LoggerService,
-HttpClientService
+HttpClientService,
+IRequestOptions
 } from '@core';
 import { Constants as GlobalConstant } from '@global/infrastructure/constants';
 import { Constants } from '@shared';
@@ -33,22 +34,21 @@ export class LocationGroupConfigService {
          }
     }
 
-    public getCarrierSettings(): Observable<any> {
+    public getCarrierSettings(opts: IRequestOptions): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: getCarrierSettings');
         if (environment.isUseMocks) {
-            return this._http.get(Constants.JsonResources.getLocationGroupConfig);
+            return this._http.get(Constants.JsonResources.getCarrierSettings, opts);
         } else {
-            return this._http.get(GlobalConstant.webApis.getCarrierSettings);
+            return this._http.get(GlobalConstant.webApis.getCarrierSettings, opts);
         }
     }
 
-    public getAllCarrierRatesWithConfiguredInfo(): Observable<any> {
+    public getAllCarrierRatesWithConfiguredInfo(opts: IRequestOptions): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: getAllCarrierRatesWithConfiguredInfo');
         if (environment.isUseMocks) {
-            return this._http.get(Constants.JsonResources.getLocationGroupConfig);
+            return this._http.get(Constants.JsonResources.getAllCarrierRatesWithConfiguredInfo, opts);
         } else {
-            return this._http.get(GlobalConstant.webApis.getAllCarrierRatesWithConfiguredInfo);
+            return this._http.get(GlobalConstant.webApis.getAllCarrierRatesWithConfiguredInfo, opts);
         }
     }
-
 }

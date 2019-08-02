@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode, SpinnerService } from '@core';
+import { LoggerService, TostrService, ErrorCode, HttpError, ErroNotificationType, ToastrCode, SpinnerService, IRequestOptions } from '@core';
 import { SharedDataService, NotificationService } from '@global';
 import { LocationGroupConfigModel, LocationGroupConfigurationModel, CarrierModel,
          UnitedStatesUpsSettingsModel, InternationalUpsSettingsModel, CanadaUpsSettingsModel,
-         ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings, ShippingSettingsForUpsModel } from './config.model';
+         ShippingSettingsForFedEx, ShippingSettingsForUsps, CanadaPostSettings, ShippingSettingsForUpsModel, CarrierSettingsModel } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
 import { LocationGroupConfigService } from './config.service';
@@ -12,6 +12,13 @@ import * as _ from 'lodash';
 import { CreateLocationGroupService } from '../create';
 import { LocationGroupModel, SiteModel } from '../create/location.group.model';
 import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
+import { HttpHeaders } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
+
+/**
+ * Pending TASK
+ * 1. Need to convert all functions into pure javascript functions.
+ */
 
 @Component({
     selector: 'app-locationgroup-config',
@@ -46,8 +53,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.sitesLst = [];
         this.model.LCCustomerPickupActions = Constants.LCCustomerPickupActions;
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
-        this.model.LCCarriers = Constants.LCCarriers;
-        this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
+        // this.model.LCCarriers = Constants.LCCarriers;
+        // this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
         this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
@@ -112,7 +119,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedExReturnLabelShippingTypes: ['', []]
         });
 
-        this.addCarriersCheckboxes();
+        // this.addCarriersCheckboxes();
         this.addUPSUSShippingTypesCheckboxes();
         this.addUPSInternationalShippingTypesCheckboxes();
         this.addUPSCanadaShippingTypesCheckboxes();
@@ -226,32 +233,29 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getCarrierSettings() {
-        this._loggerService.info('LocationGroupConfigComponent : getCarrierSettings');
-        this.configService.getCarrierSettings().subscribe(response =>
-            this.getCarrierSettingsSuccess(response),
-            (response) => this.getCarrierSettingsError(response.error.message));
-    }
-
     private getCarrierSettingsSuccess(result) {
         this._loggerService.info('LocationGroupConfigComponent : getCarrierSettingsSuccess' + JSON.stringify(result));
-        if ( result && result.items ) {
-
+        if ( result) {
+            const carrierSettingsModel: CarrierSettingsModel[] = <CarrierSettingsModel[]>result;
+            this.model.LCCarriers = [];
+            this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
+            carrierSettingsModel.map((value, index) => {
+                // Filter out custom carrier from the returned list
+                if (value.id !== 'custom') {
+                    const carrierObj = {
+                        CarrierType: value.id,
+                        CarrierTypeLabel: value.id.toUpperCase(),
+                        IsEnabled: false
+                    };
+                    const carrierDropdownObj = {
+                        data: value.id,
+                        label: value.id.toUpperCase()
+                    };
+                    this.model.LCCarriers.push(carrierObj);
+                    this.model.LCDefaultCarrier.push(carrierDropdownObj);
+                }
+            });
         }
-    }
-
-    private getCarrierSettingsError(errmsg: string) {
-        this._loggerService.info('LocationGroupConfigComponent : getCarrierSettingsError');
-        this._spinner.stop();
-        this._tostrService.showError(errmsg);
-    }
-
-
-    private getAllCarrierRatesWithConfiguredInfo() {
-        this._loggerService.info('LocationGroupConfigComponent : getAllCarrierRatesWithConfiguredInfo');
-        this.configService.getAllCarrierRatesWithConfiguredInfo().subscribe(response =>
-            this.getCarrierSettingsSuccess(response),
-            (response) => this.getCarrierSettingsError(response.error.message));
     }
 
     private getAllCarrierRatesWithConfiguredInfoSuccess( result ) {
@@ -309,23 +313,34 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     public fetchLocationGroupConfig = (locationGroupId, siteId) => {
         this._loggerService.info('LocationGroupConfigComponent : fetchLocationGroupConfig');
         this._spinner.start();
-        this.configService.getLocationGroupConfig(locationGroupId, siteId).subscribe(response =>
-            this.getLocationGroupConfigSuccess(response),
-            (response) => this.getLocationGroupConfigError(response.error.message));
+        this.getAllServicesData(locationGroupId, siteId);
     }
 
-    private getLocationGroupConfigSuccess(result) {
-        this._loggerService.info('LocationGroupConfigComponent : getLocationGroupConfigSuccess' + JSON.stringify(result));
-        // get carrier settings details.
-        this.getCarrierSettings();
-        // get carrier rates with configure info details.
-        this.getAllCarrierRatesWithConfiguredInfo();
+    private getAllServicesData(locationGroupId, siteId) {
 
-        if ( result && result.items ) {
-            const lgConfigModel: LocationGroupConfigurationModel =   <LocationGroupConfigurationModel>result.items;
-            this.resetLocationGroupConfigForm();
-            this.updateLocationGroupConfigForm(lgConfigModel);
-        }
+        const opts: IRequestOptions = this._sharedData.getSiteHttpHeaders(siteId);
+
+        // get all services observables
+        const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupId, siteId);
+        const carrierSettings = this.configService.getCarrierSettings(opts);
+        const carrierRatesWithConfiguredInfo = this.configService.getAllCarrierRatesWithConfiguredInfo(opts);
+
+        // join this services result.
+        forkJoin([carrierSettings, carrierRatesWithConfiguredInfo, locationGroupConfig]).subscribe(response => {
+            this._loggerService.info('LocationGroupConfigComponent : forkJoin' + JSON.stringify(response));
+
+            if (response && response[0] && response[0].items) {
+                this.getCarrierSettingsSuccess(response[0].items);
+            }
+
+            if (response && response[2] && response[2].items) {
+                const lgConfigModel: LocationGroupConfigurationModel =   <LocationGroupConfigurationModel>response[2].items;
+                this.resetLocationGroupConfigForm();
+                this.updateLocationGroupConfigForm(lgConfigModel);
+            }
+        }, (response) => {
+            this.getLocationGroupConfigError(response.error.message);
+        });
     }
 
     private getLocationGroupConfigError(errmsg: string) {
@@ -337,6 +352,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     private resetLocationGroupConfigForm(): void {
         this.model.locationGroupConfigForm.reset();
         this.model.locationGroupConfigForm.controls.boxItems = new FormArray([]);
+        this.model.locationGroupConfigForm.controls.carriers = new FormArray([]);
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
@@ -349,6 +365,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 this.addBoxItem();
             }, this);
         }
+
+        this.addCarriersCheckboxes();
 
         let unitedStatesUpsSettings: UnitedStatesUpsSettingsModel;
         if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings) {
@@ -375,10 +393,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             shippingSettingsForUsps = lgConfigModel.shippingSettingsForUsps;
         }
 
-        let canadaPostSettings: CanadaPostSettings;
-        if ( lgConfigModel && lgConfigModel.canadaPostSettings ) {
-            canadaPostSettings = lgConfigModel.canadaPostSettings;
-        }
+        // let canadaPostSettings: CanadaPostSettings;
+        // if ( lgConfigModel && lgConfigModel.canadaPostSettings ) {
+        //     canadaPostSettings = lgConfigModel.canadaPostSettings;
+        // }
 
 
         if (lgConfigModel) {
@@ -435,14 +453,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsExpress3DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
                 uspsReturnLabelShippingTypes:  shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
                 // Canada Post Settings
-                outboundUsername:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                outboundPassword:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                outboundCustomerNumber:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                outboundLocale:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                outboundContractID:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                carsPickupNotify:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                preferredPickupTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                closingTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null
+                // outboundUsername:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // outboundPassword:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // outboundCustomerNumber:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // outboundLocale:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // outboundContractID:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // carsPickupNotify:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // preferredPickupTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
+                // closingTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null
 
             });
         }
@@ -624,15 +642,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.shippingSettingsForUsps.express2DayDefault = lgconfigForm.get(['uspsExpress2DayDefault']).value;
         lgConfigModel.shippingSettingsForUsps.express3DayDefault = lgconfigForm.get(['uspsExpress3DayDefault']).value;
         // Canada Post Settings
-        lgConfigModel.canadaPostSettings = {} as CanadaPostSettings;
-        lgConfigModel.canadaPostSettings.outboundUsername = lgconfigForm.get(['outboundUsername']).value;
-        lgConfigModel.canadaPostSettings.outboundPassword = lgconfigForm.get(['outboundPassword']).value;
-        lgConfigModel.canadaPostSettings.outboundCustomerNumber = lgconfigForm.get(['outboundCustomerNumber']).value;
-        lgConfigModel.canadaPostSettings.outboundLocale = lgconfigForm.get(['outboundLocale']).value;
-        lgConfigModel.canadaPostSettings.outboundContractID = lgconfigForm.get(['outboundContractID']).value;
-        lgConfigModel.canadaPostSettings.carsPickupNotify = lgconfigForm.get(['carsPickupNotify']).value;
-        lgConfigModel.canadaPostSettings.preferredPickupTime = lgconfigForm.get(['preferredPickupTime']).value;
-        lgConfigModel.canadaPostSettings.closingTime = lgconfigForm.get(['closingTime']).value;
+        // lgConfigModel.canadaPostSettings = {} as CanadaPostSettings;
+        // lgConfigModel.canadaPostSettings.outboundUsername = lgconfigForm.get(['outboundUsername']).value;
+        // lgConfigModel.canadaPostSettings.outboundPassword = lgconfigForm.get(['outboundPassword']).value;
+        // lgConfigModel.canadaPostSettings.outboundCustomerNumber = lgconfigForm.get(['outboundCustomerNumber']).value;
+        // lgConfigModel.canadaPostSettings.outboundLocale = lgconfigForm.get(['outboundLocale']).value;
+        // lgConfigModel.canadaPostSettings.outboundContractID = lgconfigForm.get(['outboundContractID']).value;
+        // lgConfigModel.canadaPostSettings.carsPickupNotify = lgconfigForm.get(['carsPickupNotify']).value;
+        // lgConfigModel.canadaPostSettings.preferredPickupTime = lgconfigForm.get(['preferredPickupTime']).value;
+        // lgConfigModel.canadaPostSettings.closingTime = lgconfigForm.get(['closingTime']).value;
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 

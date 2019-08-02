@@ -8,12 +8,15 @@ import {
     UtilityService,
     LoggerService
 } from '@core';
-import { HttpClientService } from '@core/extensions/http-client.service';
+import { HttpClientService, IRequestOptions } from '@core/extensions/http-client.service';
 import { AuthService } from '@core/extensions/auth.service';
 import { Constants as GlobalConstants} from '@global/infrastructure/constants';
 import { environment } from '@env';
 import { SharedData } from './index';
 import { MenuItem } from 'primeng/api';
+import { HttpHeaders } from '@angular/common/http';
+import * as _ from 'lodash';
+import { Site } from './shared-data';
 
 @Injectable()
 export class SharedDataService {
@@ -64,5 +67,31 @@ export class SharedDataService {
                 });
         return promise;
     }
+
+
+    getSiteHttpHeaders(siteId: string): IRequestOptions {
+        this._logger.info('SharedDataService: getSiteHttpHeaders');
+        const headers: IRequestOptions = {} as IRequestOptions;
+        if (this._sharedData.items.ctTenant.sites && this._sharedData.items.ctTenant.sites.length > 0) {
+            const sites: Site[] = this._sharedData.items.ctTenant.sites;
+            let siteObj: Site;
+            if (siteId) {
+                siteObj = _.find(sites, {'id': _.parseInt(siteId)});
+            } else { // get first site item if siteId is null
+                siteObj =  sites[0];
+            }
+            headers.headers =  new HttpHeaders({
+                'x-vol-tenant': siteObj.tenantId + '',
+                'x-vol-master-catalog': siteObj.masterCatalogId + '',
+                'x-vol-catalog': siteObj.catalogId + '',
+                'x-vol-site': siteObj.id + '',
+                'x-vol-locale': siteObj.defaultLocaleCode + '',
+                'x-vol-currency': siteObj.defaultCurrencyCode + '',
+                // 'X-Requested-With': 'XMLHttpRequest' + '',
+            });
+        }
+        return headers;
+    }
+
 }
 

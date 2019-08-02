@@ -70,6 +70,8 @@ export interface Site {
     status: string;
     id: number;
     name: string;
+    localeCode:      string;
+    currencyCode:    string;
 }
 
 export interface Catalog {

@@ -3616,9 +3616,9 @@
                             "tags": [],
                             "attributes": [],
                             "auditInfo": {
-                                "updateDate": "2019-06-11T19:52:12.952Z",
+                                "updateDate": "2019-07-25T07:26:56.317Z",
                                 "createDate": "2019-06-11T19:52:12.952Z",
-                                "updateBy": "UNKNOWN",
+                                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                                 "createBy": "UNKNOWN"
                             },
                             "allowFulfillmentWithNoStock": false,
@@ -3687,9 +3687,9 @@
                             "tags": [],
                             "attributes": [],
                             "auditInfo": {
-                                "updateDate": "2019-06-11T19:20:56.366Z",
+                                "updateDate": "2019-07-25T08:59:41.565Z",
                                 "createDate": "2019-06-11T19:20:56.366Z",
-                                "updateBy": "UNKNOWN",
+                                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                                 "createBy": "UNKNOWN"
                             },
                             "allowFulfillmentWithNoStock": false,
@@ -3739,13 +3739,27 @@
                                 }
                             ],
                             "regularHours": {
-                                "sunday": {},
-                                "monday": {},
-                                "tuesday": {},
-                                "wednesday": {},
-                                "thursday": {},
-                                "friday": {},
-                                "saturday": {}
+                                "sunday": {
+                                    "label": "dsdf"
+                                },
+                                "monday": {
+                                    "label": "sdf"
+                                },
+                                "tuesday": {
+                                    "label": "sdfsdf"
+                                },
+                                "wednesday": {
+                                    "label": "sdf"
+                                },
+                                "thursday": {
+                                    "label": "sdfsdf"
+                                },
+                                "friday": {
+                                    "label": "sdf"
+                                },
+                                "saturday": {
+                                    "label": "sdfs"
+                                }
                             },
                             "shippingOriginContact": {
                                 "firstName": "Nancy",
@@ -3758,9 +3772,9 @@
                             "tags": [],
                             "attributes": [],
                             "auditInfo": {
-                                "updateDate": "2019-05-29T20:37:25.255Z",
+                                "updateDate": "2019-07-25T07:36:15.045Z",
                                 "createDate": "2019-05-29T20:37:25.255Z",
-                                "updateBy": "1",
+                                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                                 "createBy": "1"
                             },
                             "allowFulfillmentWithNoStock": false,
@@ -3829,9 +3843,9 @@
                             "tags": [],
                             "attributes": [],
                             "auditInfo": {
-                                "updateDate": "2019-06-11T18:03:09.039Z",
+                                "updateDate": "2019-07-25T07:51:14.320Z",
                                 "createDate": "2019-06-11T18:03:09.039Z",
-                                "updateBy": "UNKNOWN",
+                                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
                                 "createBy": "UNKNOWN"
                             },
                             "allowFulfillmentWithNoStock": false,

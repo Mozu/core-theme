@@ -123,6 +123,8 @@ export class Constants {
         locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
         getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
         getLocationGroupConfig : environment.appUrl + '/assets/json/location-group-configuration.json',
+        getCarrierSettings: environment.appUrl + '/assets/json/location-config-carrier-settings-read.json',
+        getAllCarrierRatesWithConfiguredInfo: environment.appUrl + '/assets/json/location-config-carrier-rates-with-configured.json',
         shippingMethods: '/assets/json/shipping-methods.json',
         auditLog: '/assets/json/audit-log.json',
         orderSearchResults: environment.appUrl + '/assets/json/orders-searchresult.json',
@@ -166,15 +168,16 @@ export class Constants {
     static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Canceled', label: 'Cancel'}];
     static LCCustomerPickupReminders = [ {data : 1, label: '1 days'}, {data: 2, label: '2 days'}, {data: 3, label: '3 days'},
                                         {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
-    static LCCarriers = [{ CarrierType: 'Fedex', CarrierTypeLabel: 'FedEx', IsEnabled: false},
-                         { CarrierType: 'UPS', CarrierTypeLabel: 'UPS', IsEnabled: false},
-                         { CarrierType: 'USPS', CarrierTypeLabel: 'USPS (Endicia)', IsEnabled: false},
-                         { CarrierType: 'CanadianPost', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
-    static LCDefaultCarrier = [{data: 'None', label: 'None'},
-                               {data: 'Fedex', label: 'FedEx'},
-                               {data: 'UPS', label: 'UPS'},
-                               {data: 'USPS', label: 'USPS (Endicia)'},
-                               {data: 'CanadianPost', label: 'Canada Post'}];
+    // static LCCarriers = [{ CarrierType: 'Fedex', CarrierTypeLabel: 'FedEx', IsEnabled: false},
+    //                      { CarrierType: 'UPS', CarrierTypeLabel: 'UPS', IsEnabled: false},
+    //                      { CarrierType: 'USPS', CarrierTypeLabel: 'USPS (Endicia)', IsEnabled: false},
+    //                      { CarrierType: 'CanadianPost', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
+    static LCDefaultCarrier = [{data: 'None', label: 'None'}
+                            //    {data: 'Fedex', label: 'FedEx'},
+                            //    {data: 'UPS', label: 'UPS'},
+                            //    {data: 'USPS', label: 'USPS (Endicia)'},
+                            //    {data: 'CanadianPost', label: 'Canada Post'}
+                            ];
     static LCPrintReturnLabel = [{data: true, label: 'Yes'}, {data: false, label: 'No'}];
     static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
     static LCUPSUSShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_EARLY_AM', label: 'UPS_NEXT_DAY_AIR_EARLY_AM'},
