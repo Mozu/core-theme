@@ -19,8 +19,7 @@ import { NotificationService } from '@global/services';
 import { environment } from '@env';
 import { ToggleGridColumnsComponent, Constants } from '@shared';
 import { OverlayPanel } from 'primeng/overlaypanel';
-
-fdescribe('QuotesListComponent', () => {
+describe('QuotesListComponent', () => {
   let component: QuotesListComponent;
   let fixture: ComponentFixture<QuotesListComponent>;
   let debugElement: DebugElement;
@@ -38,7 +37,37 @@ fdescribe('QuotesListComponent', () => {
       'siteId': 21127,
       'tenantId': 17194,
       'number': 1,
-      'items': [],
+      'items': [{
+        'id': '9ac9cd822c6843899d81aa47012134e5',
+        'fulfillmentMethod': 'Ship',
+        'lineId': 1,
+        'product': {
+          'options': [],
+          'properties': [],
+          'categories': [],
+          'price': {},
+          'bundledProducts': [],
+          'productCode': 'new-1002',
+          'name': 'New Product 2!',
+          'goodsType': 'Physical',
+          'isPackagedStandAlone': false,
+          'fulfillmentStatus': 'Pending'
+        },
+        'quantity': 2,
+        'subtotal': 1.0,
+        'extendedTotal': 0.0,
+        'discountTotal': 0.0,
+        'discountedTotal': 1.0,
+        'feeTotal': 0.0,
+        'total': 0.0,
+        'productDiscounts': [],
+        'shippingDiscounts': [],
+        'auditInfo': {
+          'createDate': '2019-05-08T12:00:29.912Z',
+          'updateBy': 'UNKNOWN',
+          'createBy': 'UNKNOWN'
+        }
+      }],
       'auditInfo': {
         'updateDate': '2019-03-31T19:52:25.091Z',
         'createDate': '2019-03-31T19:52:25.091Z',
@@ -78,23 +107,24 @@ fdescribe('QuotesListComponent', () => {
     { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true, sortable: false },
     { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false, sortable: false }
   ];
-  const dummyGridColumnHeader = [
-    { field: 'name', header: 'QUOTES.GridHeader.quoteName', checked: true, sortable: true },
-    { field: 'accountName', header: 'QUOTES.GridHeader.accountName', checked: true, sortable: false },
-    { field: 'accountUser', header: 'QUOTES.GridHeader.accountUser', checked: false, sortable: false },
-    { field: 'quoteNumber', header: 'QUOTES.GridHeader.quoteID', checked: false, sortable: true },
-    { field: 'auditInfo.createDate', header: 'QUOTES.GridHeader.createDate', checked: true, sortable: true },
-    { field: 'auditInfo.createBy', header: 'QUOTES.GridHeader.createdBy', checked: false, sortable: true },
-    { field: 'expirationDate', header: 'QUOTES.GridHeader.expirationDate', checked: true, sortable: true },
-    { field: 'status', header: 'QUOTES.GridHeader.status', checked: true, class: 'content-pill', sortable: true },
-    { field: 'submitDate', header: 'QUOTES.GridHeader.submitDate', checked: false, sortable: true },
-    { field: 'auditInfo.updateDate', header: 'QUOTES.GridHeader.updateDate', checked: false, sortable: true },
-    { field: 'numberOfProducts', header: 'QUOTES.GridHeader.numProducts', checked: false, sortable: false },
-    { field: 'totalQuantity', header: 'QUOTES.GridHeader.totalQty', checked: false, sortable: false },
-    { field: 'shippingTaxTotal', header: 'QUOTES.GridHeader.estimatedCharges', checked: true, sortable: false },
-    { field: 'total', header: 'QUOTES.GridHeader.orderTotal', checked: true, sortable: true },
-    { field: 'projectName', header: 'QUOTES.GridHeader.projectName', checked: true, sortable: true }
-  ];
+  const dummyGridColumns = {
+    'columnHeader':
+      [{ 'field': 'accountName', 'header': 'QUOTES.GridHeader.accountName', 'checked': true, 'sortable': false },
+      { 'field': 'name', 'header': 'QUOTES.GridHeader.quoteName', 'checked': true, 'sortable': true },
+      { 'field': 'accountUser', 'header': 'QUOTES.GridHeader.accountUser', 'checked': false, 'sortable': false },
+      { 'field': 'quoteNumber', 'header': 'QUOTES.GridHeader.quoteID', 'checked': false, 'sortable': true },
+      { 'field': 'auditInfo.createDate', 'header': 'QUOTES.GridHeader.createDate', 'checked': true, 'sortable': true },
+      { 'field': 'auditInfo.createBy', 'header': 'QUOTES.GridHeader.createdBy', 'checked': false, 'sortable': true },
+      { 'field': 'expirationDate', 'header': 'QUOTES.GridHeader.expirationDate', 'checked': true, 'sortable': true },
+      { 'field': 'status', 'header': 'QUOTES.GridHeader.status', 'checked': true, 'class': 'content-pill', 'sortable': true },
+      { 'field': 'submitDate', 'header': 'QUOTES.GridHeader.submitDate', 'checked': false, 'sortable': true },
+      { 'field': 'auditInfo.updateDate', 'header': 'QUOTES.GridHeader.updateDate', 'checked': false, 'sortable': true },
+      { 'field': 'numberOfProducts', 'header': 'QUOTES.GridHeader.numProducts', 'checked': false, 'sortable': false },
+      { 'field': 'totalQuantity', 'header': 'QUOTES.GridHeader.totalQty', 'checked': false, 'sortable': false },
+      { 'field': 'shippingTaxTotal', 'header': 'QUOTES.GridHeader.estimatedCharges', 'checked': true, 'sortable': false },
+      { 'field': 'total', 'header': 'QUOTES.GridHeader.orderTotal', 'checked': true, 'sortable': true },
+      { 'field': 'projectName', 'header': 'QUOTES.GridHeader.projectName', 'checked': true, 'sortable': true }]
+  };
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [TranslateModule.forRoot(),
@@ -153,12 +183,12 @@ fdescribe('QuotesListComponent', () => {
     expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : ngOnInit');
   });
   it('should load gridColumnHeader with quoteGridData if quoteGridData exist in localStorage', function () {
-    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(dummyGridColumnHeader));
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(dummyGridColumns));
     fixture.detectChanges();
-    console.log(component.gridColumnHeader, dummyGridColumnHeader)
-    expect(component.gridColumnHeader).toEqual(dummyGridColumnHeader);
+    expect(component.gridColumnHeader).toEqual(dummyGridColumns.columnHeader);
     localStorage.removeItem(Constants.localStorageKeys.quoteGridData);
   });
+
   it('should call OpenGridColumnOverlayPanel on ellipsis click', () => {
     const event = new MouseEvent('click');
     component.OpenGridColumnOverlayPanel(event);
@@ -220,16 +250,23 @@ fdescribe('QuotesListComponent', () => {
     });
   }));
   it('set selectedGridColumnHeader onColReorder', async(() => {
-    const newSelectedGridColumnHeaderEvent = { columns: dummyGridColumnHeader };
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(dummyGridColumns));
+    const newSelectedGridColumnHeaderEvent = { columns: dummyGridColumns.columnHeader };
+    fixture.detectChanges();
     component.onColReorder(newSelectedGridColumnHeaderEvent);
     const localStorageValue = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
-    expect(newSelectedGridColumnHeaderEvent.columns).toEqual(localStorageValue);
+    expect(newSelectedGridColumnHeaderEvent.columns).toEqual(localStorageValue.columnHeader);
+    localStorage.removeItem(Constants.localStorageKeys.quoteGridData);
   }));
+
   it('set selectedGridColumnHeader toggledGridColumn', async(() => {
-    const newSelectedGridColumnHeader = dummyGridColumnHeader;
+    localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(dummyGridColumns));
+    const newSelectedGridColumnHeader = dummyGridColumns.columnHeader;
+    fixture.detectChanges();
     component.toggledGridColumn(newSelectedGridColumnHeader);
     const localStorageValue = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
-    expect(newSelectedGridColumnHeader).toEqual(localStorageValue);
+    expect(newSelectedGridColumnHeader).toEqual(localStorageValue.columnHeader);
+    localStorage.removeItem(Constants.localStorageKeys.quoteGridData);
   }));
   it('should call loadQuoteLazy on onLazyLoad event (sortOrder: ASC)', async(() => {
     const spy = spyOn(component, 'populateQuoteGrid');
@@ -263,6 +300,22 @@ fdescribe('QuotesListComponent', () => {
       expect(dummyRouter.navigate).toHaveBeenCalledWith(['/' + Constants.uiRoutes.quotesEdit + '/' + component.model.selectedQuote.id]);
     });
   }));
+  
+  it('valid transformValue should return from getQuoteGridData()', () => {
+    const col = { field: 'totalQuantity' };
+    fixture.detectChanges();
+    const req = httpMock.expectOne(environment.appUrl + `/assets/json/quote-list.json`);
+    expect(req.request.method).toBe('GET');
+    req.flush(dummyQuoteList);
+    httpMock.verify();
+    const transformValue = component.getQuoteGridData(component.model.items[0], col);
+    fixture.whenStable().then(() => {
+       const totalQty = component.model.items[0].items.reduce((sum, item) => sum + item.quantity, 0);
+       fixture.detectChanges();
+       expect(transformValue).toBe(totalQty);
+    });
+  });
+
   it('should call service to get success response from mock http json (quote-list)', () => {
     fixture.detectChanges();
     const req = httpMock.expectOne(environment.appUrl + `/assets/json/quote-list.json`);
@@ -281,20 +334,5 @@ fdescribe('QuotesListComponent', () => {
     fixture.detectChanges();
     expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
   });
-  // it('valid transformValue should return', () => {
-  //   const col = { field: 'totalQuantity' };
-  //   fixture.detectChanges();
-  //   const req = httpMock.expectOne(environment.appUrl + `/assets/json/quote-list.json`);
-  //   expect(req.request.method).toBe('GET');
-  //   req.flush(dummyQuoteList);
-  //   httpMock.verify();
-  //   fixture.whenStable().then(() => {
-  //     console.log('test-model', component.model.items);
-  //     // component.model.items.reduce((sum, item) => sum + item.quantity, 0);
-  //     const transformValue = component.getQuoteGridData(component.model.items[0], col);
-  //     fixture.detectChanges();
-  //     expect(transformValue).toBe(4);
-  //   });
-  // });
-});
 
+});

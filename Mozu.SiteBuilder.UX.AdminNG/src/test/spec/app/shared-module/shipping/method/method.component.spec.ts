@@ -93,7 +93,7 @@ describe('ShippingMethodComponent', () => {
     //   }
     // };
 
-    // const req = httpMock.expectOne('/assets/json/user-data.json');
+    // const req = httpMock.expectOne(environment.appUrl + `/assets/json/user-data.json`);
     // expect(req.request.method).toBe('GET');
     // req.flush(respData);
     // httpMock.verify();
