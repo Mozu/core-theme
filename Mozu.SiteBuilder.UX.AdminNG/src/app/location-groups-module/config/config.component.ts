@@ -46,8 +46,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
 
-        this._spinner.start();
-
         this.model = new LocationGroupConfigModel();
         this.model.subscriptions = [];
         this.model.sitesLst = [];
@@ -239,7 +237,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if ( result) {
             const carrierSettingsModel: CarrierSettingsModel[] = <CarrierSettingsModel[]>result;
             this.model.LCCarriers = [];
-            this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
+            this.model.LCDefaultCarrier  = [...Constants.LCDefaultCarrier];
+            // this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
             carrierSettingsModel.map((value, index) => {
                 // Filter out custom carrier from the returned list
                 if (value.id !== 'custom') {
