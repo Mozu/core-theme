@@ -67,7 +67,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
 
     initComponent: function () {
         var me = this;
-
+        
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -470,8 +470,8 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                         available: json.candidateSuggestions[0].inventory[0].available,
                         listeners: {
                             saveSuccess: {
-                                fn: function (json) {
-                                    //me.fireEvent('orderCancelled', json);
+                                fn: function (json) { 
+                                    me.fireEvent('shipmentReassign');
                                 },
                                 //scope: me
                             }
@@ -686,6 +686,7 @@ Ext.define('Taco.view.order.widget.ShippingPackagesGrid', {
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
                     }
+                    Taco.app.fireEvent('setmessage', "Item " + " updated successfully", 'success');
                     me.fireEvent('shipmentReassign');
                     // close the dialog
 

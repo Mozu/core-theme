@@ -30,6 +30,8 @@
        
         var me = this;
         var itemsPerPage = 2;
+        var selectedTab;
+        this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'ItemInventoryStore',
             autoLoad: false,
@@ -105,7 +107,17 @@
                         xtype: 'textfield',
                         cls: 'x-grid-checkheader-editor',
                         inputValue: true,
-                        uncheckedValue: false
+                        uncheckedValue: false,
+                        minValue: 1,
+                        maxValue: me.selectedItem.quantity,
+                        listeners: {
+                            change: {
+                                scope: this,
+                                fn: function (field, value) { 
+                                    me.validateQuantity(value);
+                                }
+                            }
+                        }
                     }
                 },
             ],
@@ -132,6 +144,10 @@
                 selectionchange: function () {
                 },
                 select: function () {
+                    //me.cellEditing.startEditByPosition({
+                    //    row: 1,
+                    //    column: 5
+                    //});
                 },
                 deselect: function () {
                 },
@@ -159,6 +175,7 @@
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: me.record.getLocations(),
+            itemId: 'allLocationsGrid',
             //store: Ext.data.StoreManager.lookup('allLocationsStore'),
             columns: [
                 {
@@ -179,6 +196,16 @@
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
             height: 500,
+            listeners: {
+                beforetabchange: function (tabs, newTab, oldTab) {
+                    if (newTab.itemId == 'allLocationsGrid') {
+                        me.selectedTab = 'allLocationsGrid';
+                    }
+                    else if (newTab.itemId == 'inventoryGrid') {
+                        me.selectedTab = 'inventoryGrid';
+                    }
+                }
+            },
             renderTo: Ext.getBody(),
             items: [
                 inventorygrid,
@@ -209,7 +236,9 @@
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
                     }
+                    Taco.app.fireEvent('setmessage', "Item " +  payloadData.shipmentItems[0].name + " Successfully Reassigned", 'success');
                     me.saveSuccess(json);
+                    me.close();
                     // close the dialog
 
                 },
@@ -227,36 +256,53 @@
 
     getPayloadDataItemInventory: function () {
         var me = this;
-        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0]
+            : Ext.ComponentQuery.query('#allLocationsGrid')[0]; 
         var item = grid.getSelectionModel().getSelection();
         var selectedLocation = item[0].data;
-        if (selectedLocation) {
-            return {
-                shipmentNumber: me.shipmentRecord.number,
-                shipmentItems: [{
-                    lineId: me.selectedItem.lineId,
-                    name: me.selectedItem.name,
-                    productCode: me.selectedItem.productCode,
-                    quantity: selectedLocation.reassignQty,
-                    imageUrl: me.selectedItem.imageUrl,
-                    retailPrice: me.selectedItem.actualPrice,
-                    optionAttributeFQN: me.selectedItem.optionAttributeFQN,
-                    unitPrice: me.selectedItem.unitPrice,
-                    variationProductCode: me.selectedItem.variationProductCode
-                }]
-            };
-        }
+            if (selectedLocation) {
+                return {
+                    shipmentNumber: me.shipmentRecord.number,
+                    shipmentItems: [{
+                        lineId: me.selectedItem.lineId,
+                        name: me.selectedItem.name,
+                        productCode: me.selectedItem.productCode,
+                        locationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : item[0].raw.code,
+                        quantity: selectedLocation.reassignQty,
+                        imageUrl: me.selectedItem.imageUrl,
+                        retailPrice: me.selectedItem.actualPrice,
+                        optionAttributeFQN: me.selectedItem.optionAttributeFQN,
+                        unitPrice: me.selectedItem.unitPrice,
+                        variationProductCode: me.selectedItem.variationProductCode
+                    }]
+                };
+            }
     },
 
     validateModal: function () {
         var me = this;
-        var grid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+        var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0]
+            : Ext.ComponentQuery.query('#allLocationsGrid')[0];
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
-        if (selectedItem) {
+        if (grid.itemId == 'allLocationsGrid') {
+            if (selectedItem.name || selectedItem.locationName) {
+                return true;
+            }
+        }
+        else if (grid.itemId == 'inventoryGrid' && selectedItem) {
             if (selectedItem.reassignQty > 0) {
                 return true;
             }
+        }
+
+        return false;
+       
+    },
+
+    validateQuantity: function (quantity) {
+        var me = this;
+        if (quantity > me.selectedItem.quantity) {
             return false;
         }
     },

@@ -88,7 +88,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                         var filteredInventory;
                         shipment.items.forEach(function (element) {
                             filteredInventory = inventory.filter(function (obj) {
-                                return (obj.partNumber === element.productCode);
+                                return (obj.partNumber === element.partNumber);
                             });
                             switch (type) {
                                 case "":
@@ -257,9 +257,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                                     Taco.app.fireEvent('setmessage', json.response, 'error');
                                     return;
                                 }
+                                Taco.app.fireEvent('setmessage', "Shipment " + payloadData.ShipmentNumber + " successfully reassigned", 'success');
                                 me.saveSuccess(json);
                                 // close the dialog
-                                
+                                me.close();
                             },
                             failure: function (response) {
                                 me.setLoading(false, me.body);

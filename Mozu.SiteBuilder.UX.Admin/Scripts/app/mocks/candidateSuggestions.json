@@ -1,8 +1,8 @@
 ﻿{
   "candidateSuggestions": [
     {
-      "locationCode": "SAN_DIEGO_WH",
-      "locationName": "Kibo San Diego Warehouse",
+      "locationCode": "BCON",
+      "locationName": "Kibo San Diego Warehousee",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -19,15 +19,15 @@
       "directShip": true,
       "inventory": [
         {
-          "partNumber": "das-4-pro-blue",
-          "available": 0,
-          "upc": "das-4-pro-blue",
-          "sku": "das-4-pro-blue"
+          "partNumber": "MS-BTL-002",
+          "available": 20,
+          "upc": "MS-BTL-002",
+          "sku": "MS-BTL-002"
         }
       ]
     },
     {
-      "locationCode": "SAN_DIEGO_WH",
+      "locationCode": "BCON",
       "locationName": "Kibo Los Angeles Warehouse",
       "addressLine1": null,
       "addressLine2": null,
@@ -45,15 +45,15 @@
       "directShip": true,
       "inventory": [
         {
-          "partNumber": "RedSpatula",
-          "available": 0, 
+          "partNumber": "MS-BTL-002",
+          "available": 25,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
       ]
     },
     {
-      "locationCode": "SAN_DIEGO_WH",
+      "locationCode": "BCON",
       "locationName": "Kibo San Diego Warehouse",
       "addressLine1": null,
       "addressLine2": null,
@@ -71,15 +71,15 @@
       "directShip": true,
       "inventory": [
         {
-          "partNumber": "RedSpatula",
-          "available": 0,
+          "partNumber": "MS-BTL-002",
+          "available": 25,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
       ]
     },
     {
-      "locationCode": "SAN_DIEGO_WH",
+      "locationCode": "BCON",
       "locationName": "Kibo San Diego Warehouse",
       "addressLine1": null,
       "addressLine2": null,
@@ -97,15 +97,15 @@
       "directShip": true,
       "inventory": [
         {
-          "partNumber": "RedSpatula",
-          "available": 9,
+          "partNumber": "MS-BTL-002",
+          "available": 25,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         }
       ]
     },
     {
-      "locationCode": "SAN_DIEGO_WH",
+      "locationCode": "BCON",
       "locationName": "Kibo San Diego Warehouse",
       "addressLine1": null,
       "addressLine2": null,
@@ -123,14 +123,14 @@
       "directShip": true,
       "inventory": [
         {
-          "partNumber": "RedSpatula",
-          "available": 20,
+          "partNumber": "MS-BTL-002",
+          "available": 25,
           "upc": "RedSpatula",
           "sku": "RedSpatula"
         },
         {
-          "partNumber": "das-4-pro-blue",
-          "available": 20,
+          "partNumber": "MS-BTL-002",
+          "available": 25,
           "upc": "das-4-pro-blue",
           "sku": "das-4-pro-blue"
         }
