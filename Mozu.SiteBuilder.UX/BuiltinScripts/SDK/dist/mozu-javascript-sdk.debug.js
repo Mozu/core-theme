@@ -1,5 +1,5 @@
 /*! 
- * Mozu JavaScript SDK - v0.3.0 - 2019-01-29
+ * Mozu JavaScript SDK - v0.3.0 - 2019-08-05
  *
  * Copyright (c) 2019 Volusion, Inc.
  *
@@ -4594,7 +4594,7 @@ module.exports=
   "b2baccount": {
     "get": {
       "verb": "GET",
-      "template": "{+b2BAccountService}/{id}"
+      "template": "{+b2BAccountService}{id}"
     },
     "create": {
       "verb": "POST",
@@ -4604,31 +4604,31 @@ module.exports=
     "update": {
       "verb": "PUT",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{id}"
+      "template": "{+b2BAccountService}{id}"
     },
     "get-users": {
-      "template": "{+b2BAccountService}/{id}/users{?_*}",
+      "template": "{+b2BAccountService}{id}/users{?_*}",
       "returnType": "b2busers"
     },
     "add-user": {
       "verb": "POST",
-      "template": "{+b2BAccountService}/{id}/user",
+      "template": "{+b2BAccountService}{id}/user",
       "returnType": "b2buser"
     },
     "remove-user": {
       "verb": "PUT",
-      "template": "{+b2BAccountService}/{id}/user/{userId}/remove",
+      "template": "{+b2BAccountService}{id}/user/{userId}/remove",
       "shortcutParam": "userId"
     },
     "update-user": {
       "verb": "PUT",
-      "template": "{+b2BAccountService}/{id}/user/{userId}",
+      "template": "{+b2BAccountService}{id}/user/{userId}",
       "shortcutParam": "userId",
       "returnType": "b2buser"
     }
   },
   "b2baccounts": {
-    "template": "{+b2BAccountService}/{?_*}",
+    "template": "{+b2BAccountService}{?_*}",
     "defaultParams": {
       "startIndex": 0,
       "pageSize": 20
@@ -4638,41 +4638,41 @@ module.exports=
   "b2buser": {
     "get": {
       "verb": "GET",
-      "template": "{+b2BAccountService}/{accountId}/user?filter=id eq {id}",
+      "template": "{+b2BAccountService}{accountId}/user?filter=id eq {id}",
       "shortcutParam": "id"
     },
     "create": {
       "verb": "POST",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{accountId}/user"
+      "template": "{+b2BAccountService}{accountId}/user"
     },
     "remove": {
       "verb": "PUT",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{accountId}/user/{id}/remove"
+      "template": "{+b2BAccountService}{accountId}/user/{id}/remove"
     },
     "update": {
       "verb": "PUT",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{accountId}/user/{id}"
+      "template": "{+b2BAccountService}{accountId}/user/{id}"
     },
     "get-user-roles": {
       "verb": "GET",
-      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles"
+      "template": "{+b2BAccountService}{accountId}/user/{id}/roles"
     },
     "add-user-role": {
       "verb": "POST",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles/{roleId}"
+      "template": "{+b2BAccountService}{accountId}/user/{id}/roles/{roleId}"
     },
     "remove-user-role": {
       "verb": "DELETE",
       "includeSelf": true,
-      "template": "{+b2BAccountService}/{accountId}/user/{id}/roles/{roleId}"
+      "template": "{+b2BAccountService}{accountId}/user/{id}/roles/{roleId}"
     }
   },
   "b2busers": {
-    "template": "{+b2BAccountService}/{accountId}/users{?startIndex,sortBy,pageSize,filter}",
+    "template": "{+b2BAccountService}{accountId}/users{?startIndex,sortBy,pageSize,filter}",
     "defaultParams": {
       "startIndex": 0,
       "pageSize": 20
