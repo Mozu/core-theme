@@ -357,85 +357,16 @@
     ],
     "refunds": [],
     "packages": [],
-    "shipments": [
-      {
-        "number": 728,
-        "orderId": "0db55d5c39f053392c8602470000432c",
-        "orderNumber": 132,
-        "currencyCode": "USD",
-        "shipmentType": "STH",
-        "shippingMethodCode": "fedex_FEDEX_2_DAY",
-        "locationCode": "atx-whse",
-        "shipmentStatus": "ready",
-        "signatureRequired": true,
-        "changeMessages": [
-          {
-            "id": "5d36b30c449bca0001a2bf44",
-            "userId": "12345",
-            "subject": "shipmentStatus",
-            "message": "'shipmentStatus' changed from 'READY' to 'FULFILLED'",
-            "oldValue": "READY",
-            "newValue": "FULFILLED",
-            "amount": 0
-          }
-        ],
-        "packages": [],
-        "items": [
-          {
-            "lineId": "1",
-            "productCode": "cap-troubled-minds-set",
-            "optionAttributeFQN": "",
-            "isTaxable": false,
-            "quantity": 1,
-            "unitPrice": 0,
-            "actualPrice": 0,
-            "itemDiscount": 0,
-            "lineItemCost": 0,
-            "itemTax": 0,
-            "shipping": 0,
-            "shippingDiscount": 0,
-            "shippingTax": 0,
-            "handling": 0,
-            "handlingDiscount": 0,
-            "handlingTax": 0,
-            "duty": 0,
-            "weight": 0
-          }
-        ],
-        "canceledItems": [],
-        "auditInfo": {
-          "updateDate": "2019-07-23T07:11:09.611Z",
-          "createDate": "2019-07-19T09:23:29.294Z"
-        },
-        "shipmentAdjustment": 0,
-        "lineItemSubtotal": 0,
-        "lineItemTaxAdjustment": 0,
-        "lineItemTaxTotal": 0,
-        "lineItemTotal": 0,
-        "shippingAdjustment": 0,
-        "shippingSubtotal": 0,
-        "shippingTaxAdjustment": 0,
-        "shippingTaxTotal": 0,
-        "shippingTotal": 0,
-        "handlingAdjustment": 0,
-        "handlingSubtotal": 0,
-        "handlingTaxAdjustment": 0,
-        "handlingTaxTotal": 0,
-        "handlingTotal": 0,
-        "dutyAdjustment": 0,
-        "dutyTotal": 0,
-        "total": 0,
-        "cost": 28.01
-      },
+    "shipments": [      
       {
         "number": 713,
         "orderId": "0db55d5c39f053392c8602470000432c",
         "orderNumber": 132,
         "currencyCode": "USD",
-        "shipmentType": "STH",
+        "shipmentType": "BOPIS",
         "shippingMethodCode": "fedex_FEDEX_2_DAY",
-        "locationCode": "atx-whse",
-        "shipmentStatus": "CANCELED",
+        "locationCode": "BCON",
+        "shipmentStatus": "READY",
         "signatureRequired": true,
         "changeMessages": [
           {
@@ -453,9 +384,6 @@
         ],
         "packages": [],
         "items": [
-          
-        ],
-        "canceledItems": [
           {
             "lineId": "1",
             "productCode": "cap-troubled-minds-set",
@@ -481,6 +409,9 @@
             "cancelledBy": "Adam"
 
           }
+        ],
+        "canceledItems": [
+          
         ],
         "auditInfo": {
           "updateDate": "2019-07-22T15:09:53.836Z",

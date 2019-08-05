@@ -170,7 +170,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             Ext.getCmp(me.masterTable.id).destroy();
 
         me.masterTable = Ext.create("Ext.Component", {
-            minHeight: 380,
+            minHeight: 200,
             width: 700,
             layout: {
                 type: 'hbox',
@@ -301,13 +301,16 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             this.totalsContainer.items.items[0].items.get('saveShipmentTotals').hide();
             this.totalsContainer.items.items[0].items.get('cancelShipmentTotals').hide();
             this.totalsContainer.items.items[0].items.get('editShipmentTotals').show();
+            this.masterTable.setHeight(200);
         }
         else {
             this.isEditable = true;
             this.totalsContainer.items.items[0].items.get('saveShipmentTotals').show();
             this.totalsContainer.items.items[0].items.get('cancelShipmentTotals').show();
             this.totalsContainer.items.items[0].items.get('editShipmentTotals').hide();
+            this.masterTable.setHeight(380);
         }
+        this.doLayout();
         this.getMasterTable();
     },
 
