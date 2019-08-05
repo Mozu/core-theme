@@ -177,7 +177,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                         me.setLoading(true, me.body);
                         var order = me.record;
                         var payloadData = me.getCancelItemQuantityPayload();
-                        console.log(JSON.stringify(payloadData));
                         order.cancelShipmentItems({
                             jsonData: payloadData,
                             success: function (response) {
@@ -187,7 +186,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     Taco.app.fireEvent('setmessage', 'Error while canceling shipment item', 'error');
                                     return;
                                 }
-                                me.saveSuccess(json);
+                                me.saveSuccess();
+                                me.close();
                             },
                             failure: function (response) {
                                 me.setLoading(false, me.body);

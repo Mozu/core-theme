@@ -31,6 +31,9 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
             listeners: {
                 shipmentReassign: function () {
                     me.fireEvent('shipmentRefresh');
+                },
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
                 }
             }
         });

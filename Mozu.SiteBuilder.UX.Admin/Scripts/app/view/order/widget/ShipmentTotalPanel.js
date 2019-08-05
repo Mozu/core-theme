@@ -70,11 +70,17 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                         align: 'stretch'
                     },
                     items: [
+                        {
+                            html: '<h3>' + (this.shipmentRecord.shipmentStatus.toLowerCase() == 'bopis' ? 'Store Pickup Total' : 'Shipment Total') + '</h3>',
+                            flex: 2,
+                            margin: '8 400 0 0'
+                        },
                         Ext.widget('button', {
                             itemId: 'cancelShipmentTotals',
                             ui: 'action',
                             scale: 'medium',
                             text: 'Cancel',
+                            flex: 1,
                             hidden: !me.isEditable,
                             handler: function (evt) {
                                 me.toggleEdit();
@@ -85,6 +91,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                             ui: 'action-primary',
                             scale: 'medium',
                             text: 'Save',
+                            flex: 1,
                             hidden: !me.isEditable,
                             margin: {
                                 left: 10,
@@ -99,6 +106,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                             ui: 'action',
                             scale: 'medium',
                             text: 'Edit',
+                            flex: 1,
                             hidden: me.isEditable,
                             margin: {
                                 left: 10,
@@ -246,30 +254,36 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     setCalculatedSummaryValues: function (elementId, summarycls, originalValue, isPercentage, subElementId, defaultValue) {
-        
         var el = Ext.get(elementId);
         var calcValue = 0;
         if (el) {
             var enteredValue = parseFloat(Ext.get(elementId).getValue());
-            if (enteredValue) {
-                if (isPercentage)
-                    calcValue = (originalValue * enteredValue) / 100;
-                else
-                    calcValue = enteredValue;
+            if (this.validateNumber(enteredValue)) {
+                if (enteredValue) {
+                    if (isPercentage)
+                        calcValue = (originalValue * enteredValue) / 100;
+                    else
+                        calcValue = enteredValue;
 
-                this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(calcValue);
-            }
-            else {
-                this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(defaultValue || originalValue);
-            }
+                    this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(calcValue);
+                }
+                else {
+                    this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(defaultValue || originalValue);
+                }
 
-            //clear sub element
-            if (subElementId && calcValue)
-                if (isPercentage)
-                    Ext.get(subElementId).dom.value = calcValue.toFixed(2);
-                else if (originalValue!=0)
-                    Ext.get(subElementId).dom.value = ((calcValue / originalValue) * 100).toFixed(2);
+                //clear sub element
+                if (subElementId && calcValue)
+                    if (isPercentage)
+                        Ext.get(subElementId).dom.value = calcValue.toFixed(2);
+                    else if (originalValue != 0)
+                        Ext.get(subElementId).dom.value = ((calcValue / originalValue) * 100).toFixed(2);
+            }
         }
+    },
+
+    validateNumber: function (value) {
+        var validNumber = new RegExp(/^\d*\.?\d*$/);
+        return validNumber.test(value)
     },
 
     initToggleButton: function (selector, handler) {
@@ -410,7 +424,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         var me = this;
         me.setLoading(true, this.body);
         var payloadData = me.getShippingAdjustmentsPayload();
-        
+
         this.record.updateShipmentAdjustments({
             jsonData: payloadData,
             success: function (response) {

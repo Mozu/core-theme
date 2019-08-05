@@ -578,7 +578,7 @@
                         selectedItem: item[0].data,
                         listeners: {
                             saveSuccess: {
-                                fn: function (json) {
+                                fn: function () {
                                     me.fireEvent('shipmentRefresh');
                                 },
                                 //scope: me

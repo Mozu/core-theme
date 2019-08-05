@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
 
     initComponent: function () {
 
-        this.cls += ' shipmentform-cancellationtab';
+        this.cls: 'shipping-packages-grid',
         this.initUI();
         this.callParent(arguments);
     },
