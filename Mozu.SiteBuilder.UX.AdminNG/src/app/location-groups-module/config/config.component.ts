@@ -401,15 +401,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             unitedStatesUpsSettings = lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings;
         }
 
-        let internationalUpsSettings: InternationalUpsSettingsModel;
-        if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.internationalUpsSettings) {
-            internationalUpsSettings = lgConfigModel.shippingSettingsForUps.internationalUpsSettings;
-        }
+        // let internationalUpsSettings: InternationalUpsSettingsModel;
+        // if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.internationalUpsSettings) {
+        //     internationalUpsSettings = lgConfigModel.shippingSettingsForUps.internationalUpsSettings;
+        // }
 
-        let canadaUpsSettings: CanadaUpsSettingsModel;
-        if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.canadaUpsSettings) {
-            canadaUpsSettings = lgConfigModel.shippingSettingsForUps.canadaUpsSettings;
-        }
+        // let canadaUpsSettings: CanadaUpsSettingsModel;
+        // if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.canadaUpsSettings) {
+        //     canadaUpsSettings = lgConfigModel.shippingSettingsForUps.canadaUpsSettings;
+        // }
 
         let shippingSettingsForFedEx: ShippingSettingsForFedEx;
         if ( lgConfigModel && lgConfigModel.shippingSettingsForFedEx ) {
