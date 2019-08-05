@@ -22,6 +22,7 @@ Mozu.Reference.Contracts
 Mozu.ShippingAdmin.Contracts
 Mozu.SiteSettings.General.Contracts
 Mozu.SiteSettings.Order.Contracts
+Mozu.SiteSettings.Ship.Contracts
 protobuf-net
 Mozu.ScheduledEvent.Contracts
 OctoPack
