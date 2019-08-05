@@ -134,10 +134,6 @@
     <!--<Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>-->
-    <Reference Include="Mozu.SiteSettings.Shipping.Contracts, Version=1.1930.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Bin\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
@@ -3703,6 +3699,17 @@
       <ItemGroup>
         <Reference Include="Mozu.SiteSettings.Order.Contracts">
           <HintPath>..\packages\Mozu.SiteSettings.Order.Contracts\lib\net45\Mozu.SiteSettings.Order.Contracts.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.6.1'">
+      <ItemGroup>
+        <Reference Include="Mozu.SiteSettings.Shipping.Contracts">
+          <HintPath>..\packages\Mozu.SiteSettings.Ship.Contracts\lib\net45\Mozu.SiteSettings.Shipping.Contracts.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
