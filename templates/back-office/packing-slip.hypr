@@ -83,7 +83,7 @@
                         {% if not forloop.last %}<br/>{% endif %}
                 {% endfor %}
             </td>
-            <td>{{ model.shippingMethodName }}</td>
+            <td>{{ model.shippingMethodCode }}</td>
         </tr></tbody>
     </table>
     <table class="grid">
@@ -100,13 +100,13 @@
                     {{ item.productCode }}
                 </td>
                 <td>
-                    <div class="product-name">{{ item.productname }}</div>
+                    <div class="product-name">{{ item.name }}</div>
                 </td>
                 <td>
                     {{ item.quantity }}
                 </td>
                 <td>
-                    {{ item.adjustedweight.value }} {{ item.adjustedweight.unit }}
+                    {{ item.weight }} {{ item.weightUnit }}
                 </td>
             </tr>
         {% endfor %}
