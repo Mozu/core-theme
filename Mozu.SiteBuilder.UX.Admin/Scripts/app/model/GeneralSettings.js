@@ -54,21 +54,6 @@ Ext.define('Taco.model.GeneralSettings', {
         { "name": "isRequiredLoginForLiveEnabled", "type": "boolean", "useNull": true },
         { "name": "isRequiredLoginForStagingEnabled", "type": "boolean", "useNull": true }, 
 
-        //Site Setting
-        { "name": "isAutoCaptureEnabled", "type": "boolean", "useNull": true }, 
-        { "name": "isTaxEnabled", "type": "boolean", "useNull": true },
-        { "name": "isShippingEnabled", "type": "boolean", "useNull": true },
-        { "name": "isforceAutoCaptureEnabled", "type": "boolean", "useNull": true },
-        { "name": "jobInterval", "type": "integer", "useNull": true },
-        { "name": "numberOfDays", "type": "integer", "useNull": true },
-        { "name": "isCreateReturnLabelOnfulfilment", "type": "boolean", "useNull": true },
-        { "name": "paymentRanking", "type": "string", "useNull": true },
-        { "name": "defaultReturnProcessingFeeProps", "type": "integer", "useNull": true },
-        { "name": "backorderdatesetting", "type": "integer", "useNull": true },
-        { "name": "returnShippingAddress", "type": "string", "useNull": true },
-        { "name": "BpmSettingContainerId", "type": "string", "useNull": true },
-        { "name": "BpmSettingProcessId", "type": "string", "useNull": true },
-
         // new fields not in Json
         { "name": "channelId", "type": "string" },
         { "name": "catalogId", 

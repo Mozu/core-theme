@@ -84,6 +84,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 .UsingAssembly(Assembly.Load("Mozu.MZDB.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.SiteSettings.Order.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.SiteSettings.General.Contracts"))
+                .UsingAssembly(Assembly.Load("Mozu.SiteSettings.Shipping.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.Customer.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.Location.Contracts"))
                 .UsingAssembly(Assembly.Load("Mozu.CommerceRuntime.Contracts"))
@@ -92,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
                 .UsingAssembly(Assembly.Load("Mozu.ProductRuntime.Contracts"))
 				.UsingAssembly(Assembly.Load("Mozu.Event.Contracts"))
 				.UsingAssembly(Assembly.Load("Mozu.SiteBuilder.Mvc")) //typeof preferred
-                .UsingAssembly(Assembly.GetExecutingAssembly())              
+                .UsingAssembly(Assembly.GetExecutingAssembly())      
                 ;
 
 

@@ -81,7 +81,6 @@ namespace Mozu.SiteBuilder.Mvc.Models.ModelMapping
                 .ForMember(x => x.SupportedCards, opt => opt.ResolveUsing<SupportedCardsWithCountryCodeContextResolver>())
                 .ForMember(x => x.UseOverridePriceToCalculateDiscounts, opt => opt.ResolveUsing(x => x.OrderProcessingSettings.UseOverridePriceToCalculateDiscounts))
                 .ForMember(x => x.SupportedGiftCards, opt => opt.ResolveUsing<SupportedGiftCardsResolver>())
-                .ForMember(x => x.PaymentSettings, opt => opt.ResolveUsing(x => x.PaymentSettings))
                 ;
 
             CreateMap<Mozu.Reference.Contracts.TimeZone, UX.Models.Settings.TimeZone>()

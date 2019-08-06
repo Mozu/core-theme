@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
             if (!string.IsNullOrWhiteSpace(paymentProcessingFlowType))
                 orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
-         //   orderProcessingSettings.DefaultBackOrderDays = settingsToSave.DefaultBackOrderDays;
+    
             var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
 
 
