@@ -713,12 +713,12 @@
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
         return {
-            ShipmentNumber: me.shipmentRecord.number,
-            ItemId: selectedItem.lineId,
-            ShipmentItemAdjustment: {
-                LineId : selectedItem.lineId,
-                UnitPrice : selectedItem.unitPrice,
-                UnitTax : selectedItem.itemTax,
+            shipmentNumber: me.shipmentRecord.number,
+            itemId: selectedItem.lineId, //selectedItem.lineId,
+            shipmentItemAdjustment: {
+                lineId : selectedItem.lineId,
+                unitPrice : selectedItem.unitPrice,
+                unitTax : selectedItem.itemTax,
             }
         }
     },

@@ -2,7 +2,7 @@
   "candidateSuggestions": [
     {
       "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehousee",
+      "locationName": "Kibo San Diego Warehouse 1",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -28,7 +28,7 @@
     },
     {
       "locationCode": "BCON",
-      "locationName": "Kibo Los Angeles Warehouse",
+      "locationName": "Kibo Los Angeles Warehouse 2",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -54,7 +54,7 @@
     },
     {
       "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehouse",
+      "locationName": "Kibo San Diego Warehouse 3",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -80,7 +80,7 @@
     },
     {
       "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehouse",
+      "locationName": "Kibo San Diego Warehouse 4",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -106,7 +106,71 @@
     },
     {
       "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehouse",
+      "locationName": "Kibo San Diego Warehouse 5",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "MS-BTL-002",
+          "available": 25,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        },
+        {
+          "partNumber": "MS-BTL-002",
+          "available": 25,
+          "upc": "das-4-pro-blue",
+          "sku": "das-4-pro-blue"
+        }
+      ]
+    },
+    {
+      "locationCode": "BCON",
+      "locationName": "Kibo San Diego Warehouse 6",
+      "addressLine1": null,
+      "addressLine2": null,
+      "addressLine3": null,
+      "city": null,
+      "state": null,
+      "countryCode": "US",
+      "postalCode": "92028",
+      "distance": "0 mi",
+      "latitude": 32,
+      "longitude": -117,
+      "express": false,
+      "pickup": false,
+      "transferEnabled": true,
+      "directShip": true,
+      "inventory": [
+        {
+          "partNumber": "MS-BTL-002",
+          "available": 25,
+          "upc": "RedSpatula",
+          "sku": "RedSpatula"
+        },
+        {
+          "partNumber": "MS-BTL-002",
+          "available": 25,
+          "upc": "das-4-pro-blue",
+          "sku": "das-4-pro-blue"
+        }
+      ]
+    },
+    {
+      "locationCode": "BCON",
+      "locationName": "Kibo San Diego Warehouse 7",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
