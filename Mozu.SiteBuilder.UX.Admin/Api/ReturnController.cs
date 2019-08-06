@@ -47,6 +47,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ConcurrentDictionary<string, string> userCache = new ConcurrentDictionary<string, string>();
         private readonly ICARSApiWrapper _CARSApiWrapper;
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
+        private readonly ILocationGroupConfigurationWebApiClient _locationGroupWebApiClient;
+
 
         /// <summary>
         /// Public constructor.
@@ -55,7 +57,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
             IChannelWebApiClient channelWebApiClient,
             ICARSApiWrapper CARSApiWrapper,
-            ILocationAdminWebApiClient locationWebApiClient)
+            ILocationAdminWebApiClient locationWebApiClient,
+            ILocationGroupConfigurationWebApiClient locationGroupWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
@@ -64,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _channelWebApiClient = channelWebApiClient;
             _CARSApiWrapper = CARSApiWrapper;
             _locationWebApiClient = locationWebApiClient;
+            _locationGroupWebApiClient = locationGroupWebApiClient;
         }
 
         /// <summary>
@@ -579,10 +583,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new VaeValidationConflictException($"Location {returns.LocationCode} not found.");
             }
 
-            CARSModel.GenerateLabelRequest body = new CARSModel.GenerateLabelRequest();
-            body.Currency = returns.CurrencyCode;
+            CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location);
+            var serviceResponse = _CARSApiWrapper.GenerateLabelUsingPOST(request);
 
-            body.FromContact = new CARSModel.Contact()
+            return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
+        }
+
+        private CARSModel.GenerateLabelRequest CreateReturnShippingLabelRequest(DCr.Return returns, CommerceRuntime.Contracts.Orders.Order order, Location.Contracts.Location location)
+        {
+             //var defaultCarrier = _locationGroupWebApiClient.GetLocationGroupConfiguration(2);
+            CARSModel.GenerateLabelRequest request = new CARSModel.GenerateLabelRequest();
+            request.Currency = returns.CurrencyCode;
+            request.FromContact = new CARSModel.Contact()
             {
                 PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
                 Address = new List<string>() {
@@ -599,8 +611,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 CompanyName = order.FulfillmentInfo.FulfillmentContact?.CompanyOrOrganization,
                 Email = order.FulfillmentInfo.FulfillmentContact?.Email
             };
-
-            body.ToContact = new CARSModel.Contact()
+            request.ToContact = new CARSModel.Contact()
             {
                 PersonName = location.Name,
                 Address = new List<string>() {
@@ -613,34 +624,56 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 PostalCode = location.Address?.PostalOrZipCode,
                 City = location.Address?.CityOrTown,
                 CountryCode = location.Address?.CountryCode,
-                PhoneNumber = string.IsNullOrWhiteSpace(location.Phone) ? "55555555555" : location.Phone,
+                PhoneNumber = location.Phone,
                 Residential = location.Address?.AddressType?.Equals("Residential"),
-                StateCode = location.Address.StateOrProvince,
-                CompanyName = null,
-                Email = null
+                StateCode = location.Address.StateOrProvince.ToUpper()
             };
 
-            body.LocationCode = returns.LocationCode;
-            body.OrderID = returns.OriginalOrderId;
-            body.PackageHeight = 2;
-            body.PackageWidth = 6;
-            body.PackageLength = 12;
-            body.PackageWeight = 2;
-            body.Price = 20;
-            body.Carrier = "UPS";
-            body.PackagingType = "UPS_CUSTOMER_SUPPLIED_PACKAGE";
-            body.ServiceType = "UPS_GROUND";
-            body.LabelFormat = "LASER";
-            body.UnitType = "IMPERIAL";
-            body.ShipmentID = "1234";
-            body.ValidateAddress = true;
-            body.CustomerReferences = null;
-            body.Test = false;
+            request.LocationCode = returns.LocationCode;
+            request.OrderID = returns.OriginalOrderId;
 
-            var serviceResponse = _CARSApiWrapper.GenerateLabelUsingPOST(body);
+            request.Carrier = "UPS";
+            request.PackagingType = SetPackagingType(request.Carrier);
+            request.ServiceType = "UPS_GROUND";
+            request.LabelFormat = "LASER";
+            request.UnitType = "IMPERIAL";
+            request.ShipmentID = "1234";
+            request.ValidateAddress = true;
+            request.CustomerReferences = null;
+            request.Test = false;
 
-            return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
+            SetMeasurements(request, order, returns);
+            return request;
         }
 
+        public string SetPackagingType(string carrier)
+        {
+            var packagingTypes = string.Empty;
+            switch (carrier)
+            {
+                case "FEDEX":
+                    packagingTypes = "YOUR_PACKAGING";
+                    break;
+                case "UPS":
+                    packagingTypes = "UPS_CUSTOMER_SUPPLIED_PACKAGE";
+                    break;
+
+            }
+            return packagingTypes;
+        }
+
+        public void SetMeasurements(CARSModel.GenerateLabelRequest request, CommerceRuntime.Contracts.Orders.Order order, DCr.Return returns)
+        {
+            var measument = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
+            if (measument == null)
+            {
+                throw new VaeValidationConflictException($"Measurements can not be null.");
+            }
+            request.PackageHeight = measument.Height.Value ?? 0;
+            request.PackageWidth = measument.Width.Value ?? 0;
+            request.PackageLength = measument.Length.Value ?? 0;
+            request.PackageWeight = measument.Weight.Value ?? 0;
+            request.Price = returns.Items.Sum(a => a.Product?.Price?.Price ?? 0);
+        }
     }
 }
