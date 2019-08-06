@@ -447,6 +447,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class ShipmentItemAdjustmentArgs
         {
+            public string OrderId { get; set; }
             public int? ShipmentNumber { get; set; }
             public string ItemId { get; set; }
             public DCs.ShipmentItemAdjustment ShipmentItemAdjustment { get; set; }
@@ -454,7 +455,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPutRoute(UriTemplate = "shipment/UpdateShipmentItem")]
         public async Task<Response<DCs.Shipment>> UpdateShipmentItem(ShipmentItemAdjustmentArgs args)
         {
-            var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
+            var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.OrderId,args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
             return Single2(shipment);
         }
         
