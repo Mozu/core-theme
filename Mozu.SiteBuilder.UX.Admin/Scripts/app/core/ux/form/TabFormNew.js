@@ -11,7 +11,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
     // this is primarily here to support the tabs in the product navform;
     leftNavTopOffset: 0,
 
-    subPanelMinHeight: 240,
+    subPanelMinHeight: 100,
     
     isCollapsed: false,    
 

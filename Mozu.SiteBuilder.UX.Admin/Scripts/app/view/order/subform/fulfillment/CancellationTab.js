@@ -7,7 +7,7 @@ Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
 
     initComponent: function () {
 
-        this.cls: 'shipping-packages-grid',
+        this.cls = 'shipping-packages-grid',
         this.initUI();
         this.callParent(arguments);
     },
@@ -21,12 +21,17 @@ Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
             record: this.record,
             minHeight:300,
             margin: '10px 0 10px 0',
-            padding: '0 1px 0 0'
+            padding: '0 1px 0 0',
+            minHeight: me.calculateHeight()
         });
 
         this.items = [
             this.shippingCancellationGrid
         ];
+    },
+
+    calculateHeight: function () {
+        return this.shipmentRecord.items ? (50 + (50 * this.shipmentRecord.items.length)) : 50;
     },
 
     onDestroy: function () {
