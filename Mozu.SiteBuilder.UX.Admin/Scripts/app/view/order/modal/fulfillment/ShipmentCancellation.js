@@ -150,6 +150,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                                     me.fireEvent('saveFailure');
                                     return;
                                 }
+                                Taco.app.fireEvent('setmessage', "Shipment " + payloadData.shipmentNumber + " successfully Cancelled", 'success');
                                 me.fireEvent('shipmentCancelled');
                                 me.close();
                             },

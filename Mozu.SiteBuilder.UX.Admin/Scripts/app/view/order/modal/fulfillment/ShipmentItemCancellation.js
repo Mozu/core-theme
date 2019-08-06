@@ -131,9 +131,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
         return true;
     },
 
-
-    //sb.Append("  VariationProductCode: ").Append(VariationProductCode).Append("\n");
-
     getCancelItemQuantityPayload: function () {
 
         var me = this;
@@ -186,6 +183,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     Taco.app.fireEvent('setmessage', 'Error while canceling shipment item', 'error');
                                     return;
                                 }
+                                Taco.app.fireEvent('setmessage', "Item " + payloadData.canceledItems[0].name + " Successfully Cancelled", 'success');
                                 me.saveSuccess();
                                 me.close();
                             },
