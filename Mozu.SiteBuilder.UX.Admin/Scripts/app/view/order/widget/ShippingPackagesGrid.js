@@ -713,6 +713,7 @@
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
         return {
+            orderId: me.shipmentRecord.orderId, 
             shipmentNumber: me.shipmentRecord.number,
             itemId: selectedItem.lineId, //selectedItem.lineId,
             shipmentItemAdjustment: {
