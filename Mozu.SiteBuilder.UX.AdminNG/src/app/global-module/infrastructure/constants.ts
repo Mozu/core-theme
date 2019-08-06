@@ -50,4 +50,12 @@ export class Constants {
         apiContext: 'apiContext'
     };
 
+    static HttpHeadersParams = {
+        xVolTenant: 'x-vol-tenant',
+        xVolMasterCatlog: 'x-vol-master-catalog',
+        xVolCatalog: 'x-vol-catalog',
+        xVolSite: 'x-vol-site',
+        xVolLocale: 'x-vol-locale',
+        xVolCurrency: 'x-vol-currency'
+    };
 }

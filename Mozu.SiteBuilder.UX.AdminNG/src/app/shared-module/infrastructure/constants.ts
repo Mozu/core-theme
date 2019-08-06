@@ -168,60 +168,15 @@ export class Constants {
     static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Canceled', label: 'Cancel'}];
     static LCCustomerPickupReminders = [ {data : 1, label: '1 days'}, {data: 2, label: '2 days'}, {data: 3, label: '3 days'},
                                         {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
-    // static LCCarriers = [{ CarrierType: 'Fedex', CarrierTypeLabel: 'FedEx', IsEnabled: false},
-    //                      { CarrierType: 'UPS', CarrierTypeLabel: 'UPS', IsEnabled: false},
-    //                      { CarrierType: 'USPS', CarrierTypeLabel: 'USPS (Endicia)', IsEnabled: false},
-    //                      { CarrierType: 'CanadianPost', CarrierTypeLabel: 'Canada Post', IsEnabled: false}];
-    static LCDefaultCarrier = [{data: 'None', label: 'None'}
-                            //    {data: 'Fedex', label: 'FedEx'},
-                            //    {data: 'UPS', label: 'UPS'},
-                            //    {data: 'USPS', label: 'USPS (Endicia)'},
-                            //    {data: 'CanadianPost', label: 'Canada Post'}
-                            ];
+    static LCDefaultCarrier = [{data: 'None', label: 'None'}];
+    static LCCarriers = {
+        custom: 'custom',
+        usps: 'usps',
+        ups: 'ups',
+        fedex: 'fedex'
+    };
     static LCPrintReturnLabel = [{data: true, label: 'Yes'}, {data: false, label: 'No'}];
     static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
-    // static LCUPSUSShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_EARLY_AM', label: 'UPS_NEXT_DAY_AIR_EARLY_AM'},
-    //                                {data: 'UPS_NEXT_DAY_AIR_SAVER', label: 'UPS_NEXT_DAY_AIR_SAVER'},
-    //                                {data: 'UPS_NEXT_DAY_AIR', label: 'UPS_NEXT_DAY_AIR'},
-    //                                {data: 'UPS_2ND_DAY_AIR_AM', label: 'UPS_2ND_DAY_AIR_AM'},
-    //                                {data: 'UPS_2ND_DAY_AIR', label: 'UPS_2ND_DAY_AIR'},
-    //                                {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
-    //                                {data: 'UPS_GROUND', label: 'UPS_GROUND'},
-    //                                {data: 'UPS_SURE_POST_LESS_THAN_1_POUND', label: 'UPS_SURE_POST_LESS_THAN_1_POUND'},
-    //                                {data: 'UPS_SURE_POST_1_POUND_OR_GREATER', label: 'UPS_SURE_POST_1_POUND_OR_GREATER'}];
-
-    // static LCUPSInternationalShippingTypes = [{data: 'UPS_STANDARD', label: 'UPS_STANDARD'},
-    //                                           {data: 'UPS_EXPRESS', label: 'UPS_EXPRESS'},
-    //                                           {data: 'UPS_EXPRESS_PLUS', label: 'UPS_EXPRESS_PLUS'},
-    //                                           {data: 'UPS_EXPEDITED', label: 'UPS_EXPEDITED'},
-    //                                           {data: 'UPS_SAVER', label: 'UPS_SAVER'},
-    //                                           {data: 'UPS_ACCESS_POINT_ECONOMY', label: 'UPS_ACCESS_POINT_ECONOMY'}];
-
-    // static LCUPSCanadaShippingTypes = [{data: 'UPS_NEXT_DAY_AIR_SAVER', label: 'UPS_NEXT_DAY_AIR_SAVER'},
-    //                                           {data: 'UPS_2ND_DAY_AIR', label: 'UPS_2ND_DAY_AIR'},
-    //                                           {data: 'UPS_3_DAY_SELECT', label: 'UPS_3_DAY_SELECT'},
-    //                                           {data: 'UPS_STANDARD', label: 'UPS_STANDARD'}];
-
-    // static LCUSPSShippingTypes = [{data: 'PRIORITYEXPRESS', label: 'PRIORITYEXPRESS'},
-    //                                {data: 'FIRST', label: 'FIRST'},
-    //                                {data: 'LIBRARYMAIL', label: 'LIBRARYMAIL'},
-    //                                {data: 'MEDIAMAIL', label: 'MEDIAMAIL'},
-    //                                {data: 'STANDARDPOST', label: 'STANDARDPOST'},
-    //                                {data: 'PRIORITY', label: 'PRIORITY'},
-    //                               ];
-
-    // static LCFedExShippingType = [{data: 'FIRST_OVERNIGHT', label: 'FIRST_OVERNIGHT'},
-    //                               {data: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY', label: 'FIRST_OVERNIGHT_SATURDAY_DELIVERY'},
-    //                               {data: 'PRIORITY_OVERNIGHT', label: 'PRIORITY_OVERNIGHT'},
-    //                               {data: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY', label: 'PRIORITY_OVERNIGHT_SATURDAY_DELIVERY'},
-    //                               {data: 'STANDARD_OVERNIGHT', label: 'STANDARD_OVERNIGHT'},
-    //                               {data: 'FEDEX_2_DAY_AM', label: 'FEDEX_2_DAY_AM'},
-    //                               {data: 'FEDEX_2_DAY', label: 'FEDEX_2_DAY'},
-    //                               {data: 'FEDEX_2_DAY_SATURDAY_DELIVERY', label: 'FEDEX_2_DAY_SATURDAY_DELIVERY'},
-    //                               {data: 'FEDEX_EXPRESS_SAVER', label: 'FEDEX_EXPRESS_SAVER'},
-    //                               {data: 'FEDEX_GROUND', label: 'FEDEX_GROUND'},
-    //                               {data: 'GROUND_HOME_DELIVERY', label: 'GROUND_HOME_DELIVERY'},
-    //                               {data: 'SMART_POST', label: 'SMART_POST'}];
     static classess = {
         ellipsis: 'pi pi-ellipsis-v'
     };

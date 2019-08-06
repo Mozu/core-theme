@@ -15,11 +15,6 @@ import { ProgressButtonService } from '@shared/progress-button/progress-button.s
 import { HttpHeaders } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
 
-/**
- * Pending TASK
- * 1. Need to convert all functions into pure javascript functions.
- */
-
 @Component({
     selector: 'app-locationgroup-config',
     templateUrl: './config.component.html',
@@ -51,15 +46,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.sitesLst = [];
         this.model.LCCustomerPickupActions = Constants.LCCustomerPickupActions;
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
-        // this.model.LCCarriers = Constants.LCCarriers;
-        // this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
-        // this.model.LCUPSUSShippingTypes = Constants.LCUPSUSShippingTypes;
-        // this.model.LCUSPSShippingTypes = Constants.LCUSPSShippingTypes;
-        // this.model.LCUPSInternationalShippingTypes = Constants.LCUPSInternationalShippingTypes;
-        // this.model.LCUPSCanadaShippingTypes = Constants.LCUPSCanadaShippingTypes;
-        // this.model.LCFedExShippingType = Constants.LCFedExShippingType;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -77,21 +65,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             upsUSExpress2DayDefault:  ['', []],
             upsUSExpress3DayDefault:  ['', []],
             upsUSReturnLabelShippingTypes: ['', []],
-
-            // upsInternationalShippingTypes: new FormArray([]),
-            // upsInternationalStandardDefault: ['', []],
-            // upsInternationalExpress1DayDefault: ['', []],
-            // upsInternationalExpress2DayDefault: ['', []],
-            // upsInternationalExpress3DayDefault: ['', []],
-            // upsInternationalReturnLabelShippingTypes: ['', []],
-            // upsInternationalUSReturnLabelShippingTypes: ['', []],
-
-            // upsCanadaShippingTypes: new FormArray([]),
-            // upsCanadaStandardDefault: ['', []],
-            // upsCanadaExpress1DayDefault: ['', []],
-            // upsCanadaExpress2DayDefault: ['', []],
-            // upsCanadaExpress3DayDefault: ['', []],
-            // upsCanadaReturnLabelShippingTypes: ['', []],
 
             outboundUsername:  ['', []],
             outboundPassword:  ['', []],
@@ -117,13 +90,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedexExpress3Default: ['', []],
             fedExReturnLabelShippingTypes: ['', []]
         });
-
-        // this.addCarriersCheckboxes();
-        // this.addUPSUSShippingTypesCheckboxes();
-        // this.addUPSInternationalShippingTypesCheckboxes();
-        // this.addUPSCanadaShippingTypesCheckboxes();
-        // this.addFedExShippingTypesCheckboxes();
-        // this.addUSPSShippingTypesCheckboxes();
 
         const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
         this.createService.getLocationGroup(locationGroupId).subscribe(
@@ -188,20 +154,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
     }
 
-    // private addUPSInternationalShippingTypesCheckboxes() {
-    //     this.model.LCUPSInternationalShippingTypes.map((o, i) => {
-    //         const control = new FormControl();
-    //         (this.model.locationGroupConfigForm.controls.upsInternationalShippingTypes as FormArray).push(control);
-    //     });
-    // }
-
-    // private addUPSCanadaShippingTypesCheckboxes() {
-    //     this.model.LCUPSCanadaShippingTypes.map((o, i) => {
-    //         const control = new FormControl();
-    //         (this.model.locationGroupConfigForm.controls.upsCanadaShippingTypes as FormArray).push(control);
-    //     });
-    // }
-
     private addFedExShippingTypesCheckboxes() {
         this.model.LCFedExShippingType.map((o, i) => {
             const control = new FormControl();
@@ -238,10 +190,9 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             const carrierSettingsModel: CarrierSettingsModel[] = <CarrierSettingsModel[]>result;
             this.model.LCCarriers = [];
             this.model.LCDefaultCarrier  = [...Constants.LCDefaultCarrier];
-            // this.model.LCDefaultCarrier = Constants.LCDefaultCarrier;
             carrierSettingsModel.map((value, index) => {
                 // Filter out custom carrier from the returned list
-                if (value.id !== 'custom') {
+                if (value.id !== Constants.LCCarriers.custom) {
                     const carrierObj = {
                         CarrierType: value.id,
                         CarrierTypeLabel: value.id.toUpperCase(),
@@ -272,22 +223,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     data: value.code,
                     label: value.name
                 };
-                if (value.rateProvider.toLowerCase() === 'usps') {
+                if (value.rateProvider.toLowerCase() === Constants.LCCarriers.usps) {
                     this.model.LCUSPSShippingTypes.push(shippingTypeObj);
-                } else if (value.rateProvider.toLowerCase() === 'ups') {
+                } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.ups) {
                     this.model.LCUPSUSShippingTypes.push(shippingTypeObj);
-                } else if (value.rateProvider.toLowerCase() === 'fedex') {
+                } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.fedex) {
                     this.model.LCFedExShippingType.push(shippingTypeObj);
                 }
             });
         }
     }
-
-    // private getAllCarrierRatesWithConfiguredInfoError(errmsg: string) {
-    //     this._loggerService.info('LocationGroupConfigComponent : getAllCarrierRatesWithConfiguredInfoError');
-    //     this._spinner.stop();
-    //     this._tostrService.showError(errmsg);
-    // }
 
     private navigateToSiteConfig() {
         const locationGroupId  = this.activeRoute.snapshot.paramMap.get('id');
@@ -401,16 +346,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             unitedStatesUpsSettings = lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings;
         }
 
-        // let internationalUpsSettings: InternationalUpsSettingsModel;
-        // if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.internationalUpsSettings) {
-        //     internationalUpsSettings = lgConfigModel.shippingSettingsForUps.internationalUpsSettings;
-        // }
-
-        // let canadaUpsSettings: CanadaUpsSettingsModel;
-        // if ( lgConfigModel && lgConfigModel.shippingSettingsForUps && lgConfigModel.shippingSettingsForUps.canadaUpsSettings) {
-        //     canadaUpsSettings = lgConfigModel.shippingSettingsForUps.canadaUpsSettings;
-        // }
-
         let shippingSettingsForFedEx: ShippingSettingsForFedEx;
         if ( lgConfigModel && lgConfigModel.shippingSettingsForFedEx ) {
             shippingSettingsForFedEx = lgConfigModel.shippingSettingsForFedEx;
@@ -420,12 +355,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         if ( lgConfigModel && lgConfigModel.shippingSettingsForUsps ) {
             shippingSettingsForUsps = lgConfigModel.shippingSettingsForUsps;
         }
-
-        // let canadaPostSettings: CanadaPostSettings;
-        // if ( lgConfigModel && lgConfigModel.canadaPostSettings ) {
-        //     canadaPostSettings = lgConfigModel.canadaPostSettings;
-        // }
-
 
         if (lgConfigModel) {
             this.model.locationGroupConfigForm.patchValue({
@@ -448,23 +377,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 upsUSExpress2DayDefault:  unitedStatesUpsSettings ? unitedStatesUpsSettings.express2DayDefault : null,
                 upsUSExpress3DayDefault:  unitedStatesUpsSettings ? unitedStatesUpsSettings.express3DayDefault : null,
                 upsUSReturnLabelShippingTypes: unitedStatesUpsSettings ? unitedStatesUpsSettings.returnLabelShippingMethod : null,
-                // // UPS International Shipping Types
-                // upsInternationalShippingTypes: this.setSelectedUpsInternationalShippingTypes(internationalUpsSettings),
-                // upsInternationalStandardDefault: internationalUpsSettings ? internationalUpsSettings.standardDefault : null,
-                // upsInternationalExpress1DayDefault: internationalUpsSettings ? internationalUpsSettings.express1DayDefault : null,
-                // upsInternationalExpress2DayDefault: internationalUpsSettings ? internationalUpsSettings.express2DayDefault : null,
-                // upsInternationalExpress3DayDefault: internationalUpsSettings ? internationalUpsSettings.express3DayDefault : null,
-                // upsInternationalReturnLabelShippingTypes: internationalUpsSettings ?
-                //                                                 internationalUpsSettings.returnLabelShippingMethod : null,
-                // upsInternationalUSReturnLabelShippingTypes: internationalUpsSettings ?
-                //                                                 internationalUpsSettings.internationalUsReturnLabelShippingMethod : null,
-                // // UPS Canada Shipping Types
-                // upsCanadaShippingTypes: this.setSelectedUpsCanadaShippingTypes(canadaUpsSettings),
-                // upsCanadaStandardDefault: canadaUpsSettings ? canadaUpsSettings.standardDefault : null,
-                // upsCanadaExpress1DayDefault: canadaUpsSettings ? canadaUpsSettings.express1DayDefault : null,
-                // upsCanadaExpress2DayDefault: canadaUpsSettings ? canadaUpsSettings.express2DayDefault : null,
-                // upsCanadaExpress3DayDefault: canadaUpsSettings ? canadaUpsSettings.express3DayDefault : null,
-                // upsCanadaReturnLabelShippingTypes: canadaUpsSettings ? canadaUpsSettings.returnLabelShippingMethod : null,
                 // FedEx Settings
                 enableSmartPost: shippingSettingsForFedEx ? shippingSettingsForFedEx.enableSmartPost : false,
                 fedExShippingTypes: this.setSelectedFedExShippingTypes(shippingSettingsForFedEx),
@@ -480,15 +392,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsExpress2DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express2DayDefault : null,
                 uspsExpress3DayDefault:  shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
                 uspsReturnLabelShippingTypes:  shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
-                // Canada Post Settings
-                // outboundUsername:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // outboundPassword:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // outboundCustomerNumber:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // outboundLocale:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // outboundContractID:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // carsPickupNotify:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // preferredPickupTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null,
-                // closingTime:  canadaPostSettings ? canadaPostSettings.outboundUsername : null
 
             });
         }
@@ -527,22 +430,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         return shippingTypeLst;
     }
 
-    // private setSelectedUpsCanadaShippingTypes(canadaUpsSettings: CanadaUpsSettingsModel): boolean[] {
-    //     const shippingTypeLst: boolean[] = [];
-    //     if (canadaUpsSettings) {
-    //         const shippingMethods = canadaUpsSettings.shippingMethods;
-    //         this.model.LCUPSCanadaShippingTypes.map((o, i) => {
-    //         const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-    //         if (isShippingTypeSelected === -1) {
-    //             shippingTypeLst.push(false);
-    //         } else {
-    //             shippingTypeLst.push(true);
-    //         }
-    //      });
-    //     }
-    //     return shippingTypeLst;
-    // }
-
     private setSelectedUpsUsShippingTypes( unitedStatesUpsSettingsModel: UnitedStatesUpsSettingsModel): boolean[] {
         const shippingTypeLst: boolean[] = [];
         if (unitedStatesUpsSettingsModel) {
@@ -558,22 +445,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
         return shippingTypeLst;
     }
-
-    // private setSelectedUpsInternationalShippingTypes( internationalUpsSettings: InternationalUpsSettingsModel): boolean[] {
-    //     const shippingTypeLst: boolean[] = [];
-    //     if (internationalUpsSettings) {
-    //         const shippingMethods = internationalUpsSettings.shippingMethods;
-    //         this.model.LCUPSInternationalShippingTypes.map((o, i) => {
-    //         const isShippingTypeSelected =  _.indexOf(shippingMethods, o.data);
-    //         if (isShippingTypeSelected === -1) {
-    //             shippingTypeLst.push(false);
-    //         } else {
-    //             shippingTypeLst.push(true);
-    //         }
-    //      });
-    //     }
-    //     return shippingTypeLst;
-    // }
 
     private setSelectedCarriers( carriers: CarrierModel[]): boolean[] {
         const carriersUpr: CarrierModel[] = [];
@@ -637,21 +508,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings.express1DayDefault = lgconfigForm.get(['upsUSExpress1DayDefault']).value;
         lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings.express2DayDefault = lgconfigForm.get(['upsUSExpress2DayDefault']).value;
         lgConfigModel.shippingSettingsForUps.unitedStatesUpsSettings.express3DayDefault = lgconfigForm.get(['upsUSExpress3DayDefault']).value;
-        // // UPS International Shipping Types
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.shippingMethods = this.getSelectedUpsInternationalShippingTypes(lgconfigForm.get(['upsInternationalShippingTypes']).value);
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.returnLabelShippingMethod = lgconfigForm.get(['upsInternationalReturnLabelShippingTypes']).value;
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.internationalUsReturnLabelShippingMethod = lgconfigForm.get(['upsInternationalUSReturnLabelShippingTypes']).value;
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.standardDefault = lgconfigForm.get(['upsInternationalStandardDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.express1DayDefault = lgconfigForm.get(['upsInternationalExpress1DayDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.express2DayDefault = lgconfigForm.get(['upsInternationalExpress2DayDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.internationalUpsSettings.express3DayDefault = lgconfigForm.get(['upsInternationalExpress3DayDefault']).value;
-        // // UPS Canada Shipping Types
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.shippingMethods = this.getSelectedUpsCanadaShippingTypes(lgconfigForm.get(['upsCanadaShippingTypes']).value);
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.returnLabelShippingMethod = lgconfigForm.get(['upsCanadaReturnLabelShippingTypes']).value;
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.standardDefault = lgconfigForm.get(['upsCanadaStandardDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.express1DayDefault = lgconfigForm.get(['upsCanadaExpress1DayDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.express2DayDefault = lgconfigForm.get(['upsCanadaExpress2DayDefault']).value;
-        // lgConfigModel.shippingSettingsForUps.canadaUpsSettings.express3DayDefault = lgconfigForm.get(['upsCanadaExpress3DayDefault']).value;
         // FedEx Settings
         lgConfigModel.shippingSettingsForFedEx = {} as ShippingSettingsForFedEx;
         lgConfigModel.shippingSettingsForFedEx.shippingMethods = this.getSelectedFedExShippingTypes(lgconfigForm.get(['fedExShippingTypes']).value);
@@ -669,16 +525,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.shippingSettingsForUsps.express1DayDefault = lgconfigForm.get(['uspsExpress1DayDefault']).value;
         lgConfigModel.shippingSettingsForUsps.express2DayDefault = lgconfigForm.get(['uspsExpress2DayDefault']).value;
         lgConfigModel.shippingSettingsForUsps.express3DayDefault = lgconfigForm.get(['uspsExpress3DayDefault']).value;
-        // Canada Post Settings
-        // lgConfigModel.canadaPostSettings = {} as CanadaPostSettings;
-        // lgConfigModel.canadaPostSettings.outboundUsername = lgconfigForm.get(['outboundUsername']).value;
-        // lgConfigModel.canadaPostSettings.outboundPassword = lgconfigForm.get(['outboundPassword']).value;
-        // lgConfigModel.canadaPostSettings.outboundCustomerNumber = lgconfigForm.get(['outboundCustomerNumber']).value;
-        // lgConfigModel.canadaPostSettings.outboundLocale = lgconfigForm.get(['outboundLocale']).value;
-        // lgConfigModel.canadaPostSettings.outboundContractID = lgconfigForm.get(['outboundContractID']).value;
-        // lgConfigModel.canadaPostSettings.carsPickupNotify = lgconfigForm.get(['carsPickupNotify']).value;
-        // lgConfigModel.canadaPostSettings.preferredPickupTime = lgconfigForm.get(['preferredPickupTime']).value;
-        // lgConfigModel.canadaPostSettings.closingTime = lgconfigForm.get(['closingTime']).value;
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
@@ -732,24 +578,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         }
         return shippingTypeLst;
     }
-
-    // private getSelectedUpsInternationalShippingTypes( internationalUpsSettings: boolean[]): string[] {
-    //     let shippingTypeLst: string[] = [];
-    //     if (internationalUpsSettings) {
-    //         shippingTypeLst = internationalUpsSettings.map((v, i) => v ? this.model.LCUPSInternationalShippingTypes[i].data : null)
-    //         .filter(v => v !== null);
-    //     }
-    //     return shippingTypeLst;
-    // }
-
-    // private getSelectedUpsCanadaShippingTypes(canadaUpsSettings: boolean[]): string[] {
-    //     let shippingTypeLst: string[] = [];
-    //     if (canadaUpsSettings) {
-    //         shippingTypeLst = canadaUpsSettings.map((v, i) => v ? this.model.LCUPSCanadaShippingTypes[i].data : null)
-    //         .filter(v => v !== null);
-    //     }
-    //     return shippingTypeLst;
-    // }
 
     private getSelectedFedExShippingTypes(shippingSettingsForFedEx: boolean[]): string[] {
         let shippingTypeLst: string[] = [];

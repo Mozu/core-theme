@@ -80,15 +80,16 @@ export class SharedDataService {
             } else { // get first site item if siteId is null
                 siteObj =  sites[0];
             }
-            headers.headers =  new HttpHeaders({
-                'x-vol-tenant': siteObj.tenantId + '',
-                'x-vol-master-catalog': siteObj.masterCatalogId + '',
-                'x-vol-catalog': siteObj.catalogId + '',
-                'x-vol-site': siteObj.id + '',
-                'x-vol-locale': siteObj.defaultLocaleCode + '',
-                'x-vol-currency': siteObj.defaultCurrencyCode + '',
-                // 'X-Requested-With': 'XMLHttpRequest' + '',
-            });
+
+            const paramsObj = {};
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolTenant] = siteObj.tenantId + '';
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolMasterCatlog] = siteObj.masterCatalogId + '',
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolCatalog] = siteObj.catalogId + '',
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolSite] = siteObj.id + '',
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolLocale] = siteObj.defaultLocaleCode + '',
+            paramsObj[GlobalConstants.HttpHeadersParams.xVolCurrency] = siteObj.defaultCurrencyCode + '',
+
+            headers.headers =  new HttpHeaders(paramsObj);
         }
         return headers;
     }
