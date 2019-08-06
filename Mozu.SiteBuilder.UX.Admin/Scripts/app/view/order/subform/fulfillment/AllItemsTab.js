@@ -2,19 +2,13 @@
 Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     extend: 'Taco.view.order.subform.Subform',
 
-    tabTitle: 'All Items',
-    
+    //tabTitle: 'All Items',
     initComponent: function () {
 
+        this.tabTitle = this.shipmentRecord.items ? "Items(" + this.shipmentRecord.items.length + ")" : "Items(0)";
         this.cls += ' orderform-package-packagetab';
         this.initUI();
         this.callParent(arguments);
-
-        //this.needToReload = true;
-        //this.mon(this.record, 'reload', function() {
-        //    // Only bother reloading if the order has changed.
-        //    this.needToReload = true;
-        //}, this);
     },
 
     initUI: function () {
