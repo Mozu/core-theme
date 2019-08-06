@@ -403,9 +403,9 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         if (taxAdjustmentValue || shippingAdjustmentValue || shippingTaxAdjustmentValue || handlingAdjustmentValue || handlingTaxAdjustmentValue)
             return {
-                "shipmentAdjustment": {
-                    orderId: this.record.get('id'),
-                    shipmentNumber: this.shipmentRecord.number,
+                "orderId": this.record.get('id'),
+                "shipmentNumber": this.shipmentRecord.number,
+                "shipmentAdjustment": {                    
                     //ItemAdjustment: this.shippingAdjustmentInput ? this.shippingAdjustmentInput : null,
                     itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) - this.shipmentRecord.lineItemTaxTotal) : null,
                     shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) - this.shipmentRecord.shippingSubtotal) : null,

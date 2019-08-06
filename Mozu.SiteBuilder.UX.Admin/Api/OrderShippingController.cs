@@ -434,13 +434,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public class ShipmentAdjustmentArgs
         {
-            //public int? ShipmentNumber { get; set; }
+            public string OrderId { get; set; }
+            public int? ShipmentNumber { get; set; }
             public DCs.ShipmentAdjustment ShipmentAdjustment { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/updateShipmentAdjustments")]
         public async Task<Response<DCs.Shipment>> UpdateShipmentAdjustments(ShipmentAdjustmentArgs args)
         {
-            var shipment = (await _orderWebApiClient.UpdateShipmentAdjustments(args.ShipmentAdjustment.OrderId, args.ShipmentAdjustment.ShipmentNumber, args.ShipmentAdjustment)).ReadAsSync();
+            var shipment = (await _orderWebApiClient.UpdateShipmentAdjustments(args.OrderId, args.ShipmentNumber, args.ShipmentAdjustment)).ReadAsSync();
             return Single2(shipment);
         }
 
