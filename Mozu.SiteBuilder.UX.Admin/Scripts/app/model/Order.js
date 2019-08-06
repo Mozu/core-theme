@@ -2960,10 +2960,10 @@ Ext.define('Taco.model.Order', {
         //}
 
         Ext.apply(config, {
-            url: '/admin/Scripts/app/mocks/candidateSuggestions.json',
-            method: 'GET'
-             //url: '/admin/app/order/shipping/candidates',
-             //method: 'POST'
+            //url: '/admin/scripts/app/mocks/candidatesuggestions.json',
+            //method: 'get'
+             url: '/admin/app/order/shipping/candidates',
+             method: 'POST'
             
         });
 
