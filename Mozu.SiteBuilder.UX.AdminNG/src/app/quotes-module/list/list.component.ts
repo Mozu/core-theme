@@ -134,38 +134,38 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     this._spinner.start();
     this._loggerService.info('QuotesListComponent : populateQuoteGrid');
     this._quotesListService.fetchAllQuotes(advSearch, startIndex, pageSize, sort)
-    .subscribe((quotesListSuccessResponse: QuotesListModel) => {
-      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
-      if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
-        quotesListSuccessResponse['items'].length > 0) {
-        this.model.items = [...quotesListSuccessResponse.items];
-        this.model.startIndex = quotesListSuccessResponse.startIndex;
-        this.model.pageSize = quotesListSuccessResponse.pageSize;
-        this.model.pageCount = quotesListSuccessResponse.pageCount;
-        this.model.totalCount = quotesListSuccessResponse.totalCount;
+      .subscribe((quotesListSuccessResponse: QuotesListModel) => {
+        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_quotesResponse');
+        if (quotesListSuccessResponse !== null && quotesListSuccessResponse !== undefined &&
+          quotesListSuccessResponse['items'].length > 0) {
+          this.model.items = [...quotesListSuccessResponse.items];
+          this.model.startIndex = quotesListSuccessResponse.startIndex;
+          this.model.pageSize = quotesListSuccessResponse.pageSize;
+          this.model.pageCount = quotesListSuccessResponse.pageCount;
+          this.model.totalCount = quotesListSuccessResponse.totalCount;
+        }
         this._spinner.stop();
-      }
-    }, (quotesListErrResponse) => {
-      this._spinner.stop();
-      this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
-      throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
-    });
+      }, (quotesListErrResponse) => {
+        this._spinner.stop();
+        this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
+        throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
+      });
   }
 
   onColReorder(event) {
     this.selectedGridColumnHeader = event.columns;
     localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
-    + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
-      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
-    + ' }');
+      + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder + '"' : '')
+      + ' }');
   }
 
   toggledGridColumn(gridColumnHeader) {
     this.selectedGridColumnHeader = gridColumnHeader;
     localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
-    + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
-      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
-    + ' }');
+      + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder + '"' : '')
+      + ' }');
   }
 
   getQuoteGridData(model: any, col: any): any {
@@ -215,12 +215,12 @@ export class QuotesListComponent implements OnInit, OnDestroy {
       this.model.sortField = event.sortField;
       this.model.sortOrder = sortOrder;
       localStorage.setItem(Constants.localStorageKeys.quoteGridData, '{"columnHeader" : ' + JSON.stringify(this.selectedGridColumnHeader)
-      + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
-      + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder  + '"' : '' )
-      + ' }');
+        + (this.model.sortField ? ', "sortField" : "' + this.model.sortField + '"' : '')
+        + (this.model.sortOrder ? ',  "sortOrder" : "' + this.model.sortOrder + '"' : '')
+        + ' }');
     } else if (this.model.sortField !== undefined && this.model.sortOrder !== undefined) {
       this.model.sortResult = this._utilityService.stringFormat('[{"property":"{{propertyName}}","sortOrder":"{{sortOrder}}"}]',
-      { propertyName: this.model.sortField, sortOrder: this.model.sortOrder });
+        { propertyName: this.model.sortField, sortOrder: this.model.sortOrder });
     }
     this.model.startIndex = event.first;
     this.model.pageSize = event.rows;
