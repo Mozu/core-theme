@@ -29,8 +29,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
-            //autoLoad: false,
-            autoLoad: { start: 0, limit: 2 },
+            autoLoad: false,
+            //autoLoad: { start: 0, limit: 2 },
             pageSize: itemsPerPage,
             remoteSort: true,
             sorters: [{
@@ -52,12 +52,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         });
 
         // specify segment of data you want to load using params
-        //inventoryStore.load({
-        //    params: {
-        //        start: 0,
-        //        limit: this.itemsPerPage
-        //    }
-        //});
+        inventoryStore.load({
+            params: {
+                start: 0,
+                limit: itemsPerPage
+            }
+        });
 
      
         var inventorygrid = Ext.create('Ext.grid.Panel', {
