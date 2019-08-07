@@ -40,7 +40,7 @@ nuget Mozu.Customer.Contracts 1.1909.2
 nuget Mozu.DeployWeb
 nuget Mozu.Hypr.NDjango 1.1731.1
 nuget Mozu.InstalledApps.Contracts < 1.20
-nuget Mozu.Location.Contracts 1.1929.0-v1-net-framework-12
+nuget Mozu.Location.Contracts 1.1932.0-v1-net-framework-14
 nuget Mozu.MZDB.Contracts < 1.20
 nuget Mozu.PaymentService.Contracts 1.1840.1
 nuget Mozu.ProductAdmin.Contracts 1.1916.0-develop-6

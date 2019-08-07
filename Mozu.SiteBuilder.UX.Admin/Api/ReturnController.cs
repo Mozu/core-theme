@@ -30,6 +30,9 @@ using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
 using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
 using CARSModel = Mozu.CARS.Contracts.Model;
 using Mozu.Location.Contracts.Clients;
+using Mozu.Location.Contracts;
+using System;
+using Mozu.SiteBuilder.Mvc.SEO;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -563,7 +566,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "shipping/label")]
-        public async Task<HttpResponseMessage> GetReturnLabel([FromUri]string returnId)
+        public async Task<HttpResponseMessage> GetReturnLabel([FromUri]string returnId, [FromUri] int? siteId)
         {
             var returns = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
             if (string.IsNullOrEmpty(returns.Id))
@@ -583,15 +586,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 throw new VaeValidationConflictException($"Location {returns.LocationCode} not found.");
             }
 
-            CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location);
+            var client = siteId.HasValue ? _locationGroupWebApiClient.CloneWithSiteId(siteId) : _locationGroupWebApiClient;
+            var configuration = (await client.GetLocationGroupConfigurationByLocationCode(returns.LocationCode)).ReadAsAsync().Result;
+            if (configuration == null || string.IsNullOrWhiteSpace(configuration?.DefaultCarrier))
+            {
+                throw new VaeValidationConflictException($"Carrier not found.");
+            }
+
+            CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location, configuration);
             var serviceResponse = _CARSApiWrapper.GenerateLabelUsingPOST(request);
 
             return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
         }
 
-        private CARSModel.GenerateLabelRequest CreateReturnShippingLabelRequest(DCr.Return returns, CommerceRuntime.Contracts.Orders.Order order, Location.Contracts.Location location)
+        private CARSModel.GenerateLabelRequest CreateReturnShippingLabelRequest(DCr.Return returns, CommerceRuntime.Contracts.Orders.Order order, Location.Contracts.Location location, LocationGroupConfiguration configuration)
         {
-             //var defaultCarrier = _locationGroupWebApiClient.GetLocationGroupConfiguration(2);
             CARSModel.GenerateLabelRequest request = new CARSModel.GenerateLabelRequest();
             request.Currency = returns.CurrencyCode;
             request.FromContact = new CARSModel.Contact()
@@ -624,7 +633,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 PostalCode = location.Address?.PostalOrZipCode,
                 City = location.Address?.CityOrTown,
                 CountryCode = location.Address?.CountryCode,
-                PhoneNumber = location.Phone,
+                PhoneNumber = location.ShippingOriginContact?.PhoneNumber,
                 Residential = location.Address?.AddressType?.Equals("Residential"),
                 StateCode = location.Address.StateOrProvince.ToUpper()
             };
@@ -632,10 +641,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             request.LocationCode = returns.LocationCode;
             request.OrderID = returns.OriginalOrderId;
 
-            request.Carrier = "UPS";
-            request.PackagingType = SetPackagingType(request.Carrier);
-            request.ServiceType = "UPS_GROUND";
-            request.LabelFormat = "LASER";
+            request.Carrier = configuration.DefaultCarrier;
+            request.PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper());
+            request.ServiceType = SetServiceType(configuration);
+            request.LabelFormat = configuration.DefaultPrinterType;
             request.UnitType = "IMPERIAL";
             request.ShipmentID = "1234";
             request.ValidateAddress = true;
@@ -644,6 +653,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             SetMeasurements(request, order, returns);
             return request;
+        }
+
+        private string SetServiceType(LocationGroupConfiguration carrier)
+        {
+            var serviceType = string.Empty;
+            switch (carrier.DefaultCarrier.ToUpper())
+            {
+                case "FEDEX":
+                    serviceType = carrier.ShippingSettingsForFedEx.StandardDefault;
+                    break;
+                case "UPS":
+                    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.StandardDefault;
+                    break;
+
+            }
+            return serviceType;
         }
 
         public string SetPackagingType(string carrier)
