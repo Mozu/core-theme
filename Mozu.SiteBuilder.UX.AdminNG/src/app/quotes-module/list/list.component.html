@@ -1,10 +1,13 @@
 <div class="col-md-12 quote-container">
     <spinner></spinner>
-    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize" [totalRecords]="model.totalCount" (onRowSelect)="onRowSelect($event)" selectionMode="single" [reorderableColumns]="true" (onColReorder)="onColReorder($event)"
-        class="table-striped" (onLazyLoad)="loadQuoteLazy($event)" [lazy]="true">
+    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize"
+        [totalRecords]="model.totalCount" (onRowSelect)="onRowSelect($event)" selectionMode="single"
+        [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped"
+        (onLazyLoad)="loadQuoteLazy($event)" [lazy]="true">
         <ng-template pTemplate="header" let-columns>
             <tr>
-                <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }" pReorderableColumn [pSortableColumn]="col.sortable ? col.field: null" pReorderableColumn>
+                <th *ngFor="let col of columns" [ngStyle]="{'display': col.checked ? 'table-cell' : 'none' }"
+                    pReorderableColumn [pSortableColumn]="col.sortable ? col.field: null" pReorderableColumn>
                     {{(col.header) | translate}}
                     <p-sortIcon *ngIf="col.sortable" [field]="col.field"></p-sortIcon>
                 </th>
@@ -23,15 +26,21 @@
                 <td class="header-ellipsis">
                     <div>
                         <i class="pi pi-ellipsis-v" (click)="quoteGridContextMenu.toggle($event)"></i>
-                        <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true" appendTo="body"></p-menu>
+                        <p-menu #quoteGridContextMenu [model]="model.quoteGridContextMenuItem" [popup]="true"
+                            appendTo="body"></p-menu>
                     </div>
                 </td>
             </tr>
         </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>           
+            <p-button (onClick)="refreshQuoteGrid(state)"><i class="fa fa-refresh"></i></p-button>          
+        </ng-template>
         <ng-template pTemplate="paginatorright" let-state>
             {{'QUOTES.GridFooter.Displaying' | translate }} {{state.totalRecords
             < 1 ? 0 : state.first + 1}} - {{state.totalRecords> 0 ? ((dt.rows+ state.first)
-                <=state.totalRecords ? (dt.rows + state.first) : state.totalRecords) : 0}} {{ 'QUOTES.GridFooter.of' | translate }} {{state.totalRecords ? state.totalRecords : 0}} </ng-template>
+                <=state.totalRecords ? (dt.rows + state.first) : state.totalRecords) : 0}}
+            {{ 'QUOTES.GridFooter.of' | translate }} {{state.totalRecords ? state.totalRecords : 0}}
+        </ng-template>
     </p-table>
 
     <toggle-grid-columns [gridColumnHeader]=gridColumnHeader (toggledGridColumn)="toggledGridColumn($event)">

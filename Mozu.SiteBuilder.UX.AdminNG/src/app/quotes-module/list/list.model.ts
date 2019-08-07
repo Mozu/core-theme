@@ -1,20 +1,19 @@
 import { MenuItem } from 'primeng/api';
 
 export class QuotesListModel {
-    startIndex: number;
-    pageSize: number;
-    pageCount: number;
-    totalCount: number;
-    items: QuoteItem[];
-    numberOfRows: number;
-    selectedQuote: any;
-    quoteGridContextMenuItem: MenuItem[];
-    subscriptions: any[];
-    advancedSearch: any;
-    sortResult: any;
-    sortField: string;
-    sortOrder: string;
-  }
+  startIndex: number;
+  pageSize: number;
+  pageCount: number;
+  totalCount: number;
+  items: QuoteItem[];
+  selectedQuote: any;
+  quoteGridContextMenuItem: MenuItem[];
+  subscriptions: any[];
+  advancedSearch: any;
+  sortResult: any;
+  sortField: string;
+  sortOrder: string;
+ }
 
 export class QuoteItem {
   id: string;

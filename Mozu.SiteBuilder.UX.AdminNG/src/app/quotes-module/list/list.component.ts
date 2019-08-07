@@ -29,6 +29,7 @@ import { QuotesListService } from './list.service';
 
 import { QuotesListModel } from './list.model';
 import { LazyLoadEvent } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -63,7 +64,6 @@ export class QuotesListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._loggerService.info('QuotesListComponent : ngOnInit');
     this.model = new QuotesListModel();
-    this.model.numberOfRows = Constants.numberOfRows;
     this.model.items = [];
     this.model.quoteGridContextMenuItem = [];
     this.model.subscriptions = [];
@@ -143,8 +143,8 @@ export class QuotesListComponent implements OnInit, OnDestroy {
           this.model.pageSize = quotesListSuccessResponse.pageSize;
           this.model.pageCount = quotesListSuccessResponse.pageCount;
           this.model.totalCount = quotesListSuccessResponse.totalCount;
+          this._spinner.stop();
         }
-        this._spinner.stop();
       }, (quotesListErrResponse) => {
         this._spinner.stop();
         this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
@@ -224,6 +224,24 @@ export class QuotesListComponent implements OnInit, OnDestroy {
     }
     this.model.startIndex = event.first;
     this.model.pageSize = event.rows;
+    this.populateQuoteGrid(this.model.advancedSearch, this.model.startIndex, this.model.pageSize, this.model.sortResult);
+  }
+
+  refreshQuoteGrid(state: any) {
+    this._loggerService.info('QuotesListComponent : refreshQuoteGrid');
+    this.model.startIndex = state.first;
+    this.model.pageSize = state.rows;
+    if (localStorage.getItem(Constants.localStorageKeys.quoteGridData) != null) {
+      const gridStateValue = JSON.parse(localStorage.getItem(Constants.localStorageKeys.quoteGridData));
+      this.gridColumnHeader = gridStateValue['columnHeader'];
+      this.model.sortField = gridStateValue['sortField'];
+      this.model.sortOrder = gridStateValue['sortOrder'];
+    }
+    this.model.subscriptions.push(
+      this._notificationService.quoteSearched.subscribe((advancedSearch: string) => {
+        this.model.advancedSearch = advancedSearch;
+      })
+    );
     this.populateQuoteGrid(this.model.advancedSearch, this.model.startIndex, this.model.pageSize, this.model.sortResult);
   }
 
