@@ -51,7 +51,7 @@ nuget Mozu.ShippingAdmin.Contracts 1.1932.0-ngshot-contracts-2
 nuget Mozu.PricingRuntime.Contracts >= 1.1916.0-develop-6
 nuget Mozu.SiteSettings.General.Contracts 1.1840.3
 nuget Mozu.SiteSettings.Order.Contracts 1.1930.0-gshot-contracts-37
-nuget Mozu.SiteSettings.Ship.Contracts 1.1930.0-gshot-contracts-37
+nuget Mozu.SiteSettings.Ship.Contracts 1.1932.0-gshot-contracts-39
 nuget protobuf-net 2.0.0.668
 nuget FAKE
 nuget mozu.tenant.contracts 1.1929.0-dotnetframework-1
@@ -66,5 +66,3 @@ nuget Mozu.Event.Contracts
 
 #Manually adding this so that Burrows works; Once Burrows is removed we can take this out.
 nuget Newtonsoft.Json 9.0.1
-
-nuget RestSharp 106.6.9
