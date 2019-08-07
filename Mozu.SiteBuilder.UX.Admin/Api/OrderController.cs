@@ -30,6 +30,7 @@ using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
+using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -74,8 +75,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IReturnWebApiClient returnWebApiClient,
             IIpAddressFinderOuter ipAddressFinderOuter,
             IOrderRoutingApiWrapper orderRoutingApiWrapper,
-            IFulfillerApiWrapper fulfillerApiWrapper
-            IIpAddressFinderOuter ipAddressFinderOuter,
+            IFulfillerApiWrapper fulfillerApiWrapper,            
             ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
         )
         {

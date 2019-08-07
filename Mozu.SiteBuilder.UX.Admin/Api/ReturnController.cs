@@ -646,7 +646,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             request.ServiceType = SetServiceType(configuration);
             request.LabelFormat = configuration.DefaultPrinterType;
             request.UnitType = "IMPERIAL";
-            request.ShipmentID = "1234";
+            request.ShipmentID = returns.Id;
             request.ValidateAddress = true;
             request.CustomerReferences = null;
             request.Test = false;
