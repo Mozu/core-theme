@@ -21,10 +21,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
     },
     
 
+    
+
     initComponent: function () {
         var me = this;
         var itemsPerPage = 2;
         var shipment = me.shipmentData;
+        var pagingParams = me.createpagingParams();
         var selectedTab;
         this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
@@ -152,7 +155,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             width: 1000,
             dockedItems: [{
                 xtype: 'pagingtoolbar',
-                store: inventoryStore,   // same store GridPanel is using
+                store: inventoryStore,   
                 dock: 'bottom',
                 displayInfo: true
             }],
@@ -178,23 +181,31 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
         });
 
-        Ext.create('Ext.data.JsonStore', {
+        var allLocationsStore = Ext.create('Ext.data.Store', {
             storeId: 'allLocationsStore',
             fields: ['displayName'],
             groupField: 'displayName',
-            
+            autoLoad: false,
+            pageSize: 2,
             //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'memory',
                 reader: {
                     type: 'json',
-                    root: 'items'
+                    root: 'items',
+                    totalProperty: 'total'
                 }
+            }
+        });
+        allLocationsStore.load({
+            params: {
+                start: 0,
+                limit: 2
             }
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: me.record.getLocations(),
+            store: me.record.getLocations( pagingParams.startIndex, pagingParams.pageSize ),
             itemId: 'allLocationsGrid',
             columns: [
                 {
@@ -209,7 +220,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 }
             ],
             height: 200,
-            width: 400
+            width: 400,
+            dockedItems: [{
+                xtype: 'pagingtoolbar',
+                store: 'allLocationsStore', 
+                dock: 'bottom',
+                displayInfo: true
+            }],
         });
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
@@ -286,6 +303,16 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         }
 
         return true;
+    },
+
+    createpagingParams: function () {
+        return {
+            pagingParams: {
+                id: 1,
+                startIndex: 1,
+                pageSize: 3,
+            }
+        }
     },
 
     getPayloadDataInventory: function () {
