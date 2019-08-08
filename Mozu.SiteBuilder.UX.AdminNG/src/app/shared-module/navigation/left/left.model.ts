@@ -7,7 +7,6 @@ export class LeftNavigationModel {
     dynamicLinkIframeURL: any;
     mainItems: MenuItem[];
     systemItems: MenuItem[];
-    isOmsEnable: boolean;
 }
 
 export class LeftNavigationTabs {

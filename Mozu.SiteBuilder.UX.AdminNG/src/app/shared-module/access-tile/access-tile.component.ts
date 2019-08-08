@@ -16,7 +16,6 @@ import { AccessTileModel } from './access-tile.model';
 export class AccessTileComponent {
 
   @Input('Tiles') tileModel: AccessTileModel;
-  @Input('isOmsEnable') isOmsEnable: boolean;
   quotesRoute = Constants.uiRoutes.quotes;
   locationGroupRoute =  Constants.uiRoutes.locationGroups;
   inventoryTitle = Constants.titles.inventory;

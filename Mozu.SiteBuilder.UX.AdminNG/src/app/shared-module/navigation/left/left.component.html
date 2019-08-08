@@ -9,8 +9,7 @@
                 </div>
                  <ul id="{{menuHeader.id}}"  class="collapse in">
                         <li *ngFor="let menuOptions of menuHeader.items">
-                            <div *ngIf="!(model.isOmsEnable && menuOptions.label === locationGroupsTitle)">
-                                <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]" (click)="navigationFromMegaMenu(menuOptions.address)">
+                                <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]">
                                  {{menuOptions.label}}
                                 </a>
                                 <ng-template #routeLink >
@@ -24,7 +23,6 @@
                                    {{menuOptions.label}}
                                     </a>
                                 </ng-template>
-                            </div>
                          </li>
                     </ul>
                 </span>

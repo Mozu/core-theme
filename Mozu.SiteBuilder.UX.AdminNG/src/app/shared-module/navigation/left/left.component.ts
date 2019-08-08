@@ -73,8 +73,7 @@ export class NavigationLeftComponent implements OnInit {
       }
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
         this.model.filteredNavigationLinks, this._sharedData._sharedData.items.ctTaContext);
-
-      this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
+        this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
