@@ -33,7 +33,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft" let-state>    
-            <p-button (onClick)="refreshQuoteGrid(state)" class="refresh-btn hidden"><i class="fa fa-refresh"></i></p-button>                 
+            <p-button (onClick)="refreshQuoteGrid(state)" class="refresh-btn "><i class="fa fa-refresh"></i></p-button>                 
         </ng-template>
         <ng-template pTemplate="paginatorright" let-state>
             {{'QUOTES.GridFooter.Displaying' | translate }} {{state.totalRecords

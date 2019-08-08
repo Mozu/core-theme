@@ -36,13 +36,17 @@
         padding-top: 5px;
 }
 
-::ng-deep .ui-paginator-next::after{
-    content: "\f021";
-    font-family: "FontAwesome";
-    left: 30px;
-    position: absolute;
+::ng-deep .ui-paginator-bottom {
     display: flex;
-    align-items: center;
-    height: 22px;
+}
+
+::ng-deep .ui-paginator .ui-paginator-right-content{
+    order: 7;
+    position: absolute;
+    right: 9px;
+}
+
+::ng-deep .ui-paginator-bottom .ui-paginator-left-content{
+    order: 6;
 }
 
