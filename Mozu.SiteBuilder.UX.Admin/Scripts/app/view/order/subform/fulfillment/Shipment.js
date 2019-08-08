@@ -19,8 +19,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     buildShipmentInfoHeader: function () {
         var me = this;
 
-        //var lastUpdated = this.shipmentRecord.auditInfo && this.shipmentRecord.auditInfo.updateDate ? Ext.Date.format(new Date(this.shipmentRecord.auditInfo.updateDate), 'm/d/y H:i:s') : '';
-        var lastUpdated = this.shipmentRecord.fulfillmentDate ? Ext.Date.format(new Date(this.shipmentRecord.fulfillmentDate), 'm/d/y H:i:s') : '';
+        var lastUpdated = this.shipmentRecord.fulfillmentDate ? Ext.Date.format(new Date(this.shipmentRecord.fulfillmentDate), 'm/d/y H:i:s') :
+            (this.shipmentRecord.auditInfo && this.shipmentRecord.auditInfo.updateDate ? Ext.Date.format(new Date(this.shipmentRecord.auditInfo.updateDate), 'm/d/y H:i:s') : '');
         var shipmentTypeDescription = "";
         if (this.shipmentRecord.shipmentType) {
             if (this.shipmentRecord.shipmentType == "STH")
