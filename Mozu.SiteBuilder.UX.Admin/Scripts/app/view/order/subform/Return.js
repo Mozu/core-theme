@@ -202,6 +202,7 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     createReturn: function(type, items) {
+        var me = this;
         var returnItems = [];
 
         Ext.Array.each(items, function(item) {
@@ -216,7 +217,7 @@ Ext.define('Taco.view.order.subform.Return', {
                     };
                     quantity = quantity - shipmentQuantity
                     if(quantity) {
-                        returnItems.push(createReturnableItem(item, shipItem, shipmentQuantity));
+                        returnItems.push(me.createReturnableItem(item, shipItem, shipmentQuantity));
                     }
                 })
             } else {
