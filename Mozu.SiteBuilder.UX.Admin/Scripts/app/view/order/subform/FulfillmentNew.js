@@ -21,6 +21,9 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
 
     buildComponents: function () {
         var me = this;
+        //Remove all shipments before refreshing
+        me.removeAll();
+
         me.setLoading(true, this.body);
         this.record.getLocations();
         
