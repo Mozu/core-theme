@@ -28,12 +28,13 @@
     height: 22px;
 }
 
-::ng-deep .refresh-btn .ui-state-default:hover,::ng-deep .refresh-btn .ui-state-default{
+::ng-deep .refresh-btn .ui-state-default:hover,::ng-deep .refresh-btn .ui-state-default, ::ng-deep .refresh-btn .ui-state-default:focus{
         border: none !important;
         background: transparent !important;
         color:#b1b1b1 !important;
         height: 22px;
         padding-top: 5px;
+        box-shadow: none !important;
 }
 
 ::ng-deep .ui-paginator-bottom {
@@ -44,9 +45,13 @@
     order: 7;
     position: absolute;
     right: 9px;
+    font-weight: lighter;
 }
 
 ::ng-deep .ui-paginator-bottom .ui-paginator-left-content{
     order: 6;
+}
+::ng-deep .ui-paginator-next{
+    background: transparent;
 }
 
