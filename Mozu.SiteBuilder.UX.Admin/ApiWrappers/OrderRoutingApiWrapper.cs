@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _apiContext = apiContext;
             _settings = settings;
             //var basePath = "http://services-tp-dev01.kubedev.kibo-dev.com/order-routing/";
-            var basePath = settings.Services.First(x => x.Name == "OrderRouting").BaseUrl;
+            var basePath = settings.Urls("service-url-RoutingWebApi");
             _routingController = new RoutingControllerApi(basePath);
             _routingController.ApiClient.DefaultHeader["x-vol-tenant"] = apiContext.TenantId.ToString();
             _routingController.ApiClient.DefaultHeader["x-vol-site"] = apiContext.SiteId.GetValueOrDefault(0).ToString();
