@@ -23,3 +23,26 @@
     width: 4em;
     text-align: right;
 }
+
+::ng-deep .refresh-btn{
+    height: 22px;
+}
+
+::ng-deep .refresh-btn .ui-state-default:hover,::ng-deep .refresh-btn .ui-state-default{
+        border: none !important;
+        background: transparent !important;
+        color:#b1b1b1 !important;
+        height: 22px;
+        padding-top: 5px;
+}
+
+::ng-deep .ui-paginator-next::after{
+    content: "\f021";
+    font-family: "FontAwesome";
+    left: 30px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 22px;
+}
+
