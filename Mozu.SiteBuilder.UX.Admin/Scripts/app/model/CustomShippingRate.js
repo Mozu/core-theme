@@ -9,7 +9,7 @@ Ext.define('Taco.model.CustomShippingRate', {
     fields: [{
         'name': 'id',
         'type': 'string'
-    },{
+    }, {
         'name': 'amount',
         'type': 'float'
     }, {
@@ -26,5 +26,9 @@ Ext.define('Taco.model.CustomShippingRate', {
     }, {
         'name': 'isEnabled',
         'type': 'bool'
+    },
+    {
+        'name': 'numberOfDaysToShip',
+        'type': 'string'
     }]
 });
