@@ -79,7 +79,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.model.filteredAccessLinks =
         this.utilityService.populateNavigationLinksbyContextType
           (this.model.filteredAccessLinks, this._sharedData._sharedData.items.ctTaContext);
-      this.model.omsEnabled = this._sharedData._sharedData.items.ctTaContext.omsEnabled ? this._sharedData._sharedData.items.ctTaContext.omsEnabled : false;
 
       this.model.systemTiles = this._dashboardService.
       MapDasasboardCategoryToTiles( this.model.filteredAccessLinks

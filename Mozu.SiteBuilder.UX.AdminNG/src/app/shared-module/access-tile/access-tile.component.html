@@ -10,8 +10,8 @@
 
         <p-footer>
             <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
-                <div class="tiles-item" *ngIf="!(isOmsEnable && eachAccessTileLink.linkDataText === locationGroupsTitle)">
-                    <a *ngIf="eachAccessTileLink.linkDataURL === uiRoutes || eachAccessTileLink.linkDataURL === uiLocationGroup; 
+                <div class="tiles-item">
+                    <a *ngIf="eachAccessTileLink.linkDataURL === quotesRoute || eachAccessTileLink.linkDataURL === locationGroupRoute; 
                       else routeLink" [routerLink]="[eachAccessTileLink.linkDataURL]">{{eachAccessTileLink.linkDataText}}</a>
                     <ng-template #routeLink>
                         <a [attr.href]="eachAccessTileLink.linkDataURL">{{eachAccessTileLink.linkDataText}}</a>

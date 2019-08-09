@@ -5,14 +5,14 @@
     <ng-template #systemTilesTemplate>
         <div class="col-md-12">
             <div *ngFor="let eachSystemTile of model.systemTiles;let i=index;">
-                <access-tile *ngIf="(eachSystemTile.sectionLinks).length !== 0" [Tiles]="eachSystemTile" [isOmsEnable]="model.omsEnabled"></access-tile>
+                <access-tile *ngIf="(eachSystemTile.sectionLinks).length !== 0" [Tiles]="eachSystemTile"></access-tile>
             </div>
         </div>
     </ng-template>
     <ng-template #mainTilesTemplate>
         <div class="col-md-12">
             <div *ngFor="let eachMainTile of model.mainTiles;let i=index;">
-                <access-tile *ngIf="(eachMainTile.sectionLinks).length !== 0" [Tiles]="eachMainTile" [isOmsEnable]="model.omsEnabled"></access-tile>
+                <access-tile *ngIf="(eachMainTile.sectionLinks).length !== 0" [Tiles]="eachMainTile"></access-tile>
             </div>
         </div>
     </ng-template>

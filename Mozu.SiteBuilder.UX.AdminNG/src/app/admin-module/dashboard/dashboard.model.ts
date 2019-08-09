@@ -5,5 +5,4 @@ export class  DashboardModel {
     mainTiles: AccessTileModel[];
     isShowSystemTiles: boolean;
     filteredAccessLinks: AccessTileModel[];
-    omsEnabled: boolean;
 }

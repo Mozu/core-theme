@@ -295,7 +295,6 @@ export interface CtTaContext {
     masterCatalogs: MasterCatalog2[];
     currencies: Currencies;
     logzuUrl: string;
-    omsEnabled: boolean;
 }
 
 export interface LocalizationValue {
