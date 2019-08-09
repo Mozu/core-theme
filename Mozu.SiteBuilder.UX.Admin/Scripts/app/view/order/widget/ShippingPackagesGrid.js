@@ -466,7 +466,7 @@
                         //shipmentData: shipment,
                         shipmentRecord: me.shipmentRecord,
                         selectedItem: item[0].data,
-                        available: json.candidateSuggestions[0].inventory[0].available,
+                        available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
                         listeners: {
                             saveSuccess: {
                                 fn: function (json) { 
