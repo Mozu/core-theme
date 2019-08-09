@@ -203,6 +203,19 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 limit: 2
             }
         });
+        //createGridPager: function () {
+        //    this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+        //        dock: 'bottom',
+        //        componentCls: 'x-link-paging-toolbar',
+        //        displayInfo: true,
+        //        store: this.store,
+        //        inputItemWidth: 45
+        //    });
+
+
+        //    return this.gridPager;
+        //},
+
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: me.record.getLocations( pagingParams.startIndex, pagingParams.pageSize ),
