@@ -132,7 +132,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         items: [
                             Ext.widget('splitbutton', {
                                 menuAlign: 'tr-br?',
-                                text: 'Update Shipment',
+                                text:'Update Shipment',
                                 itemId: 'updateShipmentSplitButton',
                                 handler: function () {
 
