@@ -188,7 +188,6 @@ describe('QuotesListComponent', () => {
     expect(component.gridColumnHeader).toEqual(dummyGridColumns.columnHeader);
     localStorage.removeItem(Constants.localStorageKeys.quoteGridData);
   });
-
   it('should call OpenGridColumnOverlayPanel on ellipsis click', () => {
     const event = new MouseEvent('click');
     component.OpenGridColumnOverlayPanel(event);
@@ -258,7 +257,6 @@ describe('QuotesListComponent', () => {
     expect(newSelectedGridColumnHeaderEvent.columns).toEqual(localStorageValue.columnHeader);
     localStorage.removeItem(Constants.localStorageKeys.quoteGridData);
   }));
-
   it('set selectedGridColumnHeader toggledGridColumn', async(() => {
     localStorage.setItem(Constants.localStorageKeys.quoteGridData, JSON.stringify(dummyGridColumns));
     const newSelectedGridColumnHeader = dummyGridColumns.columnHeader;
@@ -300,7 +298,16 @@ describe('QuotesListComponent', () => {
       expect(dummyRouter.navigate).toHaveBeenCalledWith(['/' + Constants.uiRoutes.quotesEdit + '/' + component.model.selectedQuote.id]);
     });
   }));
-  
+  it('on refreshQuoteGrid, populateQuoteGrid should get call', async(() => {
+    const spy = spyOn(component, 'populateQuoteGrid');
+    const dummyState = { first: 11, rows: 10 };
+    fixture.detectChanges();
+    component.refreshQuoteGrid(dummyState);
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+    expect(spy).toHaveBeenCalledWith(component.model.advancedSearch, component.model.startIndex, component.model.pageSize, component.model.sortResult);
+    });
+  }));
   it('valid transformValue should return from getQuoteGridData()', () => {
     const col = { field: 'totalQuantity' };
     fixture.detectChanges();
@@ -315,7 +322,6 @@ describe('QuotesListComponent', () => {
        expect(transformValue).toBe(totalQty);
     });
   });
-
   it('should call service to get success response from mock http json (quote-list)', () => {
     fixture.detectChanges();
     const req = httpMock.expectOne(environment.appUrl + `/assets/json/quote-list.json`);
@@ -334,5 +340,4 @@ describe('QuotesListComponent', () => {
     fixture.detectChanges();
     expect(loggerServiceSpy).toHaveBeenCalledWith('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');
   });
-
 });

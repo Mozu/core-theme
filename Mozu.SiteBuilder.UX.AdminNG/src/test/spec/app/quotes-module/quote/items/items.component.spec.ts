@@ -29,7 +29,7 @@ import { QuoteItemsComponent } from 'app/quotes-module/quote/items/items.compone
 import { QuoteItemsService } from 'app/quotes-module/quote';
 import { TableModule } from 'primeng/components/table/table';
 
-fdescribe('QuoteItemsComponent', () => {
+describe('QuoteItemsComponent', () => {
   let component: QuoteItemsComponent;
   let fixture: ComponentFixture<QuoteItemsComponent>;
   let element;
