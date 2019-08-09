@@ -661,12 +661,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             switch (carrier.DefaultCarrier.ToUpper())
             {
                 case "FEDEX":
-                    serviceType = carrier.ShippingSettingsForFedEx.StandardDefault;
+                    serviceType = carrier.ShippingSettingsForFedEx.ReturnLabelShippingMethod;
                     break;
                 case "UPS":
-                    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.StandardDefault;
+                    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.ReturnLabelShippingMethod;
                     break;
-
+                case "USPS":
+                    serviceType = carrier.ShippingSettingsForUsps?.ReturnLabelShippingMethod;
+                    break;
             }
             return serviceType;
         }
@@ -674,6 +676,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public string SetPackagingType(string carrier)
         {
             var packagingTypes = string.Empty;
+            //USPS carrier ignores packagingTypes
             switch (carrier)
             {
                 case "FEDEX":
