@@ -47,10 +47,10 @@ export class QuoteComponent implements OnInit {
 
     this._loggerService.info('QuoteComponent : populateQuote');
 
-    this._quoteService.fetchAllQuotes().subscribe((quoteListSuccessResponse: Response) => {
-      this._loggerService.info('QuoteComponent : _quoteListService.fetchAllQuotes_quotesResponse');
-        if (quoteListSuccessResponse !== null && quoteListSuccessResponse !== undefined && quoteListSuccessResponse['items'].length > 0) {
-          this.model = _.filter(quoteListSuccessResponse['items'], function (el: any) { return el.id === quoteId; })[0];
+    this._quoteService.fetchAllQuotes().subscribe((quoteSuccessResponse: Response) => {
+      this._loggerService.info('QuoteComponent : _quoteService.fetchAllQuotes_quotesResponse');
+        if (quoteSuccessResponse !== null && quoteSuccessResponse !== undefined && quoteSuccessResponse['items'] && quoteSuccessResponse['items'].length > 0) {
+          this.model = _.filter(quoteSuccessResponse['items'], function (el: any) { return el.id === quoteId; })[0];
           this.userId = this.model.userId;
           this.customerAccountId = this.model.customerAccountId;
           this._notificationService.notifyQuoteHeaderValuesReceived(this.model.quoteNumber, this.model.status);
@@ -58,7 +58,7 @@ export class QuoteComponent implements OnInit {
           this._spinner.stop();
     }, (quoteListErrResponse) => {
       this._spinner.stop();
-      this._loggerService.info('QuoteComponent : _quotesListService.fetchAllQuotes_errResponse');
+      this._loggerService.info('QuoteComponent : _quoteService.fetchAllQuotes_errResponse');
       throw new HttpError(ErrorCode.QuoteListGetFailed, ErroNotificationType.Toaster);
     });
   }

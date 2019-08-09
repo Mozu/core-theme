@@ -6,7 +6,7 @@ import { ShippingMethodService } from 'app/shared-module/shipping/method/method.
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '@shared/infrastructure/constants';
 
-fdescribe('ShippingMethodService', () => {
+describe('ShippingMethodService', () => {
     let shippingMethodService: ShippingMethodService;
     let loggerService: LoggerService;
     let loggerServiceSpy: any;
