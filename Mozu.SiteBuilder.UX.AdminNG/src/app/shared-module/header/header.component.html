@@ -7,10 +7,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-        <a href="/"> <img class="navbar-kibo-logo" src="/admin/assets/Images/kibo-icon.png" />
+        <a [href]="headerModel.homeURL"> <img class="navbar-kibo-logo" src="/admin/assets/Images/kibo-icon.png" />
         </a>
         <span class="navbar-kibo-text">
-       <a href="/">{{'Header.Label.kibo' | translate }}</a>
+       <a [href]="headerModel.homeURL">{{'Header.Label.kibo' | translate }}</a>
     </span>
     </div>
     <div id="collapsebar" class="navbar-collapse collapse">

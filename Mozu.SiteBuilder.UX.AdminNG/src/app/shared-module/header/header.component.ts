@@ -27,6 +27,7 @@ import {
     SearchedItemType
 } from './header.model';
 import { HeaderService } from './header.service';
+import { environment } from '../../../environments/environment.Debug';
 
 @Component({
     moduleId: module.id,
@@ -50,7 +51,9 @@ export class HeaderComponent implements OnInit {
     ngOnInit() {
         this._loggerService.info('HeaderComponent : ngOnInit');
         this.headerModel = new HeaderModel();
-        this._loggerService.info('HeaderComponent : ngOnInit');
+        this.headerModel.homeURL = environment.appUrl;
+        this.headerModel.searchResult = new SearchResults();
+        this.headerModel.showSearchInput = false;
         this.fetchloggedInUserData();
         this.fetchRedirectionLink();
         this.subscriptions.push(

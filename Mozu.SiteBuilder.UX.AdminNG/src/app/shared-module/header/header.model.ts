@@ -22,5 +22,11 @@ export class HeaderModel {
     tenantName: string;
     loggedInUserName: string;
     loggedInUserInitials: string;
-
+    showSearchInput: boolean;
+    searchResult: SearchResults;
+    sites: any[];
+    customerURL: string;
+    productURL: string;
+    ordersURL: string;
+    homeURL: string;
 }
