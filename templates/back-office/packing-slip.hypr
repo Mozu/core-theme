@@ -94,19 +94,19 @@
             <th>Weight</th>
         </tr></thead>
         <tbody>
-        {% for item in model.items %} <!-- model represents the package -->
+        {% for item in model.items %} <!-- model represents the shipment -->
            <tr>
                 <td>
                     {{ item.productCode }}
                 </td>
                 <td>
-                    <div class="product-name">{{ item.productname }}</div>
+                    <div class="product-name">{{ item.name }}</div>
                 </td>
                 <td>
                     {{ item.quantity }}
                 </td>
                 <td>
-                    {{ item.adjustedweight.value }} {{ item.adjustedweight.unit }}
+                    {{ item.weight }} {{ item.weightUnit }}
                 </td>
             </tr>
         {% endfor %}
