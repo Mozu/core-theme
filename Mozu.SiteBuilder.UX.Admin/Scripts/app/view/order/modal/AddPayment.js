@@ -300,7 +300,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
             // If this is ever undefined, then there is a bigger problem with the customer's data.
             curSavedPayments[i].billingContact = foundItem;
-                    
+
         }
 
         // Prune out duplicates here!
@@ -391,9 +391,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
 
         if (paymentObj.billingContact) {
             key += (paymentObj.billingContact.address1 || "") + (paymentObj.billingContact.cityOrTown || "")
-            + (paymentObj.billingContact.countryCode || "") + (paymentObj.billingContact.email || "")
-            + (paymentObj.billingContact.firstName || "") + (paymentObj.billingContact.lastName || "")
-            + (paymentObj.billingContact.postalOrZipCode || "") + (paymentObj.billingContact.stateOrProvince || "");
+                + (paymentObj.billingContact.countryCode || "") + (paymentObj.billingContact.email || "")
+                + (paymentObj.billingContact.firstName || "") + (paymentObj.billingContact.lastName || "")
+                + (paymentObj.billingContact.postalOrZipCode || "") + (paymentObj.billingContact.stateOrProvince || "");
         }
         return key;
     },
@@ -407,116 +407,150 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             name: 'addNewCard',
             width: '100%',
             items:
-            [
-                {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    width:'100%',
-                    defaults: {
-                        style: {
-                            margin: '0 20 0 0'
-                        }
-                    },
-                    items:
-                    [
-                        {
-                            xtype: 'textfield',
-                            name: 'nameOnCard',
-                            allowBlank: false,
-                            fieldLabel: 'Name on Card',
-                            margin: '0px 5px 0px 5px',
-                            flex: 1
-                        }, {
-                            xtype: 'currencyfield',
-                            width: 170,
-                            currencyCode: this.record.getCurrencyCode(),
-                            name: 'amount',
-                            fieldLabel: 'Amount',
-                            validateOnChange: false,
-                            selectOnFocus: true,
-                            allowBlank: false,
-                            minValue: 0.01,
-                            margin: '0px 5px 0px 5px',
-                            value: this.getDefaultPaymentAmount()
-                        }, {
-                            xtype: 'combobox',
-                            width: 170,
-                            name: 'cardType',
-                            itemId: 'cardType',
-                            valueField: 'Key',
-                            displayField: 'Value',
-                            fieldLabel: 'Card Type',
-                            queryMode: 'local',
-                            margin: '0px 5px 0px 5px',
-                            allowBlank: false,
-                            editable: false,
-                            forceSelection: true,
-                            store: cardTypeStore
-                        }
-                    ]
-                }, {
-                    xtype: 'container',
-                    layout: 'hbox',
-                    width: '100%',
-                    defaults: {
-                        style: {
-                            margin: '0 20 0 0'
-                        }
-                    },
-                    items:
-                    [
-                        {
-                            xtype: 'textfield',
-                            name: 'cardNumber',
-                            itemId: 'cardNumber',
-                            allowBlank: false,
-                            fieldLabel: 'Card Number',
-                            margin: '0px 5px 0px 5px',
-                            flex: 1
-                        }, {
-                            xtype: 'numberfield',
-                            width: 110,
-                            name: 'expireMonth',
-                            hideTrigger: true,
-                            mouseWheelEnabled: false,
-                            allowBlank: false,
-                            fieldLabel: 'Exp Month',
-                            validateOnChange: false,
-                            maxLength: 2,
-                            enforceMaxLength: true,
-                            minValue: 1,
-                            maxValue: 12,
-                            margin: '0px 5px 0px 5px'
-                        }, {
-                            xtype: 'numberfield',
-                            width: 110,
-                            name: 'expireYear',
-                            hideTrigger: true,
-                            allowBlank: false,
-                            maxLength: 4,
-                            enforceMaxLength: true,
-                            validateOnChange: false,
-                            margin: '0px 5px 0px 5px',
-                            validator: function (value) {
-                                if (value && value.length < 4) {
-                                    return "Year must have 4 digits";
+                [
+                    {
+                        xtype: 'container',
+                        layout: 'hbox',
+                        width:'100%',
+                        defaults: {
+                            style: {
+                                margin: '0 20 0 0'
+                            }
+                        },
+                        items:
+                            [
+                                {
+                                    xtype: 'textfield',
+                                    name: 'nameOnCard',
+                                    allowBlank: false,
+                                    fieldLabel: 'Name on Card',
+                                    margin: '0px 5px 0px 5px',
+                                    flex: 1
+                                }, {
+                                    xtype: 'currencyfield',
+                                    width: 170,
+                                    currencyCode: this.record.getCurrencyCode(),
+                                    name: 'amount',
+                                    fieldLabel: 'Amount',
+                                    validateOnChange: false,
+                                    selectOnFocus: true,
+                                    allowBlank: false,
+                                    minValue: 0.01,
+                                    margin: '0px 5px 0px 5px',
+                                    value: this.getDefaultPaymentAmount()
+                                }, {
+                                    xtype: 'combobox',
+                                    width: 170,
+                                    name: 'cardType',
+                                    itemId: 'cardType',
+                                    valueField: 'Key',
+                                    displayField: 'Value',
+                                    fieldLabel: 'Card Type',
+                                    queryMode: 'local',
+                                    margin: '0px 5px 0px 5px',
+                                    allowBlank: false,
+                                    editable: false,
+                                    forceSelection: true,
+                                    store: cardTypeStore,
+                                    listeners: {
+                                        scope: this,
+                                        'select': function (selection) {
+                                            var skipValChk = this.down('#skipValidation');
+                                            skipValChk.setValue(false);
+                                            if (selection.getValue() === 'OTHER') {
+                                                this.down('#skipValidation').show();
+                                            }
+                                            else {
+                                                this.down('#skipValidation').hide();
+                                            }
+                                        }
+                                    }
                                 }
-                                return true;
-                            },
-                            mouseWheelEnabled: false,
-                            fieldLabel: 'Exp Year'
-                        }, {
-                            xtype: 'textfield',
-                            width: 100,
-                            name: 'cvv',
-                            itemId: 'cvv',
-                            allowBlank: false,
-                            fieldLabel: 'CVV',
-                            margin: '0px 5px 0px 5px'
-                        }
-                    ]
-                }
-            ],
+                            ]
+                    }, {
+                        xtype: 'container',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            style: {
+                                margin: '0 20 0 0'
+                            }
+                        },
+                        items:
+                            [
+                                {
+                                    xtype: 'textfield',
+                                    name: 'cardNumber',
+                                    itemId: 'cardNumber',
+                                    allowBlank: false,
+                                    fieldLabel: 'Card Number',
+                                    margin: '0px 5px 0px 5px',
+                                    flex: 1
+                                }, {
+                                    xtype: 'numberfield',
+                                    width: 110,
+                                    name: 'expireMonth',
+                                    hideTrigger: true,
+                                    mouseWheelEnabled: false,
+                                    allowBlank: false,
+                                    fieldLabel: 'Exp Month',
+                                    validateOnChange: false,
+                                    maxLength: 2,
+                                    enforceMaxLength: true,
+                                    minValue: 1,
+                                    maxValue: 12,
+                                    margin: '0px 5px 0px 5px'
+                                }, {
+                                    xtype: 'numberfield',
+                                    width: 110,
+                                    name: 'expireYear',
+                                    hideTrigger: true,
+                                    allowBlank: false,
+                                    maxLength: 4,
+                                    enforceMaxLength: true,
+                                    validateOnChange: false,
+                                    margin: '0px 5px 0px 5px',
+                                    validator: function (value) {
+                                        if (value && value.length < 4) {
+                                            return "Year must have 4 digits";
+                                        }
+                                        return true;
+                                    },
+                                    mouseWheelEnabled: false,
+                                    fieldLabel: 'Exp Year'
+                                }, {
+                                    xtype: 'textfield',
+                                    width: 100,
+                                    name: 'cvv',
+                                    itemId: 'cvv',
+                                    allowBlank: false,
+                                    fieldLabel: 'CVV',
+                                    margin: '0px 5px 0px 5px'
+                                }
+                            ]
+                    }, {
+                        xtype: 'container',
+                        layout: 'hbox',
+                        width: '100%',
+                        defaults: {
+                            style: {
+                                margin: '0 20 0 0'
+                            }
+                        },
+                        items:
+                            [
+                                {
+                                    xtype: 'checkbox',
+                                    anchor: 0,
+                                    margin: "10 0 10 0",
+                                    name: 'skipOtherCCTypeValidation',
+                                    boxLabel: 'Skip Validation',
+                                    checked: false,
+                                    itemId: 'skipValidation',
+                                }
+                            ]
+                    }
+                ],
             scope: this
         }, this);
     },
@@ -568,9 +602,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         }
                     },
                     items:
-                    [
-                        this.existingPaymentPicker
-                    ]
+                        [
+                            this.existingPaymentPicker
+                        ]
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
@@ -580,30 +614,30 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         }
                     },
                     items:
-                    [
-                        {
-                            xtype: 'currencyfield',
-                            width: 170,
-                            currencyCode: this.record.getCurrencyCode(),
-                            name: 'existingCardAmount',
-                            itemId: 'existingCardAmount',
-                            fieldLabel: 'Amount',
-                            validateOnChange: false,
-                            selectOnFocus: true,
-                            allowBlank: false,
-                            minValue: 0.01,
-                            margin: '0px 5px 0px 5px',
-                            value: this.getDefaultPaymentAmount()
-                        }, {
-                            xtype: 'textfield',
-                            width: 100,
-                            name: 'existingCardCvv',
-                            itemId: 'existingCardCVV',
-                            allowBlank: true,
-                            fieldLabel: 'CVV',
-                            margin: '0px 5px 0px 5px',
-                        }
-                    ]
+                        [
+                            {
+                                xtype: 'currencyfield',
+                                width: 170,
+                                currencyCode: this.record.getCurrencyCode(),
+                                name: 'existingCardAmount',
+                                itemId: 'existingCardAmount',
+                                fieldLabel: 'Amount',
+                                validateOnChange: false,
+                                selectOnFocus: true,
+                                allowBlank: false,
+                                minValue: 0.01,
+                                margin: '0px 5px 0px 5px',
+                                value: this.getDefaultPaymentAmount()
+                            }, {
+                                xtype: 'textfield',
+                                width: 100,
+                                name: 'existingCardCvv',
+                                itemId: 'existingCardCVV',
+                                allowBlank: true,
+                                fieldLabel: 'CVV',
+                                margin: '0px 5px 0px 5px',
+                            }
+                        ]
                 }
             ],
             scope: this
@@ -665,9 +699,9 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         }
                     },
                     items:
-                    [
-                        this.savedPaymentPicker
-                    ]
+                        [
+                            this.savedPaymentPicker
+                        ]
                 }, {
                     xtype: 'container',
                     layout: 'hbox',
@@ -677,30 +711,30 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                         }
                     },
                     items:
-                    [
-                        {
-                            xtype: 'currencyfield',
-                            width: 170,
-                            currencyCode: this.record.getCurrencyCode(),
-                            name: 'savedCardAmount',
-                            itemId: 'savedCardAmount',
-                            fieldLabel: 'Amount',
-                            validateOnChange: false,
-                            selectOnFocus: true,
-                            allowBlank: false,
-                            minValue: 0.01,
-                            margin: '0px 5px 0px 5px',
-                            value: this.getDefaultPaymentAmount()
-                        }, {
-                            xtype: 'textfield',
-                            width: 100,
-                            name: 'savedCardCvv',
-                            itemId: 'savedCardCVV',
-                            allowBlank: true,
-                            fieldLabel: 'CVV',
-                            margin: '0px 5px 0px 5px',
-                        }
-                    ]
+                        [
+                            {
+                                xtype: 'currencyfield',
+                                width: 170,
+                                currencyCode: this.record.getCurrencyCode(),
+                                name: 'savedCardAmount',
+                                itemId: 'savedCardAmount',
+                                fieldLabel: 'Amount',
+                                validateOnChange: false,
+                                selectOnFocus: true,
+                                allowBlank: false,
+                                minValue: 0.01,
+                                margin: '0px 5px 0px 5px',
+                                value: this.getDefaultPaymentAmount()
+                            }, {
+                                xtype: 'textfield',
+                                width: 100,
+                                name: 'savedCardCvv',
+                                itemId: 'savedCardCVV',
+                                allowBlank: true,
+                                fieldLabel: 'CVV',
+                                margin: '0px 5px 0px 5px',
+                            }
+                        ]
                 }
             ],
             scope: this
@@ -758,32 +792,32 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             itemId: 'billingContactInfo',
             tpl: [
                 '<tpl if="firstName || middleName ||lastName">',
-                    '<div>{firstName:htmlEncode} {middleName:htmlEncode} {lastName:htmlEncode}</div>',
+                '<div>{firstName:htmlEncode} {middleName:htmlEncode} {lastName:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address1">',
-                    '<div>{address1:htmlEncode}</div>',
+                '<div>{address1:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address2">',
-                    '<div>{address2:htmlEncode}</div>',
+                '<div>{address2:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address3">',
-                    '<div>{address3:htmlEncode}</div>',
+                '<div>{address3:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address4">',
-                    '<div>{address4:htmlEncode}</div>',
+                '<div>{address4:htmlEncode}</div>',
                 '</tpl>',
-                    '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
+                '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
                 '<tpl if="homePhone">',
-                    '<div>Home Phone: {homePhone:htmlEncode}</div>',
+                '<div>Home Phone: {homePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="workPhone">',
-                    '<div>Work Phone: {workPhone:htmlEncode}</div>',
+                '<div>Work Phone: {workPhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="mobilePhone ">',
-                    '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
+                '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="email">',
-                    '<div>{email}</div>',
+                '<div>{email}</div>',
                 '</tpl>'
             ],
             data: this.record.data.billingContact
@@ -858,7 +892,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                 }
                 break;
             case 'new':
-                // Fall through!!
+            // Fall through!!
             default:
                 {
                     // payment form
@@ -879,32 +913,32 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             itemId: 'existingBillingContactInfo',
             tpl: [
                 '<tpl if="firstName || middleName ||lastName">',
-                    '<div>{firstName:htmlEncode} {middleName:htmlEncode} {lastName:htmlEncode}</div>',
+                '<div>{firstName:htmlEncode} {middleName:htmlEncode} {lastName:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address1">',
-                    '<div>{address1:htmlEncode}</div>',
+                '<div>{address1:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address2">',
-                    '<div>{address2:htmlEncode}</div>',
+                '<div>{address2:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address3">',
-                    '<div>{address3:htmlEncode}</div>',
+                '<div>{address3:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="address4">',
-                    '<div>{address4:htmlEncode}</div>',
+                '<div>{address4:htmlEncode}</div>',
                 '</tpl>',
-                    '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
+                '<div>{cityOrTown:htmlEncode} {postalOrZipCod:htmlEncode} {stateOrProvince:htmlEncode} {countryCode:htmlEncode}</div>',
                 '<tpl if="homePhone">',
-                    '<div>Home Phone: {homePhone:htmlEncode}</div>',
+                '<div>Home Phone: {homePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="workPhone">',
-                    '<div>Work Phone: {workPhone:htmlEncode}</div>',
+                '<div>Work Phone: {workPhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="mobilePhone ">',
-                    '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
+                '<div>Mobile Phone: {mobilePhone:htmlEncode}</div>',
                 '</tpl>',
                 '<tpl if="email">',
-                    '<div>{email}</div>',
+                '<div>{email}</div>',
                 '</tpl>'
             ],
             data: record.data.billingContact
@@ -917,7 +951,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     },
 
     // need to use the billing address form to validate the billing contact data;
-    hasValidBillingContact: function () {        
+    hasValidBillingContact: function () {
         var inValidField = this.addressForm.getForm().hasInvalidField();
         return !inValidField;
     },
@@ -953,8 +987,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
         if (!PCI) {
             return me.mon(Taco.app, 'pciloaded', me.createPciProcessor, me);
         }
-        
-        
+
+
 
         me.pciProcessor = PCI({
             fields: me.getPciFieldsAdapter(),
@@ -972,35 +1006,35 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     var formValues = me.form.getValues();
 
                     me.pciProcessor.applyMask();
-                    
+
                     var order = me.record,
-                    billingInfo = {
-                        isSameBillingShippingAddress: false,
-                        paymentServiceCardId: formValues.paymentServiceCardId,
-                        nameOnCard: formValues.nameOnCard,
-                        cardType: formValues.cardType,
-                        cardNumber: formValues.cardNumber,
-                        expireMonth: formValues.expireMonth,
-                        expireYear: formValues.expireYear
-                    },
-                    contactInfo = {
-                        email: formValues.email,
-                        firstName: formValues.firstName,
-                        middleName: formValues.middleName,
-                        lastName: formValues.lastName,
-                        address1: formValues.address1,
-                        address2: formValues.address2,
-                        address3: formValues.address3,
-                        address4: formValues.address4,
-                        cityOrTown: formValues.cityOrTown,
-                        countryCode: formValues.countryCode,
-                        postalOrZipCode: formValues.postalOrZipCode,
-                        stateOrProvince: formValues.stateOrProvince,
-                        homePhone: formValues.homePhone,
-                        mobilePhone: formValues.mobilePhone,
-                        workPhone: formValues.workPhone
-                    },
-                    amount = formValues.amount;
+                        billingInfo = {
+                            isSameBillingShippingAddress: false,
+                            paymentServiceCardId: formValues.paymentServiceCardId,
+                            nameOnCard: formValues.nameOnCard,
+                            cardType: formValues.cardType,
+                            cardNumber: formValues.cardNumber,
+                            expireMonth: formValues.expireMonth,
+                            expireYear: formValues.expireYear
+                        },
+                        contactInfo = {
+                            email: formValues.email,
+                            firstName: formValues.firstName,
+                            middleName: formValues.middleName,
+                            lastName: formValues.lastName,
+                            address1: formValues.address1,
+                            address2: formValues.address2,
+                            address3: formValues.address3,
+                            address4: formValues.address4,
+                            cityOrTown: formValues.cityOrTown,
+                            countryCode: formValues.countryCode,
+                            postalOrZipCode: formValues.postalOrZipCode,
+                            stateOrProvince: formValues.stateOrProvince,
+                            homePhone: formValues.homePhone,
+                            mobilePhone: formValues.mobilePhone,
+                            workPhone: formValues.workPhone
+                        },
+                        amount = formValues.amount;
 
                     billingInfo.paymentServiceCardId = me._hiddenCardId;
 
@@ -1020,11 +1054,11 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                             if (!json || !json.success) {
                                 return;
                             }
-                                
+
                             order.reload();
                             me.saveSuccess(json);
                         },
-                        failure: function (response) {                            
+                        failure: function (response) {
                             me.setLoading(false, me.body);
                             order.reload();
                             // close the dialog
@@ -1065,7 +1099,8 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             HiddenCardID: function (id) {
                 if (id) me._hiddenCardId = id;
                 return me._hiddenCardId;
-            }
+            },
+            SkipValidationOtherCCType: this.createPciFormField(this.down('#skipValidation'))
         };
     },
 
@@ -1073,7 +1108,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
     getDefaultPaymentAmount: function () {
         var me = this,
             retVal = "",
-            authInfo;            
+            authInfo;
 
         // only do this if one is not set when instantiating this class;
         if (!this.defaultPaymentAmount) {
@@ -1105,7 +1140,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             amount = this.down('#savedCardAmount').getValue();
             paymentServiceCardId = curPayment.data.id;
         }
-        
+
         billingInfo = {
             paymentServiceCardId: paymentServiceCardId,
             nameOnCard: curPayment.data.nameOnCard,
@@ -1152,7 +1187,7 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             // Existing card 
             var order = this.record;
             var payloadData = this.getPaymentPayload();
-            
+
             order.addPayment({
                 jsonData: payloadData,
                 success: function (response) {
@@ -1161,11 +1196,11 @@ Ext.define('Taco.view.order.modal.AddPayment', {
                     if (!json || !json.success) {
                         return;
                     }
-                                
+
                     order.reload();
                     me.saveSuccess(json);
                 },
-                failure: function (response) {                            
+                failure: function (response) {
                     me.setLoading(false, me.body);
                     order.reload();
                     // close the dialog
@@ -1180,20 +1215,20 @@ Ext.define('Taco.view.order.modal.AddPayment', {
             billingContactInfo = this.down("#billingContactInfo");
         extraInfo[isChecked ? 'hide' : 'show']();
         billingContactInfo[isChecked ? 'show' : 'hide']();
-        
+
         // reset the form when the visibility is toggled;
         this.addressForm.getForm().setValues(this.billingContactRecord.getData());
     }
 },
-/* class definition-time function */
-function () {
-    var me = this;
+    /* class definition-time function */
+    function () {
+        var me = this;
 
-    Ext.Loader.loadScript({
-        url: '/admin/scripts/resources/lib/pci-temp.js',
-        onLoad: function() {
-            me.PCIaaS = window.PCIaaS;
-            Taco.app && Taco.app.fireEvent('pciloaded', me.PCIaaS);
-        }
+        Ext.Loader.loadScript({
+            url: '/admin/scripts/resources/lib/pci-temp.js',
+            onLoad: function() {
+                me.PCIaaS = window.PCIaaS;
+                Taco.app && Taco.app.fireEvent('pciloaded', me.PCIaaS);
+            }
+        });
     });
-});
