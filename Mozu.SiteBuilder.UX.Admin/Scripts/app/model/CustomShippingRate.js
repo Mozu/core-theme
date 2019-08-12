@@ -28,7 +28,7 @@ Ext.define('Taco.model.CustomShippingRate', {
         'type': 'bool'
     },
     {
-        'name': 'numberOfDaysToShip',
+        'name': 'deliveryDuration',
         'type': 'string'
     }]
 });

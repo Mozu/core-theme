@@ -32,12 +32,12 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         me.title = (this.isCreate) ? this.createTitle : this.editTitle;
         me.amountField = null;
         this.store = Ext.create('Ext.data.Store', {
-            fields: ['shipCode', 'name'],
+            fields: ['deliveryCode', 'name'],
             data: [
-                { "shipCode": "Standard", "name": "Express" },
-                { "shipCode": "One_Day", "name": "1 day" },
-                { "shipCode": "Two_Day", "name": "2 day" },
-                { "shipCode": "Three_Day", "name": "3 day" }
+                { "deliveryCode": "STANDARD", "name": "Express" },
+                { "deliveryCode": "1_DAY", "name": "1 day" },
+                { "deliveryCode": "2_DAY", "name": "2 day" },
+                { "deliveryCode": "3_DAY", "name": "3 day" }
 
             ]
         });
@@ -98,11 +98,11 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
             }, {
                 xtype: 'combobox',
                 width: 160,
-                name: 'numberOfDaysToShip',
-                itemId: 'numberOfDaysToShip',
-                valueField: 'shipCode',
+                name: 'deliveryDuration',
+                itemId: 'deliveryDuration',
+                valueField: 'deliveryCode',
                 displayField: 'name',
-                fieldLabel: 'No. of days to ship',
+                fieldLabel: 'Delivery Duration',
                 queryMode: 'local',
                 margin: '0px 5px 0px 5px',
                 allowBlank: false,
@@ -150,7 +150,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
     doSave: function () {
         var me = this,
             data = me.form.getValues();
-       
+
         me.record.set(data);
         me.saveSuccess(data);
     }
