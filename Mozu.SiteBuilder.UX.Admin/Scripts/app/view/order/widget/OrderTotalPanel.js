@@ -278,7 +278,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
                     behavior: 'fulfill'
                 }],
                 // need to have order items and a customer address. check for something on the fulfillmentContact. Note: don't use id as it might be 0 for whatever reason.
-                disabled: !this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length,
+                disabled: !this.isOrderEditable() || (!this.record.isShippable() || !this.record.get("fulfillmentContact").postalOrZipCode || !this.record.get("items").length),
                 text: me.record.get("shippingMethodName") || me.record.get("shippingMethodCode") || "None Selected",
                 menu: Ext.create('Taco.view.order.widget.ShippingMethodMenu', {
                     showRuntimePricing: true,
@@ -331,6 +331,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
         return (!this.record.isPickupOnlyOrder() && Ext.Object.isEmpty(this.record.data.fulfillmentContact))
             ? "Shipping Method <span class='taco-order-shipping-error'>(No Shipping Address Selected)</span>"
             : "Shipping Method";
+    },
+
+    isOrderEditable: function () {
+        var orderStatus = this.record.get('orderStatus');
+        if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
+            return true;
+        else
+            return false;
     },
 
     // update the shipping method label based on the presence of a shipping Address Contact
