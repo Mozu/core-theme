@@ -81,7 +81,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Shipping
        /// valid values are
        /// Standard, One_Day, Two_Day, Three_Day
        /// </summary>
-        public string NumberOfDaysToShip { get; set; }
+        public string DeliveryDuration { get; set; }
         
 
     }
