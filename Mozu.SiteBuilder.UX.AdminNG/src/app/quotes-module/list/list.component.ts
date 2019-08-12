@@ -143,8 +143,8 @@ export class QuotesListComponent implements OnInit, OnDestroy {
           this.model.pageSize = quotesListSuccessResponse.pageSize;
           this.model.pageCount = quotesListSuccessResponse.pageCount;
           this.model.totalCount = quotesListSuccessResponse.totalCount;
-          this._spinner.stop();
         }
+        this._spinner.stop();
       }, (quotesListErrResponse) => {
         this._spinner.stop();
         this._loggerService.info('QuotesListComponent : _quotesListService.fetchAllQuotes_errResponse');

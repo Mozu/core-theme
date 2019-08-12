@@ -181,7 +181,8 @@
         },
         "GridFooter": {
             "Displaying": "Displaying",
-            "of": "of"
+            "of": "of",
+            "NoDataDisplayMessage":"No data to display"
         },
         "Quote": {
             "Information": {

@@ -1,8 +1,8 @@
 <div class="col-md-12 quote-container">
     <spinner></spinner>
-    <p-table #dt [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true" [rows]="model.pageSize"
-        [totalRecords]="model.totalCount" (onRowSelect)="onRowSelect($event)" selectionMode="single"
-        [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped"
+    <p-table #quoteListDataTable [columns]="selectedGridColumnHeader" [value]="model.items" [paginator]="true"
+        [rows]="model.pageSize" [totalRecords]="model.totalCount" (onRowSelect)="onRowSelect($event)"
+        selectionMode="single" [reorderableColumns]="true" (onColReorder)="onColReorder($event)" class="table-striped"
         (onLazyLoad)="loadQuoteLazy($event)" [lazy]="true">
         <ng-template pTemplate="header" let-columns>
             <tr>
@@ -32,14 +32,19 @@
                 </td>
             </tr>
         </ng-template>
-        <ng-template pTemplate="paginatorleft" let-state>    
-            <p-button (onClick)="refreshQuoteGrid(state)" class="refresh-btn "><i class="fa fa-refresh"></i></p-button>                 
+        <ng-template pTemplate="paginatorleft" let-state>
+            <p-button (onClick)="refreshQuoteGrid(state)" class="refresh-btn "><i class="fa fa-refresh"></i></p-button>
         </ng-template>
-        <ng-template pTemplate="paginatorright" let-state>
-            {{'QUOTES.GridFooter.Displaying' | translate }} {{state.totalRecords
-            < 1 ? 0 : state.first + 1}} - {{state.totalRecords> 0 ? ((dt.rows+ state.first)
-                <=state.totalRecords ? (dt.rows + state.first) : state.totalRecords) : 0}}
-            {{ 'QUOTES.GridFooter.of' | translate }} {{state.totalRecords ? state.totalRecords : 0}}
+        <ng-template pTemplate="paginatorright" let-state>                
+            <div *ngIf="state.totalRecords && state.totalRecords > 0">
+                {{'QUOTES.GridFooter.Displaying' | translate }} {{state.totalRecords
+                        < 1 ? 0 : state.first + 1}} - {{state.totalRecords> 0 ? ((quoteListDataTable.rows+ state.first)
+                            <=state.totalRecords ? (quoteListDataTable.rows + state.first) : state.totalRecords) : 0}}
+                {{ 'QUOTES.GridFooter.of' | translate }} {{state.totalRecords ? state.totalRecords : 0}}
+            </div>
+            <div *ngIf="!state.totalRecords || state.totalRecords === 0">                
+                {{'QUOTES.GridFooter.NoDataDisplayMessage' | translate }}
+            </div>
         </ng-template>
     </p-table>
 
