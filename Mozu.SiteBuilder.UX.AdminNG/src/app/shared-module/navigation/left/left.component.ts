@@ -6,6 +6,7 @@ import {
   EventEmitter,
   Output
 } from '@angular/core';
+import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import {
   NgbModal,
@@ -21,6 +22,7 @@ import { UtilityService } from '@core/infrastructure/utility.service';
 import { SharedDataService, NotificationService } from '@global';
 import { Constants } from '@shared/infrastructure/constants';
 import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
+import { NotificationLGActions } from '@shared/infrastructure/enums';
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, SecureForm } from './left.model';
 
@@ -36,6 +38,7 @@ export class NavigationLeftComponent implements OnInit {
   locationGroupRoute = Constants.uiRoutes.locationGroups;
   inventoryTitle = Constants.titles.inventory;
   locationGroupsTitle = Constants.titles.locationGroups;
+  subscriptions = [];
 
   constructor(
     private navigationService: NavigationService,
@@ -45,7 +48,8 @@ export class NavigationLeftComponent implements OnInit {
     private utilityService: UtilityService,
     private modalService: NgbModal,
     private config: NgbModalConfig,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private router: Router
   ) { }
 
   visibleSidebar1;
@@ -132,6 +136,13 @@ export class NavigationLeftComponent implements OnInit {
     this._loggerService.info('NavigationLeftComponent : megaMenuToggleIcon');
     const element = event.target;
     element.classList.toggle('active');
+  }
+
+  navigationFromMegaMenu(route) {
+    this.visibleSidebar1 = false;
+    if (route === Constants.uiRoutes.locationGroups) {
+      this._notificationService.notifyLocationGroupAdded(NotificationLGActions.navigateFromLeftMenu);
+    }
   }
 
 }

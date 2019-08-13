@@ -34,8 +34,8 @@ import { TopLocationGroupsService } from './top-location-groups.service';
       this.checkMode();
 
       this.subscriptions.push(
-        this._notificationService.locationGroupAdded.subscribe((action: string) => {
-            if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled) {
+        this._notificationService.locationGroupAdded.subscribe((action: any) => {
+            if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled || action === NotificationLGActions.navigateFromLeftMenu) {
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
             }

@@ -43,7 +43,8 @@ export enum NotificationLGActions {
     saved = 'Saved',
     list = 'List',
     ConfirmationDialogPrimaryBtnAct = 'ConfirmationDialogPrimaryBtnAct',
-    ConfirmationDialogSecondaryBtnAct = 'ConfirmationDialogSecondaryBtnAct'
+    ConfirmationDialogSecondaryBtnAct = 'ConfirmationDialogSecondaryBtnAct',
+    navigateFromLeftMenu = 'NavigateFromLeftMenu',
 }
 
 export enum LocationGroupEventOperations {
