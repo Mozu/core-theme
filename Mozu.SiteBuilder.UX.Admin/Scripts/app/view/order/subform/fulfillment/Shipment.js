@@ -10,7 +10,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
     initComponent: function () {
         this.items = [];
-
+        this.currentTaskList = this.getActiveTaskList();
         this.buildShipmentInfoHeader();
 
         this.callParent(arguments);
@@ -70,12 +70,19 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                             '<span class="label">Status</span>',
                             '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus) + '</div>'
                         ]
-                    },
+                    },                    
                     {
                         padding: '0 50 0 0',
                         tpl: [
                             '<span class="label">Code</span>',
-                            '<div class="labelvalue">' + (this.shipmentRecord.locationCode ? this.shipmentRecord.locationCode : '') + '</div>'
+                            '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.taskId : '') + '</div>'
+                        ]
+                    },
+                    {
+                        padding: '0 50 0 0',
+                        tpl: [
+                            '<span class="label">Fulfillment Step</span>',
+                            '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.name : '') + '</div>'
                         ]
                     },
                     {
@@ -419,7 +426,16 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         else {
             me.shipmentAutoReassign(me.shipmentRecord.locationCode);
         }
+    },
+
+    getActiveTaskList: function () {
+        var taskLists = this.shipmentRecord.workflowState.taskList;
+        for (var count = 0; count < taskLists.length; count++) {
+            if (taskLists[count].active)
+                return taskLists[count];
+        }
     }
+
 });
 
 
