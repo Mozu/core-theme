@@ -1,0 +1,70 @@
+﻿    <table class="mz-ordersummary" cellpadding="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666" class="mz-ordersummary-header-product"><font color="#ffffff">{{ labels.product }}</font></td>
+                <td bgcolor="#666666" class="mz-ordersummary-header-qty"><font color="#ffffff">{{ labels.qty }}</font></td>
+                <td bgcolor="#666666" class="mz-ordersummary-header-each"><font color="#ffffff">{{ labels.each }}</font></td>
+                <td bgcolor="#666666" class="mz-ordersummary-header-total"><font color="#ffffff">{{ labels.total }}</font></td>
+            </tr>
+        </thead>
+        {% for item in model.items %}
+            <tbody class="mz-ordersummary-lineitems">
+              <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.itemDiscount > 0 %}is-discounted{% endif %}">
+                    <td class="mz-ordersummary-item-product">
+                      {{ item.name }}
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td align="right">{{ item.unitPrice|currency }}</td>
+                    <td align="right">{{ item.lineItemCost|currency }}</td>
+                </tr>
+            </tbody>
+        {% endfor %}
+      
+        <tbody>
+            <tr class="mz-ordersummary-subtotal">
+              <td align="right" colspan="4">
+                <span class="mz-ordersummary-totalname">{{ labels.subtotal }}:</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.lineItemSubtotal|currency }}</span>
+              </td>
+            </tr>
+
+            {% if model.dutyTotal > 0 %}
+            <tr class="mz-ordersummary-tax">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
+                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</span>
+                </td>
+            </tr>
+            {% else %}
+            {% if model.taxTotal %}
+            <tr class="mz-ordersummary-tax">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-totalname">{{ labels.tax }}:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.lineItemTaxTotal|currency }}</span>
+                </td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            <tr class="mz-ordersummary-shippingtotal">
+              <td align="right" colspan="4">
+                <span class="mz-ordersummary-totalname">{{ labels.shippingHandling }}:</span>
+                <span class="mz-ordersummary-totalvalue">{{ model.shippingSubTotal|currency }}</span>
+              </td>
+            </tr>
+            {% if model.handlingTotal %}
+            <tr class="mz-ordersummary-additionalhandling">
+                <td align="right" colspan="4">
+                  <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}</span>
+                  <span class="mz-ordersummary-totalvalue">{{ model.handlingTotal|currency }}</span>
+                </td>
+            </tr>
+            {% endif %}
+            <tr class="mz-ordersummary-grandtotal">
+                <td align="right" colspan="4">
+                    <span class="mz-ordersummary-totalname">{{ labels.total }}:</span>
+                    <span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
