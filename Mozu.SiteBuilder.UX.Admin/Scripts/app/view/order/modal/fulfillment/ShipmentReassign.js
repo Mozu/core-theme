@@ -183,13 +183,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
         var allLocationsStore = Ext.create('Ext.data.Store', {
             storeId: 'allLocationsStore',
-            fields: ['displayName'],
-            groupField: 'displayName',
+            fields: ['name', 'code'],
             autoLoad: false,
-            pageSize: 2,
+            pageSize: 5,
             //data: me.record.locationsStore.data.items,
             proxy: {
-                type: 'memory',
+                type: 'ajaxproxy',
+                url: '/admin/app/location/list',
                 reader: {
                     type: 'json',
                     root: 'items',
@@ -200,35 +200,24 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         allLocationsStore.load({
             params: {
                 start: 0,
-                limit: 2
+                limit: 5
             }
         });
-        //createGridPager: function () {
-        //    this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
-        //        dock: 'bottom',
-        //        componentCls: 'x-link-paging-toolbar',
-        //        displayInfo: true,
-        //        store: this.store,
-        //        inputItemWidth: 45
-        //    });
-
-
-        //    return this.gridPager;
-        //},
+       
 
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: me.record.getLocations( pagingParams.startIndex, pagingParams.pageSize ),
+            store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
             columns: [
                 {
                     text: 'Location',
-                    dataIndex: 'displayName',
+                    dataIndex: 'name',
                     width: 500,
                 },
                 {
                     text: 'Location Code',
-                    dataIndex: 'displayName',
+                    dataIndex: 'code',
                     width: 500,
                 }
             ],

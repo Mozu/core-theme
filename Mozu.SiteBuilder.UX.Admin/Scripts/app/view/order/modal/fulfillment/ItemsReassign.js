@@ -158,29 +158,36 @@
                 //}
             },
         });
-
-        Ext.create('Ext.data.JsonStore', {
+        var allLocationsStore = Ext.create('Ext.data.Store', {
             storeId: 'allLocationsStore',
-            fields: ['displayName'],
-            groupField: 'displayName',
+            fields: ['name', 'code'],
+            autoLoad: false,
+            pageSize: 5,
             //data: me.record.locationsStore.data.items,
             proxy: {
-                type: 'memory',
+                type: 'ajaxproxy',
+                url: '/admin/app/location/list',
                 reader: {
                     type: 'json',
-                    root: 'items'
+                    root: 'items',
+                    totalProperty: 'total'
                 }
+            }
+        });
+        allLocationsStore.load({
+            params: {
+                start: 0,
+                limit: 5
             }
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
-            store: me.record.getLocations(),
+            store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
-            //store: Ext.data.StoreManager.lookup('allLocationsStore'),
             columns: [
                 {
                     text: 'Location',
-                    dataIndex: 'displayName',
+                    dataIndex: 'name',
                     width: 500,
                 },
                 {
@@ -190,12 +197,18 @@
                 }
             ],
             height: 200,
-            width: 400
-        });
+            width: 400,
+            dockedItems: [{
+                xtype: 'pagingtoolbar',
+                store: 'allLocationsStore',
+                dock: 'bottom',
+                displayInfo: true
+            }],
+        });                   
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
-            height: 500,
+            height: 300,
             listeners: {
                 beforetabchange: function (tabs, newTab, oldTab) {
                     if (newTab.itemId == 'allLocationsGrid') {

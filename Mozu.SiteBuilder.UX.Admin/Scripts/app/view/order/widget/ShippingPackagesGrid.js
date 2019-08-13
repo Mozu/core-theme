@@ -460,7 +460,7 @@
                     Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
                         layout: 'hbox',
                         width: 1080,
-                        height: 550,
+                        height: 450,
                         record: me.record,
                         inventoryItemList: json,
                         //shipmentData: shipment,
