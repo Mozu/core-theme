@@ -34,7 +34,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
         this.store = Ext.create('Ext.data.Store', {
             fields: ['deliveryCode', 'name'],
             data: [
-                { "deliveryCode": "STANDARD", "name": "Express" },
+                { "deliveryCode": "STANDARD", "name": "Standard" },
                 { "deliveryCode": "1_DAY", "name": "1 day" },
                 { "deliveryCode": "2_DAY", "name": "2 day" },
                 { "deliveryCode": "3_DAY", "name": "3 day" }
