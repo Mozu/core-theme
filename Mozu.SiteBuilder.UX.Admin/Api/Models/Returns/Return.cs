@@ -127,5 +127,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
 
         public int TotalItemsToRefund { get; set; }
         #endregion
+     
+        public bool ActionRequired { get; set; }
     }
 }

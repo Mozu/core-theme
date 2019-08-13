@@ -189,5 +189,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// The quantity that is returnable now.
         /// </summary>
         public int? QuantityReturnable { get; set; }
+        public int? ShipmentItemId { get; set; }
+
+        public int? ShipmentNumber { get; set; }
+
+        public string OriginalShipmentId { get; set; }
     }
 }
