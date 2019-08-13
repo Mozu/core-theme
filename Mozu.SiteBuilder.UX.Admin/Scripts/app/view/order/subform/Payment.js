@@ -17,7 +17,8 @@ Ext.define('Taco.view.order.subform.Payment', {
         'Taco.view.order.modal.AddPaymentManual',
         'Taco.view.order.modal.AddEcommerceGiftCard',
         'Taco.view.order.modal.AddGiftCard',
-        'Taco.store.StoreCredits'
+        'Taco.store.StoreCredits',
+        'Taco.model.PaymentSettings'
     ],
 
     title: 'Payments',
@@ -136,6 +137,20 @@ Ext.define('Taco.view.order.subform.Payment', {
             callback: function (record) {
                 me.record.checkoutSettings = record;
                 me.addTools();
+            }
+        });
+
+
+        Taco.model.PaymentSettings.load(123, {
+            scope: this,
+            failure: function () {
+                // there should be a message here
+            },
+            success: function (record) {
+            },
+            callback: function (record) {
+                me.record.PaymentSettings = record;
+                me.initPaymentsUI();
             }
         });
 
@@ -320,12 +335,11 @@ Ext.define('Taco.view.order.subform.Payment', {
         var me = this;
 
         me.initHeader();
-        me.initPaymentsUI();
+        //me.initPaymentsUI();
     },
 
     initPaymentsUI: function() {
         var me = this;
-
         me.paymentPanels = [];
 
         this.record.payments().each( function (payment) {
