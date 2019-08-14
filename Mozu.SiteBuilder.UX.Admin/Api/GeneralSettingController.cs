@@ -12,7 +12,11 @@ using Mozu.SiteBuilder.UX.Models.Settings;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteSettings.Order.Contracts;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.SiteSettings.Shipping.Contracts.Clients;
+using Mozu.SiteSettings.Shipping.Contracts;
 using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
+using DC = Mozu.SiteSettings.Order.Contracts;
+using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -23,13 +27,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
         private readonly Lazy<ICheckoutSettingsWebApiClient> _checkoutSettingsWebApiClient;
         private readonly IChannelWebApiClient _channelWebApiClient;
+        private readonly IFulfillmentSettingsWebApiClient _fulfillmentSettingsWebApiClient;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
+        private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
 
-        public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient)
+
+        public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient, IFulfillmentSettingsWebApiClient fulfillmentSettingsWebApiClient, IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            IShippingSettingsWebApiClient shippingSettingsWebApiClient)
         {
             _wrapper = wrapper;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _channelWebApiClient = channelWebApiClient.CloneWithoutUserClaims();
+            _fulfillmentSettingsWebApiClient = fulfillmentSettingsWebApiClient;
+            _returnSettingsWebApiClient = returnSettingsWebApiClient;
+            _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -76,6 +88,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
 
 
+
+
             var savedSettings = _wrapper.UpdateGeneralSettings(settingsToSave);
             if (settingsToSave.ChannelId != null)
             {
@@ -93,6 +107,80 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             await this.SaveEmailTypes(settingsToSave.EmailTypes);
 
             return Single2((await this.GetSettings()).Items.First());
+        }
+
+        [HttpPostRoute(UriTemplate = "updatePaymentSettings")]
+        public async Task<Response<DC.PaymentSettings>> UpdatePaymentSettings(DC.PaymentSettings paymentSettings)
+        {
+
+            var currentPaymentSettings = (await _checkoutSettingsWebApiClient.Value.GetPaymentSettings()).ReadAsSync();
+
+            currentPaymentSettings.JobSettings = new DC.JobSettings
+            {
+                AutoCaptureJob = new DC.AutoCaptureJob
+                {
+                    IsEnabled = paymentSettings.JobSettings?.AutoCaptureJob?.IsEnabled ?? false,
+                    Interval = paymentSettings.JobSettings?.AutoCaptureJob?.Interval ?? 0
+                },
+                ForceCaptureJob = new DC.ForceCaptureJob
+                {
+                    IsEnabled = paymentSettings.JobSettings?.ForceCaptureJob?.IsEnabled ?? false,
+                    CaptureAfterDays = paymentSettings.JobSettings?.ForceCaptureJob?.CaptureAfterDays ?? 0
+                }
+            };
+
+            currentPaymentSettings.PaymentRanking = paymentSettings.PaymentRanking;
+
+            var result = (await _checkoutSettingsWebApiClient.Value.UpdatePaymentSettings(currentPaymentSettings)).ReadAsSync();
+
+            return Single2(result);
+        }
+
+        [HttpPostRoute(UriTemplate = "updateFulfillmentSettings")]
+        public async Task<Response<DC.Fulfillment.FulfillmentSettings>> UpdateFulfillmentSettings(DC.Fulfillment.FulfillmentSettings fulfillmentSettings)
+        {
+
+            var currentFulfillmentSettings = (await _fulfillmentSettingsWebApiClient.GetFulfillmentSettings()).ReadAsSync();
+
+            currentFulfillmentSettings.DefaultBackOrderDays = fulfilmentSettings.DefaultBackOrderDays;
+            currentFulfillmentSettings.BpmConfiguration = new DC.Fulfillment.BPMConfiguration
+            {
+                ContainerId = fulfillmentSettings?.BpmConfiguration?.ContainerId ?? null,
+                ProcessId = fulfillmentSettings?.BpmConfiguration?.ProcessId ?? null
+            };
+
+            var itemOut = (await _fulfillmentSettingsWebApiClient.UpdateFulfillmentSettings(currentFulfillmentSettings)).ReadAsSync();
+            return Single2(itemOut);
+          
+        }
+
+        [HttpPostRoute(UriTemplate = "updateReturnSettings")]
+        public async Task<Response<DC.Return.ReturnSettings>> UpdateReturnSettings(DC.Return.ReturnSettings returnSettings)
+        {
+
+            var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
+
+            currentReturnSettings.CreateLabelOnFulfillment = returnSettings.CreateLabelOnFulfillment;
+            currentReturnSettings.DefaultProcessingFee = returnSettings.DefaultProcessingFee;
+            currentReturnSettings.DefaultShippingLocation = returnSettings.DefaultShippingLocation;
+
+            var itemOut = (await _returnSettingsWebApiClient.UpdateReturnSettings(currentReturnSettings)).ReadAsSync();
+            return Single2(itemOut);
+
+        }
+
+        [HttpPostRoute(UriTemplate = "updateShippingSettings")]
+        public async Task<Response<SiteShippingSettings>> UpdateShippingSettings(SiteShippingSettings shippingSettings)
+        {
+
+            var currentShippingSettings = (await _shippingSettingsWebApiClient.GetSiteShippingSettings()).ReadAsSync();
+
+            currentShippingSettings.RefreshTax = shippingSettings.RefreshTax;
+            currentShippingSettings.RefreshShipping = shippingSettings.RefreshShipping;
+
+            var itemOut = (await _shippingSettingsWebApiClient.UpdateSiteShippingSettings(currentShippingSettings)).ReadAsSync();
+            return Single2(currentShippingSettings);
+
         }
 
         [HttpGetRoute(UriTemplate = "timezones/read")]
