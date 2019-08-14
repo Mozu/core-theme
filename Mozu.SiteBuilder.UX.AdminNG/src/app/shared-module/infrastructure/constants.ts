@@ -189,4 +189,11 @@ export class Constants {
         startIndex: 'startIndex',
         pageSize: 'pageSize'
     };
+
+    static advancedFilter = {
+        searchBox: 'searchBox',
+        keyword: 'keyword',
+        quoteName: 'quoteName',
+        quoteId: 'quoteId'
+    };
 }
