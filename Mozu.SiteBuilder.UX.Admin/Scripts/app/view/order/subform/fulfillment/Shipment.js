@@ -74,7 +74,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     {
                         padding: '0 50 0 0',
                         tpl: [
-                            '<span class="label">Code</span>',
+                            '<span class="label">Shipment Step Id</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.taskId : '') + '</div>'
                         ]
                     },
