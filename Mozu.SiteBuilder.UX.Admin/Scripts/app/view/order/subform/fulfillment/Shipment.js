@@ -429,10 +429,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     },
 
     getActiveTaskList: function () {
-        var taskLists = this.shipmentRecord.workflowState.taskList;
-        for (var count = 0; count < taskLists.length; count++) {
-            if (taskLists[count].active)
-                return taskLists[count];
+        if (this.shipmentRecord.workflowState && this.shipmentRecord.workflowState.taskList) {
+            var taskLists = this.shipmentRecord.workflowState.taskList;
+            for (var count = 0; count < taskLists.length; count++) {
+                if (taskLists[count].active)
+                    return taskLists[count];
+            }
         }
     }
 
