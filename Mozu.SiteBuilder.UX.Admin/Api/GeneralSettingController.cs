@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var currentFulfillmentSettings = (await _fulfillmentSettingsWebApiClient.GetFulfillmentSettings()).ReadAsSync();
 
-            currentFulfillmentSettings.DefaultBackOrderDays = fulfilmentSettings.DefaultBackOrderDays;
+            currentFulfillmentSettings.DefaultBackOrderDays = fulfillmentSettings.DefaultBackOrderDays;
             currentFulfillmentSettings.BpmConfiguration = new DC.Fulfillment.BPMConfiguration
             {
                 ContainerId = fulfillmentSettings?.BpmConfiguration?.ContainerId ?? null,
