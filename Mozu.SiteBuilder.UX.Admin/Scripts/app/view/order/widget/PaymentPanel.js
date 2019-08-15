@@ -26,11 +26,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
         var me = this;
-        this.isAutoCapEturenabled = me.order.PaymentSettings.get('jobSettings').autoCaptureJob.isEnabled;
+        
         me.initStatusRow();
         me.initPaymentDetails();
         me.initDisplayAmount();
         me.initTransactionList();
+        me.setIsAutoCaptureEnabled()
         
         me.items = [
             me.statusRow,
@@ -50,6 +51,14 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
         }
 
         this.callParent(arguments);
+    },
+
+    setIsAutoCaptureEnabled: function() {
+        this.isAutoCaptureEnabled = false 
+        
+        if(this.order.PaymentSettings.get('jobSettings').autoCaptureJob) {
+            this.isAutoCaptureEnabled = this.order.PaymentSettings.get('jobSettings').autoCaptureJob.isEnabled || false;  
+        }
     },
 
     getAvailableActions: function() {
@@ -74,12 +83,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 itemId: 'ManualDeclinePayment',
                 //TODO: when service supports the data from the manual decline modal, comment out the below line
                 handler: me.manualDeclinePayment,
-                hidden: me.isAutoCapEturenabled
+                hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Credit Payment',
                 itemId: 'CreditPayment',
-                hidden: me.record.get('amountCollected') <= 0 || me.isAutoCapEturenabled
+                hidden: me.record.get('amountCollected') <= 0 || me.isAutoCaptureEnabled
             },
             {
                 text: 'Auth and Capture',
@@ -109,12 +118,12 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             {
                 text: 'Capture Payment (Manual)',
                 itemId: 'ManualCapturePayment',
-                hidden: me.isAutoCapEturenabled
+                hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Credit Payment (Manual)',
                 itemId: 'ManualCreditPayment',
-                hidden: me.isAutoCapEturenabled
+                hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Void Payment',
@@ -407,7 +416,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     scale: 'medium',
                     text: 'Capture',
                     width: 70,
-                    hidden: me.isAutoCapEturenabled,
+                    hidden: me.isAutoCaptureEnabled,
                     itemId: 'captureButton',
                     handler: function () {
                         me.openPaymentActionModal((me.record.get('paymentType') === 'Check') ? 'ApplyCheck' : 'CapturePayment');
@@ -428,7 +437,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     ui: 'action',
                     scale: 'medium',
                     text: 'Capture',
-                    hidden: me.isAutoCapEturenabled,
+                    hidden: me.isAutoCaptureEnabled,
                     requiredBehaviors: [{
                         model: 'Taco.model.Order',
                         behavior: 'update'
@@ -454,7 +463,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                 ui: 'action',
                 scale: 'medium',
                 text: 'Capture',
-                hidden: me.isAutoCapEturenabled,
+                hidden: me.isAutoCaptureEnabled,
                 requiredBehaviors: [{
                     model: 'Taco.model.Order',
                     behavior: 'update'
