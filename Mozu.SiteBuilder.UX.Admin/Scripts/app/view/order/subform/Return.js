@@ -7,7 +7,6 @@ Ext.define('Taco.view.order.subform.Return', {
         'Taco.view.order.widget.ProcessReturnPanel',
         'Taco.view.order.widget.OrderReturns',
         'Taco.view.order.widget.ReturnableItemGrid',
-        'Taco.view.order.widget.ReturnableItemTree',
         'Taco.core.ux.PanelHeaderStat',
         'Taco.model.Order'
     ],
@@ -36,7 +35,7 @@ Ext.define('Taco.view.order.subform.Return', {
         if (this.needToReload) {
             this.setLoading(true);
             var store = this.record.getReturnsStore();
-            this.returnableItems.loadReturnableItemsData();
+            this.returnableItems.reload();
 
             store.load(function() {
                 me.setLoading(false);
@@ -111,7 +110,7 @@ Ext.define('Taco.view.order.subform.Return', {
 
         this.initCreateButton();
 
-        this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemTree', {
+        this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
             order: this.record,
             returnsStore: store,
             tools: [this.createButton],
@@ -140,7 +139,6 @@ Ext.define('Taco.view.order.subform.Return', {
                     if (model.data.quantityReturned > 0) {
                         me.returnableItemsErrorEl.setError('That item has already been returned');
                     }
-                    this.returnableItems.getSelectionModel().checkSelected();
                     return false;
                 } else {
                     me.returnableItemsErrorEl.setError('');
@@ -149,8 +147,6 @@ Ext.define('Taco.view.order.subform.Return', {
             },
             scope: me
         });
-
-        this.returnableItems.getSelectionModel().setErrorEl(this.returnableItemsErrorEl);
 
         this.orderReturns = Ext.create('Taco.view.order.widget.OrderReturns', {
             store: store

@@ -28,7 +28,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
     initComponent: function () {
         this.store = this.getReturnableItemsStore();
-
+        this.store.load();
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
             clicksToEdit: 1
         }));
@@ -83,28 +83,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 fn: function () { this.addCls('returnable-items-grid'); }
             }
         });
-
-        this.mon(this.order.getReturnsStore(), {
-            load: {
-                scope: this,
-                fn: 'addReturnableItems'
-            }
-        });
     },
 
     getColumnConfig: function() {
         return [
-            {
-                text: 'Line',
-                draggable: false,
-                resizable: true,
-                width: 60,
-                sortable: false,
-                menuDisabled: true,
-                hidden: false,
-                align: 'left',
-                dataIndex: 'orderLineId'
-            },
             {
                 dataIndex: 'productCode',
                 text: 'Code',
@@ -239,76 +221,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         
         //this.addReturnableItems()
 
-        var returnsStore = this.order.getReturnsStore();
+        //var returnsStore = this.order.getReturnsStore();
 
-        returnsStore.load();
-    },
-
-    addReturnableItems: function (store, returns) {
-        var me = this;
-        var ineligibleStatuses = [
-            Taco.model.Return.constants.statuses.CANCELLED,
-            Taco.model.Return.constants.statuses.REJECTED
-        ];
-
-        this.store.load();
-        //var returnableItems = this.order.get('returnableItems');
-        //var returnableItems = this.order.getReturnableItems({
-        //    success: function(response) {
-        //        me.store.loadData(response.responseText);
-        //        var derp = 1;
-        //    },
-        //    failure: function(response) {
-                
-        //    }
-        //});
-
-/**
-        // list of items and their qty currently added to active returns
-        var returnedItemQuantities = {};
-        
-        // track the returned quantities of each item in the order
-
-        // initialize quantity already returned for each returnable item.
-        Ext.Array.each(returnableItems, function (returnableItem) {
-            returnableItem.quantityReturned = 0 // returnedItemQuantities[returnableItem.orderItemId];
-        });
-
-        // TODO: Move this logic to the MVC layer.
-        // build a list of items already added to a return and determine the qty of each that has already been added;
-        Ext.Array.each(returns, function (ret) {
-            // ignore any records that have been cancelled or rejected;
-            if (!Ext.Array.contains(ineligibleStatuses, ret.get('status'))) {
-
-                // for each item in the return, find the returnable item and update its returnedQuantity.
-                // TODO: Account for parent with product extras.
-                Ext.Array.each(ret.get('items'), function (item) {
-                    var i, matchingReturnableItems, returnableItem;
-
-                    for (i = 1; i <= item.quantity; i++) {
-                        matchingReturnableItems = Ext.Array.filter(returnableItems, function(ri) {
-                            return ri.productCode === item.productCode &&
-                                ri.orderLineId === item.orderLineId &&
-                                ri.orderItemOptionAttributeFQN === item.orderItemOptionAttributeFQN &&
-                                ri.quantityReturned < ri.quantityOrdered;
-                        });
-                        if (!matchingReturnableItems || !matchingReturnableItems.length) continue;
-                        // in case multiple returnable items exist for the same product code, round-robin over them all and increment quantity returned.
-                        returnableItem = Ext.Array.sort(matchingReturnableItems, function(a, b) {
-                            return a.quantityReturned < b.quantityReturned ? -1 : 1;
-                        })[0];
-                        returnableItem.quantityReturned++;
-                    }
-                });
-            }
-        });
-
-        // filter out items which are already fully returned.
-        var returnableItemsFiltered = Ext.Array.filter(returnableItems, function (returnableItem) {
-            return returnableItem.quantityOrdered > returnableItem.quantityReturned;
-        });
-        this.store.loadData(returnableItemsFiltered);
-*/
+        //returnsStore.load();
+        this.store.reload();
     },
 
     getReturnableItemsStore: function () {
@@ -365,9 +281,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     'orderId': this.order.get('id')
                 },
                 reader: {
-                    type: 'json'
+                    type: 'json',
+                    root: 'items'
+                    }
                 }
-            }
         });
     },
 
