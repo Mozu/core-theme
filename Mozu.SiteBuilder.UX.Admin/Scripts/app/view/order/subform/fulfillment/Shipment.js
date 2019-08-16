@@ -114,6 +114,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                     },
                                     {
                                         text: 'Auto Reassign',
+                                        hidden: this.shipmentRecord.shipmentType == "BOPIS",
                                         handler: function () {
                                             me.shipmentAutoReassign();
                                         }

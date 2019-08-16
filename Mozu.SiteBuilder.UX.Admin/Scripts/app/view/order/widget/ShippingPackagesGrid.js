@@ -410,6 +410,7 @@
 
         var autoReassign = {
             text: 'Auto Reassign',
+            hidden: this.shipmentRecord.shipmentType == "BOPIS",
             handler: function () {
                 me.shipmentItemAutoReassign();
             }
