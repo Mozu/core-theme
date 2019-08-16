@@ -465,10 +465,10 @@
   <Target Name="BeforeBuild">
     <Message Importance="high" Text="*** START $(Configuration) build process" />
     <Message Importance="high" Text="*** START node module install process" />
-    <Exec Command="echo hi" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END node module install process" />
     <Message Importance="high" Text="*** START ng build process" />
-    <Exec Command="echo hi" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm run ng build -- --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END ng build process" />
     <ItemGroup>
       <AllAdminNGDistFolderFiles Include="$(ProjectDir)dist\*.*;$(ProjectDir)dist\**\*.*;" />
