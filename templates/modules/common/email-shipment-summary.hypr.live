@@ -32,15 +32,15 @@
             <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.taxDuty }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add:model.taxTotal}} {% endfilter %}</span>
+                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal}} {% endfilter %}</span>
                 </td>
             </tr>
             {% else %}
-            {% if model.taxTotal %}
+            {% if model.lineItemTaxTotal %}
             <tr class="mz-ordersummary-tax">
                 <td align="right" colspan="4">
                     <span class="mz-ordersummary-totalname">{{ labels.tax }}:</span>
-                    <span class="mz-ordersummary-totalvalue">{{ model.lineItemTaxTotal|currency }}</span>
+                    <span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.lineItemTaxTotal|add:model.shippingTaxTotal|add:model.handlingTaxTotal }} {% endfilter %}</span>
                 </td>
             </tr>
             {% endif %}
@@ -52,11 +52,11 @@
                 <span class="mz-ordersummary-totalvalue">{{ model.shippingSubTotal|currency }}</span>
               </td>
             </tr>
-            {% if model.handlingTotal %}
+            {% if model.handlingSubTotal %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td align="right" colspan="4">
                   <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}</span>
-                  <span class="mz-ordersummary-totalvalue">{{ model.handlingTotal|currency }}</span>
+                  <span class="mz-ordersummary-totalvalue">{{ model.handlingSubTotal|currency }}</span>
                 </td>
             </tr>
             {% endif %}
