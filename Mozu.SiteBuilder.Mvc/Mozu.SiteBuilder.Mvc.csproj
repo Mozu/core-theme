@@ -396,8 +396,17 @@
     <EmbeddedResource Include="TestData\giftcard.created\OrderCredit1.json" />
     <EmbeddedResource Include="TestData\backoffice\Order1.json" />
     <EmbeddedResource Include="TestData\backoffice\Package1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Shipments1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Pickwave1.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund2.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund3.json" />
+    <EmbeddedResource Include="TestData\order.cancel\Order1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupready\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupready\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.pickupreminder\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.fulfilled\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.backordered\Shipment1.json" />
+    <EmbeddedResource Include="TestData\shipment.backorderdatechanged\Shipment1.json" />
     <None Include="SEO\proto_routeTable" />
     <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>

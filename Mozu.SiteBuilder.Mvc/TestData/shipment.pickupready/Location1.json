@@ -1,0 +1,74 @@
+{  
+   "code":"atx-whse",
+   "locationTypes":[  
+      {  
+         "code":"Warehouse",
+         "name":"Warehouse",
+         "auditInfo":{  
+            "updateDate":"2016-03-11T23:00:41.369Z",
+            "createDate":"2016-03-11T23:00:41.369Z",
+            "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
+         }
+      }
+   ],
+   "name":"Austin Warehouse",
+   "description":"",
+   "address":{  
+      "address1":"1835 Kramer Ln",
+      "address2":"",
+      "address3":"",
+      "address4":"",
+      "cityOrTown":"Austin",
+      "stateOrProvince":"TX",
+      "postalOrZipCode":"78758",
+      "countryCode":"US",
+      "isValidated":false
+   },
+   "geo":{  
+      "lat":0.0,
+      "lng":0.0
+   },
+   "phone":"",
+   "fax":"",
+   "supportsInventory":true,
+   "fulfillmentTypes":[  
+      {  
+         "code":"DS",
+         "name":"Direct Ship"
+      },
+      {  
+         "code":"SP",
+         "name":"In Store Pickup"
+      }
+   ],
+   "regularHours":,
+   "shippingOriginContact":{  
+      "firstName":"Billy",
+      "middleNameOrInitial":"Bob",
+      "lastNameOrSurname":"Builder",
+      "companyOrOrganization":"Adam's Keyboards",
+      "phoneNumber":"555-555-5555",
+      "email":"bbuilder@adamskeyboards.net"
+   },
+   "note":"",
+   "tags":[  
+
+   ],
+   "attributes":[  
+
+   ],
+   "auditInfo":{  
+      "updateDate":"2017-09-05T22:54:58.614Z",
+      "createDate":"2016-03-11T23:02:21.427Z",
+      "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
+   },
+   "allowFulfillmentWithNoStock":false,
+   "isDisabled":false,
+   "express":false,
+   "transferEnabled":false,
+   "includeInInventoryAggregrate":false,
+   "includeInLocationExport":false,
+   "warehouseEnabled":false
+}
