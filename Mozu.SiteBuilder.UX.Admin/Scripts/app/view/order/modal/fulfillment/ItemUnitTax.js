@@ -12,7 +12,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     closeAction: 'destroy',
     primaryText: 'Update',
     scale: 'large',
-    title: 'Unit Tax',
+    title: 'Item Tax',
     isRecordSaved: false,
     unitTaxPerc: 0,
     layout: {

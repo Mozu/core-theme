@@ -89,7 +89,7 @@
             },
             {
                 name: 'itemTax',
-                type: 'int',
+                type: 'float',
                 useNull: true
             },
             {
@@ -97,12 +97,7 @@
                 type: 'int',
                 useNull: true
             },
-            {
-                name: 'total',
-                type: 'float',
-                useNull: true
-            },
-            {
+                {
                 name: 'weight',
                 type: 'float',
                 defaultValue: 0
@@ -120,10 +115,6 @@
             }, {
                 name: 'optionAttributeFQN',
                 type: 'string',
-                useNull: true
-            }, {
-                name: 'actualPrice',
-                type: 'float',
                 useNull: true
             }, {
                 name: 'duty',
@@ -154,19 +145,11 @@
                 type: 'float',
                 useNull: true
             }, {
-                name: 'actualPrice',
-                type: 'float',
-                useNull: true
-            }, {
                 name: 'shipping',
                 type: 'float',
                 useNull: true
             }, {
                 name: 'shippingDiscount',
-                type: 'float',
-                useNull: true
-            }, {
-                name: 'unitPrice',
                 type: 'float',
                 useNull: true
             }, {
@@ -288,8 +271,19 @@
                 }
             },
             {
+                dataIndex: 'quantity',
+                text: 'Qty',
+                draggable: false,
+                sortable: false,
+                //resizable: false,
+                align: 'center',
+                menuDisabled: true,
+                minWidth: 80,
+                flex: 1,
+            },
+            {
                 dataIndex: 'itemTax',
-                text: 'Unit Tax',
+                text: 'Item Tax',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -305,17 +299,9 @@
                         }
                     }
                 },
-            },
-            {
-                dataIndex: 'quantity',
-                text: 'Qty',
-                draggable: false,
-                sortable: false,
-                //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 80,
-                flex: 1,
+                renderer: function (value) {
+                    return this.record.formatCurrency(value);
+                }
             },
             //{
             //    dataIndex: 'quantity',
@@ -349,7 +335,6 @@
                 }
             },
             {
-                dataIndex: 'total',
                 text: 'Subtotal',
                 draggable: false,
                 sortable: false,
@@ -358,8 +343,11 @@
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                renderer: function (value, metaData, record) {
+                    var lineItemCost = record.get('lineItemcost') || record.get('actualPrice') * record.get("quantity");
+                    var discount = record.get('discount') || 0;
+                    var val = record.get('itemTax');
+                    return this.record.formatCurrency(lineItemCost + val - discount);
                 }
             },
             {
@@ -636,9 +624,8 @@
                     productCode: selectedItem.productCode,
                     quantity: selectedItem.quantity,
                     imageUrl: selectedItem.imageUrl,
-                    retailPrice: selectedItem.actualPrice,
+                    actualPrice: selectedItem.actualPrice,
                     optionAttributeFQN: selectedItem.optionAttributeFQN,
-                    unitPrice: selectedItem.unitPrice,
                     variationProductCode: selectedItem.variationProductCode
                 }]
             };
@@ -675,7 +662,9 @@
     },
 
     doSave: function () {
+        
         if (this.validateModal()) {
+            
             var me = this;
             me.setLoading(true, this.body);
             var payloadData = me.getPayloadItemUpdate();
@@ -686,7 +675,7 @@
                     me.isRecordSaved = true;
                     me.setLoading(false, me.body);
                     var json = Ext.decode(response.responseText, true);
-
+                    console.log(response.responseText);
                     if (!json || !json.success) {
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
@@ -718,8 +707,7 @@
             shipmentNumber: me.shipmentRecord.number,
             itemId: selectedItem.lineId, //selectedItem.lineId,
             shipmentItemAdjustment: {
-                lineId : selectedItem.lineId,
-                unitPrice : selectedItem.unitPrice,
+                actualPrice : selectedItem.actualPrice,
                 unitTax : selectedItem.itemTax,
             }
         }
@@ -730,7 +718,7 @@
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
-        if (selectedItem.unitPrice == item[0].raw.unitPrice && selectedItem.itemTax == item[0].raw.itemTax) {
+        if (selectedItem.actualPrice == item[0].raw.actualPrice && selectedItem.itemTax == item[0].raw.itemTax) {
             return false;
         }
         return true;
