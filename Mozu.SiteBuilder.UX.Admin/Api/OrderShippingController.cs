@@ -8,7 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using IO.Swagger.Model;
 using Mozu.Core.Api.Routing;
-using DCm = Mozu.Fulfiller.Contracts.Model;
+using DCm = Mozu.Fulfillment.Contracts.Model;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;

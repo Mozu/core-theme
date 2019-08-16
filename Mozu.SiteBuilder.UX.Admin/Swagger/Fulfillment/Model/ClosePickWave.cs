@@ -11,27 +11,27 @@ namespace Mozu.Fulfillment.Contracts.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class BackorderItem {
+  public class ClosePickWave {
     /// <summary>
-    /// Gets or Sets BackorderReleaseDate
+    /// Gets or Sets Attributes
     /// </summary>
-    [DataMember(Name="backorderReleaseDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "backorderReleaseDate")]
-    public DateTime? BackorderReleaseDate { get; set; }
+    [DataMember(Name="attributes", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "attributes")]
+    public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
-    /// Gets or Sets LineId
+    /// Gets or Sets CreateRecovery
     /// </summary>
-    [DataMember(Name="lineId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "lineId")]
-    public int? LineId { get; set; }
+    [DataMember(Name="createRecovery", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "createRecovery")]
+    public bool? CreateRecovery { get; set; }
 
     /// <summary>
-    /// Gets or Sets Quantity
+    /// Gets or Sets Quantities
     /// </summary>
-    [DataMember(Name="quantity", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "quantity")]
-    public int? Quantity { get; set; }
+    [DataMember(Name="quantities", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "quantities")]
+    public List<BinShipmentProductQuantity> Quantities { get; set; }
 
 
     /// <summary>
@@ -40,10 +40,10 @@ namespace Mozu.Fulfillment.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class BackorderItem {\n");
-      sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
-      sb.Append("  LineId: ").Append(LineId).Append("\n");
-      sb.Append("  Quantity: ").Append(Quantity).Append("\n");
+      sb.Append("class ClosePickWave {\n");
+      sb.Append("  Attributes: ").Append(Attributes).Append("\n");
+      sb.Append("  CreateRecovery: ").Append(CreateRecovery).Append("\n");
+      sb.Append("  Quantities: ").Append(Quantities).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

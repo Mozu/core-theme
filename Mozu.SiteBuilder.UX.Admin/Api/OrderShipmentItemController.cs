@@ -1,5 +1,5 @@
 ﻿using Mozu.Core.Api.Routing;
-using Mozu.Fulfiller.Contracts.Model;
+using Mozu.Fulfillment.Contracts.Model;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;

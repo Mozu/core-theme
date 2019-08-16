@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 using Mozu.Swagger.Client;
-using Mozu.Fulfiller.Contracts.Model;
+using Mozu.Fulfillment.Contracts.Model;
 
-namespace Mozu.Fulfiller.Contracts.Api
+namespace Mozu.Fulfillment.Contracts.Api
 {
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints

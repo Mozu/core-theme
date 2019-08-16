@@ -633,7 +633,6 @@
     <Compile Include="Swagger\Fulfillment\Model\ResourcesOfResourceOfWorkflowProcess.cs" />
     <Compile Include="Swagger\Fulfillment\Model\ResourcesOfTask.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Shipment.cs" />
-    <Compile Include="Swagger\Fulfillment\Model\SplitItem.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Task.cs" />
     <Compile Include="Swagger\Fulfillment\Model\TaskDefinition.cs" />
     <Compile Include="Swagger\Fulfillment\Model\TaskInput.cs" />

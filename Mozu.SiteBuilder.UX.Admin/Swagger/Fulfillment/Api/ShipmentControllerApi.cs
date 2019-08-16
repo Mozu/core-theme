@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using RestSharp;
 using Mozu.Swagger.Client;
-using Mozu.Fulfiller.Contracts.Model;
+using Mozu.Fulfillment.Contracts.Model;
 
-namespace Mozu.Fulfiller.Contracts.Api
+namespace Mozu.Fulfillment.Contracts.Api
 {
     /// <summary>
     /// Represents a collection of functions to interact with the API endpoints
@@ -45,8 +45,8 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="xVolTenant"></param>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        void CancelShipmentUsingPUT (CancelShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        /// <returns>ResourceOfShipment</returns>
+        ResourceOfShipment CancelShipmentUsingPUT (CancelShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// canceledItems 
         /// </summary>
@@ -55,7 +55,7 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment CanceledItemsUsingPOST (List<CanceledItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        ResourceOfShipment CanceledItemsUsingPUT (List<CanceledItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// deleteShipment 
         /// </summary>
@@ -80,8 +80,8 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolTenant"></param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        void FulfillShipmentUsingPUT (int? shipmentNumber, int? xVolTenant, int? xVolSite);
+        /// <returns>ResourceOfShipment</returns>
+        ResourceOfShipment FulfillShipmentUsingPUT (int? shipmentNumber, int? xVolTenant, int? xVolSite);
         /// <summary>
         /// getShipment 
         /// </summary>
@@ -122,14 +122,6 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <returns>ResourceOfShipment</returns>
         ResourceOfShipment NewShipmentUsingPOST (Shipment body, int? xVolTenant, int? xVolSite);
         /// <summary>
-        /// newShipment 
-        /// </summary>
-        /// <param name="body">newShipment</param>
-        /// <param name="xVolTenant"></param>
-        /// <param name="xVolSite"></param>
-        /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment NewShipmentUsingPOST1 (Shipment body, int? xVolTenant, int? xVolSite);
-        /// <summary>
         /// reassignItems 
         /// </summary>
         /// <param name="body">reassignItemDtos</param>
@@ -137,7 +129,7 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment ReassignItemsUsingPOST (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        ResourceOfShipment ReassignItemsUsingPUT (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// reassignShipment 
         /// </summary>
@@ -154,8 +146,8 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="xVolTenant"></param>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        void RejectShipmentUsingPUT (RejectShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
+        /// <returns>ResourceOfShipment</returns>
+        ResourceOfShipment RejectShipmentUsingPUT (RejectShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// replaceShipment 
         /// </summary>
@@ -183,15 +175,6 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
         ResourceOfShipment SkipTaskUsingPUT (int? shipmentNumber, string taskId, int? xVolTenant, int? xVolSite);
-        /// <summary>
-        /// splitShipment 
-        /// </summary>
-        /// <param name="body">splitItemDtos</param>
-        /// <param name="xVolTenant"></param>
-        /// <param name="shipmentNumber">shipmentNumber</param>
-        /// <param name="xVolSite"></param>
-        /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment SplitShipmentUsingPOST (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite);
         /// <summary>
         /// workflowDefinitionImage 
         /// </summary>
@@ -405,8 +388,8 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="xVolTenant"></param>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        public void CancelShipmentUsingPUT (CancelShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        /// <returns>ResourceOfShipment</returns>
+        public ResourceOfShipment CancelShipmentUsingPUT (CancelShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CancelShipmentUsingPUT");
@@ -440,7 +423,7 @@ namespace Mozu.Fulfiller.Contracts.Api
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling CancelShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
     
         /// <summary>
@@ -451,14 +434,14 @@ namespace Mozu.Fulfiller.Contracts.Api
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment CanceledItemsUsingPOST (List<CanceledItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        public ResourceOfShipment CanceledItemsUsingPUT (List<CanceledItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CanceledItemsUsingPOST");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling CanceledItemsUsingPUT");
             // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling CanceledItemsUsingPOST");
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling CanceledItemsUsingPUT");
             // verify the required parameter 'shipmentNumber' is set
-            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling CanceledItemsUsingPOST");
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling CanceledItemsUsingPUT");
     
             var path = "/shipments/{shipmentNumber}/canceledItems";
             path = path.Replace("{format}", "json");
@@ -478,12 +461,12 @@ namespace Mozu.Fulfiller.Contracts.Api
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling CanceledItemsUsingPOST: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling CanceledItemsUsingPUT: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling CanceledItemsUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling CanceledItemsUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
     
             return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
@@ -584,8 +567,8 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolTenant"></param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        public void FulfillShipmentUsingPUT (int? shipmentNumber, int? xVolTenant, int? xVolSite)
+        /// <returns>ResourceOfShipment</returns>
+        public ResourceOfShipment FulfillShipmentUsingPUT (int? shipmentNumber, int? xVolTenant, int? xVolSite)
         {
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling FulfillShipmentUsingPUT");
@@ -616,7 +599,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling FulfillShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
     
         /// <summary>
@@ -796,47 +779,6 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         }
     
         /// <summary>
-        /// newShipment 
-        /// </summary>
-        /// <param name="body">newShipment</param>
-        /// <param name="xVolTenant"></param>
-        /// <param name="xVolSite"></param>
-        /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment NewShipmentUsingPOST1 (Shipment body, int? xVolTenant, int? xVolSite)
-        {
-            // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling NewShipmentUsingPOST1");
-            // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling NewShipmentUsingPOST1");
-    
-            var path = "/shipments/";
-            path = path.Replace("{format}", "json");
-                
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-    
-                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
- if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
-                        postBody = ApiClient.Serialize(body); // http body (model) parameter
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling NewShipmentUsingPOST1: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling NewShipmentUsingPOST1: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
-        }
-    
-        /// <summary>
         /// reassignItems 
         /// </summary>
         /// <param name="body">reassignItemDtos</param>
@@ -844,14 +786,14 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment ReassignItemsUsingPOST (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        public ResourceOfShipment ReassignItemsUsingPUT (List<ReassignItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling ReassignItemsUsingPOST");
+            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling ReassignItemsUsingPUT");
             // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling ReassignItemsUsingPOST");
+            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling ReassignItemsUsingPUT");
             // verify the required parameter 'shipmentNumber' is set
-            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignItemsUsingPOST");
+            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignItemsUsingPUT");
     
             var path = "/shipments/{shipmentNumber}/reassignedItems";
             path = path.Replace("{format}", "json");
@@ -871,12 +813,12 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             String[] authSettings = new String[] {  };
     
             // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
+            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.PUT, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
     
             if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPOST: " + response.Content, response.Content);
+                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPUT: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
+                throw new ApiException ((int)response.StatusCode, "Error calling ReassignItemsUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
     
             return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
@@ -933,8 +875,8 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="xVolTenant"></param>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolSite"></param>
-        /// <returns></returns>
-        public void RejectShipmentUsingPUT (RejectShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
+        /// <returns>ResourceOfShipment</returns>
+        public ResourceOfShipment RejectShipmentUsingPUT (RejectShipment body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
         {
             // verify the required parameter 'body' is set
             if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling RejectShipmentUsingPUT");
@@ -968,7 +910,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling RejectShipmentUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
     
-            return;
+            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }
     
         /// <summary>
@@ -1102,51 +1044,6 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
                 throw new ApiException ((int)response.StatusCode, "Error calling SkipTaskUsingPUT: " + response.Content, response.Content);
             else if (((int)response.StatusCode) == 0)
                 throw new ApiException ((int)response.StatusCode, "Error calling SkipTaskUsingPUT: " + response.ErrorMessage, response.ErrorMessage);
-    
-            return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
-        }
-    
-        /// <summary>
-        /// splitShipment 
-        /// </summary>
-        /// <param name="body">splitItemDtos</param>
-        /// <param name="xVolTenant"></param>
-        /// <param name="shipmentNumber">shipmentNumber</param>
-        /// <param name="xVolSite"></param>
-        /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment SplitShipmentUsingPOST (List<SplitItem> body, int? xVolTenant, int? shipmentNumber, int? xVolSite)
-        {
-            // verify the required parameter 'body' is set
-            if (body == null) throw new ApiException(400, "Missing required parameter 'body' when calling SplitShipmentUsingPOST");
-            // verify the required parameter 'xVolTenant' is set
-            if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling SplitShipmentUsingPOST");
-            // verify the required parameter 'shipmentNumber' is set
-            if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling SplitShipmentUsingPOST");
-    
-            var path = "/shipments/{shipmentNumber}/split";
-            path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
-    
-            var queryParams = new Dictionary<String, String>();
-            var headerParams = new Dictionary<String, String>();
-            var formParams = new Dictionary<String, String>();
-            var fileParams = new Dictionary<String, FileParameter>();
-            String postBody = null;
-    
-                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
- if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
-                        postBody = ApiClient.Serialize(body); // http body (model) parameter
-    
-            // authentication setting, if any
-            String[] authSettings = new String[] {  };
-    
-            // make the HTTP request
-            IRestResponse response = (IRestResponse) ApiClient.CallApi(path, Method.POST, queryParams, postBody, headerParams, formParams, fileParams, authSettings);
-    
-            if (((int)response.StatusCode) >= 400)
-                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPOST: " + response.Content, response.Content);
-            else if (((int)response.StatusCode) == 0)
-                throw new ApiException ((int)response.StatusCode, "Error calling SplitShipmentUsingPOST: " + response.ErrorMessage, response.ErrorMessage);
     
             return (ResourceOfShipment) ApiClient.Deserialize(response.Content, typeof(ResourceOfShipment), response.Headers);
         }

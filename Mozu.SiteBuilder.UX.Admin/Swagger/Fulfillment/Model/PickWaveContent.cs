@@ -5,13 +5,20 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfiller.Contracts.Model {
+namespace Mozu.Fulfillment.Contracts.Model {
 
   /// <summary>
   /// 
   /// </summary>
   [DataContract]
-  public class SplitItem {
+  public class PickWaveContent {
+    /// <summary>
+    /// Gets or Sets ActualQuantity
+    /// </summary>
+    [DataMember(Name="actualQuantity", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "actualQuantity")]
+    public int? ActualQuantity { get; set; }
+
     /// <summary>
     /// Gets or Sets Attributes
     /// </summary>
@@ -27,25 +34,25 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public AuditInfo AuditInfo { get; set; }
 
     /// <summary>
-    /// Gets or Sets BackorderReleaseDate
+    /// Gets or Sets BinId
     /// </summary>
-    [DataMember(Name="backorderReleaseDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "backorderReleaseDate")]
-    public DateTime? BackorderReleaseDate { get; set; }
+    [DataMember(Name="binId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "binId")]
+    public int? BinId { get; set; }
 
     /// <summary>
-    /// Gets or Sets Color
+    /// Gets or Sets BinName
     /// </summary>
-    [DataMember(Name="color", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "color")]
-    public string Color { get; set; }
+    [DataMember(Name="binName", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "binName")]
+    public string BinName { get; set; }
 
     /// <summary>
-    /// Gets or Sets FulfillmentItemType
+    /// Gets or Sets ContentId
     /// </summary>
-    [DataMember(Name="fulfillmentItemType", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "fulfillmentItemType")]
-    public string FulfillmentItemType { get; set; }
+    [DataMember(Name="contentId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "contentId")]
+    public string ContentId { get; set; }
 
     /// <summary>
     /// Gets or Sets ImageUrl
@@ -55,11 +62,18 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public string ImageUrl { get; set; }
 
     /// <summary>
-    /// Gets or Sets LineId
+    /// Gets or Sets InventoryId
     /// </summary>
-    [DataMember(Name="lineId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "lineId")]
-    public int? LineId { get; set; }
+    [DataMember(Name="inventoryId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "inventoryId")]
+    public int? InventoryId { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ItemLineId
+    /// </summary>
+    [DataMember(Name="itemLineId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "itemLineId")]
+    public int? ItemLineId { get; set; }
 
     /// <summary>
     /// Gets or Sets Name
@@ -74,6 +88,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     [DataMember(Name="optionAttributeFQN", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "optionAttributeFQN")]
     public string OptionAttributeFQN { get; set; }
+
+    /// <summary>
+    /// Gets or Sets OrderNumber
+    /// </summary>
+    [DataMember(Name="orderNumber", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "orderNumber")]
+    public int? OrderNumber { get; set; }
 
     /// <summary>
     /// Gets or Sets PartNumber
@@ -97,25 +118,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public int? Quantity { get; set; }
 
     /// <summary>
-    /// Gets or Sets Reason
+    /// Gets or Sets ShipmentNumber
     /// </summary>
-    [DataMember(Name="reason", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "reason")]
-    public string Reason { get; set; }
-
-    /// <summary>
-    /// Gets or Sets RetailPrice
-    /// </summary>
-    [DataMember(Name="retailPrice", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "retailPrice")]
-    public decimal RetailPrice { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Size
-    /// </summary>
-    [DataMember(Name="size", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "size")]
-    public string Size { get; set; }
+    [DataMember(Name="shipmentNumber", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shipmentNumber")]
+    public int? ShipmentNumber { get; set; }
 
     /// <summary>
     /// Gets or Sets Sku
@@ -125,11 +132,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public string Sku { get; set; }
 
     /// <summary>
-    /// Gets or Sets UnitPrice
+    /// Gets or Sets Status
     /// </summary>
-    [DataMember(Name="unitPrice", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "unitPrice")]
-    public decimal UnitPrice { get; set; }
+    [DataMember(Name="status", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "status")]
+    public string Status { get; set; }
 
     /// <summary>
     /// Gets or Sets Upc
@@ -152,24 +159,25 @@ namespace Mozu.Fulfiller.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class SplitItem {\n");
+      sb.Append("class PickWaveContent {\n");
+      sb.Append("  ActualQuantity: ").Append(ActualQuantity).Append("\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
-      sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
-      sb.Append("  Color: ").Append(Color).Append("\n");
-      sb.Append("  FulfillmentItemType: ").Append(FulfillmentItemType).Append("\n");
+      sb.Append("  BinId: ").Append(BinId).Append("\n");
+      sb.Append("  BinName: ").Append(BinName).Append("\n");
+      sb.Append("  ContentId: ").Append(ContentId).Append("\n");
       sb.Append("  ImageUrl: ").Append(ImageUrl).Append("\n");
-      sb.Append("  LineId: ").Append(LineId).Append("\n");
+      sb.Append("  InventoryId: ").Append(InventoryId).Append("\n");
+      sb.Append("  ItemLineId: ").Append(ItemLineId).Append("\n");
       sb.Append("  Name: ").Append(Name).Append("\n");
       sb.Append("  OptionAttributeFQN: ").Append(OptionAttributeFQN).Append("\n");
+      sb.Append("  OrderNumber: ").Append(OrderNumber).Append("\n");
       sb.Append("  PartNumber: ").Append(PartNumber).Append("\n");
       sb.Append("  ProductCode: ").Append(ProductCode).Append("\n");
       sb.Append("  Quantity: ").Append(Quantity).Append("\n");
-      sb.Append("  Reason: ").Append(Reason).Append("\n");
-      sb.Append("  RetailPrice: ").Append(RetailPrice).Append("\n");
-      sb.Append("  Size: ").Append(Size).Append("\n");
+      sb.Append("  ShipmentNumber: ").Append(ShipmentNumber).Append("\n");
       sb.Append("  Sku: ").Append(Sku).Append("\n");
-      sb.Append("  UnitPrice: ").Append(UnitPrice).Append("\n");
+      sb.Append("  Status: ").Append(Status).Append("\n");
       sb.Append("  Upc: ").Append(Upc).Append("\n");
       sb.Append("  VariationProductCode: ").Append(VariationProductCode).Append("\n");
       sb.Append("}\n");

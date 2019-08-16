@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfiller.Contracts.Model {
+namespace Mozu.Fulfillment.Contracts.Model {
 
   /// <summary>
   /// 
@@ -32,6 +32,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     [DataMember(Name="completedDate", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "completedDate")]
     public DateTime? CompletedDate { get; set; }
+
+    /// <summary>
+    /// Gets or Sets Pickable
+    /// </summary>
+    [DataMember(Name="pickable", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "pickable")]
+    public bool? Pickable { get; set; }
 
     /// <summary>
     /// Gets or Sets ProcessInstanceId
@@ -65,6 +72,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  CompletedDate: ").Append(CompletedDate).Append("\n");
+      sb.Append("  Pickable: ").Append(Pickable).Append("\n");
       sb.Append("  ProcessInstanceId: ").Append(ProcessInstanceId).Append("\n");
       sb.Append("  ShipmentState: ").Append(ShipmentState).Append("\n");
       sb.Append("  TaskList: ").Append(TaskList).Append("\n");

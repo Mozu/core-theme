@@ -1,12 +1,12 @@
 ﻿
 using Mozu.Core;
 using Mozu.Core.Settings;
-using Mozu.Fulfiller.Contracts.Api;
-using Mozu.Fulfiller.Contracts.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Mozu.Fulfillment.Contracts.Api;
+using Mozu.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 {
@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 
         public ResourceOfShipment CancelItems(List<CanceledItem> request, int? shipmentNumber)
         {
-            return _shipmentController.CanceledItemsUsingPOST(request, _apiContext.TenantId, shipmentNumber,
+            return _shipmentController.CanceledItemsUsingPUT(request, _apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 
@@ -123,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
 
         public ResourceOfShipment ReassignShipmentItems(int? shipmentNumber, List<ReassignItem> items)
         {
-            return _shipmentController.ReassignItemsUsingPOST(items,_apiContext.TenantId, shipmentNumber,
+            return _shipmentController.ReassignItemsUsingPUT(items,_apiContext.TenantId, shipmentNumber,
                 _apiContext.SiteId);
         }
 

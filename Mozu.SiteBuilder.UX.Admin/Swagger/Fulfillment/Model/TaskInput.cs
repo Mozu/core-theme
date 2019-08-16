@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfiller.Contracts.Model {
+namespace Mozu.Fulfillment.Contracts.Model {
 
   /// <summary>
   /// 

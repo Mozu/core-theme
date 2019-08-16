@@ -5,27 +5,13 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfiller.Contracts.Model {
+namespace Mozu.Fulfillment.Contracts.Model {
 
   /// <summary>
   /// 
   /// </summary>
   [DataContract]
   public class Shipment {
-    /// <summary>
-    /// Gets or Sets AdditionalHandlingFee
-    /// </summary>
-    [DataMember(Name="additionalHandlingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "additionalHandlingFee")]
-    public decimal AdditionalHandlingFee { get; set; }
-
-    /// <summary>
-    /// Gets or Sets AdditionalShippingFee
-    /// </summary>
-    [DataMember(Name="additionalShippingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "additionalShippingFee")]
-    public decimal AdditionalShippingFee { get; set; }
-
     /// <summary>
     /// Gets or Sets Attributes
     /// </summary>
@@ -83,6 +69,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public string CurrencyCode { get; set; }
 
     /// <summary>
+    /// Gets or Sets CustomerAccountId
+    /// </summary>
+    [DataMember(Name="customerAccountId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "customerAccountId")]
+    public int? CustomerAccountId { get; set; }
+
+    /// <summary>
     /// Gets or Sets CustomerAddressId
     /// </summary>
     [DataMember(Name="customerAddressId", EmitDefaultValue=false)]
@@ -90,11 +83,18 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public int? CustomerAddressId { get; set; }
 
     /// <summary>
-    /// Gets or Sets CustomerId
+    /// Gets or Sets CustomerTaxId
     /// </summary>
-    [DataMember(Name="customerId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "customerId")]
-    public string CustomerId { get; set; }
+    [DataMember(Name="customerTaxId", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "customerTaxId")]
+    public string CustomerTaxId { get; set; }
+
+    /// <summary>
+    /// Gets or Sets Data
+    /// </summary>
+    [DataMember(Name="data", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "data")]
+    public Object Data { get; set; }
 
     /// <summary>
     /// Gets or Sets DestinationContact
@@ -102,6 +102,20 @@ namespace Mozu.Fulfiller.Contracts.Model {
     [DataMember(Name="destinationContact", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "destinationContact")]
     public Contact DestinationContact { get; set; }
+
+    /// <summary>
+    /// Gets or Sets DutyAdjustment
+    /// </summary>
+    [DataMember(Name="dutyAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "dutyAdjustment")]
+    public decimal DutyAdjustment { get; set; }
+
+    /// <summary>
+    /// Gets or Sets DutyTotal
+    /// </summary>
+    [DataMember(Name="dutyTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "dutyTotal")]
+    public decimal DutyTotal { get; set; }
 
     /// <summary>
     /// Gets or Sets ExternalShipmentId
@@ -118,18 +132,46 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public DateTime? FulfillmentDate { get; set; }
 
     /// <summary>
-    /// Gets or Sets ItemHandlingFee
+    /// Gets or Sets FulfillmentStatus
     /// </summary>
-    [DataMember(Name="itemHandlingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "itemHandlingFee")]
-    public decimal ItemHandlingFee { get; set; }
+    [DataMember(Name="fulfillmentStatus", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "fulfillmentStatus")]
+    public string FulfillmentStatus { get; set; }
 
     /// <summary>
-    /// Gets or Sets ItemShippingFee
+    /// Gets or Sets HandlingAdjustment
     /// </summary>
-    [DataMember(Name="itemShippingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "itemShippingFee")]
-    public decimal ItemShippingFee { get; set; }
+    [DataMember(Name="handlingAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "handlingAdjustment")]
+    public decimal HandlingAdjustment { get; set; }
+
+    /// <summary>
+    /// Gets or Sets HandlingSubtotal
+    /// </summary>
+    [DataMember(Name="handlingSubtotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "handlingSubtotal")]
+    public decimal HandlingSubtotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets HandlingTaxAdjustment
+    /// </summary>
+    [DataMember(Name="handlingTaxAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "handlingTaxAdjustment")]
+    public decimal HandlingTaxAdjustment { get; set; }
+
+    /// <summary>
+    /// Gets or Sets HandlingTaxTotal
+    /// </summary>
+    [DataMember(Name="handlingTaxTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "handlingTaxTotal")]
+    public decimal HandlingTaxTotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets HandlingTotal
+    /// </summary>
+    [DataMember(Name="handlingTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "handlingTotal")]
+    public decimal HandlingTotal { get; set; }
 
     /// <summary>
     /// Gets or Sets Items
@@ -137,6 +179,34 @@ namespace Mozu.Fulfiller.Contracts.Model {
     [DataMember(Name="items", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "items")]
     public List<Item> Items { get; set; }
+
+    /// <summary>
+    /// Gets or Sets LineItemSubtotal
+    /// </summary>
+    [DataMember(Name="lineItemSubtotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "lineItemSubtotal")]
+    public decimal LineItemSubtotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets LineItemTaxAdjustment
+    /// </summary>
+    [DataMember(Name="lineItemTaxAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "lineItemTaxAdjustment")]
+    public decimal LineItemTaxAdjustment { get; set; }
+
+    /// <summary>
+    /// Gets or Sets LineItemTaxTotal
+    /// </summary>
+    [DataMember(Name="lineItemTaxTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "lineItemTaxTotal")]
+    public decimal LineItemTaxTotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets LineItemTotal
+    /// </summary>
+    [DataMember(Name="lineItemTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "lineItemTotal")]
+    public decimal LineItemTotal { get; set; }
 
     /// <summary>
     /// Gets or Sets LocationCode
@@ -223,11 +293,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public DateTime? ShipDate { get; set; }
 
     /// <summary>
-    /// Gets or Sets ShipmentId
+    /// Gets or Sets ShipmentAdjustment
     /// </summary>
-    [DataMember(Name="shipmentId", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "shipmentId")]
-    public string ShipmentId { get; set; }
+    [DataMember(Name="shipmentAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shipmentAdjustment")]
+    public decimal ShipmentAdjustment { get; set; }
 
     /// <summary>
     /// Gets or Sets ShipmentNumber
@@ -251,11 +321,53 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public string ShipmentType { get; set; }
 
     /// <summary>
+    /// Gets or Sets ShippingAdjustment
+    /// </summary>
+    [DataMember(Name="shippingAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingAdjustment")]
+    public decimal ShippingAdjustment { get; set; }
+
+    /// <summary>
     /// Gets or Sets ShippingMethodCode
     /// </summary>
     [DataMember(Name="shippingMethodCode", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "shippingMethodCode")]
     public string ShippingMethodCode { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ShippingMethodName
+    /// </summary>
+    [DataMember(Name="shippingMethodName", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingMethodName")]
+    public string ShippingMethodName { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ShippingSubtotal
+    /// </summary>
+    [DataMember(Name="shippingSubtotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingSubtotal")]
+    public decimal ShippingSubtotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ShippingTaxAdjustment
+    /// </summary>
+    [DataMember(Name="shippingTaxAdjustment", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingTaxAdjustment")]
+    public decimal ShippingTaxAdjustment { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ShippingTaxTotal
+    /// </summary>
+    [DataMember(Name="shippingTaxTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingTaxTotal")]
+    public decimal ShippingTaxTotal { get; set; }
+
+    /// <summary>
+    /// Gets or Sets ShippingTotal
+    /// </summary>
+    [DataMember(Name="shippingTotal", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "shippingTotal")]
+    public decimal ShippingTotal { get; set; }
 
     /// <summary>
     /// Gets or Sets SignatureRequired
@@ -272,39 +384,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public int? SiteId { get; set; }
 
     /// <summary>
-    /// Gets or Sets TaxRateItem
+    /// Gets or Sets TaxData
     /// </summary>
-    [DataMember(Name="taxRateItem", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "taxRateItem")]
-    public decimal TaxRateItem { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TaxRateShippingFee
-    /// </summary>
-    [DataMember(Name="taxRateShippingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "taxRateShippingFee")]
-    public decimal TaxRateShippingFee { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TaxTotalHandlingFee
-    /// </summary>
-    [DataMember(Name="taxTotalHandlingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "taxTotalHandlingFee")]
-    public decimal TaxTotalHandlingFee { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TaxTotalItem
-    /// </summary>
-    [DataMember(Name="taxTotalItem", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "taxTotalItem")]
-    public decimal TaxTotalItem { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TaxTotalShippingFee
-    /// </summary>
-    [DataMember(Name="taxTotalShippingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "taxTotalShippingFee")]
-    public decimal TaxTotalShippingFee { get; set; }
+    [DataMember(Name="taxData", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "taxData")]
+    public Object TaxData { get; set; }
 
     /// <summary>
     /// Gets or Sets TenantId
@@ -314,53 +398,11 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public int? TenantId { get; set; }
 
     /// <summary>
-    /// Gets or Sets TotalHandlingFee
+    /// Gets or Sets Total
     /// </summary>
-    [DataMember(Name="totalHandlingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalHandlingFee")]
-    public decimal TotalHandlingFee { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalItem
-    /// </summary>
-    [DataMember(Name="totalItem", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalItem")]
-    public decimal TotalItem { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalItemDiscount
-    /// </summary>
-    [DataMember(Name="totalItemDiscount", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalItemDiscount")]
-    public decimal TotalItemDiscount { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalItemDiscountTax
-    /// </summary>
-    [DataMember(Name="totalItemDiscountTax", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalItemDiscountTax")]
-    public decimal TotalItemDiscountTax { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalShipment
-    /// </summary>
-    [DataMember(Name="totalShipment", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalShipment")]
-    public decimal TotalShipment { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalShippingFee
-    /// </summary>
-    [DataMember(Name="totalShippingFee", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalShippingFee")]
-    public decimal TotalShippingFee { get; set; }
-
-    /// <summary>
-    /// Gets or Sets TotalTax
-    /// </summary>
-    [DataMember(Name="totalTax", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "totalTax")]
-    public decimal TotalTax { get; set; }
+    [DataMember(Name="total", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "total")]
+    public decimal Total { get; set; }
 
     /// <summary>
     /// Gets or Sets TrackingNumbers
@@ -391,8 +433,6 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public override string ToString()  {
       var sb = new StringBuilder();
       sb.Append("class Shipment {\n");
-      sb.Append("  AdditionalHandlingFee: ").Append(AdditionalHandlingFee).Append("\n");
-      sb.Append("  AdditionalShippingFee: ").Append(AdditionalShippingFee).Append("\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  CanceledItems: ").Append(CanceledItems).Append("\n");
@@ -401,14 +441,26 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  Cost: ").Append(Cost).Append("\n");
       sb.Append("  CreateDate: ").Append(CreateDate).Append("\n");
       sb.Append("  CurrencyCode: ").Append(CurrencyCode).Append("\n");
+      sb.Append("  CustomerAccountId: ").Append(CustomerAccountId).Append("\n");
       sb.Append("  CustomerAddressId: ").Append(CustomerAddressId).Append("\n");
-      sb.Append("  CustomerId: ").Append(CustomerId).Append("\n");
+      sb.Append("  CustomerTaxId: ").Append(CustomerTaxId).Append("\n");
+      sb.Append("  Data: ").Append(Data).Append("\n");
       sb.Append("  DestinationContact: ").Append(DestinationContact).Append("\n");
+      sb.Append("  DutyAdjustment: ").Append(DutyAdjustment).Append("\n");
+      sb.Append("  DutyTotal: ").Append(DutyTotal).Append("\n");
       sb.Append("  ExternalShipmentId: ").Append(ExternalShipmentId).Append("\n");
       sb.Append("  FulfillmentDate: ").Append(FulfillmentDate).Append("\n");
-      sb.Append("  ItemHandlingFee: ").Append(ItemHandlingFee).Append("\n");
-      sb.Append("  ItemShippingFee: ").Append(ItemShippingFee).Append("\n");
+      sb.Append("  FulfillmentStatus: ").Append(FulfillmentStatus).Append("\n");
+      sb.Append("  HandlingAdjustment: ").Append(HandlingAdjustment).Append("\n");
+      sb.Append("  HandlingSubtotal: ").Append(HandlingSubtotal).Append("\n");
+      sb.Append("  HandlingTaxAdjustment: ").Append(HandlingTaxAdjustment).Append("\n");
+      sb.Append("  HandlingTaxTotal: ").Append(HandlingTaxTotal).Append("\n");
+      sb.Append("  HandlingTotal: ").Append(HandlingTotal).Append("\n");
       sb.Append("  Items: ").Append(Items).Append("\n");
+      sb.Append("  LineItemSubtotal: ").Append(LineItemSubtotal).Append("\n");
+      sb.Append("  LineItemTaxAdjustment: ").Append(LineItemTaxAdjustment).Append("\n");
+      sb.Append("  LineItemTaxTotal: ").Append(LineItemTaxTotal).Append("\n");
+      sb.Append("  LineItemTotal: ").Append(LineItemTotal).Append("\n");
       sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
       sb.Append("  OrderId: ").Append(OrderId).Append("\n");
       sb.Append("  OrderNumber: ").Append(OrderNumber).Append("\n");
@@ -421,26 +473,22 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  PickStatus: ").Append(PickStatus).Append("\n");
       sb.Append("  PickType: ").Append(PickType).Append("\n");
       sb.Append("  ShipDate: ").Append(ShipDate).Append("\n");
-      sb.Append("  ShipmentId: ").Append(ShipmentId).Append("\n");
+      sb.Append("  ShipmentAdjustment: ").Append(ShipmentAdjustment).Append("\n");
       sb.Append("  ShipmentNumber: ").Append(ShipmentNumber).Append("\n");
       sb.Append("  ShipmentStatus: ").Append(ShipmentStatus).Append("\n");
       sb.Append("  ShipmentType: ").Append(ShipmentType).Append("\n");
+      sb.Append("  ShippingAdjustment: ").Append(ShippingAdjustment).Append("\n");
       sb.Append("  ShippingMethodCode: ").Append(ShippingMethodCode).Append("\n");
+      sb.Append("  ShippingMethodName: ").Append(ShippingMethodName).Append("\n");
+      sb.Append("  ShippingSubtotal: ").Append(ShippingSubtotal).Append("\n");
+      sb.Append("  ShippingTaxAdjustment: ").Append(ShippingTaxAdjustment).Append("\n");
+      sb.Append("  ShippingTaxTotal: ").Append(ShippingTaxTotal).Append("\n");
+      sb.Append("  ShippingTotal: ").Append(ShippingTotal).Append("\n");
       sb.Append("  SignatureRequired: ").Append(SignatureRequired).Append("\n");
       sb.Append("  SiteId: ").Append(SiteId).Append("\n");
-      sb.Append("  TaxRateItem: ").Append(TaxRateItem).Append("\n");
-      sb.Append("  TaxRateShippingFee: ").Append(TaxRateShippingFee).Append("\n");
-      sb.Append("  TaxTotalHandlingFee: ").Append(TaxTotalHandlingFee).Append("\n");
-      sb.Append("  TaxTotalItem: ").Append(TaxTotalItem).Append("\n");
-      sb.Append("  TaxTotalShippingFee: ").Append(TaxTotalShippingFee).Append("\n");
+      sb.Append("  TaxData: ").Append(TaxData).Append("\n");
       sb.Append("  TenantId: ").Append(TenantId).Append("\n");
-      sb.Append("  TotalHandlingFee: ").Append(TotalHandlingFee).Append("\n");
-      sb.Append("  TotalItem: ").Append(TotalItem).Append("\n");
-      sb.Append("  TotalItemDiscount: ").Append(TotalItemDiscount).Append("\n");
-      sb.Append("  TotalItemDiscountTax: ").Append(TotalItemDiscountTax).Append("\n");
-      sb.Append("  TotalShipment: ").Append(TotalShipment).Append("\n");
-      sb.Append("  TotalShippingFee: ").Append(TotalShippingFee).Append("\n");
-      sb.Append("  TotalTax: ").Append(TotalTax).Append("\n");
+      sb.Append("  Total: ").Append(Total).Append("\n");
       sb.Append("  TrackingNumbers: ").Append(TrackingNumbers).Append("\n");
       sb.Append("  UpdateDate: ").Append(UpdateDate).Append("\n");
       sb.Append("  WorkflowState: ").Append(WorkflowState).Append("\n");

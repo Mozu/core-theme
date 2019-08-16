@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
-namespace Mozu.Fulfiller.Contracts.Model {
+namespace Mozu.Fulfillment.Contracts.Model {
 
   /// <summary>
   /// 
@@ -48,6 +48,13 @@ namespace Mozu.Fulfiller.Contracts.Model {
     public string FirstName { get; set; }
 
     /// <summary>
+    /// Gets or Sets Id
+    /// </summary>
+    [DataMember(Name="id", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "id")]
+    public int? Id { get; set; }
+
+    /// <summary>
     /// Gets or Sets LastNameOrSurname
     /// </summary>
     [DataMember(Name="lastNameOrSurname", EmitDefaultValue=false)]
@@ -81,6 +88,7 @@ namespace Mozu.Fulfiller.Contracts.Model {
       sb.Append("  CompanyOrOrganization: ").Append(CompanyOrOrganization).Append("\n");
       sb.Append("  Email: ").Append(Email).Append("\n");
       sb.Append("  FirstName: ").Append(FirstName).Append("\n");
+      sb.Append("  Id: ").Append(Id).Append("\n");
       sb.Append("  LastNameOrSurname: ").Append(LastNameOrSurname).Append("\n");
       sb.Append("  MiddleNameOrInitial: ").Append(MiddleNameOrInitial).Append("\n");
       sb.Append("  PhoneNumbers: ").Append(PhoneNumbers).Append("\n");

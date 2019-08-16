@@ -11,7 +11,14 @@ namespace Mozu.Fulfillment.Contracts.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class TaskDefinition {
+  public class CanceledReason {
+    /// <summary>
+    /// Gets or Sets Attributes
+    /// </summary>
+    [DataMember(Name="attributes", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "attributes")]
+    public Dictionary<string, Object> Attributes { get; set; }
+
     /// <summary>
     /// Gets or Sets Description
     /// </summary>
@@ -20,32 +27,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public string Description { get; set; }
 
     /// <summary>
-    /// Gets or Sets Inputs
+    /// Gets or Sets ReasonCode
     /// </summary>
-    [DataMember(Name="inputs", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "inputs")]
-    public List<TaskInput> Inputs { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Name
-    /// </summary>
-    [DataMember(Name="name", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "name")]
-    public string Name { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Skippable
-    /// </summary>
-    [DataMember(Name="skippable", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "skippable")]
-    public bool? Skippable { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Subject
-    /// </summary>
-    [DataMember(Name="subject", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "subject")]
-    public string Subject { get; set; }
+    [DataMember(Name="reasonCode", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "reasonCode")]
+    public string ReasonCode { get; set; }
 
 
     /// <summary>
@@ -54,12 +40,10 @@ namespace Mozu.Fulfillment.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class TaskDefinition {\n");
+      sb.Append("class CanceledReason {\n");
+      sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  Description: ").Append(Description).Append("\n");
-      sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-      sb.Append("  Name: ").Append(Name).Append("\n");
-      sb.Append("  Skippable: ").Append(Skippable).Append("\n");
-      sb.Append("  Subject: ").Append(Subject).Append("\n");
+      sb.Append("  ReasonCode: ").Append(ReasonCode).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

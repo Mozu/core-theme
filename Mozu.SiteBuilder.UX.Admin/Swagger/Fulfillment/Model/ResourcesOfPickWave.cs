@@ -11,13 +11,20 @@ namespace Mozu.Fulfillment.Contracts.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class BackorderItemsRequest {
+  public class ResourcesOfPickWave {
     /// <summary>
-    /// Gets or Sets Items
+    /// Gets or Sets Embedded
     /// </summary>
-    [DataMember(Name="items", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "items")]
-    public List<BackorderItem> Items { get; set; }
+    [DataMember(Name="_embedded", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "_embedded")]
+    public List<PickWave> Embedded { get; set; }
+
+    /// <summary>
+    /// Gets or Sets Links
+    /// </summary>
+    [DataMember(Name="_links", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "_links")]
+    public Dictionary<string, Link> Links { get; set; }
 
 
     /// <summary>
@@ -26,8 +33,9 @@ namespace Mozu.Fulfillment.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class BackorderItemsRequest {\n");
-      sb.Append("  Items: ").Append(Items).Append("\n");
+      sb.Append("class ResourcesOfPickWave {\n");
+      sb.Append("  Embedded: ").Append(Embedded).Append("\n");
+      sb.Append("  Links: ").Append(Links).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

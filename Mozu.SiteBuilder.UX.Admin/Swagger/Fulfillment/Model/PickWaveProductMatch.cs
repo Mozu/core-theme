@@ -11,7 +11,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
   /// 
   /// </summary>
   [DataContract]
-  public class RejectShipment {
+  public class PickWaveProductMatch {
     /// <summary>
     /// Gets or Sets Attributes
     /// </summary>
@@ -20,11 +20,25 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
-    /// Gets or Sets RejectReason
+    /// Gets or Sets Identifier
     /// </summary>
-    [DataMember(Name="rejectReason", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "rejectReason")]
-    public string RejectReason { get; set; }
+    [DataMember(Name="identifier", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "identifier")]
+    public string Identifier { get; set; }
+
+    /// <summary>
+    /// Gets or Sets MatchType
+    /// </summary>
+    [DataMember(Name="matchType", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "matchType")]
+    public string MatchType { get; set; }
+
+    /// <summary>
+    /// Gets or Sets Value
+    /// </summary>
+    [DataMember(Name="value", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "value")]
+    public string Value { get; set; }
 
 
     /// <summary>
@@ -33,9 +47,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     /// <returns>String presentation of the object</returns>
     public override string ToString()  {
       var sb = new StringBuilder();
-      sb.Append("class RejectShipment {\n");
+      sb.Append("class PickWaveProductMatch {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-      sb.Append("  RejectReason: ").Append(RejectReason).Append("\n");
+      sb.Append("  Identifier: ").Append(Identifier).Append("\n");
+      sb.Append("  MatchType: ").Append(MatchType).Append("\n");
+      sb.Append("  Value: ").Append(Value).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }
