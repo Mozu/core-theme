@@ -718,9 +718,10 @@ Ext.define('Taco.view.order.Header', {
 
     changeAddress: function (focusAfterCloseCmp) {
         var me = this;
-
+        var customerRecord = this.record.getCustomer();
+        customerRecord.phantom = false;
         Ext.create('Taco.view.customers.modal.Contacts', {
-            record: this.record.getCustomer(),
+            record: customerRecord,
             order: this.record,
             listeners: {
                 scope: me,
