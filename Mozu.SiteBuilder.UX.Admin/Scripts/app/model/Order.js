@@ -2946,25 +2946,9 @@ Ext.define('Taco.model.Order', {
     },
 
     getCandidateSuggestions: function (config) {
-        //payload format
-        //{
-        //    "pickupLocationCode": "Spatula_SLO",
-        //        "orderType": "TRANSFER",
-        //            "items": [
-        //                {
-        //                    "partNumber": "RedSpatula", //productCode
-        //                    "upc": "RedSpatula", //VariationProductCode
-        //                    "quantity": 1
-        //                }
-        //            ]
-        //}
-
         Ext.apply(config, {
-            //url: '/admin/scripts/app/mocks/candidatesuggestions.json',
-            //method: 'get'
              url: '/admin/app/order/shipping/candidates',
              method: 'POST'
-            
         });
 
         Ext.Ajax.request(config);

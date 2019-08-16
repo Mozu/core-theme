@@ -361,7 +361,6 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         }
         shipment.items.forEach(function (element) {
             model.items.push({
-                partNumber: element.productCode,
                 upc: element.VariationProductCode ? element.VariationProductCode : element.productCode,
                 quantity: element.quantity
             });
@@ -392,7 +391,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
     openManualReassignShipmentModal: function () {
         var me = this;
         if (Taco.user.taContext.omsEnabled) {
-            var shipment = me.getReassignShipmentPayload()
+            var shipment = me.getReassignShipmentPayload();
             me.record.getCandidateSuggestions({
                 jsonData: shipment,
                 success: function (response) {

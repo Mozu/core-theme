@@ -20,9 +20,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         type: 'fit'
     },
     
-
-    
-
     initComponent: function () {
         var me = this;
         var itemsPerPage = 2;
@@ -42,7 +39,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             fields: ['locationName', 'distance', 'stock'],
             groupField: 'locationName',
-            data: this.inventoryData.candidateSuggestions,
+            data: this.inventoryData.items.candidateSuggestions,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -61,7 +58,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 limit: itemsPerPage
             }
         });
-
      
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',
@@ -85,13 +81,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     dataIndex: 'stock',
                     renderer: function (v, meta, rec) {
                         var inventory = rec.raw.inventory;
-                        var inventory = rec.raw.inventory;
                         var type = "";
 
                         var filteredInventory;
                         shipment.items.forEach(function (element) {
                             filteredInventory = inventory.filter(function (obj) {
-                                return (obj.partNumber === element.partNumber);
+                                return (obj.upc === element.upc);
                             });
                             switch (type) {
                                 case "":
@@ -144,9 +139,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                         })
 
                         switch (type) {
-                            case 'checked': return '<button class="btn btn-yes">Yes</button>';
-                            case 'partial': return '<button class="btn btn-partial">Partial</button>';
-                            default: return '<button class="btn btn-no">No</button>';
+                            case 'checked':
+                                return '<span class="x-column-content-pill x-column-content-pill-true">Yes</span>';
+                            case 'partial':
+                                return '<span class="x-column-content-pill x-column-content-pill-false">Partial</span>';
+                            default:
+                                return '<span class="x-column-content-pill x-column-content-pill-false">No</span>';
                         }
                     }
                 }
@@ -204,7 +202,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }
         });
        
-
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
             store: 'allLocationsStore',
