@@ -1,0 +1,55 @@
+﻿{% extends "back-office/base" %}
+{% block body-content %}
+<table class="mz-printable-order mz-printable-order-packingslip">
+<thead class="header"><tr>
+    <th class="company-info">
+        <div class="company-name">{{ customContent.companyName }}</div>
+        <div class="company-contacts">{{ customContent.companyAddress }}</div>
+        <div class="company-url">{{ customContent.websiteUrl }}</div>
+    </th>
+    <th class="order-essentials">
+        <div class="order-number"><span class="label">Pick List #</span><span>{{ model.pickWaveId }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.shipDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+    </th>
+</tr></thead>
+<tbody><tr><td colspan="4">
+    <table class="grid">
+        <thead><tr>
+            <th>Image</th>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Order#s</th>
+            <th>Qty Needed</th>
+            <th>Qty Picked</th>
+        </tr></thead>
+        <tbody>
+                
+        {% for shipment in shipments %}
+          {% for item in shipment.items %}
+             <tr>
+                  <td>
+                      <img style="height: 100px;" src="{{ item.imageUrl }}">
+                  </td>
+                  <td>
+                      {{ item.productCode }}
+                  </td>
+                  <td>
+                      <div class="product-name">{{ item.name }}</div>
+                  </td>
+                  <td>
+                      {{ shipment.orderId }}
+                  </td>
+                  <td>
+                      {{ item.quantity }}
+                  </td>
+                  <td>
+                      0
+                  </td>
+              </tr>
+          {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+</td></tr></tbody>
+</table>
+{% endblock body-content %}
