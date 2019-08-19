@@ -15,10 +15,7 @@
             "offerMenu": "offer",
             "orderMenu": "order",
             "invoiceMenu": "invoice",
-            "help": "Help",
-            "Top": {
-                "searchPlaceholder": "Search"
-            }
+            "help": "Help"
         },
         "HEADER": {
             "logoutConfirmation": {
@@ -119,6 +116,17 @@
                 "event": "Event",
                 "user": "User"
             }
+        },
+        "FILTER": {
+            "searchPlaceholder": "Search",
+            "advancedFilter": "Advanced Filter",
+            "keywordSearch": "Keyword Search",
+            "cancelBtn": "Cancel",
+            "filterBtn": "Filter",
+            "QuotesFields": {
+                "quoteName": "Quote Name",
+                "quoteId": "Quote Id"
+            }
         }
     },
     "MESSAGES": {
@@ -182,7 +190,7 @@
         "GridFooter": {
             "Displaying": "Displaying",
             "of": "of",
-            "NoDataDisplayMessage":"No data to display"
+            "NoDataDisplayMessage": "No data to display"
         },
         "Quote": {
             "Information": {

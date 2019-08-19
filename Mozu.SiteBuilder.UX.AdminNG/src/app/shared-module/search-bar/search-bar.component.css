@@ -41,7 +41,7 @@
 
 .modal.advanced-filter {
     position: relative;
-    right: 100%;
+    right: 97%;
     left: auto;
     border-radius: 4px;
     box-shadow: 0 1px 14px rgba(0, 0, 0, 0.34);
@@ -49,6 +49,10 @@
     -webkit-box-shadow: 0 1px 14px rgba(0, 0, 0, 0.34);
     -o-box-shadow: 0 1px 14px rgba(0, 0, 0, 0.34);
     -ms-box-shadow: 0 1px 14px rgba(0, 0, 0, 0.34);
+}
+
+.advanced-filter .close {
+    font-size: 32px;
 }
 
 .advanced-filter .modal-dialog {

@@ -44,16 +44,19 @@ export class SearchBarComponent implements OnInit {
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
         this.setAdvancedFilterValue(value);
-        this._notificationService.notifyQuoteSearched(value);
+        console.log(_.pickBy(this.quoteFilter, _.identity));
+        this._notificationService.notifyQuoteSearched(JSON.stringify(this.quoteFilter));
         break;
     }
   }
 
   modelChanged() {
+    this.model.status = true;
     this.model.searchBox = this.quoteFilter.searchBarkeyword + this.quoteFilter.searchBarQuoteName + this.quoteFilter.searchBarQuoteId;
   }
 
   setAdvancedFilterValue(filterValue: string) {
+      this.resetAdvancedFilterValue();
       this.model.splittedValues = _.split(filterValue, ' ');
 
       this.model.splittedValues.forEach((item, index) => {
@@ -92,7 +95,7 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  resetAdvancedFilterValue(){
+  resetAdvancedFilterValue() {
     this.quoteFilter.keyword = '';
     this.quoteFilter.quoteName = '';
     this.quoteFilter.quoteId = null;

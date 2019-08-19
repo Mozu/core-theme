@@ -21,8 +21,7 @@ export class QuotesListService {
         filter = startIndex ? filter.append(Constants.queryParameters.startIndex, startIndex.toString()) : filter;
         filter = pageSize ? filter.append(Constants.queryParameters.pageSize, pageSize.toString()) : filter;
         filter = sort && sort !== '' ? filter.append(Constants.queryParameters.sort, sort) : filter;
-        filter = advancedSearch && advancedSearch !== '' ? filter.append(Constants.queryParameters.advancedSearch,
-            JSON.stringify({ keyword: advancedSearch })) : filter;
+        filter = advancedSearch && advancedSearch !== '' ? filter.append(Constants.queryParameters.advancedSearch, advancedSearch) : filter;
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.quoteList);
         } else {

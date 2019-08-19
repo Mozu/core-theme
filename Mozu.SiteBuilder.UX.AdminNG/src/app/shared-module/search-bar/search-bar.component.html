@@ -6,40 +6,40 @@
           (click)="model.status ? resetSerach(searchBar): ''"></i>
       </button>
         </div>
-        <input type="text" [(ngModel)]="model.searchBox" class="form-control" #searchBar placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
+        <input type="text" [(ngModel)]="model.searchBox" class="form-control" #searchBar placeholder="{{'SHARED.FILTER.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
     </div>
 </div>
 
 <div class="col-md-1 col-md-1">
     <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false" (click)="setAdvancedFilterValue(searchBar.value)"></span>
     <div class="modal-parent">
-        <div class="modal advanced-filter" tabindex="-1" role="dialog">
+        <div class="modal advanced-filter" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                       aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="gridSystemModalLabel">Advanced Filter</h4>
+                        <h4 class="modal-title" id="gridSystemModalLabel">{{'SHARED.FILTER.advancedFilter' | translate}}</h4>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label for="keyword">Keyword Search</label>
+                                <label for="keyword">{{'SHARED.FILTER.keywordSearch' | translate}}</label>
                                 <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='quoteFilter.keyword' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
-                                <label for="quoteName">Quote Name</label>
+                                <label for="quoteName">{{'SHARED.FILTER.QuotesFields.quoteName' | translate}}</label>
                                 <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.quoteName' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
-                                <label for="quoteId">Quote Id</label>
+                                <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
                                 <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId' (ngModelChange)="modelChanged()">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <span type="button" class="btn cancelbtn" data-dismiss="modal">Cancel</span>
-                        <button type="button" class="sbbtn btn btn-success">Filter</button>
+                        <span type="button" class="btn cancelbtn" data-dismiss="modal">{{'SHARED.FILTER.cancelBtn' | translate}}</span>
+                        <button type="button" class="sbbtn btn btn-success">{{'SHARED.FILTER.filterBtn' | translate}}</button>
                     </div>
                 </div>
             </div>
