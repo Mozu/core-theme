@@ -26,7 +26,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
 
         me.setLoading(true, this.body);
         this.record.getLocations();
-        
+
         this.add(Ext.create('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             record: this.record,
             listeners: {
@@ -36,7 +36,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
             }
         }));
 
-        var shipments = me.record.get('shipments');
+        var shipments = this.getShipments();
         if (shipments) {
             for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
                 if (shipments[shipmentCount].locationCode) {
@@ -75,7 +75,17 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
             me.setLoading(false, this.body);
         }
     },
-
+    getShipments: function () {
+        var shipments = this.record.get('shipments');
+        var filteredShipments = [];
+        if (shipments) {
+            for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
+                if (shipments[shipmentCount].shipmentStatus.toLowerCase() != 'reassigned')
+                    filteredShipments.push(shipments[shipmentCount]);
+            }
+        }
+        return filteredShipments;
+    },
     shipmentRefresh: function () {
         var me = this;
         me.removeAll();
