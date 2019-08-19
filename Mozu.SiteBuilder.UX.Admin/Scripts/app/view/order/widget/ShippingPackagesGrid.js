@@ -96,8 +96,14 @@
                 name: 'discount',
                 type: 'int',
                 useNull: true
-            },
-            {
+                },
+                
+                {
+                    name:'lineItemCost',
+                    type: 'float',
+                    useNull:true
+                },
+                {
                 name: 'weight',
                 type: 'float',
                 defaultValue: 0
