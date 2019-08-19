@@ -106,7 +106,7 @@
             name: 'subtotal',
             type: 'float',
             convert: function (value, model) {
-                return parseFloat(model.get('lineItemCost')) - parseFloat(model.get('itemDiscount'));
+                return parseFloat(model.get('lineItemCost'));
             },
             defaultValue: null
         }

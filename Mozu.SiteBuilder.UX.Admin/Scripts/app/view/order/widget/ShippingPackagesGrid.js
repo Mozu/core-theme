@@ -340,6 +340,7 @@
                 }
             },
             {
+                dataIndex: 'lineItemCost',
                 text: 'Subtotal',
                 draggable: false,
                 sortable: false,
@@ -348,11 +349,8 @@
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
-                renderer: function (value, metaData, record) {
-                    var lineItemCost = record.get('lineItemcost') || record.get('actualPrice') * record.get("quantity");
-                    var discount = record.get('discount') || 0;
-                    var val = record.get('itemTax');
-                    return this.record.formatCurrency(lineItemCost + val - discount);
+                renderer: function (value) {
+                    return this.record.formatCurrency(value);
                 }
             },
             {
