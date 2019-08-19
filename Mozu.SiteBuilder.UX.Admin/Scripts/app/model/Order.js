@@ -1113,8 +1113,12 @@ Ext.define('Taco.model.Order', {
             update: '/admin/app/order/edit',
             destroy: '/admin/app/order/delete'
         },
+        extraParams: {
+            OrderPaymentsByCatputre :  true
+        },
         reader: {
             type: 'json',
+            
             getResponseData: function (response) {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);

@@ -267,12 +267,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             ],
             data: [],
             sorters: [{
-                sorterFn: function (a, b) {
-                    if (a.get('orderLineId') === b.get('orderLineId')) {
-                        return 0;
-                    }
-                    return (a.get('orderLineId') < b.get('orderLineId') ? -1 : 1);
-                }
+                
             }],
             proxy: {
                 type: 'ajax',
