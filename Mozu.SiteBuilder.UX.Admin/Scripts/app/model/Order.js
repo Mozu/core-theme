@@ -3013,21 +3013,18 @@ Ext.define('Taco.model.Order', {
     },
 
     getLocations: function () {
+        var me = this;
         return Taco.core.data.StoreManager.getOrCreate({
             createOnly: true,
             type: 'Taco.store.Locations',
             // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
             clearSort: false,
             remoteSort: true,
-            remoteFilter: true,
+            remoteFilter: false,
             sorters: [{
                 property: 'name',
                 direction: 'ASC'
             }],
-            //filters: [{
-            //    property: 'code',
-            //    value: true
-            //}],
             autoLoad: true,
             listeners: {
                 beforeload: function (store, operation) {
@@ -3035,6 +3032,46 @@ Ext.define('Taco.model.Order', {
                     if (proxy.extraParams) {
                         //reset params at proxy (e.g. advSearch)
                         proxy.extraParams = {};
+                    }
+                    if (this.extraFilters) {
+                        store.extraFilters.add(this.extraFilters);
+                    }
+                },
+                scope: this
+            }
+        })
+    },
+
+    getLocationsByShipmentType: function (shipmentType) {
+        var me = this;
+        return Taco.core.data.StoreManager.getOrCreate({
+            createOnly: true,
+            type: 'Taco.store.Locations',
+            // note that clearSort is required to avoid having the sorters get cleared when the store is instantiated;
+            clearSort: false,
+            remoteSort: true,
+            remoteFilter: false,
+            clearFilters: false,
+            sorters: [{
+                property: 'name',
+                direction: 'ASC'
+            }],
+            filters: function (record) {
+                shipmentTypeLocation = shipmentType == 'STH' ? 'Direct Ship' : 'In Store Pickup';
+                return record.data.fulfillmentTypes.find(location => location.name === shipmentTypeLocation);
+            },
+            autoLoad: true,
+            listeners: {
+                beforeload: function (store, operation) {
+                    var proxy = store.getProxy();
+                    if (proxy.extraParams) {
+                        //reset params at proxy (e.g. advSearch)
+                        proxy.extraParams = {
+                            //page: 1,
+                            //start: 0,
+                            //limit: 5
+                            //pagesize: 5,
+                        };
                     }
                     if (this.extraFilters) {
                         store.extraFilters.add(this.extraFilters);

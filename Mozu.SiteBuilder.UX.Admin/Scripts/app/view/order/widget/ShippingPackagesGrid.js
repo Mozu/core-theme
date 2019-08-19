@@ -83,7 +83,7 @@
                 type: 'int',
                 useNull: true
             }, {
-                name: 'unitPrice',
+                name: 'actualPrice',
                 type: 'float',
                 useNull: true
             },
@@ -267,7 +267,7 @@
                 flex: 2
             },
             {
-                dataIndex: 'unitPrice',
+                dataIndex: 'actualPrice',
                 text: 'Unit Price',
                 draggable: false,
                 sortable: false,
