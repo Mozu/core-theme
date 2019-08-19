@@ -1,12 +1,14 @@
 Ext.define('Taco.view.order.subform.FulfillmentNew', {
     extend: 'Taco.view.order.subform.Subform',
-
+    requires: [
+        'Taco.model.SiteShipSetting'
+    ],
     alias: 'widget.taco-order-fulfillment',
 
     tabTitle: 'Shipments',
 
     initComponent: function () {
-
+        var me = this;
         this.cls = [this.cls, 'taco-order-fulfillment'].join(' ');
 
         this.record.on({
@@ -16,7 +18,20 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
 
         this.callParent(arguments);
 
-        this.buildComponents();
+      
+        Taco.model.SiteShipSetting.load(123, {
+            scope: this,
+            failure: function () {
+                // there should be a message here
+            },
+            success: function (record) {
+
+            },
+            callback: function (record) {
+                this.buildComponents();
+                me.record.SiteShipSetting = record;
+            }
+        });
     },
 
     buildComponents: function () {

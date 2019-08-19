@@ -66,7 +66,7 @@
 
     initComponent: function () {
         var me = this;
-
+        this.isRefreshShippingEnabled = me.record.SiteShipSetting.data.refreshTax;
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -295,6 +295,7 @@
                 menuDisabled: true,
                 minWidth: 80,
                 flex: 1,
+                hidden: me.isRefreshShippingEnabled,
                 editor: {
                     showBorder: false,
                     listeners: {
