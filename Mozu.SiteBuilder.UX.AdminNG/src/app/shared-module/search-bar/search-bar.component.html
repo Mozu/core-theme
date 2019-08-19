@@ -2,17 +2,16 @@
     <div class="input-group">
         <div class="input-group-btn">
             <button class="btn btn-default search-btn" type="button">
-        <i [ngClass]="status ? 'pi-times' : 'pi-search'" class="pi"
-          (click)="status ? resetSerach(searchBar): ''"></i>
+        <i [ngClass]="model.status ? 'pi-times' : 'pi-search'" class="pi"
+          (click)="model.status ? resetSerach(searchBar): ''"></i>
       </button>
         </div>
-        <input type="text" [(ngModel)]="quoteFilter.searchBarkeyword + quoteFilter.searchBarQuoteName + quoteFilter.searchBarQuoteId" class="form-control" #searchBar placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)"
-            (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
+        <input type="text" [(ngModel)]="model.searchBox" class="form-control" #searchBar placeholder="{{'SHARED.NAVIGATION.Top.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
     </div>
 </div>
 
 <div class="col-md-1 col-md-1">
-    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false"></span>
+    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false" (click)="setAdvancedFilterValue(searchBar.value)"></span>
     <div class="modal-parent">
         <div class="modal advanced-filter" tabindex="-1" role="dialog">
             <div class="modal-dialog">
@@ -26,15 +25,15 @@
                         <form>
                             <div class="form-group">
                                 <label for="keyword">Keyword Search</label>
-                                <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='quoteFilter.keyword'>
+                                <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='quoteFilter.keyword' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
                                 <label for="quoteName">Quote Name</label>
-                                <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.quoteName'>
+                                <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.quoteName' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
                                 <label for="quoteId">Quote Id</label>
-                                <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId'>
+                                <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId' (ngModelChange)="modelChanged()">
                             </div>
                         </form>
                     </div>

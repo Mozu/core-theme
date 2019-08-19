@@ -191,6 +191,7 @@ export class Constants {
     };
 
     static advancedFilter = {
+        keyValueDelimiter: ':',
         searchBox: 'searchBox',
         keyword: 'keyword',
         quoteName: 'quoteName',

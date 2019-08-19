@@ -53,6 +53,11 @@ export enum LocationGroupEventOperations {
 }
 
 export enum NotificationQuoteActions {
-    list = "List",
-    edit = "Edit"
+    list = 'List',
+    edit = 'Edit'
+}
+
+export enum QuotesAdvFilterFields {
+    quoteName = 'quoteName',
+    quoteId = 'quoteId'
 }
