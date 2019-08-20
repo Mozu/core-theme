@@ -639,7 +639,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             };
 
             request.LocationCode = returns.LocationCode;
-            request.OrderID = returns.OriginalOrderId;
+            request.OrderID = order.OrderNumber?.ToString();
 
             request.Carrier = configuration.DefaultCarrier;
             request.PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper());
