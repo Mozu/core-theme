@@ -186,12 +186,11 @@ Ext.define('Taco.view.order.subform.Return', {
 
     createReturnableItem: function(item, shipItem, quantity){
         return {
-            orderItemId: item.get('orderItemId'),
             orderLineId: item.get('orderLineId'),
             productCode: item.get('productCode'),
             productCode: item.get('productCode'),
-            shipmentId: shipItem.get('shipmentId'),
-            shipmentItemId: shipItem.get('shipmentItemId'),
+            shipmentId: shipItem.shipmentId,
+            shipmentItemId: shipItem.shipmentItemId,
             quantity: quantity,
             returnReason: item.get('reason'),
             returnType: item.get('returnType'),
@@ -207,16 +206,16 @@ Ext.define('Taco.view.order.subform.Return', {
         Ext.Array.each(items, function(item) {
             //Need to split by shippingItems here
             
-            if(items.shipItems && items.shipItems.length){
+            if(item.raw.items && item.raw.items.length){
                 var quantity = item.get('quantity');
-                Ext.Array.each(items.shipItems, function(shipItem){
+                Ext.Array.each(item.raw.items, function(shipItem){
                     var shipmentQuantity = shipItem.quantityReturnable
                     if(quantity < shipmentQuantity) {
                         shipmentQuantity = quantity;
                     };
-                    quantity = quantity - shipmentQuantity
                     if(quantity) {
                         returnItems.push(me.createReturnableItem(item, shipItem, shipmentQuantity));
+                        quantity = quantity - shipmentQuantity;
                     }
                 })
             } else {
