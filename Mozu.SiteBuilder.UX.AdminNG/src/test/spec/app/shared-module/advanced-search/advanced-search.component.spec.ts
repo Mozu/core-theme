@@ -11,12 +11,12 @@ import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { SharedDataService, NotificationService } from '@global';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { SearchBarComponent } from '@shared/search-bar/search-bar.component';
+import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
 import { NavigationContainerType } from '@shared/infrastructure';
 
 describe('SearchBarComponent', () => {
-    let component: SearchBarComponent;
-    let fixture: ComponentFixture<SearchBarComponent>;
+    let component: AdvancedSearchComponent;
+    let fixture: ComponentFixture<AdvancedSearchComponent>;
     let debugElement: DebugElement;
     let element: HTMLElement;
     let inputElement: HTMLInputElement;
@@ -25,7 +25,7 @@ describe('SearchBarComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, GlobalModule],
-            declarations: [SearchBarComponent],
+            declarations: [AdvancedSearchComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [By, TranslateService, LoggerService,
                 UtilityService, EnvironmentConfig, AuthService,
@@ -43,7 +43,7 @@ describe('SearchBarComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SearchBarComponent);
+        fixture = TestBed.createComponent(AdvancedSearchComponent);
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
         element = debugElement.nativeElement;
@@ -56,7 +56,7 @@ describe('SearchBarComponent', () => {
     it('should call toggleIcon()', () => {
         const event = { 'currentTarget': { 'value': 'abc' } };
         component.toggleIcon(event);
-        expect(component.status).toBe(true);
+        expect(component.model.status).toBe(true);
     });
 
     it('should search component should recieve input data', () => {
@@ -72,7 +72,7 @@ describe('SearchBarComponent', () => {
 
     it('should notify component to reset search data on grid resetSerach()', async(() => {
         const searchValue = '';
-        component.status = false;
+        component.model.status = false;
         component.navigationContainerType = 'quotes';
         inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
         fixture.detectChanges();
@@ -90,7 +90,7 @@ describe('SearchBarComponent', () => {
 
     it('should notify component to search data on grid search()', async(() => {
         const searchValue = 'sam';
-        component.status = false;
+        component.model.status = false;
         component.navigationContainerType = 'quotes';
         inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
         fixture.detectChanges();

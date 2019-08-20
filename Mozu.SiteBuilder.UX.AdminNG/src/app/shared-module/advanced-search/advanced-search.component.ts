@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NotificationService } from '@global';
 import { NavigationContainerType, Constants, QuotesAdvFilterFields } from '@shared/infrastructure';
-import { AdvancedFilterModel, QuoteFilter } from './search-bar.model';
+import { AdvancedFilterModel, QuoteFilter } from './advanced-search.model';
 import * as _ from 'lodash';
 
 
 @Component({
-  selector: 'search-bar',
-  templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.css']
+  selector: 'advanced-search',
+  templateUrl: './advanced-search.component.html',
+  styleUrls: ['./advanced-search.component.css']
 })
-export class SearchBarComponent implements OnInit {
+export class AdvancedSearchComponent implements OnInit {
   @Input() navigationContainerType: string;
   @Input() isEditMode: boolean;
   navigationType = NavigationContainerType;
@@ -34,7 +34,7 @@ export class SearchBarComponent implements OnInit {
     this.model.status = false;
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
-          this.resetAdvancedFilterValue();
+        this.resetAdvancedFilterValue();
         this._notificationService.notifyQuoteSearched(searchBar.value);
         break;
     }
@@ -44,8 +44,7 @@ export class SearchBarComponent implements OnInit {
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
         this.setAdvancedFilterValue(value);
-        console.log(_.pickBy(this.quoteFilter, _.identity));
-        this._notificationService.notifyQuoteSearched(JSON.stringify(this.quoteFilter));
+        this._notificationService.notifyQuoteSearched(JSON.stringify(_.pickBy(_.pick(this.quoteFilter, _.keys(this.quoteFilter)), _.identity)));
         break;
     }
   }
@@ -56,26 +55,26 @@ export class SearchBarComponent implements OnInit {
   }
 
   setAdvancedFilterValue(filterValue: string) {
-      this.resetAdvancedFilterValue();
-      this.model.splittedValues = _.split(filterValue, ' ');
+    this.resetAdvancedFilterValue();
+    this.model.splittedValues = _.split(filterValue, ' ');
 
-      this.model.splittedValues.forEach((item, index) => {
-        const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
-            key = (colonIndex !== -1) ? item.substr(0, colonIndex) : Constants.advancedFilter.keyword,
-            isKeywordSearch = (colonIndex === -1 || !this.isFieldSupported(key));
+    this.model.splittedValues.forEach((item, index) => {
+      const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
+        key = (colonIndex !== -1) ? item.substr(0, colonIndex) : Constants.advancedFilter.keyword,
+        isKeywordSearch = (colonIndex === -1 || !this.isFieldSupported(key));
 
-        if (isKeywordSearch) {
-            this.addKeywordOrAppendToLastKey(item, index);
-        } else {
-            this.addKeyValue(key, item, colonIndex);
-        }
-      });
+      if (isKeywordSearch) {
+        this.addKeywordOrAppendToLastKey(item, index);
+      } else {
+        this.addKeyValue(key, item, colonIndex);
+      }
+    });
   }
 
   public isFieldSupported = (keyField) => {
     let match;
     if (!keyField) {
-        return false;
+      return false;
     }
     match = Object.keys(QuotesAdvFilterFields).filter(index => _.lowerCase(QuotesAdvFilterFields[index]) === _.lowerCase(keyField));
     return match !== null;

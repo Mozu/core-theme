@@ -39,7 +39,7 @@
                     </div>
                     <div class="modal-footer">
                         <span type="button" class="btn cancelbtn" data-dismiss="modal">{{'SHARED.FILTER.cancelBtn' | translate}}</span>
-                        <button type="button" class="sbbtn btn btn-success">{{'SHARED.FILTER.filterBtn' | translate}}</button>
+                        <button type="button" class="sbbtn btn btn-success" (click)="search(searchBar.value)">{{'SHARED.FILTER.filterBtn' | translate}}</button>
                     </div>
                 </div>
             </div>

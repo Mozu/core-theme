@@ -55,7 +55,7 @@ import {
 } from './pipes/index';
 
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
+import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { SpinnerComponent } from './spinner/spinner.component';
@@ -122,7 +122,7 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         NavigationTopLocationGroupsComponent,
-        SearchBarComponent,
+        AdvancedSearchComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,
         SelectedLocationsComponent,
@@ -184,7 +184,7 @@ export function createTranslateLoader(http: HttpClient) {
         AccessTileComponent,
         NavigationTopQuotesComponent,
         NavigationTopLocationGroupsComponent,
-        SearchBarComponent,
+        AdvancedSearchComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,
         SelectedLocationsComponent,
