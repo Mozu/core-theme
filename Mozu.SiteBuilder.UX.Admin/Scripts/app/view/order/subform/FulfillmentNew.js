@@ -28,8 +28,8 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
 
             },
             callback: function (record) {
-                this.buildComponents();
                 me.record.SiteShipSetting = record;
+                this.buildComponents();
             }
         });
     },
