@@ -8,7 +8,8 @@
         'Ext.form.field.Number',
         'Ext.toolbar.TextItem',
         'Ext.grid.CellEditor',
-        'Ext.util.DelayedTask'
+        'Ext.util.DelayedTask',
+        'Ext.ux.data.PagingMemoryProxy'
     ],
 
     autoShow: true,
@@ -28,14 +29,13 @@
             clicksToEdit: 1
         });
         var me = this;
-        var itemsPerPage = 2;
         var selectedTab;
         this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'ItemInventoryStore',
             autoLoad: false,
             //autoLoad: { start: 0, limit: 5 },
-            pageSize: itemsPerPage,
+            pageSize: 5,
             remoteSort: true,
             sorters: [{
                 property: 'location',
@@ -46,12 +46,11 @@
             data: this.inventoryItemList.candidateSuggestions || this.inventoryItemList.items,
             proxy: {
                 type: 'memory',
+                enablePaging: true,
                 reader: {
                     type: 'json',
                     root: 'items',
                     totalProperty: 'total',
-                    enablePaging: true
-
                 }
             }
         });
@@ -60,7 +59,7 @@
         inventoryStore.load({
             params: {
                 start: 0,
-                limit: itemsPerPage
+                limit: 5
             }
         });
 
@@ -125,7 +124,7 @@
 
             dockedItems: [{
                 xtype: 'pagingtoolbar',
-                store: inventoryStore,   // same store GridPanel is using
+                store: 'ItemInventoryStore',   // same store GridPanel is using
                 dock: 'bottom',
                 displayInfo: true
             }],
@@ -162,10 +161,9 @@
             fields: ['name', 'code'],
             autoLoad: false,
             pageSize: 5,
-            //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list',
+                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType,
                 reader: {
                     type: 'json',
                     root: 'items',

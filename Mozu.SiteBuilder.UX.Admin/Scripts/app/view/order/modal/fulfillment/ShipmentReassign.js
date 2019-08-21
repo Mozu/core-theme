@@ -6,7 +6,8 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         'Ext.layout.container.Card',
         'Ext.tab.Bar',
         'Ext.form.field.Number',
-        'Ext.toolbar.TextItem'
+        'Ext.toolbar.TextItem',
+        'Ext.ux.data.PagingMemoryProxy'
     ],
 
     autoShow: true,
@@ -32,7 +33,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             storeId: 'inventoryStore',
             autoLoad: false,
             //autoLoad: { start: 0, limit: 2 },
-            pageSize: itemsPerPage,
+            pageSize: 5,
             remoteSort: true,
             sorters: [{
                 property: 'locationName',
@@ -43,11 +44,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             data: this.inventoryData.items.candidateSuggestions || this.inventoryData.items,
             proxy: {
                 type: 'memory',
+                enablePaging: true,
                 reader: {
                     type: 'json',
-                    root: 'rows',
-                    totalProperty: 'totalCount',
-                    enablePaging: true
+                    root: 'items',
+                    totalProperty: 'total',
                 }
             }
         });
