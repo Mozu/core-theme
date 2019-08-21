@@ -209,6 +209,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
        
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
+            cls: 'taco-order-fulfillment-locations',
             store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
             columns: [

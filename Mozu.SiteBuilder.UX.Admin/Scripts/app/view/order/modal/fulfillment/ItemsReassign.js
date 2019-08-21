@@ -65,6 +65,7 @@
 
         var inventorygrid = Ext.create('Ext.grid.Panel', {
             title: 'Inventory',
+            cls: 'taco-order-fulfillment-ReassignItems',
             store: Ext.data.StoreManager.lookup('ItemInventoryStore'),
             itemId: 'inventoryGrid',
             columns: [
@@ -179,6 +180,7 @@
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
             title: 'All Locations',
+            cls: 'taco-order-fulfillment-locations',
             store: 'allLocationsStore',
             itemId: 'allLocationsGrid',
             columns: [

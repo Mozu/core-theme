@@ -522,6 +522,22 @@
     .icon-partial {
         background-image: url('/admin/Scripts/build/resources/images/icons/partial.png');
     }
+
+    .x-grid-row-focused .x-grid-td {
+        background-color: #e6e6e6;
+    }
+}
+
+.taco-order-fulfillment-locations {
+    .x-grid-row-focused .x-grid-td {
+        background-color: #e6e6e6;
+    }
+}
+
+.taco-order-fulfillment-ReassignItems {
+    .x-grid-row-focused .x-grid-td {
+        background-color: #e6e6e6;
+    }
 }
 
 .shipping-packages-grid .x-grid-cell-inner img {
@@ -529,51 +545,51 @@
     width: 30px !important;
 }
 
-.shipping-packages-grid .x-grid-editor img {
-    height: 30px !important;
-    width: 30px !important;
-}
-
-.taco-order-fulfillment-ItemUnitTax {
-    .icon {
-        position: absolute;
-        pointer-events: none;
-        padding: 5px 8px 5px 8px;
-        background-color: #fafafa;
-        border: 1px solid rgba(63,63,63,0.19);
-        font-size: 16px;
-        font-weight: bolder;
+    .shipping-packages-grid .x-grid-editor img {
+        height: 30px !important;
+        width: 30px !important;
     }
 
-    .inner-addon {
-        position: relative;
-    }
+    .taco-order-fulfillment-ItemUnitTax {
+        .icon {
+            position: absolute;
+            pointer-events: none;
+            padding: 5px 8px 5px 8px;
+            background-color: #fafafa;
+            border: 1px solid rgba(63,63,63,0.19);
+            font-size: 16px;
+            font-weight: bolder;
+        }
 
-    .left-addon input {
-        font-size: 14px;
-        border: 1px solid #e8e6e6;
-        padding: 5px 5px 5px 30px;
-        border: 1px solid rgba(63,63,63,0.19);
-        width: 80px;
-    }
+        .inner-addon {
+            position: relative;
+        }
 
-    .middle-box {
-        margin-top: 4px;
-        float: left;
-        width: 10%;
-        font-size: 16px;
-        margin-left: 5px;
-    }
+        .left-addon input {
+            font-size: 14px;
+            border: 1px solid #e8e6e6;
+            padding: 5px 5px 5px 30px;
+            border: 1px solid rgba(63,63,63,0.19);
+            width: 80px;
+        }
 
-    input.doller {
-        width: 100px;
-    }
+        .middle-box {
+            margin-top: 4px;
+            float: left;
+            width: 10%;
+            font-size: 16px;
+            margin-left: 5px;
+        }
 
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        margin: 0;
+        input.doller {
+            width: 100px;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0;
+        }
     }
-}
