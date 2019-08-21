@@ -26,13 +26,13 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     cls: 'orderform-payment-transaction',
     initComponent: function (eOpts) {
         var me = this;
-        
+        me.setIsAutoCaptureEnabled();
+        me.getavailableActionsLength();
         me.initStatusRow();
         me.initPaymentDetails();
         me.initDisplayAmount();
         me.initTransactionList();
-        me.setIsAutoCaptureEnabled()
-        
+    
         me.items = [
             me.statusRow,
             {
@@ -56,10 +56,18 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     setIsAutoCaptureEnabled: function() {
         this.isAutoCaptureEnabled = false 
         
-        if(this.order.PaymentSettings.get('jobSettings').autoCaptureJob) {
-            this.isAutoCaptureEnabled = this.order.PaymentSettings.get('jobSettings').autoCaptureJob.isEnabled || false;  
+        if (this.order.PaymentSettings.get('jobSettings').autoCaptureJob) {
+          return this.isAutoCaptureEnabled = this.order.PaymentSettings.get('jobSettings').autoCaptureJob.isEnabled || false;  
         }
     },
+
+    getavailableActionsLength: function () {
+        var me = this;
+            data = me.record.data;
+        if (this.isAutoCaptureEnabled && (data && data.availableActions).length == 2) {
+             return ((data && data.availableActions).includes('CreditPayment') && (data && data.availableActions).includes('ManualCreditPayment')) ? true : false
+          }
+      },
 
     getAvailableActions: function() {
         var me = this,
@@ -532,6 +540,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
                     glyph: 'XE90B@mozicons',
                     itemId: 'moreActionsButton',
                     menu: me.getAvailableActions(),
+                    hidden: me.getavailableActionsLength(),
                     width: 18,
                     height: 24,
                     margin: '0 0 0 10'

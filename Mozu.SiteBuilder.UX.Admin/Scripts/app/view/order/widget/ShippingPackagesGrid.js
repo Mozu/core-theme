@@ -66,7 +66,8 @@
 
     initComponent: function () {
         var me = this;
-        this.isRefreshShippingEnabled = me.record.SiteShipSetting.data.refreshTax;
+        
+        me.setIsRefreshShippingEnabled();
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -367,6 +368,14 @@
             }
         ];
         this.callParent();
+    },
+
+    setIsRefreshShippingEnabled: function () {
+        this.isRefreshShippingEnabled = false
+
+        if (this.record.SiteShipSetting.data) {
+            return this.isRefreshShippingEnabled = this.record.SiteShipSetting.data.refreshTax || false;
+        }
     },
 
     isShipmentAction: function () {
