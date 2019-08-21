@@ -43,7 +43,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
                 pageIndex = 1,
                 pageSize = 25,
                 startIndex = 0,
-                sort = new SortingCollection()
+                sort = new SortingCollection(),
+                shipmentType = qs["shipmentType"]
             };
 
             int tmp;

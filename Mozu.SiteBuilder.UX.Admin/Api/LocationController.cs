@@ -33,8 +33,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         public LocationController(ILocationAdminWebApiClient locationWebApiClient,
             IReferenceDataWebApiClient referenceDataWebApi,
-            ILocationGroupWebApiClient locationGroupWebApiClient, 
-            ILocationGroupConfigurationWebApiClient locationGroupConfigurationWebApiClient, 
+            ILocationGroupWebApiClient locationGroupWebApiClient,
+            ILocationGroupConfigurationWebApiClient locationGroupConfigurationWebApiClient,
             IApiContext apiContext)
         {
             _locationWebApiClient = locationWebApiClient;
@@ -189,15 +189,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address)";
+                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address,fulfillmentTypes(code, name)";
+                if (!string.IsNullOrWhiteSpace(pagingParams.shipmentType)) 
+                {
+                    FilterCollectionItem filterCollectionItem = new FilterCollectionItem();
+                    if (pagingParams.shipmentType == "STH")
+                    {
+                        filterCollectionItem.value = "DS";
+                        filterCollectionItem.property = "fulfillmenttype";
+                        extFilter.Add(filterCollectionItem);
+                    }
+                    if (pagingParams.shipmentType == "BOPIS")
+                    {
+                        filterCollectionItem.value = "SP";
+                        filterCollectionItem.property = "fulfillmenttype";
+                        extFilter.Add(filterCollectionItem);
+                    }
+                }
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
+
                 locations = (await _locationWebApiClient.GetLocations(startIndex: pagingParams.startIndex,
-                    pageSize: pagingParams.pageSize,
-                    sortBy: sort,
-                    filter: filter,
-                    responseFields: responseFields
-                    )).ReadAsSync();
+                pageSize: pagingParams.pageSize,
+                sortBy: sort,
+                filter: filter,
+                responseFields: responseFields
+                )).ReadAsSync();
             }
 
             // default RegularHours to an object for pass through.
@@ -235,13 +252,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 locationGroups = new DC.LocationGroupCollection { Items = new List<DC.LocationGroup> { group }, TotalCount = 1 };
             }
             else
-            {               
+            {
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
                 locationGroups = (await _locationGroupWebApiClient.GetLocationGroups(startIndex: pagingParams.startIndex,
                     pageSize: pagingParams.pageSize,
                     sortBy: sort,
-                    filter: filter                    
+                    filter: filter
                     )).ReadAsSync();
             }
 
@@ -259,7 +276,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         [HttpPostRoute(UriTemplate = "groups/edit")]
         public async Task<HttpResponseMessage> EditGroup(DC.LocationGroup loc)
-        {           
+        {
             var resp = (await _locationGroupWebApiClient.UpdateLocationGroup(loc.LocationGroupId, loc)).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
@@ -280,18 +297,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpGetRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
-        public async Task<Response<DC.LocationGroupConfiguration>> GetLocationGroupConfiguration([FromUri]int groupId,[FromUri]int siteId)
+        public async Task<Response<DC.LocationGroupConfiguration>> GetLocationGroupConfiguration([FromUri]int groupId, [FromUri]int siteId)
         {
-            var client =  _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
+            var client = _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
             var resp = (await client.GetLocationGroupConfiguration(groupId)).ReadAsSync();
             return Single2(resp);
         }
 
         [HttpPutRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
-        public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]int groupId,[FromUri]int siteId, DC.LocationGroupConfiguration config)
+        public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]int groupId, [FromUri]int siteId, DC.LocationGroupConfiguration config)
         {
-            var client =  _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
-            var resp = (await client.SetLocationGroupConfiguration(groupId,config)).ReadAsSync();
+            var client = _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
+            var resp = (await client.SetLocationGroupConfiguration(groupId, config)).ReadAsSync();
             return Single2(resp);
         }
 

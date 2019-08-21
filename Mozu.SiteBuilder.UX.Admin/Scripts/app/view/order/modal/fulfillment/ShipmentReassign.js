@@ -55,7 +55,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         inventoryStore.load({
             params: {
                 start: 0,
-                limit: itemsPerPage
+                limit: 5
             }
         });
      
@@ -184,10 +184,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             fields: ['name', 'code'],
             autoLoad: false,
             pageSize: 5,
-            //data: me.record.locationsStore.data.items,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list',
+                url: '/admin/app/location/list?shipmentType='+ me.shipmentRecord.shipmentType,
                 reader: {
                     type: 'json',
                     root: 'items',
@@ -198,7 +197,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         allLocationsStore.load({
             params: {
                 start: 0,
-                limit: 5
+                limit: 5,
             }
         });
        
