@@ -10,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// <summary>
         /// The Id of the shipment where this item was found.
         /// </summary>
-        public string OriginalShipmentId { get; set; }
+        public string ShipmentNumber { get; set; }
 
         /// <summary>
         /// The Id of the shipment item where this item was found.

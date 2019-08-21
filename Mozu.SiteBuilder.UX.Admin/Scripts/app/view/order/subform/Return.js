@@ -173,9 +173,8 @@ Ext.define('Taco.view.order.subform.Return', {
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled'));
 
-        //TO-DO: TEMP FIX FOR TEST REVERT WHEN POSSIBLE
-        //this.createButton.setDisabled(!enabled);
-        this.createButton.setDisabled(false);
+        this.createButton.setDisabled(!enabled);
+        
         
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
@@ -189,7 +188,7 @@ Ext.define('Taco.view.order.subform.Return', {
             orderLineId: item.get('orderLineId'),
             productCode: item.get('productCode'),
             productCode: item.get('productCode'),
-            shipmentId: shipItem.shipmentId,
+            shipmentNumber: shipItem.shipmentNumber,
             shipmentItemId: shipItem.shipmentItemId,
             quantity: quantity,
             returnReason: item.get('reason'),
