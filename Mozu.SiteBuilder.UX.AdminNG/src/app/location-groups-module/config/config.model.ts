@@ -25,43 +25,10 @@ export class LocationGroupConfigModel {
     export interface CarrierModel {
         carrierType: string;
         isEnabled: boolean;
+        shippingMethodMappings: ShippingMethodMappings;
     }
 
-    export interface UnitedStatesUpsSettingsModel {
-        shippingMethods: string[];
-        returnLabelShippingMethod: string;
-        standardDefault: string;
-        express1DayDefault: string;
-        express2DayDefault: string;
-        express3DayDefault: string;
-    }
-
-    export interface InternationalUpsSettingsModel {
-        internationalUsReturnLabelShippingMethod: string;
-        shippingMethods: string[];
-        returnLabelShippingMethod: string;
-        standardDefault: string;
-        express1DayDefault: string;
-        express2DayDefault: string;
-        express3DayDefault: string;
-    }
-
-    export interface CanadaUpsSettingsModel {
-        shippingMethods: string[];
-        standardDefault: string;
-        express1DayDefault: string;
-        express2DayDefault: string;
-        express3DayDefault: string;
-        returnLabelShippingMethod: string;
-    }
-
-    export interface ShippingSettingsForUpsModel {
-        unitedStatesUpsSettings: UnitedStatesUpsSettingsModel;
-        internationalUpsSettings: InternationalUpsSettingsModel;
-        canadaUpsSettings: CanadaUpsSettingsModel;
-    }
-
-    export interface ShippingSettingsForFedEx {
+        export interface ShippingMethodMappings {
         shippingMethods: string[];
         returnLabelShippingMethod: string;
         standardDefault: string;
@@ -69,26 +36,6 @@ export class LocationGroupConfigModel {
         express2DayDefault: string;
         express3DayDefault: string;
         enableSmartPost: boolean;
-    }
-
-    export interface ShippingSettingsForUsps {
-        shippingMethods: string[];
-        returnLabelShippingMethod: string;
-        standardDefault: string;
-        express1DayDefault: string;
-        express2DayDefault: string;
-        express3DayDefault: string;
-    }
-
-    export interface CanadaPostSettings {
-        outboundUsername: string;
-        outboundPassword: string;
-        outboundCustomerNumber: string;
-        outboundLocale: string;
-        outboundContractID: string;
-        carsPickupNotify: boolean;
-        preferredPickupTime: string;
-        closingTime: string;
     }
 
     export interface AuditInfoModel {
@@ -129,10 +76,6 @@ export class LocationGroupConfigModel {
         defaultPrinterType: string;
         carriers: CarrierModel[];
         printReturnLabel: boolean;
-        shippingSettingsForUps: ShippingSettingsForUpsModel;
-        shippingSettingsForFedEx: ShippingSettingsForFedEx;
-        shippingSettingsForUsps: ShippingSettingsForUsps;
-        canadaPostSettings: CanadaPostSettings;
         boxTypes: BoxType[];
         attributes: any[];
         auditInfo: AuditInfoModel;

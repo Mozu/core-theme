@@ -28,7 +28,7 @@ export enum ConfirmationDialogNotificationCode {
     LGCUnSavedChanges = 'LGCUnSavedChanges'
 }
 
-export enum ConfirmationDialogNotificationType{
+export enum ConfirmationDialogNotificationType {
     Confirmation = 'Confirmation',
     Information = 'Information'
 }

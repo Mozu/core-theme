@@ -137,6 +137,8 @@
     <Content Include="src\app\admin-module\dashboard\dashboard.component.html" />
     <Content Include="src\app\app.component.css" />
     <Content Include="src\app\app.component.html" />
+    <Content Include="src\app\location-groups-module\config\config.component.css" />
+    <Content Include="src\app\location-groups-module\config\config.component.html" />
     <Content Include="src\app\location-groups-module\create\create.component.css" />
     <Content Include="src\app\location-groups-module\create\create.component.html" />
     <Content Include="src\app\location-groups-module\list\list.component.css" />
@@ -300,6 +302,9 @@
     <TypeScriptCompile Include="src\app\global-module\services\QuoteLocationGroupRouteGuardService.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\shared-data.service.ts" />
     <TypeScriptCompile Include="src\app\global-module\services\shared-data.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.component.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.model.ts" />
+    <TypeScriptCompile Include="src\app\location-groups-module\config\config.service.ts" />
     <TypeScriptCompile Include="src\app\location-groups-module\create\create.component.ts" />
     <TypeScriptCompile Include="src\app\location-groups-module\create\create.service.ts" />
     <TypeScriptCompile Include="src\app\location-groups-module\create\index.ts" />
