@@ -13,7 +13,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
 import { NavigationContainerType } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from '@shared/advanced-search';
-fdescribe('AdvancedSearchComponent', () => {
+
+describe('SearchBarComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
     let debugElement: DebugElement;
@@ -99,6 +100,7 @@ fdescribe('AdvancedSearchComponent', () => {
             expect(spy.calls.any()).toEqual(true);
         });
     }));
+
     it('should call modelChanged() to bind value to search bar', () => {
         fixture.detectChanges();
         component.quoteFilter.keyword = 'Test keyword';
@@ -108,6 +110,7 @@ fdescribe('AdvancedSearchComponent', () => {
         component.modelChanged();
         expect(component.model.searchBox).toEqual(component.quoteFilter.searchBarkeyword + component.quoteFilter.searchBarQuoteName + component.quoteFilter.searchBarQuoteId);
     });
+
     it('should call isFieldSupported () to bind key value to model', () => {
         fixture.detectChanges();
         let match;
@@ -118,8 +121,9 @@ fdescribe('AdvancedSearchComponent', () => {
         }
         component.isFieldSupported(keyField);
         match = Object.keys(QuotesAdvFilterFields).filter(index => QuotesAdvFilterFields[index] === keyField);
-        expect(match !== null).toEqual(true);
+        expect(match !== null ).toEqual(true);
     });
+
     it('should call addKeyValue() to bind key value to model', () => {
         fixture.detectChanges();
         const keyValueDelimiter = ':';
@@ -130,66 +134,32 @@ fdescribe('AdvancedSearchComponent', () => {
         component.addKeyValue(key, item, colonIndex);
         expect(component.model.lastKey).toEqual(key);
     });
+
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar for keyword', () => {
         fixture.detectChanges();
         const item = 'Device Config';
-        const index = 0;
-        component.addKeywordOrAppendToLastKey(item, index);
+        const index  = 0;
+        component.addKeywordOrAppendToLastKey (item, index);
         if (index === 0) {
             component.model.lastKey = 'keyword';
-            expect(component.quoteFilter[component.model.lastKey]).toEqual(item);
+            expect(component.quoteFilter[component.model.lastKey] ).toEqual(item);
         }
     });
+
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar based on last key', () => {
         fixture.detectChanges();
         const item = 'Device Config';
-        const index = 1;
+        const index  = 1;
         component.model.lastKey = 'quoteName';
-        component.addKeywordOrAppendToLastKey(item, index);
+        component.addKeywordOrAppendToLastKey (item, index);
         if (component.model.lastKey) {
-            expect(component.quoteFilter[component.model.lastKey]).toEqual((item).trim());
+            expect(component.quoteFilter[component.model.lastKey] ).toEqual((item).trim());
         }
     });
+
     it('should call resetAdvancedFilterValue () to reset model values', () => {
         fixture.detectChanges();
         component.resetAdvancedFilterValue();
         expect(component.quoteFilter.quoteId).toBeNull();
     });
-    it(`should have input field 'Keyword'`, async(() => {
-        fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#keyword')).nativeElement;
-        inputElement.value = 'walmart';
-        inputElement.dispatchEvent(new Event('input'));
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(inputElement.value).toEqual('walmart');
-        });
-    }));
-    it(`should have input field 'Quote Name'`, async(() => {
-        fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#quoteName')).nativeElement;
-        inputElement.value = 'Quote 1';
-        inputElement.dispatchEvent(new Event('input'));
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(inputElement.value).toEqual('Quote 1');
-        });
-    }));
-    it(`should have input field 'QuoteId'`, async(() => {
-        fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#quoteId')).nativeElement;
-        inputElement.value = '101';
-        inputElement.dispatchEvent(new Event('input'));
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(inputElement.value).toEqual('101');
-        });
-    }));
-    it(`should call the search method`, async(() => {
-        fixture.detectChanges();
-        const spy = spyOn(component, 'search');
-        element = fixture.debugElement.query(By.css('#btnFilter')).nativeElement;
-        element.click();
-        expect(spy).toHaveBeenCalledWith('');
-    }));
 });
