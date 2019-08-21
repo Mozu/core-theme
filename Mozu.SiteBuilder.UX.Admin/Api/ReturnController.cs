@@ -658,18 +658,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private string SetServiceType(LocationGroupConfiguration carrier)
         {
             var serviceType = string.Empty;
+            var carrierType = string.Empty;
             switch (carrier.DefaultCarrier.ToUpper())
             {
+                #region old code
+                //case "FEDEX":
+                //    serviceType = carrier.ShippingSettingsForFedEx.ReturnLabelShippingMethod;
+                //    break;
+                //case "UPS":
+                //    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.ReturnLabelShippingMethod;
+                //    break;
+                //case "USPS":
+                //    serviceType = carrier.ShippingSettingsForUsps?.ReturnLabelShippingMethod;
+                //    break;
+                #endregion
                 case "FEDEX":
-                    serviceType = carrier.ShippingSettingsForFedEx.ReturnLabelShippingMethod;
+                    carrierType = "FEDEX";                    
                     break;
                 case "UPS":
-                    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.ReturnLabelShippingMethod;
+                    carrierType = "UPS";
                     break;
                 case "USPS":
-                    serviceType = carrier.ShippingSettingsForUsps?.ReturnLabelShippingMethod;
+                    carrierType = "USPS";
                     break;
             }
+            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod;
             return serviceType;
         }
 
