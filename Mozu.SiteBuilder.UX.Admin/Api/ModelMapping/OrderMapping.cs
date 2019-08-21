@@ -215,12 +215,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                     Func<OrderItem, int> getItemCount = i => (i.ProductUsage != "Bundle" ? 1 : 0) + (i.BundledProducts?.Sum(bp => bp.Quantity) ?? 0);
                     var totalItemCount = order.Items.Sum(i => getItemCount(i) * i.Quantity);
 
+
                     if (hasShipments)
                     {
-                        shippedItemCount = order.Shipments.Where(i => i.ShipmentType == "STH" && i.ShipmentStatus == "FULFILLED").Sum(i => i.Items.Sum(item => item.Quantity));
-                        unshippedItemCount = order.Shipments.Where(i =>i.ShipmentType == "STH" && i.ShipmentStatus != "FULFILLED" ).Sum(i => i.Items.Sum(item => item.Quantity));
-                        pickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS" && i.ShipmentStatus == "FULFILLED").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
-                        unpickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS"  && i.ShipmentStatus != "FULFILLED" ).Sum(i => i.Items.Sum(pickup => pickup.Quantity));
+                        totalItemCount = order.Shipments.Where(i => i.ShipmentStatus != "CANCELED" && i.ShipmentStatus != "REASSIGNED").Sum(i => i.Items.Sum(item => item.Quantity));
+                        shippedItemCount = order.Shipments.Where(i => i.ShipmentType == "STH" && i.ShipmentStatus == "FULFILLED" && i.ShipmentStatus != "CANCELED").Sum(i => i.Items.Sum(item => item.Quantity));
+                        unshippedItemCount = order.Shipments.Where(i =>i.ShipmentType == "STH" && i.ShipmentStatus != "FULFILLED" && i.ShipmentStatus != "CANCELED" ).Sum(i => i.Items.Sum(item => item.Quantity));
+                        pickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS" && i.ShipmentStatus == "FULFILLED" && i.ShipmentStatus != "CANCELED").Sum(i => i.Items.Sum(pickup => pickup.Quantity));
+                        unpickedupItemCount = order.Shipments.Where(i => i.ShipmentType == "BOPIS"  && i.ShipmentStatus != "FULFILLED" && i.ShipmentStatus != "CANCELED" ).Sum(i => i.Items.Sum(pickup => pickup.Quantity));
                     }
 
                     var digitallyFulfilledItemCount = order.DigitalPackages?.Sum(p => p.Items.Sum(i => i.Quantity)) ?? 0;
