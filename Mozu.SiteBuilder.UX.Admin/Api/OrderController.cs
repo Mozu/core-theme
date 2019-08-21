@@ -31,6 +31,7 @@ using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
 using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
+using Mozu.Provisioning.Domain.ApiWrappers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -49,6 +50,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IReturnWebApiClient _returnWebApiClient;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
         private readonly IOrderRoutingApiWrapper _orderRoutingApiWrapper;
+        private readonly IInventoryApiWrapper _inventoryApiWrapper;
         private readonly IFulfillerApiWrapper _fulfillerApiWrapper;
         private readonly string _ipAddress;
         /*
@@ -75,6 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IReturnWebApiClient returnWebApiClient,
             IIpAddressFinderOuter ipAddressFinderOuter,
             IOrderRoutingApiWrapper orderRoutingApiWrapper,
+            IInventoryApiWrapper inventoryApiWrapper,
             IFulfillerApiWrapper fulfillerApiWrapper,            
             ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
         )
@@ -92,6 +95,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _ipAddress = ipAddressFinderOuter.IpAddress;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
             _orderRoutingApiWrapper = orderRoutingApiWrapper;
+            _inventoryApiWrapper = inventoryApiWrapper;
             _fulfillerApiWrapper = fulfillerApiWrapper;
         }
 

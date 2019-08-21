@@ -66,7 +66,7 @@
 
     initComponent: function () {
         var me = this;
-        
+
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -97,7 +97,7 @@
                 type: 'int',
                 useNull: true
             },
-                {
+            {
                 name: 'weight',
                 type: 'float',
                 defaultValue: 0
@@ -193,7 +193,7 @@
                         return false;
                     }
                 },
-                
+
             }));
 
 
@@ -221,12 +221,16 @@
             },
             {
                 text: 'Image',
+                dataIndex: 'imageUrl',
                 draggable: false,
                 resizable: true,
                 menuDisabled: true,
                 hidden: false,
                 renderer: function (value) {
-                    return '<img src="http://dtlr258s62w81.cloudfront.net/19638-23793/cms/23793/files/6ac0c98f-402d-4fd2-95da-a482f3520041?max=160&_mzcb=_1486049853491" style="width:60px" />';
+                    if (value)
+                        return '<img src="' + value + '" style="width:60px" />';
+                    else
+                        return '';
                 }
             },
             {
@@ -436,43 +440,117 @@
     openItemsReassignPopup: function () {
         var me = this;
         var grid = Ext.getCmp(this.id);
-        var item = grid.getSelectionModel().getSelection();
-        var inventoryItemData = me.getReassignItemPayload();
+        var item = grid.getSelectionModel().getSelection();        
         var selectedItem = item[0].data;
         if (selectedItem) {
-            me.record.getCandidateSuggestions({
-                jsonData: inventoryItemData,
-                success: function (response) {
-                    me.isRecordSaved = true;
-                    me.setLoading(false, me.body);
-                    var json = Ext.decode(response.responseText, true);
-                    Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
-                        layout: 'hbox',
-                        width: 1080,
-                        height: 450,
-                        record: me.record,
-                        inventoryItemList: json,
-                        //shipmentData: shipment,
-                        shipmentRecord: me.shipmentRecord,
-                        selectedItem: item[0].data,
-                        available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
-                        listeners: {
-                            saveSuccess: {
-                                fn: function (json) { 
-                                    me.fireEvent('shipmentReassign');
-                                },
-                                //scope: me
+            if (me.shipmentRecord.shipmentType == "BOPIS") {
+                var inventoryItemData = me.getBopisReassignItemPayload();
+                me.record.getInventory({
+                    jsonData: inventoryItemData,
+                    success: function (response) {
+                        me.isRecordSaved = true;
+                        me.setLoading(false, me.body);
+                        var json = Ext.decode(response.responseText, true);
+                        Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                            layout: 'hbox',
+                            width: 1080,
+                            height: 450,
+                            record: me.record,
+                            inventoryItemList: json,
+                            //shipmentData: shipment,
+                            shipmentRecord: me.shipmentRecord,
+                            selectedItem: item[0].data,
+                            //available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
+                            listeners: {
+                                saveSuccess: {
+                                    fn: function (json) {
+                                        me.fireEvent('shipmentReassign');
+                                    },
+                                    //scope: me
+                                }
                             }
+                        });
+                    },
+                    failure: function (response) {
+                        me.setLoading(false, me.body);
+                        // close the dialog
+                        me.close();
+                    }
+                });
+            }
+            else {
+                var inventoryItemData = me.getReassignItemPayload();
+                if (Taco.user.taContext.omsEnabled) {
+                    me.record.getCandidateSuggestions({
+                        jsonData: inventoryItemData,
+                        success: function (response) {
+                            me.isRecordSaved = true;
+                            me.setLoading(false, me.body);
+                            var json = Ext.decode(response.responseText, true);
+                            Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                                layout: 'hbox',
+                                width: 1080,
+                                height: 450,
+                                record: me.record,
+                                inventoryItemList: json,
+                                //shipmentData: shipment,
+                                shipmentRecord: me.shipmentRecord,
+                                selectedItem: item[0].data,
+                                available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
+                                listeners: {
+                                    saveSuccess: {
+                                        fn: function (json) {
+                                            me.fireEvent('shipmentReassign');
+                                        },
+                                        //scope: me
+                                    }
+                                }
+                            });
+                        },
+                        failure: function (response) {
+                            me.setLoading(false, me.body);
+                            // close the dialog
+                            me.close();
                         }
                     });
-                },
-                failure: function (response) {
-                    me.setLoading(false, me.body);
-                    // close the dialog
-                    me.close();
                 }
-            });
+                else
+                    me.shipmentItemAutoReassign(me.shipmentRecord.locationCode);
+            }
         }
+    },
+
+    getBopisReassignItemPayload: function () {
+        var me = this;
+        var shipment = me.shipmentRecord;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+
+        var model = {
+            type: 'ALL',
+            pickup: true,
+            items: []
+        }
+
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
+            model.requestLocation = {
+                postalCode: me.shipmentRecord.location.address.postalOrZipCode,
+                //latitude: me.shipmentRecord.location.geo.lat,
+                //longitude: me.shipmentRecord.location.geo.lng,
+                //locationCode: me.shipmentRecord.location.code,
+                radius: 500,
+                unit: 'MILES',
+                countryCode: 'US'
+            }
+        }
+
+        model.items.push({
+            //partNumber: item[0].data.productCode,
+            upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
+            quantity: item[0].data.quantity
+        });
+
+        return model;
     },
 
     getReassignItemPayload: function () {
@@ -580,11 +658,14 @@
 
     },
 
-    shipmentItemAutoReassign: function () {
+    shipmentItemAutoReassign: function (locationCode) {
         var me = this;
 
         me.setLoading(true, this.body);
         me.shipmentItemAutoReassignPayload = me.getShipmentItemReassignPayload();
+
+        if (locationCode && me.shipmentItemAutoReassignPayload.shipmentItems[0])
+            me.shipmentItemAutoReassignPayload.shipmentItems[0].fulfillmentLocationCode = locationCode;
 
         this.record.reassignShipmentItems({
             jsonData: me.shipmentItemAutoReassignPayload,
@@ -662,14 +743,14 @@
     },
 
     doSave: function () {
-        
+
         if (this.validateModal()) {
-            
+
             var me = this;
             me.setLoading(true, this.body);
             var payloadData = me.getPayloadItemUpdate();
 
-        this.record.updateShipmentItem({
+            this.record.updateShipmentItem({
                 jsonData: payloadData,
                 success: function (response) {
                     me.isRecordSaved = true;
@@ -691,7 +772,7 @@
                     var json = Ext.decode(response.responseText, true),
                         msg = (json && json.message) ? json.message : 'Error deallocating inventory';
                     Taco.app.fireEvent('setmessage', msg, 'error');
-                    me.close();
+                    //me.close();
                 }
             });
         }
@@ -703,12 +784,12 @@
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
         return {
-            orderId: me.shipmentRecord.orderId, 
+            orderId: me.shipmentRecord.orderId,
             shipmentNumber: me.shipmentRecord.number,
             itemId: selectedItem.lineId, //selectedItem.lineId,
             shipmentItemAdjustment: {
-                actualPrice : selectedItem.actualPrice,
-                unitTax : selectedItem.itemTax,
+                actualPrice: selectedItem.actualPrice,
+                unitTax: selectedItem.itemTax,
             }
         }
     },

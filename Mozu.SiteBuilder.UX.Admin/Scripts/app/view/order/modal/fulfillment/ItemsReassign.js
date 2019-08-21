@@ -27,7 +27,6 @@
         this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
         });
-       
         var me = this;
         var itemsPerPage = 2;
         var selectedTab;
@@ -44,7 +43,7 @@
             }],
             fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
             groupField: 'locationName',
-            data: this.inventoryItemList.candidateSuggestions,
+            data: this.inventoryItemList.candidateSuggestions || this.inventoryItemList.items,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -90,8 +89,8 @@
                     width: 50,
                     autoSizeColumn: true,
                     minWidth: 150,
-                    renderer: function (val, meta, record) { 
-                            return me.available;
+                    renderer: function (val, meta, record) {
+                        return me.available || val;
                     }
                 },
                 {

@@ -13,6 +13,7 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
+using Mozu.Inventory.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -369,6 +370,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(serviceResponse);
         }
 
+
+        [HttpPostRoute(UriTemplate = "shipping/inventory")]
+        public Response<List<InventoryResponse>> GetInventory(InventoryRequest body)
+        {
+            var serviceResponse = _inventoryApiWrapper.PostQueryInventory(body);
+
+            return List2(serviceResponse);
+        }
 
         public class CancelShipmentArgs
         {

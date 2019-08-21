@@ -25,8 +25,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var itemsPerPage = 2;
         var shipment = me.shipmentData;
         var pagingParams = me.createpagingParams();
-        var selectedTab;
+        
         this.selectedTab = 'inventoryGrid';
+        
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
             autoLoad: false,
@@ -39,7 +40,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             fields: ['locationName', 'distance', 'stock'],
             groupField: 'locationName',
-            data: this.inventoryData.items.candidateSuggestions,
+            data: this.inventoryData.items.candidateSuggestions || this.inventoryData.items,
             proxy: {
                 type: 'memory',
                 reader: {
@@ -79,64 +80,68 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     xtype: 'actioncolumn',
                     text: 'Stock',
                     dataIndex: 'stock',
-                    renderer: function (v, meta, rec) {
-                        var inventory = rec.raw.inventory;
-                        var type = "";
+                    renderer: function (v, meta, rec) {     
+                        if (!me.isInventory) {
+                            var inventory = rec.raw.inventory;
+                            var type = "";
 
-                        var filteredInventory;
-                        shipment.items.forEach(function (element) {
-                            filteredInventory = inventory.filter(function (obj) {
-                                return (obj.upc === element.upc);
-                            });
-                            switch (type) {
-                                case "":
-                                    if (filteredInventory.length > 0) {
-                                        if (filteredInventory[0].available >= element.quantity) {
-                                            type = "checked";
+                            var filteredInventory;
+                            shipment.items.forEach(function (element) {
+                                filteredInventory = inventory.filter(function (obj) {
+                                    return (obj.upc === element.upc);
+                                });
+                                switch (type) {
+                                    case "":
+                                        if (filteredInventory.length > 0) {
+                                            if (filteredInventory[0].available >= element.quantity) {
+                                                type = "checked";
+                                            }
+                                            else if (filteredInventory[0].available > 0) {
+                                                type = "partial";
+                                            }
+                                            else {
+                                                type = "delete";
+                                            }
                                         }
-                                        else if (filteredInventory[0].available > 0) {
+                                        else {
+                                            type = "delete";
+                                        }
+                                        break;
+
+                                    case "checked":
+                                        if (filteredInventory.length > 0) {
+                                            if (filteredInventory[0].available >= element.quantity) {
+                                                type = "checked";
+                                            }
+                                            else if (filteredInventory[0].available > 0) {
+                                                type = "partial";
+                                            }
+                                            else {
+                                                type = "delete";
+                                            }
+                                        }
+                                        else {
+                                            type = "partial";
+                                        }
+                                        break;
+
+                                    case "partial":
+                                        type = "partial";
+                                        break;
+
+                                    case "delete":
+                                        if (filteredInventory.length > 0 && filteredInventory[0].available > 0) {
                                             type = "partial";
                                         }
                                         else {
                                             type = "delete";
                                         }
-                                    }
-                                    else {
-                                        type = "delete";
-                                    }
-                                    break;
-
-                                case "checked":
-                                    if (filteredInventory.length > 0) {
-                                        if (filteredInventory[0].available >= element.quantity) {
-                                            type = "checked";
-                                        }
-                                        else if (filteredInventory[0].available > 0) {
-                                            type = "partial";
-                                        }
-                                        else {
-                                            type = "delete";
-                                        }
-                                    }
-                                    else {
-                                        type = "partial";
-                                    }
-                                    break;
-
-                                case "partial":
-                                    type = "partial";
-                                    break;
-
-                                case "delete":
-                                    if (filteredInventory.length > 0 && filteredInventory[0].available > 0) {
-                                        type = "partial";
-                                    }
-                                    else {
-                                        type = "delete";
-                                    }
-                                    break;
-                            }
-                        })
+                                        break;
+                                }
+                            })
+                        }
+                        else
+                            type = 'checked';
 
                         switch (type) {
                             case 'checked':
@@ -287,8 +292,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                             }
                         });
                     }
-        },
-    
+        },    
 
     validateModal: function () {     
         var me = this;
