@@ -206,6 +206,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                         extFilter.Add(filterCollectionItem);
                     }
                 }
+                if (!string.IsNullOrWhiteSpace(pagingParams.pickupCode))
+                {
+                    FilterCollectionItem filterCollectionItem = new FilterCollectionItem();
+                    filterCollectionItem.value =  pagingParams.pickupCode;
+                    filterCollectionItem.property = "codene";
+                    extFilter.Add(filterCollectionItem);
+                }
                 string filter = extFilter.ToFilterString();
                 string sort = (pagingParams != null && pagingParams.sort != null) ? pagingParams.sort.ToSortString() : null;
 

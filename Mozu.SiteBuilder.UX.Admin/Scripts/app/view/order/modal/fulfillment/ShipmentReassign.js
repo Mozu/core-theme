@@ -192,7 +192,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             pageSize: 5,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list?shipmentType='+ me.shipmentRecord.shipmentType,
+                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType + '&pickupCode='+ me.shipmentRecord.location.code,
                 reader: {
                     type: 'json',
                     root: 'items',

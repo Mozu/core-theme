@@ -44,7 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.OpeationHandlers
                 pageSize = 25,
                 startIndex = 0,
                 sort = new SortingCollection(),
-                shipmentType = qs["shipmentType"]
+                shipmentType = qs["shipmentType"],
+                pickupCode = qs["pickupCode"]
             };
 
             int tmp;

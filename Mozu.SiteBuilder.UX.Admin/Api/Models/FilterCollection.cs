@@ -44,6 +44,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
         }
         public string shipmentType { get; set; }
 
+        public string pickupCode { get; set; }
+
     }
 
     public class FilterCollection : List<FilterCollectionItem>

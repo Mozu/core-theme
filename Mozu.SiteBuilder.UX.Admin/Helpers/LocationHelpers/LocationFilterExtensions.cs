@@ -102,6 +102,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationHelpers
                     return string.Format("({1} eq {0})", filter.value, ZIPCODE);
                 case "code":
                     return string.Format("({1} eq '{0}')", filter.value, CODE);
+                case "codene":
+                    return string.Format("({1} ne '{0}')", filter.value, CODE);
                 case "locationtype":
                     return string.Format("({1} eq '{0}')", filter.value, LOCATIONTYPECODE);
                 case "supportsinventory":

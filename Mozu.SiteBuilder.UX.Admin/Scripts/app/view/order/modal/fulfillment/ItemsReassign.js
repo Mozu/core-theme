@@ -164,7 +164,7 @@
             pageSize: 5,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType,
+                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType +'&pickupCode='+ me.shipmentRecord.location.code,
                 reader: {
                     type: 'json',
                     root: 'items',
@@ -175,7 +175,7 @@
         allLocationsStore.load({
             params: {
                 start: 0,
-                limit: 5
+                limit: 5,
             }
         });
         var allLocations = Ext.create('Ext.grid.Panel', {
