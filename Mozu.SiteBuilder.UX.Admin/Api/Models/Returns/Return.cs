@@ -107,6 +107,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public decimal? ProductTotal { get; set; }
 
         public string CurrencyCode { get; set; }
+
+        public Decimal? DefaultProcessingFee { get; set; }
         #endregion
 
 

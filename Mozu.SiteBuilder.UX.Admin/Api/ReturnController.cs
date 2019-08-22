@@ -33,6 +33,7 @@ using Mozu.Location.Contracts.Clients;
 using Mozu.Location.Contracts;
 using System;
 using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -51,6 +52,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICARSApiWrapper _CARSApiWrapper;
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly ILocationGroupConfigurationWebApiClient _locationGroupWebApiClient;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
 
 
         /// <summary>
@@ -61,7 +63,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             IChannelWebApiClient channelWebApiClient,
             ICARSApiWrapper CARSApiWrapper,
             ILocationAdminWebApiClient locationWebApiClient,
-            ILocationGroupConfigurationWebApiClient locationGroupWebApiClient)
+            ILocationGroupConfigurationWebApiClient locationGroupWebApiClient,
+            IReturnSettingsWebApiClient returnSettingsWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
@@ -71,6 +74,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _CARSApiWrapper = CARSApiWrapper;
             _locationWebApiClient = locationWebApiClient;
             _locationGroupWebApiClient = locationGroupWebApiClient;
+            _returnSettingsWebApiClient = returnSettingsWebApiClient;
         }
 
         /// <summary>
@@ -126,6 +130,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 customerNote.CreateBy = await GetUserNameById(customerNote.CreateBy) ?? customerName;
                 customerNote.UpdateBy = await GetUserNameById(customerNote.UpdateBy) ?? customerName;
             }
+
+            var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
+            rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
 
             return rma;
         }
@@ -242,6 +249,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var dcReturn = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
 
             if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+           
 
             var sbReturn = await SingleMapFromContract(dcReturn);
 

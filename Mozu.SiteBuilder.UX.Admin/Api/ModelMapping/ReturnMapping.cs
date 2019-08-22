@@ -85,6 +85,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
             .ForMember(x => x.CustomerNotes, op => op.ResolveUsing(dc => dc.Items.SelectMany(x => x.Notes).Where(x => x != null).ToList()))
             .ForMember(x => x.ReturnOrders, op => op.Ignore())
             .ForMember(x => x.ChannelName, op => op.Ignore())
+            .ForMember(X => X.DefaultProcessingFee, op => op.Ignore())
             .AfterMap(SetRefundAmountForReturnOnPayment)
             ;
         }
