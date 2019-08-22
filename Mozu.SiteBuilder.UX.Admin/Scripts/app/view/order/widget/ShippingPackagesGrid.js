@@ -493,7 +493,7 @@
                     failure: function (response) {
                         me.setLoading(false, me.body);
                         // close the dialog
-                        me.close();
+                        //me.close();
                     }
                 });
             }
@@ -529,7 +529,7 @@
                         failure: function (response) {
                             me.setLoading(false, me.body);
                             // close the dialog
-                            me.close();
+                            //me.close();
                         }
                     });
                 }
@@ -554,8 +554,8 @@
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
-                //latitude: me.shipmentRecord.location.geo.lat,
-                //longitude: me.shipmentRecord.location.geo.lng,
+                latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
+                longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
                 //locationCode: me.shipmentRecord.location.code,
                 radius: 500,
                 unit: 'MILES',
@@ -568,7 +568,6 @@
             upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
             quantity: item[0].data.quantity
         });
-
         return model;
     },
 
@@ -775,7 +774,6 @@
                     me.isRecordSaved = true;
                     me.setLoading(false, me.body);
                     var json = Ext.decode(response.responseText, true);
-                    console.log(response.responseText);
                     if (!json || !json.success) {
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;

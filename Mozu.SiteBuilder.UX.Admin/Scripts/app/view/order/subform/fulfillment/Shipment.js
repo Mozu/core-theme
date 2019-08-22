@@ -380,8 +380,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
-                //latitude: me.shipmentRecord.location.geo.lat,
-                //longitude: me.shipmentRecord.location.geo.lng,
+                latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
+                longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
                 //locationCode: me.shipmentRecord.location.code,
                 radius: 500,
                 unit: 'MILES',
@@ -395,6 +395,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 quantity: element.quantity
             });
         });
+
         return model;
     },
 
@@ -451,7 +452,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 failure: function (response) {
                     me.setLoading(false, me.body);
                     // close the dialog
-                    me.close();
+                    //me.close();
                 }
             });
         }
@@ -486,7 +487,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     failure: function (response) {
                         me.setLoading(false, me.body);
                         // close the dialog
-                        me.close();
+                        //me.close();
                     }
                 });
             }
