@@ -208,13 +208,13 @@ Ext.define('Taco.view.order.subform.Return', {
             if(item.raw.items && item.raw.items.length){
                 var quantity = item.get('quantity');
                 Ext.Array.each(item.raw.items, function(shipItem){
-                    var shipmentQuantity = shipItem.quantityReturnable
-                    if(quantity < shipmentQuantity) {
-                        shipmentQuantity = quantity;
+                    var shipmentQuantityReturnable = shipItem.quantityReturnable
+                    if(quantity < shipmentQuantityReturnable) {
+                        shipmentQuantityReturnable = quantity;
                     };
-                    if(quantity) {
-                        returnItems.push(me.createReturnableItem(item, shipItem, shipmentQuantity));
-                        quantity = quantity - shipmentQuantity;
+                    if(quantity && shipmentQuantityReturnable) {
+                        returnItems.push(me.createReturnableItem(item, shipItem, shipmentQuantityReturnable));
+                        quantity = quantity - shipmentQuantityReturnable;
                     }
                 })
             } else {
