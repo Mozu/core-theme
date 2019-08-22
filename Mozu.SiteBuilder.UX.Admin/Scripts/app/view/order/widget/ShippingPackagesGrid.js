@@ -167,7 +167,12 @@
                 name: 'weight',
                 type: 'float',
                 useNull: true
-            }
+                }
+                , {
+                    name: 'imageUrl',
+                    type: 'string',
+                    useNull: true
+                }
             ],
             sorters: [{
                 sorterFn: function (a, b) {
