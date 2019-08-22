@@ -413,17 +413,17 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         
                     }
                 },
-                {
-                    dataIndex: 'fulfillmentStatus',
-                    text: 'Status',
-                    draggable: false,
-                    resizable: true,
-                    width: 120,
-                    sortable: false,
-                    menuDisabled: true,
-                    hidden: false,
-                    align: 'left'
-                },
+                //{
+                //    dataIndex: 'fulfillmentStatus',
+                //    text: 'Status',
+                //    draggable: false,
+                //    resizable: true,
+                //    width: 120,
+                //    sortable: false,
+                //    menuDisabled: true,
+                //    hidden: false,
+                //    align: 'left'
+                //},
                 {
                     text: 'Fulfillment',
                     editorId: 'fulfillmentColumn',
