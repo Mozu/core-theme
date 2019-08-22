@@ -26,7 +26,7 @@ namespace Mozu.Swagger.Client
         /// <param name="basePath">The base path.</param>
         public ApiClient(String basePath="//services-tp-dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce")
         {
-            BasePath = basePath;
+            BasePath = basePath ?? "//services-tp-dev01.kubedev.kibo-dev.com/kibo.fulfillment.webapi/commerce";
             RestClient = new RestClient(BasePath);
         }
     
