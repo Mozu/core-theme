@@ -1,6 +1,7 @@
 ﻿
 import { ConfigurationSettings } from './configuration-settings';
 import { environment } from '../../../environments/environment';
+import { SubtotalOptions } from './enums';
 
 export class Constants {
 
@@ -197,4 +198,11 @@ export class Constants {
         quoteName: 'quoteName',
         quoteId: 'quoteId'
     };
+
+    static quoteSubtotal = [
+        { data: 'select', label: 'Select' },
+        { data: SubtotalOptions.subTotalExclTax, label: 'Subtotal (Excl. Tax)' },
+        { data: SubtotalOptions.subTotalInclTax, label: 'Subtotal (Incl. Tax)' },
+        { data: SubtotalOptions.estimatedTax, label: 'Estimated Tax' }
+    ];
 }

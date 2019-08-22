@@ -1,4 +1,4 @@
 <ng-select [items]="shippingRates" bindLabel="shippingMethodName" (open)="populateShippingMethod()"
-   placeholder="{{'SHARED.SHIPPING.Method.shippingMethodPlaceholder' | translate}}"
+  (change)="shippingMethodChanged()" placeholder="{{'SHARED.SHIPPING.Method.shippingMethodPlaceholder' | translate}}"
   [(ngModel)]="selectedShippingRate" id="shippingMethods">
 </ng-select>

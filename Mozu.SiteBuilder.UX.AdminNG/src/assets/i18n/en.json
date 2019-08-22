@@ -156,9 +156,7 @@
                 "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
                 "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data"
             },
-            "Warning": {
-
-            },
+            "Warning": {},
             "Information": {},
             "Success": {
                 "LGCSavedSuccessfully": "Location Group Config saved successfully."
@@ -244,7 +242,16 @@
                     }
                 },
                 "Total": {
-                    "heading": "Quote Total"
+                    "heading": "Quote Total",
+                    "totalCost": "Total Cost",
+                    "negotiatedPrice": "Negotiated Price",
+                    "percentageDiscount": "Percentage Discount",
+                    "amountDiscount": "Amount Discount",
+                    "proposedPrice": "Proposed Price",
+                    "quoteSubtotalExclTax": "Quote Subtotal (Excl.Tax)",
+                    "shippingAndHandeling": "Shipping & Handeling",
+                    "estimatedTax": "Estimated Tax",
+                    "quoteGrandTotalExclTax": "Quote Grand Total(Excl.Tax)"
                 }
             }
         }
@@ -309,7 +316,6 @@
             "length": "Length",
             "height": "Height",
             "inches": "inches",
-    
             "upsSettingsInfo": "UPS Credentials for CARS can be found in the",
             "upsSettingsInfoLink": "CARS interface",
             "fedexSettingsInfo": "FedEx Credentials for CARS can be found in the",
@@ -338,7 +344,6 @@
             "uspsExpress3DayDefault": "USPS Express 3 Day Default",
             "uspsReturnLabelShippingTypes": "USPS Return Label Shipping Types",
             "upsusReturnLabelShippingTypes": "UPS US Return Label Shipping Types",
-
             "upsInternationalShippingTypes": "UPS International Shipping Types",
             "upsInternationalStandardDefault": "UPS International Standard Default",
             "upsInternationalExpress1DayDefault": "UPS International Express 1 Day Default",
@@ -346,14 +351,12 @@
             "upsInternationalExpress3DayDefault": "UPS International Express 3 Day Default",
             "upsInternationalReturnLabelShippingTypes": "UPS International Return Label Shipping Types",
             "upsInternationalUSReturnLabelShippingTypes": "UPS International US Return Label Shipping Types",
-
             "upsCanadaShippingTypes": "UPS Canada Shipping Types",
             "upsCanadaStandardDefault": "UPS Canada Standard Default",
             "upsCanadaExpress1DayDefault": "UPS Canada Express 1 Day Default",
             "upsCanadaExpress2DayDefault": "UPS Canada Express 2 Day Default",
             "upsCanadaExpress3DayDefault": "UPS Canada Express 3 Day Default",
             "upsCanadaReturnLabelShippingTypes": "UPS Canada Return Label Shipping Types",
-
             "enableSmartPost": "Enable SmartPost",
             "fedexShippingTypes": "FedEx Shipping Types",
             "fedexStandardDefault": "Fedex Standard Default",

@@ -1,14 +1,11 @@
 <div class="col-md-12 quote-container">
   <div class="info-section">
-      <div class="row">
-        <div class="sub-container">
-          <spinner></spinner>
-          <quote-summary [QuoteId]=quoteId [Quote]=model></quote-summary>
-        </div>
-        <div class="sub-container">
-          <spinner></spinner>
-          <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
-        </div>
+    <div class="row">
+      <div class="sub-container">
+        <quote-summary [QuoteId]=quoteId [Quote]=model></quote-summary>
+      </div>
+      <div class="sub-container">
+        <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
       </div>
     </div>
   </div>
@@ -17,7 +14,9 @@
   <div class="info-section">
     <div class="row">
       <div class="sub-container">
-        <quote-items [QuoteId]=quoteId [Quote]=model.items></quote-items>
+        <spinner></spinner>
+        <quote-items [QuoteId]=quoteId [Quote]=model.items (onQuoteSubtotalChanged)="applyQuoteSubtotal($event)">
+        </quote-items>
       </div>
     </div>
     <div class="row">
@@ -32,7 +31,9 @@
           </div>
           <div class="col-sm-6">
             <h5>{{'SHARED.SHIPPING.Method.shippingMethodAndPrice' | translate }} </h5>
-            <shipping-method [QuoteId]=quoteId></shipping-method>            
+            <shipping-method [QuoteId]=quoteId [ShippingMethodCode]=model.shippingMethodCode
+              (onShippingMethodChanged)="applyShippingRates($event)" (clear)=applyShippingRates($event)>
+            </shipping-method>
           </div>
         </div>
       </div>
@@ -46,111 +47,126 @@
           <div class="col-sm-6 padding-none">
             <quote-negotiation [QuoteId]=quoteId></quote-negotiation>
           </div>
-          <div class="col-sm-6">
+          <div class="col-md-6 col-sm-12">
             <p>{{'QUOTES.Quote.Negotiation.Total.heading' | translate }}</p>
 
             <div class="info-section top-margin">
               <div class="quotes-detail-wrapper">
                 <form class="form-horizontal">
                   <div class="form-group">
-                    <div class="col-md-6">
-                      <span>Total Cost</span>
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.totalCost' | translate }}</span>
                     </div>
-                    <div class="col-md-6 text-right">
-                      <span> $0.00</span>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.itemTotal : 0) | currency }}</span>
                     </div>
                   </div>
                   <div class="form-group">
-                    <div class="col-md-6">
-                      <select class="form-control" style="width: 275px;">
-                        <option>Catlog Total Price(Excl.Tax)</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                    <div class="col-xs-6">
+                      <select id="subtotalList" (change)="onChange($event.target.value)"
+                        class="form-control border-0 enabled-bg total-price-select padding-none">
+                        <option *ngFor="let c of subtotalList" [value]="c.data">{{c.label}}</option>
                       </select>
                     </div>
-                    <div class="col-md-6 text-right">
-                      <span> $0.00</span>
+                    <div class="col-xs-6 text-right">
+                      <span> {{(model.subtotalOptionValue ? model.subtotalOptionValue : 0) | currency}}</span>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <div class="col-md-4">
-                      <span>Negotiated Price</span>
+                    <div class="col-md-4 col-xs-12">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.negotiatedPrice' | translate }}</span>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-xs-12">
                       <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Percentage
-                        Discount
+                        <input type="radio" name="negotiatedPriceDiscount" value="percentageDiscount"
+                          id="btnPercentageDiscount" [checked]="isNegotiatedPriceDiscountEnable('percentageDiscount')"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.percentageDiscount' | translate }}
+                      </label>
+                    </div>
+                    <div class="col-md-4 col-xs-12 text-right">
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('percentageDiscount')}">
+                        <input type="text" class="form-control border-right-0 rounded-0" id="percentageDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('percentageDiscount')"
+                          (change)="onPercentageDiscountChange($event)" pattern="[0-9]">
+                        <div class="input-group-addon rounded-0">%</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group odd-form-group">
+                    <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
+                      <label>
+                        <input type="radio" name="negotiatedPriceDiscount" id="btnAmountDiscount" value="amountDiscount"
+                          [checked]="isNegotiatedPriceDiscountEnable('amountDiscount')"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.amountDiscount' | translate }}
                       </label>
                     </div>
                     <div class="col-md-4 text-right">
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="">
-                        <div class="input-group-addon">%</div>
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('amountDiscount')}">
+                        <div class="input-group-addon rounded-0">$</div>
+                        <input type="text" class="form-control border-left-0 rounded-0" id="amountDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('amountDiscount')"
+                          (change)="onAmountDiscountChange($event)" pattern="[0-9]">
                       </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-md-4 col-md-offset-4">
-                      <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Amount
-                        Discount
-                      </label>
-                    </div>
-                    <div class="col-md-4 text-right">
-                      <div class="input-group">
-                        <div class="input-group-addon">$</div>
-                        <input type="text" class="form-control" id="">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-md-4 col-md-offset-4">
-                      <label>
-                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Amount
-                        Discount
-                      </label>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="input-group">
-                        <div class="input-group-addon">$</div>
-                        <input type="text" class="form-control" id="">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-md-6">
-                      <span>Quote Subtotal(Excl.Tax)</span>
-                    </div>
-                    <div class="col-md-6 text-right">
-                      <span> $0.00</span>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <div class="col-md-6">
-                      <span>Shipping & Handeling</span>
-                    </div>
-                    <div class="col-md-6 text-right">
-                      <span> $0.00</span>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <div class="col-md-6">
-                      <span>Estimated Tax</span>
+                    <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
+                      <label>
+                        <input type="radio" name="negotiatedPriceDiscount" value="proposedPrice" id="btnProposedPrice"
+                          [checked]="isNegotiatedPriceDiscountEnable('proposedPrice')"
+                          (change)="onNegotiatedPriceDiscountTypeChange($event)">
+                        {{'QUOTES.Quote.Negotiation.Total.proposedPrice' | translate }}
+                      </label>
                     </div>
-                    <div class="col-md-6 text-right">
-                      <span> $0.00</span>
+                    <div class=" col-md-4">
+                      <div class="input-group"
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('proposedPrice')}">
+                        <div class="input-group-addon rounded-0">$</div>
+                        <input type="text" class="form-control border-left-0 rounded-0" id="proposedPrice"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('proposedPrice')"
+                          (change)="onPromposedPriceChange($event)" pattern="[0-9]">
+                      </div>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <div class="col-md-6">
-                      <span><b>Quote Grand Total(Excl.Tax)</b></span>
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.quoteSubtotalExclTax' | translate }}</span>
                     </div>
-                    <div class="col-md-6 text-right">
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.subTotal : 0) | currency }}</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.shippingAndHandeling' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.shippingTotal : 0) | currency}}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span>{{'QUOTES.Quote.Negotiation.Total.estimatedTax' | translate }}</span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <span>{{(model ? model.itemTaxTotal : 0) | currency }}</span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <span><b>{{'QUOTES.Quote.Negotiation.Total.quoteGrandTotalExclTax' | translate }}</b></span>
+                    </div>
+                    <div class="col-xs-6 text-right">
                       <span><b>$2700.00</b></span>
                     </div>
                   </div>

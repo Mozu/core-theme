@@ -1,23 +1,32 @@
-import { Component,
+import {
+  Component,
   OnInit,
   Input,
   SimpleChanges,
   OnChanges,
-  OnDestroy} from '@angular/core';
+  OnDestroy,
+  Output,
+  EventEmitter
+} from '@angular/core';
 
-import { LoggerService,
+import {
+  LoggerService,
   HttpError,
   ErrorCode,
   ErroNotificationType,
-  SpinnerService } from '@core';
+  SpinnerService
+} from '@core';
 
 import { NotificationService } from '@global';
 
-import { ConfirmationDialogNotificationType,
+import {
+  ConfirmationDialogNotificationType,
   ConfirmationDialogNotificationCode,
-  ConfirmationDialogService} from '@shared';
+  ConfirmationDialogService
+} from '@shared';
 
 import { QuoteItemsService } from './items.service';
+import { Item, QuoteSubtotalModel } from '../quote.model';
 
 @Component({
   selector: 'quote-items',
@@ -28,6 +37,8 @@ import { QuoteItemsService } from './items.service';
 export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
   @Input('QuoteId') quoteId: string;
   @Input('Quote') quote: any;
+  @Output() onQuoteSubtotalChanged: EventEmitter<QuoteSubtotalModel> = new EventEmitter<QuoteSubtotalModel>();
+  public quoteSubtotal: QuoteSubtotalModel;
 
   public itemId: string;
   public quoteItemTobeDeleted: any;
@@ -38,15 +49,31 @@ export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
     public _quoteItemsService: QuoteItemsService,
     private _confirmationDialogService: ConfirmationDialogService,
     private _notificationService: NotificationService,
-    private _spinner: SpinnerService ) {
-    }
+    private _spinner: SpinnerService) {
+  }
 
-    ngOnChanges(changes: SimpleChanges) {
-      this._loggerService.info('QuoteItemsComponent : ngOnChanges');
-      this.quoteItems = changes['quote'].currentValue;
+  ngOnChanges(changes: SimpleChanges) {
+    this._loggerService.info('QuoteItemsComponent : ngOnChanges');
+    this.quoteItems = changes['quote'].currentValue;
+    if (this.quoteItems) {
+      this.quoteSubtotal.estimatedTax = this.quoteItems.reduce((sum, current) =>
+        sum + current.itemTaxTotal, this.quoteSubtotal.estimatedTax);
+
+      this.quoteSubtotal.subTotalExclTax = this.quoteItems.reduce((sum, current) =>
+        sum + current.extendedTotal, this.quoteSubtotal.subTotalExclTax);
+
+      this.quoteSubtotal.subTotalInclTax = this.quoteItems.reduce((sum, current) =>
+        sum + current.subtotal, this.quoteSubtotal.subTotalInclTax);
+
+      this.quoteSubtotal.totalCost = this.quoteItems.reduce((sum, current) =>
+        sum + current.product.price.price, this.quoteSubtotal.totalCost);
+
+      this.onQuoteSubtotalChanged.emit(this.quoteSubtotal);
     }
+  }
 
   ngOnInit() {
+    this.quoteSubtotal = new QuoteSubtotalModel();
     this.subscriptions.push(
       this._notificationService.quoteItemDeleted.subscribe((action: string) => {
         if (action === ConfirmationDialogNotificationCode.DeleteQuoteItem) {
@@ -82,7 +109,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
   ngOnDestroy() {
     this._loggerService.info('QuoteItemsComponent : ngOnDestroy');
     this.subscriptions.forEach((s) => {
-        s.unsubscribe();
+      s.unsubscribe();
     });
   }
 

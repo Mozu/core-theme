@@ -61,3 +61,15 @@ export enum QuotesAdvFilterFields {
     quoteName = 'quoteName',
     quoteId = 'quoteId'
 }
+
+export enum SubtotalOptions {
+    subTotalExclTax = 'subTotalExclTax',
+    subTotalInclTax = 'subTotalInclTax',
+    estimatedTax = 'estimatedTax'
+}
+
+export enum NegotiatedPriceDiscount {
+    percentageDiscount = 'percentageDiscount',
+    amountDiscount = 'amountDiscount',
+    proposedPrice = 'proposedPrice'
+   }

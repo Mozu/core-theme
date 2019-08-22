@@ -857,8 +857,94 @@ location-group-list .ui-table-wrapper thead th {
 
 .ui-toast .ui-toast-message.ui-toast-message-success {
     background-color: #54A254 !important;
-    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
-     0 6px 10px 0 rgba(0,0,0,.14),
-     0 1px 18px 0 rgba(0,0,0,.12) !important;
-
+    display: block;
+    font-size: 1.1em !important;
+    font-family: "proxima-nova", sans-serif !important;
+    line-height: 20px !important;
+    height: auto;
+    color: #ffffff !important;
+    right: 65%!important;
+    margin: 0 auto !important;
+    width: 50vw;
+    text-align: center;
+    bottom: 32px;
+    border-radius: 0px 0px 5px 5px;
 }
+
+/* utility classes*/
+quote input {
+    font-size: 13px !important;
+}
+
+.border-0 {
+    border: none !important;
+}
+
+.border-right-0 {
+    border-right: 0 !important;
+}
+
+.border-left-0 {
+    border-left: 0 !important;
+}
+
+.rounded-0 {
+    border-radius: 0 !important;
+}
+
+.disabled-bg {
+    background-color: #eee !important;
+    box-shadow: none !important;
+}
+
+.enabled-bg {
+    background-color: #fff !important;
+    box-shadow: none !important;
+}
+
+.padding-none {
+    padding: 0 !important;
+}
+
+/* .col-sm-12, .col-xs-12, .col-md-12 {
+    width: 100% !important;
+} */
+
+/* utility classes*/
+
+.total-price-select {
+    width: 200px !important;
+    height: 15px !important;
+}
+
+quote .form-group {
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+    quotes .total-price-select {
+        width: 300px;
+        padding: 0;
+        height: auto;
+    }
+}
+
+/* quote total section */
+
+quote .form-group:nth-child(odd), .odd-form-group {
+    background: #eee;
+}
+
+quote .form-horizontal .form-group {
+    margin: 0;
+    padding: 8px 0;
+}
+
+quote .form-horizontal .input-group {
+    background: #fff;
+}
+
+    quote .form-horizontal .input-group .input-group-addon, quote .form-horizontal .input-group .form-control {
+        background: transparent;
+    }
