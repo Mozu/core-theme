@@ -391,11 +391,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
         shipment.items.forEach(function (element) {
             model.items.push({
-                upc: element.VariationProductCode ? element.VariationProductCode : element.productCode,
+                upc: element.variationProductCode ? element.variationProductCode : element.productCode,
                 quantity: element.quantity
             });
         });
-        
         return model;
     },
 
