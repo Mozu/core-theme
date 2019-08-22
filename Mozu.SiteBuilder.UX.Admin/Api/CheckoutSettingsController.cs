@@ -134,6 +134,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<DC.PaymentSettings>> UpdatePaymentSettings(DC.PaymentSettings paymentSettings)
         {
 
+            var currentPaymentSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+
+            //Job Settings are set on general Setting and not checkout settings. This is to preserve these settings.
+            paymentSettings.JobSettings = currentPaymentSettings.JobSettings;
+            paymentSettings.PaymentRanking = currentPaymentSettings.PaymentRanking;
+
             var result = (await _checkoutSettingsWebApiClient.UpdatePaymentSettings(paymentSettings)).ReadAsSync();
           
             return Single2(result);
@@ -290,7 +296,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                  var result = await GetSettings();
                  return result;
              }*/
-
             await UpdateSettings(null, null, dcPaymentSettings, dcOrderProcessingSettings, dcCheckoutSettings);
 
             var newSettings = await GetSettings();
@@ -312,6 +317,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     await (await _checkoutSettingsWebApiClient.CreateGateway(posted)).ReadAsAsync();
                 }
             }
+
+
+            var currentPaymentSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+
+            //Job Settings are set on general Setting and not checkout settings. This is to preserve these settings.
+            dcPaymentSettings.JobSettings = currentPaymentSettings.JobSettings;
+            dcPaymentSettings.PaymentRanking = currentPaymentSettings.PaymentRanking;
 
             var tasks = new List<Task>();
 
