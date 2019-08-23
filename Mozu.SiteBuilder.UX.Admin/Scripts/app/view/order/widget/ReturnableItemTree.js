@@ -474,12 +474,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemTree', {
                 { type: 'number', name: 'quantityFulfilled' },
                 { type: 'number', name: 'quantityDirectlyReturned' },
                 { type: 'number', name: 'quantityIndirectlyReturned' },
-                {
-                    type: 'number', name: 'quantityReturned',
-                    convert: function (value, record) {
-                        return record.get('quantityDirectlyReturned') + record.get('quantityIndirectlyReturned');
-                    }
-                },
+                { type: 'number', name: 'quantityReturned' },
                 { type: 'number', name: 'quantityReturnable' },
                 { type: 'number', name: 'unitQuantity' },
                 { type: 'string', name: 'parentProductCode' },
