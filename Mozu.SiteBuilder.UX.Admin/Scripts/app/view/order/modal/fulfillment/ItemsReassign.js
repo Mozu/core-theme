@@ -24,11 +24,17 @@
     },
 
     initComponent: function () {
-
         this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
         });
         var me = this;
+        this.filteredInventory = [];
+        if (this.inventoryItemList.candidateSuggestions && this.inventoryItemList.candidateSuggestions.length > 0) {
+            this.filteredInventory = this.inventoryItemList.candidateSuggestions.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+        }
+        if (this.inventoryItemList.items && this.inventoryItemList.items.length > 0) {
+            this.filteredInventory = this.inventoryItemList.items.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+        }
         var selectedTab;
         this.selectedTab = 'inventoryGrid';
         var inventoryStore = Ext.create('Ext.data.Store', {
@@ -43,7 +49,7 @@
             }],
             fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
             groupField: 'locationName',
-            data: this.inventoryItemList.candidateSuggestions || this.inventoryItemList.items,
+            data: this.filteredInventory,
             proxy: {
                 type: 'memory',
                 enablePaging: true,

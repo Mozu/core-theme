@@ -1,8 +1,8 @@
 ﻿{
   "candidateSuggestions": [
     {
-      "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehouse 1",
+      "locationCode": "WRH001",
+      "locationName": "Central Warehouse",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -27,8 +27,8 @@
       ]
     },
     {
-      "locationCode": "BCON",
-      "locationName": "Kibo Los Angeles Warehouse 2",
+      "locationCode": "CAMB1",
+      "locationName": "Cambridge Store1",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,
@@ -105,8 +105,8 @@
       ]
     },
     {
-      "locationCode": "BCON",
-      "locationName": "Kibo San Diego Warehouse 5",
+      "locationCode": "CAMB",
+      "locationName": "Cambridge Store",
       "addressLine1": null,
       "addressLine2": null,
       "addressLine3": null,

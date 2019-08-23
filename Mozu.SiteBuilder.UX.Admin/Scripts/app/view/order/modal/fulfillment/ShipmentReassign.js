@@ -28,7 +28,13 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var pagingParams = me.createpagingParams();
         
         this.selectedTab = 'inventoryGrid';
-        
+        this.filteredInventory = [];
+        if (this.inventoryData.items.candidateSuggestions && this.inventoryData.items.candidateSuggestions.length > 0) {
+            this.filteredInventory = this.inventoryData.items.candidateSuggestions.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+        }
+        if (this.inventoryData.items && this.inventoryData.items.length > 0) {
+            this.filteredInventory = this.inventoryData.items.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+        }
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
             autoLoad: false,
@@ -41,7 +47,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             fields: ['locationName', 'distance', 'stock'],
             groupField: 'locationName',
-            data: this.inventoryData.items.candidateSuggestions || this.inventoryData.items,
+            data: this.filteredInventory,
             proxy: {
                 type: 'memory',
                 enablePaging: true,
