@@ -27,6 +27,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
     },
 
     initComponent: function () {
+        var me = this;
         this.store = this.getReturnableItemsStore();
         this.store.load();
         this.plugins.push(Ext.create('Ext.grid.plugin.CellEditing', {
@@ -72,7 +73,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         this.columns = this.getColumnConfig();
 
         this.callParent(arguments);
-
+       
         this.on({
             select: {
                 scope: this,
@@ -80,7 +81,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             boxready: {
                 scope: this,
-                fn: function () { this.addCls('returnable-items-grid'); }
+                fn: function () {
+                    me.fireEvent('returnDataLoaded',this.getStore().data.items);
+                    this.addCls('returnable-items-grid');
+                }
             }
         });
     },

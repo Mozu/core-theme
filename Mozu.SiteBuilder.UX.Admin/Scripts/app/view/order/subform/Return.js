@@ -77,7 +77,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.setLoading(true);
 
         // if (returnStatus && returnStatus !== 'None') {
-        store.load(function() {
+        store.load(function () {
             me.orderReturns.store.loadData(arguments[0]);
             me.setLoading(false);
         });
@@ -109,13 +109,23 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.initCreateButton();
-
+       
         this.returnableItems = Ext.create('Taco.view.order.widget.ReturnableItemGrid', {
+            itemId:'returnableItemGrid',
             order: this.record,
             returnsStore: store,
             tools: [this.createButton],
+            createButtonId: this.createButton.id,
             margin: '10px 0 10px 0',
-            padding: '0 1px 0 0'
+            padding: '0 1px 0 0',
+            listeners: {
+                returnDataLoaded: {
+                    fn: function (data) {
+                        me.createButton.setDisabled(!me.isShowCreateReturn(data));
+                    },
+                    scope: me
+                }
+            }
         });
 
         this.returnableItems.on({
@@ -312,6 +322,15 @@ Ext.define('Taco.view.order.subform.Return', {
             scope: this
         });
     },
+
+    isShowCreateReturn: function (items) {
+        for (var i = 0; i < items.length; i++) {
+            if (parseInt(items[i].get('quantityReturnable')) >= 1)
+                return true;
+        }
+        return false;
+    },
+
 
     onDestroy: function() {
         this.callParent(arguments);
