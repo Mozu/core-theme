@@ -462,93 +462,55 @@
         var item = grid.getSelectionModel().getSelection();        
         var selectedItem = item[0].data;
         if (selectedItem) {
-            if (me.shipmentRecord.shipmentType == "BOPIS") {
-                var inventoryItemData = me.getBopisReassignItemPayload();
-                me.record.getInventory({
-                    jsonData: inventoryItemData,
-                    success: function (response) {
-                        me.isRecordSaved = true;
-                        me.setLoading(false, me.body);
-                        var json = Ext.decode(response.responseText, true);
-                        Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
-                            layout: 'hbox',
-                            width: 1080,
-                            height: 450,
-                            record: me.record,
-                            inventoryItemList: json,
-                            //shipmentData: shipment,
-                            shipmentRecord: me.shipmentRecord,
-                            selectedItem: item[0].data,
-                            //available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
-                            listeners: {
-                                saveSuccess: {
-                                    fn: function (json) {
-                                        me.fireEvent('shipmentReassign');
-                                    },
-                                    //scope: me
-                                }
+            me.record.getInventory({
+                jsonData: me.getReassignItemPayload(),
+                success: function (response) {
+                    me.isRecordSaved = true;
+                    me.setLoading(false, me.body);
+                    var json = Ext.decode(response.responseText, true);
+                    Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
+                        layout: 'hbox',
+                        width: 1080,
+                        height: 450,
+                        record: me.record,
+                        inventoryItemList: json,
+                        //shipmentData: shipment,
+                        shipmentRecord: me.shipmentRecord,
+                        selectedItem: item[0].data,
+                        //available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
+                        listeners: {
+                            saveSuccess: {
+                                fn: function (json) {
+                                    me.fireEvent('shipmentReassign');
+                                },
+                                //scope: me
                             }
-                        });
-                    },
-                    failure: function (response) {
-                        me.setLoading(false, me.body);
-                        // close the dialog
-                        //me.close();
-                    }
-                });
-            }
-            else {
-                var inventoryItemData = me.getReassignItemPayload();
-                if (Taco.user.taContext.omsEnabled) {
-                    me.record.getCandidateSuggestions({
-                        jsonData: inventoryItemData,
-                        success: function (response) {
-                            me.isRecordSaved = true;
-                            me.setLoading(false, me.body);
-                            var json = Ext.decode(response.responseText, true);
-                            Ext.create('Taco.view.order.modal.fulfillment.ItemsReassign', {
-                                layout: 'hbox',
-                                width: 1080,
-                                height: 450,
-                                record: me.record,
-                                inventoryItemList: json,
-                                //shipmentData: shipment,
-                                shipmentRecord: me.shipmentRecord,
-                                selectedItem: item[0].data,
-                                available: json.items.candidateSuggestions.length > 0 ? json.candidateSuggestions[0].inventory[0].available : '',
-                                listeners: {
-                                    saveSuccess: {
-                                        fn: function (json) {
-                                            me.fireEvent('shipmentReassign');
-                                        },
-                                        //scope: me
-                                    }
-                                }
-                            });
-                        },
-                        failure: function (response) {
-                            me.setLoading(false, me.body);
-                            // close the dialog
-                            //me.close();
                         }
                     });
+                },
+                failure: function (response) {
+                    me.setLoading(false, me.body);
+                    // close the dialog
+                    //me.close();
                 }
-                else
-                    me.shipmentItemAutoReassign(me.shipmentRecord.locationCode);
-            }
+            });
         }
     },
 
-    getBopisReassignItemPayload: function () {
+    getReassignItemPayload: function () {
         var me = this;
-        var shipment = me.shipmentRecord;
+        //var shipment = me.shipmentRecord;
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
 
         var model = {
-            type: 'ALL',
-            pickup: true,
+            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',
+            locationBlacklist: [me.shipmentRecord.location.code ],
             items: []
+        }
+
+        if (model && me.shipmentRecord.shipmentType == "BOPIS") {
+            model.pickup = true;
         }
 
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
@@ -563,29 +525,13 @@
             }
         }
 
-        model.items.push({
-            //partNumber: item[0].data.productCode,
-            upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
-            quantity: item[0].data.quantity
-        });
-        return model;
-    },
-
-    getReassignItemPayload: function () {
-        var me = this;
-        var grid = Ext.getCmp(this.id);
-        var item = grid.getSelectionModel().getSelection();
-        var model = {
-            //pickupLocationCode: shipment.locationCode,
-            orderType: 'DIRECTSHIP',//me.record.get('orderType'),
-            items: [],
+        if (item && item[0].data) {
+            model.items.push({
+                //partNumber: item[0].data.productCode,
+                upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
+                quantity: item[0].data.quantity
+            });
         }
-
-        model.items.push({
-            partNumber: item[0].data.productCode,
-            upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
-            quantity: item[0].data.quantity
-        });
         return model;
     },
 

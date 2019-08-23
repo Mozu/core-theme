@@ -357,11 +357,17 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var model = {
             pickupLocationCode: shipment.locationCode,
             orderType: 'DIRECTSHIP', //me.record.get('orderType'),
-            items: []
+            items: [],
+            
+        }
+        if (model && shipment.locationCode) {
+            model.exclusionListLocationCode = [{
+                locationCode: shipment.locationCode
+            }];
         }
         shipment.items.forEach(function (element) {
             model.items.push({
-                upc: element.VariationProductCode ? element.VariationProductCode : element.productCode,
+                upc: element.variationProductCode ? element.variationProductCode : element.productCode,
                 quantity: element.quantity
             });
         });
@@ -374,9 +380,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var model = {
             type: 'ALL',
             pickup: true,
-            items: []
+            items: [],
+            locationBlacklist: [me.shipmentRecord.location.code],
         }
-        
+
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,

@@ -86,7 +86,8 @@
                     flex: 1,
                     width: 50,
                     autoSizeColumn: true,
-                    minWidth: 150
+                    minWidth: 150,
+                    renderer: Ext.util.Format.numberRenderer('0.00')
                 },
                 {
                     text: 'Available',
@@ -96,7 +97,7 @@
                     autoSizeColumn: true,
                     minWidth: 150,
                     renderer: function (val, meta, record) {
-                        return me.available || val;
+                        return val;
                     }
                 },
                 {
