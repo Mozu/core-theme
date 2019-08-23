@@ -20,46 +20,46 @@ export class Constants {
     };
 
     static cookies =
-    {
-        sessionId: 'SessionId'
-    };
+        {
+            sessionId: 'SessionId'
+        };
 
     static requestHeader =
-    {
-        authorization: 'Authorization',
-        sessionId: 'SessionId',
-        bearer: 'Bearer',
-        accept: 'Accept',
-        contentType: 'Content-Type'
-    };
+        {
+            authorization: 'Authorization',
+            sessionId: 'SessionId',
+            bearer: 'Bearer',
+            accept: 'Accept',
+            contentType: 'Content-Type'
+        };
 
     static apiToken = {
         refreshToken: 'grant_type=refresh_token&client_id=web&refresh_token='
     };
 
     static contentType =
-    {
-        json: 'application/json; charset=utf-8',
-        formUrlEncoded: 'application/x-www-form-urlencoded',
-        multiPart: 'multipart/form-data'
-    };
+        {
+            json: 'application/json; charset=utf-8',
+            formUrlEncoded: 'application/x-www-form-urlencoded',
+            multiPart: 'multipart/form-data'
+        };
 
     static uiRoutes = {
         empty: '',
         default: ConfigurationSettings.defaultRoutePrefix,
-        quotes : 'quotes',
-        quotesEdit : 'quotesEdit',
-        locationGroups : 'locationGroups',
-        locationGroupCreate : 'locationGroupCreate',
-        locationGroupEdit : 'locationGroupEdit',
-        locationGroupConfig : 'locationGroupConfig',
+        quotes: 'quotes',
+        quotesEdit: 'quotes/edit',
+        locationGroups: 'locationGroups',
+        locationGroupCreate: 'locationGroupCreate',
+        locationGroupEdit: 'locationGroupEdit',
+        locationGroupConfig: 'locationGroupConfig',
     };
 
     static webApis = {
         login: environment.apiUrl + 'account/login',
         logout: environment.apiUrl + 'account/logout',
         getSharedData: environment.apiUrl + 'account/getUserData',
-        secureFormLink : environment.apiUrl + '/capabilities/createSecureForm?appId=',
+        secureFormLink: environment.apiUrl + '/capabilities/createSecureForm?appId=',
         getOrderData: environment.apiUrl + '/order/list',
         getCustomerData: environment.apiUrl + '/customer/list',
         getProductData: environment.apiUrl + '/Product/list'
@@ -79,23 +79,23 @@ export class Constants {
     };
 
     static localStorageKeys = {
-        userName : 'userName',
-        apiToken : 'apiToken',
-        isLoggedIn : 'isLoggedIn',
-        sessionId : 'sessionId',
-        quoteGridData : 'QuoteGridData',
+        userName: 'userName',
+        apiToken: 'apiToken',
+        isLoggedIn: 'isLoggedIn',
+        sessionId: 'sessionId',
+        quoteGridData: 'QuoteGridData',
     };
 
     static imageExtension =
-    {
-        jpeg: '.jpeg',
-        jpg: '.jpg'
-    };
+        {
+            jpeg: '.jpeg',
+            jpg: '.jpg'
+        };
 
     static headerConstant =
-    {
-        xpLogo: 'xpTopRightLogo.png',
-    };
+        {
+            xpLogo: 'xpTopRightLogo.png',
+        };
 
     static splitChars = {
         comma: ','
@@ -113,17 +113,17 @@ export class Constants {
     static localizationMenu = 'localization';
 
     static JsonResources = {
-        leftNavigationItems : environment.appUrl + '/assets/json/leftNavigation-items.json',
-        tabsNames : environment.appUrl + '/assets/json/dashboard-menu.json',
-        dasbhoardTiles : environment.appUrl + '/assets/json/dashboard-categories.json',
-        quoteList : environment.appUrl + '/assets/json/quote-list.json',
+        leftNavigationItems: environment.appUrl + '/assets/json/leftNavigation-items.json',
+        tabsNames: environment.appUrl + '/assets/json/dashboard-menu.json',
+        dasbhoardTiles: environment.appUrl + '/assets/json/dashboard-categories.json',
+        quoteList: environment.appUrl + '/assets/json/quote-list.json',
         accountInformation: environment.appUrl + '/assets/json/account-information.json',
-        redirectionLink : environment.appUrl + '/assets/json/user-redirection.json',
-        locations : environment.appUrl + '/assets/json/locations.json',
-        physicalLocations : environment.appUrl + '/assets/json/physical-locations.json',
-        locationGroupList : environment.appUrl + '/assets/json/location-group-list.json',
-        getLocationGroup : environment.appUrl + '/assets/json/location-group-edit.json',
-        getLocationGroupConfig : environment.appUrl + '/assets/json/location-group-configuration.json',
+        redirectionLink: environment.appUrl + '/assets/json/user-redirection.json',
+        locations: environment.appUrl + '/assets/json/locations.json',
+        physicalLocations: environment.appUrl + '/assets/json/physical-locations.json',
+        locationGroupList: environment.appUrl + '/assets/json/location-group-list.json',
+        getLocationGroup: environment.appUrl + '/assets/json/location-group-edit.json',
+        getLocationGroupConfig: environment.appUrl + '/assets/json/location-group-configuration.json',
         getCarrierSettings: environment.appUrl + '/assets/json/location-config-carrier-settings-read.json',
         getAllCarrierRatesWithConfiguredInfo: environment.appUrl + '/assets/json/location-config-carrier-rates-with-configured.json',
         shippingMethods: '/assets/json/shipping-methods.json',
@@ -136,19 +136,19 @@ export class Constants {
     static numberOfRows = 15;
     static locationGroupDefaultCountry = 'US';
     static gridActionItem = {
-        Edit : 'Edit',
-        New : 'New',
-        Delete : 'Delete'
+        Edit: 'Edit',
+        New: 'New',
+        Delete: 'Delete'
     };
 
     static titles = {
-        catalogImportExportTitles :  'Catalog Import/export',
+        catalogImportExportTitles: 'Catalog Import/export',
         inventory: 'Inventory',
         locationGroups: 'Location Groups'
     };
 
     static lables = {
-        closeLabel :  'close'
+        closeLabel: 'close'
     };
 
     static integrationsModalClass = 'integrationsModal';
@@ -166,18 +166,18 @@ export class Constants {
         tenantHeaderKey: 'tenant'
     };
 
-    static LCCustomerPickupActions = [ {data : 'CustomerCare', label: 'Customer Care'}, {data: 'Canceled', label: 'Cancel'}];
-    static LCCustomerPickupReminders = [ {data : 1, label: '1 days'}, {data: 2, label: '2 days'}, {data: 3, label: '3 days'},
-                                        {data: 4, label: '4 days'}, {data: 5, label: '5 days'}];
-    static LCDefaultCarrier = [{data: 'None', label: 'None'}];
+    static LCCustomerPickupActions = [{ data: 'CustomerCare', label: 'Customer Care' }, { data: 'Canceled', label: 'Cancel' }];
+    static LCCustomerPickupReminders = [{ data: 1, label: '1 days' }, { data: 2, label: '2 days' }, { data: 3, label: '3 days' },
+    { data: 4, label: '4 days' }, { data: 5, label: '5 days' }];
+    static LCDefaultCarrier = [{ data: 'None', label: 'None' }];
     static LCCarriers = {
         custom: 'custom',
         usps: 'usps',
         ups: 'ups',
         fedex: 'fedex'
     };
-    static LCPrintReturnLabel = [{data: true, label: 'Yes'}, {data: false, label: 'No'}];
-    static LCDefaultPrinterType = [{data: 'Laser', label: 'Laser'}, {data: 'Thermal', label: 'Thermal'}];
+    static LCPrintReturnLabel = [{ data: true, label: 'Yes' }, { data: false, label: 'No' }];
+    static LCDefaultPrinterType = [{ data: 'Laser', label: 'Laser' }, { data: 'Thermal', label: 'Thermal' }];
     static classess = {
         ellipsis: 'pi pi-ellipsis-v'
     };
@@ -196,7 +196,9 @@ export class Constants {
         searchBox: 'searchBox',
         keyword: 'keyword',
         quoteName: 'quoteName',
-        quoteId: 'quoteId'
+        quoteId: 'quoteId',
+        accountUser: 'accountUser',
+        accountName: 'accountName'
     };
 
     static quoteSubtotal = [

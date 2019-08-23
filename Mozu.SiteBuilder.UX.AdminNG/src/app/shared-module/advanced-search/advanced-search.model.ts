@@ -11,13 +11,22 @@ export class QuoteFilter {
     keyword: any = null;
     quoteName = '';
     quoteId: number = null;
-    get searchBarkeyword(): string {
+    accountUser = '';
+    accountName = '';
+
+    get getSearchBarkeyword(): string {
         return this.keyword ? this.keyword + ' ' : '';
     }
-    get searchBarQuoteName(): string {
+    get getSearchBarQuoteName(): string {
         return this.quoteName ? Constants.advancedFilter.quoteName + Constants.advancedFilter.keyValueDelimiter + this.quoteName + ' ' : '';
     }
-    get searchBarQuoteId(): string {
+    get getSearchBarQuoteId(): string {
         return this.quoteId ? Constants.advancedFilter.quoteId + Constants.advancedFilter.keyValueDelimiter + this.quoteId + ' ' : '';
+    }
+    get getSearchBarAccountUser(): string {
+        return this.accountUser ? Constants.advancedFilter.accountUser + Constants.advancedFilter.keyValueDelimiter + this.accountUser + ' ' : '';
+    }
+    get getSearchBarAccountName(): string {
+        return this.accountName ? Constants.advancedFilter.accountName + Constants.advancedFilter.keyValueDelimiter + this.accountName + ' ' : '';
     }
 }

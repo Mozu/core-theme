@@ -108,7 +108,7 @@ describe('SearchBarComponent', () => {
         component.quoteFilter.quoteId = 11;
         component.model.status = true;
         component.modelChanged();
-        expect(component.model.searchBox).toEqual(component.quoteFilter.searchBarkeyword + component.quoteFilter.searchBarQuoteName + component.quoteFilter.searchBarQuoteId);
+        expect(component.model.searchBox).toEqual(component.quoteFilter.getSearchBarkeyword + component.quoteFilter.getSearchBarQuoteName + component.quoteFilter.getSearchBarQuoteId);
     });
 
     it('should call isFieldSupported () to bind key value to model', () => {
@@ -162,4 +162,61 @@ describe('SearchBarComponent', () => {
         component.resetAdvancedFilterValue();
         expect(component.quoteFilter.quoteId).toBeNull();
     });
+    it(`should have input field 'Keyword'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#keyword')).nativeElement;
+        inputElement.value = 'walmart';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('walmart');
+        });
+    }));
+    it(`should have input field 'Quote Name'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#quoteName')).nativeElement;
+        inputElement.value = 'Quote 1';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('Quote 1');
+        });
+    }));
+    it(`should have input field 'QuoteId'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#quoteId')).nativeElement;
+        inputElement.value = '101';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('101');
+        });
+    }));
+    it(`should call the search method`, async(() => {
+        fixture.detectChanges();
+        const spy = spyOn(component, 'search');
+        element = fixture.debugElement.query(By.css('#btnFilter')).nativeElement;
+        element.click();
+        expect(spy).toHaveBeenCalledWith('');
+    }));
+    it(`should have input field 'Account Name'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#accountName')).nativeElement;
+        inputElement.value = 'walmart';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('walmart');
+        });
+    }));
+    it(`should have input field 'Account User'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#accountUser')).nativeElement;
+        inputElement.value = 'Pankaj';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('Pankaj');
+        });
+    }));
 });

@@ -22,7 +22,7 @@ export class AdvancedSearchComponent implements OnInit {
   ngOnInit() {
     this.model = new AdvancedFilterModel();
     this.quoteFilter = new QuoteFilter();
-    this.model.searchBox = this.quoteFilter.searchBarkeyword + this.quoteFilter.searchBarQuoteName + this.quoteFilter.searchBarQuoteId;
+    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUser;
   }
 
   toggleIcon(searchBar: any) {
@@ -51,7 +51,7 @@ export class AdvancedSearchComponent implements OnInit {
 
   modelChanged() {
     this.model.status = true;
-    this.model.searchBox = this.quoteFilter.searchBarkeyword + this.quoteFilter.searchBarQuoteName + this.quoteFilter.searchBarQuoteId;
+    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUser;
   }
 
   setAdvancedFilterValue(filterValue: string) {
@@ -71,8 +71,8 @@ export class AdvancedSearchComponent implements OnInit {
     });
   }
 
-  public isFieldSupported = (keyField) => {
-    let match;
+  public isFieldSupported = (keyField: any) => {
+    let match: any;
     if (!keyField) {
       return false;
     }
@@ -98,6 +98,8 @@ export class AdvancedSearchComponent implements OnInit {
     this.quoteFilter.keyword = '';
     this.quoteFilter.quoteName = '';
     this.quoteFilter.quoteId = null;
+    this.quoteFilter.accountUser = '';
+    this.quoteFilter.accountName = '';
   }
 }
 

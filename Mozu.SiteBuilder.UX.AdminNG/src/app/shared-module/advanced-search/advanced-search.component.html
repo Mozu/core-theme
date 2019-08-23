@@ -2,23 +2,26 @@
     <div class="input-group">
         <div class="input-group-btn">
             <button class="btn btn-default search-btn" type="button">
-        <i [ngClass]="model.status ? 'pi-times' : 'pi-search'" class="pi"
-          (click)="model.status ? resetSerach(searchBar): ''"></i>
-      </button>
+                <i [ngClass]="model.status ? 'pi-times' : 'pi-search'" class="pi"
+                    (click)="model.status ? resetSerach(searchBar): ''"></i>
+            </button>
         </div>
-        <input type="text" [(ngModel)]="model.searchBox" class="form-control" #searchBar placeholder="{{'SHARED.FILTER.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)" (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
+        <input type="text" [(ngModel)]="model.searchBox" class="form-control" #searchBar
+            placeholder="{{'SHARED.FILTER.searchPlaceholder' | translate}}" (keyup)="toggleIcon($event)"
+            (keyup.enter)="search(searchBar.value)" id="quote-search-input" name="quote-search-input">
     </div>
 </div>
 
 <div class="col-md-1 col-md-1">
-    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false" (click)="setAdvancedFilterValue(searchBar.value)"></span>
+    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false"
+        (click)="setAdvancedFilterValue(searchBar.value)"></span>
     <div class="modal-parent">
         <div class="modal advanced-filter" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                      aria-hidden="true">&times;</span></button>
+                                aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="gridSystemModalLabel">{{'SHARED.FILTER.advancedFilter' | translate}}</h4>
                     </div>
                     <div class="modal-body">
@@ -34,6 +37,14 @@
                             <div class="form-group">
                                 <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
                                 <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId' (ngModelChange)="modelChanged()">
+                            </div>
+                            <div class="form-group">
+                                <label for="accountName">{{'SHARED.FILTER.QuotesFields.accountName' | translate}}</label>
+                                <input type="text" class="form-control" id="accountName" name="accountName" [(ngModel)]='quoteFilter.accountName' (ngModelChange)="modelChanged()">
+                            </div>
+                            <div class="form-group">
+                                <label for="accountUser">{{'SHARED.FILTER.QuotesFields.accountUser' | translate}}</label>
+                                <input type="text" class="form-control" id="accountUser" name="accountUser" [(ngModel)]='quoteFilter.accountUser' (ngModelChange)="modelChanged()">
                             </div>
                         </form>
                     </div>
