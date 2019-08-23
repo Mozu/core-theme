@@ -30,10 +30,10 @@
         var me = this;
         this.filteredInventory = [];
         if (this.inventoryItemList.candidateSuggestions && this.inventoryItemList.candidateSuggestions.length > 0) {
-            this.filteredInventory = this.inventoryItemList.candidateSuggestions.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+            this.filteredInventoryLocations(this.inventoryItemList.candidateSuggestions);
         }
         if (this.inventoryItemList.items && this.inventoryItemList.items.length > 0) {
-            this.filteredInventory = this.inventoryItemList.items.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+            this.filteredInventoryLocations(this.inventoryItemList.items);
         }
         var selectedTab;
         this.selectedTab = 'inventoryGrid';
@@ -49,7 +49,7 @@
             }],
             fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
             groupField: 'locationName',
-            data: this.filteredInventory,
+            data: this.inventoryItemList.candidateSuggestions || this.inventoryItemList.items,
             proxy: {
                 type: 'memory',
                 enablePaging: true,
@@ -322,6 +322,15 @@
         var me = this;
         if (quantity > me.selectedItem.quantity) {
             return false;
+        }
+    },
+
+    filteredInventoryLocations: function (inventoryLocations) {
+        var me = this;
+        for (i = 0; i < inventoryLocations.length; i++) {
+            if (inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
+                inventoryLocations.splice(i, 1);
+            }
         }
     },
     

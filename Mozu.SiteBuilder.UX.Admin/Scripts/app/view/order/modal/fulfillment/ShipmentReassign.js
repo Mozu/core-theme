@@ -28,12 +28,12 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         var pagingParams = me.createpagingParams();
         
         this.selectedTab = 'inventoryGrid';
-        this.filteredInventory = [];
+       
         if (this.inventoryData.items.candidateSuggestions && this.inventoryData.items.candidateSuggestions.length > 0) {
-            this.filteredInventory = this.inventoryData.items.candidateSuggestions.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+            this.filteredInventoryLocations(this.inventoryData.items.candidateSuggestions);
         }
         if (this.inventoryData.items && this.inventoryData.items.length > 0) {
-            this.filteredInventory = this.inventoryData.items.filter(location => location.locationCode !== me.shipmentRecord.location.code);
+            this.filteredInventoryLocations(this.inventoryData.items);
         }
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
@@ -47,7 +47,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
             }],
             fields: ['locationName', 'distance', 'stock'],
             groupField: 'locationName',
-            data: this.filteredInventory,
+            data: this.inventoryData.items.candidateSuggestions || this.inventoryData.items,
             proxy: {
                 type: 'memory',
                 enablePaging: true,
@@ -337,6 +337,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 LocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : selectedItem.code,
             }
         };
+    },
+
+    filteredInventoryLocations: function (inventoryLocations) {
+        var me = this;
+        for (i = 0; i < inventoryLocations.length; i++) {
+            if (inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
+                inventoryLocations.splice(i, 1);
+            }
+        }
     },
 });
 
