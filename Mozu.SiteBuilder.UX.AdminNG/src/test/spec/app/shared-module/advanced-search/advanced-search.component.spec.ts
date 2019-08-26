@@ -13,8 +13,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
 import { NavigationContainerType } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from '@shared/advanced-search';
-
-describe('SearchBarComponent', () => {
+describe('AdvancedSearchComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
     let debugElement: DebugElement;
@@ -109,6 +108,14 @@ describe('SearchBarComponent', () => {
         component.model.status = true;
         component.modelChanged();
         expect(component.model.searchBox).toEqual(component.quoteFilter.getSearchBarkeyword + component.quoteFilter.getSearchBarQuoteName + component.quoteFilter.getSearchBarQuoteId);
+    });
+
+    it('should call setAdvancedFilterValue() to bind value to search bar', () => {
+        fixture.detectChanges();
+        const filterValue = 'Device Config quoteName: Test';
+        const spy = spyOn(component, 'addKeywordOrAppendToLastKey');
+        component.setAdvancedFilterValue(filterValue);
+        expect(spy).toHaveBeenCalled();
     });
 
     it('should call isFieldSupported () to bind key value to model', () => {

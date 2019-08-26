@@ -59,7 +59,9 @@ export enum NotificationQuoteActions {
 
 export enum QuotesAdvFilterFields {
     quoteName = 'quoteName',
-    quoteId = 'quoteId'
+    quoteId = 'quoteId',
+    expirationDateFrom = 'expirationDateFrom',
+    expirationDateTo = 'expirationDateTo'
 }
 
 export enum SubtotalOptions {

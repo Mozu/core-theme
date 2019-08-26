@@ -123,11 +123,14 @@
             "keywordSearch": "Keyword Search",
             "cancelBtn": "Cancel",
             "filterBtn": "Filter",
+            "to": "to",
+            "today": "Today",
             "QuotesFields": {
                 "quoteName": "Quote Name",
                 "quoteId": "Quote Id",
-                "accountName":"Account Name",
-                "accountUser":"Account User"
+                "accountName": "Account Name",
+                "accountUser": "Account User",
+                "expirationDate": "Expiration Date"
             }
         }
     },

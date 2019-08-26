@@ -871,7 +871,9 @@ location-group-list .ui-table-wrapper thead th {
     border-radius: 0px 0px 5px 5px;
 }
 
+
 /* utility classes*/
+
 quote input {
     font-size: 13px !important;
 }
@@ -906,9 +908,11 @@ quote input {
     padding: 0 !important;
 }
 
+
 /* .col-sm-12, .col-xs-12, .col-md-12 {
     width: 100% !important;
 } */
+
 
 /* utility classes*/
 
@@ -930,9 +934,11 @@ quote .form-group {
     }
 }
 
+
 /* quote total section */
 
-quote .form-group:nth-child(odd), .odd-form-group {
+quote .form-group:nth-child(odd),
+.odd-form-group {
     background: #eee;
 }
 
@@ -945,6 +951,82 @@ quote .form-horizontal .input-group {
     background: #fff;
 }
 
-    quote .form-horizontal .input-group .input-group-addon, quote .form-horizontal .input-group .form-control {
-        background: transparent;
-    }
+quote .form-horizontal .input-group .input-group-addon,
+quote .form-horizontal .input-group .form-control {
+    background: transparent;
+}
+
+
+/* --------------Calendar CSS - Start------------- */
+
+ngb-datepicker.dropdown-menu {
+    padding: 5px 15px !important;
+}
+
+.ngb-dp-header {
+    padding: 10px 0px !important;
+}
+
+.ngb-dp-day,
+.ngb-dp-week-number,
+.ngb-dp-weekday {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+}
+
+.ngb-dp-weekday {
+    line-height: 15px !important;
+    margin: 0;
+    padding: 7px 4px 4px 4px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #5e6263;
+    background: #f2f2f2;
+    border-color: #e6e6e6;
+    border: 0.5px solid #e6e6e6 !important;
+    font-style: normal !important;
+}
+
+.ngb-dp-weekdays {
+    border-bottom: 0px;
+}
+
+.ngb-dp-day {
+    font-size: 13px !important;
+    margin: 0 !important;
+    border: 0.5px solid #e6e6e6 !important;
+    background: #ffffff !important;
+    border-radius: 0px !important;
+    color: #3f3f3f;
+}
+
+.ngb-dp-day :hover {
+    text-decoration: underline;
+}
+
+.ngb-dp-day div {
+    padding: 5px 4px 3px 4px !important;
+}
+
+.ngb-dp-day div.active {
+    width: inherit;
+    height: inherit;
+    border-radius: 0px;
+    background-color: #3c86d2;
+    color: #fff;
+    font-weight: bold;
+}
+
+.ngb-dp-navigation-select .custom-select {
+    border: 0px;
+    color: #000;
+    font-size: 13px;
+}
+
+.ng-trigger.ui-datepicker {
+    display: block !important;
+    visibility: visible !important;
+}
+
+
+/* --------------Calendar CSS - End------------- */

@@ -116,7 +116,7 @@
     padding: 3px 0 0 !important;
 }
 
-.input-group .form-control {
+.searchBar .input-group .form-control {
     display: inline-block !important;
     /* width: 90% !important; */
     font-family: "proxima-nova", sans-serif !important;
@@ -166,4 +166,27 @@
 
 .advanced-filter input:focus {
     border-color: #2ea195;
+}
+
+.separator-padding {
+    padding: 0px 10px;
+}
+
+.datepicker-control {
+    width: 90% !important;
+}
+
+.datepicker .input-group {
+    display: inline-block !important;
+}
+
+.datepicker-footer {
+    text-align: center;
+}
+
+.datepicker-footer a {
+    cursor: pointer;
+    color: #3f3f3f;
+    font-family: "proxima-nova", sans-serif;
+    font-size: 13px;
 }

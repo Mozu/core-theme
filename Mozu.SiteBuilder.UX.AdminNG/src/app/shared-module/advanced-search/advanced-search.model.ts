@@ -13,6 +13,8 @@ export class QuoteFilter {
     quoteId: number = null;
     accountUser = '';
     accountName = '';
+    expirationDateFrom: Date;
+    expirationDateTo: Date;
 
     get getSearchBarkeyword(): string {
         return this.keyword ? this.keyword + ' ' : '';
@@ -28,5 +30,11 @@ export class QuoteFilter {
     }
     get getSearchBarAccountName(): string {
         return this.accountName ? Constants.advancedFilter.accountName + Constants.advancedFilter.keyValueDelimiter + this.accountName + ' ' : '';
+    }
+    get getSearchBarExpirationDateFrom(): string {
+        return this.expirationDateFrom ? Constants.advancedFilter.expirationDateFrom + Constants.advancedFilter.keyValueDelimiter + this.expirationDateFrom.toJSON() + ' ' : '';
+    }
+    get getSearchBarExpirationDateTo(): string {
+        return this.expirationDateTo ? Constants.advancedFilter.expirationDateTo + Constants.advancedFilter.keyValueDelimiter + this.expirationDateTo.toJSON() + ' ' : '';
     }
 }

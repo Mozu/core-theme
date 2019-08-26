@@ -17,10 +17,10 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectItem } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbModule, NgbDateAdapter, NgbDateNativeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-
-import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../../environments/environment';
 
@@ -137,7 +137,8 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     providers: [
         ConfirmationDialogService,
-        ProgressButtonService
+        ProgressButtonService,
+        [{provide: NgbDateAdapter, useClass: NgbDateNativeAdapter}]
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [

@@ -3,6 +3,7 @@ import { NotificationService } from '@global';
 import { NavigationContainerType, Constants, QuotesAdvFilterFields } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from './advanced-search.model';
 import * as _ from 'lodash';
+import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -16,8 +17,11 @@ export class AdvancedSearchComponent implements OnInit {
   navigationType = NavigationContainerType;
   public model: AdvancedFilterModel;
   public quoteFilter: QuoteFilter;
+  today = this.calendar.getToday();
+  placement = 'top';
 
-  constructor(private _notificationService: NotificationService) { }
+  constructor(private _notificationService: NotificationService,
+    private calendar: NgbCalendar) { }
 
   ngOnInit() {
     this.model = new AdvancedFilterModel();
@@ -51,7 +55,10 @@ export class AdvancedSearchComponent implements OnInit {
 
   modelChanged() {
     this.model.status = true;
-    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUser;
+    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
+    this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
+    this.quoteFilter.getSearchBarAccountUser + this.quoteFilter.getSearchBarExpirationDateFrom +
+    this.quoteFilter.getSearchBarExpirationDateTo;
   }
 
   setAdvancedFilterValue(filterValue: string) {
