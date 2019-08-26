@@ -39,8 +39,25 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             injectCheckbox: 'last',
             headerWidth: 37,
             checkOnly: true,
-            showHeaderCheckbox: true
-        });
+            showHeaderCheckbox: true,
+            onHeaderClick: function (headerCt, header, e) {
+                var isAllItemsAreReturned = true;
+                 for (var i = 0; i < this.getStore().data.items.length; i++) {
+                    if (parseInt(this.getStore().data.items[i].data.quantityReturnable) == 0) {
+                        if (this.getStore().data.items[i].data.quantityReturned > 0) {
+                            isAllItemsAreReturned = true;
+                        }
+                     } else {
+                       isAllItemsAreReturned = false;
+                        break;
+                    }
+                }
+                if (isAllItemsAreReturned)
+                    me.returnableItemsErrorEl.setError('All items have already been returned');
+                else
+                    me.returnableItemsErrorEl.setError('');
+            }            
+           });
 
         this.reasonStore = Ext.create('Ext.data.Store', {
             autoLoad: true,
@@ -81,10 +98,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
             },
             boxready: {
                 scope: this,
-                fn: function () {
-                    me.fireEvent('returnDataLoaded',this.getStore().data.items);
-                    this.addCls('returnable-items-grid');
-                }
+                fn: function () { this.addCls('returnable-items-grid'); }
             }
         });
     },

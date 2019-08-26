@@ -116,20 +116,13 @@ Ext.define('Taco.view.order.subform.Return', {
             returnsStore: store,
             tools: [this.createButton],
             createButtonId: this.createButton.id,
+            returnableItemsErrorEl: me.returnableItemsErrorEl,
             margin: '10px 0 10px 0',
-            padding: '0 1px 0 0',
-            listeners: {
-                returnDataLoaded: {
-                    fn: function (data) {
-                        me.createButton.setDisabled(!me.isShowCreateReturn(data));
-                    },
-                    scope: me
-                }
-            }
+            padding: '0 1px 0 0'
         });
 
         this.returnableItems.on({
-            beforeedit: function(editor, e) {
+            beforeedit: function (editor, e) {
                 if (e.record.get('quantityReturnable') === 0) {
                     if (e.record.get('quantityReturned') > 0) {
                         me.returnableItemsErrorEl.setError('That item has already been returned');
@@ -144,7 +137,7 @@ Ext.define('Taco.view.order.subform.Return', {
         });
 
         this.returnableItems.on({
-            beforeselect: function(row, model, index) {
+            beforeselect: function (row, model, index) {
                 if (model.data.quantityReturnable === 0) {
                     if (model.data.quantityReturned > 0) {
                         me.returnableItemsErrorEl.setError('That item has already been returned');
@@ -322,15 +315,6 @@ Ext.define('Taco.view.order.subform.Return', {
             scope: this
         });
     },
-
-    isShowCreateReturn: function (items) {
-        for (var i = 0; i < items.length; i++) {
-            if (parseInt(items[i].get('quantityReturnable')) >= 1)
-                return true;
-        }
-        return false;
-    },
-
 
     onDestroy: function() {
         this.callParent(arguments);
