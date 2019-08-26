@@ -9,7 +9,8 @@ using Mozu.MZDB.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
-
+using Mozu.Tenant.Contracts.Clients;
+using Mozu.Core;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -32,19 +33,33 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private readonly Lazy<IEntityListsWebApiClient> _entityListsWebApiClient;
         private readonly Lazy<ISettings> _settings;
+        private readonly ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly IApiContext _apiContext;
+
         HttpContextBase _context;
         Lazy<JObject> _state;
-        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContextBase context)
+        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContextBase context, ITenantsWebApiClient tenantsWebApiClient, IApiContext apiContext)
         {
             _entityListsWebApiClient = entityListsWebApiClient;
+            _tenantsWebApiClient = tenantsWebApiClient.CloneWithoutUserClaims();
             _settings = settings;
             _context = context;
             _state = new Lazy<JObject>(GetSettings);
+            _apiContext = apiContext;
         }
 
         JObject GetSettings()
         {
             var res = _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global").Result;
+
+            var tenant = _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId, false).Result.ReadAsSync();
+
+
+            var returnObject = res.ReadAsSync();
+
+            var catalogDisabled = (tenant.Attributes.Find(x => x.Name == "CatalogDisabled").Value.ToString() == "true") ? true : false;
+            returnObject.Add(new JProperty("catalogDisabled", catalogDisabled));
+            
             return res.ResponseMessage.IsSuccessStatusCode ? res.ReadAsSync() : new JObject();
         }
         string _bcv = null;
@@ -86,6 +101,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             
             var res = (await _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global").ConfigureAwait(false));
             var val = res.ResponseMessage.IsSuccessStatusCode ? res.ReadAsSync() : new JObject();
+
+            var tenant = _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId, false).Result.ReadAsSync();
+            var catalogDisabled = (tenant.Attributes.Find(x => x.Name == "CatalogDisabled").Value.ToString() == "true") ? true : false;
+            val.Add(new JProperty("catalogDisabled", catalogDisabled));
+
             _state = new Lazy<JObject>(() => val);
             return this;
         }
@@ -132,6 +152,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             get
             {
                 return ((bool?)_state.Value.GetValue("isSavePromptEnabled")).GetValueOrDefault(false);
+            }
+        }
+
+        public bool CatalogDisabled
+        {
+            get
+            {
+                return ((bool?)_state.Value.GetValue("catalogDisabled")).GetValueOrDefault(false);
             }
         }
     }
