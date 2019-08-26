@@ -376,7 +376,6 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }];
             }
         });
-        console.log(JSON.stringify(model));
         return model;
     },
 

@@ -518,8 +518,9 @@
         if (model && me.shipmentRecord.shipmentType == "BOPIS") {
             model.pickup = true;
         }
-        else
-            model.pickup = false;
+        else if (model && me.shipmentRecord.shipmentType == "STH") {
+            model.directShip = true;
+        }
 
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
@@ -539,7 +540,7 @@
                 upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
                 quantity: item[0].data.quantity
             });
-        }
+        }        
         return model;
     },
 
