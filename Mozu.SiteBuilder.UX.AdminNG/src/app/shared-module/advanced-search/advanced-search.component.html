@@ -29,7 +29,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="quoteName">{{'SHARED.FILTER.QuotesFields.quoteName' | translate}}</label>
-                                <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.quoteName' (ngModelChange)="modelChanged()">
+                                <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.name' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
                                 <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
@@ -40,8 +40,8 @@
                                 <input type="text" class="form-control" id="accountName" name="accountName" [(ngModel)]='quoteFilter.accountName' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
-                                <label for="accountUser">{{'SHARED.FILTER.QuotesFields.accountUser' | translate}}</label>
-                                <input type="text" class="form-control" id="accountUser" name="accountUser" [(ngModel)]='quoteFilter.accountUser' (ngModelChange)="modelChanged()">
+                                <label for="accountUserName">{{'SHARED.FILTER.QuotesFields.accountUserName' | translate}}</label>
+                                <input type="text" class="form-control" id="accountUserName" name="accountUserName" [(ngModel)]='quoteFilter.accountUserLastName' (ngModelChange)="modelChanged()">
                             </div>
                             <div class="form-group">
                                 <label for="quoteId">{{'SHARED.FILTER.QuotesFields.expirationDate' | translate}}</label>

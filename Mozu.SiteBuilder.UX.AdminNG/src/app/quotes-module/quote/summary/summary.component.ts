@@ -12,8 +12,7 @@ import { LoggerService, SpinnerService } from '@core';
   styleUrls: ['./summary.component.css'],
   providers: [SpinnerService]
 })
-export class QuoteSummaryComponent implements OnChanges {
-  @Input('QuoteId') quoteId: string;
+export class QuoteSummaryComponent implements OnChanges {  
   @Input('Quote') quote: any;
   quoteInfo = [];
 

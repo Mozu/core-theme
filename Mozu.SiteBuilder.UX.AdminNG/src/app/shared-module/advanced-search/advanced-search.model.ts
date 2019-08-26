@@ -9,9 +9,9 @@ export class AdvancedFilterModel {
 
 export class QuoteFilter {
     keyword: any = null;
-    quoteName = '';
+    name = '';
     quoteId: number = null;
-    accountUser = '';
+    accountUserLastName = '';
     accountName = '';
     expirationDateFrom: Date;
     expirationDateTo: Date;
@@ -20,13 +20,13 @@ export class QuoteFilter {
         return this.keyword ? this.keyword + ' ' : '';
     }
     get getSearchBarQuoteName(): string {
-        return this.quoteName ? Constants.advancedFilter.quoteName + Constants.advancedFilter.keyValueDelimiter + this.quoteName + ' ' : '';
+        return this.name ? Constants.advancedFilter.name + Constants.advancedFilter.keyValueDelimiter + this.name + ' ' : '';
     }
     get getSearchBarQuoteId(): string {
         return this.quoteId ? Constants.advancedFilter.quoteId + Constants.advancedFilter.keyValueDelimiter + this.quoteId + ' ' : '';
     }
-    get getSearchBarAccountUser(): string {
-        return this.accountUser ? Constants.advancedFilter.accountUser + Constants.advancedFilter.keyValueDelimiter + this.accountUser + ' ' : '';
+    get getSearchBarAccountUserLastName(): string {
+        return this.accountUserLastName ? Constants.advancedFilter.accountUserLastName + Constants.advancedFilter.keyValueDelimiter + this.accountUserLastName + ' ' : '';
     }
     get getSearchBarAccountName(): string {
         return this.accountName ? Constants.advancedFilter.accountName + Constants.advancedFilter.keyValueDelimiter + this.accountName + ' ' : '';

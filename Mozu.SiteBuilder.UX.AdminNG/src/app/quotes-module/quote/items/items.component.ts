@@ -53,7 +53,7 @@ export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this._loggerService.info('QuoteItemsComponent : ngOnChanges');
+    this._loggerService.info('QuoteItemsComponent : quoteSubtotalChanged');
     this.quoteItems = changes['quote'].currentValue;
     if (this.quoteItems) {
       this.quoteSubtotal.estimatedTax = this.quoteItems.reduce((sum, current) =>

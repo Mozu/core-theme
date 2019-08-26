@@ -58,8 +58,10 @@ export enum NotificationQuoteActions {
 }
 
 export enum QuotesAdvFilterFields {
-    quoteName = 'quoteName',
+    name = 'name',
     quoteId = 'quoteId',
+    accountUserLastName= 'accountUserLastName',
+    accountName='accountName',
     expirationDateFrom = 'expirationDateFrom',
     expirationDateTo = 'expirationDateTo'
 }

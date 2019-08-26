@@ -2,7 +2,7 @@
   <div class="info-section">
     <div class="row">
       <div class="sub-container">
-        <quote-summary [QuoteId]=quoteId [Quote]=model></quote-summary>
+        <quote-summary [Quote]=model></quote-summary>
       </div>
       <div class="sub-container">
         <account-information [UserId]=userId [CustomerAccountId]=customerAccountId></account-information>
@@ -80,17 +80,17 @@
                     <div class="col-md-4 col-xs-12">
                       <label>
                         <input type="radio" name="negotiatedPriceDiscount" value="percentageDiscount"
-                          id="btnPercentageDiscount" [checked]="isNegotiatedPriceDiscountEnable('percentageDiscount')"
+                          id="rbPercentageDiscount" [checked]="isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)"
                           (change)="onNegotiatedPriceDiscountTypeChange($event)">
                         {{'QUOTES.Quote.Negotiation.Total.percentageDiscount' | translate }}
                       </label>
                     </div>
                     <div class="col-md-4 col-xs-12 text-right">
                       <div class="input-group"
-                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('percentageDiscount')}">
-                        <input type="text" class="form-control border-right-0 rounded-0" id="percentageDiscount"
-                          [disabled]="!isNegotiatedPriceDiscountEnable('percentageDiscount')"
-                          (change)="onPercentageDiscountChange($event)" pattern="[0-9]">
+                        [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)}">
+                        <input type="text" class="form-control border-right-0 rounded-0" id="txtPercentageDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable(negotiatedPriceDiscount.percentageDiscount)"
+                          (change)="onPercentageDiscountChange($event)" restrict_input="decimalPrecisionFour">
                         <div class="input-group-addon rounded-0">%</div>
                       </div>
                     </div>
@@ -99,8 +99,8 @@
                   <div class="form-group odd-form-group">
                     <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
                       <label>
-                        <input type="radio" name="negotiatedPriceDiscount" id="btnAmountDiscount" value="amountDiscount"
-                          [checked]="isNegotiatedPriceDiscountEnable('amountDiscount')"
+                        <input type="radio" name="negotiatedPriceDiscount" id="rbAmountDiscount" value="amountDiscount"
+                          [checked]="isNegotiatedPriceDiscountEnable('negotiatedPriceDiscount.amountDiscount')"
                           (change)="onNegotiatedPriceDiscountTypeChange($event)">
                         {{'QUOTES.Quote.Negotiation.Total.amountDiscount' | translate }}
                       </label>
@@ -109,9 +109,9 @@
                       <div class="input-group"
                         [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('amountDiscount')}">
                         <div class="input-group-addon rounded-0">$</div>
-                        <input type="text" class="form-control border-left-0 rounded-0" id="amountDiscount"
-                          [disabled]="!isNegotiatedPriceDiscountEnable('amountDiscount')"
-                          (change)="onAmountDiscountChange($event)" pattern="[0-9]">
+                        <input type="text" class="form-control border-left-0 rounded-0" id="txtAmountDiscount"
+                          [disabled]="!isNegotiatedPriceDiscountEnable('negotiatedPriceDiscount.amountDiscount')"
+                          (change)="onAmountDiscountChange($event)" restrict_input="decimalPrecisionFour">
                       </div>
                     </div>
                   </div>
@@ -119,7 +119,7 @@
                   <div class="form-group">
                     <div class="col-md-4 col-md-offset-4 col-sm-offset-4">
                       <label>
-                        <input type="radio" name="negotiatedPriceDiscount" value="proposedPrice" id="btnProposedPrice"
+                        <input type="radio" name="negotiatedPriceDiscount" value="proposedPrice" id="rbProposedPrice"
                           [checked]="isNegotiatedPriceDiscountEnable('proposedPrice')"
                           (change)="onNegotiatedPriceDiscountTypeChange($event)">
                         {{'QUOTES.Quote.Negotiation.Total.proposedPrice' | translate }}
@@ -129,9 +129,9 @@
                       <div class="input-group"
                         [ngClass]="{'disabled-bg':!isNegotiatedPriceDiscountEnable('proposedPrice')}">
                         <div class="input-group-addon rounded-0">$</div>
-                        <input type="text" class="form-control border-left-0 rounded-0" id="proposedPrice"
+                        <input type="text" class="form-control border-left-0 rounded-0" id="txtProposedPrice"
                           [disabled]="!isNegotiatedPriceDiscountEnable('proposedPrice')"
-                          (change)="onPromposedPriceChange($event)" pattern="[0-9]">
+                          (change)="onPromposedPriceChange($event)" restrict_input="decimalPrecisionFour">
                       </div>
                     </div>
                   </div>

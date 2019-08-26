@@ -193,11 +193,12 @@ export class Constants {
 
     static advancedFilter = {
         keyValueDelimiter: ':',
+        searchFieldSeperator: ' ',
         searchBox: 'searchBox',
         keyword: 'keyword',
-        quoteName: 'quoteName',
+        name: 'name',
         quoteId: 'quoteId',
-        accountUser: 'accountUser',
+        accountUserLastName: 'accountUserLastName',
         accountName: 'accountName',
         expirationDateFrom: 'expirationDateFrom',
         expirationDateTo: 'expirationDateTo'

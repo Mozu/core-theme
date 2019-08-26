@@ -129,7 +129,7 @@
                 "quoteName": "Quote Name",
                 "quoteId": "Quote Id",
                 "accountName": "Account Name",
-                "accountUser": "Account User",
+                "accountUserName": "Account User-Name",
                 "expirationDate": "Expiration Date"
             }
         }

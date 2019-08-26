@@ -26,7 +26,7 @@ export class AdvancedSearchComponent implements OnInit {
   ngOnInit() {
     this.model = new AdvancedFilterModel();
     this.quoteFilter = new QuoteFilter();
-    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUser;
+    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUserLastName;
   }
 
   toggleIcon(searchBar: any) {
@@ -57,13 +57,13 @@ export class AdvancedSearchComponent implements OnInit {
     this.model.status = true;
     this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
     this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
-    this.quoteFilter.getSearchBarAccountUser + this.quoteFilter.getSearchBarExpirationDateFrom +
+    this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationDateFrom +
     this.quoteFilter.getSearchBarExpirationDateTo;
   }
 
   setAdvancedFilterValue(filterValue: string) {
     this.resetAdvancedFilterValue();
-    this.model.splittedValues = _.split(filterValue, ' ');
+    this.model.splittedValues = _.split(filterValue, Constants.advancedFilter.searchFieldSeperator);
 
     this.model.splittedValues.forEach((item, index) => {
       const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
@@ -97,15 +97,15 @@ export class AdvancedSearchComponent implements OnInit {
       this.model.lastKey = Constants.advancedFilter.keyword;
       this.quoteFilter[this.model.lastKey] = item;
     } else if (this.model.lastKey) {
-      this.quoteFilter[this.model.lastKey] = _.trim(this.quoteFilter[this.model.lastKey] + ' ' + item);
+      this.quoteFilter[this.model.lastKey] = _.trim(this.quoteFilter[this.model.lastKey] + Constants.advancedFilter.searchFieldSeperator + item);
     }
   }
 
   resetAdvancedFilterValue() {
     this.quoteFilter.keyword = '';
-    this.quoteFilter.quoteName = '';
+    this.quoteFilter.name = '';
     this.quoteFilter.quoteId = null;
-    this.quoteFilter.accountUser = '';
+    this.quoteFilter.accountUserLastName = '';
     this.quoteFilter.accountName = '';
   }
 }

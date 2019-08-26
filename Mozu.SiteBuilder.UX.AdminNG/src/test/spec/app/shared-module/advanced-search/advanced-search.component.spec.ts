@@ -218,7 +218,7 @@ describe('AdvancedSearchComponent', () => {
     }));
     it(`should have input field 'Account User'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#accountUser')).nativeElement;
+        inputElement = fixture.debugElement.query(By.css('#accountUserName')).nativeElement;
         inputElement.value = 'Pankaj';
         inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
