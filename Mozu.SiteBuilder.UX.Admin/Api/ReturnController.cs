@@ -85,9 +85,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<Return>> MultiMapFromContract(List<DCr.Return> dcRmas)
         {
             var rmas = Mapper.Map<List<Return>>(dcRmas);
+
+            var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
+           
             foreach (var rma in rmas)
             {
                 rma.ChannelName = await GetChannelName(rma.ChannelCode);
+                rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
             }
             return rmas;
         }
