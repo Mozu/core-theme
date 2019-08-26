@@ -518,6 +518,8 @@
         if (model && me.shipmentRecord.shipmentType == "BOPIS") {
             model.pickup = true;
         }
+        else
+            model.pickup = false;
 
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
