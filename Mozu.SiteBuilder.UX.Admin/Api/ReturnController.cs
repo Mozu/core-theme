@@ -34,6 +34,7 @@ using Mozu.Location.Contracts;
 using System;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteSettings.Order.Contracts.Clients;
+using Mozu.Core.Api.Client;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -85,13 +86,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<Return>> MultiMapFromContract(List<DCr.Return> dcRmas)
         {
             var rmas = Mapper.Map<List<Return>>(dcRmas);
-
-            var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
            
             foreach (var rma in rmas)
             {
                 rma.ChannelName = await GetChannelName(rma.ChannelCode);
-                rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
             }
             return rmas;
         }
@@ -135,7 +133,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 customerNote.UpdateBy = await GetUserNameById(customerNote.UpdateBy) ?? customerName;
             }
 
-            var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
+            var returnSettingsWebApiClient = _returnSettingsWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = rma.SiteId);
+
+            var currentReturnSettings = (await returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
             rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
 
             return rma;
