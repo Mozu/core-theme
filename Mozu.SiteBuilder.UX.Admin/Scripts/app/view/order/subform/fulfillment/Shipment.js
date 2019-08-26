@@ -357,20 +357,26 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var model = {
             pickupLocationCode: shipment.locationCode,
             orderType: 'DIRECTSHIP', //me.record.get('orderType'),
-            items: [],
+            items: []
             
         }
         if (model && shipment.locationCode) {
-            model.exclusionListLocationCode = [{
-                locationCode: shipment.locationCode
-            }];
+            model.exclusionListLocationCode = [];
         }
         shipment.items.forEach(function (element) {
             model.items.push({
                 upc: element.variationProductCode ? element.variationProductCode : element.productCode,
                 quantity: element.quantity
             });
+
+            if (model && shipment.locationCode) {
+                model.exclusionListLocationCode = [{
+                    locationCode: shipment.locationCode,
+                    orderItemID: element.lineId
+                }];
+            }
         });
+        console.log(JSON.stringify(model));
         return model;
     },
 
