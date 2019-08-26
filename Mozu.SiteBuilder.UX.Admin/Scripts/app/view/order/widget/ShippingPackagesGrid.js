@@ -120,8 +120,8 @@
                 type: 'string',
                 useNull: true
             }, {
-                name: 'optionAttributeFQN',
-                type: 'string',
+                name: 'options',
+                type: 'auto',
                 useNull: true
             }, {
                 name: 'duty',
@@ -256,14 +256,20 @@
                 flex: 2
             },
             {
-                dataIndex: 'optionAttributeFQN',
+                dataIndex: 'options',
                 text: 'Item Attributes',
                 draggable: false,
                 sortable: false,
                 resizable: true,
                 menuDisabled: false,
                 minWidth: 100,
-                flex: 2
+                flex: 2,
+                renderer: function (optionValue) {
+                    for (i = 0; i < optionValue.length; i++) {
+                        var display = Ext.util.Format.htmlEncode(optionValue[i].shopperEnteredValue || optionValue[i].value);
+                        return "<div class='option'>" + optionValue[i].name + ": " + display + " (" + optionValue[i].value + ")<div><br/>";
+                    }
+                }
             },
             {
                 dataIndex: 'actualPrice',
@@ -569,7 +575,8 @@
                 listeners: {
                     udpateTax: {
                         fn: function (json) {
-                            Ext.getCmp(this.taxFieldId).setValue(json.unitTax);
+                            var itemUnitTax = Math.round(json.unitTax * 100) / 100;
+                            Ext.getCmp(this.taxFieldId).setValue(itemUnitTax);
                         },
                         scope: me
                     }
