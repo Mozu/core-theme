@@ -443,6 +443,7 @@
   ],
   "settings": {
     "enableRecaptcha": false,
+    "showCookieNotice": false,
     "recaptchaSiteKey": null,
     "__recaptchaSecrete": null,
     "recaptchaType": "Invisible",
