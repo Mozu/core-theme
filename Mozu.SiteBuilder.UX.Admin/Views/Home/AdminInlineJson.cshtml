@@ -23,6 +23,10 @@
         var siteRoles = (List<UserRole>) ViewData["siteRoles"];
         List<UserRole> siteRolesJson = siteRoles;
 
+        List<string> roleTags = new List<string>();
+
+        siteRolesJson.ForEach(x => roleTags.Concat(x.RoleTags));
+
         object taContext = ViewData["taContext"];
         object siteUsers = ViewData["siteUsers"];
         string extPath = WebConfigurationManager.AppSettings["extPath"];
@@ -46,7 +50,8 @@
                 id = user.Id, behaviors, taContext,
                 email = user.EmailAddress,
                 sites = siteRolesJson,
-                name = (user.FirstName + " " + user.LastName).Trim()
+                name = (user.FirstName + " " + user.LastName).Trim(),
+                roleTags = roleTags
             },
             apiVersion = ver.FileVersion,
             localizationValues = locValues, paymentApiBaseUrl,

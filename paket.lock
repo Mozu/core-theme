@@ -129,7 +129,7 @@ NUGET
       MongoDB.Bson (>= 2.4.4)
       System.Runtime.InteropServices.RuntimeInformation (>= 4.0)
     Mozu.AdminUser.Contracts (1.18.1)
-      Mozu.Core.Prime (>= 1.17)
+      Mozu.Core.Prime (1.1933.0-otnet-user-tags-62)
       Mozu.Tenant.Contracts
     Mozu.AppDev.Contracts (1.1835.1)
       Mozu.Core.Prime (>= 1.17)
@@ -143,13 +143,13 @@ NUGET
     Mozu.Content.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.17)
     Mozu.Core.Extensible.Contracts (1.1613.1)
-      Mozu.Core.Prime (>= 1.18)
+      Mozu.Core.Prime (1.1933.0-otnet-user-tags-62)
     Mozu.Core.Messaging (1.1902.1)
       Burrows (>= 0.3.3)
       Mozu.Core.Messaging.Contracts
     Mozu.Core.Messaging.Contracts (1.1902.1)
       Mozu.Core.Prime
-    Mozu.Core.Prime (1.1917.2)
+    Mozu.Core.Prime (1.1933.0-otnet-user-tags-62)
       Autofac (>= 3.5.2)
       Autofac.WebApi2 (>= 3.4)
       AutoMapper (>= 6.2.2 < 7.0)
