@@ -1,0 +1,212 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <title>overhang.js Demo</title>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Paul Krishnamurthy" />
+    <link rel="icon" href="demo/logo.ico" />
+    <link rel="stylesheet" type="text/css" href="demo/style/index.css" />
+    <link rel="stylesheet" type="text/css" href="dist/overhang.min.css" />
+    <link rel="stylesheet" type="text/css" href="demo/style/prism.css" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="dist/overhang.min.js"></script>
+    <script type="text/javascript" src="demo/js/prism.js"></script>
+    <script type="text/javascript" src="demo/js/index.js"></script>
+  </head>
+  <body>
+
+    <div class="aligned-box">
+      <img src="logo.png" class="logo" />
+
+      <p class="descrip">A JQuery plugin to display sleek, instant notifications, confirmations or prompts inside a given element.</p>
+
+      <div align="center" id="Github">
+        <iframe src="https://ghbtns.com/github-btn.html?user=paulkr&repo=overHang.js&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px" style="padding-left: 10px;"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=paulkr&type=follow&count=true&size=large" frameborder="0" scrolling="0" width="220px" height="30px" style="margin-right: 40px;"></iframe>
+        <iframe src="https://ghbtns.com/github-btn.html?user=paulkr&repo=overHang.js&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="128px" height="30px"></iframe>
+      </div>
+
+      <button class="try-button sample">Try me</button>
+
+      <div id="Examples">
+        <div class="example--left">
+          <div class="code-info">
+            <p class="type">Success Message</p>
+            <button class="try-button example--1">Try me</button>
+          </div>
+          <div class="code-example">
+<pre style="width: 290px"><code class="language-javascript">
+$("body").overhang({
+  type: "success",
+  message: "Woohoo! Our message works!"
+});
+</code></pre>
+          </div>
+        </div>
+
+        <div class="example--right">
+          <div class="code-example">
+<pre style="width: 370px"><code class="language-javascript">
+$("body").overhang({
+  type: "error",
+  message: "Whoops! Something went wrong!",
+  closeConfirm: true
+});
+</code></pre>
+          </div>
+          <div class="code-info">
+            <p class="type">Closable Message</p>
+            <button class="try-button example--2">Try me</button>
+          </div>
+        </div>
+
+        <div class="example--left">
+          <div class="code-info">
+            <p class="type">Timed Message</p>
+            <button class="try-button example--3">Try me</button>
+          </div>
+          <div class="code-example">
+<pre style="width: 350px"><code class="language-javascript">
+$("body").overhang({
+  type: "info",
+  message: "⏲️ I will close in 5 seconds!",
+  duration: 5,
+  upper: true
+});
+</code></pre>
+          </div>
+        </div>
+
+        <div class="example--right">
+          <div class="code-example">
+<pre style="width: 367px"><code class="language-javascript">
+$("body").overhang({
+  type: "warn",
+  message: "A user has reported you!",
+  duration: 3,
+  overlay: true
+});
+</code></pre>
+          </div>
+          <div class="code-info">
+            <p class="type">Dim Overlay Screen</p>
+            <button class="try-button example--4">Try me</button>
+          </div>
+        </div>
+
+        <div class="example--left">
+          <div class="code-info">
+            <p class="type">Prompt Alert</p>
+            <button class="try-button example--5">Try me</button><br />
+            <button class="try-button example--6">View</button>
+          </div>
+          <div class="code-example">
+<pre style="width: 290px"><code class="language-javascript">
+$("body").overhang({
+  type: "prompt",
+  message: "What's your name?",
+  overlay: true
+});
+</code></pre>
+          </div>
+        </div>
+
+        <div class="example--right">
+          <div class="code-example">
+<pre style="width: 270px"><code class="language-javascript">
+$("body").overhang({
+  type: "confirm",
+  message: "Are you sure?",
+  overlay: true
+});
+</code></pre>
+          </div>
+          <div class="code-info">
+            <p class="type">Confirmation Alert</p>
+            <button class="try-button example--7">Try me</button><br />
+            <button class="try-button example--8">View</button>
+          </div>
+        </div>
+
+        <div class="example--left">
+          <div class="code-info">
+            <p class="type">Customized Alert</p>
+            <button class="try-button example--9">Try me</button>
+          </div>
+          <div class="code-example" style="margin-bottom: 30px;">
+<pre style="width: 350px"><code class="language-javascript">
+$("body").overhang({
+  custom: true,
+  textColor: "#FCE4EC",
+  primary: "#F06292",
+  accent: "#FCE4EC",
+  message: "This is my custom message 😜"
+});
+</code></pre>
+          </div>
+        </div>
+
+        <div class="example--right">
+          <div class="code-example">
+<pre style="width: 350px"><code class="language-javascript">
+$("body").overhang({
+  type: "confirm",
+  primary: "#40D47E",
+  accent: "#27AE60",
+  yesColor: "#3498DB",
+  message: "Do you want to continue?",
+  overlay: true,
+  callback: function (value) {
+    var response = value ? "Yes" : "No";
+    alert("You made your selection of: " + response);
+  }
+});
+</code></pre>
+          </div>
+          <div class="code-info">
+            <p class="type">Using callbacks</p>
+            <button class="try-button example--10">Try me</button><br />
+          </div>
+        </div>
+
+        <div class="example--left">
+          <div class="code-info">
+            <p class="type">Using HTML</p>
+            <button class="try-button example--11">Try me</button>
+          </div>
+          <div class="code-example" style="margin-bottom: 30px;">
+<pre style="width: 350px"><code class="language-javascript">
+var snapchatIcon = '&lt;i class="fa fa-snapchat-ghost" style="color: #FFFC00" aria-hidden="true">&lt;/i>';
+var snapchatNote = ' Add <span style="font-size: 20px">"thepaulkr"</span> on snapchat!';
+
+$("body").overhang({
+  type: "confirm",
+  primary: "#333333",
+  accent: "#FFFC00",
+  message: snapchatIcon + snapchatNote,
+  custom: true,
+  html: true,
+  overlay: true,
+  overlayColor: "#FFFF00",
+  callback: function (value) {
+    if (value) {
+      window.location.href = "https://www.snapchat.com/add/thepaulkr";
+    } else {
+      alert("Maybe next time then...");
+    }
+  }
+});
+</code></pre>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer><p>&copy; 2016 <a href="https://paulkr.com" target="_blank">Paul Krishnamurthy</a></footer>
+
+    <a href="https://github.com/paulkr/overhang.js"><img id="GithubBanner" style="position: absolute; top: 0; right: 0; border: 0; z-index: 100000" src="https://camo.githubusercontent.com/52760788cde945287fbb584134c4cbc2bc36f904/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png"></a>
+  </body>
+</html>

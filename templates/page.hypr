@@ -97,6 +97,11 @@
 
 
         <div id="page-wrapper" class="mz-l-pagewrapper">
+            Bippity
+            {% dump themeSettings %}
+            {% if themeSettings.showCookieNotice %}
+            boppity
+            {% endif %}
             {% if themeSettings.enableRecaptcha %}
             <div id="recaptcha-container-global"></div>
             {% endif %}
@@ -133,7 +138,6 @@
             {% block page-footer %}
             {% include "modules/page-footer" %}
             {% endblock page-footer %}
-
             {% include "modules/common/message-bar" %}
         </div>
 

@@ -14,6 +14,11 @@
                     "xtype": "mz-input-checkbox",
                     "name": "enablePartialCaching",
                     "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "showCookieNotice",
+                    "fieldLabel": "Show Cookie Notice on homepage"
                 }
             ]
         },

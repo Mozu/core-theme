@@ -1,5 +1,4 @@
-﻿<div class="mz-messagebar" data-mz-message-bar>   
- 
+﻿<div class="mz-messagebar" data-mz-message-bar>
     {% if model.length > 0 %}
         {% for msg in model %}
             {% if msg.messageType %}
