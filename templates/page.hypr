@@ -97,11 +97,9 @@
 
 
         <div id="page-wrapper" class="mz-l-pagewrapper">
-            Bippity
-            {% dump themeSettings %}
-            {% if themeSettings.showCookieNotice %}
-            boppity
-            {% endif %}
+          {% if themeSettings.showCookieNotice %}
+          cookie notice enabled
+          {% endif %}
             {% if themeSettings.enableRecaptcha %}
             <div id="recaptcha-container-global"></div>
             {% endif %}
