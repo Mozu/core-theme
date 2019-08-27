@@ -528,7 +528,7 @@
             model.directShip = true;
         }
 
-        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address && me.shipmentRecord.shipmentType == "BOPIS") {
             model.requestLocation = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
                 latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
