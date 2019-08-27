@@ -76,6 +76,11 @@
                 useNull: false
             },
             {
+                name: 'variationProductCode',
+                type: 'string',
+                useNull: true
+            },
+            {
                 name: 'name',
                 type: 'string',
                 useNull: true
@@ -173,6 +178,7 @@
                     type: 'string',
                     useNull: true
                 }
+                
             ],
             sorters: [{
                 sorterFn: function (a, b) {
@@ -533,7 +539,6 @@
                 countryCode: 'US'
             }
         }
-
         if (item && item[0].data) {
             model.items.push({
                 //partNumber: item[0].data.productCode,

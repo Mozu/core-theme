@@ -355,11 +355,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var me = this;
         var shipment = me.shipmentRecord;
         var model = {
-            pickupLocationCode: shipment.locationCode,
             orderType: 'DIRECTSHIP', //me.record.get('orderType'),
-            items: []
-            
+            items: []            
         }
+
         if (model && shipment.locationCode) {
             model.exclusionListLocationCode = [];
         }
@@ -376,6 +375,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 }];
             }
         });
+        
         return model;
     },
 
