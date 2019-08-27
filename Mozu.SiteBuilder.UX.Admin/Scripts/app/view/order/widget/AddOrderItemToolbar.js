@@ -49,14 +49,14 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             value: ''
         });
 
-        me.statusField = Ext.widget({
-            xtype: 'displayfield',
-            fieldBodyCls: 'order-addproducttoolbar-cell',
-            fieldStyle: 'padding:0px 4px;',
-            fieldCls: 'order-addproducttoolbar-field',
-            width: this.gridColumns[3].width,
-            value: ''
-        });
+        //me.statusField = Ext.widget({
+        //    xtype: 'displayfield',
+        //    fieldBodyCls: 'order-addproducttoolbar-cell',
+        //    fieldStyle: 'padding:0px 4px;',
+        //    fieldCls: 'order-addproducttoolbar-field',
+        //    width: this.gridColumns[3].width,
+        //    value: ''
+        //});
 
         me.codeField = Ext.widget({
             xtype: 'displayfield',
@@ -72,7 +72,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             fieldBodyCls: 'order-addproducttoolbar-cell',
             fieldStyle: 'text-align:right;padding:0px 4px;',
             fieldCls: 'order-addproducttoolbar-field',
-            width: this.gridColumns[5].width,
+            width: this.gridColumns[4].width,
             value: ''
         });
 
@@ -90,7 +90,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             allowBlank: false,
             minValue: 1,
             maxValue: 100000,
-            width: this.gridColumns[6].width,
+            width: this.gridColumns[5].width,
             value: '',
             listeners: {
                 change: { fn: this.onQuantityChange, buffer: 500 },
@@ -108,7 +108,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             text: 'Add',
             itemId: 'addButton',
             disabled: true,
-            width: this.gridColumns[7].width,
+            width: this.gridColumns[6].width,
             handler: function() {
                 // the handler also gets called, when the enter key is hit. But there is already a handler for enter, so we cancel it
                 if (arguments[1].keyCode != 13)
@@ -209,7 +209,7 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             //allowBlank:false,
             fieldBodyCls: 'order-addproducttoolbar-cell',
             msgTarget: 'qtip',
-            width: this.gridColumns[4].width,
+            width: this.gridColumns[3].width,
             pageSize: me.productsPerPage,
             value: '',
             /*
@@ -302,14 +302,14 @@ Ext.define('Taco.view.order.widget.AddOrderItemToolbar', {
             this.lineField,
             this.codeField,
             this.productPickerField,
-            this.statusField,
+            //this.statusField,
             this.fulfillmentPickerField,
             this.priceField,
             this.quantityField,
             this.addItemButton,
             {
                 xtype: 'component',
-                width: this.gridColumns[8].width
+                width: this.gridColumns[7].width
             }
         ];
 
