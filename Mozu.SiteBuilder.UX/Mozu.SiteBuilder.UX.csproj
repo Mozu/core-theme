@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiWrappers\FulfillerApiWrapper.cs" />
+    <Compile Include="ApiWrappers\ShipmentApiWrapper.cs" />
     <Compile Include="Areas\Misc\AMDModuleProvider.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Areas\Misc\LessUtils.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\JObjectMapping.cs" />
+    <Compile Include="Areas\StoreFront\ModelMapping\PickWaveMapping.cs" />
     <Compile Include="Areas\StoreFront\Models\CustomerPurchaseOrderPaymentTerm.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPickupItem.cs" />

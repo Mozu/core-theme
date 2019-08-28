@@ -23,6 +23,11 @@ namespace Mozu.SiteBuilder.UX.ApiWrappers
 
             var basePath = settings.Urls("service-url-PickWaveWebApi");
 
+            if (!string.IsNullOrEmpty(basePath) && basePath.Contains("pickWaves"))
+            {
+                basePath = basePath.Substring(0, basePath.IndexOf("pickWaves"));
+            }
+
             _pickWaveControllerApi = new PickWaveControllerApi(basePath);
 
         }

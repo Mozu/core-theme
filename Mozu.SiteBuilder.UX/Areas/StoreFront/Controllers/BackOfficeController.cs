@@ -38,7 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
-        private IFulfillerApiWrapper _apiWrapper;
+        private IFulfillerApiWrapper _fulfillerApiWrapper;
+        private readonly IShipmentApiWrapper _shipmentApiWrapper;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
@@ -50,7 +51,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
-            _apiWrapper = new FulfillerApiWrapper(apiContext, settings);
+            _fulfillerApiWrapper = new FulfillerApiWrapper(apiContext, settings);
+            _shipmentApiWrapper = new ShipmentApiWrapper(apiContext, settings);
         }
 
         /// <summary>
@@ -112,6 +114,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             IEnumerable<ShipmentItem> t = shipment.Items.Select(i => GetDetailedShipmentItem(i, order));
             shipment.Items = t.ToList();
+        }
+
+        private Shipment PopulateShipments(List<Fulfiller.Contracts.Model.PickWaveContent> pickWaveContents)
+        {
+            var shipment = new Shipment
+            {
+                Items = new List<ShipmentItem>()
+            };
+
+            foreach (var content in pickWaveContents)
+            {
+                var shipmentItem = Mapper.Map<ShipmentItem>(content);
+                if (shipmentItem != null)
+                {
+                    shipment.Items.Add(shipmentItem);
+                }
+            }
+            return shipment;
         }
 
         private void PopulatePickupDetails(DC.Order order)
@@ -279,13 +299,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> PickWave(int pickWaveNumber)
         {
-            var pickWave = _apiWrapper.GetPickWave(pickWaveNumber);
+            var pickWave = _fulfillerApiWrapper.GetPickWave(pickWaveNumber);
 
-            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-wave"));
+            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-list"));
             if (template == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find pick wave template for the current Theme.");
             }
+
+            List<Shipment> shipments = new List<Shipment>();
+            shipments.Add(PopulateShipments(pickWave.Contents));
+            ViewData["shipments"] = shipments;
 
             return await RenderWithContext(template, pickWave);
         }
