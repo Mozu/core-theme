@@ -103,7 +103,7 @@ describe('AdvancedSearchComponent', () => {
     it('should call modelChanged() to bind value to search bar', () => {
         fixture.detectChanges();
         component.quoteFilter.keyword = 'Test keyword';
-        component.quoteFilter.quoteName = 'Test quote name';
+        component.quoteFilter.name = 'Test quote name';
         component.quoteFilter.quoteId = 11;
         component.model.status = true;
         component.modelChanged();
@@ -112,7 +112,7 @@ describe('AdvancedSearchComponent', () => {
 
     it('should call setAdvancedFilterValue() to bind value to search bar', () => {
         fixture.detectChanges();
-        const filterValue = 'Device Config quoteName: Test';
+        const filterValue = 'Device Config name: Test';
         const spy = spyOn(component, 'addKeywordOrAppendToLastKey');
         component.setAdvancedFilterValue(filterValue);
         expect(spy).toHaveBeenCalled();
@@ -121,9 +121,9 @@ describe('AdvancedSearchComponent', () => {
     it('should call isFieldSupported () to bind key value to model', () => {
         fixture.detectChanges();
         let match;
-        const keyField = 'quoteName';
+        const keyField = 'name';
         enum QuotesAdvFilterFields {
-            quoteName = 'quoteName',
+            name = 'name',
             quoteId = 'quoteId'
         }
         component.isFieldSupported(keyField);
@@ -134,7 +134,7 @@ describe('AdvancedSearchComponent', () => {
     it('should call addKeyValue() to bind key value to model', () => {
         fixture.detectChanges();
         const keyValueDelimiter = ':';
-        const key = 'quoteName';
+        const key = 'name';
         const item = 'Device Config';
         const colonIndex = 0;
         component.quoteFilter[key] = item.substr(colonIndex + keyValueDelimiter.length);
@@ -156,9 +156,9 @@ describe('AdvancedSearchComponent', () => {
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar based on last key', () => {
         fixture.detectChanges();
         const item = 'Device Config';
-        const index  = 1;
-        component.model.lastKey = 'quoteName';
-        component.addKeywordOrAppendToLastKey (item, index);
+        const index = 1;
+        component.model.lastKey = 'name';
+        component.addKeywordOrAppendToLastKey(item, index);
         if (component.model.lastKey) {
             expect(component.quoteFilter[component.model.lastKey] ).toEqual((item).trim());
         }
