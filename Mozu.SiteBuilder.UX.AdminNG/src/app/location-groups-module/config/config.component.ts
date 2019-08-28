@@ -349,7 +349,6 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         let shippingSettingsForFedEx: ShippingMethodMappings;
         let shippingSettingsForUsps: ShippingMethodMappings;
 
-
         if (lgConfigModel && lgConfigModel.carriers.length > 0) {
             lgConfigModel.carriers.forEach((carrier) => {
                 switch (carrier.carrierType.toLowerCase()) {
@@ -460,6 +459,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private setSelectedCarriers(carriers: CarrierModel[]): boolean[] {
         const carriersUpr: CarrierModel[] = [];
+        
         carriers.map((v) => {
             const carrierObj: CarrierModel = {} as CarrierModel;
             carrierObj.carrierType = v.carrierType.toUpperCase();
@@ -513,10 +513,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
         let index = 0;
         control.forEach((element: { value: any; }) => {
-            if (element.value) {
-                const shippingType = this.model.LCCarriers[index++];
-                switch (shippingType.CarrierType.toLowerCase()) {
-                    case 'ups':
+            
+            const shippingType = this.model.LCCarriers[index++];
+            switch (shippingType.CarrierType.toLowerCase()) {
+                case 'ups':
+                    if (element.value) {
                         const upsMethod = {} as CarrierModel;
                         upsMethod.shippingMethodMappings = {} as ShippingMethodMappings;
                         upsMethod.carrierType = shippingType.CarrierType;
@@ -528,9 +529,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         upsMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['upsUSExpress2DayDefault']).value;
                         upsMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['upsUSExpress3DayDefault']).value;
                         lgConfigModel.carriers.push(upsMethod);
-                        break;
+                    }
+                    break;
 
-                    case 'usps':
+                case 'usps':
+                    if (element.value) {
                         const uspsMethod = {} as CarrierModel;
                         uspsMethod.carrierType = shippingType.CarrierType;
                         uspsMethod.isEnabled = element.value;
@@ -542,9 +545,11 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         uspsMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['uspsExpress2DayDefault']).value;
                         uspsMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['uspsExpress3DayDefault']).value;
                         lgConfigModel.carriers.push(uspsMethod);
-                        break;
+                    }
+                    break;
 
-                    case 'fedex':
+                case 'fedex':
+                    if (element.value) {
                         const fedexMethod = {} as CarrierModel;
                         fedexMethod.carrierType = shippingType.CarrierType;
                         fedexMethod.isEnabled = element.value;
@@ -557,8 +562,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         fedexMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['fedexExpress2Default']).value;
                         fedexMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['fedexExpress3Default']).value;
                         lgConfigModel.carriers.push(fedexMethod);
-                        break;
-                }
+                    }
+                    break;
             }
         });
 
