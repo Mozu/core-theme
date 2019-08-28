@@ -29,6 +29,7 @@ Ext.define('Taco.model.CustomShippingRate', {
     },
     {
         'name': 'deliveryDuration',
-        'type': 'string'
+        'type': 'string',
+        'defaultValue': 'STANDARD'
     }]
 });

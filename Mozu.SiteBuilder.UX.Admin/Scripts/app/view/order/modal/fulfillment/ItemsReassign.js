@@ -25,7 +25,8 @@
 
     initComponent: function () {
         this.cellEditing = new Ext.grid.plugin.CellEditing({
-            clicksToEdit: 1
+            clicksToEdit: 1,
+            pluginId: 'cellEditing'
         });
         var me = this;
         this.filteredInventory = [];
@@ -137,7 +138,7 @@
                 displayInfo: true
             }],
             selModel: {
-                selModel: 'rowmodel',
+                selModel: 'cellmodel',
             },
             plugins: [this.cellEditing],
             //{   
@@ -147,21 +148,20 @@
                 //pluginId: 'ItemLocationEditing',
             //},
             listeners: {
-                selectionchange: function () {
-                },
-                select: function () {
-                    //me.cellEditing.startEditByPosition({
-                    //    row: 1,
-                    //    column: 5
-                    //});
-                },
-                deselect: function () {
-                },
-                click: function () {
+                'validateedit': function (editor, context, eOpts) {
+                    var me = this;
+                    for (i = 0; i < context.record.store.data.items.length; i++) {
+                        if (i !== context.rowIdx && context.value !=='') {
+                            if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0 )) {
+                                context.record.store.data.items[i].data.reassignQty = '';
+                            }
+                        }
+                        if (i === context.rowIdx) {
+                            context.record.store.data.items[i].data.reassignQty = context.record.store.data.items[i].data.reassignQty;
+                        }
+                    }
+                    me.getView().refresh();
                 }
-                //beforeload: function (store, operation, eOpts) {
-                //    store.proxy.data = inventoryData;
-                //}
             },
         });
         var allLocationsStore = Ext.create('Ext.data.Store', {
