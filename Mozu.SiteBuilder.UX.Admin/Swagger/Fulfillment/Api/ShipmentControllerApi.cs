@@ -87,15 +87,13 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// </summary>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields">fields</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        ResourceOfShipment GetShipmentUsingGET (int? shipmentNumber, int? xVolTenant, string fields, int? xVolSite);
+        ResourceOfShipment GetShipmentUsingGET (int? shipmentNumber, int? xVolTenant, int? xVolSite);
         /// <summary>
         /// getShipments 
         /// </summary>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields"></param>
         /// <param name="filter"></param>
         /// <param name="isLate"></param>
         /// <param name="page"></param>
@@ -104,7 +102,7 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <param name="sort"></param>
         /// <param name="xVolSite"></param>
         /// <returns>PagedResourcesOfResourceOfShipment</returns>
-        PagedResourcesOfResourceOfShipment GetShipmentsUsingGET (int? xVolTenant, string fields, string filter, bool? isLate, int? page, int? pageSize, string quickSearch, string sort, int? xVolSite);
+        PagedResourcesOfResourceOfShipment GetShipmentsUsingGET (int? xVolTenant, string filter, bool? isLate, int? page, int? pageSize, string quickSearch, string sort, int? xVolSite);
         /// <summary>
         /// getTasks 
         /// </summary>
@@ -263,7 +261,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling BackorderItemsUpdateUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/backorderedItems";
+            var path = "/commerce/shipments/{shipmentNumber}/backorderedItems";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -308,7 +306,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling BackorderItemsUsingPOST");
     
-            var path = "/shipments/{shipmentNumber}/backorderedItems";
+            var path = "/commerce/shipments/{shipmentNumber}/backorderedItems";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -353,7 +351,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling BackorderShipmentUsingPOST");
     
-            var path = "/shipments/{shipmentNumber}/backordered";
+            var path = "/commerce/shipments/{shipmentNumber}/backordered";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -398,7 +396,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling CancelShipmentUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/canceled";
+            var path = "/commerce/shipments/{shipmentNumber}/canceled";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -443,7 +441,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling CanceledItemsUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/canceledItems";
+            var path = "/commerce/shipments/{shipmentNumber}/canceledItems";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -485,7 +483,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling DeleteShipmentUsingDELETE");
     
-            var path = "/shipments/{shipmentNumber}";
+            var path = "/commerce/shipments/{shipmentNumber}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -532,7 +530,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'taskId' is set
             if (taskId == null) throw new ApiException(400, "Missing required parameter 'taskId' when calling ExecuteUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/tasks/{taskId}/completed";
+            var path = "/commerce/shipments/{shipmentNumber}/tasks/{taskId}/completed";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
 path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
@@ -575,7 +573,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling FulfillShipmentUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/fulfilled";
+            var path = "/commerce/shipments/{shipmentNumber}/fulfilled";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -607,17 +605,16 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// </summary>
         /// <param name="shipmentNumber">shipmentNumber</param>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields">fields</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourceOfShipment</returns>
-        public ResourceOfShipment GetShipmentUsingGET (int? shipmentNumber, int? xVolTenant, string fields, int? xVolSite)
+        public ResourceOfShipment GetShipmentUsingGET (int? shipmentNumber, int? xVolTenant, int? xVolSite)
         {
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling GetShipmentUsingGET");
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetShipmentUsingGET");
     
-            var path = "/shipments/{shipmentNumber}";
+            var path = "/commerce/shipments/{shipmentNumber}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -627,8 +624,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (fields != null) queryParams.Add("fields", ApiClient.ParameterToString(fields)); // query parameter
-             if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
+                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
  if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
                             
             // authentication setting, if any
@@ -649,7 +645,6 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// getShipments 
         /// </summary>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields"></param>
         /// <param name="filter"></param>
         /// <param name="isLate"></param>
         /// <param name="page"></param>
@@ -658,12 +653,12 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
         /// <param name="sort"></param>
         /// <param name="xVolSite"></param>
         /// <returns>PagedResourcesOfResourceOfShipment</returns>
-        public PagedResourcesOfResourceOfShipment GetShipmentsUsingGET (int? xVolTenant, string fields, string filter, bool? isLate, int? page, int? pageSize, string quickSearch, string sort, int? xVolSite)
+        public PagedResourcesOfResourceOfShipment GetShipmentsUsingGET (int? xVolTenant, string filter, bool? isLate, int? page, int? pageSize, string quickSearch, string sort, int? xVolSite)
         {
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetShipmentsUsingGET");
     
-            var path = "/shipments";
+            var path = "/commerce/shipments";
             path = path.Replace("{format}", "json");
                 
             var queryParams = new Dictionary<String, String>();
@@ -672,8 +667,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (fields != null) queryParams.Add("fields", ApiClient.ParameterToString(fields)); // query parameter
- if (filter != null) queryParams.Add("filter", ApiClient.ParameterToString(filter)); // query parameter
+             if (filter != null) queryParams.Add("filter", ApiClient.ParameterToString(filter)); // query parameter
  if (isLate != null) queryParams.Add("isLate", ApiClient.ParameterToString(isLate)); // query parameter
  if (page != null) queryParams.Add("page", ApiClient.ParameterToString(page)); // query parameter
  if (pageSize != null) queryParams.Add("pageSize", ApiClient.ParameterToString(pageSize)); // query parameter
@@ -710,7 +704,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetTasksUsingGET");
     
-            var path = "/shipments/{shipmentNumber}/tasks";
+            var path = "/commerce/shipments/{shipmentNumber}/tasks";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -751,7 +745,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling NewShipmentUsingPOST");
     
-            var path = "/shipments";
+            var path = "/commerce/shipments";
             path = path.Replace("{format}", "json");
                 
             var queryParams = new Dictionary<String, String>();
@@ -795,7 +789,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignItemsUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/reassignedItems";
+            var path = "/commerce/shipments/{shipmentNumber}/reassignedItems";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -840,7 +834,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReassignShipmentUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/reassigned";
+            var path = "/commerce/shipments/{shipmentNumber}/reassigned";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -885,7 +879,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling RejectShipmentUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/rejected";
+            var path = "/commerce/shipments/{shipmentNumber}/rejected";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -930,7 +924,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'shipmentNumber' is set
             if (shipmentNumber == null) throw new ApiException(400, "Missing required parameter 'shipmentNumber' when calling ReplaceShipmentUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}";
+            var path = "/commerce/shipments/{shipmentNumber}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -975,7 +969,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling RevertUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/tasks/{taskId}/reverted";
+            var path = "/commerce/shipments/{shipmentNumber}/tasks/{taskId}/reverted";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
 path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
@@ -1020,7 +1014,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling SkipTaskUsingPUT");
     
-            var path = "/shipments/{shipmentNumber}/tasks/{taskId}/skipped";
+            var path = "/commerce/shipments/{shipmentNumber}/tasks/{taskId}/skipped";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
 path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
@@ -1062,7 +1056,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling WorkflowDefinitionImageUsingGET");
     
-            var path = "/shipments/{shipmentNumber}/workflow-definition-image";
+            var path = "/commerce/shipments/{shipmentNumber}/workflow-definition-image";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     
@@ -1103,7 +1097,7 @@ path = path.Replace("{" + "taskId" + "}", ApiClient.ParameterToString(taskId));
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling WorkflowInstanceImageUsingGET");
     
-            var path = "/shipments/{shipmentNumber}/workflow-instance-image";
+            var path = "/commerce/shipments/{shipmentNumber}/workflow-instance-image";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentNumber" + "}", ApiClient.ParameterToString(shipmentNumber));
     

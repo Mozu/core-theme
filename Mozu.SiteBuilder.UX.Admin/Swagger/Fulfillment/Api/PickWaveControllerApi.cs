@@ -31,11 +31,11 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <summary>
         /// getOpenPickWaves 
         /// </summary>
-        /// <param name="locationCode">locationCode</param>
+        /// <param name="fulfillmentLocationCode">fulfillmentLocationCode</param>
         /// <param name="xVolTenant"></param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourcesOfPickWave</returns>
-        ResourcesOfPickWave GetOpenPickWavesUsingGET (string locationCode, int? xVolTenant, int? xVolSite);
+        ResourcesOfPickWave GetOpenPickWavesUsingGET (string fulfillmentLocationCode, int? xVolTenant, int? xVolSite);
         /// <summary>
         /// getPickWave 
         /// </summary>
@@ -49,10 +49,9 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// </summary>
         /// <param name="pickWaveNumber">pickWaveNumber</param>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields">fields</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourcesOfShipment</returns>
-        ResourcesOfShipment GetShipmentsInPickWaveUsingGET (int? pickWaveNumber, int? xVolTenant, string fields, int? xVolSite);
+        ResourcesOfShipment GetShipmentsInPickWaveUsingGET (int? pickWaveNumber, int? xVolTenant, int? xVolSite);
     }
   
     /// <summary>
@@ -125,7 +124,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'pickWaveNumber' is set
             if (pickWaveNumber == null) throw new ApiException(400, "Missing required parameter 'pickWaveNumber' when calling ClosePickWaveUsingPUT");
     
-            var path = "/pickWaves/{pickWaveNumber}/closed";
+            var path = "/commerce/pickWaves/{pickWaveNumber}/closed";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "pickWaveNumber" + "}", ApiClient.ParameterToString(pickWaveNumber));
     
@@ -167,7 +166,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling CreatePickWaveUsingPOST");
     
-            var path = "/pickWaves";
+            var path = "/commerce/pickWaves";
             path = path.Replace("{format}", "json");
                 
             var queryParams = new Dictionary<String, String>();
@@ -197,20 +196,20 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// <summary>
         /// getOpenPickWaves 
         /// </summary>
-        /// <param name="locationCode">locationCode</param>
+        /// <param name="fulfillmentLocationCode">fulfillmentLocationCode</param>
         /// <param name="xVolTenant"></param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourcesOfPickWave</returns>
-        public ResourcesOfPickWave GetOpenPickWavesUsingGET (string locationCode, int? xVolTenant, int? xVolSite)
+        public ResourcesOfPickWave GetOpenPickWavesUsingGET (string fulfillmentLocationCode, int? xVolTenant, int? xVolSite)
         {
-            // verify the required parameter 'locationCode' is set
-            if (locationCode == null) throw new ApiException(400, "Missing required parameter 'locationCode' when calling GetOpenPickWavesUsingGET");
+            // verify the required parameter 'fulfillmentLocationCode' is set
+            if (fulfillmentLocationCode == null) throw new ApiException(400, "Missing required parameter 'fulfillmentLocationCode' when calling GetOpenPickWavesUsingGET");
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetOpenPickWavesUsingGET");
     
-            var path = "/pickWaves/open/{locationCode}";
+            var path = "/commerce/pickWaves/open/{fulfillmentLocationCode}";
             path = path.Replace("{format}", "json");
-            path = path.Replace("{" + "locationCode" + "}", ApiClient.ParameterToString(locationCode));
+            path = path.Replace("{" + "fulfillmentLocationCode" + "}", ApiClient.ParameterToString(fulfillmentLocationCode));
     
             var queryParams = new Dictionary<String, String>();
             var headerParams = new Dictionary<String, String>();
@@ -249,7 +248,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetPickWaveUsingGET");
     
-            var path = "/pickWaves/{pickWaveNumber}";
+            var path = "/commerce/pickWaves/{pickWaveNumber}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "pickWaveNumber" + "}", ApiClient.ParameterToString(pickWaveNumber));
     
@@ -281,17 +280,16 @@ namespace Mozu.Fulfillment.Contracts.Api
         /// </summary>
         /// <param name="pickWaveNumber">pickWaveNumber</param>
         /// <param name="xVolTenant"></param>
-        /// <param name="fields">fields</param>
         /// <param name="xVolSite"></param>
         /// <returns>ResourcesOfShipment</returns>
-        public ResourcesOfShipment GetShipmentsInPickWaveUsingGET (int? pickWaveNumber, int? xVolTenant, string fields, int? xVolSite)
+        public ResourcesOfShipment GetShipmentsInPickWaveUsingGET (int? pickWaveNumber, int? xVolTenant, int? xVolSite)
         {
             // verify the required parameter 'pickWaveNumber' is set
             if (pickWaveNumber == null) throw new ApiException(400, "Missing required parameter 'pickWaveNumber' when calling GetShipmentsInPickWaveUsingGET");
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetShipmentsInPickWaveUsingGET");
     
-            var path = "/pickWaves/{pickWaveNumber}/shipments";
+            var path = "/commerce/pickWaves/{pickWaveNumber}/shipments";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "pickWaveNumber" + "}", ApiClient.ParameterToString(pickWaveNumber));
     
@@ -301,8 +299,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             var fileParams = new Dictionary<String, FileParameter>();
             String postBody = null;
     
-             if (fields != null) queryParams.Add("fields", ApiClient.ParameterToString(fields)); // query parameter
-             if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
+                         if (xVolSite != null) headerParams.Add("x-vol-site", ApiClient.ParameterToString(xVolSite)); // header parameter
  if (xVolTenant != null) headerParams.Add("x-vol-tenant", ApiClient.ParameterToString(xVolTenant)); // header parameter
                             
             // authentication setting, if any

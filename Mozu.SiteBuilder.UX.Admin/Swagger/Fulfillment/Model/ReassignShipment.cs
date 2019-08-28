@@ -20,11 +20,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
-    /// Gets or Sets LocationCode
+    /// Gets or Sets FulfillmentLocationCode
     /// </summary>
-    [DataMember(Name="locationCode", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "locationCode")]
-    public string LocationCode { get; set; }
+    [DataMember(Name="fulfillmentLocationCode", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "fulfillmentLocationCode")]
+    public string FulfillmentLocationCode { get; set; }
 
 
     /// <summary>
@@ -35,7 +35,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       var sb = new StringBuilder();
       sb.Append("class ReassignShipment {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-      sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
+      sb.Append("  FulfillmentLocationCode: ").Append(FulfillmentLocationCode).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
     }

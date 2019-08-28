@@ -61,7 +61,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 }
             }
         }));
-        if (this.shipmentRecord.locationCode && this.shipmentRecord.location) {
+        if (this.shipmentRecord.fulfillmentLocationCode && this.shipmentRecord.location) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                 record: this.record,
                 shipmentRecord: this.shipmentRecord,

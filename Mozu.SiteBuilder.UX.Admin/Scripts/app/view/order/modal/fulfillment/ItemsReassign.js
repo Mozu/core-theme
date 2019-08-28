@@ -286,7 +286,7 @@
                         lineId: me.selectedItem.lineId,
                         name: me.selectedItem.name,
                         productCode: me.selectedItem.productCode,
-                        locationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : item[0].raw.code,
+                        fulfillmentLocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : item[0].raw.code,
                         quantity: selectedLocation.reassignQty,
                         imageUrl: me.selectedItem.imageUrl,
                         retailPrice: me.selectedItem.actualPrice,

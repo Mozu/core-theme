@@ -54,8 +54,8 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
         var shipments = this.getShipments();
         if (shipments) {
             for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
-                if (shipments[shipmentCount].locationCode) {
-                    this.record.getLocationsByCode(shipments[shipmentCount].locationCode).load({
+                if (shipments[shipmentCount].fulfillmentLocationCode) {
+                    this.record.getLocationsByCode(shipments[shipmentCount].fulfillmentLocationCode).load({
                         scope: this,
                         params: { 'shipmentCount': shipmentCount },
                         callback: function (records, operation, success) {

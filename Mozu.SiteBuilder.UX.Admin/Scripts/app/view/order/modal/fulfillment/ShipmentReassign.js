@@ -334,7 +334,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         return {
             ShipmentNumber: me.shipmentRecord.number,
             ReassignShipment: {
-                LocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : selectedItem.code,
+                fulfillmentLocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : selectedItem.code,
             }
         };
     },

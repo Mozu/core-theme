@@ -27,18 +27,18 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public List<PickWaveBinRange> BinRanges { get; set; }
 
     /// <summary>
+    /// Gets or Sets FulfillmentLocationCode
+    /// </summary>
+    [DataMember(Name="fulfillmentLocationCode", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "fulfillmentLocationCode")]
+    public string FulfillmentLocationCode { get; set; }
+
+    /// <summary>
     /// Gets or Sets IncludeZeroInventory
     /// </summary>
     [DataMember(Name="includeZeroInventory", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "includeZeroInventory")]
     public bool? IncludeZeroInventory { get; set; }
-
-    /// <summary>
-    /// Gets or Sets LocationCode
-    /// </summary>
-    [DataMember(Name="locationCode", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "locationCode")]
-    public string LocationCode { get; set; }
 
     /// <summary>
     /// Gets or Sets LockWave
@@ -106,8 +106,8 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("class CreatePickWave {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  BinRanges: ").Append(BinRanges).Append("\n");
+      sb.Append("  FulfillmentLocationCode: ").Append(FulfillmentLocationCode).Append("\n");
       sb.Append("  IncludeZeroInventory: ").Append(IncludeZeroInventory).Append("\n");
-      sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
       sb.Append("  LockWave: ").Append(LockWave).Append("\n");
       sb.Append("  MaxShipments: ").Append(MaxShipments).Append("\n");
       sb.Append("  PickWaveType: ").Append(PickWaveType).Append("\n");

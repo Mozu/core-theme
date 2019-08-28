@@ -107,7 +107,7 @@ namespace Mozu.Fulfillment.Contracts.Api
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetWorkflowProcessUsingGET");
     
-            var path = "/processes/definitions/{containerId}/{processId}";
+            var path = "/commerce/processes/definitions/{containerId}/{processId}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "containerId" + "}", ApiClient.ParameterToString(containerId));
 path = path.Replace("{" + "processId" + "}", ApiClient.ParameterToString(processId));
@@ -149,7 +149,7 @@ path = path.Replace("{" + "processId" + "}", ApiClient.ParameterToString(process
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetWorkflowProcessUsingGET1");
     
-            var path = "/processes/shipmentType/{shipmentType}";
+            var path = "/commerce/processes/shipmentType/{shipmentType}";
             path = path.Replace("{format}", "json");
             path = path.Replace("{" + "shipmentType" + "}", ApiClient.ParameterToString(shipmentType));
     
@@ -187,7 +187,7 @@ path = path.Replace("{" + "processId" + "}", ApiClient.ParameterToString(process
             // verify the required parameter 'xVolTenant' is set
             if (xVolTenant == null) throw new ApiException(400, "Missing required parameter 'xVolTenant' when calling GetWorkflowProcessesUsingGET");
     
-            var path = "/processes/definitions";
+            var path = "/commerce/processes/definitions";
             path = path.Replace("{format}", "json");
                 
             var queryParams = new Dictionary<String, String>();

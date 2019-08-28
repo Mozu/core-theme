@@ -19,8 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
         void DeleteShipment(int? shipmentNumber);
         ResourceOfShipment Execute(Dictionary<string, object> request, int? shipmentNumber, string taskId);
         void FulfillShipment(int? shipmentNumber);
-        ResourceOfShipment GetShipment(int? shipmentNumber, string fields);
-        PagedResourcesOfResourceOfShipment GetShipments(string fields, string filter, bool? isLate, int? page,
+        ResourceOfShipment GetShipment(int? shipmentNumber);
+        PagedResourcesOfResourceOfShipment GetShipments(string filter, bool? isLate, int? page,
             string quicksearch, int size, string sort);
         ResourcesOfTask GetTasks(int? shipmentNumber);
         ResourceOfShipment NewShipment(Shipment request);
@@ -55,8 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
                 // So, go with the ShipmentsWebApi route and strip off the "shipments/" bit.
                 basePath = basePath.Substring(0, basePath.IndexOf("shipments"));
             }
-            _shipmentController = new ShipmentControllerApi(basePath);
-            
+            _shipmentController = new ShipmentControllerApi(basePath);            
         }
 
 
@@ -99,16 +98,16 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
                 _apiContext.SiteId);
         }
 
-        public ResourceOfShipment GetShipment(int? shipmentNumber, string fields)
+        public ResourceOfShipment GetShipment(int? shipmentNumber)
         {
-            return _shipmentController.GetShipmentUsingGET(shipmentNumber, _apiContext.TenantId, fields,
+            return _shipmentController.GetShipmentUsingGET(shipmentNumber, _apiContext.TenantId,
                 _apiContext.SiteId);
         }
 
-        public PagedResourcesOfResourceOfShipment GetShipments(string fields, string filter, bool? isLate, int? page,
+        public PagedResourcesOfResourceOfShipment GetShipments(string filter, bool? isLate, int? page,
             string quicksearch, int size, string sort)
         {
-            return _shipmentController.GetShipmentsUsingGET(_apiContext.TenantId, fields, filter, isLate,page,size,quicksearch,sort, _apiContext.SiteId);
+            return _shipmentController.GetShipmentsUsingGET(_apiContext.TenantId, filter, isLate,page,size,quicksearch,sort, _apiContext.SiteId);
         }
 
         public ResourcesOfTask GetTasks(int? shipmentNumber)

@@ -62,13 +62,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public decimal Cost { get; set; }
 
     /// <summary>
-    /// Gets or Sets CreateDate
-    /// </summary>
-    [DataMember(Name="createDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "createDate")]
-    public DateTime? CreateDate { get; set; }
-
-    /// <summary>
     /// Gets or Sets CurrencyCode
     /// </summary>
     [DataMember(Name="currencyCode", EmitDefaultValue=false)]
@@ -125,6 +118,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public decimal DutyTotal { get; set; }
 
     /// <summary>
+    /// Gets or Sets Email
+    /// </summary>
+    [DataMember(Name="email", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "email")]
+    public string Email { get; set; }
+
+    /// <summary>
     /// Gets or Sets ExternalShipmentId
     /// </summary>
     [DataMember(Name="externalShipmentId", EmitDefaultValue=false)]
@@ -137,6 +137,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="fulfillmentDate", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "fulfillmentDate")]
     public DateTime? FulfillmentDate { get; set; }
+
+    /// <summary>
+    /// Gets or Sets FulfillmentLocationCode
+    /// </summary>
+    [DataMember(Name="fulfillmentLocationCode", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "fulfillmentLocationCode")]
+    public string FulfillmentLocationCode { get; set; }
 
     /// <summary>
     /// Gets or Sets FulfillmentStatus
@@ -216,13 +223,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public decimal LineItemTotal { get; set; }
 
     /// <summary>
-    /// Gets or Sets LocationCode
-    /// </summary>
-    [DataMember(Name="locationCode", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "locationCode")]
-    public string LocationCode { get; set; }
-
-    /// <summary>
     /// Gets or Sets OrderId
     /// </summary>
     [DataMember(Name="orderId", EmitDefaultValue=false)]
@@ -291,13 +291,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="pickType", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "pickType")]
     public string PickType { get; set; }
-
-    /// <summary>
-    /// Gets or Sets ShipDate
-    /// </summary>
-    [DataMember(Name="shipDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "shipDate")]
-    public DateTime? ShipDate { get; set; }
 
     /// <summary>
     /// Gets or Sets ShipmentAdjustment
@@ -419,13 +412,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public List<string> TrackingNumbers { get; set; }
 
     /// <summary>
-    /// Gets or Sets UpdateDate
-    /// </summary>
-    [DataMember(Name="updateDate", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "updateDate")]
-    public DateTime? UpdateDate { get; set; }
-
-    /// <summary>
     /// Gets or Sets WorkflowState
     /// </summary>
     [DataMember(Name="workflowState", EmitDefaultValue=false)]
@@ -447,7 +433,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  ChangeMessages: ").Append(ChangeMessages).Append("\n");
       sb.Append("  ChildShipmentNumbers: ").Append(ChildShipmentNumbers).Append("\n");
       sb.Append("  Cost: ").Append(Cost).Append("\n");
-      sb.Append("  CreateDate: ").Append(CreateDate).Append("\n");
       sb.Append("  CurrencyCode: ").Append(CurrencyCode).Append("\n");
       sb.Append("  CustomerAccountId: ").Append(CustomerAccountId).Append("\n");
       sb.Append("  CustomerAddressId: ").Append(CustomerAddressId).Append("\n");
@@ -456,8 +441,10 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  DestinationContact: ").Append(DestinationContact).Append("\n");
       sb.Append("  DutyAdjustment: ").Append(DutyAdjustment).Append("\n");
       sb.Append("  DutyTotal: ").Append(DutyTotal).Append("\n");
+      sb.Append("  Email: ").Append(Email).Append("\n");
       sb.Append("  ExternalShipmentId: ").Append(ExternalShipmentId).Append("\n");
       sb.Append("  FulfillmentDate: ").Append(FulfillmentDate).Append("\n");
+      sb.Append("  FulfillmentLocationCode: ").Append(FulfillmentLocationCode).Append("\n");
       sb.Append("  FulfillmentStatus: ").Append(FulfillmentStatus).Append("\n");
       sb.Append("  HandlingAdjustment: ").Append(HandlingAdjustment).Append("\n");
       sb.Append("  HandlingSubtotal: ").Append(HandlingSubtotal).Append("\n");
@@ -469,7 +456,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  LineItemTaxAdjustment: ").Append(LineItemTaxAdjustment).Append("\n");
       sb.Append("  LineItemTaxTotal: ").Append(LineItemTaxTotal).Append("\n");
       sb.Append("  LineItemTotal: ").Append(LineItemTotal).Append("\n");
-      sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
       sb.Append("  OrderId: ").Append(OrderId).Append("\n");
       sb.Append("  OrderNumber: ").Append(OrderNumber).Append("\n");
       sb.Append("  OrderSubmitDate: ").Append(OrderSubmitDate).Append("\n");
@@ -480,7 +466,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  ParentShipmentNumber: ").Append(ParentShipmentNumber).Append("\n");
       sb.Append("  PickStatus: ").Append(PickStatus).Append("\n");
       sb.Append("  PickType: ").Append(PickType).Append("\n");
-      sb.Append("  ShipDate: ").Append(ShipDate).Append("\n");
       sb.Append("  ShipmentAdjustment: ").Append(ShipmentAdjustment).Append("\n");
       sb.Append("  ShipmentNumber: ").Append(ShipmentNumber).Append("\n");
       sb.Append("  ShipmentStatus: ").Append(ShipmentStatus).Append("\n");
@@ -498,7 +483,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  TenantId: ").Append(TenantId).Append("\n");
       sb.Append("  Total: ").Append(Total).Append("\n");
       sb.Append("  TrackingNumbers: ").Append(TrackingNumbers).Append("\n");
-      sb.Append("  UpdateDate: ").Append(UpdateDate).Append("\n");
       sb.Append("  WorkflowState: ").Append(WorkflowState).Append("\n");
       sb.Append("}\n");
       return sb.ToString();

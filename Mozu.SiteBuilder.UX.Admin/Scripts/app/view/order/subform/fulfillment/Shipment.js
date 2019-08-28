@@ -176,7 +176,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             }
         };
         if (locationCode)
-            payloadData.reassignShipment.locationCode = locationCode;
+            payloadData.reassignShipment.fulfillmentLocationCode = locationCode;
 
         this.record.reassignShipment({
             jsonData: payloadData,
@@ -359,7 +359,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             items: []            
         }
 
-        if (model && shipment.locationCode) {
+        if (model && shipment.fulfillmentLocationCode) {
             model.exclusionListLocationCode = [];
         }
         shipment.items.forEach(function (element) {
@@ -368,9 +368,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 quantity: element.quantity
             });
 
-            if (model && shipment.locationCode) {
+            if (model && shipment.fulfillmentLocationCode) {
                 model.exclusionListLocationCode = [{
-                    locationCode: shipment.locationCode,
+                    locationCode: shipment.fulfillmentLocationCode,
                     orderItemID: element.lineId
                 }];
             }
@@ -504,7 +504,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 });
             }
             else {
-                me.shipmentAutoReassign(me.shipmentRecord.locationCode);
+                me.shipmentAutoReassign(me.shipmentRecord.fulfillmentLocationCode);
             }
         }
     },

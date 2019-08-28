@@ -34,11 +34,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public List<PickWaveContent> Contents { get; set; }
 
     /// <summary>
-    /// Gets or Sets LocationCode
+    /// Gets or Sets FulfillmentLocationCode
     /// </summary>
-    [DataMember(Name="locationCode", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "locationCode")]
-    public string LocationCode { get; set; }
+    [DataMember(Name="fulfillmentLocationCode", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "fulfillmentLocationCode")]
+    public string FulfillmentLocationCode { get; set; }
 
     /// <summary>
     /// Gets or Sets MaxShipments
@@ -81,6 +81,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="pickWaveStatus", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "pickWaveStatus")]
     public string PickWaveStatus { get; set; }
+
+    /// <summary>
+    /// Gets or Sets RecoveryPickWaveNumber
+    /// </summary>
+    [DataMember(Name="recoveryPickWaveNumber", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "recoveryPickWaveNumber")]
+    public int? RecoveryPickWaveNumber { get; set; }
 
     /// <summary>
     /// Gets or Sets ShipmentNumbers
@@ -128,13 +135,14 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  Contents: ").Append(Contents).Append("\n");
-      sb.Append("  LocationCode: ").Append(LocationCode).Append("\n");
+      sb.Append("  FulfillmentLocationCode: ").Append(FulfillmentLocationCode).Append("\n");
       sb.Append("  MaxShipments: ").Append(MaxShipments).Append("\n");
       sb.Append("  ParentPickWaveNumber: ").Append(ParentPickWaveNumber).Append("\n");
       sb.Append("  PickType: ").Append(PickType).Append("\n");
       sb.Append("  PickWaveId: ").Append(PickWaveId).Append("\n");
       sb.Append("  PickWaveNumber: ").Append(PickWaveNumber).Append("\n");
       sb.Append("  PickWaveStatus: ").Append(PickWaveStatus).Append("\n");
+      sb.Append("  RecoveryPickWaveNumber: ").Append(RecoveryPickWaveNumber).Append("\n");
       sb.Append("  ShipmentNumbers: ").Append(ShipmentNumbers).Append("\n");
       sb.Append("  ShipmentType: ").Append(ShipmentType).Append("\n");
       sb.Append("  SiteId: ").Append(SiteId).Append("\n");

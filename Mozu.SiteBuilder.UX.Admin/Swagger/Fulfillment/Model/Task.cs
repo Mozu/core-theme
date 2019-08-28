@@ -41,6 +41,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public bool? Completed { get; set; }
 
     /// <summary>
+    /// Gets or Sets CompletedDate
+    /// </summary>
+    [DataMember(Name="completedDate", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "completedDate")]
+    public DateTime? CompletedDate { get; set; }
+
+    /// <summary>
     /// Gets or Sets Description
     /// </summary>
     [DataMember(Name="description", EmitDefaultValue=false)]
@@ -94,6 +101,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  Active: ").Append(Active).Append("\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  Completed: ").Append(Completed).Append("\n");
+      sb.Append("  CompletedDate: ").Append(CompletedDate).Append("\n");
       sb.Append("  Description: ").Append(Description).Append("\n");
       sb.Append("  Inputs: ").Append(Inputs).Append("\n");
       sb.Append("  Name: ").Append(Name).Append("\n");

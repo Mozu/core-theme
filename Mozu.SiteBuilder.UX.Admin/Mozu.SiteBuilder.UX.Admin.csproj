@@ -628,6 +628,7 @@
     <Compile Include="Swagger\Fulfillment\Model\PagedResourcesOfResourceOfShipment.cs" />
     <Compile Include="Swagger\Fulfillment\Model\PageMetadata.cs" />
     <Compile Include="Swagger\Fulfillment\Model\Phone.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ProductOption.cs" />
     <Compile Include="Swagger\Fulfillment\Model\ReassignItem.cs" />
     <Compile Include="Swagger\Fulfillment\Model\ReassignShipment.cs" />
     <Compile Include="Swagger\Fulfillment\Model\RejectShipment.cs" />

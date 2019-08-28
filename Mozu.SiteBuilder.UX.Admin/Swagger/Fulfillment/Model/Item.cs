@@ -41,13 +41,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public DateTime? BackorderReleaseDate { get; set; }
 
     /// <summary>
-    /// Gets or Sets Color
-    /// </summary>
-    [DataMember(Name="color", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "color")]
-    public string Color { get; set; }
-
-    /// <summary>
     /// Gets or Sets Data
     /// </summary>
     [DataMember(Name="data", EmitDefaultValue=false)]
@@ -67,13 +60,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="fulfillmentItemType", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "fulfillmentItemType")]
     public string FulfillmentItemType { get; set; }
-
-    /// <summary>
-    /// Gets or Sets FulfillmentLocationCode
-    /// </summary>
-    [DataMember(Name="fulfillmentLocationCode", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "fulfillmentLocationCode")]
-    public string FulfillmentLocationCode { get; set; }
 
     /// <summary>
     /// Gets or Sets Handling
@@ -153,6 +139,13 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public string OptionAttributeFQN { get; set; }
 
     /// <summary>
+    /// Gets or Sets Options
+    /// </summary>
+    [DataMember(Name="options", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "options")]
+    public List<ProductOption> Options { get; set; }
+
+    /// <summary>
     /// Gets or Sets OriginalOrderItemId
     /// </summary>
     [DataMember(Name="originalOrderItemId", EmitDefaultValue=false)]
@@ -207,13 +200,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
     [DataMember(Name="shippingTax", EmitDefaultValue=false)]
     [JsonProperty(PropertyName = "shippingTax")]
     public decimal ShippingTax { get; set; }
-
-    /// <summary>
-    /// Gets or Sets Size
-    /// </summary>
-    [DataMember(Name="size", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "size")]
-    public string Size { get; set; }
 
     /// <summary>
     /// Gets or Sets Sku
@@ -276,11 +262,9 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
       sb.Append("  AuditInfo: ").Append(AuditInfo).Append("\n");
       sb.Append("  BackorderReleaseDate: ").Append(BackorderReleaseDate).Append("\n");
-      sb.Append("  Color: ").Append(Color).Append("\n");
       sb.Append("  Data: ").Append(Data).Append("\n");
       sb.Append("  Duty: ").Append(Duty).Append("\n");
       sb.Append("  FulfillmentItemType: ").Append(FulfillmentItemType).Append("\n");
-      sb.Append("  FulfillmentLocationCode: ").Append(FulfillmentLocationCode).Append("\n");
       sb.Append("  Handling: ").Append(Handling).Append("\n");
       sb.Append("  HandlingDiscount: ").Append(HandlingDiscount).Append("\n");
       sb.Append("  HandlingTax: ").Append(HandlingTax).Append("\n");
@@ -292,6 +276,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  LineItemCost: ").Append(LineItemCost).Append("\n");
       sb.Append("  Name: ").Append(Name).Append("\n");
       sb.Append("  OptionAttributeFQN: ").Append(OptionAttributeFQN).Append("\n");
+      sb.Append("  Options: ").Append(Options).Append("\n");
       sb.Append("  OriginalOrderItemId: ").Append(OriginalOrderItemId).Append("\n");
       sb.Append("  ParentId: ").Append(ParentId).Append("\n");
       sb.Append("  PartNumber: ").Append(PartNumber).Append("\n");
@@ -300,7 +285,6 @@ namespace Mozu.Fulfillment.Contracts.Model {
       sb.Append("  Shipping: ").Append(Shipping).Append("\n");
       sb.Append("  ShippingDiscount: ").Append(ShippingDiscount).Append("\n");
       sb.Append("  ShippingTax: ").Append(ShippingTax).Append("\n");
-      sb.Append("  Size: ").Append(Size).Append("\n");
       sb.Append("  Sku: ").Append(Sku).Append("\n");
       sb.Append("  TaxData: ").Append(TaxData).Append("\n");
       sb.Append("  UnitPrice: ").Append(UnitPrice).Append("\n");

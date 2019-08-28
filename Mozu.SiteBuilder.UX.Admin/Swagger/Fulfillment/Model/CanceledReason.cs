@@ -20,11 +20,11 @@ namespace Mozu.Fulfillment.Contracts.Model {
     public Dictionary<string, Object> Attributes { get; set; }
 
     /// <summary>
-    /// Gets or Sets Description
+    /// Gets or Sets MoreInfo
     /// </summary>
-    [DataMember(Name="description", EmitDefaultValue=false)]
-    [JsonProperty(PropertyName = "description")]
-    public string Description { get; set; }
+    [DataMember(Name="moreInfo", EmitDefaultValue=false)]
+    [JsonProperty(PropertyName = "moreInfo")]
+    public string MoreInfo { get; set; }
 
     /// <summary>
     /// Gets or Sets ReasonCode
@@ -42,7 +42,7 @@ namespace Mozu.Fulfillment.Contracts.Model {
       var sb = new StringBuilder();
       sb.Append("class CanceledReason {\n");
       sb.Append("  Attributes: ").Append(Attributes).Append("\n");
-      sb.Append("  Description: ").Append(Description).Append("\n");
+      sb.Append("  MoreInfo: ").Append(MoreInfo).Append("\n");
       sb.Append("  ReasonCode: ").Append(ReasonCode).Append("\n");
       sb.Append("}\n");
       return sb.ToString();
