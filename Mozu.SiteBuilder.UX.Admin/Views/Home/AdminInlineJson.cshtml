@@ -25,7 +25,7 @@
 
         List<string> roleTags = new List<string>();
 
-        siteRolesJson.ForEach(x => roleTags.Concat(x.RoleTags));
+        siteRolesJson.ForEach(x => roleTags.AddRange(x.RoleTags));
 
         object taContext = ViewData["taContext"];
         object siteUsers = ViewData["siteUsers"];
