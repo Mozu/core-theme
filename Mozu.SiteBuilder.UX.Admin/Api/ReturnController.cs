@@ -54,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly ILocationGroupConfigurationWebApiClient _locationGroupWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
-
+        private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
 
         /// <summary>
         /// Public constructor.
@@ -65,7 +65,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICARSApiWrapper CARSApiWrapper,
             ILocationAdminWebApiClient locationWebApiClient,
             ILocationGroupConfigurationWebApiClient locationGroupWebApiClient,
-            IReturnSettingsWebApiClient returnSettingsWebApiClient)
+            IReturnSettingsWebApiClient returnSettingsWebApiClient,
+            ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient)
         {
             _orderWebApiClient = orderWebApiClient;
             _returnWebApiClient = returnWebApiClient;
@@ -76,6 +77,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _locationWebApiClient = locationWebApiClient;
             _locationGroupWebApiClient = locationGroupWebApiClient;
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
+            _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
         }
 
         /// <summary>
@@ -137,6 +139,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var currentReturnSettings = (await returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
             rma.DefaultProcessingFee = currentReturnSettings.DefaultProcessingFee;
+
 
             return rma;
         }
@@ -228,7 +231,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
-                return await GetSingleReturn(pagingParams.id);
+                bool orderPayments = false;
+                if (extFilter.OrderPaymentsByCatputre)
+                {
+                    orderPayments = true;
+                }
+
+                return await GetSingleReturn(pagingParams.id, orderPayments);
             }
 
             var startIndex = pagingParams?.startIndex;
@@ -245,18 +254,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returns = await MultiMapFromContract(dcReturns.Items);
 
+            if (extFilter.OrderPaymentsByCatputre)
+            {
+                var returnHelper = new ReturnHelper(_checkoutSettingsWebApiClient);
+                var rmas = (await returnHelper.OrderPaymentsByCapture(returns));
+                return List2<Return>(rmas);
+            }
+
             return List2(returns, dcReturns.TotalCount);
         }
 
-        private async Task<Response<List<Return>>> GetSingleReturn(string returnId)
+        private async Task<Response<List<Return>>> GetSingleReturn(string returnId, bool orderPayments = false)
         {
             var dcReturn = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
 
             if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-           
+          
 
             var sbReturn = await SingleMapFromContract(dcReturn);
+
+            if (orderPayments)
+            {
+                var returnHelper = new ReturnHelper(_checkoutSettingsWebApiClient);
+                var rmas = (await returnHelper.OrderPaymentsByCapture(new List<Return>() { sbReturn }));
+                return List2<Return>(rmas);
+            }
 
             return List2(sbReturn);
         }
