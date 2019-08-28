@@ -111,13 +111,13 @@
       "title": "Order Confirmation"
     },
     {
-      "id": "pickup.ready",
+      "id": "shipment.pickupready",
       "properties": {},
       "template": "email/order-pickup-ready",
       "title": "Order Pickup Ready"
     },
     {
-      "id": "pickup.reminder",
+      "id": "shipment.pickupreminder",
       "properties": {},
       "template": "email/order-pickup-reminder",
       "title": "Order Pickup Reminder"
@@ -159,7 +159,7 @@
       "title": "Return Has Been Updated"
     },
     {
-      "id": "shipment.shipped",
+      "id": "shipment.fulfilled",
       "properties": {},
       "template": "email/shipment-confirmation",
       "title": "Your Shipment Has Shipped"
@@ -177,13 +177,13 @@
       "title": "Password Reset"
     },
     {
-      "id": "backorder",
+      "id": "shipment.backordered",
       "properties": {},
       "template": "email/backorder",
       "title": "Backorder"
     },
     {
-      "id": "backorder.update",
+      "id": "shipment.backorderupdate",
       "properties": {},
       "template": "email/backorder-update",
       "title": "Backorder Update"
