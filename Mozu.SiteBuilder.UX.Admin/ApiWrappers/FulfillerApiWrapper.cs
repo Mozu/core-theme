@@ -53,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
                 // However, the specs are effectively rooted at ${mozu:domains:tp}/kibo.fulfillment.webapi/commerce
                 // which is covered by none of the config values.
                 // So, go with the ShipmentsWebApi route and strip off the "shipments/" bit.
-                basePath = basePath.Substring(0, basePath.IndexOf("shipments"));
+                basePath = basePath.Substring(0, basePath.IndexOf("commerce/shipments"));
             }
             _shipmentController = new ShipmentControllerApi(basePath);            
         }

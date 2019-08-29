@@ -20,7 +20,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var me = this;
 
         var lastUpdated = this.shipmentRecord.fulfillmentDate ? Ext.Date.format(new Date(this.shipmentRecord.fulfillmentDate), 'm/d/y H:i:s') :
-            (this.shipmentRecord.auditInfo && this.shipmentRecord.auditInfo.updateDate ? Ext.Date.format(new Date(this.shipmentRecord.auditInfo.updateDate), 'm/d/y H:i:s') : '');
+            (this.shipmentRecord.workflowState && this.shipmentRecord.workflowState.auditInfo ? Ext.Date.format(new Date(this.shipmentRecord.workflowState.auditInfo.updateDate), 'm/d/y H:i:s') : '');
+
         var shipmentTypeDescription = "";
         if (this.shipmentRecord.shipmentType) {
             if (this.shipmentRecord.shipmentType == "STH")
@@ -44,52 +45,62 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             items:
                 [
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Type</span>',
                             '<div class="labelvalue">' + shipmentTypeDescription + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Shipment</span>',
                             '<div class="labelvalue">' + this.shipmentRecord.number + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Last Updated</span>',
                             '<div class="labelvalue">' + lastUpdated + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Status</span>',
                             '<div class="statusdiv x-column-content-pill x-column-content-pill-false">' + Taco.core.util.Common.camelToSpace(this.shipmentRecord.shipmentStatus) + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Shipment Step Id</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.taskId : '') + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Fulfillment Step</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.name : '') + '</div>'
                         ]
                     },
                     {
-                        padding: '0 50 0 0',
+                        padding: '0 40 0 0',
                         tpl: [
                             '<span class="label">Total</span>',
                             '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
+                        ]
+                    },
+                    {
+                        padding: '0 40 0 0',
+                        hidden: this.shipmentRecord.shipmentStatus.toLowerCase() != 'backorder',
+                        tpl: [
+                            '<span class="label">Backorder Available Date</span>',
+                            '<div class="labelvalue">' + (this.shipmentRecord.items[0] && this.shipmentRecord.items[0].backorderReleaseDate ?
+                                Ext.Date.format(new Date(this.shipmentRecord.items[0].backorderReleaseDate), 'm/d/y')
+                                : '') + '</div>'
                         ]
                     },
                     {
