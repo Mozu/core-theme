@@ -9,7 +9,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Pick List #</span><span>{{ model.pickWaveId }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.shipDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
