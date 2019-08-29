@@ -161,11 +161,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (Shipment),
                                                Topic = Topics.OrderPickupReminder
                                            },
-                                       new EmailTypeInfo
+                                       /*new EmailTypeInfo
                                            {
                                                ModelType = typeof (Shipment),
                                                Topic = Topics.ShipmentItemBackordered
-                                           },
+                                           },*/
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Shipment),
@@ -514,11 +514,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string GiftCardCreated = "giftcard.created";
             public const string OrderCancellation = "order.cancelled";
             public const string Backorder = "shipment.backordered";
-            public const string BackorderUpdate = "shipment.backorderupdate";
+            public const string BackorderUpdate = "shipment.backorderdatechanged";
             public const string ShipmentConfirmation = "shipment.fulfilled";
             public const string OrderPickupReady = "shipment.pickupready";
             public const string OrderPickupReminder = "shipment.pickupreminder";
-            public const string ShipmentItemBackordered = "shipment.itemBackordered";
+          //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
         }
 
