@@ -183,7 +183,7 @@
       "title": "Backorder"
     },
     {
-      "id": "shipment.backorderupdate",
+      "id": "shipment.backorderdatechanged",
       "properties": {},
       "template": "email/backorder-update",
       "title": "Backorder Update"
