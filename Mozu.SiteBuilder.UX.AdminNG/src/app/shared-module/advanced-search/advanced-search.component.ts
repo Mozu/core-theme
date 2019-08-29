@@ -18,7 +18,8 @@ export class AdvancedSearchComponent implements OnInit {
   public model: AdvancedFilterModel;
   public quoteFilter: QuoteFilter;
   today = this.calendar.getToday();
-  placement = 'top';
+  // placement = 'top';
+  
 
   constructor(private _notificationService: NotificationService,
     private calendar: NgbCalendar) { }

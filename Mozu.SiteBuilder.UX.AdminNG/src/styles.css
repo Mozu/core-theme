@@ -1028,5 +1028,41 @@ ngb-datepicker.dropdown-menu {
     visibility: visible !important;
 }
 
+.ngb-dp-weekday {
+    background: #f2f2f2;
+    border-bottom: 0 !important;
+    color: #5e6263 !important;
+}
+
+.ngb-dp-weekdays{
+    border-width: 0 !important;
+}
+
+.ngb-dp-arrow-btn{
+    background-color: #6f6f6f !important;
+}
+
+.ngb-dp-navigation-chevron{
+    color: #fff;
+}
+
+.ngb-dp-day{
+    border-width: 0 0.5px 0.5px 0 !important;
+}
+
+.ngb-dp-day:first-child{
+    border-left: 1px solid #e6e6e6 !important;
+}
+
+.ngb-dp-navigation-chevron {
+    border-width: .15em .15em 0 0 !important;
+    width: .5em !important;
+    height: .5em !important;
+}
+
+.modal-backdrop.in{
+    opacity: 0 !important;
+}
+
 
 /* --------------Calendar CSS - End------------- */

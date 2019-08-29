@@ -11,8 +11,8 @@
 </div>
 
 <div class="col-md-1 col-md-1">
-    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="false" (click)="setAdvancedFilterValue(searchBar.value)"></span>
-    <div class="modal-parent">
+    <span class="advance-filter" data-toggle="modal" data-target=".advanced-filter" type="button" data-backdrop="true" (click)="setAdvancedFilterValue(searchBar.value)"></span>
+    <!-- <div class="modal-parent"> -->
         <div class="modal advanced-filter" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -72,7 +72,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 <ng-template #expirationDateFromFooter>
