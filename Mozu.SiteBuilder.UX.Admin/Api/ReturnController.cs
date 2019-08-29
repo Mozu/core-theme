@@ -707,7 +707,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     carrierType = "USPS";
                     break;
             }
-            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod?.ToUpper();
+            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod.Split(new[] { '_' }, 2)[1]?.ToUpper();
             return serviceType;
         }
 
@@ -730,7 +730,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public void SetMeasurements(CARSModel.GenerateLabelRequest request, CommerceRuntime.Contracts.Orders.Order order, DCr.Return returns)
         {
-            //var measument = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
+            //var measurement = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
             var measurement = order.Items.FirstOrDefault()?.Product.Measurements;
             if (measurement == null)
             {
