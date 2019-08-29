@@ -959,6 +959,10 @@ quote .form-horizontal .input-group .form-control {
 
 /* --------------Calendar CSS - Start------------- */
 
+ngb-datepicker{
+    z-index: 1000000 !important;
+}
+
 ngb-datepicker.dropdown-menu {
     padding: 5px 15px !important;
 }
