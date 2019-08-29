@@ -516,10 +516,13 @@
         var item = grid.getSelectionModel().getSelection();
 
         var model = {
-            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',
-            locationBlacklist: [me.shipmentRecord.location.code ],
+            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',            
             items: []
         }
+
+        if (me.shipmentRecord.location)
+            model.locationBlacklist = [me.shipmentRecord.location.code];
+
 
         if (model && me.shipmentRecord.shipmentType == "BOPIS") {
             model.pickup = true;

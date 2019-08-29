@@ -171,7 +171,7 @@
             pageSize: 5,
             proxy: {
                 type: 'ajaxproxy',
-                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType +'&pickupCode='+ me.shipmentRecord.location.code,
+                url: '/admin/app/location/list?shipmentType=' + me.shipmentRecord.shipmentType + '&pickupCode=' + (me.shipmentRecord.location ? me.shipmentRecord.location.code : ''),
                 reader: {
                     type: 'json',
                     root: 'items',
@@ -329,7 +329,7 @@
     filteredInventoryLocations: function (inventoryLocations) {
         var me = this;
         for (i = 0; i < inventoryLocations.length; i++) {
-            if (inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
+            if (me.shipmentRecord.location && inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
                 inventoryLocations.splice(i, 1);
             }
         }

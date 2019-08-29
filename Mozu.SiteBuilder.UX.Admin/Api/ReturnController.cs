@@ -677,10 +677,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             request.LocationCode = returns.LocationCode;
             request.OrderID = order.OrderNumber?.ToString();
 
-            request.Carrier = configuration.DefaultCarrier;
+            request.Carrier = configuration.DefaultCarrier?.ToUpper();
             request.PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper());
             request.ServiceType = SetServiceType(configuration);
-            request.LabelFormat = configuration.DefaultPrinterType;
+            request.LabelFormat = configuration.DefaultPrinterType?.ToUpper();
             request.UnitType = "IMPERIAL";
             request.ShipmentID = returns.Id;
             request.ValidateAddress = true;
@@ -697,17 +697,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var carrierType = string.Empty;
             switch (carrier.DefaultCarrier.ToUpper())
             {
-                #region old code
-                //case "FEDEX":
-                //    serviceType = carrier.ShippingSettingsForFedEx.ReturnLabelShippingMethod;
-                //    break;
-                //case "UPS":
-                //    serviceType = carrier.ShippingSettingsForUps?.UnitedStatesUpsSettings?.ReturnLabelShippingMethod;
-                //    break;
-                //case "USPS":
-                //    serviceType = carrier.ShippingSettingsForUsps?.ReturnLabelShippingMethod;
-                //    break;
-                #endregion
                 case "FEDEX":
                     carrierType = "FEDEX";                    
                     break;
@@ -718,7 +707,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     carrierType = "USPS";
                     break;
             }
-            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod;
+            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod?.ToUpper();
             return serviceType;
         }
 
@@ -741,15 +730,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         public void SetMeasurements(CARSModel.GenerateLabelRequest request, CommerceRuntime.Contracts.Orders.Order order, DCr.Return returns)
         {
-            var measument = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
-            if (measument == null)
+            //var measument = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
+            var measurement = order.Items.FirstOrDefault()?.Product.Measurements;
+            if (measurement == null)
             {
                 throw new VaeValidationConflictException($"Measurements can not be null.");
             }
-            request.PackageHeight = measument.Height.Value ?? 0;
-            request.PackageWidth = measument.Width.Value ?? 0;
-            request.PackageLength = measument.Length.Value ?? 0;
-            request.PackageWeight = measument.Weight.Value ?? 0;
+            request.PackageHeight = measurement.Height.Value ?? 0;
+            request.PackageWidth = measurement.Width.Value ?? 0;
+            request.PackageLength = measurement.Length.Value ?? 0;
+            request.PackageWeight = measurement.Weight.Value ?? 0;
             request.Price = returns.Items.Sum(a => a.Product?.Price?.Price ?? 0);
         }
     }

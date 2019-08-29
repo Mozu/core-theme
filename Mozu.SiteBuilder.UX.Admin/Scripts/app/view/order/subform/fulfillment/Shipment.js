@@ -385,9 +385,11 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var model = {
             type: 'ALL',
             pickup: true,
-            items: [],
-            locationBlacklist: [me.shipmentRecord.location.code],
+            items: []
         }
+
+        if (me.shipmentRecord.location)
+            model.locationBlacklist = [me.shipmentRecord.location.code];
 
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {

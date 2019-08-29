@@ -31,9 +31,9 @@ namespace Mozu.SiteBuilder.UX.Admin.ApiWrappers
             _apiContext = apiContext;
             _settings = settings;
             var basePath = settings.Services.First(x => x.Name == "CARS").BaseUrl;
-           // basePath = "http://services-tp-dev01.kubedev.kibo-dev.com/carrier-service";
+           // basePath = "http://services-tp.dev01.kubedev.kibo-dev.com/kibo.cars.webapi/commerce/shipping/carrierService";
             _generateLabelController = new GenerateLabelControllerApi(basePath);
-            _generateLabelController.ApiClient.DefaultHeader["x-vol-tenant"] = "1";// _apiContext.TenantId.ToString();
+            _generateLabelController.ApiClient.DefaultHeader["x-vol-tenant"] = _apiContext.TenantId.ToString();
             _carrierControllerApi = new CarrierControllerApi(basePath);
         }
 
