@@ -24,7 +24,6 @@ fdescribe('AdvancedSearchComponent', () => {
     let element: HTMLElement;
     let inputElement: HTMLInputElement;
     let notificationService: NotificationService;
-    let pipe: DateTypecastPipe;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -44,7 +43,6 @@ fdescribe('AdvancedSearchComponent', () => {
         })
             .compileComponents();
         notificationService = TestBed.get(NotificationService);
-        pipe = new DateTypecastPipe();
     }));
     beforeEach(() => {
         fixture = TestBed.createComponent(AdvancedSearchComponent);
@@ -254,13 +252,47 @@ fdescribe('AdvancedSearchComponent', () => {
         });
     }));
 
-    // fit('should call setDateValueToModel() to bind exiration date in valid date format', () => {
-    //     fixture.detectChanges();
-    //     const keyField = 'to';
-    //     const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
-    //     component.setDateValueToModel(event, keyField);
-    //     component.quoteFilter.setSearchBarExpirationFrom = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-    //     expect(component.quoteFilter.getSearchBarExpirationFrom).toEqual(('expirationFrom:2019-08-08T12:00:00+05:30'));
-    // });
+    it('should call fieldValidations() for validation like to-date should be greater than from-date', () => {
+        fixture.detectChanges();
+        const expirationTo = '2019-08-08T12:00:00+05:30';
+        const expirationFrom = '2019-08-08T12:00:00+05:30';
+        component.fieldValidations();
+        if (new Date(expirationTo) < new Date(expirationFrom)) {
+            component.model.isExpirationToValid = true;
+          } else {
+            component.model.isExpirationToValid = false;
+          }
+          expect(component.model.isExpirationToValid).toBeFalsy();
+    });
 
+    it('should call fieldValidations() for validation like to-date is not greater than from-date', () => {
+        fixture.detectChanges();
+        const expirationTo = '2019-07-08T12:00:00+05:30';
+        const expirationFrom = '2019-08-08T12:00:00+05:30';
+        component.fieldValidations();
+        if (new Date(expirationTo) < new Date(expirationFrom)) {
+            component.model.isExpirationToValid = true;
+          } else {
+            component.model.isExpirationToValid = false;
+          }
+          expect(component.model.isExpirationToValid).toBeTruthy();
+    });
+
+    it('should call setDateValueToModel() to bind exirationDateFrom in valid date format', () => {
+        fixture.detectChanges();
+        const keyField = 'from';
+        const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
+        component.setDateValueToModel(event, keyField);
+        component.quoteFilter.setSearchBarExpirationFrom = new DatePipe('en-US').transform(event, Constants.advSearchDateFormat);
+        expect(component.quoteFilter.getSearchBarExpirationFrom).toEqual(('expirationFrom:2019-08-08T12:00:00+05:30 '));
+    });
+
+    it('should call setDateValueToModel() to bind exirationDateTo in valid date format', () => {
+        fixture.detectChanges();
+        const keyField = 'to';
+        const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
+        component.setDateValueToModel(event, keyField);
+        component.quoteFilter.setSearchBarExpirationTo = new DatePipe('en-US').transform(event, Constants.advSearchDateFormat);
+        expect(component.quoteFilter.getSearchBarExpirationTo).toEqual(('expirationTo:2019-08-08T12:00:00+05:30 '));
+    });
 });
