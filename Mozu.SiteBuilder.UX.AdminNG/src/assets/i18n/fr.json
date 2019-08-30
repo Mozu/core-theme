@@ -199,6 +199,9 @@
             "of": "of",
             "NoDataDisplayMessage": "No data to display"
         },
+        "GridMessages": {
+            "emptyMessage": "No Data Available"
+        },
         "Quote": {
             "Information": {
                 "heading": "Quote",
@@ -232,9 +235,6 @@
                     "configure": "Configure",
                     "updatePrices": "Update Prices",
                     "recalculateQuote": "Recalculate Quote"
-                },
-                "GridMessages": {
-                    "emptyMessage": "No Data Available"
                 }
             },
             "Negotiation": {
