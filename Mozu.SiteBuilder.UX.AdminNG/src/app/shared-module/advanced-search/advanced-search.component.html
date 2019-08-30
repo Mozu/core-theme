@@ -62,7 +62,7 @@
                                             <i class="fa fa-calendar" (click)="expirationTo.toggle()"></i>
                                         </span>
                                 </div>
-                                <div class="error" *ngIf="model.isExpirationToValid">The to-date can not be before from-date</div>
+                                <div class="error" *ngIf="model.isExpirationToValid">{{'SHARED.FILTER.FormsErrorMessages.toDateValid' | translate}}</div>
                             </div>
                         </div>
                     </div>
@@ -78,11 +78,11 @@
 
 <ng-template #expirationFromFooter>
     <div class="datepicker-footer">
-        <a (click)="quoteFilter.expirationFrom = model.today; expirationFrom.close()" title="{{today }}">{{'SHARED.FILTER.today' | translate}}</a>
+        <a (click)="quoteFilter.expirationFrom = model.today; expirationFrom.close()" title="{{model.today}}">{{'SHARED.FILTER.today' | translate}}</a>
     </div>
 </ng-template>
 <ng-template #expirationToFooter>
     <div class="datepicker-footer">
-        <a (click)="quoteFilter.expirationTo = model.today; expirationTo.close()" title="{{today}}">{{'SHARED.FILTER.today' | translate}}</a>
+        <a (click)="quoteFilter.expirationTo = model.today; expirationTo.close()" title="{{model.today}}">{{'SHARED.FILTER.today' | translate}}</a>
     </div>
 </ng-template>

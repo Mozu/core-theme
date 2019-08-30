@@ -959,7 +959,7 @@ quote .form-horizontal .input-group .form-control {
 
 /* --------------Calendar CSS - Start------------- */
 
-ngb-datepicker{
+ngb-datepicker {
     z-index: 1000000 !important;
 }
 
@@ -1038,23 +1038,23 @@ ngb-datepicker.dropdown-menu {
     color: #5e6263 !important;
 }
 
-.ngb-dp-weekdays{
+.ngb-dp-weekdays {
     border-width: 0 !important;
 }
 
-.ngb-dp-arrow-btn{
+.ngb-dp-arrow-btn {
     background-color: #6f6f6f !important;
 }
 
-.ngb-dp-navigation-chevron{
+.ngb-dp-navigation-chevron {
     color: #fff;
 }
 
-.ngb-dp-day{
+.ngb-dp-day {
     border-width: 0 0.5px 0.5px 0 !important;
 }
 
-.ngb-dp-day:first-child{
+.ngb-dp-day:first-child {
     border-left: 1px solid #e6e6e6 !important;
 }
 
@@ -1064,8 +1064,16 @@ ngb-datepicker.dropdown-menu {
     height: .5em !important;
 }
 
-.modal-backdrop.in{
+.modal-backdrop.in {
     opacity: 0 !important;
+}
+
+.bg-primary {
+    color: #fff !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    background-color: #2ea195 !important;
 }
 
 

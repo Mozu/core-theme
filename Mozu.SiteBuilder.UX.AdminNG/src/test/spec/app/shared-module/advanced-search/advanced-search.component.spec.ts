@@ -11,7 +11,7 @@ import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
 import { SharedDataService, NotificationService } from '@global';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
-import { NavigationContainerType } from '@shared/infrastructure';
+import { NavigationContainerType, Constants } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from '@shared/advanced-search';
 import { DateTypecastPipe } from '@shared';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -233,4 +233,34 @@ fdescribe('AdvancedSearchComponent', () => {
             expect(inputElement.value).toEqual('Pankaj');
         });
     }));
+    it(`should have input field 'Expiration Date From'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('input[name=expirationFrom]')).nativeElement;
+        inputElement.value = '27-08-2019';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('27-08-2019');
+        });
+    }));
+    it(`should have input field 'Expiration Date To'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('input[name=expirationTo]')).nativeElement;
+        inputElement.value = '30-08-2019';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('30-08-2019');
+        });
+    }));
+
+    // fit('should call setDateValueToModel() to bind exiration date in valid date format', () => {
+    //     fixture.detectChanges();
+    //     const keyField = 'to';
+    //     const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
+    //     component.setDateValueToModel(event, keyField);
+    //     component.quoteFilter.setSearchBarExpirationFrom = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+    //     expect(component.quoteFilter.getSearchBarExpirationFrom).toEqual(('expirationFrom:2019-08-08T12:00:00+05:30'));
+    // });
+
 });
