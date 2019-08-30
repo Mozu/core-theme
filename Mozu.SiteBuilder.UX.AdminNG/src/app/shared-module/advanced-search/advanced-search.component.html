@@ -22,43 +22,44 @@
                         <h4 class="modal-title" id="gridSystemModalLabel">{{'SHARED.FILTER.advancedFilter' | translate}}</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label for="keyword">{{'SHARED.FILTER.keywordSearch' | translate}}</label>
-                                <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='quoteFilter.keyword' (ngModelChange)="modelChanged()">
-                            </div>
-                            <div class="form-group">
-                                <label for="quoteName">{{'SHARED.FILTER.QuotesFields.quoteName' | translate}}</label>
-                                <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.name' (ngModelChange)="modelChanged()">
-                            </div>
-                            <div class="form-group">
-                                <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
-                                <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId' (ngModelChange)="modelChanged()">
-                            </div>
-                            <div class="form-group">
-                                <label for="accountName">{{'SHARED.FILTER.QuotesFields.accountName' | translate}}</label>
-                                <input type="text" class="form-control" id="accountName" name="accountName" [(ngModel)]='quoteFilter.accountName' (ngModelChange)="modelChanged()">
-                            </div>
-                            <div class="form-group">
-                                <label for="accountUserName">{{'SHARED.FILTER.QuotesFields.accountUserName' | translate}}</label>
-                                <input type="text" class="form-control" id="accountUserName" name="accountUserName" [(ngModel)]='quoteFilter.accountUserLastName' (ngModelChange)="modelChanged()">
-                            </div>
-                            <div class="form-group">
-                                <label for="quoteId">{{'SHARED.FILTER.QuotesFields.expirationDate' | translate}}</label>
-                                <div class="section-data datepicker">
-                                    <div class="input-group" id="expirationDateFrom">
-                                        <input class="form-control datepicker-control" [(ngModel)]='quoteFilter.expirationDateFrom' name="expirationDateFrom" (ngModelChange)="modelChanged()" ngbDatepicker #expirationDateFrom="ngbDatepicker" [footerTemplate]="expirationDateFromFooter" container="body">
-                                        <span class="input-group-append">
-                                            <i class="fa fa-calendar" (click)="expirationDateFrom.toggle()"></i>
+                        <div class="form-group">
+                            <label for="keyword">{{'SHARED.FILTER.keywordSearch' | translate}}</label>
+                            <input type="text" class="form-control" id="keyword" name="keyword" [(ngModel)]='quoteFilter.keyword' (ngModelChange)="modelChanged()">
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteName">{{'SHARED.FILTER.QuotesFields.quoteName' | translate}}</label>
+                            <input type="text" class="form-control" id="quoteName" name="quoteName" [(ngModel)]='quoteFilter.name' (ngModelChange)="modelChanged()">
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteId">{{'SHARED.FILTER.QuotesFields.quoteId' | translate}}</label>
+                            <input type="number" min="0" class="form-control" id="quoteId" name="quoteId" [(ngModel)]='quoteFilter.quoteId' (ngModelChange)="modelChanged()">
+                        </div>
+                        <div class="form-group">
+                            <label for="accountName">{{'SHARED.FILTER.QuotesFields.accountName' | translate}}</label>
+                            <input type="text" class="form-control" id="accountName" name="accountName" [(ngModel)]='quoteFilter.accountName' (ngModelChange)="modelChanged()">
+                        </div>
+                        <div class="form-group">
+                            <label for="accountUserName">{{'SHARED.FILTER.QuotesFields.accountUserName' | translate}}</label>
+                            <input type="text" class="form-control" id="accountUserName" name="accountUserName" [(ngModel)]='quoteFilter.accountUserLastName' (ngModelChange)="modelChanged()">
+                        </div>
+                        <div class="form-group">
+                            <label for="quoteId">{{'SHARED.FILTER.QuotesFields.expirationDate' | translate}}</label>
+                            <div class="section-data datepicker">
+                                <div class="input-group" id="expirationFrom">
+                                    <input class="form-control datepicker-control" [ngModel]="quoteFilter.expirationFrom | dateTypecast" name="expirationFrom" (ngModelChange)="modelChanged($event, 'from')" ngbDatepicker #expirationFrom="ngbDatepicker" [footerTemplate]="expirationFromFooter"
+                                        container="body">
+                                    <span class="input-group-append">
+                                            <i class="fa fa-calendar" (click)="expirationFrom.toggle()"></i>
                                         </span>
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
-                                    </div>
-                                    <div class="input-group" id="expirationDateTo">
-                                        <input class="form-control datepicker-control" [(ngModel)]='quoteFilter.expirationDateTo' name="expirationDateTo" (ngModelChange)="modelChanged()" ngbDatepicker #expirationDateTo="ngbDatepicker" [footerTemplate]="expirationDateToFooter" container="body">
-                                        <span class="input-group-append">
-                                            <i class="fa fa-calendar" (click)="expirationDateTo.toggle()"></i>
+                                </div>
+                                <div class="input-group">
+                                    <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
+                                </div>
+                                <div class="input-group" id="expirationTo">
+                                    <input class="form-control datepicker-control" [ngModel]="quoteFilter.expirationTo | dateTypecast" name="expirationTo" (ngModelChange)="modelChanged($event, 'to')" ngbDatepicker #expirationTo="ngbDatepicker" [footerTemplate]="expirationToFooter" container="body"
+                                        [ngClass]="{ 'is-invalid': model.isExpirationToValid }">
+                                    <span class="input-group-append">
+                                            <i class="fa fa-calendar" (click)="expirationTo.toggle()"></i>
                                         </span>
                                 </div>
                                 <div class="error" *ngIf="model.isExpirationToValid">The to-date can not be before from-date</div>
