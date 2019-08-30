@@ -70,8 +70,7 @@ define([
           var self = this;
           if (product.toJSON)
               product = product.toJSON();
-
-          this.model.addItemToOrder(product, self.model.get('pickerItemQuantity'));
+          this.model.addItemToOrder(product, product.quantity || self.model.get('pickerItemQuantity'));
           self.model.unset('selectedProduct');
           $('.mz-b2b-quickorder .mz-searchbox-input.tt-input').val('');
           $('.mz-b2b-quickorder #pickerItemQuantity').val(1);
@@ -134,6 +133,9 @@ define([
                   return errorData.name === "Property";
               });
               var erroredItem = self.model.get('items').find(function(modelItem){
+                  if (modelItem.get('product').variationProductCode){
+                      return modelItem.get('product').variationProductCode == errorProp.value;
+                  }
                   return modelItem.get('productCode') == errorProp.value;
               });
               if (!erroredItem.get('errorMessages')){

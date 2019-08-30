@@ -31,16 +31,16 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         },
         render: function () {
             var me = this;
-            if (this.oldOptions) {
-                me.model.get('options').map(function (option) {
-                    var oldOption = _.find(me.oldOptions, function (old) {
-                        return old.attributeFQN === option.get('attributeFQN');
-                    });
-                    if (oldOption) {
-                        option.set('values', oldOption.values);
-                    }
-                });
-            }
+            // if (this.oldOptions) {
+            //     me.model.get('options').map(function (option) {
+            //         var oldOption = _.find(me.oldOptions, function (old) {
+            //             return old.attributeFQN === option.get('attributeFQN');
+            //         });
+            //         if (oldOption) {
+            //             option.set('values', oldOption.values);
+            //         }
+            //     });
+            // }
             Backbone.MozuView.prototype.render.apply(this);
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
@@ -115,23 +115,50 @@ define(['modules/backbone-mozu', 'hyprlive', 'modules/jquery-mozu', 'underscore'
         initialize: function () {
             // handle preset selects, etc
             var me = this;
-            this.$('[data-mz-product-option]').each(function () {
-                var $this = $(this), isChecked, wasChecked;
-                if ($this.val()) {
-                    switch ($this.attr('type')) {
-                        case "checkbox":
-                        case "radio":
-                            isChecked = $this.prop('checked');
-                            wasChecked = !!$this.attr('checked');
-                            if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
-                                me.configure($this);
-                            }
-                            break;
-                        default:
-                            me.configure($this);
-                    }
-                }
+            var productModel = this.model;
+            var pickerItemQuantity = window.views.currentPane.model.get('pickerItemQuantity');
+            this.model.set('quantity', pickerItemQuantity);
+
+            productModel.apiConfigure().then(function(response){
+              productModel.set('volumePriceBands', response.data.volumePriceBands);
+              productModel._hasVolumePricing = false;
+              productModel._minQty = 1;
+              if (productModel.get('volumePriceBands') && productModel.get('volumePriceBands').length > 0) {
+                  productModel._hasVolumePricing = true;
+                  productModel._minQty = _.first(productModel.get('volumePriceBands')).minQty;
+                  if (productModel._minQty > 1) {
+                      if (productModel.get('quantity') <= 1) {
+                          productModel.set('quantity', productModel._minQty);
+                          me.render();
+                      }
+                      productModel.validation.quantity.msg = Hypr.getLabel('enterMinProductQuantity', productModel._minQty);
+                  }
+              }
+              me.$('[data-mz-product-option]').each(function () {
+                  var $this = $(this), isChecked, wasChecked;
+                  if ($this.val()) {
+                      switch ($this.attr('type')) {
+                          case "checkbox":
+                          case "radio":
+                              isChecked = $this.prop('checked');
+                              wasChecked = !!$this.attr('checked');
+                              if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
+                                  me.configure($this);
+                              }
+                              break;
+                          default:
+                              me.configure($this);
+                      }
+                  }
+              });
+
+              me.listenTo(me.model, 'optionsUpdated', function(){
+                  me.postponeRender = false;
+                  me.render();
+              });
+
             });
+
         }
     });
 

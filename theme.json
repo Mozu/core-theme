@@ -91,6 +91,12 @@
       "title": "Your Order Has Shipped"
     },
     {
+      "id": "order.cancel",
+      "properties": {},
+      "template": "email/order-cancel",
+      "title": "Order Cancel"
+    },
+    {
       "id": "checkout.changed",
       "customEditor": "email-orderconfirmation-v2",
       "properties": {},
@@ -103,6 +109,18 @@
       "properties": {},
       "template": "email/order-confirmation",
       "title": "Order Confirmation"
+    },
+    {
+      "id": "shipment.pickupready",
+      "properties": {},
+      "template": "email/order-pickup-ready",
+      "title": "Order Pickup Ready"
+    },
+    {
+      "id": "shipment.pickupreminder",
+      "properties": {},
+      "template": "email/order-pickup-reminder",
+      "title": "Order Pickup Reminder"
     },
     {
       "id": "refund.created",
@@ -141,6 +159,12 @@
       "title": "Return Has Been Updated"
     },
     {
+      "id": "shipment.fulfilled",
+      "properties": {},
+      "template": "email/shipment-confirmation",
+      "title": "Your Shipment Has Shipped"
+    },
+    {
       "id": "user.created",
       "properties": {},
       "template": "email/new-user",
@@ -151,6 +175,18 @@
       "properties": {},
       "template": "email/password-reset",
       "title": "Password Reset"
+    },
+    {
+      "id": "shipment.backordered",
+      "properties": {},
+      "template": "email/backorder",
+      "title": "Backorder"
+    },
+    {
+      "id": "shipment.backorderdatechanged",
+      "properties": {},
+      "template": "email/backorder-update",
+      "title": "Backorder Update"
     },
     {
       "id": "product.instock",
@@ -176,6 +212,12 @@
       "id": "packing-slip",
       "title": "Packing Slip",
       "template": "back-office/packing-slip",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "pick-list",
+      "title": "Pick List",
+      "template": "back-office/pick-list",
       "customEditor": "back-office@mozu"
     }
   ],

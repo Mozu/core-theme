@@ -1,6 +1,6 @@
 define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
     function ($, Hypr, _, api, Backbone, ProductModels, UserModels) {
-        
+
         function getExistingNotifications() {
             return ($.cookie('mozustocknotify') || '').split(',');
         }
@@ -9,7 +9,20 @@ define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules
             var existing = getExistingNotifications();
             $.cookie('mozustocknotify', existing.concat(productCode).join(','), { path: '/', expires: 365 });
         }
-        
+
+        function checkCookie(product) {
+            var existing = getExistingNotifications(),
+                inventoryInfo = product.get('inventoryInfo'),
+                productCode = product.get('variationProductCode') || product.get('productCode'),
+                noStock = inventoryInfo && ("onlineStockAvailable" in inventoryInfo) && inventoryInfo.onlineStockAvailable === 0;
+            if (existing && existing.includes(productCode) && !noStock){
+                var index = existing.indexOf(productCode);
+                existing.splice(index, 1);
+                $.cookie('mozustocknotify', existing.join(','), { path: '/', expires: 365 });
+            }
+
+        }
+
         var user = require.mozuData('user'),
             InstockReqView = Backbone.MozuView.extend({
                 templateName: 'modules/product/product-instock-request',
@@ -25,6 +38,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules
                     return context;
                 },
                 render: function() {
+                    checkCookie(this.model);
                     Backbone.MozuView.prototype.render.apply(this, arguments);
                     var inventoryInfo = this.model.get('inventoryInfo');
                     this.$el.css('display', (inventoryInfo && ("onlineStockAvailable" in inventoryInfo) && inventoryInfo.onlineStockAvailable === 0) || $('body').hasClass('mz-cms-editing') ? 'inherit' : 'none');
@@ -50,7 +64,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'underscore', "modules/api", "modules
                     });
                 }
             });
-        
+
         $(document).ready(function () {
             var currentProduct = ProductModels.Product.fromCurrent();
 
