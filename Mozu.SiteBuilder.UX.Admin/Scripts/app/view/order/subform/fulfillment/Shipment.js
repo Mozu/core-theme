@@ -60,6 +60,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         padding: '0 40 0 0',
+                        hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Last Updated</span>',
                             '<div class="labelvalue">' + lastUpdated + '</div>'
@@ -74,6 +75,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         padding: '0 40 0 0',
+                        hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Shipment Step Id</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.taskId : '') + '</div>'
@@ -81,6 +83,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         padding: '0 40 0 0',
+                        hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Fulfillment Step</span>',
                             '<div class="labelvalue">' + (this.currentTaskList ? this.currentTaskList.name : '') + '</div>'
@@ -92,17 +95,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                             '<span class="label">Total</span>',
                             '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
                         ]
-                    },
-                    {
-                        padding: '0 40 0 0',
-                        hidden: this.shipmentRecord.shipmentStatus.toLowerCase() != 'backorder',
-                        tpl: [
-                            '<span class="label">Backorder Available Date</span>',
-                            '<div class="labelvalue">' + (this.shipmentRecord.items[0] && this.shipmentRecord.items[0].backorderReleaseDate ?
-                                Ext.Date.format(new Date(this.shipmentRecord.items[0].backorderReleaseDate), 'm/d/y')
-                                : '') + '</div>'
-                        ]
-                    },
+                    },                    
                     {
                         flex: 1,
                         html: '',

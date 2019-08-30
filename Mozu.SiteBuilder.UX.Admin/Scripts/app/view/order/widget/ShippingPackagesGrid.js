@@ -178,7 +178,12 @@
                     type: 'string',
                     useNull: true
                 }
-                
+                , {
+                    name: 'backorderReleaseDate',
+                    type: 'date',
+                    useNull: true,
+                    //dateFormat: 'c'
+                }
             ],
             sorters: [{
                 sorterFn: function (a, b) {
@@ -285,7 +290,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 80,
+                minWidth: 50,
                 flex: 1,
                 editor: {
                     xtype: 'numberfield',
@@ -306,7 +311,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 80,
+                minWidth: 50,
                 flex: 1,
             },
             {
@@ -317,7 +322,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 80,
+                minWidth: 50,
                 flex: 1,
                 hidden: me.isRefreshShippingEnabled,
                 editor: {
@@ -351,7 +356,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 80,
+                minWidth: 50,
                 flex: 1,
                 //editor: {
                 //    xtype: 'numberfield',
@@ -371,15 +376,32 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 80,
+                minWidth: 50,
                 flex: 1,
                 renderer: function (value) {
                     return this.record.formatCurrency(value);
                 }
             },
             {
+                dataIndex: 'backorderReleaseDate',
+                text: 'Backorder Available Date',
+                draggable: false,
+                sortable: false,
+                //resizable: false,
+                align: 'center',
+                menuDisabled: true,
+                hidden: this.shipmentRecord.shipmentStatus.toLowerCase() != 'backorder',
+                width: 200,
+                flex: 2,
+                renderer: function (value) {
+                    if (value)
+                        return Ext.Date.format(value, 'm/d/Y');
+                }
+            },
+            {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
+                width: 20,
                 hidden: me.isShipmentAction(),
                 menuItems: me.getShipmentLevelSplitMenu(),
             }
