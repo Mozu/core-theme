@@ -194,14 +194,17 @@ export class Constants {
     static advancedFilter = {
         keyValueDelimiter: ':',
         searchFieldSeperator: ' ',
+        dateKeyword: 'Date',
+        from: 'from',
+        to: 'to',
         searchBox: 'searchBox',
         keyword: 'keyword',
         name: 'name',
         quoteId: 'quoteId',
         accountUserLastName: 'accountUserLastName',
         accountName: 'accountName',
-        expirationDateFrom: 'expirationDateFrom',
-        expirationDateTo: 'expirationDateTo'
+        expirationFrom: 'expirationFrom',
+        expirationTo: 'expirationTo'
     };
 
     static quoteSubtotal = [
@@ -210,4 +213,6 @@ export class Constants {
         { data: SubtotalOptions.subTotalInclTax, label: 'Subtotal (Incl. Tax)' },
         { data: SubtotalOptions.estimatedTax, label: 'Estimated Tax' }
     ];
+
+    static advSearchDateFormat = 'yyyy-MM-ddTHH:mm:ssZZZZZ';
 }

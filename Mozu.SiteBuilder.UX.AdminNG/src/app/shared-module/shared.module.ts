@@ -17,7 +17,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectItem } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { NgbCarouselModule, NgbModule, NgbDateAdapter, NgbDateNativeAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -51,7 +51,8 @@ import {
     SafeHtmlPipe,
     SplitPipe,
     PhonePipe,
-    SafeResourceUrlPipe
+    SafeResourceUrlPipe,
+    DateTypecastPipe
 } from './pipes/index';
 
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
@@ -107,7 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
         SplitPipe,
         PhonePipe,
         SafeResourceUrlPipe,
-
+        DateTypecastPipe,
         // directives
         RestrictInput,
         EnableDisableControls,
@@ -137,8 +138,7 @@ export function createTranslateLoader(http: HttpClient) {
     ],
     providers: [
         ConfirmationDialogService,
-        ProgressButtonService,
-        [{provide: NgbDateAdapter, useClass: NgbDateNativeAdapter}]
+        ProgressButtonService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [
@@ -170,7 +170,7 @@ export function createTranslateLoader(http: HttpClient) {
         SplitPipe,
         PhonePipe,
         SafeResourceUrlPipe,
-
+        DateTypecastPipe,
         // directives
         RestrictInput,
         EnableDisableControls,

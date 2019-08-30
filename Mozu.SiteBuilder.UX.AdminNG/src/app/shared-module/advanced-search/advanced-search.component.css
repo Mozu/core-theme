@@ -198,3 +198,12 @@
     font-size: 13px;
 }
 
+.is-invalid {
+    border-bottom: 1px solid #ff0000 !important;
+}
+
+div.error {
+    padding-top: 5px;
+    color: #ff0000;
+    font-size: 12px;
+}

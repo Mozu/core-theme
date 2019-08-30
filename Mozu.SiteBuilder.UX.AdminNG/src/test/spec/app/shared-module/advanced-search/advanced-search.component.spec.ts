@@ -13,22 +13,28 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
 import { NavigationContainerType } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from '@shared/advanced-search';
-describe('AdvancedSearchComponent', () => {
+import { DateTypecastPipe } from '@shared';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '@shared/shared.module';
+import { DatePipe } from '@angular/common';
+fdescribe('AdvancedSearchComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
     let debugElement: DebugElement;
     let element: HTMLElement;
     let inputElement: HTMLInputElement;
     let notificationService: NotificationService;
+    let pipe: DateTypecastPipe;
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, GlobalModule],
-            declarations: [AdvancedSearchComponent],
+            imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, GlobalModule, NgbModule],
+            declarations: [AdvancedSearchComponent, DateTypecastPipe],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [By, TranslateService, LoggerService,
                 UtilityService, EnvironmentConfig, AuthService,
                 SharedDataService, NotificationService, FormBuilder, TostrService, NGXLoggerHttpService, CustomNGXLoggerService,
-                AdvancedFilterModel, QuoteFilter,
+                AdvancedFilterModel, QuoteFilter, DatePipe,
                 {
                     provide: HttpClientService,
                     useFactory: httpClientServiceCreator,
@@ -38,6 +44,7 @@ describe('AdvancedSearchComponent', () => {
         })
             .compileComponents();
         notificationService = TestBed.get(NotificationService);
+        pipe = new DateTypecastPipe();
     }));
     beforeEach(() => {
         fixture = TestBed.createComponent(AdvancedSearchComponent);
@@ -106,8 +113,8 @@ describe('AdvancedSearchComponent', () => {
         component.quoteFilter.name = 'Test quote name';
         component.quoteFilter.quoteId = 11;
         component.model.status = true;
-        component.modelChanged();
-        expect(component.model.searchBox).toEqual(component.quoteFilter.getSearchBarkeyword + component.quoteFilter.getSearchBarQuoteName + component.quoteFilter.getSearchBarQuoteId);
+        component.modelChanged(Event, '');
+        expect(component.model.searchField).toEqual(component.quoteFilter.getSearchBarkeyword + component.quoteFilter.getSearchBarQuoteName + component.quoteFilter.getSearchBarQuoteId);
     });
 
     it('should call setAdvancedFilterValue() to bind value to search bar', () => {

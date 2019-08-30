@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { NotificationService } from '@global';
+import * as _ from 'lodash';
 import { NavigationContainerType, Constants, QuotesAdvFilterFields } from '@shared/infrastructure';
 import { AdvancedFilterModel, QuoteFilter } from './advanced-search.model';
-import * as _ from 'lodash';
-import { NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-
 
 @Component({
   selector: 'advanced-search',
@@ -17,17 +16,14 @@ export class AdvancedSearchComponent implements OnInit {
   navigationType = NavigationContainerType;
   public model: AdvancedFilterModel;
   public quoteFilter: QuoteFilter;
-  today = this.calendar.getToday();
-  // placement = 'top';
-  
 
   constructor(private _notificationService: NotificationService,
-    private calendar: NgbCalendar) { }
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.model = new AdvancedFilterModel();
     this.quoteFilter = new QuoteFilter();
-    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUserLastName;
+    this.model.searchField = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUserLastName;
   }
 
   toggleIcon(searchBar: any) {
@@ -54,12 +50,39 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
-  modelChanged() {
+  modelChanged(event, keyField) {
+    this.setDateValueToModel(event, keyField);
+    this.fieldValidations();
+
     this.model.status = true;
-    this.model.searchBox = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
+    this.model.searchField = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
     this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
-    this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationDateFrom +
-    this.quoteFilter.getSearchBarExpirationDateTo;
+    this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationFrom +
+    (!this.model.isExpirationToValid ? this.quoteFilter.getSearchBarExpirationTo : '');
+  }
+
+  fieldValidations() {
+    if (new Date(this.quoteFilter.expirationTo) < new Date(this.quoteFilter.expirationFrom)) {
+      this.model.isExpirationToValid = true;
+    } else {
+      this.model.isExpirationToValid = false;
+    }
+  }
+
+  setDateValueToModel(event: any, keyField: string) {
+    switch (keyField) {
+      case Constants.advancedFilter.from:
+          this.quoteFilter.expirationFrom = event;
+        this.quoteFilter.setSearchBarExpirationFrom = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+        break;
+
+      case Constants.advancedFilter.to:
+          this.quoteFilter.expirationTo = event;
+          this.quoteFilter.setSearchBarExpirationTo = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+          break;
+      default:
+        break;
+    }
   }
 
   setAdvancedFilterValue(filterValue: string) {
@@ -67,6 +90,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.model.splittedValues = _.split(filterValue, Constants.advancedFilter.searchFieldSeperator);
 
     this.model.splittedValues.forEach((item, index) => {
+      if (item) {
       const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
         key = (colonIndex !== -1) ? item.substr(0, colonIndex) : Constants.advancedFilter.keyword,
         isKeywordSearch = (colonIndex === -1 || !this.isFieldSupported(key));
@@ -76,6 +100,7 @@ export class AdvancedSearchComponent implements OnInit {
       } else {
         this.addKeyValue(key, item, colonIndex);
       }
+    }
     });
   }
 
@@ -89,7 +114,9 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   public addKeyValue = (key: any, item: string, colonIndex: number) => {
-    this.quoteFilter[key] = item.substr(colonIndex + Constants.advancedFilter.keyValueDelimiter.length);
+    if (!key.includes(Constants.advancedFilter.dateKeyword)) {
+      this.quoteFilter[key] = item.substr(colonIndex + Constants.advancedFilter.keyValueDelimiter.length);
+    }
     this.model.lastKey = key;
   }
 

@@ -1,10 +1,12 @@
 import { Constants } from '@shared';
 
 export class AdvancedFilterModel {
-    searchBox: any;
+    searchField: any;
     splittedValues: any;
     lastKey: string;
     status = false;
+    today = new Date();
+    isExpirationToValid = false;
 }
 
 export class QuoteFilter {
@@ -13,8 +15,8 @@ export class QuoteFilter {
     quoteId: number = null;
     accountUserLastName = '';
     accountName = '';
-    expirationDateFrom: Date;
-    expirationDateTo: Date;
+    expirationFrom: Date;
+    expirationTo: Date;
 
     get getSearchBarkeyword(): string {
         return this.keyword ? this.keyword + ' ' : '';
@@ -31,10 +33,18 @@ export class QuoteFilter {
     get getSearchBarAccountName(): string {
         return this.accountName ? Constants.advancedFilter.accountName + Constants.advancedFilter.keyValueDelimiter + this.accountName + ' ' : '';
     }
-    get getSearchBarExpirationDateFrom(): string {
-        return this.expirationDateFrom ? Constants.advancedFilter.expirationDateFrom + Constants.advancedFilter.keyValueDelimiter + this.expirationDateFrom.toJSON() + ' ' : '';
+
+    set setSearchBarExpirationFrom(expirationDate: any) {
+        this.expirationFrom = expirationDate;
     }
-    get getSearchBarExpirationDateTo(): string {
-        return this.expirationDateTo ? Constants.advancedFilter.expirationDateTo + Constants.advancedFilter.keyValueDelimiter + this.expirationDateTo.toJSON() + ' ' : '';
+    get getSearchBarExpirationFrom(): string {
+        return this.expirationFrom ? Constants.advancedFilter.expirationFrom + Constants.advancedFilter.keyValueDelimiter + this.expirationFrom + ' ' : '';
+    }
+
+    set setSearchBarExpirationTo(expirationDate: any) {
+        this.expirationTo = expirationDate;
+    }
+    get getSearchBarExpirationTo(): string {
+        return this.expirationTo ? Constants.advancedFilter.expirationTo + Constants.advancedFilter.keyValueDelimiter + this.expirationTo + ' ' : '';
     }
 }
