@@ -204,7 +204,8 @@ export class Constants {
         accountUserLastName: 'accountUserLastName',
         accountName: 'accountName',
         expirationFrom: 'expirationFrom',
-        expirationTo: 'expirationTo'
+        expirationTo: 'expirationTo',
+        projectName: 'projectName'
     };
 
     static quoteSubtotal = [

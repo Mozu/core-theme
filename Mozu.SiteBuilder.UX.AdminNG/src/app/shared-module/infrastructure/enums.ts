@@ -63,7 +63,8 @@ export enum QuotesAdvFilterFields {
     accountUserLastName = 'accountUserLastName',
     accountName = 'accountName',
     expirationFrom = 'expirationFrom',
-    expirationTo = 'expirationTo'
+    expirationTo = 'expirationTo',
+    projectName = 'projectName'
 }
 
 export enum SubtotalOptions {
@@ -76,4 +77,4 @@ export enum NegotiatedPriceDiscount {
     percentageDiscount = 'percentageDiscount',
     amountDiscount = 'amountDiscount',
     proposedPrice = 'proposedPrice'
-   }
+}

@@ -130,7 +130,8 @@
                 "quoteId": "Quote Id",
                 "accountName": "Account Name",
                 "accountUserName": "Account User-Name",
-                "expirationDate": "Expiration Date"
+                "expirationDate": "Expiration Date",
+                "projectName": "Project Name"
             },
             "FormsErrorMessages": {
                 "toDateValid": "The to-date can not be before from-date"

@@ -23,7 +23,6 @@ export class AdvancedSearchComponent implements OnInit {
   ngOnInit() {
     this.model = new AdvancedFilterModel();
     this.quoteFilter = new QuoteFilter();
-    this.model.searchField = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName + this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName + this.quoteFilter.getSearchBarAccountUserLastName;
   }
 
   toggleIcon(searchBar: any) {
@@ -50,15 +49,15 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
-  modelChanged(event, keyField) {
+  modelChanged(event?, keyField?) {
     this.setDateValueToModel(event, keyField);
     this.fieldValidations();
 
     this.model.status = true;
     this.model.searchField = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
-    this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
-    this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationFrom +
-    (!this.model.isExpirationToValid ? this.quoteFilter.getSearchBarExpirationTo : '');
+      this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
+      this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationFrom +
+      (!this.model.isExpirationToValid ? this.quoteFilter.getSearchBarExpirationTo : '') + this.quoteFilter.getProjectName;
   }
 
   fieldValidations() {
@@ -72,14 +71,14 @@ export class AdvancedSearchComponent implements OnInit {
   setDateValueToModel(event: any, keyField: string) {
     switch (keyField) {
       case Constants.advancedFilter.from:
-          this.quoteFilter.expirationFrom = event;
-        this.quoteFilter.setSearchBarExpirationFrom = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+        this.quoteFilter.expirationFrom = event;
+        this.quoteFilter.setSearchBarExpirationFrom = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
         break;
 
       case Constants.advancedFilter.to:
-          this.quoteFilter.expirationTo = event;
-          this.quoteFilter.setSearchBarExpirationTo = event ?  this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-          break;
+        this.quoteFilter.expirationTo = event;
+        this.quoteFilter.setSearchBarExpirationTo = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+        break;
       default:
         break;
     }
@@ -91,16 +90,16 @@ export class AdvancedSearchComponent implements OnInit {
 
     this.model.splittedValues.forEach((item, index) => {
       if (item) {
-      const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
-        key = (colonIndex !== -1) ? item.substr(0, colonIndex) : Constants.advancedFilter.keyword,
-        isKeywordSearch = (colonIndex === -1 || !this.isFieldSupported(key));
+        const colonIndex = _.indexOf(item, Constants.advancedFilter.keyValueDelimiter),
+          key = (colonIndex !== -1) ? item.substr(0, colonIndex) : Constants.advancedFilter.keyword,
+          isKeywordSearch = (colonIndex === -1 || !this.isFieldSupported(key));
 
-      if (isKeywordSearch) {
-        this.addKeywordOrAppendToLastKey(item, index);
-      } else {
-        this.addKeyValue(key, item, colonIndex);
+        if (isKeywordSearch) {
+          this.addKeywordOrAppendToLastKey(item, index);
+        } else {
+          this.addKeyValue(key, item, colonIndex);
+        }
       }
-    }
     });
   }
 
@@ -135,6 +134,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.quoteFilter.quoteId = null;
     this.quoteFilter.accountUserLastName = '';
     this.quoteFilter.accountName = '';
+    this.quoteFilter.projectName = '';
   }
 }
 

@@ -224,11 +224,11 @@ fdescribe('AdvancedSearchComponent', () => {
     it(`should have input field 'Account User'`, async(() => {
         fixture.detectChanges();
         inputElement = fixture.debugElement.query(By.css('#accountUserName')).nativeElement;
-        inputElement.value = 'Pankaj';
+        inputElement.value = 'foo';
         inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(inputElement.value).toEqual('Pankaj');
+            expect(inputElement.value).toEqual('foo');
         });
     }));
     it(`should have input field 'Expiration Date From'`, async(() => {
@@ -295,4 +295,14 @@ fdescribe('AdvancedSearchComponent', () => {
         component.quoteFilter.setSearchBarExpirationTo = new DatePipe('en-US').transform(event, Constants.advSearchDateFormat);
         expect(component.quoteFilter.getSearchBarExpirationTo).toEqual(('expirationTo:2019-08-08T12:00:00+05:30 '));
     });
+    it(`should have input field 'Project Name'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('#projectName')).nativeElement;
+        inputElement.value = 'foo';
+        inputElement.dispatchEvent(new Event('input'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('foo');
+        });
+    }));
 });

@@ -17,6 +17,7 @@ export class QuoteFilter {
     accountName = '';
     expirationFrom: Date;
     expirationTo: Date;
+    projectName = '';
 
     get getSearchBarkeyword(): string {
         return this.keyword ? this.keyword + ' ' : '';
@@ -46,5 +47,8 @@ export class QuoteFilter {
     }
     get getSearchBarExpirationTo(): string {
         return this.expirationTo ? Constants.advancedFilter.expirationTo + Constants.advancedFilter.keyValueDelimiter + this.expirationTo + ' ' : '';
+    }
+    get getProjectName(): string {
+        return this.projectName ? Constants.advancedFilter.projectName + Constants.advancedFilter.keyValueDelimiter + this.projectName + ' ' : '';
     }
 }
