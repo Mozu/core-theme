@@ -116,24 +116,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             shipment.Items = t.ToList();
         }
 
-        private Shipment PopulateShipments(List<Fulfiller.Contracts.Model.PickWaveContent> pickWaveContents)
-        {
-            var shipment = new Shipment
-            {
-                Items = new List<ShipmentItem>()
-            };
-
-            foreach (var content in pickWaveContents)
-            {
-                var shipmentItem = Mapper.Map<ShipmentItem>(content);
-                if (shipmentItem != null)
-                {
-                    shipment.Items.Add(shipmentItem);
-                }
-            }
-            return shipment;
-        }
-
         private void PopulatePickupDetails(DC.Order order)
         {
             if (order.Pickups == null)
@@ -307,9 +289,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find pick wave template for the current Theme.");
             }
 
-            List<Shipment> shipments = new List<Shipment>();
-            shipments.Add(PopulateShipments(pickWave.Contents));
-            ViewData["shipments"] = shipments;
+            ViewData["shipments"] = pickWave.Contents;
 
             return await RenderWithContext(template, pickWave);
         }
