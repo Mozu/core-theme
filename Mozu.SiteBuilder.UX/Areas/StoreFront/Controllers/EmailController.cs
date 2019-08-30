@@ -56,6 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     public class ShipmentEmail : Shipment
     {
         public Order Order { get; set; }
+        public Location.Contracts.Location StoreLocation { get; set; }
     }
 
     [ContextInitialization]
@@ -478,11 +479,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 //get order by shipment orderId
                 var shipmentOrder = (await _orderWebApiClient.GetOrder(shipmentEmail.OrderId)).ReadAsSync();
 
+                var locationCode = shipmentEmail.FulfillmentLocationCode;
+                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+
                 if (shipmentOrder.Shipments.SafeAny())
                 {
                     //select only shipments which are in email
                     shipmentOrder.Shipments = shipmentOrder.Shipments.Where(s => s.Number == shipmentEmail.Number).Select(x => x).ToList();
                     shipmentEmail.Order = shipmentOrder;
+                    shipmentEmail.StoreLocation = location;
                 }
             }
             return obj;
