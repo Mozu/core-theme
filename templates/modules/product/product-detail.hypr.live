@@ -30,7 +30,7 @@
 	{% endif %}		
 </dl>
 
-{% if model.inventoryInfo and model.inventoryInfo.outOfStockBehavior=='AllowBackOrder' %}
+{% if model.inventoryInfo and model.inventoryInfo.manageStock == true and model.inventoryInfo.outOfStockBehavior=='AllowBackOrder' and model.inventoryInfo.onlineStockAvailable<=0  %}
 	<div class="mz-product-backorder">
 		<span class="is-warning mz-product-backorder-warning">{{ labels.temporarilyOutOfStock }}</span>
 		<span >{{labels.temporarilyOutOfStockDetail}}</span>
