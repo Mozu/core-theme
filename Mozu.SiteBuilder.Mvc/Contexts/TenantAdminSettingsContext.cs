@@ -11,6 +11,7 @@ using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Contexts
 {
@@ -99,11 +100,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return this;
             }
             
-            var res = (await _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity(entityListFullName: "tenantAdminSettings@mozu", id: "Global").ConfigureAwait(false));
+            var res = (await _entityListsWebApiClient.Value.CloneWithoutUserClaims().GetEntity("tenantAdminSettings@mozu", "Global").ConfigureAwait(false));
             var val = res.ResponseMessage.IsSuccessStatusCode ? res.ReadAsSync() : new JObject();
 
             var tenant = _tenantsWebApiClient.GetTenantInternal(_apiContext.TenantId, false).Result.ReadAsSync();
-            var catalogDisabled = (tenant.Attributes.Find(x => x.Name == "CatalogDisabled").Value.ToString() == "true") ? true : false;
+            var catalogDisabledValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("CatalogDisabled"))?.Value.ToString();
+            var catalogDisabled = catalogDisabledValue.EqualsIgnoreCase("true");
             val.Add(new JProperty("catalogDisabled", catalogDisabled));
 
             _state = new Lazy<JObject>(() => val);
