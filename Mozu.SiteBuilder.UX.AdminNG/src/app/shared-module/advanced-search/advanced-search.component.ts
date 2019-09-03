@@ -61,11 +61,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   fieldValidations() {
-    if (new Date(this.quoteFilter.expirationTo) < new Date(this.quoteFilter.expirationFrom)) {
-      this.model.isExpirationToValid = true;
-    } else {
-      this.model.isExpirationToValid = false;
-    }
+        this.model.isExpirationToValid = this.quoteFilter.expirationTo && this.quoteFilter.expirationFrom ? (new Date(this.quoteFilter.expirationTo) < new Date(this.quoteFilter.expirationFrom)) : false;
   }
 
   setDateValueToModel(event: any, keyField: string) {
