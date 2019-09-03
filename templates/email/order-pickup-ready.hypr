@@ -17,11 +17,19 @@
             </tr>
         </thead>
 		<tbody>
-            <tr>
-                <td>{{ model.destination.name }}</td>
-                <td>{{ model.destination.regularHours }}</td>
-                <td>{{ model.destination.note }}</td>
-            </tr>
+        <tr>
+            <td>{{ storeLocation.name }}</td>
+            <td class="mz-ordersummary-regular-hours">
+                {{ labels.sunday }}: {{ storeLocation.regularHours.sunday }}<br>
+                {{ labels.monday }}: {{ storeLocation.regularHours.monday }}<br>
+                {{ labels.tuesday }}: {{ storeLocation.regularHours.tuesday }}<br>
+                {{ labels.wednesday }}: {{ storeLocation.regularHours.wednesday }}<br>
+                {{ labels.thursday }}: {{ storeLocation.regularHours.thursday }}<br>
+                {{ labels.friday }}: {{ storeLocation.regularHours.friday }}<br>
+                {{ labels.saturday }}: {{ storeLocation.regularHours.saturday }}<br>
+            </td>
+            <td>{{ storeLocation.note }}</td>
+        </tr>
 		</tbody>
     </table>
 
