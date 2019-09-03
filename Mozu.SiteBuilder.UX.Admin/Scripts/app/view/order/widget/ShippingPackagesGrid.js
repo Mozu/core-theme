@@ -66,7 +66,7 @@
 
     initComponent: function () {
         var me = this;
-        
+
         me.setIsRefreshShippingEnabled();
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
@@ -102,14 +102,14 @@
                 name: 'discount',
                 type: 'int',
                 useNull: true
-                },
-                
-                {
-                    name:'lineItemCost',
-                    type: 'float',
-                    useNull:true
-                },
-                {
+            },
+
+            {
+                name: 'lineItemCost',
+                type: 'float',
+                useNull: true
+            },
+            {
                 name: 'weight',
                 type: 'float',
                 defaultValue: 0
@@ -172,18 +172,13 @@
                 name: 'weight',
                 type: 'float',
                 useNull: true
-                }
+            }
                 , {
-                    name: 'imageUrl',
-                    type: 'string',
-                    useNull: true
-                }
-                , {
-                    name: 'backorderReleaseDate',
-                    type: 'date',
-                    useNull: true,
-                    //dateFormat: 'c'
-                }
+                name: 'imageUrl',
+                type: 'string',
+                useNull: true
+            }
+
             ],
             sorters: [{
                 sorterFn: function (a, b) {
@@ -216,7 +211,7 @@
                         return false;
                     }
                 },
-
+               
             }));
 
 
@@ -324,8 +319,8 @@
                 menuDisabled: true,
                 minWidth: 50,
                 flex: 1,
-                hidden: me.isRefreshShippingEnabled,
                 editor: {
+                    disabled: me.isRefreshShippingEnabled,
                     showBorder: false,
                     listeners: {
                         focus: function (field, event, eOpts) {
