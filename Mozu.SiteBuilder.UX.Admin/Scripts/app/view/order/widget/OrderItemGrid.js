@@ -485,7 +485,7 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                     text: 'Qty',
                     draggable: false,
                     resizable: false,
-                    width: 100,
+                    width: 50,
                     sortable: false,
                     menuDisabled: true,
                     align: 'right',
