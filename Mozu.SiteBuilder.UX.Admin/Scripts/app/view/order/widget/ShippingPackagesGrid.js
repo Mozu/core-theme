@@ -177,7 +177,13 @@
                 name: 'imageUrl',
                 type: 'string',
                 useNull: true
-            }
+                },
+                {
+                    name: 'backorderReleaseDate',
+                    type: 'date',
+                    useNull: true,
+                    //dateFormat: 'c'
+                }
 
             ],
             sorters: [{
