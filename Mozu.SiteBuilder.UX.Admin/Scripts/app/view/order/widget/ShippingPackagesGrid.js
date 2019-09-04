@@ -344,7 +344,7 @@
             //    flex: 1,
             //},
             {
-                dataIndex: 'discount',
+                dataIndex: 'itemDiscount',
                 text: 'Discount',
                 draggable: false,
                 sortable: false,
