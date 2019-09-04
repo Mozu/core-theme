@@ -2,8 +2,8 @@
 
 {% block body-content %}
     <dl class="mz-orderheader">
-  		<dt>{{ labels.backorder }}</dt>
-  		<dt>{{ labels.orderNo }} <a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dt><dd></dd>
+  		  <dt>{{ labels.backorder }}</dt>
+        <dt>{{ labels.orderNo }} <a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dt><dd></dd>
   	</dl>    
     <br>
     <p>{{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!</p>
@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th class="mz-ordersummary-header-product">{{ labels.item }}</th>
-			<th class="mz-ordersummary-header-available-on">{{ labels.availableOn }}</th>
+			      <th class="mz-ordersummary-header-available-on">{{ labels.availableOn }}</th>
             <th class="mz-ordersummary-header-subtotal">{{ labels.subtotal }}</th>
         </tr>
     </thead>
@@ -28,7 +28,7 @@
                     </dl>
                 </td>
                 <td>
-                    {{ model.backorderCreatedDate }}
+                    {{ item.backorderReleaseDate }}
                 </td>
                 <td align="right"><span class="mz-item-price">{{ item.unitPrice|currency }}</span></td>
             </tr>
