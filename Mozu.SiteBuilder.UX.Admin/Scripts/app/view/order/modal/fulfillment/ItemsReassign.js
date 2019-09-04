@@ -194,13 +194,25 @@
                 {
                     text: 'Location',
                     dataIndex: 'name',
-                    width: 500,
+                    width: 425,
                 },
                 {
                     text: 'Location Code',
                     dataIndex: 'code',
-                    width: 500,
-                }
+                    width: 425,
+                },
+                {
+                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
+                    editor: {
+                        xtype: 'textfield',
+                        cls: 'x-grid-checkheader-editor',
+                        inputValue: true,
+                        uncheckedValue: false,
+                        minValue: 1,
+                        maxValue: me.selectedItem.quantity,
+                        width: 425
+                    }
+                },
             ],
             height: 200,
             width: 400,
@@ -210,6 +222,28 @@
                 dock: 'bottom',
                 displayInfo: true
             }],
+            selType: 'cellmodel',
+            plugins: [
+                Ext.create('Ext.grid.plugin.CellEditing', {
+                    clicksToEdit: 1
+                })
+            ],
+            listeners: {
+                'validateedit': function (editor, context, eOpts) {
+                    var me = this;
+                    for (i = 0; i < context.record.store.data.items.length; i++) {
+                        if (i !== context.rowIdx && context.value !== '') {
+                            if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0)) {
+                                context.record.store.data.items[i].data.reassignQty = '';
+                            }
+                        }
+                        if (i === context.rowIdx) {
+                            context.record.store.data.items[i].data.reassignQty = context.record.store.data.items[i].data.reassignQty;
+                        }
+                    }
+                    me.getView().refresh();
+                }
+            },
         });                   
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
