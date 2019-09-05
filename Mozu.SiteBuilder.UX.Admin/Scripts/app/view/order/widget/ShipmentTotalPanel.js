@@ -612,7 +612,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<th></th>',
         '<th class="summary"><div class="{tdInnerCls}"></div></th>',
         '<th></th>',
-        '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.cost)]}</div></th>',
+        '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.total)]}</div></th>',
         '<th></th>',
         '</tr>'
 
