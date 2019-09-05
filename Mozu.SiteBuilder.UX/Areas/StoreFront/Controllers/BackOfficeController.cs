@@ -6,11 +6,13 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
+using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
+using Mozu.SiteBuilder.UX.ApiWrappers;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -36,6 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
+        private IFulfillerApiWrapper _fulfillerApiWrapper;
+        private readonly IShipmentApiWrapper _shipmentApiWrapper;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
@@ -43,10 +47,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger)
+        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger, ISettings settings)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
+            _fulfillerApiWrapper = new FulfillerApiWrapper(apiContext, settings);
+            _shipmentApiWrapper = new ShipmentApiWrapper(apiContext, settings);
         }
 
         /// <summary>
@@ -263,13 +269,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
             }
 
-            var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
-            var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
+            //var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
+            //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
             PopulateShipmentDetails(shipment, order);
 
             ViewData["order"] = order;
             return await RenderWithContext(template, shipment);
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> PickWave(int pickWaveNumber)
+        {
+            var pickWave = _fulfillerApiWrapper.GetPickWave(pickWaveNumber);
+
+            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-list"));
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find pick wave template for the current Theme.");
+            }
+
+            ViewData["shipments"] = pickWave.Contents;
+
+            return await RenderWithContext(template, pickWave);
         }
 
         /// <summary>

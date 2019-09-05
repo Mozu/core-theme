@@ -163,6 +163,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiWrappers\FulfillerApiWrapper.cs" />
+    <Compile Include="ApiWrappers\ShipmentApiWrapper.cs" />
     <Compile Include="Areas\Misc\AMDModuleProvider.cs" />
     <Compile Include="Areas\Misc\Controllers\ContentController.cs" />
     <Compile Include="Areas\Misc\LessUtils.cs" />
@@ -232,6 +234,53 @@
     <Compile Include="Messaging\VisitEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hypr\Tags\InlineStyle.cs" />
+    <Compile Include="Swagger\Client\ApiClient.cs" />
+    <Compile Include="Swagger\Client\ApiException.cs" />
+    <Compile Include="Swagger\Client\Configuration.cs" />
+    <Compile Include="Swagger\Fulfillment\Api\PickWaveControllerApi.cs" />
+    <Compile Include="Swagger\Fulfillment\Api\ShipmentControllerApi.cs" />
+    <Compile Include="Swagger\Fulfillment\Api\WorkflowProcessControllerApi.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Address.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\AuditInfo.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\BackorderItem.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\BackorderItemsRequest.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\BackorderShipmentRequest.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\CanceledItem.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\CanceledReason.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\CancelShipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ChangeMessage.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Contact.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\CreatePickWave.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Item.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Link.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Measurement.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Package.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PackageItem.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PackageMeasurements.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PagedResourcesOfResourceOfShipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PageMetadata.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Phone.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PickWave.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PickWaveBinRange.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PickWaveContent.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\PickWaveProductMatch.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ReassignItem.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ReassignShipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\RejectShipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourceOfPickWave.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourceOfShipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourceOfWorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourcesOfPickWave.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourcesOfResourceOfWorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\ResourcesOfTask.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Shipment.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\SplitItem.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\Task.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\TaskDefinition.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\TaskInput.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\WorkflowProcess.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\WorkflowProcessVariable.cs" />
+    <Compile Include="Swagger\Fulfillment\Model\WorkflowState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BuiltinScripts\SDK\src\types\checkout.js" />
@@ -331,6 +380,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\51Degrees-PremiumV3_2.dat" />
+    <None Include="packages.config" />
     <None Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

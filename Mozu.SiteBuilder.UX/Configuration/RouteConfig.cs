@@ -50,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             GetSystemRoutes(routes);
         }
         public static HttpRouteCollection GetSystemRoutes(System.Web.Http.HttpRouteCollection routes = null)
-        {
+        {   
             routes = routes??new System.Web.Http.HttpRouteCollection();
             routes.MapHttpRoute(
              "favicon",
@@ -177,6 +177,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 "packing slip (back office)",
                 "back-office/orders/{orderId}/shipments/{shipmentNumber}",
                 new { controller = "BackOffice", action = "PackingSlip" });
+
+            routes.MapHttpRoute(
+               "pick wave (back office)",
+               "back-office/pick-wave/{pickWaveNumber}",
+               new { controller = "BackOffice", action = "PickWave" });
 
             routes.MapHttpRoute(
                 "back office (admin view) - PREVIEW",
