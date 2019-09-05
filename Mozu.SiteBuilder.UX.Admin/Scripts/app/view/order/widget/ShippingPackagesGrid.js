@@ -317,7 +317,7 @@
             },
             {
                 dataIndex: 'itemTax',
-                text: 'Item Tax',
+                text: 'Unit Tax',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
