@@ -30,7 +30,7 @@
                 <td>
                     {{ item.backorderReleaseDate }}
                 </td>
-                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.unitPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
+                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
             </tr>
         {% endfor %}
 	</tbody>
