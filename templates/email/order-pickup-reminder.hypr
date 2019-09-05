@@ -18,17 +18,17 @@
         </thead>
 		<tbody>
         <tr>
-            <td>{{ storeLocation.name }}</td>
+            <td>{{ model.storeLocation.name }}</td>
             <td class="mz-ordersummary-regular-hours">
-                {{ labels.sunday }}: {{ storeLocation.regularHours.sunday }}<br>
-                {{ labels.monday }}: {{ storeLocation.regularHours.monday }}<br>
-                {{ labels.tuesday }}: {{ storeLocation.regularHours.tuesday }}<br>
-                {{ labels.wednesday }}: {{ storeLocation.regularHours.wednesday }}<br>
-                {{ labels.thursday }}: {{ storeLocation.regularHours.thursday }}<br>
-                {{ labels.friday }}: {{ storeLocation.regularHours.friday }}<br>
-                {{ labels.saturday }}: {{ storeLocation.regularHours.saturday }}<br>
+                {{ labels.sunday }}: {{ model.storeLocation.regularHours.sunday }}<br>
+                {{ labels.monday }}: {{ model.storeLocation.regularHours.monday }}<br>
+                {{ labels.tuesday }}: {{ model.storeLocation.regularHours.tuesday }}<br>
+                {{ labels.wednesday }}: {{ model.storeLocation.regularHours.wednesday }}<br>
+                {{ labels.thursday }}: {{ model.storeLocation.regularHours.thursday }}<br>
+                {{ labels.friday }}: {{ model.storeLocation.regularHours.friday }}<br>
+                {{ labels.saturday }}: {{ model.storeLocation.regularHours.saturday }}<br>
             </td>
-            <td>{{ storeLocation.note }}</td>
+            <td>{{ model.storeLocation.note }}</td>
         </tr>
 		</tbody>
     </table>
