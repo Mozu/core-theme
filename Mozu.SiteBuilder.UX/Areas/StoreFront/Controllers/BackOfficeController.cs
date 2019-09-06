@@ -39,7 +39,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
         private IFulfillerApiWrapper _fulfillerApiWrapper;
-        private readonly IShipmentApiWrapper _shipmentApiWrapper;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
@@ -52,7 +51,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _fulfillerApiWrapper = new FulfillerApiWrapper(apiContext, settings);
-            _shipmentApiWrapper = new ShipmentApiWrapper(apiContext, settings);
         }
 
         /// <summary>
