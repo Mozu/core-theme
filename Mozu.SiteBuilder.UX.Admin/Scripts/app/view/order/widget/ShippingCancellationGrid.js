@@ -8,7 +8,18 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
 
     initComponent: function () {
         var me = this;
-        this.store = Ext.create('Ext.data.JsonStore', {
+
+        var store = me.record.getCancellationReasons();
+        store.load({
+            scope: this,
+            callback: function (records, operation, success) {
+                if (records) {
+                    me.reasonCodes = me.record.localeStore;
+                    me.getView().refresh();
+                }
+            }
+        }); 
+        me.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.canceledItems,
             fields: [{
                 name: 'productCode',
@@ -62,18 +73,15 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 name: 'optionAttributeFQN',
                 type: 'string',
                 useNull: true
-                }, {
-                    name: 'createdDate',
+            },
+                {
+                    name: 'reason',
                     type: 'string',
                     useNull: true
                 },
                 {
-                    name: 'cancellationReason',
-                    type: 'string',
-                    useNull: true
-                }, {
-                    name: 'cancelledBy',
-                    type: 'string',
+                    name: 'auditInfo',
+                    type: 'auto',
                     useNull: true
                 }
             ],
@@ -86,8 +94,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             }]
         });
-
-        this.columns = [
+        me.columns = [
             {
                 dataIndex: 'lineId',
                 text: 'Line',
@@ -97,12 +104,18 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 sortable: false,
                 menuDisabled: true
             },
-            {                
+            {
                 text: 'Date Created',
-                dataIndex:'createdDate',
+                dataIndex: 'auditInfo',
                 draggable: false,
                 resizable: true,
-                menuDisabled: true
+                menuDisabled: true,
+                flex:1,
+                renderer: function (value) {
+                    if (value && value.createDate) {
+                        return Ext.Date.format(new Date(value.createDate), 'm/d/y H:i:s');
+                    }
+                }
             },
             {
                 dataIndex: 'name',
@@ -127,25 +140,43 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
             },
             {
                 text: 'Cancellation Reason',
-                dataIndex: 'cancellationReason',
+                dataIndex: 'reason',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 80,
-                flex: 1
+                align: 'left',
+                //menuDisabled: true,
+                //minWidth: 80,
+                flex: 2,
+                renderer: function (value) {
+                    if (value) {
+                        //this.reasonCodes.data.items[0].get('value')
+                        if (this.reasonCodes && this.reasonCodes.data && this.reasonCodes.data.items) {
+                            for (var i = 0; i < this.reasonCodes.data.items.length; i++) {
+                                if (value == this.reasonCodes.data.items[i].get('key')) {
+                                    return this.reasonCodes.data.items[i].get('value');
+                                }
+                            }
+                        }
+                        return value;
+                    }
+                }
             },
             {
                 text: 'Cancelled By',
-                dataIndex: 'cancelledBy',
+                dataIndex: 'auditInfo',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
-                flex: 1
+                flex: 1,
+                renderer: function (value) {
+                    if (value && value.createBy) {
+                        return me.getUserByUserIdField(value.createBy);
+                    }
+                }
             },
             {
                 text: 'Shipment Number',
@@ -175,8 +206,19 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             }
         ];
+        me.callParent();        
+    },
 
-        this.callParent();
-    }
+    getUserByUserIdField: function (id) {
+        if (!id) {
+            return null;
+        }
+
+        // look up user id in magical site users global object.
+        var user = Ext.Array.findBy(window.Taco.siteUsersRaw, function (u) {
+            return u.id === id;
+        });
+        return (user) ? user.firstName + ' ' + user.lastName : null;
+    },
 
 });
