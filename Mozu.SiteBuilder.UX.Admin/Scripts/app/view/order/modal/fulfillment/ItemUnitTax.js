@@ -107,14 +107,14 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         var element = Ext.get(this.unitTaxAdjustmentInput);
         if (element) {
             element.on('keyup', function () {
-                me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, this.selectedItem.unitPrice, false, this.unitTaxAdjustmentPercInput);
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, this.selectedItem.actualPrice, false, this.unitTaxAdjustmentPercInput);
             }, this);
         };
 
         element = Ext.get(this.unitTaxAdjustmentPercInput);
         if (element) {
             element.on('keyup', function () {
-                me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, this.selectedItem.unitPrice, true, this.unitTaxAdjustmentInput);
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, this.selectedItem.actualPrice, true, this.unitTaxAdjustmentInput);
             }, this);
         };
     },
@@ -125,7 +125,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
         if (element) {
             var enteredValue = parseFloat(Ext.get(elementId).getValue());
 
-            if (enteredValue) {
+            if (enteredValue == 0 || enteredValue) {
                 if (isPercentage) {
                     calcValue = (unitPrice * enteredValue) / 100;
                 }
@@ -141,7 +141,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
     calculatedUnitTaxPerc: function () {
         this.unitTaxPerc = 0;
         if (this.selectedItem.itemTax > 0) {
-            this.unitTaxPerc = (100 * this.selectedItem.itemTax) / this.selectedItem.unitPrice;
+            this.unitTaxPerc = (100 * this.selectedItem.itemTax) / this.selectedItem.actualPrice;
         }
     }
 });
