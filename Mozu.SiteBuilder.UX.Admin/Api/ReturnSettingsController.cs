@@ -36,14 +36,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// </summary>
         /// <returns></returns>
         [HttpGetRoute(UriTemplate = "read")]
-        public async Task<Response<DC.Return.ReturnSettings>> GetSettings()
+        public async Task<Response<DC.Returns.ReturnSettings>> GetSettings()
         {
             var returnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
             return Single2(returnSettings);
         }
 
         [HttpPutRoute(UriTemplate = "update")]
-        public async Task<Response<DC.Return.ReturnSettings>> UpdateSettings(DC.Return.ReturnSettings fulfillmentSettings)
+        public async Task<Response<DC.Returns.ReturnSettings>> UpdateSettings(DC.Returns.ReturnSettings fulfillmentSettings)
         {
             var itemOut = (await _returnSettingsWebApiClient.UpdateReturnSettings(fulfillmentSettings)).ReadAsSync();
             return Single2(itemOut);

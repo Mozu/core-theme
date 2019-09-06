@@ -155,7 +155,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         }
 
         [HttpPostRoute(UriTemplate = "updateReturnSettings")]
-        public async Task<Response<DC.Return.ReturnSettings>> UpdateReturnSettings(DC.Return.ReturnSettings returnSettings)
+        public async Task<Response<DC.Returns.ReturnSettings>> UpdateReturnSettings(DC.Returns.ReturnSettings returnSettings)
         {
 
             var currentReturnSettings = (await _returnSettingsWebApiClient.GetReturnSettings()).ReadAsSync();
