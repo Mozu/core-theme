@@ -32,9 +32,9 @@ a:hover {
 }
 
 .dashboard-icon-align {
-    position: relative;
+    /* position: relative;
     left: 38%;
-    top: 30px;
+    top: 30px; */
 }
 
 @media screen and (max-width: 480px) {
@@ -64,10 +64,11 @@ a:hover {
     font-weight: normal!important;
     left: 0;
     line-height: 1.0;
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     vertical-align: baseline;
     -webkit-font-smoothing: antialiased;
+    padding-top: 10%;
 }
 
 .dashboard-icon-products::after {
