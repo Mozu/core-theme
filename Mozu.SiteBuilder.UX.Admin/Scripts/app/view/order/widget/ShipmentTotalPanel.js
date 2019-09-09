@@ -629,8 +629,9 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             tdInnerCls = "taco-grid-cell-inner ",
             priceCls = "price-detail ",
             isEditable = this.isEditable,
+            isBopis = this.shipmentRecord.shipmentType == 'BOPIS' ? true : false,
             isEditableCls = (isEditable) ? " taco-editable " : " collapsed ";
-
+        
         if (!isEditable)
             return [
                 '{%',
@@ -839,7 +840,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '{%',
                 // add some css classes to the values data to be used in xTemplates
                 'values.tdCls = "' + tdCls + '";values.tdInnerCls = "' + tdInnerCls + '";values.isEditableCls = "' +
-                isEditableCls + '";values.actionColumnWidth = "' + me.actionColumnWidth + '";values.priceCls = "' + priceCls + '";values.isEditable = "' + isEditable + '";',
+                isEditableCls + '";values.actionColumnWidth = "' + me.actionColumnWidth + '";values.priceCls = "' + priceCls + '";values.isEditable = "' + isEditable + '";values.isBopis = ' + isBopis +';' +
                 '%}',
                 // subtotal
                 '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable summary-sub-total"})]}',
@@ -855,7 +856,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                '<th><div class="shipping-summary"></div></th>',
+                '<th><div class="{[ (values.isBopis ) ? "" : "shipping-summary"]}"></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
                 '<th></th>',
 
@@ -866,6 +867,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<th></th>',
                 '</tr>',
                 '</thead>',
+
+                '<tpl if="!values.isBopis">',
 
                 '<tbody>',
                 '<tr class="shipping-handling-item">',
@@ -883,6 +886,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</tr>',
                 '</tbody>',
 
+                '</tpl>',
+
                 '</table>',
 
                 // shipping Tax
@@ -890,7 +895,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                '<th><div class="shipping-tax-summary"></div></th>',
+                '<th><div class="{[ (values.isBopis ) ? "" : "shipping-tax-summary"]}"></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Shipping Tax</div></th>',
                 '<th></th>',
 
@@ -902,6 +907,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</tr>',
                 '</thead>',
 
+                '<tpl if="!values.isBopis">',
                 '<tbody>',
                 '<tr class="shipping-handling-item">',
                 '<td class="{tdCls}"></td>',
@@ -917,6 +923,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<td class="{tdCls}"></td>',
                 '</tr>',
                 '</tbody>',
+                '</tpl>',
 
                 '</table>',
 
@@ -926,7 +933,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                '<th><div class="handling-summary"></div></th>',
+                '<th><div class="{[ (values.isBopis ) ? "" : "handling-summary"]}"></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
                 '<th></th>',
 
@@ -938,7 +945,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</tr>',
                 '</thead>',
 
-
+                '<tpl if="!values.isBopis">',
                 '<tbody>',
                 '<tr class="shipping-handling-item">',
                 '<td class="{tdCls}"></td>',
@@ -952,6 +959,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<td class="{tdCls}"></td>',
                 '</tr>',
                 '</tbody>',
+                '</tpl>',
 
                 '</table>',
 
@@ -960,7 +968,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
                 '<thead>',
                 '<tr class="subtotalrow">',
-                '<th><div class="handling-tax-summary"></div></th>',
+                '<th><div class="{[ (values.isBopis ) ? "" : "handling-tax-summary"]}"></div></th>',
                 '<th class="summary"><div class="{tdInnerCls}">Handling Tax</div></th>',
                 '<th></th>',
 
@@ -972,7 +980,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</tr>',
                 '</thead>',
 
-
+                '<tpl if="!values.isBopis">',
                 '<tbody>',
                 '<tr class="shipping-handling-item">',
                 '<td class="{tdCls}"></td>',
@@ -986,6 +994,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<td class="{tdCls}"></td>',
                 '</tr>',
                 '</tbody>',
+                '</tpl>',
 
                 '</table>',
 
