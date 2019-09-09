@@ -97,9 +97,10 @@
 
 
         <div id="page-wrapper" class="mz-l-pagewrapper">
-          {% if themeSettings.showCookieNotice %}
-          cookie notice enabled
-          {% endif %}
+            {% if themeSettings.showCookieNotice %}
+            {% require_script "modules/cookie-notice" %}
+            {% endif %}
+          
             {% if themeSettings.enableRecaptcha %}
             <div id="recaptcha-container-global"></div>
             {% endif %}
@@ -137,6 +138,7 @@
             {% include "modules/page-footer" %}
             {% endblock page-footer %}
             {% include "modules/common/message-bar" %}
+
         </div>
 
         {% block trailing-scripts %}

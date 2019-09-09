@@ -1,4 +1,5 @@
 {
+  "acceptCookies": "Accept Cookies",
   "accountAttributes": "Account Attributes",
   "accountMyWishlist": "My Wishlist",
   "accountNoCredits": "You have no store credits.",
@@ -104,6 +105,8 @@
   "confirmPassword": "Confirm Password",
   "confirmRemoveFromWishlist": "Are you sure you want to remove {0} from your wishlist?",
   "contactType": "Type",
+  "cookieNoticeTitle": "Cookie Notice",
+  "cookieNotice": "This site uses cookies to personalize content. By using this site or accepting cookies you are agreeing to our use of cookies.",
   "country": "Country",
   "currency": "Currency",
   "countryMissing": "Please make a country selection",
@@ -229,6 +232,8 @@
   "lastName": "Last Name",
   "lastNameMissing": "Last name required",
   "late": "Arrived too late",
+  "learnMore": "Learn More",
+  "learnMoreCookiesLink": "https://kibocommerce.com/privacy/",
   "leaveOnWishlist": "Leave On Wishlist",
   "length": "Length",
   "localStores": "Local Stores",

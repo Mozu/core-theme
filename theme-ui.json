@@ -14,11 +14,6 @@
                     "xtype": "mz-input-checkbox",
                     "name": "enablePartialCaching",
                     "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "showCookieNotice",
-                    "fieldLabel": "Show Cookie Notice on homepage"
                 }
             ]
         },
@@ -121,6 +116,23 @@
                     "allowOnlyWhitespace": true,
                     "maxValue": 30
                 }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "CCPA/GDPR",
+            "collapsed": false,
+            "items": [
+              {
+                  "xtype": "mz-input-checkbox",
+                  "name": "showCookieNotice",
+                  "fieldLabel": "Show Cookie Notice on homepage"
+              },
+              {
+                  "xtype": "mz-input-checkbox",
+                  "name": "requireGDPR",
+                  "fieldLabel": "Require agreement to GDPR terms on account creation and show GDPR messaging in checkout"
+              }
             ]
         },
         {
