@@ -22,6 +22,7 @@
     layout: {
         type: 'fit'
     },
+    orderedQuantity: 0,
 
     initComponent: function () {
         this.cellEditing = new Ext.grid.plugin.CellEditing({
@@ -29,6 +30,7 @@
             pluginId: 'cellEditing'
         });
         var me = this;
+        orderedQuantity = me.selectedItem.quantity;
         this.filteredInventory = [];
         if (this.inventoryItemList.candidateSuggestions && this.inventoryItemList.candidateSuggestions.length > 0) {
             this.filteredInventoryLocations(this.inventoryItemList.candidateSuggestions);
@@ -114,17 +116,11 @@
                         xtype: 'textfield',
                         cls: 'x-grid-checkheader-editor',
                         inputValue: true,
+                        regex: /^\d{0,9}$/,
+                        regexText: "Invalid Number entered.",
                         uncheckedValue: false,
                         minValue: 1,
                         maxValue: me.selectedItem.quantity,
-                        listeners: {
-                            change: {
-                                scope: this,
-                                fn: function (field, value) { 
-                                    me.validateQuantity(value);
-                                }
-                            }
-                        }
                     }
                 },
             ],
@@ -161,6 +157,10 @@
                         }
                     }
                     me.getView().refresh();
+                    if (context.value > orderedQuantity) {
+                        alert('Quantity to reassign should be less than ordered quantity.');
+                        return false;
+                    }
                 }
             },
         });
@@ -210,7 +210,9 @@
                         uncheckedValue: false,
                         minValue: 1,
                         maxValue: me.selectedItem.quantity,
-                        width: 425
+                        width: 425,
+                        regex: /^\d{0,9}$/,
+                        regexText: "Invalid Number entered.",
                     }
                 },
             ],
@@ -242,6 +244,10 @@
                         }
                     }
                     me.getView().refresh();
+                    if (context.value > orderedQuantity) {
+                        alert('Quantity to reassign should be less than ordered quantity.');
+                        return false;
+                    }
                 }
             },
         });                   
@@ -353,12 +359,6 @@
        
     },
 
-    validateQuantity: function (quantity) {
-        var me = this;
-        if (quantity > me.selectedItem.quantity) {
-            return false;
-        }
-    },
 
     filteredInventoryLocations: function (inventoryLocations) {
         var me = this;
