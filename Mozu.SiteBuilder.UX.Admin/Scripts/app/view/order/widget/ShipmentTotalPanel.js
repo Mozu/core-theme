@@ -417,7 +417,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     getValueOf: function (elementId) {
-        return Ext.get(elementId).getValue();
+        if (elementId && Ext.get(elementId))
+            return Ext.get(elementId).getValue();
     },
 
     updateShipmentAdjustments: function () {
