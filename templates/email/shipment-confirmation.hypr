@@ -1,4 +1,4 @@
-﻿{% extends "email/email" %}
+{% extends "email/email" %}
 
 {% block body-content %}
     <br>
@@ -19,7 +19,7 @@
             <tr>
                 <td>
                     <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
-                    <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.origin %}<br><br>
+                    <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
                     {% if model.shippingMethodName %}
                     <b>{{ labels.shippingMethod }}</b>: {{ model.shippingMethodName }}<br>
                     {% endif %}

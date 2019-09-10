@@ -91,7 +91,7 @@
       "title": "Your Order Has Shipped"
     },
     {
-      "id": "order.cancel",
+      "id": "order.cancelled",
       "properties": {},
       "template": "email/order-cancel",
       "title": "Order Cancel"

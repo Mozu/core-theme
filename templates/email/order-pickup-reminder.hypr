@@ -20,13 +20,55 @@
         <tr>
             <td>{{ model.storeLocation.name }}</td>
             <td class="mz-ordersummary-regular-hours">
-                {{ labels.sunday }}: {{ model.storeLocation.regularHours.sunday }}<br>
-                {{ labels.monday }}: {{ model.storeLocation.regularHours.monday }}<br>
-                {{ labels.tuesday }}: {{ model.storeLocation.regularHours.tuesday }}<br>
-                {{ labels.wednesday }}: {{ model.storeLocation.regularHours.wednesday }}<br>
-                {{ labels.thursday }}: {{ model.storeLocation.regularHours.thursday }}<br>
-                {{ labels.friday }}: {{ model.storeLocation.regularHours.friday }}<br>
-                {{ labels.saturday }}: {{ model.storeLocation.regularHours.saturday }}<br>
+                {{ labels.sunday }}: 
+                {% if model.storeLocation.regularHours.sunday %}
+                    {{ model.storeLocation.regularHours.sunday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.monday }}: 
+                {% if model.storeLocation.regularHours.monday %}
+                    {{ model.storeLocation.regularHours.monday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.tuesday }}: 
+                {% if model.storeLocation.regularHours.tuesday %}
+                    {{ model.storeLocation.regularHours.tuesday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.wednesday }}: 
+                {% if model.storeLocation.regularHours.wednesday %}
+                    {{ model.storeLocation.regularHours.wednesday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.thursday }}: 
+                {% if model.storeLocation.regularHours.thursday %}
+                    {{ model.storeLocation.regularHours.thursday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.friday }}: 
+                {% if model.storeLocation.regularHours.friday %}
+                    {{ model.storeLocation.regularHours.friday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
+                {{ labels.saturday }}: 
+                {% if model.storeLocation.regularHours.saturday %}
+                    {{ model.storeLocation.regularHours.saturday.label }}
+                {% else %}
+                    {{ labels.noHours }}
+                {% endif %}
+                <br>
             </td>
             <td>{{ model.storeLocation.note }}</td>
         </tr>
@@ -50,7 +92,7 @@
                     <dd>{{ item.productCode }}</dd>&nbsp;
                 </dl>
                 </td>
-                <td align="right"><span class="mz-item-price">{{ item.unitPrice|currency }}</span></td>
+                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
 			</tr>
 		{% endfor %}
     </table>
