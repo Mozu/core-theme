@@ -121,6 +121,11 @@
                         uncheckedValue: false,
                         minValue: 1,
                         maxValue: me.selectedItem.quantity,
+                        validator: function (value) {
+                            if (!isNaN(value)) {
+                                return (value <= orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                            }
+                        }
                     }
                 },
             ],
@@ -213,6 +218,11 @@
                         width: 425,
                         regex: /^\d{0,9}$/,
                         regexText: "Invalid Number entered.",
+                        validator: function (value) {
+                            if (!isNaN(value)) {
+                                return (value <= orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                            }
+                        }
                     }
                 },
             ],
@@ -244,10 +254,6 @@
                         }
                     }
                     me.getView().refresh();
-                    if (context.value > orderedQuantity) {
-                        alert('Quantity to reassign should be less than ordered quantity.');
-                        return false;
-                    }
                 }
             },
         });                   

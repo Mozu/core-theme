@@ -260,10 +260,22 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             var enteredValue = parseFloat(Ext.get(elementId).getValue());
             if (this.validateNumber(enteredValue)) {
                 if (enteredValue) {
-                    if (isPercentage)
-                        calcValue = (originalValue * enteredValue) / 100;
-                    else
-                        calcValue = enteredValue;
+                    if (isPercentage) {
+                        if (summarycls == '.tax') {
+                            calcValue = (this.shipmentRecord.lineItemSubtotal * enteredValue) / 100;
+                        }
+                        else {
+                            calcValue = (originalValue * enteredValue) / 100;
+                        }
+                    }
+                    else {
+                        if (summarycls == '.tax') {
+                            calcValue = (100 * enteredValue) / this.shipmentRecord.lineItemSubtotal;
+                        }
+                        else {
+                            calcValue = enteredValue;
+                        }
+                    }
 
                     this.masterTable.el.dom.querySelector(summarycls + ' .summary-price div').innerHTML = this.record.formatCurrency(calcValue);
                 }
