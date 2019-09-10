@@ -107,15 +107,17 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
         var me = this;
         
         var order = this.record;
-        //var reason = this.down('#cancelReason').getValue();
+        var reason = this.down('#cancelReason').getValue();
         var description = (this.down('[name=otherReason]').isVisible() ?
-            this.down('#otherReason').getValue() : this.down('#cancelReason').rawValue);
+            this.down('#otherReason').getValue() : null);
 
         return {
             shipmentNumber: me.shipmentRecord.number,
             cancelShipment: {
-                cancelReason: description,
-                //cancelReasonDescription: description
+                canceledReason: {
+                    reasonCode: reason,
+                    moreInfo: description
+                }
             }
         };
     },
@@ -145,7 +147,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                             success: function (response) {
                                 // success handling here
                                 var json = Ext.decode(response.responseText, true);
-                                if (response.status != 204 && response.status != 200) {
+                                if (response.status != 200) {
                                     Taco.app.fireEvent('setmessage', 'Error canceling shipment', 'error');
                                     me.fireEvent('saveFailure');
                                     return;

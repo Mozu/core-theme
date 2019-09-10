@@ -30,8 +30,6 @@ using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
-using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
-using Mozu.Provisioning.Domain.ApiWrappers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -49,9 +47,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly ICustomerSetWebApiClient _customerSetWebApiClient;
         private readonly IReturnWebApiClient _returnWebApiClient;
         private readonly ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-        private readonly IOrderRoutingApiWrapper _orderRoutingApiWrapper;
-        private readonly IInventoryApiWrapper _inventoryApiWrapper;
-        private readonly IFulfillerApiWrapper _fulfillerApiWrapper;
+        private readonly IOrderRoutingProxyWebApiClient _orderRoutingProxyClient;
+        private readonly IInventoryProxyWebApiClient _inventoryProxyClient;
+        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private readonly string _ipAddress;
         /*
          * All order item operations have an updateMode attribute.
@@ -76,9 +74,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             ICustomerSetWebApiClient customerSetWebApiClient,
             IReturnWebApiClient returnWebApiClient,
             IIpAddressFinderOuter ipAddressFinderOuter,
-            IOrderRoutingApiWrapper orderRoutingApiWrapper,
-            IInventoryApiWrapper inventoryApiWrapper,
-            IFulfillerApiWrapper fulfillerApiWrapper,            
+            IOrderRoutingProxyWebApiClient orderRoutingProxyClient,
+            IInventoryProxyWebApiClient inventoryProxyClient,
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient,            
             ICheckoutSettingsWebApiClient checkoutSettingsWebApiClient
         )
         {
@@ -94,9 +92,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _returnWebApiClient = returnWebApiClient;
             _ipAddress = ipAddressFinderOuter.IpAddress;
             _checkoutSettingsWebApiClient = checkoutSettingsWebApiClient;
-            _orderRoutingApiWrapper = orderRoutingApiWrapper;
-            _inventoryApiWrapper = inventoryApiWrapper;
-            _fulfillerApiWrapper = fulfillerApiWrapper;
+            _orderRoutingProxyClient = orderRoutingProxyClient;
+            _inventoryProxyClient = inventoryProxyClient;
+            _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         [HttpGetRoute(UriTemplate = "list")]

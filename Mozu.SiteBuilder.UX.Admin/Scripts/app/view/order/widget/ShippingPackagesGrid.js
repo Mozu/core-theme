@@ -704,16 +704,18 @@
         if (selectedItem) {
             return {
                 shipmentNumber: me.shipmentRecord.number,
-                shipmentItems: [{
-                    lineId: selectedItem.lineId,
-                    name: selectedItem.name,
-                    productCode: selectedItem.productCode,
-                    quantity: selectedItem.quantity,
-                    imageUrl: selectedItem.imageUrl,
-                    actualPrice: selectedItem.actualPrice,
-                    optionAttributeFQN: selectedItem.optionAttributeFQN,
-                    variationProductCode: selectedItem.variationProductCode
-                }]
+                reassignItemsRequest: {
+                    items: [{
+                        lineId: selectedItem.lineId,
+                        name: selectedItem.name,
+                        productCode: selectedItem.productCode,
+                        quantity: selectedItem.quantity,
+                        imageUrl: selectedItem.imageUrl,
+                        actualPrice: selectedItem.actualPrice,
+                        optionAttributeFQN: selectedItem.optionAttributeFQN,
+                        variationProductCode: selectedItem.variationProductCode
+                    }]
+                }
             };
         }
     }

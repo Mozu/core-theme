@@ -27,7 +27,6 @@ using Mozu.Core.ErrorHandling;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Extensions;
 using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
-using Mozu.SiteBuilder.UX.Admin.ApiWrappers;
 using CARSModel = Mozu.CARS.Contracts.Model;
 using Mozu.Location.Contracts.Clients;
 using Mozu.Location.Contracts;
@@ -50,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private readonly ConcurrentDictionary<string, string> channelCache = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, string> userCache = new ConcurrentDictionary<string, string>();
-        private readonly ICARSApiWrapper _CARSApiWrapper;
+        private readonly ICARSProxyWebApiClient _CARSProxyClient;
         private readonly ILocationAdminWebApiClient _locationWebApiClient;
         private readonly ILocationGroupConfigurationWebApiClient _locationGroupWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
@@ -62,7 +61,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public ReturnController(IOrderWebApiClient orderWebApiClient, IReturnWebApiClient returnWebApiClient,
             ICustomerAccountWebApiClient customerWebApiClient, IMultiScopeAdminUserWebApiClient userWebApiClient,
             IChannelWebApiClient channelWebApiClient,
-            ICARSApiWrapper CARSApiWrapper,
+            ICARSProxyWebApiClient CARSProxyClient,
             ILocationAdminWebApiClient locationWebApiClient,
             ILocationGroupConfigurationWebApiClient locationGroupWebApiClient,
             IReturnSettingsWebApiClient returnSettingsWebApiClient,
@@ -73,7 +72,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _customerWebApiClient = customerWebApiClient;
             _usersWebApiClient = userWebApiClient;
             _channelWebApiClient = channelWebApiClient;
-            _CARSApiWrapper = CARSApiWrapper;
+            _CARSProxyClient = CARSProxyClient;
             _locationWebApiClient = locationWebApiClient;
             _locationGroupWebApiClient = locationGroupWebApiClient;
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
@@ -630,7 +629,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location, configuration);
-            var serviceResponse = _CARSApiWrapper.GenerateLabelUsingPOST(request);
+            var serviceResponse = _CARSProxyClient.GenerateLabelUsingPOST(request);
 
             return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
         }

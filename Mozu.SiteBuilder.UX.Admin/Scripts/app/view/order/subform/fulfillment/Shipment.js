@@ -217,7 +217,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             jsonData: payloadData,
             success: function (response) {
                 me.setLoading(false, this.body);
-                if (response.status != 204) {
+                if (response.status != 200) {
                     Taco.app.fireEvent('setmessage', 'Error while fulfilling shipment', 'error');
                     return;
                 }

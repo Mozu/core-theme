@@ -75,8 +75,8 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 useNull: true
             },
                 {
-                    name: 'reason',
-                    type: 'string',
+                    name: 'canceledReason',
+                    type: 'auto',
                     useNull: true
                 },
                 {
@@ -140,7 +140,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
             },
             {
                 text: 'Cancellation Reason',
-                dataIndex: 'reason',
+                dataIndex: 'canceledReason',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -148,17 +148,19 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 //menuDisabled: true,
                 //minWidth: 80,
                 flex: 2,
-                renderer: function (value) {
-                    if (value) {
-                        //this.reasonCodes.data.items[0].get('value')
+                renderer: function (value) {                    
+                    if (value && value.reasonCode) {
+                        if (value.reasonCode == 'Other')
+                            return value.moreInfo;
+
                         if (this.reasonCodes && this.reasonCodes.data && this.reasonCodes.data.items) {
                             for (var i = 0; i < this.reasonCodes.data.items.length; i++) {
-                                if (value == this.reasonCodes.data.items[i].get('key')) {
+                                if (value.reasonCode == this.reasonCodes.data.items[i].get('key')) {
                                     return this.reasonCodes.data.items[i].get('value');
                                 }
                             }
                         }
-                        return value;
+                        return value.reasonCode;
                     }
                 }
             },

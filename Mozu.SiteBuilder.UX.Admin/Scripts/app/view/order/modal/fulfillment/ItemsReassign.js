@@ -295,7 +295,7 @@
                         Taco.app.fireEvent('setmessage', json.response, 'error');
                         return;
                     }
-                    Taco.app.fireEvent('setmessage', "Item " +  payloadData.shipmentItems[0].name + " Successfully Reassigned", 'success');
+                    Taco.app.fireEvent('setmessage', "Item " + payloadData.reassignItemsRequest.items[0].name + " Successfully Reassigned", 'success');
                     me.saveSuccess(json);
                     me.close();
                     // close the dialog
@@ -322,18 +322,20 @@
             if (selectedLocation) {
                 return {
                     shipmentNumber: me.shipmentRecord.number,
-                    shipmentItems: [{
-                        lineId: me.selectedItem.lineId,
-                        name: me.selectedItem.name,
-                        productCode: me.selectedItem.productCode,
-                        fulfillmentLocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : item[0].raw.code,
-                        quantity: selectedLocation.reassignQty,
-                        imageUrl: me.selectedItem.imageUrl,
-                        retailPrice: me.selectedItem.actualPrice,
-                        optionAttributeFQN: me.selectedItem.optionAttributeFQN,
-                        unitPrice: me.selectedItem.unitPrice,
-                        variationProductCode: me.selectedItem.variationProductCode
-                    }]
+                    reassignItemsRequest: {
+                        items: [{
+                            lineId: me.selectedItem.lineId,
+                            name: me.selectedItem.name,
+                            productCode: me.selectedItem.productCode,
+                            fulfillmentLocationCode: grid.itemId == "inventoryGrid" ? item[0].raw.locationCode : item[0].raw.code,
+                            quantity: selectedLocation.reassignQty,
+                            imageUrl: me.selectedItem.imageUrl,
+                            retailPrice: me.selectedItem.actualPrice,
+                            optionAttributeFQN: me.selectedItem.optionAttributeFQN,
+                            unitPrice: me.selectedItem.unitPrice,
+                            variationProductCode: me.selectedItem.variationProductCode
+                        }]
+                    }
                 };
             }
     },

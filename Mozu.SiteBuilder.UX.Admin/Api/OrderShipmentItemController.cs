@@ -21,13 +21,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class ReassignShipmentItemArgs
         {
             public int ShipmentNumber { get; set; }
-            public List<ReassignItem> ShipmentItems { get; set; }
+            public ReassignItemsRequest ReassignItemsRequest { get; set; }
 
         }
         [HttpPostRoute(UriTemplate = "shipment/items/reassign")]
-        public Response<ResourceOfShipment> ReassignShipmentItems(ReassignShipmentItemArgs args)
+        public async Task<Response<ResourceOfShipment>> ReassignShipmentItems(ReassignShipmentItemArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.ReassignShipmentItems(args.ShipmentNumber, args.ShipmentItems);
+            var serviceResponse = (await _fulfillmentProxyClient.ReassignShipmentItems(args.ShipmentNumber, args.ReassignItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
@@ -35,13 +35,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class CancelShipmentItemArgs
         {
             public int ShipmentNumber { get; set; }
-            public List<CanceledItem> CanceledItems { get; set; }
+            public CancelItemsRequest CancelItemsRequest { get; set; }
 
         }
         [HttpPostRoute(UriTemplate = "shipment/items/cancel")]
-        public Response<ResourceOfShipment> CancelShipmentItems(CancelShipmentItemArgs args)
+        public async Task<Response<ResourceOfShipment>> CancelShipmentItems(CancelShipmentItemArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.CancelItems(args.CanceledItems, args.ShipmentNumber);
+            var serviceResponse = (await _fulfillmentProxyClient.CancelItems(args.ShipmentNumber, args.CancelItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
@@ -63,9 +63,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public BackorderItemsRequest BackorderItemsRequest { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/backorderItemsUpdate")]
-        public Response<ResourceOfShipment> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
+        public async Task<Response<ResourceOfShipment>> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.BackorderItemsUpdate(args.BackorderItemsRequest, args.ShipmentNumber);
+            var serviceResponse = (await _fulfillmentProxyClient.BackorderItemsUpdate(args.ShipmentNumber, args.BackorderItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
         }
     }

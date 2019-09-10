@@ -141,18 +141,24 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
 
         return {
             shipmentNumber: me.shipmentRecord.number,
-            canceledItems: [{
-                lineId: me.selectedItem.lineId,
-                name: me.selectedItem.name,
-                productCode: me.selectedItem.productCode,
-                quantity: this.down('#cancelQuantity').getValue(),
-                reason: (reason.toLowerCase() == 'other' ? description : reason),
-                imageUrl: me.selectedItem.imageUrl,
-                retailPrice: me.selectedItem.actualPrice,
-                optionAttributeFQN: me.selectedItem.optionAttributeFQN,
-                unitPrice: me.selectedItem.unitPrice,
-                variationProductCode: me.selectedItem.variationProductCode
-            }]
+            cancelItemsRequest: {
+                items: [{
+                    lineId: me.selectedItem.lineId,
+                    name: me.selectedItem.name,
+                    productCode: me.selectedItem.productCode,
+                    quantity: this.down('#cancelQuantity').getValue(),
+                    canceledReason: {
+                        reasonCode: reason,
+                        moreInfo: description,
+                    },
+                    //reason: (reason.toLowerCase() == 'other' ? description : reason),
+                    imageUrl: me.selectedItem.imageUrl,
+                    retailPrice: me.selectedItem.actualPrice,
+                    optionAttributeFQN: me.selectedItem.optionAttributeFQN,
+                    unitPrice: me.selectedItem.unitPrice,
+                    variationProductCode: me.selectedItem.variationProductCode
+                }]
+            }
         };
     },
 
@@ -183,7 +189,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     Taco.app.fireEvent('setmessage', 'Error while canceling shipment item', 'error');
                                     return;
                                 }
-                                Taco.app.fireEvent('setmessage', "Item " + payloadData.canceledItems[0].name + " Successfully Cancelled", 'success');
+                                Taco.app.fireEvent('setmessage', "Item " + payloadData.cancelItemsRequest.items[0].name + " Successfully Cancelled", 'success');
                                 me.saveSuccess();
                                 me.close();
                             },

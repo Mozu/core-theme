@@ -1,19 +1,19 @@
-﻿using System;
+﻿using AutoMapper;
+using Mozu.Core.Api.Routing;
+using Mozu.Inventory.Contracts.Model;
+using Mozu.OrderRouting.Contracts.Model;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
-using IO.Swagger.Model;
-using Mozu.Core.Api.Routing;
 using DCm = Mozu.Fulfillment.Contracts.Model;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
-using Mozu.Inventory.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -364,19 +364,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         ///SHIPMENT ASSIGN
         ///GET LOCATIONS 
         [HttpPostRoute(UriTemplate = "shipping/candidates")]
-        public Response<CandidateSuggestionsResponse> GetCandidates(CandidateSuggestionsRequest request)
+        public async Task<Response<CandidateSuggestionsResponse>> GetCandidates(CandidateSuggestionsRequest request)
         {
-            var serviceResponse = _orderRoutingApiWrapper.SuggestCandidates(request);
+            var serviceResponse = (await _orderRoutingProxyClient.SuggestCandidates(request)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
 
         [HttpPostRoute(UriTemplate = "shipping/inventory")]
-        public Response<List<InventoryResponse>> GetInventory(InventoryRequest body)
+        public async Task<Response<List<InventoryResponse>>> GetInventory(InventoryRequest body)
         {
-            var serviceResponse = _inventoryApiWrapper.PostQueryInventory(body);
-
-            return List2(serviceResponse);
+            var serviceResponse = (await _inventoryProxyClient.PostQueryInventory(body)).ReadAsSync();
+            return Single2(serviceResponse);
         }
 
         public class CancelShipmentArgs
@@ -386,9 +385,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/cancel")]
-        public void CancelShipment(CancelShipmentArgs args)
+        public async Task<Response<DCm.ResourceOfShipment>> CancelShipment(CancelShipmentArgs args)
         {
-            _fulfillerApiWrapper.CancelShipment(args.CancelShipment, args.ShipmentNumber);
+            var serviceResponse = (await _fulfillmentProxyClient.CancelShipment(args.ShipmentNumber, args.CancelShipment)).ReadAsSync();
+            return Single2(serviceResponse);
         }
 
         public class RejectShipmentArgs
@@ -398,9 +398,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/reject")]
-        public void RejectShipment(RejectShipmentArgs args)
-        {
-            _fulfillerApiWrapper.RejectShipment(args.RejectShipment, args.ShipmentNumber);
+        public async Task<Response<DCm.ResourceOfShipment>> RejectShipment(RejectShipmentArgs args)
+        {            
+            var serviceResponse = (await _fulfillmentProxyClient.RejectShipment(args.ShipmentNumber, args.RejectShipment)).ReadAsSync();
+            return Single2(serviceResponse);
         }
 
 
@@ -410,9 +411,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         }
         [HttpPutRoute(UriTemplate = "shipment/fulfill")]
-        public void FuflfillShipment(FuflfillShipmentArgs args)
+        public async Task<Response<DCm.ResourceOfShipment>> FuflfillShipment(FuflfillShipmentArgs args)
         {
-            _fulfillerApiWrapper.FulfillShipment(args.ShipmentNumber);
+            var serviceResponse = (await _fulfillmentProxyClient.FulfillShipment(args.ShipmentNumber)).ReadAsSync();
+            return Single2(serviceResponse);
         }
 
         public class BackorderShipmentArgs
@@ -422,9 +424,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DCm.BackorderShipmentRequest BackorderShipmentBody { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/backordered")]
-        public Response<DCm.ResourceOfShipment> BackorderShipment(BackorderShipmentArgs args)
+        public async Task<Response<DCm.ResourceOfShipment>> BackorderShipment(BackorderShipmentArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.BackorderShipment(args.BackorderShipmentBody, args.ShipmentNumber);
+            var serviceResponse = (await _fulfillmentProxyClient.BackorderShipment(args.ShipmentNumber, args.BackorderShipmentBody)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
@@ -434,9 +436,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             public DCm.ReassignShipment ReassignShipment { get; set; }
         }
         [HttpPutRoute(UriTemplate = "shipment/reassign")]
-        public Response<DCm.ResourceOfShipment> ReassignShipment(ReassignShipmenttArgs args)
+        public async Task<Response<DCm.ResourceOfShipment>> ReassignShipment(ReassignShipmenttArgs args)
         {
-            var serviceResponse = _fulfillerApiWrapper.ReassignShipment(args.ShipmentNumber,args.ReassignShipment);
+            var serviceResponse = (await _fulfillmentProxyClient.ReassignShipment(args.ShipmentNumber, args.ReassignShipment)).ReadAsSync();
             return Single2(serviceResponse);
         }
 
