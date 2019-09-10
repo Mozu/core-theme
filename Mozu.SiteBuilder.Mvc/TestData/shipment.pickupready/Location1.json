@@ -1,74 +1,88 @@
-{  
-   "code":"atx-whse",
-   "locationTypes":[  
-      {  
-         "code":"Warehouse",
-         "name":"Warehouse",
-         "auditInfo":{  
-            "updateDate":"2016-03-11T23:00:41.369Z",
-            "createDate":"2016-03-11T23:00:41.369Z",
-            "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-            "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
-         }
+{
+  "code": "storelocation1",
+  "locationTypes": [
+    {
+      "code": "storelocationtype1",
+      "name": "Store Location Type1",
+      "auditInfo": {
+        "updateDate": "2016-05-04T20:07:18.859Z",
+        "createDate": "2016-05-04T20:07:18.859Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
       }
-   ],
-   "name":"Austin Warehouse",
-   "description":"",
-   "address":{  
-      "address1":"1835 Kramer Ln",
-      "address2":"",
-      "address3":"",
-      "address4":"",
-      "cityOrTown":"Austin",
-      "stateOrProvince":"TX",
-      "postalOrZipCode":"78758",
-      "countryCode":"US",
-      "isValidated":false
-   },
-   "geo":{  
-      "lat":0.0,
-      "lng":0.0
-   },
-   "phone":"",
-   "fax":"",
-   "supportsInventory":true,
-   "fulfillmentTypes":[  
-      {  
-         "code":"DS",
-         "name":"Direct Ship"
-      },
-      {  
-         "code":"SP",
-         "name":"In Store Pickup"
-      }
-   ],
-   "regularHours":,
-   "shippingOriginContact":{  
-      "firstName":"Billy",
-      "middleNameOrInitial":"Bob",
-      "lastNameOrSurname":"Builder",
-      "companyOrOrganization":"Adam's Keyboards",
-      "phoneNumber":"555-555-5555",
-      "email":"bbuilder@adamskeyboards.net"
-   },
-   "note":"",
-   "tags":[  
-
-   ],
-   "attributes":[  
-
-   ],
-   "auditInfo":{  
-      "updateDate":"2017-09-05T22:54:58.614Z",
-      "createDate":"2016-03-11T23:02:21.427Z",
-      "updateBy":"355060a60a5e48eeb7f2fb8d92af2ba5",
-      "createBy":"355060a60a5e48eeb7f2fb8d92af2ba5"
-   },
-   "allowFulfillmentWithNoStock":false,
-   "isDisabled":false,
-   "express":false,
-   "transferEnabled":false,
-   "includeInInventoryAggregrate":false,
-   "includeInLocationExport":false,
-   "warehouseEnabled":false
+    }
+  ],
+  "name": "Store Location 1",
+  "description": "",
+  "address": {
+    "address1": "1835 Kramer Ln",
+    "address2": "",
+    "address3": "",
+    "address4": "",
+    "cityOrTown": "Austin",
+    "stateOrProvince": "TX",
+    "postalOrZipCode": "78758",
+    "countryCode": "US",
+    "isValidated": false
+  },
+  "geo": {
+    "lat": 30.3871389,
+    "lng": -97.7100097
+  },
+  "phone": "",
+  "fax": "",
+  "supportsInventory": true,
+  "fulfillmentTypes": [
+    {
+      "code": "SP",
+      "name": "In Store Pickup"
+    }
+  ],
+  "regularHours": {
+    "sunday": {
+      "label": "9AM-4PM"
+    },
+    "monday": {
+      "label": "9AM-6PM"
+    },
+    "tuesday": {
+      "label": "9AM-6PM"
+    },
+    "wednesday": {
+      "label": "9AM-6PM"
+    },
+    "thursday": {
+      "label": "9AM-6PM"
+    },
+    "friday": {
+      "label": "9AM-6PM"
+    },
+    "saturday": {
+      "label": "9AM-9PM"
+    }
+  },
+  "shippingOriginContact": {
+    "firstName": "a",
+    "middleNameOrInitial": "",
+    "lastNameOrSurname": "b",
+    "companyOrOrganization": "Volusion",
+    "phoneNumber": "6662227878",
+    "email": "ab@volusion.com"
+  },
+  "note": "",
+  "tags": [],
+  "attributes": [],
+  "auditInfo": {
+    "updateDate": "2019-09-03T16:58:16.279Z",
+    "createDate": "2016-05-04T20:27:23.589Z",
+    "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+    "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+  },
+  "allowFulfillmentWithNoStock": false,
+  "isDisabled": false,
+  "express": false,
+  "transferEnabled": false,
+  "includeInInventoryAggregrate": true,
+  "includeInLocationExport": false,
+  "warehouseEnabled": false
 }
