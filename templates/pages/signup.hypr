@@ -54,10 +54,10 @@
                 </div>
                 <div class="mz-l-formfieldgroup-row">
                   <div class="mz-l-formfieldgroup-cell">
-                      <input style="float:right" type="checkbox" name="agreeToGDPR" data-mz-signup-agreeToGDPR />
+                      <input style="float:right" type="checkbox"  {% if not themeSettings.requireGDPR %}checked hidden{% endif %} name="agreeToGDPR" data-mz-signup-agreeToGDPR />
                   </div>
                     <div class="mz-l-formfieldgroup-cell">
-                      <label style="float:left" for="agreeToGDPR">{{ labels.agreeToGDPR|string_format("https://kibocommerce.com/privacy/")|safe }}</label>
+                      <label style="float:left; {% if not themeSettings.requireGDPR %}display:none{% endif %}" for="agreeToGDPR" >{{ labels.agreeToGDPR|string_format("https://kibocommerce.com/privacy/")|safe }}</label>
                   </div>
                 </div>
                 <div class="mz-l-formfieldgroup-row">

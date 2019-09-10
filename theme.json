@@ -407,6 +407,8 @@
   ],
   "settings": {
     "enableRecaptcha": false,
+    "showCookieNotice": false,
+    "requireGDPR": true,
     "recaptchaSiteKey": null,
     "__recaptchaSecrete": null,
     "recaptchaType": "Invisible",

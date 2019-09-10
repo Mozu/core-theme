@@ -1,0 +1,50 @@
+{
+  "_from": "overhang",
+  "_id": "overhang@1.0.5",
+  "_inBundle": false,
+  "_integrity": "sha512-0znL723l2J0oWCGis72dzoGIWA/ThHuT0uLXFhIdwKnomw2IMgQcfn5DlQDiUvWzR0Btn0BW/LDweYnGlnm4OA==",
+  "_location": "/overhang",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "overhang",
+    "name": "overhang",
+    "escapedName": "overhang",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/overhang/-/overhang-1.0.5.tgz",
+  "_shasum": "c695fab3b02f752d6472bb5b5945ccf02ea5b827",
+  "_spec": "overhang",
+  "_where": "C:\\Users\\Shel\\Source\\Repos\\Mozu.CoreTheme",
+  "author": {
+    "name": "Paul Krishnamurthy",
+    "email": "paul@paulkr.com"
+  },
+  "bugs": {
+    "url": "https://github.com/paulkr/overhang.js/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "A JQuery plugin for notifications, prompts and confirmations.",
+  "homepage": "https://github.com/paulkr/overhang.js#readme",
+  "keywords": [
+    "notifications",
+    "prompts",
+    "confirmations",
+    "alerts"
+  ],
+  "license": "MIT",
+  "name": "overhang",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulkr/overhang.js.git"
+  },
+  "version": "1.0.5"
+}
