@@ -139,27 +139,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.Backorder
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.BackorderUpdate
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentConfirmation
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.OrderPickupReady
                                            },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.OrderPickupReminder
                                            },
                                        /*new EmailTypeInfo
@@ -169,7 +169,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            },*/
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Shipment),
+                                               ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentBackorderDateChanged
                                            }
                 };
