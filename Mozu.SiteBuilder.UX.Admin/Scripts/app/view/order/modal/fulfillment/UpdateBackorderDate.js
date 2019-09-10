@@ -71,26 +71,28 @@ Ext.define('Taco.view.order.modal.fulfillment.UpdateBackorderDate', {
     getUpdateBackorderDatePayload: function () {
         var me = this;
         var backorderDate = Ext.getCmp('backorderDate').getValue();
-        var items = [];
-        if (me.isShipment)
-            me.shipmentRecord.items.forEach(function (item, index) {
-                items.push({
-                    "backorderReleaseDate": backorderDate,
-                    "lineId": item.lineId
+        if (backorderDate) {
+            var items = [];
+            if (me.isShipment)
+                me.shipmentRecord.items.forEach(function (item, index) {
+                    items.push({
+                        "backorderReleaseDate": new Date(backorderDate).toISOString(),
+                        "lineId": item.lineId
+                    });
                 });
-            });
-        else
-            items.push({
-                "backorderReleaseDate": backorderDate,
-                "lineId": me.selectedItem.lineId
-            });
+            else
+                items.push({
+                    "backorderReleaseDate": new Date(backorderDate).toISOString(),
+                    "lineId": me.selectedItem.lineId
+                });
 
-        return {
-            shipmentNumber: this.shipmentRecord.number,
-            BackorderItemsRequest: {
-                items: items
-            }
-        };
+            return {
+                shipmentNumber: this.shipmentRecord.number,
+                backorderItemsRequest: {
+                    items: items
+                }
+            };
+        }
     },
 
     doSave: function () {
