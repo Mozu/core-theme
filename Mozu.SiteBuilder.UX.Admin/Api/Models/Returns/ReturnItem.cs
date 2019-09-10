@@ -125,6 +125,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         /// </summary>
         public int QuantityRestockable { get; set; }
 
+        public int QuantityRestocked { get; set; }
+
         /// <summary>
         /// If a refund is issued for the return, how much of the refund amount is for this particular item.
         /// </summary>

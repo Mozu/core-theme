@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private async Task<List<Return>> MultiMapFromContract(List<DCr.Return> dcRmas)
         {
             var rmas = Mapper.Map<List<Return>>(dcRmas);
-           
+
             foreach (var rma in rmas)
             {
                 rma.ChannelName = await GetChannelName(rma.ChannelCode);
@@ -270,7 +270,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-          
+
 
             var sbReturn = await SingleMapFromContract(dcReturn);
 
@@ -698,7 +698,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             switch (carrier.DefaultCarrier.ToUpper())
             {
                 case "FEDEX":
-                    carrierType = "FEDEX";                    
+                    carrierType = "FEDEX";
                     break;
                 case "UPS":
                     carrierType = "UPS";
@@ -741,6 +741,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             request.PackageLength = measurement.Length.Value ?? 0;
             request.PackageWeight = measurement.Weight.Value ?? 0;
             request.Price = returns.Items.Sum(a => a.Product?.Price?.Price ?? 0);
+        }
+
+
+        [HttpPostRoute(UriTemplate = "restock")]
+        public async Task<Response<Return>> RestockReturnItems(RestockArgs restockArgs)
+        {
+            var ret = (await _returnWebApiClient.RestockReturnItems(restockArgs.returnId, restockArgs.restockableReturnItems)).ReadAsAsync().Result;
+            return Single2(await SingleMapFromContract(ret));
+        }
+
+        public class RestockArgs
+        {
+            public List<DCr.RestockableReturnItem> restockableReturnItems { get; set; }
+
+            public string returnId { get; set; }
         }
     }
 }
