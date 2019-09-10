@@ -20,13 +20,13 @@
         <tr>
             <td>{{ model.storeLocation.name }}</td>
             <td class="mz-ordersummary-regular-hours">
-                {{ labels.sunday }}: {{ model.storeLocation.regularHours.sunday }}<br>
-                {{ labels.monday }}: {{ model.storeLocation.regularHours.monday }}<br>
-                {{ labels.tuesday }}: {{ model.storeLocation.regularHours.tuesday }}<br>
-                {{ labels.wednesday }}: {{ model.storeLocation.regularHours.wednesday }}<br>
-                {{ labels.thursday }}: {{ model.storeLocation.regularHours.thursday }}<br>
-                {{ labels.friday }}: {{ model.storeLocation.regularHours.friday }}<br>
-                {{ labels.saturday }}: {{ model.storeLocation.regularHours.saturday }}<br>
+                {{ labels.sunday }}: {{ model.storeLocation.regularHours.sunday.label }}<br>
+                {{ labels.monday }}: {{ model.storeLocation.regularHours.monday.label }}<br>
+                {{ labels.tuesday }}: {{ model.storeLocation.regularHours.tuesday.label }}<br>
+                {{ labels.wednesday }}: {{ model.storeLocation.regularHours.wednesday.label }}<br>
+                {{ labels.thursday }}: {{ model.storeLocation.regularHours.thursday.label }}<br>
+                {{ labels.friday }}: {{ model.storeLocation.regularHours.friday.label }}<br>
+                {{ labels.saturday }}: {{ model.storeLocation.regularHours.saturday.label }}<br>
             </td>
             <td>{{ model.storeLocation.note }}</td>
         </tr>
