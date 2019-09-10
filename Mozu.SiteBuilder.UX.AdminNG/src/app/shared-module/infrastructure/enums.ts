@@ -57,15 +57,6 @@ export enum NotificationQuoteActions {
     edit = 'Edit'
 }
 
-export enum QuotesAdvFilterFields {
-    name = 'name',
-    quoteId = 'quoteId',
-    accountUserLastName = 'accountUserLastName',
-    accountName = 'accountName',
-    expirationFrom = 'expirationFrom',
-    expirationTo = 'expirationTo',
-    projectName = 'projectName'
-}
 
 export enum SubtotalOptions {
     subTotalExclTax = 'subTotalExclTax',

@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
-import { NavigationContainerType, Constants, QuotesAdvFilterFields } from '@shared/infrastructure';
-import { AdvancedFilterModel, QuoteFilter } from './advanced-search.model';
+import { NavigationContainerType, Constants } from '@shared/infrastructure';
+import { AdvancedFilterModel, FilterModel, QuoteFilterModel } from './advanced-search.model';
 
 @Component({
   selector: 'advanced-search',
@@ -15,14 +15,15 @@ export class AdvancedSearchComponent implements OnInit {
   @Input() isEditMode: boolean;
   navigationType = NavigationContainerType;
   public model: AdvancedFilterModel;
-  public quoteFilter: QuoteFilter;
+  public filterModel: FilterModel;
 
   constructor(private _notificationService: NotificationService,
     private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.model = new AdvancedFilterModel();
-    this.quoteFilter = new QuoteFilter();
+    this.filterModel = new QuoteFilterModel();
+    this.model.filterModel = this.filterModel;
   }
 
   toggleIcon(searchBar: any) {
@@ -34,7 +35,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.model.status = false;
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
-        this.resetAdvancedFilterValue();
+        this.filterModel.ResetFilterValue();
         this._notificationService.notifyQuoteSearched(searchBar.value);
         break;
     }
@@ -44,7 +45,7 @@ export class AdvancedSearchComponent implements OnInit {
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
         this.setAdvancedFilterValue(value);
-        this._notificationService.notifyQuoteSearched(JSON.stringify(_.pickBy(_.pick(this.quoteFilter, _.keys(this.quoteFilter)), _.identity)));
+        this._notificationService.notifyQuoteSearched(JSON.stringify(_.pickBy(_.pick(this.filterModel, _.keys(this.filterModel)), _.identity)));
         break;
     }
   }
@@ -54,34 +55,32 @@ export class AdvancedSearchComponent implements OnInit {
     this.fieldValidations();
 
     this.model.status = true;
-    this.model.searchField = this.quoteFilter.getSearchBarkeyword + this.quoteFilter.getSearchBarQuoteName +
-      this.quoteFilter.getSearchBarQuoteId + this.quoteFilter.getSearchBarAccountName +
-      this.quoteFilter.getSearchBarAccountUserLastName + this.quoteFilter.getSearchBarExpirationFrom +
-      (!this.model.isExpirationToValid ? this.quoteFilter.getSearchBarExpirationTo : '') + this.quoteFilter.getProjectName;
+    this.model.searchField = '';
+    this.model.searchField = this.model.populateSearchField;
   }
 
   fieldValidations() {
-        this.model.isExpirationToValid = this.quoteFilter.expirationTo && this.quoteFilter.expirationFrom ? (new Date(this.quoteFilter.expirationTo) < new Date(this.quoteFilter.expirationFrom)) : false;
+    //this.model.isExpirationToValid = this.filterModel.expirationTo && this.filterModel.expirationFrom ? (new Date(this.filterModel.expirationTo) < new Date(this.filterModel.expirationFrom)) : false;
   }
 
   setDateValueToModel(event: any, keyField: string) {
-    switch (keyField) {
-      case Constants.advancedFilter.from:
-        this.quoteFilter.expirationFrom = event;
-        this.quoteFilter.setSearchBarExpirationFrom = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-        break;
+    // switch (keyField) {
+    //   case Constants.advancedFilter.from:
+    //     this.filterModel.expirationFrom = event;
+    //     this.filterModel.setSearchBarExpirationFrom = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+    //     break;
 
-      case Constants.advancedFilter.to:
-        this.quoteFilter.expirationTo = event;
-        this.quoteFilter.setSearchBarExpirationTo = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-        break;
-      default:
-        break;
-    }
+    //   case Constants.advancedFilter.to:
+    //     this.filterModel.expirationTo = event;
+    //     this.filterModel.setSearchBarExpirationTo = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   setAdvancedFilterValue(filterValue: string) {
-    this.resetAdvancedFilterValue();
+    this.filterModel.ResetFilterValue();
     this.model.splittedValues = _.split(filterValue, Constants.advancedFilter.searchFieldSeperator);
 
     this.model.splittedValues.forEach((item, index) => {
@@ -104,13 +103,14 @@ export class AdvancedSearchComponent implements OnInit {
     if (!keyField) {
       return false;
     }
-    match = Object.keys(QuotesAdvFilterFields).filter(index => _.lowerCase(QuotesAdvFilterFields[index]) === _.lowerCase(keyField));
+    const keys = Object.keys(this.filterModel);
+    match = Object.keys(this.filterModel).filter(index => _.lowerCase(this.filterModel[index]) === _.lowerCase(keyField));
     return match !== null;
   }
 
   public addKeyValue = (key: any, item: string, colonIndex: number) => {
     if (!key.includes(Constants.advancedFilter.dateKeyword)) {
-      this.quoteFilter[key] = item.substr(colonIndex + Constants.advancedFilter.keyValueDelimiter.length);
+      this.filterModel[key] = item.substr(colonIndex + Constants.advancedFilter.keyValueDelimiter.length);
     }
     this.model.lastKey = key;
   }
@@ -118,19 +118,10 @@ export class AdvancedSearchComponent implements OnInit {
   public addKeywordOrAppendToLastKey = (item: any, index: number) => {
     if (index === 0) {
       this.model.lastKey = Constants.advancedFilter.keyword;
-      this.quoteFilter[this.model.lastKey] = item;
+      this.filterModel[this.model.lastKey] = item;
     } else if (this.model.lastKey) {
-      this.quoteFilter[this.model.lastKey] = _.trim(this.quoteFilter[this.model.lastKey] + Constants.advancedFilter.searchFieldSeperator + item);
+      this.filterModel[this.model.lastKey] = _.trim(this.filterModel[this.model.lastKey] + Constants.advancedFilter.searchFieldSeperator + item);
     }
-  }
-
-  resetAdvancedFilterValue() {
-    this.quoteFilter.keyword = '';
-    this.quoteFilter.name = '';
-    this.quoteFilter.quoteId = null;
-    this.quoteFilter.accountUserLastName = '';
-    this.quoteFilter.accountName = '';
-    this.quoteFilter.projectName = '';
   }
 }
 

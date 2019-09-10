@@ -1,4 +1,5 @@
 import { Constants } from '@shared';
+import * as _ from 'lodash';
 
 export class AdvancedFilterModel {
     searchField: any;
@@ -7,10 +8,32 @@ export class AdvancedFilterModel {
     status = false;
     today = new Date();
     isExpirationToValid = false;
+    filterModel: FilterModel;
+
+    get populateSearchField(): string {
+        const names = Object.getOwnPropertyNames(FilterModel.prototype);
+        let getters = names.filter((name) => {
+            const result = Object.getOwnPropertyDescriptor(FilterModel.prototype, name);
+            return !!result.get;
+        });
+
+        getters = _.concat(getters, this.filterModel.GetAllGetters());
+        _.forEach(getters, property => { this.searchField ? this.searchField += this.filterModel[property] : this.searchField = this.filterModel[property] });
+
+        return this.searchField;
+    }
 }
 
-export class QuoteFilter {
-    keyword: any = null;
+export abstract class FilterModel {
+    keyword = '';
+    get getSearchBarkeyword(): string {
+        return this.keyword ? this.keyword + ' ' : '';
+    }
+    public abstract ResetFilterValue(): void;
+    public abstract GetAllGetters(): string[];
+}
+
+export class QuoteFilterModel extends FilterModel {
     name = '';
     quoteId: number = null;
     accountUserLastName = '';
@@ -19,9 +42,26 @@ export class QuoteFilter {
     expirationTo: Date;
     projectName = '';
 
-    get getSearchBarkeyword(): string {
-        return this.keyword ? this.keyword + ' ' : '';
+    public ResetFilterValue() {
+        this.keyword = '';
+        this.name = '';
+        this.quoteId = null;
+        this.accountUserLastName = '';
+        this.accountName = '';
+        this.expirationFrom = null;
+        this.expirationTo = null;
+        this.projectName = '';
     }
+
+    public GetAllGetters(): string[] {
+        const names = Object.getOwnPropertyNames(QuoteFilterModel.prototype);
+        const getters = names.filter((name) => {
+            const result = Object.getOwnPropertyDescriptor(QuoteFilterModel.prototype, name);
+            return !!result.get;
+        });
+        return getters;
+    }
+
     get getSearchBarQuoteName(): string {
         return this.name ? Constants.advancedFilter.name + Constants.advancedFilter.keyValueDelimiter + this.name + ' ' : '';
     }
