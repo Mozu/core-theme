@@ -120,6 +120,23 @@
         },
         {
             "xtype": "panel",
+            "title": "CCPA/GDPR",
+            "collapsed": false,
+            "items": [
+              {
+                  "xtype": "mz-input-checkbox",
+                  "name": "showCookieNotice",
+                  "fieldLabel": "Display Cookie Notice until shopper agrees to cookie terms"
+              },
+              {
+                  "xtype": "mz-input-checkbox",
+                  "name": "requireGDPR",
+                  "fieldLabel": "Require agreement to GDPR terms on account creation and show GDPR messaging in checkout"
+              }
+            ]
+        },
+        {
+            "xtype": "panel",
             "title": "Extended Properties",
             "collapsed": false,
             "items": [

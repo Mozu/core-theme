@@ -8,9 +8,11 @@
             <div class="mz-orderattributes">
                 {% include "modules/checkout/checkout-attributes" with model=model.orderAttributes %}
             </div>
+            {% if themeSettings.requireGDPR %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
-              <p>{{ labels.agreeToGDPRCheckout|string_format("https://kibocommerce.com/privacy/")|safe }}</p>
+                <p>{{ labels.agreeToGDPRCheckout|string_format("https://kibocommerce.com/privacy/")|safe }}</p>
             </div>
+            {% endif %}
             {% if themeSettings.requireCheckoutAgreeToTerms %}
             <div class="mz-l-formfieldgroup mz-l-formfieldgroup-norows mz-checkoutform">
             <label class='inline'>
