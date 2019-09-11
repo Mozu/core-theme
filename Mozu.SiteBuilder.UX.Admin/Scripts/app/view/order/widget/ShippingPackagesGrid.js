@@ -265,22 +265,14 @@
                 resizable: true,
                 menuDisabled: false,
                 minWidth: 100,
-                flex: 2
-            },
-            {
-                dataIndex: 'options',
-                text: 'Item Attributes',
-                draggable: false,
-                sortable: false,
-                resizable: true,
-                menuDisabled: false,
-                minWidth: 100,
                 flex: 2,
-                renderer: function (optionValue) {
-                    for (i = 0; i < optionValue.length; i++) {
-                        var display = Ext.util.Format.htmlEncode(optionValue[i].shopperEnteredValue || optionValue[i].value);
-                        return "<div class='option'>" + optionValue[i].name + ": " + display + " (" + optionValue[i].value + ")<div><br/>";
+                renderer: function (value, metadata, record) {
+                    var attributes = "<span class='product-name'>" + record.data.name + "</span>";
+                    for (i = 0; i < record.data.options.length; i++) {
+                        var display = Ext.util.Format.htmlEncode(record.data.options[i].shopperEnteredValue || record.data.options[i].value);
+                        attributes += "<div class='option'>" + record.data.options[i].name + ": " + display + " (" + record.data.options[i].value + ")<div><br/>";
                     }
+                    return attributes;
                 }
             },
             {
