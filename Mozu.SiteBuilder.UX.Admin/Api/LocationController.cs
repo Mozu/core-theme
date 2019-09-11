@@ -189,7 +189,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             else
             {
-                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address,fulfillmentTypes(code, name),geo";
+                const string responseFields = "items(code,name,isDisabled,locationTypes(name, code),address,fulfillmentTypes(code, name),geo,shippingOriginContact";
                 if (!string.IsNullOrWhiteSpace(pagingParams.shipmentType)) 
                 {
                     FilterCollectionItem filterCollectionItem = new FilterCollectionItem();
