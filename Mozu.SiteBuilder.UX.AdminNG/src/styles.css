@@ -1078,3 +1078,41 @@ ngb-datepicker.dropdown-menu {
 
 
 /* --------------Calendar CSS - End------------- */
+
+
+/* --------------Advanced Filter - ng-select CSS - Start------------- */
+
+.advanced-filter .ng-select .ng-select-container {
+    border-radius: 0;
+    border: 0;
+}
+
+.advanced-filter .ng-select .ng-select-container:hover {
+    box-shadow: none;
+    outline: none;
+}
+
+.advanced-filter .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+    padding-left: 0px;
+}
+
+.advanced-filter .ng-select .ng-select-container .ng-value-container .ng-input>input {
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.advanced-filter .ng-select .ng-select-container .ng-value-container .ng-input>input:focus {
+    border-bottom: 2px solid #2ea195;
+}
+
+.ng-select .ng-select-container .ng-value-container {
+    padding: 0px;
+}
+
+.ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
+/* --------------Advanced Filter - ng-select CSS - End------------- */

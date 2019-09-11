@@ -30,7 +30,8 @@ export class Constants {
         getQuoteList : environment.apiUrl + '/quote/list',
         getB2BUserAccount: environment.apiUrl + '/b2baccount',
         getCarrierSettings: environment.apiUrl + '/shipping/carrierSettings/read',
-        getAllCarrierRatesWithConfiguredInfo: environment.apiUrl + '/shipping/carrierRatesWithConfigured'
+        getAllCarrierRatesWithConfiguredInfo: environment.apiUrl + '/shipping/carrierRatesWithConfigured',
+        getAllB2BAccounts: environment.apiUrl + '/b2baccount/list',
     };
 
     static JsonResources = {

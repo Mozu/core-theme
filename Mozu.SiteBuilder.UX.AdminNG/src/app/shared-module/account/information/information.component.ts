@@ -32,8 +32,7 @@ import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'account-information',
   templateUrl: './information.component.html',
-  styleUrls: ['./information.component.css'],
-  providers: [AccountInfoService, SpinnerService]
+  styleUrls: ['./information.component.css']
 })
 export class AccountInformationComponent implements OnChanges, OnInit, OnDestroy {
   @Input('UserId') userId: string;

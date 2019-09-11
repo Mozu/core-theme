@@ -32,7 +32,7 @@ import { Item, QuoteSubtotalModel } from '../quote.model';
   selector: 'quote-items',
   templateUrl: './items.component.html',
   styleUrls: ['./items.component.css'],
-  providers: [QuoteItemsService, SpinnerService]
+  providers: [QuoteItemsService]
 })
 export class QuoteItemsComponent implements OnChanges, OnInit, OnDestroy {
   @Input('QuoteId') quoteId: string;

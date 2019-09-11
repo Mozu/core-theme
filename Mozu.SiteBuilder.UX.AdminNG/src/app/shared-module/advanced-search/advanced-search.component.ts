@@ -2,8 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
-import { NavigationContainerType, Constants } from '@shared/infrastructure';
+import { NavigationContainerType, Constants, QuoteFilterStatus } from '@shared/infrastructure';
 import { AdvancedFilterModel, FilterModel, QuoteFilterModel } from './advanced-search.model';
+import { AccountInfoService } from '@shared/account/information/information.service';
+import { B2BAccountListModel } from '@shared/account/information';
+import { ErroNotificationType, ErrorCode, HttpError, LoggerService } from '@core';
 
 @Component({
   selector: 'advanced-search',
@@ -16,14 +19,19 @@ export class AdvancedSearchComponent implements OnInit {
   navigationType = NavigationContainerType;
   public model: AdvancedFilterModel;
   public filterModel: FilterModel;
+  public b2bAccounts: any[];
+  public quoteStatus: any[];
 
   constructor(private _notificationService: NotificationService,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private _accountInfoService: AccountInfoService,
+    private _loggerService: LoggerService) { }
 
   ngOnInit() {
     this.model = new AdvancedFilterModel();
     this.filterModel = new QuoteFilterModel();
     this.model.filterModel = this.filterModel;
+    this.quoteStatus = Object.values(QuoteFilterStatus);
   }
 
   toggleIcon(searchBar: any) {
@@ -50,33 +58,10 @@ export class AdvancedSearchComponent implements OnInit {
     }
   }
 
-  modelChanged(event?, keyField?) {
-    this.setDateValueToModel(event, keyField);
-    this.fieldValidations();
-
+  modelChanged() {
     this.model.status = true;
     this.model.searchField = '';
     this.model.searchField = this.model.populateSearchField;
-  }
-
-  fieldValidations() {
-    //this.model.isExpirationToValid = this.filterModel.expirationTo && this.filterModel.expirationFrom ? (new Date(this.filterModel.expirationTo) < new Date(this.filterModel.expirationFrom)) : false;
-  }
-
-  setDateValueToModel(event: any, keyField: string) {
-    // switch (keyField) {
-    //   case Constants.advancedFilter.from:
-    //     this.filterModel.expirationFrom = event;
-    //     this.filterModel.setSearchBarExpirationFrom = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-    //     break;
-
-    //   case Constants.advancedFilter.to:
-    //     this.filterModel.expirationTo = event;
-    //     this.filterModel.setSearchBarExpirationTo = event ? this.datePipe.transform(event, Constants.advSearchDateFormat) : '';
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
 
   setAdvancedFilterValue(filterValue: string) {
@@ -122,6 +107,18 @@ export class AdvancedSearchComponent implements OnInit {
     } else if (this.model.lastKey) {
       this.filterModel[this.model.lastKey] = _.trim(this.filterModel[this.model.lastKey] + Constants.advancedFilter.searchFieldSeperator + item);
     }
+  }
+
+  public populateB2BAccounts = () => {
+    this._accountInfoService.fetchAllB2BAccounts().subscribe((fetchB2BAccountsResponse: B2BAccountListModel) => {
+        if (fetchB2BAccountsResponse !== null && fetchB2BAccountsResponse !== undefined) {
+            this.b2bAccounts = fetchB2BAccountsResponse.items;
+        }
+    },
+    (errResponse) => {
+        this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchB2BAccounts_errResponse');
+        throw new HttpError(ErrorCode.GetAccountInfoFailed, ErroNotificationType.Toaster);
+    });
   }
 }
 

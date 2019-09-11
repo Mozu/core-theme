@@ -9,8 +9,7 @@ import { LoggerService, SpinnerService } from '@core';
 @Component({
   selector: 'quote-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.css'],
-  providers: [SpinnerService]
+  styleUrls: ['./summary.component.css']
 })
 export class QuoteSummaryComponent implements OnChanges {  
   @Input('Quote') quote: any;

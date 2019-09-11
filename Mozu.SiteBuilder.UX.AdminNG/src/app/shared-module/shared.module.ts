@@ -62,6 +62,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-columns.component';
 import { ProgressButtonService } from './progress-button/progress-button.service';
+import { DatepickerComponent } from './datepicker/datepicker.component';
+import { AccountInfoService } from './account/information/information.service';
 
 
 declare var resourcesVersion: any;
@@ -134,7 +136,8 @@ export function createTranslateLoader(http: HttpClient) {
         ShippingMethodComponent,
         AuditLogComponent,
         ToggleGridColumnsComponent,
-        ProgressButtonComponent
+        ProgressButtonComponent,
+        DatepickerComponent
     ],
     providers: [
         ConfirmationDialogService,
@@ -142,7 +145,8 @@ export function createTranslateLoader(http: HttpClient) {
         {
             provide: NgbDateAdapter,
             useClass: NgbDateNativeAdapter
-        }
+        },
+        AccountInfoService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [
@@ -200,7 +204,8 @@ export function createTranslateLoader(http: HttpClient) {
         ShippingMethodComponent,
         AuditLogComponent,
         ToggleGridColumnsComponent,
-        ProgressButtonComponent
+        ProgressButtonComponent,
+        DatepickerComponent
     ]
 })
 

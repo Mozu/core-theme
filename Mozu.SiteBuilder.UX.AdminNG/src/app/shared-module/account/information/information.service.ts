@@ -26,4 +26,13 @@ export class AccountInfoService {
             });
         }
     }
+
+    public fetchAllB2BAccounts(): Observable<any> {
+        this._loggerService.info('AccountInfoService: fetchAllB2BAccounts');
+        if (environment.isUseMocks) {
+            return this._http.get(Constants.JsonResources.b2bAccounts);
+        } else {
+            return this._http.get(GlobalConstants.webApis.getAllB2BAccounts);
+        }
+    }
 }

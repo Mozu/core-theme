@@ -1,12 +1,12 @@
 import { Constants } from '@shared';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 export class AdvancedFilterModel {
     searchField: any;
     splittedValues: any;
     lastKey: string;
     status = false;
-    today = new Date();
     isExpirationToValid = false;
     filterModel: FilterModel;
 
@@ -37,20 +37,22 @@ export class QuoteFilterModel extends FilterModel {
     name = '';
     quoteId: number = null;
     accountUserLastName = '';
-    accountName = '';
+    accountId: number = null;
     expirationFrom: Date;
     expirationTo: Date;
     projectName = '';
+    status = '';
 
     public ResetFilterValue() {
         this.keyword = '';
         this.name = '';
         this.quoteId = null;
         this.accountUserLastName = '';
-        this.accountName = '';
+        this.accountId = null;
         this.expirationFrom = null;
         this.expirationTo = null;
         this.projectName = '';
+        this.status = '';
     }
 
     public GetAllGetters(): string[] {
@@ -72,23 +74,26 @@ export class QuoteFilterModel extends FilterModel {
         return this.accountUserLastName ? Constants.advancedFilter.accountUserLastName + Constants.advancedFilter.keyValueDelimiter + this.accountUserLastName + ' ' : '';
     }
     get getSearchBarAccountName(): string {
-        return this.accountName ? Constants.advancedFilter.accountName + Constants.advancedFilter.keyValueDelimiter + this.accountName + ' ' : '';
+        return this.accountId ? Constants.advancedFilter.accountId + Constants.advancedFilter.keyValueDelimiter + this.accountId + ' ' : '';
     }
 
     set setSearchBarExpirationFrom(expirationDate: any) {
         this.expirationFrom = expirationDate;
     }
     get getSearchBarExpirationFrom(): string {
-        return this.expirationFrom ? Constants.advancedFilter.expirationFrom + Constants.advancedFilter.keyValueDelimiter + this.expirationFrom + ' ' : '';
+        return this.expirationFrom ? Constants.advancedFilter.expirationFrom + Constants.advancedFilter.keyValueDelimiter + moment(this.expirationFrom).format(Constants.advSearchDateFormat) + ' ' : '';
     }
 
     set setSearchBarExpirationTo(expirationDate: any) {
         this.expirationTo = expirationDate;
     }
     get getSearchBarExpirationTo(): string {
-        return this.expirationTo ? Constants.advancedFilter.expirationTo + Constants.advancedFilter.keyValueDelimiter + this.expirationTo + ' ' : '';
+        return this.expirationTo ? Constants.advancedFilter.expirationTo + Constants.advancedFilter.keyValueDelimiter + moment(this.expirationTo).format(Constants.advSearchDateFormat) + ' ' : '';
     }
     get getProjectName(): string {
         return this.projectName ? Constants.advancedFilter.projectName + Constants.advancedFilter.keyValueDelimiter + this.projectName + ' ' : '';
+    }
+    get getStatus(): string {
+        return this.status ? Constants.advancedFilter.status + Constants.advancedFilter.keyValueDelimiter + this.status + ' ' : '';
     }
 }

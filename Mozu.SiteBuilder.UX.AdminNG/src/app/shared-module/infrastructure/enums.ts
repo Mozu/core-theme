@@ -69,3 +69,14 @@ export enum NegotiatedPriceDiscount {
     amountDiscount = 'amountDiscount',
     proposedPrice = 'proposedPrice'
 }
+
+export enum QuoteFilterStatus {
+    New = 'New',
+    Open = 'Open',
+    cancelled = 'Cancelled',
+    buyerRevision = 'Buyer Revision',
+    Declined = 'Declined',
+    Expired = 'Expired',
+    sellerAccepted = 'Seller Accepted',
+    Ordered = 'Ordered'
+}

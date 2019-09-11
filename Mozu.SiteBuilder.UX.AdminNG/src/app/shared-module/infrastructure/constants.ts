@@ -120,6 +120,7 @@ export class Constants {
         dasbhoardTiles: environment.appUrl + '/assets/json/dashboard-categories.json',
         quoteList: environment.appUrl + '/assets/json/quote-list.json',
         accountInformation: environment.appUrl + '/assets/json/account-information.json',
+        b2bAccounts: environment.appUrl + '/assets/json/b2b-accounts.json',
         redirectionLink: environment.appUrl + '/assets/json/user-redirection.json',
         locations: environment.appUrl + '/assets/json/locations.json',
         physicalLocations: environment.appUrl + '/assets/json/physical-locations.json',
@@ -204,10 +205,11 @@ export class Constants {
         name: 'name',
         quoteId: 'quoteId',
         accountUserLastName: 'accountUserLastName',
-        accountName: 'accountName',
+        accountId: 'accountId',
         expirationFrom: 'expirationFrom',
         expirationTo: 'expirationTo',
-        projectName: 'projectName'
+        projectName: 'projectName',
+        status: 'status'
     };
 
     static quoteSubtotal = [
@@ -217,5 +219,5 @@ export class Constants {
         { data: SubtotalOptions.estimatedTax, label: 'Estimated Tax' }
     ];
 
-    static advSearchDateFormat = 'yyyy-MM-ddTHH:mm:ssZZZZZ';
+    static advSearchDateFormat = 'YYYY-MM-DDTHH:mm:ssZ';
 }

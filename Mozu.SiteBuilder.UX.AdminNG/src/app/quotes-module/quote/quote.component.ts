@@ -24,7 +24,7 @@ import { Constants, SubtotalOptions, NegotiatedPriceDiscount } from '@shared';
     selector: 'quote',
     templateUrl: './quote.component.html',
     styleUrls: ['./quote.component.css'],
-    providers: [QuoteService, SpinnerService]
+    providers: [QuoteService]
 })
 export class QuoteComponent implements OnInit {
     quoteId: string;
