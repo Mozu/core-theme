@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
 {
     public interface IPermissionsRepository
     {
-        Task<List<Role>> GetRoles();
+        Task<Core.Api.Contracts.RoleCollection> GetRoles(int? startIndex, int? pageSize);
 
         Task<Role> GetRole(int? id);
 
