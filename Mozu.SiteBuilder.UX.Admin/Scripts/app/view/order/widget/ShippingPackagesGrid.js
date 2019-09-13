@@ -309,7 +309,7 @@
             },
             {
                 dataIndex: 'itemTax',
-                text: 'Unit Tax',
+                text: 'Tax',
                 draggable: false,
                 sortable: false,
                 //resizable: false,
@@ -601,7 +601,7 @@
                 listeners: {
                     udpateTax: {
                         fn: function (json) {
-                            var itemUnitTax = Math.round(json.unitTax * 100) / 100;
+                            var itemUnitTax = (Math.round(json.unitTax * 100) / 100)*selectedItem.quantity;
                             Ext.getCmp(this.taxFieldId).setValue(itemUnitTax);
                         },
                         scope: me

@@ -35,7 +35,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 type: 'int',
                 useNull: true
             }, {
-                name: 'unitPrice',
+                name: 'actualPrice',
                 type: 'float',
                 useNull: true
             },
@@ -194,7 +194,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             },
             {
-                dataIndex: 'unitPrice',
+                dataIndex: 'actualPrice',
                 text: 'Unit Price',
                 draggable: false,
                 sortable: false,
