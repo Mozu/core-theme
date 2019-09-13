@@ -535,21 +535,6 @@ Ext.define('Taco.view.order.subform.Detail', {
                 hidden: !canAccept
             },
             {
-                text: 'Cancel Order',
-                xtype: "button",
-                ui: "action",
-                itemId:"cancelOrderButton",
-                scale: "medium",
-                margin: {
-                    right:2
-                },
-                requiredBehaviors: me.orderUpdateBehaviors,
-                handler: function () {
-                    this.detailGrid.cancelOrder();
-                },
-                scope: me,
-                disabled: !canCancel
-            },{
                 xtype: 'button',
                 ui: 'action',
                 scale: 'medium',

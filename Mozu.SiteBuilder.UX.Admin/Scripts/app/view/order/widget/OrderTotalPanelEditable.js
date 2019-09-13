@@ -111,6 +111,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
                 behavior: 'manualAdjustment'
             }],
             text: (orderAdjustment > 0) ? addOrderLabelText : subtractOrderLabelText,
+            disabled: !this.isOrderEditable(),
             menu: {
                 plain: true,
                 listeners: {
@@ -158,6 +159,7 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
             forcePrecision: true,
             renderTo: orderAdjustmentField,
             value: orderAdjustmentValue,
+            disabled: !this.isOrderEditable(),
             requiredBehaviors: [{
                 model: 'Taco.model.Order',
                 behavior: 'update',
@@ -918,6 +920,14 @@ Ext.define('Taco.view.order.widget.OrderTotalPanelEditable', {
     },
 
     isOrderEditable: function () {        
+        var orderStatus = this.record.get('orderStatus');
+        if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
+            return true;
+        else
+            return false;
+    },
+
+    isOrderEditable: function () {
         var orderStatus = this.record.get('orderStatus');
         if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
             return true;
