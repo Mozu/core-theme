@@ -64,6 +64,7 @@ import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-co
 import { ProgressButtonService } from './progress-button/progress-button.service';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { AccountInfoService } from './account/information/information.service';
+import { DateCompareDirective } from './directive/datepicker-compare-validator.directive';
 
 
 declare var resourcesVersion: any;
@@ -114,6 +115,7 @@ export function createTranslateLoader(http: HttpClient) {
         // directives
         RestrictInput,
         EnableDisableControls,
+        DateCompareDirective,
 
         // components
         NavigationComponent,
@@ -182,6 +184,7 @@ export function createTranslateLoader(http: HttpClient) {
         // directives
         RestrictInput,
         EnableDisableControls,
+        DateCompareDirective,
 
         // shared components
         NavigationComponent,

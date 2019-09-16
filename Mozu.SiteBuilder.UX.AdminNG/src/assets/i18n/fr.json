@@ -134,7 +134,8 @@
                 "projectName": "Project Name"
             },
             "FormsErrorMessages": {
-                "toDateValid": "The to-date can not be before from-date"
+                "toDateValid": "The to-date can not be before from-date",
+                "fromDateValid" : "The from-date can not be after to-date"
             }
         }
     },
