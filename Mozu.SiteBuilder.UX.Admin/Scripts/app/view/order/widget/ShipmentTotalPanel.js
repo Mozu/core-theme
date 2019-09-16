@@ -134,12 +134,14 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             listeners: {
                 afterrender: function (obj) {
                     me.getMasterTable();
+                    me.bindEventsForTextBoxes();
                 }
             }
         });
 
         this.items.push(this.totalsContainer);
         this.setAdjustmentInputId();
+        //this.getShipmentAdjustment();
     },
 
     isShipmentAction: function () {
@@ -151,11 +153,13 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     setAdjustmentInputId: function () {
 
         this.shippingAdjustmentInput = Ext.id();
+        this.shippingAdjustmentDropdown = Ext.id();
 
         this.shippingTaxAdjustmentInput = Ext.id();
         this.shippingTaxAdjustmentPercInput = Ext.id();
 
         this.handlingAdjustmentInput = Ext.id();
+        this.handlingAdjustmentDropdown = Ext.id();
 
         this.handlingTaxAdjustmentInput = Ext.id();
         this.handlingTaxAdjustmentPercInput = Ext.id();
@@ -212,7 +216,13 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         //Shipping
         var el = Ext.get(this.shippingAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingAdjustmentInput, '.shipping', this.shipmentRecord.shippingSubtotal, false); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.shippingAdjustmentInput, '.shipping', this.shipmentRecord.shippingSubtotal, false, null, null, this.shippingAdjustmentDropdown); }, this);
+        };
+
+        //ShippingAdjustment type
+        el = Ext.get(this.shippingAdjustmentDropdown);
+        if (el) {
+            el.on('change', function () { me.setCalculatedSummaryValues(this.shippingAdjustmentInput, '.shipping', this.shipmentRecord.shippingSubtotal, false, null, null, this.shippingAdjustmentDropdown); }, this);
         };
 
         //Shipping Tax
@@ -228,7 +238,13 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         //Handling
         el = Ext.get(this.handlingAdjustmentInput);
         if (el) {
-            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingAdjustmentInput, '.handling', this.shipmentRecord.handlingSubtotal, false); }, this);
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.handlingAdjustmentInput, '.handling', this.shipmentRecord.handlingSubtotal, false, null, null, this.handlingAdjustmentDropdown); }, this);
+        };
+
+        //HandlingAdjustment type
+        el = Ext.get(this.handlingAdjustmentDropdown);
+        if (el) {
+            el.on('change', function () { me.setCalculatedSummaryValues(this.handlingAdjustmentInput, '.handling', this.shipmentRecord.handlingSubtotal, false, null, null, this.handlingAdjustmentDropdown); }, this);
         };
 
         //Handling Tax
@@ -253,11 +269,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
     },
 
-    setCalculatedSummaryValues: function (elementId, summarycls, originalValue, isPercentage, subElementId, defaultValue) {
+    setCalculatedSummaryValues: function (elementId, summarycls, originalValue, isPercentage, subElementId, defaultValue, dropdownID) {
         var el = Ext.get(elementId);
+        var adjustmentType = parseInt(this.getValueOf(dropdownID));
         var calcValue = 0;
         if (el) {
-            var enteredValue = parseFloat(Ext.get(elementId).getValue());
+            var enteredValue = parseFloat(this.getValueOf(elementId));
             if (this.validateNumber(enteredValue)) {
                 if (enteredValue) {
                     if (isPercentage) {
@@ -273,7 +290,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                             calcValue = (100 * enteredValue) / this.shipmentRecord.lineItemSubtotal;
                         }
                         else {
-                            calcValue = enteredValue;
+                            calcValue = originalValue + (enteredValue * adjustmentType);
                         }
                     }
 
@@ -417,13 +434,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             return {
                 "orderId": this.record.get('id'),
                 "shipmentNumber": this.shipmentRecord.number,
-                "shipmentAdjustment": {                    
-                    //ItemAdjustment: this.shippingAdjustmentInput ? this.shippingAdjustmentInput : null,
-                    itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) - this.shipmentRecord.lineItemTaxTotal) : null,
-                    shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) - this.shipmentRecord.shippingSubtotal) : null,
-                    shippingTaxAdjustment: shippingTaxAdjustmentValue ? (parseFloat(shippingTaxAdjustmentValue) - this.shipmentRecord.shippingTaxTotal) : null,
-                    handlingAdjustment: handlingAdjustmentValue ? (parseFloat(handlingAdjustmentValue) - this.shipmentRecord.handlingSubtotal) : null,
-                    handlingTaxAdjustment: handlingTaxAdjustmentValue ? (parseFloat(handlingTaxAdjustmentValue) - this.shipmentRecord.handlingTaxTotal) : null
+                "shipmentAdjustment": {
+                    itemTaxAdjustment: taxAdjustmentValue ? parseFloat(taxAdjustmentValue) : 0,
+                    shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) * me.getValueOf(this.shippingAdjustmentDropdown)) : 0,
+                    shippingTaxAdjustment: shippingTaxAdjustmentValue ? parseFloat(shippingTaxAdjustmentValue) : 0,
+                        handlingAdjustment: handlingAdjustmentValue ? (parseFloat(handlingAdjustmentValue) * me.getValueOf(this.handlingAdjustmentDropdown)) : 0,
+                    handlingTaxAdjustment: handlingTaxAdjustmentValue ? parseFloat(handlingTaxAdjustmentValue) : 0
                 }
             }
     },
@@ -644,7 +660,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             isEditable = this.isEditable,
             isBopis = this.shipmentRecord.shipmentType == 'BOPIS' ? true : false,
             isEditableCls = (isEditable) ? " taco-editable " : " collapsed ";
-        
+
         if (!isEditable)
             return [
                 '{%',
@@ -853,7 +869,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '{%',
                 // add some css classes to the values data to be used in xTemplates
                 'values.tdCls = "' + tdCls + '";values.tdInnerCls = "' + tdInnerCls + '";values.isEditableCls = "' +
-                isEditableCls + '";values.actionColumnWidth = "' + me.actionColumnWidth + '";values.priceCls = "' + priceCls + '";values.isEditable = "' + isEditable + '";values.isBopis = ' + isBopis +';' +
+                isEditableCls + '";values.actionColumnWidth = "' + me.actionColumnWidth + '";values.priceCls = "' + priceCls + '";values.isEditable = "' + isEditable + '";values.isBopis = ' + isBopis + ';' +
                 '%}',
                 // subtotal
                 '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable summary-sub-total"})]}',
@@ -888,12 +904,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<td class="{tdCls}"></td>',
 
                 '<td>',
-                //'<div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input type="number" id="' + me.textBoxId + '" placeholder="" /></div>',
-                //'<div class="middle-box"> or </div>',
-                '<div class="inner-addon left-addon right-box" style="margin-left: 12px"> <span class="icon">$</span> <input id="' + this.shippingAdjustmentInput + '" type="number" class="doller" placeholder="" /></div>',
+                '<div class="inner-addon left-addon right-box" style="margin-left: 12px">' + this.getAdjustmentDropdown(this.shippingAdjustmentDropdown, 'shipping') + '</div>',
                 '</td>',
 
-                '<td class="{tdCls}"></td>',
+                '<td class="{tdCls}"><div class="inner-addon left-addon right-box" style="margin-left: 12px"><span class="icon">$</span> <input id="' + this.shippingAdjustmentInput + '" type="number" class="doller" placeholder="" /></div></td>',
                 '<td class="{tdCls}"></td>',
                 '<td class="{tdCls}"></td>',
                 '</tr>',
@@ -962,12 +976,13 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<tbody>',
                 '<tr class="shipping-handling-item">',
                 '<td class="{tdCls}"></td>',
+
                 '<td>',
-                //'<div class="inner-addon left-addon left-box"> <span class="icon">%</span> <input type="number" id="' + me.textBoxId + '" placeholder="" /></div>',
-                //'<div class="middle-box"> or </div>',
+                '<div class="inner-addon left-addon right-box" style="margin-left: 12px">' + this.getAdjustmentDropdown(this.handlingAdjustmentDropdown, 'handling') + '</div>',
+                '</td>',
+                '<td>',
                 '<div class="inner-addon left-addon right-box" style="margin-left: 12px"> <span class="icon">$</span> <input id="' + this.handlingAdjustmentInput + '" type="number" class="doller" placeholder="" /></div>',
                 '</td>',
-                '<td class="{tdCls}"></td>',
                 '<td class="{tdCls}"></td>',
                 '<td class="{tdCls}"></td>',
                 '</tr>',
@@ -1085,6 +1100,18 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             ];
     },
 
+    getAdjustmentDropdown: function (id, type) {
+        switch (type) {
+            case 'shipping':
+                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Shipping Total</option><option value="1">Add to Shipping Total</option></select>';
+
+            case 'handling':
+                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Handling Total</option><option value="1">Add to Handling Total</option></select>';
+
+            default:
+                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Order Total</option><option value="1">Add to Order Total</option></select>';
+        }
+    },
 
     /**
      * Do any class level cleanup. Destroy and null any scoped refs.     
