@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
         private const string PICKWAVE_PREVIEW_RESOURCE_NAME = "backoffice.pickwave1";
-        private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
+        private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
 
         /// <summary>
         /// Public constructor.
@@ -314,13 +314,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "packing-slip")
             {
                 object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["order"] = order;
                 return await RenderWithContext(template, model);
             }
             else if (templateid == "pick-list")
             {
-                object shipment = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object shipment = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["shipment"] = shipment;
                 return await RenderWithContext(template, model);

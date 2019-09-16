@@ -395,8 +395,7 @@
     <EmbeddedResource Include="TestData\user.passwordreset\user1.json" />
     <EmbeddedResource Include="TestData\giftcard.created\OrderCredit1.json" />
     <EmbeddedResource Include="TestData\backoffice\Order1.json" />
-    <EmbeddedResource Include="TestData\backoffice\Package1.json" />
-    <EmbeddedResource Include="TestData\backoffice\Shipments1.json" />
+    <EmbeddedResource Include="TestData\backoffice\Shipment1.json" />
     <EmbeddedResource Include="TestData\backoffice\Pickwave1.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund2.json" />
     <EmbeddedResource Include="TestData\refund.created\Refund3.json" />

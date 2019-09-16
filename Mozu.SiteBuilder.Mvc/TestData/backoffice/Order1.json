@@ -1,869 +1,797 @@
-﻿{
-  "orderNumber": 665,
-  "locationCode": null,
-  "version": "1",
-  "parentOrderId": null,
-  "parentReturnId": null,
-  "originalCartId": null,
-  "availableActions": [
-    "ReopenOrder"
-  ],
-  "shopperNotes": {
-    "giftMessage": null,
-    "comments": "Please take extra care when packing my candy."
-  },
-  "customerAccountId": 1112,
-  "customerTaxId": null,
-  "isTaxExempt": false,
-  "email": "donald@duckfamily.com",
-  "ipAddress": "127.0.0.1",
-  "sourceDevice": null,
-  "acceptsMarketing": null,
-  "status": "Completed",
-  "type": "Offline",
-  "paymentStatus": "Paid",
-  "returnStatus": "None",
-  "isEligibleForReturns": true,
-  "totalCollected": 331.24,
-  "attributes": [
-    {
-      "auditInfo": {
-        "updateDate": "2014-12-16T20:40:08.716Z",
-        "createDate": "2014-12-16T20:40:08.716Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      },
-      "fullyQualifiedName": "tenant~hhj",
-      "attributeDefinitionId": 20,
-      "values": [
-        "words"
-      ]
-    }
-  ],
-  "adjustment": null,
-  "shippingAdjustment": null,
-  "shippingDiscounts": [],
-  "handlingDiscounts": [],
-  "handlingAmount": 13.0,
-  "handlingSubTotal": 43.0,
-  "handlingTotal": 43.0,
-  "fulfillmentStatus": "Fulfilled",
-  "submittedDate": "2014-12-16T20:40:59.31Z",
-  "cancelledDate": null,
-  "closedDate": "2014-12-17T15:42:45.007Z",
-  "acceptedDate": "2014-12-16T20:41:12.338Z",
-  "notes": [
-    {
-      "id": "dbd1b2ea274f4f9a8b11a4030154cf9a",
-      "text": "I broke some pieces of candy just to spite this guy.",
-      "auditInfo": {
-        "updateDate": "2014-12-16T20:40:51.281Z",
-        "createDate": "2014-12-16T20:40:51.281Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      }
-    }
-  ],
-  "items": [
-    {
-      "id": "07e01cfa7a9243e1a0d0a4030154714e",
-      "originalCartItemId": null,
-      "fulfillmentLocationCode": "AustinNextDoor",
-      "fulfillmentMethod": "Ship",
-      "localeCode": null,
-      "product": {
-        "name": "Candy Baskets",
-        "description": "DRIVER SEAT 2.2CL2.3CL classy gray",
-        "mfgPartNumber": null,
-        "upc": null,
-        "fulfillmentTypesSupported": [
-          "DirectShip"
-        ],
-        "imageAlternateText": null,
-        "imageUrl": null,
-        "productCode": "87D7B98ga",
-        "variationProductCode": null,
-        "options": [],
-        "properties": [],
-        "categories": [
-          {
-            "id": 1,
-            "parent": null
-          }
-        ],
-        "price": {
-          "price": 126.02,
-          "salePrice": null,
-          "tenantOverridePrice": null,
-          "msrp": null,
-          "creditValue": null
-        },
-        "discountsRestricted": false,
-        "discountsRestrictedStartDate": null,
-        "discountsRestrictedEndDate": null,
-        "measurements": {
-          "height": {
-            "unit": "in",
-            "value": 1.000
-          },
-          "width": {
-            "unit": "in",
-            "value": 1.000
-          },
-          "length": {
-            "unit": "in",
-            "value": 1.000
-          },
-          "weight": {
-            "unit": "lbs",
-            "value": 8.000
-          }
-        },
-        "isRecurring": null,
-        "isTaxable": true,
-        "goodsType": "Physical",
-        "isPackagedStandAlone": false,
-        "productType": "Simple Product",
-        "productReservationId": null,
-        "productUsage": "Standard",
-        "bundledProducts": []
-      },
-      "quantity": 2,
-      "isRecurring": null,
-      "isTaxable": null,
-      "subtotal": 252.04,
-      "extendedTotal": 252.04,
-      "taxableTotal": 252.04,
-      "discountTotal": 0.0,
-      "discountedTotal": 252.04,
-      "itemTaxTotal": 0.0,
-      "shippingTaxTotal": 0.0,
-      "shippingTotal": 36.2,
-      "handlingAmount": 30.0,
-      "feeTotal": 0.0,
-      "total": 288.24,
-      "unitPrice": {
-        "extendedAmount": 126.02,
-        "listAmount": 126.02,
-        "saleAmount": null,
-        "overrideAmount": null
-      },
-      "productDiscount": null,
-      "productDiscounts": [],
-      "shippingDiscounts": [],
-      "auditInfo": {
-        "updateDate": "2014-12-16T20:39:30.83Z",
-        "createDate": "2014-12-16T20:39:30.83Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      }
-    }
-  ],
-  "validationResults": [],
-  "billingInfo": {
-    "paymentType": null,
-    "billingContact": {
-      "id": 1121,
-      "email": "donald@duckfamily.com",
-      "firstName": "Donald",
-      "middleNameOrInitial": "",
-      "lastNameOrSurname": "Duck",
-      "companyOrOrganization": "",
-      "phoneNumbers": {
-        "home": "1112223333",
-        "mobile": "",
-        "work": ""
-      },
-      "address": {
-        "address1": "123 Duckey Way",
-        "address2": "",
-        "address3": "",
-        "address4": "",
-        "cityOrTown": "Duck Pond",
-        "stateOrProvince": "MO",
-        "postalOrZipCode": "12345",
-        "countryCode": "US",
-        "addressType": "Residential",
-        "isValidated": false
-      }
-    },
-    "isSameBillingShippingAddress": false,
-    "card": null,
-    "auditInfo": {
-      "updateDate": "2014-12-16T20:40:27.304Z",
-      "createDate": "2014-12-16T20:39:15.985Z",
-      "updateBy": "907e3523d71f49feb210e018b631661e",
-      "createBy": "907e3523d71f49feb210e018b631661e"
-    },
-    "storeCreditCode": null
-  },
-  "payments": [
-    {
-      "id": "d035cb276a5a48269586a404010100a4",
-      "paymentServiceTransactionId": null,
-      "availableActions": [
-        "CreditPayment"
-      ],
-      "orderId": "0590f66b1397e70ddcb2a157000008ed",
-      "paymentType": "StoreCredit",
-      "billingInfo": {
-        "paymentType": "StoreCredit",
-        "billingContact": null,
-        "isSameBillingShippingAddress": false,
-        "card": null,
-        "auditInfo": {
-          "updateDate": "2014-12-17T15:35:43.003Z",
-          "createDate": "2014-12-17T15:35:43.003Z",
-          "updateBy": "907e3523d71f49feb210e018b631661e",
-          "createBy": "907e3523d71f49feb210e018b631661e"
-        },
-        "storeCreditCode": "25bucks"
-      },
-      "status": "Collected",
-      "interactions": [
+{
+    "orderNumber": 1357,
+    "version": "1",
+    "isPartialOrder": false,
+    "availableActions": [
+        "ValidateOrder",
+        "SetOrderAsProcessing",
+        "CancelOrder"
+    ],
+    "customerAccountId": 1006,
+    "isTaxExempt": false,
+    "email": "wwilson@deadpool.net",
+    "ipAddress": "172.19.79.121",
+    "status": "Accepted",
+    "type": "Offline",
+    "paymentStatus": "Unpaid",
+    "returnStatus": "None",
+    "isEligibleForReturns": false,
+    "totalCollected": 0.0,
+    "attributes": [],
+    "shippingDiscounts": [],
+    "handlingDiscounts": [],
+    "handlingTotal": 0.0,
+    "fulfillmentStatus": "NotFulfilled",
+    "submittedDate": "2019-09-13T21:18:29.937Z",
+    "acceptedDate": "2019-09-13T21:18:35.978Z",
+    "notes": [],
+    "items": [
         {
-          "id": "e842b05901ae42cd9e0ca40401010ec1",
-          "gatewayInteractionId": null,
-          "paymentId": "d035cb276a5a48269586a404010100a4",
-          "orderId": "0590f66b1397e70ddcb2a157000008ed",
-          "currencyCode": "USD",
-          "interactionType": "AuthorizeAndCapture",
-          "checkNumber": null,
-          "status": "Captured",
-          "paymentEntryStatus": "New",
-          "isRecurring": false,
-          "isManual": false,
-          "gatewayTransactionId": null,
-          "gatewayAuthCode": null,
-          "gatewayAVSCodes": null,
-          "gatewayCVV2Codes": null,
-          "gatewayResponseCode": null,
-          "gatewayResponseText": null,
-          "paymentTransactionInteractionIdReference": null,
-          "amount": 25.0,
-          "note": null,
-          "interactionDate": "2014-12-17T15:35:55.094Z",
-          "auditInfo": {
-            "updateDate": "2014-12-17T15:35:55.094Z",
-            "createDate": "2014-12-17T15:35:55.094Z",
-            "updateBy": "907e3523d71f49feb210e018b631661e",
-            "createBy": "907e3523d71f49feb210e018b631661e"
-          }
+            "id": "83ad316cb05e46098433aac7015f170a",
+            "fulfillmentLocationCode": "warehouselocation1",
+            "fulfillmentMethod": "Ship",
+            "lineId": 1,
+            "product": {
+                "fulfillmentTypesSupported": [
+                    "DirectShip",
+                    "InStorePickup"
+                ],
+                "variationProductCode": "rkconfig_1-1",
+                "options": [
+                    {
+                        "name": "ListOptionNumber123",
+                        "value": 1,
+                        "shopperEnteredValue": 1,
+                        "attributeFQN": "tenant~listoptionnumber123"
+                    }
+                ],
+                "properties": [],
+                "categories": [],
+                "price": {
+                    "price": 100.0
+                },
+                "discountsRestricted": false,
+                "isTaxable": true,
+                "productType": "Configurable Product Type - ListOptionNumber123",
+                "productUsage": "Configurable",
+                "bundledProducts": [],
+                "productCode": "rkconfig_1",
+                "name": "rkconfig_1",
+                "description": "ewerwe",
+                "goodsType": "Physical",
+                "isPackagedStandAlone": false,
+                "stock": {
+                    "manageStock": true,
+                    "isOnBackOrder": false
+                },
+                "measurements": {
+                    "height": {
+                        "unit": "in",
+                        "value": 1.000
+                    },
+                    "width": {
+                        "unit": "in",
+                        "value": 1.000
+                    },
+                    "length": {
+                        "unit": "in",
+                        "value": 1.000
+                    },
+                    "weight": {
+                        "unit": "lbs",
+                        "value": 50.000
+                    }
+                },
+                "fulfillmentStatus": "PendingFulfillment"
+            },
+            "quantity": 1,
+            "subtotal": 100.0,
+            "extendedTotal": 100.0,
+            "taxableTotal": 100.0,
+            "discountTotal": 0.0,
+            "discountedTotal": 100.0,
+            "itemTaxTotal": 0.0,
+            "shippingTaxTotal": 0.0,
+            "shippingTotal": 3.0,
+            "feeTotal": 0.0,
+            "total": 103.0,
+            "unitPrice": {
+                "extendedAmount": 100.0,
+                "listAmount": 100.0
+            },
+            "productDiscounts": [],
+            "shippingDiscounts": [],
+            "auditInfo": {
+                "updateDate": "2019-09-13T21:18:16.780Z",
+                "createDate": "2019-09-13T21:18:16.780Z",
+                "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+            },
+            "shippingAmountBeforeDiscountsAndAdjustments": 3.00,
+            "weightedOrderAdjustment": 0.0,
+            "weightedOrderDiscount": 0.00,
+            "adjustedLineItemSubtotal": 100.0000,
+            "totalWithoutWeightedShippingAndHandling": 100.0000,
+            "weightedOrderTax": 0.00,
+            "weightedOrderShipping": 0.00,
+            "weightedOrderShippingDiscount": 0.00,
+            "weightedOrderShippingManualAdjustment": 0.00,
+            "weightedOrderShippingTax": 0.00,
+            "weightedOrderHandlingFee": 0.00,
+            "weightedOrderHandlingFeeTax": 0.00,
+            "weightedOrderHandlingFeeDiscount": 0.00,
+            "weightedOrderDuty": 0.00,
+            "totalWithWeightedShippingAndHandling": 103.0000,
+            "weightedOrderHandlingAdjustment": 0.0
         }
-      ],
-      "isRecurring": false,
-      "amountCollected": 25.0,
-      "amountCredited": 0.0,
-      "amountRequested": 25.0,
-      "changeMessages": [
-        {
-          "id": "d7be98fcb47045438bc1a404010100d8",
-          "userId": "907e3523d71f49feb210e018b631661e",
-          "subjectType": "WorkflowAction",
-          "success": true,
-          "identifier": "d035cb276a5a48269586a404010100a4",
-          "subject": "CreatePayment",
-          "verb": "Applied",
-          "message": "Workflow action succeeded.",
-          "oldValue": "New",
-          "newValue": "New",
-          "amount": null,
-          "createDate": "2014-12-17T15:35:43.222Z"
-        },
-        {
-          "id": "a88cb67e01c5426982f1a40401010ecb",
-          "userId": "907e3523d71f49feb210e018b631661e",
-          "subjectType": "WorkflowAction",
-          "success": true,
-          "identifier": "d035cb276a5a48269586a404010100a4",
-          "subject": "CapturePayment",
-          "verb": "Applied",
-          "message": "Workflow action succeeded.",
-          "oldValue": "New",
-          "newValue": "Collected",
-          "amount": null,
-          "createDate": "2014-12-17T15:35:55.125Z"
-        }
-      ],
-      "auditInfo": {
-        "updateDate": "2014-12-17T15:35:43.05Z",
-        "createDate": "2014-12-17T15:35:43.05Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      }
-    },
-    {
-      "id": "064e5090562f4c5f8e86a40401019632",
-      "paymentServiceTransactionId": "2828798225ec446c82ad6757dcfa936f",
-      "availableActions": [
-        "CreditPayment"
-      ],
-      "orderId": "0590f66b1397e70ddcb2a157000008ed",
-      "paymentType": "CreditCard",
-      "billingInfo": {
-        "paymentType": "CreditCard",
+    ],
+    "validationResults": [],
+    "billingInfo": {
         "billingContact": {
-          "email": "donald@duckfamily.com",
-          "firstName": "Donald",
-          "middleNameOrInitial": "",
-          "lastNameOrSurname": "Duck",
-          "phoneNumbers": {
-            "home": "1112223333",
-            "mobile": "",
-            "work": ""
-          },
-          "address": {
-            "address1": "123 Duckey Way",
-            "address2": "",
-            "address3": "",
-            "address4": "",
-            "cityOrTown": "Duck Pond",
-            "stateOrProvince": "MO",
-            "postalOrZipCode": "12345",
-            "countryCode": "US",
-            "addressType": "Residential",
-            "isValidated": false
-          }
+            "id": 1004,
+            "email": "wwilson@deadpool.net",
+            "firstName": "Wade",
+            "lastNameOrSurname": "Wilson",
+            "phoneNumbers": {
+                "home": "512-555-5555",
+                "mobile": "512-555-5555"
+            },
+            "address": {
+                "address1": "123 ABC",
+                "address2": "",
+                "cityOrTown": "Austin",
+                "stateOrProvince": "TX",
+                "postalOrZipCode": "78758",
+                "countryCode": "US",
+                "addressType": "Residential",
+                "isValidated": true
+            }
         },
-        "isSameBillingShippingAddress": true,
-        "card": {
-          "paymentServiceCardId": "09230e2850e7417483d88730da85eabb",
-          "isUsedRecurring": false,
-          "nameOnCard": "D Duck",
-          "isCardInfoSaved": false,
-          "paymentOrCardType": "VISA",
-          "cardNumberPartOrMask": "************1111",
-          "expireMonth": 12,
-          "expireYear": 2020
-        },
+        "isSameBillingShippingAddress": false,
         "auditInfo": {
-          "updateDate": "2014-12-17T15:37:50.622Z",
-          "createDate": "2014-12-17T15:37:50.622Z",
-          "updateBy": "907e3523d71f49feb210e018b631661e",
-          "createBy": "907e3523d71f49feb210e018b631661e"
-        },
-        "storeCreditCode": null
-      },
-      "status": "Collected",
-      "interactions": [
-        {
-          "id": "a0677b89509e4a21b113a4040101988e",
-          "gatewayInteractionId": 0,
-          "paymentId": "064e5090562f4c5f8e86a40401019632",
-          "orderId": "0590f66b1397e70ddcb2a157000008ed",
-          "currencyCode": "USD",
-          "interactionType": "Authorization",
-          "checkNumber": null,
-          "status": "Authorized",
-          "paymentEntryStatus": "New",
-          "isRecurring": false,
-          "isManual": false,
-          "gatewayTransactionId": "2225726458",
-          "gatewayAuthCode": "122WIF",
-          "gatewayAVSCodes": "Y",
-          "gatewayCVV2Codes": "P",
-          "gatewayResponseCode": "1",
-          "gatewayResponseText": "This transaction has been approved.",
-          "paymentTransactionInteractionIdReference": null,
-          "amount": 306.24,
-          "note": null,
-          "interactionDate": "2014-12-17T15:37:52.682Z",
-          "auditInfo": {
-            "updateDate": "2014-12-17T15:37:52.682Z",
-            "createDate": "2014-12-17T15:37:52.682Z",
-            "updateBy": "907e3523d71f49feb210e018b631661e",
-            "createBy": "907e3523d71f49feb210e018b631661e"
-          }
-        },
-        {
-          "id": "0db3617726784e15b348a4040101a61a",
-          "gatewayInteractionId": 1858271,
-          "paymentId": "064e5090562f4c5f8e86a40401019632",
-          "orderId": "0590f66b1397e70ddcb2a157000008ed",
-          "currencyCode": "USD",
-          "interactionType": "Capture",
-          "checkNumber": null,
-          "status": "Captured",
-          "paymentEntryStatus": "Authorized",
-          "isRecurring": false,
-          "isManual": false,
-          "gatewayTransactionId": "2225726458",
-          "gatewayAuthCode": "122WIF",
-          "gatewayAVSCodes": "P",
-          "gatewayCVV2Codes": "",
-          "gatewayResponseCode": "1",
-          "gatewayResponseText": "This transaction has been approved.",
-          "paymentTransactionInteractionIdReference": null,
-          "amount": 306.24,
-          "note": null,
-          "interactionDate": "2014-12-17T15:38:04.242Z",
-          "auditInfo": {
-            "updateDate": "2014-12-17T15:38:04.242Z",
-            "createDate": "2014-12-17T15:38:04.242Z",
-            "updateBy": "907e3523d71f49feb210e018b631661e",
-            "createBy": "907e3523d71f49feb210e018b631661e"
-          }
+            "updateDate": "2019-09-13T21:17:52.655Z",
+            "createDate": "2019-09-13T21:17:52.655Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
         }
-      ],
-      "isRecurring": false,
-      "amountCollected": 306.24,
-      "amountCredited": 0.0,
-      "amountRequested": 306.24,
-      "changeMessages": [
-        {
-          "id": "1dc06caa2f48495a85cca4040101965c",
-          "userId": "907e3523d71f49feb210e018b631661e",
-          "subjectType": "WorkflowAction",
-          "success": true,
-          "identifier": "064e5090562f4c5f8e86a40401019632",
-          "subject": "CreatePayment",
-          "verb": "Applied",
-          "message": "Workflow action succeeded.",
-          "oldValue": "New",
-          "newValue": "New",
-          "amount": null,
-          "createDate": "2014-12-17T15:37:50.81Z"
-        },
-        {
-          "id": "fbcbd39232ba43d6bbd0a40401019aa8",
-          "userId": "907e3523d71f49feb210e018b631661e",
-          "subjectType": "WorkflowAction",
-          "success": true,
-          "identifier": "064e5090562f4c5f8e86a40401019632",
-          "subject": "AuthorizePayment",
-          "verb": "Applied",
-          "message": "Workflow action succeeded.",
-          "oldValue": "New",
-          "newValue": "Authorized",
-          "amount": null,
-          "createDate": "2014-12-17T15:37:54.476Z"
-        },
-        {
-          "id": "f6eb4b4365ef40b688cba4040101a729",
-          "userId": "907e3523d71f49feb210e018b631661e",
-          "subjectType": "WorkflowAction",
-          "success": true,
-          "identifier": "064e5090562f4c5f8e86a40401019632",
-          "subject": "CapturePayment",
-          "verb": "Applied",
-          "message": "Workflow action succeeded.",
-          "oldValue": "Authorized",
-          "newValue": "Collected",
-          "amount": null,
-          "createDate": "2014-12-17T15:38:05.146Z"
-        }
-      ],
-      "auditInfo": {
-        "updateDate": "2014-12-17T15:37:50.669Z",
-        "createDate": "2014-12-17T15:37:50.669Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      }
-    }
-  ],
-  "packages": [
-    {
-      "shippingMethodCode": "usps_Priority",
-      "shippingMethodName": "Priority Mail",
-      "shipmentId": null,
-      "trackingNumber": null,
-      "packagingType": null,
-      "hasLabel": false,
-      "measurements": null,
-      "id": "1b8b8d7974664d05a1e9a4040101ca9b",
-      "code": "Package-1",
-      "status": "Fulfilled",
-      "items": [
-        {
-          "productCode": "87D7B98ga",
-          "quantity": 1,
-          "fulfillmentItemType": "Physical"
-        }
-      ],
-      "fulfillmentDate": "2014-12-17T15:39:08.966Z",
-      "fulfillmentLocationCode": "AustinNextDoor",
-      "auditInfo": {
-        "updateDate": "2014-12-17T15:39:08.966Z",
-        "createDate": "2014-12-17T15:38:35.377Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      },
-      "availableActions": [],
-      "changeMessages": []
     },
-    {
-      "shippingMethodCode": "usps_Priority",
-      "shippingMethodName": "Priority Mail",
-      "shipmentId": null,
-      "trackingNumber": null,
-      "packagingType": null,
-      "hasLabel": false,
-      "measurements": null,
-      "id": "ab5b0ac6f7f24340a1f3a4040101dc24",
-      "code": "Package-2",
-      "status": "Fulfilled",
-      "items": [
+    "payments": [],
+    "refunds": [],
+    "packages": [],
+    "pickups": [],
+    "digitalPackages": [],
+    "shipments": [
         {
-          "productCode": "87D7B98ga",
-          "quantity": 1,
-          "fulfillmentItemType": "Physical"
+            "number": 1473,
+            "orderId": "0e7c657b06ed4400015ef8f70000433f",
+            "orderNumber": 1357,
+            "email": "wwilson@deadpool.net",
+            "currencyCode": "USD",
+            "customerAccountId": 1006,
+            "shipmentType": "STH",
+            "shippingMethodCode": "21e62ddf172c4205b840a5fc010ab216",
+            "shippingMethodName": "Flat Rate Per Item - $3",
+            "fulfillmentLocationCode": "Austin_Both",
+            "destination": {
+                "destinationContact": {
+                    "id": 1005,
+                    "email": "epratt@legend.net",
+                    "firstName": "Ernest",
+                    "middleNameOrInitial": "",
+                    "lastNameOrSurname": "Pratt",
+                    "companyOrOrganization": "",
+                    "phoneNumbers": {
+                        "home": "303-303-3003",
+                        "mobile": "",
+                        "work": ""
+                    },
+                    "address": {
+                        "address1": "1900 W Girard Ave",
+                        "address2": "",
+                        "address3": "",
+                        "address4": "",
+                        "cityOrTown": "Sheridan",
+                        "stateOrProvince": "CO",
+                        "postalOrZipCode": "80110",
+                        "countryCode": "US",
+                        "addressType": "Residential",
+                        "isValidated": true
+                    }
+                }
+            },
+            "shipmentStatus": "READY",
+            "workflowState": {
+                "auditInfo": {
+                    "updateDate": "2019-09-13T21:22:47.991Z",
+                    "createDate": "2019-09-13T21:18:35.409Z"
+                },
+                "processInstanceId": "3240",
+                "shipmentState": "INVENTORY_AVAILABLE",
+                "taskList": [
+                    {
+                        "active": false,
+                        "attributes": {},
+                        "completed": true,
+                        "completedDate": "2019-09-13T21:22:47.896Z",
+                        "inputs": [
+                            {
+                                "maximum": 0.0,
+                                "minimum": 0.0,
+                                "name": "shipmentAccepted",
+                                "type": "BOOLEAN"
+                            }
+                        ],
+                        "name": "Accept Shipment",
+                        "subject": ""
+                    },
+                    {
+                        "active": false,
+                        "attributes": {},
+                        "completed": true,
+                        "completedDate": "2019-09-13T21:22:47.896Z",
+                        "inputs": [
+                            {
+                                "maximum": 0.0,
+                                "minimum": 0.0,
+                                "name": "stockLevel",
+                                "type": "STRING"
+                            }
+                        ],
+                        "name": "Validate Items In Stock",
+                        "subject": ""
+                    },
+                    {
+                        "links": {
+                            "execute": {
+                                "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/1473/tasks/5861/completed"
+                            },
+                            "skip": {
+                                "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/1473/tasks/5861/skipped"
+                            },
+                            "revert": {
+                                "href": "http://kibo-fulfillment-webapi/kibo.fulfillment.webapi/commerce/shipments/1473/tasks/5861/reverted"
+                            }
+                        },
+                        "active": true,
+                        "attributes": {},
+                        "completed": false,
+                        "description": "Print Packing Slip",
+                        "inputs": [
+                            {
+                                "label": "Back",
+                                "maximum": 0.0,
+                                "minimum": 0.0,
+                                "name": "back",
+                                "required": false,
+                                "type": "BOOLEAN"
+                            }
+                        ],
+                        "name": "Print Packing Slip",
+                        "skippable": true,
+                        "subject": "",
+                        "taskId": "5861"
+                    },
+                    {
+                        "active": false,
+                        "attributes": {},
+                        "completed": false,
+                        "inputs": [
+                            {
+                                "maximum": 0.0,
+                                "minimum": 0.0,
+                                "name": "canceled",
+                                "type": "BOOLEAN"
+                            },
+                            {
+                                "maximum": 0.0,
+                                "minimum": 0.0,
+                                "name": "back",
+                                "type": "BOOLEAN"
+                            }
+                        ],
+                        "name": "Prepare for Shipment",
+                        "subject": ""
+                    }
+                ]
+            },
+            "trackingNumbers": [],
+            "orderSubmitDate": "2019-09-13T21:18:29.937Z",
+            "changeMessages": [
+                {
+                    "id": "5d7c089f02fb40000129c252",
+                    "correlationId": "7e2d1e614d2d4ef38c3d47df3de001aa",
+                    "userId": "12345",
+                    "subject": "shipmentState",
+                    "message": "'workflowState.shipmentState' changed from 'PRE_ACCEPT_SHIPMENT' to 'ACCEPTED_SHIPMENT'",
+                    "oldValue": "PRE_ACCEPT_SHIPMENT",
+                    "newValue": "ACCEPTED_SHIPMENT"
+                },
+                {
+                    "id": "5d7c089f02fb40000129c253",
+                    "correlationId": "7e2d1e614d2d4ef38c3d47df3de001aa",
+                    "userId": "12345",
+                    "subject": "lastModifiedDate",
+                    "message": "'lastModifiedDate' changed from '2019-09-13T21:18:35.896Z' to '2019-09-13T21:22:39.732118Z'",
+                    "oldValue": "2019-09-13T21:18:35.896Z",
+                    "newValue": "2019-09-13T21:22:39.732118Z"
+                },
+                {
+                    "id": "5d7c089f02fb40000129c25c",
+                    "correlationId": "7e2d1e614d2d4ef38c3d47df3de001aa",
+                    "userId": "12345",
+                    "subject": "acceptedDate",
+                    "message": "'acceptedDate' changed from '' to '2019-09-13T21:22:39.853644Z'",
+                    "oldValue": "null",
+                    "newValue": "2019-09-13T21:22:39.853644Z"
+                },
+                {
+                    "id": "5d7c089f02fb40000129c25d",
+                    "correlationId": "7e2d1e614d2d4ef38c3d47df3de001aa",
+                    "userId": "12345",
+                    "subject": "lastModifiedDate",
+                    "message": "'lastModifiedDate' changed from '2019-09-13T21:22:39.768Z' to '2019-09-13T21:22:39.768833Z'",
+                    "oldValue": "2019-09-13T21:22:39.768Z",
+                    "newValue": "2019-09-13T21:22:39.768833Z"
+                },
+                {
+                    "id": "5d7c08a702fb40000129c27a",
+                    "correlationId": "226fb6591ec94fc8b785cbda66244c70",
+                    "userId": "12345",
+                    "subject": "lastModifiedDate",
+                    "message": "'lastModifiedDate' changed from '2019-09-13T21:22:39.963Z' to '2019-09-13T21:22:47.933897Z'",
+                    "oldValue": "2019-09-13T21:22:39.963Z",
+                    "newValue": "2019-09-13T21:22:47.933897Z"
+                },
+                {
+                    "id": "5d7c08a702fb40000129c27b",
+                    "correlationId": "226fb6591ec94fc8b785cbda66244c70",
+                    "userId": "12345",
+                    "subject": "shipmentState",
+                    "message": "'workflowState.shipmentState' changed from 'ACCEPTED_SHIPMENT' to 'INVENTORY_AVAILABLE'",
+                    "oldValue": "ACCEPTED_SHIPMENT",
+                    "newValue": "INVENTORY_AVAILABLE"
+                }
+            ],
+            "packages": [],
+            "items": [
+                {
+                    "lineId": 1,
+                    "originalOrderItemId": "83ad316cb05e46098433aac7015f170a",
+                    "productCode": "rkconfig_1",
+                    "variationProductCode": "rkconfig_1-1",
+                    "name": "rkconfig_1",
+                    "isTaxable": false,
+                    "quantity": 1,
+                    "unitPrice": 100.0,
+                    "actualPrice": 100.0,
+                    "itemDiscount": 0.00,
+                    "lineItemCost": 100.0,
+                    "itemTax": 0.00,
+                    "shipping": 3.00,
+                    "shippingDiscount": 0.00,
+                    "shippingTax": 0.00,
+                    "handling": 0.00,
+                    "handlingDiscount": 0.00,
+                    "handlingTax": 0.00,
+                    "duty": 0.0,
+                    "measurements": {
+                        "weight": {
+                            "unit": "lbs",
+                            "value": 50.000
+                        }
+                    },
+                    "options": [
+                        {
+                            "name": "ListOptionNumber123",
+                            "value": 1,
+                            "shopperEnteredValue": 1,
+                            "attributeFQN": "tenant~listoptionnumber123"
+                        }
+                    ]
+                }
+            ],
+            "canceledItems": [],
+            "auditInfo": {
+                "updateDate": "2019-09-13T21:22:47.991Z",
+                "createDate": "2019-09-13T21:18:35.409Z"
+            },
+            "shipmentAdjustment": 0.0,
+            "lineItemSubtotal": 100.00,
+            "lineItemTaxAdjustment": 0.0,
+            "lineItemTaxTotal": 0.00,
+            "lineItemTotal": 100.00,
+            "shippingAdjustment": 0.0,
+            "shippingSubtotal": 3.00,
+            "shippingTaxAdjustment": 0.0,
+            "shippingTaxTotal": 0.00,
+            "shippingTotal": 3.00,
+            "handlingAdjustment": 0.0,
+            "handlingSubtotal": 0.00,
+            "handlingTaxAdjustment": 0.0,
+            "handlingTaxTotal": 0.00,
+            "handlingTotal": 0.00,
+            "dutyAdjustment": 0.0,
+            "dutyTotal": 0.0,
+            "total": 103.00
         }
-      ],
-      "fulfillmentDate": "2014-12-17T15:42:44.96Z",
-      "fulfillmentLocationCode": "AustinNextDoor",
-      "auditInfo": {
-        "updateDate": "2014-12-17T15:42:44.96Z",
-        "createDate": "2014-12-17T15:38:50.357Z",
-        "updateBy": "907e3523d71f49feb210e018b631661e",
-        "createBy": "907e3523d71f49feb210e018b631661e"
-      },
-      "availableActions": [],
-      "changeMessages": []
-    }
-  ],
-  "pickups": [],
-  "digitalPackages": [],
-  "shipments": [],
-  "isDraft": false,
-  "hasDraft": false,
-  "isImport": false,
-  "importDate": null,
-  "externalId": null,
-  "couponCodes": [],
-  "invalidCoupons": [],
-  "amountAvailableForRefund": 331.24,
-  "amountRemainingForPayment": 0.00,
-  "id": "0590f66b1397e70ddcb2a157000008ed",
-  "tenantId": 2285,
-  "siteId": 4427,
-  "channelCode": "online",
-  "currencyCode": "USD",
-  "visitId": null,
-  "webSessionId": null,
-  "customerInteractionType": "Unknown",
-  "fulfillmentInfo": {
-    "fulfillmentContact": {
-      "id": 1121,
-      "email": "donald@duckfamily.com",
-      "firstName": "Donald",
-      "middleNameOrInitial": "",
-      "lastNameOrSurname": "Duck",
-      "companyOrOrganization": "",
-      "phoneNumbers": {
-        "home": "1112223333",
-        "mobile": "",
-        "work": ""
-      },
-      "address": {
-        "address1": "123 Duckey Way",
-        "address2": "",
-        "address3": "",
-        "address4": "",
-        "cityOrTown": "Duck Pond",
-        "stateOrProvince": "MO",
-        "postalOrZipCode": "12345",
-        "countryCode": "US",
-        "addressType": "Residential",
-        "isValidated": false
-      }
+    ],
+    "isDraft": false,
+    "hasDraft": false,
+    "isImport": false,
+    "couponCodes": [],
+    "invalidCoupons": [],
+    "amountAvailableForRefund": 0.0,
+    "amountRemainingForPayment": 103.0,
+    "amountRefunded": 0.0,
+    "id": "0e7c657b06ed4400015ef8f70000433f",
+    "tenantId": 17215,
+    "siteId": 21153,
+    "channelCode": "ONL",
+    "currencyCode": "USD",
+    "customerInteractionType": "Unknown",
+    "fulfillmentInfo": {
+        "fulfillmentContact": {
+            "id": 1005,
+            "email": "epratt@legend.net",
+            "firstName": "Ernest",
+            "middleNameOrInitial": "",
+            "lastNameOrSurname": "Pratt",
+            "companyOrOrganization": "",
+            "phoneNumbers": {
+                "home": "303-303-3003",
+                "mobile": "",
+                "work": ""
+            },
+            "address": {
+                "address1": "1900 W Girard Ave",
+                "address2": "",
+                "address3": "",
+                "address4": "",
+                "cityOrTown": "Sheridan",
+                "stateOrProvince": "CO",
+                "postalOrZipCode": "80110",
+                "countryCode": "US",
+                "addressType": "Residential",
+                "isValidated": true
+            }
+        },
+        "shippingMethodCode": "21e62ddf172c4205b840a5fc010ab216",
+        "shippingMethodName": "Flat Rate Per Item - $3",
+        "auditInfo": {
+            "updateDate": "2019-09-13T21:18:24.051Z",
+            "createDate": "2019-09-13T21:17:47.612Z",
+            "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+        }
     },
-    "isDestinationCommercial": false,
-    "shippingMethodCode": "usps_Priority",
-    "shippingMethodName": "Priority Mail",
+    "orderDiscounts": [],
+    "suggestedDiscounts": [],
+    "subtotal": 100.0,
+    "discountedSubtotal": 100.0,
+    "discountTotal": 0.00,
+    "discountedTotal": 100.00,
+    "shippingTotal": 3.0,
+    "shippingSubTotal": 3.00,
+    "shippingTaxTotal": 0.0,
+    "handlingTaxTotal": 0.0,
+    "itemTaxTotal": 0.0,
+    "taxTotal": 0.0,
+    "feeTotal": 0.0,
+    "total": 103.0,
+    "lineItemSubtotalWithOrderAdjustments": 100.00,
+    "shippingAmountBeforeDiscountsAndAdjustments": 3.00,
+    "lastValidationDate": "2019-09-13T21:18:17.341Z",
+    "changeMessages": [
+        {
+            "id": "25b7733690c242e39838aac7015ef500",
+            "correlationId": "cf0b07d1fd2a469fb51eefd42c07d87c",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "StateChange.WorkflowAction",
+            "success": true,
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "CreateOrder",
+            "verb": "Applied",
+            "message": "Workflow action succeeded.",
+            "metadata": [
+                {
+                    "oldValue": "Null",
+                    "newValue": "Pending"
+                }
+            ],
+            "oldValue": "Null",
+            "newValue": "Pending",
+            "createDate": "2019-09-13T21:17:47.728Z"
+        },
+        {
+            "id": "9f32ba3266804c059ab7aac7015efaca",
+            "correlationId": "84e27462a9c54a9da6311144d56bec66",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "Order",
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "Fulfillment Info Updated",
+            "verb": "Updated",
+            "message": "Fulfillment Info Updated",
+            "metadata": [
+                {
+                    "updatedFulfillment": {
+                        "FulfillmentContact": {
+                            "Id": 1005,
+                            "Email": "epratt@legend.net",
+                            "FirstName": "Ernest",
+                            "MiddleNameOrInitial": "",
+                            "LastNameOrSurname": "Pratt",
+                            "CompanyOrOrganization": "",
+                            "PhoneNumbers": {
+                                "Home": "303-303-3003",
+                                "Mobile": "",
+                                "Work": ""
+                            },
+                            "Address": {
+                                "Address1": "1900 W Girard Ave",
+                                "Address2": "",
+                                "Address3": "",
+                                "Address4": "",
+                                "CityOrTown": "Sheridan",
+                                "StateOrProvince": "CO",
+                                "PostalOrZipCode": "80110",
+                                "CountryCode": "US",
+                                "AddressType": "Residential",
+                                "IsValidated": true
+                            }
+                        },
+                        "ShippingMethodCode": null,
+                        "ShippingMethodName": null,
+                        "IsDestinationCommercial": null,
+                        "Data": null,
+                        "AuditInfo": {
+                            "UpdateDate": "2019-09-13T21:17:52.667Z",
+                            "CreateDate": "2019-09-13T21:17:47.612Z",
+                            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                        }
+                    },
+                    "originalFulfillment": {
+                        "FulfillmentContact": null,
+                        "ShippingMethodCode": null,
+                        "ShippingMethodName": null,
+                        "IsDestinationCommercial": null,
+                        "Data": null,
+                        "AuditInfo": {
+                            "UpdateDate": "2019-09-13T21:17:47.612Z",
+                            "CreateDate": "2019-09-13T21:17:47.612Z",
+                            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                        }
+                    }
+                }
+            ],
+            "createDate": "2019-09-13T21:17:52.667Z"
+        },
+        {
+            "id": "689be007f7f940a6be78aac7015f176b",
+            "correlationId": "ad8728c050d64203a30c76a29c6b5c7e",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "OrderItem",
+            "identifier": "83ad316cb05e46098433aac7015f170a",
+            "subject": "Item Added",
+            "verb": "Added",
+            "message": "Product rkconfig_1 (Code: rkconfig_1, Variation Code: rkconfig_1-1) was added.",
+            "metadata": [
+                {
+                    "productCode": "rkconfig_1",
+                    "variationProductCode": "rkconfig_1-1",
+                    "productName": "rkconfig_1",
+                    "quantity": 1
+                }
+            ],
+            "createDate": "2019-09-13T21:18:17.096Z"
+        },
+        {
+            "id": "b77abd82ec6c47f38f60aac7015f1f91",
+            "correlationId": "b2f5a389b15d4ce1b8212e7f726c61b4",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "Order",
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "Fulfillment Info Updated",
+            "verb": "Updated",
+            "message": "Fulfillment Info Updated",
+            "metadata": [
+                {
+                    "updatedFulfillment": {
+                        "FulfillmentContact": {
+                            "Id": 1005,
+                            "Email": "epratt@legend.net",
+                            "FirstName": "Ernest",
+                            "MiddleNameOrInitial": "",
+                            "LastNameOrSurname": "Pratt",
+                            "CompanyOrOrganization": "",
+                            "PhoneNumbers": {
+                                "Home": "303-303-3003",
+                                "Mobile": "",
+                                "Work": ""
+                            },
+                            "Address": {
+                                "Address1": "1900 W Girard Ave",
+                                "Address2": "",
+                                "Address3": "",
+                                "Address4": "",
+                                "CityOrTown": "Sheridan",
+                                "StateOrProvince": "CO",
+                                "PostalOrZipCode": "80110",
+                                "CountryCode": "US",
+                                "AddressType": "Residential",
+                                "IsValidated": true
+                            }
+                        },
+                        "ShippingMethodCode": "21e62ddf172c4205b840a5fc010ab216",
+                        "ShippingMethodName": "Flat Rate Per Item - $3",
+                        "IsDestinationCommercial": null,
+                        "Data": null,
+                        "AuditInfo": {
+                            "UpdateDate": "2019-09-13T21:18:24.051Z",
+                            "CreateDate": "2019-09-13T21:17:47.612Z",
+                            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                        }
+                    },
+                    "originalFulfillment": {
+                        "FulfillmentContact": {
+                            "Id": 1005,
+                            "Email": "epratt@legend.net",
+                            "FirstName": "Ernest",
+                            "MiddleNameOrInitial": "",
+                            "LastNameOrSurname": "Pratt",
+                            "CompanyOrOrganization": "",
+                            "PhoneNumbers": {
+                                "Home": "303-303-3003",
+                                "Mobile": "",
+                                "Work": ""
+                            },
+                            "Address": {
+                                "Address1": "1900 W Girard Ave",
+                                "Address2": "",
+                                "Address3": "",
+                                "Address4": "",
+                                "CityOrTown": "Sheridan",
+                                "StateOrProvince": "CO",
+                                "PostalOrZipCode": "80110",
+                                "CountryCode": "US",
+                                "AddressType": "Residential",
+                                "IsValidated": true
+                            }
+                        },
+                        "ShippingMethodCode": null,
+                        "ShippingMethodName": null,
+                        "IsDestinationCommercial": null,
+                        "Data": null,
+                        "AuditInfo": {
+                            "UpdateDate": "2019-09-13T21:17:52.667Z",
+                            "CreateDate": "2019-09-13T21:17:47.612Z",
+                            "UpdateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+                            "CreateBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+                        }
+                    }
+                }
+            ],
+            "createDate": "2019-09-13T21:18:24.051Z"
+        },
+        {
+            "id": "40251038f18f404894d7aac7015f26a6",
+            "correlationId": "82cd751452b64fa09c1976b0ab297211",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "StateChange.WorkflowAction",
+            "success": true,
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "SubmitOrder",
+            "verb": "Applied",
+            "message": "Workflow action succeeded.",
+            "metadata": [
+                {
+                    "oldValue": "Pending",
+                    "newValue": "Submitted"
+                }
+            ],
+            "oldValue": "Pending",
+            "newValue": "Submitted",
+            "createDate": "2019-09-13T21:18:30.094Z"
+        },
+        {
+            "id": "50d6abfff3664f91bab9aac7015f2718",
+            "correlationId": "82cd751452b64fa09c1976b0ab297211",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "StateChange.WorkflowAction",
+            "success": true,
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "ValidateOrder",
+            "verb": "Applied",
+            "message": "Workflow action succeeded.",
+            "metadata": [
+                {
+                    "oldValue": "Submitted",
+                    "newValue": "Validated"
+                }
+            ],
+            "oldValue": "Submitted",
+            "newValue": "Validated",
+            "createDate": "2019-09-13T21:18:30.472Z"
+        },
+        {
+            "id": "da1c9d318f074ffdafc8aac7015f2d7f",
+            "correlationId": "82cd751452b64fa09c1976b0ab297211",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "shipment.create",
+            "subject": "Shipments created",
+            "verb": "Created",
+            "message": "Created shipments 0.",
+            "createDate": "2019-09-13T21:18:35.938Z"
+        },
+        {
+            "id": "514133bbbd7c4530b022aac7015f2d97",
+            "correlationId": "82cd751452b64fa09c1976b0ab297211",
+            "userId": "355060a60a5e48eeb7f2fb8d92af2ba5",
+            "userFirstName": "Kibo",
+            "userLastName": "admin",
+            "userScopeType": "Tenant",
+            "appId": "2e778ae20c7c433885c8e5e418774cb4",
+            "appKey": "mozu.MozuAdmin.1933.0.0.Release",
+            "subjectType": "StateChange.WorkflowAction",
+            "success": true,
+            "identifier": "0e7c657b06ed4400015ef8f70000433f",
+            "subject": "AcceptOrder",
+            "verb": "Applied",
+            "message": "Workflow action succeeded.",
+            "metadata": [
+                {
+                    "oldValue": "Validated",
+                    "newValue": "Accepted"
+                }
+            ],
+            "oldValue": "Validated",
+            "newValue": "Accepted",
+            "createDate": "2019-09-13T21:18:36.017Z"
+        }
+    ],
+    "extendedProperties": [],
+    "discountThresholdMessages": [],
     "auditInfo": {
-      "updateDate": "2014-12-16T20:40:27.335Z",
-      "createDate": "2014-12-16T20:39:15.985Z",
-      "updateBy": "907e3523d71f49feb210e018b631661e",
-      "createBy": "907e3523d71f49feb210e018b631661e"
+        "updateDate": "2019-09-13T21:18:36.021Z",
+        "createDate": "2019-09-13T21:17:47.733Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+        "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
     }
-  },
-  "orderDiscounts": [],
-  "subtotal": 252.04,
-  "discountedSubtotal": 252.04,
-  "discountTotal": 0.0,
-  "discountedTotal": 252.04,
-  "shippingTotal": 36.2,
-  "shippingSubTotal": 36.2,
-  "shippingTaxTotal": 0.0,
-  "handlingTaxTotal": 0.0,
-  "itemTaxTotal": 0.0,
-  "taxTotal": 0.0,
-  "feeTotal": 0.0,
-  "total": 331.24,
-  "lastValidationDate": "2014-12-16T20:39:31.189Z",
-  "expirationDate": null,
-  "changeMessages": [
-    {
-      "id": "d179862056884dd88b46a40301545556",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "CreateOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Null",
-      "newValue": "Pending",
-      "amount": null,
-      "createDate": "2014-12-16T20:39:06.946Z"
-    },
-    {
-      "id": "691fb06e657746e5aaa3a40301545fee",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Fulfillment Info Updated",
-      "verb": "Updated",
-      "message": "Fulfillment information was updated.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-16T20:39:15.985Z"
-    },
-    {
-      "id": "15183d8957db4578a956a4030154718b",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "OrderItem",
-      "success": null,
-      "identifier": "07e01cfa7a9243e1a0d0a4030154714e",
-      "subject": "Item Added",
-      "verb": "Added",
-      "message": "Product Candy Baskets (Code: 87D7B98ga) was added.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-16T20:39:31.017Z"
-    },
-    {
-      "id": "cf629b1aa33f441d99b6a403015481a6",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Fulfillment Info Updated",
-      "verb": "Updated",
-      "message": "Fulfillment information was updated.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-16T20:39:44.761Z"
-    },
-    {
-      "id": "291f5e1dcd6047ed8b3aa4030154b38a",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Fulfillment Info Updated",
-      "verb": "Updated",
-      "message": "Fulfillment information was updated.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-16T20:40:27.335Z"
-    },
-    {
-      "id": "7b32c22e2959468f8669a4030154d916",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "SubmitOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Pending",
-      "newValue": "Submitted",
-      "amount": null,
-      "createDate": "2014-12-16T20:40:59.372Z"
-    },
-    {
-      "id": "9d888fe0b4214e61a424a4030154e7d2",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "ValidateOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Submitted",
-      "newValue": "Validated",
-      "amount": null,
-      "createDate": "2014-12-16T20:41:11.947Z"
-    },
-    {
-      "id": "a19e2569e8e441f2b954a4030154e84c",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "AcceptOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Validated",
-      "newValue": "Accepted",
-      "amount": null,
-      "createDate": "2014-12-16T20:41:12.352Z"
-    },
-    {
-      "id": "c31b5c7817354e148084a404010100d8",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "SetOrderAsProcessing",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Accepted",
-      "newValue": "Processing",
-      "amount": null,
-      "createDate": "2014-12-17T15:35:43.222Z"
-    },
-    {
-      "id": "2991387dc119418782dfa40401010e77",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "ValidateOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Processing",
-      "newValue": "Validated",
-      "amount": null,
-      "createDate": "2014-12-17T15:35:54.844Z"
-    },
-    {
-      "id": "2a3a81c8b26f4a8a87aca40401010ecb",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "AcceptOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Validated",
-      "newValue": "Processing",
-      "amount": null,
-      "createDate": "2014-12-17T15:35:55.125Z"
-    },
-    {
-      "id": "97e5546bf25742d48612a40401019884",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "ValidateOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Processing",
-      "newValue": "Validated",
-      "amount": null,
-      "createDate": "2014-12-17T15:37:52.65Z"
-    },
-    {
-      "id": "28b4bf30f7df471caa46a40401019aa8",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "AcceptOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Validated",
-      "newValue": "Processing",
-      "amount": null,
-      "createDate": "2014-12-17T15:37:54.476Z"
-    },
-    {
-      "id": "0dbcd19a872c49139c92a4040101a729",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "PaymentStatus",
-      "verb": "Applied",
-      "message": "Payment status updated.",
-      "oldValue": "Pending",
-      "newValue": "Paid",
-      "amount": null,
-      "createDate": "2014-12-17T15:38:05.146Z"
-    },
-    {
-      "id": "078076e8f7184ade9ab1a4040101ca9b",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Package Added",
-      "verb": "Added",
-      "message": "Package with ID: 1b8b8d7974664d05a1e9a4040101ca9b was added.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-17T15:38:35.393Z"
-    },
-    {
-      "id": "3df19f413add45dd89d5a4040101db72",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Package Updated",
-      "verb": "Updated",
-      "message": "Package with ID: 1b8b8d7974664d05a1e9a4040101ca9b was updated.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-17T15:38:49.764Z"
-    },
-    {
-      "id": "4855a92c43f24c88a81ba4040101dc24",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "Package Added",
-      "verb": "Added",
-      "message": "Package with ID: ab5b0ac6f7f24340a1f3a4040101dc24 was added.",
-      "oldValue": null,
-      "newValue": null,
-      "amount": null,
-      "createDate": "2014-12-17T15:38:50.357Z"
-    },
-    {
-      "id": "0a6aa0c095654bf0875aa4040102ef11",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "Order",
-      "success": null,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "FulfillmentStatus",
-      "verb": "Applied",
-      "message": "Fulfillment status updated.",
-      "oldValue": "PartiallyFulfilled",
-      "newValue": "Fulfilled",
-      "amount": null,
-      "createDate": "2014-12-17T15:42:44.96Z"
-    },
-    {
-      "id": "be552379be80434b9182a4040102ef1f",
-      "userId": "907e3523d71f49feb210e018b631661e",
-      "subjectType": "WorkflowAction",
-      "success": true,
-      "identifier": "0590f66b1397e70ddcb2a157000008ed",
-      "subject": "CompleteOrder",
-      "verb": "Applied",
-      "message": "Workflow action succeeded.",
-      "oldValue": "Processing",
-      "newValue": "Completed",
-      "amount": null,
-      "createDate": "2014-12-17T15:42:45.007Z"
-    }
-  ],
-  "auditInfo": {
-    "updateDate": "2014-12-17T15:42:45.1Z",
-    "createDate": "2014-12-16T20:39:06.946Z",
-    "updateBy": "907e3523d71f49feb210e018b631661e",
-    "createBy": "907e3523d71f49feb210e018b631661e"
-  }
 }
