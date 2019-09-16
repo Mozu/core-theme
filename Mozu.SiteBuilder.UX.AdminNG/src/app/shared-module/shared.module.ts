@@ -64,7 +64,8 @@ import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-co
 import { ProgressButtonService } from './progress-button/progress-button.service';
 import { DatepickerComponent } from './datepicker/datepicker.component';
 import { AccountInfoService } from './account/information/information.service';
-import { DateCompareDirective } from './directive/datepicker-compare-validator.directive';
+import { DateCompareDirective} from './directive/datepicker-compare-validator.directive';
+import { DateService } from './datepicker/datepicker.service';
 
 
 declare var resourcesVersion: any;
@@ -148,7 +149,8 @@ export function createTranslateLoader(http: HttpClient) {
             provide: NgbDateAdapter,
             useClass: NgbDateNativeAdapter
         },
-        AccountInfoService
+        AccountInfoService,
+        DateService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [

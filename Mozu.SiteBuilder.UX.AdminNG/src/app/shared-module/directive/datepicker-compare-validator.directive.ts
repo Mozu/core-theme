@@ -5,6 +5,7 @@
  */
 import { Validator, AbstractControl, NG_VALIDATORS } from "@angular/forms";
 import { Directive, Input } from "@angular/core";
+import { DateService } from '@shared/datepicker/datepicker.service';
 
 @Directive({
     selector: "[dateCompareValidator]",
@@ -18,26 +19,29 @@ import { Directive, Input } from "@angular/core";
 export class DateCompareDirective implements Validator {
     @Input() dateCompareValidator: string;
     @Input() isThisToDate: boolean;
-    dateField: any;
-    validate(c: AbstractControl): { [key: string]: any; } {
+    constructor(private dateService: DateService) {
+    }
+    validate(control: AbstractControl): { [key: string]: any; } {
         if (this.isThisToDate) {
             const toDate = this.dateCompareValidator ? new Date(this.dateCompareValidator) : null,
-                fromDate = c.value;
+                fromDate = control.value;
+            this.dateService.setToDateField(control);
             if ((toDate !== null && fromDate !== null) && toDate > fromDate) {
-                c.parent.get("expirationFrom").setErrors(null);
+                this.dateService.getFromDateField().setErrors(null);
                 return { "isValidDate": true, msg: "The to-date can not be before from-date" };
             } else if (toDate !== null && fromDate !== null) {
-                c.parent.get("expirationFrom").setErrors(null);
+                this.dateService.getFromDateField().setErrors(null);
             }
             return null;
         } else {
-            const fromDate = c.value,
+            const fromDate = control.value,
                 toDate = this.dateCompareValidator ? new Date(this.dateCompareValidator) : null;
+            this.dateService.setFromDateField(control);
             if ((toDate !== null && fromDate !== null) && toDate < fromDate) {
-                c.parent.get("expirationTo").setErrors(null);
+                this.dateService.getToDateField().setErrors(null);
                 return { "isValidDate": true, msg: "The from-date can not be after to-date" };
             } else if (toDate !== null && fromDate !== null) {
-                c.parent.get("expirationTo").setErrors(null);
+                this.dateService.getToDateField().setErrors(null);
             }
             return null;
         }

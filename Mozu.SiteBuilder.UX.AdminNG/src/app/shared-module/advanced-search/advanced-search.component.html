@@ -29,7 +29,7 @@
 
 <!-- Quote Filter Templates Starts -->
 <ng-template #quoteFilterTemplate>
-    <form name="form">
+    <form name="form"  #advancedSearchForm="ngForm">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                     aria-hidden="true">&times;</span></button>
@@ -94,7 +94,7 @@
         <div class="modal-footer">
             <span type="button" class="btn cancelbtn"
                 data-dismiss="modal">{{'SHARED.FILTER.cancelBtn' | translate}}</span>
-            <button type="button" id="btnFilter" class="sbbtn btn btn-success" [disabled]="model.isExpirationToValid"
+            <button type="button" id="btnFilter" class="sbbtn btn btn-success" [disabled]="advancedSearchForm.form.invalid"
                 (click)="search(searchBar.value)">{{'SHARED.FILTER.filterBtn' | translate}}</button>
         </div>
     </form>
