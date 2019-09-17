@@ -1114,5 +1114,9 @@ ngb-datepicker.dropdown-menu {
     box-shadow: none !important;
 }
 
+.datepicker datepicker.ng-invalid .input-group .datepicker-control {
+    border-bottom: 2px solid #ff0000 !important;
+}
+
 
 /* --------------Advanced Filter - ng-select CSS - End------------- */

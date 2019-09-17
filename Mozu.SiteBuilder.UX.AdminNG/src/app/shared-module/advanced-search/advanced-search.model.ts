@@ -6,7 +6,7 @@ export class AdvancedFilterModel {
     searchField: any;
     splittedValues: any;
     lastKey: string;
-    status = false;
+    isIconToggled = false;
     isExpirationToValid = false;
     filterModel: FilterModel;
 
@@ -41,7 +41,11 @@ export class QuoteFilterModel extends FilterModel {
     expirationFrom: Date;
     expirationTo: Date;
     projectName = '';
-    status = '';
+    status = null;
+    createFrom: Date;
+    createTo: Date;
+    b2bAccounts: any = [];
+    quoteStatus: any = [];
 
     public ResetFilterValue() {
         this.keyword = '';
@@ -52,7 +56,9 @@ export class QuoteFilterModel extends FilterModel {
         this.expirationFrom = null;
         this.expirationTo = null;
         this.projectName = '';
-        this.status = '';
+        this.status = null;
+        this.createFrom = null;
+        this.createTo = null;
     }
 
     public GetAllGetters(): string[] {
@@ -76,16 +82,8 @@ export class QuoteFilterModel extends FilterModel {
     get getSearchBarAccountName(): string {
         return this.accountId ? Constants.advancedFilter.accountId + Constants.advancedFilter.keyValueDelimiter + this.accountId + ' ' : '';
     }
-
-    set setSearchBarExpirationFrom(expirationDate: any) {
-        this.expirationFrom = expirationDate;
-    }
     get getSearchBarExpirationFrom(): string {
         return this.expirationFrom ? Constants.advancedFilter.expirationFrom + Constants.advancedFilter.keyValueDelimiter + moment(this.expirationFrom).format(Constants.advSearchDateFormat) + ' ' : '';
-    }
-
-    set setSearchBarExpirationTo(expirationDate: any) {
-        this.expirationTo = expirationDate;
     }
     get getSearchBarExpirationTo(): string {
         return this.expirationTo ? Constants.advancedFilter.expirationTo + Constants.advancedFilter.keyValueDelimiter + moment(this.expirationTo).format(Constants.advSearchDateFormat) + ' ' : '';
@@ -95,5 +93,11 @@ export class QuoteFilterModel extends FilterModel {
     }
     get getStatus(): string {
         return this.status ? Constants.advancedFilter.status + Constants.advancedFilter.keyValueDelimiter + this.status + ' ' : '';
+    }
+    get getSearchBarCreateFrom(): string {
+        return this.createFrom ? Constants.advancedFilter.createFrom + Constants.advancedFilter.keyValueDelimiter + moment(this.createFrom).format(Constants.advSearchDateFormat) + ' ' : '';
+    }
+    get getSearchBarCreateTo(): string {
+        return this.createTo ? Constants.advancedFilter.createTo + Constants.advancedFilter.keyValueDelimiter + moment(this.createTo).format(Constants.advSearchDateFormat) + ' ' : '';
     }
 }

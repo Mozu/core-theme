@@ -131,7 +131,9 @@
                 "accountName": "Account Name",
                 "accountUserName": "Account User-Name",
                 "expirationDate": "Expiration Date",
-                "projectName": "Project Name"
+                "projectName": "Project Name",
+                "status": "Status",
+                "createDate": "Create Date"
             },
             "FormsErrorMessages": {
                 "toDateValid": "The to-date can not be before from-date",

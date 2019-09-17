@@ -12,6 +12,7 @@
     outline: 0px !important;
 }
 
+
 /* .modal-parent {
     position: absolute
 } */
@@ -39,6 +40,7 @@
     opacity: 1;
 }
 
+
 /* .modal.advanced-filter {
     position: relative;
     right: 97%;
@@ -56,11 +58,12 @@
     font-size: 32px;
 }
 
+
 /* .advanced-filter .modal-dialog {
     margin: 0px;
 } */
 
-@media (min-width: 768px){
+@media (min-width: 768px) {
     .modal-dialog {
         width: 600px;
         margin: 3% 9% auto auto;
@@ -198,8 +201,8 @@
     font-size: 13px;
 }
 
-.is-invalid {
-    border-bottom: 1px solid #ff0000 !important;
+datepicker.ng-invalid {
+    border: none;
 }
 
 div.error {

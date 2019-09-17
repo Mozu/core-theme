@@ -20,7 +20,7 @@ export class AdvancedSearchComponent implements OnInit {
   public model: AdvancedFilterModel;
   public filterModel: FilterModel;
   public b2bAccounts: any[];
-  public quoteStatus: any[];
+  public quoteStatus;
 
   constructor(private _notificationService: NotificationService,
     private datePipe: DatePipe,
@@ -35,12 +35,12 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   toggleIcon(searchBar: any) {
-    this.model.status = searchBar.currentTarget && searchBar.currentTarget.value ? searchBar.currentTarget.value.length > 0 : false;
+    this.model.isIconToggled = searchBar.currentTarget && searchBar.currentTarget.value ? searchBar.currentTarget.value.length > 0 : false;
   }
 
   resetSerach(searchBar: HTMLInputElement) {
     searchBar.value = '';
-    this.model.status = false;
+    this.model.isIconToggled = false;
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
         this.filterModel.ResetFilterValue();
@@ -59,7 +59,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   modelChanged() {
-    this.model.status = true;
+    this.model.isIconToggled = true;
     this.model.searchField = '';
     this.model.searchField = this.model.populateSearchField;
   }

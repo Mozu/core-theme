@@ -209,7 +209,9 @@ export class Constants {
         expirationFrom: 'expirationFrom',
         expirationTo: 'expirationTo',
         projectName: 'projectName',
-        status: 'status'
+        status: 'status',
+        createFrom: 'createFrom',
+        createTo: 'createTo',
     };
 
     static quoteSubtotal = [

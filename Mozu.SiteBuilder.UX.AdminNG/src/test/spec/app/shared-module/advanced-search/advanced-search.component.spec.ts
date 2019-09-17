@@ -18,6 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { environment } from '@env';
+import { AccountInfoService } from '@shared/account/information/information.service';
 fdescribe('AdvancedSearchComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
@@ -172,7 +173,7 @@ fdescribe('AdvancedSearchComponent', () => {
             providers: [By, TranslateService, LoggerService,
                 UtilityService, EnvironmentConfig, AuthService,
                 SharedDataService, NotificationService, FormBuilder, TostrService, NGXLoggerHttpService, CustomNGXLoggerService,
-                AdvancedFilterModel, FilterModel, QuoteFilterModel, DatePipe,
+                AdvancedFilterModel, FilterModel, QuoteFilterModel, DatePipe, AccountInfoService,
                 {
                     provide: HttpClientService,
                     useFactory: httpClientServiceCreator,
@@ -191,6 +192,23 @@ fdescribe('AdvancedSearchComponent', () => {
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
         element = debugElement.nativeElement;
+
+        const respData = {
+            items: {
+              'ctTaContext': {
+                'masterCatalogs': [{
+                  'sites': [{
+                    'id': '1234'
+                  }]
+                }]
+              }
+            }};
+
+          httpMock = TestBed.get(HttpTestingController);
+          const req = httpMock.expectOne(`./assets/json/user-data.json`);
+          expect(req.request.method).toBe('GET');
+          req.flush(respData);
+          httpMock.verify();
     });
     it('should create', () => {
         expect(component).toBeTruthy();
@@ -198,9 +216,9 @@ fdescribe('AdvancedSearchComponent', () => {
     it('should call toggleIcon()', () => {
         fixture.detectChanges();
         const event = { 'currentTarget': { 'value': 'abc' } };
-        component.model.status = event.currentTarget ? event.currentTarget.value.length > 0 : false;
+        component.model.isIconToggled = event.currentTarget ? event.currentTarget.value.length > 0 : false;
         component.toggleIcon(event);
-        expect(component.model.status).toBe(true);
+        expect(component.model.isIconToggled).toBe(true);
     });
     it('should search component should recieve input data', () => {
         fixture.detectChanges();
@@ -215,7 +233,7 @@ fdescribe('AdvancedSearchComponent', () => {
     it('should notify component to reset search data on grid resetSerach()', async(() => {
         const searchValue = '';
         fixture.detectChanges();
-        component.model.status = false;
+        component.model.isIconToggled = false;
         component.navigationContainerType = 'quotes';
         inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
         fixture.detectChanges();
@@ -232,7 +250,7 @@ fdescribe('AdvancedSearchComponent', () => {
     it('should notify component to search data on grid search()', async(() => {
         const searchValue = 'sam';
         fixture.detectChanges();
-        component.model.status = false;
+        component.model.isIconToggled = false;
         component.navigationContainerType = 'quotes';
         inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
         fixture.detectChanges();
@@ -246,16 +264,13 @@ fdescribe('AdvancedSearchComponent', () => {
             expect(spy.calls.any()).toEqual(true);
         });
     }));
-    // it('should call modelChanged() to bind value to search bar', () => {
-    //     fixture.detectChanges();
-    //     component.filterModel.keyword = 'Test keyword';
-    //     component.filterModel.name = 'Test quote name';
-    //     component.filterModel.quoteId = 11;
-    //     component.model.status = true;
-    //     component.modelChanged(Event, '');
-    //     expect(component.model.searchField).toEqual(component.filterModel.getSearchBarkeyword + component.filterModel.getSearchBarQuoteName + component.filterModel.getSearchBarQuoteId);
-    // });
-
+    it('should call modelChanged () to bind value to search bar', () => {
+        fixture.detectChanges();
+        component.model.searchField = 'name:aaa ';
+        component.model.isIconToggled = true;
+        component.modelChanged();
+        expect(component.model.searchField).toEqual(component.model.populateSearchField);
+    });
     it('should call setAdvancedFilterValue() to bind value to search bar', () => {
         fixture.detectChanges();
         const filterValue = 'Device Config name: Test';
@@ -291,12 +306,10 @@ fdescribe('AdvancedSearchComponent', () => {
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar for keyword', () => {
         fixture.detectChanges();
         const item = 'Device Config';
-        const index  = 0;
-        component.addKeywordOrAppendToLastKey (item, index);
-        if (index === 0) {
-            component.model.lastKey = 'keyword';
-            expect(component.filterModel[component.model.lastKey]).toEqual(item);
-        }
+        const index = 0;
+        component.addKeywordOrAppendToLastKey(item, index);
+        component.model.lastKey = 'keyword';
+        expect(component.filterModel[component.model.lastKey]).toEqual(item);
     });
 
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar based on last key', () => {
@@ -305,15 +318,9 @@ fdescribe('AdvancedSearchComponent', () => {
         const index = 1;
         component.model.lastKey = 'name';
         component.addKeywordOrAppendToLastKey(item, index);
-        if (component.model.lastKey) {
-            expect(component.filterModel[component.model.lastKey]).toEqual((item).trim());
-        }
+        expect(component.filterModel[component.model.lastKey]).toEqual((item).trim());
     });
-    // it('should call resetAdvancedFilterValue () to reset model values', () => {
-    //     fixture.detectChanges();
-    //     component.filterModel.ResetFilterValue();
-    //     expect(component.filterModel.quoteId).toBeNull();
-    // });
+
     it(`should have input field 'Keyword'`, async(() => {
         fixture.detectChanges();
         inputElement = fixture.debugElement.query(By.css('#keyword')).nativeElement;
@@ -392,49 +399,6 @@ fdescribe('AdvancedSearchComponent', () => {
         });
     }));
 
-    it('should call fieldValidations() for validation like to-date should be greater than from-date', () => {
-        fixture.detectChanges();
-        const expirationTo = '2019-08-08T12:00:00+05:30';
-        const expirationFrom = '2019-08-08T12:00:00+05:30';
-        //component.fieldValidations();
-        if (new Date(expirationTo) < new Date(expirationFrom)) {
-            component.model.isExpirationToValid = true;
-          } else {
-            component.model.isExpirationToValid = false;
-          }
-          expect(component.model.isExpirationToValid).toBeFalsy();
-    });
-
-    it('should call fieldValidations() for validation like to-date is not greater than from-date', () => {
-        fixture.detectChanges();
-        const expirationTo = '2019-07-08T12:00:00+05:30';
-        const expirationFrom = '2019-08-08T12:00:00+05:30';
-        //component.fieldValidations();
-        if (new Date(expirationTo) < new Date(expirationFrom)) {
-            component.model.isExpirationToValid = true;
-          } else {
-            component.model.isExpirationToValid = false;
-          }
-          expect(component.model.isExpirationToValid).toBeTruthy();
-    });
-
-    // it('should call setDateValueToModel() to bind exirationDateFrom in valid date format', () => {
-    //     fixture.detectChanges();
-    //     const keyField = 'from';
-    //     const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
-    //     component.setDateValueToModel(event, keyField);
-    //     component.filterModel.setSearchBarExpirationFrom = new DatePipe('en-US').transform(event, Constants.advSearchDateFormat);
-    //     expect(component.filterModel.getSearchBarExpirationFrom).toEqual(('expirationFrom:2019-08-08T12:00:00+05:30 '));
-    // });
-
-    // it('should call setDateValueToModel() to bind exirationDateTo in valid date format', () => {
-    //     fixture.detectChanges();
-    //     const keyField = 'to';
-    //     const event = 'Thu Aug 08 2019 12:00:00 GMT+0530 (India Standard Time)';
-    //     component.setDateValueToModel(event, keyField);
-    //     component.filterModel.setSearchBarExpirationTo = new DatePipe('en-US').transform(event, Constants.advSearchDateFormat);
-    //     expect(component.filterModel.getSearchBarExpirationTo).toEqual(('expirationTo:2019-08-08T12:00:00+05:30 '));
-    // });
     it(`should have input field 'Project Name'`, async(() => {
         fixture.detectChanges();
         inputElement = fixture.debugElement.query(By.css('#projectName')).nativeElement;
@@ -445,34 +409,58 @@ fdescribe('AdvancedSearchComponent', () => {
             expect(inputElement.value).toEqual('foo');
         });
     }));
-    it(`should have input field 'Project Name'`, async(() => {
+    it(`should have input field 'Status'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#projectName')).nativeElement;
-        inputElement.value = 'foo';
+        inputElement = fixture.debugElement.query(By.css('#status')).nativeElement;
+        inputElement.value = 'New';
         inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
             fixture.detectChanges();
-            expect(inputElement.value).toEqual('foo');
+            expect(inputElement.value).toEqual('New');
         });
     }));
-
+    it(`should have input field 'Create Date From'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('datepicker[name=createFrom]')).nativeElement;
+        inputElement.value = '27-08-2019';
+        inputElement.dispatchEvent(new Event('datepicker'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('27-08-2019');
+        });
+    }));
+    it(`should have input field 'Create Date To'`, async(() => {
+        fixture.detectChanges();
+        inputElement = fixture.debugElement.query(By.css('datepicker[name=createTo]')).nativeElement;
+        inputElement.value = '30-08-2019';
+        inputElement.dispatchEvent(new Event('inputdatepicker'));
+        fixture.whenStable().then(() => {
+            fixture.detectChanges();
+            expect(inputElement.value).toEqual('30-08-2019');
+        });
+    }));
     it('should call service to get success response from mock http json (b2b-accounts)', () => {
+        component.populateB2BAccounts();
         fixture.detectChanges();
         const req = httpMock.expectOne(environment.appUrl + `/assets/json/b2b-accounts.json`);
         expect(req.request.method).toBe('GET');
         req.flush(dummyAccountList);
         httpMock.verify();
-        component.populateB2BAccounts();
         fixture.detectChanges();
-        expect(dummyAccountList.items[0].companyOrOrganization).toEqual('Shel Tamagotchis');
-      });
-      it('should call service to get failure response from mock http json (b2b-accounts)', () => {
+        fixture.whenStable().then(() => {
+            expect(dummyAccountList.items[0].companyOrOrganization).toEqual('Shel Tamagotchis');
+        });
+    });
+    it('should call service to get failure response from mock http json (b2b-accounts)', () => {
+        component.populateB2BAccounts();
         fixture.detectChanges();
         const req = httpMock.expectOne(environment.appUrl + `/assets/json/b2b-accounts.json`);
         expect(req.request.method).toBe('GET');
         req.flush(dummyAccountList, mockErrorResponse);
         httpMock.verify();
         fixture.detectChanges();
-        expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : _accountInfoService.fetchB2BAccounts_errResponse');
-      });
+        fixture.whenStable().then(() => {
+            expect(loggerServiceSpy).toHaveBeenCalledWith('AccountInformationComponent : _accountInfoService.fetchB2BAccounts_errResponse');
+        });
+    });
 });
