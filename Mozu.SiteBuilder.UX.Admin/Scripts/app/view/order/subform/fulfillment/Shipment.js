@@ -360,7 +360,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         var shipment = me.shipmentRecord;
         var model = {
             orderType: 'DIRECTSHIP', //me.record.get('orderType'),
-            items: []            
+            items: [],
+            inventoryRequestType: 'ALL'
         }
 
         if (model && shipment.fulfillmentLocationCode) {
