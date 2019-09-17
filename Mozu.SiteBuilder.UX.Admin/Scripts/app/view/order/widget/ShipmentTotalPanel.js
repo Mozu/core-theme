@@ -286,7 +286,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         el = Ext.get(this.taxAdjustmentDropdown);
         if (el) {
             el.on('keyup', function () { me.setCalculatedSummaryValues(this.taxAdjustmentInput, '.tax', this.shipmentRecord.lineItemTaxTotal, this.taxAdjustmentDropdown); }, this);
-        };    
+        };
     },
 
     setCalculatedSummaryValues: function (elementId, summarycls, originalValue, dropdownID) {
@@ -892,7 +892,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</tr>',
                 '</tbody>',
                 '</table>',
-                
+
                 // Tax
                 '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
 
@@ -987,7 +987,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '<div class="inner-addon left-addon right-box" style="margin-left: 12px">' + this.getAdjustmentDropdown(this.shippingTaxAdjustmentDropdown, 'shipping-tax') + '</div>',
                 '</td>',
 
-                '<td>',                
+                '<td>',
                 '<div class="inner-addon left-addon right-box" style="margin-left: 12px"> <span class="icon">$</span> <input id="' + this.shippingTaxAdjustmentInput + '" type="number" class="doller" placeholder="" /></div>',
                 '</td>',
                 '<td class="{tdCls}"></td>',
@@ -1117,25 +1117,37 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     },
 
     getAdjustmentDropdown: function (id, type) {
+        var subtractMessage = "Subtract from Shipment Total";
+        var addMessage = "Add to Shipment Total";
+
         switch (type) {
             case 'shipping':
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Shipping Total</option><option value="1">Add to Shipping Total</option></select>';
+                subtractMessage = "Subtract from Shipping Total";
+                addMessage = "Add to Shipping Total";
+                break;
 
             case 'handling':
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Handling Total</option><option value="1">Add to Handling Total</option></select>';
+                subtractMessage = "Subtract from Handling Total";
+                addMessage = "Add to Handling Total";
+                break;
 
             case 'shipping-tax':
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Shipping Tax</option><option value="1">Add to Shipping Tax</option></select>';
+                subtractMessage = "Subtract from Shipping Tax";
+                addMessage = "Add to Shipping Tax";
+                break;
 
             case 'handling-tax':
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Handling Tax</option><option value="1">Add to Handling Tax</option></select>';
+                subtractMessage = "Subtract from Handling Tax";
+                addMessage = "Add to Handling Tax";
+                break;
 
             case 'item-tax':
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Item Tax</option><option value="1">Add to Item Tax</option></select>';
-
-            default:
-                return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">Subtract from Shipment Total</option><option value="1">Add to Shipment Total</option></select>';
+                subtractMessage = "Subtract from Item Tax";
+                addMessage = "Add to Item Tax";
+                break;
         }
+
+        return '<select id="' + id + '" style="background-color: #fafafa;border: 1px solid rgba(63,63,63,0.19);box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);color: #7c7c7c;padding: 5px 12px;"><option value="-1">' + subtractMessage + '</option><option value="1">' + addMessage + '</option></select>';
     },
 
     /**
