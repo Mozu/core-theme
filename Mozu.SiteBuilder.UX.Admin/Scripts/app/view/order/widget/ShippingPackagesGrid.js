@@ -554,7 +554,7 @@
                 //locationCode: me.shipmentRecord.location.code,
                 radius: 500,
                 unit: 'MILES',
-                countryCode: 'US'
+                countryCode: me.shipmentRecord.location.address.countryCode
             }
         }
         if (item && item[0].data) {

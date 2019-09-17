@@ -380,6 +380,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             }
         });
         
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
+            model.shippingAddress = {
+                postalCode: me.shipmentRecord.location.address.postalOrZipCode,
+                countryCode: me.shipmentRecord.location.address.countryCode
+            }
+        }
+
         return model;
     },
 
@@ -403,7 +410,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 //locationCode: me.shipmentRecord.location.code,
                 radius: 500,
                 unit: 'MILES',
-                countryCode: 'US'
+                countryCode: me.shipmentRecord.location.address.countryCode
             }
         }
 

@@ -133,7 +133,7 @@ Ext.define('Taco.view.product.subform.Properties', {
                         name: this.getFieldName(ptAttribute),
                         fieldLabel: ptAttribute.get('adminName'),
                         allowBlank: ptAttribute.get('isRequired') === true ? false : true,
-                        value: (values && values.length) ? values[0] : null,
+                        value: (values && values.length) ? values[0] : null,                        
                         minHeight: 70
                     }
                 ];
@@ -279,7 +279,7 @@ Ext.define('Taco.view.product.subform.Properties', {
             attributeFQN = ptAttribute.get('attributeFQN'),
             prop = this.product.getProperties().getById(attributeFQN),
             values = prop ? prop.get('values') : null;
-
+        
         if (typeof this.statics().editors[editor] !== 'function') {
             return [
                 {
@@ -289,12 +289,19 @@ Ext.define('Taco.view.product.subform.Properties', {
             ];
         }
 
+        var item = this.statics().editors[editor].apply(this, [ptAttribute, values]);
+        if (item && item[0] && attributeFQN == 'tenant~backorder-days') {
+
+            var regex = '^[1-9][0-9]*$';
+            item[0].regex = new RegExp(regex);
+            item[0].regexText = 'Please enter positive integers only';
+        }
         return Ext.widget({
             xtype: 'container',
             margin: margin,
             width: '50%',
             layout: 'fit',
-            items: this.statics().editors[editor].apply(this, [ptAttribute, values])
+            items: item
         });
     },
 
