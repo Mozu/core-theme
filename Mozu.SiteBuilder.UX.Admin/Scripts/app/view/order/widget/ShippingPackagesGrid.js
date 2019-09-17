@@ -674,7 +674,7 @@
                     Taco.app.fireEvent('setmessage', 'Error while assigning shipment item', 'error');
                     return;
                 }
-                Taco.app.fireEvent('setmessage', "Item " + me.shipmentItemAutoReassignPayload.shipmentItems[0].name + " Successfully Reassigned", 'success');
+                Taco.app.fireEvent('setmessage', "Item " + me.shipmentItemAutoReassignPayload.reassignItemsRequest.items[0].name + " Successfully Reassigned", 'success');
                 me.fireEvent('shipmentReassign');
             },
             failure: function (response) {
