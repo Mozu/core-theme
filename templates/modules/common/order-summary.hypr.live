@@ -12,14 +12,41 @@
               <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">
                       {{ item.product.name }}
-                      {% if item.product.bundledProducts.length %}
+                      {% if item.product.productUsage == 'Bundle' %}
                       <dl class="mz-propertylist">
                         {% for bundledProduct in item.product.bundledProducts %}
                         <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
                         <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                        {% if bundledProduct.stock and bundledProduct.stock.isOnBackOrder and bundledProduct.stock.manageStock and bundledProduct.stock.stockAvailable < item.quantity|multiply(bundledProduct.quantity) %}
+                        <br/> <dd>
+                          <div class="mz-product-backorder">
+                          <div class="is-warning mz-product-backorder-warning">
+                            {{ labels.qty }} {{ bundledProduct.stock.stockAvailable }} {{ labels.productBackorderAvailable }}
+                            {% if bundledProduct.stock.availableDate  %}. {% else %}, {% endif %}
+                            <br />{{ labels.qty }} {{ item.quantity|multiply(bundledProduct.quantity)|subtract(bundledProduct.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+
+                            {% if bundledProduct.stock.availableDate  %}
+                            ,<br /> {{ labels.productBackorderAvailableDate }} {{bundledProduct.stock.availableDate | date("m/d/Y")}}
+                            {% endif %}
+                          </div>
+                        </div>
+                        </dd>
+                        {% endif %}
                         {% endfor %}
                       </dl>
+                      {% else %}
+                      {% if item.product.stock and item.product.stock.isOnBackOrder and item.product.stock.manageStock %}
+                      <div class="mz-product-backorder">
+                      <div class="is-warning mz-product-backorder-warning">
+                        {{ labels.qty }} {{ item.quantity|subtract(item.product.stock.stockAvailable) }} {{ labels.itemOnBackorder }}
+                        {% if item.product.stock.availableDate  %}
+                        .<br /> {{ labels.productBackorderAvailableDate }} {{item.product.stock.availableDate | date("m/d/Y")}}
+                        {% endif %}
+                      </div>
+                    </div>
                       {% endif %}
+                      {% endif %}
+
                     </td>
                     <td>{{ item.quantity }}</td>
                     <td>
