@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
 import { NavigationContainerType, Constants, QuoteFilterStatus } from '@shared/infrastructure';
-import { AdvancedFilterModel, FilterModel, QuoteFilterModel } from './advanced-search.model';
+import { AdvancedFilterModel, FilterModel } from './advanced-search.model';
 import { AccountInfoService } from '@shared/account/information/information.service';
 import { B2BAccountListModel } from '@shared/account/information';
 import { ErroNotificationType, ErrorCode, HttpError, LoggerService } from '@core';
+import { QuoteFilterModel } from 'app/quotes-module/quote-filter.model';
 
 @Component({
   selector: 'advanced-search',
@@ -20,10 +20,9 @@ export class AdvancedSearchComponent implements OnInit {
   public model: AdvancedFilterModel;
   public filterModel: FilterModel;
   public b2bAccounts: any[];
-  public quoteStatus;
+  public quoteStatus: any;
 
   constructor(private _notificationService: NotificationService,
-    private datePipe: DatePipe,
     private _accountInfoService: AccountInfoService,
     private _loggerService: LoggerService) { }
 
@@ -43,7 +42,7 @@ export class AdvancedSearchComponent implements OnInit {
     this.model.isIconToggled = false;
     switch (this.navigationContainerType) {
       case NavigationContainerType.quotes:
-        this.filterModel.ResetFilterValue();
+        this.filterModel.resetFilterValue();
         this._notificationService.notifyQuoteSearched(searchBar.value);
         break;
     }
@@ -65,7 +64,7 @@ export class AdvancedSearchComponent implements OnInit {
   }
 
   setAdvancedFilterValue(filterValue: string) {
-    this.filterModel.ResetFilterValue();
+    this.filterModel.resetFilterValue();
     this.model.splittedValues = _.split(filterValue, Constants.advancedFilter.searchFieldSeperator);
 
     this.model.splittedValues.forEach((item, index) => {
@@ -88,7 +87,7 @@ export class AdvancedSearchComponent implements OnInit {
     if (!keyField) {
       return false;
     }
-    const keys = Object.keys(this.filterModel);
+
     match = Object.keys(this.filterModel).filter(index => _.lowerCase(this.filterModel[index]) === _.lowerCase(keyField));
     return match !== null;
   }
@@ -111,14 +110,14 @@ export class AdvancedSearchComponent implements OnInit {
 
   public populateB2BAccounts = () => {
     this._accountInfoService.fetchAllB2BAccounts().subscribe((fetchB2BAccountsResponse: B2BAccountListModel) => {
-        if (fetchB2BAccountsResponse !== null && fetchB2BAccountsResponse !== undefined) {
-            this.b2bAccounts = fetchB2BAccountsResponse.items;
-        }
+      if (fetchB2BAccountsResponse !== null && fetchB2BAccountsResponse !== undefined) {
+        this.b2bAccounts = fetchB2BAccountsResponse.items;
+      }
     },
-    (errResponse) => {
+      (errResponse) => {
         this._loggerService.info('AccountInformationComponent : _accountInfoService.fetchB2BAccounts_errResponse');
         throw new HttpError(ErrorCode.GetAccountInfoFailed, ErroNotificationType.Toaster);
-    });
+      });
   }
 }
 

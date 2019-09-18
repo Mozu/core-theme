@@ -12,13 +12,15 @@ import { SharedDataService, NotificationService } from '@global';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search.component';
 import { NavigationContainerType, Constants } from '@shared/infrastructure';
-import { AdvancedFilterModel, FilterModel, QuoteFilterModel } from '@shared/advanced-search';
+import { AdvancedFilterModel, FilterModel } from '@shared/advanced-search';
 import { DateTypecastPipe } from '@shared';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { environment } from '@env';
 import { AccountInfoService } from '@shared/account/information/information.service';
+import { QuoteFilterModel } from 'app/quotes-module/quote-filter.model';
+
 fdescribe('AdvancedSearchComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
