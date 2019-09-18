@@ -82,12 +82,6 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                         }
                     }
                 }
-            }, {
-                width: 150,
-                text: "On Backorder",
-                stateId: 'stockOnBackOrder',
-                dataIndex: 'stockOnBackOrder',
-                sortable: true
             }
         ];
     },

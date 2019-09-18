@@ -67,8 +67,7 @@
     initComponent: function () {
         var me = this;
 
-        me.setIsRefreshShippingEnabled();
-        this.store = Ext.create('Ext.data.JsonStore', {
+            this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
                 name: 'productCode',
@@ -318,7 +317,6 @@
                 minWidth: 50,
                 flex: 1,
                 editor: {
-                    disabled: me.isRefreshShippingEnabled,
                     showBorder: false,
                     listeners: {
                         focus: function (field, event, eOpts) {
@@ -400,14 +398,6 @@
             }
         ];
         this.callParent();
-    },
-
-    setIsRefreshShippingEnabled: function () {
-        this.isRefreshShippingEnabled = false
-
-        if (this.record.SiteShipSetting.data) {
-            return this.isRefreshShippingEnabled = this.record.SiteShipSetting.data.refreshTax || false;
-        }
     },
 
     isShipmentAction: function () {
