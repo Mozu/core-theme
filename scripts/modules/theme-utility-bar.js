@@ -12,8 +12,9 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             $('#mz-variation-selector').change(function(e){
                 var selectedId = e.target.value,
                 documentName = pageContext.cmsContext.page.path;
+                var variationParam =  (selectedId !== "") ? '?variationId=' + selectedId : '';
 
-                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/' + documentName + '?variationId=' + selectedId;
+                window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/' + documentName + variationParam;
             });
         };
         this.getVariations = function() {
@@ -23,7 +24,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             var selector = "";
 
             var selected = function selected(item) {
-                if (item.id === pageContext.variationId) { 
+                if (item.id === pageContext.variationId || item === 'base') { 
                     return "selected";
                 }
                 return '';
@@ -33,6 +34,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             if(items.length) {
                 selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
 
+                selector += '<option class="mz-variation-selector-option" value=""' + selected('base') +'>Base Page</option>'
                 
                 items.forEach(function(item){
                     if(item.id) {
