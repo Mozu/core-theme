@@ -629,7 +629,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location, configuration);
-            var serviceResponse = _CARSProxyClient.GenerateLabelUsingPOST(request);
+            var serviceResponse = (await _CARSProxyClient.GenerateLabelUsingPOST(request)).ReadAsAsync().Result;
 
             return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
         }
