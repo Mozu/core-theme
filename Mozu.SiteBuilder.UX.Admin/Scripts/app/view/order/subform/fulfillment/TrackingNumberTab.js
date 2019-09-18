@@ -14,7 +14,7 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
         var me = this;
 
         if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length == 1 && this.shipmentRecord.shippingMethodCode) {
-            this.tabTitle = '<span class="label">Tracking</span><span class="title">' + this.shipmentRecord.shippingMethodCode + ' ' + this.shipmentRecord.trackingNumbers[0] + '</span>';
+            this.tabTitle = '<span class="label">Tracking</span><span class="title">' + this.shipmentRecord.shippingMethodName + ' ' + this.shipmentRecord.trackingNumbers[0] + '</span>';
             this.isTabTitleHtml = true;
         }
         else if (this.shipmentRecord.trackingNumbers && this.shipmentRecord.trackingNumbers.length > 1) 
@@ -41,7 +41,7 @@ Ext.define('Taco.view.order.subform.fulfillment.TrackingNumberTab', {
                     {
                         minWidth: '300',
                         tpl: [
-                            '<div class="labelvalue">' + this.shipmentRecord.shippingMethodCode +'</div>'
+                            '<div class="labelvalue">' + this.shipmentRecord.shippingMethodName +'</div>'
                         ]
                     },
                     {
