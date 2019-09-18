@@ -26,5 +26,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.User
         public string UseGoogleAnalytics;
         public string GoogleAnalyticsAccount;
         public string ShowBristReport;
+        public string LoginUri { get; set; }
     }
 }

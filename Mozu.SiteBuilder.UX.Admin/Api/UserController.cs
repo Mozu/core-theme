@@ -87,7 +87,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             userIdentity.CTUserRoles = this.GetUserSitesRoles().Result;
 
             userIdentity.CTTenant = this.GetTenantInternal().Result;
-
+            userIdentity.LoginUri = _settings.LoginPath;
             this.ProvisionCMSMAYBE(userIdentity.CTTenant);
 
             userIdentity.CustomSchema = GetCustomSchema(userIdentity.CTTenant).Result;
