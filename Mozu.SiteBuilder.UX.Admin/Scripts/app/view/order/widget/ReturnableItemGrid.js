@@ -103,8 +103,26 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         });
     },
 
-    getColumnConfig: function() {
+    getColumnConfig: function () {
         return [
+            {
+                dataIndex: 'shipmentNumber',
+                text: 'Shipment #',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: false,
+                minWidth: 100
+            },
+            {
+                dataIndex: 'shipmentItemId',
+                text: 'Line Id',
+                draggable: false,
+                sortable: false,
+                resizable: false,
+                menuDisabled: false,
+                minWidth: 100
+            },
             {
                 dataIndex: 'productCode',
                 text: 'Code',
@@ -129,17 +147,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     return parentBundleName ? val + " <em class=\"taco-bundleditem-note\">(Bundled with <strong>" + parentBundleName + "</strong>)</em>" : val;
                 }
             },
-            {
-                text: 'Status',
-                draggable: false,
-                resizable: true,
-                width: 150,
-                sortable: false,
-                menuDisabled: true,
-                hidden: false,
-                align: 'left',
-                dataIndex: 'fulfillmentStatus'
-            },
+            //{
+            //    text: 'Status',
+            //    draggable: false,
+            //    resizable: true,
+            //    width: 150,
+            //    sortable: false,
+            //    menuDisabled: true,
+            //    hidden: false,
+            //    align: 'left',
+            //    dataIndex: 'fulfillmentStatus'
+            //},
             {
                 dataIndex: 'quantityOrdered',
                 text: 'Qty Ordered',
@@ -269,7 +287,9 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'number',  name: 'quantityDirectlyReturned' },
                 { type: 'number',  name: 'quantityIndirectlyReturned' },
                 { type: 'number',  name: 'quantityReturned' },
-                { type: 'number',  name: 'quantityReturnable' },
+                { type: 'number', name: 'quantityReturnable' },
+                { type: 'number', name: 'shipmentNumber' },
+                { type: 'number', name: 'shipmentItemId' },
                 { type: 'number',  name: 'unitQuantity' },
                 { type: 'string',  name: 'parentItemId' },
                 { type: 'string',  name: 'parentProductCode' },

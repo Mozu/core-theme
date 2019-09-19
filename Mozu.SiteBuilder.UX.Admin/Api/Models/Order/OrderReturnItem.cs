@@ -18,6 +18,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         public string ProductName { get; set; }
 
         /// <summary>
+        /// Shipment Number associated with product
+        /// </summary>
+        public int? ShipmentNumber { get; set; }
+
+        /// <summary>
+        /// Shipment Item Id Number associated with product
+        /// </summary>
+        public int? ShipmentItemId { get; set; }
+
+        /// <summary>
         /// The number of units ordered.
         /// </summary>
         public int QuantityOrdered { get; set; }
@@ -34,13 +44,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
 
         /// <summary>
         /// The number of units returnable.
-        /// </summary>
-        public int QuantityReturnable { get; set; }
-
-        /// <summary>
-        /// Represents the various shipment items where the product was found.
-        /// </summary>
-        public List<ReturnableShipItem> Items { get; set; }
+        /// </summary
+        public int QuantityReturnable
+        {
+            get { return QuantityFulfilled - QuantityReturned; }
+        }
     }
-   
+
 }

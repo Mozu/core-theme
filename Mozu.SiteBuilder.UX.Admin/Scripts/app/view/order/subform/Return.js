@@ -188,13 +188,12 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItems.loadReturnableItemsData();
     },
 
-    createReturnableItem: function(item, shipItem, quantity){
+    createReturnableItem: function(item, quantity){
         return {
             orderLineId: item.get('orderLineId'),
             productCode: item.get('productCode'),
-            productCode: item.get('productCode'),
-            shipmentNumber: shipItem.shipmentNumber,
-            shipmentItemId: shipItem.shipmentItemId,
+            shipmentNumber: item.get('shipmentNumber'), 
+            shipmentItemId: item.get('shipmentItemId'), 
             quantity: quantity,
             returnReason: item.get('reason'),
             returnType: item.get('returnType'),
@@ -210,18 +209,16 @@ Ext.define('Taco.view.order.subform.Return', {
         Ext.Array.each(items, function(item) {
             //Need to split by shippingItems here
             
-            if(item.raw.items && item.raw.items.length){
+            if(item.raw){
                 var quantity = item.get('quantity');
-                Ext.Array.each(item.raw.items, function(shipItem){
-                    var shipmentQuantityReturnable = shipItem.quantityReturnable
-                    if(quantity < shipmentQuantityReturnable) {
-                        shipmentQuantityReturnable = quantity;
-                    };
-                    if(quantity && shipmentQuantityReturnable) {
-                        returnItems.push(me.createReturnableItem(item, shipItem, shipmentQuantityReturnable));
-                        quantity = quantity - shipmentQuantityReturnable;
-                    }
-                })
+                var shipmentQuantityReturnable = item.get('quantityReturnable');
+                if (quantity < shipmentQuantityReturnable) {
+                    shipmentQuantityReturnable = quantity;
+                };
+                if (quantity && shipmentQuantityReturnable) {
+                    returnItems.push(me.createReturnableItem(item, shipmentQuantityReturnable));
+                }
+
             } else {
                 returnItems.push(
                     {
