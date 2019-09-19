@@ -81,15 +81,13 @@ Ext.define('Taco.view.Header', {
                 }, 
                 {
                     xtype: 'component',
-                    html: '<a href="/admin" class="taco-kibo-text">Kibo eCommerce</a>',
+                    html: '<a href="javascript:void(0)" class="taco-kibo-text">Kibo eCommerce</a>',
                     listeners: {
                         click: {
                             element: 'el', //bind to the underlying el property on the panel
                             fn: function (e) {
                                 e.preventDefault();
-                                // Taco.app.context.setCurrentContext(Taco.app.context);
-                                Taco.core.StateManager.attemptNavigate(Taco.app.context.urlToken);
-
+                                window.location.href = "/admin";
                             }
                         }
                     }

@@ -24,7 +24,8 @@ import { Constants } from '@shared/infrastructure/constants';
 import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
 import { NotificationLGActions } from '@shared/infrastructure/enums';
 import { NavigationService } from '../navigation.service';
-import { LeftNavigationModel, SecureForm } from './left.model';
+import { LeftNavigationModel, SecureForm, LeftNavigationTabs } from './left.model';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'navigation-left',
@@ -44,12 +45,10 @@ export class NavigationLeftComponent implements OnInit {
     private navigationService: NavigationService,
     private changeDetectorRef: ChangeDetectorRef,
     private _loggerService: LoggerService,
-    private _sharedData: SharedDataService,
+    private _sharedDataService: SharedDataService,
     private utilityService: UtilityService,
     private modalService: NgbModal,
-    private config: NgbModalConfig,
     private _notificationService: NotificationService,
-    private router: Router
   ) { }
 
   visibleSidebar1;
@@ -66,20 +65,31 @@ export class NavigationLeftComponent implements OnInit {
       this._loggerService.info('NavigationLeftComponent : fetchLeftNavigationItems');
       /* filter the menus on the basis of logged in user behaviour id */
       this.model.filteredNavigationLinks = this.utilityService.filterLinksByBehaviorId(
-        leftNavigationItemsSuccessResponse, this._sharedData);
+        leftNavigationItemsSuccessResponse, this._sharedDataService);
       /*import/export*/
-      if (this._sharedData._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
+      if (this._sharedDataService._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
         this.model.filteredNavigationLinks = this.appendDynamicLinks(this.model.filteredNavigationLinks);
       }
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
-        this.model.filteredNavigationLinks, this._sharedData._sharedData.items.ctTaContext);
-        this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
+        this.model.filteredNavigationLinks, this._sharedDataService._sharedData.items.ctTaContext);
+      this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
+
+      _.forEach(this.model.mainItems, (eachMainItem: MenuItem) => {
+        if (eachMainItem.id === Constants.orderRoutingNavigationId) {
+          (eachMainItem.items as MenuItem[]).forEach((eachItem: MenuItem) => {
+            if (eachItem.id === Constants.orderRoutingNavigationId) {
+              eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachMainItem.url;
+            }
+          });
+        }
+      });
+
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();
-      this._sharedData.leftNavigationMenuItems = this.model.mainItems;
-      this._notificationService.notifyLeftMenuItemsLoaded(this._sharedData.leftNavigationMenuItems);
+      this._sharedDataService.leftNavigationMenuItems = this.model.mainItems;
+      this._notificationService.notifyLeftMenuItemsLoaded(this._sharedDataService.leftNavigationMenuItems);
     }, (leftNavigationItemsErrorResponse) => {
       this._loggerService.info('NavigationLeftComponent : navigationService.fetchLeftNavigationItems_errorResponse');
     });
@@ -87,7 +97,7 @@ export class NavigationLeftComponent implements OnInit {
 
   public appendDynamicLinks = (allFilteredLinks) => {
     this._loggerService.info('NavigationLeftComponent : appendDynamicLinks');
-    const distinctDynamicLinks = this.navigationService.distictImportExportLinks(this._sharedData);
+    const distinctDynamicLinks = this.navigationService.distictImportExportLinks(this._sharedDataService);
     const filteredDynamicLinks = [];
 
     distinctDynamicLinks.forEach(element => {
@@ -97,7 +107,6 @@ export class NavigationLeftComponent implements OnInit {
         url: element.href,
         appId: element.appId,
         _id: element._id
-        // command: (event : any) => { this.openDynamicLinksDialog(element.href, element.appId) }
       });
     });
     this.model.filteredNavigationLinks = this.navigationService.mergeDynamicLinks(allFilteredLinks, filteredDynamicLinks);
@@ -107,18 +116,18 @@ export class NavigationLeftComponent implements OnInit {
   public openDynamicLinksDialog = (extensionLink) => {
     this._loggerService.info('NavigationLeftComponent : openDynamicLinksDialog');
 
-    let jsonData = { 'x-vol-return-url': window.location.href };
+    const jsonData = { 'x-vol-return-url': window.location.href };
     let returnUrl = window.location.href.replace(window.location.search, '');
 
     if (returnUrl[returnUrl.length - 1] === '/') {
-      returnUrl = returnUrl.substr(0, returnUrl.length - 1);     
+      returnUrl = returnUrl.substr(0, returnUrl.length - 1);
     }
-    
+
     returnUrl += '?_mz_extlnk=' + extensionLink._id;
     jsonData['x-vol-return-url'] = returnUrl;
-          
+
     this.navigationService.fetchCapabilitiesForSecureForm(extensionLink.appId, jsonData).subscribe(data => {
-      let secureForm = JSON.parse(JSON.stringify(data));
+      const secureForm = JSON.parse(JSON.stringify(data));
       if (secureForm.success) {
         this.model.dynamicLinkIframeURL = extensionLink.url + Constants.dateStamp + encodeURIComponent(secureForm.items.dateStamp) + Constants.messageHash + encodeURIComponent(secureForm.items.messageHash);
         const modalRef = this.modalService.open(DynamicLinksDialogComponent, { windowClass: Constants.integrationsModalClass, backdropClass: Constants.integrationsBackdropModalClass });

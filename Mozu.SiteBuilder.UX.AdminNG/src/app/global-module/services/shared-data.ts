@@ -315,6 +315,7 @@ export interface Items {
     useGoogleAnalytics: string;
     googleAnalyticsAccount: string;
     showBristReport: string;
+    loginUri: string;
 }
 
 export interface SharedData {

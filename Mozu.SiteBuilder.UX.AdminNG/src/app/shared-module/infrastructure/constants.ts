@@ -19,6 +19,8 @@ export class Constants {
         email: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
     };
 
+    static orderRoutingNavigationId = 'orderRouting';
+    
     static cookies =
         {
             sessionId: 'SessionId'

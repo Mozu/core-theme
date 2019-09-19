@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Constants } from '@shared';
 import { HttpClientService } from '@core/extensions/http-client.service';
 import { LoggerService } from '@core';
 import { Observable } from 'rxjs';
 import {
          AccessTileModel,
-         AccessTileLink
+         AccessTileLink,
+         Constants
 } from '@shared/index';
+import { SharedDataService } from '@global';
 
 @Injectable()
 export class DashbaordService {
 
     constructor(private _http: HttpClientService,
-                private _loggerService: LoggerService) {}
+                private _loggerService: LoggerService,
+                private _sharedDataService: SharedDataService) {}
 
     public fetchAllDashboardTiles(): Observable<any> {
       this._loggerService.info('AdminDashboardComponent : fetchAllDashboardTiles');
@@ -22,6 +24,8 @@ export class DashbaordService {
     public MapDasasboardCategoryToTiles(dashboardCategories: any): AccessTileModel[] {
         this._loggerService.info('AdminDashboardComponent : MapDasasboardCategoryToTiles');
         let allAccessTiles: AccessTileModel[];
+        const orderRoutingURLPrefix = this._sharedDataService._sharedData.items.loginUri;
+
         if (dashboardCategories != null && dashboardCategories !== undefined && dashboardCategories.length > 0) {
           allAccessTiles = [];
           dashboardCategories.forEach(eachDasboardCategory => {
@@ -34,7 +38,11 @@ export class DashbaordService {
               eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {
                 const sectionLink = new AccessTileLink();
                 sectionLink.linkDataText = eachDasbhboardCategoryItem.label;
-                sectionLink.linkDataURL = eachDasbhboardCategoryItem.url; // Constants.voidNavigationLink;
+                if (eachDasbhboardCategoryItem.id === Constants.orderRoutingNavigationId) {
+                  sectionLink.linkDataURL = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachDasbhboardCategoryItem.url;
+                } else {
+                  sectionLink.linkDataURL = eachDasbhboardCategoryItem.url;
+                }
                 accessTileModel.sectionLinks.push(sectionLink);
               });
             }

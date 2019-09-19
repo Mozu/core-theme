@@ -2104,6 +2104,7 @@
         ],
         "useGoogleAnalytics": "false",
         "googleAnalyticsAccount": "UA-55272537-1",
-        "showBristReport": "true"
+        "showBristReport": "true",
+        "loginUri" :"https://www.dev01.kubedev.kibo-dev.com/login/cas/login/"
     }
 }

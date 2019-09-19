@@ -34,8 +34,8 @@ export class Constants {
     };
 
     static JsonResources = {
-        userIdentity: "/assets/json/user-data.json"
-    }
+        userIdentity: '/assets/json/user-data.json'
+    };
     static queryString = {
         SessionExpired: 'SessionExpired=true'
     };
