@@ -182,14 +182,6 @@
     padding: 0px 10px;
 }
 
-.datepicker-control {
-    width: 90% !important;
-}
-
-.datepicker .input-group {
-    display: inline-block !important;
-}
-
 .datepicker-footer {
     text-align: center;
 }
@@ -209,4 +201,8 @@ div.error {
     padding-top: 5px;
     color: #ff0000;
     font-size: 12px;
+}
+
+.section-data {
+    display: flex !important;
 }
