@@ -247,6 +247,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
 
     getReturnableItemsStore: function () {
         return Ext.create('Ext.data.Store', {
+            storeId: 'ReturnableItemsStore',
             fields: [
                 { type: 'string',  name: 'orderItemId' },
                 { type: 'int',     name: 'orderLineId' },

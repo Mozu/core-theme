@@ -47,7 +47,7 @@ Ext.define('Taco.view.order.subform.Return', {
     },
 
     tabChange: function(tabPanel, newTab) {
-        console.log(newTab);
+       // console.log(newTab);
     },
 
     initComponent: function() {
@@ -118,7 +118,7 @@ Ext.define('Taco.view.order.subform.Return', {
             createButtonId: this.createButton.id,
             returnableItemsErrorEl: me.returnableItemsErrorEl,
             margin: '10px 0 10px 0',
-            padding: '0 1px 0 0'
+            padding: '0 1px 0 0',
         });
 
         this.returnableItems.on({
@@ -171,13 +171,15 @@ Ext.define('Taco.view.order.subform.Return', {
         ];
     },
 
-    initCreateButton: function() {
+    initCreateButton: function () {
+        var ReturnableItemsStore = Ext.getStore('ReturnableItemsStore');
         var orderStatus = this.record.get('orderStatus');
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
-        var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled'));
-
-        this.createButton.setDisabled(!enabled);
-        
+        if (ReturnableItemsStore) {
+            var isShowCreateReturn = this.isShowCreateReturn(ReturnableItemsStore.data.items);
+        }
+        var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled')) || isShowCreateReturn;
+        this.createButton.setDisabled(!enabled)
         
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
@@ -314,6 +316,14 @@ Ext.define('Taco.view.order.subform.Return', {
             },
             scope: this
         });
+    },
+
+    isShowCreateReturn: function (items) { 
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].data.quantityReturnable > 0)
+                return true;
+        }
+        return false;
     },
 
     onDestroy: function() {
