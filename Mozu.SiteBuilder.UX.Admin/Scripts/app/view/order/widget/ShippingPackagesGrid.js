@@ -81,7 +81,12 @@
             {
                 name: 'overridePrice',
                 type: 'float',
-                useNull: true
+                useNull: true,
+                convert: function (value, record) {
+                    if (value > 0) {
+                        this.hidden = false;
+                    }
+                }
             },
             {
                 name: 'name',
@@ -93,6 +98,10 @@
                 useNull: true
             }, {
                 name: 'actualPrice',
+                type: 'float',
+                useNull: true
+            }, {
+                name: 'overridePrice',
                 type: 'float',
                 useNull: true
             },
@@ -211,6 +220,9 @@
                     }
                 },
                 beforeEdit: function (editor, context, eOpts) {
+                    var plugin = this;
+                    plugin.editor.form.findField('itemTax').disable();
+
                     if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
@@ -279,6 +291,28 @@
                 }
             },
             {
+                dataIndex: 'overridePrice',
+                text: 'Unit Price',
+                draggable: false,
+                sortable: false,
+                //resizable: false,
+                align: 'center',
+                menuDisabled: true,
+                minWidth: 80,
+                hidden: true,
+                flex: 1,
+                editor: {
+                    xtype: 'numberfield',
+                    showBorder: false,
+                    hideTrigger: true,
+                    minValue: 0,
+
+                },
+                renderer: function (value) {
+                    return this.record.formatCurrency(value);
+                }
+            },
+            {
                 dataIndex: 'actualPrice',
                 text: 'Unit Price',
                 draggable: false,
@@ -324,7 +358,7 @@
                     showBorder: false,
                     listeners: {
                         focus: function (field, event, eOpts) {
-                            me.editItemUnitTax(field, event, eOpts);
+                            //me.editItemUnitTax(field, event, eOpts);
                         }
                     }
                 },

@@ -166,8 +166,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         this.handlingTaxAdjustmentInput = Ext.id();
         this.handlingTaxAdjustmentDropdown = Ext.id();
 
-        //this.taxAdjustmentInput = Ext.id();
-        //this.taxAdjustmentDropdown = Ext.id();
+        this.taxAdjustmentInput = Ext.id();
+        this.taxAdjustmentDropdown = Ext.id();
     },
 
     applyRecord: function (record) {
@@ -276,17 +276,17 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             el.on('change', function () { me.setCalculatedSummaryValues(this.handlingTaxAdjustmentInput, '.handling-tax', this.shipmentRecord.handlingTaxTotal, this.handlingTaxAdjustmentDropdown); }, this);
         };
 
-        ////Tax
-        //el = Ext.get(this.taxAdjustmentInput);
-        //if (el) {
-        //    el.on('keyup', function () { me.setCalculatedSummaryValues(this.taxAdjustmentInput, '.tax', this.shipmentRecord.lineItemTaxTotal, this.taxAdjustmentDropdown); }, this);
-        //};
+        //Tax
+        el = Ext.get(this.taxAdjustmentInput);
+        if (el) {
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.taxAdjustmentInput, '.tax', this.shipmentRecord.lineItemTaxTotal, this.taxAdjustmentDropdown); }, this);
+        };
 
-        ////HandlingTax Adjustment type
-        //el = Ext.get(this.taxAdjustmentDropdown);
-        //if (el) {
-        //    el.on('keyup', function () { me.setCalculatedSummaryValues(this.taxAdjustmentInput, '.tax', this.shipmentRecord.lineItemTaxTotal, this.taxAdjustmentDropdown); }, this);
-        //};
+        //HandlingTax Adjustment type
+        el = Ext.get(this.taxAdjustmentDropdown);
+        if (el) {
+            el.on('keyup', function () { me.setCalculatedSummaryValues(this.taxAdjustmentInput, '.tax', this.shipmentRecord.lineItemTaxTotal, this.taxAdjustmentDropdown); }, this);
+        };
     },
 
     setCalculatedSummaryValues: function (elementId, summarycls, originalValue, dropdownID) {
@@ -423,7 +423,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     getShippingAdjustmentsPayload: function () {
         var me = this;
         var itemAdjustmentValue = me.getValueOf(this.shipmentAdjustmentInput);
-        //var taxAdjustmentValue = me.getValueOf(this.taxAdjustmentInput);
+        var taxAdjustmentValue = me.getValueOf(this.taxAdjustmentInput);
         var shippingAdjustmentValue = me.getValueOf(this.shippingAdjustmentInput);
         var shippingTaxAdjustmentValue = me.getValueOf(this.shippingTaxAdjustmentInput);
         var handlingAdjustmentValue = me.getValueOf(this.handlingAdjustmentInput);
@@ -435,7 +435,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 "shipmentNumber": this.shipmentRecord.number,
                 "shipmentAdjustment": {
                     itemAdjustment: itemAdjustmentValue ? (parseFloat(itemAdjustmentValue) * me.getValueOf(this.shipmentAdjustmentDropdown)) : null,
-                    //itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) * me.getValueOf(this.taxAdjustmentDropdown)) : null,
+                    itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) * me.getValueOf(this.taxAdjustmentDropdown)) : null,
                     shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) * me.getValueOf(this.shippingAdjustmentDropdown)) : null,
                     shippingTaxAdjustment: shippingTaxAdjustmentValue ? (parseFloat(shippingTaxAdjustmentValue) * me.getValueOf(this.shippingTaxAdjustmentDropdown)) : null,
                     handlingAdjustment: handlingAdjustmentValue ? (parseFloat(handlingAdjustmentValue) * me.getValueOf(this.handlingAdjustmentDropdown)) : null,
@@ -894,41 +894,41 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 '</table>',
 
                 // Tax
-                '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
-
-                '<thead itemId="taco-subTpl_4">',
-                '{[this.getSubTpl("subTpl_4", values)]}',
-                '</thead>',
-                '</table>',
-
                 //'{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
 
                 //'<thead itemId="taco-subTpl_4">',
-                //'<tr class="subtotalrow">',
-                //'<th><div class="tax-summary"></div></th>',
-                //'<th class="summary"><div class="{tdInnerCls}">Tax</div></th>',
-                //'<th></th>',
-                //'<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxTotal)]}</div></th>',
-                //'<th></th>',
-                //'</tr>',
+                //'{[this.getSubTpl("subTpl_4", values)]}',
                 //'</thead>',
+                //'</table>',
+
+                '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
+
+                '<thead itemId="taco-subTpl_4">',
+                '<tr class="subtotalrow">',
+                '<th><div class="tax-summary"></div></th>',
+                '<th class="summary"><div class="{tdInnerCls}">Tax</div></th>',
+                '<th></th>',
+                '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxTotal)]}</div></th>',
+                '<th></th>',
+                '</tr>',
+                '</thead>',
 
                 // output class level subTemplate 3.  Note: this will contain extjs xTemplates and will render with each change 
-                //'<tbody>',
-                //'<tr class="shipping-handling-item">',
-                //'<td class="{tdCls}"></td>',
+                '<tbody>',
+                '<tr class="shipping-handling-item">',
+                '<td class="{tdCls}"></td>',
 
-                //'<td>',
-                //'<div class="inner-addon left-addon right-box" style="margin-left: 12px">' + this.getAdjustmentDropdown(this.taxAdjustmentDropdown, 'item-tax') + '</div>',
-                //'</td>',
+                '<td>',
+                '<div class="inner-addon left-addon right-box" style="margin-left: 12px">' + this.getAdjustmentDropdown(this.taxAdjustmentDropdown, 'item-tax') + '</div>',
+                '</td>',
 
-                //'<td>',
-                //'<div class="inner-addon left-addon right-box" style="margin-left: 12px"> <span class="icon">$</span> <input id="' + this.taxAdjustmentInput + '" type="number" class="doller" placeholder="" /></div>',
-                //'</td>',
-                //'<td class="{tdCls}"></td>',
-                //'<td class="{tdCls}"></td>',
-                //'</tr>',
-                //'</tbody>',
+                '<td>',
+                '<div class="inner-addon left-addon right-box" style="margin-left: 12px"> <span class="icon">$</span> <input id="' + this.taxAdjustmentInput + '" type="number" class="doller" placeholder="" /></div>',
+                '</td>',
+                '<td class="{tdCls}"></td>',
+                '<td class="{tdCls}"></td>',
+                '</tr>',
+                '</tbody>',
                 '</table>',
 
                 // shipping

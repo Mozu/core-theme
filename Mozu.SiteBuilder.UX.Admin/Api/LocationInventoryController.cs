@@ -304,10 +304,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product, DC.ProductVariation variation)
         {
-            //var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
-
-            //var locationInventory = _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product, variation);
-            
             //filter fulfilment location for bundle products
             List<DC.LocationInventory> locationInventories = new List<DC.LocationInventory>();
             foreach (var bundledProduct in product.BundledProducts)
