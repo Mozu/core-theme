@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.Core.Api.Routing;
 using Mozu.Inventory.Contracts.Model;
 using Mozu.OrderRouting.Contracts.Model;
@@ -469,6 +470,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var shipment = (await _orderWebApiClient.UpdateShipmentItem(args.OrderId,args.ShipmentNumber,args.ItemId, args.ShipmentItemAdjustment)).ReadAsSync();
             return Single2(shipment);
         }
-        
+
+        public class ShipmentFilterArgs
+        {
+            public string Filter { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipments/filter")]
+        public async Task<Response<List<Shipment>>> GetShipments(ShipmentFilterArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.GetShipments(args.Filter)).ReadAsSync();
+            var shipments = Mapper.Map<List<Shipment>>(serviceResponse);
+            return List2(shipments);
+        }
+
     }
 }

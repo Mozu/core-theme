@@ -2923,6 +2923,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    filterShipment: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipments/filter',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     fulfillShipment: function (config) {
         Ext.apply(config, {
             url: '/admin/app/order/shipment/fulfill',
