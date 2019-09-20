@@ -79,7 +79,7 @@ export class NavigationLeftComponent implements OnInit {
         if (eachMainItem.id === Constants.orderRoutingNavigationId) {
           (eachMainItem.items as MenuItem[]).forEach((eachItem: MenuItem) => {
             if (eachItem.id === Constants.orderRoutingNavigationId) {
-              eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachMainItem.url;
+                eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachItem.url;
             }
           });
         }
