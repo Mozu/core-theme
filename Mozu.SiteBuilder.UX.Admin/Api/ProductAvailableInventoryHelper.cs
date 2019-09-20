@@ -1,11 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using Mozu.Core.Collections.Filtering;
 using Mozu.Location.Contracts;
 using Mozu.ProductAdmin.Contracts;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.ProductModels;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
+using DC = Mozu.ProductAdmin.Contracts;
 using Product = Mozu.ProductAdmin.Contracts.Product;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
@@ -18,6 +19,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(
             List<Location.Contracts.Location> locations, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation);
+
+        List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(Location.Contracts.Location location, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation);
     }
 
     public class ProductAvailableInventoryHelper : IProductAvailableInventoryHelper
@@ -51,28 +54,28 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             locationsWithInventory.ForEach(lwi => lwi.Location = locations.FirstOrDefault(l => l.Code == lwi.LocationCode));
             var result = new List<LocationWithInventory>();
             foreach (var locWithInv in locationsWithInventory
-                .Where(locWithInv => (!product.InventoryInfo.ManageStock.HasValue || !product.InventoryInfo.ManageStock.Value) 
-                                     || (product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.DisplayMessage && product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.HideProduct) 
+                .Where(locWithInv => (!product.InventoryInfo.ManageStock.HasValue || !product.InventoryInfo.ManageStock.Value)
+                                     || (product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.DisplayMessage && product.InventoryInfo.OutOfStockBehavior != ProductInventoryInfo.OutOfStockBehaviorConst.HideProduct)
                                      || (locWithInv.StockAvailable > 0)).Where(locWithInv => locWithInv.Location != null && locWithInv.Location.FulfillmentTypes != null))
             {
                 result.AddRange(locWithInv.Location.FulfillmentTypes.Where(x => prodFulfillmentCodes.Contains(x.Code))
                     .Select(fulfillment => new LocationWithInventory
-                {
-                    Location = locWithInv.Location, 
-                    AuditInfo = locWithInv.AuditInfo, 
-                    Fulfillment = fulfillment, 
-                    LocationCode = locWithInv.LocationCode, 
-                    ProductCode = locWithInv.ProductCode, 
-                    ProductName = locWithInv.ProductName, 
-                    StockAvailable = locWithInv.StockAvailable, 
-                    StockOnBackOrder = locWithInv.StockOnBackOrder, 
-                    StockOnHand = locWithInv.StockOnHand
-                }));
+                    {
+                        Location = locWithInv.Location,
+                        AuditInfo = locWithInv.AuditInfo,
+                        Fulfillment = fulfillment,
+                        LocationCode = locWithInv.LocationCode,
+                        ProductCode = locWithInv.ProductCode,
+                        ProductName = locWithInv.ProductName,
+                        StockAvailable = locWithInv.StockAvailable,
+                        StockOnBackOrder = locWithInv.StockOnBackOrder,
+                        StockOnHand = locWithInv.StockOnHand
+                    }));
             }
             result.Sort(fulfillmentComparer);
             return result;
         }
-    
+
         /// <summary>
         /// Provide inventory by location based on following logic.  
         /// If location supports multiple fulfillment type
@@ -97,18 +100,43 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 result.AddRange(location.FulfillmentTypes.Where(x => prodFulfillmentCodes.Contains(x.Code))
                     .Select(fulfillment => new LocationWithInventory
-                {
-                    Location = location, 
-                    AuditInfo = location.AuditInfo, 
-                    Fulfillment = fulfillment, 
-                    LocationCode = location.Code, 
-                    ProductCode = product.ProductCode,
-                    ProductName = product.Content.ProductName, 
-                    StockAvailable = null, 
-                    StockOnBackOrder = null, 
-                    StockOnHand = null
-                }));
+                    {
+                        Location = location,
+                        AuditInfo = location.AuditInfo,
+                        Fulfillment = fulfillment,
+                        LocationCode = location.Code,
+                        ProductCode = product.ProductCode,
+                        ProductName = product.Content.ProductName,
+                        StockAvailable = null,
+                        StockOnBackOrder = null,
+                        StockOnHand = null
+                    }));
             }
+            result.Sort(fulfillmentComparer);
+            return result;
+        }
+
+
+        public List<LocationWithInventory> GetAllShipAndPickupLocationsForUnmanagedProducts(Location.Contracts.Location location, ProductAdmin.Contracts.Product product, ProductAdmin.Contracts.ProductVariation variation)
+        {
+            var fulfillmentComparer = new LocationWithInventoryFulfillmentComparer();
+            var prodFulfillmentCodes = GetProductFulfillmentCodes(product, variation);
+
+            var result = new List<LocationWithInventory>();
+            result.AddRange(location.FulfillmentTypes.Where(x => prodFulfillmentCodes.Contains(x.Code))
+                    .Select(fulfillment => new LocationWithInventory
+                    {
+                        Location = location,
+                        AuditInfo = location.AuditInfo,
+                        Fulfillment = fulfillment,
+                        LocationCode = location.Code,
+                        ProductCode = product.ProductCode,
+                        ProductName = product.Content.ProductName,
+                        StockAvailable = null,
+                        StockOnBackOrder = null,
+                        StockOnHand = null
+                    }).ToList());
+
             result.Sort(fulfillmentComparer);
             return result;
         }
@@ -119,9 +147,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returnCodes = new List<string>();
             if (fulfillmentTypesSupported.Contains("DirectShip"))
+            {
                 returnCodes.Add(FulfillmentTypeConstants.DirectShipCode);
+            }
+
             if (fulfillmentTypesSupported.Contains("InStorePickup"))
+            {
                 returnCodes.Add(FulfillmentTypeConstants.InStorePickupCode);
+            }
+
             return returnCodes;
         }
     }
@@ -140,10 +174,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             if (x.Fulfillment.Code == FulfillmentTypeConstants.DirectShip.Code &&
                 y.Fulfillment.Code == FulfillmentTypeConstants.InStorePickup.Code)
+            {
                 return -1;
+            }
+
             if (x.Fulfillment.Code == FulfillmentTypeConstants.InStorePickup.Code &&
                 y.Fulfillment.Code == FulfillmentTypeConstants.DirectShip.Code)
+            {
                 return 1;
+            }
+
             return 1;
         }
     }

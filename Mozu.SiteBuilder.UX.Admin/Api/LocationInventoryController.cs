@@ -304,24 +304,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<List<LocationWithInventory>> GetUnmanagedInventory(DC.Product product, DC.ProductVariation variation)
         {
-            var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
+            //var locations = (await _locationWebApiClient.GetLocations()).ReadAsSync();
 
-            var locationInventory = _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product, variation);
-
-
+            //var locationInventory = _productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(locations.Items, product, variation);
+            
             //filter fulfilment location for bundle products
             List<DC.LocationInventory> locationInventories = new List<DC.LocationInventory>();
             foreach (var bundledProduct in product.BundledProducts)
             {
-                var items = (await _productClient.GetLocationInventories(productCode: bundledProduct.ProductCode)).ReadAsSync();
-                locationInventories.AddRange(items.Items);
+                var inventory = (await _productClient.GetLocationInventories(productCode: bundledProduct.ProductCode)).ReadAsSync();
+                locationInventories.AddRange(inventory.Items.Where(x => x.StockAvailable >= bundledProduct.Quantity));
             }
 
             var fulfilmentLocations = locationInventories.GroupBy(x => x.LocationCode).
-                Where(y => y.Count() == product.BundledProducts.Count && y.All(s => s.StockAvailable.Value > 0)).
+                Where(y => y.Count() == product.BundledProducts.Count).
                 Select(z => z.Key).ToList();
 
-            locationInventory = locationInventory.Where(x => fulfilmentLocations.Contains(x.LocationCode)).Select(y => y).ToList();
+            var locationInventory = new List<LocationWithInventory>();
+            foreach (var fulfilmentLocation in fulfilmentLocations)
+            {
+                var location = (await _locationWebApiClient.GetLocation(fulfilmentLocation)).ReadAsSync();
+                locationInventory.AddRange(_productAvailableInventoryHelper.GetAllShipAndPickupLocationsForUnmanagedProducts(location, product, variation));
+            }
+
             return locationInventory;
         }
 
