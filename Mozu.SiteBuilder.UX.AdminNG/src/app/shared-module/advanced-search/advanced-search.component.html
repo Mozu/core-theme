@@ -71,9 +71,9 @@
             <datepicker id="expirationFrom" name="expirationFrom" [(ngModel)]="filterModel.expirationFrom" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.expirationTo}}" [isToDate]="false" #expirationFromControl="ngModel"></datepicker>
             <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
             <datepicker id="expirationTo" name="expirationTo" [(ngModel)]="filterModel.expirationTo" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.expirationFrom}}" [isToDate]="true" #expirationToControl="ngModel"></datepicker>
-            <div class="error" *ngIf="expirationToControl.errors?.isValidDate || expirationFromControl.errors?.isValidDate">
-                {{expirationToControl.errors?.isValidDate ? expirationToControl.errors?.msg : expirationFromControl.errors?.msg}}
-            </div>
+        </div>
+        <div class="error" *ngIf="expirationToControl.errors?.isValidDate || expirationFromControl.errors?.isValidDate">
+            {{expirationToControl.errors?.isValidDate ? expirationToControl.errors?.msg : expirationFromControl.errors?.msg}}
         </div>
     </div>
     <div class="form-group">
@@ -90,9 +90,9 @@
             <datepicker id="createFrom" name="createFrom" [(ngModel)]="filterModel.createFrom" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.createTo}}" [isToDate]="false" #createFromControl="ngModel"></datepicker>
             <span class="separator-padding">{{'SHARED.FILTER.to' | translate}}</span>
             <datepicker id="createTo" name="createTo" [(ngModel)]="filterModel.createTo" (ngModelChange)="modelChanged()" dateCompareValidator="{{filterModel.createFrom}}" [isToDate]="true" #createToControl="ngModel"></datepicker>
-            <div class="error" *ngIf="createToControl.errors?.isValidDate || createFromControl.errors?.isValidDate">
-                {{createToControl.errors?.isValidDate ? createToControl.errors?.msg : createFromControl.errors?.msg}}
-            </div>
+        </div>
+        <div class="error" *ngIf="createToControl.errors?.isValidDate || createFromControl.errors?.isValidDate">
+            {{createToControl.errors?.isValidDate ? createToControl.errors?.msg : createFromControl.errors?.msg}}
         </div>
     </div>
 </ng-template>

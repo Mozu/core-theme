@@ -4,7 +4,7 @@ import { LoggerService, TostrService, EnvironmentConfig, HttpClientService, http
 import { By } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { GlobalModule } from '@global/global.module';
 import { CustomNGXLoggerService, NGXLoggerHttpService } from 'ngx-logger';
@@ -14,14 +14,19 @@ import { AdvancedSearchComponent } from '@shared/advanced-search/advanced-search
 import { NavigationContainerType, Constants } from '@shared/infrastructure';
 import { AdvancedFilterModel, FilterModel } from '@shared/advanced-search';
 import { DateTypecastPipe } from '@shared';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDateAdapter, NgbDateNativeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@shared/shared.module';
 import { DatePipe } from '@angular/common';
 import { environment } from '@env';
 import { AccountInfoService } from '@shared/account/information/information.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DateService } from '@shared/datepicker/datepicker.service';
+import { DateCompareDirective } from '@shared/directive/datepicker-compare-validator.directive';
+import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
+import { TableModule } from 'primeng/table';
+import { DatepickerComponent } from '@shared/datepicker/datepicker.component';
 import { QuoteFilterModel } from 'app/quotes-module/quote-filter.model';
-
-fdescribe('AdvancedSearchComponent', () => {
+describe('AdvancedSearchComponent', () => {
     let component: AdvancedSearchComponent;
     let fixture: ComponentFixture<AdvancedSearchComponent>;
     let debugElement: DebugElement;
@@ -37,157 +42,162 @@ fdescribe('AdvancedSearchComponent', () => {
         'success': true,
         'total': 3,
         'items': [{
-                'isPoEnabled': false,
-                'id': 1021,
-                'customerSet': 'default',
-                'segments': [{
-                    'id': 1,
-                    'code': 'seg1',
-                    'name': 'Segment1',
-                    'description': '',
-                    'auditInfo': {
-                        'updateDate': '2016-03-24T13:56:53.677Z',
-                        'createDate': '2016-03-24T13:56:53.677Z',
-                        'updateBy': '355060a60a5e48eeb7f2fb8d92af2ba5',
-                        'createBy': '355060a60a5e48eeb7f2fb8d92af2ba5'
-                    }
-                }],
-                'contacts': [{
-                    'accountId': 1021,
-                    'isShipping': true,
-                    'isPrimaryShipping': false,
-                    'isBilling': true,
-                    'isPrimaryBilling': false,
-                    'id': 1007,
-                    'email': 'shel@admin.com',
-                    'firstName': 'Michele',
-                    'lastName': 'Keller',
-                    'address1': '5700 Tapadera Trace Ln',
-                    'address2': 'Apt 536',
-                    'cityOrTown': 'Austin',
-                    'countryCode': 'US',
-                    'postalOrZipCode': '78758',
-                    'stateOrProvince': 'TX',
-                    'addressIsValidated': false,
-                    'addressType': 'Residential',
-                    'homePhone': '1231231234'
-                }],
-                'companyOrOrganization': 'Shel Tamagotchis',
-                'isActive': true,
-                'attributes': [],
-                'notes': [],
-                'taxExempt': false,
-                'visitCount': 18,
-                'siteId': 0,
-                'totalSpent': 0,
-                'orderCount': 0,
-                'wishlistCount': 0,
-                'createDate': '2019-04-12T18:49:24.655Z',
-                'segmentIds': [
-                    1
-                ],
+            'isPoEnabled': false,
+            'id': 1021,
+            'customerSet': 'default',
+            'segments': [{
+                'id': 1,
+                'code': 'seg1',
+                'name': 'Segment1',
+                'description': '',
+                'auditInfo': {
+                    'updateDate': '2016-03-24T13:56:53.677Z',
+                    'createDate': '2016-03-24T13:56:53.677Z',
+                    'updateBy': '355060a60a5e48eeb7f2fb8d92af2ba5',
+                    'createBy': '355060a60a5e48eeb7f2fb8d92af2ba5'
+                }
+            }],
+            'contacts': [{
+                'accountId': 1021,
+                'isShipping': true,
+                'isPrimaryShipping': false,
+                'isBilling': true,
+                'isPrimaryBilling': false,
+                'id': 1007,
+                'email': 'shel@admin.com',
+                'firstName': 'Michele',
+                'lastName': 'Keller',
+                'address1': '5700 Tapadera Trace Ln',
+                'address2': 'Apt 536',
+                'cityOrTown': 'Austin',
+                'countryCode': 'US',
+                'postalOrZipCode': '78758',
+                'stateOrProvince': 'TX',
+                'addressIsValidated': false,
+                'addressType': 'Residential',
+                'homePhone': '1231231234'
+            }],
+            'companyOrOrganization': 'Shel Tamagotchis',
+            'isActive': true,
+            'attributes': [],
+            'notes': [],
+            'taxExempt': false,
+            'visitCount': 18,
+            'siteId': 0,
+            'totalSpent': 0,
+            'orderCount': 0,
+            'wishlistCount': 0,
+            'createDate': '2019-04-12T18:49:24.655Z',
+            'segmentIds': [
+                1
+            ],
+            'isLocked': false,
+            'isDisabled': false,
+            'customerSinceDate': '2019-04-12T18:49:24.655Z',
+            'users': [{
+                'emailAddress': 'sparkbell@gmail.com',
+                'userName': 'sparkbell@gmail.com',
+                'firstName': 'Michele',
+                'lastName': 'Keller',
+                'localeCode': 'en-US',
+                'userId': '50872202bca6431681fbf1a0dca8bdd5',
                 'isLocked': false,
-                'isDisabled': false,
-                'customerSinceDate': '2019-04-12T18:49:24.655Z',
-                'users': [{
-                        'emailAddress': 'sparkbell@gmail.com',
-                        'userName': 'sparkbell@gmail.com',
-                        'firstName': 'Michele',
-                        'lastName': 'Keller',
-                        'localeCode': 'en-US',
-                        'userId': '50872202bca6431681fbf1a0dca8bdd5',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    },
-                    {
-                        'emailAddress': 'a@b.com',
-                        'userName': 'a@b.com',
-                        'firstName': 'a',
-                        'lastName': 'b',
-                        'localeCode': 'en-US',
-                        'userId': '558f6588c70c465584cc7643151574c9',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    },
-                    {
-                        'emailAddress': 'shel@admin.com',
-                        'userName': 'shel@admin.com',
-                        'firstName': 'Shel',
-                        'lastName': 'Tamagotchi',
-                        'localeCode': 'en-us',
-                        'userId': '5fcf7948b62d400d990c5d38a08f555b',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    },
-                    {
-                        'emailAddress': 'mtamagotchi@admin.com',
-                        'userName': 'mtamagotchi@admin.com',
-                        'firstName': 'Mr',
-                        'lastName': 'Tamagotchi',
-                        'localeCode': 'en-US',
-                        'userId': '9949b7d50384439d9232f27204283759',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    },
-                    {
-                        'emailAddress': 's@k.com',
-                        'userName': 's@k.com',
-                        'firstName': 's',
-                        'lastName': 'k',
-                        'localeCode': 'en-US',
-                        'userId': 'c421af01d5104e4285ed0e0e373cfdc1',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    },
-                    {
-                        'emailAddress': 'akeller@admin.com',
-                        'userName': 'akeller@admin.com',
-                        'firstName': 'avery',
-                        'lastName': 'keller',
-                        'localeCode': 'en-US',
-                        'userId': 'cae237b8a82d4d5e9b320cd10092eab4',
-                        'isLocked': false,
-                        'isActive': true,
-                        'isRemoved': false,
-                        'hasExternalPassword': false
-                    }
-                ],
-                'priceList': 'test'
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
+            },
+            {
+                'emailAddress': 'a@b.com',
+                'userName': 'a@b.com',
+                'firstName': 'a',
+                'lastName': 'b',
+                'localeCode': 'en-US',
+                'userId': '558f6588c70c465584cc7643151574c9',
+                'isLocked': false,
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
+            },
+            {
+                'emailAddress': 'shel@admin.com',
+                'userName': 'shel@admin.com',
+                'firstName': 'Shel',
+                'lastName': 'Tamagotchi',
+                'localeCode': 'en-us',
+                'userId': '5fcf7948b62d400d990c5d38a08f555b',
+                'isLocked': false,
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
+            },
+            {
+                'emailAddress': 'mtamagotchi@admin.com',
+                'userName': 'mtamagotchi@admin.com',
+                'firstName': 'Mr',
+                'lastName': 'Tamagotchi',
+                'localeCode': 'en-US',
+                'userId': '9949b7d50384439d9232f27204283759',
+                'isLocked': false,
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
+            },
+            {
+                'emailAddress': 's@k.com',
+                'userName': 's@k.com',
+                'firstName': 's',
+                'lastName': 'k',
+                'localeCode': 'en-US',
+                'userId': 'c421af01d5104e4285ed0e0e373cfdc1',
+                'isLocked': false,
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
+            },
+            {
+                'emailAddress': 'akeller@admin.com',
+                'userName': 'akeller@admin.com',
+                'firstName': 'avery',
+                'lastName': 'keller',
+                'localeCode': 'en-US',
+                'userId': 'cae237b8a82d4d5e9b320cd10092eab4',
+                'isLocked': false,
+                'isActive': true,
+                'isRemoved': false,
+                'hasExternalPassword': false
             }
+            ],
+            'priceList': 'test'
+        }
         ]
     };
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, GlobalModule, NgbModule],
-            declarations: [AdvancedSearchComponent, DateTypecastPipe],
+            imports: [TranslateModule.forRoot(), HttpClientModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule, NgSelectModule, TableModule, GlobalModule, NgbModule],
+            declarations: [AdvancedSearchComponent, DateTypecastPipe, DateCompareDirective, DatepickerComponent],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [By, TranslateService, LoggerService,
                 UtilityService, EnvironmentConfig, AuthService,
                 SharedDataService, NotificationService, FormBuilder, TostrService, NGXLoggerHttpService, CustomNGXLoggerService,
-                AdvancedFilterModel, FilterModel, QuoteFilterModel, DatePipe, AccountInfoService,
+                AdvancedFilterModel, FilterModel, QuoteFilterModel, DatePipe, DateService, AccountInfoService,
                 {
                     provide: HttpClientService,
                     useFactory: httpClientServiceCreator,
                     deps: [HttpClient, UtilityService, AuthService]
+                },
+                ProgressButtonService,
+                {
+                    provide: NgbDateAdapter,
+                    useClass: NgbDateNativeAdapter
                 }
             ]
         })
             .compileComponents();
-            loggerService = TestBed.get(LoggerService);
-            httpMock = TestBed.get(HttpTestingController);
-            notificationService = TestBed.get(NotificationService);
-            loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
+        loggerService = TestBed.get(LoggerService);
+        httpMock = TestBed.get(HttpTestingController);
+        notificationService = TestBed.get(NotificationService);
+        loggerServiceSpy = spyOn(loggerService, 'info').and.callThrough();
     }));
     beforeEach(() => {
         fixture = TestBed.createComponent(AdvancedSearchComponent);
@@ -197,20 +207,21 @@ fdescribe('AdvancedSearchComponent', () => {
 
         const respData = {
             items: {
-              'ctTaContext': {
-                'masterCatalogs': [{
-                  'sites': [{
-                    'id': '1234'
-                  }]
-                }]
-              }
-            }};
+                'ctTaContext': {
+                    'masterCatalogs': [{
+                        'sites': [{
+                            'id': '1234'
+                        }]
+                    }]
+                }
+            }
+        };
 
-          httpMock = TestBed.get(HttpTestingController);
-          const req = httpMock.expectOne(`./assets/json/user-data.json`);
-          expect(req.request.method).toBe('GET');
-          req.flush(respData);
-          httpMock.verify();
+        httpMock = TestBed.get(HttpTestingController);
+        const req = httpMock.expectOne(`./assets/json/user-data.json`);
+        expect(req.request.method).toBe('GET');
+        req.flush(respData);
+        httpMock.verify();
     });
     it('should create', () => {
         expect(component).toBeTruthy();
@@ -222,15 +233,15 @@ fdescribe('AdvancedSearchComponent', () => {
         component.toggleIcon(event);
         expect(component.model.isIconToggled).toBe(true);
     });
-    it('should search component should recieve input data', () => {
+    it('search component should recieve input data', () => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
-        inputElement.value = 'sam';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#quote-search-input')).nativeElement;
+            inputElement.value = 'sam';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('sam');
         });
+
     });
     it('should notify component to reset search data on grid resetSerach()', async(() => {
         const searchValue = '';
@@ -325,33 +336,31 @@ fdescribe('AdvancedSearchComponent', () => {
 
     it(`should have input field 'Keyword'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#keyword')).nativeElement;
-        inputElement.value = 'walmart';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#keyword')).nativeElement;
+            inputElement.value = 'walmart';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('walmart');
         });
     }));
     it(`should have input field 'Quote Name'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#quoteName')).nativeElement;
-        inputElement.value = 'Quote 1';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#quoteName')).nativeElement;
+            inputElement.value = 'Quote 1';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('Quote 1');
         });
     }));
     it(`should have input field 'QuoteId'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#quoteId')).nativeElement;
-        inputElement.value = '101';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#quoteId')).nativeElement;
+            inputElement.value = '101';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('101');
         });
+
     }));
     it(`should call the search method`, async(() => {
         fixture.detectChanges();
@@ -372,13 +381,13 @@ fdescribe('AdvancedSearchComponent', () => {
     }));
     it(`should have input field 'Account User'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#accountUserName')).nativeElement;
-        inputElement.value = 'foo';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#accountUserName')).nativeElement;
+            inputElement.value = 'foo';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('foo');
         });
+
     }));
     it(`should have input field 'Expiration Date From'`, async(() => {
         fixture.detectChanges();
@@ -403,11 +412,10 @@ fdescribe('AdvancedSearchComponent', () => {
 
     it(`should have input field 'Project Name'`, async(() => {
         fixture.detectChanges();
-        inputElement = fixture.debugElement.query(By.css('#projectName')).nativeElement;
-        inputElement.value = 'foo';
-        inputElement.dispatchEvent(new Event('input'));
         fixture.whenStable().then(() => {
-            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.css('#projectName')).nativeElement;
+            inputElement.value = 'foo';
+            inputElement.dispatchEvent(new Event('input'));
             expect(inputElement.value).toEqual('foo');
         });
     }));
