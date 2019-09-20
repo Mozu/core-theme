@@ -64,8 +64,8 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     getavailableActionsLength: function () {
         var me = this;
             data = me.record.data;
-        if (this.isAutoCaptureEnabled && (data && data.availableActions).length == 2) {
-             return ((data && data.availableActions).includes('CreditPayment') && (data && data.availableActions).includes('ManualCreditPayment')) ? true : false
+        if (this.isAutoCaptureEnabled) {
+            return ((data && data.availableActions).length == 0) ? true : false
           }
       },
 
