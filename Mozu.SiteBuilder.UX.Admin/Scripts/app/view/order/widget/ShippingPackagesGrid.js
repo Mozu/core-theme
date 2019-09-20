@@ -66,8 +66,7 @@
 
     initComponent: function () {
         var me = this;
-
-            this.store = Ext.create('Ext.data.JsonStore', {
+        this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
                 name: 'productCode',
@@ -77,6 +76,11 @@
             {
                 name: 'variationProductCode',
                 type: 'string',
+                useNull: true
+            },
+            {
+                name: 'overridePrice',
+                type: 'float',
                 useNull: true
             },
             {
@@ -176,13 +180,13 @@
                 name: 'imageUrl',
                 type: 'string',
                 useNull: true
-                },
-                {
-                    name: 'backorderReleaseDate',
-                    type: 'date',
-                    useNull: true,
-                    //dateFormat: 'c'
-                }
+            },
+            {
+                name: 'backorderReleaseDate',
+                type: 'date',
+                useNull: true,
+                //dateFormat: 'c'
+            }
 
             ],
             sorters: [{
@@ -216,7 +220,7 @@
                         return false;
                     }
                 },
-               
+
             }));
 
 
@@ -476,7 +480,7 @@
     openItemsReassignPopup: function () {
         var me = this;
         var grid = Ext.getCmp(this.id);
-        var item = grid.getSelectionModel().getSelection();        
+        var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
         if (selectedItem) {
             me.record.getInventory({
@@ -521,7 +525,7 @@
         var item = grid.getSelectionModel().getSelection();
 
         var model = {
-            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',            
+            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',
             items: []
         }
 
@@ -553,7 +557,7 @@
                 upc: item[0].data.variationProductCode ? item[0].data.variationProductCode : item[0].data.productCode,//write condition if variationproduct code missing
                 quantity: item[0].data.quantity
             });
-        }        
+        }
         return model;
     },
 
@@ -580,7 +584,6 @@
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
         var selectedItem = item[0].data;
-
         if (selectedItem) {
             //field = e.context.field;
             Ext.create('Taco.view.order.modal.fulfillment.ItemUnitTax', {
@@ -591,7 +594,7 @@
                 listeners: {
                     udpateTax: {
                         fn: function (json) {
-                            var itemUnitTax = (Math.round(json.unitTax * 100) / 100)*selectedItem.quantity;
+                            var itemUnitTax = (Math.round(json.unitTax * 100) / 100) * selectedItem.quantity;
                             Ext.getCmp(this.taxFieldId).setValue(itemUnitTax);
                         },
                         scope: me

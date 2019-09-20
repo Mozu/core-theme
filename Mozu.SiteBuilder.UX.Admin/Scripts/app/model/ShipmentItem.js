@@ -60,6 +60,11 @@
             "type": "float"
         },
         {
+            "name": "overridePrice",
+            "type": "float",
+            "useNull": true
+        },
+        {
             "name": "itemTax",
             "type": "float",
             "useNull": true
@@ -95,7 +100,7 @@
         },
         {
             "name": "lineItemCost",
-            "type": "float"            
+            "type": "float"
         },
         {
             "name": "itemDiscount",

@@ -25,7 +25,6 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     initComponent: function () {
         var me = this;
-
         this.setAdjustmentInputId();
         this.calculatedUnitTaxPerc();
         this.fieldContainer = Ext.create('Ext.form.FieldContainer', {
@@ -103,23 +102,23 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     bindEventsForTextBoxes: function () {
         var me = this;
-
         var element = Ext.get(this.unitTaxAdjustmentInput);
+        var originalPrice = (this.selectedItem.overridePrice !== null && parseInt(this.selectedItem.overridePrice) > 0) ? this.selectedItem.overridePrice : this.selectedItem.actualPrice;
         if (element) {
             element.on('keyup', function () {
-                me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, this.selectedItem.actualPrice, false, this.unitTaxAdjustmentPercInput);
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentInput, originalPrice, false, this.unitTaxAdjustmentPercInput);
             }, this);
         };
 
         element = Ext.get(this.unitTaxAdjustmentPercInput);
         if (element) {
             element.on('keyup', function () {
-                me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, this.selectedItem.actualPrice, true, this.unitTaxAdjustmentInput);
+                me.setCalculatedUnitTax(this.unitTaxAdjustmentPercInput, originalPrice, true, this.unitTaxAdjustmentInput);
             }, this);
         };
     },
 
-    setCalculatedUnitTax: function (elementId, unitPrice, isPercentage, targetElementId) {
+    setCalculatedUnitTax: function (elementId, originalPrice, isPercentage, targetElementId) {
         var element = Ext.get(elementId);
         var calcValue = 0;
         if (element) {
@@ -127,10 +126,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
             if (enteredValue == 0 || enteredValue) {
                 if (isPercentage) {
-                    calcValue = (unitPrice * enteredValue) / 100;
+                    calcValue = (originalPrice * enteredValue) / 100;
                 }
                 else {
-                    calcValue = (100 * enteredValue) / unitPrice;
+                    calcValue = (100 * enteredValue) / originalPrice;
                 }
 
                 Ext.get(targetElementId).dom.value = calcValue;
@@ -140,8 +139,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ItemUnitTax', {
 
     calculatedUnitTaxPerc: function () {
         this.unitTaxPerc = 0;
+        var originalPrice = (this.selectedItem.overridePrice !== null && parseInt(this.selectedItem.overridePrice) > 0) ? this.selectedItem.overridePrice : this.selectedItem.actualPrice;
         if (this.selectedItem.itemTax > 0) {
-            this.unitTaxPerc = (100 * this.selectedItem.itemTax) / this.selectedItem.actualPrice;
+            this.unitTaxPerc = (100 * this.selectedItem.itemTax) / originalPrice;
         }
     }
 });
