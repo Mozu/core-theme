@@ -6,13 +6,11 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
-using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Mozu.SiteBuilder.Mvc.TestData;
-using Mozu.SiteBuilder.UX.ApiWrappers;
 using Mozu.SiteBuilder.UX.Areas.StoreFront.Models;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
@@ -38,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     {
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
-        private IFulfillerApiWrapper _fulfillerApiWrapper;
+        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
@@ -48,11 +46,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger)
+        public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger,
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
-            _fulfillerApiWrapper = new FulfillerApiWrapper(apiContext, MozuConfigurationManager.Settings);
+            _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         /// <summary>
@@ -281,7 +280,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> PickWave(int pickWaveNumber)
         {
-            var pickWave = _fulfillerApiWrapper.GetPickWave(pickWaveNumber);
+            var pickWave = (await _fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-list"));
             if (template == null)

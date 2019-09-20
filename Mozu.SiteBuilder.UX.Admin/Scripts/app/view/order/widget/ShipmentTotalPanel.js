@@ -166,8 +166,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         this.handlingTaxAdjustmentInput = Ext.id();
         this.handlingTaxAdjustmentDropdown = Ext.id();
 
-        this.taxAdjustmentInput = Ext.id();
-        this.taxAdjustmentDropdown = Ext.id();
+        //this.taxAdjustmentInput = Ext.id();
+        //this.taxAdjustmentDropdown = Ext.id();
     },
 
     applyRecord: function (record) {
@@ -435,7 +435,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 "shipmentNumber": this.shipmentRecord.number,
                 "shipmentAdjustment": {
                     itemAdjustment: itemAdjustmentValue ? (parseFloat(itemAdjustmentValue) * me.getValueOf(this.shipmentAdjustmentDropdown)) : null,
-                    itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) * me.getValueOf(this.taxAdjustmentDropdown)) : null,
+                    //itemTaxAdjustment: taxAdjustmentValue ? (parseFloat(taxAdjustmentValue) * me.getValueOf(this.taxAdjustmentDropdown)) : null,
                     shippingAdjustment: shippingAdjustmentValue ? (parseFloat(shippingAdjustmentValue) * me.getValueOf(this.shippingAdjustmentDropdown)) : null,
                     shippingTaxAdjustment: shippingTaxAdjustmentValue ? (parseFloat(shippingTaxAdjustmentValue) * me.getValueOf(this.shippingTaxAdjustmentDropdown)) : null,
                     handlingAdjustment: handlingAdjustmentValue ? (parseFloat(handlingAdjustmentValue) * me.getValueOf(this.handlingAdjustmentDropdown)) : null,
