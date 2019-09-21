@@ -11,7 +11,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         public FulfillmentMapping()
         {
-            CreateMap<F.ResourceOfShipment, CR.Shipment>()
+            CreateMap<F.ResourceOfShipment, CR.Shipment>()                
                 .ForMember(x => x.Number, opt => opt.ResolveUsing(dc => dc.ShipmentNumber))
                 .ForMember(x => x.Packages, opt => opt.Ignore());
 
@@ -24,6 +24,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.Id, opt => opt.Ignore())
                 .ForMember(x => x.UserScopeType, opt => opt.Ignore())
                 .ForMember(x => x.CreateDate, opt => opt.Ignore());
+
+            CreateMap<F.CanceledItem, Mozu.CommerceRuntime.Contracts.Fulfillment.CanceledItem>()
+                .ForMember(x => x.FulfillmentLocationCode, opt => opt.Ignore())
+                .ForMember(x => x.IsPackagedStandAlone, opt => opt.Ignore())
+                .ForMember(x => x.Measurements, opt => opt.Ignore());
+
+            CreateMap<F.CanceledReason, Mozu.CommerceRuntime.Contracts.Orders.CanceledReason>()
+                .ForMember(x => x.Description, opt => opt.Ignore());
+
 
             CreateMap<CR.Shipment, F.ResourceOfShipment>()
                 .ForMember(x => x.ShipmentNumber, opt => opt.ResolveUsing(dc => dc.Number));
