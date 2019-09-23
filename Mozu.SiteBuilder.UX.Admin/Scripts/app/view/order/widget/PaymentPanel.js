@@ -96,7 +96,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             {
                 text: 'Credit Payment',
                 itemId: 'CreditPayment',
-                hidden: me.record.get('amountCollected') <= 0 || me.isAutoCaptureEnabled
+                hidden: me.record.get('amountCollected') <= 0
             },
             {
                 text: 'Auth and Capture',
@@ -131,7 +131,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
             {
                 text: 'Credit Payment (Manual)',
                 itemId: 'ManualCreditPayment',
-                hidden: me.isAutoCaptureEnabled
+               // hidden: me.isAutoCaptureEnabled
             },
             {
                 text: 'Void Payment',
