@@ -30,10 +30,10 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
         this.selectedTab = 'inventoryGrid';
        
         if (this.inventoryData.items.candidateSuggestions && this.inventoryData.items.candidateSuggestions.length > 0) {
-            this.filteredInventoryLocations(this.inventoryData.items.candidateSuggestions);
+            this.inventoryData.items.candidateSuggestions = this.filteredInventoryLocations(this.inventoryData.items.candidateSuggestions);
         }
         if (this.inventoryData.items && this.inventoryData.items.length > 0) {
-            this.filteredInventoryLocations(this.inventoryData.items);
+            this.inventoryData.items = this.filteredInventoryLocations(this.inventoryData.items);
         }
         var inventoryStore = Ext.create('Ext.data.Store', {
             storeId: 'inventoryStore',
@@ -341,11 +341,21 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
 
     filteredInventoryLocations: function (inventoryLocations) {
         var me = this;
-        for (i = 0; i < inventoryLocations.length; i++) {
-            if (me.shipmentRecord.location && inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
-                inventoryLocations.splice(i, 1);
+        var distinctLocations = [];
+        for (var i = 0; i < inventoryLocations.length; i++) {
+            if (!me.isExists(distinctLocations, inventoryLocations[i].locationCode)) {
+                distinctLocations.push(inventoryLocations[i])
             }
         }
+        return distinctLocations;
     },
+
+    isExists: function (items, locationCode) {
+        for (var count = 0; count < items.length; count++) {
+            if (items[count].locationCode == locationCode)
+                return true;
+        }
+        return false;
+    }
 });
 
