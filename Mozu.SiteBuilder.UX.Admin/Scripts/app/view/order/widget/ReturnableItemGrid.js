@@ -273,10 +273,10 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 {
                     type: 'string', name: 'productName',
                     convert: function(value, record) {
-                        var excludeExtras = record.get('excludeProductExtras');
-                        var isChild = record.get('parentItemId');
-                        var extra = isChild ? '' : excludeExtras ? ' (stand alone)' : ' (with extras)';
-                        return value + extra;
+                        //var excludeExtras = record.get('excludeProductExtras');
+                        //var isChild = record.get('parentItemId');
+                        //var extra = isChild ? '' : excludeExtras ? ' (stand alone)' : ' (with extras)';
+                        return value;// + extra;
                     }
                 },
                 { type: 'string',  name: 'orderItemOptionAttributeFQN' },
