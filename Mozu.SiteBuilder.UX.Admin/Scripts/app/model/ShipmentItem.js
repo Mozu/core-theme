@@ -60,6 +60,10 @@
             "type": "float"
         },
         {
+            "name": "actualPrice",
+            "type": "float"
+        },
+        {
             "name": "overridePrice",
             "type": "float",
             "useNull": true

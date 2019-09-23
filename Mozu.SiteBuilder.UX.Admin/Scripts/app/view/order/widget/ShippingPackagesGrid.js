@@ -299,7 +299,6 @@
                 align: 'center',
                 menuDisabled: true,
                 minWidth: 80,
-                hidden: true,
                 flex: 1,
                 editor: {
                     xtype: 'numberfield',
@@ -308,29 +307,11 @@
                     minValue: 0,
 
                 },
-                renderer: function (value) {
-                    return this.record.formatCurrency(value);
-                }
-            },
-            {
-                dataIndex: 'actualPrice',
-                text: 'Unit Price',
-                draggable: false,
-                sortable: false,
-                //resizable: false,
-                align: 'center',
-                menuDisabled: true,
-                minWidth: 50,
-                flex: 1,
-                editor: {
-                    xtype: 'numberfield',
-                    showBorder: false,
-                    hideTrigger: true,
-                    minValue: 0,
-
-                },
-                renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                renderer: function (value, metadata, record) {
+                    var unitPrice = record.get("overridePrice") !== undefined
+                        ? record.get("overridePrice")
+                        : record.get("actualPrice");
+                    return this.record.formatCurrency(unitPrice);
                 }
             },
             {
@@ -731,6 +712,7 @@
                         quantity: selectedItem.quantity,
                         imageUrl: selectedItem.imageUrl,
                         actualPrice: selectedItem.actualPrice,
+                        overridePrice: selectedItem.overridePrice,
                         optionAttributeFQN: selectedItem.optionAttributeFQN,
                         variationProductCode: selectedItem.variationProductCode
                     }]
@@ -813,20 +795,14 @@
             shipmentNumber: me.shipmentRecord.number,
             itemId: selectedItem.lineId, //selectedItem.lineId,
             shipmentItemAdjustment: {
-                actualPrice: selectedItem.actualPrice,
-                unitTax: selectedItem.itemTax,
+                overridePrice: selectedItem.overridePrice
             }
-        }
+        };
     },
 
     validateModal: function () {
-        var me = this;
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
-        var selectedItem = item[0].data;
-        if (selectedItem.actualPrice == item[0].raw.actualPrice && selectedItem.itemTax == item[0].raw.itemTax) {
-            return false;
-        }
-        return true;
+        return item[0].dirty; // save if something changed
     }
 });
