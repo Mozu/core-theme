@@ -125,7 +125,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ForceCaptureJob = new DC.ForceCaptureJob
                 {
                     IsEnabled = paymentSettings.JobSettings?.ForceCaptureJob?.IsEnabled ?? false,
-                    CaptureAfterDays = paymentSettings.JobSettings?.ForceCaptureJob?.CaptureAfterDays ?? 0
+                    CaptureAfterDays = paymentSettings.JobSettings?.ForceCaptureJob?.CaptureAfterDays ?? 0,
+                    Interval = paymentSettings.JobSettings?.ForceCaptureJob?.Interval ?? 0,
                 }
             };
 
