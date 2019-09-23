@@ -222,6 +222,7 @@
                 beforeEdit: function (editor, context, eOpts) {
                     var plugin = this;
                     plugin.editor.form.findField('itemTax').disable();
+                    //editor.record.set('overridePrice', 10);
 
                     if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
@@ -308,7 +309,7 @@
 
                 },
                 renderer: function (value, metadata, record) {
-                    var unitPrice = record.get("overridePrice") !== undefined
+                    var unitPrice = (record.get("overridePrice") !== undefined && record.get("overridePrice") !== null)
                         ? record.get("overridePrice")
                         : record.get("actualPrice");
                     return this.record.formatCurrency(unitPrice);
