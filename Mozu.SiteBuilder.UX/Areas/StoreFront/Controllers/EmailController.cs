@@ -23,6 +23,7 @@ using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteBuilder.UX.Hypr.Tags;
 using Mozu.SiteBuilder.UX.Models.Admin.Email;
 using Mozu.SiteBuilder.UX.Models.Customers;
+using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Newtonsoft.Json;
@@ -69,6 +70,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly ILocationAdminWebApiClient _locationAdminWebApi;
         private static readonly List<EmailTypeInfo> g_emailTypeInfos;
+        private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private IOrderWebApiClient _orderWebApiClient;
 
         static EmailController()
@@ -187,7 +189,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ICustomRouteHandler customRouteHandler,
             IOrderWebApiClient orderWebApiClient,
             ILocationAdminWebApiClient locationAdminWebApi,
-             UrlHelper urlhelper
+             UrlHelper urlhelper,
+             IReturnSettingsWebApiClient returnSettingsWebApiClient
             )
             : base(docRepo, docTypeRepo, cmsService,
                 customerAccountWebApiClient, hyprViewEngine, customRouteHandler, urlhelper)
@@ -198,6 +201,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _locationAdminWebApi = locationAdminWebApi.CloneWithoutUserClaims();
+            _returnSettingsWebApiClient = returnSettingsWebApiClient.CloneWithoutUserClaims();
         }
 
         //
@@ -253,7 +257,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             ViewData["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault();
-            ViewData["rmaLocation"] = await GetDirectShipLocationOrDefault();
+            ViewData["rmaLocation"] = await GetDefaultReturnLocation();
 
             ViewData["storefrontOrderAttributes"] = await GetShopperOrderAttributes();
 
@@ -380,7 +384,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 ["model"] = model,
                 ["content"] = cmdContent,
                 ["User"] = user,
-                ["rmaLocation"] = await GetDirectShipLocationOrDefault(),
+                ["rmaLocation"] = await GetDefaultReturnLocation(),
                 ["domainName"] = site.Domains.Where(x => x.IsPrimary).Select(x => x.DomainName).FirstOrDefault(),
 
                 ["storefrontOrderAttributes"] = await GetShopperOrderAttributes()
@@ -390,10 +394,23 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return await Render(view, context);
         }
 
-        private async Task<Location.Contracts.Location> GetDirectShipLocationOrDefault()
+        //private async Task<Location.Contracts.Location> GetDirectShipLocationOrDefault()
+        //{
+        //    var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
+        //    return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
+        //}
+
+        private async Task<Location.Contracts.Location> GetDefaultReturnLocation()
         {
-            var locations = await _locationRuntimeWebApiClient.GetDirectShipLocation();
-            return locations.ResponseMessage.IsSuccessStatusCode ? locations.ReadAsSync() : null;
+            var returnSettings = await _returnSettingsWebApiClient.GetReturnSettings();
+            var locationCode = returnSettings.ResponseMessage.IsSuccessStatusCode ? (returnSettings.ReadAsSync())?.DefaultShippingLocation : null;
+            if (!string.IsNullOrEmpty(locationCode))
+            {
+                var shippingLocation = await _locationAdminWebApi.GetLocation(locationCode);
+                return shippingLocation.ResponseMessage.IsSuccessStatusCode ? shippingLocation.ReadAsSync() : null;
+            }
+
+            return null;
         }
 
         private static async Task<string> Render(HyprView view, HyprViewContext context)
@@ -523,7 +540,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ShipmentConfirmation = "shipment.fulfilled";
             public const string OrderPickupReady = "shipment.pickupready";
             public const string OrderPickupReminder = "shipment.pickupreminder";
-          //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
+            //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
         }
 
