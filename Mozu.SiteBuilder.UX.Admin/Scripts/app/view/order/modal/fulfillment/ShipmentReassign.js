@@ -45,7 +45,15 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                 property: 'locationName',
                 direction: 'asc'
             }],
-            fields: ['locationName', 'distance', 'stock'],
+            fields: ['locationName', 'stock',
+                {
+                    name: 'distance',
+                    type: 'float',
+                    convert: function (value) { 
+                        return value ? parseFloat(value.split(" ")[0]).toFixed(2) +' '+ 'mi' : "";
+                    }
+                }
+            ],
             groupField: 'locationName',
             data: this.inventoryData.items.candidateSuggestions || this.inventoryData.items,
             proxy: {
