@@ -283,13 +283,10 @@ Ext.define('Taco.view.order.widget.OrderItemGrid', {
                         '<span class="product-link-disabled">{productName}</span>',
                         '</tpl>',
 
-                        '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock">',
-                        '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">Item is on backorder.</span><br/>',
-                        '<tpl if="stock.stockAvailable < quantity">',
-                        '<span class="product-link-disabled">{stock.stockAvailable:number("0")} Available Now.</span>',
-                        '<span class="product-link-disabled"> {[values.quantity - values.stock.stockAvailable]} Available on {stock.availableDate:date("m/d/Y")}.</span>',
-                        '<tpl else>',
-                        '<span class="product-link-disabled">{quantity} Available Now.</span>',
+                        '<tpl if="stock != null && stock.isOnBackOrder && stock.manageStock && stock.stockAvailable < quantity">',  
+                        '<br/><em class="adjustment-cell-inner-value"><span class="product-link-disabled">Qty {[values.quantity - values.stock.stockAvailable]} on backorder.</span>',
+                        '<tpl if="stock.availableDate">',
+                        '<span class="product-link-disabled"> Available on {stock.availableDate:date("m/d/Y")}</span>',
                         '</tpl>',                        
                         '</em></tpl>',
 
