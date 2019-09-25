@@ -409,6 +409,16 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
                 return result;
             }
         }
+
+        /// <summary>
+        /// Was this order created by the Unified platform.
+        /// </summary>
+        /// <remarks>
+        /// If true, this order was created by the Unified (.NET Core) platform.
+        /// If false, this order was created by the legacy (.NET Framework) platform.
+        /// This is a read-only field and any set value will be ignored.
+        /// </remarks>
+        public bool IsUnified { get; set; }
     }
 
     public class LineIdFee

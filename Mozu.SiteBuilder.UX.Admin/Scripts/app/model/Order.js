@@ -837,7 +837,12 @@ Ext.define('Taco.model.Order', {
         type: 'float',
         persist: false,
         useNull: true
-    }
+        },
+        {
+            name: 'isUnified',
+            type: 'boolean',
+            defaultValue: false
+        }
     ],
 
     // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.

@@ -50,19 +50,21 @@ Ext.define('Taco.view.order.subform.InternalNotes', {
             store: this.store
         });
 
-        this.tools = [{
-            xtype: 'button',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Add Internal Notes',
-            scope: this.grid,
-            requiredBehaviors: this.orderUpdateBehaviors,
-            handler: function () {
-                this.changeCards(1);
-                this.grid.onRowEditorCreate();
-            },
-            scope: this
-        }];
+        if (this.record.get('isUnified')) {
+            this.tools = [{
+                xtype: 'button',
+                ui: 'action',
+                scale: 'medium',
+                text: 'Add Internal Notes',
+                scope: this.grid,
+                requiredBehaviors: this.orderUpdateBehaviors,
+                handler: function () {
+                    this.changeCards(1);
+                    this.grid.onRowEditorCreate();
+                },
+                scope: this
+            }];
+        }
 
         this.items = [{
                 xtype: 'component',
