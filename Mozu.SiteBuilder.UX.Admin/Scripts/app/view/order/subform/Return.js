@@ -177,8 +177,10 @@ Ext.define('Taco.view.order.subform.Return', {
         var ReturnableItemsStore = Ext.getStore('ReturnableItemsStore');
         var orderStatus = this.record.get('orderStatus');
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
+        var isShowCreateReturn = false;
+        
         if (ReturnableItemsStore) {
-            var isShowCreateReturn = this.isShowCreateReturn(ReturnableItemsStore.data.items);
+            isShowCreateReturn = this.isShowCreateReturn(ReturnableItemsStore.data.items);
         }
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled')) || isShowCreateReturn;
         this.createButton.setDisabled(!enabled)

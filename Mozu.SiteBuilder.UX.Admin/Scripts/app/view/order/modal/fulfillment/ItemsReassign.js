@@ -30,7 +30,7 @@
             pluginId: 'cellEditing'
         });
         var me = this;
-        orderedQuantity = me.selectedItem.quantity;
+        me.orderedQuantity = me.selectedItem.quantity;
         this.filteredInventory = [];
         if (this.inventoryItemList.candidateSuggestions && this.inventoryItemList.candidateSuggestions.length > 0) {
             this.filteredInventoryLocations(this.inventoryItemList.candidateSuggestions);
@@ -123,7 +123,7 @@
                         maxValue: me.selectedItem.quantity,
                         validator: function (value) {
                             if (!isNaN(value)) {
-                                return (value <= orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                                return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
                         }
                     }
@@ -151,7 +151,7 @@
             listeners: {
                 'validateedit': function (editor, context, eOpts) {
                     var me = this;
-                    for (i = 0; i < context.record.store.data.items.length; i++) {
+                    for (var i = 0; i < context.record.store.data.items.length; i++) {
                         if (i !== context.rowIdx && context.value !=='') {
                             if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0 )) {
                                 context.record.store.data.items[i].data.reassignQty = '';
@@ -162,7 +162,7 @@
                         }
                     }
                     me.getView().refresh();
-                    if (context.value > orderedQuantity) {
+                    if (context.value > me.orderedQuantity) {
                         alert('Quantity to reassign should be less than ordered quantity.');
                         return false;
                     }
@@ -220,7 +220,7 @@
                         regexText: "Invalid Number entered.",
                         validator: function (value) {
                             if (!isNaN(value)) {
-                                return (value <= orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
+                                return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
                         }
                     }
@@ -243,7 +243,7 @@
             listeners: {
                 'validateedit': function (editor, context, eOpts) {
                     var me = this;
-                    for (i = 0; i < context.record.store.data.items.length; i++) {
+                    for (var i = 0; i < context.record.store.data.items.length; i++) {
                         if (i !== context.rowIdx && context.value !== '') {
                             if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0)) {
                                 context.record.store.data.items[i].data.reassignQty = '';
@@ -370,7 +370,7 @@
 
     filteredInventoryLocations: function (inventoryLocations) {
         var me = this;
-        for (i = 0; i < inventoryLocations.length; i++) {
+        for (var i = 0; i < inventoryLocations.length; i++) {
             if (me.shipmentRecord.location && inventoryLocations[i].locationCode == me.shipmentRecord.location.code) {
                 inventoryLocations.splice(i, 1);
             }

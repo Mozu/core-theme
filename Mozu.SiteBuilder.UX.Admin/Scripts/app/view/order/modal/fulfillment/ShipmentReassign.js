@@ -95,10 +95,11 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     xtype: 'actioncolumn',
                     text: 'Stock',
                     dataIndex: 'stock',
-                    renderer: function (v, meta, rec) {     
+                    renderer: function (v, meta, rec) {
+                        var type = "";  
                         if (!me.isInventory) {
                             var inventory = rec.raw.inventory;
-                            var type = "";
+                            
 
                             var filteredInventory;
                             shipment.items.forEach(function (element) {

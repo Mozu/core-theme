@@ -284,7 +284,7 @@
                 flex: 2,
                 renderer: function (value, metadata, record) {
                     var attributes = "<span class='product-name'>" + record.data.name + "</span>";
-                    for (i = 0; i < record.data.options.length; i++) {
+                    for (var i = 0; i < record.data.options.length; i++) {
                         var display = Ext.util.Format.htmlEncode(record.data.options[i].shopperEnteredValue || record.data.options[i].value);
                         attributes += "<div class='option'>" + record.data.options[i].name + ": " + display + " (" + record.data.options[i].value + ")<div><br/>";
                     }

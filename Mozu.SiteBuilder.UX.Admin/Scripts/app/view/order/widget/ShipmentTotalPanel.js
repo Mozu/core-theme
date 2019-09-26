@@ -409,7 +409,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             },
             hidden: !me.isEditable,
             handler: function (evt) {
-                me.updateShipmentAdjustments();
+                if(me.store.getAdjustedShippingTotal() !== me.shipmentRecord.total) {
+                    me.updateShipmentAdjustments();
+                    me.toggleEdit(false);
+                }
             }
         });
 
@@ -543,6 +546,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 me.setLoading(false, this.body);
                 // error handling here
                 Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                me.store.resetAdjustmentAmounts();
             },
             scope: me
         });
