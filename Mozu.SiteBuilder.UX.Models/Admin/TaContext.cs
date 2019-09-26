@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Mozu.Core.Money;
+using Mozu.Tenant.Contracts;
 
 namespace Mozu.SiteBuilder.UX.Models.Admin
 {
@@ -24,6 +25,12 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "logzuUrl")]
         public string LogzuUrl { get; set; }
+
+        [DataMember(Name = "omsEnabled")]
+        public bool? OmsEnabled { get; set; }
+
+        [DataMember(Name = "attributes")]
+        public List<TenantAttribute> Attributes { get; set; }
     }
 
     [DataContract]

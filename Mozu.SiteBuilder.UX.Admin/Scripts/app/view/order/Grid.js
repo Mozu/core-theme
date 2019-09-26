@@ -741,7 +741,7 @@ Ext.define('Taco.view.order.Grid', {
             margin: "0 0 0 10",
             ui: 'action-primary',
             scale: 'medium',
-            hidden: !me.createButtonVisible,
+            hidden: !me.createButtonVisible || me.isUnified(),
             itemId: 'createActionButton',
             handler: me.createActionHandler,
             scope: me
@@ -784,6 +784,21 @@ Ext.define('Taco.view.order.Grid', {
         }
 
         return createButtonConfig
+    },
+
+    isUnified: function () {
+        var taContext = window.Taco.user.taContext;
+        if (taContext && taContext.attributes && taContext.attributes.length > 0) {
+            for (var i = 0; i < taContext.attributes.length; i++) {
+                if (taContext.attributes[i].name == "IsUnified" && taContext.attributes[i].value) {
+                    //value is true but datatype is string not boolean
+                    if (taContext.attributes[i].value.toString() == "true")
+                        return true;
+                }
+            }
+        }
+
+        return false;
     },
 
     doCreate: function () {
