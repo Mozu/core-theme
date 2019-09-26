@@ -50,7 +50,9 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentReassign', {
                     name: 'distance',
                     type: 'float',
                     convert: function (value) { 
-                        return value ? parseFloat(value.split(" ")[0]).toFixed(2) +' '+ 'mi' : "";
+                        //candidate api returning 'mi' in distance field (string). instead inventory returning decimal value for distance.
+                        if (value)
+                            return value ? parseFloat(value.toString().replace('mi', '').trim()).toFixed(2) : '';
                     }
                 }
             ],
