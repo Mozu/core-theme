@@ -1,6 +1,9 @@
 
 Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     extend: 'Taco.view.order.subform.Subform',
+    requires: [
+        'Taco.view.order.widget.ShippingPackagesGrid'
+    ],
 
     //tabTitle: 'All Items',
     initComponent: function () {

@@ -1,6 +1,9 @@
 
 Ext.define('Taco.view.order.subform.fulfillment.CancellationTab', {
     extend: 'Taco.view.order.subform.Subform',
+    requires: [
+        'Taco.view.order.widget.ShippingCancellationGrid'
+    ],
 
     
     //title: 'Cancelled Items (3)',

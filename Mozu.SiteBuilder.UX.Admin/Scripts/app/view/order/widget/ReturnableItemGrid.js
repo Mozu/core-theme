@@ -300,9 +300,6 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 { type: 'number',  name: 'quantity', defaultValue: 0 }
             ],
             data: [],
-            sorters: [{
-                
-            }],
             proxy: {
                 type: 'ajax',
                 url: '/admin/app/order/returnableitems',

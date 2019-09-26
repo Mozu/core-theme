@@ -1,7 +1,9 @@
 ﻿Ext.define('Taco.view.order.subform.fulfillment.ShipmentDetails', {
     extend: 'Taco.view.order.subform.fulfillment.Container',
     alias: 'taco-order-fulfillment-ShipmentDetails',
-
+    requires: [
+        'Taco.view.order.subform.fulfillment.ShipmentTabs'
+    ],
     cls: 'taco-order-fulfillment-ShipmentDetails',
 
     collapsible: false,

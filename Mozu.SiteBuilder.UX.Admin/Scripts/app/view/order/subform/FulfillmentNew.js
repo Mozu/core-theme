@@ -1,7 +1,9 @@
 Ext.define('Taco.view.order.subform.FulfillmentNew', {
     extend: 'Taco.view.order.subform.Subform',
     requires: [
-        'Taco.model.SiteShipSetting'
+        'Taco.model.SiteShipSetting',
+        'Taco.view.order.subform.fulfillment.ShipmentHeader',
+        'Taco.view.order.subform.fulfillment.Shipment'
     ],
     alias: 'widget.taco-order-fulfillment',
 

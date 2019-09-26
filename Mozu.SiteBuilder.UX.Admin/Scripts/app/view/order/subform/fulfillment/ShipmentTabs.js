@@ -7,6 +7,8 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
     alias: 'widget.taco-shipmentform',
     requires: [
         'Taco.view.order.subform.fulfillment.AllItemsTab',
+        'Taco.view.order.subform.fulfillment.ShippedFromTab',
+        'Taco.view.order.subform.fulfillment.CancellationTab'
     ],
 
     //model: 'Taco.model.Order',

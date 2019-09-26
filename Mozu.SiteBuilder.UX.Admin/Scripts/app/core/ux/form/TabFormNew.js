@@ -4,7 +4,10 @@
 Ext.define('Taco.core.ux.form.TabFormNew', {
     extend: 'Taco.core.ux.form.Form',
     alias: 'widget.taco.tabformnew',
-    requires: ['Taco.core.ux.grid.plugins.AutoSelect'],
+    requires: [
+        'Taco.core.ux.grid.plugins.AutoSelect',
+        'Taco.view.order.widget.ShipmentTotalPanel'
+    ],
 
     // this is an offset adjustment to move the left nav up and down relative to the first subForm's top edge.
     // By defaul the left nav will adjust itself to align with the top of the first subform;

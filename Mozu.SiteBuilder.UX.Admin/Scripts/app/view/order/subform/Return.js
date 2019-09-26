@@ -78,7 +78,9 @@ Ext.define('Taco.view.order.subform.Return', {
 
         // if (returnStatus && returnStatus !== 'None') {
         store.load(function () {
-            me.orderReturns.store.loadData(arguments[0]);
+            if(me.orderReturns) {
+                me.orderReturns.store.loadData(arguments[0]);
+            }
             me.setLoading(false);
         });
 
