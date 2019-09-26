@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Authorization;
 using Mozu.Core.Api.Routing;
@@ -11,6 +6,11 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Order;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
 using DCp = Mozu.CommerceRuntime.Contracts.Products;
 using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
@@ -38,6 +38,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPutRoute(UriTemplate = "cancel")]
         public async Task<Response<Order>> CancelOrder(CancelOrderArgs args)
         {
+            if (args.Reason == null)
+            {
+                args.Reason = new CanceledReason
+                {
+                    ReasonCode = "Other",
+                    MoreInfo = "CSR cancelling PendingReview order"
+                };
+            }
+
             var dcOrder = (await _orderWebApiClient.CancelOrder(args.OrderId, args.Reason)).ReadAsSync();
             return Single2(Mapper.Map<Order>(dcOrder));
         }
