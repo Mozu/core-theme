@@ -49,6 +49,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         {
             get { return QuantityFulfilled - QuantityReturned; }
         }
+
+        public string FulfillmentStatus { get; set; }
+
+        public string OrderItemId { get; set; }
+
+        public int OrderLineId { get; set; }
+
+        public string OrderItemOptionAttributeFQN { get; set; }
+
+        public int UnitQuantity { get; set; }
+
+        public string ParentProductCode { get; set; }
+
+        public string ParentProductName { get; set; }
+
+
     }
 
 }
