@@ -48,10 +48,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             data : [
                 {
                     id: 'lineItemSubtotal',
-                    adjustmentId: "itemAdjustment",
+                    adjustmentId: "shipmentAdjustment",
                     name: 'Sub Total',
                     originalAmount: me.shipmentRecord.lineItemSubtotal,
-                    adjustmentAmount: me.shipmentRecord.itemAdjustment
+                    adjustmentAmount: me.shipmentRecord.shipmentAdjustment
                 },
                 {
                     id: 'lineItemTax',
@@ -512,7 +512,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 "orderId": this.record.get('id'),
                 "shipmentNumber": this.shipmentRecord.number,
                 "shipmentAdjustment": {
-                    itemAdjustment: me.store.getById('lineItemSubtotal').adjustmentAmount,
+                    shipmentAdjustment: me.store.getById('lineItemSubtotal').adjustmentAmount,
                     itemTaxAdjustment:  me.store.getById('lineItemTax').adjustmentAmount,
                     shippingAdjustment: me.store.getById('shippingSubtotal').adjustmentAmount,
                     shippingTaxAdjustment: me.store.getById('shippingTax').adjustmentAmount,
