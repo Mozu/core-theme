@@ -384,7 +384,9 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.shippingAddress = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
-                countryCode: me.shipmentRecord.location.address.countryCode
+                countryCode: me.shipmentRecord.location.address.countryCode,
+                latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
+                longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
             }
         }
 

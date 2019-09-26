@@ -562,9 +562,12 @@
                 latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
                 longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
                 //locationCode: me.shipmentRecord.location.code,
-                radius: 500,
-                unit: 'MILES',
                 countryCode: me.shipmentRecord.location.address.countryCode
+            }
+            //only showing 500 miles radius locations for BOPIS
+            if (model.requestLocation && me.shipmentRecord.shipmentType == "BOPIS") {
+                model.requestLocation.radius = 500;
+                model.requestLocation.unit = 'MILES';
             }
         }
         if (item && item[0].data) {
