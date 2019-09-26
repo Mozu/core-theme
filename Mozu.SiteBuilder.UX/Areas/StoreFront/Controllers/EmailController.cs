@@ -487,23 +487,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     var filter = locations.Aggregate((x, y) => x + " or " + y);
                     checkoutEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
                 }
-
-
             }
 
             if (obj is ShipmentEmail shipmentEmail)
             {
                 //get order by shipment orderId
                 var shipmentOrder = (await _orderWebApiClient.GetOrder(shipmentEmail.OrderId)).ReadAsSync();
-
-                var locationCode = shipmentEmail.FulfillmentLocationCode;
-                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
-
+                shipmentEmail.Order = shipmentOrder;
                 if (shipmentOrder.Shipments.SafeAny())
                 {
-                    //select only shipments which are in email
-                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(s => s.Number == shipmentEmail.Number).Select(x => x).ToList();
-                    shipmentEmail.Order = shipmentOrder;
+                    shipmentOrder.Shipments = shipmentOrder.Shipments.Where(x => x.Number == shipmentEmail.Number).ToList();
+                }
+
+                var locationCode = shipmentEmail.FulfillmentLocationCode;
+                if (!locationCode.IsNullOrEmpty()) {
+                    var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
                     shipmentEmail.StoreLocation = location;
                 }
             }
