@@ -123,11 +123,11 @@ body{font-family:'Segoe UI'; font-size:14px; color:#333333; height:100%; backgro
     color:#c6312e!important;
 }
 
-.ng-invalid:not(form){
+/* .ng-invalid:not(form){
     border-color:  #a94442;
     border-width: 1px;
     border-style: solid;
-}
+} */
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
     
 /* Safari only override */

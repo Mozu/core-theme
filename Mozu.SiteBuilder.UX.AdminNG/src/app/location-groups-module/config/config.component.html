@@ -92,11 +92,12 @@
                 <div class="row nomargin" formArrayName="boxItems" *ngFor="let item of model.locationGroupConfigForm.get('boxItems')['controls']; let rowIndex = index;">
                     <div [formGroupName]="rowIndex">
                         <div class="form-row col-md-2 for-no-padding">
-                            <input class="inputText form-control subform-text" id="boxName" (change)="markLocationGroupConfigFormDirty()" formControlName="name" />
+                            <input class="inputText form-control subform-text" id="boxName" (change)="markLocationGroupConfigFormDirty(rowIndex)" formControlName="name" />
                             <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value === '',
 											'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.value !== '' 
 											}">{{'LOCATIONGROUPCONFIG.FormLabels.name' | translate }}</span>
-                            <hr class="underline-from-left">
+                                            <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.touched) && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.valid)}" >
+                                            <span class="error" *ngIf="(model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.touched && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.name.valid))">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
                         </div>
 
                         <div class="form-row col-md-2 for-no-padding boxItemMargin">
@@ -105,7 +106,8 @@
                                 <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.length' | translate }}</span>
-                                <hr class="underline-from-left">
+                                                <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.touched) && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.valid) }" >
+                                            <span class="error" *ngIf="model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.touched && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.length.valid)">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
                             </div>
                             <div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">
                                 {{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>
@@ -117,7 +119,8 @@
                                 <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.width' | translate }}</span>
-                                <hr class="underline-from-left">
+                                                <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.touched) && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.valid) }" >
+                                            <span class="error" *ngIf="model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.touched && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.width.valid)">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
                             </div>
                             <div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">
                                 {{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>
@@ -129,7 +132,8 @@
                                 <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value === '',
 												'floating-label-not-empty': model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.value !== '' 
 												}">{{'LOCATIONGROUPCONFIG.FormLabels.height' | translate }}</span>
-                                <hr class="underline-from-left">
+                                                <hr class="underline-from-left" [ngClass]="{'redunderline-from-left':(model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.touched) && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.valid) }" >
+                                            <span class="error" *ngIf="model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.touched && (!model.locationGroupConfigForm.get('boxItems')['controls'][rowIndex].controls.height.valid)">{{'LOCATIONGROUP.FormsErrorMessages.nameRequired' | translate }}</span>
                             </div>
                             <div class="col-md-3 nomargin nopadding pull-left boxItemInputUnit">
                                 {{'LOCATIONGROUPCONFIG.FormLabels.inches' | translate }}</div>

@@ -28,7 +28,14 @@ export enum ErrorCode {
     LocationsGetFailed = <any>'LocationsGetFailed',
     LocationGroupsListGetFailed = <any>'LocationGroupsListGetFailed',
     GetLocationGroupDetailFailed = <any>'GetLocationGroupDetailFailed',
-    fetchCapabilitiesForSecureFormGetFailed= <any>'fetchCapabilitiesForSecureFormGetFailed'
+    fetchCapabilitiesForSecureFormGetFailed= <any>'fetchCapabilitiesForSecureFormGetFailed',
+    EmptyLocationGroupName= <any> 'EmptyLocationGroupName',
+    EmptyLocationGroupSites= <any> 'EmptyLocationGroupSites',
+    EmptyLocationGroupCodes= <any> 'EmptyLocationGroupCodes',
+    EmptyBoxTypeName= <any> 'EmptyBoxTypeName',
+    EmptyBoxTypeLength= <any> 'EmptyBoxTypeLength',
+    EmptyBoxTypeWidth= <any> 'EmptyBoxTypeWidth',
+    EmptyBoxTypeHeight= <any> 'EmptyBoxTypeHeight'
 }
 
 export enum ToastrCode {

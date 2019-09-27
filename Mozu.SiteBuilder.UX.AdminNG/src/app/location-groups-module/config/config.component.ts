@@ -7,9 +7,10 @@ import {
     CarrierModel,
     CarrierSettingsModel,
     CarrierShippingType,
-    ShippingMethodMappings
+    ShippingMethodMappings,
+    BoxType
 } from './config.model';
-import { FormBuilder, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormArray, FormControl, FormGroup, Validators  } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -251,10 +252,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private createBoxItem(): FormGroup {
         return this.fb.group({
-            name: '',
-            length: '',
-            width: '',
-            height: ''
+            name: ['', Validators.required],
+            length: ['', Validators.required],
+            width: ['', Validators.required],
+            height: ['', Validators.required]
         });
     }
 
@@ -570,12 +571,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
+       if (this.validateLocationGroup(lgConfigModel)) {
         this.updateLocationGroupConfig(lgConfigModel);
+       }
     }
 
     private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel) {
         this._loggerService.info('LocationGroupConfigComponent : updateLocationGroupConfig');
-
         this.configService.updateLocationGroupConfig(lgcModel).subscribe(response =>
             this.updateLocationGroupConfigSuccess(response),
             (response) => this.updateLocationGroupConfigError(response.error.message));
@@ -637,5 +639,37 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 .filter(v => v !== null);
         }
         return shippingTypeLst;
+    }
+
+    private validateLocationGroup(lgModel: LocationGroupConfigurationModel): boolean {
+        if (lgModel && lgModel.boxTypes.map(boxTypes => boxTypes.name).includes('')) {
+            this._tostrService.showError(ErrorCode.EmptyBoxTypeName);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+
+        }
+        if (lgModel && lgModel.boxTypes.map(boxTypes => boxTypes.length).includes('')) {
+            this._tostrService.showError(ErrorCode.EmptyBoxTypeLength);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+
+        }
+        if (lgModel && lgModel.boxTypes.map(boxTypes => boxTypes.width).includes('')) {
+            this._tostrService.showError(ErrorCode.EmptyBoxTypeWidth);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+
+        }
+        if (lgModel && lgModel.boxTypes.map(boxTypes => boxTypes.height).includes('')) {
+            this._tostrService.showError(ErrorCode.EmptyBoxTypeHeight);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+
+        }
+        return true;
     }
 }

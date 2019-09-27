@@ -47,9 +47,9 @@ export class LocationGroupConfigModel {
 
     export interface BoxType {
         name: string;
-        height: number;
-        width: number;
-        length: number;
+        height: string;
+        width: string;
+        length: string;
     }
 
     export interface LocationGroupConfigurationModel {
