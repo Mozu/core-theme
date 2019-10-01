@@ -627,6 +627,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             {
                 throw new VaeValidationConflictException($"Carrier not found.");
             }
+            if (configuration == null || string.IsNullOrWhiteSpace(configuration?.DefaultPrinterType))
+            {
+                throw new VaeValidationConflictException($"Default Printer Type for location code {returns.LocationCode} must not be null.");
+            }
 
             CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location, configuration);
             var serviceResponse = (await _CARSProxyClient.GenerateLabelUsingPOST(request)).ReadAsAsync().Result;
