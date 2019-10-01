@@ -38,6 +38,23 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 name: 'actualPrice',
                 type: 'float',
                 useNull: true
+                },
+            {
+                name: 'overridePrice',
+                type: 'float',
+                useNull: true
+            },
+            {
+                name: 'unitPrice',
+                type: 'float',
+                useNull: true,
+                persist: false,
+                convert: function (value, record) {
+                    if (record.get('overridePrice') !== null && record.get('overridePrice') !== undefined) {
+                        return record.get('overridePrice');
+                    }
+                    return record.get('actualPrice');
+                }
             },
             {
                 name: 'itemTax',
@@ -194,7 +211,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             },
             {
-                dataIndex: 'actualPrice',
+                dataIndex: 'unitPrice',
                 text: 'Unit Price',
                 draggable: false,
                 sortable: false,
