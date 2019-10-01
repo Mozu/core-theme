@@ -53,35 +53,9 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
             }
         }));
 
-        this.getShipments();
-    },
-
-    getShipments: function () {
-        var me = this;
         me.setLoading(true, this.body);
-        this.record.shipments = [];
-        this.record.filterShipment({
-            jsonData: {
-                filter: 'orderId==' + this.record.get('id') + ';shipmentStatus!=REASSIGNED'
-            },
-            success: function (response) {
-                var json = Ext.decode(response.responseText, true);
-                if (json.items) {
-                    me.record.shipments = json.items;
-                    me.getLocationInforForShipment(me.record.shipments);
-                }
-            },
-            failure: function (response) {
-
-                me.setLoading(false);
-                // error handling here
-                var json = Ext.decode(response.responseText, true),
-                    msg = (json && json.message) ? json.message : 'Error canceling order';
-
-                Taco.app.fireEvent('setmessage', msg, 'error');
-            },
-            scope: me
-        });
+        me.getLocationInforForShipment(me.record.get('shipments'));
+        me.setLoading(false, this.body);
     },
 
     getLocationInforForShipment: function (shipments) {

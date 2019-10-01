@@ -30,6 +30,7 @@ using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
+using Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -237,6 +238,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var order = (await orderWebApiClient.GetOrder(orderId, draft)).ReadAsSync();
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            var shipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED")).ReadAsSync();
+            if(shipments!=null)
+                order.Shipments = Mapper.Map<List<Shipment>>(shipments);
 
             var single = order.Map<Order>();
             if (single.CustomerId.HasValue)
