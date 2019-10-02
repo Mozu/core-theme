@@ -6,7 +6,8 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
     alias: 'widget.taco.tabformnew',
     requires: [
         'Taco.core.ux.grid.plugins.AutoSelect',
-        'Taco.view.order.widget.ShipmentTotalPanel'
+        'Taco.view.order.widget.ShipmentTotalPanel',
+        'Taco.view.order.widget.ShipmentTotalPanelEdit'
     ],
 
     // this is an offset adjustment to move the left nav up and down relative to the first subForm's top edge.
@@ -138,9 +139,124 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         items.push(this.scrollSpacer);
         items.push(this.formContainer);
 
+        this.createAdjustmentTotalStore = function() {
+            var me = this;
+            me.store = Ext.create('Ext.data.Store', {
+                model: 'Taco.model.ShipmentAdjustment',
+                data : [
+                    {
+                        id: 'shipment',
+                        adjustmentId: "shipmentAdjustment",
+                        name: 'Sub Total',
+                        originalAmount: me.shipmentRecord.lineItemSubtotal,
+                        adjustmentAmount: me.shipmentRecord.shipmentAdjustment
+                    },
+                    {
+                        id: 'itemTax',
+                        adjustmentId: "itemTaxAdjustment",
+                        name: 'Tax',
+                        originalAmount: me.shipmentRecord.lineItemTaxTotal,
+                        adjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment
+                    },
+                    {
+                        id: 'shippingSubtotal',
+                        adjustmentId: "shippingAdjustment",
+                        name: 'Shipping Total',
+                        originalAmount: me.shipmentRecord.shippingSubtotal,
+                        adjustmentAmount: me.shipmentRecord.shippingAdjustment
+                    },
+                    {
+                        id: 'shippingTaxTotal',
+                        adjustmentId: "shippingTaxAdjustment",
+                        name: 'Shipping Tax',
+                        originalAmount: me.shipmentRecord.shippingTaxTotal,
+                        adjustmentAmount: me.shipmentRecord.shippingTaxAdjustment
+                    },
+                    {
+                        id: 'handlingSubtotal',
+                        adjustmentId: "handlingAdjustment",
+                        name: 'Handling Total',
+                        originalAmount: me.shipmentRecord.handlingSubtotal,
+                        adjustmentAmount: me.shipmentRecord.handlingAdjustment
+                    },
+                    {
+                        id: 'handlingTaxTotal',
+                        adjustmentId: "handlingTaxAdjustment",
+                        name: 'Handling Tax',
+                        originalAmount: me.shipmentRecord.handlingTaxTotal,
+                        adjustmentAmount: me.shipmentRecord.handlingTaxAdjustment
+                    }
+                ],
+                getAdjustedShippingTotal: function(){
+                    return Ext.Array.sum(this.pluck('adjustedTotal'));
+                },
+                resetAdjustmentAmounts: function(){
+                    this.each(function(record, idx){
+                        record.set('adjustmentAmount', me.shipmentRecord[record.get('adjustmentId')]);
+                    })
+                }
+            });
+        };
+
+        this.getShippingAdjustmentsPayload = function () {
+            var me = this;
+                return {
+                    "orderId": this.record.get('id'),
+                    "shipmentNumber": this.shipmentRecord.number,
+                    "shipmentAdjustment": {
+                        shipmentAdjustment: me.store.getById('shipment').get('adjustmentAmount'),
+                        itemTaxAdjustment:  me.store.getById('itemTax').get('adjustmentAmount'),
+                        shippingAdjustment: me.store.getById('shippingSubtotal').get('adjustmentAmount'),
+                        shippingTaxAdjustment: me.store.getById('shippingTaxTotal').get('adjustmentAmount'),
+                        handlingAdjustment:me.store.getById('handlingSubtotal').get('adjustmentAmount'),
+                        handlingTaxAdjustment: me.store.getById('handlingTaxTotal').get('adjustmentAmount')
+                    }
+                }
+        };
+    
+        this.updateShipmentAdjustments = function () {
+            var me = this;
+            me.setLoading(true, this.body);
+            var payloadData = me.getShippingAdjustmentsPayload();
+    
+            this.record.updateShipmentAdjustments({
+                jsonData: payloadData,
+                success: function (response) {
+                    me.setLoading(false, this.body);
+                    var json = Ext.decode(response.responseText, true);
+                    if (!json || !json.success) {
+                        Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                        return;
+                    }
+                    Taco.app.fireEvent('setmessage', "Shipment totals updated Successfully", 'success');
+                    me.fireEvent('shipmentRefresh');
+
+                    me.shipmentTotals.show(true);
+                    me.shipmentTotalsEdit.hide(true);
+
+                    me.shipmentEditBtn.show(true);
+                    me.shipmentSaveBtn.hide(true);
+                    me.shipmentCancelBtn.hide(true);
+                },
+                failure: function (response) {
+                    me.setLoading(false, this.body);
+                    // error handling here
+                    Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
+                    me.store.resetAdjustmentAmounts();
+                },
+                scope: me
+            });
+        };
+
+        this.createAdjustmentTotalStore();
+
         //subtotals, orderlevel discounts, tax shipping, and totals
         this.shipmentTotals = Ext.create('Taco.view.order.widget.ShipmentTotalPanel', {
+            itemId: Ext.id(),
             margin: '0 0 20 0',
+            style: {
+                clear: "both"
+            },
             record: this.record,
             shipmentRecord: me.shipmentRecord,
             listeners: {
@@ -150,7 +266,93 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             }
         });
 
-        items.push(this.shipmentTotals);
+        this.shipmentTotalsEdit = Ext.create('Taco.view.order.widget.ShipmentTotalPanelEdit', {
+            margin: '0 0 20 0',
+            style: {
+                clear: "both"
+            },
+            record: this.record,
+            shipmentRecord: me.shipmentRecord,
+            store: me.store,
+            hidden: true,
+            listeners: {
+                shipmentRefresh: function () {
+                    me.fireEvent('shipmentRefresh');
+                }
+            }
+        });
+
+        this.shipmentEditBtn = Ext.create('Ext.Button', {
+            itemId: Ext.id(),
+            cls: 'Edit',
+            text: 'Edit',
+            style: {
+                "float": "right"
+            },
+            ui: 'action',
+            scale: 'medium',
+            margin: '0 0 0 0',
+            handler: function (button, event) {
+                me.shipmentTotals.hide(true);
+                me.shipmentTotalsEdit.show(true);
+
+                me.shipmentEditBtn.hide(true);
+                me.shipmentSaveBtn.show(true);
+                me.shipmentCancelBtn.show(true);
+            }
+        });
+
+        this.shipmentCancelBtn = Ext.create('Ext.Button', {
+            itemId: Ext.id(),
+            cls: 'cancel',
+            text: 'Cancel',
+            hidden: true,
+            ui: 'action',
+            scale: 'medium',
+            style: {
+                "float": "right",
+                "margin-left": "10px"
+            },
+            handler: function (button, event) {
+                me.shipmentTotals.show(true);
+                me.shipmentTotalsEdit.hide(true);
+
+                me.shipmentEditBtn.show(true);
+                me.shipmentSaveBtn.hide(true);
+                me.shipmentCancelBtn.hide(true);
+            }
+        });
+
+        this.shipmentSaveBtn = Ext.create('Ext.Button', {
+            cls: 'save',
+            hidden: true,
+            style: {
+                "float": "right"
+            },
+            text: 'Save',
+            ui: 'action',
+            scale: "medium",
+            margin: '0 0 0 0',
+            handler: function (button, event) {
+                me.updateShipmentAdjustments() 
+            }
+        });
+
+        var totalPanelItems = [
+            this.shipmentEditBtn,
+            this.shipmentCancelBtn,
+            this.shipmentSaveBtn,
+            this.shipmentTotals,
+            this.shipmentTotalsEdit
+        ];
+
+        this.totalPanel = Ext.widget({
+            xtype: 'container',
+            width: '500px',
+            items: totalPanelItems
+        });
+
+        items.push(this.totalPanel);
 
         this.items = items;
 

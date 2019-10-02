@@ -9,14 +9,13 @@
 Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     extend: 'Ext.container.Container',
     requires: [
-        'Taco.core.ux.picker.Selector',
         'Taco.model.ShipmentAdjustment'
     ],
 
     layout: {
         type: 'hbox',
         align: 'stretch',
-        pack: 'end'
+        pack: 'start'
     },
 
     defaults: { xtype: "component" },
@@ -41,522 +40,504 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
     */
     actionColumnWidth: 64,
 
-    createAdjustmentRowConfig: function() {
-        var me = this;
-        me.store = Ext.create('Ext.data.Store', {
-            model: 'Taco.model.ShipmentAdjustment',
-            data : [
-                {
-                    id: 'lineItemSubtotal',
-                    adjustmentId: "shipmentAdjustment",
-                    name: 'Sub Total',
-                    originalAmount: me.shipmentRecord.lineItemSubtotal,
-                    adjustmentAmount: me.shipmentRecord.shipmentAdjustment
-                },
-                {
-                    id: 'lineItemTax',
-                    adjustmentId: "itemTaxAdjustment",
-                    name: 'Tax',
-                    originalAmount: me.shipmentRecord.lineItemTax,
-                    adjustmentAmount: me.shipmentRecord.itemTaxAdjustment
-                },
-                {
-                    id: 'shippingSubtotal',
-                    adjustmentId: "shippingAdjustment",
-                    name: 'Shipping Total',
-                    originalAmount: me.shipmentRecord.shippingSubtotal,
-                    adjustmentAmount: me.shipmentRecord.shippingAdjustment
-                },
-                {
-                    id: 'shippingTaxTotal',
-                    adjustmentId: "shippingTaxAdjustment",
-                    name: 'Shipping Tax',
-                    originalAmount: me.shipmentRecord.shippingTaxTotal,
-                    adjustmentAmount: me.shipmentRecord.shippingTaxAdjustment
-                },
-                {
-                    id: 'handlingSubtotal',
-                    adjustmentId: "handlingAdjustment",
-                    name: 'Handling Total',
-                    originalAmount: me.shipmentRecord.handlingSubtotal,
-                    adjustmentAmount: me.shipmentRecord.handlingAdjustment
-                },
-                {
-                    id: 'handlingTaxTotal',
-                    adjustmentId: "handlingTaxAdjustment",
-                    name: 'Handling Tax',
-                    originalAmount: me.shipmentRecord.handlingTaxTotal,
-                    adjustmentAmount: me.shipmentRecord.handlingTaxAdjustment
-                }
-            ],
-            getAdjustedShippingTotal: function(){
-                return Ext.Array.sum(this.pluck('adjustedTotal'));
-            },
-            resetAdjustmentAmounts: function(){
-                this.each(function(record, idx){
-                    record.set('adjustmentAmount', me.shipmentRecord[record.get('adjustmentId')]);
-                })
-            }
-        });
-    },
+    
 
     initComponent: function (eOpts) {
         var me = this;
-        me.cls = 'shipmentform-detail-totalpanel x-grid-row';
+        me.cls = 'orderform-detail-totalpanel shipmentPanel x-grid-row';
 
         if(!this.shipmentRecord) {
             return;
         }
-        this.createAdjustmentRowConfig();
+        
         this.initUI();
-        me.callParent(arguments);
+
+         me.callParent(arguments);
     },
 
-    getAdjustmentDropdown: function (row) {
+    applyRecord: function (record) {
+        this.masterTable.update(record.getData());
+        this.initSummaryToggleButtons();
+        return record;
+    },
+
+
+    initToggleButton: function (selector, handler) {
         var me = this;
-       return Ext.widget({
-            xtype: 'combobox',
-            itemId: 'adjustmentType-' + row.get('id'),
-            margin: '0 0 0 15',
-            fieldStyle : {
-                'font-size': '12px;'
-            },
-            editable: false,
-            forceSelection: true,
-            width: 170,
-            value: -1,
-            store: [[1, 'Add to ' + row.get('name')], [-1, 'Subtract from ' + row.get('name')]],
-            style: {
-                'padding-right': '10px'
-            },
-            listeners: {
-                change: {
-                    scope: this,
-                    fn: function(field, newValue) {
-                        var record = me.store.findRecord('id', row.get('id'));
-                        var adjustmentCmp = me.down('#adjustmentTotal-' + record.get('id'));
-                        if(adjustmentCmp) {
-                            record.set('adjustmentAmount', (record.get('adjustmentAmount') * -1));
-                            if(record.get("adjustmentAmount") !== 0) {
-                                adjustmentCmp.update(record.formatCurrency(record.get("adjustedTotal")));
-                                me.adjustedTotalField.update(Taco.app.context.getCurrent().formatCurrency(me.store.getAdjustedShippingTotal()));
-                            }
-                        }
-                    }
-                }
-            },
-            flex: 2
-        });
-    },
-    
-    getAmountFormField: function(row) {
-        var me =this;
-        return  Ext.create('Ext.form.FieldContainer', {
-            itemId: Ext.id(),
-            name: 'adjustmentForm',
-            flex: 2,
-            items: [
-                {
-                xtype : 'label',
-                text : '$',            
-                border: 1,
-                height : 32,
-                width : 22,
-                style: {
-                    borderColor: 'gray',
-                    borderStyle: 'solid',
-                    background : '#E5E2E1',
-                    'margin-right' : '0px',
-                    'padding' : '9px 5px 5px 5px;',
-                    'border-right' : 0,
-                    'border-top-left-radius': '3px',
-                    'border-bottom-left-radius': '3px',
-                    'float': 'left'
-                }
-                },
-                {
-                    xtype : 'textfield',
-                    itemId: 'adjustmentField-' + row.get('id'),
-                    height: '32px',
-                    width: '100px',
-                    value : (row.get('adjustmentAmount') < 0 ) ? row.get('adjustmentAmount') * -1 : row.get('adjustmentAmount'),
-                    regex: /^([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\.[0-9][0-9])?$/,
-                    fieldStyle: {
-                        'width': '98px',
-                        'height': '27px',
-                        'border-bottom': '0px'
-                    },       
-                    style: {
-                        'width':'100px',
-                        'height': '30px',
-                        'borderColor': 'gray',
-                        'borderStyle': 'solid',
-                        'padding' : '1px',
-                        'margin-left' : '0px',
-                        'border-left' : 0,
-                        'border-top-right-radius': '3px',
-                        'border-bottom-right-radius': '3px',
-                        'display': 'inline-block',
-                        'border-width': '1px'
-                    },
-                    allowBlank: true,
-                    validateOnChange : true,
-                    listeners: {
-                        change: function(cmp, newValue) {
-                            var record = me.store.findRecord('id', row.get('id'));
-                            var adjustmentCmp = me.down('#adjustmentTotal-' + row.get('id'));
-                            var dropdownCmp = me.down('#adjustmentType-' + row.get('id'));
-                            if(adjustmentCmp && dropdownCmp && record ){
-                                if(newValue === "" || newValue === " " || newValue < 0) {
-                                    adjustmentCmp.update('');
-                                    return;
-                                }
-                                if(!cmp.validate()){
-                                    return;
-                                }
-                                
-                                var adjustment = dropdownCmp.value * newValue;
-                                record.set('adjustmentAmount', adjustment);
-                                adjustmentCmp.update(row.formatCurrency(row.get("adjustedTotal")));
-                                me.adjustedTotalField.update(Taco.app.context.getCurrent().formatCurrency(me.store.getAdjustedShippingTotal()));
-                            } 
-                        }
-                    }
-                }
-            ]
-        })
-    },
 
-    getEditableRowContainer: function() {
-        var me = this;
-        var items = []
+        if (me.el) {
+            var summary = me.el.down(selector);
 
-        me.store.each( function(row){
-            var adjustmentTotalField = Ext.widget({
-                xtype: 'component',
-                itemId: 'originalTotal-' + row.get('id'),
-                style: {
-                    'text-align' : 'right',
-                    'padding' : '10px'
-                },
-                cls: Taco.baseCSSPrefix + 'originalTotal',
-                html: row.formatCurrency(row.get('originalAmount')),
-                autoEl: {
-                    tag: 'span'
-                },
-                flex: 1
-            });
-            items.push(
+            if (summary && summary.dom.children.length <= 0) {
+
                 Ext.widget({
-                    itemId: Ext.id(),
-                    xtype: 'panel',
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [
-                        {
-                            html: '<div class="label" style="padding:10px;">' + row.get('name') + '</div>',
-                            flex: 1
-                        },
-                        adjustmentTotalField
-                    ],
-                    flex: 1
-                })
-                //html: '<span class="label">' + row.name + '</span><span class="price">' + row.amount +'</span>'
-            );
-            items.push(me.getEditableRow(row));
-        });
+                    xtype: "button",
+                    cls: 'summary-toggle',
+                    padding: '6px 0px 5px 6px',
+                    renderTo: summary,
+                    width: 30,
+                    // right arrow
+                    glyph: "XE927@mozicons",
+                    ui: 'action',
+                    scale: 'small',
+                    handler: handler,
+                    scope: me
+                });
 
-        var container = Ext.widget({
-            itemId: Ext.id(),
-            xtype: 'panel',
-            width: 500,
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            defaults: {
-                // applied to each contained panel
-                bodyStyle: 'padding:5px'
-            },
-            items: items
-            
-        });
-       
-         return container;
-    },
-
-    getEditableRow: function(row) {
-        var me =this;
-        return Ext.widget({
-            itemId: Ext.id(),
-            xtype: 'panel',
-            layout: {
-                type: 'hbox',
-                align: 'stretch'
-            },
-            items: [
-                me.getAdjustmentDropdown(row),
-                me.getAmountFormField(row),
-                me.getAdjustedValueField(row)
-            ],
-            flex: 1
-        })
-    },
-
-    getAdjustedValueField: function(row){
-        return Ext.widget({
-            xtype: 'component',
-            itemId: 'adjustmentTotal-' + row.get('id'),
-            cls: Taco.baseCSSPrefix + 'adjustmentTotal',
-            html: (row.get('adjustmentAmount') === 0) ? '' : row.formatCurrency(row.get('adjustmentAmount')),
-            style: {
-                'text-align':'right',
-                'padding': '10px 10px 0 0'
-            },
-            autoEl: {
-                tag: 'span'
-            },
-            flex: 1
-        });
-    },
-
-    getAdjustedTotalField: function() {
-        var me = this;
-        return Ext.widget({
-            xtype: 'component',
-            itemId: 'adjustedTotal',
-            cls: Taco.baseCSSPrefix + 'adjustedTotal',
-            html: Taco.app.context.getCurrent().formatCurrency(me.store.getAdjustedShippingTotal()),
-            style: {
-                'text-align':'right',
-                'font-weight': 600,
-                'padding': "20px 37px 10px 0"
-            },
-            autoEl: {
-                tag: 'div'
             }
-        });
+        }
+
     },
-    
+
+    initSummaryToggleButtons: function () {
+
+        var me = this;
+
+        me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
+        me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
+        me.initToggleButton(".tax-summary", me.toggleTaxDetails);
+        me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
+
+    },
 
     initUI: function () {
-        this.items = [];
+        var me = this,
+            isEditable = me.isEditable,
+            flex = (isEditable) ? .5 : 1;
+
+        this.initLeftPanel();
+
+        this.masterTable = Ext.create("Ext.Component", {
+            data: this.shipmentRecord,
+            flex: flex,
+            tpl: this.getMasterTemplate(),
+            listeners: {
+                boxready: {
+                    fn: function () {
+                        me.initSummaryToggleButtons();
+                    },
+                    scope: me
+                }
+            }
+        });
+
+        this.items = [
+            this.leftPanel,
+            {
+                xtype: "container",
+                flex: 1,
+                items: [
+                    this.masterTable
+                ]
+            }
+        ];
+
+    },
+
+    toggleAdjustmentDetails: function (btn, e) {
+
+        this.handleToggle(btn, '.adjustment');
+
+    },
+
+    toggleShippingDetails: function (btn, e) {
+
+        this.handleToggle(btn, '.shipping');
+
+    },
+
+    toggleHandlingDetails: function (btn, e) {
+
+        this.handleToggle(btn, '.handling');
+
+    },
+
+    toggleTaxDetails: function (btn, e) {
+
+        this.handleToggle(btn, '.tax');
+
+    },
+
+    handleToggle: function (btn, selector) {
 
         var me = this,
-            isEditable = me.isEditable;
+            selector = ".pricing-detail-collapsable" + selector,
+            el = this.masterTable.el.down(selector),
+            isCollapsed = (el.hasCls("collapsed"));
 
-        this.adjustedTotalField = this.getAdjustedTotalField();
-
-        this.editablePanel = Ext.widget({
-            xtype: 'container',
-            hidden: !me.isEditable,
-            itemId: 'shipmentTotalPanelEdit',
-            items: [this.getEditableRowContainer()]
-        });
-
-        var data = [];
-
-        me.store.each(function(record) {
-            data.push(record.getData());
-        });
-
-        this.summaryPanel= Ext.widget({
-            xtype: 'component',
-            hidden: me.isEditable,
-            itemId: 'shipmentTotalPanelSummary',
-            width: 400,
-            tpl: [
-                '<table>',
-                    '<tpl for=".">',
-                        '<tr>',
-                            '<td style="width:180px;padding:10px;font-size:13px;"><span class="label">{name}</span></td>',
-                            '<td style="width:180px;padding:10px;font-size:13px;text-align:right"><span class="price">',
-                            '{[this.formatCurrency(values.adjustedTotal)]}',
-                            '</span></td>',
-                        '</tr>',
-                    '</tpl>',    
-                '</table>',
-                {
-                    formatCurrency: function (value) {
-                        return Taco.app.context.getCurrent().formatCurrency(value);
-                    }
-                }
-            ],
-            data: data
-        });
-
-        this.btnCancelAdjustments = Ext.widget('button', {
-            itemId: 'btnCancelAdjustments',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Cancel',
-            hidden: !me.isEditable,
-            handler: function (evt) {
-                me.store.resetAdjustmentAmounts();
-                me.toggleEdit(false);
-            }
-        });
-
-        this.btnSaveAdjustments = Ext.widget('button', {
-            itemId: 'btnSaveAdjustments',
-            ui: 'action-primary',
-            scale: 'medium',
-            text: 'Save',
-            style: {
-                'margin-right': '10px',
-            },
-            hidden: !me.isEditable,
-            handler: function (evt) {
-                if(me.store.getAdjustedShippingTotal() !== me.shipmentRecord.total) {
-                    me.updateShipmentAdjustments();
-                    me.toggleEdit(false);
-                }
-            }
-        });
-
-        this.btnEditShipmentTotals = Ext.widget('button', {
-            itemId: 'btnEditShipmentTotals',
-            ui: 'action',
-            scale: 'medium',
-            text: 'Edit',
-            hidden: me.isEditable,
-            handler: function (evt) {
-                me.toggleEdit(true);
-            }
-        });
-
-        this.masterTableId = Ext.id();
-        this.totalsContainer = Ext.widget({
-            xtype: 'container',
-            //padding: '0 20 10 20',
-            layout: {
-                type: 'vbox',
-                align: 'right'
-            },
-            items: [
-                {
-                    xtype: 'container',
-                    hidden: me.isShipmentAction(),
-                    width: 400,
-                    layout: {
-                        type: 'hbox',
-                        align: 'stretch'
-                    },
-                    items: [
-                        {
-                            html: '<h3 >' + (this.shipmentRecord.shipmentStatus.toLowerCase() == 'bopis' ? 'Store Pickup Total' : 'Shipment Total') + '</h3>',
-                            flex: 1,
-                        },
-                        {
-                            xtype: 'container',
-                            layout: 'auto',
-                            items: [
-                                me.btnSaveAdjustments,
-                                me.btnCancelAdjustments,
-                                me.btnEditShipmentTotals,
-                            ],
-                            flex: 1,
-                            style: {
-                                'padding-right': '37px',
-                                'text-align': 'right'
-                            }
-                        }
-                        
-                    ]
-                },
-                {
-                    xtype: 'container',
-                    layout: {
-                        type: 'vbox',
-                        align: 'right'
-                    },
-                    items: [
-                        this.summaryPanel,
-                        this.editablePanel,
-                        this.adjustedTotalField
-                    ]
-                }
-            ]
-        });
-
-        this.items.push(this.totalsContainer);
-    },
-
-    toggleEdit: function(toggle){
-        if(toggle){
-            this.isEditable = true;
-            this.editablePanel.show();
-            this.btnSaveAdjustments.show();
-            this.btnCancelAdjustments.show();
-            
-            this.summaryPanel.hide();
-            this.btnEditShipmentTotals.hide();
-            return; 
+        if (isCollapsed) {
+            el.removeCls("collapsed")
+            // down arrow
+            btn.setGlyph("XE92A");
+        } else {
+            el.addCls("collapsed");
+            // right arrow
+            btn.setGlyph("XE927");
         }
-            this.editablePanel.hide();
-            this.btnSaveAdjustments.hide();
-            this.btnCancelAdjustments.hide();
 
-            this.summaryPanel.show();
-            this.btnEditShipmentTotals.show();
+        me.update();
     },
 
-    isShipmentAction: function () {
-        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'fulfilled' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled')
-            return true;
-        return false;
-    },
-
-    getShippingAdjustmentsPayload: function () {
+    initLeftPanel: function () {
         var me = this;
-            return {
-                "orderId": this.record.get('id'),
-                "shipmentNumber": this.shipmentRecord.number,
-                "shipmentAdjustment": {
-                    shipmentAdjustment: me.store.getById('lineItemSubtotal').adjustmentAmount,
-                    itemTaxAdjustment:  me.store.getById('lineItemTax').adjustmentAmount,
-                    shippingAdjustment: me.store.getById('shippingSubtotal').adjustmentAmount,
-                    shippingTaxAdjustment: me.store.getById('shippingTax').adjustmentAmount,
-                    handlingAdjustment:me.store.getById('handlingSubtotal').adjustmentAmount,
-                    handlingTaxAdjustment: me.store.getById('handlingTaxTotal').adjustmentAmount
+
+        var items = [];
+
+        items.push({
+            xtype: "component",
+            html: ""
+        });
+
+        this.leftPanel = Ext.create("Ext.container.Container", {
+            cls: "orderform-detail-totalpanel-leftpanel",
+            layout: {
+                type: 'form'
+            },
+            items: items,
+            flex: .5
+        });
+
+    },
+
+    isOrderEditable: function () {
+        var orderStatus = this.record.get('orderStatus');
+        if (orderStatus == 'Pending' || orderStatus == 'Abandoned')
+            return true;
+        else
+            return false;
+    },
+
+    tableStartTpl: new Ext.XTemplate(
+        '<table class="x-grid-table x-grid-with-row-lines collapsed {isEditableCls} {classNames}" border="0" cellspacing="0" cellpadding="0" style="width:90%; margin-left: auto;">',
+        // todo make this dynamic and pulls from grid header to get correct widths;
+        '<colgroup><col class="" style="width:30px;text-align:left"></colgroup>',
+        '<colgroup><col class="" style="text-align:left"></colgroup>',
+        '<colgroup><col class="" style="width:100px;text-align:right"></colgroup>',
+        '<colgroup><col class="" style="width:165px;text-align:right"></colgroup>',
+        '<colgroup><col class="" style="width:{actionColumnWidth}px;"></colgroup>'
+    ),
+
+    /**
+     *   The second section of XTemplate that is after the order adjustment row and before the shipping adjustment row;
+    */
+    subTpl_2: new Ext.XTemplate(
+
+        '<tr class="shipping-handling-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Handling Subtotal</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingSubtotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+
+        '<tpl if="isEditable || handlingAdjustment &lt; 0">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="handlingAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="handlingAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingAdjustment)]}</div></td>',
+        '<td itemId="handlingAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>',
+
+        '<tr class="shipping-handling-item handlingTax">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Handling Tax</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxTotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+
+        '<tpl if="isEditable || handlingTaxAdjustment &lt; 0">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="handlingTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="handlingTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxAdjustment)]}</div></td>',
+        '<td itemId="handlingTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>'
+    ),
+
+    /**
+     *   The third section of XTemplate that is after the shipping adjustment row
+    */
+    subTpl_3: new Ext.XTemplate(
+        
+        '<tr class="shipping-handling-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipping Subtotal</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+
+        '<tpl if="isEditable || shippingAdjustment">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="shippingAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="shippingAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAdjustment)]}</div></td>',
+        '<td itemId="shippingAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>',
+
+        '<tr class="shipping-handling-item handlingTax">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Tax</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxTotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+
+        
+        '<tpl if="isEditable || shippingTaxAdjustment">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="shippingTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="shippingTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxAdjustment)]}</div></td>',
+        '<td itemId="shippingTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>'
+    ),
+
+    subTpl_4: new Ext.XTemplate(
+        
+
+    ),
+
+    subTpl_5: new Ext.XTemplate(
+
+        '<div class="{tdInnerCls} {[ (values.adjustmentTotal < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.adjustmentTotal)]}</div>'
+
+    ),
+
+    subTpl_6: new Ext.XTemplate(
+
+        '<tr class="subtotalrow">',
+        '<th></th>',
+        '<th class="summary"><div class="{tdInnerCls}">Subtotal</div></th>',
+        '<th></th>',
+        '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemSubtotal)]}</div></th>',
+        '<th></th>',
+        '</tr>'
+
+    ),
+
+    subTpl_7: new Ext.XTemplate(
+
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTotal + values.lineItemTaxTotal)]}</div>'
+
+    ),
+
+    subTpl_10: new Ext.XTemplate(
+
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.handlingTotal)]}</div>'
+
+    ),
+
+    subTpl_8: new Ext.XTemplate(
+
+        '<tr class="shipping-handling-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipment Subtotal</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+
+        '<tpl if="isEditable == \'true\'">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="shipmentAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="shipmentAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shipmentAdjustment)]}</div></td>',
+        '<td itemId="shipmentAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>',
+        
+        '<tpl if="lineItemTaxTotal &gt; 0">',
+        '<tr class=shipping-handling-item shippingTax">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipment Tax</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxTotal)]}</div></td>',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>',
+
+        '<tpl if="isEditable || itemTaxAdjustment">',
+        '<tr class="tax-item">',
+        '<td class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="itemTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="itemTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxAdjustment)]}</div></td>',
+        '<td itemId="itemTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"></td>',
+        '</tr>',
+        '</tpl>'
+    ),
+
+    subTpl_9: new Ext.XTemplate(
+
+        '<tr class="totalrow" >',
+        '<th></th>',
+        '<th class="summary"><div class="{tdInnerCls}">Shipment Total</div></th>',
+        '<th></th>',
+        '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.total)]}</div></th>',
+        '<th></th>',
+        '</tr>'
+
+    ),
+
+    /**
+    * The main xTemplate that initializes the view. It will load the 7 subTemplates and create the dom needed for the orderAjustment ui and the shippingAdjustment ui.
+    * Note: the master template is only rendered once because the orderAjustment and shipping adjusment contain extjs components; 
+    * THE SUBTEMPLATES WILL RERENDER AFTER EVERY UPDATE OF THE ORDER RECORD;
+    */
+    getMasterTemplate: function () {
+        var me = this,
+            tdCls = "taco-grid-cell ",
+            tdInnerCls = "taco-grid-cell-inner ",
+            priceCls = "price-detail ",
+            isEditable = this.isEditable,
+            isEditableCls = (isEditable) ? "taco-editable " : "",
+            // need to fake an editable field in the template dom. if editable needs to be an anchor tag to allow for tabbing and div when uneditable
+            fakeInputDom = (isEditable) ? "a " : "div";
+
+        return [
+
+            '{%',
+            // add some css classes to the values data to be used in xTemplates
+            'values.tdCls = "' + tdCls + '";values.tdInnerCls = "' + tdInnerCls + '";values.isEditableCls = "' +
+            isEditableCls + '";values.actionColumnWidth = "' + me.actionColumnWidth + '";values.priceCls = "' + priceCls + '";values.isEditable = "' + isEditable + '";',
+            '%}',
+
+            // subtotal
+            '{[this.getSubTpl("tableStartTpl", values)]}',
+
+            //'<thead itemId="taco-subTpl_6">',
+            //'{[this.getSubTpl("subTpl_6", values)]}',
+            //'</thead>',
+
+            '</table>',
+
+            // Shipment
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipping"})]}',
+
+            '<thead>',
+            '<tr class="subtotalrow">',
+            '<th><div class="{[ (values.lineItemSubtotal != 0 || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
+            '<th></th>',
+
+            '<th class="summary-price" itemId="taco-subTpl_7">',
+            '{[this.getSubTpl("subTpl_7", values)]}',
+            '</th>',
+
+            '<th></th>',
+            '</tr>',
+            '</thead>',
+
+            '<tbody itemId="taco-subTpl_8">',
+            '{[this.getSubTpl("subTpl_8", values)]}',
+            '</tbody>',
+
+            '</table>',
+
+            // handling template - output class level subTemplate 2.  Note: this will contain extjs xTemplates and will render with each change 
+
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable handling"})]}',
+
+            '<thead>',
+            '<tr class="subtotalrow">',
+            '<th><div class="{[ (values.handlingAmount != 0 || ' + isEditable + ') ? "handling-summary" : "" ]}"></div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">Handling</div></th>',
+            '<th></th>',
+
+            '<th class="summary-price" itemId="taco-subTpl_10">',
+            '{[this.getSubTpl("subTpl_10", values)]}',
+            '</th>',
+
+            '<th></th>',
+            '</tr>',
+            '</thead>',
+
+
+            '<tbody itemId="taco-subTpl_2">',
+            '{[this.getSubTpl("subTpl_2", values)]}',
+            '</tbody>',
+
+            '</table>',
+
+            // Shipping
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
+
+            '<thead itemId="taco-subTpl_4">',
+            '<tr class="subtotalrow">',
+            '<th><div class="{[ (values.taxDutyTotal != 0 || ' + isEditable + ') ? "tax-summary" : "" ]}"></div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
+            '<th></th>',
+            '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div></th>',
+            '<th></th>',
+            '</tr>',
+            '</thead>',
+
+            // output class level subTemplate 3.  Note: this will contain extjs xTemplates and will render with each change 
+            '<tbody itemId="taco-subTpl_3">',
+            '{[this.getSubTpl("subTpl_3", values)]}',
+            '</tbody>',
+
+            '</table>',
+
+            // total
+            '{[this.getSubTpl("tableStartTpl", values)]}',
+
+            '<thead itemId="taco-subTpl_9">',
+            '{[this.getSubTpl("subTpl_9", values)]}',
+            '</thead>',
+
+            '</table>',
+            {
+                view: me,
+                getSubTpl: function (tplName, values, params) {
+                    var tpl = this.view[tplName];
+                    tpl.getCurrencyFormat = this.getCurrencyFormat;
+                    values.isEditable = (isEditable) ? 'true' : 'false'; 
+                    if (params) {
+                        values = Ext.apply(values, params);
+                    }
+                    var tplTxt = tpl.apply(values);
+                    return tplTxt;
+                },
+                getCurrencyFormat: function (v) {
+                    var retVal,
+                        isNegative;
+
+                    v = v - 0;
+
+                    if (v < 0) {
+                        isNegative = true;
+                        v = -v;
+                    }
+                    v = Taco.app.context.getCurrent().formatCurrency(v);
+
+
+                    if (isNegative) {
+                        retVal = "(" + v + ")";
+                    } else {
+                        retVal = v;
+                    }
+
+                    return retVal;
                 }
             }
+        ];
     },
-
-    updateShipmentAdjustments: function () {
-        var me = this;
-        me.setLoading(true, this.body);
-        var payloadData = me.getShippingAdjustmentsPayload();
-
-        this.record.updateShipmentAdjustments({
-            jsonData: payloadData,
-            success: function (response) {
-                me.setLoading(false, this.body);
-                var json = Ext.decode(response.responseText, true);
-                if (!json || !json.success) {
-                    Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
-                    return;
-                }
-                Taco.app.fireEvent('setmessage', "Shipment totals updated Successfully", 'success');
-                me.fireEvent('shipmentRefresh');
-            },
-            failure: function (response) {
-                me.setLoading(false, this.body);
-                // error handling here
-                Taco.app.fireEvent('setmessage', 'Error while updating shipment totals', 'error');
-                me.store.resetAdjustmentAmounts();
-            },
-            scope: me
-        });
-    },
-
     /**
      * Do any class level cleanup. Destroy and null any scoped refs.     
      */
     onDestroy: function () {
         this.callParent(arguments);
     }
-
 });

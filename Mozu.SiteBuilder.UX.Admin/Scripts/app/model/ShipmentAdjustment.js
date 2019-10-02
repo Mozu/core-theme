@@ -8,6 +8,7 @@ Ext.define("Taco.model.ShipmentAdjustment", {
     idProperty: "id",
     fields: [
         { name: "id", type: "string" },
+        { name: "adjustmentId", type: "string" },
         { name: "name", type: "string" },
         { name: "originalAmount", type: "float", "defaultValue": 0},
         { name: "adjustedTotal", type: "float", "defaultValue": 0},
