@@ -242,6 +242,8 @@
             isEditable = me.isEditable,
             flex = (isEditable) ? .5 : 1;
 
+        this.initLeftPanel();
+
         this.masterTable = Ext.create("Ext.Component", {
             data: me.shipmentRecord,
             flex: flex,
@@ -260,7 +262,7 @@
             this.leftPanel,
             {
                 xtype: "container",
-                flex: .5,
+                flex: 1,
                 items: [
                     this.masterTable
                 ]
@@ -280,7 +282,7 @@
             Ext.apply(data, {
                 tdCls: "taco-grid-cell ",
                 tdInnerCls: "taco-grid-cell-inner ",
-                priceCls: "price-detail "
+                priceCls: "price-detail-shipment "
             });
 
             // do a quick check to make sure the component hasn't been destroyed;

@@ -93,9 +93,8 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         var me = this;
 
-        me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
-        me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
-        me.initToggleButton(".tax-summary", me.toggleTaxDetails);
+        me.initToggleButton(".shipment-summary", me.toggleShippingDetails);
+        me.initToggleButton(".shipping-summary", me.toggleTaxDetails);
         me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
 
     },
@@ -134,15 +133,9 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
     },
 
-    toggleAdjustmentDetails: function (btn, e) {
-
-        this.handleToggle(btn, '.adjustment');
-
-    },
-
     toggleShippingDetails: function (btn, e) {
 
-        this.handleToggle(btn, '.shipping');
+        this.handleToggle(btn, '.shipment');
 
     },
 
@@ -154,7 +147,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
     toggleTaxDetails: function (btn, e) {
 
-        this.handleToggle(btn, '.tax');
+        this.handleToggle(btn, '.shipping');
 
     },
 
@@ -231,11 +224,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '</tr>',
 
         '<tpl if="isEditable || handlingAdjustment &lt; 0">',
-        '<tr class="tax-item">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="handlingAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="handlingAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingAdjustment)]}</div></td>',
-        '<td itemId="handlingAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="handlingAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.handlingAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.handlingAdjustment)]}</div></td>',
+        '<td itemId="handlingAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>',
@@ -249,11 +242,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '</tr>',
 
         '<tpl if="isEditable || handlingTaxAdjustment &lt; 0">',
-        '<tr class="tax-item">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="handlingTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="handlingTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxAdjustment)]}</div></td>',
-        '<td itemId="handlingTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="handlingTaxAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.handlingTaxAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.handlingTaxAdjustment)]}</div></td>',
+        '<td itemId="handlingTaxAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>'
@@ -273,11 +266,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '</tr>',
 
         '<tpl if="isEditable || shippingAdjustment">',
-        '<tr class="tax-item">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="shippingAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="shippingAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingAdjustment)]}</div></td>',
-        '<td itemId="shippingAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="shippingAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.shippingAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.shippingAdjustment)]}</div></td>',
+        '<td itemId="shippingAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>',
@@ -292,11 +285,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         
         '<tpl if="isEditable || shippingTaxAdjustment">',
-        '<tr class="tax-item">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="shippingTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="shippingTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxAdjustment)]}</div></td>',
-        '<td itemId="shippingTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="shippingTaxAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.shippingTaxAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.shippingTaxAdjustment)]}</div></td>',
+        '<td itemId="shippingTaxAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>'
@@ -341,18 +334,18 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipment Subtotal</div></td>',
+        '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipment Total</div></td>',
         '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
 
-        '<tpl if="isEditable == \'true\'">',
-        '<tr class="tax-item">',
+        '<tpl if="values.isEditable">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
-        '<td class="{tdCls}"><div itemId="shipmentAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="shipmentAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.shipmentAdjustment)]}</div></td>',
-        '<td itemId="shipmentAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="itemAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
+        '<td class="{tdCls}"><div itemId="itemAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.shipmentAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.shipmentAdjustment)]}</div></td>',
+        '<td itemId="itemAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>',
@@ -368,11 +361,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '</tpl>',
 
         '<tpl if="isEditable || itemTaxAdjustment">',
-        '<tr class="tax-item">',
+        '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="itemTaxAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
-        '<td class="{tdCls}"><div itemId="itemTaxAdjustmentField" class="{priceCls} {tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxAdjustment)]}</div></td>',
-        '<td itemId="itemTaxAdjustmentTotal" class="{tdCls}"></td>',
+        '<td class="{tdCls}"><div itemId="itemTaxAdjustmentField" class="{priceCls} {tdInnerCls} {[ (values.lineItemTaxAdjustment < 0) ? "negative-currency" : "" ]}">{[this.getCurrencyFormat(values.lineItemTaxAdjustment)]}</div></td>',
+        '<td itemId="itemTaxAdjustmentTotal" class="{tdCls} adjustmentTotal"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
         '</tpl>'
@@ -399,7 +392,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         var me = this,
             tdCls = "taco-grid-cell ",
             tdInnerCls = "taco-grid-cell-inner ",
-            priceCls = "price-detail ",
+            priceCls = "price-detail-shipment ",
             isEditable = this.isEditable,
             isEditableCls = (isEditable) ? "taco-editable " : "",
             // need to fake an editable field in the template dom. if editable needs to be an anchor tag to allow for tabbing and div when uneditable
@@ -423,12 +416,12 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             '</table>',
 
             // Shipment
-            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipping"})]}',
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipment"})]}',
 
             '<thead>',
             '<tr class="subtotalrow">',
-            '<th><div class="{[ (values.lineItemSubtotal != 0 || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
-            '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
+            '<th><div class="{[ (values.lineItemSubtotal != 0 || ' + isEditable + ') ? "shipment-summary" : "" ]}"></div></th>',
+            '<th class="summary"><div class="{tdInnerCls}">Shipment</div></th>',
             '<th></th>',
 
             '<th class="summary-price" itemId="taco-subTpl_7">',
@@ -471,11 +464,11 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             '</table>',
 
             // Shipping
-            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable tax"})]}',
+            '{[this.getSubTpl("tableStartTpl", values, {classNames:"pricing-detail-collapsable shipping"})]}',
 
             '<thead itemId="taco-subTpl_4">',
             '<tr class="subtotalrow">',
-            '<th><div class="{[ (values.taxDutyTotal != 0 || ' + isEditable + ') ? "tax-summary" : "" ]}"></div></th>',
+            '<th><div class="{[ (values.taxDutyTotal != 0 || ' + isEditable + ') ? "shipping-summary" : "" ]}"></div></th>',
             '<th class="summary"><div class="{tdInnerCls}">Shipping</div></th>',
             '<th></th>',
             '<th class="summary-price"><div class="{tdInnerCls}">{[this.getCurrencyFormat(values.shippingTotal)]}</div></th>',

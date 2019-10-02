@@ -146,9 +146,9 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 data : [
                     {
                         id: 'shipment',
-                        adjustmentId: "shipmentAdjustment",
+                        adjustmentId: "itemAdjustment",
                         name: 'Sub Total',
-                        originalAmount: me.shipmentRecord.lineItemSubtotal,
+                        originalAmount: me.shipmentRecord.lineItemTotal,
                         adjustmentAmount: me.shipmentRecord.shipmentAdjustment
                     },
                     {
@@ -287,11 +287,11 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             cls: 'Edit',
             text: 'Edit',
             style: {
-                "float": "right"
+                "float": "right",
+                "margin": "0 10px 0 0"
             },
             ui: 'action',
             scale: 'medium',
-            margin: '0 0 0 0',
             handler: function (button, event) {
                 me.shipmentTotals.hide(true);
                 me.shipmentTotalsEdit.show(true);
@@ -311,7 +311,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             scale: 'medium',
             style: {
                 "float": "right",
-                "margin-left": "10px"
+                "margin": "0 10px 0 10px"
             },
             handler: function (button, event) {
                 me.shipmentTotals.show(true);
