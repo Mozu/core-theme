@@ -59,6 +59,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Order Order { get; set; }
         public Location.Contracts.Location StoreLocation { get; set; }
     }
+    
+    public class OrderEmailItem : OrderItem {
+        public Location.Contracts.Location StoreLocation { get; set; }
+    }
+
+    public class OrderEmail : Order {
+        public List<OrderEmailItem> Items { get; set; }
+    }
 
     [ContextInitialization]
     [IgnoreDataViewMode]
@@ -505,6 +513,19 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     shipmentEmail.StoreLocation = location;
                 }
             }
+            
+            if (obj is OrderEmail orderEmail)
+            {
+                foreach (var item in orderEmail.Items)
+                {
+                    if (item.FulfillmentMethod.EqualsIgnoreCase("pickup") && !item.FulfillmentLocationCode.IsNullOrEmpty())
+                    {
+                        var location = (await _locationRuntimeWebApiClient.GetLocation(item.FulfillmentLocationCode)).ReadAsSync();
+                        item.StoreLocation = location;
+                    }
+                }
+            }
+            
             return obj;
         }
 
