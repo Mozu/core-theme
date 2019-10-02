@@ -222,7 +222,8 @@
                 beforeEdit: function (editor, context, eOpts) {
                     var plugin = this;
                     plugin.editor.form.findField('itemTax').disable();
-                    //editor.record.set('overridePrice', 10);
+                    if (editor && !editor.record.get('overridePrice'))
+                        editor.record.set('overridePrice', editor.record.get('actualPrice'));
 
                     if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'

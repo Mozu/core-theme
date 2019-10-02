@@ -374,10 +374,10 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             });
 
             if (model && shipment.fulfillmentLocationCode) {
-                model.exclusionListLocationCode = [{
+                model.exclusionListLocationCode.push({
                     locationCode: shipment.fulfillmentLocationCode,
                     orderItemID: element.lineId
-                }];
+                });
             }
         });
         
