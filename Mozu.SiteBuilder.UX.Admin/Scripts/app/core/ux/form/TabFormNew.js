@@ -149,42 +149,49 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                         adjustmentId: "itemAdjustment",
                         name: 'Shipment Total',
                         originalAmount: me.shipmentRecord.lineItemTotal,
+                        originalAdjustmentAmount: me.shipmentRecord.shipmentAdjustment,
                         adjustmentAmount: me.shipmentRecord.shipmentAdjustment
+                        
                     },
                     {
                         id: 'itemTax',
                         adjustmentId: "itemTaxAdjustment",
                         name: 'Shipment Tax',
                         originalAmount: me.shipmentRecord.lineItemTaxTotal,
-                        adjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment
+                        originalAdjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment,
+                        adjustmentAmount: 0
                     },
                     {
                         id: 'shippingSubtotal',
                         adjustmentId: "shippingAdjustment",
                         name: 'Shipping Total',
                         originalAmount: me.shipmentRecord.shippingSubtotal,
-                        adjustmentAmount: me.shipmentRecord.shippingAdjustment
+                        originalAdjustmentAmount: me.shipmentRecord.shippingAdjustment,
+                        adjustmentAmount: 0
                     },
                     {
                         id: 'shippingTaxTotal',
                         adjustmentId: "shippingTaxAdjustment",
                         name: 'Shipping Tax',
                         originalAmount: me.shipmentRecord.shippingTaxTotal,
-                        adjustmentAmount: me.shipmentRecord.shippingTaxAdjustment
+                        originalAdjustmentAmount: me.shipmentRecord.shippingTaxAdjustment,
+                        adjustmentAmount: 0
                     },
                     {
                         id: 'handlingSubtotal',
                         adjustmentId: "handlingAdjustment",
                         name: 'Handling Total',
                         originalAmount: me.shipmentRecord.handlingSubtotal,
-                        adjustmentAmount: me.shipmentRecord.handlingAdjustment
+                        originalAdjustmentAmount: me.shipmentRecord.handlingAdjustment,
+                        adjustmentAmount: 0
                     },
                     {
                         id: 'handlingTaxTotal',
                         adjustmentId: "handlingTaxAdjustment",
                         name: 'Handling Tax',
                         originalAmount: me.shipmentRecord.handlingTaxTotal,
-                        adjustmentAmount: me.shipmentRecord.handlingTaxAdjustment
+                        originalAdjustmentAmount: me.shipmentRecord.handlingTaxAdjustment,
+                        adjustmentAmount: 0
                     }
                 ],
                 getAdjustedShippingTotal: function(){
@@ -200,16 +207,19 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
 
         this.getShippingAdjustmentsPayload = function () {
             var me = this;
+            var calcAdjustmentAmount = function(fieldName){
+               return  me.store.getById(fieldName).get('adjustmentAmount') + me.store.getById(fieldName).get('originalAdjustmentAmount');
+            };
                 return {
                     "orderId": this.record.get('id'),
                     "shipmentNumber": this.shipmentRecord.number,
                     "shipmentAdjustment": {
-                        itemAdjustment: me.store.getById('shipment').get('adjustmentAmount'),
-                        itemTaxAdjustment:  me.store.getById('itemTax').get('adjustmentAmount'),
-                        shippingAdjustment: me.store.getById('shippingSubtotal').get('adjustmentAmount'),
-                        shippingTaxAdjustment: me.store.getById('shippingTaxTotal').get('adjustmentAmount'),
-                        handlingAdjustment:me.store.getById('handlingSubtotal').get('adjustmentAmount'),
-                        handlingTaxAdjustment: me.store.getById('handlingTaxTotal').get('adjustmentAmount')
+                        itemAdjustment: calcAdjustmentAmount('shipment'),
+                        itemTaxAdjustment:  calcAdjustmentAmount('itemTax'),
+                        shippingAdjustment: calcAdjustmentAmount('shippingSubtotal'),
+                        shippingTaxAdjustment: calcAdjustmentAmount('shippingTaxTotal'),
+                        handlingAdjustment: calcAdjustmentAmount('handlingSubtotal'),
+                        handlingTaxAdjustment: calcAdjustmentAmount('handlingTaxTotal')
                     }
                 }
         };
@@ -257,6 +267,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             style: {
                 clear: "both"
             },
+            store: me.store,
             record: this.record,
             shipmentRecord: me.shipmentRecord,
             listeners: {

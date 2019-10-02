@@ -155,7 +155,7 @@
             
             
                 var adjustmentValue = Math.abs(field.get('adjustmentAmount'));
-                adjustmentValue = Ext.util.Format.number(0, ",0.00");
+                adjustmentValue = Ext.util.Format.number(adjustmentValue, ",0.00");
 
                 var adjustmentFieldInput = Ext.widget({
                     currencyCode: me.record.getCurrencyCode(),

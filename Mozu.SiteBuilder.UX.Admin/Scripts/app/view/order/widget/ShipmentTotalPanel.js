@@ -487,7 +487,15 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
             '{[this.getSubTpl("tableStartTpl", values)]}',
 
             '<thead itemId="taco-subTpl_9">',
-            '{[this.getSubTpl("subTpl_9", values)]}',
+            
+            '<tr class="totalrow" >',
+            '<th></th>',
+            '<th class="summary"><div class="{tdInnerCls}">Shipment Total</div></th>',
+            '<th></th>',
+            '<th class="summary-price"><div class="{tdInnerCls}">{[this.adjustmentSubTotal()]}</div></th>',
+            '<th></th>',
+            '</tr>',
+
             '</thead>',
 
             '</table>',
@@ -523,6 +531,9 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                     }
 
                     return retVal;
+                },
+                adjustmentSubTotal: function(){
+                    return this.getCurrencyFormat(me.store.getAdjustedShippingTotal());
                 }
             }
         ];
