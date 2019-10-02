@@ -147,14 +147,14 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'shipment',
                         adjustmentId: "itemAdjustment",
-                        name: 'Sub Total',
+                        name: 'Shipment Total',
                         originalAmount: me.shipmentRecord.lineItemTotal,
                         adjustmentAmount: me.shipmentRecord.shipmentAdjustment
                     },
                     {
                         id: 'itemTax',
                         adjustmentId: "itemTaxAdjustment",
-                        name: 'Tax',
+                        name: 'Shipment Tax',
                         originalAmount: me.shipmentRecord.lineItemTaxTotal,
                         adjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment
                     },
@@ -204,7 +204,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     "orderId": this.record.get('id'),
                     "shipmentNumber": this.shipmentRecord.number,
                     "shipmentAdjustment": {
-                        shipmentAdjustment: me.store.getById('shipment').get('adjustmentAmount'),
+                        itemAdjustment: me.store.getById('shipment').get('adjustmentAmount'),
                         itemTaxAdjustment:  me.store.getById('itemTax').get('adjustmentAmount'),
                         shippingAdjustment: me.store.getById('shippingSubtotal').get('adjustmentAmount'),
                         shippingTaxAdjustment: me.store.getById('shippingTaxTotal').get('adjustmentAmount'),

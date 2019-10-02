@@ -101,14 +101,24 @@
             if(adjustmentLabel) {
                 adjustmentLabel.update("");
 
+                function getBtnDefaults() {
+                    var btn = {};
+                    var isAmountNegative = (field.get('adjustmentAmount') <= 0 );
+                    btn.text = me.getAdjustmentText(isAmountNegative, field);
+                    btn.value = (isAmountNegative) ? -1 : 1;
+                    return btn;
+                };
+
+                var defaultButton = getBtnDefaults();
+
                 var adjustment = field.get('adjustmentAmount')
                 var adjustmentLabelButton = new Ext.button.Button({
                     id: field.get("id") + "AdjustmentLabelButton",
                     ui: "action",
                     scale: "medium",
                     menuAlign: 'tr-br?',
-                    text: me.getAdjustmentText(field.get('adjustmentAmount') < 0, field),
-                    value: -1,
+                    text: defaultButton.text,
+                    value: defaultButton.value,
                     menu: {
                         plain: true,
                         listeners: {
@@ -126,12 +136,12 @@
                             {
                                 text: me.getAdjustmentText(true, field),
                                 type: "shippingAdjustmentIsNegative",
-                                value: true
+                                value: -1
                             },
                             {
                                 text: me.getAdjustmentText(false, field),
                                 type: "shippingAdjustmentIsNegative",
-                                value: false
+                                value: 1
                             }
                         ]
                     },
@@ -145,7 +155,7 @@
             
             
                 var adjustmentValue = Math.abs(field.get('adjustmentAmount'));
-                adjustmentValue = Ext.util.Format.number(adjustmentValue, ",0.00");
+                adjustmentValue = Ext.util.Format.number(0, ",0.00");
 
                 var adjustmentFieldInput = Ext.widget({
                     currencyCode: me.record.getCurrencyCode(),
@@ -185,14 +195,8 @@
             var adjustmentField = ctl;
             var adjustment = adjustmentField.getValue();
 
-            if(params.field.get("adjustmentAmount") < 0){
-                if(adjustmentLabelButton.value === 1) {
-                    adjustment = adjustment * -1;
-                }
-            } else {
-                adjustment = adjustment * adjustmentLabelButton.value;
-            }
-
+            adjustment = adjustment * adjustmentLabelButton.value;
+            
             adjustment = parseFloat(adjustment);
             params.field.set("adjustmentAmount", adjustment);
             me.updateAdjustmentTotals(params.field, params.label);
@@ -219,8 +223,8 @@
             return;
         }
 
-        menu.ownerButton.setText(me.getAdjustmentText(newValue, field));
-        menu.ownerButton.value = (newValue === -1) ? 1 : -1;
+        menu.ownerButton.setText(me.getAdjustmentText((newValue === -1) ? true : false, field));
+        menu.ownerButton.value = newValue;
 
         var adjustment = field.get('adjustmentAmount');
 
