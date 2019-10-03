@@ -320,7 +320,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
     subTpl_7: new Ext.XTemplate(
 
-        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTotal + values.lineItemTaxTotal)]}</div>'
+        '<div class="{tdInnerCls}">{[this.getCurrencyFormat(values.lineItemSubtotal + values.lineItemTaxTotal)]}</div>'
 
     ),
 
@@ -335,7 +335,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipment Total</div></td>',
-        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTotal)]}</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemSubtotal)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
