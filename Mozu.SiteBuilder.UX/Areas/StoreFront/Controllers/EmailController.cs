@@ -60,12 +60,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public Location.Contracts.Location StoreLocation { get; set; }
     }
     
-    public class OrderEmailItem : OrderItem {
-        public Location.Contracts.Location StoreLocation { get; set; }
-    }
-
     public class OrderEmail : Order {
-        public List<OrderEmailItem> Items { get; set; }
+        public List<Location.Contracts.Location> Locations { get; set; }
     }
 
     [ContextInitialization]
@@ -516,13 +512,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             
             if (obj is OrderEmail orderEmail)
             {
-                foreach (var item in orderEmail.Items)
+                var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
+                if (locations.SafeAny())
                 {
-                    if (item.FulfillmentMethod.EqualsIgnoreCase("pickup") && !item.FulfillmentLocationCode.IsNullOrEmpty())
-                    {
-                        var location = (await _locationRuntimeWebApiClient.GetLocation(item.FulfillmentLocationCode)).ReadAsSync();
-                        item.StoreLocation = location;
-                    }
+                    var filter = locations.Aggregate((x, y) => x + " or " + y);
+                    orderEmail.Locations = (await _locationAdminWebApi.GetLocations(filter: filter)).ReadAsSync().Items;
                 }
             }
             
