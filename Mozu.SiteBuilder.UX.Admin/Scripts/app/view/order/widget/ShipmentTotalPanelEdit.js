@@ -113,7 +113,7 @@
 
                 var adjustment = field.get('adjustmentAmount')
                 var adjustmentLabelButton = new Ext.button.Button({
-                    id: field.get("id") + "AdjustmentLabelButton",
+                    itemId: field.get("id") + "AdjustmentLabelButton",
                     ui: "action",
                     scale: "medium",
                     menuAlign: 'tr-br?',
