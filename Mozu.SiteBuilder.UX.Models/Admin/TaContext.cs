@@ -29,6 +29,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "omsEnabled")]
         public bool? OmsEnabled { get; set; }
 
+        [DataMember(Name = "loginURI")]
+        public string LoginURI { get; set; }
+
         [DataMember(Name = "attributes")]
         public List<TenantAttribute> Attributes { get; set; }
     }

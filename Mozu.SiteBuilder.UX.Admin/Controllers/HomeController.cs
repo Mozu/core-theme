@@ -301,6 +301,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var logzuUriBuilder = new UriBuilder(_settings.ZuKeeperPath);
             logzuUriBuilder.Path = "mozu.logzu";
             taContext.LogzuUrl = logzuUriBuilder.ToString();
+            taContext.LoginURI = _settings.LoginPath + "/cas/login/";
             Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();

@@ -10,7 +10,8 @@ Ext.define('Taco.core.context.TaContext', {
     contextType: 't',
     name: 'All',
     masterCatalogs: null,
-
+    loginURI: '',
+    orderRoutingURIPrefix: '',
     currentCtx: null,
     constructor: function (config) {
         var me = this;
@@ -277,7 +278,8 @@ Ext.define('Taco.core.context.TaContext', {
         me.urlToken = me.contextType + '-' + data.id;
         me.currentCtx = me;
         me.currencyLookup = {};
-
+        me.loginURI = data.loginURI;
+        me.orderRoutingURIPrefix = me.loginURI + data.id;
         Ext.each(data.masterCatalogs, function (sc, idx) {
             me.masterCatalogs[idx] = Ext.create('Taco.core.context.MasterCatalog', sc);
 
@@ -291,6 +293,9 @@ Ext.define('Taco.core.context.TaContext', {
         this.setCookie();
     },
 
+    getOrderRoutingURI : function() {
+        return this.orderRoutingURIPrefix;
+    },
     setCurrentSite: function (id) {
         var me = this,
             newSite = me.findSite(id);

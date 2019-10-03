@@ -56,6 +56,15 @@ Ext.define('Taco.store.Navigation', {
                         // top level element and it contains localization links, so we need to display it
                         return true;
                     }
+
+                    if (item.id === 'orderRouting') {
+                        item.address = Taco.app.context.getOrderRoutingURI() + '?service=/_orderRouting/security-check';
+                    }
+
+                    if (item.id === 'fulfiller') {
+                        item.address = window.location.origin + '/_fulfiller';
+                    }
+
                     if (item.locAtts) {
                         if (item.locAtts.length === 2 && !(isMultiLang || isMultiCurrency)) {
                             return false;
@@ -319,7 +328,7 @@ Ext.define('Taco.store.Navigation', {
             {
                 'id': 'order',
                 'navParent': 'main',
-                'label': 'Fulfillment',
+                'label': 'Orders',
                 'icon': 'nav-orders',
                 'behaviorIds': [73],
                 'items': [
@@ -356,12 +365,26 @@ Ext.define('Taco.store.Navigation', {
                 'navParent': 'main',
                 'label': 'Fulfillment',
                 'icon': 'nav-orders',
-                'behaviorIds': [73],
+                'behaviorIds': [188],
                 'items': [
                     {
                         "id": "fulfiller",
                         "label": "Fulfiller",
-                        "address": "http://services-tp-dev01.kubedev.kibo-dev.com/fulfillment-ui/dashboard/home",
+                        "address": "/_fulfiller"
+                    }
+                ]
+            },
+            {
+                'id': 'orderRoutingParent',
+                'navParent': 'main',
+                'label': 'Order Routing',
+                'icon': 'nav-orders',
+                'behaviorIds': [188],
+                'items': [
+                    {
+                        "id": "orderRouting",
+                        "label": "Order Routing",
+                        "address": ""
                     }
                 ]
             },
