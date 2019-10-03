@@ -71,6 +71,14 @@
         }
     },
 
+    getBtnDefaults: function(me, field) {
+        var btn = {};
+        var isAmountNegative = (field.get('adjustmentAmount') <= 0 );
+        btn.text = me.getAdjustmentText(isAmountNegative, field);
+        btn.value = (isAmountNegative) ? -1 : 1;
+        return btn;
+    },
+
     
     createAdjustmentFields: function() {
         var me = this;
@@ -101,15 +109,7 @@
             if(adjustmentLabel) {
                 adjustmentLabel.update("");
 
-                function getBtnDefaults() {
-                    var btn = {};
-                    var isAmountNegative = (field.get('adjustmentAmount') <= 0 );
-                    btn.text = me.getAdjustmentText(isAmountNegative, field);
-                    btn.value = (isAmountNegative) ? -1 : 1;
-                    return btn;
-                };
-
-                var defaultButton = getBtnDefaults();
+                var defaultButton = me.getBtnDefaults(me, field);
 
                 var adjustment = field.get('adjustmentAmount')
                 var adjustmentLabelButton = new Ext.button.Button({
