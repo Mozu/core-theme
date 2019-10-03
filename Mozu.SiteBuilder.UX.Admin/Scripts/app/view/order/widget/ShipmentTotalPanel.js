@@ -155,7 +155,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
 
         var me = this,
             selector = ".pricing-detail-collapsable" + selector,
-            el = this.masterTable.el.down(selector),
+            el = btn.el.up(selector),
             isCollapsed = (el.hasCls("collapsed"));
 
         if (isCollapsed) {
