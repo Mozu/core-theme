@@ -239,7 +239,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var shipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED;shipmentStatus!=CANCELED")).ReadAsSync();
+            var shipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED")).ReadAsSync();
             if(shipments!=null)
                 order.Shipments = Mapper.Map<List<Shipment>>(shipments);
 
