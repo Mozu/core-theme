@@ -257,7 +257,7 @@
             selType: 'rowmodel',
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
-                    clicksToEdit: 1
+                    clicksToEdit: 1,
                     pluginId: 'cellEditing'
                 })
             ],
