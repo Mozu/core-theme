@@ -145,12 +145,13 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                 model: 'Taco.model.ShipmentAdjustment',
                 data : [
                     {
-                        id: 'shipment',
+                        id: 'item',
                         adjustmentId: "itemAdjustment",
                         name: 'Item Subtotal',
                         originalAmount: me.shipmentRecord.lineItemSubtotal,
+                        currentAmount: me.shipmentRecord.lineItemSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.shipmentAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount:  me.shipmentRecord.shipmentAdjustment
                         
                     },
                     {
@@ -158,40 +159,45 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                         adjustmentId: "itemTaxAdjustment",
                         name: 'Item Tax',
                         originalAmount: me.shipmentRecord.lineItemTaxTotal,
+                        currentAmount: me.shipmentRecord.lineItemTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount: me.shipmentRecord.lineItemTaxAdjustment
                     },
                     {
                         id: 'shippingSubtotal',
                         adjustmentId: "shippingAdjustment",
                         name: 'Shipping Total',
                         originalAmount: me.shipmentRecord.shippingSubtotal,
+                        currentAmount: me.shipmentRecord.shippingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.shippingAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount:  me.shipmentRecord.shippingAdjustment
                     },
                     {
                         id: 'shippingTaxTotal',
                         adjustmentId: "shippingTaxAdjustment",
                         name: 'Shipping Tax',
                         originalAmount: me.shipmentRecord.shippingTaxTotal,
+                        currentAmount: me.shipmentRecord.shippingTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.shippingTaxAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount: me.shipmentRecord.shippingTaxAdjustment
                     },
                     {
                         id: 'handlingSubtotal',
                         adjustmentId: "handlingAdjustment",
                         name: 'Handling Total',
                         originalAmount: me.shipmentRecord.handlingSubtotal,
+                        currentAmount: me.shipmentRecord.handlingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.handlingAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount: me.shipmentRecord.handlingAdjustment
                     },
                     {
                         id: 'handlingTaxTotal',
                         adjustmentId: "handlingTaxAdjustment",
                         name: 'Handling Tax',
                         originalAmount: me.shipmentRecord.handlingTaxTotal,
+                        currentAmount: me.shipmentRecord.handlingTaxTotal,
                         originalAdjustmentAmount: me.shipmentRecord.handlingTaxAdjustment,
-                        adjustmentAmount: 0
+                        adjustmentAmount: me.shipmentRecord.handlingTaxAdjustment
                     }
                 ],
                 getAdjustedShippingTotal: function(){
@@ -208,13 +214,15 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
         this.getShippingAdjustmentsPayload = function () {
             var me = this;
             var calcAdjustmentAmount = function(fieldName){
-               return  me.store.getById(fieldName).get('adjustmentAmount') + me.store.getById(fieldName).get('originalAdjustmentAmount');
+               //return  me.store.getById(fieldName).get('adjustmentAmount') + me.store.getById(fieldName).get('originalAdjustmentAmount');
+
+               return me.store.getById(fieldName).get('adjustmentAmount');
             };
                 return {
                     "orderId": this.record.get('id'),
                     "shipmentNumber": this.shipmentRecord.number,
                     "shipmentAdjustment": {
-                        itemAdjustment: calcAdjustmentAmount('shipment'),
+                        itemAdjustment: calcAdjustmentAmount('item'),
                         itemTaxAdjustment:  calcAdjustmentAmount('itemTax'),
                         shippingAdjustment: calcAdjustmentAmount('shippingSubtotal'),
                         shippingTaxAdjustment: calcAdjustmentAmount('shippingTaxTotal'),

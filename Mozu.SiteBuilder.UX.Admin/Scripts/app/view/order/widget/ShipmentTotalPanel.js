@@ -218,7 +218,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Handling Subtotal</div></td>',
-        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingSubtotal)]}</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingSubtotalOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -236,7 +236,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item handlingTax">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Handling Tax</div></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxTotal)]}</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.handlingTaxTotalOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -260,7 +260,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Shipping Subtotal</div></td>',
-        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotal)]}</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingSubtotalOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -278,7 +278,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item handlingTax">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Shipping Tax</div></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxTotal)]}</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.shippingTaxTotalOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -335,7 +335,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class="shipping-handling-item">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div class="{parent.tdInnerCls}">Item Subtotal</div></td>',
-        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemSubtotal)]}</div></td>',
+        '<td class="{tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.itemOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -354,7 +354,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<tr class=shipping-handling-item shippingTax">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Item Tax</div></td>',
-        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.lineItemTaxTotal)]}</div></td>',
+        '<td class="{parent.tdCls}"><div class="{parent.priceCls} {parent.tdInnerCls}">{[this.getCurrencyFormat(values.itemTaxOriginalAmount)]}</div></td>',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
@@ -507,7 +507,10 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
                 getSubTpl: function (tplName, values, params) {
                     var tpl = this.view[tplName];
                     tpl.getCurrencyFormat = this.getCurrencyFormat;
-                    values.isEditable = (isEditable) ? 'true' : 'false'; 
+                    values.isEditable = (isEditable) ? 'true' : 'false';
+                    me.store.each(function(record){
+                        values[record.get('id') + 'OriginalAmount'] = record.get('originalAmount');
+                    });
                     if (params) {
                         values = Ext.apply(values, params);
                     }

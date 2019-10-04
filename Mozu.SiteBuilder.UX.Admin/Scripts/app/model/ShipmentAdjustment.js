@@ -10,7 +10,16 @@ Ext.define("Taco.model.ShipmentAdjustment", {
         { name: "id", type: "string" },
         { name: "adjustmentId", type: "string" },
         { name: "name", type: "string" },
-        { name: "originalAmount", type: "float", "defaultValue": 0},
+        { 
+            name: "originalAmount",
+            type: "float",
+            "defaultValue": 0,
+            convert: function(value, record) {
+                var adjustment  = record.get('originalAdjustmentAmount');
+                return adjustment * -1 + value;
+            }
+        },
+        { name: "currentAmount", type: "float", "defaultValue": 0},
         { name: "originalAdjustmentAmount", type: "float", "defaultValue": 0},
         { name: "adjustedTotal", type: "float", "defaultValue": 0},
         { 
@@ -18,8 +27,8 @@ Ext.define("Taco.model.ShipmentAdjustment", {
             type: "float",
             defaultValue: 0,
             convert: function(value, record) {
-                var originalAmount  = record.get('originalAmount');
-                record.data.adjustedTotal = originalAmount + value;
+                var currentAmount  = record.get('originalAmount');
+                record.data.adjustedTotal = currentAmount + value;
 
                 return value;
             }
