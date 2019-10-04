@@ -97,7 +97,7 @@ Ext.define('Taco.view.order.Grid', {
     statics: {
         bulkActionResponses: {
             'AcceptOrder': '{0} of {1} orders were accepted successfully.',
-            'CancelOrder': '{0} of {1} orders were cancelled successfully.',
+            'CancelOrder': '{0} of {1} orders were canceled successfully.',
             'CapturePayment': '{0} of {1} payments were captured successfully.',
             'Ship': '{0} of {1} orders were shipped successfully.'
         }

@@ -145,7 +145,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 flex: 2
             },
             {
-                text: 'Qty Cancelled',
+                text: 'Qty Canceled',
                 dataIndex: 'quantity',
                 draggable: false,
                 sortable: false,
@@ -182,7 +182,7 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                 }
             },
             {
-                text: 'Cancelled By',
+                text: 'Canceled By',
                 dataIndex: 'auditInfo',
                 draggable: false,
                 sortable: false,

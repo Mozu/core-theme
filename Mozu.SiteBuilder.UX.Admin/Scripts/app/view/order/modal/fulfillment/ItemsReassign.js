@@ -23,6 +23,10 @@
         type: 'fit'
     },
     orderedQuantity: 0,
+    itemSave: true,
+    count: 0,
+
+    
 
     initComponent: function () {
         this.cellEditing = new Ext.grid.plugin.CellEditing({
@@ -111,7 +115,7 @@
                     }
                 },
                 {
-                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
+                    text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150, allowBlank: false,
                     editor: {
                         xtype: 'textfield',
                         cls: 'x-grid-checkheader-editor',
@@ -121,10 +125,13 @@
                         uncheckedValue: false,
                         minValue: 1,
                         maxValue: me.selectedItem.quantity,
+                        allowBlank: false,
                         validator: function (value) {
                             if (!isNaN(value)) {
+                                Ext.getCmp('toolbar2').setVisible(false);
                                 return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
+                           
                         }
                     }
                 },
@@ -133,13 +140,13 @@
             width: 1000,
 
             dockedItems: [{
-                xtype: 'pagingtoolbar',
-                store: 'ItemInventoryStore',   // same store GridPanel is using
+                xtype: 'toolbar',
                 dock: 'bottom',
                 displayInfo: true
-            }],
+            }
+            ],
             selModel: {
-                selModel: 'cellmodel',
+                selModel: 'rowmodel',
             },
             plugins: [this.cellEditing],
             //{   
@@ -151,6 +158,16 @@
             listeners: {
                 'validateedit': function (editor, context, eOpts) {
                     var me = this;
+                    
+                    Ext.getCmp('toolbar2').setVisible(false);
+
+                    if (context.value == '') {
+                        Ext.getCmp('toolbar2').setVisible(true);
+                        return false;
+                    }
+                    else {
+                        Ext.getCmp('toolbar2').setVisible(false);
+                    }
                     for (var i = 0; i < context.record.store.data.items.length; i++) {
                         if (i !== context.rowIdx && context.value !=='') {
                             if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0 )) {
@@ -220,6 +237,7 @@
                         regexText: "Invalid Number entered.",
                         validator: function (value) {
                             if (!isNaN(value)) {
+                                Ext.getCmp('toolbar2').setVisible(false);
                                 return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
                         }
@@ -233,16 +251,29 @@
                 store: 'allLocationsStore',
                 dock: 'bottom',
                 displayInfo: true
-            }],
-            selType: 'cellmodel',
+            },
+           
+            ],
+            selType: 'rowmodel',
             plugins: [
                 Ext.create('Ext.grid.plugin.CellEditing', {
                     clicksToEdit: 1
+                    pluginId: 'cellEditing'
                 })
             ],
             listeners: {
                 'validateedit': function (editor, context, eOpts) {
                     var me = this;
+                    Ext.getCmp('toolbar2').setVisible(false);
+
+                    if (context.value == '') {
+                        Ext.getCmp('toolbar2').setVisible(true);
+                        return false;
+                    }
+                    else {
+                        Ext.getCmp('toolbar2').setVisible(false);
+                    }
+
                     for (var i = 0; i < context.record.store.data.items.length; i++) {
                         if (i !== context.rowIdx && context.value !== '') {
                             if ((context.record.store.data.items[i].data.reassignQty) && (context.record.store.data.items[i].data.reassignQty > 0)) {
@@ -256,6 +287,7 @@
                     me.getView().refresh();
                 }
             },
+            
         });                   
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
@@ -275,16 +307,69 @@
             items: [
                 inventorygrid,
                 allLocations
-            ]
+            ],
+            
         });
 
+       
         this.items = [this.fieldContainer];
-
+       
         this.callParent(arguments);
 
+        this.addDocked(
+            {
+                xtype: 'toolbar',
+                id: 'toolbar1',
+                hidden: true,
+                style: {
+                    'top': '370px',
+                    'color': 'red',
+                    'font-size': '14px'
+                },
+                dock: 'bottom',
+                layout: {
+                    align: 'middle',
+                    pack: 'start',
+                    type: 'hbox',
+                },
+                items: [{
+                    xtype: 'label',
+                    text: 'Please select location and quantity to reassign',
+                }],
+            });
+        this.addDocked({
+            xtype: 'toolbar',
+            id: 'toolbar2',
+            hidden: true,
+            style: {
+                'top': '370px',
+                'color': 'red',
+                'font-size': '14px'
+            },
+            dock: 'bottom',
+            layout: {
+                align: 'middle',
+                pack: 'start',
+                type: 'hbox',
+            },
+            items: [{
+                xtype: 'label',
+                text: 'Please enter quantity to reassign',
+            }],
+        });
     },
 
     doSave: function () {
+        var me = this;
+        var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0]
+            : Ext.ComponentQuery.query('#allLocationsGrid')[0];
+        var item = grid.getSelectionModel().getSelection();
+        
+        if (item.length == 0 && this.count == 0) {
+            this.count = this.count + 1;
+            Ext.getCmp('toolbar1').setVisible(true);
+        }
+        
         if (this.validateModal()) {
             var me = this;
             me.setLoading(true, this.body);
@@ -351,20 +436,50 @@
         var grid = me.selectedTab == 'inventoryGrid' ? Ext.ComponentQuery.query('#inventoryGrid')[0]
             : Ext.ComponentQuery.query('#allLocationsGrid')[0];
         var item = grid.getSelectionModel().getSelection();
-        var selectedItem = item[0].data;
-        if (grid.itemId == 'allLocationsGrid') {
-            if (selectedItem.name || selectedItem.locationName) {
-                return true;
-            }
-        }
-        else if (grid.itemId == 'inventoryGrid' && selectedItem) {
-            if (selectedItem.reassignQty > 0) {
-                return true;
-            }
-        }
+        if (item.length > 0) {
+            Ext.getCmp('toolbar1').setVisible(false);
+            var selectedItem = item[0].data;
+            var rowIdx = grid.store.indexOf(item[0]);
 
+            if (grid.itemId == 'allLocationsGrid') {
+                if (selectedItem.name || selectedItem.locationName) {
+                    var allocationgrid = Ext.ComponentQuery.query('#allLocationsGrid')[0];
+                    var cellEditing = allocationgrid.getPlugin('cellEditing');
+
+                    cellEditing.startEditByPosition({
+                        row: rowIdx,
+                        column: 2
+                    });
+                    if (selectedItem.reassignQty == null || selectedItem.reassignQty == '') {
+                        Ext.getCmp('toolbar2').setVisible(true);
+                        return false;
+                    }
+                    Ext.getCmp('toolbar2').setVisible(false);
+                    return true;
+                }
+            }
+            else if (grid.itemId == 'inventoryGrid' && selectedItem) {
+                var allocationgrid = Ext.ComponentQuery.query('#inventoryGrid')[0];
+                var cellEditing = allocationgrid.getPlugin('cellEditing');
+
+                cellEditing.startEditByPosition({
+                    row: rowIdx,
+                    column: 4
+                });
+                if (selectedItem.reassignQty == null || selectedItem.reassignQty == '') {
+                    Ext.getCmp('toolbar2').setVisible(true);
+                    return false;
+                }
+                if (selectedItem.reassignQty > 0) {
+                    Ext.getCmp('toolbar2').setVisible(false);
+                    return true;
+                }
+            }
+            return false;
+        }
+        Ext.getCmp('toolbar1').setVisible(true);
+        Ext.getCmp('toolbar2').setVisible(false);
         return false;
-       
     },
 
 

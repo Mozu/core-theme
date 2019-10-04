@@ -54,7 +54,7 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                         top: 50,
                     },
                     flex: 1,
-                    html: '<h3 class="">Shipment is cancelled, see all items on the cancellation tab.</h3>',
+                    html: '<h3 class="">Shipment is canceled, see all items on the cancellation tab.</h3>',
                 },
                 {
                     flex: 1,

@@ -935,6 +935,12 @@
     <Content Include="Scripts\app\view\customSchema\Split.js" />
     <Content Include="Scripts\app\view\location\inventory\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\merchandising\Index.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcherBar.js" />
+    <Content Include="Scripts\app\view\navigation\ContextSwitcherSelector.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuContainer.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuMask.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuNavGroup.js" />
+    <Content Include="Scripts\app\view\navigation\PrimaryMenuSubContainer.js" />
     <Content Include="Scripts\app\view\navigation\SubNavLinkContainer.js" />
     <Content Include="Scripts\app\view\order\modal\AddEcommerceGiftCard.js" />
     <Content Include="Scripts\app\view\order\modal\AddPurchaseOrder.js" />
