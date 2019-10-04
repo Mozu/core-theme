@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                        },
                                        new EmailTypeInfo
                                            {
-                                               ModelType = typeof (Order),
+                                               ModelType = typeof (OrderEmail),
                                                Topic = Topics.OrderEmailTopic
                                            },
                                        new EmailTypeInfo
