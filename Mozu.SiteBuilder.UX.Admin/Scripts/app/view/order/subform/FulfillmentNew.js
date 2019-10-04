@@ -54,48 +54,72 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
         }));
 
         me.setLoading(true, this.body);
-        me.getLocationInforForShipment(me.record.get('shipments'));
+        me.getLocationInforForShipment();
         me.setLoading(false, this.body);
     },
 
-    getLocationInforForShipment: function (shipments) {
+    getLocationInforForShipment: function () {
         var me = this;
+        var shipments = me.record.get('shipments');
+        var filters = [];
+        filters.push({
+            property: 'any',
+            text: 'ANY',
+            isDefault: true
+        });
+
         if (shipments) {
+            //create a filter for location service
             for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
                 if (shipments[shipmentCount].fulfillmentLocationCode) {
-                    this.record.getLocationsByCode(shipments[shipmentCount].fulfillmentLocationCode).load({
-                        scope: this,
-                        params: { 'shipmentCount': shipmentCount },
-                        callback: function (records, operation, success) {
-                            if (records && records[0] && records[0].data) {
-                                shipments[operation.params.shipmentCount].location = records[0].data;
-                            }
+                    filters.push(
+                        {
+                            property: 'code',
+                            value: shipments[shipmentCount].fulfillmentLocationCode
+                        }
+                    );
+                }
+            }
 
-                            me.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-                                record: me.record,
-                                shipmentRecord: shipments[operation.params.shipmentCount],
-                                listeners: {
-                                    shipmentRefresh: function () {
-                                        me.shipmentRefresh();
+            if (filters.length > 1) {
+                this.record.getLocationsByFilter(filters).load({
+                    scope: this,
+                    callback: function (records, operation, success) {
+                        if (records && records.length > 0) {
+                            //shipments[operation.params.shipmentCount].location = records[0].data;
+                            for (var locCount = 0; locCount < records.length; locCount++) {
+                                for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
+                                    //patch location on shipment object
+                                    if (!shipments[shipmentCount].location && records[locCount].data && records[locCount].get('code') == shipments[shipmentCount].fulfillmentLocationCode) {
+                                        shipments[shipmentCount].location = records[locCount].data;
                                     }
                                 }
-                            }));
-                            me.setLoading(false, this.body);
-                        }
-                    });
-                }
-                else
-                    me.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
-                        record: me.record,
-                        shipmentRecord: shipments[shipmentCount],
-                        listeners: {
-                            shipmentRefresh: function () {
-                                me.shipmentRefresh();
                             }
                         }
-                    }));
+                        me.renderShipments(shipments);
+                        me.setLoading(false, this.body);
+                    }
+                });
+            }
+            else {
+                me.renderShipments(shipments);
             }
             me.setLoading(false, this.body);
+        }
+    },
+
+    renderShipments: function (shipments) {
+        var me = this;
+        for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
+            me.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
+                record: me.record,
+                shipmentRecord: shipments[shipmentCount],
+                listeners: {
+                    shipmentRefresh: function () {
+                        me.shipmentRefresh();
+                    }
+                }
+            }));
         }
     },
 

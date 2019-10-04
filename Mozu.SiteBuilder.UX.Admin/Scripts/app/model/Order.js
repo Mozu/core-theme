@@ -3003,17 +3003,12 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    getLocationsByCode: function (locationCode) {
-        if (locationCode) {
+    getLocationsByFilter: function (filters) {
+        if (filters) {
             var me = this;
 
             return Ext.create('Taco.store.Locations', {
-                filters: [
-                    {
-                        property: 'code',
-                        value: locationCode
-                    }
-                ]
+                filters: filters
             });
         }
     },
