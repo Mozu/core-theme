@@ -593,3 +593,15 @@
             margin: 0;
         }
     }
+
+    .shipping-packages-grid .x-grid-row-editor > .x-panel-body-default > .x-box-inner {
+        min-height: 85px !important;
+    }
+
+    .shipping-packages-grid .x-grid-row-editor-buttons {
+        bottom: auto !important;
+    }
+
+    .shipping-packages-grid.x-panel .x-panel-default, .shipping-packages-grid.x-panel {
+        overflow: visible;
+    }
