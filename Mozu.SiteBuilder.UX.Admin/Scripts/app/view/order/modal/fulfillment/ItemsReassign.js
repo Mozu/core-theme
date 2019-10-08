@@ -140,7 +140,8 @@
             width: 1000,
 
             dockedItems: [{
-                xtype: 'toolbar',
+                xtype: 'pagingtoolbar', 
+                store: 'ItemInventoryStore',
                 dock: 'bottom',
                 displayInfo: true
             }
