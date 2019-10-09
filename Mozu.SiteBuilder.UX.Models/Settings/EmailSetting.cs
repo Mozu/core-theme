@@ -72,6 +72,13 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         RefundCreated,
         StoreCreditCreated,
         StoreCreditUpdated,
-        GiftCardCreated
+        GiftCardCreated,
+        Backorder,
+        BackorderUpdate,
+        ShipmentConfirmation,
+        OrderPickupReady,
+        OrderPickupReminder,
+        ShipmentBackorderDateChanged,
+        OrderCancellation
     };
 }

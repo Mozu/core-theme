@@ -222,6 +222,27 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? GiftCardCreated { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderCancellation { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? Backorder { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? BackorderUpdate { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentConfirmation { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderPickupReady { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? OrderPickupReminder { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentBackorderDateChanged { get; set; }
     }
 
     [DataContract]
