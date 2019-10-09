@@ -70,21 +70,24 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     }
                 ],
                 autoLoad: false,
-                pageSize: 1000,
+                pageSize: 10,
+                remoteFilter:true,
                 filters: [
-                    function (item) {                        
-                        return item.get("productCode");
+                    {
+                        property:"variationproductcode",
+                        comparison:"ne",
+                        value: "null"
                     }
                 ],
                 proxy: {
                     type: 'ajax',
                     // changed for issue with long URI on GET request
                     api: {
-                        read: '/admin/form-to-get/app/productVariation/list'                  
+                        read: '/admin/app/productVariation/list'                  
                     },
                     actionMethods: {
                         create: 'POST',
-                        read: 'POST',
+                        read: 'GET',
                         update: 'POST',
                         destroy: 'POST',
                         duplicate: 'POST'
@@ -115,10 +118,7 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
         
         var me = this,
             items= [],
-            optionColumns = [],
-            staticColumns,
-            hasVariations = me.variationsStore.count(),
-            saveButton = me.down('#primaryAction')
+            hasVariations = me.variationsStore.count();
         
         
 
@@ -172,93 +172,19 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
 
         // if we have variations data need to add the grid
         if (hasVariations) {
-
-            this.product.getOptions().each(function (option, index) {
-                var attribute = this.findAttribute(option),
-                    attributeText = attribute.get('adminName'),
-                    attributeValues = attribute.get('selectedValues'),
-                    attributeId = attribute.getId();
-
-
-                optionColumns.push({
-                    //flex: 1,
-                    text: attributeText,
-                    dataIndex: 'options',
-                    sortable: false,
-                    renderer: function (values) {
-
-
-                        var value = Ext.Array.findBy(values, function (v) {
-                            return v.attributeFQN == attributeId
-                        });
-
-                        var attributeValue = Ext.Array.findBy(attributeValues, function (item) {
-                            return typeof item.id !== 'undefined' && (item.id.toString() === value.value.toString());
-                        });
-
-                        if (!attributeValue) {
-                            return value.value;
-                        }
-                        return attributeValue.value;
-                    }
-                });
-            }, this);
-
-
-            staticColumns = [
-                { text: 'Current Product Code', dataIndex: 'productCode', width: 250 },
-                {
-                    text: 'New Product Code', dataIndex: 'newProductCode',
-                    width: 250,
-                    editor: {
-                        validator: function (value) {                            
-                            return (value && value == this.invalidValue) ? "The new and current product code cannot be the same" : true
-                        },
-                        emptyText: "Enter New Product Code",
-                        xtype: 'textfield',
-                        showBorder: true,
-                        msgTarget: "qtip"
-                    }
-
-                }
-                
-            ]
-
-            var columns = staticColumns.concat(optionColumns);
-
-            me.grid = Ext.create('Ext.grid.Panel', {
-                store: me.variationsStore,
+            me.initOptionsData();
+            me.grid = Ext.create('Taco.view.product.widget.productCode.Grid', {
                 flex: 1,
                 margin: "20 0 0 0",
-                columns: columns,
-                enableColumnHide:false,
-                viewConfig: {
-                    emptyText: '<div class="empty-grid-message">No varients to display</div>',
-                    deferEmptyText: false,
-                    stripeRows: false
-                },
-                selModel: Ext.create('Ext.selection.CellModel', {
-                    enableFieldTabbing: true
-                }),
-                plugins: [
-                    Ext.create('Ext.grid.plugin.CellEditing', {
-                        pluginId: "cellEditing",
-                        clicksToEdit: 1
-                    })
-                ]
-            })
-
-
-
-            me.mon(me.grid, 'beforeedit', function (editorPlugin, e, eOpts) {
-                // disable editing when the grid is not editMode:true                
-                var editor = e.column.getEditor(),
-                    record = e.record;
-                editor.invalidValue = record.get("productCode");
-                return true;
-            }, me);
-
-
+                enableColumnHide: false,
+                product: this.product,
+                optionsData: me.optionsData,
+                productType: this.productType,
+                pricingModeChanged: false,
+                pricingMode: 'Delta',
+                stateId: 'statefulProductOptionsGrid',
+                store: me.variationsStore
+            });
 
             me.mon(me.grid, 'edit', function (grid, context) {
                 var gridDirty = false;
@@ -267,11 +193,10 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
                     var gridDirty = true;
                 }
 
-                this.updateSaveButton({
+                me.updateSaveButton({
 
                     gridDirty: gridDirty
                 })
-
             }, me);
 
             items.push(me.grid);
@@ -293,6 +218,18 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             me.minHeight = 500;
             me.setHeight(600);
         }
+    },
+
+    initOptionsData: function () {
+        var me = this,
+            optionsStore = me.product.getOptions();
+
+        me.optionsData = new Ext.util.MixedCollection();
+
+        // saturate the options mixed collection;
+        optionsStore.each(function (record) {
+            me.optionsData.add(record.get("attributeFQN"), Ext.clone(record.data));
+        });
     },
 
     updateSaveButton : function (config){
@@ -317,10 +254,6 @@ Ext.define('Taco.view.product.widget.productCode.Modal', {
             saveButton.disable();
         }
 
-    },
-
-    findAttribute: function (record) {
-        return this.productType.getOptions().findRecord('attributeFQN', record.get('attributeFQN'), 0, false, false, true);
     },
 
     getJsonData : function (){

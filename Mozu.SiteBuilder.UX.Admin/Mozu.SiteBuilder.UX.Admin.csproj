@@ -481,6 +481,7 @@
     <Compile Include="Helpers\LocationHelpers\LocationFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventoryFilterExtensions.cs" />
     <Compile Include="Helpers\LocationInventoryHelpers\LocationInventorySortExtensions.cs" />
+    <Compile Include="Helpers\ProductVariationHelpers.cs\ProductVariationFilterExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistFilterExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistSortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />
@@ -961,6 +962,7 @@
     <Content Include="Scripts\app\view\productRanking\Index.js" />
     <Content Include="Scripts\app\view\productType\AttributeForm.js" />
     <Content Include="Scripts\app\view\product\subform\Images.js" />
+    <Content Include="Scripts\app\view\product\widget\productCode\Grid.js" />
     <Content Include="Scripts\app\view\product\widget\productCode\Modal.js" />
     <Content Include="Scripts\app\view\provisioning\Catalogs.js" />
     <Content Include="Scripts\app\view\provisioning\Sites.js" />

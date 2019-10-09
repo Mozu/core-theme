@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Mozu.SiteBuilder.UX.Admin.Api.Models;
 
-namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
+namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductVariationHelpers
 {
-    public static class ProductFilterExtensions
+    public static class ProductVariationFilterExtensions
     {       
         private const string PRODUCT_NAME_PROPERTY = "productincatalogs.content.productName";
         private const string PRODUCT_CODE_PROPERTY = "productCode";
@@ -27,28 +27,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
         private const string PUBLISH_SET_CODE = "publishsetcode";
         private const string PRODUCT_USAGE = "productUsage";
         private const string BASE_PRODUCT_CODE = "baseProductCode";
+        private const string VARIATION_PRODUCT_CODE = "variationproductcode";
         /// <summary>
         /// Converts a FilterCollection for Product to a mozu services-compatible filter string.
         /// </summary>
         public static string ToFilterString(this FilterCollection extFilter, bool? withVariations = null)
         {
-           
-            // TODO: If the filter needs to include products with variations, do something with 'withVariations'
-            // Note: this could change, we're waiting on changes to be applied from the services team and/or Britt G.
-
-            // TODO: commenting out this next part. I can't find any way from EXT to make "query" happen.
-            // if (!string.IsNullOrEmpty(extFilter.query))
-            //     extFilter.Add(new FilterCollectionItem { comparison = "cont", field = PropertyGuy.Convert(x => x.Content.ProductName), value = extFilter.query });
-            
-            if (!string.IsNullOrWhiteSpace(extFilter.QueryString["productCode"]))
-            {
-                extFilter.Add(new FilterCollectionItem()
-                {
-                    comparison ="eq", 
-                    property  ="productCode", 
-                    value = extFilter.QueryString["productCode"]
-                });
-            }
 
             if (extFilter.Count == 0)
             {
@@ -193,6 +177,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.ProductHelpers
                     return string.Format("({0} eq standard or {0} eq component or ({0} eq configurable and {1} eq true))", PRODUCT_USAGE, IS_VARIATION);
                 case "baseproductcode":
                     return string.Format("({0} eq \"{1}\")", BASE_PRODUCT_CODE, filter.value);
+                case "variationproductcode":
+                    return string.Format("({0} {1} {2})", VARIATION_PRODUCT_CODE, filter.comparison, filter.value);
                 default:
                     {
                         throw new NotImplementedException("unable to filter on property " + filter.property);
