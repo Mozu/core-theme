@@ -340,7 +340,7 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<td class="{tdCls}"></td>',
         '</tr>',
 
-        '<tpl if="values.isEditable">',
+        '<tpl if="isEditable || shipmentAdjustment">',
         '<tr class="tax-item adjustment-tr">',
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"><div itemId="itemAdjustmentLabel" class="{tdInnerCls}">Adjustment</div></td>',
@@ -350,7 +350,6 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '</tr>',
         '</tpl>',
         
-        '<tpl if="lineItemTaxTotal &gt; 0">',
         '<tr class=shipping-handling-item shippingTax">',
         '<td class="{tdCls}"></td>',
         '<td class="{parent.tdCls}"><div class="{parent.tdInnerCls}">Item Tax</div></td>',
@@ -358,7 +357,6 @@ Ext.define('Taco.view.order.widget.ShipmentTotalPanel', {
         '<td class="{tdCls}"></td>',
         '<td class="{tdCls}"></td>',
         '</tr>',
-        '</tpl>',
 
         '<tpl if="isEditable || itemTaxAdjustment">',
         '<tr class="tax-item adjustment-tr">',

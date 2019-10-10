@@ -166,7 +166,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'shippingSubtotal',
                         adjustmentId: "shippingAdjustment",
-                        name: 'Shipping Total',
+                        name: 'Shipping Subtotal',
                         originalAmount: me.shipmentRecord.shippingSubtotal,
                         currentAmount: me.shipmentRecord.shippingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.shippingAdjustment,
@@ -184,7 +184,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     {
                         id: 'handlingSubtotal',
                         adjustmentId: "handlingAdjustment",
-                        name: 'Handling Total',
+                        name: 'Handling Subtotal',
                         originalAmount: me.shipmentRecord.handlingSubtotal,
                         currentAmount: me.shipmentRecord.handlingSubtotal,
                         originalAdjustmentAmount: me.shipmentRecord.handlingAdjustment,
@@ -231,12 +231,34 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
                     }
                 }
         };
+
+        this.validateShipmentAdjustmentFields = function() {
+            var NEGATIVE_ADJUSTMENT_ERROR = "Adjustment totals cannot be negative"
+            var validated = true;
+            
+            this.store.each(function(item){
+                if(item.get('adjustmentAmount') < 0) {
+                    validated = false;
+                };
+            })
+
+            if(!validated) {
+                Taco.app.fireEvent('setmessage', NEGATIVE_ADJUSTMENT_ERROR, 'error');
+            }
+
+            return validated;
+        };
     
         this.updateShipmentAdjustments = function () {
             var me = this;
+            
+            if(!this.validateShipmentAdjustmentFields()){
+                return false;
+            }
+
             me.setLoading(true, this.body);
             var payloadData = me.getShippingAdjustmentsPayload();
-    
+
             this.record.updateShipmentAdjustments({
                 jsonData: payloadData,
                 success: function (response) {
