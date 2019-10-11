@@ -1113,9 +1113,6 @@ Ext.define('Taco.model.Order', {
             update: '/admin/app/order/edit',
             destroy: '/admin/app/order/delete'
         },
-        extraParams: {
-            OrderPaymentsByCatputre :  true
-        },
         reader: {
             type: 'json',
             
