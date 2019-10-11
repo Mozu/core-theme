@@ -128,6 +128,9 @@
                         allowBlank: false,
                         validator: function (value) {
                             if (!isNaN(value)) {
+                                if (value == 0) {
+                                    return 'Quantity should not be 0';
+                                }
                                 Ext.getCmp('toolbar2').setVisible(false);
                                 return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
@@ -238,6 +241,9 @@
                         regexText: "Invalid Number entered.",
                         validator: function (value) {
                             if (!isNaN(value)) {
+                                if (value == 0) {
+                                    return 'Quantity should not be 0';
+                                }
                                 Ext.getCmp('toolbar2').setVisible(false);
                                 return (value <= me.orderedQuantity) || 'Quantity to reassign should be less than ordered quantity';
                             }
