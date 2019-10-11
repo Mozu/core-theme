@@ -96,7 +96,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedExReturnLabelShippingTypes: ['', []]
         });
 
-        const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
+       const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
         this.createService.getLocationGroup(locationGroupId).subscribe(
             (response) => this.getLocationGroupSuccess(response),
             (response) => this.getLocationGroupError(response.error.message)
@@ -377,7 +377,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 // Shipping
                 carriers: this.setSelectedCarriers(lgConfigModel.carriers),
                 defaultCarrier: lgConfigModel.defaultCarrier,
-                printReturnLabel: lgConfigModel.printReturnLabel,
+                printReturnLabel: lgConfigModel.printReturnLabel === undefined ? false : lgConfigModel.printReturnLabel,
                 defaultPrinterType: lgConfigModel.defaultPrinterType,
                 // Box Types
                 boxItems: lgConfigModel.boxTypes,
