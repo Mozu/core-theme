@@ -35,7 +35,8 @@ export enum ErrorCode {
     EmptyBoxTypeName= <any> 'EmptyBoxTypeName',
     EmptyBoxTypeLength= <any> 'EmptyBoxTypeLength',
     EmptyBoxTypeWidth= <any> 'EmptyBoxTypeWidth',
-    EmptyBoxTypeHeight= <any> 'EmptyBoxTypeHeight'
+    EmptyBoxTypeHeight= <any> 'EmptyBoxTypeHeight',
+    EmptyDefaultPrintType= <any> 'EmptyDefaultPrintType',
 }
 
 export enum ToastrCode {

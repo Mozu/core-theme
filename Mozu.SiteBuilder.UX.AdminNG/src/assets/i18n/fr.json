@@ -322,7 +322,7 @@
             "carriers": "Carriers",
             "defaultCarrier": "Default Carrier",
             "printReturnLabel": "Print Return Label",
-            "defaultPrinterType": "Default Printer Type",
+            "defaultPrinterType": "Default Printer Type*",
             "name": "Name*",
             "width": "Width*",
             "length": "Length*",

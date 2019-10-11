@@ -642,6 +642,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     private validateLocationGroup(lgModel: LocationGroupConfigurationModel): boolean {
+        if (lgModel && lgModel.defaultPrinterType === ('' || undefined )) {
+            this._tostrService.showError(ErrorCode.EmptyDefaultPrintType);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+
+        }
         if (lgModel && lgModel.boxTypes.map(boxTypes => boxTypes.name).includes('')) {
             this._tostrService.showError(ErrorCode.EmptyBoxTypeName);
             this._spinner.stop();
