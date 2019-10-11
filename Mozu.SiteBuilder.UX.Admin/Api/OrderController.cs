@@ -131,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var mappedOrders = Mapper.Map<List<Order>>(dcOrders.Items);
 
             
-            if (extFilter.OrderPaymentsByCatputre)
+            if (extFilter.OrderPaymentsByCapture)
             {
                 var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
                 var orders = (await orderHelper.OrderPaymentsByCapture(mappedOrders));
@@ -260,7 +260,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 if (custTask.Success)
                     single.Customer = custTask.Items.FirstOrDefault();
 
-                if (callExtFilter.OrderPaymentsByCatputre)
+                if (callExtFilter.OrderPaymentsByCapture)
                 {
                     var orderHelper = new OrderHelper(_checkoutSettingsWebApiClient);
                     var orders = (await orderHelper.OrderPaymentsByCapture(new List<Order>() { single }));

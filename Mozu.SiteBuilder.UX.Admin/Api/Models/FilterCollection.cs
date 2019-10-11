@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
 
         public bool ShowVariations { get; set; }
 
-        public bool OrderPaymentsByCatputre { get; set; }
+        public bool OrderPaymentsByCapture { get; set; }
 
 
         /// <summary>

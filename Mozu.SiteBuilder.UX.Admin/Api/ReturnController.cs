@@ -1,39 +1,39 @@
-﻿using System.Collections.Concurrent;
+﻿using AutoMapper;
+using Mozu.AdminUser.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Clients;
+using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core.Api.Client;
+using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Api.Routing;
+using Mozu.Core.ErrorHandling;
+using Mozu.Core.Exceptions;
+using Mozu.Core.Extensions;
+using Mozu.Customer.Contracts.Clients;
+using Mozu.Location.Contracts;
+using Mozu.Location.Contracts.Clients;
+using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.SiteBuilder.Mvc.SEO;
+using Mozu.SiteBuilder.UX.Admin.Api.Models;
+using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
+using Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers;
+using Mozu.SiteSettings.Order.Contracts.Clients;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AutoMapper;
-using Mozu.CommerceRuntime.Contracts.Clients;
-using Mozu.Core.Api.Routing;
-using Mozu.Customer.Contracts.Clients;
-using Mozu.SiteBuilder.UX.Admin.Api.Models;
-using Mozu.SiteBuilder.UX.Admin.Api.Models.Returns;
-using Mozu.SiteBuilder.Mvc.Extensions;
-using Mozu.SiteBuilder.UX.Admin.Helpers.ReturnHelpers;
+using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
+using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
+using CARSModel = Mozu.CARS.Contracts.Model;
 using DCp = Mozu.CommerceRuntime.Contracts.Payments;
 using DCr = Mozu.CommerceRuntime.Contracts.Returns;
-using ReturnActions = Mozu.CommerceRuntime.Contracts.Returns.ReturnAction.ReturnActionNameConst;
+using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
 using PaymentActions = Mozu.CommerceRuntime.Contracts.Payments.PaymentAction.PaymentActionNameConst;
 using PaymentTypes = Mozu.CommerceRuntime.Contracts.Payments.PaymentTypeConst;
-using ApiCustomer = Mozu.SiteBuilder.UX.Admin.Api.Models.Customer;
-using AdminUser2 = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
-using Mozu.AdminUser.Contracts.Clients;
-using Mozu.CommerceRuntime.Contracts.Orders;
-using Mozu.Core.Api.Client.Exceptions;
-using Mozu.Core.ErrorHandling;
-using Mozu.Core.Exceptions;
-using Mozu.Core.Extensions;
-using Order = Mozu.SiteBuilder.UX.Admin.Api.Models.Order.Order;
-using CARSModel = Mozu.CARS.Contracts.Model;
-using Mozu.Location.Contracts.Clients;
-using Mozu.Location.Contracts;
-using System;
-using Mozu.SiteBuilder.Mvc.SEO;
-using Mozu.SiteSettings.Order.Contracts.Clients;
-using Mozu.Core.Api.Client;
+using ReturnActions = Mozu.CommerceRuntime.Contracts.Returns.ReturnAction.ReturnActionNameConst;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -150,7 +150,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         /// <returns>The corresponding channel name, or the code if not found</returns>
         private async Task<string> GetChannelName(string channelCode)
         {
-            if (channelCode.IsNullOrEmpty()) return string.Empty;
+            if (channelCode.IsNullOrEmpty())
+            {
+                return string.Empty;
+            }
 
             if (!channelCache.ContainsKey(channelCode))
             {
@@ -161,7 +164,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 catch (MozuApplicationException appException)
                 {
-                    if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) throw;
+                    if (!ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode))
+                    {
+                        throw;
+                    }
 
                     // If the channel can't be found, fallback to the channel code.
                     channelCache[channelCode] = channelCode;
@@ -172,12 +178,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private async Task<Contact> GetCustomerContact(int? customerAccountId)
         {
-            if (customerAccountId == null) return null;
+            if (customerAccountId == null)
+            {
+                return null;
+            }
 
             try
             {
                 var account = (await _customerWebApiClient.GetAccount(customerAccountId)).ReadAsSync();
-                if (account == null) return null;
+                if (account == null)
+                {
+                    return null;
+                }
 
                 return new Contact
                 {
@@ -188,7 +200,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             catch (MozuApplicationException appException)
             {
-                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode)) return null;
+                if (ErrorCodes.ITEM_NOT_FOUND.Equals(appException.ErrorCode))
+                {
+                    return null;
+                }
 
                 throw;
             }
@@ -231,9 +246,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
                 bool orderPayments = false;
-                if (extFilter.OrderPaymentsByCatputre)
+                if (extFilter.Count > 0)
                 {
-                    orderPayments = true;
+                    orderPayments = extFilter.OrderPaymentsByCapture;
+                }
+                else
+                {
+                    var data = Request.GetQueryNameValuePairs();
+                    var OrderPaymentsByCapture = data.Where(x => x.Key.Equals("OrderPaymentsByCapture")).FirstOrDefault();
+                    orderPayments = Convert.ToBoolean(OrderPaymentsByCapture.Value);
                 }
 
                 return await GetSingleReturn(pagingParams.id, orderPayments);
@@ -253,7 +274,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var returns = await MultiMapFromContract(dcReturns.Items);
 
-            if (extFilter.OrderPaymentsByCatputre)
+            if (extFilter.OrderPaymentsByCapture)
             {
                 var returnHelper = new ReturnHelper(_checkoutSettingsWebApiClient);
                 var rmas = (await returnHelper.OrderPaymentsByCapture(returns));
@@ -267,9 +288,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var dcReturn = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
 
-            if (dcReturn == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
-
+            if (dcReturn == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             var sbReturn = await SingleMapFromContract(dcReturn);
 
@@ -592,8 +614,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var httpContent = serviceResponse.ResponseMessage.Content;
 
             var contentStream = await httpContent.ReadAsStreamAsync();
-            var myResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            myResponse.Content = new StreamContent(contentStream);
+            var myResponse = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(contentStream)
+            };
             myResponse.Content.Headers.ContentLength = serviceResponse.ResponseMessage.Content.Headers.ContentLength;
             myResponse.Content.Headers.ContentType = serviceResponse.ResponseMessage.Content.Headers.ContentType;
             myResponse.Content.Headers.LastModified = serviceResponse.ResponseMessage.Content.Headers.LastModified;
@@ -640,55 +664,57 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
         private CARSModel.GenerateLabelRequest CreateReturnShippingLabelRequest(DCr.Return returns, CommerceRuntime.Contracts.Orders.Order order, Location.Contracts.Location location, LocationGroupConfiguration configuration)
         {
-            CARSModel.GenerateLabelRequest request = new CARSModel.GenerateLabelRequest();
-            request.Currency = returns.CurrencyCode;
-            request.FromContact = new CARSModel.Contact()
+            CARSModel.GenerateLabelRequest request = new CARSModel.GenerateLabelRequest
             {
-                PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
-                Address = new List<string>() {
+                Currency = returns.CurrencyCode,
+                FromContact = new CARSModel.Contact()
+                {
+                    PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
+                    Address = new List<string>() {
                     order.FulfillmentInfo.FulfillmentContact?.Address?.Address1??"",
                     order.FulfillmentInfo.FulfillmentContact?.Address?.Address2??"",
                     order.FulfillmentInfo.FulfillmentContact?.Address?.Address3??"",
                     order.FulfillmentInfo.FulfillmentContact?.Address?.Address4??""},
-                PostalCode = order.FulfillmentInfo.FulfillmentContact?.Address?.PostalOrZipCode,
-                City = order.FulfillmentInfo.FulfillmentContact?.Address?.CityOrTown,
-                PhoneNumber = order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Home ?? order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Mobile,
-                CountryCode = order.FulfillmentInfo.FulfillmentContact?.Address?.CountryCode,
-                Residential = order.FulfillmentInfo.FulfillmentContact?.Address?.AddressType?.Equals("Residential") ?? false,
-                StateCode = order.FulfillmentInfo.FulfillmentContact?.Address?.StateOrProvince,
-                CompanyName = order.FulfillmentInfo.FulfillmentContact?.CompanyOrOrganization,
-                Email = order.FulfillmentInfo.FulfillmentContact?.Email
-            };
-            request.ToContact = new CARSModel.Contact()
-            {
-                PersonName = location.Name,
-                Address = new List<string>() {
+                    PostalCode = order.FulfillmentInfo.FulfillmentContact?.Address?.PostalOrZipCode,
+                    City = order.FulfillmentInfo.FulfillmentContact?.Address?.CityOrTown,
+                    PhoneNumber = order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Home ?? order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Mobile,
+                    CountryCode = order.FulfillmentInfo.FulfillmentContact?.Address?.CountryCode,
+                    Residential = order.FulfillmentInfo.FulfillmentContact?.Address?.AddressType?.Equals("Residential") ?? false,
+                    StateCode = order.FulfillmentInfo.FulfillmentContact?.Address?.StateOrProvince,
+                    CompanyName = order.FulfillmentInfo.FulfillmentContact?.CompanyOrOrganization,
+                    Email = order.FulfillmentInfo.FulfillmentContact?.Email
+                },
+                ToContact = new CARSModel.Contact()
+                {
+                    PersonName = location.Name,
+                    Address = new List<string>() {
                     string.Join(" ",location.Address?.Address1??""
                     ,location.Address?.Address2??""
                     ,location.Address?.Address3??""
                     ,location.Address?.Address4??"")
                },
 
-                PostalCode = location.Address?.PostalOrZipCode,
-                City = location.Address?.CityOrTown,
-                CountryCode = location.Address?.CountryCode,
-                PhoneNumber = location.ShippingOriginContact?.PhoneNumber,
-                Residential = location.Address?.AddressType?.Equals("Residential"),
-                StateCode = location.Address.StateOrProvince.ToUpper()
+                    PostalCode = location.Address?.PostalOrZipCode,
+                    City = location.Address?.CityOrTown,
+                    CountryCode = location.Address?.CountryCode,
+                    PhoneNumber = location.ShippingOriginContact?.PhoneNumber,
+                    Residential = location.Address?.AddressType?.Equals("Residential"),
+                    StateCode = location.Address.StateOrProvince.ToUpper()
+                },
+
+                LocationCode = returns.LocationCode,
+                OrderID = order.OrderNumber?.ToString(),
+
+                Carrier = configuration.DefaultCarrier?.ToUpper(),
+                PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper()),
+                ServiceType = SetServiceType(configuration),
+                LabelFormat = configuration.DefaultPrinterType?.ToUpper(),
+                UnitType = "IMPERIAL",
+                ShipmentID = returns.Id,
+                ValidateAddress = true,
+                CustomerReferences = null,
+                Test = false
             };
-
-            request.LocationCode = returns.LocationCode;
-            request.OrderID = order.OrderNumber?.ToString();
-
-            request.Carrier = configuration.DefaultCarrier?.ToUpper();
-            request.PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper());
-            request.ServiceType = SetServiceType(configuration);
-            request.LabelFormat = configuration.DefaultPrinterType?.ToUpper();
-            request.UnitType = "IMPERIAL";
-            request.ShipmentID = returns.Id;
-            request.ValidateAddress = true;
-            request.CustomerReferences = null;
-            request.Test = false;
 
             SetMeasurements(request, order, returns);
             return request;
