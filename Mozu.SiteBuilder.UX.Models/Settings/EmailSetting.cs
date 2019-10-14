@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         StoreCreditUpdated,
         GiftCardCreated,
         Backorder,
-        BackorderUpdate,
+        //BackorderUpdate,
         ShipmentConfirmation,
         OrderPickupReady,
         OrderPickupReminder,

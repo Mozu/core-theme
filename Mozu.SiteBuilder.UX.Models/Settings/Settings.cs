@@ -229,8 +229,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? Backorder { get; set; }
 
-        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
-        public bool? BackorderUpdate { get; set; }
+        //[JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        //public bool? BackorderUpdate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ShipmentConfirmation { get; set; }
