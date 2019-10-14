@@ -37,6 +37,9 @@ export enum ErrorCode {
     EmptyBoxTypeWidth= <any> 'EmptyBoxTypeWidth',
     EmptyBoxTypeHeight= <any> 'EmptyBoxTypeHeight',
     EmptyDefaultPrintType= <any> 'EmptyDefaultPrintType',
+    EmptyUPSUsShippingTypes= <any> 'EmptyUPSUsShippingTypes',
+    EmptyFedExShippingTypes= <any> 'EmptyFedExShippingTypes',
+    EmptyUSPSShippingTypes= <any> 'EmptyUSPSShippingTypes',
 }
 
 export enum ToastrCode {

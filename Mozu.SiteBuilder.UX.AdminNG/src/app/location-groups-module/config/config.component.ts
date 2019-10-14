@@ -10,7 +10,7 @@ import {
     ShippingMethodMappings,
     BoxType
 } from './config.model';
-import { FormBuilder, FormArray, FormControl, FormGroup, Validators  } from '@angular/forms';
+import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
 import { LocationGroupConfigService } from './config.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -96,7 +96,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedExReturnLabelShippingTypes: ['', []]
         });
 
-       const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
+        const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
         this.createService.getLocationGroup(locationGroupId).subscribe(
             (response) => this.getLocationGroupSuccess(response),
             (response) => this.getLocationGroupError(response.error.message)
@@ -460,7 +460,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private setSelectedCarriers(carriers: CarrierModel[]): boolean[] {
         const carriersUpr: CarrierModel[] = [];
-        
+
         carriers.map((v) => {
             const carrierObj: CarrierModel = {} as CarrierModel;
             carrierObj.carrierType = v.carrierType.toUpperCase();
@@ -514,7 +514,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
         let index = 0;
         control.forEach((element: { value: any; }) => {
-            
+
             const shippingType = this.model.LCCarriers[index++];
             switch (shippingType.CarrierType.toLowerCase()) {
                 case 'ups':
@@ -571,9 +571,61 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;
 
-       if (this.validateLocationGroup(lgConfigModel)) {
-        this.updateLocationGroupConfig(lgConfigModel);
-       }
+        if (!this.validateShippingTypes(lgconfigForm)) {
+            return false;
+        }
+        if (this.validateLocationGroup(lgConfigModel)) {
+            this.updateLocationGroupConfig(lgConfigModel);
+        }
+    }
+
+    private validateShippingTypes(lgconfigForm: FormGroup): boolean {
+        if (lgconfigForm.controls.defaultCarrier.value !== ('' || undefined)) {
+            let isAtLeastOneTypeSelected = false;
+            switch (lgconfigForm.controls.defaultCarrier.value.toLowerCase()) {
+                case 'ups':
+                    lgconfigForm.controls.upsUsShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyUPSUsShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;
+                case 'fedex':
+                    lgconfigForm.controls.fedExShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyFedExShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;
+                case 'usps':
+                    lgconfigForm.controls.uspsShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyUSPSShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;
+                default:
+                    isAtLeastOneTypeSelected = true;
+                    break;
+            }
+            return isAtLeastOneTypeSelected;
+        }
+        return true;
     }
 
     private updateLocationGroupConfig(lgcModel: LocationGroupConfigurationModel) {
@@ -642,7 +694,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     private validateLocationGroup(lgModel: LocationGroupConfigurationModel): boolean {
-        if (lgModel && lgModel.defaultPrinterType === ('' || undefined )) {
+        if (lgModel && lgModel.defaultPrinterType === ('' || undefined)) {
             this._tostrService.showError(ErrorCode.EmptyDefaultPrintType);
             this._spinner.stop();
             this._progressButtonService.stop();

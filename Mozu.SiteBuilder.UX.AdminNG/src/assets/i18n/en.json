@@ -171,7 +171,10 @@
                 "EmptyBoxTypeLength": "Please enter box type Length",
                 "EmptyBoxTypeWidth": "Please enter box type Width",
                 "EmptyBoxTypeHeight": "Please enter box type Height",
-                "EmptyDefaultPrintType": "Please select Default Printer Type"
+                "EmptyDefaultPrintType": "Please select Default Printer Type",
+                "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
+                "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
+                "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS"
             },
             "Warning": {},
             "Information": {},
