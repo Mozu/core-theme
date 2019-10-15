@@ -10,7 +10,7 @@ Ext.define('Taco.view.account.userFormModal', {
         'Ext.selection.CheckboxModel',
         'Taco.store.Roles'
     ],
-
+    
     autoShow: true,
     scale: 'large',
     //title: 'Add User',
@@ -34,6 +34,13 @@ Ext.define('Taco.view.account.userFormModal', {
                     }
                 }
             ]*/
+        });
+
+        me.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+            componentCls: 'x-link-paging-toolbar',
+            store: me.roles,
+            displayInfo: true,
+            dock: 'bottom'
         });
 
         me.roles.on('load', function () {
@@ -105,6 +112,9 @@ Ext.define('Taco.view.account.userFormModal', {
                     flex: 1
                 }
             ],
+            dockedItems: [
+              me.gridPager
+            ],
             selModel: me.selModel
         });
 
@@ -120,7 +130,6 @@ Ext.define('Taco.view.account.userFormModal', {
                     value: (this.record) ? this.record.get('email') : '',
                     listeners: {
                         change: function (it, newVal) {
-                            console.log('ere');
                             if (!this.scope.isValid()) {
                                 Ext.ComponentQuery.query('[itemId="primaryAction"]')[0].disable();
                             } else {
