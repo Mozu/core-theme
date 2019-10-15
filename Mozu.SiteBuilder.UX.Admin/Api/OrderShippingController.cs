@@ -478,8 +478,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "shipments/filter")]
         public async Task<Response<List<Shipment>>> GetShipments(ShipmentFilterArgs args)
         {
-            var serviceResponse = (await _fulfillmentProxyClient.GetShipments(args.Filter)).ReadAsSync();
-            var shipments = Mapper.Map<List<Shipment>>(serviceResponse);
+            var pagedShipments = (await _fulfillmentProxyClient.GetShipments(args.Filter)).ReadAsSync();
+            var shipmentContracts = pagedShipments?.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<DCm.ResourceOfShipment>();
+
+            var shipments = Mapper.Map<List<Shipment>>(shipmentContracts);
             return List2(shipments);
         }
 

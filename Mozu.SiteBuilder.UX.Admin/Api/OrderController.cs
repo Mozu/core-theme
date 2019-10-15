@@ -30,7 +30,8 @@ using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
-using Mozu.CommerceRuntime.Contracts.Fulfillment;
+using Mozu.Fulfillment.Contracts.Model;
+using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -239,9 +240,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             if (order == null) throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var shipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED")).ReadAsSync();
-            if (shipments != null)
-                order.Shipments = Mapper.Map<List<Shipment>>(shipments).OrderByDescending(x => x.Number).ToList();
+            var pagedShipments = (await _fulfillmentProxyClient.GetShipments("orderId==" + order.Id + ";shipmentStatus!=REASSIGNED")).ReadAsSync();
+            if (pagedShipments != null)
+            {
+                var shipments = pagedShipments.Embedded != null ? pagedShipments.Embedded["shipments"] : new List<ResourceOfShipment>();
+                order.Shipments = Mapper.Map<List<DCs.Shipment>>(shipments).OrderByDescending(x => x.Number).ToList();
+            }
 
             var single = order.Map<Order>();
             if (single.CustomerId.HasValue)
