@@ -135,3 +135,21 @@
 .navbar-search-tab {
     margin-left: 10px;
 }
+
+.adminToggleButton {
+    color: white;
+    font-size: 1em;
+    border-radius: 4px;
+    position: relative;
+    right: 12%;
+}
+
+.switch-button-secondary {
+    border: 1px solid #2ea195;
+    background-color: #2ea195;
+}
+
+.switch-button-primary {
+    border: 1px solid  #bb6e9c;
+    background-color:  #bb6e9c;
+}

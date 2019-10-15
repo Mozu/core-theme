@@ -23,6 +23,8 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { environment } from '../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
+
 
 import {
     RestrictInput,
@@ -150,7 +152,8 @@ export function createTranslateLoader(http: HttpClient) {
             useClass: NgbDateNativeAdapter
         },
         AccountInfoService,
-        DateService
+        DateService,
+        CookieService
     ],
     entryComponents: [DynamicLinksDialogComponent],
     exports: [

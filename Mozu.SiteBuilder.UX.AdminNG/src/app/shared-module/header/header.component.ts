@@ -28,6 +28,7 @@ import {
 } from './header.model';
 import { HeaderService } from './header.service';
 import { environment } from '../../../environments/environment.Debug';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
     moduleId: module.id,
@@ -40,15 +41,33 @@ import { environment } from '../../../environments/environment.Debug';
 export class HeaderComponent implements OnInit {
     headerModel: HeaderModel;
     public userContextMenuItem: MenuItem;
+    subscriptions = [];
+    mainMenuLinks: MenuItem[];
+    isUnifiedAdmin: string;
+    switchButtonText: string;
+    switchButtonTooltip: string;
+    switchButtonClass: string;
 
     constructor(
         private _loggerService: LoggerService,
         private _sharedData: SharedDataService,
-        private _headerService: HeaderService
-    ) {
-    }
+        private _headerService: HeaderService,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _notificationService: NotificationService,
+        private _utilityService: UtilityService,
+        private _cookieService: CookieService
+    ) { }
 
     ngOnInit() {
+        if (this._cookieService.get('isUnifiedAdmin') === 'false') {
+            this.switchButtonClass = 'adminToggleButton switch-button-secondary';
+            this.switchButtonText = 'Switch to Unified';
+            this.switchButtonTooltip = 'Click here to switch to Unified Admin';
+        } else {
+            this.switchButtonClass = 'adminToggleButton switch-button-primary';
+            this.switchButtonText = 'Switch to Classic';
+            this.switchButtonTooltip = 'Click here to switch to Classic Admin';
+        }
         this._loggerService.info('HeaderComponent : ngOnInit');
         this.headerModel = new HeaderModel();
         this.headerModel.homeURL = environment.appUrl;
@@ -72,6 +91,22 @@ export class HeaderComponent implements OnInit {
         this.subscriptions.forEach((s) => {
             s.unsubscribe();
         });
+    }
+
+    onClickSwitchButton() {
+        if (this._cookieService.get('isUnifiedAdmin') === 'false') {
+            this.switchButtonClass = 'adminToggleButton switch-button-primary';
+            this.switchButtonText = 'Switch to Classic';
+            this.switchButtonTooltip = 'Click here to switch to Classic Admin';
+            this._cookieService.set('isUnifiedAdmin', 'true');
+            window.location.reload(true);
+        } else {
+            this.switchButtonClass = 'adminToggleButton switch-button-secondary';
+            this.switchButtonText = 'Switch to Unified';
+            this.switchButtonTooltip = 'Click here to switch to Unified Admin';
+            this._cookieService.set('isUnifiedAdmin', 'false');
+            window.location.reload(true);
+        }
     }
 
     public fetchloggedInUserData = () => {

@@ -15,7 +15,8 @@
     </div>
     <div id="collapsebar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-            <li><span class="tenant-name-container"></span>{{ headerModel.tenantName }}</li>
+            <li> <button type="button" [ngClass]="switchButtonClass" [title]="switchButtonTooltip" (click)="onClickSwitchButton()">{{switchButtonText}}</button></li>
+            <li><span class="tenant-name-container">{{ headerModel.tenantName }}</span></li>
             <li><a href="https://www.mozu.com/docs/guides/guides.htm"><span class=""></span> {{'Header.Label.help' | translate }} </a></li>
             <li class="navbar-search-align">
                 <span *ngIf="!headerModel.showSearchInput" (click)="toggleVisible()" class="fa fa-search fa-rotate-90"></span>
