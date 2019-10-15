@@ -252,9 +252,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 else
                 {
-                    var data = Request.GetQueryNameValuePairs();
-                    var OrderPaymentsByCapture = data.Where(x => x.Key.Equals("OrderPaymentsByCapture")).FirstOrDefault();
-                    orderPayments = Convert.ToBoolean(OrderPaymentsByCapture.Value);
+                    var queryStrings = Request.GetQueryNameValuePairs();
+                    var orderPaymentsByCapture = queryStrings.Where(x => x.Key.Equals("OrderPaymentsByCapture")).FirstOrDefault();
+                    orderPayments = Convert.ToBoolean(orderPaymentsByCapture.Value);
                 }
 
                 return await GetSingleReturn(pagingParams.id, orderPayments);

@@ -28,11 +28,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var paymentRankings = paymentSettings.PaymentRanking.Split(',');
 
-
             Returns.ForEach(rma => {
-                rma.Payments = rma.Payments.Reverse<OrderPayment>().ToList();
                 rma.Payments = rma.Payments.OrderBy(payment => payment, new PaymentHelper.PaymentRankingComparer(paymentRankings)).ToList();
-
+                rma.Payments = rma.Payments.Reverse<OrderPayment>().ToList();
             });
 
             return Returns;
