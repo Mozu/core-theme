@@ -192,7 +192,7 @@
         });
         var allLocationsStore = Ext.create('Ext.data.Store', {
             storeId: 'allLocationsStore',
-            fields: ['name', 'code'],
+            fields: ['name', 'code', 'orderedQty'],
             autoLoad: false,
             pageSize: 5,
             proxy: {
@@ -220,12 +220,19 @@
                 {
                     text: 'Location',
                     dataIndex: 'name',
-                    width: 425,
+                    width: 325,
                 },
                 {
                     text: 'Location Code',
                     dataIndex: 'code',
-                    width: 425,
+                    width: 325,
+                },
+                {
+                    text: 'Qty Ordered', dataIndex: 'orderedQty', flex: 1, width: 50, autoSizeColumn: true, minWidth: 150,
+                    renderer: function (val, meta, record) {
+                        if (me.selectedItem)
+                            return me.selectedItem.quantity;
+                    }
                 },
                 {
                     text: 'Qty to reassign', dataIndex: 'reassignQty', width: 150,
@@ -455,7 +462,7 @@
 
                     cellEditing.startEditByPosition({
                         row: rowIdx,
-                        column: 2
+                        column: 3
                     });
                     if (selectedItem.reassignQty == null || selectedItem.reassignQty == '') {
                         Ext.getCmp('toolbar2').setVisible(true);
