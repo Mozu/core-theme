@@ -605,3 +605,7 @@
     .shipping-packages-grid.x-panel .x-panel-default, .shipping-packages-grid.x-panel {
         overflow: visible;
     }
+
+    .shipping-packages-grid.x-panel .x-panel-body .x-grid-row td.x-grid-dirty-cell:not(.x-grid-checkheader-cell) {
+    background-color: #fafafa !important;
+    }

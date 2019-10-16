@@ -10,7 +10,7 @@
 
         <p-footer>
             <div class="taco-dashboard-item-item" *ngFor="let eachAccessTileLink of tileModel.sectionLinks;let i=index;">
-                <div class="tiles-item">
+                <div class="tiles-item" *ngIf="eachAccessTileLink.linkDataURL !== quotesRoute">
                     <a *ngIf="eachAccessTileLink.linkDataURL === quotesRoute || eachAccessTileLink.linkDataURL === locationGroupRoute; 
                       else routeLink" [routerLink]="[eachAccessTileLink.linkDataURL]">{{eachAccessTileLink.linkDataText}}</a>
                     <ng-template #routeLink>

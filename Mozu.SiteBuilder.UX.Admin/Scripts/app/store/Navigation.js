@@ -418,12 +418,8 @@ Ext.define('Taco.store.Navigation', {
                     'id': 'b2b-accounts',
                     'label': 'B2B Accounts',
                     'address': 'b2baccounts'
-                },
-                    {
-                        "id": "quotes",
-                        "label": "Quotes",
-                        "address": "/admin?quotes",
-                    }]
+                }
+                ]
             },
             {
                 'id': 'report',
