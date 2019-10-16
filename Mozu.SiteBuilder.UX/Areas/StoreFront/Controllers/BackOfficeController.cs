@@ -22,6 +22,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using DC = Mozu.CommerceRuntime.Contracts.Orders;
+using DCShipment = Mozu.Fulfillment.Contracts.Model.ResourceOfShipment;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -255,12 +256,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
-            var shipment = order != null && order.Shipments != null ? order.Shipments.FirstOrDefault(p => p.Number == shipmentNumber) : null;
+            var shipment = (await _fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
 
             if (order == null || shipment == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
+
+            var dcShipment = Mapper.Map<Shipment>(shipment);
+            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
@@ -271,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //var ser = new Newtonsoft.Json.JsonSerializer() { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() };
             //var jo = Newtonsoft.Json.Linq.JObject.FromObject(shipment, ser);
 
-            PopulateShipmentDetails(shipment, order);
+            PopulateShipmentDetails(dcShipment, order);
 
             ViewData["order"] = order;
             return await RenderWithContext(template, shipment);
@@ -395,7 +399,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
-
+       
             bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
             if (isExpired)
             {

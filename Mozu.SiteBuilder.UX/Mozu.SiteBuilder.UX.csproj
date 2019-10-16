@@ -173,6 +173,7 @@
     <Compile Include="Areas\StoreFront\Controllers\LocationController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\MyAnonymousAccountController.cs" />
     <Compile Include="Areas\StoreFront\Controllers\VisitController.cs" />
+    <Compile Include="Areas\StoreFront\ModelMapping\FulfillmentMapping.cs" />
     <Compile Include="Areas\StoreFront\ModelMapping\JObjectMapping.cs" />
     <Compile Include="Areas\StoreFront\Models\CustomerPurchaseOrderPaymentTerm.cs" />
     <Compile Include="Areas\StoreFront\Models\DetailedPackageItem.cs" />
