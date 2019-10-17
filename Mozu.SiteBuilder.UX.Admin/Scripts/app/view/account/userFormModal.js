@@ -26,8 +26,9 @@ Ext.define('Taco.view.account.userFormModal', {
         me.title = (me.record) ? 'Edit User' : 'Add User';
 
         me.roles = Ext.create('Taco.store.Roles', {
-            autoLoad: true/*,
-            filters: [
+            autoLoad: true,
+            pageSize: 200
+            /*filters: [
                 function(item) {
                     if (item.data.id > 2) {
                         return item;
