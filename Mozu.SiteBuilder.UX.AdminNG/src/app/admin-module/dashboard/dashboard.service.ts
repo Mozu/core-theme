@@ -45,8 +45,13 @@ export class DashbaordService {
                 }
                 accessTileModel.sectionLinks.push(sectionLink);
               });
-            }
-            allAccessTiles.push(accessTileModel);
+              }
+              if (accessTileModel.id === Constants.orderRoutingNavigationId) {
+                  if (this._sharedDataService._sharedData.items.ctTaContext.omsEnabled)
+                      allAccessTiles.push(accessTileModel);
+              }
+              else
+                  allAccessTiles.push(accessTileModel);
           });
         }
         return allAccessTiles;

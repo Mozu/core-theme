@@ -73,8 +73,8 @@ export class NavigationLeftComponent implements OnInit {
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
         this.model.filteredNavigationLinks, this._sharedDataService._sharedData.items.ctTaContext);
       this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
-        function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
-
+          function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
+        
       _.forEach(this.model.mainItems, (eachMainItem: MenuItem) => {
         if (eachMainItem.id === Constants.orderRoutingNavigationId) {
           (eachMainItem.items as MenuItem[]).forEach((eachItem: MenuItem) => {
@@ -85,6 +85,10 @@ export class NavigationLeftComponent implements OnInit {
         }
       });
 
+        if (!this._sharedDataService._sharedData.items.ctTaContext.omsEnabled) {
+            const orderRoutingIndex = this.model.mainItems.findIndex((eachItem) => { return eachItem.id === Constants.orderRoutingNavigationId });
+            this.model.mainItems.splice(orderRoutingIndex,1);
+        }
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();

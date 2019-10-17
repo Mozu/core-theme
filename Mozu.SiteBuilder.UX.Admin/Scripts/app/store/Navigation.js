@@ -58,7 +58,7 @@ Ext.define('Taco.store.Navigation', {
                     }
 
                     if (item.id === 'orderRouting') {
-                        item.address = Taco.app.context.getOrderRoutingURI() + '?service=/_orderRouting/security-check';
+                        item.address = Taco.app.context.getOrderRoutingURI() + '?service=/_orderRouting/login/cas';
                     }
 
                     if (item.id === 'fulfiller') {
@@ -196,6 +196,8 @@ Ext.define('Taco.store.Navigation', {
         {
             filterFn: function (record) {
                 var ret = true;
+                if (record.raw.id === 'orderRoutingParent' && !Taco.user.taContext.omsEnabled)
+                    return false;
 
                 if (record.raw.behaviorIds && record.raw.behaviorIds.length) {
                     Ext.each(record.raw.behaviorIds, function (behaviorId) {
@@ -379,7 +381,6 @@ Ext.define('Taco.store.Navigation', {
                 'navParent': 'main',
                 'label': 'Order Routing',
                 'icon': 'nav-orders',
-                'behaviorIds': [188],
                 'items': [
                     {
                         "id": "orderRouting",

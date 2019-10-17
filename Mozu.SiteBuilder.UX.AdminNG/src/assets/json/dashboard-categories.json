@@ -241,7 +241,7 @@
         "contextType": "",
         "address": "orderRouting",
         "visible": true,
-        "url": "?service=/_orderRouting/security-check"
+        "url": "?service=/_orderRouting/login/cas"
       }
     ]
   },
