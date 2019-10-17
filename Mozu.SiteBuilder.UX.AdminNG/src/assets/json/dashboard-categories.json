@@ -215,7 +215,7 @@
     "id": "fulfiller",
     "navParent": "main",
     "label": "Fulfillment",
-    "behaviorIds": 188,
+    "behaviorIds": 187,
     "visible": true,
     "items": [
       {

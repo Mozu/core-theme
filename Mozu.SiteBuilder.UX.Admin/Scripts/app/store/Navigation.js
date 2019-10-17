@@ -365,7 +365,7 @@ Ext.define('Taco.store.Navigation', {
                 'navParent': 'main',
                 'label': 'Fulfillment',
                 'icon': 'nav-orders',
-                'behaviorIds': [188],
+                'behaviorIds': [187],
                 'items': [
                     {
                         "id": "fulfiller",
