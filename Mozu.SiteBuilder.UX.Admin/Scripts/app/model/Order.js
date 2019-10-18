@@ -2783,50 +2783,32 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
-    getCancellationReasons: function () {
-        if (!this.localeStore) {
-            this.localeStore = Ext.create('Ext.data.Store', {
-                fields: ['key', 'value'],
-                autoLoad: true,
-                proxy: {
-                    type: 'ajax',
-                    url: '/admin/scripts/app/locale/en-US.json'
+    getCancellationReasons: function (category) {
+        this.cancellationReasons = Ext.create('Ext.data.Store', {
+            autoLoad: false,
+            fields: [
+                {
+                    name: 'reasonCode',
+                    type: 'string'
+                },
+                {
+                    name: 'name',
+                    type: 'string'
+                },
+                {
+                    name: 'needsMoreInfo',
+                    type: 'boolean'
                 }
-            });
-            this.localeStore.load({
-                scope: this,
-                callback: function (records, operation, success) { }
-            });
-        }
-
-        if (!this.cancellationReasons) {
-            this.cancellationReasons = Ext.create('Ext.data.Store', {
-                autoLoad: false,
-                fields: [
-                    {
-                        name: 'reasonCode',
-                        type: 'string'
-                    },
-                    {
-                        name: 'description',
-                        type: 'string'
-                    },
-                    {
-                        name: 'needsMoreInfo',
-                        type: 'boolean'
-                    }
-                ],
-                proxy: {
-                    type: 'ajax',
-                    url: '/admin/app/order/cancel/reasons',
-                    reader: {
-                        type: 'json',
-                        root: 'items'
-                    }
+            ],
+            proxy: {
+                type: 'ajax',
+                url: '/admin/app/order/cancel/reasons?category=' + (category ? category : ""),
+                reader: {
+                    type: 'json',
+                    root: 'items'
                 }
-            });
-
-        }
+            }
+        });
         return this.cancellationReasons;
     },
 

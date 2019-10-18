@@ -62,7 +62,7 @@ Ext.define('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                                     name: 'cancelReason',
                                     itemId: 'cancelReason',
                                     valueField: 'reasonCode',
-                                    displayField: 'description',
+                                    displayField: 'name',
                                     fieldLabel: 'Cancel Reason',
                                     queryMode: 'local',
                                     margin: '0px 5px 0px 5px',

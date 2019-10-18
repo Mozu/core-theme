@@ -626,8 +626,8 @@
 
     openItemCancellationPopup: function () {
         var me = this;
-
-        var store = me.record.getCancellationReasons();
+        
+        var store = me.record.getCancellationReasons(me.shipmentRecord.shipmentType);
         store.load({
             scope: this,
             callback: function (records, operation, success) {
@@ -635,16 +635,6 @@
                     var grid = Ext.getCmp(this.id);
                     var item = grid.getSelectionModel().getSelection();
 
-                    for (var i = 0; i < records.length; i++) {
-                        me.record.localeStore.each(function (localeRecord) {
-                            if (records[i].get('reasonCode') == localeRecord.get('key')) {
-                                records[i].dirty = true;
-                                records[i].set('description', localeRecord.get('value'));
-                                records[i].setDirty('description', localeRecord.get('value'));
-                                records[i].commit();
-                            }
-                        });
-                    }
                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentItemCancellation', {
                         layout: 'hbox',
                         width: 600,

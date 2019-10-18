@@ -67,16 +67,6 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
             scope: this,
             callback: function (records, operation, success) {
                 if (records) {
-                    for (var i = 0; i < records.length; i++) {
-                        me.record.localeStore.each(function (localeRecord) {
-                            if (records[i].get('reasonCode') == localeRecord.get('key')) {
-                                records[i].dirty = true;
-                                records[i].set('description', localeRecord.get('value'));
-                                records[i].setDirty('description', localeRecord.get('value'));
-                                records[i].commit();
-                            }
-                        });
-                    }
                     Ext.create('Taco.view.order.modal.fulfillment.OrderCancellation', {
                         layout: 'hbox',
                         width: 600,

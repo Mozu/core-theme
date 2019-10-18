@@ -319,21 +319,12 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
     openShipmentCancellationPopUp: function () {
         var me = this;
-        var store = me.record.getCancellationReasons();
+        
+        var store = me.record.getCancellationReasons(me.shipmentRecord.shipmentType);
         store.load({
             scope: this,
             callback: function (records, operation, success) {
-                if (records) {
-                    for (var i = 0; i < records.length; i++) {
-                        me.record.localeStore.each(function (localeRecord) {
-                            if (records[i].get('reasonCode') == localeRecord.get('key')) {
-                                records[i].dirty = true;
-                                records[i].set('description', localeRecord.get('value'));
-                                records[i].setDirty('description', localeRecord.get('value'));
-                                records[i].commit();
-                            }
-                        });
-                    }
+                if (records) {                    
                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                         layout: 'hbox',
                         width: 600,

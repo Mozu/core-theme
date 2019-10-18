@@ -19,16 +19,12 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 {
     public partial class OrderController
     {
-        public class CancelReasonArgs
-        {
-            public string Category { get; set; }
-        }
         [HttpGetRoute(UriTemplate = "cancel/reasons")]
-        public async Task<Response<List<CancelReasonItem>>> GetReasons(CancelReasonArgs args, [FromUri]bool draft = false)
+        public async Task<Response<List<CancelReasonItem>>> GetReasons([FromUri]string Category, [FromUri]bool draft = false)
         {
-            var reasons = (await _orderWebApiClient.GetReasons()).ReadAsSync();
+            var reasons = (await _orderWebApiClient.GetReasons(Category)).ReadAsSync();
 
-            return List2(Mapper.Map<List<CancelReasonItem>>(reasons.Items), reasons.TotalCount);
+            return List2(Mapper.Map<List<CancelReasonItem>>(reasons.Items.OrderBy(x=>x.ReasonCode)), reasons.TotalCount);
         }
         public class CancelOrderArgs
         {

@@ -9,12 +9,12 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
     initComponent: function () {
         var me = this;
 
-        var store = me.record.getCancellationReasons();
+        var store = me.record.getCancellationReasons(me.shipmentRecord.shipmentType);
         store.load({
             scope: this,
             callback: function (records, operation, success) {
                 if (records) {
-                    me.reasonCodes = me.record.localeStore;
+                    me.reasonCodes = records;
                     me.getView().refresh();
                 }
             }
@@ -169,11 +169,11 @@ Ext.define('Taco.view.order.widget.ShippingCancellationGrid', {
                     if (value && value.reasonCode) {
                         if (value.reasonCode == 'Other')
                             return value.moreInfo;
-
-                        if (this.reasonCodes && this.reasonCodes.data && this.reasonCodes.data.items) {
-                            for (var i = 0; i < this.reasonCodes.data.items.length; i++) {
-                                if (value.reasonCode == this.reasonCodes.data.items[i].get('key')) {
-                                    return this.reasonCodes.data.items[i].get('value');
+                        
+                        if (this.reasonCodes && this.reasonCodes.length > 0 ) {
+                            for (var i = 0; i < this.reasonCodes.length; i++) {
+                                if (value.reasonCode == this.reasonCodes[i].get('reasonCode')) {
+                                    return this.reasonCodes[i].get('name');
                                 }
                             }
                         }
