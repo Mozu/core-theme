@@ -9,7 +9,10 @@
         'Ext.toolbar.TextItem',
         'Ext.grid.CellEditor',
         'Ext.util.DelayedTask',
-        'Ext.ux.data.PagingMemoryProxy'
+        'Ext.ux.data.PagingMemoryProxy',
+        'Ext.toolbar.Paging',
+        'Ext.view.BoundList',
+        'Ext.data.Store'
     ],
 
     autoShow: true,
@@ -29,18 +32,19 @@
     
 
     initComponent: function () {
+       
         this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1,
             pluginId: 'cellEditing'
         });
         var me = this;
+        
+        
         me.orderedQuantity = me.selectedItem.quantity;
         this.filteredInventory = [];
-        if (this.inventoryItemList.candidateSuggestions && this.inventoryItemList.candidateSuggestions.length > 0) {
-            this.filteredInventoryLocations(this.inventoryItemList.candidateSuggestions);
-        }
-        if (this.inventoryItemList.items && this.inventoryItemList.items.length > 0) {
-            this.filteredInventoryLocations(this.inventoryItemList.items);
+        
+        if (me.inventoryItemList.items && me.inventoryItemList.items.length > 0) {
+            this.filteredInventoryLocations(me.inventoryItemList.items);
         }
         var selectedTab;
         this.selectedTab = 'inventoryGrid';
@@ -56,7 +60,7 @@
             }],
             fields: ['locationName', 'distance', 'available', 'orderedQty', 'reassignQty'],
             groupField: 'locationName',
-            data: this.inventoryItemList.candidateSuggestions || this.inventoryItemList.items,
+            data: me.inventoryItemList.items,
             proxy: {
                 type: 'memory',
                 enablePaging: true,
@@ -146,19 +150,41 @@
                 xtype: 'pagingtoolbar', 
                 store: 'ItemInventoryStore',
                 dock: 'bottom',
-                displayInfo: true
+                displayInfo: true,
+                doRefresh: function () {
+                    var store = Ext.getStore('ItemInventoryStore');
+                    me.record.getInventory({
+                        jsonData: me.getReassignItemPayload(),
+                        success: function (response) {
+                            me.isRecordSaved = true;
+                            me.setLoading(false, me.body);
+                            var json = Ext.decode(response.responseText, true);
+                            inventorygrid.setLoading({
+                                useMsg: false,
+                                maskCls: 'x-mask taco-loadmask'
+                            });
+                            //store.loadData(json.items); 
+                            store.proxy.data = json.items;
+                            var current = store.currentPage;
+                            if (me.fireEvent('beforechange', me, current) !== false) {
+                                store.loadPage(current);
+                            }
+                            setTimeout(function () {
+                                inventorygrid.setLoading(false);
+                            }, 1000);
+                        },
+                        failure: function (response) {
+                            me.setLoading(false, me.body);
+                        }
+                    });
+                },
             }
             ],
             selModel: {
                 selModel: 'rowmodel',
             },
             plugins: [this.cellEditing],
-            //{   
-                //ptype: 'cellediting',
-                //clicksToEdit: 1,
-                //autoCancel: false,
-                //pluginId: 'ItemLocationEditing',
-            //},
+           
             listeners: {
                 'validateedit': function (editor, context, eOpts) {
                     var me = this;
@@ -190,6 +216,7 @@
                 }
             },
         });
+       
         var allLocationsStore = Ext.create('Ext.data.Store', {
             storeId: 'allLocationsStore',
             fields: ['name', 'code', 'orderedQty'],
@@ -302,7 +329,7 @@
                 }
             },
             
-        });                   
+        });   
 
         this.fieldContainer = Ext.create('Ext.tab.Panel', {
             width: 1000,
@@ -505,5 +532,51 @@
             }
         }
     },
+
+    getReassignItemPayload: function () {
+        var me = this;
+
+        var model = {
+            type: me.shipmentRecord.shipmentType == "BOPIS" ? 'ALL' : 'ANY',
+            items: []
+        }
+
+        if (me.shipmentRecord.location)
+            model.locationBlacklist = [me.shipmentRecord.location.code];
+
+
+        if (model && me.shipmentRecord.shipmentType == "BOPIS") {
+            model.pickup = true;
+        }
+        else if (model && me.shipmentRecord.shipmentType == "STH") {
+            model.directShip = true;
+        }
+
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
+            model.requestLocation = {
+                postalCode: me.shipmentRecord.location.address.postalOrZipCode,
+                latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
+                longitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lng : '',
+                //locationCode: me.shipmentRecord.location.code,
+                countryCode: me.shipmentRecord.location.address.countryCode
+            }
+            //only showing 500 miles radius locations for BOPIS
+            if (model.requestLocation && me.shipmentRecord.shipmentType == "BOPIS") {
+                model.requestLocation.radius = 500;
+                model.requestLocation.unit = 'MILES';
+            }
+        }
+        if (me.selectedItem) {
+            model.items.push({
+                //partNumber: item[0].data.productCode,
+                upc: me.selectedItem.variationProductCode ? me.selectedItem.variationProductCode : me.selectedItem.productCode,//write condition if variationproduct code missing
+                quantity: me.selectedItem.quantity
+            });
+        }
+        return model;
+    },
+
+    
+
     
 });
