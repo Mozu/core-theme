@@ -483,6 +483,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             foreach (var refund in args.Refunds)
             {
+                if (refund.Amount <= 0)
+                {
+                    throw new VaeValidationConflictException(nameof(refund.Amount), $"Refund amount of {refund.Amount} is invalid. Amount must be greater than 0.");
+                }
+
                 var dcPaymentAction = new DCp.PaymentAction
                 {
                     ActionName = PaymentActions.CREDIT_PAYMENT,
