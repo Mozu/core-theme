@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             if(match.Success)
             {
                 var g = match.Groups["dotjs"];
-                return new StringBuilder(content.Substring(0, g.Index)).Append(".js?ver=1.2").Append(content.Substring(g.Index + 3)).ToString();
+                return new StringBuilder(content.Substring(0, g.Index)).Append(".js?ver=1.3").Append(content.Substring(g.Index + 3)).ToString();
             }
             return content;
 
