@@ -235,7 +235,7 @@ Ext.define('Taco.view.order.widget.PaymentPanel', {
     initStatusRow: function () {
         var me = this,
             // capture amount is the outstanding balance on the order
-            captureAmount = me.order.getCaptureAmountHint(),
+            captureAmount = me.order.data.authorizationInfo.totalAmount - me.order.data.authorizationInfo.amountCollected,
             // auth ready is when you have an authorized card with id
             authReady = Ext.Array.contains(me.record.data.availableActions, 'CapturePayment'),
             // can capture is when you are auth ready and your order has a positive capture amount
