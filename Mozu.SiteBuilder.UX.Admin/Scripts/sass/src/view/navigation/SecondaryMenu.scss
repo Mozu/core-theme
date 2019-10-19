@@ -8,6 +8,30 @@
         margin-right: 10px;
         z-index: 1
     }
+
+    .x-btn .x-btn-inner-center {
+        color: white;
+        font-size: 12px;
+    }
+
+
+    .switch-button-primary {
+        background-color: #bb6e9c;
+        background-image: none;
+
+        &:hover {
+            text-decoration: none !important;
+        }
+    }
+
+    .switch-button-secondary {
+        background-color: #2ea195;
+        background-image: none;
+
+        &:hover {
+            text-decoration: none !important;
+        }
+    }
     .help-button {
         padding: 10px 11px 8px;
         top: -2px !important; //override EXT JS positioning
@@ -18,6 +42,7 @@
             left: 1px;
         }
     }
+
     .global-search-box .x-form-field {
         border: 0px !important;
     }
@@ -42,9 +67,10 @@
                 left: -1px;
             }
         }
-        
+
         .#{$prefix}btn-wrap {
             @include icon-font($glyph-magnifying-glass, 16px, $kibo-light-gray);
+
             &::after {
                 left: -6px;
                 top: 0px;

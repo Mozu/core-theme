@@ -63,6 +63,41 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
         }
 
         this.items = [{
+            xtype: 'button',
+            text: 'Switch to Classic',
+            pressed: true,
+            cls: 'switch-button-primary',
+            tooltip: 'click here switch to classic admin',
+            enableToggle: true,
+            listeners: {
+                'toggle': function (button, pressed) {
+                    if (Ext.util.Cookies.get('isUnifiedAdmin') == 'false') {
+                        button.addCls('switch-button-primary');
+                        Ext.util.Cookies.set('isUnifiedAdmin', true);
+                        button.setText('Switch to Classic');
+                        button.setTooltip("Click here to switch to Classic Admin");
+                        window.location.reload(true);
+                    } else {
+                        button.addCls('switch-button-secondary');
+                        Ext.util.Cookies.set('isUnifiedAdmin', false);
+                        button.setText('Switch to Unified');
+                        button.setTooltip("Click here to switch to Unified Admin");
+                        window.location.reload(true);
+                    }
+                },
+                'afterrender': function (button) {
+                    if (Ext.util.Cookies.get('isUnifiedAdmin') == "false") {
+                        button.addCls('switch-button-secondary');
+                        button.setText('Switch to Unified');
+                        button.setTooltip("Click here to switch to Unified Admin");
+                    } else {
+                        button.addCls('switch-button-primary');
+                        button.setText('Switch to Classic');
+                        button.setTooltip("Click here to switch to Classic Admin");
+                    }
+                }
+            }
+        }, {
             xtype: 'component',
             cls: 'tenant-name',
             html: '<div class="tenant-name-container"><span>' + tenantName + '</span></div>',
