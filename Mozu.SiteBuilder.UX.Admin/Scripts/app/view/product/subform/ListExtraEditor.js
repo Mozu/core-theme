@@ -227,6 +227,7 @@ Ext.define('Taco.view.product.subform.ListExtraEditor', {
 
         me.items = [me.adderCfg ,me.gridConfg];
 
+		me.gridConfg.suspendLayout = false;
         me.callParent(arguments);
 
 
