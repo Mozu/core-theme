@@ -23,7 +23,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             ]
         },
         //Not Good... Rework
-        saveUser: function(){
+        saveUser: function () {
             var user = this.get('user');
             user.set('id', user.get('userId'));
             user.set('accountId', this.get('b2bAccountId'));
@@ -34,7 +34,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             user.set('isRemoved', false);
             user.set('userName', user.get('emailAddress'));
             if (user.get('id')) {
-                return user.apiUpdate().then(function(){
+                return user.apiUpdate().then(function () {
                     window.usersGridView.refreshGrid();
                     var role = user.get('originalRoles') || [];
                     if (role.length) {
@@ -42,7 +42,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
                             id: user.get('id'),
                             accountId: user.get('accountId'),
                             roleId: role[0].roleId
-                        }).then( function() {
+                        }).then(function () {
                             return user.apiAddUserRole();
                         });
                     } else {
@@ -58,12 +58,12 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
                 window.usersGridView.refreshGrid();
             });
         },
-        setUser: function(user){
+        setUser: function (user) {
             this.get('user').clear();
             this.set('user', user);
 
         },
-        removeUser: function(){
+        removeUser: function () {
             return this.get('user').apiDelete.then(function () {
 
             });
@@ -85,7 +85,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             'user.emailAddress',
             'user.isActive'
         ],
-        chooseUserRole: function(e){
+        chooseUserRole: function (e) {
             var roleId = $(e.currentTarget).prop('value');
             this.model.get('user').set('roleId', roleId);
         }
@@ -105,7 +105,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         },
         handleDialogSave: function () {
             var self = this;
-            if (self._userForm ) {
+            if (self._userForm) {
                 self._userForm.model.saveUser();
             }
             this.bootstrapInstance.hide();
@@ -134,13 +134,13 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
                 userEditForm.render();
             }
 
-            if (user.get('userId')){
+            if (user.get('userId')) {
                 user.set('id', user.get('userId'));
                 user.set('accountId', require.mozuData('user').accountId);
 
                 user.apiGetUserRoles().then(function (resp) {
                     var role = resp.data.items[0];
-                    if(role) {
+                    if (role) {
                         user.set('originalRoles', resp.data.items);
                         user.set('roleId', role.roleId);
                     }
@@ -183,7 +183,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             {
                 index: 'isActive',
                 displayName: 'User Status',
-                displayTemplate: function(value){
+                displayTemplate: function (value) {
                     value = (value) ? 'Active' : 'Inactive';
                     return '<span class="status-pill' + value + '">' + value + '<span>';
                 },
@@ -194,7 +194,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
             {
                 displayName: 'Edit',
                 action: 'editUser',
-                isHidden: function(){
+                isHidden: function () {
                     return !this.hasRequiredBehavior();
                 }
             },
@@ -213,7 +213,7 @@ define(["modules/mozu-utilities", "modules/jquery-mozu", 'modules/api', "undersc
         },
         deleteUser: function (e, row) {
             var self = this;
-            return row.apiRemove().then(function(){
+            return row.apiRemove().then(function () {
                 self.refreshGrid();
             });
         },

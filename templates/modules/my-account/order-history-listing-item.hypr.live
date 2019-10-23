@@ -17,7 +17,16 @@
       {% endif %}
     </div>
     <div class="mz-itemlisting-price">
-     {{labels.orderPackagePrice}} : {%if model.product.price.tenantOverridePrice %} {{ model.product.price.tenantOverridePrice|currency }} {% else %} {%if model.product.price.salePrice %} {{ model.product.price.salePrice|currency }} {% else %} {{ model.product.price.price|currency }} {%endif%}{%endif%}
+     {{labels.orderPackagePrice}} : 
+     {% if model.product.price.tenantOverridePrice %}
+        {{ model.product.price.tenantOverridePrice|currency }} 
+      {% else %} 
+        {%if model.product.price.salePrice %}
+          {{ model.product.price.salePrice|currency }}
+        {% else %}
+          {{ model.product.price.price|currency }}
+        {% endif %}
+      {% endif %}
     </div>
     <div class="mz-itemlisting-quantity">
      {{labels.orderPackageQuantity}} : {%if packageItem %} {{ packageItem.quantity}} {% else %} {{ model.quantity}} {% endif %} 
@@ -27,7 +36,7 @@
    
 {% endblock item-listing-actions %}
 {% block item-listing-extras %}
-{% if returning == model.id %}
-<p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
-{% endif %}
+  {% if returning == model.id %}
+  <p class="mz-itemlisting-prompt is-warning">{{ labels.returnInfo|safe }}</p>
+  {% endif %}
 {% endblock item-listing-extras %}

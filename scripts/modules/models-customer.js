@@ -376,12 +376,32 @@
                 orderHistory = this.get('orderHistory'),
                 returnHistory = this.get('returnHistory');
             this.get('editingContact').set('accountId', this.get('id'));
+
+
             orderHistory.lastRequest = {
-                pageSize: 5
+                pageSize: 5,
+                 mode: "synthesized"
             };
             returnHistory.lastRequest = {
                 pageSize: 5
             };
+            
+            orderHistory.apiGet(orderHistory.lastRequest).then(function (req) {
+                var orderModels = _.map(req.data.items, function(item){
+                    item.items = _.map(item.items, function(orderItem) {
+                        orderItem.id = orderItem.id + '-' + orderItem.lineId;
+                        return orderItem;
+                    });
+
+                    //Temp until Package Fulfillment is fixed
+
+
+                    return new OrderModels.Order(item);
+                });
+                orderHistory.get('items').reset(orderModels);
+                orderHistory.trigger('ordersLoaded');
+            });
+            
             orderHistory.on('returncreated', function(id) {
                 returnHistory.apiGet(returnHistory.lastRequest).then(function () {
                     returnHistory.trigger('returndisplayed', id);

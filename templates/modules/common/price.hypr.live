@@ -19,7 +19,6 @@
  </span>
  {% else %}
  <span itemprop="price" class="mz-price">
-
      {% if model.priceType != "MAP" %}
          {{model.price|currency}}
      {% else %}
