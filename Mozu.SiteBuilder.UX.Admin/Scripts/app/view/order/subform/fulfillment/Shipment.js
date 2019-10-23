@@ -77,7 +77,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         padding: '0 40 0 0',
                         hidden: !(this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled'),
                         tpl: [
-                            '<span class="label">Status Reason</span>',
+                            '<span class="label">Reason</span>',
                             '<div class="shipmentStatus">' +
                             (this.shipmentRecord.shipmentStatusReason ? this.getReasonDescription(this.shipmentRecord.shipmentStatusReason) : '')
                             + '</div>'
