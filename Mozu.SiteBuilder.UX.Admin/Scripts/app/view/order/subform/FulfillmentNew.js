@@ -13,6 +13,17 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
         var me = this;
         this.cls = [this.cls, 'taco-order-fulfillment'].join(' ');
 
+        //Load Cancellation Reasons for category CSR. This needs to display reason code's description.
+        var store = me.record.getCancellationReasons("CSR");
+        store.load({
+            scope: this,
+            callback: function (records, operation, success) {
+                if (records) {
+                    me.record.set('csrCancellationReasons', records);
+                }
+            }
+        });
+        
         this.record.on({
             reload: this.buildComponents,
             scope: this

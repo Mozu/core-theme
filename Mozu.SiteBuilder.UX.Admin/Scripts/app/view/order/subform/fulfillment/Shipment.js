@@ -75,6 +75,17 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         padding: '0 40 0 0',
+                        hidden: !(this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care' || this.shipmentRecord.shipmentStatus.toLowerCase() == 'canceled'),
+                        tpl: [
+                            '<span class="label">Status Reason</span>',
+                            '<div class="shipmentStatus">' +
+                            (this.shipmentRecord.shipmentStatusReason ? this.getReasonDescription(this.shipmentRecord.shipmentStatusReason) : '')
+                            + '</div>'
+                        ],
+                        width:200
+                    },
+                    {
+                        padding: '0 40 0 0',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Shipment Step Id</span>',
@@ -524,8 +535,24 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     return taskLists[count];
             }
         }
-    }
+    },
 
+    getReasonDescription: function (value) {
+        var reasonCodes = this.record.get('csrCancellationReasons');
+        if (value && value.reasonCode) {
+            if (value.reasonCode == 'Other')
+                return value.moreInfo || value.reasonCode;
+
+            if (reasonCodes && reasonCodes.length > 0) {
+                for (var i = 0; i < reasonCodes.length; i++) {
+                    if (value.reasonCode == reasonCodes[i].get('reasonCode')) {
+                        return reasonCodes[i].get('name');
+                    }
+                }
+            }
+            return value.reasonCode;
+        }
+    }
 });
 
 

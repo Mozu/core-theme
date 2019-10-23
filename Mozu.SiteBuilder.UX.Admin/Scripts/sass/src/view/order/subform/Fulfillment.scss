@@ -369,6 +369,14 @@
         font-size: 16px;
     }
 
+    .shipmentStatus {
+        padding: 10px 0;
+        width: 180px;
+        overflow-wrap: break-word;
+        font-size: 14px !important;
+        overflow: hidden;
+    }
+
     .x-btn-inner.x-btn-inner-center {
         color: #000;
     }
