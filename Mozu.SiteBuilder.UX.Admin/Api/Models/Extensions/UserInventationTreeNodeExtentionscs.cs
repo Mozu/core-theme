@@ -37,7 +37,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Extensions
                     if (!roles.IsNullOrEmpty() && roles.Count == 1)
                     {
                         roleText = roles[0].Role;
-                        roles = new List<AccountUserTreeNode>();
                     }
                     else if (roles.Count > 1)
                     {
