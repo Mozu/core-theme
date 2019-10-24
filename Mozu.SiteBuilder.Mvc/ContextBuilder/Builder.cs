@@ -63,7 +63,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
         const int TimerInterval = 15 * 1000;
-        public const string CacheVersion = "9";
+        public const string CacheVersion = "U1";
         const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
         const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
         const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
