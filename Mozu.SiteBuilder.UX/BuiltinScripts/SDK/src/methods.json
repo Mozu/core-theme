@@ -691,6 +691,11 @@
       "verb": "GET",
       "template": "{+returnService}{returnId}/packages/{packageId}/label{?returnAsBase64Png}",
       "returnType": "string"
+    },
+    "get-fulfillment-return-label": {
+      "verb": "GET",
+      "template": "{+returnService}{returnId}/shipping/label",
+      "returnType": "string"
     }
   },
   "rmas": {
