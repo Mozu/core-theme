@@ -237,7 +237,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             var validated = true;
             
             this.store.each(function(item){
-                if(item.get('originalAmount') - item.get('adjustmentAmount') < 0) {
+                if(item.get('originalAmount') + item.get('adjustmentAmount') < 0) {
                     validated = false;
                 };
             })
