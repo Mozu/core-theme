@@ -2130,8 +2130,10 @@
                     process.push(this.addDigitalCreditToCustomerAccount);
                 }
 
+                
+                // IF not saving through paypal & has an account & has permission to save a contact (full account access| 1014) THEN
                 //save contacts
-                if (!this.isNonMozuCheckout() && isAuthenticated || isSavingNewCustomer && this.hasRequiredBehavior(1014)) {
+                if ((isAuthenticated || isSavingNewCustomer) && this.hasRequiredBehavior(1014) && !this.isNonMozuCheckout()) {
                     if (!isSameBillingShippingAddress && !isSavingCreditCard) {
                         if (requiresFulfillmentInfo) process.push(this.addShippingContact);
                         if (requiresBillingInfo) process.push(this.addBillingContact);
