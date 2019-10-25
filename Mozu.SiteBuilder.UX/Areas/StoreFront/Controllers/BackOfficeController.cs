@@ -256,9 +256,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
-            var shipment = (await _fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
+            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
 
-            if (order == null || shipment == null)
+            if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
