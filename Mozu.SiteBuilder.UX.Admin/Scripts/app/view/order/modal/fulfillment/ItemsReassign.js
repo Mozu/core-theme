@@ -413,14 +413,14 @@
         
         if (this.validateModal()) {
             var me = this;
-            me.setLoading(true, this.body);
+            me.setLoading(true);
             var payloadData = me.getPayloadDataItemInventory();
 
             this.record.reassignShipmentItems({
                 jsonData: payloadData,
                 success: function (response) {
                     me.isRecordSaved = true;
-                    me.setLoading(false, me.body);
+                    me.setLoading(false);
                     var json = Ext.decode(response.responseText, true);
 
                     if (!json || !json.success) {
@@ -434,8 +434,7 @@
 
                 },
                 failure: function (response) {
-                    me.setLoading(false, me.body);
-
+                    me.setLoading(false);
                     var json = Ext.decode(response.responseText, true),
                         msg = (json && json.message) ? json.message : 'Error deallocating inventory';
                     Taco.app.fireEvent('setmessage', msg, 'error');
