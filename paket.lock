@@ -210,7 +210,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.General.Contracts (1.1942.0-gshot-contracts-43)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.Order.Contracts (1.1936.0-gshot-contracts-40)
+    Mozu.SiteSettings.Order.Contracts (1.1943.0-gshot-contracts-48)
       Mozu.Core.Prime (>= 1.17)
       Mozu.PaymentService.Contracts (>= 1.9.6)
     Mozu.SiteSettings.Ship.Contracts (1.1936.0-gshot-contracts-40)

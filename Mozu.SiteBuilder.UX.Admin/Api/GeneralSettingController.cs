@@ -149,6 +149,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ContainerId = fulfillmentSettings?.BpmConfiguration?.ContainerId ?? null,
                 ProcessId = fulfillmentSettings?.BpmConfiguration?.ProcessId ?? null
             };
+            currentFulfillmentSettings.FulfillmentJobSettings = new DC.Fulfillment.JobSettings() {
+                PickupReminderJob = fulfillmentSettings?.FulfillmentJobSettings?.PickupReminderJob,
+                ReleaseBackorderJob = fulfillmentSettings?.FulfillmentJobSettings?.ReleaseBackorderJob
+            };
 
             var itemOut = (await _fulfillmentSettingsWebApiClient.UpdateFulfillmentSettings(currentFulfillmentSettings)).ReadAsSync();
             return Single2(itemOut);
