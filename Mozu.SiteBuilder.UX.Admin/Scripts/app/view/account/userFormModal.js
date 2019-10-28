@@ -293,10 +293,10 @@ Ext.define('Taco.view.account.userFormModal', {
     isValid: function () {
         var retval = false;
         var email = this.form.getValues()['email'];
-        var selectionModel = this.selModel.getSelection();
+        var selectedRecords = this.selectedRecords.items;
         var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
         
-        if (re.test(email) && selectionModel.length != 0) {
+        if (re.test(email) && selectedRecords.length != 0) {
             retval = true;
         }
         return retval;
