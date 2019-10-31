@@ -14,8 +14,13 @@
 
     var betaControlVersion = tenantGlobalSettings.EnableBetaAdmin ? null : tenantGlobalSettings.BetaControlVersion;
     var cdn = (string)ViewData["cdn"];
+<<<<<<< HEAD
     var mozuInstanceId = (string)ViewData["mozuInstanceId"];
     var requestSuffix = string.Format("ver={0}&verHash={1}&bcv={2}&_miid={3}", ver.FileVersion, assemblyInfoHash, betaControlVersion, mozuInstanceId);
+=======
+    var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
+    var requestSuffix = string.Format("ver={0}&verHash={1}&bcv={2}", ver.FileVersion, assemblyInfoHash, betaControlVersion);
+>>>>>>> a19d1963f... turning off cdn if using cookie to view non standard admin
 
 }
 @helper DoCss( string cdn, string requestSuffix)
