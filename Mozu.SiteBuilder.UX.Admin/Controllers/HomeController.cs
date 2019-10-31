@@ -323,8 +323,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             await customSchemaTask.ConfigureAwait(false);
 
             ViewData["customSchema"] = customSchemaTask.Result;
-            
 
+            ViewData["cdn"] = GetCdn(tenant);
 
             var adminBundlePath = System.Web.Hosting.HostingEnvironment.MapPath("~/_mz_AdminUI_App")?.ToLowerInvariant();
             if (string.IsNullOrEmpty(adminBundlePath))
@@ -349,10 +349,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 
                 return RazorView("Index_Compiled");
             }
-
-          
-
+            
             return RazorView("index");
+            
+        }
+
+        private string GetCdn(Tenant.Contracts.Tenant tenant)
+        {
+            if ( !string.Equals( tenant.MozuInstanceId ?? "" , this._apiContext.MozuInstanceId ??"", StringComparison.OrdinalIgnoreCase))
+            {
+                return "";
+            }
+            var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
+            return  Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
+            
         }
 
         private void Resort(TaContext taContext)

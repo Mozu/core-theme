@@ -9,10 +9,11 @@
     var assemblyInfoHash = new Guid(System.Security.Cryptography.MD5.Create().ComputeHash(System.Text.Encoding.ASCII.GetBytes(assemblyInfoAtt.InformationalVersion))).ToString();
 
     var ver = System.Diagnostics.FileVersionInfo.GetVersionInfo(assFile);
-    var cdnHost = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("CdnHost");
+   
     var tenantGlobalSettings = (ITenantAdminSettingsContext)ViewData["tenantGlobalSettings"];
 
     var betaControlVersion = tenantGlobalSettings.EnableBetaAdmin ? null : tenantGlobalSettings.BetaControlVersion;
+    var cdn = (string)ViewData["cdn"];
     var cdn = Mozu.Core.Settings.MozuConfigurationManager.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost) ? "" : ("//" + cdnHost + "/common");
     var requestSuffix = string.Format("ver={0}&verHash={1}&bcv={2}", ver.FileVersion, assemblyInfoHash, betaControlVersion);
 
