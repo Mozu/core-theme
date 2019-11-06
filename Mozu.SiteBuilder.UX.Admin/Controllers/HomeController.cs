@@ -37,6 +37,7 @@ using User = Mozu.SiteBuilder.UX.Admin.Api.Models.Account.User;
 using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -261,6 +262,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var logzuUriBuilder = new UriBuilder(_settings.ZuKeeperPath);
             logzuUriBuilder.Path = "mozu.logzu";
             taContext.LogzuUrl = logzuUriBuilder.ToString();
+            taContext.HasUnifiedAdmin = HasUnifiedAdmin(tenant);
+
             Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();
@@ -353,6 +356,14 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             return RazorView("index");
             
+        }
+
+        private bool HasUnifiedAdmin(Tenant.Contracts.Tenant tenant)
+        {
+            var isUnifiedValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("IsUnified"))?.Value.ToString();
+            var kubeInstanceIdValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("mozu.reverseproxy.kube_instance_id"))?.Value.ToString();
+
+            return isUnifiedValue.EqualsIgnoreCase("true") && !string.IsNullOrEmpty(kubeInstanceIdValue);
         }
 
         private string GetCdn()

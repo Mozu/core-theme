@@ -26,11 +26,8 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
         [DataMember(Name = "logzuUrl")]
         public string LogzuUrl { get; set; }
 
-        [DataMember(Name = "omsEnabled")]
-        public bool? OmsEnabled { get; set; }
-
-        [DataMember(Name = "attributes")]
-        public List<TenantAttribute> Attributes { get; set; }
+        [DataMember(Name = "hasUnifiedAdmin")]
+        public bool? HasUnifiedAdmin { get; set; }
     }
 
     [DataContract]

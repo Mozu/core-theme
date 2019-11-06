@@ -425,6 +425,9 @@ Ext.define('Taco.core.context.TaContext', {
                 publishingEnabled: this.publishingEnabled
             }
         });
+    },
+    
+    getHasUnifiedAdmin: function () {
+        return this.hasUnifiedAdmin;
     }
-
 });
