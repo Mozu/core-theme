@@ -296,6 +296,7 @@ export interface CtTaContext {
     currencies: Currencies;
     logzuUrl: string;
     omsEnabled: boolean;
+    hasLegacyAdmin: boolean;
 }
 
 export interface LocalizationValue {

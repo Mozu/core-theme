@@ -430,6 +430,9 @@ Ext.define('Taco.core.context.TaContext', {
                 publishingEnabled: this.publishingEnabled
             }
         });
+    },
+    
+    getHasLegacyAdmin: function () {
+        return this.hasLegacyAdmin;
     }
-
 });

@@ -7,6 +7,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Api.Contracts.Provisioning;
 using Mozu.Core.Api.Routing;
+using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
 using Mozu.Core.Money;
 using Mozu.Core.Settings;
@@ -117,6 +118,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var logzuUriBuilder = new UriBuilder(_settings.ZuKeeperPath);
             logzuUriBuilder.Path = "mozu.logzu";
             taContext.LogzuUrl = logzuUriBuilder.ToString();
+            taContext.HasLegacyAdmin = HasLegacyAdmin(userIdentity.CTTenant);
             Mapper.Map(masterCatalogs, taContext);
 
             var emtpy = new Currency();
@@ -368,6 +370,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
                 return null;
             });
+        }
+
+        // Duplicate of method from HomeController. Required by AdminNG front-end that only seems to expose the User TaContext.
+        private bool HasLegacyAdmin(Tenant.Contracts.Tenant tenant)
+        {
+            var isUnifiedValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("IsUnified"))?.Value.ToString();
+            var legacyInstanceIdValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("mozu.reverseproxy.legacy_instance_id"))?.Value.ToString();
+
+            return isUnifiedValue.EqualsIgnoreCase("true") && !string.IsNullOrEmpty(legacyInstanceIdValue);
         }
 
         private void Resort(TaContext taContext)

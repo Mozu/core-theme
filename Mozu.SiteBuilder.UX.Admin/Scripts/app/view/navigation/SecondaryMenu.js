@@ -67,8 +67,9 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             text: 'Switch to Classic',
             pressed: true,
             cls: 'switch-button-primary',
-            tooltip: 'click here switch to classic admin',
-            enableToggle: true,
+            tooltip: 'Click here to switch to Classic Admin',
+            hidden: !this.showSwitchAdminButton(),
+            pressed: true,
             listeners: {
                 'toggle': function (button, pressed) {
                     if (Ext.util.Cookies.get('isUnifiedAdmin') == 'false') {
@@ -230,6 +231,10 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
 
     });
 
-    }
+    },
     
+    showSwitchAdminButton: function () {
+        var taContext = Taco.app.context;
+        return taContext.getHasLegacyAdmin();
+    }
 });

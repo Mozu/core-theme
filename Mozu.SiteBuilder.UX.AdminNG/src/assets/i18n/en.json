@@ -310,6 +310,10 @@
         "SearchMessage": {
             "noMatchingItem": "No matching items found."
         },
+        "SwitchAdminButton": {
+            "text": "Switch to Classic",
+            "tooltip": "Click here to switch to Classic Admin"
+        },
         "Label": {
             "kibo": "Kibo eCommerce",
             "help": "Help",

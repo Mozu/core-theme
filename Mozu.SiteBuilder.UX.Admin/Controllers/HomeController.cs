@@ -38,7 +38,7 @@ using Mozu.SiteBuilder.UX.Admin.Api.Models.Entities;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.IO;
-
+using Mozu.Core.Extensions;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -301,6 +301,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             var logzuUriBuilder = new UriBuilder(_settings.ZuKeeperPath);
             logzuUriBuilder.Path = "mozu.logzu";
             taContext.LogzuUrl = logzuUriBuilder.ToString();
+            taContext.HasLegacyAdmin = HasLegacyAdmin(tenant);
             taContext.LoginURI = _settings.LoginPath + "/cas/login/";
             Mapper.Map(masterCatalogs, taContext);
 
@@ -393,6 +394,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             
             return RazorView("index");
             
+        }
+
+        // There is a copy of this method in UserController. Keep both methods in sync.
+        private bool HasLegacyAdmin(Tenant.Contracts.Tenant tenant)
+        {
+            var isUnifiedValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("IsUnified"))?.Value.ToString();
+            var legacyInstanceIdValue = tenant.Attributes?.FirstOrDefault(x => x.Name.EqualsIgnoreCase("mozu.reverseproxy.legacy_instance_id"))?.Value.ToString();
+
+            return isUnifiedValue.EqualsIgnoreCase("true") && !string.IsNullOrEmpty(legacyInstanceIdValue);
         }
 
         private string GetCdn(Tenant.Contracts.Tenant tenant)

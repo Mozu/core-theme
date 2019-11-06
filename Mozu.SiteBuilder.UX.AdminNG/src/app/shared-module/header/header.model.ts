@@ -23,6 +23,7 @@ export class HeaderModel {
     loggedInUserName: string;
     loggedInUserInitials: string;
     showSearchInput: boolean;
+    showSwitchAdminButton: boolean;
     searchResult: SearchResults;
     sites: any[];
     customerURL: string;
