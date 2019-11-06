@@ -9,14 +9,16 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Pick List #</span><span>{{ model.pickWaveId }}</span></div>
-        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.shipDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
 <tbody><tr><td colspan="4">
     <table class="grid">
         <thead><tr>
             <th>Image</th>
-            <th>Product Code</th>
+            <th>Part#</th>
+            <th>UPC</th>
+            <th>SKU</th>
             <th>Product Name</th>
             <th>Order#s</th>
             <th>Qty Needed</th>
@@ -24,30 +26,34 @@
         </tr></thead>
         <tbody>
                 
-        {% for shipment in shipments %}
-          {% for item in shipment.items %}
+          {% for item in model.contents %}
              <tr>
                   <td>
                       <img style="height: 100px;" src="{{ item.imageUrl }}">
                   </td>
                   <td>
-                      {{ item.productCode }}
+                      {{ item.partNumber }}
+                  </td>
+                  <td>
+                      {{ item.upc }}
+                  </td>
+                  <td>
+                      {{ item.sku }}
                   </td>
                   <td>
                       <div class="product-name">{{ item.name }}</div>
                   </td>
                   <td>
-                      {{ shipment.orderId }}
+                      {{ item.orderNumber }}
                   </td>
                   <td>
                       {{ item.quantity }}
                   </td>
                   <td>
-                      0
+                      {{ item.actualQuantity }}
                   </td>
               </tr>
           {% endfor %}
-        {% endfor %}
         </tbody>
     </table>
 </td></tr></tbody>
