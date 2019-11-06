@@ -106,7 +106,7 @@
                     {{ item.quantity }}
                 </td>
                 <td>
-                    {{ item.measurements.weight.value }} {{ item.measurements.weight.unit }}
+                    {{ item.weight }} {{ item.weightUnit }}
                 </td>
             </tr>
         {% endfor %}
