@@ -108,7 +108,6 @@ body .ui-tabview .ui-tabview-panels {
 
 .ui-card-shadow.ui-card {
     margin-top: 20px !important;
-    height: 213px !important;
     margin-bottom: 20px !important;
 }
 
@@ -170,6 +169,11 @@ body .ui-sidebar {
     }
 }
 
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .ui-card-body {
+    padding: 0.78em 0.2em !important;
+}
+}
 
 /***********Custom Code Collapsible left menu*******************/
 

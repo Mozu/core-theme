@@ -60,10 +60,16 @@ a:hover {
       }
     }
 
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 900px) {
     .tab-link {
-        min-width: 112px;
+        min-width: 88px;
         margin-left: 2px;
         left:5%;
     }
+}
+
+@media screen and (min-width: 980px) and (max-width: 1024px) {
+    .tab-link {
+        min-width: 128px;
+}
 }

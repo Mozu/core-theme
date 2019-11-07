@@ -31,12 +31,6 @@ a:hover {
     color: #3f3f3f;
 }
 
-.dashboard-icon-align {
-    /* position: relative;
-    left: 38%;
-    top: 30px; */
-}
-
 @media screen and (max-width: 480px) {
     .dashboard-icon-align {
         position: relative;
@@ -125,4 +119,11 @@ a:hover {
 
 .dashboard-icon-fulfiller::after {
     content: "\E91A";
+}
+
+@media screen and (min-width: 994px) and (max-width: 1190px){
+    .tiles-item {
+        font-size: 0.84em;
+        padding-left: 0.43em;
+    }
 }
