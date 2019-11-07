@@ -34,7 +34,7 @@ define(["modules/jquery-mozu", 'modules/api', "underscore", "hyprlive", "modules
       },
       initialize: function(){
         Backbone.MozuView.prototype.initialize.apply(this, arguments);
-        this.model.set('viewingAllOrders', false);
+        this.model.set('viewingAllOrders', true);
       },
       initializeOrderView: function(){
         var self = this;
