@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Returns
         public string OriginalOrderId { get; set; }
 
         public string OriginalOrderNumber { get; set; }
-
+        public bool IsUnified { get; set; }
         public string ReturnOrderId { get; set; }
 
         public List<Order.Order> ReturnOrders { get; set; }
