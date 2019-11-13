@@ -22,8 +22,9 @@ import { HttpClient } from '@angular/common/http';
 export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
   @ViewChild('form') postForm: ElementRef;
   @Input() iframeResourceURL: any;
+  @Input() dialogTitle: string;
   @Input() formBody: any;
-  catalogImportExport = Constants.titles.catalogImportExportTitles;
+
   close = Constants.lables.closeLabel;
 
   constructor(
@@ -31,7 +32,7 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
     private _loggerService: LoggerService,
     public activeModal: NgbActiveModal,
     private _domSanitizer: DomSanitizer
-  ) {  }
+  ) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this._loggerService.info('DynamicLinksDialogComponent : ngOnChanges');
@@ -40,6 +41,9 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
     }
     if (changes && changes.formBody && changes.formBody.currentValue) {
       this.formBody = changes.formBody.currentValue;
+    }
+    if (changes && changes.dialogTitle && changes.dialogTitle.currentValue) {
+      this.dialogTitle = changes.dialogTitle.currentValue;
     }
   }
 

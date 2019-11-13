@@ -145,7 +145,6 @@ export class Constants {
     };
 
     static titles = {
-        catalogImportExportTitles: 'Catalog Import/export',
         inventory: 'Inventory',
         locationGroups: 'Location Groups'
     };

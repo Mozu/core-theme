@@ -452,8 +452,14 @@ p-table .ui-table .pi-ellipsis-v:hover {
     z-index: 19021 !important;
 }
 
+.integrationsModal .modal-content {
+    width: 1436px;
+    height: 706px;
+	  top: -9px;
+}
+
 .integrationsModal .modal-body {
-    height: 400px;
+    height: 90%;
 }
 
 .integrationsModal .modal-header .close {

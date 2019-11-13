@@ -73,22 +73,22 @@ export class NavigationLeftComponent implements OnInit {
       this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
         this.model.filteredNavigationLinks, this._sharedDataService._sharedData.items.ctTaContext);
       this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
-          function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
-        
+        function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
+
       _.forEach(this.model.mainItems, (eachMainItem: MenuItem) => {
         if (eachMainItem.id === Constants.orderRoutingNavigationId) {
           (eachMainItem.items as MenuItem[]).forEach((eachItem: MenuItem) => {
             if (eachItem.id === Constants.orderRoutingNavigationId) {
-                eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachItem.url;
+              eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachItem.url;
             }
           });
         }
       });
 
-        if (!this._sharedDataService._sharedData.items.ctTaContext.omsEnabled) {
-            const orderRoutingIndex = this.model.mainItems.findIndex((eachItem) => { return eachItem.id === Constants.orderRoutingNavigationId });
-            this.model.mainItems.splice(orderRoutingIndex,1);
-        }
+      if (!this._sharedDataService._sharedData.items.ctTaContext.omsEnabled) {
+        const orderRoutingIndex = this.model.mainItems.findIndex((eachItem) => { return eachItem.id === Constants.orderRoutingNavigationId });
+        this.model.mainItems.splice(orderRoutingIndex, 1);
+      }
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.changeDetectorRef.detectChanges();
@@ -110,7 +110,8 @@ export class NavigationLeftComponent implements OnInit {
         location: element.location,
         url: element.href,
         appId: element.appId,
-        _id: element._id
+        _id: element._id,
+        title: element.windowTitle
       });
     });
     this.model.filteredNavigationLinks = this.navigationService.mergeDynamicLinks(allFilteredLinks, filteredDynamicLinks);
@@ -137,6 +138,7 @@ export class NavigationLeftComponent implements OnInit {
         const modalRef = this.modalService.open(DynamicLinksDialogComponent, { windowClass: Constants.integrationsModalClass, backdropClass: Constants.integrationsBackdropModalClass });
         modalRef.componentInstance.iframeResourceURL = this.model.dynamicLinkIframeURL;
         modalRef.componentInstance.formBody = secureForm.items.body;
+        modalRef.componentInstance.dialogTitle = extensionLink.title ? extensionLink.title : extensionLink.label;
       }
     }, (errResponse) => {
       this._loggerService.info('NavigationLeftComponent : navigationService.fetchCapabilitiesForSecureForm_errResponse');
