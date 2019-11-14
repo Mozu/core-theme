@@ -284,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> PickWave(int pickWaveNumber)
         {
-            var pickWave = (await _fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
+            var pickWave = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
 
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-list"));
             if (template == null)
