@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                 case "productcode":
                     return string.Format("({1} {2} {0})", filter.value, PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
                 case "productcodefilter":
-                    return $"({PRODUCT_CODE} sw \"{filter.value}\" or {BASE_PRODUCT_CODE} eq \"{filter.value}\")";
+                    return $"({PRODUCT_CODE} eq \"{filter.value}\")";
                 case "productstatus":
                     if (filter.value == null)
                         return string.Empty;
