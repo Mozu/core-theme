@@ -161,7 +161,7 @@ Ext.define('Taco.view.order.subform.Return', {
             {
                 html: '<div class="x-column-content-pill x-column-content-pill-true">This is an old return. To perform operations please switch to Classic Admin.</div>',
                 margin: '0 0 0 900px',
-                hidden: this.isReturnUnified(this.orderReturns)
+                hidden: this.record.get('isUnified')
             },
             this.returnableItems,
             {
@@ -188,7 +188,7 @@ Ext.define('Taco.view.order.subform.Return', {
             isShowCreateReturn = this.isShowCreateReturn(ReturnableItemsStore.data.items);
         }
         var enabled = orderStatus === 'Completed' || (orderStatus === 'Processing' && (fulfillmentStatus === 'Fulfilled' || fulfillmentStatus === 'PartiallyFulfilled')) || isShowCreateReturn;
-        this.createButton.setDisabled(!this.isReturnUnified(this.orderReturns) || !enabled);
+        this.createButton.setDisabled(!this.record.get('isUnified') || !enabled);
         
         this.returnableItemsErrorEl.setError(enabled ? "" : "This order must be at least partially fulfilled before a return can be initiated.");
     },
@@ -328,17 +328,6 @@ Ext.define('Taco.view.order.subform.Return', {
         for (var i = 0; i < items.length; i++) {
             if (items[i].data.quantityReturnable > 0)
                 return true;
-        }
-        return false;
-    },
-
-    isReturnUnified: function (store) {
-        if (this.orderReturns && this.orderReturns.items) {
-            var items = this.orderReturns.store.data.items;            
-            for (var count = 0; count < items.length; count++) {
-                if (items[count].get('isUnified'))
-                    return true;
-            }
         }
         return false;
     },
