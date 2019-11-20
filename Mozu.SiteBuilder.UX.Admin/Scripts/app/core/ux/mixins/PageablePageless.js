@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @class Taco.core.ux.mixins.Pageable 
  * Grid Mixin that provides custom paging toolbar
  * add this to the initComponent of your grid to initilize this mixin
@@ -26,7 +26,7 @@
  *
  */
 
-Ext.define('Taco.core.ux.mixins.Pageable', {
+Ext.define('Taco.core.ux.mixins.PageablePageless', {
     requires: ['Taco.core.util.ExceptionWhiner',
         'Taco.core.ux.grid.LinkPaging',
         'Taco.core.ux.grid.PagelessPaging'],
@@ -44,7 +44,7 @@ Ext.define('Taco.core.ux.mixins.Pageable', {
             return;
         }
 
-        this.gridPager = Ext.create('Taco.core.ux.grid.LinkPaging', {
+        this.gridPager = Ext.create('Taco.core.ux.grid.PagelessPaging', {
             componentCls: 'x-link-paging-toolbar',
             width: '100%',
             store: this.store,

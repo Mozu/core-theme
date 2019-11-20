@@ -13,13 +13,14 @@ Ext.define('Taco.view.inventory.Split', {
         'Taco.core.ux.mixins.SplitEditor',
         'Taco.view.location.inventory.LocationInventory',
         'Taco.core.ux.grid.Panel',
-        'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
+        'Taco.core.ux.grid.MenuColumn',
+        'Taco.core.ux.mixins.PageablePageless'
     ],
 
     mixins: {
         splitEditor: 'Taco.core.ux.mixins.SplitEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader',
-        pageable: 'Taco.core.ux.mixins.Pageable'
+        pageable: 'Taco.core.ux.mixins.PageablePageless'
     },
 
     stateId: 'taco-custom-schema',
@@ -120,7 +121,7 @@ Ext.define('Taco.view.inventory.Split', {
     		autoLoad: true
     	});
 
-    	this.productInventoryGrid = Ext.create('Taco.core.ux.browser.SearchList', {
+    	this.productInventoryGrid = Ext.create('Taco.core.ux.browser.SearchListPageless', {
     		store: this.store,
             enablePaging: true,
             modelName: 'Taco.order.Model',

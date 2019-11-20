@@ -274,7 +274,8 @@
         &::after {
             border-radius: 3px;
             padding: 2px;
-            top: -2px;
+            top: -1px;
+            padding-left: 7px
         }
 
         &:hover {
@@ -304,12 +305,28 @@
                 @include icon-font($glyph-arrow-left, 11px, $pagination-arrow-color);
                 top: 4px;
                 left: 4px;
+                &.x-btn-button {
+                    &::after {
+                        top: 1px;    
+                    }
+                }
+                
             }
         }
         &.pagination-arrow-right {
             .#{$prefix}btn-wrap {
                 @include icon-font($glyph-arrow-right, 11px, $pagination-arrow-color);
                 top: 4px;
+                &.x-btn-button {
+                    &::after {
+                        top: 1px;    
+                    }
+                }
+                &::after {
+                    left: inherit;
+                    right: 0px;
+                    top: 1px;    
+                }
             }
         }
     }

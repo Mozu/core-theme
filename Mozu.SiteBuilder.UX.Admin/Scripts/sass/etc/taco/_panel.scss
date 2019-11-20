@@ -575,6 +575,19 @@
                 &.#{$prefix}arrow-disabled {
                     cursor: initial;
                 }
+
+                &.pageless {
+                    width: 45px;
+
+                    .#{$prefix}btn-wrap {
+                        width:45px;
+                    }
+
+                    .#{$prefix}btn-button {
+                        top: 0px;
+                    }
+
+                }
 			}
 
 		}

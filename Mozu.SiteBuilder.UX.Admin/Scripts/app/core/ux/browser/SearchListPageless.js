@@ -3,13 +3,13 @@
  * Simple grid panel with search.
  */
 
-Ext.define('Taco.core.ux.browser.SearchList', {
+Ext.define('Taco.core.ux.browser.SearchListPageless', {
     extend: 'Taco.core.ux.grid.Panel',
     requires: ['Taco.core.ux.grid.plugins.AutoSelect', 'Taco.core.ux.mixins.PageablePageless'],
     mixins: {
         launcheditor: 'Taco.core.ux.mixins.LaunchEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader',
-        pageable: 'Taco.core.ux.mixins.Pageable',
+        pageable: 'Taco.core.ux.mixins.PageablePageless',
         searchable: 'Taco.core.ux.mixins.Searchable',
         rowEditable: 'Taco.core.ux.mixins.RowEditable',
         deleteFromGrid: 'Taco.core.ux.mixins.DeleteFromGrid',
@@ -108,7 +108,6 @@ Ext.define('Taco.core.ux.browser.SearchList', {
 
         if (!me.store) {
             throw ("store configuration is required.  Example store: { type: 'Taco.store.InventoryProducts' } ");
-            return;
         } else {
             if (!me.store.isStore) {
                 me.store = Taco.core.data.StoreManager.getOrCreate(me.store);
