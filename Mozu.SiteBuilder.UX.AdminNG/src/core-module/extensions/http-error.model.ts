@@ -4,7 +4,7 @@
     Swallow
 }
 
-export enum ToastrMessageType {
+export enum TostrMessageType {
     Error = <any>'Error',
     Warning = <any>'Warning',
     Information = <any>'Information',

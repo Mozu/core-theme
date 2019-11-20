@@ -21,17 +21,17 @@ import {
 
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@global';
-import { Constants,
+import {
+  Constants,
   ToggleGridColumnsComponent,
-  NotificationQuoteActions } from '@shared';
+  NotificationQuoteActions
+} from '@shared';
 
 import { QuotesListService } from './list.service';
 
 import { QuotesListModel } from './list.model';
 import { LazyLoadEvent } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'quotes-list',
@@ -202,7 +202,7 @@ export class QuotesListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._loggerService.info('QuotesListComponent : ngOnDestroy');
     this.model.subscriptions.forEach((s) => {
-        s.unsubscribe();
+      s.unsubscribe();
     });
   }
 

@@ -14,7 +14,7 @@ import { NavigationTopShellComponent } from '@shared';
 import { NavigationService } from '@shared/navigation/navigation.service';
 
 
-describe('top navigation component', () => {
+describe('Top shell navigation component', () => {
   let component: NavigationTopShellComponent;
   let fixture: ComponentFixture<NavigationTopShellComponent>;
   let debugElement: DebugElement;
@@ -80,6 +80,7 @@ describe('top navigation component', () => {
     it('Application should call fetch tabs data function', () => {
     
     component.fetchHomeTabsName();
+    expect(loggerService.info).toHaveBeenCalledWith('NavigationTopShellComponent : fetchHomeTabsName');
      const req = httpMock.expectOne(`./assets/json/dashboard-menu.json`, "sample url test from navigation component");
      expect(req.request.method).toBe("GET");
      req.flush(dummydata_tabsMenu);

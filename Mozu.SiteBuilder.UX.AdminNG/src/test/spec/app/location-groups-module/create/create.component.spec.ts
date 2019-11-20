@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA, DebugElement  } from '@angular/core';
-import { LoggerService, ToastrService } from '@core'
+import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
+import { LoggerService, TostrService } from '@core'
 import { By } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
@@ -78,7 +78,7 @@ describe('CreateLocationGroupComponent', () => {
       schemas: [NO_ERRORS_SCHEMA],
       providers: [By, TranslateService, LoggerService, CustomNGXLoggerService,
         NGXLoggerHttpService, UtilityService, EnvironmentConfig, AuthService, LocationGroupModel,  
-        SharedDataService, NotificationService, FormBuilder, ToastrService, MessageService, CreateLocationGroupService, 
+          SharedDataService, NotificationService, FormBuilder, TostrService, MessageService, CreateLocationGroupService, 
         {
           provide: HttpClientService,
           useFactory: httpClientServiceCreator,

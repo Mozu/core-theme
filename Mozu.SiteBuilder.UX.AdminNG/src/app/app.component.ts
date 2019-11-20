@@ -73,14 +73,14 @@ export class AppComponent implements OnInit {
                     this.containerType = NavigationContainerType.quotes;
                 } else if ( event.url.includes(Constants.uiRoutes.locationGroups) ||
                         event.url.includes(Constants.uiRoutes.locationGroupCreate) ||
-                        event.url.includes(Constants.uiRoutes.locationGroupEdit)) {
+                        event.url.includes(Constants.uiRoutes.locationGroupEdit) ||
+                        event.url.includes(Constants.uiRoutes.locationGroupConfig)) {
                     this.containerType = NavigationContainerType.locationGroups;
                 } else {
                     this.containerType = NavigationContainerType.dashboard;
                 }
             }
         });
-    
     }
 
     ngOnInit() {

@@ -66,3 +66,5 @@ nuget Mozu.Event.Contracts
 
 #Manually adding this so that Burrows works; Once Burrows is removed we can take this out.
 nuget Newtonsoft.Json 9.0.1
+
+nuget RestSharp 106.6.9

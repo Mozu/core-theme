@@ -60,6 +60,6 @@ export class DynamicLinksDialogComponent implements OnChanges, AfterViewInit {
    * closeModal
    */
   public closeModal = () => {
-    this.activeModal.dismiss('Cross click');
+    this.activeModal.dismiss('Cross click')
   }
 }

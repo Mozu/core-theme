@@ -22,13 +22,17 @@ export class NotificationService {
     quoteSearched: Subject<any> = new Subject<any>();
     quoteEdited: Subject<any> = new Subject<any>();
     quoteListed: Subject<any> = new Subject<any>();
-    // Confirmation Dialog Notification
     quoteItemDeleted: Subject<any> = new Subject<any>();
     locationGroupDeleted: Subject<any> = new Subject<any>();
 
+    // Confirmation Dialog Notification
+    QuoteItemDeleteConfirmation: Subject<any> = new Subject<any>();
+    LocationGroupDeleteConfirmation: Subject<any> = new Subject<any>();
+    LGCUnSavedChangesConfirmation: Subject<any> = new Subject<any>();
+
+
     constructor(
-        private _logger: LoggerService
-    ) {
+        private _logger: LoggerService ) {
         this._logger.info('NotificationService : constructor');
     }
 
@@ -47,7 +51,7 @@ export class NotificationService {
         this.disableUINotification.next();
     }
 
-    notifyLoadAccessTileCategories(accesTileName: string){
+    notifyLoadAccessTileCategories(accesTileName: string) {
         this._logger.info('NotificationService : notifyLoadAccessTileCategories');
         this.loadAccessTileCategories.next(accesTileName);
     }
@@ -56,8 +60,8 @@ export class NotificationService {
         this._logger.info('NotificationService : notifyLocationGroupAdded');
         this.locationGroupAdded.next(actionName);
     }
-    
-    notifyLocationGroupEdited(action:any){
+
+    notifyLocationGroupEdited(action: any) {
         this._logger.info('NotificationService : notifyLocationGroupEdited');
         this.locationGroupEdited.next(action);
     }
@@ -96,6 +100,16 @@ export class NotificationService {
     notifyQuoteListed(action: any) {
         this._logger.info('NotificationService : notifyQuoteListed');
         this.quoteListed.next(action);
+    }
+
+    notifyLGCUnSavedChangesConfirmation(action: any) {
+        this._logger.info('NotificationService : notifyLGCUnSavedChangesConfirmation');
+        this.LGCUnSavedChangesConfirmation.next(action);
+    }
+
+    notifyLoadLeftMenuItems(actionName: any) {
+        this._logger.info('NotificationService : notifyLoadLeftMenuItems');
+        this.loadLeftMenuItems.next(actionName);
     }
 
     notifyQuoteHeaderValuesReceived(quoteNumber: any, quoteStatus: any) {

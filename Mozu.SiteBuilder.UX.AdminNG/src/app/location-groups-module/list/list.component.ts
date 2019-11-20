@@ -1,18 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    OnDestroy
+} from '@angular/core';
 import { Router } from '@angular/router';
 
-import { LoggerService,
-         HttpError,
-         ErrorCode,
-         ErroNotificationType,
-         SpinnerService
+import {
+    LoggerService,
+    HttpError,
+    ErrorCode,
+    ErroNotificationType,
+    SpinnerService
 } from '@core';
 
-import { Constants,
-         NotificationLGActions,
-         ConfirmationDialogService,
-         ConfirmationDialogNotificationCode,
-         ConfirmationDialogNotificationType
+import {
+    Constants,
+    NotificationLGActions,
+    ConfirmationDialogService,
+    ConfirmationDialogNotificationCode,
+    ConfirmationDialogNotificationType
 } from '@shared';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -29,7 +35,7 @@ import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-gro
     providers: [LocationGroupsListService]
 })
 
-export class LocationGroupsListComponent implements OnInit {
+export class LocationGroupsListComponent implements OnInit, OnDestroy {
     public model: LocationGroupListModel;
     subscriptions = [];
 
@@ -80,18 +86,18 @@ export class LocationGroupsListComponent implements OnInit {
     onRowSelect(event) {
         this.model.selectedLocationGroup = event.data;
         // open in edit mode
-        if (event && event.originalEvent &&  event.originalEvent.target &&
+        if (event && event.originalEvent && event.originalEvent.target &&
             event.originalEvent.target.classList &&
             event.originalEvent.target.classList.value === Constants.classess.ellipsis) {
             // open action menu.
         } else {
-         this.viewLocationGroup();
+            this.viewLocationGroup();
         }
     }
 
     showDeleteConfirmationDialog() {
-    this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup,
-    ConfirmationDialogNotificationType.Confirmation);
+        this._confirmationDialogService.openConfirmationDialog(ConfirmationDialogNotificationCode.DeleteLocationGroup,
+            ConfirmationDialogNotificationType.Confirmation, this.model.selectedLocationGroup.name);
     }
 
     deleteLocationGroup() {

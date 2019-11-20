@@ -13,7 +13,7 @@ import { SharedModule } from '@shared/shared.module';
 import { QuotesListComponent } from './list';
 
 import { QuoteComponent,
-         QuoteSummaryComponent } from './quote';
+  QuoteSummaryComponent } from './quote';
 
 import { QuoteItemsComponent } from './quote/items/items.component';
 

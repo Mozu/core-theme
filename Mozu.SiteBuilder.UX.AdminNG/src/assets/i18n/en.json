@@ -357,12 +357,12 @@
             "preferredPickupTime": "Preferred Pickup Time",
             "closingTime": "Closing Time",
             "upsusShippingTypes": "UPS US Shipping Types",
-            "upsusStandardDefault": "UPS US Standard Default", 
+            "upsusStandardDefault": "UPS US Standard Default",
             "upsusExpress1DayDefault": "UPS US Express 1 Day Default",
             "upsusExpress2DayDefault": "UPS US Express 2 Day Default",
             "upsusExpress3DayDefault": "UPS US Express 3 Day Default",
             "uspsShippingTypes": "USPS Shipping Types",
-            "uspsStandardDefault": "USPS Standard Default", 
+            "uspsStandardDefault": "USPS Standard Default",
             "uspsExpress1DayDefault": "USPS Express 1 Day Default",
             "uspsExpress2DayDefault": "USPS Express 2 Day Default",
             "uspsExpress3DayDefault": "USPS Express 3 Day Default",
@@ -390,7 +390,7 @@
             "fedexReturnLabelShippingTypes": "FedEx Return Label Shipping Types"
         },
         "FormSections": {
-            "ispu" : "ISPU",
+            "ispu": "ISPU",
             "boxTypes": "Box Types",
             "shipping": "Shipping",
             "upsSettings": "UPS Settings",
@@ -399,5 +399,4 @@
             "canadaPostSettings": "Canada Post Settings"
         }
     }
-
 }

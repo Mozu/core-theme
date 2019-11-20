@@ -23,13 +23,15 @@ export class ConfirmationDialogService {
                              confirmationDialogMessage: string,
                              primaryButtonText: string,
                              isShowSecondaryButton: boolean,
-                             secondaryButtonText: string) => void;
+                             secondaryButtonText: string,
+                             itemName: string,
+                             confirmationDialogSecondaryMessage: string) => void;
 
     constructor(private _translate: TranslateService,
         private _notificationService: NotificationService,
         private _loggerService: LoggerService) { }
 
-    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any): void {
+    public openConfirmationDialog(dialogNotificationCode: any, dialogNotificationType: any, itemName?: any): void {
         this._loggerService.info('ConfirmationDialogService : openConfirmationDialog');
 
             this._translate.get('SHARED.CONFIRMATIONDIALOG.' + dialogNotificationType + '.' + dialogNotificationCode)
@@ -49,7 +51,7 @@ export class ConfirmationDialogService {
                                     this.confirmationDialogMessage,
                                     this.primaryButttonText,
                                     this.isShowSecondaryButton,
-                                    this.secondaryButtonText);
+                                    this.secondaryButtonText, this.itemName,  this.confirmationDialogSecondaryMessage);
         this.notificationCode = dialogNotificationCode;
     }
 

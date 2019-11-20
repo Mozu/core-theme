@@ -302,9 +302,8 @@ describe('AdvancedSearchComponent', () => {
         }
         component.isFieldSupported(keyField);
         match = Object.keys(QuotesAdvFilterFields).filter(index => QuotesAdvFilterFields[index] === keyField);
-        expect(match !== null ).toEqual(true);
+        expect(match !== null).toEqual(true);
     });
-
     it('should call addKeyValue() to bind key value to model', () => {
         fixture.detectChanges();
         const keyValueDelimiter = ':';
@@ -315,7 +314,6 @@ describe('AdvancedSearchComponent', () => {
         component.addKeyValue(key, item, colonIndex);
         expect(component.model.lastKey).toEqual(key);
     });
-
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar for keyword', () => {
         fixture.detectChanges();
         const item = 'Device Config';
@@ -324,7 +322,6 @@ describe('AdvancedSearchComponent', () => {
         component.model.lastKey = 'keyword';
         expect(component.filterModel[component.model.lastKey]).toEqual(item);
     });
-
     it('should call addKeywordOrAppendToLastKey () to bind value to search bar based on last key', () => {
         fixture.detectChanges();
         const item = 'Device Config';

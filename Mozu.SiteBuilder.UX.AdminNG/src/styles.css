@@ -38,6 +38,12 @@ body .ui-tabview.ui-tabview-top .ui-tabview-nav li {
     margin-right: 0;
 }
 
+.ui-tabview.ui-tabview-top .ui-tabview-nav li,
+.ui-tabview.ui-tabview-top .ui-tabview-nav li:hover {
+    border: 1px solid transparent !important;
+    background-color: transparent !important;
+}
+
 body .ui-menu .ui-submenu-header {
     font-size: 11px;
     color: #a3a3a3 !important;
@@ -249,11 +255,11 @@ p-table .ui-table .ui-table-tbody>tr>td {
     background-color: white !important;
     font-size: 13px !important;
     border: 0px !important;
-    border-bottom: 1px solid #f2f2f2 !important;
-    padding: 8px 2px !important;
+    border-bottom: 1.5px solid #f2f2f2 !important;
+    padding: 8px 20px !important;
     color: #3f3f3f !important;
     font-family: "proxima-nova", sans-serif !important;
-    font-weight: 600;
+    /* font-weight: 600; */
     word-break: break-all;
 }
 
@@ -604,13 +610,8 @@ quotes-list p-table .ui-table .ui-table-thead>tr>th {
 
 
 /* quote edit */
-quotes-list p-table .ui-table .ui-table-thead{
-    background-color: #f7f7f7 !important;   
-   }   
-   quotes-list p-table .ui-table .ui-table-thead > tr > th{   
-    padding: 8px 20px !important;    
-   }
-quote .ui-table-responsive .ui-table-thead>tr>th{
+
+quote .ui-table-responsive .ui-table-thead>tr>th {
     display: table-cell !important;
     white-space: nowrap;
 }
@@ -711,9 +712,6 @@ body{ overflow: hidden;} */
 .ui-table-scrollable-header-box {
     background-color: #fff
 }
-.ui-sidebar-mask{ z-index:9 !important;}
-/* html{ overflow: hidden;}
-body{ overflow: hidden;} */
 
 .ui-widget-header {
     background: #ffffff;
@@ -831,32 +829,40 @@ location-group-list .ui-table-wrapper thead {
 location-group-list .ui-table-wrapper thead th {
     width: 11.66%;
 }
+
+
 /* location group css ends*/
-/* Custom Toastr */
-.ui-toast .ui-toast-message.ui-toast-message-error {
-    background-color: #E42000 !important;
-    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
-     0 6px 10px 0 rgba(0,0,0,.14),
-     0 1px 18px 0 rgba(0,0,0,.12) !important;
-     min-width: 110%;
+
+
+/* --------------- PrimeNg Overlay Panel CSS Start ------------------ */
+
+.ui-overlaypanel:before {
+    right: 1.1em !important;
+    left: auto !important;
 }
 
-.ui-toast .ui-toast-message.ui-toast-message-success {
-    background-color: #54A254 !important;
-    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
-     0 6px 10px 0 rgba(0,0,0,.14),
-     0 1px 18px 0 rgba(0,0,0,.12) !important;
+.ui-overlaypanel:after {
+    right: 1.25em !important;
+    left: auto !important;
+}
 
-/* location group css ends*/
 
-/* location group css ends*/
-/* Custom Toastr */
+/* --------------- PrimeNg Overlay Panel CSS End ------------------ */
+
 .ui-toast .ui-toast-message.ui-toast-message-error {
-    background-color: #e53935 !important;
-    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),
-     0 6px 10px 0 rgba(0,0,0,.14),
-     0 1px 18px 0 rgba(0,0,0,.12) !important;
-     min-width: 110%;
+    background-color: #e42d00 !important;
+    display: block;
+    font-size: 1.1em !important;
+    font-family: "proxima-nova", sans-serif !important;
+    line-height: 20px !important;
+    height: auto;
+    color: #ffffff !important;
+    right: 65%!important;
+    margin: 0 auto !important;
+    width: 50vw;
+    text-align: center;
+    bottom: 32px;
+    border-radius: 0px 0px 5px 5px;
 }
 
 .ui-toast .ui-toast-message.ui-toast-message-success {

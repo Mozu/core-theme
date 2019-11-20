@@ -154,7 +154,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
     private addUPSUSShippingTypesCheckboxes() {
         this.model.LCUPSUSShippingTypes.map((o, i) => {
-            const control = new FormControl(); // if first item set to true, else false
+            const control = new FormControl();
             (this.model.locationGroupConfigForm.controls.upsUsShippingTypes as FormArray).push(control);
         });
     }

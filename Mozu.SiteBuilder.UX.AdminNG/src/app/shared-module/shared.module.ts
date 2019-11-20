@@ -1,11 +1,11 @@
 ﻿import { NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
-import { TreeTableModule } from 'primeng/treetable';
+import {TreeTableModule} from 'primeng/treetable';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
@@ -13,6 +13,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MenuModule } from 'primeng/menu';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
+import {ListboxModule} from 'primeng/listbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectItem } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -57,10 +58,13 @@ import {
     DateTypecastPipe
 } from './pipes/index';
 
+// import { PhysicalLocationsComponent } from './physical/locations.component';
 import { DynamicLinksDialogComponent } from './dynamic-links-dialog/dynamic-links-dialog.component';
 import { AdvancedSearchComponent } from './advanced-search/advanced-search.component';
 import { AccountInformationComponent } from './account/information/information.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { ShippingAddressComponent, ShippingMethodComponent } from './shipping';
+import { AuditLogComponent } from './audit-log/audit-log.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ToggleGridColumnsComponent } from './toggle-grid-columns/toggle-grid-columns.component';
 import { ProgressButtonService } from './progress-button/progress-button.service';
@@ -71,7 +75,6 @@ import { DateService } from './datepicker/datepicker.service';
 
 
 declare var resourcesVersion: any;
-
 export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, environment.appUrl + '/assets/i18n/', '.json?v=' + resourcesVersion);
 }
@@ -93,9 +96,10 @@ export function createTranslateLoader(http: HttpClient) {
         ListboxModule,
         TreeTableModule,
         TableModule,
-        NgbModule.forRoot(),
         DropdownModule,
         AutoCompleteModule,
+        OverlayPanelModule,
+        NgbModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

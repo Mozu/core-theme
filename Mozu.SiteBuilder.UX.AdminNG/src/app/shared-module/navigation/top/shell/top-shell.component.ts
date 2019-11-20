@@ -1,8 +1,6 @@
 import {
     Component,
     OnInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef
   } from '@angular/core';
 
 import { LoggerService } from '@core';
@@ -24,7 +22,6 @@ export class NavigationTopShellComponent implements OnInit {
 
   constructor(
       private navigationService: NavigationService,
-      private changeDetectorRef: ChangeDetectorRef,
       private notificationService: NotificationService,
       private _loggerService: LoggerService
       ) {
@@ -49,7 +46,6 @@ export class NavigationTopShellComponent implements OnInit {
     this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_SuccessResponse');
     this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
     this.activeTab = this.model.navigationTabs[0];
-    this.changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_ErrorResponse');
     });

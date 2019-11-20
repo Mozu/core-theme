@@ -75,7 +75,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Checkout
 
         public List<DC.ThirdPartyPaymentSetting> ThirdPartyPaymentSettings { get; set; }
 
-       // public List<DC.PaymentSettings> PaymentSettings { get; set; }
     }
 
     public class CardGateway

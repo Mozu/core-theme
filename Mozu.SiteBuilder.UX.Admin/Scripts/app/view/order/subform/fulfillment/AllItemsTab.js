@@ -17,7 +17,6 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
     initUI: function () {
         var me = this;
         // itemId: this.packageRecord.code + 'shipment';
-        
         this.shipmentItems = Ext.create('Taco.view.order.widget.ShippingPackagesGrid', {
             shipmentRecord: this.shipmentRecord,
             record: this.record,

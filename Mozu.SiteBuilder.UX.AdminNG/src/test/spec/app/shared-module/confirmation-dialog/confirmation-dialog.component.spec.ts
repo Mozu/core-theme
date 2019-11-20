@@ -64,8 +64,9 @@ describe('ConfirmationDialogComponent', () => {
   it('should call showConfirmationDialog method', () => {
     displayModal = true;
     confirmationDialogTitle = 'Delete Item';
-    component.showConfirmationDialog(confirmationDialogTitle, confirmationDialogMessage,
-      primaryButtonText, isShowSecondaryButton, secondaryButtonText);
+    component.showConfirmationDialog(confirmationDialogTitle,
+    confirmationDialogMessage, primaryButtonText,
+    isShowSecondaryButton, secondaryButtonText, itemName, secondaryMessage);
     component.dialogTitle = confirmationDialogTitle;
     expect(confirmationDialogTitle).toBe('Delete Item');
   });

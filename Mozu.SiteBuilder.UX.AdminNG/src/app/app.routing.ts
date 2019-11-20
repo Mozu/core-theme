@@ -24,10 +24,6 @@ import {
 } from './quotes-module';
 import { LocationGroupConfigComponent } from './location-groups-module/config/config.component';
 
-import {
-    LocationGroupsListComponent,
-    LocationGroupCreateComponent 
-} from './location-groups-module';  
 
 const appRoutes: Routes = [
     {

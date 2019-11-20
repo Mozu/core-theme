@@ -33,7 +33,7 @@ export class ConfirmationDialogComponent implements OnInit {
   }
 
   showConfirmationDialog(confirmationDialogTitle: string, confirmationDialogMessage: string, primaryButtonText: string,
-    isShowSecondaryButton: boolean, secondaryButtonText: string) {
+    isShowSecondaryButton: boolean, secondaryButtonText: string, itemName: string, confirmationDialogSecondaryMessage: string) {
     this._loggerService.info('ConfirmationDialogComponent : showConfirmationDialog ');
     this.dialogTitle = confirmationDialogTitle;
     this.message = confirmationDialogMessage;

@@ -324,7 +324,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 50,
+                minWidth: 80,
                 flex: 1,
             },
             {
@@ -335,7 +335,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 50,
+                minWidth: 80,
                 flex: 1,
                 editor: {
                     showBorder: false,
@@ -368,7 +368,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 50,
+                minWidth: 80,
                 flex: 1,
                 //editor: {
                 //    xtype: 'numberfield',
@@ -388,7 +388,7 @@
                 //resizable: false,
                 align: 'center',
                 menuDisabled: true,
-                minWidth: 50,
+                minWidth: 80,
                 flex: 1,
                 renderer: function (value) {
                     return this.record.formatCurrency(value);
@@ -413,7 +413,6 @@
             {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
-                width: 20,
                 hidden: me.isShipmentAction(),
                 menuItems: me.getShipmentLevelSplitMenu(),
             }
@@ -714,10 +713,7 @@
                 }
             };
         }
-    }
-});
-
-
+    },
 
     openUpdateBackorderDatePopUp: function () {
         var grid = Ext.getCmp(this.id);

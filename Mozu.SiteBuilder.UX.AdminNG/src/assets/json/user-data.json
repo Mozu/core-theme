@@ -2037,69 +2037,64 @@
                 "value": "Starts"
             },
             {
-              "id": 21577,
-              "name": "ChildCatalogOneOne",
-              "stagingHost": "t17450-s21577.dev01.kibo-dev.com",
-              "masterCatalogId": 2,
-              "catalogId": 2,
-              "isMozuRendered": true,
-              "localeCode": "en-US",
-              "currencyCode": "USD"
-            }
-          ],
-          "catalogs": [
-            {
-              "id": 2,
-              "name": "ChildCatalogOneOne",
-              "localeCode": "en-US",
-              "currencyCode": "USD",
-              "masterCatalogId": 2
-            }
-          ],
-          "localeCode": "en-US",
-          "currencyCode": "USD",
-          "enableLiveEdit": false
-        },
-        {
-          "id": 3,
-          "name": "MasterCatalogTwo",
-          "productPublishingMode": "Live",
-          "sites": [
-            {
-              "id": 21574,
-              "name": "ChildCatalogTwoOne",
-              "stagingHost": "t17450-s21574.dev01.kibo-dev.com",
-              "masterCatalogId": 3,
-              "catalogId": 3,
-              "isMozuRendered": true,
-              "localeCode": "en-US",
-              "currencyCode": "USD"
+                "key": "discount-now",
+                "value": "Now"
             },
             {
-              "id": 21575,
-              "name": "ChildCatalogTwoTwo",
-              "stagingHost": "*.t17450-s21575.dev01.kibo-dev.com",
-              "masterCatalogId": 3,
-              "catalogId": 4,
-              "isMozuRendered": true,
-              "localeCode": "en-US",
-              "currencyCode": "USD"
-            }
-          ],
-          "catalogs": [
-            {
-              "id": 3,
-              "name": "ChildCatalogTwoOne",
-              "localeCode": "en-US",
-              "currencyCode": "USD",
-              "masterCatalogId": 3
+                "key": "discount-ends",
+                "value": "Ends"
             },
             {
-              "id": 4,
-              "name": "ChildCatalogTwoTwo",
-              "localeCode": "en-US",
-              "currencyCode": "USD",
-              "masterCatalogId": 3
+                "key": "discount-never",
+                "value": "Never"
+            },
+            {
+                "key": "discount-createcoupon",
+                "value": "Create coupon"
+            },
+            {
+                "key": "discount-randomcode",
+                "value": "Random code"
+            },
+            {
+                "key": "discount-entercode",
+                "value": "Enter code"
+            },
+            {
+                "key": "discount-selectcategories",
+                "value": "Select categories"
+            },
+            {
+                "key": "discount-selectproducts",
+                "value": "Select products"
+            },
+            {
+                "key": "discount-selectshippingmethods",
+                "value": "Select Shipping Methods"
+            },
+            {
+                "key": "discount-allproducts",
+                "value": "All products"
+            },
+            {
+                "key": "discount-selectedproductsandcategories",
+                "value": "Selected products and categories"
+            },
+            {
+                "key": "discount-minimumordersof",
+                "value": "Minimum orders of"
+            },
+            {
+                "key": "discount-percentage",
+                "value": "Percentage"
+            },
+            {
+                "key": "discount-dollaramount",
+                "value": "Dollar amount"
+            },
+            {
+                "key": "discount-freeshipping",
+                "value": "Free shipping"
             }
         ],
         "useGoogleAnalytics": "false",

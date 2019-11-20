@@ -1,6 +1,14 @@
-import { Component,
-         OnInit } from '@angular/core';
-
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+import { Router,
+  UrlSegmentGroup,
+  PRIMARY_OUTLET,
+  UrlSegment } from '@angular/router';
+import { NotificationService } from '@global';
+import { LoggerService } from '@core';
 import { Constants } from '@shared/infrastructure/constants';
 import { TopQuoteModel } from './top-quotes.model';
 import { NotificationQuoteActions, NavigationContainerType } from '@shared/infrastructure/enums';
@@ -46,7 +54,10 @@ export class NavigationTopQuotesComponent implements OnInit, OnDestroy {
     );
   }
 
-  constructor() { }
+  checkMode() {
+    const urltree = this.router.parseUrl(this.router.url);
+    const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
+    const primarySegments: UrlSegment[] = primary.segments;
 
     if (primarySegments && primarySegments.length) {
       const path = primarySegments[0].path + (primarySegments[1] != null ? '/' + primarySegments[1].path : '');

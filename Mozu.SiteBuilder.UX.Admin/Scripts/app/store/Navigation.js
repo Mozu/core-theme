@@ -358,7 +358,7 @@ Ext.define('Taco.store.Navigation', {
                         "id": "locations-group",
                         "label": "Location Groups",
                         "address": "/admin?locationGroups",
-                       // 'visible': Taco.user.taContext.omsEnabled === false ? true : false,
+                        //'visible': Taco.user.taContext.omsEnabled === false ? true : false,
                     }
                 ]
             },
