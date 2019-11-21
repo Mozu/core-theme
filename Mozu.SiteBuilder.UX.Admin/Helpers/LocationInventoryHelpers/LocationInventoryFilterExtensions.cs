@@ -39,9 +39,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
             switch (filter.property.ToLowerInvariant())
             {
                 case "productname":
-                    return string.Format("({1} sw {0})", filter.value, PRODUCT_NAME);
+                    return string.Format("({1} eq {0})", filter.value, PRODUCT_NAME);
                 case "productcode":
-                    return string.Format("({1} {2} {0})", filter.value, PRODUCT_CODE, filter.comparison == "sw" ? "sw" : "eq");
+                    return string.Format("({1} eq {0})", filter.value, PRODUCT_CODE);
                 case "productcodefilter":
                     return $"({PRODUCT_CODE} eq \"{filter.value}\")";
                 case "productstatus":
