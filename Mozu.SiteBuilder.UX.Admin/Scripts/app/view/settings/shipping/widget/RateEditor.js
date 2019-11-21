@@ -63,6 +63,7 @@ Ext.define('Taco.view.settings.shipping.widget.RateEditor', {
                     fieldLabel: "Custom Rate Type",
                     flex: 1,
                     name: "typeGroup",
+                    allowBlank: false,
                     layout: {
                         layout: "hbox"
                     },

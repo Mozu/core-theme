@@ -93,7 +93,7 @@ Ext.define('Taco.core.ux.grid.PagelessPaging', {
             return false;
         };
 
-        movePrevious = function(){
+        me.movePrevious = function(){
             var me = this,
                 store = me.store;
 
