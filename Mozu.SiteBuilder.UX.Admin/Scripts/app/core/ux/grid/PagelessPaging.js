@@ -43,48 +43,33 @@ Ext.define('Taco.core.ux.grid.PagelessPaging', {
         firstDisplayed = Math.min(currPage - 2, lastPage - 4);
         firstDisplayed = Math.max(firstDisplayed, 1);
 
-        if (pageData.pageCount !== 0) {
 
-            pageNumberItems.push({
-                itemId: 'prev',
-                cls: arrowLeftCls + ' paginationArrows pagination-arrow-left pageless',
-                handler: function () {
-                    return me.handlePagerAction(MOVE_PREVIOUS)
-                },
-                text: 'Prev',
-                scope: me,
-            });
-        }
+        pageNumberItems.push({
+            itemId: 'prev',
+            cls: arrowLeftCls + ' paginationArrows pagination-arrow-left pageless',
+            handler: function () {
+                return me.handlePagerAction(MOVE_PREVIOUS)
+            },
+            text: 'Prev',
+            scope: me,
+        });
+        
 
-        if (pageData !== 0) {
-
-            pageNumberItems.push({
-                itemId: 'next',
-                cls: arrowRightCls + ' paginationArrows pagination-arrow-right pageless',
-                handler: function () {
-                    return me.handlePagerAction(MOVE_NEXT)
-                },
-                text: 'Next',
-                style: {
-                    width: '45px'
-                },
-                scope: me,
-            });
-        }
+        pageNumberItems.push({
+            itemId: 'next',
+            cls: arrowRightCls + ' paginationArrows pagination-arrow-right pageless',
+            handler: function () {
+                return me.handlePagerAction(MOVE_NEXT)
+            },
+            text: 'Next',
+            style: {
+                width: '45px'
+            },
+            scope: me,
+        });
 
         pageNumberItems.push(refreshBtn);
 
-        if (me.displayInfo && pageData.pageCount > 1) {
-            pageNumberItems.push('->');
-            pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
-        }
-
-        else {
-            pageNumberItems = [];
-            pageNumberItems.push(refreshBtn);
-            pageNumberItems.push('->');
-            pageNumberItems.push({ xtype: 'tbtext', itemId: 'displayItem' });
-        }
 
         return pageNumberItems;
     },
@@ -93,6 +78,32 @@ Ext.define('Taco.core.ux.grid.PagelessPaging', {
         var me = this;
 
         if (me.grid) me.grid.on('reconfigure', me.onReconfigure, this);
+
+        me.moveNext = function(){
+            var me = this,
+                store = me.store;
+
+                if(me.store.data.items.length === me.store.pageSize) {
+                    if (me.fireEvent('beforechange', me) !== false) {
+                        store.nextPage();
+                        return true;
+                    }
+                }
+
+            return false;
+        };
+
+        movePrevious = function(){
+            var me = this,
+                store = me.store;
+
+            if (me.fireEvent('beforechange', me) !== false) {
+                store.previousPage();
+                return true;
+            }
+
+            return false;
+        };
 
         me.callParent();
     },
@@ -143,7 +154,7 @@ Ext.define('Taco.core.ux.grid.PagelessPaging', {
 
     handlePagerAction: function (action) {
         var me = this;
-
+        
         switch (action) {
             case MOVE_NEXT:
                 me.moveNext();

@@ -464,6 +464,7 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
                 searchType: 'navigation',
                 width: '100%',
                 flex: 1,
+                defaultFieldName: me.advancedSearchConfig.defaultFieldName || 'keyword',
                 enableQuickFilters : this.enableQuickFilters,
                 quickFilterData: [me.advancedSearchConfig.quickFilterData],
                 advancedForm: me.advancedSearchConfig.form,

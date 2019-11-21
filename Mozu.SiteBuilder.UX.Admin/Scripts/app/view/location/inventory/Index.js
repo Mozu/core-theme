@@ -39,8 +39,10 @@ Ext.define('Taco.view.location.inventory.Index', {
     enableSearch: false,
 
     advancedSearchConfig : {
-        advancedFormCls: 'Taco.view.location.inventory.AdvancedSearchForm',
-        emptySearchText: 'Search'
+        defaultFieldName: 'productCodeFilter',
+        disableAdvancedSearch: true,
+        advancedFormCls: false,
+        emptySearchText: 'Product Code'
     },
     
     // optional prevalidation check for row create

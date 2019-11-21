@@ -518,7 +518,7 @@ Ext.define('Taco.core.ux.form.FilterContainer', {
      * @return {Object} The object containing field keys and values.
      */
     parseTextFilterValue: function (field) {
-        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter);
+        return Taco.core.util.Filter.toJSON(field.getValue(), this.getAdvSearchFieldNames(), this.keyValueDelimiter, this.defaultFieldName);
     },
 
     isFieldSupported: function (key) {

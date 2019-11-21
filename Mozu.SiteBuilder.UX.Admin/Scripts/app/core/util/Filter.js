@@ -20,7 +20,7 @@ Ext.define('Taco.core.util.Filter', {
      * @param keyValueDelimiter, defaults to ":" if null
      * @returns if passes Filter then returns true, else returns error string
      */
-    toJSON : function(filterValue, advSearchFieldNames, keyValueDelimiter) {
+    toJSON : function(filterValue, advSearchFieldNames, keyValueDelimiter, defaultFieldName) {
         var jsonValue = {},
             values,
             lastKey,
@@ -44,7 +44,7 @@ Ext.define('Taco.core.util.Filter', {
 
             addKeywordOrAppendToLastKey = function(item, index) {
                 if (index === 0) {
-                    lastKey = 'keyword';
+                    lastKey = defaultFieldName || 'keyword';
                     jsonValue[lastKey] = item;
                 } else if (!Ext.isEmpty(lastKey)) {
                     jsonValue[lastKey] = Ext.String.trim([jsonValue[lastKey], item].join(' '));
