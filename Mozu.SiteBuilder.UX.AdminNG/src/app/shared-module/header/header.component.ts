@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     onClickSwitchAdminButton() {
-        this._cookieService.set('isUnified', 'false');
+        this._cookieService.set('isUnified', 'false', null, '/');
         window.location.reload(true);
     }
 
