@@ -59,8 +59,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     
     modelName: 'Taco.model.LocationInventory',
     
-    initComponent : function() {
-
+    initComponent: function () {
         this.store = Ext.create('Taco.store.LocationInventories', {
             autoLoad: false
         });
@@ -270,83 +269,150 @@ Ext.define('Taco.view.location.inventory.Index', {
     */
     
     initGridPanelConf: function () {
-        var me = this,
+        var me = this;
+        if(Taco.tenantSettings.catalogDisabled == true) {
             gridColumns = [
-            {
-                dataIndex: 'productCode',
-                stateId: 'productCode',
-                width: 150,
-                text: 'Product Code',
-                menuDisabled: true,
+                {
+                    dataIndex: 'productCode',
+                    stateId: 'productCode',
+                    width: 350,
+                    text: 'Product Code',
+                    menuDisabled: true,
+                    editor: {
+                        // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
+                        xtype: "taco-productpickerfield",
+                        allowBlank: false,
+                        editableOnCreateOnly: true,
+                        msgTarget: "qtip",
+                        productType: 'inventory',
+                        onEditorShow: function (field, editor, context) {
+                            // need to add the locationCode to the locationInventory;
+                            var store = editor.grid.store,
+                                locationFilter = store.extraFilters.getByKey("locationCode");
 
-                editor: {
-                    // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
-                    xtype: "displayfield",
-                    allowBlank: false
-                }
+                            if (!locationFilter) {
+                                return false;
+                            }
+                            this.maxWidth = field.column.getWidth();
+                            me.freezeColumns(editor.grid, true);
 
-            }, {
-                dataIndex: 'productName',
-                stateId: 'productName',
-                flex: 1,
-                text: 'Product Name',
-                sortable: false,
-                menuDisabled: true,
-                // product selector
-                editor: {
-                    xtype: "taco-productpickerfield",
-                    editableOnCreateOnly: true,
-                    msgTarget: "qtip",
-                    allowBlank: false,
-                    productType: 'inventory',
-                    onEditorShow: function(field, editor, context) {
-                        // need to add the locationCode to the locationInventory;
-                        var store = editor.grid.store,
-                            locationFilter = store.extraFilters.getByKey("locationCode"),
-                            locationCode;
-
-                        if (!locationFilter) {
-                            return false;
-                        }
-                        //tfs #54780
-                        this.maxWidth = field.column.getWidth();
-                        me.freezeColumns(editor.grid, true);
-
-                        locationCode = locationFilter.value;
-                        context.record.set("locationCode", locationCode);
-                    },
-                    listeners: {
-                        select: {
-                            fn: function(combo, records) {
-                                var record = records[0],
-                                    rowEditor = combo.up('roweditor'),
-                                    productCodeField = rowEditor.form.findField("productCode"),
-                                    grid = combo.up('grid'),
-                                    store = grid.store,
-                                    productCode = record.get("productCode"),
-                                    existingRecord = store.findRecord('productCode', productCode),
-                                    // the column to set focus in when opening the editor;
+                            locationCode = locationFilter.value;
+                            context.record.set("locationCode", locationCode);
+                        },
+                        listeners: {
+                            select: {
+                                fn: function (combo, records) {
+                                    var record = records[0],
+                                        rowEditor = combo.up('roweditor'),
+                                        productCodeField = rowEditor.form.findField("productCode"),
+                                        grid = combo.up('grid'),
+                                        store = grid.store,
+                                        productCode = record.get("productCode"),
+                                        existingRecord = store.findRecord('productCode', productCode);
                                     columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
 
-                                // check to see if a record already exists in the current store data with this product code;
-                                // note that this does not check the service for an existing record that is not loaded in the current page of the store;
-                                // the service is expected to return an error when persisting a new record with the same productCode;
-                                if (existingRecord) {
-                                    // cancel the create and select the existing record and start editing it;
-                                    combo.collapse();
-                                    grid.editingPlugin.cancelEdit();
-                                    grid.editingPlugin.startEdit(existingRecord, columnHeader);
-                                } else {
-                                    productCodeField.setValue(productCode);
-                                    combo.setValue(record.get("productName"));
+                                    if (existingRecord) {
+                                        combo.collapse();
+                                        grid.editingPlugin.cancelEdit();
+                                        grid.editingPlugin.startEdit(existingRecord, columnHeader);
+                                    } else {
+                                        productCodeField.setValue(productCode);
+                                        combo.setValue(record.get("productCode"));
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-            }
-        ];
+                }, {
+                    dataIndex: 'productName',
+                    stateId: 'productName',
+                    flex: 1,
+                    text: 'Product Name',
+                    sortable: false,
+                    menuDisabled: true,
+                }
+            ];
+        }
+        else {
+            gridColumns = [
+                {
+                    dataIndex: 'productCode',
+                    stateId: 'productCode',
+                    width: 150,
+                    text: 'Product Code',
+                    menuDisabled: true,
+
+                    editor: {
+                        // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
+                        xtype: "displayfield",
+                        allowBlank: false
+                    }
+
+                }, {
+                    dataIndex: 'productName',
+                    stateId: 'productName',
+                    flex: 1,
+                    text: 'Product Name',
+                    sortable: false,
+                    menuDisabled: true,
+                    // product selector
+                    editor: {
+                        xtype: "taco-productpickerfield",
+                        editableOnCreateOnly: true,
+                        msgTarget: "qtip",
+                        allowBlank: false,
+                        productType: 'inventory',
+                        onEditorShow: function (field, editor, context) {
+                            // need to add the locationCode to the locationInventory;
+                            var store = editor.grid.store,
+                                locationFilter = store.extraFilters.getByKey("locationCode"),
+                                locationCode;
+
+                            if (!locationFilter) {
+                                return false;
+                            }
+                            //tfs #54780
+                            this.maxWidth = field.column.getWidth();
+                            me.freezeColumns(editor.grid, true);
+
+                            locationCode = locationFilter.value;
+                            context.record.set("locationCode", locationCode);
+                        },
+                        listeners: {
+                            select: {
+                                fn: function (combo, records) {
+                                    var record = records[0],
+                                        rowEditor = combo.up('roweditor'),
+                                        productCodeField = rowEditor.form.findField("productCode"),
+                                        grid = combo.up('grid'),
+                                        store = grid.store,
+                                        productCode = record.get("productCode"),
+                                        existingRecord = store.findRecord('productCode', productCode),
+                                        // the column to set focus in when opening the editor;
+                                        columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
+
+                                    // check to see if a record already exists in the current store data with this product code;
+                                    // note that this does not check the service for an existing record that is not loaded in the current page of the store;
+                                    // the service is expected to return an error when persisting a new record with the same productCode;
+                                    if (existingRecord) {
+                                        // cancel the create and select the existing record and start editing it;
+                                        combo.collapse();
+                                        grid.editingPlugin.cancelEdit();
+                                        grid.editingPlugin.startEdit(existingRecord, columnHeader);
+                                    } else {
+                                        productCodeField.setValue(productCode);
+                                        combo.setValue(record.get("productName"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            ];
+
+        }
 
         gridColumns = gridColumns.concat(Taco.view.location.inventory.InventoryStockColumns.getInventoryStockColumns('productCode'));
 
