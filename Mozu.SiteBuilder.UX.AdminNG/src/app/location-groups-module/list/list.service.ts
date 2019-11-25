@@ -23,12 +23,12 @@ export class LocationGroupsListService {
         }
     }
 
-    public deleteLocationGroup(locationGroupId): Observable<any> {
+    public deleteLocationGroup(locationGroupCode): Observable<any> {
         this._loggerService.info('LocationGroupsListService: deleteLocationGroup');
         if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
         } else {
-            return this._http.Delete(GlobalConstant.webApis.deleteLocationGroup + '/' + locationGroupId);
+            return this._http.Delete(GlobalConstant.webApis.deleteLocationGroup + '/' + locationGroupCode);
         }
     }
 }

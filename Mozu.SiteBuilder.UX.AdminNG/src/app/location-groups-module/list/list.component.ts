@@ -101,8 +101,8 @@ export class LocationGroupsListComponent implements OnInit, OnDestroy {
     }
 
     deleteLocationGroup() {
-        const locationGroupId = this.model.selectedLocationGroup.locationGroupId;
-        this._locationGroupsListService.deleteLocationGroup(locationGroupId).subscribe((successResponse: Response) => {
+        const locationGroupCode = this.model.selectedLocationGroup.locationGroupCode;
+        this._locationGroupsListService.deleteLocationGroup(locationGroupCode).subscribe((successResponse: Response) => {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.deleteLocationGroup_successResponse');
             this.populateLocationGroupGrid();
         }, (errResponse) => {
@@ -112,10 +112,11 @@ export class LocationGroupsListComponent implements OnInit, OnDestroy {
     }
 
     viewLocationGroup() {
-        const locationGroupId = this.model.selectedLocationGroup.locationGroupId;
-        this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupId]);
+        const locationGroupCode = this.model.selectedLocationGroup.locationGroupCode;
+        this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + locationGroupCode]);
         const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
-        topLocationGroupConfigModel.locationGroupId = locationGroupId;
+        topLocationGroupConfigModel.locationGroupId = this.model.selectedLocationGroup.locationGroupId;
+        topLocationGroupConfigModel.locationGroupName = locationGroupCode;
         topLocationGroupConfigModel.locationGroupName = this.model.selectedLocationGroup.name;
         this._notificationService.notifySetLocationGroupConfigData({name: NotificationLGActions.list, data: topLocationGroupConfigModel});
     }
@@ -127,7 +128,7 @@ export class LocationGroupsListComponent implements OnInit, OnDestroy {
             this._loggerService.info('LocationGroupsListComponent : _locationGroupsListService.fetchAllLocationGroups_successResponse');
             const responseJson = successResponse;
             if (responseJson != null && responseJson !== undefined && responseJson['items'].length > 0) {
-                this.model.items = _.sortBy(responseJson['items'], ['locationGroupId']);
+                this.model.items = _.sortBy(responseJson['items'], ['locationGroupCode']);
             } else {
                 this.model.items = [];
             }

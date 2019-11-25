@@ -19,6 +19,7 @@ import { CreateLocationGroupService } from '../create';
 import { LocationGroupModel, SiteModel } from '../create/location.group.model';
 import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
 import { forkJoin } from 'rxjs';
+import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
 
 @Component({
     selector: 'app-locationgroup-config',
@@ -96,17 +97,17 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedExReturnLabelShippingTypes: ['', []]
         });
 
-        const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
-        this.createService.getLocationGroup(locationGroupId).subscribe(
+        const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
+        this.createService.getLocationGroup(locationGroupCode).subscribe(
             (response) => this.getLocationGroupSuccess(response),
             (response) => this.getLocationGroupError(response.error.message)
         );
 
         this.model.subscriptions.push(
             this.activeRoute.params.subscribe(routeParams => {
-                const locgroupId = this.activeRoute.snapshot.paramMap.get('id');
+                const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
                 const siteId = this.activeRoute.snapshot.paramMap.get('siteId');
-                this.fetchLocationGroupConfig(locgroupId, siteId);
+                this.fetchLocationGroupConfig(locationGroupCode, siteId);
             })
         );
 
@@ -240,8 +241,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
     }
 
     private navigateToSiteConfig() {
-        const locationGroupId = this.activeRoute.snapshot.paramMap.get('id');
-        this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupId
+        const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
+        this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + locationGroupCode
             + '/' + this.model.selectedSite.id]);
     }
 
@@ -278,18 +279,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.selectedSite = _.find(this.model.sitesLst, { 'id': _.parseInt(siteId) });
     }
 
-    public fetchLocationGroupConfig = (locationGroupId: any, siteId: any) => {
+    public fetchLocationGroupConfig = (locationGroupCode: any, siteId: any) => {
         this._loggerService.info('LocationGroupConfigComponent : fetchLocationGroupConfig');
         this._spinner.start();
-        this.getAllServicesData(locationGroupId, siteId);
+        this.getAllServicesData(locationGroupCode, siteId);
     }
 
-    private getAllServicesData(locationGroupId: string, siteId: string) {
+    private getAllServicesData(locationGroupCode: string, siteId: string) {
 
         const opts: IRequestOptions = this._sharedData.getSiteHttpHeaders(siteId);
 
         // get all services observables
-        const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupId, siteId);
+        const locationGroupConfig = this.configService.getLocationGroupConfig(locationGroupCode, siteId);
         const carrierSettings = this.configService.getCarrierSettings(opts);
         const carrierRatesWithConfiguredInfo = this.configService.getAllCarrierRatesWithConfiguredInfo(opts);
 
@@ -495,6 +496,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.tenantId = this.model.lgConfigModel.tenantId;
         lgConfigModel.siteId = this.model.lgConfigModel.siteId;
         lgConfigModel.locationGroupId = this.model.lgConfigModel.locationGroupId;
+        lgConfigModel.locationGroupCode = this.model.lgConfigModel.locationGroupCode;
         // ISPU
         lgConfigModel.customerFailedToPickupAfterAction = lgconfigForm.get(['customerFailedToPickupAfterAction']).value;
         lgConfigModel.customerFailedToPickupDeadline = lgconfigForm.get(['customerFailedToPickupDeadline']).value;
@@ -633,6 +635,9 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.configService.updateLocationGroupConfig(lgcModel).subscribe(response =>
             this.updateLocationGroupConfigSuccess(response),
             (response) => this.updateLocationGroupConfigError(response.error.message));
+        let siteIds = [];
+        siteIds.push(lgcModel.siteId);
+        this.setConfigData(lgcModel.locationGroupId, lgcModel.locationGroupCode, siteIds);
     }
 
     updateLocationGroupConfigError(message: any): void {
@@ -730,5 +735,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
         }
         return true;
+    }
+
+    private setConfigData(locationGroupId, locationGroupCode, siteIds) {
+        const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
+        topLocationGroupConfigModel.locationGroupId = locationGroupId;
+        topLocationGroupConfigModel.locationGroupCode = locationGroupCode;
+        topLocationGroupConfigModel.locationGroupSiteIds = siteIds;
+        this._notificationService.notifySetLocationGroupConfigData({ name: NotificationLGActions.locationGroupConfigUpdate, data: topLocationGroupConfigModel });
     }
 }

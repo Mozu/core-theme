@@ -51,14 +51,14 @@ const appRoutes: Routes = [
           }
     },
     {
-        path: Constants.uiRoutes.locationGroupEdit + '/:id',
+        path: Constants.uiRoutes.locationGroupEdit + '/:locationGroupCode',
         component: LocationGroupCreateComponent,
         data: {
             mode: Constants.gridActionItem.Edit
           }
     },
     {
-        path: Constants.uiRoutes.locationGroupConfig+'/:id'+'/:siteId',
+        path: Constants.uiRoutes.locationGroupConfig +'/:locationGroupCode'+'/:siteId',
         component: LocationGroupConfigComponent,
         data: {
             mode: Constants.gridActionItem.Edit

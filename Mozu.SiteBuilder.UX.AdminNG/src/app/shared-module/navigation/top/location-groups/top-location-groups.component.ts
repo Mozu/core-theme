@@ -50,19 +50,21 @@ import { TopLocationGroupsService } from './top-location-groups.service';
       );
 
       this.subscriptions.push(
-        this._notificationService.setLocationGroupConfigData.subscribe((action: any) => {
+          this._notificationService.setLocationGroupConfigData.subscribe((action: any) => {
           if (action.name === NotificationLGActions.list) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
             this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
-            this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
+              this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
+              this.model.locationGroupCode = (action.data as TopLocationGroupConfigModel).locationGroupCode;
           }
           if (action.name === NotificationLGActions.edit) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
             const topLocationGroupConfigModel: TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel;
             this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
-            this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
+              this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
+              this.model.locationGroupCode = topLocationGroupConfigModel.locationGroupCode;
             if (topLocationGroupConfigModel.locationGroupSiteIds && topLocationGroupConfigModel.locationGroupSiteIds.length > 0) {
               this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
             }
@@ -82,7 +84,6 @@ import { TopLocationGroupsService } from './top-location-groups.service';
         const urltree = this.router.parseUrl(this.router.url);
         const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
         const primarySegments: UrlSegment[] = primary.segments;
-
         if (primarySegments && primarySegments.length) {
           const path =  primarySegments[0].path;
           if (path === Constants.uiRoutes.locationGroups) {
@@ -103,11 +104,11 @@ import { TopLocationGroupsService } from './top-location-groups.service';
 
             // this code executes only if user refresh the location config screen.
             if (primarySegments.length > 2) {
-              const locationGroupId  = primarySegments[1].toString();
+              const locationGroupCode  = primarySegments[1].toString();
               const siteId = primarySegments[2].toString();
               this.model.locationGroupSelectedSiteId = siteId;
               if (this.model && _.isEmpty(this.model.locationGroupName)) {
-                this.topLocationGroupsService.getLocationGroup(locationGroupId).subscribe(
+                  this.topLocationGroupsService.getLocationGroup(locationGroupCode).subscribe(
                   (response) => this.getLocationGroupSuccess(response),
                   (response) => this.getLocationGroupError(response.error.message)
                 );
@@ -154,13 +155,13 @@ import { TopLocationGroupsService } from './top-location-groups.service';
     gotoLocationGroupEdit() {
       this.model.isEditMode = true;
       this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupId]);
+      this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupCode]);
     }
 
     gotoLocationGroupConfig() {
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupId
+      this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupCode
                             + '/' + this.model.locationGroupSelectedSiteId]);
     }
 }

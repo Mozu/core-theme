@@ -16,12 +16,12 @@ export class LocationGroupConfigService {
     constructor(private _http: HttpClientService,
         private _loggerService: LoggerService) { }
 
-    public getLocationGroupConfig(locationGroupId: string, siteId : string): Observable<any> {
+    public getLocationGroupConfig(locationGroupCode: string, siteId : string): Observable<any> {
         this._loggerService.info('LocationGroupConfigService: getLocationGroupConfig');
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroupConfig);
         } else {
-            return this._http.get(GlobalConstant.webApis.getLocationGroupConfig + '/' + locationGroupId + '/' + siteId );
+            return this._http.get(GlobalConstant.webApis.getLocationGroupConfig + '/' + locationGroupCode + '/' + siteId );
         }
     }
 
@@ -30,7 +30,7 @@ export class LocationGroupConfigService {
         if (environment.isUseMocks) {
             return of(new HttpResponse({ status: 200 }));
          } else {
-            return this._http.Put(GlobalConstant.webApis.getLocationGroupConfig + '/' + lgcModel.locationGroupId + '/' + lgcModel.siteId, lgcModel);
+            return this._http.Put(GlobalConstant.webApis.getLocationGroupConfig + '/' + lgcModel.locationGroupCode + '/' + lgcModel.siteId, lgcModel);
          }
     }
 

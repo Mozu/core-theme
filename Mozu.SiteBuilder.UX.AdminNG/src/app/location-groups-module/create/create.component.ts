@@ -55,7 +55,6 @@ export class LocationGroupCreateComponent implements OnInit {
 
     ngOnInit() {
         this.model = new LocationGroupCreateModel();
-
         this._loggerService.info('LocationGroupCreateComponent : ngOnInit');
         this.model.selectedLocations = [];
         this.model.isSticky = false;
@@ -63,6 +62,7 @@ export class LocationGroupCreateComponent implements OnInit {
 
         this.model.locationGroupForm = this.fb.group({
             locationGroupName: ['', [Validators.required, Validators.maxLength(50)]],
+            locationGroupCode: ['', [Validators.required, Validators.maxLength(100)]],
             locationSites: new FormArray([])
         });
 
@@ -91,9 +91,9 @@ export class LocationGroupCreateComponent implements OnInit {
 
         this.model.formMode = this.route.snapshot.data['mode'];
         if (this.model.formMode === Constants.gridActionItem.Edit) {
-            this.model.locationGroupId = this.route.snapshot.paramMap.get('id');
+            this.model.locationGroupCode = this.route.snapshot.paramMap.get('locationGroupCode');
             this.model.subscriptions.push(
-                this.createService.getLocationGroup(this.model.locationGroupId).subscribe(
+                this.createService.getLocationGroup(this.model.locationGroupCode).subscribe(
                     (response) => this.getLocationGroupSuccess(response),
                     (response) => this.getLocationGroupError(response.error.message)
                 )
@@ -116,6 +116,7 @@ export class LocationGroupCreateComponent implements OnInit {
     private setConfigData(lgModel: LocationGroupModel) {
         const topLocationGroupConfigModel = new TopLocationGroupConfigModel();
         topLocationGroupConfigModel.locationGroupId = lgModel.locationGroupId;
+        topLocationGroupConfigModel.locationGroupCode = lgModel.locationGroupCode;
         topLocationGroupConfigModel.locationGroupName = lgModel.name;
         topLocationGroupConfigModel.locationGroupSiteIds = lgModel.siteIds;
         this._notificationService.notifySetLocationGroupConfigData({name: NotificationLGActions.edit, data: topLocationGroupConfigModel});
@@ -133,6 +134,7 @@ export class LocationGroupCreateComponent implements OnInit {
         });
         this.model.locationGroupForm.patchValue({
             locationGroupName: lgModel.name,
+            locationGroupCode: lgModel.locationGroupCode,
             locationSites: locationSites
         });
     }
@@ -267,6 +269,7 @@ export class LocationGroupCreateComponent implements OnInit {
             lgModel.siteIds = _.map(sitesArr, 'id');
         }
         lgModel.name = this.model.locationGroupForm.get(['locationGroupName']).value;
+        lgModel.locationGroupCode = this.model.locationGroupForm.get(['locationGroupCode']).value;
         lgModel.locationCodes = _.map(this.model.selectedLocations, 'code');
         if (this.model.locationGroupId) {
             lgModel.locationGroupId = this.model.locationGroupId;
@@ -276,6 +279,10 @@ export class LocationGroupCreateComponent implements OnInit {
     private validateLocationGroup(lgModel: LocationGroupModel): boolean {
         if (lgModel && _.isEmpty(lgModel.name)) {
             this._tostrService.showError(ErrorCode.EmptyLocationGroupName);
+            return false;
+        }
+        if (lgModel && _.isEmpty(lgModel.locationGroupCode)) {
+            this._tostrService.showError(ErrorCode.EmptyLocationGroupCode);
             return false;
         }
         if (lgModel && _.isEmpty(lgModel.siteIds)) {
@@ -298,7 +305,7 @@ export class LocationGroupCreateComponent implements OnInit {
         if (result && result.items) {
             const lgModel: LocationGroupModel =   <LocationGroupModel>result.items;
             this.setConfigData(lgModel);
-            this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + lgModel.locationGroupId]);
+            this.router.navigate(['/' + Constants.uiRoutes.locationGroupEdit + '/' + lgModel.locationGroupCode]);
         }
     }
 

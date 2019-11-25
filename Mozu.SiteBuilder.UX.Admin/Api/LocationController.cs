@@ -252,9 +252,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<HttpResponseMessage> ListGroup([FromUri]PagingParamaters pagingParams, [FromUri]FilterCollection extFilter)
         {
             DC.LocationGroupCollection locationGroups;
-            if (pagingParams.NumericId != null)
+            if (pagingParams.locationGroupCode != null)
             {
-                var group = (await _locationGroupWebApiClient.GetLocationGroup(pagingParams.NumericId)).ReadAsSync();
+                var group = (await _locationGroupWebApiClient.GetLocationGroup(pagingParams.locationGroupCode)).ReadAsSync();
 
                 locationGroups = new DC.LocationGroupCollection { Items = new List<DC.LocationGroup> { group }, TotalCount = 1 };
             }
@@ -284,38 +284,38 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "groups/edit")]
         public async Task<HttpResponseMessage> EditGroup(DC.LocationGroup loc)
         {
-            var resp = (await _locationGroupWebApiClient.UpdateLocationGroup(loc.LocationGroupId, loc)).ReadAsSync();
+            var resp = (await _locationGroupWebApiClient.UpdateLocationGroup(loc.LocationGroupCode, loc)).ReadAsSync();
 
             return this.Request.CreateResponse(HttpStatusCode.OK, Single2(resp));
         }
 
-        [HttpGetRoute(UriTemplate = "groups/get/{groupId}")]
-        public async Task<Response<DC.LocationGroup>> GetGroup([FromUri]int groupId)
+        [HttpGetRoute(UriTemplate = "groups/get/{groupCode}")]
+        public async Task<Response<DC.LocationGroup>> GetGroup([FromUri]string groupCode)
         {
-            var resp = (await _locationGroupWebApiClient.GetLocationGroup(groupId)).ReadAsSync();
+            var resp = (await _locationGroupWebApiClient.GetLocationGroup(groupCode)).ReadAsSync();
             return Single2(resp);
         }
 
-        [HttpDeleteRoute(UriTemplate = "groups/delete/{groupId}")]
-        public async Task<Response<DC.LocationGroup>> DeleteGroup([FromUri]int groupId)
+        [HttpDeleteRoute(UriTemplate = "groups/delete/{groupCode}")]
+        public async Task<Response<DC.LocationGroup>> DeleteGroup([FromUri]string groupCode)
         {
-            var resp = (await _locationGroupWebApiClient.DeleteLocationGroup(groupId)).ReadAsSync();
+            var resp = (await _locationGroupWebApiClient.DeleteLocationGroup(groupCode)).ReadAsSync();
             return Message3<DC.LocationGroup>(true, "Location Group Successfully Deleted");
         }
 
-        [HttpGetRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
-        public async Task<Response<DC.LocationGroupConfiguration>> GetLocationGroupConfiguration([FromUri]int groupId, [FromUri]int siteId)
+        [HttpGetRoute(UriTemplate = "group/configuration/{groupCode}/{siteId}")]
+        public async Task<Response<DC.LocationGroupConfiguration>> GetLocationGroupConfiguration([FromUri]string groupCode, [FromUri]int siteId)
         {
             var client = _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
-            var resp = (await client.GetLocationGroupConfiguration(groupId)).ReadAsSync();
+            var resp = (await client.GetLocationGroupConfiguration(groupCode)).ReadAsSync();
             return Single2(resp);
         }
 
-        [HttpPutRoute(UriTemplate = "group/configuration/{groupId}/{siteId}")]
-        public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]int groupId, [FromUri]int siteId, DC.LocationGroupConfiguration config)
+        [HttpPutRoute(UriTemplate = "group/configuration/{groupCode}/{siteId}")]
+        public async Task<Response<DC.LocationGroupConfiguration>> UpdateLocationGroupConfiguration([FromUri]string groupCode, [FromUri]int siteId, DC.LocationGroupConfiguration config)
         {
             var client = _locationGroupConfigurationWebApiClient.CloneWithSiteId(siteId);
-            var resp = (await client.SetLocationGroupConfiguration(groupId, config)).ReadAsSync();
+            var resp = (await client.SetLocationGroupConfiguration(groupCode, config)).ReadAsSync();
             return Single2(resp);
         }
 

@@ -153,29 +153,30 @@
             }
         },
         "Toastr": {
-            "Error": {
-                "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
-                "EmptyEmailAddress": "Please enter Email Address.",
-                "EmptyPassword": "Please enter Password.",
-                "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
-                "QuoteListGetFailed": "Error occured while fetching quote list",
-                "QuoteGetFailed": "Error occured while fetching quote information",
-                "GetAccountInfoFailed": "Error occured while fetching account details",
-                "EmptyLocationGroupName": "Please enter Name.",
-                "EmptyLocationGroupSites": "Please select Site.",
-                "EmptyLocationGroupCodes": "Please select Location(s)",
-                "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
-                "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
-                "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data",
-                "EmptyBoxTypeName": "Please enter box type Name",
-                "EmptyBoxTypeLength": "Please enter box type Length",
-                "EmptyBoxTypeWidth": "Please enter box type Width",
-                "EmptyBoxTypeHeight": "Please enter box type Height",
-                "EmptyDefaultPrintType": "Please select Default Printer Type",
-                "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
-                "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
-                "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS"
-            },
+          "Error": {
+            "Fatal": "Error occurred while processing your request. Please try again later or contact customer support team.",
+            "EmptyEmailAddress": "Please enter Email Address.",
+            "EmptyPassword": "Please enter Password.",
+            "DashboardTilesGetFailed": "Error occured while fetching dasbhoard tiles",
+            "QuoteListGetFailed": "Error occured while fetching quote list",
+            "QuoteGetFailed": "Error occured while fetching quote information",
+            "GetAccountInfoFailed": "Error occured while fetching account details",
+            "EmptyLocationGroupName": "Please enter Name.",
+            "EmptyLocationGroupCode": "Please enter Location Group Code.",
+            "EmptyLocationGroupSites": "Please select Site.",
+            "EmptyLocationGroupCodes": "Please select Location(s)",
+            "LocationGroupsListGetFailed": "Error occured while fetching location group list.",
+            "GetLocationGroupDetailFailed": "Error occured while fetching location group details.",
+            "fetchCapabilitiesForSecureFormGetFailed": "Error occured while fetching capabilities data",
+            "EmptyBoxTypeName": "Please enter box type Name",
+            "EmptyBoxTypeLength": "Please enter box type Length",
+            "EmptyBoxTypeWidth": "Please enter box type Width",
+            "EmptyBoxTypeHeight": "Please enter box type Height",
+            "EmptyDefaultPrintType": "Please select Default Printer Type",
+            "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
+            "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
+            "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS"
+          },
             "Warning": {},
             "Information": {},
             "Success": {
@@ -293,15 +294,16 @@
             "locationGroup": "Location Group",
             "addLocations": "Add Locations"
         },
-        "FormLabels": {
-            "locationGroup": "Location Group",
-            "sites": "Sites",
-            "name": "Name",
-            "addLocations": "Add Location(s)",
-            "physicalLocation": "Physical Location",
-            "locations": "Locations",
-            "selectedLocations": "Selected Locations"
-        },
+      "FormLabels": {
+        "locationGroup": "Location Group",
+        "sites": "Sites",
+        "name": "Name",
+        "locationGroupCode": "Location Group Code",
+        "addLocations": "Add Location(s)",
+        "physicalLocation": "Physical Location",
+        "locations": "Locations",
+        "selectedLocations": "Selected Locations"
+      },
         "FormsErrorMessages": {
             "nameRequired": "Input is Required."
         }

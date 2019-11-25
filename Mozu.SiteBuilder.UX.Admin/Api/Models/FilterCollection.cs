@@ -43,7 +43,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models
             return this.id + ";" + this.NumericId + ":" + pageIndex + ";" + startIndex + ";" + pageSize + ";" + productCode + ";" + (sort == null ? "" : string.Join(",",sort.Select(x => x.direction + x.property)) );
         }
         public string shipmentType { get; set; }
-
+        public string locationGroupCode { get; set; } 
         public string pickupCode { get; set; }
 
     }

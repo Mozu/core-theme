@@ -24,12 +24,12 @@ export class CreateLocationGroupService {
         }
     }
 
-    public getLocationGroup(locationGroupId: string): Observable<any> {
+    public getLocationGroup(locationGroupCode: string): Observable<any> {
         this._loggerService.info('EditLocationGroupService: getLocationGroup');
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroup);
         } else {
-            return this._http.get(GlobalConstant.webApis.getLocationGroup + '/' + locationGroupId);
+            return this._http.get(GlobalConstant.webApis.getLocationGroup + '/' + locationGroupCode);
         }
     }
 

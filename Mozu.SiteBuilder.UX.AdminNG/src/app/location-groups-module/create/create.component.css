@@ -21,24 +21,30 @@
   border-bottom: 1px solid #2ea195;
 } */
 
-.subform-text:focus+.floating-label {
-    top: -5px;
-    left: 2px;
-    font-size: 11px;
-    opacity: 1;
-    color: #2ea195;
-    transition-duration: .2s;
-    transition-property: all;
-    transition-timing-function: cubic-bezier(.27, .44, .62, .81);
-}
+    .subform-text:focus + .floating-label,
+    .subform-text:read-only + .floating-label {
+        top: -5px;
+        left: 2px;
+        font-size: 11px;
+        opacity: 1;
+        color: #2ea195;
+        transition-duration: .2s;
+        transition-property: all;
+        transition-timing-function: cubic-bezier(.27, .44, .62, .81);
+    }
 
-input.inputText:not(:focus):valid+.floating-label {
-    top: -5px;
-    color: #2ea195;
-    left: 2px;
-    font-size: 11px;
-    opacity: 1;
-}
+    .subform-text:read-only{
+        background-color: inherit;
+        cursor: not-allowed;
+    }
+
+    input.inputText:not(:focus):valid + .floating-label {
+        top: -5px;
+        color: #2ea195;
+        left: 2px;
+        font-size: 11px;
+        opacity: 1;
+    }
 
 .redunderline-from-left {
     border-color: #ff0000 !important;

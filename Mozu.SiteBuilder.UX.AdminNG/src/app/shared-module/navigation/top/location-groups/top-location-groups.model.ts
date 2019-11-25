@@ -3,6 +3,7 @@ export class TopLocationGroupsModel {
     isConfigTabVisible: boolean;
     locationGroupName: string;
     locationGroupId: string;
+    locationGroupCode: string;
     locationGroupURL: string;
     locationGroupSelectedSiteId: string;
     locationGroupSiteIds: any[];
@@ -10,6 +11,7 @@ export class TopLocationGroupsModel {
 
 export class TopLocationGroupConfigModel {
     locationGroupName: string;
+    locationGroupCode: string;
     locationGroupId: string;
     locationGroupSiteIds: any[];
 }

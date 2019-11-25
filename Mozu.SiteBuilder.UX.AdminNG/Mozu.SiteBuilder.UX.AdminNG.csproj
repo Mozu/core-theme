@@ -169,6 +169,8 @@
     <Content Include="src\app\shared-module\navigation\left\left.component.html" />
     <Content Include="src\app\shared-module\navigation\navigation.component.css" />
     <Content Include="src\app\shared-module\navigation\navigation.component.html" />
+    <Content Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.css" />
+    <Content Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.html" />
     <Content Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.css" />
     <Content Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.html" />
     <Content Include="src\app\shared-module\navigation\top\shell\top-shell.component.css" />
@@ -359,6 +361,9 @@
     <TypeScriptCompile Include="src\app\shared-module\navigation\left\left.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.service.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\top\quotes\top-quotes.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\top\shell\top-shell.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\top\shell\top-shell.model.ts" />

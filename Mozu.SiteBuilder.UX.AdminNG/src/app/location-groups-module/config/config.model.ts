@@ -57,6 +57,7 @@ export class LocationGroupConfigModel {
         tenantId: number;
         siteId: number;
         locationGroupId: number;
+        locationGroupCode: string;
         customerFailedToPickupAfterAction: string;
         customerFailedToPickupDeadline: number;
         sendCustomerPickupReminder: number;

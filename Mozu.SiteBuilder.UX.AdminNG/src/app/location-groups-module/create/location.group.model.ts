@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 
 export class  LocationGroupModel {
     locationGroupId: any;
+    locationGroupCode: string;
     siteIds: any[];
     name: string;
     locationCodes: any[];
@@ -17,6 +18,7 @@ export class LocationGroupCreateModel {
     isSticky: boolean;
     isSaving: boolean;
     locationGroupId: string;
+    locationGroupCode: string;
     formMode: string;
     subscriptions: any[];
     locationGroupForm: FormGroup;
