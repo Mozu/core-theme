@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Mozu.SiteBuilder.UX.Models.Settings
 {
-    public class EmailTypeSettingVM 
+    public class EmailTypeSettingVM
     {
         [JsonProperty(
            DefaultValueHandling = DefaultValueHandling.Include,
@@ -29,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         public string SenderEmailAddressOverride { get; set; }
 
         [JsonProperty(
-            DefaultValueHandling = DefaultValueHandling.Include, 
+            DefaultValueHandling = DefaultValueHandling.Include,
             NullValueHandling = NullValueHandling.Include
             )]
         public string SenderEmailAliasOverride { get; set; }
@@ -56,7 +51,6 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
     }
     public enum EmailTypes
     {
-       
         BackInStock,
         OrderChanged,
         OrderShipped,
@@ -72,6 +66,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         RefundCreated,
         StoreCreditCreated,
         StoreCreditUpdated,
-        GiftCardCreated
+        GiftCardCreated,
+        Backorder,
+        ShipmentConfirmation,
+        OrderPickupReady,
+        OrderPickupReminder,
+        ShipmentBackorderDateChanged,
+        OrderCancellation
     };
 }
