@@ -129,5 +129,9 @@ namespace Mozu.SiteBuilder.UX.Models.Admin
 
         [DataMember(Name = "currencyCode")]
         public string Currency { get; set; }
+
+        [DataMember(Name = "omsOnly")]
+        public bool OmsOnly { get; set; }
+
     }
 }

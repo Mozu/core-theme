@@ -96,14 +96,13 @@ Ext.define('Taco.view.order.widget.OrderTotalPanel', {
     },
 
     initSummaryToggleButtons: function () {
-
         var me = this;
-
-        me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
-        me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
-        me.initToggleButton(".tax-summary", me.toggleTaxDetails);
-        me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
-
+        if (!Taco.app.context.getSite().omsOnly) {
+            me.initToggleButton(".adjustment-summary", me.toggleAdjustmentDetails);
+            me.initToggleButton(".shipping-summary", me.toggleShippingDetails);
+            me.initToggleButton(".tax-summary", me.toggleTaxDetails);
+            me.initToggleButton(".handling-summary", me.toggleHandlingDetails);
+        }
     },
 
     initUI: function () {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 
 using AutoMapper;
+using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.UX.Models.Admin;
 using DC = Mozu.Tenant.Contracts;
 
@@ -75,6 +76,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 //ignores
                 .ForMember(x => x.DefaultHost, op => op.Ignore())
                 .ForMember(x => x.ContentPublishingEnabled, op => op.Ignore())
+                .ForMember(x=>x.OmsOnly, op => op.ResolveUsing( x=>x.Attributes.FirstOrDefault(y => y.Name.EqualsIgnoreCase("omsonly"))?.Value.ToString().ToLower() == "true"))
                 ;
 
             CreateMap<Mozu.ProductAdmin.Contracts.MasterCatalogCollection , TaContext>()
