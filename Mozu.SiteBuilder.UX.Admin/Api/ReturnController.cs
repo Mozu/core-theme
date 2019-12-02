@@ -253,7 +253,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 else
                 {
                     var queryStrings = Request.GetQueryNameValuePairs();
-                    var orderPaymentsByCapture = queryStrings.Where(x => x.Key.Equals("OrderPaymentsByCapture")).FirstOrDefault();
+                    var orderPaymentsByCapture = queryStrings.Where(x => x.Key.Equals("orderPaymentsByCapture", StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
                     orderPayments = Convert.ToBoolean(orderPaymentsByCapture.Value);
                 }
 
