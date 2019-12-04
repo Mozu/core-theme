@@ -578,6 +578,7 @@ Ext.define('Taco.Application', {
     },
 
     init: function () {
+        Ext.setGlyphFontFamily('FontAwesome');
         var stringStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.LocalizedStrings');
         stringStore.loadRawData(Taco.localizationValues);
         this.callParent(arguments);

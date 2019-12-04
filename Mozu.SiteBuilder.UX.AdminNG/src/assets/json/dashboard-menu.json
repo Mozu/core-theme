@@ -1,10 +1,9 @@
-[
-    {
+[{
         "tabID": "1",
-        "tabName": "Main"
+        "tabName": "MAIN"
     },
     {
         "tabID": "2",
-        "tabName": "System"
+        "tabName": "SYSTEM"
     }
 ]

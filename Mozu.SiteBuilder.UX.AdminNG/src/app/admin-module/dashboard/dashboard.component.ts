@@ -15,7 +15,7 @@ import {
 } from '@core';
 
 import { NotificationService } from '@global';
-import { Constants } from '@shared/index';
+import { Constants, NavigationContainerType } from '@shared/index';
 import { DashboardModel } from './dashboard.model';
 import { DashbaordService } from './dashboard.service';
 import { CookieService as Cookie } from 'ngx-cookie-service';
@@ -47,6 +47,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
     this._loggerService.info('AdminDashboardComponent : constructor');
     this.model = new DashboardModel();
+    this.model.dashboardCSSClass = 'dashboardRightShifted';
     this.subscriptions = [];
   }
 
@@ -57,6 +58,26 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this._notificationService.loadAccessTileCategories.subscribe((activeTab: string) => {
         this.model.isShowSystemTiles = (activeTab === Constants.systemTabDisplayText);
+        this._changeDetectionRef.detectChanges();
+      })
+    );
+
+    this.subscriptions.push(
+      this._notificationService.expandHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
+        if (navContainerType === NavigationContainerType.dashboard) {
+          this.model.dashboardCSSClass = 'dashboardRightShifted';
+          this._changeDetectionRef.detectChanges();
+        } else
+        {
+          this.model.dashboardCSSClass = 'dashboard';
+          this._changeDetectionRef.detectChanges();  
+        }
+      })
+    );
+
+    this.subscriptions.push(
+      this._notificationService.collapseHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
+        this.model.dashboardCSSClass = 'dashboard';
         this._changeDetectionRef.detectChanges();
       })
     );
@@ -78,7 +99,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       /* filter the menus on the basis of logged in user behaviour id */
       this.model.filteredAccessLinks = this.utilityService.filterLinksByBehaviorId(dashboardTileLinksResponse, this._sharedData);
       this.model.filteredAccessLinks =
-        this.utilityService.populateNavigationLinksbyContextType
+        this.utilityService.populateSubNavigationLinksbyContextType
           (this.model.filteredAccessLinks, this._sharedData._sharedData.items.ctTaContext);
 
       this.model.systemTiles = this._dashboardService.

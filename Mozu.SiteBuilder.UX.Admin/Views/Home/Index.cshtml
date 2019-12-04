@@ -2,7 +2,9 @@
     Layout = "";
     var cookie = Context.Request.Cookies.Get("taco-asset-location");
     var assetServer = cookie != null && cookie.Value != null ? HttpUtility.UrlDecode(cookie.Value) : "";
-    var cssPath = assetServer+ Url.Content("~/Scripts/build/resources/Taco-all.css");
+    var cssPath = assetServer + Url.Content("~/Scripts/build/resources/Taco-all.css");
+    //var fontAwesome = assetServer + Url.Content("//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css");
+    var fontAwesome = assetServer + Url.Content("~/Scripts/build/resources/fonts/fontawesome/css/all.css");
     var appPath = assetServer + Url.Content("~/Scripts/app");
     var uxPath = assetServer + Url.Content("~/Scripts/ux");
     var extPath = assetServer + Url.Content("~/Scripts/ext/src");
@@ -21,13 +23,17 @@
     <link type="image/x-icon" href="@icoPath" rel="shortcut icon" />
 
     <link rel="stylesheet" type="text/css" href="@cssPath" />
+    <link rel="stylesheet" type="text/css" href="@fontAwesome" />
 
     <!-- Google Tag Manager -->
     <script>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-KMSBT4');
     </script>
     <!-- End Google Tag Manager -->
@@ -41,7 +47,7 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/resources/lib/history.js")"></script>
 
 
-    @if ( ! (Request.Browser.Type.Contains("IE") && Request.Browser.MajorVersion < 9))
+    @if (!(Request.Browser.Type.Contains("IE") && Request.Browser.MajorVersion < 9))
     {
         <script src="@Url.Content("~/Scripts/resources/lib/ace/ace.js")" type="text/javascript" charset="utf-8"></script>
         <script src="@Url.Content("~/Scripts/resources/lib/ace/theme-textmate.js")" type="text/javascript" charset="utf-8"></script>
@@ -66,7 +72,7 @@
     });
     Ext.Loader.addClassPathMappings({
         Taco: '@appPath',
-        
+
         "Ext.ux.form.field.BoxSelect": "@uxPath/boxselect/form/field/BoxSelect.js",
         "Ext.ux.data.PagingStore": "@uxPath/pagingStore/data/PagingStore.js",
         "Ext.ux.layout.component.field.BoxSelectField": "@uxPath/boxselect/layout/component/field/BoxSelectField.js",
@@ -94,7 +100,8 @@
 
 </head>
 
-<body data-current-user="@System.Environment.UserName"></body>
+<body data-current-user="@System.Environment.UserName">
+</body>
 
 </html>
 

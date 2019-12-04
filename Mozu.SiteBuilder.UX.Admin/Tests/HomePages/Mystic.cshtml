@@ -3,6 +3,7 @@
 <head>
     <title>MOZU-ADMIN</title>
     <link rel="stylesheet" type="text/css" href="/Admin/Scripts/build/resources/Taco-all.css?ver=1.7.1.29" />
+    <link rel="stylesheet" type="text/css" href="/Admin/Scripts/build/resources/fonts/fontawesome/css/all.css" />
     <script>
         window.Taco = {
             "adminRelPath": "/Admin/",
@@ -221,66 +222,66 @@
 
         @Html.Raw("<scr" + "ipt>useExtLoader = true;</scr" + "ipt>");
     }
-    
+
     <script>
         var devCodes = "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/polyfills.js'></scr" + "ipt>                   \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/json2.js'></scr" + "ipt>                       \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.adapter.native.js'></scr" + "ipt>      \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.html4.js'></scr" + "ipt>               \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.js'></scr" + "ipt>                     \n" +
-    "                                                                                                               \n" +
-    "                                                                                                               \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/ext/ext-all-dev.js'></scr" + "ipt>                           \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/ext/locale/ext-lang-en.js'></scr" + "ipt>                    \n" +
-    "                                                                                                               \n" +
-    "    <scr" + "ipt type='text/javascr" + "ipt'>                                                                            \n" +
-    "        Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider', {                                 \n" +
-    "            path: '/admin/',                                                                                   \n" +
-    "            expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30))                               \n" +
-    "        }));                                                                                                   \n" +
-    "        //1 min timeout                                                                                        \n" +
-    "        Ext.Ajax.timeout = 120000;                                                                             \n" +
-    "        Ext.Loader.setConfig({                                                                                 \n" +
-    "            enabled: true,                                                                                     \n" +
-    "            disableCaching: !!Ext.state.Manager.get('disableCaching'),                                         \n" +
-    "            paths: {                                                                                           \n" +
-    "                Taco: '/admin/scr" + "ipts/app/'                                                                    \n" +
-    "            }                                                                                                  \n" +
-    "        });                                                                                                    \n" +
-    "    Ext.ns('Taco');                                                                                            \n" +
-    "    Taco.baseCSSPrefix = 'taco-';                                                                              \n" +
-    "                                                                                                               \n" +
-    "    (function () {                                                                                             \n" +
-    "        var oldClassPathMappings = Ext.Loader.addClassPathMappings;                                            \n" +
-    "        Ext.Loader.addClassPathMappings = function (classPaths) {                                              \n" +
-    "            for (var cls in classPaths) classPaths[cls] = '/admin/scr" + "ipts/' + classPaths[cls];                 \n" +
-    "                oldClassPathMappings.call(Ext.Loader, classPaths);                                             \n" +
-    "                // only do this once                                                                           \n" +
-    "                Ext.Loader.addClassPathMappings = oldClassPathMappings;                                        \n" +
-    "            };                                                                                                 \n" +
-    "        }());                                                                                                  \n" +
-    "                                                                                                               \n" +
-    "    </scr" + "ipt>                                                                                                  \n" +
-    "    <scr" + "ipt src='/admin/scr" + "ipts/bootstrap.js'></scr" + "ipt>                                                        \n" +
-    "    <scr" + "ipt src='/admin/scr" + "ipts/app.js'></scr" + "ipt>                                                              \n";
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/json2.js'></scr" + "ipt>                       \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.adapter.native.js'></scr" + "ipt>      \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.html4.js'></scr" + "ipt>               \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/resources/lib/history.js'></scr" + "ipt>                     \n" +
+            "                                                                                                               \n" +
+            "                                                                                                               \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/ext/ext-all-dev.js'></scr" + "ipt>                           \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt' src='/admin/scr" + "ipts/ext/locale/ext-lang-en.js'></scr" + "ipt>                    \n" +
+            "                                                                                                               \n" +
+            "    <scr" + "ipt type='text/javascr" + "ipt'>                                                                            \n" +
+            "        Ext.state.Manager.setProvider(Ext.create('Ext.state.CookieProvider', {                                 \n" +
+            "            path: '/admin/',                                                                                   \n" +
+            "            expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 30))                               \n" +
+            "        }));                                                                                                   \n" +
+            "        //1 min timeout                                                                                        \n" +
+            "        Ext.Ajax.timeout = 120000;                                                                             \n" +
+            "        Ext.Loader.setConfig({                                                                                 \n" +
+            "            enabled: true,                                                                                     \n" +
+            "            disableCaching: !!Ext.state.Manager.get('disableCaching'),                                         \n" +
+            "            paths: {                                                                                           \n" +
+            "                Taco: '/admin/scr" + "ipts/app/'                                                                    \n" +
+            "            }                                                                                                  \n" +
+            "        });                                                                                                    \n" +
+            "    Ext.ns('Taco');                                                                                            \n" +
+            "    Taco.baseCSSPrefix = 'taco-';                                                                              \n" +
+            "                                                                                                               \n" +
+            "    (function () {                                                                                             \n" +
+            "        var oldClassPathMappings = Ext.Loader.addClassPathMappings;                                            \n" +
+            "        Ext.Loader.addClassPathMappings = function (classPaths) {                                              \n" +
+            "            for (var cls in classPaths) classPaths[cls] = '/admin/scr" + "ipts/' + classPaths[cls];                 \n" +
+            "                oldClassPathMappings.call(Ext.Loader, classPaths);                                             \n" +
+            "                // only do this once                                                                           \n" +
+            "                Ext.Loader.addClassPathMappings = oldClassPathMappings;                                        \n" +
+            "            };                                                                                                 \n" +
+            "        }());                                                                                                  \n" +
+            "                                                                                                               \n" +
+            "    </scr" + "ipt>                                                                                                  \n" +
+            "    <scr" + "ipt src='/admin/scr" + "ipts/bootstrap.js'></scr" + "ipt>                                                        \n" +
+            "    <scr" + "ipt src='/admin/scr" + "ipts/app.js'></scr" + "ipt>                                                              \n";
 
 
         var prodCodes = "      <scr" + "ipt type='text/javascr" + "ipt' src='/Admin/scr" + "ipts/resources/lib/init.min.js'></scr" + "ipt>\n" +
-        "                                                                                             \n" +
-        "      <scr" + "ipt type='text/javascr" + "ipt' src='/Admin/scr" + "ipts/build/app-dev.js'></scr" + "ipt>             \n" +
-        "                                                                                             \n" +
-        "                                                                                             \n" +
-        "      <scr" + "ipt src='/Admin/scr" + "ipts/build/locale/ext-lang-en.js'></scr" + "ipt>                     \n" +
-        "                                                                                             \n" +
-        "      <scr" + "ipt type='text/javascr" + "ipt'>                                                        \n" +
-        "                                                                                             \n" +
-        "          Ext.Ajax.timeout = 120000;                                                         \n" +
-        "                                                                                             \n" +
-        "          Ext.Loader.setConfig({                                                             \n" +
-        "              enabled: false                                                                 \n" +
-        "          });                                                                               \n" +
-        "                                                                                             \n" +
-        "      </scr" + "ipt>                                                                              \n";
+            "                                                                                             \n" +
+            "      <scr" + "ipt type='text/javascr" + "ipt' src='/Admin/scr" + "ipts/build/app-dev.js'></scr" + "ipt>             \n" +
+            "                                                                                             \n" +
+            "                                                                                             \n" +
+            "      <scr" + "ipt src='/Admin/scr" + "ipts/build/locale/ext-lang-en.js'></scr" + "ipt>                     \n" +
+            "                                                                                             \n" +
+            "      <scr" + "ipt type='text/javascr" + "ipt'>                                                        \n" +
+            "                                                                                             \n" +
+            "          Ext.Ajax.timeout = 120000;                                                         \n" +
+            "                                                                                             \n" +
+            "          Ext.Loader.setConfig({                                                             \n" +
+            "              enabled: false                                                                 \n" +
+            "          });                                                                               \n" +
+            "                                                                                             \n" +
+            "      </scr" + "ipt>                                                                              \n";
         if (useExtLoader) {
             document.write(devCodes);
         } else {

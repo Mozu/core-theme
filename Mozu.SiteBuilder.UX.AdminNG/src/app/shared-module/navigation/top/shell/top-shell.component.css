@@ -38,7 +38,7 @@ a:hover {
 }
 
 .active {
-    border-bottom: 2px solid #2ea195;
+    border-bottom: 2px solid rgb(51, 0, 101);
     color: #333333;
     opacity: 1;
 }

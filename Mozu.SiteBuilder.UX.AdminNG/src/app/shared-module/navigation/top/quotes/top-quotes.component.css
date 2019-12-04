@@ -18,13 +18,14 @@
     color: #3f3f3f;
     text-decoration: none;
 }
-.quote-number{
+
+.quote-number {
     font-size: 18px;
     padding: 10px;
     display: inline-block;
 }
 
-.content-pill{
+.content-pill {
     background-color: #f3f3f3;
     color: #7c7c7c;
     border-radius: 9px;
@@ -33,9 +34,17 @@
     font-size: 11px;
 }
 
-.quote-details{
+.quote-details {
     width: 140px;
     padding-right: 0;
+}
+
+.quote-location-sub-header {
+    padding-top: 8px;
+}
+
+.quote-location-sub-header .heading {
+    padding-left: 20px;
 }
 
 @media screen and (max-width: 480px) {
@@ -43,4 +52,3 @@
         border-right: 0px solid transparent;
     }
 }
-

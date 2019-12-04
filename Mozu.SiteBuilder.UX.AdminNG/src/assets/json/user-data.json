@@ -669,7 +669,7 @@
             },
             "supportsCustomExtensions": true,
             "mozuInstanceId": "1",
-            "omsEnabled": false,
+            "omsEnabled": true,
             "attributes": [],
             "createDate": "2019-03-28T16:42:36.053Z",
             "isDeleted": false,
@@ -2001,7 +2001,7 @@
                 }
             },
             "logzuUrl": "http://tbd:80/mozu.logzu",
-            "omsEnabled": false
+            "omsEnabled": true
         },
         "localizationValues": [
             {

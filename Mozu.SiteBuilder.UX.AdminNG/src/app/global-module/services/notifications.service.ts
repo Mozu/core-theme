@@ -4,11 +4,14 @@
 
 import { LoggerService } from '@core';
 import { Subject } from 'rxjs/Subject';
+import { NavigationContainerType } from '@shared';
 
 
 @Injectable()
 export class NotificationService {
 
+    expandHamburgerMenuNotification: Subject<NavigationContainerType> = new Subject<NavigationContainerType>();
+    collapseHamburgerMenuNotification: Subject<NavigationContainerType> = new Subject<NavigationContainerType>();
     productAddedToCartNotification: Subject<null> = new Subject<null>();
     productAddedToCartFromDialogNotification: Subject<null> = new Subject<null>();
     disableUINotification: Subject<null> = new Subject<null>();
@@ -36,6 +39,14 @@ export class NotificationService {
         this._logger.info('NotificationService : constructor');
     }
 
+    notifyHamburgerMenuExpanded(containerType: NavigationContainerType) {
+        this._logger.info('NotificationService : notifyHamburgerMenuExpanded');
+        this.expandHamburgerMenuNotification.next(containerType);
+    }
+    notifyHamburgerMenuCollapsed(containerType: NavigationContainerType) {
+        this._logger.info('NotificationService : notifyHamburgerMenuCollapsed');
+        this.collapseHamburgerMenuNotification.next(containerType);
+    }
     notifyProductAddedToCart() {
         this._logger.info('NotificationService : notifyNonCatalogProductAddedToCart');
         this.productAddedToCartNotification.next();
@@ -116,4 +127,5 @@ export class NotificationService {
         this._logger.info('NotificationService : notifyQuoteHeaderValuesReceived');
         this.quoteHeaderValuesReceived.next({quoteNumber: quoteNumber, quoteStatus: quoteStatus});
     }
+    
 }

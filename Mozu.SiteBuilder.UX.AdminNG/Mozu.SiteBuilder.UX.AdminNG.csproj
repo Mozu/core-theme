@@ -155,8 +155,14 @@
     <Content Include="src\app\shared-module\access-tile\access-tile.component.html" />
     <Content Include="src\app\shared-module\account\information\information.component.css" />
     <Content Include="src\app\shared-module\account\information\information.component.html" />
+    <Content Include="src\app\shared-module\advanced-search\advanced-search.component.css" />
+    <Content Include="src\app\shared-module\advanced-search\advanced-search.component.html" />
+    <Content Include="src\app\shared-module\audit-log\audit-log.component.css" />
+    <Content Include="src\app\shared-module\audit-log\audit-log.component.html" />
     <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.css" />
     <Content Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.html" />
+    <Content Include="src\app\shared-module\datepicker\datepicker.component.css" />
+    <Content Include="src\app\shared-module\datepicker\datepicker.component.html" />
     <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.css" />
     <Content Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.html" />
     <Content Include="src\app\shared-module\header\header.component.css" />
@@ -167,6 +173,10 @@
     <Content Include="src\app\shared-module\locations\list.component.html" />
     <Content Include="src\app\shared-module\navigation\left\left.component.css" />
     <Content Include="src\app\shared-module\navigation\left\left.component.html" />
+    <Content Include="src\app\shared-module\navigation\left\search\search.component.css" />
+    <Content Include="src\app\shared-module\navigation\left\search\search.component.html" />
+    <Content Include="src\app\shared-module\navigation\left\user\action.component.css" />
+    <Content Include="src\app\shared-module\navigation\left\user\action.component.html" />
     <Content Include="src\app\shared-module\navigation\navigation.component.css" />
     <Content Include="src\app\shared-module\navigation\navigation.component.html" />
     <Content Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.css" />
@@ -177,11 +187,19 @@
     <Content Include="src\app\shared-module\navigation\top\shell\top-shell.component.html" />
     <Content Include="src\app\shared-module\physical\locations.component.css" />
     <Content Include="src\app\shared-module\physical\locations.component.html" />
+    <Content Include="src\app\shared-module\progress-button\progress-button.component.css" />
+    <Content Include="src\app\shared-module\progress-button\progress-button.component.html" />
     <Content Include="src\app\shared-module\search-bar\search-bar.component.css" />
     <Content Include="src\app\shared-module\search-bar\search-bar.component.html" />
     <Content Include="src\app\shared-module\selected-locations\selected.component.css" />
     <Content Include="src\app\shared-module\selected-locations\selected.component.html" />
+    <Content Include="src\app\shared-module\shipping\address\address.component.css" />
+    <Content Include="src\app\shared-module\shipping\address\address.component.html" />
+    <Content Include="src\app\shared-module\shipping\method\method.component.css" />
+    <Content Include="src\app\shared-module\shipping\method\method.component.html" />
     <Content Include="src\app\shared-module\spinner\spinner.component.html" />
+    <Content Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.css" />
+    <Content Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.html" />
     <Content Include="src\assets\Fonts\Calibri.svg" />
     <Content Include="src\assets\Fonts\fontawesome-webfont.svg" />
     <Content Include="src\assets\Fonts\glyphicons-halflings-regular.svg" />
@@ -199,6 +217,7 @@
     <Content Include="src\assets\Images\downArrowWhite.png" />
     <Content Include="src\assets\Images\fullfillment.png" />
     <Content Include="src\assets\Images\kibo-icon.png" />
+    <Content Include="src\assets\Images\kibo-logo-sidebar.png" />
     <Content Include="src\assets\Images\loading-blue-bak.gif" />
     <Content Include="src\assets\Images\marketing.png" />
     <Content Include="src\assets\Images\new-window.png" />
@@ -216,7 +235,6 @@
     <Content Include="src\assets\References\jquery-2.2.0.min.js" />
     <Content Include="src\assets\References\jquery.signalR-2.2.1.min.js" />
     <Content Include="src\assets\Styles\bootstrap.min.css" />
-    <Content Include="src\assets\Styles\font-awesome.min.css" />
     <Content Include="src\assets\Styles\jquery-ui.min.css" />
     <Content Include="src\assets\Styles\public.component.css" />
     <Content Include="src\assets\Styles\spinner.component.css" />
@@ -234,6 +252,7 @@
     <Content Include="angular.json" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
+    <Content Include="fontawesome.npmrc" />
     <None Include="packages.config" />
     <Content Include="src\assets\Fonts\Calibri.eot" />
     <Content Include="src\assets\Fonts\Calibri.otf" />
@@ -321,6 +340,7 @@
     <TypeScriptCompile Include="src\app\quotes-module\list\list.component.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\list\list.model.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\list\list.service.ts" />
+    <TypeScriptCompile Include="src\app\quotes-module\quote-filter.model.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\quotes.module.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\quote\index.ts" />
     <TypeScriptCompile Include="src\app\quotes-module\quote\items\items.component.ts" />
@@ -336,14 +356,25 @@
     <TypeScriptCompile Include="src\app\shared-module\account\information\information.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\account\information\information.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\account\information\information.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\advanced-search.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\advanced-search.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\advanced-search\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\audit-log.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\audit-log\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\confirmation-dialog.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\confirmation-dialog\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\datepicker\datepicker.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\datepicker\datepicker.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\directive\datepicker-compare-validator.directive.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\enable-disable-controls.directive.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\directive\restrict-input.directive.ts" />
     <TypeScriptCompile Include="src\app\shared-module\dynamic-links-dialog\dynamic-links-dialog.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\header.model.ts" />
-    <TypeScriptCompile Include="src\app\shared-module\header\header.service.ts" />
     <TypeScriptCompile Include="src\app\shared-module\header\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\home\home.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\index.ts" />
@@ -359,6 +390,14 @@
     <TypeScriptCompile Include="src\app\shared-module\navigation\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\left\left.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\left\left.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\search\search.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\action.service.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\navigation\left\user\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\navigation.service.ts" />
     <TypeScriptCompile Include="src\app\shared-module\navigation\top\location-groups\top-location-groups.component.ts" />
@@ -376,13 +415,21 @@
     <TypeScriptCompile Include="src\app\shared-module\pipes\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\pipes\safeHtml.pipe.ts" />
     <TypeScriptCompile Include="src\app\shared-module\pipes\split.pipe.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\progress-button\progress-button.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\progress-button\progress-button.service.ts" />
     <TypeScriptCompile Include="src\app\shared-module\rxjs-extensions.ts" />
     <TypeScriptCompile Include="src\app\shared-module\search-bar\index.ts" />
     <TypeScriptCompile Include="src\app\shared-module\search-bar\search-bar.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\selected-locations\selected.component.ts" />
     <TypeScriptCompile Include="src\app\shared-module\selected-locations\selected.model.ts" />
     <TypeScriptCompile Include="src\app\shared-module\shared.module.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\address\address.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\index.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.model.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\shipping\method\method.service.ts" />
     <TypeScriptCompile Include="src\app\shared-module\spinner\spinner.component.ts" />
+    <TypeScriptCompile Include="src\app\shared-module\toggle-grid-columns\toggle-grid-columns.component.ts" />
     <TypeScriptCompile Include="src\core-module\core.module.ts" />
     <TypeScriptCompile Include="src\core-module\errorHandling\global-error-dialog.component.ts" />
     <TypeScriptCompile Include="src\core-module\errorHandling\global-error-handler.component.ts" />
@@ -433,7 +480,6 @@
     <TypeScriptCompile Include="src\test\spec\app\quotes-module\quote\summary\summary.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\access-tile\access-tile.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\header\header.component.spec.ts" />
-    <TypeScriptCompile Include="src\test\spec\app\shared-module\header\header.service.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\home\home.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\left\left.component.spec.ts" />
     <TypeScriptCompile Include="src\test\spec\app\shared-module\navigation\navigation.component.spec.ts" />
@@ -475,6 +521,8 @@
   <Target Name="BeforeBuild">
     <Message Importance="high" Text="*** START $(Configuration) build process" />
     <Message Importance="high" Text="*** START node module install process" />
+    <Exec Command="npm config set &quot;@fortawesome:registry&quot; https://npm.fontawesome.com/" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm config set &quot;//npm.fontawesome.com/:_authToken&quot; 74AB3AFD-9000-49B0-A6AB-0B676CC1C51B" WorkingDirectory="$(ProjectDir)" />
     <Exec Command="npm --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END node module install process" />
     <Message Importance="high" Text="*** START ng build process" />

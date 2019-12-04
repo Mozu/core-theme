@@ -1,4 +1,5 @@
 ﻿.#{$vprefix}context-switcher {
+
     .#{$prefix}trigger-cell, .#{$prefix}form-text {
         background-color: $color-action-background;
         @include facade-transitions;
@@ -77,4 +78,7 @@
     .#{$prefix}menu-item {
         border-bottom: 1px solid whitesmoke !important;
     }
+}
+.taco-picker-selector.taco-context-switcher-selector .title {
+    color : #fff !important;
 }

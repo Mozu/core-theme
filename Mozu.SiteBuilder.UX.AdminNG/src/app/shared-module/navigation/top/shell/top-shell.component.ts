@@ -1,6 +1,8 @@
 import {
     Component,
     OnInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
   } from '@angular/core';
 
 import { LoggerService } from '@core';
@@ -13,7 +15,8 @@ import { TopNavigationModel,
 @Component({
   selector: 'navigation-top-shell',
   templateUrl: './top-shell.component.html',
-  styleUrls: ['./top-shell.component.css']
+  styleUrls: ['./top-shell.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavigationTopShellComponent implements OnInit {
 
@@ -23,7 +26,8 @@ export class NavigationTopShellComponent implements OnInit {
   constructor(
       private navigationService: NavigationService,
       private notificationService: NotificationService,
-      private _loggerService: LoggerService
+      private _loggerService: LoggerService,
+      private _changeDetectorRef : ChangeDetectorRef
       ) {
         this._loggerService.info('NavigationTopShellComponent : constructor');
       }
@@ -38,6 +42,7 @@ export class NavigationTopShellComponent implements OnInit {
     this._loggerService.info('NavigationTopShellComponent : tabSelectionChanged');
     this.activeTab = selectedTab;
     this.notificationService.notifyLoadAccessTileCategories(selectedTab.tabName);
+    this._changeDetectorRef.detectChanges();
   }
 
   public fetchHomeTabsName = () => {
@@ -46,6 +51,7 @@ export class NavigationTopShellComponent implements OnInit {
     this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_SuccessResponse');
     this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
     this.activeTab = this.model.navigationTabs[0];
+    this._changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_ErrorResponse');
     });

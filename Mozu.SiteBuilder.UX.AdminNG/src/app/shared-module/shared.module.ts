@@ -15,9 +15,9 @@ import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import {ListboxModule} from 'primeng/listbox';
 import { DropdownModule } from 'primeng/dropdown';
-import { SelectItem } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { NgbCarouselModule, NgbModule, NgbDateAdapter, NgbDateNativeAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -35,6 +35,9 @@ import {
 import {
     NavigationComponent,
     NavigationTopShellComponent,
+    NavigationLeftSearchComponent,
+    NavigationLeftSandBoxComponent,
+    NavigationLeftUserActionComponent,
     NavigationLeftComponent,
     AccessTileComponent,
     NavigationTopQuotesComponent,
@@ -99,6 +102,7 @@ export function createTranslateLoader(http: HttpClient) {
         DropdownModule,
         AutoCompleteModule,
         OverlayPanelModule,
+        ScrollPanelModule,
         NgbModule,
         TranslateModule.forRoot({
             loader: {
@@ -127,6 +131,9 @@ export function createTranslateLoader(http: HttpClient) {
         // components
         NavigationComponent,
         NavigationTopShellComponent,
+        NavigationLeftSandBoxComponent,
+        NavigationLeftSearchComponent,
+        NavigationLeftUserActionComponent,
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,
@@ -182,6 +189,7 @@ export function createTranslateLoader(http: HttpClient) {
         TreeTableModule,
         TableModule,
         OverlayPanelModule,
+        ScrollPanelModule,
         // pipes
         DatexPipe,
         EllipsisPipe,
@@ -198,6 +206,10 @@ export function createTranslateLoader(http: HttpClient) {
         // shared components
         NavigationComponent,
         NavigationTopShellComponent,
+        NavigationLeftSearchComponent,
+        NavigationLeftSandBoxComponent,
+        NavigationLeftSandBoxComponent,
+        NavigationLeftUserActionComponent,
         NavigationLeftComponent,
         SpinnerComponent,
         HeaderComponent,

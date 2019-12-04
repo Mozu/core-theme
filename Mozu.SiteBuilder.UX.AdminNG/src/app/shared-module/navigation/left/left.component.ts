@@ -3,8 +3,13 @@ import {
   OnInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  EventEmitter,
-  Output
+  Input,
+  AfterViewInit,
+  ViewEncapsulation,
+  OnDestroy,
+  OnChanges,
+  SimpleChange,
+  SimpleChanges
 } from '@angular/core';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -22,23 +27,27 @@ import { UtilityService } from '@core/infrastructure/utility.service';
 import { SharedDataService, NotificationService } from '@global';
 import { Constants } from '@shared/infrastructure/constants';
 import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
-import { NotificationLGActions } from '@shared/infrastructure/enums';
+import { NotificationLGActions, NavigationContainerType } from '@shared/infrastructure/enums';
 import { NavigationService } from '../navigation.service';
 import { LeftNavigationModel, SecureForm, LeftNavigationTabs } from './left.model';
 import { MenuItem } from 'primeng/api';
+import { environment } from 'environments/environment.Dev';
 
 @Component({
   selector: 'navigation-left',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './left.component.html',
-  styleUrls: ['./left.component.css']
+  styleUrls: ['./left.component.css']//,
+  //encapsulation : ViewEncapsulation.None
 })
-export class NavigationLeftComponent implements OnInit {
+export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  @Input() naviContainerType: NavigationContainerType;
   public model: LeftNavigationModel;
   quotesRoute = Constants.uiRoutes.quotes;
   locationGroupRoute = Constants.uiRoutes.locationGroups;
   inventoryTitle = Constants.titles.inventory;
   locationGroupsTitle = Constants.titles.locationGroups;
+  isContainerTypeChanged: boolean;
   subscriptions = [];
 
   constructor(
@@ -48,7 +57,7 @@ export class NavigationLeftComponent implements OnInit {
     private _sharedDataService: SharedDataService,
     private utilityService: UtilityService,
     private modalService: NgbModal,
-    private _notificationService: NotificationService,
+    private _notificationService: NotificationService
   ) { }
 
   visibleSidebar1;
@@ -58,8 +67,55 @@ export class NavigationLeftComponent implements OnInit {
     this.model = new LeftNavigationModel();
     this.fetchNavigationItem();
     this.model.filteredNavigationLinks = [];
+    this.model.homeURL = environment.appUrl;
+    this.model.isShowSearchComponent = true;
+    this.visibleSidebar1 = (this.naviContainerType === NavigationContainerType.dashboard);
+    this.model.isSideBarModal = !(this.naviContainerType === NavigationContainerType.dashboard);
+
+    this.subscriptions.push(
+      this._notificationService.expandHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
+        this.model.isSideBarModal = !(navContainerType === NavigationContainerType.dashboard);
+        this.visibleSidebar1 = true;
+        this.changeDetectorRef.detectChanges();
+      })
+    );
   }
 
+  ngAfterViewInit() {
+    this._loggerService.info('NavigationLeftComponent : ngAfterViewInit');
+    document.querySelectorAll('.ui-scrollpanel').forEach(
+      (eachElement) => {
+        eachElement.setAttribute('style', 'height:' + document.querySelector('.ui-tabview-panels').clientHeight + 'px;');
+        this.changeDetectorRef.detectChanges();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this._loggerService.info('NavigationLeftComponent : ngOnDestroy');
+    this.subscriptions.forEach((s) => {
+      s.unsubscribe();
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const containerType: SimpleChange = changes.naviContainerType;
+    if (containerType.currentValue !== NavigationContainerType.dashboard) {
+      this.model.isSideBarModal = true;
+      this.visibleSidebar1 = false;
+      this.isContainerTypeChanged = true;
+      this.changeDetectorRef.detectChanges();
+    } else {
+      this.isContainerTypeChanged = false;
+    }
+  }
+  public collapseHamburgerMenu() {
+    // if (this.isContainerTypeChanged === false) {
+    this.visibleSidebar1 = false;
+    this._notificationService.notifyHamburgerMenuCollapsed(this.naviContainerType);
+    //}
+  }
+  
   public fetchNavigationItem = () => {
     this.navigationService.fetchLeftNavigationItems().subscribe(leftNavigationItemsSuccessResponse => {
       this._loggerService.info('NavigationLeftComponent : fetchLeftNavigationItems');
@@ -70,18 +126,16 @@ export class NavigationLeftComponent implements OnInit {
       if (this._sharedDataService._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
         this.model.filteredNavigationLinks = this.appendDynamicLinks(this.model.filteredNavigationLinks);
       }
-      this.model.filteredNavigationLinks = this.utilityService.populateNavigationLinksbyContextType(
+      this.model.filteredNavigationLinks = this.utilityService.populateMainNavigationLinksbyContextType(
+        this.model.filteredNavigationLinks, this._sharedDataService._sharedData.items.ctTaContext);
+      this.model.filteredNavigationLinks = this.utilityService.populateSubNavigationLinksbyContextType(
         this.model.filteredNavigationLinks, this._sharedDataService._sharedData.items.ctTaContext);
       this.model.mainItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuMainTabJsonNavParentPrefix; });
 
       _.forEach(this.model.mainItems, (eachMainItem: MenuItem) => {
         if (eachMainItem.id === Constants.orderRoutingNavigationId) {
-          (eachMainItem.items as MenuItem[]).forEach((eachItem: MenuItem) => {
-            if (eachItem.id === Constants.orderRoutingNavigationId) {
-              eachItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachItem.url;
-            }
-          });
+          eachMainItem.url = this._sharedDataService._sharedData.items.loginUri + this._sharedDataService._sharedData.items.ctTenant.id + eachMainItem.url;
         }
       });
 
@@ -146,17 +200,27 @@ export class NavigationLeftComponent implements OnInit {
     });
   }
 
-  public megaMenuToggleIcon = (event) => {
+  public megaMenuToggleIcon = (event, menuHeader) => {
     this._loggerService.info('NavigationLeftComponent : megaMenuToggleIcon');
     const element = event.target;
     element.classList.toggle('active');
+    menuHeader.expanded = !menuHeader.expanded;
+    this.changeDetectorRef.detectChanges();
   }
 
-  navigationFromMegaMenu(route) {
+  navigationFromMegaMenu(route,event, menuHeader) {
+    const element = event.target;
+    element.classList.toggle('menu-option-selected');
+    menuHeader.expanded = !menuHeader.expanded;
+    this.changeDetectorRef.detectChanges();
     this.visibleSidebar1 = false;
     if (route === Constants.uiRoutes.locationGroups) {
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.navigateFromLeftMenu);
     }
+  }
+
+  toggleSearchComponenet(){
+    this.model.isShowSearchComponent = !this.model.isShowSearchComponent;
   }
 
 }

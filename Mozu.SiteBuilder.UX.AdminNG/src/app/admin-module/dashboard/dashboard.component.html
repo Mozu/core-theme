@@ -1,4 +1,4 @@
-<div class="dashboard">
+<div [ngClass]="model.dashboardCSSClass">
     <ng-container *ngIf="model.isShowSystemTiles; then systemTilesTemplate; else mainTilesTemplate">
     </ng-container>
 

@@ -1,10 +1,4 @@
-[
-    {
-        "label": "Launchpad",
-        "url": "/admin/auth/launchpad"
-    },
-    {
-        "label": "Log Out",
-        "url": "/admin/auth/logout"
-    }
-]
+[{
+    "label": "Log Out",
+    "url": "/admin/auth/logout"
+}]

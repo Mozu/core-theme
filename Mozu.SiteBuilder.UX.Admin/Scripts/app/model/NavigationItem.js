@@ -5,7 +5,7 @@ Ext.define('Taco.model.NavigationItem', {
     requires:['Ext.data.association.HasMany'],
     extend: 'Taco.core.data.Model',
     idProperty: 'id',
-    fields: ['id', 'label', 'icon', 'address', 
+    fields: ['id', 'label', 'icon', 'address', 'menucolor',
         {
             name: 'visible',
             type: 'boolean',

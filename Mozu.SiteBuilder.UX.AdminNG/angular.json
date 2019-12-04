@@ -26,12 +26,12 @@
                             "src/styles.css",
                             "src/assets/styles/jquery-ui.min.css",
                             "src/assets/styles/bootstrap.min.css",
-                            "src/assets/styles/font-awesome.min.css",
                             "src/assets/styles/spinner.component.css",
                             "src/assets/styles/public.component.css",
                             "node_modules/primeng/resources/themes/nova-light/theme.css",
                             "node_modules/primeng/resources/primeng.min.css",
-                            "node_modules/primeicons/primeicons.css"
+                            "node_modules/primeicons/primeicons.css",
+                            "node_modules/@fortawesome/fontawesome-pro/css/all.css"
                         ],
                         "scripts": [
                             "src/assets/references/jquery-2.2.0.min.js",
@@ -254,9 +254,9 @@
                             "src/styles.css",
                             "src/assets/styles/jquery-ui.min.css",
                             "src/assets/styles/bootstrap.min.css",
-                            "src/assets/styles/font-awesome.min.css",
                             "src/assets/styles/spinner.component.css",
-                            "src/assets/styles/public.component.css"
+                            "src/assets/styles/public.component.css",
+                            "node_modules/@fortawesome/fontawesome-pro/css/all.css"
                         ],
 
                         "assets": [

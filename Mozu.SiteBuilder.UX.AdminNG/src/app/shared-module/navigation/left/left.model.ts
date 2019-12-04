@@ -7,6 +7,9 @@ export class LeftNavigationModel {
     dynamicLinkIframeURL: any;
     mainItems: MenuItem[];
     systemItems: MenuItem[];
+    homeURL : string;
+    isSideBarModal : boolean;
+    isShowSearchComponent : boolean;
 }
 
 export class LeftNavigationTabs {

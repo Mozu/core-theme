@@ -332,7 +332,9 @@ Ext.define('Taco.core.context.TaContext', {
         }
         return cc.getSite();
     },
-
+    getReportURL: function () {
+        return 's-' + this.getSiteId() + "/reports";
+    },
     getMasterCatalog: function () {
         var cc = this.getCurrentContext();
         if (cc == this) {

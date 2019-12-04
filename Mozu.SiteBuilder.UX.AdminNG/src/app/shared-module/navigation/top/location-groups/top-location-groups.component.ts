@@ -1,66 +1,72 @@
-import { Component,
+import {
+  Component,
          OnInit,
-         OnDestroy} from '@angular/core';
-import { Router,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef
+} from '@angular/core';
+import {
+  Router,
          PRIMARY_OUTLET,
          UrlSegmentGroup,
          UrlSegment, 
-         ActivatedRoute} from '@angular/router';
-
+  ActivatedRoute
+} from '@angular/router';
 import { NotificationService } from '@global';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
 import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-location-groups.model';
 import * as _ from 'lodash';
-
 import { LoggerService, ErroNotificationType, ErrorCode, HttpError } from '@core';
 import { TopLocationGroupsService } from './top-location-groups.service';
-
   @Component({
     selector: 'navigation-top-location-groups',
     templateUrl: './top-location-groups.component.html',
     styleUrls: ['./top-location-groups.component.css'],
-    providers: [TopLocationGroupsService]
+  providers: [TopLocationGroupsService],
+  changeDetection: ChangeDetectionStrategy.OnPush
   })
   export class NavigationTopLocationGroupsComponent implements OnInit, OnDestroy {
-
     public model: TopLocationGroupsModel;
     subscriptions = [];
-
     constructor(private router: Router,
       private _notificationService: NotificationService,
       private route: ActivatedRoute,
       private _loggerService: LoggerService,
-      private topLocationGroupsService: TopLocationGroupsService) {
+      private topLocationGroupsService: TopLocationGroupsService,
+      private _changeDetectorRef: ChangeDetectorRef) {
     }
-
     ngOnInit() {
       this.model = new TopLocationGroupsModel();
       this.model.locationGroupURL = Constants.uiRoutes.locationGroups;
       this.model.isEditMode = false;
       this.model.isConfigTabVisible = false;
+    this.model.isShowLocationGroupTabActive = false;
       this.checkMode();
-
       this.subscriptions.push(
         this._notificationService.locationGroupAdded.subscribe((action: any) => {
             if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled || action === NotificationLGActions.navigateFromLeftMenu) {
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
+          this.model.isShowLocationGroupTabActive = false;
+          this._changeDetectorRef.detectChanges();
             }
         })
       );
-
       this.subscriptions.push(
           this._notificationService.setLocationGroupConfigData.subscribe((action: any) => {
           if (action.name === NotificationLGActions.list) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
+            this.model.isShowLocationGroupTabActive = true;
             this.model.locationGroupName = (action.data as TopLocationGroupConfigModel).locationGroupName;
               this.model.locationGroupId = (action.data as TopLocationGroupConfigModel).locationGroupId;
               this.model.locationGroupCode = (action.data as TopLocationGroupConfigModel).locationGroupCode;
+          this._changeDetectorRef.detectChanges();
           }
           if (action.name === NotificationLGActions.edit) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
+          this.model.isShowLocationGroupTabActive = true;
             const topLocationGroupConfigModel: TopLocationGroupConfigModel = action.data as TopLocationGroupConfigModel;
             this.model.locationGroupName = topLocationGroupConfigModel.locationGroupName;
               this.model.locationGroupId = topLocationGroupConfigModel.locationGroupId;
@@ -69,17 +75,16 @@ import { TopLocationGroupsService } from './top-location-groups.service';
               this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
             }
             this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
+          this._changeDetectorRef.detectChanges();
           }
         })
       );
     }
-
     ngOnDestroy() {
       this.subscriptions.forEach((s) => {
           s.unsubscribe();
       });
     }
-
     checkMode() {
         const urltree = this.router.parseUrl(this.router.url);
         const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
@@ -89,19 +94,25 @@ import { TopLocationGroupsService } from './top-location-groups.service';
           if (path === Constants.uiRoutes.locationGroups) {
             this.model.isEditMode = false;
             this.model.isConfigTabVisible  = false;
+        this.model.isShowLocationGroupTabActive = false;
+        this._changeDetectorRef.detectChanges();
           }
           if (path === Constants.uiRoutes.locationGroupCreate) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = false;
+        this.model.isShowLocationGroupTabActive = false;
+        this._changeDetectorRef.detectChanges();
           }
           if (path === Constants.uiRoutes.locationGroupEdit) {
             this.model.isEditMode = true;
             this.model.isConfigTabVisible  = true;
+        this.model.isShowLocationGroupTabActive = true;
+        this._changeDetectorRef.detectChanges();
           }
           if (path === Constants.uiRoutes.locationGroupConfig) {
             this.model.isEditMode = false;
             this.model.isConfigTabVisible  = true;
-
+        this.model.isShowLocationGroupTabActive = true;
             // this code executes only if user refresh the location config screen.
             if (primarySegments.length > 2) {
               const locationGroupCode  = primarySegments[1].toString();
@@ -117,7 +128,6 @@ import { TopLocationGroupsService } from './top-location-groups.service';
           }
         }
     }
-
     private getLocationGroupSuccess(result) {
       this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupSuccess' + JSON.stringify(result));
       if (result && result.items) {
@@ -125,43 +135,44 @@ import { TopLocationGroupsService } from './top-location-groups.service';
          this.model.locationGroupId = lgModel.locationGroupId;
          this.model.locationGroupName = lgModel.name;
          this.model.locationGroupSiteIds = lgModel.siteIds;
+      this._changeDetectorRef.detectChanges();
       }
     }
-
     private getLocationGroupError(errmsg: string) {
       this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupError');
       throw new HttpError(ErrorCode.GetLocationGroupDetailFailed, ErroNotificationType.Toaster);
     }
-
     showCreateLG() {
       this.model.isEditMode = true;
       this.router.navigate(['/' + Constants.uiRoutes.locationGroupCreate]);
     }
-
     cancelCreateLG() {
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.cancel);
     }
-
     saveCreateLG() {
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.save);
     }
-
     gotoLocationGroupList() {
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = false;
+    this.model.isShowLocationGroupTabActive = false;
+    this._changeDetectorRef.detectChanges();
       this.router.navigate([Constants.uiRoutes.locationGroups]);
     }
-
     gotoLocationGroupEdit() {
       this.model.isEditMode = true;
       this.model.isConfigTabVisible  = true;
+    this.model.isShowLocationGroupTabActive = true;
       this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupCode]);
+    this._changeDetectorRef.detectChanges();
     }
-
     gotoLocationGroupConfig() {
       this.model.isEditMode = false;
       this.model.isConfigTabVisible  = true;
+    this.model.isShowLocationGroupTabActive = false;
       this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupCode
                             + '/' + this.model.locationGroupSelectedSiteId]);
+    this.model.isShowLocationGroupTabActive = false;
+    this._changeDetectorRef.detectChanges();
     }
 }

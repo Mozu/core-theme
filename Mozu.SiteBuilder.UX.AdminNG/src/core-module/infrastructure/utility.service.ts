@@ -133,7 +133,7 @@ export class UtilityService {
         return accessLinks.filter(function (v: any) { return (v.id !== Constants.localization.localizationAccessLink); });
     }
 
-    public populateNavigationLinksbyContextType = (navigationlinks: any, identityTaContext: any) => {
+    public populateSubNavigationLinksbyContextType = (navigationlinks: any, identityTaContext: any) => {
         this._logger.info('UtilityService : populateNavigationLinksbyContextType');
         _.map(navigationlinks, (eachNavigationlink: any) => {
             _.filter(eachNavigationlink.items, (eachSubLink: any) => {
@@ -153,6 +153,29 @@ export class UtilityService {
                 }
                 return eachSubLink;
             });
+        });
+
+        return navigationlinks;
+    }
+
+    public populateMainNavigationLinksbyContextType = (navigationlinks: any, identityTaContext: any) => {
+        this._logger.info('UtilityService : populateMainNavigationLinksbyContextType');
+        _.map(navigationlinks, (eachNavigationlink: any) => {
+            switch (eachNavigationlink.contextType) {
+                case Constants.contextTypes.catalogContextType:
+                    eachNavigationlink.url = eachNavigationlink.contextType + '-' +
+                        identityTaContext.masterCatalogs[0].catalogs[0].id + '/' + eachNavigationlink.address;
+                    break;
+                case Constants.contextTypes.siteContextType:
+                    eachNavigationlink.url = eachNavigationlink.contextType + '-' +
+                        identityTaContext.masterCatalogs[0].sites[0].id + '/' + eachNavigationlink.address;
+                    break;
+                case Constants.contextTypes.masterCatalogContextType:
+                    eachNavigationlink.url = eachNavigationlink.contextType + '-' +
+                        identityTaContext.masterCatalogs[0].id + '/' + eachNavigationlink.address;
+                    break;
+            }
+            return eachNavigationlink;
         });
 
         return navigationlinks;

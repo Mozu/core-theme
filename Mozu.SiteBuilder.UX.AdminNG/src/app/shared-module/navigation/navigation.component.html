@@ -1,5 +1,5 @@
-﻿<div class="toolbar-main">
-    <navigation-left></navigation-left>
+﻿<div [ngClass]="navigationContainerCSSClass">
+    <navigation-left [naviContainerType]=navigationContainerType></navigation-left>
     <div [ngSwitch]="navigationContainerType">
         <navigation-top-quote  *ngSwitchCase="navigationType.quotes"></navigation-top-quote>
         <navigation-top-location-groups *ngSwitchCase="navigationType.locationGroups"></navigation-top-location-groups>

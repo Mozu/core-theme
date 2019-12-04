@@ -71,11 +71,13 @@ export class AppComponent implements OnInit {
             if (event instanceof NavigationStart) {
                 if (event.url.includes(Constants.uiRoutes.quotes) || event.url.includes(Constants.uiRoutes.quotesEdit) ){
                     this.containerType = NavigationContainerType.quotes;
+                    this._notificationService.notifyHamburgerMenuCollapsed(this.containerType);
                 } else if ( event.url.includes(Constants.uiRoutes.locationGroups) ||
                         event.url.includes(Constants.uiRoutes.locationGroupCreate) ||
                         event.url.includes(Constants.uiRoutes.locationGroupEdit) ||
                         event.url.includes(Constants.uiRoutes.locationGroupConfig)) {
                     this.containerType = NavigationContainerType.locationGroups;
+                    this._notificationService.notifyHamburgerMenuCollapsed(this.containerType);
                 } else {
                     this.containerType = NavigationContainerType.dashboard;
                 }

@@ -4,6 +4,7 @@
  *
  */
 Ext.define('Taco.view.navigation.GlobalSearchBox', {
+    alias: 'widget.global-search-box',
     extend: 'Ext.form.ComboBox',
     requires: [],
 
@@ -18,7 +19,7 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     listConfig: {
         loadingText: 'Searching...',
         emptyText: '<ul class="x-list-plain"><li class="x-boundlist-item"><div>No matching items found.</div></li></ul>',
-        width: 400,
+        width: 270,
         // Custom rendering template for each item
         //removing count because of service optimization it doesnt return.
         getInnerTpl: function () {

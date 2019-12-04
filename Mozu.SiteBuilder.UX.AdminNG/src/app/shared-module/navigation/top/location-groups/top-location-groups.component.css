@@ -32,7 +32,7 @@
 
 .cancelbtn {
     margin-right: 10px;
-    height: 40px;
+    /* height: 40px; */
 }
 
 @media screen and (max-width: 480px) {
@@ -61,6 +61,14 @@
 .sbbtn:hover {
     border-color: #2ea195;
     opacity: .8;
+}
+
+.quote-location-sub-header {
+    padding-top: 10px;
+}
+
+.quote-location-sub-header .heading {
+    padding-left: 20px !important;
 }
 
 @media screen and (min-width: 1024px) {

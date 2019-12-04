@@ -5,7 +5,7 @@ Ext.define('Taco.view.Viewport', {
     extend: 'Ext.container.Viewport',
     requires: [
         'Taco.core.ContentView',
-        'Taco.view.Header'
+        //'Taco.view.Header'
     ],
 
     id: 'primaryViewPort',
@@ -24,10 +24,10 @@ Ext.define('Taco.view.Viewport', {
     initComponent: function () {
         var me = this;
         me.contentView = Ext.create('Taco.core.ContentView', { id: 'contentView', region: 'center' });
-        me.header = Ext.create('Taco.view.Header', { region: 'north' });
+       // me.header = Ext.create('Taco.view.Header', { region: 'north' });
         
         me.items = [
-            me.header,
+            //me.header,
             me.contentView
         ];
         

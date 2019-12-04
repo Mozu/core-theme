@@ -1,52 +1,113 @@
-<div class="col-md-half col-sm-2 sidebar">
+<div class="sidebar">
     <div class="">
-        <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="1" [showCloseIcon]="false" [blockScroll]="true">
+        <p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="2" [showCloseIcon]="false" [blockScroll]="true" [modal]="model.isSideBarModal">
+            <div class="logo-wrapper">
+                <i class="fa fa-times" (click)="collapseHamburgerMenu()"></i>
+                <a [href]="model.homeURL" class=""><img class="sidebar-kibo-logo" src="assets/Images/kibo-logo-sidebar.png"></a>
+            </div>
+
             <p-tabView>
-                <p-tabPanel header="Main">
-                    <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
-                        <span [hidden]="menuHeader.items.length === 0">    
-                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign button">{{menuHeader.label}}
-                </div>
-                 <ul id="{{menuHeader.id}}"  class="collapse in">
-                        <li *ngFor="let menuOptions of menuHeader.items">
-                            <div *ngIf="menuOptions.address !== quotesRoute">
-                                <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]" (click)="navigationFromMegaMenu(menuOptions.address)">
-                                 {{menuOptions.label}}
-                                </a>
-                                <ng-template #routeLink >
-                                <ng-container *ngIf="menuOptions.label !== 'Import/Export'; else importExportDynamicLink">     
-                                   <a [attr.href]="menuOptions.url">
-                                {{menuOptions.label}}
-                                 </a> </ng-container>
-                                </ng-template>
-                                <ng-template #importExportDynamicLink>
-                                    <a class="import-export-cursor" (click)="openDynamicLinksDialog(menuOptions)">
-                                   {{menuOptions.label}}
-                                    </a>
-                                </ng-template>
-                            </div>
-                         </li>
-                    </ul>
-                </span>
-                    </div>
-                </p-tabPanel>
-                <p-tabPanel header="System">
-                    <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">
-                        <span [hidden]="menuHeader.items.length === 0">
-                <div type="button" data-toggle="collapse"  [attr.data-target]="'#' + menuHeader.id" (click)="megaMenuToggleIcon($event)" class="menuHeaderAlign">{{menuHeader.label}}
-                </div>
-                <ul id="{{menuHeader.id}}"  class="collapse in">
-                        <li *ngFor="let menuOptions of menuHeader.items">
-                            <a [attr.href]="menuOptions.url">
-                             {{menuOptions.label}}
+                <navigation-left-sandbox></navigation-left-sandbox>
+                <!--Main tab-->
+                <p-tabPanel header="MAIN">
+
+                    <p-scrollPanel>
+                        <div class="menuHeader menu-ends kibo-purple">
+                            <a type="button active collapsed" class="button" [routerLink]="['./']" [routerLinkActive]="['is-active']">
+                                <span class="fa fa-home"></span> <span>Home</span>
                             </a>
-                        </li>
-                </ul>
-            </span>
-                    </div>
+                        </div>
+                        <div *ngFor="let menuHeader of model.mainItems" class="menuHeader">
+                            <span [hidden]="menuHeader.items.length === 0">
+                                <div type="button active collapsed" data-toggle="collapse"
+                                     [attr.data-target]="'#' + menuHeader.id"
+                                     class="menuHeaderAlign button {{menuHeader.color}}">
+                                    <span [ngClass]="(menuHeader.expanded)? menuHeader.toggleIcon : menuHeader.icon"></span>
+                                    <a class="menu-label">{{menuHeader.label}}</a>
+                                </div>
+                                <ul id="{{menuHeader.id}}" class="collapse">
+                                    <li *ngFor="let menuOptions of menuHeader.items">
+                                        <div>
+                                            <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]" (click)="navigationFromMegaMenu(menuOptions.address,$event,menuHeader)">
+                                                {{menuOptions.label}}
+                                            </a>
+                                            <ng-template #routeLink>
+                                                <ng-container *ngIf="menuOptions.label !== 'Import/Export'; else importExportDynamicLink">
+                                                    <a [attr.href]="menuOptions.url">
+                                                        {{menuOptions.label}}
+                                                    </a>
+                                                </ng-container>
+                                            </ng-template>
+                                            <ng-template #importExportDynamicLink>
+                                                <a class="import-export-cursor" (click)="openDynamicLinksDialog(menuOptions)">
+                                                    {{menuOptions.label}}
+                                                </a>
+                                            </ng-template>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </span>
+                            <div *ngIf="menuHeader.items.length === 0" class="menuHeader menu-ends {{menuHeader.color}}">
+                                <a type="button active collapsed" [attr.href]="menuHeader.url">
+                                    <span [ngClass]="(menuHeader.expanded)? menuHeader.toggleIcon : menuHeader.icon"></span>
+                                    <span>{{menuHeader.label}}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="menuHeader menu-ends kibo-blue">
+                            <a type="button active collapsed " href="https://www.mozu.com/docs/guides/guides.htm" class="">
+                                <span class="fal fa-question-circle"></span>
+                                <span>{{'Header.Label.help' | translate }} </span>
+                            </a>
+                        </div>
+                    </p-scrollPanel>
+                </p-tabPanel>
+                <!--System tab-->
+                <p-tabPanel header="SYSTEM" class="main-sidebar-tabs">
+                    <p-scrollPanel>
+                        <div class="menuHeader menu-ends kibo-purple">
+                            <a type="button active collapsed" class="button" [routerLink]="['/admin']" [routerLinkActive]="['is-active']">
+                                <span class="fa fa-home"></span> <span>Home</span>
+                            </a>
+                        </div>
+                        <div class="menuHeader" *ngFor="let menuHeader of model.systemItems">
+                            <span [hidden]="menuHeader.items.length === 0">
+                                <div type="button active collapsed" data-toggle="collapse"
+                                     [attr.data-target]="'#' + menuHeader.id"
+                                     (click)="megaMenuToggleIcon($event,menuHeader)"
+                                     class="menuHeaderAlign {{menuHeader.color}}">
+                                    <span [ngClass]="(menuHeader.expanded)? menuHeader.icon : menuHeader.icon"></span>
+                                    <a class="menu-label">{{menuHeader.label}}</a>
+                                </div>
+                                <ul id="{{menuHeader.id}}" class="collapse">
+                                    <li *ngFor="let menuOptions of menuHeader.items">
+                                        <a [attr.href]="menuOptions.url">
+                                            {{menuOptions.label}}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </span>
+                        </div>
+
+                        <div class="menuHeader menu-ends kibo-blue">
+                            <a type="button active collapsed" href="https://www.mozu.com/docs/guides/guides.htm">
+                                <span class="fal fa-question-circle"></span> <span>
+                                    {{'Header.Label.help' | translate }}
+                                </span>
+                            </a>
+                        </div>
+                    </p-scrollPanel>
+                </p-tabPanel>
+                <p-tabPanel rightIcon="fal fa-search">
+                    <p-scrollPanel>
+                        <div class="menuHeader menu-ends">
+                            <navigation-left-search [isShowSearchComponent]="model.isShowSearchComponent">
+                            </navigation-left-search>
+                        </div>
+                    </p-scrollPanel>
                 </p-tabPanel>
             </p-tabView>
+            <navigation-left-user-action></navigation-left-user-action>
         </p-sidebar>
-        <span pButton type="button" (click)="visibleSidebar1 = true"><i class="fa fa-bars hamburgerMenu"></i></span>
     </div>
 </div>
