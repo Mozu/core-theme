@@ -110,10 +110,16 @@ Ext.define('Taco.view.location.inventory.Index', {
             forceSelection: true,
             labelWidth: 95,
             minWidth: 300,
+            anyMatch: true,
+            editable: true,
+            typeAhead: true,
+            queryMode: 'local',
+            selectOnFocus: true,
+            triggerAction: 'all',
             listeners: {
                 change: this.onIventoryChange,
                 scope: this
-            }
+            }            
         };
 
         this.secondToolbarItems = [
@@ -173,27 +179,24 @@ Ext.define('Taco.view.location.inventory.Index', {
     },
 
     onIventoryChange: function (cmp, code) {
-
-        // var gridStore = this.store,
-        //     code = record.get('code');
-
-        var record = cmp.store.findRecord('code', code);
-
-        if (record && record.get('isDisabled')) {
-            this.fireEvent('locationchange', this, true);
-        } else if (record) {
-            this.fireEvent('locationchange', this, false);
-        }
-
-        // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
-        // adding a filter with the same id will be treated like an update
-        this.store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: code });
-        this.store.load({
-            callback: function (records, operation, success) {
-                if (!success)
-                    Taco.app.fireEvent('setmessage', 'Error occurred while fetching inventory', 'error');
+        var record = cmp.store.findRecord('code', code, 0, false, false, true);
+        if (record) {
+            if (record && record.get('isDisabled')) {
+                this.fireEvent('locationchange', this, true);
+            } else if (record) {
+                this.fireEvent('locationchange', this, false);
             }
-        });
+
+            // an extra filter to be added to each service call. note this will not be cleared when you clear the filters;
+            // adding a filter with the same id will be treated like an update
+            this.store.extraFilters.add({ id: "locationCode", property: 'locationCode', value: record.get('code') });
+            this.store.load({
+                callback: function (records, operation, success) {
+                    if (!success)
+                        Taco.app.fireEvent('setmessage', 'Error occurred while fetching inventory', 'error');
+                }
+            });
+        }
     },
 
     insertMenu: function(id, records, handler) {
