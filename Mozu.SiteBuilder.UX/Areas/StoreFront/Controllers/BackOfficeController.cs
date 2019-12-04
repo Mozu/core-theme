@@ -6,6 +6,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Extensions;
 using Mozu.Core.Logging;
+using Mozu.Location.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
@@ -38,21 +39,25 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ISiteBuilderApiContext _apiContext;
         private IOrderWebApiClient _orderWebApiClient;
         private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
+        private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
         private const string PICKWAVE_PREVIEW_RESOURCE_NAME = "backoffice.pickwave1";
         private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
+        private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
 
         /// <summary>
         /// Public constructor.
         /// </summary>
         public BackOfficeController(ISiteBuilderApiContext apiContext, IOrderWebApiClient orderWebApiClient, ILogger logger,
-            IFulfillmentProxyWebApiClient fulfillmentProxyClient)
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient,
+            ILocationRuntimeWebApiClient locationRuntimeWebApiClient)
         {
             _apiContext = apiContext;
             _orderWebApiClient = orderWebApiClient.CloneWithoutUserClaims();
             _fulfillmentProxyClient = fulfillmentProxyClient;
+            _locationRuntimeWebApiClient = locationRuntimeWebApiClient.CloneWithoutUserClaims();
         }
 
         /// <summary>
@@ -298,6 +303,38 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return await RenderWithContext(template, pickWave);
         }
 
+        [HttpGet]
+        public async Task<HttpResponseMessage> TransferPackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
+        {
+            var order = await GetOrderWithCustomToken(orderId, token);
+            var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
+
+            if (order == null || shipment == null || !shipment.OrderId.EqualsIgnoreCase(orderId))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            var dcShipment = Mapper.Map<Shipment>(shipment);
+            order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
+
+            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("transfer-packing-slip"));
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find transfer packing slip template for the current Theme.");
+            }
+            
+            PopulateShipmentDetails(dcShipment, order);
+
+            var locationCode = shipment.FulfillmentLocationCode;
+            if (!locationCode.IsNullOrEmpty()) {
+                var location = (await _locationRuntimeWebApiClient.GetLocation(locationCode)).ReadAsSync();
+                ViewData["location"] = location;
+            }
+
+            ViewData["order"] = order;
+            return await RenderWithContext(template, shipment);
+        }
+
         /// <summary>
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
@@ -327,6 +364,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 object shipment = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 object model = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["shipment"] = shipment;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "transfer-packing-slip")
+            {
+                object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object location = TestDataBroker.GetFileContents(LOCATION_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["order"] = order;
+                ViewData["location"] = location;
                 return await RenderWithContext(template, model);
             }
             else

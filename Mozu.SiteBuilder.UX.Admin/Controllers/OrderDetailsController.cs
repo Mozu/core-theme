@@ -66,6 +66,21 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             }
         }
 
+        [HttpGet]
+        public HttpResponseMessage Transfer(int siteId, string orderId, int shipmentNumber)
+        {
+            var claim = CreateLimitedUserClaimsForOrder(orderId);
+            string tok = claim.ToAccessToken();
+
+            string destinationUrl = "/back-office/orders/" + orderId + "/transfers/" + shipmentNumber;
+
+            destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
+
+            var resp = Request.CreateResponse(HttpStatusCode.Found);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            return resp;
+        }
+
         private LightweightUserClaims CreateLimitedUserClaimsForOrder(string orderId)
         {
             var newScope = new UserScope { Id = _apiContext.TenantId, Type = UserScopeType.Tenant, Name = "OrderDetailsScope" };

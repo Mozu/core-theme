@@ -179,6 +179,11 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "PackingSlip" });
 
             routes.MapHttpRoute(
+                "transfer packing slip (back office)",
+                "back-office/orders/{orderId}/transfers/{shipmentNumber}",
+                new { controller = "BackOffice", action = "TransferPackingSlip" });
+
+            routes.MapHttpRoute(
                "pick wave (back office)",
                "back-office/pick-wave/{pickWaveNumber}",
                new { controller = "BackOffice", action = "PickWave" });
