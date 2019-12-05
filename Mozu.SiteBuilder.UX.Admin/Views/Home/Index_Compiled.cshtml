@@ -16,6 +16,7 @@
     var cdn = (string)ViewData["cdn"];
     var mozuInstanceId = (string)ViewData["mozuInstanceId"];
     var requestSuffix = string.Format("ver={0}&verHash={1}&bcv={2}&_miid={3}", ver.FileVersion, assemblyInfoHash, betaControlVersion, mozuInstanceId);
+
 }
 @helper DoCss(string cdn, string requestSuffix)
     {
