@@ -60,7 +60,14 @@
 }
 
 .taco-primary-menu-heading.color-kibo-purple:hover, li.color-kibo-purple:hover {
-    background-color: $color-kibo-purple-light !important;
+    &.main-menu-switchToClassic:hover {
+        background-color: transparent !important;
+        span {
+            text-decoration:none;
+        }
+    }
+    
+    background-color: $color-kibo-purple-light ;
 
     a {
         text-decoration: underline;

@@ -237,6 +237,7 @@
     padding: 12px 0;
 
     &:hover {
+
         span {
             text-decoration: underline;
         }
@@ -606,6 +607,7 @@ i.usericon {
     line-height: 24px;
     align-items: flex-start;
     padding: 0;
+    background: #fafafa;
 
     span {
         font-weight: bold !important;
@@ -616,4 +618,9 @@ i.usericon {
     max-height: 80px !important;
     overflow: visible;
     background: #fafafa;
+
+    a.taco-primary-menu-item-link {
+        padding-left: 23px;
+        font-weight: bold;
+    }
 }

@@ -60,6 +60,7 @@ Ext.define('Taco.view.publishing.component.button.PublishButton', {
 
         this.menu = {
             shadow: true,
+            cls: 'taco-header-split-button',
             items: [
                 this.moveOption,
                 this.removeOption,

@@ -549,12 +549,15 @@ Ext.define('Taco.core.ux.mixins.NavHeader', {
 
                 if (me.saveAndCreateButtonEnabled) {
                     saveButtonCfg.xtype = 'splitbutton';
-                    saveButtonCfg.menu = [{
-                        text: "Save and Create New",
-                        handler: me.saveAndCreate,
-                        scope: me,
-                        hidden: !(me.allowUpdate() || me.allowCreate())
-                    }];
+                    saveButtonCfg.menu = {
+                        cls: 'taco-header-split-button',
+                        items: [{
+                            text: "Save and Create New",
+                            handler: me.saveAndCreate,
+                            scope: me,
+                            hidden: !(me.allowUpdate() || me.allowCreate())
+                        }]
+                    };
                 }
 
                 if (saveButtonCfg.xtype === 'splitbutton') {

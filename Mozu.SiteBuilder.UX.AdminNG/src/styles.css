@@ -219,7 +219,7 @@ body .ui-sidebar {
 .ui-card-body {
     background: #fafafa;
     margin-top: 5.1%;
-    height: 85px;
+    height: 105px;
 }
 
 @media screen and (max-width: 480px) {
@@ -517,7 +517,7 @@ p-table .ui-table .pi-ellipsis-v:hover {
 .integrationsModal .modal-content {
     width: 1436px;
     height: 706px;
-	  top: -9px;
+    top: -9px;
 }
 
 .integrationsModal .modal-body {
