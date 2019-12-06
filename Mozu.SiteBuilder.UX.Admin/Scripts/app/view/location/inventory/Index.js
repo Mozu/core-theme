@@ -285,6 +285,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     flex:1,
                     text: 'Product Code',
                     menuDisabled: true,
+                    sortable: false,
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                         xtype: "taco-productpickerfield",
@@ -342,7 +343,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     width: 150,
                     text: 'Product Code',
                     menuDisabled: true,
-
+                    sortable: false,
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                         xtype: "displayfield",

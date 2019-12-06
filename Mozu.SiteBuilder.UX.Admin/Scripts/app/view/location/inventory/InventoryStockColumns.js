@@ -26,7 +26,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 text: "Available",
                 stateId: 'stockAvailable',
                 dataIndex: 'stockAvailable',
-                sortable: true
+                sortable: false
             }, {
                 width: 100,
                 text: 'On Reserve',
@@ -43,7 +43,7 @@ Ext.define('Taco.view.location.inventory.InventoryStockColumns', {
                 itemId: "stockOnHand",
                 stateId: 'stockOnHand',
                 text: 'On Hand',
-                sortable: true,
+                sortable: false,
                 editor: {
                     emptyText: "add",
                     msgTarget: "qtip",
