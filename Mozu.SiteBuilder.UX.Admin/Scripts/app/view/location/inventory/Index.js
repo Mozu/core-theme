@@ -282,7 +282,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                 {
                     dataIndex: 'productCode',
                     stateId: 'productCode',
-                    width: 350,
+                    flex:1,
                     text: 'Product Code',
                     menuDisabled: true,
                     editor: {
@@ -331,13 +331,6 @@ Ext.define('Taco.view.location.inventory.Index', {
                         }
                     }
 
-                }, {
-                    dataIndex: 'productName',
-                    stateId: 'productName',
-                    flex: 1,
-                    text: 'Product Name',
-                    sortable: false,
-                    menuDisabled: true,
                 }
             ];
         }
