@@ -27,7 +27,7 @@ Ext.define('Taco.view.category.Edit', {
 
         this.moreButtonCfg = {
             menu: {
-                cls: 'taco-more-action-button-menu',
+                cls: 'taco-more-action-button-menu taco-header-split-button',
                 plain: true,
                 shadow: false,
                 items: [
@@ -35,7 +35,8 @@ Ext.define('Taco.view.category.Edit', {
                     disabled: me.record.data.isHidden,
                     itemId: 'live',
                     text: 'View Live',
-                    menu: {
+                        menu: {
+                            cls: 'taco-header-split-button',
                         plain: true,
                         shadow: false,
                         items: []
@@ -45,6 +46,7 @@ Ext.define('Taco.view.category.Edit', {
                     itemId: 'preview',
                     text: 'View Staged',
                     menu: {
+                        cls: 'taco-header-split-button',
                         plain: true,
                         shadow: false,
                         items: []
