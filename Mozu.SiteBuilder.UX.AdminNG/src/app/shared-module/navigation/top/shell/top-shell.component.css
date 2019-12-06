@@ -43,6 +43,12 @@ a:hover {
     opacity: 1;
 }
 
+.nav-flex-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 @media screen and (max-width: 480px) {
     .tab-link {
         min-width: 52px;
@@ -52,24 +58,22 @@ a:hover {
     }
 }
 
-    @media only screen 
-    and (min-width : 320px) 
-    and (max-width : 400px) {
-        .tab-link {
-          left: 0%;
-      }
+@media only screen and (min-width: 320px) and (max-width: 400px) {
+    .tab-link {
+        left: 0%;
     }
+}
 
 @media screen and (min-width: 768px) and (max-width: 900px) {
     .tab-link {
         min-width: 88px;
         margin-left: 2px;
-        left:5%;
+        left: 5%;
     }
 }
 
 @media screen and (min-width: 980px) and (max-width: 1024px) {
     .tab-link {
         min-width: 128px;
-}
+    }
 }

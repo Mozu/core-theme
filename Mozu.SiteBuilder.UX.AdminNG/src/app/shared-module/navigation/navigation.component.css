@@ -14,9 +14,9 @@
     background-color: white;
     line-height: 23px;
     height: 62px;
-    width: 80%;
+    /* width: 80%; */
     margin-top: 0px !important;
-    margin-left: 20%;
+    margin-left: 319px;
 }
 
 @media screen and (max-width: 480px) {
