@@ -61,22 +61,22 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                         var className = document.querySelectorAll('.taco-primary-menu-heading .fa-chevron-down');
                         Ext.state.Manager.set(me.collapsedStateKey, true);
                     } else {
-
                         var colorel = Ext.get('color-' + me.record.get('label'));
                         var colorel2 = Ext.get(colorel); // takes an Ext.Element
                         var t2 = Ext.get(colorel.dom); // takes an HTMLElement
                         Ext.fly(t2).removeCls('fal');
                         Ext.fly(t2).addCls('fas');
 
-
-                        var el1 = Ext.get(me.record.get('label')); // takes an element id
-                        var el2 = Ext.get(el1); // takes an Ext.Element
-                        var t = Ext.get(el1.dom); // takes an HTMLElement
-                        console.log(t);
-                        Ext.fly(t).removeCls('fa-chevron-down');
-                        Ext.fly(t).addCls('fa-chevron-up');
-                        me.subMenuItems.show();
-                        Ext.state.Manager.set(me.collapsedStateKey, false);
+                        if (!(e.target.innerText == 'Fulfiller' || e.target.innerText == 'Order Routing' || e.target.innerText == 'Home')) {
+                            var el1 = Ext.get(me.record.get('label')); // takes an element id
+                            var el2 = Ext.get(el1); // takes an Ext.Element
+                            var t = Ext.get(el1.dom); // takes an HTMLElement
+                            console.log(t);
+                            Ext.fly(t).removeCls('fa-chevron-down');
+                            Ext.fly(t).addCls('fa-chevron-up');
+                            me.subMenuItems.show();
+                            Ext.state.Manager.set(me.collapsedStateKey, false);
+                        }
                     }
 
                     return false;
