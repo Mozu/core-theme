@@ -1,0 +1,75 @@
+﻿{% extends "back-office/base" %}
+{% block body-content %}
+<table class="mz-printable-order mz-printable-order-packingslip">
+<thead class="header"><tr>
+    <th class="company-info">
+        <div class="company-name">{{ customContent.companyName }}</div>
+        <div class="company-contacts">{{ customContent.companyAddress }}</div>
+        <div class="company-url">{{ customContent.websiteUrl }}</div>
+    </th>
+    <th class="order-essentials">
+        <div class="order-number"><span class="label">Transfer Order #</span><span>{{ order.orderNumber }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+    </th>
+</tr></thead>
+<tbody><tr><td colspan="4">
+    <table class="grid">
+        <thead><tr>
+            <th>Ship From:</th>
+            <th>Ship To:</th>
+        </tr></thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div>{{ location.name }}</div>
+                    {% if location.shippingOriginContact.companyOrOrganization %}<div>{{ location.shippingOriginContact.companyOrOrganization }}</div>{% endif %}
+                    <div>{{ location.address.address1 }}</div>
+                    {% if location.address.address2 %}<div>{{ location.address.address2 }}</div>{% endif %}
+                    {% if location.address.address3 %}<div>{{ location.address.address3 }}</div>{% endif %}
+                    {% if location.address.address4 %}<div>{{ location.address.address4 }}</div>{% endif %}
+                    <div>{{ location.address.cityOrTown }}, {{ location.address.stateOrProvince }} {{ location.address.postalOrZipCode }}</div>
+                    {% if location.phone %}<div>{{ location.phone }}</div>{% endif %}
+                </td><td>
+                    <div>{{ order.fulfillmentInfo.fulfillmentContact.firstName }} {{ order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}</div>
+                    {% if order.fulfillmentInfo.fulfillmentContact.companyOrOrganization %}<div>{{ order.fulfillmentInfo.fulfillmentContact.companyOrOrganization }}</div>{% endif %}
+                    <div>{{ order.fulfillmentInfo.fulfillmentContact.address.address1 }}</div>
+                    {% if order.fulfillmentInfo.fulfillmentContact.address.address2 %}<div>{{ order.fulfillmentInfo.fulfillmentContact.address.address2 }}</div>{% endif %}
+                    {% if order.fulfillmentInfo.fulfillmentContact.address.address3 %}<div>{{ order.fulfillmentInfo.fulfillmentContact.address.address3 }}</div>{% endif %}
+                    {% if order.fulfillmentInfo.fulfillmentContact.address.address4 %}<div>{{ order.fulfillmentInfo.fulfillmentContact.address.address4 }}</div>{% endif %}
+                    <div>{{ order.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}, {{ order.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }} {{ order.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}</div>
+                    {% if order.fulfillmentInfo.fulfillmentContact.phoneNumbers.home %}<div>{{ order.fulfillmentInfo.fulfillmentContact.phoneNumbers.home }} (home)</div>{% endif %}
+                    {% if order.fulfillmentInfo.fulfillmentContact.phoneNumbers.work %}<div>{{ order.fulfillmentInfo.fulfillmentContact.phoneNumbers.work }} (work)</div>{% endif %}
+                    {% if order.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile %}<div>{{ order.fulfillmentInfo.fulfillmentContact.phoneNumbers.mobile }} (mobile)</div>{% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="grid">
+        <thead><tr>
+            <th>Product Code</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Weight</th>
+        </tr></thead>
+        <tbody>
+        {% for item in model.items %} <!-- model represents the shipment -->
+           <tr>
+                <td>
+                    {{ item.productCode }}
+                </td>
+                <td>
+                    <div class="product-name">{{ item.name }}</div>
+                </td>
+                <td>
+                    {{ item.quantity }}
+                </td>
+                <td>
+                    {{ item.weight }} {{ item.weightUnit }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</td></tr></tbody>
+</table>
+{% endblock body-content %}

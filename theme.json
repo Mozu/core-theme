@@ -219,6 +219,12 @@
       "title": "Pick List",
       "template": "back-office/pick-list",
       "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "transfer-packing-slip",
+      "title": "Transfer Packing Slip",
+      "template": "back-office/transfer-packing-slip",
+      "customEditor": "back-office@mozu"
     }
   ],
   "pageTypes": [
