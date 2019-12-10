@@ -173,15 +173,18 @@ Ext.define('Taco.view.dashboard.Index', {
             pushData.icon = el.get('icon');
             pushData.address = el.get('address');
 
-            Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
+            //Added check when there are no submenu items for example home,help on hamburgur menu.
+            if (el.data.items.length > 0) {
+                Ext.Array.forEach(el.itemsStore.data.items, function (subEl, index, arr) {
 
-                var subNavData = {};
-                subNavData.label = subEl.get('label');
-                subNavData.address = subEl.get('address');
-                if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
-                    subNav.push(subNavData);
-                }
-            }, this);
+                    var subNavData = {};
+                    subNavData.label = subEl.get('label');
+                    subNavData.address = subEl.get('address');
+                    if (subEl.get('visible') && !subEl.get('breadCrumbOnly')) {
+                        subNav.push(subNavData);
+                    }
+                }, this);
+            }
 
             pushData.subNav = subNav;
 
