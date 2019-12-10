@@ -632,151 +632,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpGetRoute(UriTemplate = "shipping/label")]
         public async Task<HttpResponseMessage> GetReturnLabel([FromUri]string returnId, [FromUri] int? siteId)
         {
-            var returns = (await _returnWebApiClient.GetReturn(returnId)).ReadAsSync();
-            if (string.IsNullOrEmpty(returns.Id))
+            var returnLabel = (await _returnWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = siteId).GetReturnLabel(returnId)).ReadAsSync();
+
+            if (returnLabel == null)
             {
-                throw new VaeValidationConflictException($"Return {returnId} not found.");
+                throw new VaeValidationConflictException($"Label for {returnId} not found.");
             }
 
-            var order = (await _orderWebApiClient.GetOrder(returns.OriginalOrderId)).ReadAsAsync().Result;
-            if (order == null)
-            {
-                throw new VaeValidationConflictException($"Order {returns.OriginalOrderId} not found.");
-            }
-
-            var location = (await _locationWebApiClient.GetLocation(returns.LocationCode)).ReadAsAsync().Result;
-            if (location == null)
-            {
-                throw new VaeValidationConflictException($"Location {returns.LocationCode} not found.");
-            }
-
-            var client = siteId.HasValue ? _locationGroupWebApiClient.CloneWithSiteId(siteId) : _locationGroupWebApiClient;
-            var configuration = (await client.GetLocationGroupConfigurationByLocationCode(returns.LocationCode)).ReadAsAsync().Result;
-            if (configuration == null || string.IsNullOrWhiteSpace(configuration?.DefaultCarrier))
-            {
-                throw new VaeValidationConflictException($"Carrier not found.");
-            }
-            if (configuration == null || string.IsNullOrWhiteSpace(configuration?.DefaultPrinterType))
-            {
-                throw new VaeValidationConflictException($"Default Printer Type for location code {returns.LocationCode} must not be null.");
-            }
-
-            CARSModel.GenerateLabelRequest request = CreateReturnShippingLabelRequest(returns, order, location, configuration);
-            var serviceResponse = (await _CARSProxyClient.GenerateLabelUsingPOST(request)).ReadAsAsync().Result;
-
-            return Request.CreateResponse(HttpStatusCode.OK, serviceResponse);
+            return Request.CreateResponse(HttpStatusCode.OK, returnLabel);
         }
-
-        private CARSModel.GenerateLabelRequest CreateReturnShippingLabelRequest(DCr.Return returns, CommerceRuntime.Contracts.Orders.Order order, Location.Contracts.Location location, LocationGroupConfiguration configuration)
-        {
-            CARSModel.GenerateLabelRequest request = new CARSModel.GenerateLabelRequest
-            {
-                Currency = returns.CurrencyCode,
-                FromContact = new CARSModel.Contact()
-                {
-                    PersonName = order.FulfillmentInfo.FulfillmentContact.FirstName + " " + order.FulfillmentInfo.FulfillmentContact.LastNameOrSurname,
-                    Address = new List<string>() {
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address1??"",
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address2??"",
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address3??"",
-                    order.FulfillmentInfo.FulfillmentContact?.Address?.Address4??""},
-                    PostalCode = order.FulfillmentInfo.FulfillmentContact?.Address?.PostalOrZipCode,
-                    City = order.FulfillmentInfo.FulfillmentContact?.Address?.CityOrTown,
-                    PhoneNumber = order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Home ?? order.FulfillmentInfo.FulfillmentContact?.PhoneNumbers?.Mobile,
-                    CountryCode = order.FulfillmentInfo.FulfillmentContact?.Address?.CountryCode,
-                    Residential = order.FulfillmentInfo.FulfillmentContact?.Address?.AddressType?.Equals("Residential") ?? false,
-                    StateCode = order.FulfillmentInfo.FulfillmentContact?.Address?.StateOrProvince,
-                    CompanyName = order.FulfillmentInfo.FulfillmentContact?.CompanyOrOrganization,
-                    Email = order.FulfillmentInfo.FulfillmentContact?.Email
-                },
-                ToContact = new CARSModel.Contact()
-                {
-                    PersonName = location.Name,
-                    Address = new List<string>() {
-                    string.Join(" ",location.Address?.Address1??""
-                    ,location.Address?.Address2??""
-                    ,location.Address?.Address3??""
-                    ,location.Address?.Address4??"")
-               },
-
-                    PostalCode = location.Address?.PostalOrZipCode,
-                    City = location.Address?.CityOrTown,
-                    CountryCode = location.Address?.CountryCode,
-                    PhoneNumber = location.ShippingOriginContact?.PhoneNumber,
-                    Residential = location.Address?.AddressType?.Equals("Residential"),
-                    StateCode = location.Address.StateOrProvince.ToUpper()
-                },
-
-                LocationCode = returns.LocationCode,
-                OrderID = order.OrderNumber?.ToString(),
-
-                Carrier = configuration.DefaultCarrier?.ToUpper(),
-                PackagingType = SetPackagingType(configuration.DefaultCarrier.ToUpper()),
-                ServiceType = SetServiceType(configuration),
-                LabelFormat = configuration.DefaultPrinterType?.ToUpper(),
-                UnitType = "IMPERIAL",
-                ShipmentID = returns.Id,
-                ValidateAddress = true,
-                CustomerReferences = null,
-                Test = false
-            };
-
-            SetMeasurements(request, order, returns);
-            return request;
-        }
-
-        private string SetServiceType(LocationGroupConfiguration carrier)
-        {
-            var serviceType = string.Empty;
-            var carrierType = string.Empty;
-            switch (carrier.DefaultCarrier.ToUpper())
-            {
-                case "FEDEX":
-                    carrierType = "FEDEX";
-                    break;
-                case "UPS":
-                    carrierType = "UPS";
-                    break;
-                case "USPS":
-                    carrierType = "USPS";
-                    break;
-            }
-            serviceType = carrier.Carriers.Where(s => s.CarrierType.ToUpper().Equals(carrierType)).FirstOrDefault().ShippingMethodMappings.ReturnLabelShippingMethod.Split(new[] { '_' }, 2)[1]?.ToUpper();
-            return serviceType;
-        }
-
-        public string SetPackagingType(string carrier)
-        {
-            var packagingTypes = string.Empty;
-            //USPS carrier ignores packagingTypes
-            switch (carrier)
-            {
-                case "FEDEX":
-                    packagingTypes = "YOUR_PACKAGING";
-                    break;
-                case "UPS":
-                    packagingTypes = "UPS_CUSTOMER_SUPPLIED_PACKAGE";
-                    break;
-
-            }
-            return packagingTypes;
-        }
-
-        public void SetMeasurements(CARSModel.GenerateLabelRequest request, CommerceRuntime.Contracts.Orders.Order order, DCr.Return returns)
-        {
-            //var measurement = order.Shipments.FirstOrDefault()?.Packages.FirstOrDefault()?.Measurements;
-            var measurement = order.Items.FirstOrDefault()?.Product.Measurements;
-            if (measurement == null)
-            {
-                throw new VaeValidationConflictException($"Measurements can not be null.");
-            }
-            request.PackageHeight = measurement.Height.Value ?? 0;
-            request.PackageWidth = measurement.Width.Value ?? 0;
-            request.PackageLength = measurement.Length.Value ?? 0;
-            request.PackageWeight = measurement.Weight.Value ?? 0;
-            request.Price = returns.Items.Sum(a => a.Product?.Price?.Price ?? 0);
-        }
-
 
         [HttpPostRoute(UriTemplate = "restock")]
         public async Task<Response<Return>> RestockReturnItems(RestockArgs restockArgs)
