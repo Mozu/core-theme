@@ -9,7 +9,7 @@ Ext.define('Taco.core.ux.content.SiteViewDropdown', {
     menuAlign: 'tr-br',
     initComponent: function() {
         this.menu = Ext.create('Ext.menu.Menu', {
-            cls: 'taco-siteviewdropdown-menu',
+            cls: 'taco-siteviewdropdown-menu taco-header-split-button',
             items: [
                 {
                     text: 'View Live',

@@ -153,7 +153,7 @@ Ext.define('Taco.view.website.Index', {
             menu: {
                 plain: true,
                 shadow: false,
-                cls: 'taco-more-action-button-menu',
+                cls: 'taco-more-action-button-menu  taco-header-split-button',
                 items: [
                     {  
                         text: 'Preview Theme',
@@ -957,6 +957,7 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             previewThemesMenu = this.getHeader().down('#previewThemesMenu'),
             menu = {
+                cls: 'taco-header-split-button',
                 items: []
             },
             hash = this.themeStore.tree.nodeHash;

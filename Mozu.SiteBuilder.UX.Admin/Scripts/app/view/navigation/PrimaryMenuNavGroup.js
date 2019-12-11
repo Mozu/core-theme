@@ -67,7 +67,7 @@ Ext.define('Taco.view.navigation.PrimaryMenuNavGroup', {
                         Ext.fly(t2).removeCls('fal');
                         Ext.fly(t2).addCls('fas');
 
-                        if (!(e.target.innerText == 'Fulfiller' || e.target.innerText == 'Order Routing' || e.target.innerText == 'Home')) {
+                        if (!(e.target.innerText == 'Fulfiller' || e.target.innerText == 'Order Routing' || e.target.innerText == 'Home' || e.target.innerText == 'Help')) {
                             var el1 = Ext.get(me.record.get('label')); // takes an element id
                             var el2 = Ext.get(el1); // takes an Ext.Element
                             var t = Ext.get(el1.dom); // takes an HTMLElement

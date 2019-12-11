@@ -380,10 +380,10 @@
         padding: 5px 16px !important;
 
         &:hover {
-            background-color: #ffeb3b !important;
+            background-color: $new-theme-button-bgcolor-hover !important;
 
             .x-btn-split-right::after {
-                background-color: #ffeb3b !important;
+                background-color: $new-theme-button-bgcolor-hover !important;
             }
         }
 
@@ -428,7 +428,6 @@
         color: $white-color !important;
         padding-top: 11px !important;
     }
-
     /*a.x-btn-action-primary-medium:not(.x-btn-disabled) .x-btn-split-right::after,
     a.x-btn-action-primary-toolbar-medium:not(.x-btn-disabled) .x-btn-split-right::after,
     a.x-btn-action-primary-toolbar-medium:not(.x-btn-disabled) .x-btn-split-right::after {
@@ -439,7 +438,6 @@
             color: #fff;
         }
     }*/
-
     .taco-subnavlink .subnavlink-container {
         color: $white-color !important;
         padding: 0 !important;
@@ -523,9 +521,9 @@
     }
 }
 
-    .taco-navheader .taco-navheader-toolbar .navheader-action-toolbar .taco-more-action-button.x-btn.x-menu-active .x-btn-arrow-right::after {
-        color: #2b2b2b !important;
-    }
+.taco-navheader .taco-navheader-toolbar .navheader-action-toolbar .taco-more-action-button.x-btn.x-menu-active .x-btn-arrow-right::after {
+    color: $new-theme-button-color !important;
+}
 
     .x-btn-link-toolbar-medium .x-btn-arrow-right::after {
         color: $white-color !important;
@@ -540,15 +538,15 @@
         padding: 6px !important;
     }
 
-    .x-panel.button-menu .x-menu-body .x-menu-item {
-        border-color: $new-theme-button-bgcolor !important;
-        background-color: $new-theme-button-bgcolor !important;
-        padding: 6px !important;
+.x-panel.button-menu .x-menu-body .x-menu-item {
+    border-color: $new-theme-button-bgcolor !important;
+    background-color: $new-theme-button-bgcolor !important;
+    padding: 6px !important;
 
-        &:hover {
-            background-color: #ffeb3b !important;
-        }
+    &:hover {
+        background-color: $new-theme-button-bgcolor-hover !important;
     }
+}
 
 
 .sort-definitions-grid-category-page {
@@ -570,31 +568,47 @@
 
 }
 
-.x-menu-plain.x-border-box {
+.taco-selector-flyout.taco-header-split-button {
     border: 0px !important;
-    margin-top: 10px !important;
+
+    .x-component-default {
+        border-color: $new-theme-button-bgcolor !important;
+        background-color: $new-theme-button-bgcolor !important;
+    }
+
+    .call-to-action,
+    .x-component-default li:hover {
+        background-color: $new-theme-button-bgcolor-hover !important;
+    }
+
+    .call-to-action,
+    .selector {
+        color: $new-theme-button-color !important;
+        border-bottom: 0px !important;
+    }
 }
 
-.x-css-shadow {
-    margin-top: 10px !important;
-}
+.x-panel.taco-header-split-button {
+    border: 0px !important;
 
-.x-panel.taco-header-split-button .x-panel-body .x-vertical-box-overflow-body {
-    border-color: $new-theme-button-bgcolor !important;
-    background-color: $new-theme-button-bgcolor !important;
-    padding: 6px !important;
-}
+    .x-panel-body .x-vertical-box-overflow-body {
+        border-color: $new-theme-button-bgcolor !important;
+        background-color: $new-theme-button-bgcolor !important;
 
-.x-panel.taco-header-split-button .x-panel-body .x-vertical-box-overflow-body .x-menu-item {
-    border-bottom: 0px !important;
-}
+        .x-menu-item {
+            border-bottom: 0px !important;
+        }
 
-.x-panel.taco-header-split-button .x-panel-body .x-vertical-box-overflow-body .x-menu-item-active, .x-panel.button-menu .x-menu-body .x-vertical-box-overflow-body .x-menu-item:hover {
-    background-color: #FFEB3B !important;
-}
+        .x-menu-item-active,
+        .call-to-action,
+        .x-panel.button-menu .x-menu-body .x-vertical-box-overflow-body .x-menu-item:hover {
+            background-color: $new-theme-button-bgcolor-hover !important;
+        }
 
-.x-panel.taco-header-split-button .x-panel-body .x-vertical-box-overflow-body .x-menu-item-link .x-menu-item-text {
-    color: #2B2B2B !important;
+        .x-menu-item-link .x-menu-item-text, .x-menu-item-link .x-menu-item-text::after {
+            color: $new-theme-button-color !important;
+        }
+    }
 }
 
 .taco-navheader .taco-navheader-toolbar {
@@ -619,20 +633,20 @@
         }
 
         &:hover {
-            background-color: #ffeb3b !important;
+            background-color: $new-theme-button-bgcolor-hover !important;
 
             .x-btn-inner-center {
                 color: #3f3f3f !important;
             }
 
 
-            .x-btn-split-right::after, .x-btn-split-right span::after, .x-btn-split-right{
-                background-color: #ffeb3b !important;
+            .x-btn-split-right::after, .x-btn-split-right span::after, .x-btn-split-right {
+                background-color: $new-theme-button-bgcolor-hover !important;
                 color: #3f3f3f !important;
             }
 
             .taco-button-overlay {
-            background-color: transparent !important;
+                background-color: transparent !important;
             }
         }
     }

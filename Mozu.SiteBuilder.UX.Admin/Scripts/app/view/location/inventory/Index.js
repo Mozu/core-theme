@@ -144,25 +144,28 @@ Ext.define('Taco.view.location.inventory.Index', {
 
         this.moreButtonCfg = {
             itemId: 'moreButton',
-            menu: [
-                {
-                    cls: 'call-to-action override',
-                    text: 'Adjustment Mode'
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Add',
-                    itemId: 'adjustmentModeAdd',
-                    group: 'adjustmentMode',
-                    checked: true
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Set',
-                    itemId: 'adjustmentModeSet',
-                    group: 'adjustmentMode'
-                }
-            ]
+            menu: {
+                cls: 'taco-header-split-button',
+                items: [
+                    {
+                        cls: 'call-to-action override',
+                        text: 'Adjustment Mode'
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Add',
+                        itemId: 'adjustmentModeAdd',
+                        group: 'adjustmentMode',
+                        checked: true
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Set',
+                        itemId: 'adjustmentModeSet',
+                        group: 'adjustmentMode'
+                    }
+                ]
+            }
         };
 
         this.callParent(arguments);

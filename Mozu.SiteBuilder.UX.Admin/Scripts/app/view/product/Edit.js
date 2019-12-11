@@ -169,6 +169,7 @@
                     itemId: 'live',
                     text: 'View Live',
                     menu: {
+                        cls: 'taco-header-split-button',
                         plain: true,
                         shadow: false,
                         items: []
@@ -177,6 +178,7 @@
                     itemId: 'preview',
                     text: 'View Staged',
                     menu: {
+                        cls: 'taco-header-split-button',
                         plain: true,
                         shadow: false,
                         items: []

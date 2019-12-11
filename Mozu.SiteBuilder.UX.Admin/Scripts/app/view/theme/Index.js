@@ -117,20 +117,23 @@ Ext.define('Taco.view.theme.Index', {
         ];
 
         this.moreButtonCfg = {
-        	menu: [
-        		{
-        			text: 'Expand All',
-        			handler: function() {
-        				me.expandAll();
-        			}
-        		},
-        		{
-        			text: 'Collapse All',
-        			handler: function() {
-        				me.collapseAll();
-        			}
-        		}
-        	]
+            menu: {
+                cls: 'taco-header-split-button',
+                items: [
+                    {
+                        text: 'Expand All',
+                        handler: function () {
+                            me.expandAll();
+                        }
+                    },
+                    {
+                        text: 'Collapse All',
+                        handler: function () {
+                            me.collapseAll();
+                        }
+                    }
+                ]
+            }
         };
 
         this.listeners = {

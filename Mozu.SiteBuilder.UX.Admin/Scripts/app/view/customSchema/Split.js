@@ -68,7 +68,10 @@ Ext.define('Taco.view.customSchema.Split', {
         this.additionalActions = this.getAdditionalActions();
 
         this.moreButtonCfg = {
-            menu: this.getMenuItems(),
+            menu: {
+                cls: 'taco-header-split-button',
+                items: this.getMenuItems()
+            },
             disabled: true
         };
 
@@ -96,16 +99,19 @@ Ext.define('Taco.view.customSchema.Split', {
             handler: function() {
                 // do nothing;
             },
-            menu: [
-                {
-                    text: 'Create Default',
-                    handler: this.onCreate.bind(this)
-                },
-                {
-                    text: 'Create Raw',
-                    handler: this.onCreate.bind(this, {editMode: 'raw'})
-                }
-            ]
+            menu: {
+                cls: 'taco-header-split-button',
+                items: [
+                    {
+                        text: 'Create Default',
+                        handler: this.onCreate.bind(this)
+                    },
+                    {
+                        text: 'Create Raw',
+                        handler: this.onCreate.bind(this, { editMode: 'raw' })
+                    }
+                ]
+            }
         }
     },
 

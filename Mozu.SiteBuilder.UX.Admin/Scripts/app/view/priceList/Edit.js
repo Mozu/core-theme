@@ -72,7 +72,7 @@ Ext.define('Taco.view.priceList.Edit', {
                 menuAlign: 'tr-br?',
                 disabled: disabledOnCreate,
                 menu: {
-                    cls: 'taco-more-action-button-menu',
+                    cls: 'taco-more-action-button-menu taco-header-split-button',
                     plain: true,
                     shadow: false,
                     items: menuItems

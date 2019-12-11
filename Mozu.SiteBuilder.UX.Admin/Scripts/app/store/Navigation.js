@@ -427,7 +427,7 @@ Ext.define('Taco.store.Navigation', {
             'address': 'reports'
         },
         {
-            'id': 'help',
+            'id': 'help-main',
             'navParent': 'main',
             'label': 'Help',
             'icon': 'fal fa-question-circle',
@@ -626,6 +626,13 @@ Ext.define('Taco.store.Navigation', {
                     'locAtts': ['multCurrency']
                 }
             ]
+        },
+        {
+            'id': 'help-system',
+            'navParent': 'sys',
+            'label': 'Help',
+            'icon': 'fal fa-question-circle',
+            'menucolor': 'orange'
         }
             //todo: include shipping sublinks? greg_murray on 12/1/2015
             //{

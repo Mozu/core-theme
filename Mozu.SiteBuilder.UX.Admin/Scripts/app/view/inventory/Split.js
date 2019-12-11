@@ -60,25 +60,28 @@ Ext.define('Taco.view.inventory.Split', {
 
         this.moreButtonCfg = {
             itemId: 'moreButton',
-            menu: [
-                {
-                    cls: 'call-to-action override',
-                    text: 'Adjustment Mode',
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Add',
-                    itemId: 'adjustmentModeAdd',
-                    group: 'adjustmentMode',
-                    checked: true
-                },
-                {   
-                    xtype: 'menucheckitem',
-                    text: 'Set',
-                    itemId: 'adjustmentModeSet',
-                    group: 'adjustmentMode'
-                }
-            ]
+            menu: {
+                cls: 'taco-header-split-button',
+                items: [
+                    {
+                        cls: 'call-to-action override',
+                        text: 'Adjustment Mode',
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Add',
+                        itemId: 'adjustmentModeAdd',
+                        group: 'adjustmentMode',
+                        checked: true
+                    },
+                    {
+                        xtype: 'menucheckitem',
+                        text: 'Set',
+                        itemId: 'adjustmentModeSet',
+                        group: 'adjustmentMode'
+                    }
+                ]
+            }
         };
 
         this.mixins.navHeader.init.apply(this);
