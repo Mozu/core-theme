@@ -17,6 +17,8 @@ Ext.define('Taco.view.customSchema.Split', {
         'Taco.core.ux.grid.MenuColumn' // just to refer to its classname
     ],
 
+
+
     mixins: {
         splitEditor: 'Taco.core.ux.mixins.SplitEditor',
         navHeader: 'Taco.core.ux.mixins.NavHeader'
@@ -33,6 +35,8 @@ Ext.define('Taco.view.customSchema.Split', {
         disableAdvancedSearch: true,
         emptySearchText: 'Search'
     },
+
+    cls:'schema-header',
 
     contextConfig: {
         supportedLevels: ['t', 'm', 'c', 's']

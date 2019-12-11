@@ -19,7 +19,7 @@ Ext.define('Taco.view.report.Split', {
 
     title: 'Reports',
 
-    cls: 'taco-reporting-view',
+    cls: 'taco-reporting-view reports-header',
     hideContextSwitcherBar: true,
     padding: '0 0 0 0',
     contextConfig: {
@@ -58,6 +58,7 @@ Ext.define('Taco.view.report.Split', {
                 editable: false,
                 forceSelection: true,
                 width: 300,
+                style: 'color: white !important',
                 //initialValue: 0,
                 afterRender: function(eOpts) {
                     this.setValue(0);
@@ -67,7 +68,7 @@ Ext.define('Taco.view.report.Split', {
                 xtype: 'component',
                 html: 'Date Range',
                 cls: 'taco-reporting-item',
-                style: "font-size: 18px",
+                style: "font-size: 18px, background: transparent",
                 height: 1
             },
             {

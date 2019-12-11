@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
     ],
     extend: 'Taco.view.settings.shipping.Rules',
     alias: 'widget.productrulegrid',
+    cls: 'shipping-links',
 
     createButtonText: "Create New Product Rule",
     title: "Shipping",

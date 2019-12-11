@@ -256,10 +256,7 @@
         }
     }
 }
-.taco-navheader-toolbar {
-    background-color: $brand-color !important;
-    color: $white-color;
-}
+
 .taco-navheader .taco-navheader-toolbar .taco-content-header-title-container .taco-content-header-title .x-column-content-pill {
     top: -30px !important;
 }
@@ -544,7 +541,14 @@
     padding: 6px !important;
 
     &:hover {
-        background-color: $new-theme-button-bgcolor-hover !important;
+        background-color: #ffeb3b !important;
+    }
+
+    .x-menu-item-link {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
     }
 }
 
@@ -647,6 +651,44 @@
 
             .taco-button-overlay {
                 background-color: transparent !important;
+            }
+        }
+    }
+}
+
+.taco-navheader-toolbar {
+    background-color: $brand-color !important;
+    color: $white-color;
+
+    .product-ranking-rules-category-page &, .sort-definitions-grid-category-page & {
+        background-color: white !important;
+        color: inherit;
+
+        input[type="text"] {
+            background: none !important;
+            color: inherit !important;
+
+            &:hover, &:focus {
+                color: inherit !important;
+            }
+        }
+
+        .x-btn, a.x-btn-action-primary-toolbar-medium {
+            background-color: #2ea195 !important;
+            border: 0 !important;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2) !important;
+            padding: 5px 19px !important;
+
+            .x-btn-inner {
+                color: white !important;
+            }
+        }
+
+        .advanced-search-button {
+            background-color: white !important;
+
+            .x-btn-wrap::after {
+                color: #7c7c7c !important;
             }
         }
     }

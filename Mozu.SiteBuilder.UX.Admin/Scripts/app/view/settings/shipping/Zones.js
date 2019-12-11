@@ -5,6 +5,7 @@ Ext.define('Taco.view.settings.shipping.Zones', {
     requires:['Taco.store.ShippingZones'],
     extend: 'Taco.view.settings.shipping.Rules',
     alias: 'widget.shippingzoneegrid',
+    cls: 'shipping-links',
 
     createButtonText: "Create New Zone",
     title: "Shipping",

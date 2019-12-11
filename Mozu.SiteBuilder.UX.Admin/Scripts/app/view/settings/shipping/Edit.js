@@ -7,6 +7,7 @@ Ext.define('Taco.view.settings.shipping.Edit', {
     requires: [
         'Taco.view.settings.shipping.Form'
     ],
+    cls: 'shipping-links',
     enableSearchBarInHeader: false,
     formCls: 'Taco.view.settings.shipping.Form',
     contextConfig: {

@@ -54,6 +54,10 @@
                     &:hover {
                         color: $nav-element-active;
                         text-decoration: none;
+
+                        .shipping-links & {
+                            color: #fff;
+                        }
                     }
                 }
 
@@ -64,10 +68,19 @@
                     a {
                         color: $nav-element-active;
                     }
+
+                    .shipping-links & {
+                        color: #fff;
+                        background-color: transparent;
+                    }
                 }
 
                 &.active {
                     border-bottom: 2px solid $valid-green;
+
+                    .shipping-links & {
+                        border-bottom: 2px solid #ffce01;
+                    }
                 }
             }
         }
@@ -304,4 +317,46 @@
         background: transparent !important;
         border-color: transparent !important;
     }
+}
+
+.x-form-text {
+    .reports-header & {
+        background-color: transparent;
+        color: #fff;
+
+        &.x-field-form-focus {
+            box-shadow: none;
+            border-color: #ffce01;
+        }
+    }
+}
+
+.x-form-trigger-wrap-focus label {
+    color: #fff;
+    .reports-header & {
+        color: #fff !important;
+    }
+}
+
+.taco-navheader .taco-navheader-toolbar .x-btn-disabled.x-btn-action-primary-toolbar-medium {
+
+    .schema-header &, .product-header & {
+        height: 41px !important;
+
+        &:hover {
+            .x-btn-split-right {
+                background-color: transparent !important;
+            }
+
+            .x-btn-split-right::after {
+                background-color: transparent !important;
+                color: #e5e6e7 !Important;
+            }
+
+            .x-btn-inner {
+                color: #e5e6e7 !Important;
+            }
+        }
+    }
+
 }

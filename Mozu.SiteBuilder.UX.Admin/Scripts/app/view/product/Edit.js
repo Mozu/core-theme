@@ -13,6 +13,8 @@
         'Taco.view.product.widget.CatalogAssignmentBar'
     ],
 
+    cls: 'product-header',
+
     parentTitleCfg: {
         title: 'Products',
         lightTagLabel: 'productCode',
