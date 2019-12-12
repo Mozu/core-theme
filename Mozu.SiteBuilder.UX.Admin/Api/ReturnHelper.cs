@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<List<Return>> OrderPaymentsByCapture(List<Return> Returns)
         {
 
-            var paymentSettings = (await _checkoutSettingsWebApiClient.GetPaymentSettings()).ReadAsSync();
+            var paymentSettings = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetPaymentSettings()).ReadAsSync();
 
             var paymentRankings = paymentSettings.PaymentRanking.Split(',');
 
