@@ -211,6 +211,7 @@
     <Compile Include="Configuration\AutofacModule.cs" />
     <Compile Include="Configuration\BootStrapperUX.cs" />
     <Compile Include="Areas\StoreFront\Controllers\CheckoutController.cs" />
+    <Compile Include="Filters\AddUnifiedCookieFilter.cs" />
     <Compile Include="Filters\ForceCDNUseFilter.cs" />
     <Compile Include="Filters\StorefrontErrorFilterAttribute.cs" />
     <Compile Include="Filters\InitSettingsAttribute.cs" />

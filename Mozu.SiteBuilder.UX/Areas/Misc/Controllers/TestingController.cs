@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -347,7 +348,21 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode: isAdminMode);
 
+            //COM-1037 fix to send isUnified Cookies on URL-Rewrite
+
+            CookieHeaderValue cookie = Request.Headers.GetCookies("isUnified").FirstOrDefault();
+            string isUnifiedCookieValue = cookie?["isUnified"].Value ?? "";
+
             var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);
+
+            if (!isUnifiedCookieValue.IsNullOrEmpty())
+            {
+                if (uri.Contains("?"))
+                    uri = uri + "&isUnified=" + isUnifiedCookieValue;
+                else
+                    uri = uri + "?isUnified=" + isUnifiedCookieValue;
+            }
+
             return new RedirectResult(uri);
         }
 

@@ -18,6 +18,7 @@ using System.Web.Http.Routing;
 using Mozu.Core.Extensions;
 using Mozu.Core;
 using System.Linq;
+using System.Net.Http.Headers;
 using Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Helpers
@@ -274,6 +275,33 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
             {
                 return sb.Insert(0, this._siteContext.CdnPrefix).ToString();
             }
+            //COM-1037 Update to add isUnified into the URL if it is present in the URL or cookies
+            string isUnifiedInUrl = _httpRequestMessage.RequestUri.ParseQueryString()["isUnified"] ?? "";
+
+            if (!isUnifiedInUrl.IsNullOrEmpty())
+            {
+                //May be move this code over to a helper method to avoid duplication 
+                if (sb.ToString().Contains("?"))
+                    sb.Append("&");
+                else
+                    sb.Append("?");
+                sb.Append("isUnified=" + isUnifiedInUrl);
+            }
+            else
+            {
+                CookieHeaderValue cookie = _httpRequestMessage.Headers.GetCookies("isUnified").FirstOrDefault();
+                string cookieValue = cookie?["isUnified"].Value ?? "";
+                if (!cookieValue.IsNullOrEmpty())
+                {
+                    if (sb.ToString().Contains("?"))
+                        sb.Append("&");
+                    else
+                        sb.Append("?");
+                    sb.Append("isUnified=" + cookieValue);
+                }
+
+            }
+
 
             return sb.ToString();
 

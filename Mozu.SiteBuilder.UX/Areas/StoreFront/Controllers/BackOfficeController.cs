@@ -253,6 +253,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Packing Slip.
         /// </summary>
         [HttpGet]
+        [AddUnifiedCookieFilter]
         public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
