@@ -508,30 +508,32 @@ p-table .ui-table .pi-ellipsis-v:hover {
 
 .integrationsModal.show {
     opacity: 1 !important;
+    overflow-y: hidden !important;
 }
 
 .integrationsModal {
     z-index: 19021 !important;
 }
 
-.integrationsModal .modal-content {
-    width: 1436px;
-    height: 706px;
-    top: -9px;
-}
+    .integrationsModal .modal-content {
+        width: 100%;
+        height: 100%;
+        top: -9px;
+    }
 
-.integrationsModal .modal-body {
-    height: 90%;
-}
+    .integrationsModal .modal-body {
+        height: 90%;
+    }
 
-.integrationsModal .modal-header .close {
-    margin-top: -25px;
-}
+    .integrationsModal .modal-header .close {
+        margin-top: -25px;
+    }
 
-.integrationsModal .modal-dialog {
-    width: 90% !important;
-    top: 25%;
-}
+    .integrationsModal .modal-dialog {
+        width: 90% !important;
+        height: 90%;
+        top: 25%;
+    }
 
 
 /* .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text{
