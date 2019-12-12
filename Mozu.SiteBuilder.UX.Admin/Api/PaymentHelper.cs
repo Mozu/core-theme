@@ -18,6 +18,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             private bool hasCardType(string rank, string cardType)
             {
+                if(String.IsNullOrEmpty(cardType) || String.IsNullOrEmpty(rank))
+                {
+                    return false;
+                }
+
                 rank = rank.ToLower().Trim();
                 cardType = cardType.ToLower();
 
