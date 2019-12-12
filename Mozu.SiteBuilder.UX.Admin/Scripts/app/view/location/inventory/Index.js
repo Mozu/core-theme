@@ -3,7 +3,7 @@
  */
 Ext.define('Taco.view.location.inventory.Index', {
     extend: 'Taco.core.ux.browser.SearchListPageless',
-  
+
     requires: [
         'Taco.shared.view.field.ProductPickerField',
         'Taco.shared.view.field.LocationPickerField',
@@ -25,7 +25,7 @@ Ext.define('Taco.view.location.inventory.Index', {
     cancelButtonEnabled: false,
 
     contextConfig: {
-        supportedLevels: ['m','c'],
+        supportedLevels: ['m', 'c'],
         requiresContextOfType: ['m', 's', 'c']
     },
     addContentViewPadding: true,
@@ -33,32 +33,32 @@ Ext.define('Taco.view.location.inventory.Index', {
     enableNavHeader: true,
     title: 'Inventory',
     gridHeaderLabel: 'Inventory',
-    
+
     // turn on the row editing feature for inline grid editing and inline grid creation.  typically used for simple entities with several fields.
     enableRowEditing: true,
     enableSearch: false,
 
-    advancedSearchConfig : {
+    advancedSearchConfig: {
         defaultFieldName: 'productCodeFilter',
         disableAdvancedSearch: true,
         advancedFormCls: false,
         emptySearchText: 'Product Code'
     },
-    
+
     // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
         var locationCode = null,
             locationFilter = store.extraFilters.getByKey("locationCode");
-        
+
         if (!locationFilter) {
             Taco.app.fireEvent('setmessage', "A location selection is required", 'error');
             return false;
         }
         return true;
     },
-    
+
     modelName: 'Taco.model.LocationInventory',
-    
+
     initComponent: function () {
         this.store = Ext.create('Taco.store.LocationInventories', {
             autoLoad: false
@@ -119,7 +119,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             listeners: {
                 change: this.onIventoryChange,
                 scope: this
-            }            
+            }
         };
 
         this.secondToolbarItems = [
@@ -128,16 +128,16 @@ Ext.define('Taco.view.location.inventory.Index', {
                 layout: 'hbox',
                 padding: '0 0 10 0',
                 items: [{
-                        xtype: 'label',
-                        text: 'Inventory for: ',
-                        margin: '5 10 0 0'
-                    }, {
-                        xtype: 'panel',
-                        cls: '',
-                        items: [
-                            this.locationCombo
-                        ]
-                    }
+                    xtype: 'label',
+                    text: 'Inventory for: ',
+                    margin: '5 10 0 0'
+                }, {
+                    xtype: 'panel',
+                    cls: '',
+                    items: [
+                        this.locationCombo
+                    ]
+                }
                 ]
             }
         ];
@@ -175,9 +175,9 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
 
         else {
-            this.locationStore.on('load', function() {
+            this.locationStore.on('load', function () {
                 this.down('#inventory-dropdown').setValue(this.locationStore.getAt(0));
-            }, this, { single: true});
+            }, this, { single: true });
         }
     },
 
@@ -202,10 +202,10 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
     },
 
-    insertMenu: function(id, records, handler) {
+    insertMenu: function (id, records, handler) {
         var me = this;
         var dropdown = me.down('#' + id);
-        var menuItems = Ext.Array.map(records, function(rec) {
+        var menuItems = Ext.Array.map(records, function (rec) {
             return {
                 xtype: 'menuitem',
                 text: rec.get('name'),
@@ -215,7 +215,7 @@ Ext.define('Taco.view.location.inventory.Index', {
 
         dropdown.menu.add(menuItems);
 
-    },  
+    },
 
     useTilePanel: false,
 
@@ -230,14 +230,14 @@ Ext.define('Taco.view.location.inventory.Index', {
                 width: 560
             },
             items: [
-            
+
                 {
                     name: 'productName',
                     fieldLabel: 'Product Name',
-                    flex:1
-                
+                    flex: 1
+
                 },
-            
+
                 {
                     name: 'productCode',
                     fieldLabel: 'Product Code',
@@ -254,7 +254,7 @@ Ext.define('Taco.view.location.inventory.Index', {
             text: 'All',
             isDefault: true
         },
-        
+
         {
             property: 'productName',
             text: 'Product Name'
@@ -273,10 +273,11 @@ Ext.define('Taco.view.location.inventory.Index', {
         actions:[]
     },
     */
-    
+
     initGridPanelConf: function () {
         var me = this;
-        if(Taco.tenantSettings.catalogDisabled == true) {
+        var gridColumns = [];
+        if (Taco.tenantSettings.catalogDisabled == true) {
             gridColumns = [
                 {
                     dataIndex: 'productCode',
@@ -302,7 +303,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                             this.maxWidth = field.column.getWidth();
                             me.freezeColumns(editor.grid, true);
 
-                            locationCode = locationFilter.value;
+                            var locationCode = locationFilter.value;
                             context.record.set("locationCode", locationCode);
                         },
                         listeners: {
@@ -315,7 +316,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                                         store = grid.store,
                                         productCode = record.get("productCode"),
                                         existingRecord = store.findRecord('productCode', productCode);
-                                    columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
+                                    var columnHeader = grid.getTopLevelVisibleColumnManager().getHeaderById("stockOnHand");
 
                                     if (existingRecord) {
                                         combo.collapse();
@@ -434,7 +435,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     behavior:'destroy'
                 },
                 */
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
                         var record = eventData.record,
                             store = eventData.grid.store;
 
@@ -451,10 +452,10 @@ Ext.define('Taco.view.location.inventory.Index', {
                     behavior: 'update'
                 },
                 */
-                    menuColumnHandler: function(item, eventData) {
+                    menuColumnHandler: function (item, eventData) {
                         var record = eventData.record;
                         var code = record.get("baseProductCode") || record.get("productCode");
-                        Ext.defer(function() {
+                        Ext.defer(function () {
                             Taco.core.StateManager.attemptNavigate('products/edit/' + code);
                         }, 1, this);
                     }
@@ -496,8 +497,8 @@ Ext.define('Taco.view.location.inventory.Index', {
         }
     },
 
-    freezeColumns: function(grid, isFrozen) {
-        Ext.Array.each(grid.columns, function(col) {
+    freezeColumns: function (grid, isFrozen) {
+        Ext.Array.each(grid.columns, function (col) {
             col.resizable = !isFrozen;
             col.draggable = !isFrozen;
         });
@@ -517,12 +518,12 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.callParent(arguments);
     },
 
-    onRowEditorCancel: function(editor, context) {
+    onRowEditorCancel: function (editor, context) {
         this.freezeColumns(editor.grid, false);
         this.callParent(arguments);
     },
 
-    doCreate: function() {
+    doCreate: function () {
         this.onRowEditorCreate();
     }
 });
