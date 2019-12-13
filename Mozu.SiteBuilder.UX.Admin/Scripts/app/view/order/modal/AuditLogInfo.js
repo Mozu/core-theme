@@ -602,6 +602,8 @@ Ext.define('Taco.view.order.modal.AuditLogInfo', {
                 '<div>Payment Status: {paymentStatus:htmlEncode}</div>',
                 '<div>Amount: {[this.getCurrencyFormat(values.amount)]}</div>',
                 '<div>Payment Action: {actionName:htmlEncode}</div>',
+                '<div>Payment Id: {paymentId:htmlEncode}</div>',
+                '<div>Correlation Id: {correlationId:htmlEncode}</div>',
                 '<div>Details: {message:htmlEncode}</div>',
                 {
                     getCurrencyFormat: function (v) {
