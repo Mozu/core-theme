@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.UnitTests.Admin.Api
                new OrderPayment { PaymentType = "CreditCard", CardType = "VISA" },
                new OrderPayment { PaymentType = "CreditCard", CardType = "AMEX" },
                new OrderPayment { PaymentType = "GiftCard", CardType = "GC" },
-               new OrderPayment { PaymentType = "StoreCredit", CardType =""}
+               new OrderPayment { PaymentType = "StoreCredit", CardType ="" }
             };
 
         private static List<OrderPayment> _paymentDuplicates = new List<OrderPayment>

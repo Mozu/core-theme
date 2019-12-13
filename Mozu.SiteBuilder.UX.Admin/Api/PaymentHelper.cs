@@ -18,10 +18,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             private bool hasCardType(string rank, string cardType)
             {
-                if(String.IsNullOrEmpty(cardType))
-                {
-                    return false;
-                }
 
                 rank = rank.ToLower().Trim();
                 cardType = cardType.ToLower();
@@ -60,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             public int Compare(OrderPayment x, OrderPayment y)
             {
-                var xIdx = Array.FindIndex(Rankings, rank => hasCardType(rank, x.CardType));
-                var yIdx = Array.FindIndex(Rankings, rank => hasCardType(rank, y.CardType));
+                var xIdx = Array.FindIndex(Rankings, rank => hasCardType(rank, x.CardType ?? ""));
+                var yIdx = Array.FindIndex(Rankings, rank => hasCardType(rank, y.CardType ?? ""));
 
                 if (xIdx == -1)
                 {
