@@ -26,12 +26,20 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var paymentSettings = (await _checkoutSettingsWebApiClient.CloneWithoutUserClaims().GetPaymentSettings()).ReadAsSync();
 
-            var paymentRankings = paymentSettings.PaymentRanking.Split(',');
+            if(paymentSettings != null)
+            {
+                if (!String.IsNullOrEmpty(paymentSettings.PaymentRanking))
+                {
+                    var paymentRankings = paymentSettings.PaymentRanking.Split(',');
 
-            Returns.ForEach(rma => {
-                rma.Payments = rma.Payments.OrderBy(payment => payment, new PaymentHelper.PaymentRankingComparer(paymentRankings)).ToList();
-                rma.Payments = rma.Payments.Reverse<OrderPayment>().ToList();
-            });
+                    Returns.ForEach(rma => {
+                        rma.Payments = rma.Payments.OrderBy(payment => payment, new PaymentHelper.PaymentRankingComparer(paymentRankings)).ToList();
+                        rma.Payments = rma.Payments.Reverse<OrderPayment>().ToList();
+                    });
+                }
+               
+            }
+           
 
             return Returns;
         }
