@@ -26,8 +26,11 @@ Ext.define('Taco.model.AuditLog', {
         }, {
             name: 'userDisplayName',
             type: 'string',
-            convert: function(value, record) {
-                return Ext.util.Format.htmlEncode(record.get('userFirstName')) + Ext.util.Format.htmlEncode(record.get('userLastName'));
+            convert: function (value, record) {
+                if (record.get('userFirstName') || record.get('userLastName')) {
+                    return Ext.util.Format.htmlEncode(record.get('userFirstName')) + Ext.util.Format.htmlEncode(record.get('userLastName'));
+                }
+                return Ext.util.Format.htmlEncode(record.get('appId'));
             }
         }, {
             name: 'userType',
