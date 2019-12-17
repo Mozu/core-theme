@@ -13,12 +13,12 @@ Ext.define('Taco.view.order.Grid', {
     ],
 
     launchEditorOnClick: true,
-    
+
     // Required by mixin: Taco.core.ux.mixins.LaunchEditor defined in SearchList
     modelName: 'Taco.model.Order',
 
     enableNavHeader: true,
-    
+
 
     // adds the "taco-content-navcontainer-padding" class
     // Will add the 20px padding needed for display in the contentView as part of the NavHeader code;
@@ -37,22 +37,22 @@ Ext.define('Taco.view.order.Grid', {
     showActionsColumn: true,
 
     hideSearchToolbar: false,
-    
+
     title: "Orders",
 
     autoScroll: true,
 
     itemId: 'taco-order-grid',
 
-    advancedSearchConfig : {
+    advancedSearchConfig: {
         advancedFormCls: 'Taco.view.order.AdvancedSearchForm',
-        
+
         quickFilterData: [
             [{ orderStatus: 'Open' }, 'Open Orders'],
             [{ paymentStatus: 'Unpaid,Pending', orderStatus: 'Open' }, 'Unpaid Orders'],
             [{ paymentStatus: 'Paid', fulfillmentStatus: 'NotFulfilled' }, 'Paid, Pending Fulfillment Orders'],
-            [{ orderStatus: 'Pending', orderType: 'Online' }, 'Pending Online Orders'], 
-            [{ orderStatus: 'Pending', orderType: 'Offline' }, 'Pending Offline Orders'], 
+            [{ orderStatus: 'Pending', orderType: 'Online' }, 'Pending Online Orders'],
+            [{ orderStatus: 'Pending', orderType: 'Offline' }, 'Pending Offline Orders'],
             [{ fulfillmentStatus: 'Fulfilled' }, 'Fulfilled Orders'],
             [{ returnStatus: 'InProgress' }, 'Returns in Progress'],
             [{ orderStatus: 'Cancelled' }, 'Cancelled Orders'],
@@ -68,31 +68,31 @@ Ext.define('Taco.view.order.Grid', {
     stateful: true,
     stateId: 'statefulOrderGrid',
     orderUpdateBehaviors: [{
-                                model: 'Taco.model.Order',
-                                behavior: 'update'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateItem'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updatePrice'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateDiscount'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'updateAttribute'
-                            },
-                            {
-                                model: 'Taco.model.Order',
-                                behavior: 'manualAdjustment'
-                            }
+        model: 'Taco.model.Order',
+        behavior: 'update'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateItem'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updatePrice'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateDiscount'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'updateAttribute'
+    },
+    {
+        model: 'Taco.model.Order',
+        behavior: 'manualAdjustment'
+    }
 
-                            ],
+    ],
 
     statics: {
         bulkActionResponses: {
@@ -102,10 +102,10 @@ Ext.define('Taco.view.order.Grid', {
             'Ship': '{0} of {1} orders were shipped successfully.'
         }
     },
-        
+
     initComponent: function () {
         var me = this;
-        
+
         // need to override the createButtonCfg;
         me.createButtonCfg = me.getCreateButtonConfig();
 
@@ -122,8 +122,8 @@ Ext.define('Taco.view.order.Grid', {
 
         this.bulkActionConfig = {
             onMenuShow: this.getBulkActions,
-            onMenuHide: function() {
-                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function(id) { 
+            onMenuHide: function () {
+                Ext.Array.each(['#AcceptOrder', '#CancelOrder', '#CapturePayment', '#Ship'], function (id) {
                     this.down(id).disable();
                 }, this);
             },
@@ -147,7 +147,7 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('CancelOrder');
                     }
-                }, 
+                },
                 {
                     itemId: 'CapturePayment',
                     text: 'Capture',
@@ -164,7 +164,7 @@ Ext.define('Taco.view.order.Grid', {
                     handler: function () {
                         this.doBulkAction('CapturePayment');
                     }
-                }, 
+                },
                 {
                     itemId: 'Ship',
                     text: 'Ship',
@@ -185,12 +185,23 @@ Ext.define('Taco.view.order.Grid', {
 
             ]
         };
-        
+
+        me.ajaxBeforeListener = Ext.Ajax.on('beforerequest', function (conn, options) {
+
+            var dataViewModeHeader = {
+                'x-vol-dataview-mode': 'Live'
+            };
+
+            if (options && options.headers) {
+                Ext.apply(options.headers, dataViewModeHeader);
+            }
+        }, me, { destroyable: true });
+
         me.callParent(arguments);
 
     },
 
-    onMenuHide: function() { 
+    onMenuHide: function () {
         alert('ho');
     },
 
@@ -199,11 +210,11 @@ Ext.define('Taco.view.order.Grid', {
         var selection = selmodel.getSelection();
         var allAvailableBulkActions = Ext.Array.flatten(Ext.Array.map(selection, function (o) { return o.get('availableBulkActions') }));
 
-        Ext.Array.each(allAvailableBulkActions, function(itemId) {
+        Ext.Array.each(allAvailableBulkActions, function (itemId) {
             me.down('#' + itemId).enable();
         }, me);
     },
-    
+
     doBulkAction: function (action) {
         var selection = this.getSelectionModel().getSelection();
         var context = Taco.app.context.getCurrent();
@@ -233,7 +244,7 @@ Ext.define('Taco.view.order.Grid', {
         Ext.Ajax.request(config);
     },
 
-    getMasterCatalogId: function(ctx, siteId) {
+    getMasterCatalogId: function (ctx, siteId) {
         var masterCatalog = Ext.Array.findBy(ctx.masterCatalogs, function (mc) {
             return Ext.Array.some(mc.sites, function (site) {
                 return site.id === siteId;
@@ -501,7 +512,7 @@ Ext.define('Taco.view.order.Grid', {
                     if (Ext.isArray(value)) {
                         return Ext.Array.unique(value.map(function (val) { if (val.paymentType === "token") return val.tokenType; else return val.paymentType; }));
                     } else
-                       return null;
+                        return null;
                 }
             }, {
                 stateId: 'amountReceived',
@@ -524,7 +535,7 @@ Ext.define('Taco.view.order.Grid', {
                 width: 120,
                 sortable: false,
                 hidden: true,
-                
+
                 renderer: function (value, metaData, record) {
                     var amount = record.get('total') - value.amountCollected;
                     return record.formatCurrency(amount);
@@ -697,7 +708,7 @@ Ext.define('Taco.view.order.Grid', {
     // if multi site, need to make the create button trigger a menu that lists out all of the possible sites;
     getCreateButtonConfig: function () {
         var me = this;
-        
+
         // get site list
         var ctx = Taco.app.context,
             item,
@@ -731,7 +742,7 @@ Ext.define('Taco.view.order.Grid', {
         }
 
 
-        var createButtonConfig=  {
+        var createButtonConfig = {
             xtype: 'button',
             text: me.createButtonText,
             requiredBehaviors: {
@@ -757,7 +768,7 @@ Ext.define('Taco.view.order.Grid', {
                     showSeparator: false,
                     listeners: {
                         click: {
-                            fn: function (menu, menuItem, e) {                                
+                            fn: function (menu, menuItem, e) {
                                 if (!menuItem) {
                                     return
                                 }
@@ -788,7 +799,7 @@ Ext.define('Taco.view.order.Grid', {
 
     doCreate: function () {
         var me = this;
-        
+
         var ctx = Taco.app.context.getCurrentContext(),
             record;
 
@@ -798,9 +809,9 @@ Ext.define('Taco.view.order.Grid', {
         }
 
         Taco.app.setLoading();
-        
 
-        
+
+
 
         record = Ext.create('Taco.model.Order');
 
@@ -826,5 +837,12 @@ Ext.define('Taco.view.order.Grid', {
             scope: this
         });
 
+    },
+
+    onDestroy: function (destroy) {
+        if (this.ajaxBeforeListener) {
+            this.ajaxBeforeListener.destroy();
+        }
+        this.callParent(arguments);
     }
 });
