@@ -1,44 +1,44 @@
-define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jquery', 'hyprlivecontext' ], function ($, $shim, HyprLiveContext) { 
-    
-    var VariationSelector = function() {
+define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jquery', 'hyprlivecontext'], function ($, $shim, HyprLiveContext) {
+
+    var VariationSelector = function () {
         var qSelector = "#mz-variation-selector";
         var pageContext = require.mozuData('pagecontext');
 
-        this.init = function(){
+        this.init = function () {
             var me = this;
             var selector = me.buildSelector(this.getVariations());
             $(qSelector).html(selector);
 
-            $('#mz-variation-selector').change(function(e){
+            $('#mz-variation-selector').change(function (e) {
                 var selectedId = e.target.value,
-                documentName = pageContext.cmsContext.page.path;
-                var variationParam =  (selectedId !== "") ? '?variationId=' + selectedId : '';
+                    documentName = pageContext.cmsContext.page.path;
+                var variationParam = (selectedId !== "") ? '?variationId=' + selectedId : '';
 
                 window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/' + documentName + variationParam;
             });
         };
-        this.getVariations = function() {
+        this.getVariations = function () {
             return pageContext.variations || [];
         };
-        this.buildSelector = function(items){
+        this.buildSelector = function (items) {
             var selector = "";
 
             var selected = function selected(item) {
-                if (item.id === pageContext.variationId || item === 'base') { 
+                if (item.id === pageContext.variationId || item === 'base') {
                     return "selected";
                 }
                 return '';
             };
 
 
-            if(items.length) {
+            if (items.length) {
                 selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
 
-                selector += '<option class="mz-variation-selector-option" value=""' + selected('base') +'>Base Page</option>'
-                
-                items.forEach(function(item){
-                    if(item.id) {
-                        selector += '<option class="mz-variation-selector-option" value="' + item.id + '"' + selected(item) +'>' + item.name + '</option>';
+                selector += '<option class="mz-variation-selector-option" value=""' + selected('base') + '>Base Page</option>';
+
+                items.forEach(function (item) {
+                    if (item.id) {
+                        selector += '<option class="mz-variation-selector-option" value="' + item.id + '"' + selected(item) + '>' + item.name + '</option>';
                     }
                 });
             }
@@ -46,56 +46,56 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         };
     };
 
-    var DateTimePicker = function() {
-            var me = this;
-            this.handler = $('#mz-date-display');
-            this.displayBar = $('#mz-date-display-cover');
-            this.urlBar = $('#mz-url-copy');
-            this.dateField = $('.visible-date');
-            this.setQueryString(this.getCookie(), true);
-            this.showUrl();
-            this.options = {
-                autodateOnStart: true,
-                currentTime: this.getCookie(),
-                futureOnly: true,
-                onInit: function(handler) {
-                    me.picker = handler;
-                    me.setDate(me.getCookie());
-                }
-            };
-        },
-        ButtonHandler = function(selector) {
+    var DateTimePicker = function () {
+        var me = this;
+        this.handler = $('#mz-date-display');
+        this.displayBar = $('#mz-date-display-cover');
+        this.urlBar = $('#mz-url-copy');
+        this.dateField = $('.visible-date');
+        this.setQueryString(this.getCookie(), true);
+        this.showUrl();
+        this.options = {
+            autodateOnStart: true,
+            currentTime: this.getCookie(),
+            futureOnly: true,
+            onInit: function (handler) {
+                me.picker = handler;
+                me.setDate(me.getCookie());
+            }
+        };
+    },
+        ButtonHandler = function (selector) {
             if (!selector) {
                 return;
             }
             this.handler = $(selector);
             this.urlBar = $('#mz-url-copy');
         },
-        ShowHideAction = function() {
+        ShowHideAction = function () {
             ButtonHandler.apply(this, arguments);
             this.headerbar = $('.mz-future-date-header');
             this.indicator = $('.mz-future-bar-indicator');
-            this.isShown = (function() {
-                if (!document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0;})) {
+            this.isShown = (function () {
+                if (!document.cookie.split(';').filter(function (str) { return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0; })) {
                     return true;
                 }
                 else {
-                    var cookie  = document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0;})[0];
+                    var cookie = document.cookie.split(';').filter(function (str) { return str.indexOf('MZ_SHOW_FUTURE_BAR') > 0; })[0];
                     if (!cookie) return true;
                     return cookie.indexOf('true') !== -1;
                 }
             })();
         },
-        ShareAction = function() {
+        ShareAction = function () {
             ButtonHandler.apply(this, arguments);
         },
-        PriceListPicker = function() {
+        PriceListPicker = function () {
             var me = this;
             this.handler = $('#mz-pricelist-display');
-            this.handler.blur(function(){
+            this.handler.blur(function () {
                 me.setQueryString(this.value);
             });
-            this.handler.keypress(function(evt){
+            this.handler.keypress(function (evt) {
                 var enterKey = 13;
                 if (evt.which === enterKey) {
                     me.setQueryString(this.value);
@@ -107,7 +107,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
                 return '';
             }
             var result = qs;
-            if (qs.substring(0,1) === '&') {
+            if (qs.substring(0, 1) === '&') {
                 result = '?' + qs.substring(1);
             }
             result = result.replace(/(&)+/g, '&');
@@ -123,12 +123,12 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
     ShowHideAction.prototype = new ButtonHandler();
 
-    ShowHideAction.prototype.init = function(){
+    ShowHideAction.prototype.init = function () {
         this.handler.on('click', this.action.bind(this));
         this.indicator.on('click', this.action.bind(this));
     };
 
-    ShowHideAction.prototype.action = function() {
+    ShowHideAction.prototype.action = function () {
         this.indicator.toggleClass('hidden');
         this.headerbar.toggleClass('mz-header-hidden');
         this.setIsShown();
@@ -136,23 +136,23 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         this.setCookie();
     };
 
-    ShowHideAction.prototype.setIsShown = function() {
+    ShowHideAction.prototype.setIsShown = function () {
         this.isShown = !this.isShown;
     };
 
-    ShowHideAction.prototype.setCookie = function() {
+    ShowHideAction.prototype.setCookie = function () {
         document.cookie = ' MZ_SHOW_FUTURE_BAR=' + this.isShown + '; Path=/; Expires=';
     };
 
-    DateTimePicker.prototype.init = function() {
+    DateTimePicker.prototype.init = function () {
         this.plugin = this.handler.appendDtpicker(this.options);
 
-        this.displayBar.on('click', (function() {
+        this.displayBar.on('click', (function () {
             this.picker.show();
         }).bind(this));
-        
-        $(document).on('click', (function(eventData){
-            
+
+        $(document).on('click', (function (eventData) {
+
             if (!this.changedValue || eventData.target.className.indexOf('pricelist') !== -1) {
                 return;
             }
@@ -162,35 +162,35 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
         }).bind(this));
 
-        this.handler.on('change', (function(){
+        this.handler.on('change', (function () {
             this.changedValue = true;
         }).bind(this));
 
         $(document).on('click', '.icon-home', this.setCookie.bind(this));
     };
 
-    DateTimePicker.prototype.sanitizeDate = function() {
+    DateTimePicker.prototype.sanitizeDate = function () {
         return new Date(this.plugin.val().replace(/-/g, '/')).toISOString();
     };
 
-    DateTimePicker.prototype.setDate = function(date) {
-        date = date ? new Date(date).toDateString() + ', ' + new Date(date).toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + ' CST': 'Now';
+    DateTimePicker.prototype.setDate = function (date) {
+        date = date ? new Date(date).toDateString() + ', ' + new Date(date).toLocaleTimeString(navigator.language, { hour: '2-digit', minute: '2-digit' }) + ' CST' : 'Now';
         this.dateField.text(date);
     };
 
-    DateTimePicker.prototype.getCookie = function() {
-        var cookie = document.cookie.split(';').filter(function(str) {return str.indexOf('MZ_NOW') > 0;});
+    DateTimePicker.prototype.getCookie = function () {
+        var cookie = document.cookie.split(';').filter(function (str) { return str.indexOf('MZ_NOW') > 0; });
         return cookie.length > 0 ? cookie[0].replace(' MZ_NOW=', '') : '';
     };
 
-    DateTimePicker.prototype.setCookie = function() {
+    DateTimePicker.prototype.setCookie = function () {
         var date = new Date();
-        date.setDate(date.getDate() -1);
+        date.setDate(date.getDate() - 1);
         document.cookie = ' MZ_NOW' + '=; Path=/; Expires=' + date;
         location.search = '';
     };
 
-    DateTimePicker.prototype.setQueryString = function(str, soft) {
+    DateTimePicker.prototype.setQueryString = function (str, soft) {
         if (soft && str) {
             window.history.replaceState('MOZU', document.title, this.getQueryString(str));
         }
@@ -198,10 +198,10 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
     DateTimePicker.prototype.sanitizeQueryString = sanitizeQueryString;
 
-    DateTimePicker.prototype.getQueryString = function(str) {
+    DateTimePicker.prototype.getQueryString = function (str) {
         var queryString = '';
         //same
-        if (location.search.match("mz_now="+str)) {
+        if (location.search.match("mz_now=" + str)) {
             return location.search;
         }
 
@@ -216,43 +216,43 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
                 queryString += '&';
             }
             queryString += 'mz_now=' + str;
-        }  else {
+        } else {
             queryString = '?mz_now=' + str;
         }
         return this.sanitizeQueryString(queryString);
     };
 
-    DateTimePicker.prototype.dateHasChanged = function() {
+    DateTimePicker.prototype.dateHasChanged = function () {
 
         // no query string
         if (window.location.search === '' && this.changedValue) {
             return true;
         }
 
-        else if (window.location.search !== ''){
+        else if (window.location.search !== '') {
             return this.sanitizeDate().substring(0, 23) !== this.getCookie().substring(0, 23);
         }
 
     };
 
-    DateTimePicker.prototype.showUrl = function() {
+    DateTimePicker.prototype.showUrl = function () {
         this.urlBar.val(location.href);
-        this.urlBar.on('click', function() { $(this).select(); });
+        this.urlBar.on('click', function () { $(this).select(); });
     };
 
     PriceListPicker.prototype.init = function () {
-        this.handler.on('change', (function(){
+        this.handler.on('change', (function () {
             this.changedValue = true;
         }).bind(this));
     };
 
-    PriceListPicker.prototype.getQueryStringValue = function() {
+    PriceListPicker.prototype.getQueryStringValue = function () {
         var regExPriceList = /mz_pricelist=(.*?)(?:&.*|$)/gi;
         var matches = regExPriceList.exec(location.search);
         return (matches && matches.length >= 1) ? matches[1] : '';
     };
 
-    PriceListPicker.prototype.setQueryString = function(priceListVal) {
+    PriceListPicker.prototype.setQueryString = function (priceListVal) {
         var queryString = location.search,
             currentQsVal = this.getQueryStringValue();
 
@@ -263,7 +263,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         if (!priceListVal) {
             queryString = queryString.replace(('mz_pricelist=' + currentQsVal), '');
         } else if (location.search.indexOf('mz_pricelist') === -1) {
-            queryString += (queryString.indexOf('?') !== -1)  ? '&' : '?';
+            queryString += (queryString.indexOf('?') !== -1) ? '&' : '?';
             queryString += ('mz_pricelist=' + priceListVal);
         } else {
             queryString = queryString.replace(('mz_pricelist=' + currentQsVal), ('mz_pricelist=' + priceListVal));
@@ -273,8 +273,8 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
 
     PriceListPicker.prototype.sanitizeQueryString = sanitizeQueryString;
 
-    ShareAction.prototype.init = function() {
-        this.handler.on('click', (function() {
+    ShareAction.prototype.init = function () {
+        this.handler.on('click', (function () {
             this.urlBar.select();
         }).bind(this));
     };
@@ -284,7 +284,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
         shareaction = new ShareAction('#mz-share'),
         priceListPicker = new PriceListPicker(),
         variationSelector = new VariationSelector();
-    
+
     datetimepicker.init();
     showhideaction.init();
     shareaction.init();
