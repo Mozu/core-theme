@@ -103,6 +103,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public async Task<Response<List<Order>>> List([FromUri] PagingParamaters pagingParams,
             [FromUri] FilterCollection extFilter, [FromUri] bool draft = false)
         {
+            SbApiContext.SetDataMode(DataViewModeType.Live);
             var orderWebApiClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.SiteId = null);
 
             // get single order
