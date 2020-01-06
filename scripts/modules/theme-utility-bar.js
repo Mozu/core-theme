@@ -14,6 +14,10 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
                     documentName = pageContext.cmsContext.page.path;
                 var variationParam = (selectedId !== "") ? '?variationId=' + selectedId : '';
 
+                if (HyprLiveContext.locals.pageContext.pageType === "category") {
+                    window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/c/' + HyprLiveContext.locals.pageContext.categoryId + variationParam;
+                    return;
+                }
                 window.location = (HyprLiveContext.locals.siteContext.siteSubdirectory || '') + '/' + documentName + variationParam;
             });
         };
