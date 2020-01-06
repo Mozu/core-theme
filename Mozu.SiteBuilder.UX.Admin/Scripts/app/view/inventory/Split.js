@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.inventory.Split', {
     extend: 'Taco.core.ux.content.SplitContainer',
+    cls: 'inventory-header',
     alias: [
         'widget.inventory-split',
         'widget.inventory.split'
@@ -61,10 +62,10 @@ Ext.define('Taco.view.inventory.Split', {
         this.moreButtonCfg = {
             itemId: 'moreButton',
             menu: {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
-                        cls: 'call-to-action override',
+                        //cls: 'call-to-action override',
                         text: 'Adjustment Mode',
                     },
                     {

@@ -29,7 +29,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[];
     @Input() navigationContainerType: string;
     navigationType = NavigationContainerType;
-    navigationContainerCSSClass = 'toolbar-main-dashboard';
+    navigationContainerCSSClass = 'toolbar-main';
     constructor(
         private _loggerService: LoggerService,
         private _notificationService: NotificationService,

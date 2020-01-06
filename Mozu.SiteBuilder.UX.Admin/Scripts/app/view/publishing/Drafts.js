@@ -32,7 +32,7 @@ Ext.define('Taco.view.publishing.Drafts', {
 
         this.moreButtonCfg = {
             menu: {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
                         xtype: 'menucheckitem',

@@ -1,12 +1,13 @@
 .tiles-align {
-    min-height: 110px;
-    text-align: center;
+    min-height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .tiles-images-align {
-    font-size: 75px;
-    margin-top: 13%;
-    margin-bottom: 12%;
+    font-size: 64px;
+    display: flex;
 }
 
 .tiles-item {
@@ -14,21 +15,24 @@
     margin-left: 3px;
     bottom: 18px;
     position: relative;
-    font-size: 13px;
+    font-size: 14px;
     padding-left: 0.51em;
     cursor: pointer;
 }
 
 .tiles-item a {
-    color: #3f3f3f !important;
-    border-bottom: 1px solid #e9e9e9 !important;
-    line-height: 16px !important;
+    color: #000080 !important;
+    margin-right: 16px;
+    border-bottom: none !important;
 }
 
-a:hover {
+.tiles-item a:hover {
+    color: #1565c0 !important;
+    text-decoration: underline !important;
+}
+
+.dashboard-icon-align:hover {
     text-decoration: none;
-    border-bottom: 1px solid #2ea195;
-    color: #3f3f3f;
 }
 
 @media screen and (max-width: 480px) {
@@ -50,6 +54,18 @@ a:hover {
     }
 }
 
+.menuHeaderAlign {
+    background-color: transparent;
+    cursor: pointer;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    border-left: 4px solid;
+    box-sizing: border-box;
+    border-color: transparent;
+    position: relative;
+}
+
 .dashboard-icon::after {
     color: #2ea195;
     display: block;
@@ -65,63 +81,36 @@ a:hover {
     padding-top: 10%;
 }
 
-.dashboard-icon-products::after {
-    content: "\E91E";
+.kibo-purple,
+.kibo-purple .fa {
+    color: #7862a0;
 }
 
-.dashboard-icon-marketing::after {
-    content: "\E923";
+.kibo-blue,
+.kibo-blue .fa {
+    color: #66c2cc;
 }
 
-.dashboard-icon-content::after {
-    content: "\E926";
+.kibo-green {
+    color: #4ab56d;
 }
 
-.dashboard-icon-publishing::after {
-    content: "\E924";
+.kibo-orange {
+    color: #f78f24;
 }
 
-.dashboard-icon-order::after {
-    content: "\E922";
+.kibo-orange .fa,
+.kibo-orange .fal {
+    color: #f78f24;
 }
 
-.dashboard-icon-customer::after {
-    content: "\E921";
+.col-md-4,
+col.md-5 {
+    width: 100% !important;
+    height: 100%;
 }
 
-.dashboard-icon-b2baccount::after {
-    content: "\E936";
-}
-
-.dashboard-icon-report::after {
-    content: "\E925";
-}
-
-.dashboard-icon-settings::after {
-    content: "\E91C";
-}
-
-.dashboard-icon-schema::after {
-    content: "\E91B";
-}
-
-.dashboard-icon-customization::after {
-    content: "\E918";
-}
-
-.dashboard-icon-structure::after {
-    content: "\E91D";
-}
-
-.dashboard-icon-permissions::after {
-    content: "\E91A";
-}
-
-.dashboard-icon-fulfiller::after {
-    content: "\E91A";
-}
-
-@media screen and (min-width: 994px) and (max-width: 1190px){
+@media screen and (min-width: 994px) and (max-width: 1190px) {
     .tiles-item {
         font-size: 0.84em;
         padding-left: 0.43em;

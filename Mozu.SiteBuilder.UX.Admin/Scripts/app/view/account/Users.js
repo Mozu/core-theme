@@ -112,7 +112,7 @@ Ext.define('Taco.view.account.Users', {
             menu: {
                 plain: true,
                 shadow: false,
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
                         text: 'Expand All',

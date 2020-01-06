@@ -5,7 +5,6 @@ import {
   ChangeDetectorRef,
   Input,
   AfterViewInit,
-  ViewEncapsulation,
   OnDestroy,
   OnChanges,
   SimpleChange,
@@ -29,7 +28,7 @@ import { Constants } from '@shared/infrastructure/constants';
 import { DynamicLinksDialogComponent } from '@shared/dynamic-links-dialog/dynamic-links-dialog.component';
 import { NotificationLGActions, NavigationContainerType } from '@shared/infrastructure/enums';
 import { NavigationService } from '../navigation.service';
-import { LeftNavigationModel, SecureForm, LeftNavigationTabs } from './left.model';
+import { LeftNavigationModel } from './left.model';
 import { MenuItem } from 'primeng/api';
 import { environment } from 'environments/environment.Dev';
 
@@ -37,8 +36,7 @@ import { environment } from 'environments/environment.Dev';
   selector: 'navigation-left',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './left.component.html',
-  styleUrls: ['./left.component.css']//,
-  //encapsulation : ViewEncapsulation.None
+  styleUrls: ['./left.component.css']
 })
 export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @Input() naviContainerType: NavigationContainerType;
@@ -69,8 +67,8 @@ export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy
     this.model.filteredNavigationLinks = [];
     this.model.homeURL = environment.appUrl;
     this.model.isShowSearchComponent = true;
-    this.visibleSidebar1 = (this.naviContainerType === NavigationContainerType.dashboard);
-    this.model.isSideBarModal = !(this.naviContainerType === NavigationContainerType.dashboard);
+    this.visibleSidebar1 = false;
+    this.model.isSideBarModal = true;
 
     this.subscriptions.push(
       this._notificationService.expandHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
@@ -145,6 +143,7 @@ export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy
       }
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
+      this.applyColorsToNavigationLinks();
       this.changeDetectorRef.detectChanges();
       this._sharedDataService.leftNavigationMenuItems = this.model.mainItems;
       this._notificationService.notifyLeftMenuItemsLoaded(this._sharedDataService.leftNavigationMenuItems);
@@ -223,4 +222,24 @@ export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy
     this.model.isShowSearchComponent = !this.model.isShowSearchComponent;
   }
 
+  public applyColorsToNavigationLinks(): void {
+    let linkColorIndex = 1;
+    _.forEach(this.model.mainItems, (eachItem, index) => {
+      if (linkColorIndex % 4 === 0) {
+        linkColorIndex = 0;
+      }
+      eachItem.styleClass = this.model.linkColors[linkColorIndex];
+      linkColorIndex = linkColorIndex + 1;
+    });
+    this.model.mainHelpLinkStyleClass = (linkColorIndex % 4 === 0) ? this.model.linkColors[0] : this.model.linkColors[linkColorIndex];
+    linkColorIndex = 1;
+    _.forEach(this.model.systemItems, (eachItem, index) => {
+      if (linkColorIndex % 4 === 0) {
+        linkColorIndex = 0;
+      }
+      eachItem.styleClass = this.model.linkColors[linkColorIndex];
+      linkColorIndex = linkColorIndex + 1;
+    });
+    this.model.systemHelpLinkStyleClass = (linkColorIndex % 4 === 0) ? this.model.linkColors[0] : this.model.linkColors[linkColorIndex];
+  }
 }

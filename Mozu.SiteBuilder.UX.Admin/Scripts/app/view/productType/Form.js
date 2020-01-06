@@ -5,6 +5,7 @@
 
 Ext.define('Taco.view.productType.Form', {
     extend: 'Taco.core.ux.form.Form',
+    cls: 'producttypepage',
     requires: [
         'Taco.core.ux.form.field.MultiSelect',
         'Taco.core.ux.BoxReorderer',

@@ -515,25 +515,25 @@ p-table .ui-table .pi-ellipsis-v:hover {
     z-index: 19021 !important;
 }
 
-    .integrationsModal .modal-content {
-        width: 100%;
-        height: 100%;
-        top: -9px;
-    }
+.integrationsModal .modal-content {
+    width: 100%;
+    height: 100%;
+    top: -9px;
+}
 
-    .integrationsModal .modal-body {
-        height: 90%;
-    }
+.integrationsModal .modal-body {
+    height: 90%;
+}
 
-    .integrationsModal .modal-header .close {
-        margin-top: -25px;
-    }
+.integrationsModal .modal-header .close {
+    margin-top: -25px;
+}
 
-    .integrationsModal .modal-dialog {
-        width: 90% !important;
-        height: 90%;
-        top: 25%;
-    }
+.integrationsModal .modal-dialog {
+    width: 90% !important;
+    height: 90%;
+    top: 25%;
+}
 
 
 /* .ng-trigger.ui-menu .ui-menuitem-link .ui-menuitem-text{
@@ -1225,7 +1225,7 @@ ngb-datepicker.dropdown-menu {
 }
 
 .sidebar .ui-scrollpanel {
-    height: calc(100vh - 270px) !important;
+    height: calc(100vh - 215px) !important;
 }
 
 .ui-sidebar .ui-tabview .ui-tabview-title {
@@ -1293,4 +1293,44 @@ ngb-datepicker.dropdown-menu {
     line-height: 1.428 !important;
     padding: 7.5px 12px !important;
     font-size: 14px !important;
+}
+
+access-tile .ui-card-body {
+    margin-top: 0 !important;
+    padding: 16px 16px 0 16px !important;
+    height: 100% !important;
+}
+
+access-tile .ui-card-shadow.ui-card {
+    margin-bottom: 0 !important;
+}
+
+access-tile .ui-card-shadow {
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    height: calc(100% - 20px) !important;
+}
+
+access-tile .ui-card-subtitle,
+access-tile .tiles-item {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+access-tile .ui-card-subtitle {
+    line-height: 1.5;
+    margin-bottom: 5px !important;
+    color: #2b2b2b !important;
+    font-size: 16px;
+    font-weight: 600 !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+access-tile .tiles-item {
+    line-height: 1.7;
+}
+
+access-tile {
+    height: 100% !important;
 }

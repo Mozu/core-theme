@@ -73,7 +73,7 @@ Ext.define('Taco.view.customSchema.Split', {
 
         this.moreButtonCfg = {
             menu: {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button', 
                 items: this.getMenuItems()
             },
             disabled: true

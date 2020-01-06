@@ -10,6 +10,9 @@ export class LeftNavigationModel {
     homeURL : string;
     isSideBarModal : boolean;
     isShowSearchComponent : boolean;
+    linkColors: string[]  = ['kibo-purple', 'kibo-green', 'kibo-blue', 'kibo-orange'];
+    mainHelpLinkStyleClass: string;
+    systemHelpLinkStyleClass: string;
 }
 
 export class LeftNavigationTabs {

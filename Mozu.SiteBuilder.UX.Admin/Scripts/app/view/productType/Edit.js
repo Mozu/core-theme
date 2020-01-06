@@ -5,7 +5,8 @@
 
 Ext.define('Taco.view.productType.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
-    requires: ['Taco.view.productType.Form'],    
+    requires: ['Taco.view.productType.Form'],
+    cls: 'producttypeheader', 
     formCls: 'Taco.view.productType.Form',
     enableSearchBarInHeader: false,
     saveAndCreateButtonEnabled: true,

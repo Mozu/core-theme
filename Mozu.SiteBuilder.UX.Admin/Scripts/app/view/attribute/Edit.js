@@ -6,6 +6,7 @@
 Ext.define('Taco.view.attribute.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     alias: "widget.taco-attribute-edit",
+    cls: 'productattributeheader',
     requires: [
         'Taco.view.attribute.Form'
     ],

@@ -13,7 +13,7 @@
 
                     <p-scrollPanel>
                         <div class="menuHeader menu-ends kibo-purple">
-                            <a type="button active collapsed" class="button" [routerLink]="['./']" [routerLinkActive]="['is-active']">
+                            <a type="button active collapsed" class="button" [href]="model.homeURL">
                                 <span class="fa fa-home"></span> <span>Home</span>
                             </a>
                         </div>
@@ -21,7 +21,7 @@
                             <span [hidden]="menuHeader.items.length === 0">
                                 <div type="button active collapsed" data-toggle="collapse"
                                      [attr.data-target]="'#' + menuHeader.id"
-                                     class="menuHeaderAlign button {{menuHeader.color}}">
+                                     class="menuHeaderAlign button {{menuHeader.styleClass}}">
                                     <span [ngClass]="(menuHeader.expanded)? menuHeader.toggleIcon : menuHeader.icon"></span>
                                     <a class="menu-label">{{menuHeader.label}}</a>
                                 </div>
@@ -47,14 +47,14 @@
                                     </li>
                                 </ul>
                             </span>
-                            <div *ngIf="menuHeader.items.length === 0" class="menuHeader menu-ends {{menuHeader.color}}">
+                            <div *ngIf="menuHeader.items.length === 0" class="menuHeader menu-ends {{menuHeader.styleClass}}">
                                 <a type="button active collapsed" [attr.href]="menuHeader.url">
-                                    <span [ngClass]="(menuHeader.expanded)? menuHeader.toggleIcon : menuHeader.icon"></span>
+                                    <span class="{{menuHeader.icon}} {{menuHeader.styleClass}}"></span>
                                     <span>{{menuHeader.label}}</span>
                                 </a>
                             </div>
                         </div>
-                        <div class="menuHeader menu-ends kibo-blue">
+                        <div class="menuHeader menu-ends {{model.mainHelpLinkStyleClass}}">
                             <a type="button active collapsed " href="https://www.mozu.com/docs/guides/guides.htm" class="">
                                 <span class="fal fa-question-circle"></span>
                                 <span>{{'Header.Label.help' | translate }} </span>
@@ -75,21 +75,23 @@
                                 <div type="button active collapsed" data-toggle="collapse"
                                      [attr.data-target]="'#' + menuHeader.id"
                                      (click)="megaMenuToggleIcon($event,menuHeader)"
-                                     class="menuHeaderAlign {{menuHeader.color}}">
+                                     class="menuHeaderAlign {{menuHeader.styleClass}}">
                                     <span [ngClass]="(menuHeader.expanded)? menuHeader.icon : menuHeader.icon"></span>
                                     <a class="menu-label">{{menuHeader.label}}</a>
                                 </div>
                                 <ul id="{{menuHeader.id}}" class="collapse">
                                     <li *ngFor="let menuOptions of menuHeader.items">
-                                        <a [attr.href]="menuOptions.url">
-                                            {{menuOptions.label}}
-                                        </a>
+                                        <div>
+                                            <a [attr.href]="menuOptions.url">
+                                                {{menuOptions.label}}
+                                            </a>
+                                        </div>
                                     </li>
                                 </ul>
                             </span>
                         </div>
 
-                        <div class="menuHeader menu-ends kibo-blue">
+                        <div class="menuHeader menu-ends {{model.systemHelpLinkStyleClass}}">
                             <a type="button active collapsed" href="https://www.mozu.com/docs/guides/guides.htm">
                                 <span class="fal fa-question-circle"></span> <span>
                                     {{'Header.Label.help' | translate }}

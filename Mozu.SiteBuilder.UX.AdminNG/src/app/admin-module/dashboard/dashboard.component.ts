@@ -47,7 +47,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
     this._loggerService.info('AdminDashboardComponent : constructor');
     this.model = new DashboardModel();
-    this.model.dashboardCSSClass = 'dashboardRightShifted';
+    this.model.dashboardCSSClass = 'dashboard';
     this.subscriptions = [];
   }
 
@@ -67,8 +67,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         if (navContainerType === NavigationContainerType.dashboard) {
           this.model.dashboardCSSClass = 'dashboardRightShifted';
           this._changeDetectionRef.detectChanges();
-        } else
-        {
+        } else {
           this.model.dashboardCSSClass = 'dashboard';
           this._changeDetectionRef.detectChanges();  
         }
@@ -108,11 +107,31 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.model.mainTiles = this._dashboardService.
         MapDasasboardCategoryToTiles(this.model.filteredAccessLinks.
           filter(function (eachCategory) { return eachCategory.navParent === Constants.mainTileJsonNavParentPrefix; }));
+      this.applyTileIconColorsToAccessTile();
       this._changeDetectionRef.detectChanges();
 
     }, (dashboardTileLinksErrResponse) => {
       this._loggerService.info('AdminDashboardComponent : _dashboardService.fetchAllDashboardTiles_errResponse');
       throw new HttpError(ErrorCode.DashboardTilesGetFailed, ErroNotificationType.Toaster, dashboardTileLinksErrResponse);
+    });
+  }
+
+  public applyTileIconColorsToAccessTile(): void {
+    let linkColorIndex = 1;
+    _.forEach(this.model.mainTiles, (eachItem, index) => {
+      if (linkColorIndex % 4 === 0) {
+        linkColorIndex = 0;
+      }
+      eachItem.tileIconColor = this.model.linkColors[linkColorIndex];
+      linkColorIndex = linkColorIndex + 1;
+    });
+    linkColorIndex = 1;
+    _.forEach(this.model.systemTiles, (eachItem, index) => {
+      if (linkColorIndex % 4 === 0) {
+        linkColorIndex = 0;
+      }
+      eachItem.tileIconColor = this.model.linkColors[linkColorIndex];
+      linkColorIndex = linkColorIndex + 1;
     });
   }
 }

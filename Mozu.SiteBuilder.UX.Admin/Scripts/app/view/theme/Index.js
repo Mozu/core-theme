@@ -4,6 +4,7 @@
  */
 Ext.define('Taco.view.theme.Index', {
     extend: 'Taco.core.ux.browser.SearchListTree',
+    cls: 'themes-header',
     requires: [
         'Taco.store.ThemeListingsTree',
         'Taco.core.ux.content.SiteViewDropdown'
@@ -118,7 +119,7 @@ Ext.define('Taco.view.theme.Index', {
 
         this.moreButtonCfg = {
             menu: {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
                         text: 'Expand All',

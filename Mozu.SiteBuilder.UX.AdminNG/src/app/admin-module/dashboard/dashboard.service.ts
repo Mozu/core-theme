@@ -33,6 +33,8 @@ export class DashbaordService {
             accessTileModel.sectionText = eachDasboardCategory.label;
             accessTileModel.sectionImageURL = eachDasboardCategory.imageURL;
             accessTileModel.id = eachDasboardCategory.id;
+            accessTileModel.tileIcon = eachDasboardCategory.tileIcon;
+            accessTileModel.tileIconColor = eachDasboardCategory.tileIconColor;
             if (eachDasboardCategory.items != null && eachDasboardCategory.items !== undefined && eachDasboardCategory.items.length > 0) {
               accessTileModel.sectionLinks = [];
               eachDasboardCategory.items.forEach(eachDasbhboardCategoryItem => {

@@ -5,6 +5,8 @@ export class AccessTileModel {
     sectionImageURL: string;
     navParent: string;
     id: string;
+    tileIcon: string;
+    tileIconColor: string;
 }
 
 export class AccessTileLink {

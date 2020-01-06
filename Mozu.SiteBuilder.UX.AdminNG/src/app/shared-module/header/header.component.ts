@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public userContextMenuItem: MenuItem;
     subscriptions = [];
     mainMenuLinks: MenuItem[];
+    dashboardContainer: string;
 
     constructor(
         private _loggerService: LoggerService,
@@ -33,6 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
+        this.dashboardContainer = NavigationContainerType.dashboard;
         this._loggerService.info('HeaderComponent : ngOnInit');
         this.headerModel = new HeaderModel();
         this.headerModel.homeURL = environment.appUrl;

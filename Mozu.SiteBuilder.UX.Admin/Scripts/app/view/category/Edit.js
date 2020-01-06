@@ -5,6 +5,7 @@
 Ext.define('Taco.view.category.Edit', {
     extend: 'Taco.core.ux.form.FullEditor',
     alias: 'widget.categoryfulledit',
+    cls: 'category-header',
     requires: ['Taco.view.category.Form'],
     formCls: 'Taco.view.category.Form',
     saveAndCreateButtonEnabled: true,
@@ -27,7 +28,7 @@ Ext.define('Taco.view.category.Edit', {
 
         this.moreButtonCfg = {
             menu: {
-                cls: 'taco-more-action-button-menu taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 plain: true,
                 shadow: false,
                 items: [
@@ -36,7 +37,7 @@ Ext.define('Taco.view.category.Edit', {
                     itemId: 'live',
                     text: 'View Live',
                         menu: {
-                            cls: 'taco-header-split-button',
+                        cls: 'taco-ellipsis-split-button',
                         plain: true,
                         shadow: false,
                         items: []
@@ -46,7 +47,7 @@ Ext.define('Taco.view.category.Edit', {
                     itemId: 'preview',
                     text: 'View Staged',
                     menu: {
-                        cls: 'taco-header-split-button',
+                        cls: 'taco-ellipsis-split-button',
                         plain: true,
                         shadow: false,
                         items: []

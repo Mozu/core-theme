@@ -145,15 +145,15 @@ Ext.define('Taco.view.location.inventory.Index', {
         this.moreButtonCfg = {
             itemId: 'moreButton',
             menu: {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {
-                        cls: 'call-to-action override',
+                        //cls: 'call-to-action override',
                         text: 'Adjustment Mode'
                     },
                     {
                         xtype: 'menucheckitem',
-                        text: 'Add',
+                        text: 'Amol',
                         itemId: 'adjustmentModeAdd',
                         group: 'adjustmentMode',
                         checked: true

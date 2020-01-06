@@ -6,4 +6,5 @@ export class  DashboardModel {
     isShowSystemTiles: boolean;
     filteredAccessLinks: AccessTileModel[];
     dashboardCSSClass: string;
+    linkColors: string[]  = ['kibo-purple', 'kibo-green', 'kibo-blue', 'kibo-orange'];
 }

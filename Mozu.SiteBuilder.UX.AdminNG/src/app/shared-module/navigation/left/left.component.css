@@ -94,9 +94,14 @@ a:visited {
 ul li {
     list-style-type: none;
     line-height: 32px;
-    padding-left: 56px;
     position: relative;
     cursor: pointer;
+}
+
+ul li div a {
+    width: 100%;
+    padding-left: 56px;
+    display: block;
 }
 
 ul {
@@ -174,8 +179,7 @@ a:hover {
 }
 
 .menuHeader ul.collapse li:hover a {
-    text-decoration: none;
-    border-bottom: 1px solid;
+    text-decoration: underline;
 }
 
 .kibo-purple,
@@ -217,9 +221,9 @@ a:hover {
 }
 
 .menu-ends:hover a>span:last-child {
-    border-bottom: 1px solid;
     line-height: 1.25;
     letter-spacing: 0.25px;
+    text-decoration: underline;
 }
 
 .menuHeader.kibo-purple .is-active {
@@ -230,43 +234,31 @@ a:hover {
 .menuHeaderAlign.kibo-purple[aria-expanded="true"]+ul li:hover,
 .kibo-purple:hover {
     background: rgba(120, 98, 160, 0.1);
-    /* border-color: rgba(120, 98, 160, 0); */
 }
 
 .menuHeaderAlign.kibo-blue[aria-expanded="true"]+ul li:hover,
 .kibo-blue:hover {
-    background: rgba(74, 181, 109, 0.1);
-    /* border-color: rgba(74, 181, 109, 0); */
+    background: rgba(102, 194, 204, 0.1);
 }
 
 .menuHeaderAlign.kibo-green[aria-expanded="true"]+ul li:hover,
 .kibo-green:hover {
-    background: rgba(102, 194, 204, 0.1);
-    /* border-color: rgba(102, 194, 204, 0); */
+    background: rgba(74, 181, 109, 0.1);
 }
 
 .menuHeaderAlign.kibo-orange[aria-expanded="true"]+ul li:hover,
 .kibo-orange:hover {
     background: rgba(247, 143, 36, 0.1);
-    /* border-color: rgba(247, 143, 36, 0); */
 }
 
 .menuHeader:hover .menuHeaderAlign a {
-    /* padding: 0.4em 1.3em; */
-    text-decoration: none;
-    border-bottom: 1px solid;
+    text-decoration: underline;
 }
 
 .menu-label {
     color: #333;
     line-height: 1;
 }
-
-
-/* .menuHeaderAlign[aria-expanded="true"] .menu-label {
-    font-weight: bold;
-} */
-
 .menu-option-selected {
     font-weight: bold;
 }
@@ -303,7 +295,6 @@ a:hover {
 
 .menu-ends {
     height: 48px;
-    /* padding-left: 5px; */
     display: flex;
     align-items: center;
 }
@@ -392,7 +383,8 @@ span.fa+.menu-label {
 .kibo-orange .fa:after {
     background-color: #f78f24;
 }
+
 .ui-scrollpanel-bar {
-    background: rgba(0,0,0,0.38) !important;
-    opacity:1 !important;
+    background: rgba(0, 0, 0, 0.38) !important;
+    opacity: 1 !important;
 }

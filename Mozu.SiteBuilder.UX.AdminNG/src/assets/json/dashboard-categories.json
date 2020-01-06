@@ -6,6 +6,8 @@
     "icon": "nav-catalog",
     "behaviorIds": 4,
     "visible": true,
+    "tileIcon" :"fal fa-book", 
+    "tileIconColor" :"kibo-green",
     "items": [
       {
         "id": "catalogProducts",
@@ -51,6 +53,8 @@
     "label": "Marketing",
     "icon": "nav-marketing",
     "behaviorIds": 24,
+    "tileIcon" :"fal fa-megaphone",
+    "tileIconColor" :"kibo-blue",
     "visible": true,
     "items": [
       {
@@ -97,6 +101,8 @@
     "label": "Site Builder",
     "icon": "nav-sites",
     "showBreadCrumbs": true,
+    "tileIcon" :"fal fa-paint-roller",
+    "tileIconColor" :"kibo-orange",
     "visible": true,
     "items": [
       {
@@ -139,6 +145,8 @@
     "label": "Publishing ",
     "icon": "nav-publishing",
     "behaviorIds": 8,
+    "tileIcon" :"fal fa-calendar-star",
+    "tileIconColor" :"kibo-purple",
     "visible": true,
     "items": [
       {
@@ -165,6 +173,8 @@
     "label": "Orders",
     "icon": "nav-orders",
     "behaviorIds": 73,
+    "tileIcon" :"fal fa-home",
+    "tileIconColor" :"kibo-green",
     "visible": true,
     "items": [
       {
@@ -217,6 +227,8 @@
     "navParent": "main",
     "label": "Fulfillment",
     "behaviorIds": 187,
+    "tileIcon" :"fal fa-warehouse-alt",
+    "tileIconColor" :"kibo-blue",
     "visible": true,
     "items": [
       {
@@ -234,6 +246,8 @@
     "navParent": "main",
     "label": "Order Routing",
     "behaviorIds": 188,
+    "tileIcon" :"fal fa-map-signs",
+    "tileIconColor" :"kibo-orange",
     "visible": true,
     "items": [
       {
@@ -252,6 +266,8 @@
     "label": "Customers",
     "imageURL": "/admin/assets/Images/customers.png",
     "icon": "nav-customers",
+    "tileIcon" :"fal fa-user-crown",
+    "tileIconColor" :"kibo-purple",
     "visible": true,
     "items": [
       {
@@ -286,6 +302,8 @@
     "navParent": "main",
     "label": "B2B",
     "behaviorIds": 188,
+    "tileIcon" :"fal fa-building",
+    "tileIconColor" :"kibo-green",
     "visible": true,
     "items": [
       {
@@ -311,6 +329,8 @@
     "navParent": "main",
     "label": "Reporting",
     "behaviorIds": 188,
+    "tileIcon" :"fal fa-file-chart-line",
+    "tileIconColor" :"kibo-blue",
     "visible": true,
     "items": [
       {
@@ -328,6 +348,8 @@
     "navParent": "sys",
     "label": "Settings",
     "icon": "nav-settings",
+    "tileIcon" :"fal fa-cog",
+    "tileIconColor" :"kibo-green",
     "visible": true,
     "items": [
       {
@@ -393,6 +415,8 @@
     "navParent": "sys",
     "label": "Schema",
     "behaviorIds": 4,
+    "tileIcon" :"fal fa-project-diagram",
+    "tileIconColor" :"kibo-blue",
     "visible": true,
     "items": [
       {
@@ -466,6 +490,8 @@
     "navParent": "sys",
     "label": "Customization",
     "behaviorIds": 4,
+    "tileIcon" :"fal fa-tools",
+    "tileIconColor" :"kibo-orange",
     "visible": true,
     "items": [
       {
@@ -499,6 +525,8 @@
     "navParent": "sys",
     "label": "Structure",
     "behaviorIds": 4,
+    "tileIcon" :"fal fa-sitemap",
+    "tileIconColor" :"kibo-purple",
     "visible": true,
     "items": [
       {
@@ -539,6 +567,8 @@
     "id": "permissions",
     "navParent": "sys",
     "label": "Permissions",
+    "tileIcon" :"fal fa-unlock",
+    "tileIconColor" :"kibo-green",
     "visible": true,
     "items": [
       {
@@ -572,6 +602,8 @@
     "navParent": "sys",
     "locAtts": [ "multiLang", "multCurrency" ],
     "label": "Localization",
+    "tileIcon" :"fal fa-home",
+    "tileIconColor" :"kibo-blue",
     "visible": true,
     "items": [
       {

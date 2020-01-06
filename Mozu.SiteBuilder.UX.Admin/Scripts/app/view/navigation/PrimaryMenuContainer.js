@@ -60,6 +60,19 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
             return;
         }
         this.store = store;
+        var colorArray = ['purple', 'green', 'blue', 'orange'];
+        var currentIndex = 0;
+        this.store.each(function (record, idx) {
+            switch (record.get('navParent')) {
+                case 'main':
+                    record.set('menucolor', colorArray[idx % 4]);
+                    break;
+                case 'sys':
+                    record.set('menucolor', colorArray[currentIndex % 4]);
+                    currentIndex++;
+                    break;
+            }            
+        });
         this.mixins.bindable.bindStore.apply(this, arguments);
 
         this.viewMain = Ext.create('Taco.view.navigation.PrimaryMenuSubContainer', {

@@ -6016,6 +6016,7 @@
     </Content>
     <Content Include="Scripts\resources\images\camera.png" />
     <Content Include="Scripts\resources\images\icons\checkbox.gif" />
+    <Content Include="Scripts\resources\images\icons\greycircle.gif" />
     <Content Include="Scripts\resources\images\icons\icon-barcode.png" />
     <Content Include="Scripts\resources\images\icons\icon-cart.png" />
     <Content Include="Scripts\resources\images\icons\icon-checkbox-focus.png" />
@@ -6038,6 +6039,7 @@
     <Content Include="Scripts\resources\images\icons\icon-theme-tablet.png" />
     <Content Include="Scripts\resources\images\icons\icon-tools.png" />
     <Content Include="Scripts\resources\images\image.png" />
+    <Content Include="Scripts\resources\images\kibo-logo-sidebar.png" />
     <Content Include="Scripts\resources\images\loader_25x25.gif" />
     <Content Include="Scripts\resources\images\loader_51x51.gif" />
     <Content Include="Scripts\resources\images\noimage.png" />

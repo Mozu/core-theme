@@ -6,6 +6,7 @@
 
 Ext.define('Taco.view.fileManager.Index', {
     extend: 'Taco.core.ux.browser.SearchList',
+    cls: 'filemanager-header',
     alias: 'widget.filemanager',
     requires: [
         'Taco.core.ux.form.FileInputButton',

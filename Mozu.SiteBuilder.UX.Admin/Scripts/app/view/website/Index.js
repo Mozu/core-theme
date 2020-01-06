@@ -71,7 +71,7 @@ Ext.define('Taco.view.website.Index', {
     enableNavHeader: true,
     cancelButtonEnabled: false,
     options: {},
-    
+
     contextConfig: {
         supportedLevels: ['s'],
         requiresContextOfType: ['s']
@@ -104,10 +104,13 @@ Ext.define('Taco.view.website.Index', {
             scope: this
         });
 
+        
+
         this.resolutionOverride = 0;
 
         this.publishButton =  {
             xtype: 'publishbutton',
+            cls: 'website-publish-btn',
             itemId: 'publishActionButton',
             beforeItemId: 'saveActionButton',
             buttonGroup: 'isPublishable',
@@ -119,6 +122,7 @@ Ext.define('Taco.view.website.Index', {
                 this.onPublish();
                 me.showMessage('Published', 'success');
             },
+
 
             onMoveToPublish: function(record, code) {
                 me.publishButton.setLoading(true);
@@ -153,7 +157,7 @@ Ext.define('Taco.view.website.Index', {
             menu: {
                 plain: true,
                 shadow: false,
-                cls: 'taco-more-action-button-menu  taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: [
                     {  
                         text: 'Preview Theme',
@@ -957,7 +961,7 @@ Ext.define('Taco.view.website.Index', {
         var me = this,
             previewThemesMenu = this.getHeader().down('#previewThemesMenu'),
             menu = {
-                cls: 'taco-header-split-button',
+                cls: 'taco-ellipsis-split-button',
                 items: []
             },
             hash = this.themeStore.tree.nodeHash;

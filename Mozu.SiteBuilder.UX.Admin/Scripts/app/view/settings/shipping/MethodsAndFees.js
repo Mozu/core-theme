@@ -10,6 +10,7 @@ Ext.define('Taco.view.settings.shipping.MethodsAndFees', {
         'Taco.view.settings.shipping.widget.OrderHandlingFeeRulesForm'
 
     ],
+    cls: 'shipping-links',
     formCls: 'Taco.core.ux.form.Form',
     //editorName: 'Taco.view.discount.Edit',
 
