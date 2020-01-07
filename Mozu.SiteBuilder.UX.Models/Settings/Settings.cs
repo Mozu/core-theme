@@ -243,6 +243,12 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
 
         [JsonProperty(NullValueHandling = NullValueHandling.Include)]
         public bool? ShipmentBackorderDateChanged { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentItemCanceled { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public bool? ShipmentAssigned { get; set; }
     }
 
     [DataContract]

@@ -137,7 +137,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                Topic = Topics.GiftCardCreated
                                            },
 
-                                       //COM-384 changes
                                        new EmailTypeInfo
                                            {
                                                ModelType = typeof (Order),
@@ -188,11 +187,18 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.TransferShipmentShipped
                                            },
-                                        new EmailTypeInfo
+                                         new EmailTypeInfo
                                            {
                                                ModelType = typeof (ShipmentEmail),
-                                               Topic = Topics.ShipmentAssignment
+                                               Topic = Topics.ShipmentItemCanceled
+                                           },
+                                       new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentAssigned
                                            }
+
+
                 };
         }
 
@@ -572,7 +578,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
             public const string TransferShipmentCreated = "transfer.created";
             public const string TransferShipmentShipped = "transfer.shipped";
-            public const string ShipmentAssignment = "shipment.assigned";
+			public const string ShipmentItemCanceled = "shipment.itemscanceled";
+            public const string ShipmentAssigned = "shipment.assigned"; 
 
         }
 

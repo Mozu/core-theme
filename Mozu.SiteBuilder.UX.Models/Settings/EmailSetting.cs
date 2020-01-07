@@ -79,6 +79,8 @@ namespace Mozu.SiteBuilder.UX.Models.Settings
         OrderPickupReady,
         OrderPickupReminder,
         ShipmentBackorderDateChanged,
-        OrderCancellation
+        OrderCancellation,
+        ShipmentItemCanceled,
+        ShipmentAssigned
     };
 }
