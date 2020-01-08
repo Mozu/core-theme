@@ -27,7 +27,7 @@
                                 </div>
                                 <ul id="{{menuHeader.id}}" class="collapse">
                                     <li *ngFor="let menuOptions of menuHeader.items">
-                                        <div>
+                                        <div *ngIf="menuOptions.address !== quotesRoute">
                                             <a *ngIf="menuOptions.address === quotesRoute || menuOptions.address === locationGroupRoute; else routeLink" [routerLink]="[menuOptions.routerLink]" (click)="navigationFromMegaMenu(menuOptions.address,$event,menuHeader)">
                                                 {{menuOptions.label}}
                                             </a>

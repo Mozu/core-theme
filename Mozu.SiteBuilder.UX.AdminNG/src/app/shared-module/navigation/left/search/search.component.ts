@@ -182,9 +182,13 @@ export class NavigationLeftSearchComponent implements OnInit, OnDestroy {
             }
             if (!event.isHeader) {
                 if (event.type === SearchedItemType.products) {
-                    navUrl = navUrl + Constants.editNavigationDeepLink + event.item.productTypeId;
+                    navUrl = navUrl + Constants.editNavigationDeepLink + event.item.productCode;
                 } else {
                     navUrl = navUrl + Constants.editNavigationDeepLink + event.item.id;
+                }
+            } else {
+                if (event.type === SearchedItemType.products) {
+                    navUrl = navUrl + Constants.editNavigationDeepLink + event.item.productCode;
                 }
             }
             this._utilityService.redirectToURL(navUrl);
