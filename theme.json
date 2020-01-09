@@ -97,6 +97,12 @@
       "title": "Order Cancel"
     },
     {
+      "id": "item.cancelled",
+      "properties": {},
+      "template": "email/item-cancel",
+      "title": "Item Cancel"
+    },
+    {
       "id": "checkout.changed",
       "customEditor": "email-orderconfirmation-v2",
       "properties": {},

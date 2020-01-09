@@ -225,6 +225,8 @@
   "internationalSettings": "International Settings",
   "isActive": "Active",
   "item": "Item",
+  "itemCancelBlob1": "The following item(s) from order #{0} have been cancelled.",
+  "itemCancelBlob2": "Full credit for any cancelled items will be applied to the payment method you used to place your order. To place a new order, please visit {0}'s site. We apologize for any inconvenience this has caused.",
   "itemsShipped": "Shipment Details",
   "itemTotal": "Item Total",
   "lastName": "Last Name",
