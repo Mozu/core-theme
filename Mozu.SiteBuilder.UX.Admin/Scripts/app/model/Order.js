@@ -197,6 +197,12 @@ Ext.define('Taco.model.Order', {
         type: 'string',
         useNull: true,
         persist: false
+        },
+        {
+            name: 'email',
+            type: 'string',
+            useNull: true,
+            persist: false
     }, {
         name: 'billingContact',
         type: 'auto',
@@ -1306,6 +1312,23 @@ Ext.define('Taco.model.Order', {
 
 
         config.errorMsg = config.errorMsg || 'Error updating order billing and shipping address';
+        this.addErrorHandling(config);
+
+        Ext.Ajax.request(config);
+    },
+
+
+    updateEmailAddress: function (config, newEmail) {
+        Ext.apply(config, {
+            url: '/admin/app/order/updateemailaddress',
+            params: {
+                'newEmail': newEmail
+            },
+            method: 'POST'
+        });
+
+
+        config.errorMsg = config.errorMsg || 'Error updating email address';
         this.addErrorHandling(config);
 
         Ext.Ajax.request(config);

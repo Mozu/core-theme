@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.PartialOrderNumber, op => op.ResolveUsing(dc => dc.PartialOrderNumber))
                 .ForMember(x => x.PartialOrderCount, op => op.ResolveUsing(dc => dc.PartialOrderCount))
                 .ForMember(x => x.ExternalId, op => op.ResolveUsing(dc => dc.ExternalId))
-
+                .ForMember(x => x.Email, op => op.ResolveUsing(dc => dc.Email))
                 .ForMember(x => x.OrderNumber, op => op.ResolveUsing(dc => dc.OrderNumber))
                 .ForMember(x => x.CreateDate, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateDate))
                 .ForMember(x => x.CreateBy, op => op.ResolveUsing(dc => dc.AuditInfo?.CreateBy))

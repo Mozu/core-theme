@@ -685,5 +685,32 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var returnableItems = (await orderWebApiClient.GetOrderReturnableItems(orderId)).ReadAsSync();
             return List2(Mapper.Map<List<OrderReturnableItem>>(returnableItems.Items), (int)returnableItems.TotalCount);
         }
+
+
+
+        [HttpPostRoute(UriTemplate = "updateemailaddress")]
+        public async Task<Response<Order>> UpdateEmailAddress(Order order, [FromUri] string newEmail)
+        {
+
+            if (string.IsNullOrEmpty(newEmail))
+            {
+                throw new Exception("Email must not be empty");
+            }
+
+            var dcOrder = (await _orderWebApiClient.GetOrder(order.Id)).ReadAsSync();
+
+            if (newEmail == dcOrder.Email)
+            {
+                //short circuit for no changes
+                return Single2(order);
+            }
+
+
+            dcOrder.Email = newEmail;
+
+            dcOrder = (await _orderWebApiClient.UpdateOrder(order.Id, dcOrder, APPLY_TO_ORIGINAL)).ReadAsSync();
+            return Single2(dcOrder.Map<Order>());
+
+        }
     }
 }

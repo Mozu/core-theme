@@ -51,6 +51,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.Models.Order
         /// </summary>
         public string ExternalId { get; set; }
 
+        public string Email { get; set; }
+
         public List<InvalidCoupon> InvalidCoupons { get; set; }
 
         /// <summary>

@@ -7,7 +7,8 @@ Ext.define('Taco.view.order.Header', {
     requires: [
         'Taco.shared.view.field.Customer',
         'Taco.view.customers.modal.Contacts',
-        'Taco.view.customers.modal.CreateCustomer'
+        'Taco.view.customers.modal.CreateCustomer',
+        'Taco.view.order.modal.EditOrderEmail'
     ],
 
     width: '100%',
@@ -27,7 +28,7 @@ Ext.define('Taco.view.order.Header', {
     navigation: false,
 
     initComponent: function () {
-        Ext.util.Format.phone = function(value) {
+        Ext.util.Format.phone = function (value) {
             return value.length === 10
                 ? value.replace(/^(\d{3})(\d{3})(\d{4})$/, '$1-$2-$3')
                 : value
@@ -94,14 +95,14 @@ Ext.define('Taco.view.order.Header', {
         });
     },
 
-    canViewShopperCart: function() {
+    canViewShopperCart: function () {
         return this.record.getCustomer() && this.record.get('orderStatus') === 'Pending';
     },
 
     showStorefrontModal: function (customerId, userId, orderId) {
         var me = this;
         var modalConfigWindow = null;
-        var addCartItems = function(button) {
+        var addCartItems = function (button) {
             modalConfigWindow.setLoading({ msg: 'Loading' });
             Ext.Ajax.request({
                 url: '/admin/app/order/addShoppersCartItems?userId=' + userId + '&orderId=' + orderId,
@@ -121,7 +122,7 @@ Ext.define('Taco.view.order.Header', {
                 }
             });
         };
-        var linkOrderToCart = function(cartId) {
+        var linkOrderToCart = function (cartId) {
             modalConfigWindow.setLoading({ msg: 'Loading' });
             Ext.Ajax.request({
                 url: '/admin/app/order/linkOrderToCart?cartId=' + cartId + '&orderId=' + orderId,
@@ -213,7 +214,7 @@ Ext.define('Taco.view.order.Header', {
         });
         modalConfigWindow.center();
     },
-    getCustomer : function() {
+    getCustomer: function () {
         return this.record.getCustomer() ? this.record.getCustomer().getData() : {};
     },
     loadItems: function () {
@@ -222,10 +223,10 @@ Ext.define('Taco.view.order.Header', {
             itemId: 'customerLink',
             tpl: [
                 '<tpl if="id">',
-                    '<a href="/admin/customers/edit/{id}/{userId}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
-                    '<tpl if="accountType === \'B2B\' ">',
-                        '<br/><br/>B2B Account: <a href="/admin/b2baccounts/edit/{id}">{companyOrOrganization}</a>',
-                    '</tpl>',
+                '<a href="/admin/customers/edit/{id}/{userId}" data-handle="customerName">', '{[(values.lastNameSafe) ? values.firstNameSafe + " " + values.lastNameSafe : values.emailAddressSafe]}', '</a>',
+                '<tpl if="accountType === \'B2B\' ">',
+                '<br/><br/>B2B Account: <a href="/admin/b2baccounts/edit/{id}">{companyOrOrganization}</a>',
+                '</tpl>',
                 '</tpl>'
             ],
             margin: '0, 20, 0, 0',
@@ -240,7 +241,7 @@ Ext.define('Taco.view.order.Header', {
             hidden: !this.canViewShopperCart(),
             // Customer update behavior required for impersonation.
             requiredBehaviors: [{ model: 'Taco.model.CustomerAccount', behavior: 'update' }],
-            handler: function() {
+            handler: function () {
                 var custRecord = this.getCustomer();
                 this.showStorefrontModal(custRecord.id, custRecord.userId, this.record.getId());
             },
@@ -310,10 +311,10 @@ Ext.define('Taco.view.order.Header', {
             hidden: !(this.record.get('parentOrderId') || this.record.get('externalId')),
             tpl: [
                 '<tpl if="parentOrderId">',
-                    '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderNumber}</a></div>',
+                '<div class="parent-order"><span class="label">Ref Order #:</span><a href="/admin/s-{siteId}/orders/edit/{parentOrderId}">{parentOrderNumber}</a></div>',
                 '</tpl>',
                 '<tpl if="externalId">',
-                    '<div class="external-order"><span class="label">External Order #:</span>{externalId}</div>',
+                '<div class="external-order"><span class="label">External Order #:</span>{externalId}</div>',
                 '</tpl>'
             ],
             data: this.record.getData()
@@ -334,77 +335,77 @@ Ext.define('Taco.view.order.Header', {
                 '<tpl if="orderSummary.totalItemCount &gt; 0">',
 
                 '<tr>',
-                    '<td>',
-                        '<table class="header-summary">',
-                            '<tr>',
-                                '<td>Order Total:</td>',
-                                '<td data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</td>',
-                            '</tr>',
-                            '<tpl if="this.calculatePending(payments)">',
-                            '<tr>',
-                                '<td>Pending:</td>',
-                                '<td>{[values.orderRecord.formatCurrency(this.calculatePending(values.payments))]}</td>',
-                            '</tr>',
-                            '</tpl>',
-                            '<tr>',
-                                '<td>Collected:</td>',
-                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
-                            '</tr><tpl if="amountRefunded"><tr>',
-                                '<td>Refunded:</td>',
-                                '<td>{[values.orderRecord.formatCurrency(values.amountRefunded)]}</td>',
-                            '</tr></tpl><tr>',
-                                '<td>Balance:</td>',
-                                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
-                            '</tr>',
-                        '</table>',
-                    '</td>',
-                    '<td>',
-                        '<table class="header-summary">',
-                            '<tr>',
-                                '<td>Items:</td>',
-                                '<td>{orderSummary.totalItemCount}</td>',
-                            '</tr><tr>',
-                                '<td>Fulfilled:</td>',
-                                '<td>{orderSummary.fulfilledItemCount}</td>',
-                            '</tr><tr>',
-                                '<td>Remaining:</td>',
-                                '<td>{orderSummary.unfulfilledItemCount}</td>',
-                            '</tr>',
-                        '</table>',
-                    '</td>',
+                '<td>',
+                '<table class="header-summary">',
+                '<tr>',
+                '<td>Order Total:</td>',
+                '<td data-handle="orderSummaryOrderTotal">{[values.orderRecord.formatCurrency(values.orderSummary.totalAmount)]}</td>',
+                '</tr>',
+                '<tpl if="this.calculatePending(payments)">',
+                '<tr>',
+                '<td>Pending:</td>',
+                '<td>{[values.orderRecord.formatCurrency(this.calculatePending(values.payments))]}</td>',
+                '</tr>',
+                '</tpl>',
+                '<tr>',
+                '<td>Collected:</td>',
+                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.amountCollected)]}</td>',
+                '</tr><tpl if="amountRefunded"><tr>',
+                '<td>Refunded:</td>',
+                '<td>{[values.orderRecord.formatCurrency(values.amountRefunded)]}</td>',
+                '</tr></tpl><tr>',
+                '<td>Balance:</td>',
+                '<td>{[values.orderRecord.formatCurrency(values.orderSummary.balance)]}</td>',
+                '</tr>',
+                '</table>',
+                '</td>',
+                '<td>',
+                '<table class="header-summary">',
+                '<tr>',
+                '<td>Items:</td>',
+                '<td>{orderSummary.totalItemCount}</td>',
+                '</tr><tr>',
+                '<td>Fulfilled:</td>',
+                '<td>{orderSummary.fulfilledItemCount}</td>',
+                '</tr><tr>',
+                '<td>Remaining:</td>',
+                '<td>{orderSummary.unfulfilledItemCount}</td>',
+                '</tr>',
+                '</table>',
+                '</td>',
                 '</tr>',
 
                 '<tpl else>',
 
                 '<tr>',
-                    '<td>',
-                        '<table class="header-summary">',
-                            '<tr>',
-                                '<td>Order Total:</td>',
-                                '<td data-handle="orderSummaryOrderTotal">N/A</td>',
-                            '</tr><tr>',
-                                '<td>Collected:</td>',
-                                '<td>N/A</td>',
-                            '</tr><tr>',
-                                '<td>Balance:</td>',
-                                '<td>N/A</td>',
-                            '</tr>',
-                        '</table>',
-                    '</td>',
-                    '<td>',
-                        '<table class="header-summary">',
-                            '<tr>',
-                                '<td>Items:</td>',
-                                '<td>N/A</td>',
-                            '</tr><tr>',
-                                '<td>Fulfilled:</td>',
-                                '<td>N/A</td>',
-                            '</tr><tr>',
-                                '<td>Remaining:</td>',
-                                '<td>N/A</td>',
-                            '</tr>',
-                        '</table>',
-                    '</td>',
+                '<td>',
+                '<table class="header-summary">',
+                '<tr>',
+                '<td>Order Total:</td>',
+                '<td data-handle="orderSummaryOrderTotal">N/A</td>',
+                '</tr><tr>',
+                '<td>Collected:</td>',
+                '<td>N/A</td>',
+                '</tr><tr>',
+                '<td>Balance:</td>',
+                '<td>N/A</td>',
+                '</tr>',
+                '</table>',
+                '</td>',
+                '<td>',
+                '<table class="header-summary">',
+                '<tr>',
+                '<td>Items:</td>',
+                '<td>N/A</td>',
+                '</tr><tr>',
+                '<td>Fulfilled:</td>',
+                '<td>N/A</td>',
+                '</tr><tr>',
+                '<td>Remaining:</td>',
+                '<td>N/A</td>',
+                '</tr>',
+                '</table>',
+                '</td>',
                 '</tr>',
 
                 '</tpl>',
@@ -449,34 +450,34 @@ Ext.define('Taco.view.order.Header', {
                 '<table>',
                 '<tr>',
                 '<td>',
-                    '<tpl if="submittedDate">',
-                        '<span class="label label-light">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
-                    '<tplelse>',
-                        '<span class="label label-light">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
-                    '</tpl>',
+                '<tpl if="submittedDate">',
+                '<span class="label label-light">Order Date:</span>{submittedDate:date("m/d/Y h:i a")}',
+                '<tplelse>',
+                '<span class="label label-light">Order Create Date:</span>{createDate:date("m/d/Y h:i a")}',
+                '</tpl>',
                 '</td>',
                 '<tpl if="channelName">',
-                    '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName">{channelName}</span>', '</td>',
+                '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName">{channelName}</span>', '</td>',
                 '<tplelse>',
-                    '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName" class="channel-name">N/A</span>', '</td>',
+                '<td>', '<span class="label label-light">Channel:</span><span data-handle="channelName" class="channel-name">N/A</span>', '</td>',
                 '</tpl>',
                 '</tr>',
                 '<tr>',
                 '<td>', '<span class="label label-light">Last Updated:</span>{updateDate:date("m/d/Y h:i a")}', '</td>',
                 '<tpl if="orderType === \'Online\'">',
-                    '<td data-handle="ipAddress">', '<span class="label label-light">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</td>',
+                '<td data-handle="ipAddress">', '<span class="label label-light">IP Address:</span>', '<a href="http://whatismyipaddress.com/ip/{ipAddress}" target="_blank">', '{ipAddress}', '</a>', '</td>',
                 '<tpl elseif="orderType === \'Offline\'">',
-                    '<td><span class="label label-light">Offline Order</span></td>',
+                '<td><span class="label label-light">Offline Order</span></td>',
                 '</tpl>',
                 '</tr>',
                 '<tpl if="parentReturnId">',
                 '<tr>',
-                '<td>','<span class="label label-light">Parent Return:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/returns/edit/{parentReturnId}">{parentReturnNumber}</a></span>','</td>',
+                '<td>', '<span class="label label-light">Parent Return:</span><span data-handle="parentReturnId"><a href="/admin/s-{[Taco.app.context.getCurrent().id]}/returns/edit/{parentReturnId}">{parentReturnNumber}</a></span>', '</td>',
                 '</tr>',
                 '</tpl>',
                 '</table>'
             ],
-            data: Ext.apply( { channelName: this.record.getChannelName(), parentReturnNumber: this.parentReturnNumber }, this.record.getData())
+            data: Ext.apply({ channelName: this.record.getChannelName(), parentReturnNumber: this.parentReturnNumber }, this.record.getData())
         });
 
         this.addressesCmp = Ext.widget({
@@ -489,25 +490,25 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="billingContact && billingContact.lastName">',
 
-                    '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
+                '<span class="label">{billingContact.firstName:htmlEncode}<tpl if="billingContact.middleName"> {billingContact.middleName:htmlEncode}</tpl> {billingContact.lastName:htmlEncode}</span><br>',
 
-                    '<tpl if="billingContact.companyOrOrganization">{billingContact.companyOrOrganization:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.companyOrOrganization">{billingContact.companyOrOrganization:htmlEncode}<br></tpl>',
 
-                    '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
+                '<tpl if="billingContact.email">{billingContact.email}<br></tpl>',
 
-                    '<tpl if="billingContact.address1">',
-                        '{billingContact.address1:htmlEncode}<br>',
-                        '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
-                        '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
-                        '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
-                        '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
-                    '</tpl>',
+                '<tpl if="billingContact.address1">',
+                '{billingContact.address1:htmlEncode}<br>',
+                '<tpl if="billingContact.address2">{billingContact.address2:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.address3">{billingContact.address3:htmlEncode}<br></tpl>',
+                '<tpl if="billingContact.address4">{billingContact.address4:htmlEncode}<br></tpl>',
+                '{billingContact.cityOrTown:htmlEncode}, {billingContact.stateOrProvince:htmlEncode} {billingContact.postalOrZipCode:htmlEncode} {billingContact.countryCode:htmlEncode}<br>',
+                '</tpl>',
 
                 '<tpl if="billingContact.homePhone">{billingContact.homePhone:phone}<br></tpl>',
 
                 '<tplelse>',
 
-                    '<div data-handle="order-header-no-billing">n/a</div>',
+                '<div data-handle="order-header-no-billing">n/a</div>',
 
                 '</tpl>',
 
@@ -515,27 +516,27 @@ Ext.define('Taco.view.order.Header', {
 
                 '<tpl if="fulfillmentContact && (fulfillmentContact.lastName || fulfillmentContact.email || fulfillmentContact.address1)">',
 
-                    '<tpl if="fulfillmentContact.lastName">',
-                        '<span class="label">{fulfillmentContact.firstName:htmlEncode}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:htmlEncode}</tpl> {fulfillmentContact.lastName:htmlEncode}</span><br>',
-                    '</tpl>',
+                '<tpl if="fulfillmentContact.lastName">',
+                '<span class="label">{fulfillmentContact.firstName:htmlEncode}<tpl if="fulfillmentContact.middleName"> {fulfillmentContact.middleName:htmlEncode}</tpl> {fulfillmentContact.lastName:htmlEncode}</span><br>',
+                '</tpl>',
 
-                    '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
+                '<tpl if="fulfillmentContact.email">{fulfillmentContact.email}<br></tpl>',
 
-                    '<tpl if="fulfillmentContact.companyOrOrganization">{fulfillmentContact.companyOrOrganization:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.companyOrOrganization">{fulfillmentContact.companyOrOrganization:htmlEncode}<br></tpl>',
 
-                    '<tpl if="fulfillmentContact.address1">',
-                        '{fulfillmentContact.address1:htmlEncode}<br>',
-                        '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',
-                        '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:htmlEncode}<br></tpl>',
-                        '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
-                        '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
-                    '</tpl>',
+                '<tpl if="fulfillmentContact.address1">',
+                '{fulfillmentContact.address1:htmlEncode}<br>',
+                '<tpl if="fulfillmentContact.address2">{fulfillmentContact.address2:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.address3">{fulfillmentContact.address3:htmlEncode}<br></tpl>',
+                '<tpl if="fulfillmentContact.address4">{fulfillmentContact.address4:htmlEncode}<br></tpl>',
+                '{fulfillmentContact.cityOrTown:htmlEncode}, {fulfillmentContact.stateOrProvince:htmlEncode} {fulfillmentContact.postalOrZipCode:htmlEncode} {fulfillmentContact.countryCode:htmlEncode}<br>',
+                '</tpl>',
 
                 '<tpl if="fulfillmentContact.homePhone">{fulfillmentContact.homePhone:phone}<br></tpl>',
 
                 '<tplelse>',
 
-                    '<div data-handle="order-header-no-fulfillment">n/a</div>',
+                '<div data-handle="order-header-no-fulfillment">n/a</div>',
 
                 '</tpl>',
 
@@ -544,15 +545,50 @@ Ext.define('Taco.view.order.Header', {
             data: this.record.getData()
         });
 
+        this.emailCmp = Ext.widget({
+            xtype: 'component',
+            itemId: 'addressesCmp',
+            tpl: [
+                '{email:htmlEncode}'
+            ],
+            data: this.record.getData()
+
+        });
+        this.emailContainer = Ext.widget({
+            xtype: 'container',
+            itemId: 'emailCmps',
+            cls: 'pane  pane-change-address',
+            flex: 33,
+            style: 'padding-left: 0px;',
+            data: this.record.getData(),
+            items: [
+                {
+                    xtype: 'label',
+                    text: 'Email:',
+                    cls: 'label label-light'
+                }, this.emailCmp, {
+                    xtype: 'button',
+                    ui: 'link',
+                    text: 'Edit Email Address',
+                    itemId: "changeEmailLink",
+                    requiredBehaviors: [
+                        { model: 'Taco.model.Order', behavior: 'update' },
+                        { model: 'Taco.model.Order', behavior: 'fulfill' }
+                    ],
+                    handler: this.changeEmailAddress,
+                    scope: this
+                }
+            ]
+        });
+
         this.addressesContainer = Ext.widget({
             xtype: 'container',
             itemId: 'addressesContainer',
             cls: 'pane pane-addresses',
             flex: 33,
             hidden: !this.record.getCustomer(),
-            items: [ this.addressesCmp ]
+            items: [this.addressesCmp, this.emailContainer]
         });
-
         this.customerSelector = Ext.widget({
             xtype: 'taco-customerfield',
             itemId: 'customerSelector',
@@ -686,8 +722,8 @@ Ext.define('Taco.view.order.Header', {
         this.detailCmp.update(Ext.apply({ channelName: this.record.getChannelName() }, data));
         this.statusCmp.update(Ext.apply({}, { orderRecord: this.record }, data));
         this.addressesCmp.update(data);
+        this.emailCmp.update(data);
         this.relatedCmp.update(data);
-
         this.relatedCmp[(data.externalId || data.parentOrderId) ? 'show' : 'hide']();
         this.addressesContainer[this.record.getCustomer() ? 'show' : 'hide']();
         this.customerSelectionContainer[this.record.getCustomer() ? 'hide' : 'show']();
@@ -738,6 +774,25 @@ Ext.define('Taco.view.order.Header', {
                 }
             });
         }
+    },
+
+    changeEmailAddress: function (focusAfterCloseCmp) {
+        var me = this;
+        Ext.create('Taco.view.order.modal.EditOrderEmail', {
+            record: this.record,
+            listeners: {
+                scope: me,
+                afterclose: function () {
+                    if (focusAfterCloseCmp) {
+                        focusAfterCloseCmp.focus();
+                    }
+                },
+                aftersaveclose: function () {
+                    me.fireEvent('addresschanged', me, me.record);
+                    me.updateHeader();
+                }
+            }
+        });
     },
 
     changeCustomer: function (customerRecord) {
