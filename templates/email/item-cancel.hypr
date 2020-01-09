@@ -1,0 +1,55 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+    <br>
+    <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }},</p>
+    <br>
+    <p>{{ labels.itemCancelBlob1|string_format(model.orderNumber)|safe }}</p>
+    
+    <table cellpadding="1" width="100%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
+                <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
+            </tr>
+        </thead>
+        {% for item in model.items %}
+            <tbody class="mz-ordersummary-lineitems">
+              <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+                    <td class="mz-ordersummary-item-product">
+                      {{ item.product.name }}
+                      {% if item.product.productUsage == 'Bundle' %}
+                      <dl class="mz-propertylist">
+                        {% for bundledProduct in item.product.bundledProducts %}
+                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                        {% endfor %}
+                      </dl>s
+                      {% endif %}
+                    </td>
+                    <td align="right"> {% include "modules/common/email-item-price" %}</td>
+                </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+
+    
+    
+    
+    
+
+    <br>
+    <p>{{ labels.itemCancelBlob2|string_format(siteContext.generalSettings.websiteName)|safe }}</p>
+
+    {% if model.shopperNotes.comments %}
+        <h5>{{ labels.comments }}</h5>
+        <br><p>{{ model.shopperNotes.comments }}</p>
+    {% endif %}
+
+    {% if model.shopperNotes.giftMessage %}
+        <h5>{{ labels.giftMessage }}</h5>
+        <br><p>{{ model.shopperNotes.giftMessage }}</p>
+    {% endif %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+{% endblock body-content %}
