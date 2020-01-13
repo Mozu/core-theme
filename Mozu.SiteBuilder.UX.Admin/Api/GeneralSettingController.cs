@@ -170,6 +170,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 PickupReminderJob = fulfillmentSettings?.FulfillmentJobSettings?.PickupReminderJob,
                 ReleaseBackorderJob = fulfillmentSettings?.FulfillmentJobSettings?.ReleaseBackorderJob
             };
+            currentFulfillmentSettings.ShipToStore = new DC.Fulfillment.ShipToStore
+            {
+                IsEnabled = fulfillmentSettings?.ShipToStore?.IsEnabled ?? false,
+                AlwaysCreateTransferShipments = fulfillmentSettings?.ShipToStore?.AlwaysCreateTransferShipments ?? false
+            };
 
             currentFulfillmentSettings.FulfillerSettings = new DC.Fulfillment.FulfillerSettings()
             {
