@@ -116,7 +116,7 @@
 }
 
 .#{$vprefix}navheader {
-    font-family: Roboto-Regular !important;
+    font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif !important;
     .#{$vprefix}breadcrumb {
         .#{$vprefix}icon {
             border-right: 1px solid $color-standard-border;
@@ -239,7 +239,7 @@
     padding: 10px;
     color: $white-color !important;
     background: #260845;
-    font-family: Roboto-Regular;
+    font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
 }
 
 .taco-draft-toolbar .taco-filtercontainer .taco-quickfilter .x-form-item-body input {
@@ -335,7 +335,7 @@
 
     .placeholderSearch input::placeholder {
         color: $white-color;
-        font-family: Roboto-Regular;
+        font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
     }
 
     .x-form-clear-trigger {
@@ -366,7 +366,7 @@
             color: $new-theme-button-color !important;
             font-weight: 600 !important;
             font-size: 1.5rem !important;
-            font-family: Roboto-Regular;
+            font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
         }
 
         .x-btn-arrow-right::after {
@@ -525,7 +525,7 @@
 }
 
 .taco-navheader .taco-navheader-toolbar .x-btn-link-toolbar-medium .x-btn-inner {
-    font-family: Roboto-Regular !important;
+    font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif !important;
 }
 
 .taco-navheader .taco-navheader-toolbar .navheader-action-toolbar .taco-more-action-button.x-btn.x-menu-active .x-btn-arrow-right::after {
@@ -541,7 +541,7 @@
     font-size: 12px !important;
     font-weight: 500;
     line-height: 20px;
-    font-family: Roboto-Regular;
+    font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
     padding: 6px !important;
 }
 
@@ -583,7 +583,7 @@
         padding: 10px 13px;
         color: #3f3f3f;
         background: #260845;
-        font-family: Roboto-Regular;
+        font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
     }
         */
     }
@@ -715,7 +715,7 @@
                 color: $new-theme-button-color !important;
                 font-weight: 600 !important;
                 font-size: 1.5rem !important;
-                font-family: Roboto-Regular;
+                font-family: "Roboto", "Franklin Gothic Medium", Tahoma, sans-serif;
             }
 
             .x-btn-arrow-right::after {

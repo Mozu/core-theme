@@ -6008,6 +6008,8 @@
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-brands-400.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.svg" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.svg" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-regular-400.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -6691,6 +6693,14 @@
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.woff2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.eot" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.ttf" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.woff" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.woff2" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.eot" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.ttf" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff2" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
