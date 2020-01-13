@@ -54,7 +54,7 @@ export class NavigationLeftUserActionComponent implements OnInit {
   }
 
   onClickSwitchAdminButton() {
-    this._cookieService.set('isUnified', 'false');
+    this._cookieService.set('isUnified', 'false', null, '/');
     window.location.reload(true);
   }
 
