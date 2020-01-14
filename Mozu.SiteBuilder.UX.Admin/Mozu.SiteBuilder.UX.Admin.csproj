@@ -2356,6 +2356,50 @@
     <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.woff">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-brands-400.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-brands-400.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-brands-400.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-brands-400.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-regular-400.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-regular-400.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-regular-400.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-regular-400.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.eot">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-solid-900.woff2">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.eot" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.ttf" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.woff" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-duotone-900.woff2" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.eot" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.ttf" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff" />
+    <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff2" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-bold-webfont.svg" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-italic-webfont.svg" />
     <Content Include="Scripts\resources\fonts\myriadwebpro-webfont.svg" />

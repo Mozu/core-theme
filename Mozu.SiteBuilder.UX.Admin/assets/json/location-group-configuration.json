@@ -1,0 +1,67 @@
+{
+    "success": true,
+    "total": 1,
+  "items": {
+    "tenantId": 17450,
+    "siteId": 21576,
+    "locationGroupCode": "TLG245",
+    "locationGroupId": 245,
+    "customerFailedToPickupAfterAction": "CustomerCare",
+    "customerFailedToPickupDeadline": 3,
+    "sendCustomerPickupReminder": 2,
+    "closePickWavePermissions": [],
+    "defaultCarrier": "None",
+    "carriers": [
+      {
+        "carrierType": "FedEx",
+        "isEnabled": true
+      }
+    ],
+    "shippingSettingsForUsps": {
+      "shippingMethods": []
+    },
+    "shippingSettingsForFedEx": {
+      "enableSmartPost": false,
+      "shippingMethods": [
+        "FIRST_OVERNIGHT",
+        "FIRST_OVERNIGHT_SATURDAY_DELIVERY",
+        "PRIORITY_OVERNIGHT",
+        "PRIORITY_OVERNIGHT_SATURDAY_DELIVERY",
+        "STANDARD_OVERNIGHT",
+        "FEDEX_2_DAY_AM",
+        "FEDEX_2_DAY"
+      ],
+      "returnLabelShippingMethod": "FIRST_OVERNIGHT",
+      "standardDefault": "FIRST_OVERNIGHT_SATURDAY_DELIVERY",
+      "express1DayDefault": "FEDEX_2_DAY",
+      "express2DayDefault": "FIRST_OVERNIGHT",
+      "express3DayDefault": "FIRST_OVERNIGHT"
+    },
+    "shippingSettingsForUps": {
+      "unitedStatesUpsSettings": {
+        "shippingMethods": []
+      },
+      "internationalUpsSettings": {
+        "shippingMethods": []
+      },
+      "canadaUpsSettings": {
+        "shippingMethods": []
+      }
+    },
+    "boxTypes": [
+      {
+        "name": "Small Box",
+        "height": 2.0,
+        "width": 2.0,
+        "length": 2.0
+      }
+    ],
+    "attributes": [],
+    "auditInfo": {
+      "updateDate": "2019-08-01T10:50:46.716Z",
+      "createDate": "2019-07-30T11:04:39.326Z",
+      "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+      "createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+    }
+  }
+}
