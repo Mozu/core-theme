@@ -349,6 +349,7 @@
   "paymentType": "Payment Type",
   "paymentTypeMissing": "Please select a payment type",
   "paypalExpress": "PayPal Express",
+  "paypalExpress2": "PayPal Express 2",
   "paypalExpressCancelled": "The Paypal Express transaction was cancelled.  Please select another payment method.",
   "paypalExpressInfo": "When you click 'Next', you will be taken to PayPal to complete your transaction.",
   "paypalExpressSummary": "This transaction will be processed by PayPal Express.",

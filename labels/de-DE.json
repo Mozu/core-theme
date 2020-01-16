@@ -163,6 +163,7 @@
     "paymentType"   : "Zahlungsart",
     "selectPaymentType"   : "Wählen Sie eine Zahlungsart",
     "paypalExpress"   : "PayPal Express",
+    "paypalExpress2": "PayPal Express 2",
     "payPalTagline"   : "Die sicherer, einfacher Weg, um zu bezahlen.",
     "paypalExpressInfo"   : "Wenn Sie auf Weiter klicken, werden Sie zu PayPal getroffen werden, um den Vorgang abzuschließen.",
     "paypalExpressSummary": "Diese Transaktion wird von PayPal Express verarbeitet werden.",

@@ -63,7 +63,8 @@
                         {% if type.grouper == "StoreCredit" %}{{ labels.storeCredit }}{% endif %}
                         {% if type.grouper == "DigitalCredit" %}{{ labels.digitalCredit }}{% endif %}
                         {% if type.grouper == "Paypal" %}{{ labels.payPal }}{% endif %}
-                        {% if type.grouper == "PaypalExpress" %}{{ labels.paypalExpress }}{% endif %}
+                        {% if type.grouper == "PayPalExpress" %}{{ labels.paypalExpress }}{% endif %}
+                        {% if type.grouper == "PayPalExpress2" %}{{ labels.paypalExpress2 }}{% endif %}
                         {% if type.grouper == "PurchaseOrder" %}
                             {% for payment in order.payments %}
                                 {% if payment.status != "Voided" and payment.paymentType == "PurchaseOrder" %}
