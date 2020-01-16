@@ -234,8 +234,11 @@ Ext.define('Taco.view.navigation.GlobalSearchBox', {
     onBeforeselect: function (combo, record, index, eOpts) {
         var sourceRecord = record.data.sourceRecord;
         if (sourceRecord) {
-            // Taco.core.StateManager.attemptNavigate(record.data.ctx +'/' + record.data.controller + '/edit/' + sourceRecord.getId(), { complexMetaData: { record: sourceRecord } });
-            Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.getId());
+            if (record.data.controller == 'customers') {
+                Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.get('id'));
+            } else {
+                Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller + '/edit/' + sourceRecord.getId());
+            }
 
         } else {
             Taco.core.StateManager.attemptNavigate(record.data.ctx + '/' + record.data.controller, {
