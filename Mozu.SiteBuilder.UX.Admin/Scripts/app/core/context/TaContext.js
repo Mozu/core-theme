@@ -26,6 +26,7 @@ Ext.define('Taco.core.context.TaContext', {
 
         me.callParent([config]);
 
+        Taco.core.StateManager.on('beforenavigate', me.onBeforeNavigate, this);
         Taco.core.StateManager.on('navigate', me.onNavigate, this);
         me.init(config);
         Ext.Ajax.on('beforerequest', me.onBeforeAjaxRequest, me);
@@ -122,6 +123,12 @@ Ext.define('Taco.core.context.TaContext', {
             Ext.apply(headers, options.operation.headers);
         }
     },
+    onBeforeNavigate: function (state) {
+        var controller = state.metaData.controller;
+        var action = state.metaData.action;
+        if (controller === 'dashboard' && action === 'index')
+            window.location.href = "/admin";
+    },
     onNavigate: function (state) {
         var ulrToken = state.metaData.ctx,
             recordId = this.getStore().find('urlToken', ulrToken, 0, false, true, true),
@@ -130,7 +137,6 @@ Ext.define('Taco.core.context.TaContext', {
             this.setCurrentContext(record.raw, false);
         }
     },
-
     setCurrentContext: function (cfg, navigate, replaceHistory) {
         var me = this,
             smState = Taco.core.StateManager.getCurrentState(),
