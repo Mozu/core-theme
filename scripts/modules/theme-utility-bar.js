@@ -38,7 +38,7 @@ define(['jquery', 'shim!modules/jquery-simple-datetimepicker[jquery=jquery]>jque
             if (items.length) {
                 selector = '<select id="mz-variation-selector" name="variationSelector" class="mz-variation-selector" data-mz-variations>';
 
-                selector += '<option class="mz-variation-selector-option" value=""' + selected('base') + '>Base Page</option>';
+                selector += '<option class="mz-variation-selector-option" value="base"' + selected('base') + '>Base Page</option>';
 
                 items.forEach(function (item) {
                     if (item.id) {
