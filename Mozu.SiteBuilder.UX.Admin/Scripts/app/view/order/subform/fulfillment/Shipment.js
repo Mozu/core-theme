@@ -28,6 +28,8 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 shipmentTypeDescription = "Ship to Home";
             else if (this.shipmentRecord.shipmentType == "BOPIS")
                 shipmentTypeDescription = "Store Pickup";
+            else if (this.shipmentRecord.shipmentType == "Transfer")
+                shipmentTypeDescription = "Transfer";
         }
 
         this.infoContainer = Ext.widget({
