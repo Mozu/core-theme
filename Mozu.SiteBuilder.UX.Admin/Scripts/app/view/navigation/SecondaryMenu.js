@@ -72,8 +72,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             listeners: {
                 'click': function (button, pressed) {
                     Ext.util.Cookies.set('isUnified', true);
-                    //window.location.reload(true);
-                    window.location.href = '/admin';
+                    window.location.reload(true);
                 }
             }
         }, {
