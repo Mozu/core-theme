@@ -165,6 +165,12 @@
       "title": "Return Has Been Updated"
     },
     {
+      "id": "transfer.created",
+      "properties": {},
+      "template": "email/transfer-shipment-created",
+      "title": "Transfer Shipment Created"
+    },
+    {
       "id": "shipment.fulfilled",
       "properties": {},
       "template": "email/shipment-confirmation",
