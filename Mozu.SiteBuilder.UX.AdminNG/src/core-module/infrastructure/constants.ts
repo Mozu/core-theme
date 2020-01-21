@@ -45,7 +45,9 @@ export class Constants {
     }
 
     static localization = {
-        localizationAccessLink : 'localization'
+        localizationAccessLink : 'localization',
+        multiLang: 'multiLang',
+        multCurrency: 'multCurrency'
     }
 
     static fatalErrorRedirectionUrl =

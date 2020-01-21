@@ -26,6 +26,10 @@ export class UtilityService {
     public siteToken: any;
     public tenantToken: any;
     public contextType: any[] = ['m', 'c', 's', 't'];
+    public isMultiCurrency = false;
+    public isMultiLang = false;
+    public excludeDefaultLocale = false;
+    public excludeDefaultCurrency = false;
 
     constructor(
         private _logger: LoggerService,
@@ -98,13 +102,16 @@ export class UtilityService {
     }
     public filterLinksByBehaviorId = (accessLinks: any, loggedInUsersData: any) => {
         const loggedInUsersBehaviorIds = loggedInUsersData._sharedData.items.ctUser.behaviorIds;
-        accessLinks = this.filterLocalizationLink(accessLinks);
+
         let allFilteredLinks = [];
         let isMenuVisible = false;
-        allFilteredLinks = _.filter(accessLinks, function (v: any) {
+        allFilteredLinks = _.filter(accessLinks, (v: any) => {
             if (v.visible) {
                 if (v.behaviorIds) {
                     isMenuVisible = (loggedInUsersBehaviorIds.includes(v.behaviorIds));
+                } else if (v.id === Constants.localization.localizationAccessLink) {
+                    this.getMultiLangAndCurrencyFlag(loggedInUsersData._sharedData.items.ctTaContext);
+                    isMenuVisible = this.filterLocalizationLink(v);
                 } else {
                     isMenuVisible = true;
                 }
@@ -130,7 +137,54 @@ export class UtilityService {
     }
 
     public filterLocalizationLink = (accessLinks: any) => {
-        return accessLinks.filter(function (v: any) { return (v.id !== Constants.localization.localizationAccessLink); });
+        if (accessLinks.locAtts) {
+            if (accessLinks.locAtts.length === 2 && !( this.isMultiLang ||  this.isMultiCurrency)) {
+                return false;
+            } else if (_.indexOf(accessLinks.locAtts, Constants.localization.multiLang) > -1 && ! this.isMultiLang) {
+                return false;
+            } else if (_.indexOf(accessLinks.locAtts, Constants.localization.multCurrency) > -1 && ! this.isMultiCurrency) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    getMultiLangAndCurrencyFlag = (identityTaContext: any) => {
+        _.forEach(identityTaContext.masterCatalogs, (mCatalog) => {
+            if (this.getSupportedCurrencies(mCatalog, this.excludeDefaultCurrency).length > 1) {
+                this.isMultiCurrency = true;
+            }
+            if (this.getSupportedLocales(mCatalog, this.excludeDefaultLocale).length > 1) {
+                this.isMultiLang = true;
+            }
+        });
+    }
+
+    getSupportedLocales = (masterCatalog: any, excludeDefaultLocale: boolean) => {
+        const distinctLocales = [];
+        const defaultLocale = masterCatalog.localeCode;
+
+        if (!masterCatalog.catalogs) { return distinctLocales; }
+
+        _.forEach(masterCatalog.catalogs, (cat) => {
+            if ( _.indexOf(distinctLocales , cat.localeCode) === -1 && (!excludeDefaultLocale || defaultLocale !== cat.localeCode)) {
+                distinctLocales.push(cat.localeCode);
+            }
+        });
+        return distinctLocales;
+    }
+
+    getSupportedCurrencies = (masterCatalog: any, excludeDefaultCurrency: boolean) => {
+        const distinctCurrencies = [];
+        const defaultCurrencyCode = masterCatalog.currencyCode;
+        if (!masterCatalog.catalogs) { return distinctCurrencies; }
+
+        _.forEach(masterCatalog.catalogs, (cat) => {
+            if ( _.indexOf(distinctCurrencies, cat.currencyCode) === -1 && (!excludeDefaultCurrency || defaultCurrencyCode !== cat.currencyCode)) {
+                distinctCurrencies.push(cat.currencyCode);
+            }
+        });
+        return distinctCurrencies;
     }
 
     public populateSubNavigationLinksbyContextType = (navigationlinks: any, identityTaContext: any) => {

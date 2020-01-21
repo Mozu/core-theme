@@ -576,42 +576,42 @@
         "items": [{
                 "id": "localizationAttrmenu",
                 "label": "Attributes",
+                "contextType": "m",
                 "address": "Localization",
                 "locAtts": ["multiLang"],
-                "visible": true,
-                "url": "http://sb.ngdev06.kibong-dev.com/admin/"
+                "visible": true
             },
             {
                 "id": "localizationAttrValmenu",
                 "label": "Attribute Values",
+                "contextType": "m",
                 "address": "Localization/attributeValues",
                 "locAtts": ["multiLang"],
-                "visible": true,
-                "url": "http://sb.ngdev06.kibong-dev.com/admin/"
+                "visible": true
             },
             {
                 "id": "localizationPropmenu",
                 "label": "Product Properties",
+                "contextType": "m",
                 "address": "Localization/productProperties",
                 "locAtts": ["multiLang"],
-                "visible": true,
-                "url": "http://sb.ngdev06.kibong-dev.com/admin/"
+                "visible": true
             },
             {
                 "id": "localizationExtramenu",
                 "label": "Product Extras",
+                "contextType": "m",
                 "address": "Localization/productExtras",
                 "locAtts": ["multCurrency"],
-                "visible": true,
-                "url": "http://sb.ngdev06.kibong-dev.com/admin/"
+                "visible": true
             },
             {
                 "id": "localizationVarmenu",
                 "label": "Product Variants",
+                "contextType": "m",
                 "address": "Localization/productVariants",
                 "locAtts": ["multCurrency"],
-                "visible": true,
-                "url": "http://sb.ngdev06.kibong-dev.com/admin/"
+                "visible": true
             }
         ]
     }
