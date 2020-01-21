@@ -171,6 +171,12 @@
       "title": "Transfer Shipment Created"
     },
     {
+      "id": "transfer.shipped",
+      "properties": {},
+      "template": "email/transfer-shipment-shipped",
+      "title": "Transfer Shipment Shipped"
+    },
+    {
       "id": "shipment.fulfilled",
       "properties": {},
       "template": "email/shipment-confirmation",
