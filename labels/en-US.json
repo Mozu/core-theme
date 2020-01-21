@@ -532,6 +532,7 @@
   "toggleToMultiShip": "I want to ship to multiple addresses",
   "toggleToSingleShip": "Ship to single address",
   "transferConfirmationBlob1": "Your order #{0} had items not currently available. A transfer shipment has been created, be on the look out for a ready for pickup email. If you would like to view or manage your orders, please visit <a href=\"http://{1}/myaccount\">My Account</a>.",
+  "transferShippedBlob1": "Your transfer shipment for order #{0} has been shipped, be on the look out for a ready for pickup emai.",
   "trackPackage": "Track Package",
   "trackingNumber": "Tracking Number",
   "tuesday": "Tuesday",

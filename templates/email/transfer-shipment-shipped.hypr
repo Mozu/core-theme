@@ -1,0 +1,109 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+    <br>
+    <p>{{ labels.orderWelcome }} {{ model.billingInfo.billingContact.firstName }} {{ model.billingInfo.billingContact.lastNameOrSurname }}!</p>
+    <br>
+    <p>{{ labels.transferShippedBlob1|string_format(model.orderNumber)|safe }}</p>
+
+    <table class="mz-ordersummary">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.storeLocation }}</td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.storeHours }}</font></td>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.pickupDetails }}</font></td>
+            </tr>
+        </thead>
+		<tbody>
+        <tr>
+        <td>{{ model.storeLocation.name }}</td>
+        <td class="mz-ordersummary-regular-hours">
+            {{ labels.sunday }}: 
+            {% if model.storeLocation.regularHours.sunday %}
+                {{ model.storeLocation.regularHours.sunday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.monday }}: 
+            {% if model.storeLocation.regularHours.monday %}
+                {{ model.storeLocation.regularHours.monday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.tuesday }}: 
+            {% if model.storeLocation.regularHours.tuesday %}
+                {{ model.storeLocation.regularHours.tuesday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.wednesday }}: 
+            {% if model.storeLocation.regularHours.wednesday %}
+                {{ model.storeLocation.regularHours.wednesday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.thursday }}: 
+            {% if model.storeLocation.regularHours.thursday %}
+                {{ model.storeLocation.regularHours.thursday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.friday }}: 
+            {% if model.storeLocation.regularHours.friday %}
+                {{ model.storeLocation.regularHours.friday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+            {{ labels.saturday }}: 
+            {% if model.storeLocation.regularHours.saturday %}
+                {{ model.storeLocation.regularHours.saturday.label }}
+            {% else %}
+                {{ labels.noHours }}
+            {% endif %}
+            <br>
+        </td>
+        <td>{{ model.storeLocation.note }}</td>
+        </tr>
+		</tbody>
+    </table>
+    <br>
+
+    <table width="100%" cellpadding="1" cellspacing="1" width="50%">
+        <thead>
+            <tr>
+                <td bgcolor="#666666"><font color="#FFFFFF">{{ labels.item }}</font></td>
+                <td bgcolor="#666666" style="text-align: right;"><font color="#FFFFFF">{{ labels.subtotal }}</font></td>
+            </tr>
+        </thead>
+        
+        {% for item in model.items %}
+			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
+				<td>
+                {{ item.name }}
+                <dl>
+                    <dd>{{ item.productCode }}</dd>&nbsp;
+                </dl>
+                </td>
+                <td align="right"><span class="mz-item-price">{% filter currency %} {{ item.actualPrice|multiply(item.quantity) }} {% endfilter %}</span></td>
+			</tr>
+		{% endfor %}
+    </table>
+
+    {% if model.shopperNotes.comments %}
+        <h5>{{ labels.comments }}</h5>
+        <br><p>{{ model.shopperNotes.comments }}</p>
+    {% endif %}
+
+    {% if model.shopperNotes.giftMessage %}
+        <h5>{{ labels.giftMessage }}</h5>
+        <br><p>{{ model.shopperNotes.giftMessage }}</p>
+    {% endif %}
+
+    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+{% endblock body-content %}
