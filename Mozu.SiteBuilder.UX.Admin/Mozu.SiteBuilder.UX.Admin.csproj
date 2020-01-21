@@ -727,10 +727,12 @@
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
     <Content Include="Scripts\app\model\InventoryExportJob.js" />
+    <Content Include="Scripts\app\model\Owner.js" />
     <Content Include="Scripts\app\model\PaymentSettings.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
     <Content Include="Scripts\app\model\LocationAttribute.js" />
+    <Content Include="Scripts\app\model\Resource.js" />
     <Content Include="Scripts\app\model\ShipmentItem.js" />
     <Content Include="Scripts\app\model\PaymentActionTarget.js" />
     <Content Include="Scripts\app\model\PurchaseOrderPaymentTerms.js" />
@@ -779,6 +781,7 @@
     <Content Include="Scripts\app\model\NavigationItem2.js" />
     <Content Include="Scripts\app\model\HandlingFeeRule.js" />
     <Content Include="Scripts\app\model\ShippingInclusionRule.js" />
+    <Content Include="Scripts\app\model\Tag.js" />
     <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />

@@ -19,6 +19,40 @@ namespace Mozu.SiteBuilder.UX.Models.Users
 
         [DataMember(Name = "isEditable")]
         public bool IsSystemRole { get; set; }
+
+        [DataMember(Name = "owners")]
+        public List<Owner> Owners { get; set; }
+
+        [DataMember(Name = "tags")]
+        public List<string> Tags { get; set; }
+
+        [DataMember(Name = "resources")]
+        public List<Resource> Resources { get; set; }
+    }
+
+    [Flags]
+    public enum OwnerType
+    {
+        Role = 0,
+        User = 1
+    }
+
+    [DataContract]
+    public class Owner : ModelBase
+    {
+        [DataMember(Name = "type")]
+        public OwnerType Type { get; set; }
+        [DataMember(Name = "id")]
+        public string Id { get; set; }
+    }
+
+    [DataContract]
+    public class Resource : ModelBase
+    {
+        [DataMember(Name = "type")]
+        public string Type { get; set; }
+        [DataMember(Name = "id")]
+        public string Id { get; set; }
     }
 
     [DataContract]
