@@ -177,6 +177,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.ShipmentBackorderDateChanged
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentCreated
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.TransferShipmentShipped
                                            }
                 };
         }
@@ -509,7 +519,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     shipmentEmail.StoreLocation = location;
                 }
             }
-            
+               
             if (obj is OrderEmail orderEmail)
             {
                 var locations = orderEmail.Items.Where(x => !string.IsNullOrEmpty(x.FulfillmentLocationCode) && x.FulfillmentMethod == CommerceRuntime.Contracts.Commerce.FulfillmentMethodConst.PICKUP).Select(x => $"code eq {x.FulfillmentLocationCode}");
@@ -555,6 +565,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string OrderPickupReminder = "shipment.pickupreminder";
             //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
+            public const string TransferShipmentCreated = "transfer.created";
+            public const string TransferShipmentShipped = "transfer.shipped";
+
         }
 
 

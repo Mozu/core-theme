@@ -407,6 +407,10 @@
     <EmbeddedResource Include="TestData\shipment.fulfilled\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.backordered\Shipment1.json" />
     <EmbeddedResource Include="TestData\shipment.backorderdatechanged\Shipment1.json" />
+    <EmbeddedResource Include="TestData\transfer.created\Shipment1.json" />
+    <EmbeddedResource Include="TestData\transfer.created\Location1.json" />
+    <EmbeddedResource Include="TestData\transfer.shipped\Shipment1.json" />
+    <EmbeddedResource Include="TestData\transfer.shipped\Location1.json" />
     <None Include="SEO\proto_routeTable" />
     <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>
