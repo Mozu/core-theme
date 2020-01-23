@@ -225,6 +225,9 @@
                     if (editor && !editor.record.get('overridePrice'))
                         editor.record.set('overridePrice', editor.record.get('actualPrice'));
 
+                    if (me.shipmentRecord.shipmentType == "Transfer")
+                        return false;
+
                     if (me.shipmentRecord.shipmentStatus.toLowerCase() == 'ready'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder'
                         || me.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
@@ -471,7 +474,14 @@
             }
         };
 
-        if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
+        if (me.shipmentRecord.shipmentType == "Transfer") {
+            return [
+                manualReassign,
+                autoReassign,
+                actionCancelItem
+            ];
+        }
+        else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             return [
                 manualReassign,
                 autoReassign,

@@ -333,6 +333,7 @@ Ext.define('Taco.core.ux.form.TabFormNew', {
             },
             ui: 'action',
             scale: 'medium',
+            disabled: me.shipmentRecord.shipmentType == "Transfer",
             handler: function (button, event) {
                 me.shipmentTotals.hide(true);
                 me.shipmentTotalsEdit.show(true);
