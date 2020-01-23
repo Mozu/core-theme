@@ -593,6 +593,8 @@ Ext.define('Taco.store.Navigation', {
             'id': 'localization',
             'navParent': 'sys',
             'locAtts': ['multiLang', 'multCurrency'],
+            'menucolor': 'blue',
+            'icon': 'fa-home',
             'label': 'Localization',
             'items': [
                 {

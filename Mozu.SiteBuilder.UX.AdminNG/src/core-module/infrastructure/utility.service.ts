@@ -137,16 +137,17 @@ export class UtilityService {
     }
 
     public filterLocalizationLink = (accessLinks: any) => {
+        let hasLocalizationLinks = false;
         if (accessLinks.locAtts) {
-            if (accessLinks.locAtts.length === 2 && !( this.isMultiLang ||  this.isMultiCurrency)) {
-                return false;
-            } else if (_.indexOf(accessLinks.locAtts, Constants.localization.multiLang) > -1 && ! this.isMultiLang) {
-                return false;
-            } else if (_.indexOf(accessLinks.locAtts, Constants.localization.multCurrency) > -1 && ! this.isMultiCurrency) {
-                return false;
+            if (accessLinks.locAtts.length > 0 && (this.isMultiLang || this.isMultiCurrency)) {
+                hasLocalizationLinks = true;
+                accessLinks.items = _.filter(accessLinks.items, (el: any) => {
+                    return (el.locAtts.includes(Constants.localization.multiLang) && this.isMultiLang) ||
+                    (el.locAtts.includes(Constants.localization.multCurrency) && this.isMultiCurrency);
+                });
             }
         }
-        return true;
+        return hasLocalizationLinks;
     }
 
     getMultiLangAndCurrencyFlag = (identityTaContext: any) => {
