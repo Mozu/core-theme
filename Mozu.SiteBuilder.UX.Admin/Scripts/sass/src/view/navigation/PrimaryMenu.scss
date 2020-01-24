@@ -468,6 +468,11 @@ ul.taco-primary-menu li.color-kibo-purple.active + .x-panel > label.taco-primary
     border-color: $color-kibo-green;
 }*/
 
+.taco-primary-menu-ct .primary-nav-group > .x-box-inner {
+    scrollbar-color: linear-gradient(left, #22ADD4, #1E98BA);
+    scrollbar-width: thin;
+}
+
 .x-panel-body .x-box-inner::-webkit-scrollbar {
     width: 4px;
     margin-right:6px;
