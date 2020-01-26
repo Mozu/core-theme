@@ -221,4 +221,9 @@ export class Constants {
     ];
 
     static advSearchDateFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+
+    static headerOMSOnlyURL = {
+        customerCareUrl: 'https://customer.shopatron.com/customer',
+        fulfillerUrl: 'http://www.shopatron.com/fulfiller'
+    }
 }

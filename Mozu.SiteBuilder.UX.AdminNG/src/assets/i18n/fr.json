@@ -43,6 +43,12 @@
                     "remove": "Remove",
                     "add": "Add"
                 }
+            },
+            "OMSClassic": {
+                "omsclassicapp": "OMS Classic Apps",
+                "customercare": "Customer Care",
+                "fulfiller": "Fulfiller",
+                "orderrouting":"Order Routing"
             }
         },
         "FOOTER": {

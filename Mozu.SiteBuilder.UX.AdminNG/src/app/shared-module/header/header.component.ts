@@ -7,8 +7,10 @@ import {
 import { MenuItem } from 'primeng/api';
 import * as _ from 'lodash';
 import { LoggerService } from '@core';
+import { Constants } from '@shared/infrastructure/constants';
 import {
-    NotificationService
+    NotificationService,
+    SharedDataService
 } from '@global';
 import { HeaderModel } from './header.model';
 import { environment } from '../../../environments/environment.Debug';
@@ -24,13 +26,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     @Input() navigationContainerType: NavigationContainerType;
     public headerModel: HeaderModel;
     public userContextMenuItem: MenuItem;
+    public OMSOnlycustomerCareUrl = Constants.headerOMSOnlyURL.customerCareUrl;
+    public OMSOnlyFulfillerUrl = Constants.headerOMSOnlyURL.fulfillerUrl;
     subscriptions = [];
     mainMenuLinks: MenuItem[];
     dashboardContainer: string;
+    deleteLabel = Constants.gridActionItem.Delete;
 
     constructor(
         private _loggerService: LoggerService,
-        private _notificationService: NotificationService
+        private _notificationService: NotificationService,
+        private _sharedDataService: SharedDataService,
     ) { }
 
     ngOnInit() {
@@ -38,6 +44,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this._loggerService.info('HeaderComponent : ngOnInit');
         this.headerModel = new HeaderModel();
         this.headerModel.homeURL = environment.appUrl;
+        this.headerModel.isOMSEnabledTenant = this._sharedDataService._sharedData.items.ctTaContext.omsEnabled;
+        this.headerModel.isUpgradeOMSClient = this._sharedDataService._sharedData.items.ctTaContext.hasLegacyAdmin;
     }
 
     ngOnDestroy() {

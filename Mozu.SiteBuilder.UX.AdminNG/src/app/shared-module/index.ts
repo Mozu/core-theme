@@ -8,6 +8,8 @@ export * from './spinner/spinner.component';
 
 export * from './header/index';
 
+export * from './header/oms/navigation/index';
+
 export * from './navigation/index';
 
 export * from './access-tile/index';
