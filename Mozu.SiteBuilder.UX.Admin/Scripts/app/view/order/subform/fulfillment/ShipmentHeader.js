@@ -44,12 +44,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                     Ext.widget('button', {
                         itemId: 'cancelOrder',
                         ui: 'action',
-                        hidden: function () {
-                            if (this.record.get('orderStatus') == 'Cancelled' || this.fulfillmentStatus == 'Fulfilled') {
-                                return true;
-                            }
-                            return false;
-                        },
+                        hidden: (this.record.get('orderStatus') == 'Cancelled' || this.record.get('fulfillmentStatus') == 'Fulfilled') ? true : false,
                         disabled: this.record.get('orderStatus') == 'PendingReview' ? true : false,
                         scale: 'medium',
                         text: 'Cancel Order',
