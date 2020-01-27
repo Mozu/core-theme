@@ -15,7 +15,7 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
         var me = this;
         var fulfillmentStatus = this.record.get('fulfillmentStatus');
         fulfillmentStatus = Taco.core.util.Common.camelToSpace(fulfillmentStatus);
-        
+
         this.infoContainer = Ext.widget({
             xtype: 'container',
             cls: 'taco-order-fulfillment-info-header',
@@ -44,7 +44,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentHeader', {
                     Ext.widget('button', {
                         itemId: 'cancelOrder',
                         ui: 'action',
-                        hidden: this.record.get('orderStatus') == 'Cancelled' ? true : false,
+                        hidden: function () {
+                            if (this.record.get('orderStatus') == 'Cancelled' || this.fulfillmentStatus == 'Fulfilled') {
+                                return true;
+                            }
+                            return false;
+                        },
                         disabled: this.record.get('orderStatus') == 'PendingReview' ? true : false,
                         scale: 'medium',
                         text: 'Cancel Order',
