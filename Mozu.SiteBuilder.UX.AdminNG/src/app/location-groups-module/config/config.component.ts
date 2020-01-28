@@ -94,7 +94,17 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedexExpress1Default: ['', []],
             fedexExpress2Default: ['', []],
             fedexExpress3Default: ['', []],
-            fedExReturnLabelShippingTypes: ['', []]
+            fedExReturnLabelShippingTypes: ['', []],
+
+           
+            autoPackingListPopup: ['', []],
+            allowPartialStock: ['', []],
+            defaultMaxNumberOfShipmentsInPickWave: ['', []],
+            displayProductImagesInPickWaveDetails: ['', []],
+            enablePnpForSTH: ['', []],
+            enablePnpForBOPIS: ['', []],
+            allowPartialCancel: ['', []]
+
         });
 
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
@@ -406,6 +416,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsExpress3DayDefault: shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
                 uspsReturnLabelShippingTypes: shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
 
+                autoPackingListPopup: lgConfigModel.autoPackingListPopup === undefined ? false : lgConfigModel.autoPackingListPopup,
+                allowPartialStock: lgConfigModel.allowPartialStock === undefined ? false : lgConfigModel.allowPartialStock,
+                defaultMaxNumberOfShipmentsInPickWave: lgConfigModel.defaultMaxNumberOfShipmentsInPickWave,
+                displayProductImagesInPickWaveDetails: lgConfigModel.displayProductImagesInPickWaveDetails === undefined ? false : lgConfigModel.displayProductImagesInPickWaveDetails,
+                enablePnpForSTH: lgConfigModel.enablePnpForSTH === undefined ? false : lgConfigModel.enablePnpForSTH,
+                enablePnpForBOPIS: lgConfigModel.enablePnpForBOPIS === undefined ? false : lgConfigModel.enablePnpForBOPIS,
+                allowPartialCancel: lgConfigModel.allowPartialCancel === undefined ? false : lgConfigModel.allowPartialCancel,
             });
         }
         this._spinner.stop();
@@ -569,6 +586,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     break;
             }
         });
+
+        lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
+        lgConfigModel.allowPartialStock = lgconfigForm.get(['allowPartialStock']).value;
+        lgConfigModel.defaultMaxNumberOfShipmentsInPickWave = lgconfigForm.get(['defaultMaxNumberOfShipmentsInPickWave']).value;
+        lgConfigModel.displayProductImagesInPickWaveDetails = lgconfigForm.get(['displayProductImagesInPickWaveDetails']).value;
+        lgConfigModel.enablePnpForSTH = lgconfigForm.get(['enablePnpForSTH']).value;
+        lgConfigModel.enablePnpForBOPIS = lgconfigForm.get(['enablePnpForBOPIS']).value;
+        lgConfigModel.allowPartialCancel = lgconfigForm.get(['allowPartialCancel']).value;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;

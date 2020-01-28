@@ -226,3 +226,7 @@ span.error {
 .boxItemMargin {
     margin-left: 35px;
 }
+
+.checkforpicknpack label {
+    padding-right: 5px;
+}

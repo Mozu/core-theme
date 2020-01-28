@@ -81,6 +81,13 @@ export class LocationGroupConfigModel {
         boxTypes: BoxType[];
         attributes: any[];
         auditInfo: AuditInfoModel;
+        autoPackingListPopup: boolean;
+        allowPartialStock: boolean;
+        defaultMaxNumberOfShipmentsInPickWave: number;
+        displayProductImagesInPickWaveDetails: boolean;
+        enablePnpForSTH: boolean;
+        enablePnpForBOPIS: boolean;
+        allowPartialCancel: boolean;
     }
 
 
