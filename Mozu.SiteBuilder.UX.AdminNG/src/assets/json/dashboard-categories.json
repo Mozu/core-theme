@@ -337,63 +337,72 @@
         "tileIcon": "fal fa-cog",
         "tileIconColor": "kibo-green",
         "visible": true,
-        "items": [{
-                "id": "generalsettings",
-                "label": "General",
-                "contextType": "s",
-                "address": "generalsettings",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "paymentgateways",
-                "label": "Payment Gateways",
-                "contextType": "s",
-                "address": "settings/paymentGateways",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "paymenttypes",
-                "label": "Payment Types",
-                "contextType": "c",
-                "address": "settings/paymentTypes",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "discountsettings",
-                "label": "Discount Settings",
-                "contextType": "s",
-                "address": "settings/discounts",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "tax",
-                "label": "Tax",
-                "contextType": "s",
-                "address": "settings/tax",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "shippingMain",
-                "label": "Shipping",
-                "contextType": "s",
-                "address": "shipping",
-                "visible": true,
-                "url": ""
-            },
-            {
-                "id": "publishing",
-                "label": "Publishing",
-                "contextType": "s",
-                "address": "settings/publishing",
-                "visible": true,
-                "url": ""
-            }
-        ]
+      "items": [
+        {
+          "id": "generalsettings",
+          "label": "General",
+          "contextType": "s",
+          "address": "generalsettings",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "paymentgateways",
+          "label": "Payment Gateways",
+          "contextType": "s",
+          "address": "settings/paymentGateways",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "paymenttypes",
+          "label": "Payment Types",
+          "contextType": "c",
+          "address": "settings/paymentTypes",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "inventoryexportjob",
+          "label": "Inventory Settings",
+          "contextType": "s",
+          "address": "settings/inventoryExportJob",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "discountsettings",
+          "label": "Discount Settings",
+          "contextType": "s",
+          "address": "settings/discounts",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "tax",
+          "label": "Tax",
+          "contextType": "s",
+          "address": "settings/tax",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "shippingMain",
+          "label": "Shipping",
+          "contextType": "s",
+          "address": "shipping",
+          "visible": true,
+          "url": ""
+        },
+        {
+          "id": "publishing",
+          "label": "Publishing",
+          "contextType": "s",
+          "address": "settings/publishing",
+          "visible": true,
+          "url": ""
+        }
+      ]
     },
     {
         "id": "schema",

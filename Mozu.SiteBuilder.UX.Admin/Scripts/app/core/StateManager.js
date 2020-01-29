@@ -145,7 +145,8 @@ Ext.define('Taco.core.StateManager', {
             '/redirects',
             '/returns',
             '/settings/discounts',
-            '/synonyms'
+            '/synonyms',
+            '/settings/inventoryexportjob',
         ];
         var NOT_VIEWS =[
             '/customerset',

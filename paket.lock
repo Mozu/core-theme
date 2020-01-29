@@ -135,7 +135,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.BuildSupport.GetAssemblyFileVersionTask (1.0.0)
     Mozu.CommerceRuntime.Contracts (1.1950.0-ngshotContracts-97)
-      Mozu.Core.Extensible.Contractsngshot
+      Mozu.Core.Extensible.Contracts
       Mozu.Core.Prime
       Mozu.PricingRuntime.Contracts
       Mozu.ShippingRuntime.Contracts
@@ -208,7 +208,7 @@ NUGET
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
-    Mozu.SiteSettings.General.Contracts (1.1942.0-gshot-contracts-43)
+    Mozu.SiteSettings.General.Contracts (1.2001.0-gshot-contracts-64)
       Mozu.Core.Prime (>= 1.17)
     Mozu.SiteSettings.Order.Contracts (1.1943.0-gshot-contracts-48)
       Mozu.Core.Prime (>= 1.17)

@@ -204,6 +204,7 @@
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
+    <Compile Include="Api\InventorySettingsController.cs" />
     <Compile Include="Api\ModelMapping\FulfillmentMapping.cs" />
     <Compile Include="Api\Models\Order\ReturnableShipItem.cs" />
     <Compile Include="Api\PaymentHelper.cs" />
@@ -723,6 +724,7 @@
     <Content Include="Scripts\app\data\NavigationTreeNodeReader.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
+    <Content Include="Scripts\app\model\InventoryExportJob.js" />
     <Content Include="Scripts\app\model\PaymentSettings.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
@@ -851,6 +853,7 @@
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\CustomerSet.js" />
+    <Content Include="Scripts\app\store\InventoryExportJob.js" />
     <Content Include="Scripts\app\store\PagedMemoryStore.js" />
     <Content Include="Scripts\app\store\PaymentGateways.js" />
     <Content Include="Scripts\app\store\PinnedProducts.js" />
@@ -1102,6 +1105,8 @@
     <Content Include="Scripts\app\view\order\widget\ReturnInternalNotesGrid.js" />
     <Content Include="Scripts\app\view\role\editModal.js" />
     <Content Include="Scripts\app\view\productRanking\modal\ProductRankingEditor.js" />
+    <Content Include="Scripts\app\view\settings\inventoryExportJob\Edit.js" />
+    <Content Include="Scripts\app\view\settings\inventoryExportJob\Index.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\Index.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\CreditCards.js" />
     <Content Include="Scripts\app\view\settings\paymentGateways\subform\PaymentGateway.js" />

@@ -458,6 +458,11 @@ Ext.define('Taco.store.Navigation', {
                     'address': 'settings/paymentTypes'
                 },
                 {
+                    'id': 'inventoryexportjob',
+                    'label': 'Inventory Settings',
+                    'address': 'settings/inventoryExportJob'
+                },
+                {
                     'id': 'discountsettings',
                     'label': 'Discount Settings',
                     'address': 'settings/discounts'
