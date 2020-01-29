@@ -401,7 +401,7 @@
         "defaultMaxNumberOfShipmentsInPickWave": "Default number of orders in pickwave",
         "displayProductImagesInPickWaveDetails": "Show product images in pickwave details",
         "enablePickandPack": "Enable Pick and Pack",
-        "shiptoHome": "Ship to Home",
+        "shiptoHome": "ShiptoHome",
         "bopis": "BOPIS",
         "allowPartialCancel": "Do not allow partial rejection from Customer Pickup step"
       },
@@ -413,7 +413,8 @@
         "upsSettings": "UPS Settings",
         "fedexSettings": "FedEx Settings",
         "uspsSettings": "USPS Settings",
-        "canadaPostSettings": "Canada Post Settings"
+        "canadaPostSettings": "Canada Post Settings",
+        "otherSettings": "Other Settings"
       }
     }
 }

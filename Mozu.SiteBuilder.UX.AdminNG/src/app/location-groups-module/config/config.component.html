@@ -14,55 +14,7 @@
                     <progress-button (buttonClick)="saveLocationConfig()" class="pull-right" label="{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}"></progress-button>
                 </div>
             </div>
-            <div class="subform">
-                <h4><!--{{'LOCATIONGROUPCONFIG.FormSections.bopis' | translate }}--></h4>
-                <div class="row nomargin">
-                    <div >
-                        <label class="subform-label col-md-4 nopadding">
-                            <input type="checkbox" formControlName="autoPackingListPopup">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.autoPackingListPopup' | translate }}
-                        </label>
-                    </div>
-                    <div >
-                        <label class="subform-label col-md-4 nopadding">
-                            <input type="checkbox" formControlName="allowPartialStock">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.allowPartialStock' | translate }}
-                        </label>
-                    </div>
-                    <div>
-
-                        <div class="subform-label col-md-4 nopadding">
-                            <input class="inputText form-control subform-text" id="defaultMaxNumberOfShipmentsInPickWave" name="defaultMaxNumberOfShipmentsInPickWave" formControlName="defaultMaxNumberOfShipmentsInPickWave" />
-                            <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value === '' || model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value === null,
-										'floating-label-not-empty': model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value !== ''
-										}">{{'LOCATIONGROUPCONFIG.FormLabels.defaultMaxNumberOfShipmentsInPickWave' | translate }}</span>
-                            <hr class="underline-from-left">
-                        </div>
-                    </div>
-                </div>
-                <div class="row nomargin">
-                    <div>
-                        <label class="subform-label col-md-4 nopadding">
-                            <input type="checkbox" formControlName="displayProductImagesInPickWaveDetails">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.displayProductImagesInPickWaveDetails' | translate }}
-                        </label>
-                    </div>
-                    <div class=" col-md-4 checkforpicknpack nopadding">
-                        <div>
-                            {{'LOCATIONGROUPCONFIG.FormLabels.enablePickandPack' | translate }}
-                        </div>
-                        <label class="subform-label ">
-                            <input type="checkbox" formControlName="enablePnpForSTH">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.shiptoHome' | translate }}
-                        </label>
-
-                        <label class="subform-label ">
-                            <input type="checkbox" formControlName="enablePnpForBOPIS">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.bopis' | translate }}
-                        </label>
-                    </div>
-                </div>
-            </div>
+          
             <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.bopis' | translate }}</h4>
                 <div class="row nomargin">
@@ -442,6 +394,55 @@
                                     </option>
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="subform">
+                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.otherSettings' | translate }}</h4>
+                <div class="row nomargin">
+                    <div >
+                        <label class="subform-label col-md-4 nopadding">
+                            <input type="checkbox" formControlName="autoPackingListPopup">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.autoPackingListPopup' | translate }}
+                        </label>
+                    </div>
+                    <div >
+                        <label class="subform-label col-md-4 nopadding">
+                            <input type="checkbox" formControlName="allowPartialStock">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.allowPartialStock' | translate }}
+                        </label>
+                    </div>
+                    <div>
+
+                        <div class="subform-label col-md-4 nopadding">
+                            <input class="inputText form-control subform-text" id="defaultMaxNumberOfShipmentsInPickWave" name="defaultMaxNumberOfShipmentsInPickWave" formControlName="defaultMaxNumberOfShipmentsInPickWave" />
+                            <span [ngClass]="{'floating-label': model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value === '' || model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value === null,
+										'floating-label-not-empty': model.locationGroupConfigForm.get('defaultMaxNumberOfShipmentsInPickWave').value !== ''
+										}">{{'LOCATIONGROUPCONFIG.FormLabels.defaultMaxNumberOfShipmentsInPickWave' | translate }}</span>
+                            <hr class="underline-from-left">
+                        </div>
+                    </div>
+                </div>
+                <div class="row nomargin">
+                    <div>
+                        <label class="subform-label col-md-4 nopadding">
+                            <input type="checkbox" formControlName="displayProductImagesInPickWaveDetails">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.displayProductImagesInPickWaveDetails' | translate }}
+                        </label>
+                    </div>
+                    <div class=" col-md-4 checkforpicknpack nopadding">
+                        <div>
+                            {{'LOCATIONGROUPCONFIG.FormLabels.enablePickandPack' | translate }}
+                        </div>
+                        <div class="subform-label ">
+                            <input type="checkbox" formControlName="enablePnpForSTH">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.shiptoHome' | translate }}
+                        </div>
+
+                        <div class="subform-label ">
+                            <input type="checkbox" formControlName="enablePnpForBOPIS">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.bopis' | translate }}
                         </div>
                     </div>
                 </div>

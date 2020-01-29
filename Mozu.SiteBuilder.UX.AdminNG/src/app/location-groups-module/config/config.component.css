@@ -230,3 +230,7 @@ span.error {
 .checkforpicknpack label {
     padding-right: 5px;
 }
+
+.checkforpicknpack .subform-label {
+    padding-left: 18px;
+}
