@@ -1,6 +1,7 @@
 ﻿/**
  * @class Taco.view.location.inventory.Index
  */
+//uuguy
 Ext.define('Taco.view.location.inventory.Index', {
     extend: 'Taco.core.ux.browser.SearchListPageless',
 
@@ -40,10 +41,13 @@ Ext.define('Taco.view.location.inventory.Index', {
 
     advancedSearchConfig: {
         defaultFieldName: 'productCodeFilter',
-        disableAdvancedSearch: true,
-        advancedFormCls: false,
+        disableAdvancedSearch: false,
+        advancedFormCls: 'Taco.view.location.inventory.AdvancedSearchForm',
         emptySearchText: 'Product Code'
     },
+
+    stateful: true,
+    stateId: 'statefulInventoryGrid',
 
     // optional prevalidation check for row create
     beforeRowCreate: function (editor, store) {
@@ -282,10 +286,13 @@ Ext.define('Taco.view.location.inventory.Index', {
                 {
                     dataIndex: 'productCode',
                     stateId: 'productCode',
-                    flex:1,
+                    flex: 0.7,
                     text: 'Product Code',
                     menuDisabled: true,
+                    //width: 100,
+                    cls: 'inventorygridheader',
                     sortable: false,
+                    hideable: false,
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                         xtype: "taco-productpickerfield",
@@ -301,7 +308,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                             if (!locationFilter) {
                                 return false;
                             }
-                            this.maxWidth = field.column.getWidth();
+                            //this.maxWidth = field.column.getWidth();
                             me.freezeColumns(editor.grid, true);
 
                             var locationCode = locationFilter.value;
@@ -344,6 +351,8 @@ Ext.define('Taco.view.location.inventory.Index', {
                     text: 'Product Code',
                     menuDisabled: true,
                     sortable: false,
+                    hideable: false,
+                    flex: 0.7,
                     editor: {
                         // readonly field for display only. Note: the editor is required to allow for the field to be automatically persisted with the save call;
                         xtype: "displayfield",
@@ -357,6 +366,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     text: 'Product Name',
                     sortable: false,
                     menuDisabled: true,
+                    hideable: false,
                     // product selector
                     editor: {
                         xtype: "taco-productpickerfield",
@@ -419,7 +429,7 @@ Ext.define('Taco.view.location.inventory.Index', {
 
         gridColumns.push({
             xtype: 'taco.menucolumn',
-            menuDisabled: true,
+            //menuDisabled: Taco.tenantSettings.catalogDisabled == true ? false : true,
             menuItems: [
                 {
                     text: 'Remove Inventory',

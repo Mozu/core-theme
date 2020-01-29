@@ -14,6 +14,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
         private const string STOCK_ON_HAND = "stockonhand";
         private const string STOCK_AVAILABLE = "stockavailable";
         private const string STOCK_ON_BACKORDER = "stockonbackorder";
+        private const string SKU = "sku";
+        private const string PARTNUMBER = "mfgPartNumber";
 
         private const string CREATE_DATE_PROPERTY = "createdate"; 
         private const string CREATED_BY_PROPERTY = "createby";
@@ -93,7 +95,10 @@ namespace Mozu.SiteBuilder.UX.Admin.Helpers.LocationInventoryHelpers
                 case "updateby":
                 case "lastmodifiedby":
                     return String.Format("{0} eq \"{1}\"", UPDATE_BY_PROPERTY, filter.value);
-
+                case "sku":
+                    return $"({SKU} eq \"{filter.value}\")";
+                case "mfgpartnumber":
+                    return $"({PARTNUMBER} eq \"{filter.value}\")";
                 default:
                     throw new NotImplementedException("unable to filter on property " + filter.property);
             }

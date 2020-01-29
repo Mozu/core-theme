@@ -108,6 +108,18 @@ Ext.define('Taco.model.LocationInventory', {
         "type": "auto",
         "useNull": true,
         "persist": false
+    },
+    {
+        "name": "sku",
+        "type": "string",
+        "useNull": true,
+        "persist": false
+    },
+    {
+        "name": "mfgPartNumber",
+        "type": "string",
+        "useNull": true,
+        "persist": false
     }
 
     ],
