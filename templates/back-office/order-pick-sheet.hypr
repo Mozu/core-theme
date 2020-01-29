@@ -1,0 +1,8 @@
+﻿{% extends "back-office/base" %}
+{% block body-content %}
+{% for shipment in model %}
+    <div style="page-break-after: always;">
+        {% include "back-office/order-pick-sheet-content" %}
+    </div>
+{% endfor %}
+{% endblock body-content %}

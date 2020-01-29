@@ -233,15 +233,27 @@
       "customEditor": "back-office@mozu"
     },
     {
+      "id": "transfer-packing-slip",
+      "title": "Transfer Packing Slip",
+      "template": "back-office/transfer-packing-slip",
+      "customEditor": "back-office@mozu"
+    },
+    {
       "id": "pick-list",
       "title": "Pick List",
       "template": "back-office/pick-list",
       "customEditor": "back-office@mozu"
     },
     {
-      "id": "transfer-packing-slip",
-      "title": "Transfer Packing Slip",
-      "template": "back-office/transfer-packing-slip",
+      "id": "order-pick-sheet",
+      "title": "Order Pick Sheet",
+      "template": "back-office/order-pick-sheet",
+      "customEditor": "back-office@mozu"
+    },
+    {
+      "id": "pick-wave-print",
+      "title": "Pick Wave Print",
+      "template": "back-office/pick-wave-print",
       "customEditor": "back-office@mozu"
     }
   ],
