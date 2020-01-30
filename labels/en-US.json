@@ -471,6 +471,8 @@
   "shipTo": "Ship To",
   "shipped": "Shipped",
   "shippedTo": "Shipped to",
+  "shipmentAssignmentBlob1": "Order #{0} is ready to fulfill.",
+  "shipmentAssignmentBlob2": "Please <a href=\"http://{0}/myaccount\">log in</a> to process this order.",
   "shipmentConfirmationBlob1": "Good news, part of your order has been shipped. Please note that your items may be shipped in seperate boxes, and you will receive another email for any remaining items that need to be shipped.",
   "shipmentConfirmationBlob2": "If your order includes a pre-ordered item, visit the website to view its expected release date. We will send an email when the items is available. Your order may be shipped to you by {0} or by an authorized retailer.",
   "shippingContact": "Shipping Contact",

@@ -217,6 +217,12 @@
       "properties": {},
       "template": "email/giftcard-created",
       "title": "Gift Card Created"
+    },
+    {
+      "id": "shipment.assigned",
+      "properties": {},
+      "template": "email/shipment-assignment",
+      "title": "Shipment Assignment"
     }
   ],
   "backOfficeTemplates": [
