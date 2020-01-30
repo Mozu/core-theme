@@ -1,0 +1,64 @@
+﻿<table class="mz-printable-order mz-printable-order-packingslip">
+<thead class="header"><tr>
+    <th class="company-info">
+        <div class="company-name">Order Pick Sheet</div>
+    </th>
+    <th class="company-info">
+        <div class="company-name">{{ customContent.companyName }}</div>
+        <div class="company-contacts">{{ customContent.companyAddress }}</div>
+        <div class="company-url">{{ customContent.websiteUrl }}</div>
+    </th>
+    <th class="order-essentials">
+        <div class="order-number"><span class="label">Order #</span><span>{{ shipment.orderNumber }}</span></div>
+        <div class="order-number"><span class="label">Pick Wave #</span><span>{{ pickwave.pickWaveId }}</span></div>
+        <div class="order-date"><span class="label">Date: </span><span>{{ shipment.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
+    </th>
+</tr></thead>
+
+
+<tbody><tr><td colspan="4">
+    <table class="grid">
+        <thead><tr>
+            <th>Image</th>
+            <th>Part#</th>
+            <th>UPC</th>
+            <th>SKU</th>
+            <th>Product Name</th>
+            <th>Order#s</th>
+            <th>Qty Needed</th>
+            <th>Qty Picked</th>
+        </tr></thead>
+        <tbody>
+                
+          {% for item in shipment.items %}
+             <tr>
+                  <td>
+                      <img style="height: 100px;" src="{{ item.imageUrl }}">
+                  </td>
+                  <td>
+                      {{ item.partNumber }}
+                  </td>
+                  <td>
+                      {{ item.upc }}
+                  </td>
+                  <td>
+                      {{ item.sku }}
+                  </td>
+                  <td>
+                      <div class="product-name">{{ item.name }}</div>
+                  </td>
+                  <td>
+                      {{ item.orderNumber }}
+                  </td>
+                  <td>
+                      {{ item.quantity }}
+                  </td>
+                  <td>
+                      {{ item.actualQuantity }}
+                  </td>
+              </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+</td></tr></tbody>
+</table>

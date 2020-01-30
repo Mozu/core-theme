@@ -1,0 +1,18 @@
+﻿{% block body-content %}
+    {% if printPickwave %}
+        <div>{% include "back-office/pick-list" %}</div>
+        <br>
+    {% endif %}
+    {% for order in orders %}
+        {% for shipment in order.shipments %}
+            {% if printPackingSlips %}
+                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment %}</div>
+                <br>
+            {% endif %}
+            {% if printPickSheets %}
+                <div style="page-break-before: always;">{% include "back-office/order-pick-sheet-content" with model=shipment pickwave=model %}</div>
+                <br>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endblock body-content %}
