@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                     else
                         allCollections.Items.AddRange(locations.Items);
                     pagingParams.startIndex = pagingParams.startIndex + pagingParams.pageSize;
-                } while (pagingParams.startIndex <= locations.PageCount);
+                } while (pagingParams.startIndex < locations.TotalCount);
             }
 
             // default RegularHours to an object for pass through.
