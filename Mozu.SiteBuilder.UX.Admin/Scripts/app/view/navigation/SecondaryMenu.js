@@ -72,6 +72,7 @@ Ext.define('Taco.view.navigation.SecondaryMenu', {
             listeners: {
                 'click': function (button, pressed) {
                     Ext.util.Cookies.set('isUnified', false);
+                    Ext.util.Cookies.set('isUnifiedState', true);
                     window.location.reload(true);
                 }
             }
