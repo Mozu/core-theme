@@ -8,7 +8,8 @@ export class Constants {
         shop: 'shop',
         cart: 'cart',
         quotes: 'quotes',
-        locationGroups: 'locationGroups'
+        locationGroups: 'locationGroups',
+        admin : 'admin'
     };
 
     static businessExceptions = {

@@ -25,9 +25,13 @@ export class AuthGuardService implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+        this._logger.info('AuthGuard : canActivate');
         const url: string = state.url;
 
-        this._logger.info('AuthGuard : canActivate');
+        if (url.toLowerCase() === '/' + Constants.uiRoutes.admin){
+            this._router.navigate(['']);
+            return false;
+        }
 
         this.throwBusinessErrors(url);
 
