@@ -230,15 +230,16 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     showBorder: true,
                     forceSelection: true,
                     store: this.getResolutionStore(),
+                    emptyText:'Select'
                 },
-                renderer: function (value) {
+                /*renderer: function (value) {
                     if (Taco.tenantSettings.catalogDisabled) {
                         return 'Refund';
                     }
                     else {
                         return 'Select';
                     }
-                }
+                }*/
             },
             {
                 dataIndex: 'quantity',
