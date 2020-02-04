@@ -154,11 +154,7 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
         var me = this,
             configuredRatesMenuData = [],
             customConfiguredRatesMenuData = [],
-            rateProviders = {
-                fedex: [],
-                usps: [],
-                ups: []
-            },
+            rateProviders = {}, // Will add providers dynamically
             store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingMethods');
 
         me.configuredRatesMenuData = configuredRatesMenuData;
@@ -183,13 +179,19 @@ Ext.define('Taco.view.order.widget.ShippingMethodMenu', {
                         // tack on the text "configured" to the text description only in the secondary flyout menus
                         itemConfig.text += " (Configured)";
                     }
+
+                    // Dynamically add the rate provider entries
+                    if (!rateProviders.hasOwnProperty(itemConfig.rateProvider)) {
+                        rateProviders[itemConfig.rateProvider] = [];
+                    }
+
                     // populate secondary flyouts
-                    rateProviders[itemConfig.rateProvider].push(itemConfig)
+                    var provider = rateProviders[itemConfig.rateProvider];
+                    provider.push(itemConfig);
                 }
             });
         }
     },
-
 
     getShippingRatesMenu: function () {
         var me = this,

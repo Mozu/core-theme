@@ -48,6 +48,7 @@ Ext.define('Taco.view.settings.shipping.AdvancedSearchForm', {
                                  fields: ['id', 'value'],
                                  data: [
                                      //{ "id": '', value: '' },
+                                     { "id": "canadapost", "value": "CanadaPost" },
                                      { "id": "fedex", "value": "FedEx" },
                                      { "id": "ups", "value": "UPS" },
                                      { "id": "usps", "value": "USPS" }                                    

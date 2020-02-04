@@ -34,9 +34,9 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
             this.setUspsColumnConfig();
         }
 
-        //if (me.record.data.carrierId === "canadapost") {
-        //    this.setCanadaPostColumnConfig()
-        //}
+        if (me.record.data.carrierId === "canadapost") {
+            this.setCanadaPostColumnConfig()
+        }
        
         me.callParent(arguments);
     },
@@ -253,62 +253,62 @@ Ext.define('Taco.view.settings.shipping.EditCarrierAccount', {
         }
     },
 
-    //setCanadaPostColumnConfig: function () {
-    //    var me = this;
-    //    var getValues = me.convertKeyValueToObject();
-    //    this.formCfg = {
-    //        xtype: 'formform',
-    //        // flex: 1,
-    //        layout: {
-    //            type: 'vbox',
-    //            align: 'stretch'
+    setCanadaPostColumnConfig: function () {
+        var me = this;
+        var getValues = me.convertKeyValueToObject();
+        this.formCfg = {
+            xtype: 'formform',
+            // flex: 1,
+            layout: {
+                type: 'vbox',
+                align: 'stretch'
 
-    //        },
-    //        title: this.title,
-    //        items: [
-    //            {
-    //                xtype: 'textfield',
-    //                fieldLabel: 'Nickname',
-    //                name: 'name',
-    //                allowBlank: false,
-    //                maxWidth: 300,
-    //                margin: "0 0 0 30",
-    //                value: me.record.get('name'),
-    //                inputType: 'text'
-    //            },
-    //            {
-    //                xtype: 'textfield',
-    //                name: 'canadapostapikey',
-    //                maxWidth: 300,
-    //                value: getValues.canadapostapikey,
-    //                margin: "0 0 0 30",
-    //                fieldLabel: 'CanadaPost API Key'
+            },
+            title: this.title,
+            items: [
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Nickname',
+                    name: 'name',
+                    allowBlank: false,
+                    maxWidth: 300,
+                    margin: "0 0 0 30",
+                    value: me.record.get('name'),
+                    inputType: 'text'
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'canadapostapikey',
+                    maxWidth: 300,
+                    value: getValues.canadapostapikey,
+                    margin: "0 0 0 30",
+                    fieldLabel: 'CanadaPost API Key'
 
-    //            },
+                },
 
-    //            {
-    //                xtype: 'textfield',
-    //                name: 'contractid',
-    //                fieldLabel: 'Contract ID',
-    //                maxWidth: 300,
-    //                value: getValues.contractid,
-    //                margin: "0 0 0 30",
+                {
+                    xtype: 'textfield',
+                    name: 'contractid',
+                    fieldLabel: 'Contract ID',
+                    maxWidth: 300,
+                    value: getValues.contractid,
+                    margin: "0 0 0 30",
 
 
 
-    //            },
-    //            {
-    //                xtype: 'textfield',
-    //                name: 'accountnumber',
-    //                fieldLabel: 'Customer Number',
-    //                maxWidth: 300,
-    //                value: getValues.accountnumber,
-    //                margin: "0 0 0 30",
-    //            },
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'accountnumber',
+                    fieldLabel: 'Customer Number',
+                    maxWidth: 300,
+                    value: getValues.accountnumber,
+                    margin: "0 0 0 30",
+                },
 
-    //        ]
-    //    }
-    // },
+            ]
+        }
+     },
 
     getCarrierAccountDetails: function () {
         var me = this;

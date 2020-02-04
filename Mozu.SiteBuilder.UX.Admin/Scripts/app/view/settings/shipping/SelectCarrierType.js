@@ -28,6 +28,7 @@
                 store: Ext.create('Ext.data.Store', {
                     fields: ['id', 'name'],
                     data: [
+                        { "id": "canadapost", "name": "CanadaPost" },
                         { "id": "fedex", "name": "FedEx" },
                         { "id": "ups", "name": "UPS" },
                         { "id": "usps", "name": "USPS" }

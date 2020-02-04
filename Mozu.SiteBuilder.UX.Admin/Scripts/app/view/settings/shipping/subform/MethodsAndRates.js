@@ -24,7 +24,6 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         var me = this;
         
         store = Taco.core.data.StoreManager.getOrCreate('Taco.store.ShippingCarrierSettings');
-        //carrierAccountStore = Taco.core.data.StoreManager.getOrCreate('Taco.store.CarrierCredentials');
         carrierAccountStore = Ext.create('Taco.store.CarrierCredentials');
         carrierAccountStore.proxy.extraParams = { siteId: Taco.app.context.getSiteId() }
 
@@ -399,58 +398,117 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
                 uspsCombo
             ]
         });
-
-
         this.uspsStore.load({
-            callback: function() { uspsCombo.setValue(setUspsValue) }
+            callback: function () { uspsCombo.setValue(setUspsValue) }
         });
 
-        //TODO:-We can add this code once CanadaPost changes add in Dev01 branch
-        //this.uspsStore = Ext.create('Taco.store.Carriertypes', {
-        //    storeId: 'canadapoststoreid',
-        //    autoLoad: true
-        //});
-        //this.uspsStore.proxy.extraParams = { carrierId: 'canadapost' }
-        //this.canadaPost = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
-        //    record: store.getById('canadapost'),
-        //    title: 'Canada Post',
-        //    providerId: 'canadapost',
-        //    configureCopy: '<img src="https://www.canadapost.ca/cpc/assets/cpc/uploads/logos/aboutus/cpc-main-logo.svg"/> <div>Please provide your Canada Post account credentials.</div>',
-        //    ratesCopy: '<img src="https://www.canadapost.ca/cpc/assets/cpc/uploads/logos/aboutus/cpc-main-logo.svg"/> <div>Please provide your Canada Post account credentials.</div>',
-        //    stateStore: stateStore,
-        //    customFileds: [
 
 
-        //        {
-        //            xtype: 'selectfield',
-        //            // name: 'name',
-        //            record: carrierAccountStore.getById('canadapost'),
-        //            fieldLabel: 'Carrier Account',
-        //            valueField: 'code',
-        //            displayField: 'name',
-        //            pageSize: 25,
-        //            //value: '',
-        //            allowBlank: true,
-        //            store: Ext.data.StoreManager.lookup('canadapoststoreid'),
-        //            listeners: {
-        //                scope: this,
-        //                afterRender: function (me) {
-        //                    var getRecord = carrierAccountStore.getById('canadapost');
-        //                    if (getRecord) {
-        //                        me.setValue(getRecord.get('code'));
-        //                    }
-        //                    else {
-        //                        me.setValue('0');
-        //                    }
-        //                }
-        //            },
-        //            //  renderTo: Ext.getBody()
-        //        }
-        
-        //    ]
-        //});
 
-        this.tabs.add([this.fedex, this.UPS, this.USPS]);
+
+        this.canadapostStore = Ext.create('Ext.data.Store', {
+            model: 'Taco.model.CarrierAccountList',
+            idProperty: 'code',
+            storeId: 'canadapoststoreid',
+            remoteFilter: true,
+            remoteSort: false,
+            pageSize: 15,
+            storeManagerConfig: {
+                clearFilters: true,
+                clearSort: true,
+                autoLoad: true
+            },
+            proxy: {
+                type: 'ajax',
+                api: {
+                    read: '/admin/app/carriers/credentialsset/List?carrierId=canadapost',
+                },
+                reader: {
+                    type: 'json',
+                    root: 'items',
+                    successProperty: 'success',
+                    messageProperty: "message"
+                },
+                writer: {
+                    allowSingle: false,
+                    type: 'json'
+                }
+            }
+        });
+
+        var canadapostCombo = Ext.create('widget.combo', {
+            xtype: 'combo',
+            name: 'name',
+            editable: true,
+            record: carrierAccountStore.getById('canadapost'),
+            fieldLabel: 'Carrier Account',
+            valueField: 'code',
+            displayField: 'name',
+            pageSize: 15,
+            forceSelection: true,
+            queryMode: 'remote',
+            allowBlank: true,
+            store: this.canadapostStore,
+            setValue: function (value, doSelect) {
+                var copyArgs = arguments;
+
+                var selectedValue = typeof (value) === 'object' ? value[0].get('code') : value
+                if (selectedValue && !this.store.findRecord('code', selectedValue)) {
+                    this.store.model.setProxy({
+                        type: 'ajaxproxy',
+
+                        api: {
+                            read: '/admin/app/carriers/credentialsset/List?carrierId=canadapost',
+                        },
+                        reader: {
+                            type: 'json',
+                            root: 'items',
+                            successProperty: 'success',
+                            messageProperty: "message"
+                        },
+
+                        writer: {
+                            allowSingle: true,
+                            type: 'json'
+                        }
+                    }),
+
+                        this.store.model.load(selectedValue, {
+                            scope: this,
+                            success: function (record, operation) {
+                                this.store.add(record);
+                                this.setValue.apply(this, [selectedValue]);
+                            }
+                        });
+                } else if (selectedValue) {
+                    this.__proto__.setValue.apply(this, [selectedValue])
+                }
+            },
+        });
+
+        var getRecord = carrierAccountStore.getById('canadapost');
+        var setcanadapostValue = "0"
+        if (getRecord) {
+            setcanadapostValue = getRecord.get('code')
+        }
+
+        this.canadaPost = Ext.create('Taco.view.settings.shipping.subform.ShippingProvider', {
+            record: store.getById('canadapost'),
+            title: 'Canada Post',
+            providerId: 'canadapost',
+            configureCopy: '<img src="https://www.canadapost.ca/cpc/assets/cpc/uploads/logos/aboutus/cpc-main-logo.svg"/> <div>Please provide your Canada Post account credentials.</div>',
+            ratesCopy: '<img src="https://www.canadapost.ca/cpc/assets/cpc/uploads/logos/aboutus/cpc-main-logo.svg"/> <div>Please provide your Canada Post account credentials.</div>',
+            stateStore: stateStore,
+            customFileds: [
+               canadapostCombo        
+            ]
+        });
+
+        this.canadapostStore.load({
+            callback: function () { canadapostCombo.setValue(setcanadapostValue) }
+        });
+       
+        this.tabs.add([this.fedex, this.UPS, this.USPS, this.canadaPost]);
 
 
     },
@@ -460,6 +518,6 @@ Ext.define('Taco.view.settings.shipping.subform.MethodsAndRates', {
         me.fedex.record.data.areCredentialsSet = !(me.fedex.record.data.settings.apipassword === null || me.fedex.record.data.settings.apipassword === '');
         me.UPS.record.data.areCredentialsSet = !(me.UPS.record.data.settings.apipassword === null || me.UPS.record.data.settings.apipassword === '');
         me.USPS.record.data.areCredentialsSet = !(me.USPS.record.data.settings.apipassword === null || me.USPS.record.data.settings.apipassword === '');
-      //  me.canadaPost.record.data.areCredentialsSet = !(me.canadaPost.record.data.settings.apipassword === null || me.canadaPost.record.data.settings.apipassword === '');
+        me.canadaPost.record.data.areCredentialsSet = !(me.canadaPost.record.data.settings.apipassword === null || me.canadaPost.record.data.settings.apipassword === '');
     }
 });

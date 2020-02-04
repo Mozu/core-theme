@@ -24,9 +24,9 @@
         if (me.record.get('carrierId') === "usps") {
             this.getUspsColumnConfig();
         }
-        //if (me.record.get('carrierId') === "canadapost") {
-        //    this.getCanadaPostColumnConfig();
-        //}
+        if (me.record.get('carrierId') === "canadapost") {
+            this.getCanadaPostColumnConfig();
+        }
 
         me.callParent(arguments);
     },
@@ -210,45 +210,45 @@
 
     },
 
-    //getCanadaPostColumnConfig: function () {
-    //    var me = this;
-    //    var settingName = Ext.widget(
-    //        {
-    //            xtype: 'textfield',
-    //            allowBlank: false,
-    //            fieldLabel: 'Nickname',
-    //            name: 'name',
-    //            width: 300,
-    //            margin: "0 0 0 30",
-    //            inputType: 'text'
-    //        });
-    //    me.items.push(settingName);
-    //    var settingName = Ext.widget({
-    //        xtype: 'textfield',
-    //        name: 'canadapostapikey',
-    //        width: 300,
-    //        margin: "0 0 0 30",
-    //        fieldLabel: 'CanadaPost API Key'
+    getCanadaPostColumnConfig: function () {
+        var me = this;
+        var settingName = Ext.widget(
+            {
+                xtype: 'textfield',
+                allowBlank: false,
+                fieldLabel: 'Nickname',
+                name: 'name',
+                width: 300,
+                margin: "0 0 0 30",
+                inputType: 'text'
+            });
+        me.items.push(settingName);
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'canadapostapikey',
+            width: 300,
+            margin: "0 0 0 30",
+            fieldLabel: 'CanadaPost API Key'
 
-    //    });
-    //    me.items.push(settingName);
-    //    var settingName = Ext.widget({
-    //        xtype: 'textfield',
-    //        name: 'contractid',
-    //        fieldLabel: 'Contract ID',
-    //        width: 300,
-    //        margin: "0 0 0 30",
-    //    });
-    //    me.items.push(settingName);
-    //    var settingName = Ext.widget({
-    //        xtype: 'textfield',
-    //        name: 'accountnumber',
-    //        fieldLabel: 'Customer Number',
-    //        width: 300,
-    //        margin: "0 0 0 30",
-    //    });
-    //    me.items.push(settingName);
+        });
+        me.items.push(settingName);
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'contractid',
+            fieldLabel: 'Contract ID',
+            width: 300,
+            margin: "0 0 0 30",
+        });
+        me.items.push(settingName);
+        var settingName = Ext.widget({
+            xtype: 'textfield',
+            name: 'accountnumber',
+            fieldLabel: 'Customer Number',
+            width: 300,
+            margin: "0 0 0 30",
+        });
+        me.items.push(settingName);
 
-    //},
+    },
    
 });
