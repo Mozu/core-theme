@@ -224,12 +224,17 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 menuDisabled: true,
                 width: 100,
                 editor: {
-                    xtype: 'combobox',
+                    xtype: 'selectfield',
                     queryMode: 'local',
                     allowOnlyWhitespace: false,
                     showBorder: true,
-                    forceSelection: true,
-                    store: (Taco.tenantSettings.catalogDisabled) ? ["Refund"] : ["Refund", "Replace"]
+                    forceSelection: true,   
+                    store: (Taco.tenantSettings.catalogDisabled) ? ['Refund'] : ['Refund','Replace']
+                },
+                renderer: function (value) {
+                    if (Taco.tenantSettings.catalogDisabled) {
+                        return 'Refund';
+                    }
                 }
             },
             {

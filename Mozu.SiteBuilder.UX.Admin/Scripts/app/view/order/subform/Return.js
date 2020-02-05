@@ -258,6 +258,8 @@ Ext.define('Taco.view.order.subform.Return', {
         var returnsStore = this.getReturnsStore();
         var erroredReturns = [],
             selected = this.returnableItems.getSelectionModel().getSelection();
+        if (Taco.tenantSettings.catalogDisabled)
+            selected[0].data.returnType = "Refund"
 
         if (selected.length === 0) {
             this.returnableItemsErrorEl.setError('Please select items to return.');
@@ -287,7 +289,7 @@ Ext.define('Taco.view.order.subform.Return', {
             this.returnableItemsErrorEl.setError('Please choose a return reason.');
             return;
         }
-
+  
         erroredReturns = Ext.Array.filter(selected, function(item) { return item.get('returnType') === 'Select'; });
         if (erroredReturns.length > 0) {
             this.returnableItemsErrorEl.setError('Please choose a return resolution.');
