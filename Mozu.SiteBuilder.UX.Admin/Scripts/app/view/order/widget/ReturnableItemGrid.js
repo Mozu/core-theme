@@ -224,7 +224,7 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                 menuDisabled: true,
                 width: 100,
                 editor: {
-                    xtype: 'selectfield',
+                    xtype: 'combo',
                     queryMode: 'local',
                     allowOnlyWhitespace: false,
                     showBorder: true,
