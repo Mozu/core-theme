@@ -22,7 +22,6 @@ Ext.define('Taco.view.settings.inventoryExportJob.Index', {
 
     initComponent: function () {
         var me = this;
-        Taco.core.StateManager.attemptNavigate(me.createRoute);
         me.callParent(arguments);
 
     },
