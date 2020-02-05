@@ -787,6 +787,7 @@
     <Content Include="Scripts\app\model\RedirectEntry.js" />
     <Content Include="Scripts\app\model\Provisionable.js" />
     <Content Include="Scripts\app\model\StoreCredit.js" />
+    <Content Include="Scripts\app\model\TransferShipmentTree.js" />
     <Content Include="Scripts\app\model\WishlistItem.js" />
     <Content Include="Scripts\app\model\Country.js" />
     <Content Include="Scripts\app\model\CustomerAttribute.js" />
@@ -984,6 +985,7 @@
     <Content Include="Scripts\app\view\order\modal\ManualDeclinePayment.js" />
     <Content Include="Scripts\app\view\order\Storefront.js" />
     <Content Include="Scripts\app\view\order\subform\FulfillmentNew.js" />
+    <Content Include="Scripts\app\view\order\subform\fulfillment\TransfersTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\CancellationTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\TrackingNumberTab.js" />
     <Content Include="Scripts\app\view\order\subform\fulfillment\ShippedFromTab.js" />
@@ -998,6 +1000,7 @@
     <Content Include="Scripts\app\view\order\widget\ShipmentTotalPanel.js" />
     <Content Include="Scripts\app\view\order\widget\PriceListPickerField.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingCancellationGrid.js" />
+    <Content Include="Scripts\app\view\order\widget\TransferShipmentGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ShippingPackagesGrid.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnableItemTree.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnReplacementGrid.js" />

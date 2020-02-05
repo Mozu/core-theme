@@ -11,6 +11,8 @@ Ext.define('Taco.view.order.subform.fulfillment.ShippedFromTab', {
                 shipmentTypeDescription = "Shipped From";
             else if (this.shipmentRecord.shipmentType == "BOPIS")
                 shipmentTypeDescription = "Pickup From";
+            else if (this.shipmentRecord.shipmentType == "Transfer")
+                shipmentTypeDescription = "Transfer From";
         }
 
         if (this.shipmentRecord.location && this.shipmentRecord.location.displayName) {

@@ -89,7 +89,12 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
                 }
             }));
         }
-        
+        if (this.shipmentRecord.shipmentType == "BOPIS" && this.shipmentRecord.transferShipmentNumbers.length > 0) {
+            items.push(Ext.create('Taco.view.order.subform.fulfillment.TransfersTab', {
+                record: this.record,
+                shipmentRecord: this.shipmentRecord
+            }));
+        }
         if (this.shipmentRecord.canceledItems && this.shipmentRecord.canceledItems.length > 0) {
             items.push(Ext.create('Taco.view.order.subform.fulfillment.CancellationTab', {
                 record: this.record,

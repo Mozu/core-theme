@@ -122,7 +122,7 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
     renderShipments: function (shipments) {
         var me = this;
         for (var shipmentCount = 0; shipmentCount < shipments.length; shipmentCount++) {
-            me.add(Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
+            var shipmentCard = Ext.create('Taco.view.order.subform.fulfillment.Shipment', {
                 record: me.record,
                 shipmentRecord: shipments[shipmentCount],
                 listeners: {
@@ -130,7 +130,16 @@ Ext.define('Taco.view.order.subform.FulfillmentNew', {
                         me.shipmentRefresh();
                     }
                 }
-            }));
+            });
+            me.add(shipmentCard);
+            this.setShipmentCardId(shipments[shipmentCount].number, shipmentCard.getId());
+        }
+    },
+
+    setShipmentCardId: function (shipmentNumber, extId) {
+        for (var count = 0; count < this.record.data.shipments.length; count++) {
+            if (this.record.data.shipments[count].number == shipmentNumber)
+                this.record.data.shipments[count].shipmentCardId = extId;
         }
     },
 

@@ -62,6 +62,14 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                     },
                     {
                         cls: 'taco-shipment-item-header',
+                        hidden: this.shipmentRecord.shipmentType != "Transfer",
+                        tpl: [
+                            '<span class="label">Parent Shipment No</span>',
+                            '<div class="labelvalue">' + this.shipmentRecord.parentShipmentNumber + '</div>'
+                        ]
+                    },
+                    {
+                        cls: 'taco-shipment-item-header',
                         hidden: this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder',
                         tpl: [
                             '<span class="label">Last Updated</span>',

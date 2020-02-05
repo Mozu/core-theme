@@ -159,8 +159,42 @@
     border: 1px solid #e9e9e9;
 }
 
+.shipment-transfer-grid .x-grid-cell-inner {
+    font-size: 14px !important;
+}
+
 .shipping-packages-grid .x-grid-header-ct {
     background-color: #f7f7f7 !important;
+}
+
+.shipment-transfer-grid .x-column-header {
+    background-color: #f7f7f7 !important;
+    color: #7c7c7c !important;
+}
+
+.shipment-transfer-grid .x-column-header-last .x-column-header-trigger {
+    display:none !important;
+}
+
+.shipment-transfer-grid .x-grid-tree-node-leaf {
+    background-color: white !important;
+    font-size: 12px !important;
+}
+
+.shipment-transfer-grid .x-grid-tree-node-leaf .x-grid-cell-inner {
+    font-size: 12px !important;
+}
+
+/*.shipment-transfer-grid .x-grid-tree-node-leaf .x-grid-cell-inner {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}*/
+.shipment-transfer-grid .x-grid-tree-node-leaf:hover {
+    background-color: white !important;
+}
+
+.shipment-transfer-grid .x-panel.taco-order-fulfillment-ShipmentDetails .x-panel-subform {
+    padding-bottom:0px !important;
 }
 
 .taco-order-fulfillment-shipments .label {
