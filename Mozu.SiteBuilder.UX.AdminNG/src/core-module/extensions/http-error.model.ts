@@ -40,7 +40,9 @@ export enum ErrorCode {
     EmptyDefaultPrintType= <any> 'EmptyDefaultPrintType',
     EmptyUPSUsShippingTypes= <any> 'EmptyUPSUsShippingTypes',
     EmptyFedExShippingTypes= <any> 'EmptyFedExShippingTypes',
-    EmptyUSPSShippingTypes= <any> 'EmptyUSPSShippingTypes',
+    EmptyUSPSShippingTypes = <any>'EmptyUSPSShippingTypes',
+    NonIntCustomerFailedToPickupDeadline = <any>'NonIntCustomerFailedToPickupDeadline',
+    NonIntDefaultMaxNumberOfShipmentsInPickWave = <any>'NonIntDefaultMaxNumberOfShipmentsInPickWave'
 }
 
 export enum ToastrCode {

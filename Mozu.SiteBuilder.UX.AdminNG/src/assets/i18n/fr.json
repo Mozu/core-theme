@@ -181,7 +181,9 @@
             "EmptyDefaultPrintType": "Please select Default Printer Type",
             "EmptyUPSUsShippingTypes": "Please select at least one UPS US Shipping Type for default carrier UPS",
             "EmptyFedExShippingTypes": "Please select at least one FedEx Shipping Type for default carrier FedEx",
-            "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS"
+            "EmptyUSPSShippingTypes": "Please select at least one USPS Shipping Type for default carrier USPS",
+            "NonIntCustomerFailedToPickupDeadline": "Please enter numeric value for Customer Failed to Pickup Deadline",
+            "NonIntDefaultMaxNumberOfShipmentsInPickWave": "Please enter numeric value for Default number of orders in pickwave"
           },
             "Warning": {},
             "Information": {},
@@ -397,13 +399,13 @@
         "fedexExpress3Default": "Fedex Express 3 Default",
         "fedexReturnLabelShippingTypes": "FedEx Return Label Shipping Types",
         "autoPackingListPopup": "Auto generate packing list",
-        "allowPartialStock": "Do no allow partial quantity on validate stock",
+        "blockPartialStock": "Do not allow partial quantity on validate stock",
         "defaultMaxNumberOfShipmentsInPickWave": "Default number of orders in pickwave",
         "displayProductImagesInPickWaveDetails": "Show product images in pickwave details",
         "enablePickandPack": "Enable Pick and Pack",
         "shiptoHome": "ShiptoHome",
         "bopis": "BOPIS",
-        "allowPartialCancel": "Do not allow partial rejection from Customer Pickup step"
+        "blockPartialCancel": "Do not allow partial rejection from Customer Pickup step"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",

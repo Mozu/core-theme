@@ -98,12 +98,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
            
             autoPackingListPopup: ['', []],
-            allowPartialStock: ['', []],
+            blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
             displayProductImagesInPickWaveDetails: ['', []],
             enablePnpForSTH: ['', []],
             enablePnpForBOPIS: ['', []],
-            allowPartialCancel: ['', []]
+            blockPartialCancel: ['', []]
 
         });
 
@@ -417,12 +417,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsReturnLabelShippingTypes: shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
 
                 autoPackingListPopup: lgConfigModel.autoPackingListPopup === undefined ? false : lgConfigModel.autoPackingListPopup,
-                allowPartialStock: lgConfigModel.allowPartialStock === undefined ? false : lgConfigModel.allowPartialStock,
+                blockPartialStock: lgConfigModel.blockPartialStock === undefined ? false : lgConfigModel.blockPartialStock,
                 defaultMaxNumberOfShipmentsInPickWave: lgConfigModel.defaultMaxNumberOfShipmentsInPickWave,
                 displayProductImagesInPickWaveDetails: lgConfigModel.displayProductImagesInPickWaveDetails === undefined ? false : lgConfigModel.displayProductImagesInPickWaveDetails,
                 enablePnpForSTH: lgConfigModel.enablePnpForSTH === undefined ? false : lgConfigModel.enablePnpForSTH,
                 enablePnpForBOPIS: lgConfigModel.enablePnpForBOPIS === undefined ? false : lgConfigModel.enablePnpForBOPIS,
-                allowPartialCancel: lgConfigModel.allowPartialCancel === undefined ? false : lgConfigModel.allowPartialCancel,
+                blockPartialCancel: lgConfigModel.blockPartialCancel === undefined ? false : lgConfigModel.blockPartialCancel,
             });
         }
         this._spinner.stop();
@@ -516,6 +516,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         lgConfigModel.locationGroupCode = this.model.lgConfigModel.locationGroupCode;
         // ISPU
         lgConfigModel.customerFailedToPickupAfterAction = lgconfigForm.get(['customerFailedToPickupAfterAction']).value;
+
+        let custFailedToPickupDeadline = lgconfigForm.get(['customerFailedToPickupDeadline']).value
+        if (custFailedToPickupDeadline != undefined && custFailedToPickupDeadline != "" && isNaN(custFailedToPickupDeadline)) {
+            this._tostrService.showError(ErrorCode.NonIntCustomerFailedToPickupDeadline);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+        } 
+
         lgConfigModel.customerFailedToPickupDeadline = lgconfigForm.get(['customerFailedToPickupDeadline']).value;
         lgConfigModel.sendCustomerPickupReminder = lgconfigForm.get(['sendCustomerPickupReminder']).value;
         // Shipping
@@ -588,12 +597,21 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
 
         lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
-        lgConfigModel.allowPartialStock = lgconfigForm.get(['allowPartialStock']).value;
+        lgConfigModel.blockPartialStock = lgconfigForm.get(['blockPartialStock']).value;
+
+        let numberOfShipmentsInPickWave = lgconfigForm.get(['defaultMaxNumberOfShipmentsInPickWave']).value
+        if (numberOfShipmentsInPickWave != undefined && numberOfShipmentsInPickWave != "" && isNaN(numberOfShipmentsInPickWave)) {
+            this._tostrService.showError(ErrorCode.NonIntDefaultMaxNumberOfShipmentsInPickWave);
+            this._spinner.stop();
+            this._progressButtonService.stop();
+            return false;
+        } 
+
         lgConfigModel.defaultMaxNumberOfShipmentsInPickWave = lgconfigForm.get(['defaultMaxNumberOfShipmentsInPickWave']).value;
         lgConfigModel.displayProductImagesInPickWaveDetails = lgconfigForm.get(['displayProductImagesInPickWaveDetails']).value;
         lgConfigModel.enablePnpForSTH = lgconfigForm.get(['enablePnpForSTH']).value;
         lgConfigModel.enablePnpForBOPIS = lgconfigForm.get(['enablePnpForBOPIS']).value;
-        lgConfigModel.allowPartialCancel = lgconfigForm.get(['allowPartialCancel']).value;
+        lgConfigModel.blockPartialCancel = lgconfigForm.get(['blockPartialCancel']).value;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;

@@ -82,12 +82,12 @@ export class LocationGroupConfigModel {
         attributes: any[];
         auditInfo: AuditInfoModel;
         autoPackingListPopup: boolean;
-        allowPartialStock: boolean;
+        blockPartialStock: boolean;
         defaultMaxNumberOfShipmentsInPickWave: number;
         displayProductImagesInPickWaveDetails: boolean;
         enablePnpForSTH: boolean;
         enablePnpForBOPIS: boolean;
-        allowPartialCancel: boolean;
+        blockPartialCancel: boolean;
     }
 
 
