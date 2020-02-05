@@ -229,17 +229,8 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
                     allowOnlyWhitespace: false,
                     showBorder: true,
                     forceSelection: true,
-                    store: this.getResolutionStore(),
-                    emptyText:'Select'
-                },
-                /*renderer: function (value) {
-                    if (Taco.tenantSettings.catalogDisabled) {
-                        return 'Refund';
-                    }
-                    else {
-                        return 'Select';
-                    }
-                }*/
+                    store: (Taco.tenantSettings.catalogDisabled) ? ["Refund"] : ["Refund", "Replace"]
+                }
             },
             {
                 dataIndex: 'quantity',
@@ -274,14 +265,14 @@ Ext.define('Taco.view.order.widget.ReturnableItemGrid', {
         this.store.reload();
     },
 
-    getResolutionStore: function () {
+    /*getResolutionStore: function () {
         if (Taco.tenantSettings.catalogDisabled) {
             return ['Refund'];
         }
         else {
             return ['Replace', 'Refund'];
         }
-    },
+    },*/
 
     getReturnableItemsStore: function () {
         return Ext.create('Ext.data.Store', {
