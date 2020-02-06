@@ -418,6 +418,13 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(serviceResponse);
         }
 
+        [HttpPutRoute(UriTemplate = "shipment/receivetransfer")]
+        public async Task<Response<DCm.ResourceOfShipment>> ReceiveTransfer(FuflfillShipmentArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.ReceiveTransfer(args.ShipmentNumber)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
         public class BackorderShipmentArgs
         {
             public int? ShipmentNumber { get; set; }

@@ -245,6 +245,32 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         });
     },
 
+    shipmentMarkAsReceiveTransfer: function () {
+        var me = this;
+        me.setLoading(true, this.body);
+
+        var payloadData = {
+            shipmentNumber: this.shipmentRecord.number
+        };
+        this.record.receiveTransfer({
+            jsonData: payloadData,
+            success: function (response) {
+                me.setLoading(false, this.body);
+                if (response.status != 200) {
+                    Taco.app.fireEvent('setmessage', 'Error while receiving transfer shipment', 'error');
+                    return;
+                }
+                me.fireEvent('shipmentRefresh');
+            },
+            failure: function (response) {
+                me.setLoading(false, this.body);
+                // error handling here
+                Taco.app.fireEvent('setmessage', 'Error while receiving transfer shipment', 'error');
+            },
+            scope: me
+        });
+    },
+
     shipmentMoveToBackorder: function () {
         var me = this;
         me.setLoading(true, this.body);
@@ -288,6 +314,13 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             }
         };
 
+        var shipmentMarkAsReceiveTransfer = {
+            text: 'Receive Transfer',
+            handler: function () {
+                me.shipmentMarkAsReceiveTransfer();
+            }
+        };
+
         //var actionMoveToBackorder = {
         //    text: 'Move To backorder',
         //    handler: function () {
@@ -302,26 +335,30 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             }
         };
 
+        var splitMenus = [];
         if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
-            return [
+            splitMenus = [
                 actionMarkAsShipped,
-                //actionUpdateBackorderDate,
                 actionCancelShipment
             ];
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
-            return [
+            splitMenus = [
                 actionUpdateBackorderDate,
                 actionCancelShipment
             ];
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
-            return [
-                //actionMoveToBackorder,
+            splitMenus = [
                 actionMarkAsShipped,
                 actionCancelShipment
             ];
         }
+
+        if (this.shipmentRecord.shipmentType.toLowerCase() == 'transfer' && this.shipmentRecord.workflowState.shipmentState.toLowerCase() == 'in_transit') {
+            splitMenus.push(shipmentMarkAsReceiveTransfer);
+        }
+        return splitMenus;
     },
 
     isShipmentAction: function () {
@@ -560,5 +597,3 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         }
     }
 });
-
-

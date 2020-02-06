@@ -947,7 +947,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(x => x.FulfillmentLocationCode, op => op.ResolveUsing(dc => dc.FulfillmentLocationCode))
                 .ForMember(x => x.ShippingMethodCode, op => op.ResolveUsing(dc => dc.ShippingMethodCode))
                 .ForMember(x => x.ShippingMethodName, op => op.ResolveUsing(dc => dc.ShippingMethodName))
-               // .ForMember(x => x.TrackingNumber, op => op.ResolveUsing(dc => dc.TrackingNumber))
+                //.ForMember(x => x.TrackingNumber, op => op.ResolveUsing(dc => dc.TrackingNumber))
                 .ForMember(x => x.PackagingType, op => op.ResolveUsing(dc => string.IsNullOrEmpty(dc.PackagingType) ? "CUSTOM" : dc.PackagingType))
                 .ForMember(x => x.Height, op => op.ResolveUsing(dc => dc.Measurements?.Height))
                 .ForMember(x => x.Length, op => op.ResolveUsing(dc => dc.Measurements?.Length))
@@ -1079,7 +1079,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
                 .ForMember(dc => dc.ShippingMethodCode, op => op.ResolveUsing(x => x.ShippingMethodCode))
                 .ForMember(dc => dc.ShippingMethodName, op => op.ResolveUsing(x => x.ShippingMethodName))
                 .ForMember(dc => dc.Status, op => op.ResolveUsing(x => x.Status))
-               // .ForMember(dc => dc.TrackingNumbers, op => op.ResolveUsing(x => x.TrackingNumber))
+                //.ForMember(dc => dc.TrackingNumber, op => op.ResolveUsing(x => x.TrackingNumber))
                 .ForMember(dc => dc.Measurements, op => op.ResolveUsing(x => new CommerceDC.PackageMeasurements
                 {
                     Height = new Core.Api.Contracts.Measurement { Unit = "in", Value = x.Height },

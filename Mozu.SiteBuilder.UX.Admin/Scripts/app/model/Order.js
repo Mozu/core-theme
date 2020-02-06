@@ -12,7 +12,7 @@ Ext.define('Taco.model.Order', {
         'Taco.model.Shipment',
         'Taco.store.ShippingMethods',
         'Ext.data.association.HasOne',
-        'Ext.ux.IFrame'        
+        'Ext.ux.IFrame'
     ],
 
     statics: {
@@ -217,13 +217,13 @@ Ext.define('Taco.model.Order', {
         name: 'items',
         type: 'auto',
         useNull: true
-        },
-        {
-            name: 'shipments',
-            type: 'auto',
-            defaultValue: []
-        },
-        {
+    },
+    {
+        name: 'shipments',
+        type: 'auto',
+        defaultValue: []
+    },
+    {
         name: 'priceListCode',
         type: 'string',
         useNull: true
@@ -837,12 +837,12 @@ Ext.define('Taco.model.Order', {
         type: 'float',
         persist: false,
         useNull: true
-        },
-        {
-            name: 'isUnified',
-            type: 'boolean',
-            defaultValue: false
-        }
+    },
+    {
+        name: 'isUnified',
+        type: 'boolean',
+        defaultValue: false
+    }
     ],
 
     // helper method that walks the order items and any bundled items to determine if this order has any items that require shipping.
@@ -887,7 +887,7 @@ Ext.define('Taco.model.Order', {
         loadConfig = Ext.applyIf({
             bypassCache: true,
             success: function (record) {
-                
+
                 if (record.getId() === me.getId()) {
                     me.beginEdit();
                     modifiedNames = me.copyFrom(record);
@@ -921,7 +921,7 @@ Ext.define('Taco.model.Order', {
     formatCurrency: function (value) {
         if (Taco.app.context.findSite(this.get('siteId'))) {
             return Taco.app.context.findSite(this.get('siteId')).formatCurrency(value);
-        }        
+        }
         else {
             return Taco.app.context.getCurrent().formatCurrency(value);
         }
@@ -1044,7 +1044,7 @@ Ext.define('Taco.model.Order', {
         return this.get('total') - this.get('authorizationInfo').amountCollected;
     },
 
-    
+
 
     associations: [
         // Note:  (simeon) I have intentially not created models for package, shipment, unpackagedItems and packagedItems
@@ -1120,7 +1120,7 @@ Ext.define('Taco.model.Order', {
         },
         reader: {
             type: 'json',
-            
+
             getResponseData: function (response) {
                 // this is a temporary hack to get the proxy to use defaultValue for members that don't exist in the response
                 var data = Ext.decode(response.responseText);
@@ -2925,6 +2925,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    receiveTransfer: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/receivetransfer',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     cancelItemQuantity: function (config) {
         var me = this;
 
@@ -2944,12 +2953,12 @@ Ext.define('Taco.model.Order', {
 
     getCandidateSuggestions: function (config) {
         Ext.apply(config, {
-             url: '/admin/app/order/shipping/candidates',
-             method: 'POST'
+            url: '/admin/app/order/shipping/candidates',
+            method: 'POST'
         });
 
         Ext.Ajax.request(config);
-    },    
+    },
 
     getInventory: function (config) {
         Ext.apply(config, {
@@ -2958,7 +2967,7 @@ Ext.define('Taco.model.Order', {
         });
 
         Ext.Ajax.request(config);
-    },    
+    },
 
     updateShipmentAdjustments: function (config) {
         Ext.apply(config, {
