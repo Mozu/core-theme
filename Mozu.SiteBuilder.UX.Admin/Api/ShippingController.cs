@@ -55,8 +55,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             FeatureDic[DC.Constants.FedEx.CarrierId] = "fedexrates";
             FeatureDic[DC.Constants.Ups.CarrierId] = "upsrates";
             FeatureDic[DC.Constants.Usps.CarrierId] = "uspsrates";
-
-
+            FeatureDic[DC.Constants.CanadaPost.CarrierId] = "canadapostrates";
 
         }
 
@@ -68,6 +67,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             list2.Add("fedexrates");
             list2.Add("upsrates");
             list2.Add("uspsrates");
+            list2.Add("canadapostrates");
             return list2;
         }
 
@@ -602,21 +602,25 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         {
             var res = (await _carrierConfigurationWebApiClient.GetConfigurations(startIndex: 0, pageSize: 600)).ReadAsSync();
             var settings = Mapper.Map<List<CarrierConfiguration>>(res.Items );
-            if (!settings.Any(x => x.id == DC.Constants.FedEx.CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.FedEx.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.FedEx.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Ups.CarrierId  ))
+            if (!settings.Any(x => x.id == DC.Constants.Ups.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.Ups.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Usps .CarrierId ))
+            if (!settings.Any(x => x.id == DC.Constants.Usps.CarrierId))
             {
                 settings.Add(new CarrierConfiguration() { id = DC.Constants.Usps.CarrierId, IsConfigured = false });
             }
-            if (!settings.Any(x => x.id == DC.Constants.Custom .CarrierId))
+            if (!settings.Any(x => x.id == DC.Constants.CanadaPost.CarrierId))
             {
-                settings.Add(new CarrierConfiguration() { id = DC.Constants.Custom.CarrierId , IsConfigured = false });
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.CanadaPost.CarrierId , IsConfigured = false });
+            }
+            if (!settings.Any(x => x.id == DC.Constants.Custom.CarrierId))
+            {
+                settings.Add(new CarrierConfiguration() { id = DC.Constants.Custom.CarrierId, IsConfigured = false });
             }
             return List2<CarrierConfiguration>(settings);
         }
