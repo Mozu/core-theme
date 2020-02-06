@@ -13,6 +13,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
         {
             CreateMap<F.ResourceOfShipment, CR.Shipment>()                
                 .ForMember(x => x.Number, opt => opt.ResolveUsing(dc => dc.ShipmentNumber))
+                .ForMember(x => x.TrackingNumbers, opt => opt.ResolveUsing(dc => dc.Packages
+                               .SelectMany(x => x.TrackingNumbers).Where(track => track != null).ToList()))
                 .ForMember(x => x.Packages, opt => opt.Ignore());
 
             CreateMap<F.Item, CR.ShipmentItem>()
