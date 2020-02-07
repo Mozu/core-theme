@@ -3,16 +3,16 @@
         <div>{% include "back-office/pick-list" %}</div>
         <br>
     {% endif %}
-    {% for order in orders %}
-        {% for shipment in order.shipments %}
+    {% for shipment in shipments %}
+        {% with orders|findwhere('orderNumber', shipment.orderNumber) as order %}
             {% if printPackingSlips %}
-                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment %}</div>
+                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment order=order %}</div>
                 <br>
             {% endif %}
             {% if printPickSheets %}
                 <div style="page-break-before: always;">{% include "back-office/order-pick-sheet-content" with model=shipment pickwave=model %}</div>
                 <br>
             {% endif %}
-        {% endfor %}
+        {% endwith %}
     {% endfor %}
 {% endblock body-content %}
