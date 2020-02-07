@@ -10,7 +10,7 @@
 	"fulfillmentLocationCode": "BWH",
 	"pickWaveStatus": "",
 	"pickType": "",
-	"maxShipments": ,
+	"maxShipments": "",
 	"shipmentType": "",
 	"contents": [
 		{
@@ -35,5 +35,10 @@
 			"auditInfo ": {}
 		}
 	],
-	"auditInfo ": {}
+	"auditInfo ": {
+        "updateDate": "2020-01-17T15:42:32.374Z",
+        "createDate": "2020-01-17T15:42:32.374Z",
+        "updateBy": "355060a60a5e48eeb7f2fb8d92af2ba5",
+		"createBy": "355060a60a5e48eeb7f2fb8d92af2ba5"
+	}
 }

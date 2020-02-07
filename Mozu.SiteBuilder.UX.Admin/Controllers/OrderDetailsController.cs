@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// on storefront and sends a 302 redirects to storefront.
         /// </summary>
         [HttpGet]
-        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber = 0)
+        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
             string tok = claim.ToAccessToken();
@@ -50,20 +50,31 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage PickWave(int siteId, int pickWaveNumber = 0)
+        public HttpResponseMessage PickWave(int siteId, int pickWaveNumber, Boolean printPickWave = true, Boolean printPackingLists = false, Boolean printSingleOrderSheets = false)
         {
-            if (pickWaveNumber > 0)
-            {
-                string destinationUrl = "/back-office/pick-wave/" + pickWaveNumber;
-
-                var resp = Request.CreateResponse(HttpStatusCode.Found);
-                resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
-                return resp;
-            }
-            else
-            {
+            if (pickWaveNumber <= 0) {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
+
+            string destinationUrl = $"/back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}";
+
+            var resp = Request.CreateResponse(HttpStatusCode.Found);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage OrderPickSheets(int siteId, int pickWaveNumber)
+        {
+            if (pickWaveNumber <= 0) {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+            string destinationUrl = "/back-office/order-pick-sheets/" + pickWaveNumber;
+
+            var resp = Request.CreateResponse(HttpStatusCode.Found);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            return resp;
         }
 
         [HttpGet]

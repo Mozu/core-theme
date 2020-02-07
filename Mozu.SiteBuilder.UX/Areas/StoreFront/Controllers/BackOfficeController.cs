@@ -42,9 +42,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly ILocationRuntimeWebApiClient _locationRuntimeWebApiClient;
         private const string CMS_LIST_NAME = "emailTemplateContent@mozu";
         private const string ORDER_PREVIEW_RESOURCE_NAME = "backoffice.order1";
+        private const string ORDERS_PREVIEW_RESOURCE_NAME = "backoffice.orders1";
         private const string PACKAGE_PREVIEW_RESOURCE_NAME = "backoffice.package1";
         private const string PICKWAVE_PREVIEW_RESOURCE_NAME = "backoffice.pickwave1";
+        private const string PICKWAVE2_PREVIEW_RESOURCE_NAME = "backoffice.pickwave2";
         private const string SHIPMENT_PREVIEW_RESOURCE_NAME = "backoffice.shipment1";
+        private const string SHIPMENT2_PREVIEW_RESOURCE_NAME = "backoffice.shipment2";
+        private const string SHIPMENTS_PREVIEW_RESOURCE_NAME = "backoffice.shipments1";
         private const string LOCATION_PREVIEW_RESOURCE_NAME = "backoffice.location1";
 
         /// <summary>
@@ -272,7 +276,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var dcShipment = Mapper.Map<Shipment>(shipment);
             order.Shipments = order.Shipments ?? new List<Shipment>(new [] { dcShipment });
 
-            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("packing-slip"));
             if (template == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find packing slip template for the current Theme.");
@@ -288,19 +292,59 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> PickWave(int pickWaveNumber)
+        public async Task<HttpResponseMessage> PickWave(int pickWaveNumber, bool printPickWave, bool printPackingLists, bool printSingleOrderSheets)
         {
-            var pickWave = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
+            var fulfillmentProxyClient = _fulfillmentProxyClient.CloneWithoutUserClaims();
+            var pickWave = (await fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
 
-            var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase("pick-list"));
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("pick-wave-print"));
             if (template == null)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find pick wave template for the current Theme.");
             }
 
-            ViewData["shipments"] = pickWave.Contents;
+            var shipments = new List<DCShipment>();
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers) {
+                var dcShipment = (await fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
+                shipments.Add(dcShipment);
+            }
+            ViewData["shipments"] = shipments;
+
+            var orderIds = shipments.Select(x => x.OrderId).Distinct().ToList();
+            var orders = new List<DC.Order>();
+            foreach (var orderId in orderIds) {
+                var dcOrder = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+                orders.Add(dcOrder);
+            }
+            ViewData["orders"] = orders;
+            
+            ViewData["printPickwave"] = printPickWave;
+            ViewData["printPackingSlips"] = printPackingLists;
+            ViewData["printPickSheets"] = printSingleOrderSheets;
 
             return await RenderWithContext(template, pickWave);
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> OrderPickSheets(int pickWaveNumber)
+        {
+            var fulfillmentProxyClient = _fulfillmentProxyClient.CloneWithoutUserClaims();
+            var pickWave = (await fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
+            ViewData["pickwave"] = pickWave;
+
+            var shipments = new List<DCShipment>();
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers) {
+                var shipment = (await fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
+                shipments.Add(shipment);
+            }
+
+            var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("order-pick-sheet"));
+            if (template == null)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order pick sheet template for the current Theme.");
+            }
+
+            return await RenderWithContext(template, shipments);
         }
 
         [HttpGet]
@@ -361,9 +405,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             else if (templateid == "pick-list")
             {
-                object shipment = TestDataBroker.GetFileContents(SHIPMENT_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                ViewData["shipment"] = shipment;
+                object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["shipments"] = shipments;
+
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "order-pick-sheet")
+            {
+                object model = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickwave = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();;
+                ViewData["pickwave"] = pickwave;
+                return await RenderWithContext(template, model);
+            }
+            else if (templateid == "pick-wave-print")
+            {
+                object shipments = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object model = TestDataBroker.GetFileContents(PICKWAVE2_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                ViewData["shipments"] = shipments;
+                ViewData["orders"] = orders;
+                ViewData["printPickwave"] = true;
+                ViewData["printPackingSlips"] = true;
+                ViewData["printPickSheets"] = true;
                 return await RenderWithContext(template, model);
             }
             else if (templateid == "transfer-packing-slip")
