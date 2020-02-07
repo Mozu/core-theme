@@ -6,7 +6,7 @@
     {% for shipment in shipments %}
         {% with orders|findwhere('orderNumber', shipment.orderNumber) as order %}
             {% if printPackingSlips %}
-                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment %}</div>
+                <div style="page-break-before: always;">{% include "back-office/packing-slip" with model=shipment order=order %}</div>
                 <br>
             {% endif %}
             {% if printPickSheets %}
