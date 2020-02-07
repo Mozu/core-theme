@@ -187,6 +187,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                                            {
                                                ModelType = typeof (ShipmentEmail),
                                                Topic = Topics.TransferShipmentShipped
+                                           },
+                                        new EmailTypeInfo
+                                           {
+                                               ModelType = typeof (ShipmentEmail),
+                                               Topic = Topics.ShipmentAssignment
                                            }
                 };
         }
@@ -567,6 +572,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
             public const string TransferShipmentCreated = "transfer.created";
             public const string TransferShipmentShipped = "transfer.shipped";
+            public const string ShipmentAssignment = "shipment.assigned";
 
         }
 

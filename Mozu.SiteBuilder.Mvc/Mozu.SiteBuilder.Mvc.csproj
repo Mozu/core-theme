@@ -415,6 +415,7 @@
     <EmbeddedResource Include="TestData\transfer.created\Location1.json" />
     <EmbeddedResource Include="TestData\transfer.shipped\Shipment1.json" />
     <EmbeddedResource Include="TestData\transfer.shipped\Location1.json" />
+    <EmbeddedResource Include="TestData\shipment.assigned\Shipment1.json" />
     <None Include="SEO\proto_routeTable" />
     <None Include="TestData\refund.created\Refund1.json" />
   </ItemGroup>
