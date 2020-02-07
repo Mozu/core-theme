@@ -13,7 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using DCm = Mozu.Fulfillment.Contracts.Model;
+using DCm = Kibo.Fulfillment.Contracts.Model;
 using DCs = Mozu.CommerceRuntime.Contracts.Fulfillment;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api

@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Newtonsoft.Json.Linq;
 using CR = Mozu.CommerceRuntime.Contracts.Fulfillment;
-using F = Mozu.Fulfillment.Contracts.Model;
+using F = Kibo.Fulfillment.Contracts.Model;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {

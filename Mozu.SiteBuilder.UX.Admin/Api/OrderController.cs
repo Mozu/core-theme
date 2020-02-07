@@ -30,7 +30,7 @@ using Newtonsoft.Json.Linq;
 using Product = Mozu.CommerceRuntime.Contracts.Products.Product;
 using Mozu.SiteSettings.Order.Contracts.Clients;
 using Mozu.SiteBuilder.UX.Admin.Controllers;
-using Mozu.Fulfillment.Contracts.Model;
+using Kibo.Fulfillment.Contracts.Model;
 using Contact = Mozu.SiteBuilder.UX.Admin.Api.Models.Contact;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
