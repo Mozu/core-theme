@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     public class HotOnlyAuthActionFilter : ActionFilterAttribute
     {
 
-        public override bool AllowMultiple
+        public bool AllowMultiple
         {
             get { return false; }
         }

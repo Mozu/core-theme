@@ -730,7 +730,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             }
         }
 
-        [Microsoft.ClearScript.ScriptMember("findById")]
+        //todo:cole add JS export [Microsoft.ClearScript.ScriptMember("findById")]
         public Category FindById( int? categoryId)
         {
             if (!categoryId.HasValue)
@@ -741,7 +741,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             _allCategoriesIndexById.Value.TryGetValue(categoryId.Value, out cat);
             return cat;
         }
-        [Microsoft.ClearScript.ScriptMember("findByCode")]
+        //todo:cole add JS export [Microsoft.ClearScript.ScriptMember("findByCode")]
         public Category FindByCode(string categoryCode)
         {
             if( categoryCode == null)
@@ -753,7 +753,7 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
             return cat;
         }
 
-        [Microsoft.ClearScript.ScriptMember("findBySlug")]
+        //todo:cole add JS export [Microsoft.ClearScript.ScriptMember("findBySlug")]
         public IList<Category> FindBySlug ( string categorySlug)
         {
             if (categorySlug == null)

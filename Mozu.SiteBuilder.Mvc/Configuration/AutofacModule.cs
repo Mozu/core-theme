@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Mozu.Core;
+﻿using Mozu.Core;
 using Mozu.Core.Configuration;
 using Mozu.Core.Expressions;
 using Mozu.Core.Settings;
@@ -26,92 +25,88 @@ using NDjango.Interfaces;
 using System;
 using System.Linq;
 using System.Reflection;
-using Module = Autofac.Module;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.Configuration
 {
-    public class AutofacModule : Module
+    public class AutofacModule : IDependencyConfigurator
     {
-        protected override void Load(ContainerBuilder builder)
+        void IDependencyConfigurator.Configure(IServiceCollection builder)
         {
             builder.RegisterClassesMatchingInterfaceName(typeof(IShippingWebApiClient).Assembly);
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
-             
-            builder.RegisterType<MozuVirtualPathProvider>().As<IMozuVirtualPathProvider>().InstancePerRequest();
+
+            builder.AddScoped<IMozuVirtualPathProvider, MozuVirtualPathProvider>();
             
             //contexts
-            builder.RegisterType<ClientApiContext>().InstancePerRequest();
-            builder.RegisterType<NavigationContext>().InstancePerRequest();
-            builder.RegisterType<UrlHelper>().InstancePerRequest();
+            builder.AddScoped<ClientApiContext>();
+            builder.AddScoped<NavigationContext>();
+            builder.AddScoped<UrlHelper>();
 
 
-            builder.RegisterType<PageContext>().As<PageContext>().As<IPageContext>().InstancePerRequest();
-            builder.RegisterType<SiteContext>().As<SiteContext>().As<ISiteContext>().InstancePerRequest();
-            
-            builder.RegisterType<PageContext>().As<IEditableContext>().InstancePerRequest();
-            builder.RegisterType<SiteBuilderApiContext>().As<IApiContext>().InstancePerRequest();
+            builder.AddScoped<PageContext>();
+            builder.AddScoped<IPageContext>(cfg => cfg.GetService<PageContext>());
+            builder.AddScoped<SiteContext>();
+            builder.AddScoped<ISiteContext>(cfg => cfg.GetService<SiteContext>());
 
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();
-            builder.RegisterType<ReferenceDataWebApiClient>().As<IReferenceDataWebApiClient>().InstancePerRequest();
+            builder.AddScoped<IEditableContext, PageContext>();
+            builder.AddScoped<IApiContext, SiteBuilderApiContext>();
+
+            builder.AddScoped<IPermissionsRepository, PermissionsRepository>();
+            builder.AddScoped<IReferenceDataWebApiClient, ReferenceDataWebApiClient>();
             
             RegisterThemeInfrastructure(builder);
 
-            builder.RegisterType<CmsHelper>().InstancePerRequest();
+            builder.AddScoped<CmsHelper>();
 
-            builder.RegisterType<NavigationRepository>().As<INavigationRepository>().InstancePerRequest();
+            builder.AddScoped<INavigationRepository, NavigationRepository>();
 
-            builder.RegisterType<NavigationGandalfTheWhite>().As<INavigationGandalf>().InstancePerLifetimeScope().InstancePerRequest();
+            builder.AddScoped<INavigationGandalf, NavigationGandalfTheWhite>();
 
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerRequest();
+            builder.AddScoped<ICategoryTreeProvider, RuntimeCategoryTreeProvider>();
 
-            builder.RegisterType<CmsServiceWrapper>().As<ICmsServiceWrapper>().InstancePerDependency();
-            builder.RegisterType<ThemeEntityDefinitionProvider>().As<IThemeEntityDefinitionProvider>().InstancePerDependency();
-            builder.RegisterType<ContentRetriever>().As<IThemeContentRetriever>().SingleInstance();
+            builder.AddTransient<ICmsServiceWrapper, CmsServiceWrapper>();
+            builder.AddTransient<IThemeEntityDefinitionProvider, ThemeEntityDefinitionProvider>();
+            builder.AddScoped<IThemeContentRetriever, ContentRetriever>();
 
-            builder.RegisterType<ExceptionContextLogWrapper>();
-            builder.RegisterType<LiveModeOnlyCacheInternal>().As<ILiveModeOnlyCache>().InstancePerRequest();
-            builder.RegisterType<DataViewModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();
-            builder.RegisterType<EditModeFinderOuter>().AsImplementedInterfaces().InstancePerRequest();         
-            builder.RegisterTypes(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
-            builder.RegisterType<SEO.CustomRouteValidator>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<SEO.CustomRouteRepository>().AsImplementedInterfaces().AsSelf();
+            builder.AddScoped<ExceptionContextLogWrapper>();
+            builder.AddScoped<ILiveModeOnlyCache, LiveModeOnlyCacheInternal>();
+            builder.RegisterAllImplementedInterfaces<DataViewModeFinderOuter>(ServiceLifetime.Scoped);
+            builder.RegisterAllImplementedInterfaces<EditModeFinderOuter>(ServiceLifetime.Scoped);
+            builder.AddScoped(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
+            builder.AddScoped<SEO.CustomRouteValidator>();
+            builder.RegisterAllImplementedInterfaces<SEO.CustomRouteValidator>(ServiceLifetime.Scoped);
+            builder.RegisterAllImplementedInterfaces<SEO.CustomRouteRepository>(ServiceLifetime.Scoped).AsSelf();
 
-            builder.RegisterType<StorefrontCacheControlImpl>().As<IStorefrontCacheControl>().SingleInstance();
+            builder.AddSingleton<IStorefrontCacheControl, StorefrontCacheControlImpl>();
 
-            builder.RegisterType<StorefrontCache>().As<IStorefrontCache>().InstancePerRequest();
-            builder.RegisterType<ThemeCache>().As<IThemeCache>().SingleInstance();
-            builder.RegisterType<SitebuilderContextCacheRepository>().As<ISitebuilderContextCacheRepository>().SingleInstance();
+            builder.AddScoped<IStorefrontCache, StorefrontCache>();
+            builder.AddSingleton<IThemeCache, ThemeCache>();
+            builder.AddSingleton<ISitebuilderContextCacheRepository, SitebuilderContextCacheRepository>();
 
-            builder.RegisterType<StorageGatewayConnectionWarmer>().As<INfsConnectionWarmer>().SingleInstance();
+            builder.AddSingleton<INfsConnectionWarmer, StorageGatewayConnectionWarmer>();
 
             //Rule based page stuff
             //static property provider
-            builder.RegisterType<StaticMetadataProvider<CmsPageRuleContext>>().AsSelf().SingleInstance();
+            builder.AddSingleton<StaticMetadataProvider<CmsPageRuleContext>>();
 
             //dynamic property provider
-            builder.RegisterType<CmsPageRuleDynamicMetadataProvider>()  //todo: update when we add customer attributes
-                .As<IDynamicContextPropertyMetadataProvider<CmsPageRuleContext>>()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<IDynamicContextPropertyMetadataProvider<CmsPageRuleContext>, CmsPageRuleDynamicMetadataProvider>();  //todo: update when we add customer attributes
 
             //metadata provider facade
-            builder.RegisterType<ExpressionContextMetadataProvider<CmsPageRuleContext>>()
-                .As<IExpressionContextMetadataProvider<CmsPageRuleContext>>()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<IExpressionContextMetadataProvider<CmsPageRuleContext>, ExpressionContextMetadataProvider<CmsPageRuleContext>>();
 
-            builder.RegisterType<CmsPageRuleContextFactory>()
-                .As<IExpressionContextFactory<CmsPageRuleContext>>()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<IExpressionContextFactory<CmsPageRuleContext>, CmsPageRuleContextFactory>();
 
             //expression evaluator visitor
-            builder.RegisterType<ExpressionEvaluatorVisitor<CmsPageRuleContext>>()
+            builder.AddScoped<ExpressionEvaluatorVisitor<CmsPageRuleContext>>()
                 .AsSelf()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
             //evaluator
-            builder.RegisterType<CmsPageRelationalExpressionEvaluator>()
-                .As<IRelationalExpressionEvaluator<CmsPageRuleContext>>()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<IRelationalExpressionEvaluator<CmsPageRuleContext>, CmsPageRelationalExpressionEvaluator>();
             
             //expression validator visitor
             builder.RegisterType<CmsPageRuleExpressionValidator>()
@@ -119,19 +114,18 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<CmsPageRuleRelationalExpressionValidator>().AsSelf()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
         }
 
-        private static void RegisterThemeInfrastructure(ContainerBuilder builder)
+        private static void RegisterThemeInfrastructure(IServiceCollection builder)
         {
-            builder.RegisterType<ThemeMetadataProvider>().As<IThemeMetaDataProvider>().SingleInstance();
-            builder.RegisterType<ThemeRepository>().As<IThemeRepository>().SingleInstance();
-            builder.RegisterType<HyprViewEngine>().InstancePerRequest();
+            builder.AddSingleton<IThemeMetaDataProvider, ThemeMetadataProvider>();
+            builder.AddSingleton<IThemeRepository, ThemeRepository>();
+            builder.AddScoped<HyprViewEngine>();
 
          
 
-            builder.Register(c =>
+            builder.AddSingleton(c =>
             {
             var tmp = new TemplateManagerProvider()
                     .WithLibrary(typeof(AddFilter).Assembly)

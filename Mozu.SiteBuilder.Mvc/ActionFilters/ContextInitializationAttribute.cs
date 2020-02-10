@@ -7,14 +7,15 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Controllers;
-using IActionFilter = System.Web.Http.Filters.IActionFilter;
+using IActionFilter = Microsoft.AspNetCore.Mvc.Filters.IActionFilter;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class ContextInitializationAttribute : System.Attribute, IActionFilter 
     {
-        public Task<HttpResponseMessage> ExecuteActionFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteActionFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var controller = (ApiControllerBase)actionContext.ControllerContext.Controller;
             if (controller != null || !controller.ContextInitializationTasks.IsCompleted)

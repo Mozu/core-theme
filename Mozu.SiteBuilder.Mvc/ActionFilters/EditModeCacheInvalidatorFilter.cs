@@ -4,9 +4,9 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class EditModeCacheInvalidatorFilter : System.Web.Http.Filters.ActionFilterAttribute
+    public class EditModeCacheInvalidatorFilter : Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute
     {
-        public override bool AllowMultiple
+        public bool AllowMultiple
         {
             get { return false; }
         }

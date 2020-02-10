@@ -6,12 +6,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
+using Microsoft.Extensions.DependencyInjection;
+using Mozu.Core.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
 
@@ -21,13 +24,13 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     {
         private StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute = new StoreFrontAuthorizeAttribute();
 
-        public override bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple { get { return false; } }
 
 
 
-        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
-            var sbc = actionContext.Request.Resolve<ISiteBuilderApiContext>();
+            var sbc = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
 
             if (sbc.UserClaims == null || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
             {

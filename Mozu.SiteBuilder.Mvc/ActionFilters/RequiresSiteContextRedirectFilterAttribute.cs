@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
@@ -23,12 +23,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     {
    
 
-        public override bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple { get { return false; } }
 
 
 
 
-        public  Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public  Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
             var apiContext = actionContext.Request.Resolve<IApiContext>();
             if (! apiContext.SiteId.HasValue)

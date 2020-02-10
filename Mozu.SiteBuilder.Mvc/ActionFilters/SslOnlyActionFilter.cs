@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -12,7 +12,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class SslOnlyActionFilter : ActionFilterAttribute
     {
-        public override bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple { get { return false; } }
 
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {

@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Net.Http.Headers;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class ClientCacheHeadersAttribute : ActionFilterAttribute
     {
-        public override bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple { get { return false; } }
         public  bool AllowCrossOrigin { get; set; }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             return request.Properties.TryGetValue ( "_mz_is404", out tmp) && (bool)tmp;
         }
 
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        public override void OnActionExecuted(ActionExecutingContext actionExecutedContext)
         {
 
             var settings =actionExecutedContext.Request.Resolve<ISettings>();

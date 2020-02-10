@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -8,9 +8,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class AnonymousShopperFilterAttribute : ActionFilterAttribute
     {
-        public override bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple => false;
 
-        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
             var apiContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
 

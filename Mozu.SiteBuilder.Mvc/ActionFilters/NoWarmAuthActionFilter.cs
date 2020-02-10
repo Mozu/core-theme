@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class NoWarmAuthActionFilter : ActionFilterAttribute
     {
-        public override bool AllowMultiple
+        public bool AllowMultiple
         {
             get { return false; }
         }
