@@ -2,6 +2,7 @@
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
+using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Exceptions;
 using Mozu.Core.Api.Routing;
@@ -243,6 +244,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             [FromUri] FilterCollection extFilter,
             [FromUri] bool draft = false)
         {
+            SbApiContext.SetDataMode(DataViewModeType.Live);
             if (!string.IsNullOrEmpty(pagingParams?.id))
             {
                 bool orderPayments = false;
