@@ -17,6 +17,9 @@ using Mozu.SiteSettings.Shipping.Contracts;
 using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 using DC = Mozu.SiteSettings.Order.Contracts;
 using Newtonsoft.Json.Linq;
+using Mozu.Core.Exceptions;
+using System.Net;
+using System.Net.Http;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -30,10 +33,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IFulfillmentSettingsWebApiClient _fulfillmentSettingsWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
-
+        private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
 
         public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient, IFulfillmentSettingsWebApiClient fulfillmentSettingsWebApiClient, IReturnSettingsWebApiClient returnSettingsWebApiClient,
-            IShippingSettingsWebApiClient shippingSettingsWebApiClient)
+            IShippingSettingsWebApiClient shippingSettingsWebApiClient,
+            IFulfillmentProxyWebApiClient fulfillmentProxyClient)
         {
             _wrapper = wrapper;
             _generalSettingsWebApiClient = generalSettingsWebApiClient;
@@ -42,6 +46,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _fulfillmentSettingsWebApiClient = fulfillmentSettingsWebApiClient;
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
+            _fulfillmentProxyClient = fulfillmentProxyClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -84,7 +89,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var orderProcessingSettings = (await _checkoutSettingsWebApiClient.Value.GetOrderProcessingSettings()).ReadAsSync();
             if (!string.IsNullOrWhiteSpace(paymentProcessingFlowType))
                 orderProcessingSettings.PaymentProcessingFlowType = OrderProcessingSettings.PaymentProcessingFlowTypes.AuthorizeOnOrderPlacementAndCaptureOnOrderShipment;
-    
+
             var result = (await _checkoutSettingsWebApiClient.Value.UpdateOrderProcessingSettings(orderProcessingSettings)).ReadAsSync();
 
 
@@ -112,6 +117,9 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "updatePaymentSettings")]
         public async Task<Response<DC.PaymentSettings>> UpdatePaymentSettings(DC.PaymentSettings paymentSettings)
         {
+            if ((!string.IsNullOrWhiteSpace(paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.STHFlow?.CaptureBy) && paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.STHFlow?.CaptureOn.Count <= 0)
+                || !string.IsNullOrWhiteSpace(paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.BOPISFlow?.CaptureBy) && paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.BOPISFlow?.CaptureOn.Count <= 0)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
 
             var currentPaymentSettings = (await _checkoutSettingsWebApiClient.Value.GetPaymentSettings()).ReadAsSync();
 
@@ -120,7 +128,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 AutoCaptureJob = new DC.AutoCaptureJob
                 {
                     IsEnabled = paymentSettings.JobSettings?.AutoCaptureJob?.IsEnabled ?? false,
-                    Interval = paymentSettings.JobSettings?.AutoCaptureJob?.Interval ?? 0
+                    Interval = paymentSettings.JobSettings?.AutoCaptureJob?.Interval ?? 0,
+                    FlexibleCapture = new FlexibleCapture()
+                    {
+                        BOPISFlow = !string.IsNullOrWhiteSpace(paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.BOPISFlow?.CaptureBy) ?
+                                paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.BOPISFlow : null,
+                        STHFlow = !string.IsNullOrWhiteSpace(paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.STHFlow?.CaptureBy) ?
+                                paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.STHFlow : null,
+                        IsEnabled = paymentSettings.JobSettings?.AutoCaptureJob?.FlexibleCapture?.IsEnabled ?? false
+                    }
                 },
                 ForceCaptureJob = new DC.ForceCaptureJob
                 {
@@ -149,14 +165,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ContainerId = fulfillmentSettings?.BpmConfiguration?.ContainerId ?? null,
                 ProcessId = fulfillmentSettings?.BpmConfiguration?.ProcessId ?? null
             };
-            currentFulfillmentSettings.FulfillmentJobSettings = new DC.Fulfillment.JobSettings() {
+            currentFulfillmentSettings.FulfillmentJobSettings = new DC.Fulfillment.JobSettings()
+            {
                 PickupReminderJob = fulfillmentSettings?.FulfillmentJobSettings?.PickupReminderJob,
                 ReleaseBackorderJob = fulfillmentSettings?.FulfillmentJobSettings?.ReleaseBackorderJob
             };
 
             var itemOut = (await _fulfillmentSettingsWebApiClient.UpdateFulfillmentSettings(currentFulfillmentSettings)).ReadAsSync();
             return Single2(itemOut);
-          
+
         }
 
         [HttpPostRoute(UriTemplate = "updateReturnSettings")]
@@ -250,6 +267,34 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
 
             return await GetEmailTypes(new PagingParamaters(), new FilterCollection());
+        }
+
+        [HttpGetRoute(UriTemplate = "shipmentBpmSteps/{shipmentType}")]
+        public async Task<Response<List<FulfillmentListView>>> GetShipmentBpmSteps(string shipmentType)
+        {
+            var workflowProcesses = (await _fulfillmentProxyClient.GetWorkflowProcesses()).ReadAsSync();
+            var tasks = workflowProcesses.Embedded["processes"].Where(x => x.Id.ToLower().Contains(shipmentType.ToLower())).FirstOrDefault()?.Tasks;
+
+            return List2(tasks.Select(x => new FulfillmentListView()
+            {
+                Text = x.Name,
+                Value = x.Name
+            }).ToList());
+        }
+
+        [HttpGetRoute(UriTemplate = "shipmentStatus")]
+        public Response<List<FulfillmentListView>> GetShipmentStatus()
+        {
+            var results = new List<FulfillmentListView>() {
+                new FulfillmentListView(){Text="Ready",Value="READY" },
+                new FulfillmentListView(){Text="Reassigned",Value="REASSIGNED" },
+                new FulfillmentListView(){Text="Backorder",Value="BACKORDER" },
+                new FulfillmentListView(){Text="Canceled",Value="CANCELED" },
+                new FulfillmentListView(){Text="Fulfilled",Value="FULFILLED" },
+                new FulfillmentListView(){Text="Customer Care",Value="CUSTOMER_CARE" }
+            };
+
+            return List2(results);
         }
 
         private static void AddEmailSettings(List<EmailTypeSettingVM> updates, SiteSettings.General.Contracts.GeneralSettings existing)
