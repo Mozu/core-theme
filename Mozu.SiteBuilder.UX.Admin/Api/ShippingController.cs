@@ -671,7 +671,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             }
             return List2(ret);
           
-        }
+        }        
 
         /// <summary>
         /// converts drop down value of shippingRate percentage to value type of percent & applies to of shipping.

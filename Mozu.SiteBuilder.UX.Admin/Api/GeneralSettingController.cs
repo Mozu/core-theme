@@ -17,6 +17,9 @@ using Mozu.SiteSettings.Shipping.Contracts;
 using TimeZone = Mozu.SiteBuilder.UX.Models.Settings.TimeZone;
 using DC = Mozu.SiteSettings.Order.Contracts;
 using Newtonsoft.Json.Linq;
+using Mozu.ShippingAdmin.Contracts.Clients;
+using Mozu.ShippingAdmin.Contracts;
+using Constants = Mozu.ShippingAdmin.Contracts.Constants;
 using Mozu.Core.Exceptions;
 using System.Net;
 using System.Net.Http;
@@ -33,6 +36,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         private readonly IFulfillmentSettingsWebApiClient _fulfillmentSettingsWebApiClient;
         private readonly IReturnSettingsWebApiClient _returnSettingsWebApiClient;
         private readonly IShippingSettingsWebApiClient _shippingSettingsWebApiClient;
+        private readonly IShippingAdminProvisioningWebApiClient _shippingAdminProvisioningWebApiClient;
         private readonly IFulfillmentProxyWebApiClient _fulfillmentProxyClient;
 
         public GeneralSettingController(IGeneralSettingWrapper wrapper, IChannelWebApiClient channelWebApiClient, IGeneralSettingsWebApiClient generalSettingsWebApiClient, Lazy<ICheckoutSettingsWebApiClient> checkoutSettingsWebApiClient, IFulfillmentSettingsWebApiClient fulfillmentSettingsWebApiClient, IReturnSettingsWebApiClient returnSettingsWebApiClient,
@@ -47,6 +51,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             _returnSettingsWebApiClient = returnSettingsWebApiClient;
             _shippingSettingsWebApiClient = shippingSettingsWebApiClient;
             _fulfillmentProxyClient = fulfillmentProxyClient;
+            _shippingAdminProvisioningWebApiClient = shippingAdminProvisioningWebApiClient;
         }
 
         [HttpGetRoute(UriTemplate = "read")]
@@ -156,7 +161,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         [HttpPostRoute(UriTemplate = "updateFulfillmentSettings")]
         public async Task<Response<DC.Fulfillment.FulfillmentSettings>> UpdateFulfillmentSettings(DC.Fulfillment.FulfillmentSettings fulfillmentSettings)
         {
-
             var currentFulfillmentSettings = (await _fulfillmentSettingsWebApiClient.GetFulfillmentSettings()).ReadAsSync();
 
             currentFulfillmentSettings.DefaultBackOrderDays = fulfillmentSettings.DefaultBackOrderDays;
@@ -170,10 +174,15 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 PickupReminderJob = fulfillmentSettings?.FulfillmentJobSettings?.PickupReminderJob,
                 ReleaseBackorderJob = fulfillmentSettings?.FulfillmentJobSettings?.ReleaseBackorderJob
             };
+
+            var stsDefaultShippingMethod = GetDefaultServiceTypes().Items.Where(x => x.Code == fulfillmentSettings?.ShipToStore?.ShippingMethod?.Code).FirstOrDefault();
+
             currentFulfillmentSettings.ShipToStore = new DC.Fulfillment.ShipToStore
             {
                 IsEnabled = fulfillmentSettings?.ShipToStore?.IsEnabled ?? false,
-                AlwaysCreateTransferShipments = fulfillmentSettings?.ShipToStore?.AlwaysCreateTransferShipments ?? false
+                AlwaysCreateTransferShipments = fulfillmentSettings?.ShipToStore?.AlwaysCreateTransferShipments ?? false,
+                ShippingMethod = new DC.Fulfillment.ShippingMethod() { Code = stsDefaultShippingMethod?.Code, Name = stsDefaultShippingMethod?.DeliveryDuration },
+                Cancellation = fulfillmentSettings?.ShipToStore?.Cancellation
             };
 
             currentFulfillmentSettings.FulfillerSettings = new DC.Fulfillment.FulfillerSettings()
@@ -201,6 +210,29 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var itemOut = (await _returnSettingsWebApiClient.UpdateReturnSettings(currentReturnSettings)).ReadAsSync();
             return Single2(itemOut);
 
+        }
+
+        [HttpGetRoute(UriTemplate = "shipmentBpmSteps/{shipmentType}")]
+        public Response<List<FulfillmentListView>> GetShipmentBpmSteps(string shipmentType)
+        {
+            if (shipmentType == "STH")
+            {
+                return List2(new List<FulfillmentListView>() {
+                  new FulfillmentListView(){Text="Accept Shipment",Value="10" },
+                  new FulfillmentListView(){Text="Validate Items In Stock",Value="29" },
+                  new FulfillmentListView(){Text="Print Packing Slip",Value="22" },
+                  new FulfillmentListView(){Text="Prepare for Shipment",Value="25" }
+              });
+            }
+            else
+            {
+                return List2(new List<FulfillmentListView>() {
+                  new FulfillmentListView(){Text="Accept Shipment",Value="13" },
+                  new FulfillmentListView(){Text="Print Pick List",Value="21" },
+                  new FulfillmentListView(){Text="Validate Items In Stock",Value="26" },
+                  new FulfillmentListView(){Text="Customer Pickup",Value="23" }
+              });
+            }
         }
 
         [HttpPostRoute(UriTemplate = "updateShippingSettings")]

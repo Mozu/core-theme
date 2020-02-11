@@ -204,7 +204,7 @@ NUGET
     Mozu.Reference.Contracts (1.17.4)
     Mozu.ScheduledEvent.Contracts (1.19.2)
       Mozu.Core.Prime (>= 1.18)
-    Mozu.ShippingAdmin.Contracts (1.1933.0-ngshot-contracts-3)
+    Mozu.ShippingAdmin.Contracts (1.2002.0-ngshot-contracts-4)
       Mozu.Core.Prime (>= 1.17)
     Mozu.ShippingRuntime.Contracts (1.1623.1)
       Mozu.Core.Prime (>= 1.17)
