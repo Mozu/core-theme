@@ -23,9 +23,14 @@
                     {% if model.shippingMethodName %}
                     <b>{{ labels.shippingMethod }}</b>: {{ model.shippingMethodName }}<br><br>
                     {% endif %}
-                    {% if model.trackingNumbers %}
-                    <b>{{labels.trackingNumber}}</b>:{% for trackingNumber in model.trackingNumbers %}{{ trackingNumber }}{% endfor %}
-                    {% endif %}
+                    <b>{{labels.trackingNumber}}</b>: 
+                    {% for package in model.packages %}
+                        {% if package.trackingNumbers %}
+                        {% for trackingNumber in package.trackingNumbers %}
+                            {{ trackingNumber }}</br>
+                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                 </td>
             </tr>
 
