@@ -248,7 +248,7 @@
         //});
 
         //this.columns = this.getColumnConfig(me);
-
+        var discount = 0;
         this.columns = [
             {
                 dataIndex: 'lineId',
@@ -377,7 +377,9 @@
                 //    minValue: 0,
                 //},
                 renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                    discount = value
+                    return this.record.formatCurrency(value)
+
                 }
             },
             {
@@ -391,7 +393,7 @@
                 minWidth: 80,
                 flex: 1,
                 renderer: function (value) {
-                    return this.record.formatCurrency(value);
+                    return this.record.formatCurrency(value - discount);
                 }
             },
             {
