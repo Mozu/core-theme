@@ -257,10 +257,7 @@ Ext.define('Taco.view.order.subform.Return', {
         this.returnableItemsErrorEl.setError('');
         var returnsStore = this.getReturnsStore();
         var erroredReturns = [],
-            selected = this.returnableItems.getSelectionModel().getSelection();
-        if (Taco.tenantSettings.catalogDisabled)
-            selected[0].data.returnType = "Refund"
-
+            selected = this.returnableItems.getSelectionModel().getSelection();     
         if (selected.length === 0) {
             this.returnableItemsErrorEl.setError('Please select items to return.');
             return;
