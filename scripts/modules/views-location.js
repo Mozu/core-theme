@@ -82,6 +82,7 @@ define(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/mod
                 getRenderContext: function () {
                     var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
                     c.model.messages = (this.product.messages) ? this.product.messages.toJSON() : [];
+                    c.model.product = (this.product) ? this.product.toJSON() : [];
                     return c;
                 }
             });
