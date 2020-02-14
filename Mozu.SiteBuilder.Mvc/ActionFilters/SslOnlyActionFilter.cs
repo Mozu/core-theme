@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -12,23 +13,29 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class SslOnlyActionFilter : ActionFilterAttribute
     {
-        public bool AllowMultiple { get { return false; } }
+        private readonly ISettings _settings;
+        private readonly PageContext _pc;
 
-        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        public SslOnlyActionFilter(ISettings settings, PageContext pageContext)
+        {
+            _settings = settings;
+            _pc = pageContext;
+        }
+
+        public bool AllowMultiple => false;
+
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
             // pass if we're not doing ssl in this env
-            if (!actionContext.Request.Resolve<ISettings>().CoreSettings.IsSSLValidationEnabled) return;
+            if (!_settings.CoreSettings.IsSSLValidationEnabled) return;
 
             // pass if the request already was SSL
-            var pageContext = actionContext.Request.Resolve<PageContext>();
+            var pageContext = _pc;
             if (pageContext.Url.IsNullOrEmpty() || pageContext.IsSecure || pageContext.IsEditMode) return;
 
             // else redirect to secure
-            var ubilBuilder = new UriBuilder(pageContext.Url);
-            ubilBuilder.Scheme = "https";
-            ubilBuilder.Port = 443;
-            actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
-            actionContext.Response.Headers.Location = ubilBuilder.Uri;
+            var ubilBuilder = new UriBuilder(pageContext.Url) {Scheme = "https", Port = 443};
+            actionContext.Result = new RedirectResult(ubilBuilder.Uri.ToString(), true);
         }
     }
 
@@ -37,33 +44,38 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class NoSslActionFilter : ActionFilterAttribute
     {
-        public override bool AllowMultiple { get { return false; } }
+        private readonly PageContext _pc;
+        private readonly ISiteContext _sc;
 
-        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        public NoSslActionFilter(PageContext pageContext, ISiteContext sc)
         {
-            var pageContext = actionContext.Request.Resolve<PageContext>();
+            _pc = pageContext;
+            _sc = sc;
+        }
+        public bool AllowMultiple => false;
+
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
+        {
+            var pageContext = _pc;
             // only GETS get redirected
-            if (actionContext.Request.Method != HttpMethod.Get) return;
+            if (!actionContext.HttpContext.Request.Method.Equals("get", StringComparison.InvariantCultureIgnoreCase)) return;
             // edit mode pages get a pass
             if (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode) return;
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
-            var customRoute = actionContext.Request.GetRouteData().Route as CustomRoute;
-            if (customRoute != null && customRoute.UrlScheme.HasValue)
+            var customRoute = actionContext.GetRouteData().Route as CustomRoute;
+            if (customRoute?.UrlScheme != null)
             {
                 return;
             }
 
-            var siteContext = actionContext.Request.Resolve<ISiteContext>();
-            if (siteContext?.GeneralSettings?.EnforceSitewideSSL == true)
+            if (_sc?.GeneralSettings?.EnforceSitewideSSL == true)
             {
                 return;
             }
 
             // else redirect to insecure
-            var builder = new UriBuilder(pageContext.Url);
-            builder.Scheme = "http";
-            builder.Port = 80;
+            var builder = new UriBuilder(pageContext.Url) {Scheme = "http", Port = 80};
             actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
             actionContext.Response.Headers.Location = builder.Uri;
         }

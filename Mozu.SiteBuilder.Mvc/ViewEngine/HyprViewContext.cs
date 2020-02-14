@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
-using Autofac;
+using Microsoft.AspNetCore.Http;
+using Mozu.Core.Configuration;
 
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class ViewDataDictionary : IDictionary<string, object> , Microsoft.ClearScript.IPropertyBag
     {
-        IDictionary<string, object> _inner = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        private readonly IDictionary<string, object> _inner = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         public ViewDataDictionary() 
         {
             
@@ -20,11 +21,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             get
             {
-                object model;
-                TryGetValue("Model", out model);
+                TryGetValue("Model", out var model);
                 return model;
             }
-            set { this["Model"] = value; }
+            set => this["Model"] = value;
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
@@ -62,15 +62,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return _inner.Remove(item);
         }
 
-        public int Count
-        {
-            get { return _inner.Count; }
-        }
+        public int Count => _inner.Count;
 
-        public bool IsReadOnly
-        {
-            get { return _inner.IsReadOnly; }
-        }
+        public bool IsReadOnly => _inner.IsReadOnly;
 
         public bool ContainsKey(string key)
         {
@@ -94,14 +88,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         public object this[string key]
         {
-            get {
-                object obj;
-                if (_inner.TryGetValue(key, out obj))
-                {
-                    return obj;
-                }
-                return null;
-            }
+            get => _inner.TryGetValue(key, out var obj) ? obj : null;
             set 
             {
                 if (value is Microsoft.ClearScript.V8.IV8ScriptItem)
@@ -113,22 +100,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             }
         }
 
-        public ICollection<string> Keys
-        {
-            get { return _inner.Keys; }
-        }
+        public ICollection<string> Keys => _inner.Keys;
 
-        public ICollection<object> Values
-        {
-            get { return _inner.Values; }
-        }
+        public ICollection<object> Values => _inner.Values;
     }
 
     public static class HttpControllerContextExtensions
     {
-        public static HttpContextBase HttpContext(this HttpControllerContext context)
+        public static HttpContext HttpContext(this HttpControllerContext context)
         {
-            return context.Resolve<HttpContextBase>();
+            return context.Resolve<HttpContext>();
         }
 
         public static T Resolve<T>(this HttpControllerContext context)
@@ -136,9 +117,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return context.Request.LifetimeScope().Resolve<T>();
         }
 
-        public static ILifetimeScope LifetimeScope(this HttpRequestMessage request)
+        public static IServiceProvider LifetimeScope(this HttpRequestMessage request)
         {
-            return ((ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope)));
+            return ((IServiceProvider)request.GetDependencyScope().GetService(typeof(IServiceProvider)));
         }
 
         public static T Resolve<T>(this HttpRequestMessage request)
@@ -146,16 +127,16 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return request.LifetimeScope().Resolve<T>();
         }
 
-        public static HttpContextBase HttpContext(this HttpRequestMessage request)
+        public static HttpContext HttpContext(this HttpRequestMessage request)
         {
-            return request.Resolve<HttpContextBase>();
+            return request.Resolve<HttpContext>();
         }
     }
 
     public class HyprViewContext
     {
-        private HttpContextBase _httpContext;
-        private ILifetimeScope _lifetimeScope;
+        private HttpContext _httpContext;
+        private IServiceProvider _lifetimeScope;
 
         public HyprViewContext(HttpRequestMessage requestMessage, ViewDataDictionary viewData, HyprViewContext parentActionViewContext = null)
         {
@@ -169,7 +150,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public HyprViewContext ParentActionViewContext { get; set; }
 
 
-        public ILifetimeScope LifetimeScope
+        public IServiceProvider LifetimeScope
         {
             get
             {
@@ -177,13 +158,13 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
                 _lifetimeScope = GetRootLifeTimeScope(this);
                 return _lifetimeScope;
             }
-            set { _lifetimeScope = value; }
+            set => _lifetimeScope = value;
         }
 
-        private static ILifetimeScope GetRootLifeTimeScope(HyprViewContext ctx)
+        private static IServiceProvider GetRootLifeTimeScope(HyprViewContext ctx)
         {
-            ILifetimeScope scope = null;
-            if (ctx.ParentActionViewContext != null && ctx.ParentActionViewContext.LifetimeScope != null)
+            IServiceProvider scope = null;
+            if (ctx.ParentActionViewContext?.LifetimeScope != null)
             {
                 scope = GetRootLifeTimeScope(ctx.ParentActionViewContext);
             }
@@ -194,10 +175,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return scope;
         }
 
-        public virtual HttpContextBase HttpContext
+        public virtual HttpContext HttpContext
         {
-            get { return _httpContext ?? (_httpContext = LifetimeScope.Resolve<HttpContextBase>()); }
-            set { _httpContext = value; }
+            get => _httpContext ??= LifetimeScope.Resolve<HttpContext>();
+            set => _httpContext = value;
         }
     }
 }

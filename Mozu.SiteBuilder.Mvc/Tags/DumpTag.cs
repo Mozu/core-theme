@@ -22,11 +22,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     {
         public string Process(object model)
         {
-            model = model ?? "null";
+            model ??= "null";
 
             var ss = new CaseInsensitiveJsonSerializerSettings { StringEscapeHandling = StringEscapeHandling.EscapeHtml, NullValueHandling = NullValueHandling.Include, Converters = new List<JsonConverter> { new Newtonsoft.Json.Converters.StringEnumConverter() } };
             var json = JsonConvert.SerializeObject(model, Formatting.None, ss);
-            return string.Format("<pre>{0}\r\n{1}</pre>", model.GetType().FullName, json);
+            return $"<pre>{model.GetType().FullName}\r\n{json}</pre>";
         }
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)

@@ -4,6 +4,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
@@ -28,8 +29,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public string FileDownloadName
         {
-            get { return (_fileDownloadName ?? string.Empty); }
-            set { _fileDownloadName = value; }
+            get => (_fileDownloadName ?? string.Empty);
+            set => _fileDownloadName = value;
         }
 
         public string Etag { get; set; }
@@ -39,45 +40,45 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-            HttpResponseBase response = requestMessage.HttpContext().Response;
+            HttpResponse response = requestMessage.HttpContext().Response;
             WriteHeaders(response);
             WriteFile(response);
         }
 
         public  Task ExecuteResultAsync(HttpRequestMessage requestMessage)
         {
-            HttpResponseBase response = requestMessage.HttpContext().Response;
+            HttpResponse response = requestMessage.HttpContext().Response;
             WriteHeaders(response);
             return WriteFileAsync(response);
         }
 
-        private void WriteHeaders(HttpResponseBase response)
+        private void WriteHeaders(HttpResponse response)
         {
             response.ContentType = ContentType;
 
             if (!string.IsNullOrEmpty(Etag))
             {
-                response.AddHeader("ETag", Etag);
+                response.Headers.Add("ETag", Etag);
             }
             if (LastModifiedDate.HasValue)
             {
-                response.AddHeader("Last-Modified", LastModifiedDate.Value.ToUniversalTime().ToString("r"));
+                response.Headers.Add("Last-Modified", LastModifiedDate.Value.ToUniversalTime().ToString("r"));
             }
             if (!string.IsNullOrEmpty(FileDownloadName))
             {
-                string headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
-                response.AddHeader("Content-Disposition", headerValue);
+                var headerValue = ContentDispositionUtil.GetHeaderValue(FileDownloadName);
+                response.Headers.Add("Content-Disposition", headerValue);
             }
-            if (!string.IsNullOrEmpty(Range))
-            {
-                response.AddHeader("Content-Range", Range);
-                response.StatusCode = 206;
-            }
+
+            if (string.IsNullOrEmpty(Range)) return;
+
+            response.Headers.Add("Content-Range", Range);
+            response.StatusCode = 206;
         }
 
-        protected abstract void WriteFile(HttpResponseBase response);
+        protected abstract void WriteFile(HttpResponse response);
 
-        protected abstract Task WriteFileAsync(HttpResponseBase response);
+        protected abstract Task WriteFileAsync(HttpResponse response);
         // Nested Types
         internal static class ContentDispositionUtil
         {

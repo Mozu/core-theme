@@ -15,15 +15,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         [JsonIgnore]
         public ViewDataDictionary ViewData
         {
-            get
-            {
-                if (_viewDataDictionary == null)
-                {
-                    _viewDataDictionary = new ViewDataDictionary();
-                }
-                return _viewDataDictionary;
-            }
-            set { _viewDataDictionary = value; }
+            get => _viewDataDictionary ??= new ViewDataDictionary();
+            set => _viewDataDictionary = value;
         }
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
@@ -38,11 +31,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         [JsonIgnore]
         public object Model
         {
-            get
-            {
-                return this.ViewData.Model;
-            }
-            set { this.ViewData.Model = value; }
+            get => this.ViewData.Model;
+            set => this.ViewData.Model = value;
         }
         [JsonIgnore]
         System.Collections.Generic.IDictionary<string, object> Core.Actions.Contracts.Http.IViewResult.ViewData

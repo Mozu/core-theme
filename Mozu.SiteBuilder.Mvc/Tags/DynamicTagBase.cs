@@ -18,13 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     public abstract class DynamicTagBase : SimpleTagBase
     {
         
-        protected override ArgumentCollection.ParseStrategy ArgumentParserStrategy
-        {
-            get
-            {
-                return ArgumentCollection.Strategies.MultiMapsWithOutPut;
-            }
-        }
+        protected override ArgumentCollection.ParseStrategy ArgumentParserStrategy => ArgumentCollection.Strategies.MultiMapsWithOutPut;
 
         protected override IEnumerable<WalkResult> ProcessTag(ArgumentCollection arguments, IContext context, Func<string, ITemplate> getTemplateFunc)
         {

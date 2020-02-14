@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Runtime.Caching;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Logging;
 using Mozu.SiteSettings.General.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Extensions;

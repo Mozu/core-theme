@@ -62,9 +62,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             {
                 return;
             }
-            foreach ( var kvp in constraints)
+            foreach ( var (key, value) in constraints)
             {
-                var paramNames = kvp.Value == null || kvp.Value.Length == 0 ? new string[] { "*" } : kvp.Value;
+                var paramNames = value == null || value.Length == 0 ? new [] { "*" } : value;
                 foreach( var paramName in paramNames)
                 {
                     if ( !Constraints.TryGetValue( paramName, out temp))
@@ -72,7 +72,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                         temp = new CustomRouteConstraintGroup();
                         Constraints[paramName] = temp;
                     }
-                   ((CustomRouteConstraintGroup)temp).Constrains.Add(kvp.Key);
+                    ((CustomRouteConstraintGroup)temp).Constrains.Add(key);
                 }
             }
         }

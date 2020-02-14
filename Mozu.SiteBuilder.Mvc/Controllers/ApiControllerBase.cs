@@ -4,13 +4,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using Autofac;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System;
+using Microsoft.AspNetCore.Http;
+using Mozu.Core.Configuration;
 using Mozu.Core.Expressions;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
@@ -18,61 +19,37 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
     public class ApiControllerBase : ApiController, IHyprController
     {
 
-        static T Resolve<T>(Lazy<ILifetimeScope> s)
+        static T Resolve<T>(Lazy<IServiceProvider> s)
         {
             return s.Value.Resolve<T>();
         }
 
-        private ILifetimeScope _lifetimeScope;
+        private IServiceProvider _lifetimeScope;
 
-        public ILifetimeScope LifetimeScope
+        public IServiceProvider LifetimeScope
         {
-            get
-            {
-                if (_lifetimeScope == null)
-                {
-                    _lifetimeScope = (ILifetimeScope) this.Request.GetDependencyScope().GetService(typeof (ILifetimeScope));
-                }
-                return _lifetimeScope;
-            }
-            set { _lifetimeScope = value; }
+            get => _lifetimeScope ??= (IServiceProvider) Request.GetDependencyScope().GetService(typeof(IServiceProvider));
+            set => _lifetimeScope = value;
         }
 
 
         private ISiteBuilderApiContext _siteBuilderApiContext;
-        private HttpContextBase _httpContextBase;
+        private HttpContext _httpContextBase;
 
         public ISiteBuilderApiContext SbApiContext
         {
-            get
-            {
-                if (_siteBuilderApiContext == null)
-                {
-                    _siteBuilderApiContext = LifetimeScope.Resolve<ISiteBuilderApiContext>();
-
-                }
-
-                return _siteBuilderApiContext;
-            }
-            set { _siteBuilderApiContext = value; }
+            get => _siteBuilderApiContext ??= LifetimeScope.Resolve<ISiteBuilderApiContext>();
+            set => _siteBuilderApiContext = value;
         }
 
      
         private Task _contextInitTasks;
 
-        public Task ContextInitializationTasks
-        {
-            get
-            {
-                if (_contextInitTasks == null)
-                {
-                _contextInitTasks = Task.WhenAll(
-                    new CmsHelper(CmsService).InitCmsPageContext(PageContext, SiteContext, SbApiContext, ExpressionEvaluaton, PageRuleVisitor), 
-                    SiteContext.Init());
-                }
-                return _contextInitTasks;
-            }
-        }
+        public Task ContextInitializationTasks =>
+            _contextInitTasks ??= Task.WhenAll(
+                new CmsHelper(CmsService).InitCmsPageContext(PageContext, SiteContext, SbApiContext,
+                    ExpressionEvaluaton, PageRuleVisitor),
+                SiteContext.Init());
 
         public void ResetContextInitilaztionTasks()
         {
@@ -82,34 +59,15 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         private Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient _entityListService;
         public Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient EntityListService
         {
-              get
-            {
-                if (_entityListService == null)
-                {
-                    _entityListService = LifetimeScope.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
-
-                }
-
-                return _entityListService;
-            }
-            set { _entityListService = value; }
+              get => _entityListService ??= LifetimeScope.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
+              set => _entityListService = value;
         }
 
         private ICmsServiceWrapper _cmsService;
         public ICmsServiceWrapper CmsService
         {
-            get
-            {
-                if (_cmsService == null)
-                {
-                    _cmsService = LifetimeScope.Resolve<ICmsServiceWrapper>();
-                }
-                return _cmsService;
-            }
-            set
-            {
-                _cmsService = value;
-            }
+            get => _cmsService ??= LifetimeScope.Resolve<ICmsServiceWrapper>();
+            set => _cmsService = value;
         }
 
         //private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
@@ -117,13 +75,8 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         private ExpressionEvaluatorVisitor<CmsPageRuleContext> _pageRuleVisitor;
         public ExpressionEvaluatorVisitor<CmsPageRuleContext> PageRuleVisitor
         {
-            get
-            {
-                return _pageRuleVisitor ?? (_pageRuleVisitor =
-                           LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>().Value);
-            }
-
-            set { _pageRuleVisitor = value; }
+            get => _pageRuleVisitor ??= LifetimeScope.Resolve<Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>>>().Value;
+            set => _pageRuleVisitor = value;
         }
 
         private IExpressionEvaluator _expressionEvaluator;
@@ -131,106 +84,49 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         {
             get
             {
-                return _expressionEvaluator ?? (_expressionEvaluator = LifetimeScope.Resolve<IExpressionEvaluator>());
+                return _expressionEvaluator ??= LifetimeScope.Resolve<IExpressionEvaluator>();
             }
-            set
-            {
-                _expressionEvaluator = value;
-            }
+            set => _expressionEvaluator = value;
         }
 
         PageContext _pc;
         public PageContext PageContext
         {
-            get
-            {
-                if (_pc == null)
-                {
-                    _pc = LifetimeScope.Resolve<PageContext>();
-                }
-                return _pc;
-            }
-            set
-            {
-                _pc = value;
-            }
+            get => _pc ??= LifetimeScope.Resolve<PageContext>();
+            set => _pc = value;
         }
 
         private NavigationContext _navigationContext;
         public  NavigationContext NavigationContext
         {
-            get
-            {
-                if (_navigationContext == null)
-                {
-                    _navigationContext = LifetimeScope.Resolve<NavigationContext>();
-                }
-                return _navigationContext;
-            }
-            set
-            {
-                _navigationContext = value;
-            }
+            get => _navigationContext ??= LifetimeScope.Resolve<NavigationContext>();
+            set => _navigationContext = value;
         }
 
         CmsPageContext  _cmsPageContext ;
         public CmsPageContext CmsPageContext
         {
-            get
-            {
-                if (_cmsPageContext == null)
-                {
-                    _cmsPageContext = LifetimeScope.Resolve<CmsPageContext>();
-                }
-                return _cmsPageContext;
-            }
-            set
-            {
-                _cmsPageContext = value;
-            }
+            get => _cmsPageContext ??= LifetimeScope.Resolve<CmsPageContext>();
+            set => _cmsPageContext = value;
         }
 
 
         SiteContext _sc;
         public SiteContext SiteContext
         {
-            get
-            {
-                if (_sc == null)
-                {
-                    _sc = LifetimeScope.Resolve<SiteContext>();
-                }
-                return _sc;
-            }
-            set
-            {
-                _sc = value;
-            }
+            get => _sc ??= LifetimeScope.Resolve<SiteContext>();
+            set => _sc = value;
         }
 
-        public HttpContextBase HttpContext
+        public HttpContext HttpContext
         {
-            get
-            {
-                if (_httpContextBase == null)
-                {
-                    _httpContextBase = LifetimeScope.Resolve<HttpContextBase>();
-                }
-                return _httpContextBase;
-            }
-            set { _httpContextBase = value; }
+            get => _httpContextBase ??= LifetimeScope.Resolve<HttpContext>();
+            set => _httpContextBase = value;
         }
 
-        public HttpRequestBase HttpRequestBase
-        {
-            get { return HttpContext.Request; }
-        }
-        public HttpResponseBase Response
-        {
-            get { return HttpContext.Response; }
-        }
+        public HttpRequest HttpRequestBase => HttpContext.Request;
 
-
+        public HttpResponse Response => HttpContext.Response;
 
 
         protected internal FileContentResult File(byte[] fileContents, string contentType)
@@ -242,8 +138,6 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
         {
             return new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName };
         }
-
-
 
         protected internal virtual FileStreamResult File(Stream fileStream, string contentType, string fileDownloadName)
         {
@@ -260,8 +154,6 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             return new FilePathResult(fileName, contentType) { FileDownloadName = fileDownloadName };
         }
 
-
-
         // var cc = new ControllerContext(new HttpContextWrapper(HttpContext.Current), new RouteData(), new FooController());
         protected internal ViewResult View(object model)
         {
@@ -273,20 +165,15 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             return View(viewName, model: null);
         }
 
-        protected internal virtual new RedirectResult Redirect(string url)
+        protected internal new virtual RedirectResult Redirect(string url)
         {
-
             return new RedirectResult(url);
         }
-
-
 
         protected internal ViewResult View(string viewName, object model)
         {
             return View(viewName, null /* masterName */, model);
         }
-
-       
 
         protected internal virtual ViewResult View(string viewName, string masterName, object model)
         {
@@ -297,16 +184,13 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
             if (string.IsNullOrEmpty(viewName))
             {
-
                 viewName = (string)this.ControllerContext.RouteData.Values["action"];
-
             }
+
             return new ViewResult
             {
                 ViewName = viewName,
-
                 ViewData = ViewData
-
             };
         }
 
@@ -333,9 +217,6 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
                 ViewData.Model = model;
             }
 
-
-
-
             return new PartialViewResult
             {
                 ViewName = viewName,
@@ -343,31 +224,22 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
             };
         }
 
-
-
-
-
         private ViewDataDictionary _viewDataDictionary;
         public ViewDataDictionary ViewData
         {
             get
             {
-                if (_viewDataDictionary == null)
-                {
-                    _viewDataDictionary = new ViewDataDictionary();
-                    //_viewDataDictionary["ControllerContext"] = this.MvcControlerContext;
-                    _viewDataDictionary["ControllerContext"] = this.ControllerContext;
-                }
+                if (_viewDataDictionary != null) return _viewDataDictionary;
+                _viewDataDictionary = new ViewDataDictionary {["ControllerContext"] = ControllerContext};
+                //_viewDataDictionary["ControllerContext"] = this.MvcControlerContext;
                 return _viewDataDictionary;
             }
-            set { _viewDataDictionary = value; }
+            set => _viewDataDictionary = value;
         }
         public FileStreamResult File(Stream fileStream, string contentType)
         {
             return new FileStreamResult(fileStream, contentType);
         }
-
-
 
         public ContentResult Content(string content, string contentType)
         {

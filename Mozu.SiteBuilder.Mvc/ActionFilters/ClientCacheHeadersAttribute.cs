@@ -24,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class ClientCacheHeadersAttribute : ActionFilterAttribute
     {
-        public bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple => false;
         public  bool AllowCrossOrigin { get; set; }
 
         /// <summary>
@@ -60,26 +60,20 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             return request.Properties.TryGetValue ( "_mz_is404", out tmp) && (bool)tmp;
         }
 
-        public override void OnActionExecuted(ActionExecutingContext actionExecutedContext)
+        public void OnActionExecuted(ActionExecutingContext actionExecutedContext, ISettings settings)
         {
-
-            var settings =actionExecutedContext.Request.Resolve<ISettings>();
             if (ConfigKey == null)
                 return;
 
-            var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey);
-            if (val == null)
-            {
-                val = settings.AppSettings("clientCacheHeaderLength:default");
-            }
+            var val = settings.AppSettings("clientCacheHeaderLength:" + ConfigKey) ?? settings.AppSettings("clientCacheHeaderLength:default");
             if (val == null || val == "0")
                 return;
-            int duration = int.Parse(val);
+            var duration = int.Parse(val);
 
 
-            if (actionExecutedContext.Response != null && actionExecutedContext.Response.Headers != null)
+            if (actionExecutedContext.HttpContext.Response?.Headers != null)
             {
-                var cache = actionExecutedContext.Response.Headers.CacheControl = actionExecutedContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
+                var cache = actionExecutedContext.HttpContext.Response.Headers.CacheControl = actionExecutedContext.HttpContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
 
                 if (ForceRevalidate)
                 {

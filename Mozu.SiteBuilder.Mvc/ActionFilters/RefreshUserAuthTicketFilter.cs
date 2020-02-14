@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using FiftyOne.Foundation.Mobile.Detection;
+//using FiftyOne.Foundation.Mobile.Detection;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
@@ -20,15 +20,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class RefreshStoreFrontUserAuthTicketFilter : FilterAttribute, IAuthorizationFilter
+    public class RefreshStoreFrontUserAuthTicketFilter : IActionFilter, IAuthorizationFilter
     {
         private StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute = new StoreFrontAuthorizeAttribute();
 
-        public bool AllowMultiple { get { return false; } }
+        public bool AllowMultiple => false;
 
 
-
-        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, IAuthenticationHelper authHelper, IAuthTicketWebApiClient authService)
         {
             var sbc = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
 
@@ -36,7 +35,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 return continuation();
             }
-            var authHelper = actionContext.Request.Resolve<IAuthenticationHelper>();
 
             if (sbc.UserClaims.IsAnonymous)
             {
@@ -57,7 +55,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             {
                 return continuation();
             }
-            var authService = actionContext.Request.Resolve<IAuthTicketWebApiClient>();
             var authTicketTask = authService.RefreshUserAuthTicket(rToken);
             var rettask = authTicketTask.ContinueWith(x =>
             {
@@ -89,7 +86,19 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
         }
 
+        public void OnAuthorization(AuthorizationFilterContext context)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

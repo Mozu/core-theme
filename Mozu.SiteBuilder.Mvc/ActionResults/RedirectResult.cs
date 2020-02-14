@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
-    public class RedirectResult : ActionResult
+    //DEPRECATED
+    public class RedirectResult : IActionResult
     {
         public RedirectResult(string url)
             : this(url, false)
@@ -25,22 +29,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         public string Url { get; private set; }
 
         public TimeSpan? CacheDuration { get; private set; }
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
-        {
-            HttpResponseBase repsonse = requestMessage.HttpContext().Response;
-            if ( CacheDuration.HasValue)
-            {
-                repsonse.Headers["cache-control"] = "public,max-age=" + CacheDuration.Value.TotalSeconds.ToString();
-            }
 
-            if (Permanent)
+        public Task ExecuteResultAsync(ActionContext context)
+        {
+            var repsonse = context.HttpContext.Response;
+            if (CacheDuration.HasValue)
             {
-                repsonse.RedirectPermanent(Url, false);
+                repsonse.Headers["cache-control"] = "public,max-age=" + CacheDuration.Value.TotalSeconds;
             }
-            else
-            {
-                repsonse.Redirect(Url, false);
-            }
+            repsonse.Redirect(Url, Permanent);
+            return Task.CompletedTask;
         }
     }
 }

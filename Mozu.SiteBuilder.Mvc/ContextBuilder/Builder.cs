@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autofac;
-using Autofac.Integration;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
 using System.Threading;
@@ -30,6 +28,9 @@ using Mozu.Location.Contracts;
 using MongoDB.Driver;
 using Mozu.Core.Settings;
 using System.Security.Cryptography;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using SBCategory = Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category;
 using Mozu.Core.EnsureThat;
@@ -51,25 +52,25 @@ namespace Mozu.SiteBuilder.Mvc.Context
     }
     public class SitebuilderContextCacheRepository : ISitebuilderContextCacheRepository
     {
-        Mozu.Core.Caching.ICacheProvider _cacheProvider;
-        Core.Mongo.MongoDatabaseProvider _mdbProvider;
-        bool _ensureIndexes = false;
-        Task _ensureIndexTask;
-        Timer _backgroundBuildTimer;
-        Timer _backgroundJobCleanTimer;
-        ISettings _settings;
-        string _machineId;
-        Autofac.ILifetimeScope _globalScope;
+        private readonly Mozu.Core.Caching.ICacheProvider _cacheProvider;
+        private readonly Core.Mongo.MongoDatabaseProvider _mdbProvider;
+        private bool _ensureIndexes = false;
+        private Task _ensureIndexTask;
+        private readonly Timer _backgroundBuildTimer;
+        private readonly Timer _backgroundJobCleanTimer;
+        private readonly ISettings _settings;
+        private readonly string _machineId;
+        private readonly IServiceProvider _globalScope;
         public const string CacheName = "Sitebuilder.ContextBuilder.Compressed";
         public const string RedirectCacheName = "Sitebuilder.Redirects.Compressed";
-        const int TimerInterval = 15 * 1000;
+        private const int TimerInterval = 15 * 1000;
         public const string CacheVersion = "9";
-        const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
-        const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
-        const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
-        System.Collections.Concurrent.ConcurrentDictionary<int, DateTime> _requestedSites = new System.Collections.Concurrent.ConcurrentDictionary<int, DateTime>();
-        ILogger _logger;
-        public SitebuilderContextCacheRepository(ICacheProvider cacheProvider, Mozu.Core.Settings.ISettings settings, ILifetimeScope globalScope)
+        private const string EnableCleanJobConfigKey = "sitebuilder:context.enableCleanJob";
+        private const string BuildIntervalConfigKey = "sitebuilder:context.buildinterval";
+        private const string CleanJobIntervalConfigKey = "sitebuilder:context.cleaninterval";
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<int, DateTime> _requestedSites = new System.Collections.Concurrent.ConcurrentDictionary<int, DateTime>();
+        private readonly ILogger _logger;
+        public SitebuilderContextCacheRepository(ICacheProvider cacheProvider, Mozu.Core.Settings.ISettings settings, IServiceProvider globalScope)
         {
             _mdbProvider = new Core.Mongo.MongoDatabaseProvider("CacheDB", "Cache", settings);
             _ensureIndexTask = EnsureIndexes();
@@ -90,9 +91,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 _backgroundJobCleanTimer = new Timer(CleanJobQueuCallback, null, GetNextCleanInterval(), Timeout.Infinite);
             }
             
-            _globalScope = ((Autofac.Core.ISharingLifetimeScope)globalScope).RootLifetimeScope; 
+            _globalScope = globalScope; 
         }
-        TimeSpan GetNextBuildTime()
+
+        private TimeSpan GetNextBuildTime()
         {
             int intervalInMinutes = _settings.AppSettingsAsNullableInt(BuildIntervalConfigKey).GetValueOrDefault(10);
             var now = DateTime.Now;
@@ -106,19 +108,17 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return new TimeSpan(0, 0, modMins, now.Second % 60, now.Millisecond % 1000);
         }
 
-        int GetNextCleanInterval()
+        private int GetNextCleanInterval()
         {
             return _settings.AppSettingsAsNullableInt(CleanJobIntervalConfigKey).GetValueOrDefault(120) * 60 * 1000;
         }
 
 
-
-
-        void BuildCallback(object state)
+        private void BuildCallback(object state)
         {
             try
             {
-                Task.Run(() => DoBuilds()).Wait();
+                Task.Run(DoBuilds).Wait();
             }
             catch( Exception ex)
             {
@@ -128,11 +128,11 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
-        void CleanJobQueuCallback(object state)
+        private void CleanJobQueuCallback(object state)
         {
             try
             {
-                Task.Run(() => CleanOldJobs()).Wait();
+                Task.Run(CleanOldJobs).Wait();
             }
             catch (Exception ex)
             {
@@ -142,8 +142,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             _backgroundJobCleanTimer.Change(GetNextCleanInterval(), Timeout.Infinite);
         }
 
-       
-        async Task DoBuilds ()
+
+        private async Task DoBuilds ()
         {
             var lastWorkId = default(string);
             while ( true)
@@ -170,7 +170,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 lastWorkId = work.Id;
             }
         }
-        SiteBuilderApiContext ToApiContext(SiteBuilderContextWorkItem work)
+
+        private SiteBuilderApiContext ToApiContext(SiteBuilderContextWorkItem work)
         {
             var newContext = SiteBuilderApiContext.Create();
             newContext.TenantId = work.TenantId;
@@ -185,38 +186,26 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return newContext;
         }
 
-        async Task<ISiteBuilderContextData> ProcessCtxWork ( SiteBuilderContextWorkItem work , SiteBuilderApiContext apiContext)
+        private async Task<ISiteBuilderContextData> ProcessCtxWork ( SiteBuilderContextWorkItem work , SiteBuilderApiContext apiContext)
         {
-            using (var lifetimeScope = _globalScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cfg =>
-            {
-                apiContext.UserClaims = null;
-                cfg.RegisterInstance(apiContext)
-                .As<ISiteBuilderApiContext>()
-                .As<Mozu.Core.IApiContext>().SingleInstance();
-            }))
-            {
-                var serviceAggregator = lifetimeScope.Resolve<IContextServiceAggregator>();
-                var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
-                return await serviceAggregator.Aggregate(existing).ConfigureAwait(false);
-            }
+            using var scope = _globalScope.CreateScope();
+            apiContext.UserClaims = null;
+            scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
+            var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
+            var existing = await ((ISitebuilderContextCacheRepository)this).GetAsync(apiContext).ConfigureAwait(false);
+            return await serviceAggregator.Aggregate(existing).ConfigureAwait(false);
         }
 
-        async Task<List<SBCategory>> ProcessCategoryListWork(SiteBuilderContextWorkItem work, SiteBuilderApiContext apiContext)
+        private async Task<List<SBCategory>> ProcessCategoryListWork(SiteBuilderContextWorkItem work, SiteBuilderApiContext apiContext)
         {
-            using (var lifetimeScope = _globalScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cfg =>
-            {
-                apiContext.UserClaims = null;
-                cfg.RegisterInstance(apiContext)
-                .As<ISiteBuilderApiContext>()
-                .As<Mozu.Core.IApiContext>().SingleInstance();
-            }))
-            {
-                var serviceAggregator = lifetimeScope.Resolve<IContextServiceAggregator>();
-                return await serviceAggregator.BuildCategoryTree().ConfigureAwait(false);
-            }
+            using var scope = _globalScope.CreateScope();
+            apiContext.UserClaims = null;
+            scope.ServiceProvider.Resolve<IApiContextAccessor>().ApiContext = apiContext;
+            var serviceAggregator = scope.ServiceProvider.Resolve<IContextServiceAggregator>();
+            return await serviceAggregator.BuildCategoryTree().ConfigureAwait(false);
         }
 
-        async Task CleanOldJobs()
+        private async Task CleanOldJobs()
         {
             var fBuilder = Builders<SiteBuilderContextWorkItem>.Filter;
             var filter = fBuilder.Gt(x => x.TimeStamp, DateTime.UtcNow.AddHours(-2));
@@ -235,7 +224,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
-        Task<SiteBuilderContextWorkItem> GetWork()
+        private Task<SiteBuilderContextWorkItem> GetWork()
         {
             var fiveMinsAgo = DateTime.Now.AddMinutes(-10);
             var sites = _requestedSites.Where(_ => _.Value > fiveMinsAgo).Select(_ => _.Key).ToArray();
@@ -275,19 +264,21 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     IsUpsert = false
                 });
         }
-      
-        async Task EnsureIndexes()
+
+        [Obsolete]
+        private async Task EnsureIndexes()
         {
             if (!_ensureIndexes)
             {
                 var colleciton = GetCollection();
-                var newWorkIdxName = "newWork_withVer_Idx";
-                var newWorkIdxName2 = "newWork_withVer_site_Idx";
-                var oldWorkIxdName = "oldWork_Ixd";
+                const string newWorkIdxName = "newWork_withVer_Idx";
+                const string newWorkIdxName2 = "newWork_withVer_site_Idx";
+                const string oldWorkIxdName = "oldWork_Ixd";
                 var builder = Builders<SiteBuilderContextWorkItem>.IndexKeys;
                 using (var cursor = await colleciton.Indexes.ListAsync().ConfigureAwait(false))
                 {
                     var indexes = await cursor.ToListAsync().ConfigureAwait(false);
+                    // todo:cole - replace obsolete EnsureIndex
                     await EnsureIndex(colleciton, indexes, newWorkIdxName2,
                         builder.Ascending(x => x.Version)
                         .Ascending(x => x.SchedualedBuildTime)
@@ -300,16 +291,18 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
         }
 
+        [Obsolete]
         private async Task EnsureIndex(IMongoCollection<SiteBuilderContextWorkItem> colleciton,  
             List<MongoDB.Bson.BsonDocument> indexes , 
             string indexName ,
             IndexKeysDefinition<SiteBuilderContextWorkItem> keys)
         {
-            if (!indexes.Any(index => index["name"] == indexName))
+            if (indexes.All(index => index["name"] != indexName))
             {
                 try
                 {
-                    await colleciton.Indexes.CreateOneAsync(keys,
+                    // todo:cole - replace obsolete method
+                    _ = await colleciton.Indexes.CreateOneAsync(keys,
                         new CreateIndexOptions()
                         {
                             Background = true,
@@ -318,12 +311,12 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 }
                 catch (Exception e)
                 {
-                    _logger.Warn(e);
+                    _logger.Warn(e.ToString());
                 }
             }
         }
 
-        string GetContextCacheKey(ISiteBuilderApiContext apiContext)
+        private string GetContextCacheKey(ISiteBuilderApiContext apiContext)
         {
             var dvm = apiContext.DataViewMode == DataViewModeType.Pending ? 
                 DataViewModeType.Pending : 
@@ -331,7 +324,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return $"t={apiContext.TenantId}&s={apiContext.SiteId}&l={apiContext.LocaleCode}&c={apiContext.CurrencyCode}&dvm={dvm}&v={CacheVersion}";
         }
 
-        string GetPlCategoryListCacheKey(ISiteBuilderApiContext apiContext)
+        private string GetPlCategoryListCacheKey(ISiteBuilderApiContext apiContext)
         {
             var dvm = apiContext.DataViewMode == DataViewModeType.Pending ?
                 DataViewModeType.Pending :
@@ -341,8 +334,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         }
 
 
-
-        IMongoCollection<SiteBuilderContextWorkItem> GetCollection()
+        private IMongoCollection<SiteBuilderContextWorkItem> GetCollection()
         {
             return _mdbProvider.MongoDataBase.GetCollection<SiteBuilderContextWorkItem>("SiteBuilderContextWorkItems");
         }
@@ -363,7 +355,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
             
         }
-        void RecordVisit (IApiContext apicontext)
+
+        private void RecordVisit (IApiContext apicontext)
         {
             _requestedSites[apicontext.SiteId.GetValueOrDefault(-1)] = DateTime.Now;
         }
@@ -432,7 +425,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             await UpsertWorkQueue(apiContext, includePriceList:false).ConfigureAwait(false);
         }
 
-        List<string> GetTags ( int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dvm )
+        private List<string> GetTags ( int tenantId, int masterCatalogId, int catalogId, int? siteId, DataViewModeType dvm )
         {
             var isPending = dvm == DataViewModeType.Pending;
             var ret= new List<string>()
@@ -445,7 +438,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
             return ret;
         }
-        async Task UpsertWorkQueue (ISiteBuilderApiContext apiContext, bool includePriceList)
+
+        private async Task UpsertWorkQueue (ISiteBuilderApiContext apiContext, bool includePriceList)
         {
             
             if (apiContext.DataViewMode  == DataViewModeType.Pending )
@@ -478,7 +472,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
         }
 
-        string GetRedirectsCacheKey(ISiteBuilderApiContext apiContext )
+        private string GetRedirectsCacheKey(ISiteBuilderApiContext apiContext )
         {
             return apiContext.TenantId + "|" + apiContext.SiteId + (apiContext.DataViewMode == DataViewModeType.Pending ? "p" : "l");
         }
@@ -507,7 +501,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             };
 
             return _cacheProvider.GetCache(RedirectCacheName, apiContext)
-                .PutAsync<List<RedirectEntry>>(
+                .PutAsync(
                     item:redirects,
                     key: cacheKey ,
                     tags:new List<string>(),
@@ -554,10 +548,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
             await UpsertWorkQueue(apiContext, includePriceList: true)
                 .ConfigureAwait(false);
         }
-        static class CatagoryTreeHasher
-        {
 
-            static HashSet<SBCategory> FlattenCatTree(List<SBCategory> root)
+        private static class CatagoryTreeHasher
+        {
+            private static HashSet<SBCategory> FlattenCatTree(List<SBCategory> root)
             {
                 var categories = new HashSet<SBCategory>();
                 var treeStack =  new Stack<SBCategory>(root);
@@ -662,10 +656,9 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public class SiteBuilderContextDataRepository : ISiteBuilderContextDataRepository
     {
-       
-        ISiteBuilderApiContext _context;
-        ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
-        Lazy<IContextServiceAggregator> _contextServiceAggregator;
+        private readonly ISiteBuilderApiContext _context;
+        private readonly ISitebuilderContextCacheRepository _sitebuilderContextCacheRepository;
+        private readonly Lazy<IContextServiceAggregator> _contextServiceAggregator;
 
         public SiteBuilderContextDataRepository(
             ISitebuilderContextCacheRepository sitebuilderContextCacheRepository,
@@ -696,7 +689,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return await AppendCategoryData(data);
         }
 
-        async Task<ISiteBuilderContextData> AppendCategoryData(ISiteBuilderContextData data)
+        private async Task<ISiteBuilderContextData> AppendCategoryData(ISiteBuilderContextData data)
         {
             if (string.IsNullOrEmpty(this._context.PriceListCode))
             {
@@ -732,7 +725,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return _contextServiceAggregator.Value.Aggregate(existing);
         }
 
-        Task<List<SBCategory>> BuildCategoryTree( )
+        private Task<List<SBCategory>> BuildCategoryTree( )
         {
             return _contextServiceAggregator.Value.BuildCategoryTree();
         }
@@ -750,10 +743,10 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public class SiteBuilderContextProvider : ISiteBuilderContextProvider
     {
-        ISiteBuilderContextDataRepository _repo;
-        Task<ISiteBuilderContextData> _dataTask;
-        ISiteBuilderContextData _data;
-        Exception _ex;
+        private readonly ISiteBuilderContextDataRepository _repo;
+        private Task<ISiteBuilderContextData> _dataTask;
+        private ISiteBuilderContextData _data;
+        private Exception _ex;
         public SiteBuilderContextProvider(ISiteBuilderContextDataRepository repo)
         {
             _repo = repo;
@@ -812,20 +805,20 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public class ContextServiceAggregator : IContextServiceAggregator
     {
-        Mozu.Content.Contracts.Clients.IDocumentListWebApiClient _documentListWebApiClient;
-        Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient _entityListsWebApiClient;
-        Mozu.ProductRuntime.Contracts.Clients.IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
-        Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
-        Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
-        Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient _tenantsWebApiClient;
-        Mozu.ProductRuntime.Contracts.Clients.ICurrencyRuntimeWebApiClient _currencyRuntimeWebApiClient;
-        Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient _productSearchWebApiClient;
-        Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient _locationSettingsWebApiClient;
-        IThemeRepository _themeRepository;
-        INavigationRepository _navigationRepository;
-        ISiteBuilderApiContext _apiContext;
-        ILogger _logger;
-        ISitebuilderContextCacheRepository _cacheRepo;
+        private readonly Mozu.Content.Contracts.Clients.IDocumentListWebApiClient _documentListWebApiClient;
+        private readonly Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient _entityListsWebApiClient;
+        private readonly Mozu.ProductRuntime.Contracts.Clients.IProductCategoryRuntimeWebApiClient _productCategoryRuntimeWebApiClient;
+        private readonly Mozu.SiteSettings.General.Contracts.Clients.IGeneralSettingsWebApiClient _generalSettingsWebApiClient;
+        private readonly Mozu.SiteSettings.Order.Contracts.Clients.ICheckoutSettingsWebApiClient _checkoutSettingsWebApiClient;
+        private readonly Mozu.Tenant.Contracts.Clients.ITenantsWebApiClient _tenantsWebApiClient;
+        private readonly Mozu.ProductRuntime.Contracts.Clients.ICurrencyRuntimeWebApiClient _currencyRuntimeWebApiClient;
+        private readonly Mozu.ProductRuntime.Contracts.Clients.IProductSearchWebApiClient _productSearchWebApiClient;
+        private readonly Mozu.Location.Contracts.Clients.ILocationSettingsWebApiClient _locationSettingsWebApiClient;
+        private readonly IThemeRepository _themeRepository;
+        private readonly INavigationRepository _navigationRepository;
+        private readonly ISiteBuilderApiContext _apiContext;
+        private readonly ILogger _logger;
+        private readonly ISitebuilderContextCacheRepository _cacheRepo;
         public ContextServiceAggregator(
             ISiteBuilderApiContext apiContext,
             Mozu.Content.Contracts.Clients.IDocumentListWebApiClient documentListWebApiClient,
@@ -947,7 +940,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 {
                     throw ex;
                 }
-                _logger.Warn(ex);
+                _logger.Warn(ex.ToString());
             }
 
 
@@ -972,7 +965,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         throw ex;
                     }
-                    _logger.Warn(ex);
+                    _logger.Warn(ex.ToString());
                 }
 
             }
@@ -1000,7 +993,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                  .ContinueWith(ProcessCategories);
         }
 
-        async Task<ISiteBuilderContextData> ProcessRedirets(ISiteBuilderContextData data, List<Task> tasks)
+       private async Task<ISiteBuilderContextData> ProcessRedirets(ISiteBuilderContextData data, List<Task> tasks)
         {
            
             if (data.RedirectUpdateDate.HasValue)
@@ -1270,21 +1263,23 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return tasks;
         }
 
-        List<SBCategory> ProcessCategories(Task<List<Mozu.ProductRuntime.Contracts.Category>> task)
+        private List<SBCategory> ProcessCategories(Task<List<Mozu.ProductRuntime.Contracts.Category>> task)
         {
             var list = AutoMapper.Mapper.Map<List<SBCategory>>(task.Result);
             return list;
         }
 
-        T GenericServiceContinuation<T>(Task<ServiceClientResponse<T>> responseTask)
+        private T GenericServiceContinuation<T>(Task<ServiceClientResponse<T>> responseTask)
         {
             return GenericServiceContinuatioImpl(responseTask, false);
         }
-        T GenericServiceContinuationAllow404<T>(Task<ServiceClientResponse<T>> responseTask)
+
+        private T GenericServiceContinuationAllow404<T>(Task<ServiceClientResponse<T>> responseTask)
         {
             return GenericServiceContinuatioImpl(responseTask, true);
         }
-        T GenericServiceContinuatioImpl<T>(Task<ServiceClientResponse<T>> responseTask, bool allow404)
+
+        private T GenericServiceContinuatioImpl<T>(Task<ServiceClientResponse<T>> responseTask, bool allow404)
         {
             if (responseTask.IsFaulted || !responseTask.IsCompleted)
             {
@@ -1294,7 +1289,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
                     {
                         throw responseTask.Exception;
                     }
-                    _logger.Warn(responseTask.Exception);
+                    _logger.Warn(responseTask.Exception.ToString());
                 }
                 return default(T);
             }
@@ -1309,15 +1304,16 @@ namespace Mozu.SiteBuilder.Mvc.Context
                 {
                     throw response.ReadException();
                 }
-                _logger.Warn(response.ReadException());
+                _logger.Warn(response.ReadException().ToString());
                 return default(T);
             }
             return response.ReadAsSync();
 
         }
 
-        static Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
-        static UX.Models.Settings.ThemeSelection ToThemeSelection(string val)
+        private static readonly Regex isBase64 = new Regex("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$");
+
+        private static UX.Models.Settings.ThemeSelection ToThemeSelection(string val)
         {
             if (string.IsNullOrEmpty(val))
             {
@@ -1348,8 +1344,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
         }
 
 
-
-        List<RedirectEntry> RedirectDocumentContinuation(Task<ServiceClientResponse<StreamContent>> documentContentResponse)
+        private List<RedirectEntry> RedirectDocumentContinuation(Task<ServiceClientResponse<StreamContent>> documentContentResponse)
         {
             if (documentContentResponse.IsFaulted || !documentContentResponse.IsCompleted)
             {
@@ -1410,7 +1405,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
 
     public class PriceListSpecificSiteBuilderContextDataProxy : AbstractContextData, ISiteBuilderContextData
     {
-        ISiteBuilderContextData _inner;
+        private readonly ISiteBuilderContextData _inner;
 
         public PriceListSpecificSiteBuilderContextDataProxy(ISiteBuilderContextData inner, List<SBCategory> rootCatTree)
         {
@@ -1677,7 +1672,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
     //navigation
     public class SiteBuilderContextData : AbstractContextData ,ISiteBuilderContextData
     {
-        const string SubDirRewriteAttributeName = "mozu.reverseproxy.subdirectoryrewrites";
+        private const string SubDirRewriteAttributeName = "mozu.reverseproxy.subdirectoryrewrites";
         public DocumentCollection NavWebPages { get; set; }
       
         public GeneralSettings GeneralSettings { get; set; }
@@ -1711,20 +1706,21 @@ namespace Mozu.SiteBuilder.Mvc.Context
         public string ThemeHash { get; set; }
         public List<CurrencyExchangeRate> CurrencyExchangeRates { get; set; }
 
-        Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings _mappedGenSettings;
+        private Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings _mappedGenSettings;
         public Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings GetMappedGeneralSettings()
         {
             return _mappedGenSettings = _mappedGenSettings ?? Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.GeneralSettings>(GeneralSettings);
         }
 
-        Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings _mappedCheckoutSettings;
+        private Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings _mappedCheckoutSettings;
         public Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings GetMappedCheckoutSettings()
         {
             return _mappedCheckoutSettings = _mappedCheckoutSettings ?? Mapper.Map<Mozu.SiteBuilder.UX.Models.Settings.CheckoutSettings>(CheckoutSettings, opt => opt.Items["countryCode"] = this.TenantInfo.Sites.First(x => x.Id == SiteId).CountryCode);
         }
-        List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> _mappedSiteDomains;
 
-        string _siteSubDirectory = null;
+        private List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> _mappedSiteDomains;
+
+        private string _siteSubDirectory = null;
         public List<Mozu.SiteBuilder.UX.Models.Settings.SiteDomain> GetMappedSiteDomains()
         {
             if (_mappedSiteDomains == null)
@@ -1741,7 +1737,8 @@ namespace Mozu.SiteBuilder.Mvc.Context
             }
             return _siteSubDirectory;
         }
-        void PostProcessSiteInfo()
+
+        private void PostProcessSiteInfo()
         {
             if (_mappedSiteDomains != null)
             {
@@ -1800,7 +1797,7 @@ namespace Mozu.SiteBuilder.Mvc.Context
             return _flatCategories;
         }
 
-        List<SBCategory> _flatCategories;
+        private List<SBCategory> _flatCategories;
         public void ProcessCategoryTree()
         {
             if (_flatCategories != null || this.RootCategoryTree == null)

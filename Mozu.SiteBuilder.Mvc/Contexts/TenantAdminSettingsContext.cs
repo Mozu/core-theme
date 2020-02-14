@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
@@ -32,9 +33,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     {
         private readonly Lazy<IEntityListsWebApiClient> _entityListsWebApiClient;
         private readonly Lazy<ISettings> _settings;
-        HttpContextBase _context;
+        readonly HttpContext _context;
         Lazy<JObject> _state;
-        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContextBase context)
+        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContext context)
         {
             _entityListsWebApiClient = entityListsWebApiClient;
             _settings = settings;

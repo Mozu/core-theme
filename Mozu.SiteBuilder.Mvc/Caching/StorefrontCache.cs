@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.Caching;
-using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
@@ -15,6 +14,9 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using System.Net.Http;
 using System.Web;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.Mvc.Caching
 {
@@ -22,16 +24,12 @@ namespace Mozu.SiteBuilder.Mvc.Caching
     {
         T Get<T>(string key, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default);
         void Set(string key, object value, CacheScope scope = CacheScope.Site, StorefrontCacheTypes cacheType = StorefrontCacheTypes.Default, Func<object, object> updateCallback   = null , IList<string> filePaths= null);
-
-
     }
-   
    
     internal  class StorefrontCache : IStorefrontCache
     {
         private readonly IApiContext _ctx;
-       
-        private readonly ILifetimeScope _scope;
+        private readonly IServiceProvider _scope;
         private readonly IStorefrontCacheControl _cacheControl;
         private static readonly Hashtable SiteLookupHashtable = new Hashtable();
      
@@ -39,7 +37,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public StorefrontCache(IApiContext ctx, ILifetimeScope scope, IStorefrontCacheControl cacheControl )
+        public StorefrontCache(IApiContext ctx, IServiceProvider scope, IStorefrontCacheControl cacheControl )
         {
             _ctx = ctx;
             _scope = scope;
@@ -58,7 +56,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 if (!siteTask.Result.HasException && siteTask.Result.ResponseMessage.IsSuccessStatusCode)
                 {
                     var site = siteTask.Result.ReadAsSync();
-                    res = site!= null ? site.Id : new int?();
+                    res = site?.Id;
                 }
                 SiteLookupHashtable[key] = res;
             }
@@ -73,7 +71,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             var cc = _cacheControl.GetCache(cacheType, _ctx.DataViewMode);
             //if (_timeout == 0)
             //    return null;
-            if (String.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrWhiteSpace(key))
                 return null;
             ValidateContext();
             if (_ctx == null || _ctx.TenantId == 0)
@@ -100,7 +98,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
         public T Get<T>(string key, CacheScope scope, StorefrontCacheTypes cacheType)
         {
             var value = Get(key, scope, cacheType);
-            return (value is T) ? (T)value : default(T);
+            return value is T ? (T)value : default;
         }
 
        
@@ -120,20 +118,17 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             public IEnumerable<string> Dependencies { get; set; }
             IList<string> _filePaths = null;
             public IList<string> FilePaths {
-                get { return _filePaths; }
+                get => _filePaths;
 
                 private set {
-                    if ( value != null )
-                    {
-
-                        var subDirs = value.Select(x => new DirectoryInfo(x)).ToList();
-                        _filePaths = subDirs
-                            .Where(x => x.Attributes.HasFlag(FileAttributes.Directory))
-                            .SelectMany(x => x.GetDirectories("*.*", SearchOption.AllDirectories))
-                            .Where( x => x.FullName.IndexOf("node_modules", StringComparison.CurrentCultureIgnoreCase) ==-1)
-                            .Union(subDirs)
-                            .Select( x=> x.FullName).ToList();
-                    }
+                    if (value == null) return;
+                    var subDirs = value.Select(x => new DirectoryInfo(x)).ToList();
+                    _filePaths = subDirs
+                        .Where(x => x.Attributes.HasFlag(FileAttributes.Directory))
+                        .SelectMany(x => x.GetDirectories("*.*", SearchOption.AllDirectories))
+                        .Where( x => x.FullName.IndexOf("node_modules", StringComparison.CurrentCultureIgnoreCase) ==-1)
+                        .Union(subDirs)
+                        .Select( x=> x.FullName).ToList();
                 }
             }
 
@@ -166,16 +161,16 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                
             }
 
-            CacheItemPolicy GetPolicy (string key , ObjectCache cache )
+            System.Runtime.Caching.CacheItemPolicy GetPolicy (string key , ObjectCache cache )
             {
                 var abskey = key + ";abs";
-                cache.AddOrGetExisting(new CacheItem(abskey, new object()), new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300)) });
+                cache.AddOrGetExisting(new CacheItem(abskey, new object()), new System.Runtime.Caching.CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300)) });
 
                 var cm = cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey }));
                 
                // var cm = { cache.CreateCacheEntryChangeMonitor(this.Dependencies.Union(new string[] { abskey })) };
 
-                var cip=   new CacheItemPolicy()
+                var cip = new System.Runtime.Caching.CacheItemPolicy()
                 {
                     SlidingExpiration = TimeSpan.FromSeconds(Config.SlidingExpirationSeconds.GetValueOrDefault(120)),
                     UpdateCallback = UpdateCallback == null ? (CacheEntryUpdateCallback)null : CacheEntryUpdateHandler,
@@ -264,7 +259,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
     {
 
         Func<T, object, object> _handler;
-        public CacheCallBacker( ILifetimeScope existingScope , Func<T,object, object> handler): base(existingScope, (l,o)=> handler(l.Resolve<T>() , o ))
+        public CacheCallBacker(IServiceProvider existingScope , Func<T,object, object> handler): base(existingScope, (l,o)=> handler(l.Resolve<T>() , o ))
         {
             _handler = handler;
         }
@@ -274,7 +269,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
     {
         class DependencyScope : System.Web.Http.Dependencies.IDependencyScope
         {
-            public ILifetimeScope Scope { get; set; }
+            public IServiceProvider Scope { get; set; }
             public void Dispose()
             {
 
@@ -291,9 +286,9 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             }
         }
 
-        Func<ILifetimeScope> _scopeFn;
-        Func<ILifetimeScope, object, object> _handler;
-        public CacheCallBacker(ILifetimeScope existingScope, Func<ILifetimeScope, object, object> handler)
+        Func<IServiceProvider> _scopeFn;
+        Func<IServiceProvider, object, object> _handler;
+        public CacheCallBacker(IServiceProvider existingScope, Func<IServiceProvider, object, object> handler)
         {
             _handler = handler;
             try
@@ -303,7 +298,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
                 var pageContext = existingScope.Resolve<IPageContext>();
                 // var request = existingScope.Resolve<HttpRequestMessage>();
-                var httpContext = existingScope.Resolve<HttpContextBase>();
+                var httpContext = existingScope.Resolve<HttpContext>();
                 var cookieProvider = existingScope.Resolve<ICookieProvider>();
                 var globalScope = ((Autofac.Core.ISharingLifetimeScope)existingScope).RootLifetimeScope;
                 _scopeFn = () => globalScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cb =>
@@ -317,7 +312,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                     cb.Register(c => siteContext).As<ISiteContext>();
                     cb.Register(c => pageContext).As<IPageContext>();
                     cb.Register(c => req).As<HttpRequestMessage>();
-                    cb.Register(c => httpContext).As<HttpContextBase>();
+                    cb.Register(c => httpContext).As<HttpContext>();
                     cb.Register(c => cookieProvider).As<ICookieProvider>();
                     if (siteContext is SiteContext)
                     {
@@ -334,23 +329,13 @@ namespace Mozu.SiteBuilder.Mvc.Caching
                 //dies on tests... tbd refactor
                 System.Diagnostics.Trace.WriteLine(ex.ToString());
             }
-
-
-
         }
-
 
         public object CacheCallBack(object oldCacheValue)
         {
-            using (var scope = _scopeFn())
-            {
-                scope.Resolve<HttpRequestMessage>().Properties[System.Web.Http.Hosting.HttpPropertyKeys.DependencyScope] = new DependencyScope() { Scope = scope };
-                return _handler(scope, oldCacheValue);
-            }
+            var scope = _scopeFn();
+            scope.Resolve<HttpRequestMessage>().Properties[System.Web.Http.Hosting.HttpPropertyKeys.DependencyScope] = new DependencyScope() { Scope = scope };
+            return _handler(scope, oldCacheValue);
         }
-
-
-
-
     }
 }

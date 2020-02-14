@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Api;
 
 namespace Mozu.SiteBuilder.Mvc.Handler
@@ -13,21 +14,19 @@ namespace Mozu.SiteBuilder.Mvc.Handler
     public interface IPriceListResolutionHandler
     {
         Task<string> ResolvePriceList(int? customerAccoutnid = null);
-
-   
     }
 
     public class PriceListResolutionHandler: IPriceListResolutionHandler
     {
 
-        Lazy<Mozu.Core.Api.Session.IMozuSession> _session;
-        Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
+        Lazy<IMozuSession> _session;
+        readonly Lazy<IPriceListRuntimeWebApiClient> _priceListRuntimeWebApiClient;
         ISiteBuilderApiContext _apiContext;
-        Mozu.Core.Logging.ILogger _logger;
+        ILogger _logger;
         public PriceListResolutionHandler(ISiteBuilderApiContext apiContext,
-            Lazy<Mozu.Core.Api.Session.IMozuSession> session,
+            Lazy<IMozuSession> session,
             Lazy<IPriceListRuntimeWebApiClient> priceListRuntimeWebApiClient,
-            Mozu.Core.Logging.ILogger logger
+            ILogger logger
             )
         {
             _apiContext = apiContext;
@@ -39,10 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Handler
         Task<string> IPriceListResolutionHandler.ResolvePriceList(int? customerAccoutnid )
         {
             return _priceListRuntimeWebApiClient.Value.GetResolvedPriceList(customerAccountId: customerAccoutnid)
-                .ContinueWith(x =>  x.Result == null ? null : x.Result.ReadAsSync()?.PriceListCode);
+                .ContinueWith(x =>  x.Result?.ReadAsSync()?.PriceListCode);
         }
-
-        
-
     }
 }

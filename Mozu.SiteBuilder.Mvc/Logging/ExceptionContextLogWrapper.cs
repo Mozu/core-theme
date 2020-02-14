@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Logging

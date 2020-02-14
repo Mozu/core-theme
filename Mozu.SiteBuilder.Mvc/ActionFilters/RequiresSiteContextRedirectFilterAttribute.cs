@@ -5,49 +5,49 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Http.Controllers;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
-using FiftyOne.Foundation.Mobile.Detection;
+using Microsoft.Extensions.Logging;
 using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Logging;
-
+using Mozu.SiteBuilder.Mvc.ActionResults;
 
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class RequiresSiteContextRedirectFilterAttribute : FilterAttribute, IAuthorizationFilter
+    public class RequiresSiteContextRedirectFilterAttribute : IActionFilter, IAuthorizationFilter
     {
-   
+        private readonly IApiContext _apiContext;
+        private readonly ILogger _logger;
 
-        public bool AllowMultiple { get { return false; } }
-
-
-
-
-        public  Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
+        public RequiresSiteContextRedirectFilterAttribute(IApiContext apiContext, ILogger logger)
         {
-            var apiContext = actionContext.Request.Resolve<IApiContext>();
-            if (! apiContext.SiteId.HasValue)
+            _apiContext = apiContext;
+            _logger = logger;
+        }
+
+        public bool AllowMultiple => false;
+
+        public void OnAuthorization(AuthorizationFilterContext context)
+        {
+            if (!_apiContext.SiteId.HasValue)
             {
                 var redirLoc = "/admin/auth/launchpad";
-              
-                if (string.Equals(actionContext.Request.RequestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+
+                if (string.Equals(new Uri(context.HttpContext.Request.GetDisplayUrl()).AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                 {
                     redirLoc = "/admin/Scripts/resources/favicon.ico";
                 }
                 else
                 {
-                    var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
-                    logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
+                    _logger.Warn("missing sitecontext on " + context.HttpContext.Request.GetDisplayUrl());
                 }
 
-                HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved);
-                redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
-                return Task<HttpResponseMessage>.FromResult(redir);
+                context.Result = new RedirectResult(redirLoc);
             }
             else
             {
@@ -66,7 +66,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                             var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
                             logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
                         }
-                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved );
+                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved);
                         redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
                         return redir;
                     }
@@ -74,9 +74,17 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 }
                 );
             }
-
         }
-       
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
   
 }

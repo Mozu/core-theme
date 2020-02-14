@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Contexts;
 
@@ -12,12 +14,12 @@ namespace Mozu.SiteBuilder.Mvc.Logging
     /// </summary>
     public class CurrentRequestLoggingContextProvider : ILoggingContextProvider
     {
-        private HttpContextBase _httpContext;
-        private PageContext _pageContext;
+        private readonly HttpContext _httpContext;
+        private readonly PageContext _pageContext;
 
         public CurrentRequestLoggingContextProvider() { }
 
-        public CurrentRequestLoggingContextProvider(HttpContextBase httpContext, PageContext pageContext)
+        public CurrentRequestLoggingContextProvider(HttpContext httpContext, PageContext pageContext)
         {
             _httpContext = httpContext;
             _pageContext = pageContext;
@@ -27,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Logging
         {
             var dict = new Dictionary<string, object>(4);
 
-            if (_pageContext != null && _pageContext.Visit != null)
+            if (_pageContext?.Visit != null)
             {
                 dict.Add("VisitId", _pageContext.Visit.VisitId);
                 dict.Add("VisitorId", _pageContext.Visit.VisitorId);
@@ -38,28 +40,29 @@ namespace Mozu.SiteBuilder.Mvc.Logging
             }
           
             // if context was passed via container
-            if (_httpContext != null && _httpContext.Request != null)
+            if (_httpContext?.Request != null)
             {
               
-                dict.Add("RawUrl", _httpContext.Request.RawUrl);
-                dict.Add("AbsoluteUrl", _httpContext.Request.Url != null ? _httpContext.Request.Url.AbsoluteUri : null);
+                dict.Add("RawUrl", _httpContext.Request.GetDisplayUrl());
+                dict.Add("AbsoluteUrl", _httpContext.Request.GetEncodedUrl());
             }
             // otherwise, fall back to the horrible HttpContext.Current way.
-            else
-            {
-                try
-                {
-                    if (HttpContext.Current != null && HttpContext.Current.Request != null)
-                    {
-                        dict.Add("RawUrl", HttpContext.Current.Request.RawUrl);
+            // HttpContext.Current was removed in .net core - cole
+            //else
+            //{
+            //    try
+            //    {
+            //        if (HttpContext.Current != null && HttpContext.Current.Request != null)
+            //        {
+            //            dict.Add("RawUrl", HttpContext.Current.Request.RawUrl);
 
-                        if (HttpContext.Current.Request.Url != null)
-                            dict.Add("AbsoluteUrl", HttpContext.Current.Request.Url.AbsoluteUri);
-                    }
-                }
-                // supress HttpContext.Current not available exceptions
-                catch (Exception) { }
-            }
+            //            if (HttpContext.Current.Request.Url != null)
+            //                dict.Add("AbsoluteUrl", HttpContext.Current.Request.Url.AbsoluteUri);
+            //        }
+            //    }
+            //    // supress HttpContext.Current not available exceptions
+            //    catch (Exception) { }
+            //}
             return dict;
         }
     }

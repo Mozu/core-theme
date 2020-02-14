@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -17,7 +18,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             this.FileName = fileName;
         }
 
-        protected override void WriteFile(HttpResponseBase response)
+        protected override void WriteFile(HttpResponse response)
         {
             response.TransmitFile(this.FileName);
         }
@@ -25,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         // Properties
         public string FileName { get; private set; }
 
-        protected override System.Threading.Tasks.Task WriteFileAsync(HttpResponseBase response)
+        protected override System.Threading.Tasks.Task WriteFileAsync(HttpResponse response)
         {
             TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
             tcs.SetResult(true);

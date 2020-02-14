@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                 .Must(HaveDistinctTemplates)
                 .When(x => x.Routes != null)
                 .WithName("Duplicate Routes detected")
-                .WithMessage("There are multiple routes with the same templates: [{0}]", x => string.Join(",", Group(x.Routes).Where(rs => rs.Count() > 1).Select(g => g.Key)));
+                .WithMessage(x => $"There are multiple routes with the same templates: [{string.Join(",", Group(x.Routes).Where(rs => rs.Count() > 1).Select(g => g.Key))}]");
         }
 
         static bool HaveDistinctTemplates(List<Route> routes)
@@ -44,7 +44,8 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public MappingValidator(IEntityListsWebApiClient client)
         {
             _entityListClient = client;
-            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("mapping type").WithMessage(string.Format("mapping type must be one of {0}", string.Join(",", types)));
+            RuleFor(x => x.Value.type.ToLowerInvariant()).Must(BeInTypeConst).WithName("mapping type").WithMessage(
+                $"mapping type must be one of {string.Join(",", types)}");
             RuleFor(x => x.Value).Must(HaveFacetMapFields).When(x => x.Value.type == Mapping.TypeConst.facet).WithName("facet mapping").WithMessage("facet mapping must provide  mapTo, and facetId");
             RuleFor(x => x.Value).Must(HaveMZDBMapFields).When(x => x.Value.type == Mapping.TypeConst.mzdb).WithName("mzdb mapping").WithMessage("mzdb mapping must provide listFqn and docId");
             RuleFor(x => x.Value).Must(HaveDirectMapFields).When(x => x.Value.type == Mapping.TypeConst.direct).WithName("direct mapping").WithMessage("direct mapping must provide mappings");
@@ -75,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override async Task<ValidationResult> ValidateAsync(ValidationContext<KeyValuePair<string, Mapping>> context)
+        public async Task<ValidationResult> ValidateAsync(ValidationContext<KeyValuePair<string, Mapping>> context)
         {
             var instance = context.InstanceToValidate.Value;
             var validDoc = ValidatorExt.OK;
@@ -141,7 +142,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
             return types.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override async Task<ValidationResult> ValidateAsync(ValidationContext<KeyValuePair<string, Validator>> context)
+        public async Task<ValidationResult> ValidateAsync(ValidationContext<KeyValuePair<string, Validator>> context)
         {
             var instance = context.InstanceToValidate.Value;
             var extraTypeValidations = await DoDataValidations(instance, _entityListClient, _attributeClient).ConfigureAwait(false);

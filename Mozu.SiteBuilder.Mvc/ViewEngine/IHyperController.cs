@@ -5,12 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-using Autofac;
-
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public interface  IHyprController 
     {
-        ILifetimeScope  LifetimeScope { get; set; }
+        IServiceProvider  LifetimeScope { get; set; }
     }
 }

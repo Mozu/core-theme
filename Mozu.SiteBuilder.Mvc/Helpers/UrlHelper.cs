@@ -64,6 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Helpers
 
         static JsonCleaningCaseInsensitiveMemberResolver _resolver = new JsonCleaningCaseInsensitiveMemberResolver();
 
+        //todo:cole add script support
         [Microsoft.ClearScript.ScriptMember("getUrl")]
         public string MakeUrl(string type, object obj, DynamicObject config, string hostname = null)
         {

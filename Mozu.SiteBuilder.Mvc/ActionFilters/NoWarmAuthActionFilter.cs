@@ -1,34 +1,29 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
+using System;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class NoWarmAuthActionFilter : ActionFilterAttribute
     {
-        public bool AllowMultiple
+        private readonly ISiteBuilderApiContext _sbContext;
+
+        public NoWarmAuthActionFilter(ISiteBuilderApiContext sbContext)
         {
-            get { return false; }
+            _sbContext = sbContext;
         }
 
+        public bool AllowMultiple => false;
 
         public string ReturnUrl
         {
             get; set;
         }
-        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
+        public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var sbContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
-            if (!sbContext.UserClaims.IsAnonymous && !sbContext.UserClaims.IsAuthenticationHot)
-            {
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Redirect);
-                var returnUrl = ReturnUrl ?? actionContext.Request.RequestUri.PathAndQuery;
-                actionContext.Response.Headers.Location = new Uri("/user/login?returnUrl=" + System.Web.HttpUtility.UrlEncode(returnUrl), UriKind.Relative);
-
-            }
-
+            if (_sbContext.UserClaims.IsAnonymous || _sbContext.UserClaims.IsAuthenticationHot) return;
+            var returnUrl = ReturnUrl ?? System.Web.HttpUtility.UrlEncode(actionContext.HttpContext.Request.Path) + actionContext.HttpContext.Request.QueryString.Value;
+            actionContext.Result = new RedirectResult(new Uri("/user/login?returnUrl=" + returnUrl, UriKind.Relative).ToString());
         }
     }
 }

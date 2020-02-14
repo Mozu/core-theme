@@ -5,7 +5,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http.Routing;
 using System.Web.Routing;
+using GreenPipes;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
 {
@@ -43,15 +47,16 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
         {
             var ret = string.Format("MozuVersionConstraint:{0}", string.Join(",",
                                  typeof(Mozu.Core.Api.Routing.MozuVersionConstraint)
-                                     .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Select(x => string.Format("[{0}:{1}]", x.Name, x.GetValue(ver))).ToArray()
+                                     .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Select(x =>
+                                         $"[{x.Name}:{x.GetValue(ver)}]").ToArray()
                                   )
                 );
             return ret;
         }
-        var meth = obj as System.Web.Http.Routing.HttpMethodConstraint;
-        if (meth != null)
+
+        if (obj is HttpMethodConstraint meth)
         {
-            var ret= string.Format("HttpMethod:{0}", string.Join(",", meth.AllowedMethods.Select(x => x.Method.ToString()).ToArray()));
+            var ret= $"HttpMethod:{string.Join(",", meth.AllowedMethods.Select(x => x.Method.ToString()).ToArray())}";
             return ret;
         }
         return obj.ToString();
@@ -61,17 +66,17 @@ namespace Mozu.SiteBuilder.Mvc.Debugging.RouteDebug
     public void ProcessRequest(HttpContext context)
     {
         string str = string.Empty;
-        if (context.Request.QueryString.Count > 0)
+        if (context.Request.Query.Count > 0)
         {
             RouteValueDictionary dictionary = new RouteValueDictionary();
-            foreach (string str2 in context.Request.QueryString.Keys)
+            foreach (string str2 in context.Request.Query.Keys)
             {
-                dictionary.Add(str2, context.Request.QueryString[str2]);
+                dictionary.Add(str2, context.Request.Query[str2]);
             }
 
             
 
-            VirtualPathData virtualPath = RouteTable.Routes.GetVirtualPath(this.RequestContext, dictionary);
+            VirtualPathData virtualPath = context.Request.GetVirtualPath(this.RequestContext, dictionary);
             if (virtualPath != null)
             {
                 str = "<p><label>Generated URL</label>: ";

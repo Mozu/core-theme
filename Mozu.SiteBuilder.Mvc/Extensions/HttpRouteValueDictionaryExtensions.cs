@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Web.Http;
 using System.Web.Http.Routing;
+using Microsoft.AspNetCore.Routing;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.SEO.Mappings;
 using Mozu.SiteSettings.General.Contracts.General.Routing;
@@ -31,7 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     }
     public static class RouteExtensions
     {
-        public static IHttpRoute MapCustomHttpRoute(this System.Web.Http.HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme? scheme = null)
+        public static IHttpRoute MapCustomHttpRoute(this HttpRouteCollection routes, string name, string routeTemplate, object defaults, IDictionary<ICustomRouteConstraint, string[]> constraints, IDictionary<IRouteDataMapping, string[]> mappings, FancyRoute fancyRoute, bool isCanonical, CustomRoute.Scheme? scheme = null)
         {
             if (mappings == null)
             {
@@ -40,7 +42,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
 
             mappings.Add(new RouteDataFixup(), new string[0]);
 
-            HttpRouteValueDictionary defaultsDictionary = new HttpRouteValueDictionary(defaults);
+            RouteValueDictionary defaultsDictionary = new RouteValueDictionary(defaults);
             defaultsDictionary
                .ChainSet("controller", CustomRouteRepository.GetControllerName(fancyRoute))
                .ChainSet("action", CustomRouteRepository.GetControllerAction(fancyRoute));

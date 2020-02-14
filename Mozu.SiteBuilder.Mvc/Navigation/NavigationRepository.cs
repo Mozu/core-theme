@@ -4,6 +4,7 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using Magnum.Extensions;
+using Microsoft.Extensions.Logging;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.CMS;

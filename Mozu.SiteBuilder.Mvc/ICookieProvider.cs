@@ -4,8 +4,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 
 namespace Mozu.SiteBuilder.Mvc
@@ -23,17 +26,17 @@ namespace Mozu.SiteBuilder.Mvc
     public interface ICookieProvider
     {
         CookieState GetRequestCookie(string cookieName);
-        void SaveResponseCookie(string cookieName, HttpCookie cookie, bool httpOnly = true);
+        void SaveResponseCookie(string cookieName, Cookie cookie, bool httpOnly = true);
         void RemoveCookie(string cookieName);
     }
 
     public class CookieProvider : ICookieProvider
     {
         private readonly HttpRequestMessage _request;
-        private readonly HttpContextBase _context;
+        private readonly HttpContext _context;
         //private readonly string _cookieName;
         
-        public CookieProvider( HttpRequestMessage request , HttpContextBase context ,  ISettings settings   )
+        public CookieProvider( HttpRequestMessage request , HttpContext context ,  ISettings settings   )
         {
             _request = request;
             _context = context;
@@ -65,21 +68,21 @@ namespace Mozu.SiteBuilder.Mvc
             return cookie;
         }
 
-        public void SaveResponseCookie(string cookieName , HttpCookie cookie, bool httpConly = true)
+        public void SaveResponseCookie(string cookieName , Cookie cookie, bool httpConly = true)
         {
             cookie.Name = cookieName;
             cookie.HttpOnly = httpConly;
             //cookie.Domain = this.Domain;
-            if (_context.Response.Cookies.AllKeys.Any( x=> x == cookieName ))
+            if (_context.Request.Cookies.ContainsKey(cookieName))
             {
-                _context.Response.Cookies.Remove(cookieName);
+                _context.Response.Cookies.Delete(cookieName);
             }
-            _context.Response.SetCookie(cookie);
+            _context.Response.Cookies.Append(cookieName, cookie.Value);
         }
 
         public void RemoveCookie(string cookieName)
         {
-            _context.Response.Cookies.Remove(cookieName);
+            _context.Response.Cookies.Delete(cookieName);
         }
     }
 }

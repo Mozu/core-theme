@@ -25,6 +25,7 @@ using Autofac;
 using System.Net.Http;
 using System.Web;
 using Mozu.SiteBuilder.Mvc.Context;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation
 {
@@ -47,7 +48,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         readonly UrlHelper _urlHelper;
         readonly Lazy<string> _primaryDomain;
 
-        ILifetimeScope _lifetimeScope;
+        IServiceProvider _lifetimeScope;
         private string _priceListCode;
 
         const string NAVIGATION_LIST_INTERNAL_CACHE_KEY = "navigation_list";
@@ -66,7 +67,7 @@ namespace Mozu.SiteBuilder.Mvc.Navigation
         /// Public constructor.
         /// </summary>
         public NavigationGandalfTheWhite(ISiteBuilderContextProvider contextProvider,
-            IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, ILifetimeScope lifetimeScope = null,
+            IDocumentListWebApiClient documentClient, INavigationRepository navRepo, ILogger logger, PageContext pageContext, IApiContext apicontext, ICategoryTreeProvider categoryProvider, UrlHelper urlHelper, IStorefrontCache cache = null, ICustomRouteHandler customRouteHandler = null, IServiceProvider lifetimeScope = null,
             Lazy<ISiteContext> siteContext = null)
         {
             _contextProvider = contextProvider;

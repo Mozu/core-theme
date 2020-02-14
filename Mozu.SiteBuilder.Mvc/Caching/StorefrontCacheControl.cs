@@ -49,17 +49,17 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public static string GetSiteCacheKey( int siteId, string key)
         {
-            return String.Format("site:{0}-{1}", siteId, key);
+            return $"site:{siteId}-{key}";
         }
 
         public static string GetCatalogCacheKey( int tenantId, int catalogId)
         {
-            return String.Format("tenant:{0}-catalog:{1}", tenantId, catalogId);
+            return $"tenant:{tenantId}-catalog:{catalogId}";
         }
 
         public static string GetCatalogCacheKey(int tenantId, int catalogId, string key)
         {
-            return String.Format("tenant:{0}-catalog:{1}-{2}", tenantId, catalogId, key);
+            return $"tenant:{tenantId}-catalog:{catalogId}-{key}";
         }
 
         public static string GetTenantCacheKey(int tenant)
@@ -69,7 +69,7 @@ namespace Mozu.SiteBuilder.Mvc.Caching
 
         public static string GetTenantCacheKey( int siteId, string key)
         {
-            return String.Format("tenant:{0}-{1}", siteId, key);
+            return $"tenant:{siteId}-{key}";
         }
     }
     class EventDebouncer

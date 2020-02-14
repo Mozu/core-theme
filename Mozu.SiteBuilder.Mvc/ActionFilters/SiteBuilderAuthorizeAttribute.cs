@@ -1,40 +1,24 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Controllers;
-using System.Web.Mvc;
-using Autofac;
-using Mozu.AdminUser.Contracts.Clients;
-using Mozu.Core;
-using Mozu.Core.Settings;
-using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
-
-using Mozu.SiteBuilder.Mvc.Security;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class StoreFrontAuthorizeAttribute : System.Web.Http.AuthorizeAttribute
-
+    public class StoreFrontAuthorizeAttribute : IAuthorizationFilter
     {
-      
-        protected override bool IsAuthorized(System.Web.Http.Controllers.HttpActionContext actionContext)
+        private readonly ISiteBuilderApiContext _sbc;
+
+        public StoreFrontAuthorizeAttribute(ISiteBuilderApiContext sbc)
         {
-            var sbc = actionContext.Request.Resolve<ISiteBuilderApiContext>();
-            if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || !sbc.UserClaims.IsAuthenticationHot )
+            _sbc = sbc;
+        }
+
+        public bool AllowMultiple => false;
+        public void OnAuthorization(AuthorizationFilterContext context)
+        {
+            if (_sbc.UserClaims == null || _sbc.UserClaims.IsAnonymous || !_sbc.UserClaims.IsAuthenticationHot)
             {
-                return false;
+                context.Result = new ForbidResult();
             }
-
-            return true;
-
         }
-
-        public override bool AllowMultiple
-        {
-            get { return false; }
-        }
-
     }
 }

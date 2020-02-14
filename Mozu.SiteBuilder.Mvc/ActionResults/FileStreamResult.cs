@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -14,29 +15,21 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         public FileStreamResult(Stream fileStream, string contentType)
             : base(contentType)
         {
-            if (fileStream == null)
-            {
-                throw new ArgumentNullException("fileStream");
-            }
-            FileStream = fileStream;
+            FileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
         }
-
-     
 
         // Properties
         public Stream FileStream { get; private set; }
 
-        protected override void WriteFile(HttpResponseBase response)
-        {
-           
-            
-            Stream outputStream = response.OutputStream;
+        protected override void WriteFile(HttpResponse response)
+        {   
+            var outputStream = response.Body;
             using (FileStream)
             {
                 var buffer = new byte[0x1000];
                 while (true)
                 {
-                    int count = FileStream.Read(buffer, 0, 0x1000);
+                    var count = FileStream.Read(buffer, 0, BufferSize);
                     if (count == 0)
                     {
                         return;
@@ -48,15 +41,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         
 
-        protected async override Task WriteFileAsync(HttpResponseBase response)
+        protected override async Task WriteFileAsync(HttpResponse response)
         {
-            Stream outputStream = response.OutputStream;
-            using (FileStream)
+            var outputStream = response.Body;
+            await using (FileStream)
             {
                 var buffer = new byte[0x1000];
                 while (true)
                 {
-                    int count = await FileStream.ReadAsync( buffer, 0, 0x1000).ConfigureAwait(false);
+                    var count = await FileStream.ReadAsync( buffer, 0, BufferSize).ConfigureAwait(false);
                     if (count == 0)
                     {
                         return;

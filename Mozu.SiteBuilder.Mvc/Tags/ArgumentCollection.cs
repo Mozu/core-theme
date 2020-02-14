@@ -9,8 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Web.Routing;
+    using Microsoft.AspNetCore.Routing;
 
     /// <summary>
     /// TODO: Update summary.
@@ -47,21 +46,26 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public T GetValueOrDefault<T>(string parameterName, Func<T> defaultValue)
         {
-            TagArgument arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
+            var arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (arg == null || arg.Value == null) return defaultValue();
-            if (arg.Value is string && string.IsNullOrEmpty((string)arg.Value)) return defaultValue();
-            if (arg.Value is T) return (T)arg.Value;
-
-            try
+            switch (arg?.Value)
             {
-                return (T)Convert.ChangeType(arg.Value, typeof(T));
+                case null:
+                    return defaultValue();
+                case string value when string.IsNullOrEmpty(value):
+                    return defaultValue();
+                case T value:
+                    return value;
+                default:
+                    try
+                    {
+                        return (T)Convert.ChangeType(arg.Value, typeof(T));
+                    }
+                    catch (Exception)
+                    {
+                        return defaultValue();
+                    }
             }
-            catch (Exception)
-            {
-                return defaultValue();
-            }
-
         }
 
         public T GetValueOrDefault<T>(string parameterName, T defaultValue = default(T))
@@ -71,25 +75,19 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public bool TryGetValue<T>(string parameterName, out T value)
         {
-            TagArgument arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
+            var arg = this.FirstOrDefault(x => string.Equals(parameterName, x.Name, StringComparison.OrdinalIgnoreCase));
             if (arg != null)
             {
                 value = (T)arg.Value;
             }
             else
             {
-                value = default(T);
+                value = default;
             }
             return arg != null;
         }
 
-        public int ValueCount
-        {
-            get
-            {
-                return this.Count(x => x.ArgumentType == TagArgument.ArgumentTypes.ValueArgument);
-            }
-        }
+        public int ValueCount => this.Count(x => x.ArgumentType == TagArgument.ArgumentTypes.ValueArgument);
 
         public IDictionary<string, object> ToDictionary(string startKeyword = null, string endKeyword = null, IDictionary<string, object> dic = null)
         {
@@ -99,14 +97,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
                 dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             }
-            int startPos = -1;
+            var startPos = -1;
             if (startKeyword != null)
             {
                 startPos = FindIndex(x => x.ArgumentType == TagArgument.ArgumentTypes.Keyword && x.Name == startKeyword);
                 if (startPos == -1)
                     return dic;
             }
-            int endPos = int.MaxValue;
+            var endPos = int.MaxValue;
             if (endKeyword != null)
             {
                 endPos = FindIndex(x => x.ArgumentType == TagArgument.ArgumentTypes.Keyword && x.Name == endKeyword);
@@ -114,7 +112,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                     endPos = int.MaxValue;
             }
 
-            for (int pos = startPos + 1; pos < Count && pos < endPos; pos++)
+            for (var pos = startPos + 1; pos < Count && pos < endPos; pos++)
             {
                 dic[this[pos].Name] = this[pos].Value;
             }
@@ -123,11 +121,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         public RouteValueDictionary ToRouteValueDictionary(string startKeyword = null, string endKeyword = null, RouteValueDictionary dic = null)
         {
-            if (dic == null)
-            {
-                dic = new RouteValueDictionary();
-                dic[ArgumentCollection.ArgumentDictionaryKey ] = dic;
-            }
+            if (dic != null) return (RouteValueDictionary) ToDictionary(startKeyword, endKeyword, dic);
+            dic = new RouteValueDictionary();
+            dic[ArgumentCollection.ArgumentDictionaryKey ] = dic;
             return (RouteValueDictionary)ToDictionary(startKeyword, endKeyword, dic);
         }
 
@@ -145,9 +141,9 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             static ArgumentCollection MultiMapsWithAsKeywordsFN(ArgumentCollection coll)
             {
-                ArgumentCollection copy = new ArgumentCollection();
+                var copy = new ArgumentCollection();
                 RouteValueDictionary dic = null;
-                for (int i = 0; i < coll.Count; i++)
+                for (var i = 0; i < coll.Count; i++)
                 {
                     var tag = coll[i];
 
@@ -169,14 +165,15 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                                             i++;
                                         }
                                     }
-                                    if (paramName != null)
-                                    {
-                                        copy.Add(new TagArgument() { Value = dic, Name = paramName, ArgumentType = TagArgument.ArgumentTypes.NamedArgument });
-                                    }
-                                    else
-                                    {
-                                        copy.Add(new TagArgument() { Value = dic ,  ArgumentType = TagArgument.ArgumentTypes.ValueArgument  });
-                                    }
+
+                                    copy.Add(paramName != null
+                                        ? new TagArgument()
+                                        {
+                                            Value = dic, Name = paramName,
+                                            ArgumentType = TagArgument.ArgumentTypes.NamedArgument
+                                        }
+                                        : new TagArgument()
+                                            {Value = dic, ArgumentType = TagArgument.ArgumentTypes.ValueArgument});
                                     dic = null;
                                     break;
                                 }

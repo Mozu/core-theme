@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Routing;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -18,7 +23,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-            var httpContext = requestMessage.Resolve<HttpContextBase>();
+            var httpContext = requestMessage.Resolve<HttpContext>();
             var routeData = new RouteData();
 
             var res = new InnerViewResult()
@@ -39,10 +44,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
 
 
-        public class InnerViewResult : System.Web.Mvc.ViewResultBase
+        public class InnerViewResult : Microsoft.AspNetCore.Mvc.ViewResult
         {
             public HttpRequestMessage RequestMessage { get; set; }
-            public override void ExecuteResult(ControllerContext context)
+            public override void ExecuteResult(ActionContext context)
             {
                 if (context == null)
                 {
@@ -50,11 +55,8 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                 }
                 if (string.IsNullOrEmpty(this.ViewName))
                 {
-                    this.ViewName = context.RouteData.GetRequiredString("action");
+                    this.ViewName = context.RouteData.Values["action"].ToString();
                 }
-
-
-
 
                 ViewEngineResult result = null;
                 if (this.View == null)

@@ -20,6 +20,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.UX.Models.Customers;
 using System.Globalization;
+using Microsoft.AspNetCore.Http;
 using Mozu.Core.Money;
 using Mozu.SiteBuilder.Mvc.Tags;
 
@@ -28,7 +29,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 {
     public class PagingParameters
     {
-        private SearchContext search;
+        private readonly SearchContext search;
 
         public PagingParameters(SearchContext search)
         {
@@ -37,27 +38,18 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public string FacetValueFilter
         {
-            get
-            {
-                return search.ToFacetValueFilter();
-            }
-            set { throw new NotSupportedException(); }
+            get => search.ToFacetValueFilter();
+            set => throw new NotSupportedException();
         }
         public int? PageSize
         {
-            get
-            {
-                return search.PageSize;
-            }
-            set { throw new NotSupportedException(); }
+            get => search.PageSize;
+            set => throw new NotSupportedException();
         }
         public int? StartIndex
         {
-            get
-            {
-                return search.StartIndex;
-            }
-            set { throw new NotSupportedException(); }
+            get => search.StartIndex;
+            set => throw new NotSupportedException();
         }
       
 
@@ -68,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public override string ToString()
         {
-            return string.Format("PagingParameters,{0},{1},{2}", this.StartIndex, this.PageSize, this.FacetValueFilter );
+            return $"PagingParameters,{StartIndex},{PageSize},{FacetValueFilter}";
         }
     }
 
@@ -106,14 +98,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
         public string Sort
         {
-            get
-            {
-                return this.search.SortBy;
-            }
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get => this.search.SortBy;
+            set => throw new NotSupportedException();
         }
         public static SortingParameters Create(SearchContext search)
         {
@@ -138,7 +124,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
     public interface IPageContext
     {
         NameValueCollection Query { get; }
-        HttpCookieCollection Cookies { get; }
+        IRequestCookieCollection Cookies { get; }
         string ThemeId { get; }
         bool IsDebugMode { get; }
         SortingParameters Sorting { get; set; }
@@ -225,9 +211,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 IEnumerable<string> val = null;
                 if ( request?.Headers.TryGetValues("x-forwarded-for", out val) == false || val?.Any()== false)
                 {
-                    val = new string[] { ((System.Web.HttpContextWrapper)request?.Properties["MS_HttpContext"])?.Request?.ServerVariables["REMOTE_ADDR"] };
+                    val = new string[] { ((HttpContext)request?.Properties["MS_HttpContext"])?.Request?.Headers["REMOTE_ADDR"] };
                 }
-                IpAddress = val?.SelectMany( _ => _.Split(',')).Select(_ => _.Trim()).Where(_ => _.IsIPAddressValid()).FirstOrDefault();
+                IpAddress = (val?.SelectMany( _ => _.Split(',')).Select(_ => _.Trim())).FirstOrDefault(_ => _.IsIPAddressValid());
                 
                 if ( !IpAddress.IsIPAddressValid())
                 {
@@ -245,8 +231,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _requestMessage;
         private readonly ISettings _settings;
-        private IMobileDetectionProvider _mobileDetectionProvider;
-        private readonly HttpContextBase _context;
+        // private IMobileDetectionProvider _mobileDetectionProvider;
+        private readonly HttpContext _context;
         private ISiteContext _siteContext;
         LocationInfo _location;
 
@@ -254,17 +240,17 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         {
 
         }
-        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null, IMobileDetectionProvider mobileDetectionProvider = null, ISiteContext siteContext = null)
+        public static PageContext CreateForTesting(ISiteBuilderApiContext apiContext = null/*, IMobileDetectionProvider mobileDetectionProvider = null*/, ISiteContext siteContext = null)
         {
             var pc = new PageContext()
             {
                 _apiContext = apiContext,
-                _mobileDetectionProvider = mobileDetectionProvider,
+                // _mobileDetectionProvider = mobileDetectionProvider,
                 _siteContext = siteContext
             };
             return pc;
         }
-        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings, IMobileDetectionProvider mobileDetectionProvider, HttpContextBase context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
+        public PageContext(ISiteBuilderApiContext apiContext, IAuthenticationHelper authenticationHelper, HttpRequestMessage requestMessage, ISettings settings/*, IMobileDetectionProvider mobileDetectionProvider*/, HttpContext context, IRequestUrlFinderOuter requestURLGetter, Lazy<ICategoryTreeProvider> categoryTreeProvider
             , IIpAddressFinderOuter ipAddressFinderOuter,
             ISiteContext siteContext)
         {
@@ -272,13 +258,13 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _authenticationHelper = authenticationHelper;
             _requestMessage = requestMessage;
             _settings = settings;
-            _mobileDetectionProvider = mobileDetectionProvider;
+            // _mobileDetectionProvider = mobileDetectionProvider;
             _context = context;
             this._siteContext = siteContext;
-            _crawlerInfo = new CrawlerInfo()
-            {
-                IsCrawler = IsCrawler
-            };
+            //_crawlerInfo = new CrawlerInfo()
+            //{
+            //    IsCrawler = IsCrawler
+            //};
 
             IsEditMode = _apiContext.IsEditMode;
             HandledByProxy = IsHeaderTrue(Core.Api.Contracts.Constants.Headers.HANDLED_BY_PROXY, requestMessage);
@@ -304,11 +290,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 return;
             }
             _initCurrency = true;
-            Mozu.Core.Money.CurrencyCode cc;
 
 
             if (_siteContext.CurrencyExchangeRate != null &&
-                Mozu.Core.Money.CurrencyCode.TryParse(_siteContext.CurrencyExchangeRate.ToCurrencyCode, out cc))
+                Enum.TryParse(_siteContext.CurrencyExchangeRate.ToCurrencyCode, out CurrencyCode cc))
             {
                 CurrencyInfo = Mozu.Core.Money.CurrencyRepository.Get(cc);
      
@@ -342,10 +327,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         }
 
         [JsonPreloadFilter]
-        public string CorrelationId
-        {
-            get { return _apiContext.TraceContext?.CorrelationId; }
-        }
+        public string CorrelationId => _apiContext.TraceContext?.CorrelationId;
+
         [JsonPreloadFilter]
         public string IpAddress
         {
@@ -359,7 +342,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             var prof = new UserProfile
             {
-                UserId = userClaims != null ? userClaims.UserId : null
+                UserId = userClaims?.UserId
             };
 
             if (!string.IsNullOrEmpty(ptoken))
@@ -381,8 +364,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         static User CreateUserFromClaims(LightweightUserClaims userClaims, Lazy<UserProfile> userProfile)
         {
-            string tempStr;
-            int accountId = -1;
+            var accountId = -1;
 
             //TODO: chusk 18 Nov 2015 - should maybe default to some dummy placeholder User.
             if (userClaims == null) return null;
@@ -391,8 +373,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             var segments = new List<string>();
             if (userClaims.Bag != null)
             {
-
-                if (userClaims.Bag.TryGetValue("AccountId", out tempStr))
+                if (userClaims.Bag.TryGetValue("AccountId", out var tempStr))
                 {
                     if (!int.TryParse(tempStr, out accountId))
                     {
@@ -449,17 +430,11 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         [System.Runtime.Serialization.IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
-        public NameValueCollection Query
-        {
-            get { return _context.Request.QueryString; }
-        }
+        public NameValueCollection Query => HttpUtility.ParseQueryString(_context.Request.QueryString.Value);
 
         [System.Runtime.Serialization.IgnoreDataMember]
         [Newtonsoft.Json.JsonIgnore]
-        public HttpCookieCollection Cookies
-        {
-            get { return _context.Request.Cookies; }
-        }
+        public IRequestCookieCollection Cookies => _context.Request.Cookies;
 
         private string _themeId;
 
@@ -467,24 +442,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         //used to serialize out the themid to the page.   Sitecontext is still kinda the canonical loc, but since based on user agent ... needs to be lesser client cached page context 
         public string ThemeId
         {
-            get
-            {
-                if (_themeId == null)
-                {
-                    _themeId = this._requestMessage.Resolve<SiteContext>().ThemeId;
-                }
-                return _themeId;
-            }
-            set
-            {
-                _themeId = value;
-            }
+            get => _themeId ??= this._requestMessage.Resolve<SiteContext>().ThemeId;
+            set => _themeId = value;
         }
         [JsonPreloadFilter]
-        public bool IsDebugMode
-        {
-            get { return _apiContext.IsDebugMode; }
-        }
+        public bool IsDebugMode => _apiContext.IsDebugMode;
+
         public DebugModeFlagValues DebugFlags => _apiContext.DebugFlags;
 
         public SortingParameters Sorting
@@ -494,8 +457,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         string _cdnCacheBustKey;
         public string CdnCacheBustKey
         {
-            get { return _cdnCacheBustKey ?? _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey; }
-            set { _cdnCacheBustKey = value; }
+            get => _cdnCacheBustKey ?? _requestMessage.Resolve<ISiteContext>().GeneralSettings.CdnCacheBustKey;
+            set => _cdnCacheBustKey = value;
         }
 
         public PagingParameters Pagination
@@ -505,22 +468,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         bool IsHeaderTrue(string headerName, HttpRequestMessage requestMessage)
         {
-            IEnumerable<string> values;
-            if (requestMessage.Headers.TryGetValues(headerName, out values))
+            if (!requestMessage.Headers.TryGetValues(headerName, out var values)) return false;
+            var val = values.FirstOrDefault();
+            if (bool.TryParse(val, out var ret))
             {
-
-
-                bool ret;
-                var val = values.FirstOrDefault();
-                if (bool.TryParse(val, out ret))
-                {
-                    return ret;
-                }
-
-                return val == "1";
+                return ret;
             }
-            return false;
-            ;
+
+            return val == "1";
         }
 
 
@@ -535,44 +490,23 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public string PageTypeId { get; set; }
         public List<KeyValuePair<string, string>> ShippingCountries { get; set; }
         public List<KeyValuePair<string, string>> BillingCountries { get; set; }
+        [JsonPreloadFilter] public bool IsCrawler => false;//_mobileDetectionProvider.IsCurrentRequestCrawler;
+
+        [JsonPreloadFilter] public bool IsMobile => false;//_mobileDetectionProvider.IsCurrentRequestMobile;
+
         [JsonPreloadFilter]
-        public bool IsCrawler
-        {
-            get { return _mobileDetectionProvider.IsCurrentRequestCrawler; }
-        }
+        public bool IsTablet => false;//_mobileDetectionProvider.IsCurrentRequestTablet;
+
         [JsonPreloadFilter]
-        public bool IsMobile
-        {
-            get { return _mobileDetectionProvider.IsCurrentRequestMobile; }
-        }
-        [JsonPreloadFilter]
-        public bool IsTablet
-        {
-            get { return _mobileDetectionProvider.IsCurrentRequestTablet; }
-        }
-        [JsonPreloadFilter]
-        public bool IsDesktop
-        {
-            get
-            {
-                return (!_mobileDetectionProvider.IsCurrentRequestMobile &&
-                        !_mobileDetectionProvider.IsCurrentRequestTablet);
-            }
-        }
+        public bool IsDesktop => false;//(!_mobileDetectionProvider.IsCurrentRequestMobile &&!_mobileDetectionProvider.IsCurrentRequestTablet);
 
         public CmsPageContext CmsContext { get; set; }
 
         SearchContext _sc;
         public SearchContext Search
         {
-            get
-            {
-                return _sc ?? SearchContext.Get(_requestMessage);
-            }
-            set
-            {
-                _sc = value;
-            }
+            get => _sc ?? SearchContext.Get(_requestMessage);
+            set => _sc = value;
         }
         [JsonPreloadFilter]
         public Visit Visit
@@ -596,10 +530,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonPreloadFilter]
         public User User
         {
-            get
-            {
-                return _user.Value;
-            }
+            get => _user.Value;
             set
             {
                 _user = new Lazy<User>(() => value);
@@ -608,10 +539,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonPreloadFilter]
         public UserProfile UserProfile
         {
-            get
-            {
-                return _userProfile.Value;
-            }
+            get => _userProfile.Value;
             set
             {
                 _userProfile = new Lazy<UserProfile>(() => value);
@@ -620,14 +548,8 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         [JsonPreloadFilter]
         public LocationInfo PurchaseLocation
         {
-            get
-            {
-                return _location;
-            }
-            set
-            {
-                _location = value;
-            }
+            get => _location;
+            set => _location = value;
         }
 
 
@@ -641,9 +563,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
         public string DocumentId { get; set; }
         [JsonPreloadFilter]
-        public bool IsEditMode { get { return _apiContext.IsEditMode; } set { _apiContext.IsEditMode = value; } }
+        public bool IsEditMode { get => _apiContext.IsEditMode;
+            set => _apiContext.IsEditMode = value;
+        }
         [JsonPreloadFilter]
-        public bool IsAdminMode { get { return _apiContext.IsAdminMode; } }
+        public bool IsAdminMode => _apiContext.IsAdminMode;
+
         public string VariationId { get; set; }
         public JArray Variations { get; set; }
         public string Url { get; set; }
@@ -661,20 +586,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public DateTime Now { get; set; }
 
         public string CategoryCode { get; set; }
-        public int? CategoryId { get { return Search.CategoryId; } set { Search.CategoryId = value; } }
+        public int? CategoryId { get => Search.CategoryId;
+            set => Search.CategoryId = value;
+        }
         public List<Core.Extensible.Contracts.Attribute> StorefrontOrderAttributes { get; set; }
 
 
         ICrawlerInfo _crawlerInfo;
         [JsonPreloadFilter]
-        public ICrawlerInfo CrawlerInfo
-        {
-            get
-            {
-                return _crawlerInfo;
-            }
+        public ICrawlerInfo CrawlerInfo => null;//_crawlerInfo;
 
-        }
         Currency _currency;
         public Currency CurrencyInfo
         {
@@ -683,10 +604,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 InitCurrencySettings();
                 return _currency;
             }
-            set
-            {
-                _currency = value;
-            }
+            set => _currency = value;
         }
 
         NumberFormatInfo _numberFormatInfo;
@@ -697,10 +615,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 InitCurrencySettings();
                 return _numberFormatInfo;
             }
-            set
-            {
-                _numberFormatInfo = value;
-            }
+            set => _numberFormatInfo = value;
         }
 
         
@@ -713,10 +628,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 InitCurrencySettings();
                 return _currencyRateInfo;
             }
-            set
-            {
-                _currencyRateInfo = value;
-            }
+            set => _currencyRateInfo = value;
         }
       
     }
@@ -734,7 +646,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         public static readonly CurrencyRateInfo Empty = new CurrencyRateInfo();
         public bool IsEmpty()
         {
-            return Object.Equals(Empty, this);
+            return Equals(Empty, this);
         }
 
     }

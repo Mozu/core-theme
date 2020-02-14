@@ -1,22 +1,17 @@
-﻿using System.Web.Http.Controllers;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Api.Client.Caching;
-using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class EditModeCacheInvalidatorFilter : Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute
+    public class EditModeCacheInvalidatorFilter : ActionFilterAttribute
     {
-        public bool AllowMultiple
+        public bool AllowMultiple => false;
+
+        public void OnActionExecuting(ActionExecutingContext actionContext, ISiteBuilderApiContext apiContext, IDirtyCacheInvalidator invalidator)
         {
-            get { return false; }
-        }
-        public override  void OnActionExecuting(HttpActionContext actionContext)
-        {
-            var apiContext = actionContext.Request.Resolve<ISiteBuilderApiContext>();
             if (!apiContext.IsEditMode)
                 return;
 
-            var invalidator = actionContext.Request.Resolve<IDirtyCacheInvalidator>();
             invalidator.Invalidate();
         }
         

@@ -5,13 +5,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using Autofac;
-using Autofac.Integration.WebApi;
-
-
 using System.Threading;
-
-
+using Microsoft.AspNetCore.Http;
+using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
@@ -46,28 +42,17 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         public  static void UpdateScopeWithHttpRequestMessage(HttpRequestMessage request)
         {
             var scope = request.GetDependencyScope();
-            var requestScope = scope.GetRequestLifetimeScope();
-            if (requestScope == null) return;
+            if (scope == null) return;
 
-            var registry = requestScope.ComponentRegistry;
+            var registry = scope.ComponentRegistry;
             var builder = new ContainerBuilder();
 
           
-            builder.Register( c =>
-            {
-                if (HttpContext.Current != null)
-                {
-                    return (HttpContextBase)new HttpContextWrapper(HttpContext.Current);
-                }
-                else
-                {
-                    return (HttpContextBase)new DummyHttpContextBase();
-                }
-            }
-            ).As<HttpContextBase>().InstancePerLifetimeScope();
+            builder.Register( c => { return request.HttpContext() ?? new DummyHttpContextBase(); }
+            ).As<HttpContext>().InstancePerLifetimeScope();
             builder.Update(registry);
         }
-        class DummyHttpContextBase: HttpContextBase
+        class DummyHttpContextBase: HttpContext
         {
 
         }
