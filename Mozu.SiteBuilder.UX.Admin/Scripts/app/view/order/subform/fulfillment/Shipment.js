@@ -363,7 +363,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             ];
         }
 
-        if (this.shipmentRecord.shipmentType.toLowerCase() == 'transfer' && this.shipmentRecord.workflowState.shipmentState.toLowerCase() == 'in_transit') {
+        if (this.shipmentRecord.shipmentType.toLowerCase() == 'transfer' && this.shipmentRecord.workflowState.shipmentState.toLowerCase() == 'validate_incoming_transfer') {
             splitMenus.push(shipmentMarkAsReceiveTransfer);
         }
         return splitMenus;
