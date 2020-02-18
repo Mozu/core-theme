@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
         public class BackorderItemsUpdateArgs
         {
             public int? ShipmentNumber { get; set; }
-            public BackorderItemsRequest BackorderItemsRequest { get; set; }
+            public BackorderItemsUpdateRequest BackorderItemsRequest { get; set; }
         }
         [HttpPostRoute(UriTemplate = "shipment/backorderItemsUpdate")]
         public async Task<Response<ResourceOfShipment>> BackorderItemsUpdate(BackorderItemsUpdateArgs args)
