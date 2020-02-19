@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
-using Newtonsoft.Json.Linq;
 using CR = Mozu.CommerceRuntime.Contracts.Fulfillment;
 using F = Kibo.Fulfillment.Contracts.Model;
 
@@ -11,16 +9,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
     {
         public FulfillmentMapping()
         {
-            CreateMap<F.ResourceOfShipment, CR.Shipment>()                
+            CreateMap<F.ResourceOfShipment, CR.Shipment>()
                 .ForMember(x => x.Number, opt => opt.ResolveUsing(dc => dc.ShipmentNumber))
                 .ForMember(x => x.TrackingNumbers, opt => opt.ResolveUsing(dc => dc.Packages
                                .SelectMany(x => x.TrackingNumbers).Where(track => !string.IsNullOrWhiteSpace(track)).ToList()))
-                .ForMember(x => x.Packages, opt => opt.Ignore());
+                .ForMember(x => x.Packages, opt => opt.Ignore())
+                .ForMember(x => x.Data, opt => opt.Ignore());
 
             CreateMap<F.Item, CR.ShipmentItem>()
                 .ForMember(x => x.FulfillmentLocationCode, opt => opt.Ignore())
                 .ForMember(x => x.IsPackagedStandAlone, opt => opt.Ignore())
-                .ForMember(x => x.Measurements, opt => opt.Ignore());
+                .ForMember(x => x.Measurements, opt => opt.Ignore())
+                .ForMember(x => x.Data, opt => opt.Ignore());
 
             CreateMap<F.ChangeMessage, Mozu.CommerceRuntime.Contracts.Commerce.ChangeMessage>()
                 .ForMember(x => x.Id, opt => opt.Ignore())
@@ -34,7 +34,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api.ModelMapping
 
             CreateMap<F.CanceledReason, Mozu.CommerceRuntime.Contracts.Orders.CanceledReason>()
                 .ForMember(x => x.Description, opt => opt.Ignore());
-
 
             CreateMap<CR.Shipment, F.ResourceOfShipment>()
                 .ForMember(x => x.ShipmentNumber, opt => opt.ResolveUsing(dc => dc.Number));
