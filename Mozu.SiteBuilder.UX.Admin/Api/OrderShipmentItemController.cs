@@ -69,6 +69,18 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             return Single2(serviceResponse);
         }
 
+        public class PickupItemsRequestArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public PickupItemsRequest PickupItemsRequest { get; set; }
+        }
+        [HttpPostRoute(UriTemplate = "shipment/pickupItems")]
+        public async Task<Response<ResourceOfShipment>> PickupItems(PickupItemsRequestArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.PickupItems(args.PickupItemsRequest,args.ShipmentNumber)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
+
         public class TransferShipmentItemsArgs
         {
             public int? ShipmentNumber { get; set; }

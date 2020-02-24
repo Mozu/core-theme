@@ -60,6 +60,9 @@ Ext.define('Taco.view.order.subform.fulfillment.ShipmentTabs', {
             listeners: {
                 shipmentRefresh: function () {
                     me.fireEvent('shipmentRefresh');
+                },
+                partialPickup: function (partialPickupItems) {
+                    me.fireEvent('partialPickup', partialPickupItems);
                 }
             }
         }));

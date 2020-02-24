@@ -30,7 +30,80 @@ Ext.define('Taco.view.order.subform.fulfillment.AllItemsTab', {
                 },
                 shipmentRefresh: function () {
                     me.fireEvent('shipmentRefresh');
-                }
+                },
+                partialPickup: function (partialPickupItems) {
+                    me.fireEvent('partialPickup', partialPickupItems);
+                },
+                celldblclick: function (grid, td, cellIndex, record, tr, rowIndex, e) {
+                    return this.shipmentRecord.shipmentType.toLowerCase() != 'bopis'
+                },
+                viewready: function (view) {
+                    var els = view.el.query('div[qty-to-pickup]');
+                    Ext.each(els, function (domEl) {
+                        var qtyToPickup = parseInt(Ext.get(domEl).getAttribute('qty-to-pickup'));
+                        var lineId = Ext.get(domEl).getAttribute('lineId');
+                        var extId = Ext.id();
+                        Ext.widget({
+                            xtype: 'container',
+                            cls: 'taco-order-fulfillment-shipments-pickup',
+                            height: 50,
+                            renderTo: domEl,
+                            layout: {
+                                type: 'hbox',
+                                align: 'stretch'
+                            },
+                            defaults: {
+                                xtype: 'component',
+                                data: this.record.getData()
+                            },
+                            items:
+                                [
+                                    {
+                                        xtype: 'checkbox',
+                                        lineId: lineId,
+                                        qtyToPickup: qtyToPickup,
+                                        disabled: qtyToPickup <= 0,
+                                        checked: false,
+                                        listeners: {
+                                            change: function (cmp, newValue,a,b) {
+                                                if (newValue) {
+                                                    Ext.getCmp(extId).enable();
+                                                    me.shipmentItems.savePartialPickup(this.lineId, parseInt(Ext.getCmp(extId).value), true);
+                                                }
+                                                else {
+                                                    Ext.getCmp(extId).disable();
+                                                    me.shipmentItems.savePartialPickup(this.lineId, 0, true);
+                                                }
+                                            }
+                                        },
+                                    },
+                                    {
+                                        xtype: 'numberfield',
+                                        id: extId,
+                                        lineId: lineId,
+                                        minValue: 1,
+                                        maxValue: qtyToPickup,
+                                        maxText: 'Max qty available for pickup is {0}',
+                                        value: qtyToPickup,
+                                        disabled: true,
+                                        hidden: qtyToPickup <= 0,
+                                        //hideTrigger: true,
+                                        //keyNavEnabled: false,
+                                        //mouseWheelEnabled: false,
+                                        //enableKeyEvents:true,
+                                        listeners: {
+                                            blur: {
+                                                fn: function (cmp, newValue) {
+                                                    me.shipmentItems.savePartialPickup(this.lineId, cmp.value, cmp.wasValid);
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                        });
+                    }, this);
+                    view.up('viewport').doLayout();
+                },
             }
         });
 

@@ -7,6 +7,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         'Taco.view.order.modal.fulfillment.UpdateBackorderDate'
     ],
     packageContainer: {},
+    partialPickupItems: {},
 
     initComponent: function () {
         this.items = [];
@@ -181,10 +182,47 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
             listeners: {
                 shipmentRefresh: function () {
                     me.fireEvent('shipmentRefresh');
+                },
+                partialPickup: function (partialPickupItems) {
+                    if (partialPickupItems && partialPickupItems.pickupItemsRequest.items && partialPickupItems.pickupItemsRequest.items.length > 0) {
+                        for (var count = 0; count < partialPickupItems.pickupItemsRequest.items.length; count++) {
+                            if (!partialPickupItems.pickupItemsRequest.items[count].isValid) {
+                                Taco.app.fireEvent('setmessage', 'Please enter a valid qty for pickup', 'error');
+                                return;
+                            }
+                        }
+                        me.partialPickupItems = partialPickupItems;
+                    }
                 }
             }
         });
         this.items.push(this.ShipmentDetails);
+    },
+
+    savePartialPickup: function () {
+        //Save
+        var me = this;
+        me.setLoading(true);
+        this.record.pickupItems({
+            jsonData: me.partialPickupItems,
+            success: function (response) {
+                me.setLoading(false);
+                var json = Ext.decode(response.responseText, true);
+
+                if (!json || !json.success) {
+                    Taco.app.fireEvent('setmessage', json.response, 'error');
+                    return;
+                }
+                Taco.app.fireEvent('setmessage', "Item(s) pickup successful", 'success');
+                me.fireEvent('shipmentRefresh');
+            },
+            failure: function (response) {
+                me.setLoading(false);
+                var json = Ext.decode(response.responseText, true),
+                    msg = (json && json.message) ? json.message : 'Error while pickup';
+                Taco.app.fireEvent('setmessage', msg, 'error');
+            }
+        });
     },
 
     shipmentAutoReassign: function (locationCode) {
@@ -344,22 +382,32 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         };
 
         var splitMenus = [];
+        var actionPickup = {
+            text: 'Pickup',
+            handler: function () {
+                me.savePartialPickup();
+            }
+        };
+
         if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'ready') {
             splitMenus = [
                 actionMarkAsShipped,
-                actionCancelShipment
+                actionCancelShipment,
+                me.shipmentRecord.shipmentType == "BOPIS" ? actionPickup : null
             ];
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'backorder') {
             splitMenus = [
                 actionUpdateBackorderDate,
-                actionCancelShipment
+                actionCancelShipment,
+                me.shipmentRecord.shipmentType == "BOPIS" ? actionPickup : null
             ];
         }
         else if (this.shipmentRecord.shipmentStatus.toLowerCase() == 'customer_care') {
             splitMenus = [
                 actionMarkAsShipped,
-                actionCancelShipment
+                actionCancelShipment,
+                me.shipmentRecord.shipmentType == "BOPIS" ? actionPickup : null
             ];
         }
 

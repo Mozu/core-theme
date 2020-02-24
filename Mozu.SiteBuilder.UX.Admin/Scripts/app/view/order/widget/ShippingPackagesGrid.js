@@ -29,7 +29,14 @@
 
     initEvents: function () {
         var me = this;
-        me.initEditTriggers();
+        //me.initEditTriggers();
+    },
+
+    partialPickupItems: {
+        pickupItemsRequest: {
+            isUserAction: true,
+            items: []
+        }
     },
 
     initEditTriggers: function () {
@@ -67,7 +74,6 @@
     initComponent: function () {
         var me = this;
         this.getQuantityForTransfer();
-
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -197,12 +203,17 @@
                 type: 'date',
                 useNull: true,
                 //dateFormat: 'c'
-                },
-                {
-                    name: 'quantityAvailToTransfer',
-                    type: 'int',
-                    defaultValue: 0
-                }
+            },
+            {
+                name: 'quantityAvailToTransfer',
+                type: 'int',
+                defaultValue: 0
+            },
+            {
+                name: 'readyForPickupQuantity',
+                type: 'int',
+                defaultValue: 0
+            }
             ],
             sorters: [{
                 sorterFn: function (a, b) {
@@ -218,7 +229,7 @@
         //});
         this.plugins.push(
             Ext.create('Ext.grid.plugin.RowEditing', {
-                clicksToEdit: 1,
+                clicksToEdit: 2,
                 pluginId: 'destinationEditor',
                 listeners: {
                     edit: function (editor, context, eOpts) {
@@ -243,7 +254,12 @@
                         return false;
                     }
                 },
-
+                cancelEdit: function () {
+                    if (this.editing) {
+                        this.getEditor().cancelEdit();
+                        me.fireEvent('viewready', me);
+                    }
+                }
             }));
 
 
@@ -422,12 +438,29 @@
                 }
             },
             {
+                dataIndex: 'readyForPickupQuantity',
+                text: 'Qty to Pickup',
+                draggable: false,
+                sortable: false,
+                menuDisabled: true,
+                width: 200,
+                padding: 0,
+                hidden: !this.isDisplayPartialPickup(),
+                flex: 2,
+                renderer: function (value, row) {
+                    if (row.record)
+                        return '<div qty-to-pickup="' + (value || 0) + '" lineId="' + row.record.get('lineId') + '"></div>';
+                    return '';
+                }
+            },
+            {
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
                 hidden: me.isShipmentAction(),
                 menuItems: me.getShipmentLevelSplitMenu()
             }
         ];
+
         this.callParent();
     },
 
@@ -886,5 +919,43 @@
         var grid = Ext.getCmp(this.id);
         var item = grid.getSelectionModel().getSelection();
         return item[0].dirty; // save if something changed
+    },
+
+    isDisplayPartialPickup: function () {
+        return this.shipmentRecord.shipmentType == "BOPIS" && this.shipmentRecord.shipmentStatus.toLowerCase() != 'fulfilled';
+    },
+
+    savePartialPickup: function (lineId, qty, isValid) {
+        var recordFound = -1;
+
+        if (this.partialPickupItems.pickupItemsRequest.items.length <= 0 && qty > 0) {
+            this.partialPickupItems.shipmentNumber = this.shipmentRecord.number;
+            this.partialPickupItems.pickupItemsRequest.items = [{
+                lineId: lineId,
+                quantity: qty,
+                isValid: isValid
+            }];
+        }
+        else {
+            for (var count = 0; count < this.partialPickupItems.pickupItemsRequest.items.length; count++) {
+                if (this.partialPickupItems.pickupItemsRequest.items[count].lineId == lineId) {
+                    this.partialPickupItems.pickupItemsRequest.items[count].quantity = qty;
+                    this.partialPickupItems.pickupItemsRequest.items[count].isValid = isValid;
+                    recordFound = count;
+                }
+            }
+            //Delete if qty is null or 0
+            if (recordFound >= 0 && qty <= 0)
+                this.partialPickupItems.pickupItemsRequest.items.splice(recordFound, 1);
+            else if (recordFound < 0 && qty > 0)
+                this.partialPickupItems.pickupItemsRequest.items.push({
+                    lineId: lineId,
+                    quantity: qty,
+                    isValid: isValid
+                });
+        }
+
+        if (this.partialPickupItems.pickupItemsRequest.items.length > 0)
+            this.fireEvent('partialPickup', this.partialPickupItems);
     }
 });

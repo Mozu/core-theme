@@ -2934,6 +2934,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    pickupItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/pickupItems',
+            method: 'POST'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     cancelItemQuantity: function (config) {
         var me = this;
 

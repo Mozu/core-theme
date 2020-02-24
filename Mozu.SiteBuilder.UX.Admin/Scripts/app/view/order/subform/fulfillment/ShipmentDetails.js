@@ -17,6 +17,9 @@
             listeners: {
                 shipmentRefresh: function () {
                     me.fireEvent('shipmentRefresh');
+                },
+                partialPickup: function (partialPickupItems) {
+                    me.fireEvent('partialPickup', partialPickupItems);
                 }
             }
         });
