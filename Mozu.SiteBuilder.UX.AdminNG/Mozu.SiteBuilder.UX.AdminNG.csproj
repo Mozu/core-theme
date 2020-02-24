@@ -523,7 +523,7 @@
     <Message Importance="high" Text="*** START node module install process" />
     <Exec Command="npm config set &quot;@fortawesome:registry&quot; https://npm.fontawesome.com/" WorkingDirectory="$(ProjectDir)" />
     <Exec Command="npm config set &quot;//npm.fontawesome.com/:_authToken&quot; 74AB3AFD-9000-49B0-A6AB-0B676CC1C51B" WorkingDirectory="$(ProjectDir)" />
-    <Exec Command="npm --cache-min 9999999 install" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="npm --prefer-offline true install" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="high" Text="*** END node module install process" />
     <Message Importance="high" Text="*** START ng build process" />
     <Exec Command="npm run ng build -- --configuration=$(ConfigurationName)" WorkingDirectory="$(ProjectDir)" />

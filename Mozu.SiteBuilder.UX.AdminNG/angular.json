@@ -53,27 +53,31 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.CI.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.CI.ts"
+                                }
+                            ]
                         },
                         "Debug": {
-                            "optimization": true,
+                            "optimization": false,
                             "outputHashing": "none",
                             "sourceMap": true,
                             "extractCss": true,
                             "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": true,
+                            "aot": false,
+                            "extractLicenses": false,
                             "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "serviceWorker": true,
+                            "buildOptimizer": false,
+                            "serviceWorker": false,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.Debug.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Debug.ts"
+                                }
+                            ]
                         },
                         "Demo": {
                             "optimization": true,
@@ -87,13 +91,15 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.Demo.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Demo.ts"
+                                }
+                            ]
                         },
                         "Dev": {
-                            "optimization": true,
+                            "optimization": false,
                             "outputHashing": "all",
                             "sourceMap": false,
                             "extractCss": true,
@@ -101,13 +107,15 @@
                             "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
-                            "buildOptimizer": true,
+                            "buildOptimizer": false,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.Dev.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Dev.ts"
+                                }
+                            ]
                         },
                         "perf": {
                             "optimization": true,
@@ -121,10 +129,12 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.perf.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.perf.ts"
+                                }
+                            ]
                         },
                         "Prod": {
                             "optimization": true,
@@ -138,10 +148,12 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.Prod.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Prod.ts"
+                                }
+                            ]
                         },
                         "QA": {
                             "optimization": true,
@@ -155,10 +167,12 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.QA.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.QA.ts"
+                                }
+                            ]
                         },
                         "Release": {
                             "optimization": true,
@@ -172,10 +186,12 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.Release.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.Release.ts"
+                                }
+                            ]
                         },
                         "SI": {
                             "optimization": true,
@@ -189,10 +205,12 @@
                             "buildOptimizer": true,
                             "serviceWorker": true,
                             "ngswConfigPath": "src/ngsw-config.json",
-                            "fileReplacements": [{
-                                "replace": "src/environments/environment.ts",
-                                "with": "src/environments/environment.SI.ts"
-                            }]
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.SI.ts"
+                                }
+                            ]
                         }
                     }
                 },
@@ -258,7 +276,6 @@
                             "src/assets/styles/public.component.css",
                             "node_modules/@fortawesome/fontawesome-pro/css/all.css"
                         ],
-
                         "assets": [
                             "src/assets",
                             "src/favicon.ico",
