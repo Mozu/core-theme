@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mozu.Core;
 using Mozu.Core.Api;
 
 
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public class SiteBuilderApiContextBuilder : IApiContextBuilder
-    {
+    //public class SiteBuilderApiContextBuilder : IApiContextFactory
+    //{
 
 
-        public Core.IApiContext BuildApiContext(Core.IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
-        {
-            return apiContext;
-        }
-    }
+    //    public Core.IApiContext BuildApiContext(Core.IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
+    //    {
+    //        return apiContext;
+    //    }
+
+    //    public IApiContext CreateContext()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 }
 
 

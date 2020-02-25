@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Hosting;
-using AutoMapper;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Models.CMS;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 using MongoDB.Driver;
 using Mozu.Core.Mongo;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.Themes
 {
@@ -70,17 +68,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private const string METADATA_THEME_FILE_NAME = "theme.json";
         private const string METADATA_ADDON_FILE_NAME = "addon.json";
         IThemeContentRetriever _contentRetriever;
+        private readonly IWebHostEnvironment _env;
         /// <summary>
         /// Constructor.
         /// </summary>
         public ThemeMetadataProvider( ISettings settings, 
             IMongoDatabaseProviderProvider mongoDataseProviderProvider,
-            IThemeContentRetriever contentRetriever)
+            IThemeContentRetriever contentRetriever,
+            IWebHostEnvironment env)
         {
             _settings = settings;
             _mongoDataseProviderProvider = mongoDataseProviderProvider;
             _jsonSerializer = new JsonSerializer();
             _contentRetriever = contentRetriever;
+            _env = env;
         }
 
 
@@ -99,7 +100,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         /// </summary>
         public async Task<ThemeMetaData> GetTheme(string id)
         {
-            if (String.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(id))
                 return null;
             id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
@@ -161,7 +162,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             }
             else if (tmd.Id.IndexOf("core", StringComparison.OrdinalIgnoreCase) == 0)
             {
-                string temp = this.LegacyThemePath + "//themes//" + tmd.Id;
+                var temp = this.LegacyThemePath + "//themes//" + tmd.Id;
                 if (Directory.Exists(temp))
                 {
                     tmd.ThemePath = Path.GetFullPath(temp);
@@ -188,7 +189,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 }
                 else if (tmd.ThemeId.IndexOf("core", StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    string temp = this.LegacyThemePath + "//themes//" + tmd.ThemeId;
+                    var temp = this.LegacyThemePath + "//themes//" + tmd.ThemeId;
                     tmd.RootPath = Path.GetFullPath(temp);
                 }
                 else 
@@ -202,7 +203,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         public async Task<ThemeMetaData> GetThemeSlim(string id)
         {
-            if (String.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(id))
                 return null;
             id = EscapeThemeId(id);
             var tmd = new ThemeMetaData { Id = id };
@@ -225,16 +226,8 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 var tfi = this.CreateThemeFileSystemInfo(gridFsInfo, "\\\\foo\\bing", id);
                 tmd.Configuration = await LoadThemeDescriptor(tfi).ConfigureAwait(false);
             }
-            
-
            
-           
-           
-            if (tmd.Configuration == null)
-                return null;
-
-            return tmd;
-
+            return tmd.Configuration == null ? null : tmd;
         }
 
         /// <summary>
@@ -303,26 +296,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 return LoadThemeDescriptorLegacy(file.FullPath);
             }
             //pants
-            ThemeConfiguration themecfg = new ThemeConfiguration();
-
-            
-
+            var themecfg = new ThemeConfiguration();
 
             JObject themecfgJson = null;
-           
 
-            using (var stream = await _contentRetriever.GetStreamAsync(file, CancellationToken.None).ConfigureAwait(false))
+            await using (var stream = await _contentRetriever.GetStreamAsync(file, CancellationToken.None).ConfigureAwait(false))
             {
-                using (var sr = new StreamReader(stream))
-                {
-                    JsonTextReader reader = new JsonTextReader(sr);
-                    themecfgJson = (JObject)JObject.ReadFrom(reader);
-                }
+                using var sr = new StreamReader(stream);
+                var reader = new JsonTextReader(sr);
+                themecfgJson = (JObject)JToken.ReadFrom(reader);
             }
 
 
 
-                themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
+            themecfg.About = themecfgJson["about"].ToObject<ThemeConfiguration.ThemeAbout>();
             themecfg.PageTypes = themecfgJson["pageTypes"] == null ? new List<PageTypeDefinition>() : themecfgJson["pageTypes"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.EmailTemplates = themecfgJson["emailTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["emailTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
             themecfg.BackOfficeTemplates = themecfgJson["backOfficeTemplates"] == null ? new List<PageTypeDefinition>() : themecfgJson["backOfficeTemplates"].ToObject<List<Mozu.SiteBuilder.Mvc.Models.CMS.PageTypeDefinition>>();
@@ -342,7 +329,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             if (!File.Exists(fileName))
                 return null;
 
-            ThemeConfiguration themecfg = new ThemeConfiguration();
+            var themecfg = new ThemeConfiguration();
             var themecfgJsonText = File.ReadAllText(fileName);
             var themecfgJson = JObject.Parse(themecfgJsonText);
 
@@ -396,7 +383,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         private async Task<Dictionary<string, ThemeLabelCollection>> LoadThemeLabels(ThemeMetaData themeMetaData)
         {
-            Dictionary<string, ThemeLabelCollection> returnValues = new Dictionary<string, ThemeLabelCollection>(StringComparer.OrdinalIgnoreCase);
+            var returnValues = new Dictionary<string, ThemeLabelCollection>(StringComparer.OrdinalIgnoreCase);
 
             var lableNfos = themeMetaData.FileListing.InternalFiles.Where(x => x.VirtualPath.StartsWith("labels", StringComparison.OrdinalIgnoreCase)).ToList();
            
@@ -406,22 +393,20 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             // inside of labels\ there are a bunch of json files named <locale>.json. For instance: "en-US.json"
             foreach (var labelJsonFile in lableNfos)
             {
-                string localeCode = Path.GetFileNameWithoutExtension(labelJsonFile.VirtualPath);
+                var localeCode = Path.GetFileNameWithoutExtension(labelJsonFile.VirtualPath);
                 var labelCollection = new ThemeLabelCollection();
-                JObject labelsJson = default(JObject);
+                var labelsJson = default(JObject);
                 using (var stream = await _contentRetriever.GetStreamAsync(labelJsonFile, CancellationToken.None).ConfigureAwait(false))
                 {
-                    using (var sr = new StreamReader(stream))
+                    using var sr = new StreamReader(stream);
+                    try
                     {
-                        try
-                        {
-                            labelsJson = JObject.Load(new JsonTextReader(sr));
-                        }
-                        catch (Exception ex)
-                        {
-                            Mozu.Core.Logging.LoggingService.LoggerFor<ThemeMetadataProvider>().Error(ex);
-                            continue;
-                        }
+                        labelsJson = JObject.Load(new JsonTextReader(sr));
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingService.LoggerFor<ThemeMetadataProvider>().Error(ex);
+                        continue;
                     }
                 }
                 foreach (var x in labelsJson.Children<JProperty>())
@@ -445,12 +430,12 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
                 var ci = System.Globalization.CultureInfo.GetCultureInfo(Path.GetFileNameWithoutExtension(labelJsonFile));
                 System.Diagnostics.Debug.WriteLine(ci.LCID.ToString());
-                for (int i = 1; i < 13; i++)
+                for (var i = 1; i < 13; i++)
                 {
                     var month = (Months) i;
                     var shortMonth = (ShortMonths) i;
-                    string key = (month).ToString();
-                    string shortKey = (shortMonth).ToString();
+                    var key = (month).ToString();
+                    var shortKey = (shortMonth).ToString();
 
                     if (!labelCollection.ContainsKey(key))
                     {
@@ -461,10 +446,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                         labelCollection[shortKey] = ci.DateTimeFormat.GetAbbreviatedMonthName((int) shortMonth);
                     }
                 }
-                for (int i = 0; i < 7; i++)
+                for (var i = 0; i < 7; i++)
                 {
                     var day = (DayOfWeek) i;
-                    string key = day.ToString().ToLowerInvariant();
+                    var key = day.ToString().ToLowerInvariant();
                     var shortKey = "short" + day.ToString();
                     if (!labelCollection.ContainsKey(key))
                     {
@@ -486,7 +471,6 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             var relPath = x.Filename.Replace('/', '\\');
             var relPathNoExt = relPath.GetFilePathNameWithoutExtension();
-            
 
             return new ThemeFileSystemInfo()
             {
@@ -565,12 +549,9 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 Limit = 1,
             };
             var bucket = GetBucket();
-            
-            using (var cursor = await bucket.FindAsync(filter, options).ConfigureAwait(false))
-            {
-                return !await cursor.AnyAsync().ConfigureAwait(false);
-            }
 
+            using var cursor = await bucket.FindAsync(filter, options).ConfigureAwait(false);
+            return !await cursor.AnyAsync().ConfigureAwait(false);
         }
 
         async Task<GridFSFileInfo> GetGirdFSFileInfo(string themeId, string virtualPath)
@@ -592,29 +573,23 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 Limit = 1,
             };
             var bucket = GetBucket();
-            using (var cursor = await bucket.FindAsync(filter, options).ConfigureAwait(false))
-            {
-                var fileInfo = await cursor.FirstOrDefaultAsync().ConfigureAwait(false);
-                return fileInfo;
-            }
-
+            using var cursor = await bucket.FindAsync(filter, options).ConfigureAwait(false);
+            var fileInfo = await cursor.FirstOrDefaultAsync().ConfigureAwait(false);
+            return fileInfo;
         }
 
         public static  Tuple<int,int> ParseId( string themeId)
         {
-            int app = 0;
-            int package = 0;
             try
             {
                 //  pants
-                var fn = themeId.Replace('\\', '/').Trim('/');
                 var parts = themeId.Trim('~').Split('~');
                 if (parts.Length != 2)
                 {
                     return new Tuple<int, int>(0, 0);
                 }
-                app = int.Parse(parts[0]);
-                package = int.Parse(parts[1]);
+                var app = int.Parse(parts[0]);
+                var package = int.Parse(parts[1]);
                 return new Tuple<int, int>(app, package);
             }
             catch
@@ -635,20 +610,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var filter = Builders<GridFSFileInfo>.Filter.And(
                 Builders<GridFSFileInfo>.Filter.Eq("metadata.AppVersionId", appId.Item1),
                 Builders<GridFSFileInfo>.Filter.Eq("metadata.PackageId", appId.Item2));
-            
 
             var bucket = GetBucket();
 
-
-
-            using (var cursor = await bucket.FindAsync(filter).ConfigureAwait(false))
-            {
-                var fileInfos = await cursor.ToListAsync().ConfigureAwait(false);
-                var themeInfos = fileInfos.Select(x => CreateThemeFileSystemInfo(x, themePath, themeId));
-                return new ThemeFileSystemInfoCollection(themeInfos, null, null);
-            }
-
-
+            using var cursor = await bucket.FindAsync(filter).ConfigureAwait(false);
+            var fileInfos = await cursor.ToListAsync().ConfigureAwait(false);
+            var themeInfos = fileInfos.Select(x => CreateThemeFileSystemInfo(x, themePath, themeId));
+            return new ThemeFileSystemInfoCollection(themeInfos, null, null);
         }
         GridFSBucket GetBucket()
         {
@@ -675,17 +643,10 @@ namespace Mozu.SiteBuilder.Mvc.Themes
             var pmf = Path.Combine(dirinfo.FullName, "packageManifest.json");
             if ( File.Exists(pmf))
             {
-                using (var str = File.OpenRead(pmf))
-                {
-                    using (var sr = new StreamReader(str))
-                    {
-                        var jtr = new JsonTextReader(sr);
-                        manifest = _jsonSerializer.Deserialize<Mozu.AppDev.Contracts.PackageManifest>(jtr);
-                    }
-
-                        
-                }
-                    
+                using var str = File.OpenRead(pmf);
+                using var sr = new StreamReader(str);
+                var jtr = new JsonTextReader(sr);
+                manifest = _jsonSerializer.Deserialize<Mozu.AppDev.Contracts.PackageManifest>(jtr);
             }
             if ( manifest != null )
             {
@@ -748,16 +709,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
 
         
 
-        public string LocalAddonPath
-        {
-            get
-            {
-                return null;// Path.GetDirectoryName( LocalThemePath)+"../addons/";
-                
-              
-             
-            }
-        }
+        public string LocalAddonPath => null;
 
         public IEnumerable<string> ThemePaths
         {
@@ -779,36 +731,18 @@ namespace Mozu.SiteBuilder.Mvc.Themes
                 yield return LocalAddonPath;
             }
         }
-       public string LegacyThemePath
-        {
-            get
-            {
+       public string LegacyThemePath => GetFullPath("CoreLegacyTheme");
 
-                return GetFullPath("CoreLegacyTheme");
-            }
-        }
+       public  string CoreThemePath => GetFullPath("CoreTheme");
 
-       public  string CoreThemePath
-        {
-            get
-            {
-                return GetFullPath("CoreTheme");
-            }
-        }
-
-        string GetFullPath(string settingKey)
+       string GetFullPath(string settingKey)
         {
             var setting = _settings.AppSettings(settingKey + "_directory");
-            if (setting.IsNullOrEmpty())
-            {
-                return Path.GetFullPath(new DirectoryInfo(HttpRuntime.AppDomainAppPath).Parent.Parent.FullName + "/Mozu." + settingKey);
-            }
-            if (setting[0] == '~')
-            {
-                return Path.GetFullPath(HostingEnvironment.MapPath(setting.Substring(1)));
-            }
-            return Path.GetFullPath(setting);
-
+            return setting.IsNullOrEmpty() ?
+                Path.GetFullPath(new DirectoryInfo(_env.ContentRootPath).Parent.Parent.FullName + "/Mozu." + settingKey) :
+                Path.GetFullPath(setting[0] == '~' ?
+                    Path.Combine(_env.WebRootPath, setting.Substring(1)) :
+                    setting);
         }
 
     }

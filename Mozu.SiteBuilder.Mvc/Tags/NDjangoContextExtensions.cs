@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
-
-using Autofac;
+using Microsoft.AspNetCore.Http;
 using Microsoft.FSharp.Core;
+using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             return default(HyprViewContext);
         }
 
-        public static HttpContextBase HttpContext(this NDjango.Interfaces.IContext context)
+        public static HttpContext HttpContext(this NDjango.Interfaces.IContext context)
         {
             return context.ViewContext().HttpContext;
         }

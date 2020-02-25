@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Settings;
@@ -330,26 +331,30 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                 }
                 return _domains;
             }
-            set { _domains = value; }
+            set => _domains = value;
         }
 
         public static void Save(int? site, int? masterCatalog, int tenant, bool isEditMode, DataViewModeType dataViewMode, ICookieProvider cookieProvider, int? catalogid, string locale = null, string currency = null, bool isAdminMode = false)
         {
-            var cookie = new HttpCookie("") {Expires = DateTime.MaxValue};
+            var cookie = new CookieOptions {Expires = DateTime.MaxValue};
 
-            cookie["site"] = site.HasValue ? site.ToString() : null;
-            cookie["locale"] = locale;
-            cookie["currency"] = currency;
-            cookie["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null;
-            cookie["catalog"] = catalogid.HasValue ? catalogid.ToString() : null;
-            cookie["tenant"] = tenant.ToString();
-            cookie["editmode"] = isEditMode.ToString();
-            cookie["adminmode"] = isAdminMode.ToString();
+            var val = new Dictionary<string, string>
+            {
+                ["site"] = site.HasValue ? site.ToString() : null,
+                ["locale"] = locale,
+                ["currency"] = currency,
+                ["masterCatalog"] = masterCatalog.HasValue ? masterCatalog.ToString() : null,
+                ["catalog"] = catalogid.HasValue ? catalogid.ToString() : null,
+                ["tenant"] = tenant.ToString(),
+                ["editmode"] = isEditMode.ToString(),
+                ["adminmode"] = isAdminMode.ToString()
+            };
+
             if (dataViewMode == DataViewModeType.Pending)
             {
-                cookie["dataview"] = DataViewModeType.Pending.ToString();
+                val["dataview"] = DataViewModeType.Pending.ToString();
             }
-            cookieProvider.SaveResponseCookie(COOKIENAME, cookie);
+            cookieProvider.SaveResponseCookie(COOKIENAME, val.ToLegacyCookieString(), cookie);
         }
 
         static byte[] _assbmlyHash;

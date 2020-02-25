@@ -77,7 +77,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
             builder.AddScoped<SEO.CustomRouteValidator>();
             builder.RegisterAllImplementedInterfaces<SEO.CustomRouteValidator>(ServiceLifetime.Scoped);
-            builder.RegisterAllImplementedInterfaces<SEO.CustomRouteRepository>(ServiceLifetime.Scoped).AsSelf();
+            builder.AddScoped<SEO.CustomRouteRepository>();
+            builder.RegisterAllImplementedInterfaces<SEO.CustomRouteRepository>(ServiceLifetime.Scoped);
 
             builder.AddSingleton<IStorefrontCacheControl, StorefrontCacheControlImpl>();
 
@@ -100,19 +101,15 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<IExpressionContextFactory<CmsPageRuleContext>, CmsPageRuleContextFactory>();
 
             //expression evaluator visitor
-            builder.AddScoped<ExpressionEvaluatorVisitor<CmsPageRuleContext>>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<ExpressionEvaluatorVisitor<CmsPageRuleContext>>();
+            builder.RegisterAllImplementedInterfaces<ExpressionEvaluatorVisitor<CmsPageRuleContext>>(ServiceLifetime.Scoped);
 
             //evaluator
             builder.AddScoped<IRelationalExpressionEvaluator<CmsPageRuleContext>, CmsPageRelationalExpressionEvaluator>();
             
             //expression validator visitor
-            builder.RegisterType<CmsPageRuleExpressionValidator>()
-                .AsSelf()
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
+            builder.AddScoped<CmsPageRuleExpressionValidator>();
+            builder.RegisterAllImplementedInterfaces<CmsPageRuleExpressionValidator>(ServiceLifetime.Scoped);
 
             builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
         }
@@ -123,31 +120,30 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddSingleton<IThemeRepository, ThemeRepository>();
             builder.AddScoped<HyprViewEngine>();
 
-         
+
 
             builder.AddSingleton(c =>
             {
-            var tmp = new TemplateManagerProvider()
+                var tmp = new TemplateManagerProvider()
                     .WithLibrary(typeof(AddFilter).Assembly)
                     .WithLibrary(typeof(HyprViewEngine).Assembly)
                     .WithLibrary(typeof(AutofacModule).Assembly)
                     .WithLoader(new TemplateLoader(c.Resolve<Lazy<IThemeRepository>>(),
-                    c.Resolve < Lazy<ISettings>>(),
-                    c.Resolve<Lazy<IThemeContentRetriever>>()
-                   ))
-                .WithSetting("settings.DEFAULT_AUTOESCAPE", true);
+                        c.Resolve<Lazy<ISettings>>(),
+                        c.Resolve<Lazy<IThemeContentRetriever>>()
+                    ))
+                    .WithSetting("settings.DEFAULT_AUTOESCAPE", true);
 
-            var ass = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => new AssemblyName(x.FullName).Name == "Mozu.SiteBuilder.UX");
-            if (ass != null)
-            {
-                tmp = tmp.WithLibrary(ass);
-            }
-            
+                var ass = AppDomain.CurrentDomain.GetAssemblies()
+                    .FirstOrDefault(x => new AssemblyName(x.FullName).Name == "Mozu.SiteBuilder.UX");
+                if (ass != null)
+                {
+                    tmp = tmp.WithLibrary(ass);
+                }
+
                 return tmp;
-            })
-                .As<TemplateManagerProvider>()
-                .As<ITemplateManagerProvider>()
-                .SingleInstance();
+            });
+            builder.AddSingleton<ITemplateManagerProvider, TemplateManagerProvider>();
 
             ResolverConfig.Resolver = new JsonCleaningCaseInsensitiveMemberResolver();
             EscaperConfig.Escaper = new SafeEscaper();
@@ -156,12 +152,11 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
        
            // var tm = tmp.GetNewManager();
 
-            builder.Register(c => {
-                var tm = c.Resolve<TemplateManagerProvider>().GetNewManager();
-                return new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>());
-            })
-                .As<ITemplateManager>()
-                .InstancePerLifetimeScope();
+           builder.AddScoped<ITemplateManager>(c =>
+           {
+               var tm = c.Resolve<TemplateManagerProvider>().GetNewManager();
+               return new HyprTemplateManager(tm, c.Resolve<IMozuVirtualPathProvider>());
+           });
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.IO;
 using System.Net.Http;
-using Autofac;
 
 using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.Themes;

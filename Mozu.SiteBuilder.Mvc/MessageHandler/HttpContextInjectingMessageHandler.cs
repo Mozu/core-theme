@@ -14,51 +14,45 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
 
 
-    /// <summary>
-    ///     A delegating handler that updates the current dependency scope
-    ///     with the current <see cref="HttpRequestMessage"/>.
-    /// </summary>
-    public class HttpContextInjectingMessageHandler : DelegatingHandler
-    {
-        /// <summary>
-        /// Sends an HTTP request to the inner handler to send to the server as an asynchronous operation.
-        /// </summary>
-        /// <param name="request">The HTTP request message to send to the server.</param>
-        /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
-        /// <returns>
-        /// Returns <see cref="T:System.Threading.Tasks.Task`1" />. The task object representing the asynchronous operation.
-        /// </returns>
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            UpdateScopeWithHttpRequestMessage(request);
+    ///// <summary>
+    /////     A delegating handler that updates the current dependency scope
+    /////     with the current <see cref="HttpRequestMessage"/>.
+    ///// </summary>
+    //public class HttpContextInjectingMessageHandler : DelegatingHandler
+    //{
+    //    /// <summary>
+    //    /// Sends an HTTP request to the inner handler to send to the server as an asynchronous operation.
+    //    /// </summary>
+    //    /// <param name="request">The HTTP request message to send to the server.</param>
+    //    /// <param name="cancellationToken">A cancellation token to cancel operation.</param>
+    //    /// <returns>
+    //    /// Returns <see cref="T:System.Threading.Tasks.Task`1" />. The task object representing the asynchronous operation.
+    //    /// </returns>
+    //    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    //    {
+    //        UpdateScopeWithHttpRequestMessage(request);
 
-            return base.SendAsync(request, cancellationToken);
-        }
+    //        return base.SendAsync(request, cancellationToken);
+    //    }
 
-        /// <summary>
-        /// Updates the current dependency scope with current HTTP request message.
-        /// </summary>
-        /// <param name="request">The HTTP request message.</param>
-        public  static void UpdateScopeWithHttpRequestMessage(HttpRequestMessage request)
-        {
-            var scope = request.GetDependencyScope();
-            if (scope == null) return;
+    //    /// <summary>
+    //    /// Updates the current dependency scope with current HTTP request message.
+    //    /// </summary>
+    //    /// <param name="request">The HTTP request message.</param>
+    //    public  static void UpdateScopeWithHttpRequestMessage(HttpRequestMessage request)
+    //    {
+    //        var scope = request.GetDependencyScope();
+    //        if (scope == null) return;
 
-            var registry = scope.ComponentRegistry;
-            var builder = new ContainerBuilder();
+    //        var registry = scope.ComponentRegistry;
+    //        var builder = new ContainerBuilder();
 
           
-            builder.Register( c => { return request.HttpContext() ?? new DummyHttpContextBase(); }
-            ).As<HttpContext>().InstancePerLifetimeScope();
-            builder.Update(registry);
-        }
-        class DummyHttpContextBase: HttpContext
-        {
-
-        }
-    }
-
-
+    //        builder.Register( c => { return request.HttpContext() ?? new DefaultHttpContext(); }
+    //        ).As<HttpContext>().InstancePerLifetimeScope();
+    //        builder.Update(registry);
+    //    }
+    //}
 }
 
 

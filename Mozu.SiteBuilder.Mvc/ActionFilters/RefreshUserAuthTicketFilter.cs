@@ -22,7 +22,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class RefreshStoreFrontUserAuthTicketFilter : IActionFilter, IAuthorizationFilter
     {
-        private StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute = new StoreFrontAuthorizeAttribute();
+        private readonly StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute;
+
+        public RefreshStoreFrontUserAuthTicketFilter(StoreFrontAuthorizeAttribute attribute)
+        {
+            _storeFrontAuthorizeAttribute = attribute;
+        }
 
         public bool AllowMultiple => false;
 
@@ -82,8 +87,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 return continuation();
             });
             return rettask.Unwrap();
-
-
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)

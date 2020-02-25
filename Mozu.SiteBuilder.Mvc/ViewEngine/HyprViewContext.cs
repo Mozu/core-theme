@@ -10,7 +10,7 @@ using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
-    public class ViewDataDictionary : IDictionary<string, object> , Microsoft.ClearScript.IPropertyBag
+    public class ViewDataDictionary : IDictionary<string, object>/*todo:cole add back scripting eventually , Microsoft.ClearScript.IPropertyBag*/
     {
         private readonly IDictionary<string, object> _inner = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         public ViewDataDictionary() 
@@ -91,10 +91,10 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             get => _inner.TryGetValue(key, out var obj) ? obj : null;
             set 
             {
-                if (value is Microsoft.ClearScript.V8.IV8ScriptItem)
-                {
-                    value = Newtonsoft.Json.Linq.JToken.FromObject(value);
-                }
+                //if (value is Microsoft.ClearScript.V8.IV8ScriptItem)
+                //{
+                //    value = Newtonsoft.Json.Linq.JToken.FromObject(value);
+                //}
                 _inner[key] = value;
             
             }

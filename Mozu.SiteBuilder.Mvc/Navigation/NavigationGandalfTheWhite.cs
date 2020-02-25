@@ -21,7 +21,6 @@ using Mozu.SiteBuilder.Mvc.Helpers;
 using Mozu.Core.Api.Contracts.Client;
 using Mozu.Content.Contracts;
 using System.Threading;
-using Autofac;
 using System.Net.Http;
 using System.Web;
 using Mozu.SiteBuilder.Mvc.Context;

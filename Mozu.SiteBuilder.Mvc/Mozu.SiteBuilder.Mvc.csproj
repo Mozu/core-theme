@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.1952.0-dotnetcore.136" />
+    <PackageReference Include="Mozu.AppDev.Contracts" Version="1.1944.0-ddlogs2.9" />
     <PackageReference Include="Mozu.Content.Contracts" Version="1.1917.0-dotnetcore.28" />
     <PackageReference Include="Mozu.Core.Actions" Version="1.2005.8" />
     <PackageReference Include="Mozu.Core.Expressions" Version="1.2005.1" />
@@ -30,11 +31,16 @@
     <PackageReference Include="Mozu.ShippingRuntime.Contracts" Version="1.1939.0-dotnetcore.46" />
     <PackageReference Include="Mozu.SiteSettings.Contracts" Version="1.2004.0-dotnetcore.74" />
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.1942.0-dotnetcore.42" />
-    <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
+    <PackageReference Include="NDjangoParser40" Version="1.2008.0-dotnetcore.2" />
+    <PackageReference Include="NDjangoParserFilters40" Version="1.2008.0-dotnetcore.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.UX.Models\Mozu.SiteBuilder.UX.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

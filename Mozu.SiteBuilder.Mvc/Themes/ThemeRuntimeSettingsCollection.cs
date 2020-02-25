@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Magnum.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -44,55 +43,48 @@ namespace Mozu.SiteBuilder.Mvc.Themes
              }
          }
 
-        public T Get<T>(string key, T fallback = default(T))
+        public T Get<T>(string key, T fallback = default)
         {
             if ( typeof(T) == typeof(int) || typeof(T) == typeof(int?))
             {
-                int? i = GetInt(key);
-                if ( i == null)
-                {
-                    i = (int?)(object)fallback;
-                }
+                var i = GetInt(key) ?? (int?)(object)fallback;
                 return (T)(object)i;
             }
             var val = this[key];
-            if (val is JValue)
+            if (val is JValue value)
             {
-                val = ((JValue)val).Value;
+                val = value.Value;
             }
-            if (val is T)
+            if (val is T tval)
             {
-                return (T)val;
+                return tval;
             }
             return fallback;
         }
         public int? GetInt( string id)
         {
             var val = this[id];
-            if ( val is JValue)
+            if (val is JValue jval)
             {
-                val = ((JValue)val).Value;
+                val = jval.Value;
             }
-            if ( val is Int64)
+            if (val is long)
             {
                 val = Convert.ToInt32(val);
             }
-            if ( val is int)
+            switch (val)
             {
-                return (int)val;
+                case int ival:
+                    return ival;
+                case null:
+                    return null;
             }
-            if ( val == null)
-            {
-                return null;
-            }
-            int ret;
-            if ( int.TryParse( val.ToString(), out ret ))
+
+            if ( int.TryParse( val.ToString(), out var ret ))
             {
                 return ret;
             }
             return null;
-            
-
         }
 
 
@@ -100,21 +92,13 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         {
             get
             {
-
-                object value;
-                if (InnerDictionary.TryGetValue(id, out value))
+                if (!InnerDictionary.TryGetValue(id, out var value)) return null;
+                return value switch
                 {
-                    if (value is Int64)
-                    {
-                        return Convert.ToInt32(value);
-                    }
-                    if (value is JValue)
-                    {
-                        return ((JValue)value).Value;
-                    }
-                    return value;
-                }
-                return null;
+                    long _ => Convert.ToInt32(value),
+                    JValue jval => jval.Value,
+                    _ => value
+                };
             }
         }
 
@@ -134,10 +118,7 @@ namespace Mozu.SiteBuilder.Mvc.Themes
              this.TimeStamp = timeStamp;
 
              this.Etag = etagBytes;
-
          }
-
-
 
          public byte[] Etag { get; set; }
 

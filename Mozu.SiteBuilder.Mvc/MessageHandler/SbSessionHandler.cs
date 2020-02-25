@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
-    class SbSessionHandler : DelegatingHandler
-    {
-    }
+    //class SbSessionHandler : DelegatingHandler
+    //{
+    //}
 }

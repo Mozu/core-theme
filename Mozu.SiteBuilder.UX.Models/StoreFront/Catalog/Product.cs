@@ -389,6 +389,15 @@ namespace Mozu.SiteBuilder.UX.Models.StoreFront.Catalog
     }
     public class ProductImageCollection: List<ProductImage>
     {
+        public ProductImageCollection(IEnumerable<ProductImage> seed)
+        {
+            this.AddRange(seed);
+        }
+
+        public ProductImageCollection()
+        {
+        }
+
         public ProductImage Main
         {
             get { return this.FirstOrDefault(); }

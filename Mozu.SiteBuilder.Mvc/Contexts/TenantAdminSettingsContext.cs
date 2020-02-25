@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Mozu.MZDB.Contracts.Clients;
 using Mozu.Core.Api.Client;
@@ -35,12 +37,14 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
         private readonly Lazy<ISettings> _settings;
         readonly HttpContext _context;
         Lazy<JObject> _state;
-        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContext context)
+        private readonly IWebHostEnvironment _env;
+        public TenantAdminSettingsContext(Lazy<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient> entityListsWebApiClient, Lazy<Mozu.Core.Settings.ISettings> settings, HttpContext context, IWebHostEnvironment env)
         {
             _entityListsWebApiClient = entityListsWebApiClient;
             _settings = settings;
             _context = context;
             _state = new Lazy<JObject>(GetSettings);
+            _env = env;
         }
 
         JObject GetSettings()
@@ -74,9 +78,9 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             }
 
         }
-        public string MapPath ( string virtualPath )
+        public string MapPath (string virtualPath)
         {
-            return _context.Server.MapPath("/admin/_mzAdminBetaControl/" + virtualPath);
+            return Path.Combine(_env.ContentRootPath, "/admin/_mzAdminBetaControl/", virtualPath);
         }
         public async Task<ITenantAdminSettingsContext> AsyncGet()
         {
@@ -90,50 +94,16 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
             _state = new Lazy<JObject>(() => val);
             return this;
         }
-        public bool EnableBetaAdmin
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool EnableBetaAdmin => true;
 
-        public bool EntityManagerVisible
-        {
-            get
-            {
-                return ((bool?)_state.Value.GetValue("entityManagerVisible")).GetValueOrDefault(false);
-            }
-        }
-        public bool SiteBuilderContentListsVisible
-        {
-            get
-            {
-                return ((bool?)_state.Value.GetValue("siteBuilderContentListsVisible")).GetValueOrDefault(false);
-            }
-        }
-        public bool CustomRoutesVisible
-        {
-            get
-            {
-                return ((bool?)_state.Value.GetValue("customRoutesVisible")).GetValueOrDefault(false);
-            }
-        }
+        public bool EntityManagerVisible => ((bool?)_state.Value.GetValue("entityManagerVisible")).GetValueOrDefault(false);
 
-        public bool EnableOrderEditInStorefront
-        {
-            get
-            {
-                return ((bool?)_state.Value.GetValue("enableOrderEditInStorefront")).GetValueOrDefault(false);
-            }
-        }
+        public bool SiteBuilderContentListsVisible => ((bool?)_state.Value.GetValue("siteBuilderContentListsVisible")).GetValueOrDefault(false);
 
-        public bool IsSavePromptEnabled
-        {
-            get
-            {
-                return ((bool?)_state.Value.GetValue("isSavePromptEnabled")).GetValueOrDefault(false);
-            }
-        }
+        public bool CustomRoutesVisible => ((bool?)_state.Value.GetValue("customRoutesVisible")).GetValueOrDefault(false);
+
+        public bool EnableOrderEditInStorefront => ((bool?)_state.Value.GetValue("enableOrderEditInStorefront")).GetValueOrDefault(false);
+
+        public bool IsSavePromptEnabled => ((bool?)_state.Value.GetValue("isSavePromptEnabled")).GetValueOrDefault(false);
     }
 }

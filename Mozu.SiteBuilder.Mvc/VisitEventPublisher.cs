@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Web;
-using Burrows.Publishing;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;

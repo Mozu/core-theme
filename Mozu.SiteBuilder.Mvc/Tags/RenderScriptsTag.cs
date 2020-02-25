@@ -12,6 +12,7 @@ using NDjango;
 using NDjango.Interfaces;
 using Newtonsoft.Json;
 using System;
+using Microsoft.AspNetCore.Http;
 using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
@@ -23,7 +24,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("all_scripts")]
     public class RenderScriptsTag : SimpleTagBase
     {
-        public static void RenderRequiresForWidgetPreview(TextWriter tw, HttpContextBase httpContext)
+        public static void RenderRequiresForWidgetPreview(TextWriter tw, HttpContext httpContext)
         {
             var scriptsArray = (HashSet<string>)httpContext.Items["scripts"];
             if (scriptsArray == null || scriptsArray.Count == 0)

@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
 
             bool sslEnabled = _settings.CoreSettings.IsSSLValidationEnabled;
 
-            bool useCoors = _settings.Urls("useCORS") == "true";
+            bool useCoors = _settings.AsMozuSettings().Routes.GetValue<string>("useCORS") == "true";
 
             return sis.ToDictionary(x => x.Id, y =>
             {
@@ -184,103 +184,103 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "ProductService",
-                            InternalUrl = settings.Urls("service-url-ProductRuntimeWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ProductRuntimeWebApi")
                         },
                          new ServiceInfo
                         {
                             Id = "DocumentListService",
-                            InternalUrl = settings.Urls("service-url-DocumentListWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("DocumentListWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "EntityListService",
-                            InternalUrl = settings.Urls("service-url-EntityListsWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("EntityListsWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "CategoryService",
-                            InternalUrl = settings.Urls("service-url-ProductCategoryRuntimeWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ProductCategoryRuntimeWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "CartService",
-                            InternalUrl = settings.Urls("service-url-CartWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("CartWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "CustomerService",
-                            InternalUrl = settings.Urls("service-url-CustomerAccountWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("CustomerAccountWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "B2BAccountService",
-                            InternalUrl = settings.Urls("service-url-B2BAccountWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("B2BAccountWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "CustomerAttributeDefService",
-                            InternalUrl = settings.Urls("service-url-CustomerAttributeDefinitionWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("CustomerAttributeDefinitionWebApi"),
                             RequiresSsl = true
                         },
                          new ServiceInfo
                         {
                             Id = "AccountAttributeDefService",
-                            InternalUrl = settings.Urls("service-url-AccountAttributeDefinitionWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("AccountAttributeDefinitionWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "InStockNotificationService",
-                            InternalUrl = settings.Urls("service-url-InStockNotificationSubscriptionWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("InStockNotificationSubscriptionWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "ShippingService",
-                            InternalUrl = settings.Urls("service-url-ShippingWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ShippingWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "OrderService",
-                            InternalUrl = settings.Urls("service-url-OrderWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("OrderWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "SearchService",
-                            InternalUrl = settings.Urls("service-url-ProductSearchWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ProductSearchWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "ReferenceService",
-                            InternalUrl = settings.Urls("service-url-ReferenceDataWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ReferenceDataWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "PaymentService",
-                            InternalUrl = settings.Urls("service-url-StorefrontCardsWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("StorefrontCardsWebApi"),
                             SkipRename = true,
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "addressValidationService",
-                            InternalUrl = settings.Urls("service-url-AddressValidationWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("AddressValidationWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "wishlistService",
-                            InternalUrl = settings.Urls("service-url-WishlistWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("WishlistWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "ReturnService",
-                            InternalUrl = settings.Urls("service-url-ReturnWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("ReturnWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
@@ -294,12 +294,12 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "locationService",
-                            InternalUrl = settings.Urls("service-url-LocationRuntimeWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("LocationRuntimeWebApi")
                         },
                         new ServiceInfo
                         {
                             Id = "creditService",
-                            InternalUrl = settings.Urls("service-url-CreditWebApi")
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("CreditWebApi")
                         }
                         ,new ServiceInfo
                         {
@@ -310,32 +310,32 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                         new ServiceInfo
                         {
                             Id = "OrderAttributeDefService",
-                            InternalUrl = settings.Urls("service-url-OrderAttributeWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("OrderAttributeWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "LocationAttributeDefService",
-                            InternalUrl = settings.Urls("service-url-LocationAttributeDefinitionWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("LocationAttributeDefinitionWebApi"),
                             RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "CheckoutService",
-                            InternalUrl = settings.Urls("service-url-CheckoutWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("CheckoutWebApi"),
                             RequiresSsl = true
                         }, 
                         new ServiceInfo
                         {
                              Id = "tokenService",
-                             InternalUrl = settings.Urls("service-url-StorefrontTokensWebApi"),
+                             InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("StorefrontTokensWebApi"),
                              SkipRename = true,
                              RequiresSsl = true
                         },
                         new ServiceInfo
                         {
                             Id = "DiscountService",
-                            InternalUrl = settings.Urls("service-url-DiscountRuntimeSecondaryWebApi"),
+                            InternalUrl = settings.AsMozuSettings().Routes.GetValue<string>("DiscountRuntimeSecondaryWebApi"),
                             RequiresSsl = true
                         }
 

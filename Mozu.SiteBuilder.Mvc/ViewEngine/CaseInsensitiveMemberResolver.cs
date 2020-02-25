@@ -146,11 +146,12 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
 
         static FSharpOption<object> ResolveProperty(object container, string memberName)
         {
-            if (container is Microsoft.ClearScript.V8.IV8ScriptItem)
-            {
-                return ResolveFromClearScriptBinders(container, memberName);
-            }
-            else if (container is JObject)
+            //if (container is Microsoft.ClearScript.V8.IV8ScriptItem)
+            //{
+            //    return ResolveFromClearScriptBinders(container, memberName);
+            //}
+            //else 
+            if (container is JObject)
             {
                 return ResolveFromJObject(container, memberName);
             }
@@ -182,7 +183,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             {
                 res = null;
             }
-            res = res is Microsoft.ClearScript.Undefined ? null : res;
+            res = null; /*res is Microsoft.ClearScript.Undefined ? null : res;*/
             if (res == null) return FSharpOption<object>.None;
             else return FSharpOption<object>.Some(res);
         }

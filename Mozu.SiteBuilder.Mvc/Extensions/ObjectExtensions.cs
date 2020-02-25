@@ -4,7 +4,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Magnum.Extensions;
 using Newtonsoft.Json.Linq;
 
 namespace Mozu.SiteBuilder.Mvc.Extensions
@@ -21,51 +20,44 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
     /// </summary>
     public static class ObjectExtensions
     {
-
         public static T Get<T>(this Mozu.Content.Contracts.Document doc, string key, T defaultValue= default(T))
         {
-            if (doc == null || doc.Properties == null)
+            if (doc?.Properties == null)
             {
                 return defaultValue;
             }
-            JToken tok;
-            if (doc.Properties.CastAs<JObject>().TryGetValue(key,  StringComparison.InvariantCultureIgnoreCase, out tok))
+
+            if (!doc.Properties.TryGetValue(key, StringComparison.InvariantCultureIgnoreCase, out var tok))
+                return defaultValue;
+            try
             {
-                try
-                {
-                    return (T) tok.ToObject<T>();
-                }
-                catch
-                {
-                    return defaultValue;
-                }
+                return (T) tok.ToObject<T>();
             }
-            return defaultValue;
-            
+            catch
+            {
+                return defaultValue;
+            }
         }
 
-        public static bool TryGet<T>(this Mozu.Content.Contracts.Document doc, string key, out T  value)
+        public static bool TryGet<T>(this Mozu.Content.Contracts.Document doc, string key, out T value)
         {
-            if (doc == null || doc.Properties == null)
+            value = default;
+            if (doc?.Properties == null)
             {
-                value = default (T);
                 return false;
             }
-            
-            JToken tok;
-            if (doc.Properties.CastAs<JObject>().TryGetValue(key, StringComparison.InvariantCultureIgnoreCase, out tok))
+
+            if (!doc.Properties.TryGetValue(key, StringComparison.InvariantCultureIgnoreCase, out var tok))
+                return false;
+            //todo test if can be cast..
+            try
             {
-                //todo test if can be cast..
-                try
-                {
-                    value = (T) tok.ToObject<T>();
-                    return true;
-                }
-                catch
-                {
-                }
+                value = (T) tok.ToObject<T>();
+                return true;
             }
-            value = default(T);
+            catch
+            {
+            }
             return false;
         }
         
@@ -81,40 +73,39 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 doc.Properties = new JObject();
             }
             
-            doc.Properties.CastAs<JObject>()[key] = JToken.FromObject(value);
+            doc.Properties[key] = JToken.FromObject(value);
         }
 
         public static bool IsTruthy(this object obj)
         {
-            if (obj is string && ((string)obj).Length > 0)
+            switch (obj)
             {
-                return true;
-            }
-            if (obj is bool)
-            {
-                return (bool)obj;
+                case string sobj when sobj.Length > 0:
+                    return true;
+                case bool bobj:
+                    return bobj;
             }
 
             var str = Convert.ToString(obj);
-            if (obj is string && ((string)obj).Length > 0)
+            if (obj is string sobj2 && sobj2.Length > 0)
             {
                 return true;
             }
-            return str != null && str.Length > 0 && str != "0";
+            return !string.IsNullOrEmpty(str) && str != "0";
         }
         public static T Clone<T>(this object original)
         {
             T cloned;
-            using (MemoryStream stream = new MemoryStream())
+            using (var stream = new MemoryStream())
             {
 
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T),new Type[]{ typeof ( object[]) , typeof ( string[]), typeof ( decimal [])} );
+                var serializer = new DataContractJsonSerializer(typeof(T),new []{ typeof ( object[]) , typeof ( string[]), typeof ( decimal [])} );
                 serializer.WriteObject(stream, original);
                 
                 stream.Position = 0;
                 cloned = (T)serializer.ReadObject(stream);
             }
-            return (T)cloned;
+            return cloned;
         }
         public static T Map<T>( this object obj )
         {
@@ -139,7 +130,7 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         }
         public static IEnumerable<T> Flatten<T> ( this IEnumerable<T> col , Func<T,IEnumerable<T>> fn)
         {
-            List<T> list = new List<T>();
+            var list = new List<T>();
             var stack = new Stack<T>(col);
 
             while ( stack.Count > 0  )
@@ -147,14 +138,12 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
                 var curr = stack.Pop();
                 list.Add ( curr );
                 var subItems = fn(curr);
-                if ( subItems != null )
+                if (subItems == null) continue;
+                foreach ( var subItem in subItems )
                 {
-                    foreach ( var subItem in subItems )
+                    if ( !list.Contains(subItem))
                     {
-                        if ( !list.Contains(subItem))
-                        {
-                            stack.Push(subItem);
-                        }
+                        stack.Push(subItem);
                     }
                 }
             }
@@ -162,17 +151,16 @@ namespace Mozu.SiteBuilder.Mvc.Extensions
         }
         public static Exception UnwrapAgg(this Exception e)
         {
-            while (e is AggregateException)
+            while (e is AggregateException exception)
             {
-                e = ((AggregateException)e).InnerExceptions[0];
+                e = exception.InnerExceptions[0];
             }
             return e;
         }
 
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> self, TKey key, TValue @default)
         {
-            TValue value;
-            return self.TryGetValue(key, out value) ? value : @default;
+            return self.TryGetValue(key, out var value) ? value : @default;
         }
 
         public static string BetweenStrings(this string self, string start, string stop, StringComparison stringComparison = StringComparison.OrdinalIgnoreCase)

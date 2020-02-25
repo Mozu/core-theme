@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
-using Autofac;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client;
 using Mozu.Core;
@@ -15,6 +14,10 @@ using Mozu.Tenant.Contracts;
 using Mozu.Tenant.Contracts.Clients;
 using Mozu.Core.Extensions;
 using System.Diagnostics;
+using System.Net;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using RestSharp;
 
 namespace Mozu.SiteBuilder.Mvc
 {
@@ -24,9 +27,10 @@ namespace Mozu.SiteBuilder.Mvc
         private readonly ISettings _settings;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly HttpRequestMessage _httpRequestMessage;
+        private readonly IWebHostEnvironment _environment;
 
         public bool IsDebugMode { get; set; }
-        public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage, IDataViewModeFinderOuter dvmGetter, IEditModeFinderOuter editModeGetter)
+        public SiteBuilderApiContext( ICookieProvider cookieProvider, ISettings settings, IAuthenticationHelper authenticationHelper, HttpRequestMessage httpRequestMessage, IDataViewModeFinderOuter dvmGetter, IEditModeFinderOuter editModeGetter, IWebHostEnvironment env)
             : base()
         {
             TenantId = -1;
@@ -34,6 +38,7 @@ namespace Mozu.SiteBuilder.Mvc
             _settings = settings;
             _authenticationHelper = authenticationHelper;
             _httpRequestMessage = httpRequestMessage;
+            _environment = env;
 
             IsEditMode = editModeGetter.IsEditMode();
             
@@ -83,15 +88,15 @@ namespace Mozu.SiteBuilder.Mvc
             var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals( x.Key, "debugmode",  StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
             if (val != null)
             {
-                isDebugMode = string.Equals(val, Boolean.TrueString , StringComparison.OrdinalIgnoreCase);
+                isDebugMode = string.Equals(val, bool.TrueString , StringComparison.OrdinalIgnoreCase);
 
-                var newCookie =new HttpCookie(Mvc.Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f");
+                var newCookie =new CookieOptions();
                 if (!isDebugMode)
                 {
                     newCookie.Expires = DateTime.MinValue;
                 }
                 
-                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, newCookie, false);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGCOOKIENAME, isDebugMode ? "t" : "f", newCookie, false);
 
             }
             this.IsDebugMode = isDebugMode;
@@ -104,42 +109,33 @@ namespace Mozu.SiteBuilder.Mvc
 
         private DateTime? GetNowValue()
         {
+            if (this.DataViewMode != DataViewModeType.Pending) return null;
             DateTime? now = null;
-            if (this.DataViewMode == DataViewModeType.Pending)
+            var cookie = new CookieOptions();
+            DateTime temp;
+            var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_now", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
+            if (val != null)
             {
-                HttpCookie cookie;
-                DateTime temp;
-                var val = _httpRequestMessage.GetQueryNameValuePairs().Where(x => string.Equals(x.Key, "mz_now", StringComparison.OrdinalIgnoreCase)).Select(x => x.Value).FirstOrDefault();
-                if (val != null)
+                if (DateTime.TryParse(val, out temp))
                 {
-                    if (DateTime.TryParse(val, out temp))
-                    {
-                        now = temp;
-                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, now.Value.ToUniversalTime().ToString("o"));
-                    }
-                    else
-                    {
-                        cookie = new HttpCookie(Constants.NOWCOOKIENAME, "");
-                        cookie.Expires = DateTime.MinValue;
-                    }
-
-
-                    _cookieProvider.SaveResponseCookie(Constants.NOWCOOKIENAME, cookie, false);
-
+                    now = temp;
+                    val = temp.ToUniversalTime().ToString("o");
                 }
                 else
                 {
+                    val = "";
+                    cookie.Expires = DateTime.MinValue;
+                }
 
-                    var reqCookie = _cookieProvider.GetRequestCookie(Constants.NOWCOOKIENAME);
-                    if (reqCookie != null)
-                    {
-
-                        if (DateTime.TryParse(reqCookie.Value, out temp))
-                        {
-                            now = temp;
-                        }
-
-                    }
+                _cookieProvider.SaveResponseCookie(Constants.NOWCOOKIENAME, val, cookie, false);
+            }
+            else
+            {
+                var reqCookie = _cookieProvider.GetRequestCookie(Constants.NOWCOOKIENAME);
+                if (reqCookie == null) return null;
+                if (DateTime.TryParse(reqCookie.Value, out temp))
+                {
+                    return temp;
                 }
             }
             return now;
@@ -267,20 +263,9 @@ namespace Mozu.SiteBuilder.Mvc
 
         }
 
-        UserScopeType ScopeType
-        {
-            get
-            {
-                if (String.Equals( HttpRuntime.AppDomainAppVirtualPath , "/admin",  StringComparison.OrdinalIgnoreCase))
-                {
-                    return UserScopeType.Tenant;
-                }
-                return UserScopeType.Shopper;
-                ;
-            }
-        }
-
-
+        //cmcmannus|02/19/2020
+        //hard coded to shopper since not porting admin
+        UserScopeType ScopeType => UserScopeType.Shopper;
 
         const string EmptyHeaderTokenValue = "__mzrpt__";
         //remove the empty token from the headers... sometimes sent from the UI.  for backwards compatibility with older theme script.
@@ -468,26 +453,23 @@ namespace Mozu.SiteBuilder.Mvc
                 DebugFlags = DebugFlags.HasFlag(DebugModeFlagValues.None) ? DebugModeFlagValues.None : DebugFlags;
 
 
-                var cookie = new HttpCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, ((int)DebugFlags).ToString());
+                var cookie = new CookieOptions();
                 if (DebugFlags == DebugModeFlagValues.None)
                 {
                     cookie.Expires = DateTime.MinValue;
                 }
 
-                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, cookie, false);
+                _cookieProvider.SaveResponseCookie(Mvc.Constants.DEBUGFLAGSCOOKIENAME, ((int)DebugFlags).ToString(), cookie, false);
 
             }
             else
             {
                 var cookie = _cookieProvider.GetRequestCookie(Constants.DEBUGFLAGSCOOKIENAME);
-                int cookieVal;
-                if (int.TryParse(cookie?.Value, out cookieVal))
+                if (int.TryParse(cookie?.Value, out var cookieVal))
                 {
                     DebugFlags = (DebugModeFlagValues)cookieVal;
                 }
-
             }
-
         }
 
         public DebugModeFlagValues DebugFlags

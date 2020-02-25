@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
     {
     }
 
-    public class ViewResultBase : ActionResult, Mozu.Core.Actions.Contracts.Http.IViewResult
+    public class ViewResultBase : ActionResult/*, Mozu.Core.Actions.Contracts.Http.IViewResult server side JS*/
     {
         private ViewDataDictionary _viewDataDictionary;
         [JsonIgnore]
@@ -34,11 +34,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             get => this.ViewData.Model;
             set => this.ViewData.Model = value;
         }
-        [JsonIgnore]
-        System.Collections.Generic.IDictionary<string, object> Core.Actions.Contracts.Http.IViewResult.ViewData
-        {
-            get { return this.ViewData; }
-        }
+        // Server-side JS
+        //[JsonIgnore]
+        //System.Collections.Generic.IDictionary<string, object> Core.Actions.Contracts.Http.IViewResult.ViewData
+        //{
+        //    get { return this.ViewData; }
+        //}
 
 
     }

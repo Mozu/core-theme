@@ -21,13 +21,12 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public object Perform(object value) { return null; }
         public object PerformWithParam(object value, object parameter) { return null; }
-        public object DefaultValue { get{return null;} }
+        public object DefaultValue => null;
 
         public object PerformWithParamAndContext(object value, IEnumerable<object> parameter, IContext context)
         {
             var attrName = parameter.First().ToString();
-            var typed = value as Product;
-            if (typed != null) return GetAttributeFromProduct(typed, attrName);
+            if (value is Product typed) return GetAttributeFromProduct(typed, attrName);
             else return GetAttributeFromUntyped(value, context, attrName);
         }
 
@@ -42,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
         {
             var props = typed.Properties ?? new List<ProductProperty>();
             var opts = typed.Options ?? new List<ProductOption>();
-            return ((object)props.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName))) ?? opts.FirstOrDefault(x => x.AttributeFQN.EqualsIgnoreCase(attrName));
+            return ((object)props.FirstOrDefault(x => x.AttributeFqn.EqualsIgnoreCase(attrName))) ?? opts.FirstOrDefault(x => x.AttributeFqn.EqualsIgnoreCase(attrName));
         }
 
         private static IEnumerable<object> GetAttributesFrom(object value, IContext context)
@@ -56,7 +55,7 @@ namespace Mozu.SiteBuilder.Mvc.Filters
 
         public static IEnumerable<object> ToSafeEnumerable(object input)
         {
-             if(input is IEnumerable) return (input as IEnumerable).Cast<object>();
+            if (input is IEnumerable enumerable) return enumerable.Cast<object>();
             return Enumerable.Empty<object>();
         }
     }

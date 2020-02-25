@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -81,11 +81,9 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         public ThemeFileSystemInfo GetParentThemeFileInfo(ThemeFileSystemInfo item)
         {
             var currentTheme = ThemeStack.FirstOrDefault(theme => theme.Id.EqualsIgnoreCase(item.ThemeId));
-            if (currentTheme == null) return null;
 
-            var parentTheme = currentTheme.Parent;
-            if (parentTheme == null) return null;
-            return parentTheme.FileListing.GetFileInfo(item.VirtualPathNoExt, false);
+            var parentTheme = currentTheme?.Parent;
+            return parentTheme?.FileListing.GetFileInfo(item.VirtualPathNoExt, false);
         }
 
         public override bool FileExists(string virtualPath)
@@ -99,10 +97,18 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         }
     }
 
-    class MozuVirtualDirectory : System.Web.Hosting.VirtualDirectory
+    public class VirtualDirectory
+    {
+        public VirtualDirectory(string path) {  }
+
+        public virtual System.Collections.IEnumerable Directories => throw new NotImplementedException();
+
+        public virtual System.Collections.IEnumerable Files => throw new NotImplementedException();
+    }
+
+    class MozuVirtualDirectory : VirtualDirectory
     {
         private string _virtualDir;
-        private string _mapPath;
         private IMozuVirtualPathProvider _mozuVirtualPathProvider;
 
         public MozuVirtualDirectory(string virtualDir, string mapPath, IMozuVirtualPathProvider mozuVirtualPathProvider)
@@ -110,16 +116,14 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             // TODO: Complete member initialization
             this._virtualDir = virtualDir;
-            this._mapPath = mapPath;
+            this.MapPath = mapPath;
             this._mozuVirtualPathProvider = mozuVirtualPathProvider;
         }
 
-        public string MapPath
-        {
-            get { return _mapPath; }
-        }
+        public string MapPath { get; }
+        public string VirtualPath { get; set; }
 
-        public override System.Collections.IEnumerable Children
+        public System.Collections.IEnumerable Children
         {
             get
             {

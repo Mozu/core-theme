@@ -137,10 +137,10 @@ namespace Mozu.SiteBuilder.Mvc.Contexts
                     return;
                 }
                 var bc = Newtonsoft.Json.Linq.JObject.FromObject(obj).ToObject<BreadCrumb>();
-                if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)
-                {
-                    ((IDisposable)obj).Dispose();
-                }
+                //if (obj is Microsoft.ClearScript.V8.IV8ScriptItem)
+                //{
+                //    ((IDisposable)obj).Dispose();
+                //}
                 base.Add((BreadCrumb)bc);
             }
         }

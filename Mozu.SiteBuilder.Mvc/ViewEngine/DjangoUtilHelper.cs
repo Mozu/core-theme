@@ -3,19 +3,27 @@ using System.Linq;
 using Microsoft.FSharp.Core;
 using Mozu.SiteBuilder.Mvc.Themes;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
 {
     public class DjangoUtilHelper : FSharpFunc<string,string>
     {
         private string[] _paths;
+        private readonly IWebHostEnvironment _env;
+
+        public DjangoUtilHelper(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
 
         public override string Invoke(string fullPath)
         {
             var paths = _paths;
             if (paths == null)
             {
-                var tr = new ThemeMetadataProvider(Core.Settings.MozuConfigurationManager.Settings, null, null);
+                var tr = new ThemeMetadataProvider(Core.Settings.MozuConfigurationManager.Settings, null, null, _env);
                 paths = _paths = tr.ThemePaths.Union(new List<string> { tr.CoreThemePath, tr.LegacyThemePath }).ToArray();
             }
 

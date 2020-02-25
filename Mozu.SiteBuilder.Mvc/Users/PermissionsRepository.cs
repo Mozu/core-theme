@@ -32,7 +32,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         public Task<List<Role>> GetRoles()
         {
-            var response = _rolesWebApiClient.GetRoles(UserScopeType.Tenant.ToString( ), _apiContext.TenantId).Result;
+            var response = _rolesWebApiClient.GetRoles(scopeType: UserScopeType.Tenant.ToString( ), scopeId: _apiContext.TenantId).Result;
 
             if (response.HasException || !response.ResponseMessage.IsSuccessStatusCode)
                 return InTask(new List<Role>(0));

@@ -76,8 +76,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
             // else redirect to insecure
             var builder = new UriBuilder(pageContext.Url) {Scheme = "http", Port = 80};
-            actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.MovedPermanently);
-            actionContext.Response.Headers.Location = builder.Uri;
+            actionContext.Result = new RedirectResult(builder.Uri.ToString(), true);
         }
     }
 }

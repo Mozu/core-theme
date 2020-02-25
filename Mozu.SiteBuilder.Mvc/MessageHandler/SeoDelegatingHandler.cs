@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Mozu.SiteBuilder.Mvc.SEO;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Navigation;
@@ -16,6 +15,7 @@ using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.Core.Caching;
+using Mozu.Core.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {

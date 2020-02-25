@@ -1,6 +1,8 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
@@ -14,19 +16,19 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
 
         public override void ExecuteResult(HttpRequestMessage requestMessage)
         {
-            HttpResponseBase response = requestMessage.HttpContext().Response;
+            var response = requestMessage.HttpContext().Response;
             if (!string.IsNullOrEmpty(ContentType))
             {
                 response.ContentType = ContentType;
             }
             if (ContentEncoding != null)
             {
-                response.ContentEncoding = ContentEncoding;
+                response.Headers["Content-Encoding"] = ContentEncoding.HeaderName;
             }
-            if (Content != null)
-            {
-                response.Write(Content);
-            }
+
+            if (Content == null) return;
+            var bytes = ContentEncoding != null ? ContentEncoding.GetBytes(Content) : Encoding.Default.GetBytes(Content);
+            response.Body.Write(bytes);
         }
     }
 }

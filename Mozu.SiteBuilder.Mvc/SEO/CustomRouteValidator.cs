@@ -171,14 +171,15 @@ namespace Mozu.SiteBuilder.Mvc.SEO
     {
         public RouteValidator(IEnumerable<string> mappingNames, IEnumerable<string> validatorKeys)
         {
-            RuleFor(x => x.InternalRoute).Must(ParseAsFancyRoute).WithName("internal route").WithMessage(string.Format("the internal route must be one of {0}", string.Join(",", Enum.GetNames(typeof(FancyRoute)))));
+            RuleFor(x => x.InternalRoute).Must(ParseAsFancyRoute).WithName("internal route").WithMessage(
+                $"the internal route must be one of {string.Join(",", Enum.GetNames(typeof(FancyRoute)))}");
             RuleFor(x => x.Mappings.Keys ).Must( x => x.All(map => mappingNames.Contains(map, StringComparer.OrdinalIgnoreCase))).WithName("mapping name").WithMessage("all mappings must be declared in the mapping section of the custom routes");
-            RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage("all validators must be declared in the validators section of the custom routes.  Error with validators:({0}) in routeTempate:{1}", x =>  String.Join(",", x.Validators.Keys), x=> x.Template );
+            RuleFor(x => x.Validators.Keys).Must(x => x.All(constraint => validatorKeys.Contains(constraint, StringComparer.OrdinalIgnoreCase))).WithName("validator name").WithMessage(x => $"all validators must be declared in the validators section of the custom routes.  Error with validators:({string.Join(",", x.Validators.Keys)}) in routeTempate:{x.Template}");
             RuleFor(x => x.InternalRoute).NotNull().NotEmpty().WithName("Internal Route").WithMessage("An Internal Route must be provided");
             RuleFor(x => x.Template).NotNull().WithName("template");
-            RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" has duplicate route parameters: [{1}]", x => x.Template, x => string.Join(",", GetDuplicateRouteParameters(x.Template)));
-            RuleFor(x => x.Template).Must(NotStartWithInvalidRouteCharacters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage("The route \"{0}\" cannot start with '~' or '/'", x => x.Template);
-            RuleFor(x => x.UrlScheme).Must(ParseAsOneOfHttpOrHttps).When(x => !x.UrlScheme.IsNullOrEmpty()).WithName("Url Scheme").WithMessage("The Url Scheme must be one of {0}, but was {1}", x => string.Join(", ", SchemeNames), x => x.UrlScheme);
+            RuleFor(x => x.Template).Must(NotContainDuplicateRouteParameters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage(x => $"The route \"{x.Template}\" has duplicate route parameters: [{string.Join(",", GetDuplicateRouteParameters(x.Template))}]");
+            RuleFor(x => x.Template).Must(NotStartWithInvalidRouteCharacters).When(x => !string.IsNullOrEmpty(x.Template)).WithName("Route Template").WithMessage(x => $"The route \"{x.Template}\" cannot start with '~' or '/'");
+            RuleFor(x => x.UrlScheme).Must(ParseAsOneOfHttpOrHttps).When(x => !x.UrlScheme.IsNullOrEmpty()).WithName("Url Scheme").WithMessage(x => $"The Url Scheme must be one of {string.Join(", ", SchemeNames)}, but was {x.UrlScheme}");
         }
 
         static string[] SchemeNames = Enum.GetNames(typeof(CustomRoute.Scheme));

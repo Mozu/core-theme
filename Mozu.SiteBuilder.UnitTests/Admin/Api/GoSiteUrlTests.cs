@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autofac.Core;
-using Autofac;
 using Mozu.SiteBuilder.Mvc.Context;
 using System.Net.Http;
 using System.Web.Http.Dependencies;

@@ -5,13 +5,13 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using Autofac;
 using Mozu.Core.Api.Contracts;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Newtonsoft.Json;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
@@ -23,14 +23,14 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
         }
-        public ILifetimeScope LifetimeScope { get; set; }
+        public IServiceProvider LifetimeScope { get; set; }
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, System.Net.Http.HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
             if (this.CanWriteType(type))
             {
                 var formatter = (HtmlErrorMediaTypeHyperFormatter)this.MemberwiseClone();
                 formatter.RequestMessage = request;
-                formatter.LifetimeScope = (ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+                formatter.LifetimeScope = (IServiceProvider)request.GetDependencyScope().GetService(typeof(IServiceProvider));
                 return formatter;
             }
             return this;

@@ -12,51 +12,54 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 {
     public class ProductMapping: Profile
     {
+        private class CategoryToDictionaryConverter : ITypeConverter<Category, IDictionary<string, object>>
+        {
+            public IDictionary<string, object> Convert(Category source, IDictionary<string, object> destination, ResolutionContext context)
+            {
+                var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+                PopulateDictionary(source, dic);
+
+                return dic;
+            }
+        }
+        private class ProductToDictionaryConverter : ITypeConverter<Product, IDictionary<string, object>>
+        {
+            public IDictionary<string, object> Convert(Product source, IDictionary<string, object> destination, ResolutionContext context)
+            {
+                var dic = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["productCode"] = source.ProductCode,
+                    ["productName"] = source.ProductName,
+                    ["productSlug"] = source.Content?.SEOFriendlyUrl,
+                    ["productType"] = source.ProductType,
+                    ["productTypeId"] = source.ProductTypeId,
+                    ["variationProductCode"] = source.VariationProductCode
+                };
+                if (source.Categories != null && source.Categories.Count > 0)
+                {
+                    var cat = source.Categories.FirstOrDefault(x => x.IsDisplayed) ?? source.Categories.First();
+                    PopulateDictionary(cat, dic);
+                }
+
+                if (source.Properties == null) return dic;
+
+                foreach (var prop in source.Properties.Where(x => !x.IsMultiValue.GetValueOrDefault(false) && x.Values != null && x.Values.Count > 0))
+                {
+                    dic[prop.AttributeFqn] = prop.Values.First().Value;
+                }
+
+                return dic;
+            }
+        }
+
         public ProductMapping()
         {
-           CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category, IDictionary<string, object>>()
-                .ConvertUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Category parent) =>
-                {
+           CreateMap<Category, IDictionary<string, object>>()
+                .ConvertUsing<CategoryToDictionaryConverter>();
 
-                    var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-
-                    
-
-                    PopulateDictionary( parent, dic);
-
-                    return dic;
-                });
-
-            CreateMap<Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product, IDictionary<string, object>>()
-               .ConvertUsing((Mozu.SiteBuilder.UX.Models.StoreFront.Catalog.Product  product) =>
-               {
-
-                   var dic = new System.Collections.Generic.Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-                   dic["productCode"] = product.ProductCode;
-                   dic["productName"] = product.ProductName;
-                   dic["productSlug"] = product.Content?.SEOFriendlyUrl;
-                   dic["productType"] = product.ProductType;
-                   dic["productTypeId"] = product.ProductTypeId;
-                   dic["variationProductCode"] = product.VariationProductCode;
-                   if ( product.Categories != null && product.Categories.Count>0)
-                   {
-                       var cat = product.Categories.FirstOrDefault(x => x.IsDisplayed) ?? product.Categories.First();
-                       PopulateDictionary(cat, dic);
-                   }
-                   
-                   if ( product.Properties != null)
-                   {
-                       foreach (var prop in product.Properties.Where(x => !x.IsMultiValue.GetValueOrDefault(false) && x.Values != null && x.Values.Count > 0 ))
-                       {
-                           dic[prop.AttributeFQN] = prop.Values.First().Value;
-                       }
-
-                   }
-
-                   return dic;
-               });
-
-
+            CreateMap<Product, IDictionary<string, object>>()
+               .ConvertUsing<ProductToDictionaryConverter>();
 
             CreateMap<Mozu.ProductRuntime.Contracts.ProductSearchResult, ProductSearchResult>();
             CreateMap<Mozu.ProductRuntime.Contracts.Facet, Facet>();
@@ -82,18 +85,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             CreateMap<Mozu.ProductRuntime.Contracts.Product, Product>();
               
             CreateMap<Mozu.ProductRuntime.Contracts.ProductContent, ProductContent>()
-                  .ForMember(x => x.ProductImages, op => op.ResolveUsing(x =>
-                      {
-                          var pic = new ProductImageCollection();
-                          if (x.ProductImages != null)
-                          {
-                              pic.AddRange(x.ProductImages.Select(pi => Mapper.Map<ProductImage>(pi)));
-                              ;
-                          }
-
-                          return pic;
-
-                      }));
+                  .ForMember(x => x.ProductImages, op => op.MapFrom(x => x.ProductImages == null ?
+                      new ProductImageCollection() : 
+                      new ProductImageCollection(x.ProductImages.Select(Mapper.Map<ProductImage>))));
             ;
             CreateMap<Mozu.ProductRuntime.Contracts.ProductCollection, ProductCollection>();
                 //.ForMember(x => x.Items, op => op.MapFrom(x => x.Items))
@@ -121,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
 
         }
 
-        private static void PopulateDictionary( Category category, Dictionary<string, object> dic)
+        private static void PopulateDictionary( Category category, IDictionary<string, object> dic)
         {
             var token = new CategoryToken(CategoryToken.CategoryIdentifierType.Id, 0, null);
             for (var i = 0; category != null && category.IsDisplayed && i < 10; i++)
@@ -131,7 +125,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
                 token.IdType = CategoryToken.CategoryIdentifierType.Code;
                 dic[token.Raw] = category.CategoryCode;
                 token.IdType = CategoryToken.CategoryIdentifierType.Slug;
-                dic[token.Raw] = category.Content == null ? null : category.Content.Slug;
+                dic[token.Raw] = category.Content?.Slug;
 
                 category = category.ParentCategory;
                 token = token.GetParent();

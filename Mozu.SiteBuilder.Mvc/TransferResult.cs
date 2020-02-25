@@ -12,42 +12,42 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc
 {
-    public class TransferResult : ActionResult
-    {
-        public string Url { get; private set; }
+    //public class TransferResult : ActionResult
+    //{
+    //    public string Url { get; private set; }
 
-        public TransferResult(string url)
-        {
-            this.Method = "GET";
-            this.Url = url;
-        }
-        public NameValueCollection Headers { get; set; }
+    //    public TransferResult(string url)
+    //    {
+    //        this.Method = "GET";
+    //        this.Url = url;
+    //    }
+    //    public NameValueCollection Headers { get; set; }
 
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
-        {
+    //    public override void ExecuteResult(HttpRequestMessage requestMessage)
+    //    {
 
-            var httpContext = requestMessage.HttpContext();
+    //        var httpContext = requestMessage.HttpContext();
 
-            // MVC 3 running on IIS 7+
-            if (HttpRuntime.UsingIntegratedPipeline)
-            {
-                if (Headers != null)
-                {
-                    httpContext.Server.TransferRequest(this.Url, false, this.Method, this.Headers);
-                }
-                else
-                {
-                    httpContext.Server.TransferRequest(this.Url, true);    
-                }
+    //        // MVC 3 running on IIS 7+
+    //        if (HttpRuntime.UsingIntegratedPipeline)
+    //        {
+    //            if (Headers != null)
+    //            {
+    //                httpContext.Server.TransferRequest(this.Url, false, this.Method, this.Headers);
+    //            }
+    //            else
+    //            {
+    //                httpContext.Server.TransferRequest(this.Url, true);    
+    //            }
                 
-            }
-            else
-            {
+    //        }
+    //        else
+    //        {
                 
-                throw new NotImplementedException("Should be using IntegratedPipeline.");
-            }
-        }
+    //            throw new NotImplementedException("Should be using IntegratedPipeline.");
+    //        }
+    //    }
 
-        public string Method { get; set; }
-    }
+    //    public string Method { get; set; }
+    //}
 }

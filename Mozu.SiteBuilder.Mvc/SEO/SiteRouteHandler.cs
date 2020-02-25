@@ -10,12 +10,12 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Hosting;
 using System.Web.Http.Routing;
-using Autofac;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.SEO
 {
@@ -253,7 +253,7 @@ namespace Mozu.SiteBuilder.Mvc.SEO
                     if (request.Headers.TryGetValues(Constants.HEADER_ALTERNATIVE_VIEW, out values) && values.Any(x => !string.IsNullOrWhiteSpace(x)))
                     {
                         uri = new Uri(uri.GetLeftPart(UriPartial.Path) + request.RequestUri.Query);
-                        request.Resolve<HttpContextBase>().Response.AddHeader(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
+                        request.Resolve<HttpContext>().Response.Headers.Add(Constants.HEADER_CANONICAL_URL, uri.PathAndQuery);
                     }
                     return null;
                 }

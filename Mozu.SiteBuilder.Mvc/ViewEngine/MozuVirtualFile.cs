@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Hosting;
 using System.IO;
 
 namespace Mozu.SiteBuilder.Mvc.ViewEngine
@@ -44,10 +43,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             return File.GetLastWriteTime(MappedPath);
         }
 
-        public override System.IO.Stream Open()
-        {
-            return File.Open(MappedPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        }
+        public virtual System.IO.Stream Open() { throw new NotImplementedException(); }
     }
 
     public class MozuVirtualMongoFile : MozuVirtualFile
@@ -79,7 +75,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             set;
         }
 
-        public override Stream Open()
+        public Stream Open()
         {
             return new MemoryStream(Content);
         }

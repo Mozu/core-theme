@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders.Physical;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
@@ -15,23 +17,20 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
             {
                 throw new ArgumentException("MvcResources.Common_NullOrEmpty, fileName");
             }
-            this.FileName = fileName;
+            FileName = fileName;
         }
 
         protected override void WriteFile(HttpResponse response)
         {
-            response.TransmitFile(this.FileName);
+            response.SendFileAsync(new PhysicalFileInfo(new FileInfo(FileName)));
         }
 
         // Properties
         public string FileName { get; private set; }
 
-        protected override System.Threading.Tasks.Task WriteFileAsync(HttpResponse response)
+        protected override Task WriteFileAsync(HttpResponse response)
         {
-            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
-            tcs.SetResult(true);
-            response.TransmitFile( this.FileName);
-            return tcs.Task;
+            return response.SendFileAsync(new PhysicalFileInfo(new FileInfo(FileName)));
         }
     }
 }

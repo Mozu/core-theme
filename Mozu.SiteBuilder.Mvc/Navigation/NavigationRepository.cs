@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization.Json;
-using System.Threading.Tasks;
-using Magnum.Extensions;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.CMS;
@@ -12,6 +6,8 @@ using Mozu.SiteBuilder.Mvc.Extensions;
 using Mozu.SiteBuilder.Mvc.TempMocks;
 using Mozu.SiteBuilder.UX.Models.Navigation;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DC = Mozu.Content.Contracts;
 
 namespace Mozu.SiteBuilder.Mvc.Navigation

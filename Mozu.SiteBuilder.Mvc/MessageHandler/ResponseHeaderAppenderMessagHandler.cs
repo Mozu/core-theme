@@ -14,6 +14,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.Mvc.MessageHandler
 {
@@ -33,17 +34,14 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
             ILogger logger = null;
             var additionalHeaders = request.GetAdditionalRespnoseHeaders();
-            foreach( var nvHeader in additionalHeaders)
+            foreach (var nvHeader in additionalHeaders.Where(nvHeader => !resp.Headers.TryAddWithoutValidation(nvHeader.Name, nvHeader.Value)))
             {
-                if (!resp.Headers.TryAddWithoutValidation(nvHeader.Name, nvHeader.Value))
+                if ( logger == null)
                 {
-                    if ( logger == null)
-                    {
-                        var exceptionLogWrapper = request.Resolve<ExceptionContextLogWrapper>();
-                        logger = exceptionLogWrapper.GetLogger();
-                    }
-                    logger.Warn($"unable to write header {nvHeader.Name} {nvHeader.Value}");
+                    var exceptionLogWrapper = request.Resolve<ExceptionContextLogWrapper>();
+                    logger = exceptionLogWrapper.GetLogger();
                 }
+                logger.Warn($"unable to write header {nvHeader.Name} {nvHeader.Value}");
             }
             return resp;
         }
@@ -96,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
             }
             catch (Exception ex)
             {
-                request.Resolve<ILoggingService>().LoggerFor<PageContextCookieHandler>().Warn(ex);
+                LoggingService.LoggerFor<PageContextCookieHandler>().Warn(ex.Message);
             }
             if (!request.HasAdditionalRespnoseHeaders())
             {

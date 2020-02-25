@@ -15,6 +15,7 @@ using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.Core;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Logging;
 using Mozu.MZDB.Contracts;
 using Mozu.ProductRuntime.Contracts;
 using Mozu.ProductRuntime.Contracts.Clients;

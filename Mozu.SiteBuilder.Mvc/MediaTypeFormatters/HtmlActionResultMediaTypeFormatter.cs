@@ -10,8 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using Autofac;
 using Microsoft.Extensions.Logging;
+using Mozu.Core.Configuration;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Logging;
@@ -29,13 +29,13 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/json"));
         }
-        private ILifetimeScope LifetimeScope { get; set; }
+        private IServiceProvider LifetimeScope { get; set; }
         private ILogger _logger;
         private string _correlationId;
 
     
 
-        public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, System.Net.Http.HttpRequestMessage request, MediaTypeHeaderValue mediaType)
+        public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId == null && type.IsAssignableTo<IHyprViewResult>())
@@ -46,7 +46,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             {
                 var formatter = (HtmlActionResultMediaTypeFormatter)this.MemberwiseClone();
                 formatter.RequestMessage = request;
-                formatter.LifetimeScope = (ILifetimeScope)request.GetDependencyScope().GetService(typeof(ILifetimeScope));
+                formatter.LifetimeScope = (IServiceProvider)request.GetDependencyScope().GetService(typeof(IServiceProvider));
                 formatter.MediaType = mediaType;
 
                 var exceptionLogWrapper = formatter.LifetimeScope.Resolve<ExceptionContextLogWrapper>();
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         }
 
-        private HttpResponseException CreateandLogFormattingException(Exception ex, System.Net.Http.HttpContent content)
+        private Exception CreateandLogFormattingException(Exception ex, System.Net.Http.HttpContent content)
         {
             _logger.Error("An unhandled exception occured in the HtmlActionResultMediaTypeFormatter.", ex);
 
@@ -81,9 +81,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             }
 
 
-       
-            AggregateException aggregateException = ex as AggregateException;
-            if (aggregateException != null && aggregateException.InnerExceptions.Count ==1)
+            if (ex is AggregateException aggregateException && aggregateException.InnerExceptions.Count == 1)
             {
                 ex = aggregateException.InnerExceptions.First();
             }
@@ -121,7 +119,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
                 var hvc = new HyprViewContext(this.RequestMessage, vrb.ViewData, null);
                 InitAdditioanViewContext(hvc);
                 var httpContext = this.RequestMessage.HttpContext();
-                httpContext.Response.Buffer = true;
+                //httpContext.Response.Buffer = true;
                 var sw = new StreamWriter(writeStream);
             
                 if (view == null)
@@ -140,8 +138,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             else
             {
                 var action = value as ActionResult;
-                var iAsyncActoin = value as IActionResultAsync;
-                if (iAsyncActoin != null)
+                if (value is IActionResultAsync iAsyncActoin)
                 {
                     var task = iAsyncActoin.ExecuteResultAsync(this.RequestMessage);
 

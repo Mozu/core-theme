@@ -4,7 +4,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Net.Http.Headers;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
@@ -56,11 +57,10 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
         }
         public static bool Is404(HttpRequestMessage request)
         {
-            object tmp;
-            return request.Properties.TryGetValue ( "_mz_is404", out tmp) && (bool)tmp;
+            return request.Properties.TryGetValue ( "_mz_is404", out var tmp) && (bool)tmp;
         }
 
-        public void OnActionExecuted(ActionExecutingContext actionExecutedContext, ISettings settings)
+        public void OnActionExecuted(ActionExecutedContext actionExecutedContext, ISettings settings)
         {
             if (ConfigKey == null)
                 return;
@@ -73,7 +73,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
             if (actionExecutedContext.HttpContext.Response?.Headers != null)
             {
-                var cache = actionExecutedContext.HttpContext.Response.Headers.CacheControl = actionExecutedContext.HttpContext.Response.Headers.CacheControl ?? new CacheControlHeaderValue();
+                var typedHeaders = actionExecutedContext.HttpContext.Response.GetTypedHeaders();
+                var cache = typedHeaders.CacheControl ??= new CacheControlHeaderValue();
+
+                //todo:translate request to requestmessage
+                //var req = actionExecutedContext.HttpContext.Request;
+                var hrm = new HttpRequestMessage();
 
                 if (ForceRevalidate)
                 {
@@ -81,7 +86,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     cache.NoCache = true;
                     cache.MustRevalidate = true;
                 }
-                else if (ClientCacheHeadersAttribute.Is404(actionExecutedContext.Request) )
+                else if (Is404(hrm) )
                 {
                     var cacheDuration = TimeSpan.FromSeconds(600);
 
@@ -99,7 +104,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 
                 if (AllowCrossOrigin)
                 {
-                    actionExecutedContext.Response.Headers.TryAddWithoutValidation("Access-Control-Allow-Origin", new string[] {"*"});
+                    actionExecutedContext.HttpContext.Response.Headers["Access-Control-Allow-Origin"] = new [] {"*"};
                 }
 
                 //Access-Control-Allow-Origin
