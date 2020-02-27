@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FSPowerPack.Core.Community" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Mozu.AdminUser.Contracts" Version="1.1952.0-dotnetcore.136" />
     <PackageReference Include="Mozu.AppDev.Contracts" Version="1.1944.0-ddlogs2.9" />

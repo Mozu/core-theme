@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NDjango.Interfaces;
-using Microsoft.FSharp.Collections;
 using NDjango.FiltersCS.Compatibility;
 using System.Reflection;
 using FSharpx.Collections;
@@ -42,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
             {
             }
 
-            public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
+            public override Microsoft.FSharp.Collections.FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)
             {
                 var ctx = walker.context;
                 var block = walker.context.tryfind("block");

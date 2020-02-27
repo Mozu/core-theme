@@ -19,9 +19,9 @@ namespace Mozu.SiteBuilder.Mvc.SEO
         public CustomRouteValidator(IEntityListsWebApiClient entityListClient, IAttributeWebApiClient attributeClient)
         {
             RuleFor(x => x).NotNull().WithName("custom routes").WithMessage("custom routes cannot be null");
-            RuleFor(x => x.Mappings).SetCollectionValidator(new MappingValidator(entityListClient)).When(x => x.Mappings != null && x.Mappings.Count > 0).WithName("mappings").WithMessage("Mappings must all be valid");
-            RuleFor(x => x.Validators).SetCollectionValidator(new ConstraintValidator(entityListClient, attributeClient)).When(x => x.Validators != null && x.Validators.Count > 0).WithName("validators").WithMessage("Validators must all be valid");
-            RuleFor(x => x.Routes).SetCollectionValidator(x => new RouteValidator(x.Mappings.Keys, x.Validators.Keys)).When(x => x.Routes != null && x.Routes.Count > 0).WithName("routes").WithMessage("Routes must all be valid");
+            RuleForEach(x => x.Mappings).SetValidator(new MappingValidator(entityListClient)).When(x => x.Mappings != null && x.Mappings.Count > 0).WithName("mappings").WithMessage("Mappings must all be valid");
+            RuleForEach(x => x.Validators).SetValidator(new ConstraintValidator(entityListClient, attributeClient)).When(x => x.Validators != null && x.Validators.Count > 0).WithName("validators").WithMessage("Validators must all be valid");
+            RuleForEach(x => x.Routes).SetValidator(x => new RouteValidator(x.Mappings.Keys, x.Validators.Keys)).When(x => x.Routes != null && x.Routes.Count > 0).WithName("routes").WithMessage("Routes must all be valid");
             RuleFor(x => x.Routes)
                 .Must(HaveDistinctTemplates)
                 .When(x => x.Routes != null)

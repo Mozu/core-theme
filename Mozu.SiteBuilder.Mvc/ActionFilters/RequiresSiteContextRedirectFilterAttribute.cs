@@ -23,22 +23,25 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     {
         private readonly IApiContext _apiContext;
         private readonly ILogger _logger;
+        private readonly SiteContext _siteContext;
 
-        public RequiresSiteContextRedirectFilterAttribute(IApiContext apiContext, ILogger logger)
+        public RequiresSiteContextRedirectFilterAttribute(IApiContext apiContext, ILogger logger, SiteContext siteContext)
         {
             _apiContext = apiContext;
             _logger = logger;
+            _siteContext = siteContext;
         }
 
         public bool AllowMultiple => false;
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            var requestUri = new Uri(context.HttpContext.Request.GetDisplayUrl());
             if (!_apiContext.SiteId.HasValue)
             {
                 var redirLoc = "/admin/auth/launchpad";
 
-                if (string.Equals(new Uri(context.HttpContext.Request.GetDisplayUrl()).AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(requestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                 {
                     redirLoc = "/admin/Scripts/resources/favicon.ico";
                 }
@@ -51,28 +54,25 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             }
             else
             {
-                return continuation().ContinueWith(x =>
-                {
-                    var sc = actionContext.Request.Resolve<SiteContext>();
-                    if (!sc.SiteExists)
+                //return continuation().ContinueWith(x =>
+                //{
+                    if (!_siteContext.SiteExists)
                     {
                         var redirLoc = "/admin/auth/launchpad";
-                        if (string.Equals(actionContext.Request.RequestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(requestUri.AbsolutePath, "/favicon.ico", StringComparison.OrdinalIgnoreCase))
                         {
                             redirLoc = "/admin/Scripts/resources/favicon.ico";
                         }
                         else
                         {
-                            var logger = actionContext.Request.Resolve<ILoggingService>().LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
-                            logger.Warn("missing sitecontext on " + actionContext.Request.RequestUri.ToString());
+                            var logger = LoggingService.LoggerFor<RequiresSiteContextRedirectFilterAttribute>();
+                            logger.Warn("missing sitecontext on " + requestUri);
                         }
-                        HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved);
-                        redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
-                        return redir;
+                        //HttpResponseMessage redir = actionContext.Request.CreateResponse(HttpStatusCode.Moved);
+                        //redir.Headers.Location = new Uri(redirLoc, UriKind.Relative);
+                        context.Result = new RedirectResult(redirLoc);
                     }
-                    return x.Result;
-                }
-                );
+                //});
             }
         }
 

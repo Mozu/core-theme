@@ -8,6 +8,7 @@ using Mozu.Core.Configuration;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.Mvc.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -63,7 +64,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         public static T ResolveOptional<T>(this NDjango.Interfaces.IContext context)
            where T : class
         {
-            return context.ViewContext().LifetimeScope.ResolveOptional<T>();
+            return context.ViewContext().LifetimeScope.GetService<T>();
         }
 
         public static Task AsyncRender<TModel>(this NDjango.Interfaces.IContext context, string viewName, TModel model, TextWriter writer)

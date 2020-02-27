@@ -68,20 +68,17 @@ namespace Mozu.SiteBuilder.Mvc.Themes
         private const string METADATA_THEME_FILE_NAME = "theme.json";
         private const string METADATA_ADDON_FILE_NAME = "addon.json";
         IThemeContentRetriever _contentRetriever;
-        private readonly IWebHostEnvironment _env;
         /// <summary>
         /// Constructor.
         /// </summary>
         public ThemeMetadataProvider( ISettings settings, 
             IMongoDatabaseProviderProvider mongoDataseProviderProvider,
-            IThemeContentRetriever contentRetriever,
-            IWebHostEnvironment env)
+            IThemeContentRetriever contentRetriever)
         {
             _settings = settings;
             _mongoDataseProviderProvider = mongoDataseProviderProvider;
             _jsonSerializer = new JsonSerializer();
             _contentRetriever = contentRetriever;
-            _env = env;
         }
 
 
@@ -736,14 +733,17 @@ namespace Mozu.SiteBuilder.Mvc.Themes
        public  string CoreThemePath => GetFullPath("CoreTheme");
 
        string GetFullPath(string settingKey)
-        {
-            var setting = _settings.AppSettings(settingKey + "_directory");
-            return setting.IsNullOrEmpty() ?
-                Path.GetFullPath(new DirectoryInfo(_env.ContentRootPath).Parent.Parent.FullName + "/Mozu." + settingKey) :
-                Path.GetFullPath(setting[0] == '~' ?
-                    Path.Combine(_env.WebRootPath, setting.Substring(1)) :
-                    setting);
-        }
+       {
+           var setting = _settings.AppSettings(settingKey + "_directory");
+           if (setting.IsNullOrEmpty())
+           {
+               return Path.GetFullPath("/themes" + settingKey);
+           }
+           else
+           {
+               return Path.GetFullPath(setting);
+           }
+       }
 
     }
 }

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.AdminUser.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Settings;
@@ -67,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
             return InTask(Mapper.Map<Role>(newRole));
         }
 
-        public Task<StreamContent> DeleteRole(Role role)
+        public Task<ActionResult> DeleteRole(Role role)
         {
             return _rolesWebApiClient.DeleteRole(role.Id, UserScopeType.Tenant.ToString(), _apiContext.TenantId).Result.ReadAsAsync();
         }

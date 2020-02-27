@@ -42,8 +42,6 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
         {
             return File.GetLastWriteTime(MappedPath);
         }
-
-        public virtual System.IO.Stream Open() { throw new NotImplementedException(); }
     }
 
     public class MozuVirtualMongoFile : MozuVirtualFile
@@ -75,7 +73,7 @@ namespace Mozu.SiteBuilder.Mvc.ViewEngine
             set;
         }
 
-        public Stream Open()
+        public new Stream Open()
         {
             return new MemoryStream(Content);
         }

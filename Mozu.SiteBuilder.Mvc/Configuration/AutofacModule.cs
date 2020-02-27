@@ -74,7 +74,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.AddScoped<ILiveModeOnlyCache, LiveModeOnlyCacheInternal>();
             builder.RegisterAllImplementedInterfaces<DataViewModeFinderOuter>(ServiceLifetime.Scoped);
             builder.RegisterAllImplementedInterfaces<EditModeFinderOuter>(ServiceLifetime.Scoped);
-            builder.AddScoped(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
+            // todo:cole implement interfaces explicitly
+            //builder.AddScoped(typeof(SEO.Constraints.ConstraintFactory), typeof(SEO.Mappings.RouteMappingFactory)).AsImplementedInterfaces().AsSelf().InstancePerRequest();
             builder.AddScoped<SEO.CustomRouteValidator>();
             builder.RegisterAllImplementedInterfaces<SEO.CustomRouteValidator>(ServiceLifetime.Scoped);
             builder.AddScoped<SEO.CustomRouteRepository>();

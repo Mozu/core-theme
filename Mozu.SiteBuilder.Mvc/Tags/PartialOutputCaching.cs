@@ -43,17 +43,17 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         protected virtual ArgumentCollection.ParseStrategy ArguemntParserStrategy { get; set; }
 
-        public Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>>
+        public Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>>
             Perform(
             Lexer.BlockToken blockToken,
             IParsingContext parsingContext,
-            LazyList<Lexer.Token> tokenList)
+            FSharpx.Collections.LazyList<Lexer.Token> tokenList)
         {
-            Tuple<FSharpList<INodeImpl>, LazyList<Lexer.Token>> parsedData = ((IParser) parsingContext.Provider).Parse(new FSharpOption<Lexer.BlockToken>(blockToken), tokenList, parsingContext.WithClosures(new FSharpList<string>("endpartial_cache", FSharpList<string>.Empty)));
+            Tuple<FSharpList<INodeImpl>, FSharpx.Collections.LazyList<Lexer.Token>> parsedData = ((IParser) parsingContext.Provider).Parse(new FSharpOption<Lexer.BlockToken>(blockToken), tokenList, parsingContext.WithClosures(new FSharpList<string>("endpartial_cache", FSharpList<string>.Empty)));
             InnerNodes = parsedData.Item1;
 
             var nodeImpl = new TagNodeImpl(parsingContext, blockToken, parsedData.Item1 , this);
-            var resp = new Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>>(nodeImpl, parsingContext, parsedData.Item2);
+            var resp = new Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>>(nodeImpl, parsingContext, parsedData.Item2);
             return resp;
         }
 

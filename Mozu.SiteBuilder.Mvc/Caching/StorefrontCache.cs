@@ -170,11 +170,12 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             MemoryCacheEntryOptions GetPolicy (string key)
             {
                 var abskey = key + ";abs";
-                cache.GetOrCreate(abskey, (entry,item) =>
-                    {
-                        entry.AbsoluteExpiration =
-                            DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300));
-                    });
+                cache.GetOrCreate(abskey, entry =>
+                {
+                    entry.AbsoluteExpiration =
+                        DateTime.Now.AddSeconds(Config.AbsoluteExpirationSeconds.GetValueOrDefault(300));
+                    return new object();
+                });
 
                 var cip = new MemoryCacheEntryOptions
                 {
@@ -262,93 +263,6 @@ namespace Mozu.SiteBuilder.Mvc.Caching
             updateCallback = _ctx.DataViewMode == Core.DataViewModeType.Pending ? null : updateCallback;
 
             new CacheHandler(cc.Configuration, updateCallback, dependencies, filePaths, cc.Cache).Cache(cacheKey, value);
-
-            
-        }
-    }
-
-    public class CacheCallBacker<T>: CacheCallBacker
-    {
-
-        Func<T, object, object> _handler;
-        public CacheCallBacker(IServiceProvider existingScope , Func<T,object, object> handler): base(existingScope, (l,o)=> handler(l.Resolve<T>() , o ))
-        {
-            _handler = handler;
-        }
-    }
-
-    public class CacheCallBacker
-    {
-        class DependencyScope : System.Web.Http.Dependencies.IDependencyScope
-        {
-            public IServiceProvider Scope { get; set; }
-            public void Dispose()
-            {
-
-            }
-
-            public object GetService(Type serviceType)
-            {
-                return Scope.Resolve(serviceType);
-            }
-
-            public IEnumerable<object> GetServices(Type serviceType)
-            {
-                return new object[] { Scope.Resolve(serviceType) };
-            }
-        }
-
-        Func<IServiceProvider> _scopeFn;
-        Func<IServiceProvider, object, object> _handler;
-        public CacheCallBacker(IServiceProvider existingScope, Func<IServiceProvider, object, object> handler)
-        {
-            _handler = handler;
-            try
-            {
-                var apiContext = existingScope.Resolve<ISiteBuilderApiContext>();
-                var siteContext = existingScope.Resolve<ISiteContext>();
-
-                var pageContext = existingScope.Resolve<IPageContext>();
-                // var request = existingScope.Resolve<HttpRequestMessage>();
-                var httpContext = existingScope.Resolve<HttpContext>();
-                var cookieProvider = existingScope.Resolve<ICookieProvider>();
-                var globalScope = existingScope.CreateScope();
-                _scopeFn = () => globalScope.BeginLifetimeScope(Autofac.Core.Lifetime.MatchingScopeLifetimeTags.RequestLifetimeScopeTag, cb =>
-                {
-                    var req = new HttpRequestMessage();
-                    var ctx = (ISiteBuilderApiContext)apiContext.Clone();
-                    ctx.RequestCancellationToken = new System.Threading.CancellationTokenSource(60000).Token;
-                    globalScope.ServiceProvider.Resolve<IApiContext>() = ctx;
-                    cb.Register(c => ctx)
-                    .As<IApiContext>()
-                    .As<ISiteBuilderApiContext>();
-                    cb.Register(c => siteContext).As<ISiteContext>();
-                    cb.Register(c => pageContext).As<IPageContext>();
-                    cb.Register(c => req).As<HttpRequestMessage>();
-                    cb.Register(c => httpContext).As<HttpContext>();
-                    cb.Register(c => cookieProvider).As<ICookieProvider>();
-                    if (siteContext is SiteContext)
-                    {
-                        cb.Register(c => (SiteContext)siteContext).As<SiteContext>();
-                    }
-                    if (pageContext is PageContext)
-                    {
-                        cb.Register(c => (PageContext)pageContext).As<PageContext>();
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                //dies on tests... tbd refactor
-                System.Diagnostics.Trace.WriteLine(ex.ToString());
-            }
-        }
-
-        public object CacheCallBack(object oldCacheValue)
-        {
-            var scope = _scopeFn();
-            scope.Resolve<HttpRequestMessage>().Properties[System.Web.Http.Hosting.HttpPropertyKeys.DependencyScope] = new DependencyScope() { Scope = scope };
-            return _handler(scope, oldCacheValue);
         }
     }
 }

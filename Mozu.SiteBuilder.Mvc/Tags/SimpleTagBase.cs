@@ -26,7 +26,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     /// </summary>
     public abstract class SimpleTagBase : ITag
     {
-        public Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, LazyList<Lexer.Token> tokenList)
+        public Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, FSharpx.Collections.LazyList<Lexer.Token> tokenList)
         {
             var blockTokenArs = PreProcessArguments(blockToken.Args);
             ParamFilters = blockTokenArs.Select(x => new Expressions.FilterExpression(parsingContext, x));
@@ -249,14 +249,14 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         public IContext Context { get; set; }
     }
 
-    public class PerformResponse : Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>>
+    public class PerformResponse : Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>>
     {
-        public PerformResponse(INodeImpl nodeImpl, IParsingContext parseContext, LazyList<Lexer.Token> tokenList) : base(nodeImpl, parseContext, tokenList) { }
+        public PerformResponse(INodeImpl nodeImpl, IParsingContext parseContext, FSharpx.Collections.LazyList<Lexer.Token> tokenList) : base(nodeImpl, parseContext, tokenList) { }
     }
 
     public abstract class SimpleTagBaseAsync : ITag
     {
-        public Tuple<INodeImpl, IParsingContext, LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, LazyList<Lexer.Token> tokenList)
+        public Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>> Perform(Lexer.BlockToken blockToken, IParsingContext parsingContext, FSharpx.Collections.LazyList<Lexer.Token> tokenList)
         {
             var blockTokenArs = PreProcessArguments(blockToken.Args);
             ParamFilters = blockTokenArs.Select(x => new Expressions.FilterExpression(parsingContext, x));
@@ -268,13 +268,8 @@ namespace Mozu.SiteBuilder.Mvc.Tags
         }
 
         static readonly string[] Keywords = { "as", "with", "as_param", "as_parameter", "and" };
-        string[] _keywords = Keywords;
 
-        public string[] KeyWords
-        {
-            get { return _keywords; }
-            set { _keywords = value; }
-        }
+        public string[] KeyWords { get; set; } = Keywords;
 
         protected virtual IEnumerable<Lexer.TextToken> PreProcessArguments(IEnumerable<Lexer.TextToken> tokens)
         {
@@ -286,11 +281,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
         class TagNodeImplAsync : ParserNodes.TagNode, IHyprNode, INodeImplAsync
         {
-
-            public SimpleTagBaseAsync TagBase
-            {
-                get { return (SimpleTagBaseAsync)Tag; }
-            }
+            public SimpleTagBaseAsync TagBase => (SimpleTagBaseAsync)Tag;
 
             public TagNodeImplAsync(IParsingContext parsingContext, Lexer.BlockToken blockToken, SimpleTagBaseAsync tag)
                 : base(parsingContext, blockToken, tag)
@@ -301,8 +292,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
 
             readonly IParsingContext _parsingContext;
             readonly Lexer.BlockToken _blockToken;
-
-
+            
             public FSharpAsync<FSharpList<WalkResult>> asyncWalk(ITemplateManager manager, Walker walker)
             {
                 var arguments = ProcessArguments(walker);
@@ -312,7 +302,7 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 }
                 var ctx = walker.context;
 
-                return FSharpAsync.AwaitTask(TagBase.ProcessTagAsync(arguments, ctx, name => manager.GetTemplate(name)).ContinueWith(t => t.Result.ToFSharpList()));
+                return FSharpAsync.AwaitTask(TagBase.ProcessTagAsync(arguments, ctx, manager.GetTemplate).ContinueWith(t => t.Result.ToFSharpList()));
             }
 
             public override FSharpList<WalkResult> walk(ITemplateManager manager, Walker walker)

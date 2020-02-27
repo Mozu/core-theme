@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,11 +64,12 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             if (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode) return;
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
-            var customRoute = actionContext.GetRouteData().Route as CustomRoute;
-            if (customRoute?.UrlScheme != null)
-            {
-                return;
-            }
+            // todo:cole revisit at some point
+            //var customRoute = actionContext.RouteData.Routers .GetRouteData().Route as CustomRoute;
+            //if (customRoute?.UrlScheme != null)
+            //{
+            //    return;
+            //}
 
             if (_sc?.GeneralSettings?.EnforceSitewideSSL == true)
             {

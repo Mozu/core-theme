@@ -140,19 +140,19 @@ namespace Mozu.SiteBuilder.Mvc.CMS
             }
 
             
+            // todo:cole revisit after getting initial build and qa'ed 95%
+            //if (pageRuleVisitor != null && expressionEvaluator != null && String.IsNullOrEmpty(pageCxt.VariationId) && !pageCxt.IsEditMode && sbApiContext.DataViewMode != Core.DataViewModeType.Pending)
+            //{
+            //    try
+            //    {
+            //        await expressionEvaluator.EvaluatePageRules(pageCxt, pageRuleVisitor);
+            //    }
+            //    catch
+            //    {
 
-            if (pageRuleVisitor != null && expressionEvaluator != null && String.IsNullOrEmpty(pageCxt.VariationId) && !pageCxt.IsEditMode && sbApiContext.DataViewMode != Core.DataViewModeType.Pending)
-            {
-                try
-                {
-                    await expressionEvaluator.EvaluatePageRules(pageCxt, pageRuleVisitor);
-                }
-                catch
-                {
+            //    }
 
-                }
-
-            }
+            //}
 
 
             if (sbApiContext.DataViewMode == Core.DataViewModeType.Pending && cmsPageContext.Page.Document != null)

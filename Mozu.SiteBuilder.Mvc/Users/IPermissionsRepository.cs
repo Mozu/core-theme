@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.UX.Models.Users;
 
 namespace Mozu.SiteBuilder.Mvc.Users
@@ -13,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.Users
 
         Task<Role> AddRole(Role role);
 
-        Task<StreamContent> DeleteRole(Role role);
+        Task<ActionResult> DeleteRole(Role role);
 
         Task<Role> UpdateRole(Role role);
 

@@ -33,6 +33,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         private ILogger _logger;
         private string _correlationId;
 
+        private static readonly JsonMediaTypeFormatter _jmtf = new JsonMediaTypeFormatter();
     
 
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
@@ -40,7 +41,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
             if (apiContext.SiteId == null && type.IsAssignableTo<IHyprViewResult>())
             {
-                return System.Web.Http.GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+                return _jmtf;
             }
             if (this.CanWriteType(type))
             {
@@ -88,7 +89,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
             var errorResp = this.RequestMessage.CreateErrorResponse(statusCode, ex);
 
-            ((HttpError) ((ObjectContent) errorResp.Content).Value)["_ex"] = ex;
+            //((HttpError) ((ObjectContent) errorResp.Content).Value)["_ex"] = ex;
             return new HttpResponseException(errorResp);
         }
 

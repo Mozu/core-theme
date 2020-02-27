@@ -1,4 +1,5 @@
 ﻿using FSharpx.Collections;
+using NDjango;
 
 namespace Mozu.SiteBuilder.Mvc.Tags
 {
@@ -41,11 +42,11 @@ namespace Mozu.SiteBuilder.Mvc.Tags
     [Name("raw")]
     public class RawTag : ITag
     {
-        public Tuple<INodeImpl, IParsingContext, LazyList<NDjango.Lexer.Token>>
+        public Tuple<INodeImpl, IParsingContext, FSharpx.Collections.LazyList<Lexer.Token>>
             Perform(
-            NDjango.Lexer.BlockToken blockToken,
+            Lexer.BlockToken blockToken,
             IParsingContext parsingContext,
-            LazyList<NDjango.Lexer.Token> tokenList)
+            FSharpx.Collections.LazyList<Lexer.Token> tokenList)
         {
             var endPos = 0;
             var sb = new StringBuilder();
@@ -60,16 +61,12 @@ namespace Mozu.SiteBuilder.Mvc.Tags
                 sb.Append(token.TextToken.RawText);
             }
 
-            tokenList = LazyListModule.skip(endPos + 1, tokenList);
+            tokenList = LazyList.skip(endPos + 1, tokenList);
             var nodeImpl = new TagNodeImpl(parsingContext, blockToken, this, sb.ToString());
             return new PerformResponse(nodeImpl, parsingContext, tokenList);
         }
 
-
-        public bool is_header_tag
-        {
-            get { return false; }
-        }
+        public bool is_header_tag => false;
 
         private class TagNodeImpl : NDjango.ParserNodes.TagNode
         {

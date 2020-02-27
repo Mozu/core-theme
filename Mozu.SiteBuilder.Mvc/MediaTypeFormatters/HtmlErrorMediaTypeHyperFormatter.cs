@@ -39,14 +39,8 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 
         void WriteYSOD(Exception ex, Stream writeStream)
         {
-            HttpException hex = ex as HttpException;
-            if (hex == null)
-            {
-                hex = new HttpUnhandledException(ex.Message, ex);
-            }
-            
             var stw = new StreamWriter(writeStream);
-            stw.Write(hex.GetHtmlErrorMessage());
+            stw.Write(ex.ToString());
 
 
             string correlationId = this.LifetimeScope.Resolve<ISiteBuilderApiContext>().TraceContext.CorrelationId;

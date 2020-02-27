@@ -14,7 +14,7 @@ namespace Mozu.SiteBuilder.Mvc.CMS
         private readonly ILogger _logger;
 
         /// <inheritdoc />
-        public CmsPageRelationalExpressionEvaluator(IExpressionContextMetadataProvider<CmsPageRuleContext> binaryExpressionContextMetadataProvider, ILogger logger) : 
+        public CmsPageRelationalExpressionEvaluator(IExpressionContextMetadataProvider<CmsPageRuleContext> binaryExpressionContextMetadataProvider, ILogger<RelationalExpressionEvaluator<CmsPageRuleContext>> logger) : 
             base(binaryExpressionContextMetadataProvider, logger)
         {
             _logger = logger;
