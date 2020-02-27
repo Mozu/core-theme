@@ -135,8 +135,8 @@
                     <div class="form-row col-md-5 for-no-padding">
                         <label class="subform-label" for="defaultCarrier">{{'LOCATIONGROUPCONFIG.FormLabels.defaultCarrier' | translate}}</label>
                         <select id="defaultCarrier" class="form-control" formControlName="defaultCarrier">
-                            <option *ngFor="let action of model.LCDefaultCarrier" [ngValue]="action.data">
-                                {{ action.label }}
+                              <option *ngFor="let action of model.LCDefaultCarrier" [ngValue]="action.data">
+                                 {{ action.label }}
                             </option>
                         </select>
                     </div>
@@ -227,40 +227,39 @@
                 </div>
             </div>
             <div class="subform">
-                <h4>{{'LOCATIONGROUPCONFIG.FormSections.upsSettings' | translate}}</h4>
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.canadaPostSettings' | translate}}</h4>
                 <h5>
-                    {{'LOCATIONGROUPCONFIG.FormLabels.upsSettingsInfo' | translate}}
-                    <a>{{'LOCATIONGROUPCONFIG.FormLabels.upsSettingsInfoLink' | translate}}</a>.
+                    {{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfo' | translate}}
+                    <a>{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostSettingsInfoLink' | translate}}</a>.
                 </h5>
                 <div class="row nomargin">
                     <div class="col-md-6 for-no-padding">
                         <div class="col-md-4 for-no-padding">
-                            {{'LOCATIONGROUPCONFIG.FormLabels.upsusShippingTypes' | translate}}
+                            {{'LOCATIONGROUPCONFIG.FormLabels.canadaPostShippingTypes' | translate}}
                         </div>
                         <div class="col-md-8 for-no-padding">
-                            <label class="subform-label nopadding col-md-12" formArrayName="upsUsShippingTypes" *ngFor="let shippingType of model.locationGroupConfigForm.get('upsUsShippingTypes')['controls']; let shippingTypeIndex = index">
+                            <label class="subform-label nopadding col-md-12" formArrayName="canadapostShippingTypes" *ngFor="let shippingType of model.locationGroupConfigForm.get('canadapostShippingTypes')['controls']; let shippingTypeIndex = index">
                                 <input type="checkbox" [formControlName]="shippingTypeIndex">
-                                {{model.LCUPSUSShippingTypes[shippingTypeIndex].label}}
+                                {{model.LCCanadaPostShippingType[shippingTypeIndex].label}}
                             </label>
                         </div>
-                        <div class="row nomargin for-top-margin">
-                            <div class="form-row col-md-10 for-no-padding">
-                                <label class="subform-label" for="upsUSReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.upsusReturnLabelShippingTypes' | translate}}</label>
-                                <select id="upsUSReturnLabelShippingTypes" class="form-control" formControlName="upsUSReturnLabelShippingTypes">
-                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
-                                            [ngValue]="shippingType.data">
-                                        {{ shippingType.label }}
-                                    </option>
-                                </select>
-                            </div>
+                        <div class="form-row col-md-8 for-no-padding">
+                            <label class="subform-label" for="canadapostReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostReturnLabelShippingTypes' | translate}}</label>
+                            <select id="canadapostReturnLabelShippingTypes" class="form-control" formControlName="canadapostReturnLabelShippingTypes">
+                                <option *ngFor="let shippingType of model.LCCanadaPostShippingType"
+                                        [ngValue]="shippingType.data">
+                                    {{ shippingType.label }}
+                                </option>
+                            </select>
                         </div>
+
                     </div>
                     <div class="col-md-6 for-no-padding">
                         <div class="row nomargin">
                             <div class="form-row col-md-10 for-no-padding">
-                                <label class="subform-label" for="upsUSStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusStandardDefault' | translate}}</label>
-                                <select id="upsUSStandardDefault" class="form-control" formControlName="upsUSStandardDefault">
-                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                <label class="subform-label" for="canadapostStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostStandardDefault' | translate}}</label>
+                                <select id="canadapostStandardDefault" class="form-control" formControlName="canadapostStandardDefault">
+                                    <option *ngFor="let shippingType of model.LCCanadaPostShippingType"
                                             [ngValue]="shippingType.data">
                                         {{ shippingType.label }}
                                     </option>
@@ -269,9 +268,9 @@
                         </div>
                         <div class="row nomargin for-top-margin">
                             <div class="form-row col-md-10 for-no-padding">
-                                <label class="subform-label" for="upsUSExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress1DayDefault' | translate}}</label>
-                                <select id="upsUSExpress1DayDefault" class="form-control" formControlName="upsUSExpress1DayDefault">
-                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                <label class="subform-label" for="canadapostExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostExpress1Default' | translate}}</label>
+                                <select id="canadapostExpress1DayDefault" class="form-control" formControlName="canadapostExpress1DayDefault">
+                                    <option *ngFor="let shippingType of model.LCCanadaPostShippingType"
                                             [ngValue]="shippingType.data">
                                         {{ shippingType.label }}
                                     </option>
@@ -280,9 +279,9 @@
                         </div>
                         <div class="row nomargin for-top-margin">
                             <div class="form-row col-md-10 for-no-padding">
-                                <label class="subform-label" for="upsUSExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress2DayDefault' | translate}}</label>
-                                <select id="upsUSExpress2DayDefault" class="form-control" formControlName="upsUSExpress2DayDefault">
-                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                <label class="subform-label" for="canadapostExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostExpress2Default' | translate}}</label>
+                                <select id="canadapostExpress2DayDefault" class="form-control" formControlName="canadapostExpress2DayDefault">
+                                    <option *ngFor="let shippingType of model.LCCanadaPostShippingType"
                                             [ngValue]="shippingType.data">
                                         {{ shippingType.label }}
                                     </option>
@@ -291,9 +290,9 @@
                         </div>
                         <div class="row nomargin for-top-margin">
                             <div class="form-row col-md-10 for-no-padding">
-                                <label class="subform-label" for="upsUSExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress3DayDefault' | translate}}</label>
-                                <select id="upsUSExpress3DayDefault" class="form-control" formControlName="upsUSExpress3DayDefault">
-                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                <label class="subform-label" for="canadapostExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.canadaPostExpress3Default' | translate}}</label>
+                                <select id="canadapostExpress3DayDefault" class="form-control" formControlName="canadapostExpress3DayDefault">
+                                    <option *ngFor="let shippingType of model.LCCanadaPostShippingType"
                                             [ngValue]="shippingType.data">
                                         {{ shippingType.label }}
                                     </option>
@@ -377,6 +376,83 @@
                                 <label class="subform-label" for="fedexExpress3Default">{{'LOCATIONGROUPCONFIG.FormLabels.fedexExpress3Default' | translate}}</label>
                                 <select id="fedexExpress3Default" class="form-control" formControlName="fedexExpress3Default">
                                     <option *ngFor="let shippingType of model.LCFedExShippingType"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="subform">
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.upsSettings' | translate}}</h4>
+                <h5>
+                    {{'LOCATIONGROUPCONFIG.FormLabels.upsSettingsInfo' | translate}}
+                    <a>{{'LOCATIONGROUPCONFIG.FormLabels.upsSettingsInfoLink' | translate}}</a>.
+                </h5>
+                <div class="row nomargin">
+                    <div class="col-md-6 for-no-padding">
+                        <div class="col-md-4 for-no-padding">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.upsusShippingTypes' | translate}}
+                        </div>
+                        <div class="col-md-8 for-no-padding">
+                            <label class="subform-label nopadding col-md-12" formArrayName="upsUsShippingTypes" *ngFor="let shippingType of model.locationGroupConfigForm.get('upsUsShippingTypes')['controls']; let shippingTypeIndex = index">
+                                <input type="checkbox" [formControlName]="shippingTypeIndex">
+                                {{model.LCUPSUSShippingTypes[shippingTypeIndex].label}}
+                            </label>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="upsUSReturnLabelShippingTypes">{{'LOCATIONGROUPCONFIG.FormLabels.upsusReturnLabelShippingTypes' | translate}}</label>
+                                <select id="upsUSReturnLabelShippingTypes" class="form-control" formControlName="upsUSReturnLabelShippingTypes">
+                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 for-no-padding">
+                        <div class="row nomargin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="upsUSStandardDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusStandardDefault' | translate}}</label>
+                                <select id="upsUSStandardDefault" class="form-control" formControlName="upsUSStandardDefault">
+                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="upsUSExpress1DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress1DayDefault' | translate}}</label>
+                                <select id="upsUSExpress1DayDefault" class="form-control" formControlName="upsUSExpress1DayDefault">
+                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="upsUSExpress2DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress2DayDefault' | translate}}</label>
+                                <select id="upsUSExpress2DayDefault" class="form-control" formControlName="upsUSExpress2DayDefault">
+                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
+                                            [ngValue]="shippingType.data">
+                                        {{ shippingType.label }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row nomargin for-top-margin">
+                            <div class="form-row col-md-10 for-no-padding">
+                                <label class="subform-label" for="upsUSExpress3DayDefault">{{'LOCATIONGROUPCONFIG.FormLabels.upsusExpress3DayDefault' | translate}}</label>
+                                <select id="upsUSExpress3DayDefault" class="form-control" formControlName="upsUSExpress3DayDefault">
+                                    <option *ngFor="let shippingType of model.LCUPSUSShippingTypes"
                                             [ngValue]="shippingType.data">
                                         {{ shippingType.label }}
                                     </option>
@@ -513,6 +589,7 @@
                     </div>
                 </div>
             </div>
+
         </form>
     </div>
 </div>

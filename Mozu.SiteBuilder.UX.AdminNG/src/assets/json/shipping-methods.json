@@ -185,5 +185,27 @@
       ],
       "currencyCode":"USD",
       "price":15.00
+   },
+   {
+      "shippingMethodCode":"canadapost_Expedited_Parcel",
+      "shippingMethodName":"Expedited Parcel",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":7.95
+   },
+   {
+      "shippingMethodCode":"canadapost_Xpress_Post",
+      "shippingMethodName":"Express Post",
+      "shippingZoneCode":"United States",
+      "isValid":true,
+      "messages":[
+
+      ],
+      "currencyCode":"USD",
+      "price":7.95
    }
 ]

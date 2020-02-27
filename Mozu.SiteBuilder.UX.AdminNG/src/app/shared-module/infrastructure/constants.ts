@@ -196,7 +196,8 @@ export class Constants {
         custom: 'custom',
         usps: 'usps',
         ups: 'ups',
-        fedex: 'fedex'
+        fedex: 'fedex',
+        canadapost: 'canadapost'
     };
     static LCPrintReturnLabel = [{ data: true, label: 'Yes' }, { data: false, label: 'No' }];
     static LCDefaultPrinterType = [{ data: 'Laser', label: 'Laser' }, { data: 'Thermal', label: 'Thermal' }];

@@ -17,6 +17,7 @@ export class LocationGroupConfigModel {
     LCUPSInternationalShippingTypes: any[];
     LCUPSCanadaShippingTypes: any[];
     LCFedExShippingType: any[];
+    LCCanadaPostShippingType: any[];
     subscriptions: any[];
     lgConfigModel: LocationGroupConfigurationModel;
     packageSettingUnitTypes: any[];

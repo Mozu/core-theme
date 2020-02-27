@@ -103,7 +103,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedexExpress3Default: ['', []],
             fedExReturnLabelShippingTypes: ['', []],
 
-
+            canadapostShippingTypes: new FormArray([]),
+            canadapostStandardDefault: ['', []],
+            canadapostExpress1DayDefault: ['', []],
+            canadapostExpress2DayDefault: ['', []],
+            canadapostExpress3DayDefault: ['', []],
+            canadapostReturnLabelShippingTypes: ['', []],
+           
             autoPackingListPopup: ['', []],
             blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
@@ -191,6 +197,13 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
     }
 
+    private addCanadaPostShippingTypesCheckboxes() {
+        this.model.LCCanadaPostShippingType.map((o, i) => {
+            const control = new FormControl();
+            (this.model.locationGroupConfigForm.controls.canadapostShippingTypes as FormArray).push(control);
+        });
+    }
+
     addBoxItem(): void {
         (this.model.locationGroupConfigForm.controls.boxItems as FormArray).push(this.createBoxItem());
     }
@@ -246,6 +259,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             this.model.LCUPSUSShippingTypes = [];
             this.model.LCUSPSShippingTypes = [];
             this.model.LCFedExShippingType = [];
+            this.model.LCCanadaPostShippingType = [];
 
             carrierShippingType.map((value, index) => {
                 const shippingTypeObj = {
@@ -258,6 +272,8 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                     this.model.LCUPSUSShippingTypes.push(shippingTypeObj);
                 } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.fedex) {
                     this.model.LCFedExShippingType.push(shippingTypeObj);
+                } else if (value.rateProvider.toLowerCase() === Constants.LCCarriers.canadapost) {
+                    this.model.LCCanadaPostShippingType.push(shippingTypeObj);
                 }
             });
         }
@@ -365,6 +381,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.locationGroupConfigForm.controls.upsUsShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.uspsShippingTypes = new FormArray([]);
         this.model.locationGroupConfigForm.controls.fedExShippingTypes = new FormArray([]);
+        this.model.locationGroupConfigForm.controls.canadapostShippingTypes = new FormArray([]);
     }
 
     private updateLocationGroupConfigForm(lgConfigModel: LocationGroupConfigurationModel): void {
@@ -382,10 +399,12 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.addUPSUSShippingTypesCheckboxes();
         this.addFedExShippingTypesCheckboxes();
         this.addUSPSShippingTypesCheckboxes();
+        this.addCanadaPostShippingTypesCheckboxes();
 
         let unitedStatesUpsSettings: ShippingMethodMappings;
         let shippingSettingsForFedEx: ShippingMethodMappings;
         let shippingSettingsForUsps: ShippingMethodMappings;
+        let shippingSettingsForCanadaPost: ShippingMethodMappings;
 
         if (lgConfigModel && lgConfigModel.carriers.length > 0) {
             lgConfigModel.carriers.forEach((carrier) => {
@@ -400,6 +419,10 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
 
                     case 'fedex':
                         shippingSettingsForFedEx = carrier.shippingMethodMappings;
+                        break;
+
+                    case 'canadapost':
+                        shippingSettingsForCanadaPost = carrier.shippingMethodMappings;
                         break;
                 }
             });
@@ -442,6 +465,14 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 uspsExpress3DayDefault: shippingSettingsForUsps ? shippingSettingsForUsps.express3DayDefault : null,
                 uspsReturnLabelShippingTypes: shippingSettingsForUsps ? shippingSettingsForUsps.returnLabelShippingMethod : null,
 
+                // Canada Post Settings
+                canadapostShippingTypes: this.setSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost),
+                canadapostStandardDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.standardDefault : null,
+                canadapostExpress1DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express1DayDefault : null,
+                canadapostExpress2DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express2DayDefault : null,
+                canadapostExpress3DayDefault: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.express3DayDefault : null,
+                canadapostReturnLabelShippingTypes: shippingSettingsForCanadaPost ? shippingSettingsForCanadaPost.returnLabelShippingMethod : null,
+
                 autoPackingListPopup: lgConfigModel.autoPackingListPopup === undefined ? false : lgConfigModel.autoPackingListPopup,
                 blockPartialStock: lgConfigModel.blockPartialStock === undefined ? false : lgConfigModel.blockPartialStock,
                 defaultMaxNumberOfShipmentsInPickWave: lgConfigModel.defaultMaxNumberOfShipmentsInPickWave,
@@ -474,7 +505,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         });
     }
 
-    private updateCarrierAccountsConfigForm(carrierAccountModel: any): void {  
+    private updateCarrierAccountsConfigForm(carrierAccountModel: any): void {
         const uspsCarrierAccount = carrierAccountModel.filter(a => a.carrierId === 'usps')
         if (uspsCarrierAccount.length > 0) {
             this.model.selectedUSPSCarrier = {
@@ -484,6 +515,22 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         } else {
             this.model.selectedUSPSCarrier = Constants.DefaultUSPSAccount;
         }
+    }
+
+    private setSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost: ShippingMethodMappings): boolean[] {
+        const shippingTypeLst: boolean[] = [];
+        if (shippingSettingsForCanadaPost) {
+            const shippingMethods = shippingSettingsForCanadaPost.shippingMethods;
+            this.model.LCCanadaPostShippingType.map((o, i) => {
+                const isShippingTypeSelected = _.indexOf(shippingMethods, o.data);
+                if (isShippingTypeSelected === -1) {
+                    shippingTypeLst.push(false);
+                } else {
+                    shippingTypeLst.push(true);
+                }
+            });
+        }
+        return shippingTypeLst;
     }
 
     private setSelectedUspsShippingTypes(shippingSettingsForUsps: ShippingMethodMappings): boolean[] {
@@ -651,7 +698,24 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         lgConfigModel.carriers.push(fedexMethod);
                     }
                     break;
-            }
+
+                case 'canadapost':
+                    if (element.value) {
+                        const canadapostMethod = {} as CarrierModel;
+                        canadapostMethod.carrierType = shippingType.CarrierType;
+                        canadapostMethod.isEnabled = element.value;
+                        canadapostMethod.shippingMethodMappings = {} as ShippingMethodMappings;
+                        canadapostMethod.shippingMethodMappings.shippingMethods = this.getSelectedCanadaPostShippingTypes(lgconfigForm.get(['canadapostShippingTypes']).value);
+                        //canadapostMethod.shippingMethodMappings.enableSmartPost = lgconfigForm.get(['enableSmartPost']).value;
+                        canadapostMethod.shippingMethodMappings.returnLabelShippingMethod = lgconfigForm.get(['canadapostReturnLabelShippingTypes']).value;
+                        canadapostMethod.shippingMethodMappings.standardDefault = lgconfigForm.get(['canadapostStandardDefault']).value == null || '' ? 'canadapost_Expedited_Parcel' : lgconfigForm.get(['canadapostStandardDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express1DayDefault = lgconfigForm.get(['canadapostExpress1DayDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express2DayDefault = lgconfigForm.get(['canadapostExpress2DayDefault']).value;
+                        canadapostMethod.shippingMethodMappings.express3DayDefault = lgconfigForm.get(['canadapostExpress3DayDefault']).value;
+                        lgConfigModel.carriers.push(canadapostMethod);
+                    }
+                    break;        
+               }
         });
 
         lgConfigModel.autoPackingListPopup = lgconfigForm.get(['autoPackingListPopup']).value;
@@ -766,6 +830,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                         this._progressButtonService.stop();
                     }
                     break;
+                case 'canadapost':
+                    lgconfigForm.controls.canadapostShippingTypes.value.map((val, index) => {
+                        if (val) {
+                            isAtLeastOneTypeSelected = true;
+                        }
+                    });
+                    if (!isAtLeastOneTypeSelected) {
+                        this._tostrService.showError(ErrorCode.EmptyCanadaPostShippingTypes);
+                        this._spinner.stop();
+                        this._progressButtonService.stop();
+                    }
+                    break;        
                 default:
                     isAtLeastOneTypeSelected = true;
                     break;
@@ -836,6 +912,15 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         let shippingTypeLst: string[] = [];
         if (shippingSettingsForFedEx) {
             shippingTypeLst = shippingSettingsForFedEx.map((v, i) => v ? this.model.LCFedExShippingType[i].data : null)
+                .filter(v => v !== null);
+        }
+        return shippingTypeLst;
+    }
+
+    private getSelectedCanadaPostShippingTypes(shippingSettingsForCanadaPost: boolean[]): string[] {
+        let shippingTypeLst: string[] = [];
+        if (shippingSettingsForCanadaPost) {
+            shippingTypeLst = shippingSettingsForCanadaPost.map((v, i) => v ? this.model.LCCanadaPostShippingType[i].data : null)
                 .filter(v => v !== null);
         }
         return shippingTypeLst;

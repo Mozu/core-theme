@@ -451,6 +451,26 @@
             "isInternational": true,
             "sequence": 0,
             "isConfigured": false
+        },
+        {
+            "code": "canadapost_Expedited_Parcel",
+            "name": "Expedited Parcel",
+            "isProvider": true,
+            "rateProvider": "canadaPost",
+            "isActive": true,
+            "isInternational": true,
+            "sequence": 0,
+            "isConfigured": false
+        },
+        {
+            "code": "canadapost_Xpress_Post",
+            "name": "Xpress Post",
+            "isProvider": true,
+            "rateProvider": "canadaPost",
+            "isActive": true,
+            "isInternational": true,
+            "sequence": 0,
+            "isConfigured": false
         }
     ]
 }
