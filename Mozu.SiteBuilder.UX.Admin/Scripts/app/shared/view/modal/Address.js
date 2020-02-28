@@ -101,7 +101,13 @@ Ext.define('Taco.shared.view.modal.Address', {
     },
 
 
-    doSave: function () {        
+    doSave: function () {
+        var email = this.form.findField("email").getValue();
+        
+        if (email && !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))) {
+            Taco.app.fireEvent('setmessage', 'Validation error. Email is not formatted correctly', 'error');
+            return
+        }
         this.form.save();
     },
 
@@ -121,9 +127,11 @@ Ext.define('Taco.shared.view.modal.Address', {
             
             if (!(homePhone.length || workPhone.length || mobilePhone.length)) {
                 Taco.app.fireEvent('setmessage', 'Validation error. At least one of the phone numbers is required', 'error');
-                return
+                return;
             }            
         }
+
+      
 
         // skip address validation for now
         if (!me.validateAddress && !this.optionalValidationEnabled) {
