@@ -4,8 +4,8 @@
 <div id="bfTTContainer"></div>
 {% if model.config.environment == "staging" %}
 <!--Order tracking tool JS2 -->
-<script src="https://tracking.stage.borderfree.com/public/js/merchants/borderfreeOrderTracking.min.js"></script>
+<script src="http://global.sbx.borderfree.com/cdn/tracking/v1/dist/borderfreeOrderTracking.min.js"></script>
 {% else %}
 <!--Order tracking tool JS1-->
-<script src="https://tracking.borderfree.com/public/js/merchants/borderfreeOrderTracking.min.js"></script>
+<script src="https://global.prd.borderfree.com/cdn/tracking/v1/dist/borderfreeOrderTracking.min.js"></script>
 {% endif %}
