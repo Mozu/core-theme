@@ -1,4 +1,4 @@
-﻿<div class="mz-locationlisting mz-locationlisting-forproduct {% if model.quantity == 0 and product.inventoryInfo.outOfStockBehavior != 'AllowBackOrder' %}is-disabled{% endif %}">
+﻿<div class="mz-locationlisting mz-locationlisting-forproduct {% if model.quantity <= 0 and product.inventoryInfo.outOfStockBehavior != 'AllowBackOrder' %}is-disabled{% endif %}">
     <div class="mz-locationlisting-locationdetails">
         <h4 class="mz-locationlisting-name">{{ model.name }}</h4>
         <div class="mz-addresssummary">
@@ -27,7 +27,7 @@
     </div>
     <div class="mz-locationlisting-inventory">
         <p class="mz-locationlisting-inventorystatus">
-          {% if model.quantity == 0 %}
+          {% if model.quantity <= 0 %}
 
           {% if product.inventoryInfo.outOfStockBehavior == "AllowBackOrder" %}
           {{ labels.isOnBackorder }}
@@ -46,6 +46,6 @@
     </div>
     {% endif %}
     <div class="mz-locationlisting-actions">
-        <button class="mz-button" {% if model.quantity == 0 and product.inventoryInfo.outOfStockBehavior != 'AllowBackOrder' %}  disabled="disabled" {% endif %} data-mz-action="addToCartForPickup" data-mz-location="{{ model.code }}" data-mz-name="{{ model.name }}">{{ labels.addToCart }}</button>
+        <button class="mz-button" {% if model.quantity <= 0 and product.inventoryInfo.outOfStockBehavior != 'AllowBackOrder' %}  disabled="disabled" {% endif %} data-mz-action="addToCartForPickup" data-mz-location="{{ model.code }}" data-mz-name="{{ model.name }}">{{ labels.addToCart }}</button>
     </div>
 </div>
