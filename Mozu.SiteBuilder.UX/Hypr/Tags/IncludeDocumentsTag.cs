@@ -51,13 +51,13 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
 
-            string template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
+            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
 
 
-            bool pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
-            bool sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
-            int startIndex = arguments.GetValueOrDefault("startIndex", 0);
-            int pageSize = arguments.GetValueOrDefault("pageSize", 15);
+            var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
+            var sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
+            var startIndex = arguments.GetValueOrDefault("startIndex", 0);
+            var pageSize = arguments.GetValueOrDefault("pageSize", 15);
             var query = arguments.GetValueOrDefault<string>("query", arguments.GetValueOrDefault<string>("filter"));
             var sortBy = arguments.GetValueOrDefault<string>("sort");
             var list = arguments.GetValueOrDefault<string>("listFQN");
@@ -70,11 +70,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (tempCol != null)
             {
                 docIds = tempCol.Cast<object>().Where(x => x != null).Select(x => x.ToString()).ToList();
-                query = string.Join( ", or", docIds.Select(x => string.Format("ID eq \"{0}\"", x)));
+                query = string.Join( ", or", docIds.Select(x => $"ID eq \"{x}\""));
             }
             if (!string.IsNullOrEmpty(id))
             {
-                query = string.Format("id eq \"{0}\"", id);
+                query = $"id eq \"{id}\"";
             }
             var service = context.Resolve<IDocumentListWebApiClient>();
             var siteContext = context.SiteContext();
@@ -83,8 +83,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (pageWithUrl)
             {
-                int tmp;
-                if (int.TryParse(request["pageSize"], out tmp))
+                if (int.TryParse(request["pageSize"], out int tmp))
                 {
                     pageSize = tmp;
                 }

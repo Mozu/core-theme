@@ -26,9 +26,12 @@ using System.Threading;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Linq.Expressions;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client.Caching;
+using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
@@ -42,29 +45,27 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
         private readonly ICookieProvider _cookieProvider;
         private readonly ISiteBuilderApiContext _apiContext;
-        private IAuthenticationHelper _authenticationHelper;
+        private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ICustomerAccountWebApiClient _customerAccountWebApiClient;
         private readonly IOrderWebApiClient _orderWebApiClient;
         private readonly IAuthTicketWebApiClient _authTicketWebApiClient;
-        private IPageContext _pageContext;
-        private VisitEventPublisher _visitPublisher;
-        ISiteContext _siteContext;
+        private readonly IPageContext _pageContext;
+        private readonly VisitEventPublisher _visitPublisher;
+        readonly ISiteContext _siteContext;
         IHttpErrorResponseGenerator _errorGenerator;
-        Lazy<ICaptchaClient> _captchaClient;
-        Mozu.Core.Logging.ILogger _logger;
+        readonly Lazy<ICaptchaClient> _captchaClient;
+        ILogger _logger;
 
         public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, IPageContext pageContext, VisitEventPublisher visitPublisher,
             ISiteContext siteContext,
             IHttpErrorResponseGenerator errorGenerator,
            Lazy<ICaptchaClient> captchaClient,
-           Mozu.Core.Logging.ILogger logger)
+           ILogger logger)
         {
-            if (customerAccountWebApiClient == null) throw new ArgumentNullException("customerAccountWebApiClient");
-            if (authTicketWebApiClient == null) throw new ArgumentNullException("authTicketWebApiClient");
             _authenticationHelper = authenticationHelper;
-            _customerAccountWebApiClient = customerAccountWebApiClient;
+            _customerAccountWebApiClient = customerAccountWebApiClient ?? throw new ArgumentNullException(nameof(customerAccountWebApiClient));
             _orderWebApiClient = orderWebApiClient;
-            _authTicketWebApiClient = authTicketWebApiClient;
+            _authTicketWebApiClient = authTicketWebApiClient ?? throw new ArgumentNullException(nameof(authTicketWebApiClient));
          
             _cookieProvider = cookieProvider;
             _apiContext = apiContext;
@@ -125,9 +126,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         async Task<HttpResponseMessage> DoCreateAccount(CustomerAccountAndAuthInfo accountInfo)
         {
-            HttpResponseMessage ret = null;
             if (
-                HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out ret) ||
+                HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
                 HasInvalidCharecters(accountInfo.Account?.LastName, "lastName", out ret) ||
                  HasInvalidCharecters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
                 HasInvalidCharecters(accountInfo.Account?.UserName, "userName", out ret) 
@@ -141,19 +141,15 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         {
             resp = null;
             str = (str ?? "").Trim();
-            if (str != HttpUtility.HtmlEncode(str))
-            {
-                resp = _errorGenerator.GenerateErrorResponse(this.Request, new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"));
-                return true;
-            }
-            return false;
+            if (str == HttpUtility.HtmlEncode(str)) return false;
+            resp = _errorGenerator.GenerateErrorResponse(this.Request, new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"));
+            return true;
         }
 
         protected async Task<ServiceClientResponse<CustomerAuthTicket>> DoLogin(string email, string password,string token)
         {
             //add token header for arcjs integration.
-            var extraHeader = new  System.Collections.Specialized.NameValueCollection();
-            extraHeader["racaptchaToken"] = token;
+            var extraHeader = new System.Collections.Specialized.NameValueCollection {["racaptchaToken"] = token};
             return await LoginAndTrack(() => _authTicketWebApiClient
             .CloneWithHeaders(extraHeader)
             .CreateUserAuthTicket(new CustomerUserAuthInfo()
@@ -185,22 +181,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private Uri MakeRedirectUri(string returnUrl = null)
         {
-            if (string.IsNullOrEmpty(returnUrl))
-            {
-                returnUrl = Request.Headers.Referrer?.ToString();
-                if (string.IsNullOrEmpty(returnUrl))
-                {
-                    return new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative);
-                }
-                else
-                {
-                    return new Uri(returnUrl, UriKind.Absolute);
-                }
-            }
-            else
-            {
-                return new Uri(returnUrl, UriKind.Relative);
-            }
+            if (!string.IsNullOrEmpty(returnUrl)) return new Uri(returnUrl, UriKind.Relative);
+
+            returnUrl = Request.Headers.Referrer?.ToString();
+            return string.IsNullOrEmpty(returnUrl) ? new Uri( string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory)? "/": this.SiteContext.SiteSubdirectory, UriKind.Relative) : new Uri(returnUrl, UriKind.Absolute);
+
         }
 
         [HttpGet]
@@ -304,10 +289,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              {
                  return res;
              }
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new
+             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
              {
-                Message = string.Format("Login as {0} failed. Please try again.", HttpUtility.HtmlEncode(authInfo.Account.EmailAddress))
-            });
+                Message = $"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again."
+             });
         }
 
         [AcceptVerbs("OPTIONS", "POST")]
@@ -315,9 +300,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
             if (Request.Method.Method == "OPTIONS")
-             {
+            {
                 return Request.CreateResponse(HttpStatusCode.OK);
-             }
+            }
             var res = await DoCreateAccount(authInfo);
 
              return res;
@@ -340,22 +325,24 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         public class CaptchaClient: ICaptchaClient
         {
-            ISettings _settings;
-            Mozu.Core.Logging.ILogger _logger;
+            readonly ISettings _settings;
+            readonly ILogger _logger;
             public CaptchaClient(
                 ISettings settings,
-                Mozu.Core.Logging.ILogger logger)
+                ILogger logger)
             {
                 _settings = settings;
                 _logger = logger;
             }
 
-            static Lazy<HttpMessageHandler> _clientHandler = new Lazy<HttpMessageHandler>(() =>
+            static readonly Lazy<HttpMessageHandler> _clientHandler = new Lazy<HttpMessageHandler>(() =>
             {
-                var handler = new WebRequestHandler();
-                handler.UseCookies = false;
-                handler.UnsafeAuthenticatedConnectionSharing = true;
-                handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                var handler = new HttpClientHandler
+                {
+                    UseCookies = false,
+                    AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
+                };
+                //handler.UnsafeAuthenticatedConnectionSharing = true;
                 return (HttpMessageHandler)handler;
             }, LazyThreadSafetyMode.ExecutionAndPublication);
 
@@ -431,10 +418,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return LoginFailed();
             }
-            string email = details.email;
-            string password = details.password;
-            string returnUrl = details.returnUrl;
-            string token = details.token;
+            var email = details.email;
+            var password = details.password;
+            var returnUrl = details.returnUrl;
+            var token = details.token;
 
             var tokenRes = await ValidateToken(token);
 
@@ -462,15 +449,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         string GetLabel(string id, string defaultValue)
         {
-            string val = null;
-            if (_siteContext.Labels.TryGetValue(id, out val))
-            {
-                return val;
-            }
-            return defaultValue;
+            return _siteContext.Labels.TryGetValue(id, out var val) ? val : defaultValue;
         }
-
-
 
         private HttpResponseMessage LoginFailed(string email = null, string code = null)
         {
@@ -489,23 +469,22 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     "The User account is locked for security purposes. To unlock the user account please secure it by resetting your password now."
                 );
             }
-            if (errorCode?.StartsWith("Recaptcha-") == true)
-            {
-                errorCode = errorCode.Substring("Recaptcha-".Length);
-                return GetLabel(
-                           $"recaptcha-error-msg-{errorCode}",
-                           GetLabel("recaptcha-error-msg-generic", "Erorr With Captcha Validation"));
-            }
-            
-            return (email != null)
-                ? string.Format(GetLabel(
-                    "loginFailedErrorWithEmail",
-                    "Login as {0} failed. Please try again."
-                ), HttpUtility.HtmlEncode(email))
-                : GetLabel(
-                    "loginFailedError",
-                    "Login failed. Please specify a user."
-                );
+
+            if (errorCode?.StartsWith("Recaptcha-") != true)
+                return (email != null)
+                    ? string.Format(GetLabel(
+                        "loginFailedErrorWithEmail",
+                        "Login as {0} failed. Please try again."
+                    ), HttpUtility.HtmlEncode(email))
+                    : GetLabel(
+                        "loginFailedError",
+                        "Login failed. Please specify a user."
+                    );
+            errorCode = errorCode.Substring("Recaptcha-".Length);
+            return GetLabel(
+                $"recaptcha-error-msg-{errorCode}",
+                GetLabel("recaptcha-error-msg-generic", "Erorr With Captcha Validation"));
+
         }
 
         [HttpPost]
@@ -516,9 +495,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return AjaxLoginFailure();
             }
-            string email = details.email;
-            string password = details.password;
-            string token = details.token;
+            var email = details.email;
+            var password = details.password;
+            var token = details.token;
 
             var tokenRes = await ValidateToken(token);
 
@@ -539,8 +518,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 };
             }
             var errorCode = default(string);
-            var ex = res.ReadException() as Mozu.Core.Api.Client.Exceptions.ApiWebClientException;
-            if ( ex != null)
+            if ( res.ReadException() is ApiWebClientException ex)
             {
                 errorCode = ex.ErrorCode;
             }
@@ -599,11 +577,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //  exception. Basic validation needed to happen here so we didn't have number parse
             //  exceptions in CommerceRuntime when the bad filter was being built.
 
-            int orderNumberInt; // This is required for TryParse below. We don't care about it.
             var idFilter = "";
-            idFilter = Int32.TryParse(orderNumber, out orderNumberInt)
-                ? String.Format("orderNumber eq {0} or externalId eq {0} or parentCheckoutNumber eq {0}", orderNumberInt)
-                : String.Format("externalId eq {0}", orderNumber);
+            idFilter = int.TryParse(orderNumber, out var orderNumberInt)
+                ? $"orderNumber eq {orderNumberInt} or externalId eq {orderNumberInt} or parentCheckoutNumber eq {orderNumberInt}"
+                : $"externalId eq {orderNumber}";
 
             var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter: idFilter);
             if (res.HasException)
@@ -615,7 +592,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var orders = res.ReadAsSync().Items;
-            if (orders == null || (orders != null && !orders.Any()))
+            if (orders == null || !orders.Any())
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound, new
                 {
@@ -645,7 +622,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (!string.IsNullOrEmpty(billingZipCode))
             {
-
                 if (!orders.Any(order => (order.BillingInfo?.BillingContact?.Address?.PostalOrZipCode.Equals(billingZipCode, StringComparison.OrdinalIgnoreCase)) ?? false))
                 {
                     return GenerateInvalidChallengeResponse();
@@ -660,14 +636,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (orders.Any(order => order.ParentCheckoutNumber == orderNumberInt))
             {
-                userClaims.Bag["orderIds"] = String.Join(",", orders.Select(order => order.Id).ToArray());
+                userClaims.Bag["orderIds"] = string.Join(",", orders.Select(order => order.Id).ToArray());
             }
 
             var profileToken = _authenticationHelper.GetProfileToken();
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken, DateTime.Now.AddMinutes(20));
 
-            return Request.CreateResponse(statusCode: HttpStatusCode.OK);
-            
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         private HttpResponseMessage GenerateInvalidChallengeResponse()
@@ -683,10 +658,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
          {
             if (Request.Method.Method == "OPTIONS")
-             {
                 return Request.CreateResponse(HttpStatusCode.OK);
-             }
-             var res = await DoResetPassword(info);
+
+            var res = await DoResetPassword(info);
 
              return res.ResponseMessage;
          }
@@ -702,7 +676,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var accountsResp = await _customerAccountWebApiClient.CloneWithoutUserClaims().GetAccounts(filter: "UserId eq " + u);
 
-            string userName = !accountsResp.ResponseMessage.IsSuccessStatusCode ? null : (accountsResp.ReadAsSync().Items.FirstOrDefault() ?? new CustomerAccount()).UserName;
+            var userName = !accountsResp.ResponseMessage.IsSuccessStatusCode ? null : (accountsResp.ReadAsSync().Items.FirstOrDefault() ?? new CustomerAccount()).UserName;
 
             var model = new ResetPasswordConfirmDetails()
             {

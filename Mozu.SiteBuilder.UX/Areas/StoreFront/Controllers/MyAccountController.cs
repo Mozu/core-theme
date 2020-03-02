@@ -31,8 +31,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class MyAccountController : BaseApiController
     {
         private const string DEFAULT_WISHLIST_NAME = "my_wishlist";
@@ -73,8 +73,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //todo:hyper  remiplement auth att.
         // [SiteBuilderAuthorize()]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.MyAccountAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         public async Task<HttpResponseMessage> Index()
         {
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var orderHistoryTask = _orderWebApiClient.GetOrders(0, 5, null, "Status ne Created and Status ne Validated and Status ne Pending and Status ne Abandoned and Status ne Errored");
             var returnHistoryTask = _returnApiClient.GetReturns(0, 5, null);
             var reasonList = _returnApiClient.GetReasons();
-            var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", account.Id, DateTime.UtcNow.ToString("o")));
+            var storeCreditsTask = _creditApiClient.GetCredits(0, 25, "activationDate DESC", string.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", account.Id, DateTime.UtcNow.ToString("o")));
             var wishlistTask = _wishlistApiClient.GetWishlistByName(account.Id, DEFAULT_WISHLIST_NAME);
             var purchaseOrderAccount =
                 (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId))
@@ -223,16 +223,16 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private string BuildOrderHistoryFilter(int accountId)
         {
-            return String.Format("CustomerAccountId eq \"{0}\" and OrderNumber ne null", accountId);
+            return $"CustomerAccountId eq \"{accountId}\" and OrderNumber ne null";
         }
         private string BuildReturnHistoryFilter(int accountId)
         {
-            return String.Format("CustomerAccountId eq \"{0}\"", accountId);
+            return $"CustomerAccountId eq \"{accountId}\"";
         }
 
         private string BuildWishlistFilter(int accountId)
         {
-            return String.Format("CustomerAccountId eq \"{0}\" and Name eq \"{1}\"", accountId, DEFAULT_WISHLIST_NAME);
+            return $"CustomerAccountId eq \"{accountId}\" and Name eq \"{DEFAULT_WISHLIST_NAME}\"";
         }
 
         public  Task<CustomerAccount> GetAccount()
@@ -311,9 +311,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return true;
         }
 
-        protected LightweightUserClaims CurrentUser
-        {
-            get { return _apiContext.UserClaims; }
-        }
+        protected LightweightUserClaims CurrentUser => _apiContext.UserClaims;
     }
 }

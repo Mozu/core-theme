@@ -38,6 +38,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterClassesMatchingInterfaceName(typeof(ILocationRuntimeWebApiClient).Assembly);
 
             builder.AddScoped<IMozuVirtualPathProvider, MozuVirtualPathProvider>();
+
+            builder.AddScoped<ISettings>();
             
             //contexts
             builder.AddScoped<ClientApiContext>();

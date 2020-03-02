@@ -4,6 +4,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -25,7 +27,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private const string PIXEL_CONTENT_BASE64 = @"R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         private static byte[] PIXEL_BYTES = Convert.FromBase64String(PIXEL_CONTENT_BASE64);
 
-        private HttpContextBase _httpContext;
+        private HttpContext _httpContext;
         private PageContext _pageContext;
         private ISiteBuilderApiContext _apiContext;
         private VisitEventPublisher _publisher;
@@ -34,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Public constructor.
         /// </summary>
-        public VisitController(HttpContextBase httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, VisitEventPublisher publisher, ILogger logger)
+        public VisitController(HttpContext httpContext, PageContext pageContext, ISiteBuilderApiContext apiContext, VisitEventPublisher publisher, ILogger logger)
         {
             _httpContext = httpContext;
             _pageContext = pageContext;
@@ -47,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public HttpResponseMessage TrackingPixel([FromUri(Name="r")]string visitId)
         {
             // try to parse the visitor id from the query string.
-            Guid visitIdFromArg = Guid.Empty;
+            var visitIdFromArg = Guid.Empty;
             try
             {
                 visitIdFromArg = visitId.DecodeUrlSafeGuid();
@@ -69,7 +71,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Pixel();
             }
             
-            bool isAlreadyTracked = _pageContext.Visit.IsTracked && (String.IsNullOrEmpty(_pageContext.Visit.UserId) || _pageContext.Visit.IsUserTracked);
+            var isAlreadyTracked = _pageContext.Visit.IsTracked && (string.IsNullOrEmpty(_pageContext.Visit.UserId) || _pageContext.Visit.IsUserTracked);
             // only log the visit if it wasn't already tracked and isn't an anonymous shopper.
             if (!(isAlreadyTracked || _apiContext.IsAnonymousShopper()))
             {
@@ -77,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 _publisher.PublishVisit(_pageContext.Visit);
                 _logger.Info("I caught a visit!", _pageContext.Visit);
                 _pageContext.Visit.IsTracked = true;
-                _pageContext.Visit.IsUserTracked = !String.IsNullOrEmpty(_pageContext.Visit.UserId);
+                _pageContext.Visit.IsUserTracked = !string.IsNullOrEmpty(_pageContext.Visit.UserId);
             }
 
             return Pixel();

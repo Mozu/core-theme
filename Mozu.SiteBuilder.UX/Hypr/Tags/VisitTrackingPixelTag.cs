@@ -18,7 +18,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var visit = context.PageContext().Visit;
             if (visit == null) return Enumerable.Empty<WalkResult>();
 
-            var buffer = string.Format("<img data-mztp src=\"/_mzblank.gif?r={0}\" alt=\"\"/>", System.Web.HttpUtility.UrlEncode(visit.VisitId));
+            var buffer =
+                $"<img data-mztp src=\"/_mzblank.gif?r={System.Web.HttpUtility.UrlEncode(visit.VisitId)}\" alt=\"\"/>";
             return new[] { WalkResultHelpers.Buffer(buffer) };
         }
     }

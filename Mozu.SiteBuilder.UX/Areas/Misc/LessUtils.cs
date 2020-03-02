@@ -1,7 +1,6 @@
 ﻿using dotless.Core.Exceptions;
 using dotless.Core.Importers;
 using dotless.Core.Input;
-using dotless.Core.Loggers;
 using dotless.Core.Parser;
 using dotless.Core.Parser.Infrastructure;
 using dotless.Core.Parser.Infrastructure.Nodes;
@@ -18,6 +17,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
 {
@@ -31,48 +32,63 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
         public void Debug(string msg)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, msg));
+            System.Diagnostics.Debug.WriteLine(string.Format(DebugTemplate, msg));
         }
 
         public void Error(string msg)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(ErrorTemplate, msg));
+            System.Diagnostics.Debug.WriteLine(string.Format(ErrorTemplate, msg));
         }
 
         public void Info(string msg)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(InfoTemplate, msg));
+            System.Diagnostics.Debug.WriteLine(string.Format(InfoTemplate, msg));
         }
 
         public void Log(LogLevel level, string msg)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(LogTemplate, level.ToString(), msg));
+            System.Diagnostics.Debug.WriteLine(LogTemplate, level.ToString(), msg);
         }
 
         public void Warn(string msg)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(WarnTemplate, msg));
+            System.Diagnostics.Debug.WriteLine(string.Format(WarnTemplate, msg));
         }
 
 
         public void Debug(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(DebugTemplate, string.Join(" -- ", args)));
+            System.Diagnostics.Debug.WriteLine(string.Format(DebugTemplate, string.Join(" -- ", args)));
         }
 
         public void Error(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(ErrorTemplate, string.Join(" -- ", args)));
+            System.Diagnostics.Debug.WriteLine(string.Format(ErrorTemplate, string.Join(" -- ", args)));
         }
 
         public void Info(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(InfoTemplate, string.Join(" -- ", args)));
+            System.Diagnostics.Debug.WriteLine(string.Format(InfoTemplate, string.Join(" -- ", args)));
         }
 
         public void Warn(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine(String.Format(WarnTemplate, string.Join(" -- ", args)));
+            System.Diagnostics.Debug.WriteLine(string.Format(WarnTemplate, string.Join(" -- ", args)));
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -108,7 +124,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         public async Task<Stream> Transform(Stream str, string stem)
         {
             var sr = new StreamReader(str);
-            string template = await sr.ReadToEndAsync().ConfigureAwait(false);
+            var template = await sr.ReadToEndAsync().ConfigureAwait(false);
             Exception debuggableException = null;
 
             template = ProcessSettingsVariables(template, stem);
@@ -303,7 +319,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
         public bool DoesFileExist(string fileName)
         {
-            string stem = fileName;
+            var stem = fileName;
             var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
             return file != null;
         }
@@ -313,11 +329,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         {
             // foreach (var theme in SiteContext.ThemeInfo.Stack)
             {
-                string stem = fileName;
+                var stem = fileName;
                 var file = _lessTransFormer.PathProvider.GetThemeFileInfo(stem);
                 if (file != null)
                 {
-                    using (Stream stream = _contentRetriever.GetStream(file, this.Controller.SbApiContext.RequestCancellationToken))
+                    using (var stream = _contentRetriever.GetStream(file, this.Controller.SbApiContext.RequestCancellationToken))
                     {
                         var data = new byte[stream.Length];
                         stream.Read(data, 0, data.Length);
@@ -330,10 +346,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         }
 
 
-        public bool UseCacheDependencies
-        {
-            get { return false; }
-        }
+        public bool UseCacheDependencies => false;
     }
 
     class CdnFunction : dotless.Core.Parser.Functions.Function
@@ -378,10 +391,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
     class InsertThemeVariablePlugin : VisitorPlugin
     {
-        public override VisitorPluginType AppliesTo
-        {
-            get { return VisitorPluginType.BeforeEvaluation; }
-        }
+        public override VisitorPluginType AppliesTo => VisitorPluginType.BeforeEvaluation;
         public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
 
         public override Node Execute(Node node, out bool visitDeeper)
@@ -403,10 +413,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
     class ProbeForThemeVariablesPlugin : VisitorPlugin
     {
-        public override VisitorPluginType AppliesTo
-        {
-            get { return VisitorPluginType.BeforeEvaluation; }
-        }
+        public override VisitorPluginType AppliesTo => VisitorPluginType.BeforeEvaluation;
 
         public Env Env { get; set; }
         public Dictionary<string, Node> Rules = new Dictionary<string, Node>();
@@ -426,7 +433,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                 {
 
                     var setting = ThemeSettings[variableNode.Name.Substring(prefix.Length)];
-                    bool added = false;
+                    var added = false;
                     if (setting != null)
                     {
                         Parser p = new Parser();

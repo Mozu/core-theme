@@ -14,25 +14,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class SslOnlyActionFilter : ActionFilterAttribute
     {
-        private readonly ISettings _settings;
-        private readonly PageContext _pc;
-
-        public SslOnlyActionFilter(ISettings settings, PageContext pageContext)
-        {
-            _settings = settings;
-            _pc = pageContext;
-        }
-
         public bool AllowMultiple => false;
 
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
             // pass if we're not doing ssl in this env
-            if (!_settings.CoreSettings.IsSSLValidationEnabled) return;
+            if (!(actionContext.HttpContext.RequestServices.GetService(typeof(ISettings)) as ISettings).CoreSettings.IsSSLValidationEnabled) return;
 
             // pass if the request already was SSL
-            var pageContext = _pc;
-            if (pageContext.Url.IsNullOrEmpty() || pageContext.IsSecure || pageContext.IsEditMode) return;
+            var pageContext = actionContext.HttpContext.RequestServices.GetService(typeof(PageContext)) as PageContext;
+            if (pageContext != null && (pageContext.Url.IsNullOrEmpty() || pageContext.IsSecure || pageContext.IsEditMode)) return;
 
             // else redirect to secure
             var ubilBuilder = new UriBuilder(pageContext.Url) {Scheme = "https", Port = 443};
@@ -45,23 +36,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class NoSslActionFilter : ActionFilterAttribute
     {
-        private readonly PageContext _pc;
-        private readonly ISiteContext _sc;
-
-        public NoSslActionFilter(PageContext pageContext, ISiteContext sc)
-        {
-            _pc = pageContext;
-            _sc = sc;
-        }
         public bool AllowMultiple => false;
 
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var pageContext = _pc;
+            var pageContext = actionContext.HttpContext.RequestServices.GetService(typeof(PageContext)) as PageContext;
             // only GETS get redirected
             if (!actionContext.HttpContext.Request.Method.Equals("get", StringComparison.InvariantCultureIgnoreCase)) return;
             // edit mode pages get a pass
-            if (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode) return;
+            if (pageContext != null && (pageContext.Url.IsNullOrEmpty() || !pageContext.IsSecure || pageContext.IsEditMode || pageContext.IsAdminMode)) return;
 
             // if we're on a custom route and the route specifies a scheme, then let it pass
             // todo:cole revisit at some point
@@ -71,7 +54,9 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             //    return;
             //}
 
-            if (_sc?.GeneralSettings?.EnforceSitewideSSL == true)
+            var sc = actionContext.HttpContext.RequestServices.GetService(typeof(ISiteContext)) as ISiteContext;
+
+            if (sc?.GeneralSettings?.EnforceSitewideSSL == true)
             {
                 return;
             }

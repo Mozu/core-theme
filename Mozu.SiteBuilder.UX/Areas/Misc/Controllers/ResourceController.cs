@@ -23,6 +23,8 @@ using Mozu.SiteBuilder.Mvc.Navigation;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.UX.Filters;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -33,17 +35,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         readonly Lazy<IMozuVirtualPathProvider> _pathProvider;
         readonly Lazy<INavigationGandalf> _navGandalf;
         readonly Lazy<IThemeContentRetriever> _contentRetriever;
-        readonly Core.Logging.ILogger _logger;
+        readonly ILogger _logger;
         readonly Lazy<AMDModuleProvider> _moduleProvider;
         readonly ISettings _settings;
         readonly IApiContext _apiContext;
-        readonly static Lazy<JsonpMediaTypeFormatter> _jmtf = new Lazy<JsonpMediaTypeFormatter>(() => new JsonpMediaTypeFormatter(GlobalConfiguration.Configuration.Formatters.JsonFormatter));
+        static readonly Lazy<JsonpMediaTypeFormatter> _jmtf = new Lazy<JsonpMediaTypeFormatter>(() => new JsonpMediaTypeFormatter(new JsonMediaTypeFormatter()));
         readonly ITemplateInheritanceHandler _templateGetter;
 
         public ResourceController(Lazy<IMozuVirtualPathProvider> pathProvider, 
             Lazy<INavigationGandalf> gandalf, 
             Lazy<IThemeContentRetriever> contentRetriever, 
-            Core.Logging.ILogger logger, 
+            ILogger logger, 
             ISettings settings, 
             IApiContext apiContext, 
             ITemplateInheritanceHandler templateGetter,
@@ -95,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
             if (oc != null)
             {
-                bool emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
+                var emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
                 ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug.GetValueOrDefault(false), emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
             }
 
@@ -144,7 +146,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
             var pathPrefix = Path.IsPathRooted(sharedFolder) ? "" : @"\\";
-            var tenantShareRoot = string.Format("{0}{1}/t-{2}", pathPrefix, sharedFolder, _apiContext.TenantId);
+            var tenantShareRoot = $"{pathPrefix}{sharedFolder}/t-{_apiContext.TenantId}";
             var fileName = Path.Combine(tenantShareRoot, relativePath);
             
             if (checkRequestContent(relativePath, tenantShareRoot) || !System.IO.File.Exists(fileName))
@@ -155,8 +157,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var content = new StreamContent(SourceStream);
-                string fileType;
-                var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out fileType);
+                var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out var fileType);
                 var resp = Request.CreateResponse(HttpStatusCode.OK);
 
                 resp.Content = content;
@@ -198,12 +199,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var settingsDic = SiteContext.ThemeSettings?.InnerDictionary;
 
             //filter out server side only parameters
-            if ( settingsDic != null)
-            {
-                settingsDic = settingsDic.Where(x => !x.Key.StartsWith("__")).ToDictionary(x => x.Key, y => y.Value);
-            }
+            settingsDic = settingsDic?.Where(x => !x.Key.StartsWith("__")).ToDictionary(x => x.Key, y => y.Value);
 
-            
+
             var setting = JObject.FromObject(settingsDic);
             
             locals.Add("themeSettings", setting);// SiteContext.ThemeSettings);
@@ -244,22 +242,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public HttpResponseMessage Widget(string pathinfo)
         {
-            int pos = pathinfo.IndexOf('/');
-            if (pos > -1)
-            {
-                string widgetId = pathinfo.Substring(0, pos);
-                string path = pathinfo.Substring(pos);
-                WidgetDefinition widget = SiteContext.Theme.Widgets.FirstOrDefault(x => x.Id == widgetId);
-                if (widget != null)
-                {
-                    var fullPath = new FileInfo(widget.FullPath + path);
-                    if (fullPath.Exists)
-                    {
-                        return Request.CreateResponse(HttpStatusCode.OK, new FilePathResult(fullPath.FullName, GetMimeType(pathinfo)));
-                    }
-                }
-            }
-            return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            var pos = pathinfo.IndexOf('/');
+            if (pos <= -1) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            var widgetId = pathinfo.Substring(0, pos);
+            var path = pathinfo.Substring(pos);
+            var widget = SiteContext.Theme.Widgets.FirstOrDefault(x => x.Id == widgetId);
+            if (widget == null) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            var fullPath = new FileInfo(widget.FullPath + path);
+            return fullPath.Exists ? Request.CreateResponse(HttpStatusCode.OK, new FilePathResult(fullPath.FullName, GetMimeType(pathinfo))) : Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
@@ -274,7 +264,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [NoCdnForce]
         public HttpResponseMessage Misc(string pathinfo, string contentType = null)
         {
-            string stem = "/resources/" + pathinfo;
+            var stem = "/resources/" + pathinfo;
             if (contentType == null)
             {
                 contentType = GetMimeType(stem);
@@ -315,9 +305,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         string GetMimeType(string path)
         {
-            string mimeType;
             var ext = Path.GetExtension(path);
-            if (!Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(ext, out mimeType))
+            if (!Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(ext, out var mimeType))
             {
                 mimeType = "application/unknown";
             }
@@ -328,7 +317,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             private readonly ThemeFileSystemInfo _file;
             private readonly IThemeContentRetriever _contentRetriever;
-            CancellationToken _cancellationToken;
+            readonly CancellationToken _cancellationToken;
 
             public MozuVirtualFileResult(string path, string contentType, ThemeFileSystemInfo file, IThemeContentRetriever contentRetriever, 
                 CancellationToken cancellationToken)
@@ -341,9 +330,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             public Func<Stream, string, Task<Stream>> Transform { get; set; }
 
-            protected override void WriteFile(HttpResponseBase response)
+            protected override void WriteFile(HttpResponse response)
             {
-                WriteFile(response.OutputStream);
+                WriteFile(response.Body);
             }
 
 
@@ -360,18 +349,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
             }
 
-            protected override async Task WriteFileAsync(HttpResponseBase response)
+            protected override async Task WriteFileAsync(HttpResponse response)
             {
-                
-                using (var stream = _contentRetriever.GetStream(_file, _cancellationToken))
+                await using var stream = _contentRetriever.GetStream(_file, _cancellationToken);
+                var source = stream;
+                if (Transform != null)
                 {
-                    var source = stream;
-                    if (Transform != null)
-                    {
-                        source = await Transform(stream, _file.VirtualPath).ConfigureAwait(false);
-                    }
-                    await source.CopyToAsync(response.OutputStream).ConfigureAwait(false);
+                    source = await Transform(stream, _file.VirtualPath).ConfigureAwait(false);
                 }
+                await source.CopyToAsync(response.Body).ConfigureAwait(false);
             }
         }
     }

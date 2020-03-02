@@ -26,10 +26,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
-        ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
-        Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(ActionFilterConstants.GlobalPageBeforeAction,
+    //    ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(ActionFilterConstants.GlobalPageAfterAction, ActionExtensionExecutionTypes.AfterController,
+    //    Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CmsPagesController : BaseApiController
     {
         private readonly ICustomRouteHandler _customRouteHandler;
@@ -102,10 +102,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [HttpHead]
         [HttpGet]
-        [SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
-            ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
-            ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
+        //    ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
+        //    ActionExtensionExecutionTypes.AfterController)]
         public async Task<HttpResponseMessage> Page(string documentListName, string documentName, string variationId = "")
         {
             PageContext.CmsContext = new CmsPageContext
@@ -118,7 +118,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             };
 
-            if (!String.IsNullOrEmpty(variationId))
+            if (!string.IsNullOrEmpty(variationId))
             {
                 PageContext.VariationId = variationId;
             }

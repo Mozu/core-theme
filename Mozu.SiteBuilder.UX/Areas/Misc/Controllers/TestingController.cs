@@ -118,14 +118,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             _client = _client ?? new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
 
             this.Request.RequestUri = new Uri(service.BaseUrl + this.Request.RequestUri.PathAndQuery.Substring(4));
-            IEnumerable<string> vals;
-            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out vals) && vals.Count() > 0)
+            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out var vals) && vals.Count() > 0)
             {
                 this.Request.Method = new HttpMethod(vals.First());
             }
 
-            IEnumerable<string> values;
-            if (!this.Request.Headers.TryGetValues(Headers.USER_CLAIMS, out values))
+            if (!this.Request.Headers.TryGetValues(Headers.USER_CLAIMS, out var values))
             {
                 Request.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
             }
@@ -167,8 +165,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public ActionResult ForceTheme(string themeType = "", string redir = null)
         {
-            ThemeMode mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
-            string themeName = "";
+            var mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
+            var themeName = "";
             if (mode == ThemeMode.Auto)
             {
                 _cookies.RemoveCookie(FORCE_THEME_COOKIE_NAME);
@@ -187,8 +185,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpPost]
         public HttpResponseMessage Visit(string id = null)
         {
-            int accountId;
-            if (int.TryParse(id, out accountId))
+            if (int.TryParse(id, out var accountId))
             {
                 this.PageContext.User.AccountId = accountId;
             }
@@ -209,7 +206,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [HttpGet]
         public ContentResult Echo()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("<pre>");
             sb.AppendLine();
             sb.AppendLine("headers");
@@ -257,7 +254,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                         invalidator.Invalidate();
                         viewMode = DataViewModeType.Pending;
                         domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
-                        if (!String.IsNullOrEmpty(variationId))
+                        if (!string.IsNullOrEmpty(variationId))
                         {
                             var qstring = new NameValueCollection();
                             var queryPosition = redir.IndexOf("?");
@@ -298,8 +295,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             var reqCustId = qstring["mz_cust_impersonate"];
                             var canImpersonate = (this.SbApiContext.AdminUserClaim?.HasBehavior<Core.Behaviors.CustomerUpdateBehavior>()).GetValueOrDefault(false);
 
-                            int customerAccountId;
-                            if (canImpersonate && int.TryParse(reqCustId, out customerAccountId))
+                            if (canImpersonate && int.TryParse(reqCustId, out var customerAccountId))
                             {
                                 var authTicket = (await Request.Resolve<IAuthTicketWebApiClient>()
                                     .CloneWithoutUserClaims()
@@ -327,7 +323,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                 authHelper.ClearStorefrontTokens();
                                 authHelper.ClearSessionToken();
                             }
-                            if (!String.IsNullOrEmpty(variationId))
+                            if (!string.IsNullOrEmpty(variationId))
                             {
                                 qstring = new NameValueCollection();
                                 var queryPosition = redir.IndexOf("?");
@@ -356,15 +352,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     }
             }
 
-            string newHostname = (domainList.FirstOrDefault());
+            var newHostname = (domainList.FirstOrDefault());
 
-            if(!String.IsNullOrEmpty(variationId))
+            if(!string.IsNullOrEmpty(variationId))
             {
                 this.PageContext.VariationId = variationId;
             }
             
 
-            bool doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
+            var doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
 
             if (!string.IsNullOrEmpty(transfer))
             {

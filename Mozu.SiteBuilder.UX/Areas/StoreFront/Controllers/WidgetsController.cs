@@ -114,7 +114,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 default:
                 {
-                    throw new Exception(string.Format("Could not find preview context for zone {0}", wpd.ZoneScope));
+                    throw new Exception($"Could not find preview context for zone {wpd.ZoneScope}");
                 }
             }
         }

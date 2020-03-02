@@ -20,26 +20,17 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
-    public class RefreshStoreFrontUserAuthTicketFilter : IActionFilter, IAuthorizationFilter
+    public class RefreshStoreFrontUserAuthTicketFilter : Attribute, IAsyncAuthorizationFilter
     {
-        private readonly StoreFrontAuthorizeAttribute _storeFrontAuthorizeAttribute;
-
-        public RefreshStoreFrontUserAuthTicketFilter(StoreFrontAuthorizeAttribute attribute)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            _storeFrontAuthorizeAttribute = attribute;
-        }
-
-        public bool AllowMultiple => false;
-
-
-        public Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(ActionExecutingContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation, IAuthenticationHelper authHelper, IAuthTicketWebApiClient authService)
-        {
-            var sbc = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
+            var sbc = context.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
 
             if (sbc.UserClaims == null || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
             {
-                return continuation();
+                return;
             }
+            var authHelper = context.HttpContext.RequestServices.GetService<IAuthenticationHelper>();
 
             if (sbc.UserClaims.IsAnonymous)
             {
@@ -47,21 +38,22 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                 var token = sbc.UserClaims.ToAccessToken();
                 var pToken = authHelper.GetProfileToken();
                 authHelper.SaveStoreFrontAccessToken(token, pToken);
-                return continuation();
+                return;
             }
 
             if (sbc.UserClaims == null || sbc.UserClaims.IsAnonymous || DateTime.UtcNow.AddMinutes(10) < sbc.UserClaims.Expiration)
             {
-                return continuation();
+                return;
             }
-           
+
             var rToken = authHelper.GetStoreFrontRefreshToken();
             if (rToken == null)
             {
-                return continuation();
+                return;
             }
+            var authService = context.HttpContext.RequestServices.GetService<IAuthTicketWebApiClient>();
             var authTicketTask = authService.RefreshUserAuthTicket(rToken);
-            var rettask = authTicketTask.ContinueWith(x =>
+            await authTicketTask.ContinueWith(x =>
             {
                 var res = x.Result;
                 if (res.ResponseMessage.IsSuccessStatusCode)
@@ -77,31 +69,15 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                     authHelper.SaveStoreFrontAccessToken(ticket.AccessToken, profile.ToToken());
                     authHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken, ticket.RefreshTokenExpiration);
                     var user = LightweightUserClaims.Parse(ticket.AccessToken);
-                
+
                     sbc.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
                 }
                 else if (res.ResponseMessage.StatusCode == HttpStatusCode.NotFound)
                 {
                     authHelper.SaveStoreFrontRefreshToken(null, DateTime.MaxValue);
                 }
-                return continuation();
             });
-            return rettask.Unwrap();
-        }
-
-        public void OnAuthorization(AuthorizationFilterContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnActionExecuting(ActionExecutingContext context)
-        {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

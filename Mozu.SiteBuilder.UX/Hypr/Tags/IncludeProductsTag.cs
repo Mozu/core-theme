@@ -95,9 +95,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var suppressErrors = arguments.GetValueOrDefault<bool>("suppressErrors", MozuConfigurationManager.Settings.AppSettingsAsNullableBool("sitebuilder_includeproducttag_suppressErrors").GetValueOrDefault(false));
             var facetPrefix = arguments.GetValueOrDefault<string>("facetPrefix");
             var includeUserClaims = arguments.GetValueOrDefault<bool>("includeUserClaims", false);
-            int? facetCategoryId;
-            int? categoryId;
-            GetCategoryCodes(arguments, context, pageContext, out facetCategoryId, out categoryId);
+            GetCategoryCodes(arguments, context, pageContext, out var facetCategoryId, out var categoryId);
 
             var isVolumePricingBandsEnabled = ((bool?)themeSettings["listVolumePricing"]);
             var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
@@ -117,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
            
             
 
-            string[] productCodesFilters = new string[0];
+            var productCodesFilters = new string[0];
         
 
             if (!ProcessFilter( ref productCodes, categoryId, ref filter, ref productCodesFilters))
@@ -134,7 +132,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             
             var cache = context.Resolve<ILiveModeOnlyCache>();
-            ProductSearchResult pc = await DoSearch(
+            var pc = await DoSearch(
                 cache, 
                 searchContext ,
                 startIndex, 
@@ -368,7 +366,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
         private static bool ProcessFilter( ref IEnumerable productCodes, int? categoryId, ref string filter, ref string[] productCodesFilters)
         {
-            StringBuilder filterStringBuilder = new StringBuilder();
+            var filterStringBuilder = new StringBuilder();
         
             if (filter != null)
             {
@@ -380,7 +378,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 {
                     productCodes = ((string)productCodes).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 }
-                productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x => string.Format("productCode eq {0}", x)).ToArray();
+                productCodesFilters = (productCodes).Cast<object>().Where(x => x != null).Select(x =>
+                    $"productCode eq {x}").ToArray();
                 if (productCodesFilters.Length == 0)
                 {
                     return false; 
@@ -437,12 +436,11 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             if (pageWithUrl)
             {
-                int tmp;
                 if (searchContext.PageSize.HasValue)
                 {
                     pageSize = searchContext.PageSize.Value;
                 }
-                else if (int.TryParse((siteContext.ThemeSettings["defaultPageSize"] ?? new object()).ToString(), out tmp))
+                else if (int.TryParse((siteContext.ThemeSettings["defaultPageSize"] ?? new object()).ToString(), out var tmp))
                 {
                     pageSize = tmp;
                 }

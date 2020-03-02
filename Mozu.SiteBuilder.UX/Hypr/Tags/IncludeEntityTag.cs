@@ -63,12 +63,12 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             var result = new ProcessTagResult(context);
             var sbContext = context.SiteBuilderApiContext();
-            string template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
+            var template = arguments.GetValueOrDefault<string>("viewName") ?? (string) arguments[0].Value;
 
-            bool pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
-            bool sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
-            int startIndex = arguments.GetValueOrDefault("startIndex", 0);
-            int pageSize = arguments.GetValueOrDefault("pageSize", 15);
+            var pageWithUrl = arguments.GetValueOrDefault("pageWithUrl", false);
+            var sortWithUrl = arguments.GetValueOrDefault("sortWithUrl", false);
+            var startIndex = arguments.GetValueOrDefault("startIndex", 0);
+            var pageSize = arguments.GetValueOrDefault("pageSize", 15);
             var query = arguments.GetValueOrDefault<string>("query", arguments.GetValueOrDefault<string>("filter"));
             var sortBy = arguments.GetValueOrDefault<string>("sort");
             var list = arguments.GetValueOrDefault<string>("listFQN");
@@ -79,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             if (tempCol != null)
             {
                 ids = tempCol.Cast<object>().Where(x => x != null).Select(x => x.ToString()).ToList();
-                query = string.Join(" or ", ids.Select(x => string.Format("id eq \"{0}\"", x)));
+                query = string.Join(" or ", ids.Select(x => $"id eq \"{x}\""));
                 ;
             }
             var service = context.Resolve<Mozu.MZDB.Contracts.Clients.IEntityListsWebApiClient>();
@@ -88,8 +88,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var request = context.HttpContext().Request;
             if (pageWithUrl)
             {
-                int tmp;
-                if (int.TryParse(request["pageSize"], out tmp))
+                if (int.TryParse(request.Query["pageSize"], out int tmp))
                 {
                     pageSize = tmp;
                 }
@@ -102,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     pageSize = 15;
                 }
 
-                if (int.TryParse(request["startIndex"], out tmp))
+                if (int.TryParse(request.Query["startIndex"], out tmp))
                 {
                     startIndex = tmp;
                 }

@@ -354,7 +354,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
       
         public static HttpRouteCollection GetStandardRoutes()
         {
-            System.Web.Http.HttpRouteCollection routes = new System.Web.Http.HttpRouteCollection();
+            var routes = new System.Web.Http.HttpRouteCollection();
             
 
             routes.MapCustomHttpRoute(
@@ -633,7 +633,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             public bool Match(HttpRequestMessage request, IHttpRoute route, string parameterName, IDictionary<string, object> values, HttpRouteDirection routeDirection)
             {
-                bool ret = request.Headers.Accept.Contains(_mediaType);
+                var ret = request.Headers.Accept.Contains(_mediaType);
                 return (_match == ret);
             }
         }

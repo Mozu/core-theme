@@ -33,8 +33,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [HotOnlyAuthActionFilter]
     [SslOnlyActionFilter]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class MyAnonymousAccountController : BaseApiController
     {
 
@@ -64,7 +64,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             }
 
-            var idFilter = String.Format("id eq {0} or parentCheckoutId eq {0}", orderId);
+            var idFilter = string.Format("id eq {0} or parentCheckoutId eq {0}", orderId);
 
 
             var orders = (await _orderWebApiClient.GetOrders(filter: idFilter, pageSize: 200));

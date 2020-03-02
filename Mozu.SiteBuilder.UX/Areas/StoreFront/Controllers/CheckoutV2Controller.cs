@@ -38,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ContextInitialization]
     [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CheckoutV2Controller : BaseApiController
     {
 
@@ -161,8 +161,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return redirectUrl;
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
         public async Task<ActionResult> Index(string checkoutId)
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            bool addedPrimaryShippingContactToOrderJustNow = false;
+            var addedPrimaryShippingContactToOrderJustNow = false;
 
             // dynamic dOrder = jOrder;
             this.PageContext.BillingCountries = billTask.Result;
@@ -261,7 +261,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
-                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
+                credits = (await _creditWebApiClient.GetCredits(0, 25, null, string.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
                 CustomerContact defaultShippingContact = null;
 
 
@@ -286,7 +286,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 //var itemsByDestination = model.Items.GroupBy(item => item.DestinationId);
 
-                Func<Boolean> ExpressCheckoutNeed = () =>
+                Func<bool> ExpressCheckoutNeed = () =>
                 {
                     //if(itemsByDestination.FirstOrDefault(item => item.Key == null) != null)
                     //{
@@ -325,7 +325,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                         })).ReadAsSync();
                     }
 
-                    List<ItemsForDestination> itemsFordestination = new List<ItemsForDestination>()
+                    var itemsFordestination = new List<ItemsForDestination>()
                     {
                         new ItemsForDestination() { DestinationId = primaryDestination.Id }
                     };
@@ -446,8 +446,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string apiBase { get; set; }
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Confirmation(string checkoutId)
         {
@@ -490,7 +490,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var pickUpItems = checkout.Items.FindAll(x => x.FulfillmentMethod == FulfillmentMethodConst.PICKUP);
             if (pickUpItems.NotIsNullOrEmpty())
             {
-                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", pickUpItems.Select(x => string.Format("Code eq \"{0}\"", x.FulfillmentLocationCode)).Distinct().ToList())));
+                var locationsTask = (await _locationRuntimeWebApiClient.GetInStorePickupLocations(0, null, null, string.Join(" or ", pickUpItems.Select(x =>
+                    $"Code eq \"{x.FulfillmentLocationCode}\"").Distinct().ToList())));
 
                 locations = locationsTask.ReadAsSync();
             }

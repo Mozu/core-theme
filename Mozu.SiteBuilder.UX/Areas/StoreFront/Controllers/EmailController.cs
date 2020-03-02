@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Orders;
 using Mozu.Core.Api.Client;
@@ -229,13 +230,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 cmdContent = vr.Model;
             }
 
-            _logger.Info(string.Format("raw payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), notification);
+            _logger.Info($"raw payload for topic:{notification.MessageId} messageId:{notification.Topic}", notification);
 
             var model = await Convert(notification.Payload, emailTypeInfo);
 
             try
             {
-                _logger.Info(string.Format("de-serialized payload for topic:{0} messageId:{1}", notification.MessageId, notification.Topic), model);
+                _logger.Info($"de-serialized payload for topic:{notification.MessageId} messageId:{notification.Topic}", model);
             }
             catch (Exception ex)
             {
@@ -287,10 +288,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (view == null)
             {
-                var errMesage = string.Format("no template found for view:{0} topic{1}", emailTemplate.Template,
-                    notification.Topic);
+                var errMesage = $"no template found for view:{emailTemplate.Template} topic{notification.Topic}";
                 _logger.Warn(errMesage);
-                return String.Empty;
+                return string.Empty;
             }
 
             
@@ -332,7 +332,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var order = obj as Order;
             if (order?.Items != null && order.Packages != null && order.Packages.Count > 0)
             {
-                Hashtable ht = new Hashtable(StringComparer.OrdinalIgnoreCase);
+                var ht = new Hashtable(StringComparer.OrdinalIgnoreCase);
 
                 foreach (var x in (order.Items).Where(x => x != null))
                 {
@@ -348,7 +348,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     }
                 }
 
-                foreach (Package p in order.Packages.Where(x => x.Items != null))
+                foreach (var p in order.Packages.Where(x => x.Items != null))
                 {
                     for (var i = 0; i < p.Items.Count; i++)
                     {

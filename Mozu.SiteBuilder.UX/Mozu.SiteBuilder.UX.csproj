@@ -5,7 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- use latest known package of mozu.core.prime -->
-    <PackageReference Include="Mozu.Core.Prime" Version="1.1908.57-master" />
+    <PackageReference Include="dotless" Version="1.6.7" />
+    <PackageReference Include="Mozu.Core.Prime" Version="1.2005.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">

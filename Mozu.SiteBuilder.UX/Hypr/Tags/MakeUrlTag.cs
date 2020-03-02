@@ -30,15 +30,15 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             var urlHelper = context.Resolve<UrlHelper>();
 
-            UrlHelper.UrlType urlType;
-            if (FastEnum<UrlHelper.UrlType>.TryParse(type, out urlType))
+            if (FastEnum<UrlHelper.UrlType>.TryParse(type, out var urlType))
             {
                 var url = urlHelper.MakeUrl(urlType, obj, props, includeContext);
                 return new[] { WalkResultHelpers.Buffer(url) };
             }
             else
             {
-                throw new RenderingError(string.Format("unknown urltag type: {0}. Tags must be one of [{1}]", type, string.Join(",", Enum.GetNames(typeof(UrlHelper.UrlType)).Select(x => x.ToLowerInvariant()))), Microsoft.FSharp.Core.FSharpOption<Exception>.None);
+                throw new RenderingError(
+                    $"unknown urltag type: {type}. Tags must be one of [{string.Join(",", Enum.GetNames(typeof(UrlHelper.UrlType)).Select(x => x.ToLowerInvariant()))}]", Microsoft.FSharp.Core.FSharpOption<Exception>.None);
             }
         }
     }

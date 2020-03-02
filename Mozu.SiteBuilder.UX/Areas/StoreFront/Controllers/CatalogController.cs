@@ -8,7 +8,7 @@ using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
-using Autofac;
+using Microsoft.Extensions.Logging;
 using Mozu.Core;
 using Mozu.Core.Api.Serialization;
 using Mozu.Core.Extensions;
@@ -44,8 +44,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CatalogController : BaseApiController
     {
       
@@ -59,12 +59,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> _pageRuleVisitor;
         private readonly Lazy<IExpressionEvaluator> _expressionEvaluator;
         private static readonly JsonSerializer ProductSerializer = JsonSerializer.Create(new JsonSerializerSettings { Converters = new List<JsonConverter> { new ExpandoObjectConverter() }, ContractResolver = new CamelCaseResolver() });
-        private readonly Core.Logging.ILogger _logger;
+        private readonly ILogger _logger;
         public CatalogController(ICategoryTreeProvider categoryTreeProvider, IProductWebApiClient productClient,
             IProductSearchWebApiClient searchClient, ICustomRouteHandler customRouteHandler,
             IStorefrontCache storeFrontCache, UrlHelper urlhelper,
             Lazy<ExpressionEvaluatorVisitor<CmsPageRuleContext>> pageRuleVisitor,
-            Lazy<IExpressionEvaluator> expressionEvaluator, Mozu.Core.Logging.ILogger logger)
+            Lazy<IExpressionEvaluator> expressionEvaluator, ILogger logger)
         {
             _categoryTreeProvider = categoryTreeProvider;
             _searchClient = searchClient;
@@ -83,8 +83,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <param name="productCode">Required. Merchant-created code associated with the product, for example, a SKU. Max length: 30.</param>
         /// <param name="vpc">Optional vpc = variation product code. Merchant-created code associated with a specific product variation. Max length: #.</param>
         /// <returns>Returns information about a single product given its product code including its ... to be continued.</returns>
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> ProductDetail(string productCode, string vpc = null)
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                     {
                         if (productResponse.HasException)
                         {
-                            Exception ex = productResponse.ReadException();
+                            var ex = productResponse.ReadException();
                             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Product not found.", ex);
                         }
                     }
@@ -109,7 +109,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            ProductRuntime.Contracts.Product prod = await productResponse.ReadAsAsync();
+            var prod = await productResponse.ReadAsAsync();
 
 
 
@@ -156,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PageContext.CrawlerInfo.CanonicalUrl = _urlhelper.MakeUrl(UrlHelper.UrlType.Product, product, null);
        
 
-            string template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
+            var template = PageContext.CmsContext.Page.GetTemplate(SiteContext, "product");
 
             
             SetCatalogContext(product);
@@ -181,11 +181,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 itemsPerPage = itemsPerPage.GetValueOrDefault(Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]));
                 startIdx = startIdx.GetValueOrDefault(0);
             }
-            bool recurse = categoryId.HasValue;
+            var recurse = categoryId.HasValue;
             string filter = null;
             if (productCodes != null && productCodes.Count > 0)
             {
-                List<string> productCodes2 = productCodes.Select(x => x.ToString()).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => string.Format("productCode eq {0}", x)).ToList();
+                var productCodes2 = productCodes.Select(x => x.ToString()).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x =>
+                    $"productCode eq {x}").ToList();
                 if (productCodes2.Count > 0)
                 {
                     filter = string.Join(" or ", productCodes2);
@@ -208,12 +209,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             // recurse: recurse,
 
             var isVolumePricingBandsEnabled = ((bool?)SiteContext.ThemeSettings["listVolumePricing"]);
-            string responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
+            var responseOptions = isVolumePricingBandsEnabled.GetValueOrDefault() ? "volumePriceBands" : null;
 
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
             {
                 string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
-                ProductSearchResult pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
+                var pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                 pc.Init(true, this.PageContext.Search);
                 return pc;
@@ -230,7 +231,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [HttpGet]
         public async Task<ActionResult> Store()
         {
-            CategoryTree catList =  _categoryTreeProvider.GetAllCategories();
+            var catList =  _categoryTreeProvider.GetAllCategories();
             var cat = new Category
             {
                 Content = new CategoryContent { Name = "Store" }
@@ -270,7 +271,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         async Task<Category> AddCrawlerLinks(Category category)
         {
 
-            Lazy<IDictionary<string, object>> catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
+            var catDic = new Lazy<IDictionary<string, object>>(() => Mapper.Map<IDictionary<string, object>>(category));
 
 
             
@@ -328,8 +329,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
         public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
@@ -342,7 +343,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "category not found");
             }
 
-            if (!String.IsNullOrEmpty(variationId))
+            if (!string.IsNullOrEmpty(variationId))
             {
                 PageContext.VariationId = variationId;
             }
@@ -388,7 +389,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             };
 
 
-            string template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
+            var template = this.PageContext.CmsContext.Page.GetTemplate(this.SiteContext, "category");
 
             var result = View(template, cat);
 

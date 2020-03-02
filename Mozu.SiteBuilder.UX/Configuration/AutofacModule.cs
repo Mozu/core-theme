@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Web.Http;
-using Autofac;
-using Autofac.Core;
-using Autofac.Core.Lifetime;
-using Autofac.Core.Resolving;
-using Autofac.Integration.WebApi;
-using Burrows.Autofac;
-using Burrows.Configuration;
-using Burrows.Publishing;
+using dotless.Core.Input;
+using MassTransit;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api;
@@ -31,14 +25,19 @@ using Mozu.SiteBuilder.Mvc.Users;
 
 using Mozu.SiteBuilder.UX.Messaging;
 using Mozu.SiteSettings.General.Contracts.Clients;
-using Module = Autofac.Module;
 using Mozu.SiteBuilder.UX.Areas.Misc;
 using Mozu.SiteBuilder.Mvc.Context;
 using Mozu.Core.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Mozu.Core.Messaging.Consume;
+using Mozu.Core.Messaging.Contracts.Product.Events;
+using Mozu.Core.Messaging.Contracts.Search.Events;
 
 namespace Mozu.SiteBuilder.UX.Configuration
 {
-    public class AutofacModule : Module
+    public class AutofacModule : IDependencyConfigurator
     {
         public string ApiBaseUri { get; set; }
         class SbApiContextBuilder : IApiContextBuilder
@@ -50,12 +49,61 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             }
         }
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
 
-            builder.RegisterType<SiteBuilderApiContext>().As<Mozu.Core.IApiContext>().As<ISiteBuilderApiContext>().InstancePerRequest();
-            builder.RegisterType<SbApiContextBuilder>().As<IApiContextBuilder>();
+        //class BurrowsConumerScope : ILifetimeScope , IDisposer
+        //{
+        //    public object Thing { get; set; }
+        //    public object ResolveComponent(IComponentRegistration registration, IEnumerable<Parameter> parameters)
+        //    {
+        //        return Thing;
+        //    }
+
+        //    public IComponentRegistry ComponentRegistry { get; set; }
+        //    public void Dispose()
+        //    {
+             
+        //    }
+
+        //    public void AddInstanceForDisposal(IDisposable instance)
+        //    {
+                
+        //    }
+
+        //    public ILifetimeScope BeginLifetimeScope()
+        //    {
+        //        return this;
+        //    }
+
+        //    public ILifetimeScope BeginLifetimeScope(object tag)
+        //    {
+        //        return this;
+        //    }
+
+        //    public ILifetimeScope BeginLifetimeScope(Action<ContainerBuilder> configurationAction)
+        //    {
+        //        return this;
+        //    }
+
+        //    public ILifetimeScope BeginLifetimeScope(object tag, Action<ContainerBuilder> configurationAction)
+        //    {
+        //        return this;
+        //    }
+
+        //    public IDisposer Disposer => this;
+        //    public object Tag { get; set; }
+        //    public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning;
+        //    public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding;
+        //    public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning;
+        //}
+
+
+        public void Configure(IServiceCollection configure)
+        {
+            //configure.RegisterHttpRequestMessage(GlobalConfiguration.Configuration);
+
+            configure.AddScoped<IApiContext, SiteBuilderApiContext>();
+            configure.AddScoped<ISiteBuilderApiContext, SiteBuilderApiContext>();
+            configure.AddScoped<IApiContextBuilder, SbApiContextBuilder>();
             //builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
             //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerRequest();
 
@@ -70,9 +118,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.Reference.Contracts.Clients.ReferenceDataWebApiClient).Assembly);
             //builder.RegisterClassesMatchingInterfaceName(typeof(Mozu.SiteSettings.Order.Contracts.CheckoutSettings).Assembly);
 
-            builder.RegisterType<ThemeSettingsRepository>().As<IThemeSettingsRepository>().InstancePerRequest();
-            builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
-            builder.RegisterType<PermissionsRepository>().As<IPermissionsRepository>().InstancePerRequest();
+            configure.AddScoped<IThemeSettingsRepository, ThemeSettingsRepository>();
+            // todo:cole revisit for mobile detection
+            //builder.RegisterType<FiftyOneDegreesMobileDetectionProvider>().As<IMobileDetectionProvider>().InstancePerRequest();
+            configure.AddScoped<IPermissionsRepository, PermissionsRepository>();
             //builder.RegisterClassesMatchingInterfaceName(typeof(IEntityListsWebApiClient).Assembly);
             //  builder.RegisterType<BehaviorWebApiClient>().As<IBehaviorWebApiClient>();
 
@@ -88,7 +137,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterType<DjangoMozuViewEngine>().As<DjangoMozuViewEngine>().As<IViewEngine>().InstancePerLifetimeScope();
 
             // TODO: is this necessary
-            builder.RegisterType<RuntimeCategoryTreeProvider>().As<ICategoryTreeProvider>().InstancePerRequest();
+            configure.AddScoped<ICategoryTreeProvider, RuntimeCategoryTreeProvider>();
 
             // builder.RegisterType<MozuServiceClientMessageHandler>().As<IServiceClientMessageHandler>();
 
@@ -120,46 +169,56 @@ namespace Mozu.SiteBuilder.UX.Configuration
             // ;
 
             // add these two logging context providers for loggers provided by the DI framework.
-            builder.RegisterType<CurrentRequestLoggingContextProvider>().As<ILoggingContextProvider>().InstancePerLifetimeScope();
+            configure.AddScoped<ILoggingContextProvider, CurrentRequestLoggingContextProvider>();
             builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
-            builder.RegisterType<VisitEventPublisher>().AsSelf().InstancePerRequest();
-            builder.RegisterType<CacheItemsInvalidConsumer>().AsSelf().SingleInstance();
-           // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
+            configure.AddScoped<VisitEventPublisher>();
+            configure.AddSingleton<CacheItemsInvalidConsumer>();
+            // builder.RegisterType<CacheItemsInvalidConsumer2>().AsSelf();
 
             // Register a MassTransit/Burrows IPublisher for visits.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            builder.Register(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX")).As<IPublisher>().SingleInstance();
-            builder.Register(c => System.Runtime.Caching.MemoryCache.Default).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
-            builder.RegisterType<SiteBuilderHttpErrorResponseGenerator>().As<IHttpErrorResponseGenerator>();
+            configure.AddSingleton<IPublishEndpoint>(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX"));;
+            builder.Register(c => new Microsoft.Extensions.Caching.Memory.MemoryCache()).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
+            configure.AddScoped<IHttpErrorResponseGenerator, SiteBuilderHttpErrorResponseGenerator>();
             builder.RegisterType<HttpErrorResponseGenerator>();
-            builder.RegisterType<AMDModuleProvider>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<LessLogger>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<LessTransFormer>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<MyLessFileReader>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<TemplateInheritanceHandler>().AsImplementedInterfaces().AsSelf();
-            builder.RegisterType<CacheItemsInvalidConsumer>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<SiteBuilderContextInvalidatorConsumer>().SingleInstance();
+            configure.AddScoped<AMDModuleProvider>();
+            configure.AddScoped<LessLogger>();
+            configure.AddScoped<ILogger, LessLogger>();
+            configure.AddScoped<LessTransFormer>();
+            configure.AddScoped<MyLessFileReader>();
+            configure.AddScoped<IFileReader, MyLessFileReader>();
+            configure.AddScoped<TemplateInheritanceHandler>();
+            configure.AddScoped<ITemplateInheritanceHandler, TemplateInheritanceHandler>();
+            configure.AddSingleton<LoggingConsumer, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<IProductEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<ICategoryEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<IDiscountEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<ISearchIndexUpdated>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<IFacetEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<ISearchTuningRuleEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<Consumes<ISearchSettingsEvent>.All, CacheItemsInvalidConsumer>();
+            configure.AddSingleton<SiteBuilderContextInvalidatorConsumer>();
             builder
               .Register(c =>
               {
                   var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
-                  var conString = string.Format(format.Value, Guid.NewGuid().ToString("N"));
+                  var conString = string.Format(format, Guid.NewGuid().ToString("N"));
                   var cacheInvalidator = c.Resolve<CacheItemsInvalidConsumer>();
-                  var lifeTimeScope = c.Resolve<ILifetimeScope>();
-                  var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator , ComponentRegistry= lifeTimeScope.ComponentRegistry };
-                 
-                  var factory = ServiceBusFactory.New(sbc => 
+                  //var lifeTimeScope = c.Resolve<ILifetimeScope>();
+                  //var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator, ComponentRegistry = lifeTimeScope.ComponentRegistry };
+
+                  var factory = ServiceBusFactory.New(sbc =>
                   sbc
-                    .Configure(conString, subs => subs.Consumer< CacheItemsInvalidConsumer>( ()=>cacheInvalidator))
+                    .Configure(conString, subs => subs.Consumer<CacheItemsInvalidConsumer>(() => cacheInvalidator))
                     .SetConcurrentConsumerLimit(2)
-                  
+
                   );
-               
+
 
                   return factory;
               })
-              
+
               .AutoActivate();
             builder
             .Register(c =>
@@ -170,67 +229,10 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 {
                     subscriptionSource.Consumer<SiteBuilderContextInvalidatorConsumer>(() => consumer);
                     // subscriptionSource.Consumer<>
-                },
-                new MessageBusSettings() { ConcurrentConsumerLimit = 2 });
+                }, new MessageBusSettings() { ConcurrentConsumerLimit = 2 });
 
 
-            }).AutoActivate(); 
-           
-
+            }).AutoActivate();
         }
-
-        class BurrowsConumerScope : ILifetimeScope , IDisposer
-        {
-            public object Thing { get; set; }
-            public object ResolveComponent(IComponentRegistration registration, IEnumerable<Parameter> parameters)
-            {
-                return Thing;
-            }
-
-            public IComponentRegistry ComponentRegistry { get; set; }
-            public void Dispose()
-            {
-             
-            }
-
-            public void AddInstanceForDisposal(IDisposable instance)
-            {
-                
-            }
-
-            public ILifetimeScope BeginLifetimeScope()
-            {
-                return this;
-            }
-
-            public ILifetimeScope BeginLifetimeScope(object tag)
-            {
-                return this;
-            }
-
-            public ILifetimeScope BeginLifetimeScope(Action<ContainerBuilder> configurationAction)
-            {
-                return this;
-            }
-
-            public ILifetimeScope BeginLifetimeScope(object tag, Action<ContainerBuilder> configurationAction)
-            {
-                return this;
-            }
-
-            public IDisposer Disposer
-            {
-                get
-                {
-                    return this;
-                }
-            }
-            public object Tag { get; set; }
-            public event EventHandler<LifetimeScopeBeginningEventArgs> ChildLifetimeScopeBeginning;
-            public event EventHandler<LifetimeScopeEndingEventArgs> CurrentScopeEnding;
-            public event EventHandler<ResolveOperationBeginningEventArgs> ResolveOperationBeginning;
-        }
-
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using Autofac;
-using Autofac.Integration.WebApi;
-using Mozu.Core;
+﻿using Mozu.Core;
 using Mozu.Core.Behaviors;
 using Mozu.Core.Extensions;
 using Mozu.Core.Settings;
@@ -19,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
@@ -27,7 +26,7 @@ namespace Mozu.SiteBuilder.UX.Filters
 
     public class DataViewModeEnforcementAttribute : FilterAttribute, IAuthorizationFilter
     {
-        public override bool AllowMultiple { get { return false; } }
+        public override bool AllowMultiple => false;
 
         public async Task<HttpResponseMessage> ExecuteAuthorizationFilterAsync(HttpActionContext actionContext, CancellationToken cancellationToken, Func<Task<HttpResponseMessage>> continuation)
         {
@@ -60,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Filters
             // else we are in a locked-down state. Is there an admin logged in?
             if (!HasAdminCookie(adminToken))
             {
-                string host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
+                var host = GetHostValue(resolver.Resolve<IRequestUrlFinderOuter>());
                 return RedirectTo(CreateLoginLink(loginAppHelper, request.RequestUri, host, apiContext.TenantId ));
             }
 
@@ -100,8 +99,7 @@ namespace Mozu.SiteBuilder.UX.Filters
 
         private static bool AdminHasBehavior(DataViewModeType viewMode, string adminToken)
         {
-            LightweightUserClaims claims;
-            if (!adminToken.IsNullOrEmpty() && LightweightUserClaims.TryParse(adminToken, out claims))
+            if (!adminToken.IsNullOrEmpty() && LightweightUserClaims.TryParse(adminToken, out var claims))
             {
                 switch (viewMode)
                 {
@@ -182,10 +180,10 @@ namespace Mozu.SiteBuilder.UX.Filters
             return inClaims;
         }
 
-        private static ILifetimeScope GetRequestScope(HttpRequestMessage request)
+        private static IServiceProvider GetRequestScope(HttpRequestMessage request)
         {
             var thing = request.GetDependencyScope();
-            return thing.GetRequestLifetimeScope();
+            return null;
         }
 
         private static HttpResponseMessage RedirectTo(Uri redirectUrl)

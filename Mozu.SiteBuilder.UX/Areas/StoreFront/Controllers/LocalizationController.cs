@@ -45,10 +45,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 {
                     foreach (var key in collections.Keys)
                     {
-                        Dictionary<string, string> dic;
                         var c = new JObject();
 
-                        if(collections.TryGetValue(key, out dic))
+                        if(collections.TryGetValue(key, out var dic))
                         {
                             foreach (var k in dic.Keys)
                             {

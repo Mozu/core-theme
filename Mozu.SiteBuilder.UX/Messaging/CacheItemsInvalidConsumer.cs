@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Burrows;
 using Mozu.Core;
 using Mozu.Core.Messaging.Consume;
 using Mozu.Core.Messaging.Contracts;
@@ -12,6 +11,7 @@ using Mozu.SiteBuilder.Mvc.Context;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System;
+using MassTransit;
 
 namespace Mozu.SiteBuilder.UX.Messaging
 {
@@ -97,7 +97,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
         {
 
 
-            DataViewModeType dvm = (DataViewModeType)message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
+            var dvm = (DataViewModeType)message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
 
             //todo update when kevin figures out how to tell us if its a staging or live event.
             InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, dvm);
@@ -115,8 +115,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
 
             foreach( var kvp in work)
             {
-                MessagePublishingContext temp;
-                _messageDebounceCol.TryRemove(kvp.Key, out temp);
+                _messageDebounceCol.TryRemove(kvp.Key, out var temp);
                
                 _sitebuilderContextCacheRepository.Invalidate(kvp.Value.TenantId,
                    kvp.Value.MasterCatalogId.Value,
@@ -277,7 +276,7 @@ namespace Mozu.SiteBuilder.UX.Messaging
         {
 
 
-            DataViewModeType dvm =(DataViewModeType) message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
+            var dvm =(DataViewModeType) message.MessagePublishingContext.DataViewMode.GetValueOrDefault((int)DataViewModeType.NoneSet);
           
             //todo update when kevin figures out how to tell us if its a staging or live event.
             InvalidateMessageOnCatalogAndSite(message, StoreFrontCacheDependencies.Catalog, dvm);
@@ -300,7 +299,5 @@ namespace Mozu.SiteBuilder.UX.Messaging
                 _storefrontCacheControl.InvalidateSite(message.MessagePublishingContext.SiteId.Value, cacheDepType,dataModeType);
             }
         }
-
-
     }
 }

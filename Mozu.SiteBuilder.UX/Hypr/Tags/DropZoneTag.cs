@@ -23,6 +23,7 @@ using Mozu.Core.Settings;
 using System.Threading.Tasks;
 using Microsoft.FSharp.Core;
 using System.Collections;
+using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.Contexts;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
@@ -35,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             return sb;
         }
 
-        public static TItem EnsureInContext<TKey, TItem>(this HttpContextBase ctx, TKey key, Func<TItem> thing) where TItem :class
+        public static TItem EnsureInContext<TKey, TItem>(this HttpContext ctx, TKey key, Func<TItem> thing) where TItem :class
         {
             var guy = ctx.Items[key] as TItem;
             if (guy != null) return guy;
@@ -90,7 +91,8 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             {
                 using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
                 {
-                    return new[] { WalkResultHelpers.Buffer(string.Format("\t\t<link rel=\"stylesheet\" href=\"{0}/resources/cms/layout.css?{1},{2}\">\r", siteContext.CdnPrefix, FileVersion, AssemblyInfoHash)) };
+                    return new[] { WalkResultHelpers.Buffer(
+                        $"\t\t<link rel=\"stylesheet\" href=\"{siteContext.CdnPrefix}/resources/cms/layout.css?{FileVersion},{AssemblyInfoHash}\">\r") };
                 }
             }
             var tenantAdminSettings = context.Resolve<ITenantAdminSettingsContext>();
@@ -103,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var cdnHost = string.IsNullOrWhiteSpace(siteContext.GeneralSettings.CustomCdnHostName) ? settings.AppSettings("CdnHost") : siteContext.GeneralSettings.CustomCdnHostName;
             var cdn = settings.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
                 ? string.Empty
-                : string.Format("//{0}/common", cdnHost);
+                : $"//{cdnHost}/common";
 
 
             var layoutJavaScripts = new List<string>() { "chorizo" };
@@ -148,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var cdnHost = string.IsNullOrWhiteSpace(siteContext.GeneralSettings.CustomCdnHostName) ? settings.AppSettings("CdnHost") : siteContext.GeneralSettings.CustomCdnHostName;
                 var cdn = settings.AppSettings("disableCDN") == "true" || string.IsNullOrEmpty(cdnHost)
                     ? string.Empty
-                    : string.Format("//{0}/common", cdnHost);
+                    : $"//{cdnHost}/common";
 
                 
                 using (var sbItemDisposer = StringBuilderPool.Default.GetContainer())
@@ -213,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var zoneId = arguments.GetValueOrDefault("zoneId", () => (string)arguments.First().Value);
             if (HasVisited(zoneId, httpContext))
             {
-                throw new RenderingError(string.Format("Zone {0} already rendered", zoneId), null);
+                throw new RenderingError($"Zone {zoneId} already rendered", null);
             }
 
             var siteContext = context.SiteContext();
@@ -221,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
             var viewContext = context.ViewContext();
             var sbApiContext = context.SiteBuilderApiContext();
             var themeEntityDefinitionProvider = context.Resolve<IThemeEntityDefinitionProvider>();
-            ZoneScope scope = ParseZoneScopeString(arguments);
+            var scope = ParseZoneScopeString(arguments);
             var zoneSpan = arguments.GetValueOrDefault("span", 12);
                                                                    
             if (pageContext.CmsContext != null && !pageContext.CmsContext.Initialized)
@@ -426,7 +428,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         {
             {
                 widget.Config = widget.Config as JObject ?? new JObject();
-                bool isContent = widget.DefinitionId == "content";
+                var isContent = widget.DefinitionId == "content";
                 widget.isRichText = isContent;
 
                 var widgetDefinition = getWidgetDefFunc(widget.DefinitionId);
@@ -461,8 +463,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     if (!string.IsNullOrWhiteSpace(heightStr))
                     {
                         sb.Append(" style=\"height:");
-                        int heightInt;
-                        if (int.TryParse(heightStr, out heightInt))
+                        if (int.TryParse(heightStr, out var heightInt))
                         {
                             sb.Append(heightInt);
                             sb.Append("px;\"");
@@ -529,15 +530,14 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
         private static ZoneScope ParseZoneScopeString(ArgumentCollection arguments)
         {
             var scopeString = arguments.GetValueOrDefault("scope", () => DetermineZoneScopeDefault(arguments));
-            ZoneScope scope;
-            if (Enum.TryParse(scopeString, true, out scope))
+            if (Enum.TryParse(scopeString, true, out ZoneScope scope))
             {
                 return scope;
             }
             return ZoneScope.Page;
         }
 
-        private bool HasVisited(string zoneId, HttpContextBase httpContext)
+        private bool HasVisited(string zoneId, HttpContext httpContext)
         {
             if (httpContext == null || httpContext.Items == null) return false;
             var hs = httpContext.EnsureInContext(HTTPCONTEXTKEY, () => new HashSet<string>(StringComparer.OrdinalIgnoreCase));

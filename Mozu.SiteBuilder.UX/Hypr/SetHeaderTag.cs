@@ -36,7 +36,7 @@ namespace Mozu.SiteBuilder.UX.Hypr
                 value = parts[1];
             }
 
-            string tmp = string.Empty;
+            var tmp = string.Empty;
             if (arguments.TryGetValue<string>("name", out tmp))
             {
                 name = tmp;

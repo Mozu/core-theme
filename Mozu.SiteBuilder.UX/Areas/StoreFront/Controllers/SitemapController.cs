@@ -115,8 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             foreach (string key in routeSlugPairs.Keys)
             {
-                int siteId;
-                if (int.TryParse(routeSlugPairs[key], out siteId) && siteId != this.SbApiContext.SiteId)
+                if (int.TryParse(routeSlugPairs[key], out var siteId) && siteId != this.SbApiContext.SiteId)
                 {
                     var stem = key.StartsWith("/") ? key : "/" + key;
                     ret.Add(stem);
@@ -216,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             this.HttpContext.Response.ContentType = "text/xml";
             var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
             writer.WriteStartElement("urlset", NS);
-            int offset = 0;
+            var offset = 0;
             var startIndex = page * PageSize;
 
             while (true)
@@ -279,8 +278,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private string GetNakedSitePrimaryDomain()
         {
             var primary = SiteContext.Domains.Primary?.DomainName;
-            Uri uri;
-            if (Uri.TryCreate(this.PageContext.Url, UriKind.Absolute, out uri))
+            if (Uri.TryCreate(this.PageContext.Url, UriKind.Absolute, out var uri))
             {
                 if (this.SiteContext.Domains?.All.Any(domain => 
                     string.Equals(domain.DomainName, uri.Host, StringComparison.OrdinalIgnoreCase)) == false)

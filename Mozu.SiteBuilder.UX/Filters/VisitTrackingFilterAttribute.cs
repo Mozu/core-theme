@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Microsoft.Extensions.Logging;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -17,7 +18,7 @@ namespace Mozu.SiteBuilder.UX.Filters
     {
         private ILogger _logger;
 
-        public override bool AllowMultiple { get { return false; } }
+        public override bool AllowMultiple => false;
 
         public VisitTrackingFilterAttribute()
         {
@@ -53,7 +54,7 @@ namespace Mozu.SiteBuilder.UX.Filters
                 responseHeaders.SetVisitorCookie(pageContext.Visit.VisitorId);
             }
             var sessionCookie = requestHeaders.GetSessionCookie();
-            string sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
+            var sessionCookieExpectedValue = (pageContext.Visit.IsTracked ? "y" : "n") + (pageContext.Visit.IsUserTracked ? "y" : "n");
             if (sessionCookie == null || (pageContext.Visit.IsTracked && sessionCookie.Value != sessionCookieExpectedValue))
             {
                 responseHeaders.SetSessionCookie(sessionCookieExpectedValue);
@@ -92,7 +93,7 @@ namespace Mozu.SiteBuilder.UX.Filters
         {
             // try to parse the visitor id from the cookie.
             var visitorCookie = request.Headers.GetVisitorCookie();
-            Guid visitorIdFromCookie = Guid.Empty;
+            var visitorIdFromCookie = Guid.Empty;
             if (visitorCookie != null)
             {
                 Guid.TryParse(visitorCookie.Value, out visitorIdFromCookie);
@@ -102,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Filters
                 visitorIdFromCookie = Guid.NewGuid();
             }
 
-            string visitorId = visitorIdFromCookie.ToUrlSafeString();
+            var visitorId = visitorIdFromCookie.ToUrlSafeString();
 
             var apiContext = request.Resolve<ISiteBuilderApiContext>();
 

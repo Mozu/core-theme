@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.UX.Filters
 {
@@ -20,7 +21,6 @@ namespace Mozu.SiteBuilder.UX.Filters
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
             actionExecutedContext.Response?.Headers.Remove("Set-Cookie");
-            actionExecutedContext.Request.Resolve<HttpContextBase>()?.Response.Cookies.Clear();
         }
     }
 
@@ -30,10 +30,7 @@ namespace Mozu.SiteBuilder.UX.Filters
 
     public class ForceCDNUseFilter : ActionFilterAttribute
     {
-        public override bool AllowMultiple
-        {
-            get { return false; }
-        }
+        public override bool AllowMultiple => false;
 
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
@@ -44,9 +41,6 @@ namespace Mozu.SiteBuilder.UX.Filters
             var disableCdn = settings.AppSettingsAsNullableBool("disableCdn").GetValueOrDefault(false);
             var sbapi = actionContext.Request.Resolve<ISiteBuilderApiContext>();
             var noForce = actionContext.ActionDescriptor.GetCustomAttributes<NoCdnForce>().Any() || sbapi.DebugFlags.HasFlag(DebugModeFlagValues.DisableCdn);
-
-
-
 
             var hasAkamiOriginHop = actionContext.Request.Headers.Any(x => string.Equals(x.Key, "Akamai-Origin-Hop", StringComparison.OrdinalIgnoreCase));
             if (ShouldRedirectToCdn(actionContext.Request.RequestUri, cdnHost, cdnOriginHost, hasAkamiOriginHop, disableCdn, noForce , requestURLGetter))
@@ -69,7 +63,7 @@ namespace Mozu.SiteBuilder.UX.Filters
         static HttpResponseMessage RedirectToCDN(string cdnHost, Uri originalUrl, int tenantId, int? siteId)
         {
             var builder = new UriBuilder(originalUrl);
-            builder.Path = string.Format("{0}-{1}/{2}", tenantId, siteId, builder.Path);
+            builder.Path = $"{tenantId}-{siteId}/{builder.Path}";
             builder.Host = cdnHost;
             var response = new HttpResponseMessage(HttpStatusCode.MovedPermanently);
             response.Headers.Location = builder.Uri;

@@ -34,8 +34,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [NoSslActionFilter]
     [ContextInitialization]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class SearchController : BaseApiController
     {
         readonly IProductCategoryRuntimeWebApiClient _catClient;
@@ -53,8 +53,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpGet]
         public async Task<HttpResponseMessage> Index(
             string query = null, 
@@ -203,7 +203,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public override async Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
             {
                 var resp = (SolrDebugResp)value;
-                using (StreamWriter sw = new StreamWriter(writeStream, Encoding.UTF8, 4096, true))
+                using (var sw = new StreamWriter(writeStream, Encoding.UTF8, 4096, true))
                 {
                     if (!string.IsNullOrEmpty(resp.JsonPFn))
                     {
@@ -242,14 +242,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 // actionContext.ActionArguments["query"] = null;
                 //  actionContext.ActionArguments["categoryId"] = null;
 
-                AdvancedSearchParamaters avp = new AdvancedSearchParamaters();
+                var avp = new AdvancedSearchParamaters();
              
                 var sc = actionContext.Request.Resolve<ISiteContext>();
                 var pc = actionContext.Request.Resolve<IPageContext>();
                 var includeFacets = ((bool?)sc.ThemeSettings["showCategoryFacets"]);
                 var isVolumePricingBandsEnabled = ((bool?)sc.ThemeSettings["listVolumePricing"]);
                 var  pageStr = bindingContext.ValueProvider.GetValue("page");
-                int pageInt = 0;
+                var pageInt = 0;
                 if (! int.TryParse(pageStr?.ToString(), out pageInt))
                 {
                     pageInt = 0;
@@ -292,8 +292,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
                 int? categoryId = null;
                 res = bindingContext.ValueProvider.GetValue("categoryId");
-                int tmpInt;
-                if (res != null && int.TryParse(res.RawValue?.ToString(), out tmpInt))
+                if (res != null && int.TryParse(res.RawValue?.ToString(), out var tmpInt))
                 {
                     categoryId = tmpInt;
                 }
@@ -305,8 +304,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 if (categoryId == null)
                 {
-                    int tempInt;
-                    if (int.TryParse(pc.Search.Facets["categoryId"], out tempInt))
+                    if (int.TryParse(pc.Search.Facets["categoryId"], out var tempInt))
                     {
                         pc.Search.CategoryId = categoryId = tempInt;
                     }

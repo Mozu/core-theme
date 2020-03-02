@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
 using Mozu.CommerceRuntime.Contracts.Products;
@@ -125,7 +126,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private static Measurement CalculateAdjustedWeight(Measurement weight, int quantity)
         {
             if (weight == null || !weight.Value.HasValue) return null;
-            return new Measurement { Unit = weight.Unit, Value = Decimal.Round(weight.Value.Value * quantity, 1) };
+            return new Measurement { Unit = weight.Unit, Value = decimal.Round(weight.Value.Value * quantity, 1) };
         }
 
         /// <summary>
@@ -218,13 +219,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (templateid == "order-details")
             {
-                object model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                var model = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 return await RenderWithContext(template, model);
             }
             else if (templateid == "packing-slip")
             {
-                object order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                var order = TestDataBroker.GetFileContents(ORDER_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                var model = TestDataBroker.GetFileContents(PACKAGE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["order"] = order;
                 return await RenderWithContext(template, model);
             }
@@ -270,15 +271,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         private bool IsUserAuthorizedForOrder(LightweightUserClaims userClaimFromQuery, string orderId)
         {
-            int claimTenantId;
-            string claimOrderId, tidString;
-
             return
                 (userClaimFromQuery.ScopeType == UserScopeType.Tenant.ToString())
                 &&
-                (userClaimFromQuery.Bag.TryGetValue("OrderId", out claimOrderId) && claimOrderId == orderId)
+                (userClaimFromQuery.Bag.TryGetValue("OrderId", out var claimOrderId) && claimOrderId == orderId)
                 &&
-                (userClaimFromQuery.Bag.TryGetValue("TenantId", out tidString) && Int32.TryParse(tidString, out claimTenantId) && claimTenantId == _apiContext.TenantId);
+                (userClaimFromQuery.Bag.TryGetValue("TenantId", out var tidString) && int.TryParse(tidString, out var claimTenantId) && claimTenantId == _apiContext.TenantId);
         }
 
         /// <summary>
@@ -289,12 +287,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             LightweightUserClaims userClaimFromCustomToken = null;
 
             // ensure things are on the up and up
-            bool isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
+            var isAuthorized = LightweightUserClaims.TryParse(authToken, out userClaimFromCustomToken) && IsUserAuthorizedForOrder(userClaimFromCustomToken, orderId);
             if (!isAuthorized) throw new HttpResponseException(this.Request.CreateErrorResponse(HttpStatusCode.Forbidden, "You are not permitted to access this resource."));
 
             var customOrderClient = _orderWebApiClient.CloneWithApiContext(ctx => ctx.UserClaims = userClaimFromCustomToken);
 
-            bool isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
+            var isExpired = userClaimFromCustomToken.Expiration < DateTime.UtcNow;
             if (isExpired) throw TokenExpiredException();
 
             return _orderWebApiClient.GetOrder(orderId).ContinueWith(t => t.Result.ReadAsAsync()).Unwrap();

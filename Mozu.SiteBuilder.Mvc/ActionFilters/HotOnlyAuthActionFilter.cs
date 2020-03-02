@@ -4,38 +4,27 @@ using Mozu.Core;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Security;
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters
 {
     public class HotOnlyAuthActionFilter : ActionFilterAttribute
     {
-        private readonly ISiteBuilderApiContext _sbContext;
-        private readonly IAuthenticationHelper _authHelper;
-        private readonly IAuthTicketWebApiClient _authService;
-
-        public HotOnlyAuthActionFilter(ISiteBuilderApiContext sbContext, IAuthenticationHelper authHelper,
-            IAuthTicketWebApiClient authService)
-        {
-            _sbContext = sbContext;
-            _authHelper = authHelper;
-            _authService = authService;
-        }
-
-        public bool AllowMultiple => false;
-
         public override void OnActionExecuting(ActionExecutingContext actionContext)
         {
-            var userClaims = _sbContext.UserClaims;
+            var sbCtx = actionContext.HttpContext.RequestServices.GetService<ISiteBuilderApiContext>();
+            var userClaims = sbCtx.UserClaims;
             if(userClaims.IsAnonymous || !userClaims.IsAuthenticationHot)
             {
                 // check for case when we are order auth'd
                 if(userClaims.Bag.ContainsKey("orderId"))
                     return;
 
-                var rToken = _authHelper.GetStoreFrontRefreshToken();
+                var authHelper = actionContext.HttpContext.RequestServices.GetService<IAuthenticationHelper>();
+                var rToken = authHelper.GetStoreFrontRefreshToken();
                 if (rToken != null)
                 {
-                    var authTicketTask = _authService.RefreshUserAuthTicket(rToken).ConfigureAwait(false);
+                    var authTicketTask = actionContext.HttpContext.RequestServices.GetService<IAuthTicketWebApiClient>().RefreshUserAuthTicket(rToken).ConfigureAwait(false);
                     var result = authTicketTask.GetAwaiter().GetResult();
                     if (!result.HasException && result.ResponseMessage.IsSuccessStatusCode)
                     {
@@ -47,11 +36,11 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
                             LastName = ticket.CustomerAccount.LastName,
                             UserId = ticket.CustomerAccount.UserId
                         };
-                        _authHelper.SaveStoreFrontAccessToken(ticket.AccessToken, profile.ToToken());
-                        _authHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken, ticket.RefreshTokenExpiration);
+                        authHelper.SaveStoreFrontAccessToken(ticket.AccessToken, profile.ToToken());
+                        authHelper.SaveStoreFrontRefreshToken(ticket.RefreshToken, ticket.RefreshTokenExpiration);
                         var user = LightweightUserClaims.Parse(ticket.AccessToken);
 
-                        _sbContext.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
+                        sbCtx.SetUser(LightweightUserClaims.Parse(ticket.AccessToken));
                         return;
                     }
                 }

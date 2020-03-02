@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Autofac;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Extensions;
 using Mozu.ShippingRuntime.Contracts.Clients;

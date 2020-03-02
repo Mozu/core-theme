@@ -38,8 +38,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
     [ContextInitialization]
     [NoWarmAuthActionFilter(ReturnUrl = "/cart/checkout")]
     [DataViewModeEnforcement]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-    [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+    //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
     public class CheckoutController : BaseApiController
     {
 
@@ -161,8 +161,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return redirectUrl;
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.CheckoutAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ForceRevalidate = true)]
         public async Task<ActionResult> Index(string orderId)
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
             }
 
-            bool addedPrimaryShippingContactToOrderJustNow = false;
+            var addedPrimaryShippingContactToOrderJustNow = false;
 
             // dynamic dOrder = jOrder;
             this.PageContext.BillingCountries = billTask.Result;
@@ -258,7 +258,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 account = (await _customerAccountWebApiClient.GetAccount(this.PageContext.User.AccountId)).ReadAsSync();
                 cards = (await _customerAccountWebApiClient.GetAccountCards(this.PageContext.User.AccountId)).ReadAsSync();
                 accountPurchaseOrder = (await _customerAccountWebApiClient.GetCustomerPurchaseOrderAccount(this.PageContext.User.AccountId)).ReadAsSync();
-                credits = (await _creditWebApiClient.GetCredits(0, 25, null, String.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
+                credits = (await _creditWebApiClient.GetCredits(0, 25, null, string.Format("CustomerId eq \"{0}\" and activationdate le \"{1}\" and expirationdate ge \"{1}\" and currentBalance ge 0.01", this.PageContext.User.AccountId, DateTime.UtcNow.ToString("o")))).ReadAsSync();
                 CustomerContact primaryShippingContact = null;
                 //CustomerContact primaryBillingContact = null;
 
@@ -366,7 +366,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
 
                 var asm = (methods ?? new List<ShippingRate>(0)).ToJArray();
-                JObject si = (JObject)jOrder["fulfillmentInfo"];
+                var si = (JObject)jOrder["fulfillmentInfo"];
                 si.Add("availableShippingMethods", asm);
             }
 
@@ -406,8 +406,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string apiBase { get; set; }
         }
 
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.OrderConfirmationAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Confirmation(string orderId)
         {
@@ -463,7 +463,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 var jItems = (JArray)jOrder["items"];
 
-                for (int i = 0; i < order.Items.Count; i++)
+                for (var i = 0; i < order.Items.Count; i++)
                 {
                     if (order.Items[i].FulfillmentMethod == FulfillmentMethodConst.SHIP)
                     {

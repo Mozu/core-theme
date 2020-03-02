@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNetCore.Http;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
@@ -53,15 +54,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         Site LookupSite(int siteid)
         {
-            ISitesWebApiClient client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
-            ServiceClientResponse<Site> siteRes = client.GetSite(siteid, false).Result;
+            var client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
+            var siteRes = client.GetSite(siteid, false).Result;
             return siteRes.ReadAsSync();
         }
 
         Tenant.Contracts.Tenant LookupTenant(int tenant)
         {
-            ITenantsWebApiClient client = Request.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
-            ServiceClientResponse<Tenant.Contracts.Tenant> res = client.GetTenantInternal(tenant,includeSoftDeletes:false, includeInactiveChildren:false).Result;
+            var client = Request.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
+            var res = client.GetTenantInternal(tenant,includeSoftDeletes:false, includeInactiveChildren:false).Result;
             return res.ReadAsSync();
         }
 
@@ -104,7 +105,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 context = x;
                 if (site.HasValue)
                 {
-                    Site siteLookup = _siteLookup.GetOrAdd(site.Value, LookupSite);
+                    var siteLookup = _siteLookup.GetOrAdd(site.Value, LookupSite);
                     if (siteLookup == null)
                     {
                         throw new FileNotFoundException("cant find site:" + site);
@@ -223,7 +224,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
                 throw ex;
             }
-            string ct = result.ResponseMessage.Content.Headers.ContentType != null
+            var ct = result.ResponseMessage.Content.Headers.ContentType != null
                 ? result.ResponseMessage.Content.Headers.ContentType.MediaType
                 : null;
             if (ct == "text/json" || string.IsNullOrEmpty(ct))
@@ -288,11 +289,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return null;
             }
-            Guid guid;
-            
-           
 
-            if (Guid.TryParse(genSettings.MissingImageSubstitute, out guid))
+
+            if (Guid.TryParse(genSettings.MissingImageSubstitute, out var guid))
             {
                 result = await _docRepo.TransformDocumentContent(
                     documentListName: "files@mozu",
@@ -347,23 +346,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             originalQuery["_mzts"] = timeStamp.Ticks.ToString();
             if (isLatestRequest)
             {
-                UriBuilder latestRedirectUrl = new UriBuilder(originalUri);
+                var latestRedirectUrl = new UriBuilder(originalUri);
                 latestRedirectUrl.Query = originalQuery.ToString();
                 return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
             }
 
-            UriBuilder ub = new UriBuilder();
+            var ub = new UriBuilder();
             ub.Scheme = this.PageContext.IsSecure ? "https" : "http";
             ub.Host = cdnHost;
 
 
             ub.Path = string.Equals( list , "files@mozu", StringComparison.OrdinalIgnoreCase)
-                ? string.Format("{0}-m{1}/cms/files/{2}", this.SbApiContext.TenantId, this.SbApiContext.MasterCatalogId.GetValueOrDefault(1),
-                    documentId)
-                : string.Format("{0}-{1}/cms/{2}/{3}", this.SbApiContext.TenantId,
-                    (this.SbApiContext.SiteId.HasValue
-                        ? this.SbApiContext.SiteId.Value.ToString()
-                        : "m-" + this.SbApiContext.MasterCatalogId.GetValueOrDefault(1)), list, documentId);
+                ? $"{this.SbApiContext.TenantId}-m{this.SbApiContext.MasterCatalogId.GetValueOrDefault(1)}/cms/files/{documentId}"
+                : $"{this.SbApiContext.TenantId}-{(this.SbApiContext.SiteId.HasValue ? this.SbApiContext.SiteId.Value.ToString() : "m-" + this.SbApiContext.MasterCatalogId.GetValueOrDefault(1))}/cms/{list}/{documentId}";
             ub.Query = queryOverride ?? originalQuery.ToString();
 
 
@@ -372,7 +367,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         string GetContentType(string fileName)
         {
-            string fileExtension = Path.GetExtension(fileName);
+            var fileExtension = Path.GetExtension(fileName);
             switch (fileExtension)
             {
                 case ".txt":
@@ -411,19 +406,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 Range = range;
             }
 
-            protected override void WriteFile(HttpResponseBase response)
+            protected override void WriteFile(HttpResponse response)
             {
                 processFileName(response);
-                response.Cache.SetCacheability(HttpCacheability.Public);
-                response.Cache.SetExpires(DateTime.Now.AddDays(1));
+                response.Headers.Add("Cache-Control", "public,max-age=86400");
                 base.WriteFile(response);
             }
 
-            void processFileName(HttpResponseBase response)
+            void processFileName(HttpResponse response)
             {
                 if (_fileName != null)
                 {
-                    response.AddHeader("Content-Disposition", "attachment; filename=" + _fileName);
+                    response.Headers.Add("Content-Disposition", "attachment; filename=" + _fileName);
                 }
             }
         }
@@ -432,7 +426,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             public override void ExecuteResult(HttpRequestMessage requestMessage)
             {
-                HttpResponseBase response = requestMessage.HttpContext().Response;
+                var response = requestMessage.HttpContext().Response;
                 response.StatusCode = 304;
             }
         }

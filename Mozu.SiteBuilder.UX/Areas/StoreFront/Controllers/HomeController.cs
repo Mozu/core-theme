@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Mozu.Core.Actions;
+﻿using Mozu.Core.Actions;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
 using Mozu.SiteBuilder.Mvc.ActionResults;
@@ -14,6 +13,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Mozu.SiteBuilder.Mvc.OAF;
 using System;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -24,8 +24,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public HomeController() { }
 
         //
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
-        [SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController, Priority = ActionFilterConstants.GlobalPageBeforePriority)]
+        //[SbActionExtensionFilter(actionId: ActionFilterConstants.GlobalPageAfterAction, executionType: ActionExtensionExecutionTypes.AfterController, Priority = ActionFilterConstants.GlobalPageAfterPriority)]
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> Index()
         {
@@ -76,7 +76,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         public async Task<HttpResponseMessage> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
-            var resp = await webToolsRepository.GetWebMasterToolsFile(string.Format("google{0}.html", hash));
+            var resp = await webToolsRepository.GetWebMasterToolsFile($"google{hash}.html");
             if (resp.ResponseMessage.IsSuccessStatusCode)
             {
                 var stream = await resp.ResponseMessage.Content.ReadAsStreamAsync();

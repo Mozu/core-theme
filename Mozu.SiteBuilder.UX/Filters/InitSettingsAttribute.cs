@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
-using Autofac;
 using Mozu.Core.Api.Client;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -36,9 +35,6 @@ namespace Mozu.SiteBuilder.UX.Filters
 
         }
 
-        public bool AllowMultiple
-        {
-            get { return false; }
-        }
+        public bool AllowMultiple => false;
     }
 }

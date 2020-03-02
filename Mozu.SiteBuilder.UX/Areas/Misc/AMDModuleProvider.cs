@@ -76,20 +76,20 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             {
                 return new Tuple<string, string>(string.Empty, string.Empty);
             }
-            List<string> namedDeps = new List<string>();
-            List<string> anonDeps = new List<string>();
-            List<string> args = new List<string>();
+            var namedDeps = new List<string>();
+            var anonDeps = new List<string>();
+            var args = new List<string>();
 
             //string[] dep;
 
-            int nestingLevel = 0;
-            int lastCommaIndex = -1;
-            bool isComma = false;
+            var nestingLevel = 0;
+            var lastCommaIndex = -1;
+            var isComma = false;
             char chr;
             string depName;
             Match depMatch;
-            char[] requireCharArray = requireString.ToCharArray();
-            for (int i = 0; i < requireCharArray.Length; i++)
+            var requireCharArray = requireString.ToCharArray();
+            for (var i = 0; i < requireCharArray.Length; i++)
             {
                 chr = requireCharArray[i];
                 if (chr == '[') nestingLevel++;
@@ -122,7 +122,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
         public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport, bool debug)
         {
-            string contents = GetScriptFileContents(pathinfo);
+            var contents = GetScriptFileContents(pathinfo);
             if (contents == null)
             {
                 return new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -131,8 +131,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
                     Content = new StringContent("File " + pathinfo + " not found.")
                 };
             }
-            Tuple<string, string> deps = GetAMDDeps(shimRequire);
-            string module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
+            var deps = GetAMDDeps(shimRequire);
+            var module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
                 RequestMessage = req,

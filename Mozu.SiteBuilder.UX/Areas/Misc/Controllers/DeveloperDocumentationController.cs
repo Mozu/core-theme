@@ -9,6 +9,7 @@ using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Tags;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using NDjango.Interfaces;
 using Mozu.SiteBuilder.Mvc.Controllers;
 
@@ -30,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [System.Web.Http.HttpGet]
         public ActionResult Tags()
         {
-            List<DjangoItemInfo> itemInfos = BuildTagInfos();
+            var itemInfos = BuildTagInfos();
 
             ViewData.Model = itemInfos;
             ViewData["itemtype"] = "Filters";
@@ -52,7 +53,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 get;
                 set;
             }
-            public String DocUrl { get; set; }
+            public string DocUrl { get; set; }
             public List<string> Examples
             {
                 get;
@@ -79,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
 
             var summaries = GetSummeries(this.HttpContext);
-            List<DjangoItemInfo> itemInfos = new List<DjangoItemInfo>();
+            var itemInfos = new List<DjangoItemInfo>();
             var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
             var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
 
@@ -122,7 +123,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <code>i like fudge</code>
         /// <param name="context"></param>
         /// <returns></returns>
-        static Dictionary<string, string> GetSummeries(System.Web.HttpContextBase context)
+        static Dictionary<string, string> GetSummeries(HttpContext context)
         {
             if (_assumblyTypeSummeries != null)
             {
@@ -137,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 {
                     throw new FileNotFoundException("documentation file missing " + xmlFile, xmlFile);
                 }
-                XDocument xdoc = XDocument.Load(fullPath);
+                var xdoc = XDocument.Load(fullPath);
 
                 var kvps = xdoc.Root.Element("members").Elements("member").Where(mem => ((string)mem.Attribute("name")).StartsWith("T:")).Select(
                     mem => new KeyValuePair<string, string>(
@@ -148,7 +149,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 var items = kvps.Where(x => dic.ContainsKey(x.Key)).ToList();
                 if (items.Any())
                 {
-                    throw new Exception(String.Join(" ", items));
+                    throw new Exception(string.Join(" ", items));
                 }
                 dic.AddRange(kvps);
 
@@ -165,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return null;
             }
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var node in elm.Nodes())
             {
                 if (node.NodeType == XmlNodeType.Element)

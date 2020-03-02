@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
 {
@@ -44,7 +45,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             if (!GetExtendsRegex.IsMatch(info.scrubbedContent)) return new List<TemplateInfo> { info }; // base case
             var parents = await GetParentInfos(_pathProvider, info.key, _contentRetriever);
             var allTemplateInfos = new List<TemplateInfo> { info }.Concat(parents);
-            _logger.Info(string.Format("inheritance chain for {0}: {1}", info.ToString(), string.Join(", ", allTemplateInfos.Select(y => y.ToString()))));
+            _logger.Info(
+                $"inheritance chain for {info.ToString()}: {string.Join(", ", allTemplateInfos.Select(y => y.ToString()))}");
             return TransformAndMapTemplates(allTemplateInfos); // else have to fetch and merge in all the parents
         }
 
@@ -86,14 +88,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         static string TransformContent(string content, string newExtendsPath)
         {
             var replaceString = CreateFullReplaceString(content);
-            var newString = string.Format("\"{0}\"", newExtendsPath);
+            var newString = $"\"{newExtendsPath}\"";
             var extendsTagReplaced = content.Replace(replaceString, newString);
             return ScrubCommentsFromTemplate(extendsTagReplaced);
         }
 
         static string MakeExtendsPath(string basePath, string themeId)
         {
-            var interimExtendsPath = string.Format("{0}__{1}", basePath.Replace("\"", string.Empty).Replace("'", string.Empty).Replace("\\", "/"), themeId);
+            var interimExtendsPath =
+                $"{basePath.Replace("\"", string.Empty).Replace("'", string.Empty).Replace("\\", "/")}__{themeId}";
             return ScrubVirtualPath(interimExtendsPath);
         }
 
@@ -103,7 +106,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             var pathPart = m.Groups["path"].Value;
             var junkPart = m.Groups["junk"].Value;
             var filterPart = m.Groups["filter"].Value;
-            var all = string.Format("{0}{1}{2}", pathPart, junkPart, filterPart);
+            var all = $"{pathPart}{junkPart}{filterPart}";
             return all;
         }
 
@@ -118,7 +121,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
         static async Task<IEnumerable<TemplateInfo>> GetParentInfos(IMozuVirtualPathProvider vpp, string virtualPath, IThemeContentRetriever contentRetriever)
         {
 
-            var theme = vpp.GetThemeFileInfo(string.Format("templates/{0}", virtualPath), false);
+            var theme = vpp.GetThemeFileInfo($"templates/{virtualPath}", false);
             if (theme == null) return Enumerable.Empty<TemplateInfo>();
 
             var parents = new List<ThemeFileSystemInfo>();

@@ -192,10 +192,10 @@ namespace Mozu.SiteBuilder.UX.Constants
                 dic["." + mimeMatch.Key] = mimeMatch.Value;
             }
 
-            foreach (string keyName in Registry.ClassesRoot.GetSubKeyNames())
+            foreach (var keyName in Registry.ClassesRoot.GetSubKeyNames())
             {
-                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(keyName, false);
-                object contentType = regKey.GetValue("Content Type");
+                var regKey = Registry.ClassesRoot.OpenSubKey(keyName, false);
+                var contentType = regKey.GetValue("Content Type");
                 if (contentType != null)
                 {
                     dic[keyName] = contentType.ToString();
