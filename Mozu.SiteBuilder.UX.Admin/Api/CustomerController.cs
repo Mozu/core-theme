@@ -677,7 +677,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 var contactsToDel = dcExistingCustomer.Contacts.Except(dcCustomer.Contacts, comparer).ToList();
 
                 contactManagementTasks.AddRange(contactsToUpdate.Select(con =>
-                    _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id)));
+                    _customerWebApiClient.UpdateAccountContact(con, con.AccountId, con.Id, dcExistingCustomer.UserId)));
                 contactManagementTasks.AddRange(contactsToAdd.Select(con =>
                     _customerWebApiClient.AddAccountContact(con, con.AccountId)));
                 contactDeleteTasks.AddRange(contactsToDel.Select(con =>
