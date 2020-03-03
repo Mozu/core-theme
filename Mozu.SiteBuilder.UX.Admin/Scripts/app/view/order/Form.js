@@ -247,13 +247,14 @@ Ext.define('Taco.view.order.Form', {
 
         items.push(this.headerCmp);
 
-        this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg));
+        this.orderDetailPanel = Ext.create('Taco.view.order.subform.Detail', Ext.apply({}, subformCfg)); 
 
         this.paymentPanel = Ext.create('Taco.view.order.subform.Payment', Ext.apply({}, subformCfg));
 
         this.auditLogPanel = Ext.create('Taco.view.order.subform.AuditLog', subformCfg);
 
         var isOnlineOrder = me.record.get("orderType") === "Online";
+        var isFulfillerUser = Taco.user.isFulfillerUser;
 
         // we always show for online orders. for offline orders we need hide the detail panel until the header is filled out.
         if (isOnlineOrder || me.isHeaderDataComplete()) {
@@ -263,14 +264,14 @@ Ext.define('Taco.view.order.Form', {
         //If this is legacy order then dont show the shipments,payment and returns tab
         if (this.record.get('isUnified')) {
             //Todo:here we have to switch new or old tabs based on tenant configs
-            if (this.isEdit()) {
+            if (!isFulfillerUser && this.isEdit()) {
                 items.push(Ext.create('Taco.view.order.subform.FulfillmentNew', subformCfg));
             }
         }
 
         if (this.record.get('isUnified')) {
             // we always show for online orders and conditionaly show for offline orders
-            if (isOnlineOrder || (me.isHeaderDataComplete() && this.record.get("items").length)) {
+            if (!isFulfillerUser && (isOnlineOrder || (me.isHeaderDataComplete() && this.record.get("items").length))) {
                 items.push(this.paymentPanel);
             }
         }

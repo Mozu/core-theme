@@ -102,12 +102,17 @@ export class UtilityService {
     }
     public filterLinksByBehaviorId = (accessLinks: any, loggedInUsersData: any) => {
         const loggedInUsersBehaviorIds = loggedInUsersData._sharedData.items.ctUser.behaviorIds;
+        var isFulfillerUser = loggedInUsersData._sharedData.items.ctUser.isFulfillerUser;
 
         let allFilteredLinks = [];
         let isMenuVisible = false;
         allFilteredLinks = _.filter(accessLinks, (v: any) => {
             if (v.visible) {
-                if (v.behaviorIds) {
+                if (isFulfillerUser && !Constants.fullfillerAccessibleLinks.includes(v.id))
+                {
+                    isMenuVisible = false; 
+                }
+                else if (v.behaviorIds) {
                     isMenuVisible = (loggedInUsersBehaviorIds.includes(v.behaviorIds));
                 } else if (v.id === Constants.localization.localizationAccessLink) {
                     this.getMultiLangAndCurrencyFlag(loggedInUsersData._sharedData.items.ctTaContext);
@@ -122,7 +127,10 @@ export class UtilityService {
         _.map(allFilteredLinks, function (el) {
             const filteredSubItems = _.filter(el.items, function (el: any) {
                 if (el.visible) {
-                    if (el.behaviorIds) {
+                    if (isFulfillerUser && !Constants.fullfillerAccessibleSubLinks.includes(el.id)) {
+                        isMenuVisible = false;
+                    }
+                    else if (el.behaviorIds) {
                         isMenuVisible = (loggedInUsersBehaviorIds.indexOf(el.behaviorIds) >= 0);
                     } else {
                         isMenuVisible = true;
@@ -132,7 +140,17 @@ export class UtilityService {
             });
             el.items = filteredSubItems;
         });
+        
+        return this.filterLinksByOMSEnabledFlag(allFilteredLinks, loggedInUsersData);
+    }
 
+    public filterLinksByOMSEnabledFlag(allFilteredLinks: any, loggedInUsersData: any) {
+        if (!loggedInUsersData._sharedData.items.ctTaContext.omsEnabled) {
+            if (allFilteredLinks.some(x => x.id === Constants.orderRoutingNavigationId)) {
+                const orderRoutingIndex = allFilteredLinks.findIndex((eachItem) => { return eachItem.id === Constants.orderRoutingNavigationId });
+                allFilteredLinks.splice(orderRoutingIndex, 1);
+            }
+        }
         return allFilteredLinks;
     }
 

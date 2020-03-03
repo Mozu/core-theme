@@ -121,7 +121,7 @@ export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy
       this.model.filteredNavigationLinks = this.utilityService.filterLinksByBehaviorId(
         leftNavigationItemsSuccessResponse, this._sharedDataService);
       /*import/export*/
-      if (this._sharedDataService._sharedData.items.ctEntities.length > 0) { /*if import/export app is enabled*/
+        if (this._sharedDataService._sharedData.items.ctEntities.length > 0 && !this._sharedDataService._sharedData.items.ctUser.isFulfillerUser) { /*if import/export app is enabled*/
         this.model.filteredNavigationLinks = this.appendDynamicLinks(this.model.filteredNavigationLinks);
       }
       this.model.filteredNavigationLinks = this.utilityService.populateMainNavigationLinksbyContextType(
@@ -137,10 +137,6 @@ export class NavigationLeftComponent implements OnInit, AfterViewInit, OnDestroy
         }
       });
 
-      if (!this._sharedDataService._sharedData.items.ctTaContext.omsEnabled) {
-        const orderRoutingIndex = this.model.mainItems.findIndex((eachItem) => { return eachItem.id === Constants.orderRoutingNavigationId });
-        this.model.mainItems.splice(orderRoutingIndex, 1);
-      }
       this.model.systemItems = _.filter(this.model.filteredNavigationLinks,
         function (el: any) { return el.navParent === Constants.LefMenuSystemTabJsonNavParentPrefix; });
       this.applyColorsToNavigationLinks();

@@ -51,7 +51,8 @@
                 email = user.EmailAddress,
                 sites = siteRolesJson,
                 name = (user.FirstName + " " + user.LastName).Trim(),
-                roleTags = roleTags
+                roleTags = roleTags,
+                isFulfillerUser = user.IsFulfillerUser
             },
             apiVersion = ver.FileVersion,
             localizationValues = locValues, paymentApiBaseUrl,

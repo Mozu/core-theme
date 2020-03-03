@@ -379,7 +379,8 @@ Ext.define('Taco.store.Navigation', {
             'navParent': 'main',
             'label': 'Order Routing',
             'icon': 'fa-map-signs',
-            'menucolor': 'orange'
+            'menucolor': 'orange',
+            'behaviorIds': [251]
         },
         {
             'id': 'customer',

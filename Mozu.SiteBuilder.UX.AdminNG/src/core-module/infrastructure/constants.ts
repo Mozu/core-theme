@@ -54,4 +54,8 @@ export class Constants {
     {
         logout: '/admin/auth/logout',
     };
+
+    static orderRoutingNavigationId = 'orderRouting';
+    static fullfillerAccessibleLinks = ['order', 'fulfiller'];
+    static fullfillerAccessibleSubLinks = ['orders', 'returns', 'fulfiller', 'ordersmenu', 'returnsmenu'];
 }

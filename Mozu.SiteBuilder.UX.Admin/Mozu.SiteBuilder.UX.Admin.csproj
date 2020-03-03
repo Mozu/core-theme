@@ -526,6 +526,7 @@
     <Compile Include="Helpers\QuoteHelpers\QuoteFilterExtensions.cs" />
     <Compile Include="Helpers\QuoteHelpers\QuoteSortExtensions.cs" />
     <Compile Include="Helpers\ProductVariationHelpers.cs\ProductVariationFilterExtensions.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistFilterExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistSortExtensions.cs" />
     <Compile Include="Helpers\OrderHelpers\OrderFilterExtensions.cs" />

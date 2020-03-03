@@ -233,7 +233,7 @@
         "navParent": "main",
         "label": "Order Routing",
         "imageURL": "/admin/assets/Images/reporting.png",
-        "behaviorIds": 188,
+        "behaviorIds": 251,
         "icon": "fal fa-map-signs",
         "toggleIcon": "fa fa-map-signs",
         "expanded": false,

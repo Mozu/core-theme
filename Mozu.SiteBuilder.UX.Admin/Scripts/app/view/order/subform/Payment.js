@@ -278,9 +278,11 @@ Ext.define('Taco.view.order.subform.Payment', {
         });
     },
     isGatewayGiftCardEnabled: function () {
-        return this.record.checkoutSettings.get('cardGatewayMap').find(function (card) { 
-            return card.cardType === 'GIFTCARD' && card.isEnabled 
-        });
+        if (this.record.checkoutSettings) {
+            return this.record.checkoutSettings.get('cardGatewayMap').find(function (card) {
+                return card.cardType === 'GIFTCARD' && card.isEnabled
+            });
+        }
     },
     isPurchaseOrderEnalbled: function () {
         var checkoutSettings = this.record && this.record.checkoutSettings && this.record.checkoutSettings.get('purchaseOrder') ? this.record.checkoutSettings.get('purchaseOrder').isEnabled : false;

@@ -237,7 +237,7 @@
         "id": "orderRouting",
         "navParent": "main",
         "label": "Order Routing",
-        "behaviorIds": 188,
+        "behaviorIds": 251,
         "tileIcon": "fal fa-map-signs",
         "tileIconColor": "kibo-orange",
         "visible": true,

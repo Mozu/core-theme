@@ -39,6 +39,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 using Mozu.Core.Extensions;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Controllers
 {
@@ -283,18 +284,19 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
                 adminSubNavExtensibiltyTask = _entityListsWebApiClient.GetEntityContainers("subNavLinks@mozu", 6000);
                 await adminSubNavExtensibiltyTask;
             }
-           
-            
+
+
 
 
             var user = new User
-                       {
-                           BehaviorIds = _apiContext.UserClaims.BehaviorIds,
-                           EmailAddress = userDC.EmailAddress,
-                           FirstName = userDC.FirstName,
-                           LastName = userDC.LastName,
-                           Id = _apiContext.UserClaims.UserId
-                       };
+            {
+                BehaviorIds = _apiContext.UserClaims.BehaviorIds,
+                EmailAddress = userDC.EmailAddress,
+                FirstName = userDC.FirstName,
+                LastName = userDC.LastName,
+                Id = _apiContext.UserClaims.UserId,
+                IsFulfillerUser = _apiContext.IsFulfillerUserWithOrderAccess()
+            };
 
 
             var taContext = Mapper.Map<TaContext>(tenant);

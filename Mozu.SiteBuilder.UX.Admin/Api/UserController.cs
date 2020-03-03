@@ -32,6 +32,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.Controllers;
+using Mozu.SiteBuilder.UX.Admin.Helpers;
 
 namespace Mozu.SiteBuilder.UX.Admin.Api
 {
@@ -155,7 +156,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                        Models.Account.User ContextUser = Mapper.Map<Models.Account.User>(t.Result.ReadAsAsync().Result);
                        ContextUser.BehaviorIds = this._apiContext.UserClaims.BehaviorIds;
                        ContextUser.Id = this._apiContext.UserClaims.UserId;
-
+                       ContextUser.IsFulfillerUser = this._apiContext.IsFulfillerUserWithOrderAccess(); 
                        return ContextUser;
                    }
                    return null;

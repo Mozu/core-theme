@@ -59,10 +59,25 @@ Ext.define('Taco.view.navigation.PrimaryMenuContainer', {
         if (this.isBound) {
             return;
         }
+        const fullfillerAccessibleLinks = ['order', 'fulfillment', 'help-system', 'help-main'];
+        const fullfillerAccessibleSubLinks = ['orders', 'returns'];
+        if (Taco.user.isFulfillerUser) {
+            store.filterBy(function (rec) {
+                return fullfillerAccessibleLinks.includes(rec.get('id'));
+            });
+        }
         this.store = store;
         var colorArray = ['purple', 'green', 'blue', 'orange'];
         var currentIndex = 0;
         this.store.each(function (record, idx) {
+            if (Taco.user.isFulfillerUser) {
+                if (record.data.items != "") {
+                    var filteredItems = record.data.items.filter(function (rec) {
+                        return fullfillerAccessibleSubLinks.includes(rec.id);
+                    });
+                    record.data.items = filteredItems;
+                }
+            }
             switch (record.get('navParent')) {
                 case 'main':
                     record.set('menucolor', colorArray[idx % 4]);
