@@ -10,7 +10,8 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ shipment.orderNumber }}</span></div>
-        <div class="order-number"><span class="label">Pick Wave #</span><span>{{ pickwave.pickWaveId }}</span></div>
+      {% if displayExternalId %}<div class="order-number"><span class="label">External Order #</span><span>{{ shipment.externalOrderId }}</span></div>{% endif %}
+      <div class="order-number"><span class="label">Pick Wave #</span><span>{{ pickwave.pickWaveId }}</span></div>
         <div class="order-date"><span class="label">Date: </span><span>{{ shipment.orderSubmitDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
@@ -24,7 +25,6 @@
             <th>UPC</th>
             <th>SKU</th>
             <th>Product Name</th>
-            <th>Order#s</th>
             <th>Qty Needed</th>
             <th>Qty Picked</th>
         </tr></thead>
@@ -46,9 +46,6 @@
                   </td>
                   <td>
                       <div class="product-name">{{ item.name }}</div>
-                  </td>
-                  <td>
-                      {{ item.orderNumber }}
                   </td>
                   <td>
                       {{ item.quantity }}
