@@ -45,7 +45,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
-            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
             return resp;
         }
 
@@ -59,7 +59,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string destinationUrl = $"/back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}";
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
-            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
             return resp;
         }
 
@@ -73,7 +73,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             string destinationUrl = "/back-office/order-pick-sheets/" + pickWaveNumber;
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
-            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
             return resp;
         }
 
@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
-            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
+            resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
             return resp;
         }
 
