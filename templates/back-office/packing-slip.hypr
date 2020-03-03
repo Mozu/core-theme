@@ -9,6 +9,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ order.orderNumber }}</span></div>
+		{% if displayExternalId %}<div class="order-number"><span class="label">External Order #</span><span>{{ order.externalId }}</span></div>{% endif %}
         <div class="order-date"><span class="label">Date: </span><span>{{ order.submittedDate|date(themeSettings.backofficeDateTimeFormat) }}</span></div>
     </th>
 </tr></thead>
