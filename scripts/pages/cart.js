@@ -48,7 +48,29 @@ define(['modules/api',
                 window.onVisaCheckoutReady = initVisaCheckout;
                 require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
             }
-
+            //Update currency rate for BF.
+            var currencyRate = pageContext.currencyRateInfo.rate;
+            var currencySymbol = pageContext.currencyInfo.symbol; 
+            var discountThresholdMesssages = this.model.attributes.discountThresholdMessages;
+            //check if threshold message is available
+            if(discountThresholdMesssages){
+              for(var p = 0; p < discountThresholdMesssages.length; p++){
+                var self = discountThresholdMesssages[p];
+                if(self.message){
+                  var msg = self.message.split(" ");
+                  for(var q=0; q< msg.length; q++){
+                    if(msg[q].indexOf("$") !== -1){
+                      var price = msg[q].replace("$", "");
+                      price = parseInt(price,10) * currencyRate;
+                      msg[q] = currencySymbol + price.toFixed(2);
+                    }
+                  }
+                  self.messaage = msg.join(" ");
+                }
+                this.model.attributes.discountThresholdMessages[p] = self.messaage;
+              }
+            }
+            
             me.messageView = new ThresholdMessageView({
               el: $('#mz-discount-threshold-messages'),
               model: this.model
