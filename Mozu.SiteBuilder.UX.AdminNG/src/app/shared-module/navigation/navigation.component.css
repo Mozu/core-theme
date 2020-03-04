@@ -18,6 +18,11 @@
     margin-top: 0px !important;
     margin-left: 319px;
 }
+.toolbar-height0
+{
+   height: 0;
+  
+}
 
 @media screen and (max-width: 480px) {
     .toolbar-main {

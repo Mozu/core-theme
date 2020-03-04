@@ -8,6 +8,7 @@ export class TopLocationGroupsModel {
     locationGroupSelectedSiteId: string;
     locationGroupSiteIds: any[];
     isShowLocationGroupTabActive : boolean;
+    isShowLocationGroupList : boolean;
 }
 
 export class TopLocationGroupConfigModel {

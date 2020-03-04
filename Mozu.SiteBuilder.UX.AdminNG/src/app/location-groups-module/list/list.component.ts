@@ -26,7 +26,7 @@ import { LocationGroupListModel } from './list.model';
 import { LocationGroupsListService } from './list.service';
 import { NotificationService } from '@global';
 import * as _ from 'lodash';
-import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
+import { TopLocationGroupConfigModel } from '@shared/header/location-groups/header-location-groups.model';
 
 @Component({
     selector: 'location-group-list',

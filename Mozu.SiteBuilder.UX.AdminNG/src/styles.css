@@ -176,6 +176,40 @@ body .ui-tabview .ui-tabview-panels {
     padding: 0.78em !important;
 }
 
+.primary-yellow-btn{
+    background-color: #ffce01!important;
+    color: #2b2b2b!important;
+    font-weight: 600 !important;
+    font-size: 15px!important;
+    font-family: Roboto,sans-serif!important;
+    height: 40px !important;
+    border: none !important;
+}
+
+.primary-yellow-btn:hover{
+    opacity: 1 !important;
+    background-color: #ffeb3b!important;
+}
+
+.primary-cancel-btn:hover{
+    background: #633095;
+    text-decoration: underline !important;
+}
+
+.primary-cancel-btn{
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #7c7c7c !important;
+    font-size: 12px !important;
+    line-height: 40px !important;
+    padding: 0 8px !important;
+    color: #fff!important;
+    opacity: 1 !important;
+}
+
+
+
+
 .ui-widget-content {
     border: 0 !important;
 }

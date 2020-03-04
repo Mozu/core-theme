@@ -41,7 +41,7 @@ import {
     NavigationLeftComponent,
     AccessTileComponent,
     NavigationTopQuotesComponent,
-    NavigationTopLocationGroupsComponent,
+    HeaderLocationGroupsComponent,
     HeaderComponent,
     HeaderOmsNavigationComponent,
     AppHomeComponent,
@@ -128,7 +128,6 @@ export function createTranslateLoader(http: HttpClient) {
         RestrictInput,
         EnableDisableControls,
         DateCompareDirective,
-
         // components
         NavigationComponent,
         NavigationTopShellComponent,
@@ -141,8 +140,8 @@ export function createTranslateLoader(http: HttpClient) {
         HeaderOmsNavigationComponent,
         AppHomeComponent,
         AccessTileComponent,
-        NavigationTopQuotesComponent,
-        NavigationTopLocationGroupsComponent,
+        NavigationTopQuotesComponent,        
+        HeaderLocationGroupsComponent,
         AdvancedSearchComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,
@@ -219,7 +218,8 @@ export function createTranslateLoader(http: HttpClient) {
         AppHomeComponent,
         AccessTileComponent,
         NavigationTopQuotesComponent,
-        NavigationTopLocationGroupsComponent,
+        
+        HeaderLocationGroupsComponent,
         AdvancedSearchComponent,
         PhysicalLocationsComponent,
         LocationsListComponent,

@@ -19,7 +19,7 @@ import { CreateLocationGroupService } from '../create';
 import { LocationGroupModel, SiteModel } from '../create/location.group.model';
 import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
 import { forkJoin } from 'rxjs';
-import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
+import { TopLocationGroupConfigModel } from '@shared/header/location-groups/header-location-groups.model';
 
 @Component({
     selector: 'app-locationgroup-config',

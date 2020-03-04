@@ -184,10 +184,10 @@ p {
 
 .mozu-c-btn__circle-one:after,
 .mozu-c-btn__circle-two:after {
-	animation-duration: 1.4s;
-	animation-iteration-count: infinite;
-	animation-name: pulse;
-	animation-timing-function: ease-out;
+	animation-duration: 1.4s !important;
+	animation-iteration-count: infinite !important;
+	animation-name: pulse !important;
+	animation-timing-function: ease-out !important;
 	border: .2em solid #fff;
 	border-radius: 5em;
 	content: "";

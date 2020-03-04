@@ -10,12 +10,12 @@ import { Constants } from '@shared/infrastructure/constants';
 import { environment } from '@env';
 
 @Injectable()
-export class TopLocationGroupsService {
+export class HeaderLocationGroupsService {
     constructor(private _http: HttpClientService,
         private _loggerService: LoggerService) { }
 
     public getLocationGroup(locationGroupCode: string): Observable<any> {
-        this._loggerService.info('TopLocationGroupsService: getLocationGroup');
+        this._loggerService.info('HeaderLocationGroupsService: getLocationGroup');
         if (environment.isUseMocks) {
             return this._http.get(Constants.JsonResources.getLocationGroup);
         } else {

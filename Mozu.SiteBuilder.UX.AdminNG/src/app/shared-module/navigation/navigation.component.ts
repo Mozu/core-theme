@@ -2,7 +2,7 @@
     Component,
     OnInit,
     OnDestroy,
-    Input,
+    Input,    
     ChangeDetectionStrategy,
     ChangeDetectorRef
 } from '@angular/core';
@@ -15,6 +15,8 @@ import { NavigationContainerType } from '@shared/infrastructure/enums';
 
 import { NavigationService } from './navigation.service';
 import { NotificationService } from '@global';
+import { Location } from "@angular/common";
+import { Router} from "@angular/router";
 
 @Component({
     moduleId: module.id,
@@ -28,9 +30,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
     subscriptions: Subscription[];
     @Input() navigationContainerType: string;
-    navigationType = NavigationContainerType;
+    navigationType = NavigationContainerType;    
     navigationContainerCSSClass = 'toolbar-main';
     constructor(
+        private router: Router,
+        private location: Location,
         private _loggerService: LoggerService,
         private _notificationService: NotificationService,
         private _changeDetectorRef: ChangeDetectorRef
@@ -39,24 +43,34 @@ export class NavigationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._loggerService.info('NavigationComponent : ngOnInit ');
+        this._loggerService.info('NavigationComponent : ngOnInit ');     
         this.subscriptions.push(
             this._notificationService.expandHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
                 if (navContainerType === NavigationContainerType.dashboard) {
                     this.navigationContainerCSSClass = 'toolbar-main-dashboard';
                 } else {
-                    this.navigationContainerCSSClass = 'toolbar-main';
+                    if (navContainerType == NavigationContainerType.locationGroups) {
+                        this.navigationContainerCSSClass = 'toolbar-height0'
+                    }
+                    else {
+                        this.navigationContainerCSSClass = 'toolbar-main';
+                    }
                 }
                 this._changeDetectorRef.detectChanges();
             })
         );
         this.subscriptions.push(
             this._notificationService.collapseHamburgerMenuNotification.subscribe((navContainerType: NavigationContainerType) => {
-                this.navigationContainerCSSClass = 'toolbar-main';
+                if (navContainerType == NavigationContainerType.locationGroups) {
+                    this.navigationContainerCSSClass = 'toolbar-height0'
+                }
+                else {
+                    this.navigationContainerCSSClass = 'toolbar-main';
+                }
                 this._changeDetectorRef.detectChanges();
             })
         );
-    }
+    } 
 
     ngOnDestroy() {
         this._loggerService.info('NavigationComponent : ngOnDestroy ');

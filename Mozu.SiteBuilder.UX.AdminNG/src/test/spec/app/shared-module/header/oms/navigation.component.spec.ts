@@ -11,7 +11,7 @@ import { AuthService } from '@core/extensions/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { GlobalModule } from "@global/global.module";
 
-fdescribe('HeaderOmsNavigationComponent', () => {
+describe('HeaderOmsNavigationComponent', () => {
   let component: HeaderOmsNavigationComponent;
   let fixture: ComponentFixture<HeaderOmsNavigationComponent>;
   let de: DebugElement;

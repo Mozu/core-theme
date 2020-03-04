@@ -3,7 +3,8 @@ import {
          OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  HostListener
 } from '@angular/core';
 import {
   Router,
@@ -14,37 +15,79 @@ import {
 } from '@angular/router';
 import { NotificationService } from '@global';
 import { Constants, NotificationLGActions } from '@shared/infrastructure';
-import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './top-location-groups.model';
+import { TopLocationGroupsModel, TopLocationGroupConfigModel } from './header-location-groups.model';
 import * as _ from 'lodash';
 import { LoggerService, ErroNotificationType, ErrorCode, HttpError } from '@core';
-import { TopLocationGroupsService } from './top-location-groups.service';
+import { HeaderLocationGroupsService } from './HeaderLocationGroupsService';
+import { Location } from "@angular/common";
   @Component({
-    selector: 'navigation-top-location-groups',
-    templateUrl: './top-location-groups.component.html',
-    styleUrls: ['./top-location-groups.component.css'],
-  providers: [TopLocationGroupsService],
+    selector: 'header-location-groups',
+    templateUrl: './header-location-groups.component.html',
+    styleUrls: ['./header-location-groups.component.css'],
+  providers: [HeaderLocationGroupsService],
   changeDetection: ChangeDetectionStrategy.OnPush
   })
-  export class NavigationTopLocationGroupsComponent implements OnInit, OnDestroy {
+
+  export class HeaderLocationGroupsComponent implements OnInit, OnDestroy {
     public model: TopLocationGroupsModel;
     subscriptions = [];
     constructor(private router: Router,
+      private location: Location, 
       private _notificationService: NotificationService,
       private route: ActivatedRoute,
       private _loggerService: LoggerService,
-      private topLocationGroupsService: TopLocationGroupsService,
-      private _changeDetectorRef: ChangeDetectorRef) {
+      private headerLocationGroupsService: HeaderLocationGroupsService,
+      private _changeDetectorRef: ChangeDetectorRef) {        
     }
-    ngOnInit() {
+    ngOnInit() {      
       this.model = new TopLocationGroupsModel();
       this.model.locationGroupURL = Constants.uiRoutes.locationGroups;
       this.model.isEditMode = false;
       this.model.isConfigTabVisible = false;
+      this.model.isShowLocationGroupList = false;      
+      this._changeDetectorRef.detectChanges();      
+      if(this.model.isShowLocationGroupTabActive)
+        {
+          this.model.isEditMode = true;
+          this.model.isConfigTabVisible = true;
+        }                     
+          if (this.location.path().includes(Constants.uiRoutes.locationGroupCreate))
+           {
+            this.model.isEditMode = true;
+            this.model.isConfigTabVisible = false;           
+            this._changeDetectorRef.detectChanges();
+          }
+
+          if (this.location.path().includes(Constants.uiRoutes.locationGroups)) {
+            this.model.isEditMode = false;
+            this.model.isConfigTabVisible = false;
+            this._changeDetectorRef.detectChanges();
+          }
+
+        this.subscriptions.push(  this.router.events.subscribe(val => {
+            if (this.location.path().includes(Constants.uiRoutes.locationGroups)){
+            if(this.model.isShowLocationGroupTabActive)
+            {
+              const primarySegments: UrlSegment[] = this.GetPath();
+              if (primarySegments && primarySegments.length) {
+              const path =  primarySegments[0].path;
+              if (path === Constants.uiRoutes.locationGroups) {
+              this.model.isEditMode = false;
+              this.model.isConfigTabVisible  = false;
+              this.model.isShowLocationGroupTabActive = false;
+              if (!this._changeDetectorRef['destroyed'])
+              this._changeDetectorRef.detectChanges();            
+            }    
+        }
+        }       
+    }
+  }));
+
     this.model.isShowLocationGroupTabActive = false;
       this.checkMode();
       this.subscriptions.push(
         this._notificationService.locationGroupAdded.subscribe((action: any) => {
-            if (action === NotificationLGActions.saved || action === NotificationLGActions.cancelled || action === NotificationLGActions.navigateFromLeftMenu) {
+            if (action === NotificationLGActions.cancelled || action === NotificationLGActions.navigateFromLeftMenu) {
               this.model.isEditMode = false;
               this.model.isConfigTabVisible  = false;
           this.model.isShowLocationGroupTabActive = false;
@@ -75,6 +118,7 @@ import { TopLocationGroupsService } from './top-location-groups.service';
               this.model.locationGroupSelectedSiteId = topLocationGroupConfigModel.locationGroupSiteIds[0];
             }
             this.model.locationGroupSiteIds = topLocationGroupConfigModel.locationGroupSiteIds;
+            if (!this._changeDetectorRef['destroyed'])
           this._changeDetectorRef.detectChanges();
           }
         })
@@ -85,66 +129,60 @@ import { TopLocationGroupsService } from './top-location-groups.service';
           s.unsubscribe();
       });
     }
-    checkMode() {
-        const urltree = this.router.parseUrl(this.router.url);
-        const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
-        const primarySegments: UrlSegment[] = primary.segments;
-        if (primarySegments && primarySegments.length) {
-          const path =  primarySegments[0].path;
-          if (path === Constants.uiRoutes.locationGroups) {
-            this.model.isEditMode = false;
-            this.model.isConfigTabVisible  = false;
+    
+    checkMode()
+    { const primarySegments: UrlSegment[] = this.GetPath();
+      if (primarySegments && primarySegments.length) {
+        const path =  primarySegments[0].path;      
+      if (path === Constants.uiRoutes.locationGroupConfig) 
+      {
+        this.model.isEditMode = false;
+        this.model.isConfigTabVisible  = true;
         this.model.isShowLocationGroupTabActive = false;
-        this._changeDetectorRef.detectChanges();
-          }
-          if (path === Constants.uiRoutes.locationGroupCreate) {
-            this.model.isEditMode = true;
-            this.model.isConfigTabVisible  = false;
-        this.model.isShowLocationGroupTabActive = false;
-        this._changeDetectorRef.detectChanges();
-          }
-          if (path === Constants.uiRoutes.locationGroupEdit) {
-            this.model.isEditMode = true;
-            this.model.isConfigTabVisible  = true;
-        this.model.isShowLocationGroupTabActive = true;
-        this._changeDetectorRef.detectChanges();
-          }
-          if (path === Constants.uiRoutes.locationGroupConfig) {
-            this.model.isEditMode = false;
-            this.model.isConfigTabVisible  = true;
-        this.model.isShowLocationGroupTabActive = true;
-            // this code executes only if user refresh the location config screen.
-            if (primarySegments.length > 2) {
-              const locationGroupCode  = primarySegments[1].toString();
-              const siteId = primarySegments[2].toString();
-              this.model.locationGroupSelectedSiteId = siteId;
-              if (this.model && _.isEmpty(this.model.locationGroupName)) {
-                  this.topLocationGroupsService.getLocationGroup(locationGroupCode).subscribe(
-                  (response) => this.getLocationGroupSuccess(response),
-                  (response) => this.getLocationGroupError(response.error.message)
-                );
-              }
-            }
+        // this code executes only if user refresh the location config screen.
+        if (primarySegments.length > 2) 
+        {
+          const locationGroupCode  = primarySegments[1].toString();
+          const siteId = primarySegments[2].toString();
+          this.model.locationGroupSelectedSiteId = siteId;
+          this.model.locationGroupCode = locationGroupCode;
+          if (this.model && _.isEmpty(this.model.locationGroupName)) {
+              this.headerLocationGroupsService.getLocationGroup(locationGroupCode).subscribe(
+              (response) => this.getLocationGroupSuccess(response),
+              (response) => this.getLocationGroupError(response.error.message)
+            );
           }
         }
+        if (!this._changeDetectorRef['destroyed'])
+        this._changeDetectorRef.detectChanges();
+      }
     }
+    }  
+    private GetPath() {
+      const urltree = this.router.parseUrl(this.router.url);
+      const primary: UrlSegmentGroup = urltree.root.children[PRIMARY_OUTLET];
+      const primarySegments: UrlSegment[] = primary.segments;
+      return primarySegments;
+    }
+
     private getLocationGroupSuccess(result) {
-      this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupSuccess' + JSON.stringify(result));
+      this._loggerService.info('HeaderLocationGroupsComponent : getLocationGroupSuccess' + JSON.stringify(result));
       if (result && result.items) {
          const lgModel = result.items;
          this.model.locationGroupId = lgModel.locationGroupId;
          this.model.locationGroupName = lgModel.name;
          this.model.locationGroupSiteIds = lgModel.siteIds;
-      this._changeDetectorRef.detectChanges();
+         this._changeDetectorRef.detectChanges();
       }
     }
     private getLocationGroupError(errmsg: string) {
-      this._loggerService.info('NavigationTopLocationGroupsComponent : getLocationGroupError');
+      this._loggerService.info('HeaderLocationGroupsComponent : getLocationGroupError');
       throw new HttpError(ErrorCode.GetLocationGroupDetailFailed, ErroNotificationType.Toaster);
     }
     showCreateLG() {
-      this.model.isEditMode = true;
-      this.router.navigate(['/' + Constants.uiRoutes.locationGroupCreate]);
+      this.model.isEditMode = true;     
+      this.model.isShowLocationGroupList = true;
+      this.router.navigate(['/' + Constants.uiRoutes.locationGroupCreate]);      
     }
     cancelCreateLG() {
       this._notificationService.notifyLocationGroupAdded(NotificationLGActions.cancel);
@@ -161,9 +199,9 @@ import { TopLocationGroupsService } from './top-location-groups.service';
     }
     gotoLocationGroupEdit() {
       this.model.isEditMode = true;
-      this.model.isConfigTabVisible  = true;
+      this.model.isConfigTabVisible  = true;      
     this.model.isShowLocationGroupTabActive = true;
-      this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupCode]);
+     this.router.navigate([Constants.uiRoutes.locationGroupEdit + '/' + this.model.locationGroupCode]);
     this._changeDetectorRef.detectChanges();
     }
     gotoLocationGroupConfig() {
@@ -173,6 +211,19 @@ import { TopLocationGroupsService } from './top-location-groups.service';
       this.router.navigate([Constants.uiRoutes.locationGroupConfig + '/' + this.model.locationGroupCode
                             + '/' + this.model.locationGroupSelectedSiteId]);
     this.model.isShowLocationGroupTabActive = false;
+    if (!this._changeDetectorRef['destroyed'])
     this._changeDetectorRef.detectChanges();
     }
+    @HostListener('window:popstate', ['$event'])
+    onPopState(event) {      
+      if (this.model.isShowLocationGroupList) {
+        this.model.isEditMode = false;
+        this.model.isConfigTabVisible = false;
+        this._changeDetectorRef.detectChanges();
+      }
+
+    }
+    
 }
+
+

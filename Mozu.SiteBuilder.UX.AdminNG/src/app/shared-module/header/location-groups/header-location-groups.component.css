@@ -8,6 +8,7 @@
 .tab-active {
     border-bottom: 2px solid #2ea195;
     color: #333333;
+    margin-left: 10px;
 }
 
 .heading a {
@@ -30,9 +31,18 @@
     padding: 0px 15px;
 }
 
+.whiteColor {
+    color: white
+}
+
 .cancelbtn {
     margin-right: 10px;
-    /* height: 40px; */
+    height: 40px;
+    align-self: center;
+}
+
+.pr-15 {
+    padding-right: 15px;
 }
 
 @media screen and (max-width: 480px) {
@@ -63,12 +73,17 @@
     opacity: .8;
 }
 
-.quote-location-sub-header {
-    padding-top: 10px;
-}
-
 .quote-location-sub-header .heading {
     padding-left: 20px !important;
+}
+
+.quote-location-sub-header .row {
+    display: flex;
+    align-items: center;
+}
+
+.quote-location-sub-header .row div:nth-of-type(1) {
+    flex-grow: 1;
 }
 
 @media screen and (min-width: 1024px) {
@@ -79,12 +94,66 @@
         margin: 1px 8px 0 0;
     }
 }
+ 
+.quote-location-sub-header .row div:nth-of-type(1) {
+    flex-grow: 1;
+}
 
+.create-location-btn-wrapper{
+    display: flex;
+    flex-grow: 1;
+}
 
-/* @media screen and (min-width: 768px) {
-    .forlineheight{ font-size: 18px !important; } 
-    .sbbtn{ margin: 1px 2px 0 0; }
-} */
+.cancel-save-btn-wrapper{
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.create-location-btn-wrapper .col-md-10{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-right: 0;
+}
+
+.location-title a{
+    display: inherit;
+    padding: 0 20px;
+}
+
+.location-title{
+    flex-grow: inherit !important;
+}
+
+.location-tab-wrapper{
+    display: inherit;
+    width: auto;
+}
+
+.location-tab.tab-active{
+    border-bottom: 2px solid #ffce01;
+}
+
+.location-tab{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    margin-left: 10px;
+}
+
+.location-tab a:hover, .location-tab a:focus {
+    text-decoration: none;
+}
+
+.location-tab h4:hover{
+    color: #fff !important;
+}
+.location-tab h4{
+    font-size: 16px !important;
+    color: #a3a3a3;
+}
 
 @media screen and (max-width: 768px) {
     .forlineheight {

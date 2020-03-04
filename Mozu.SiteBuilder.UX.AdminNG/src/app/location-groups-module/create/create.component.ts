@@ -24,7 +24,7 @@ import { CreateLocationGroupService } from './create.service';
 import { LocationGroupModel, LocationGroupCreateModel } from './location.group.model';
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
-import { TopLocationGroupConfigModel } from '@shared/navigation/top/location-groups/top-location-groups.model';
+import { TopLocationGroupConfigModel } from '@shared/header/location-groups/header-location-groups.model';
 import { ProgressButtonService } from '@shared/progress-button/progress-button.service';
 
 @Component({

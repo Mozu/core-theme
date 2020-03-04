@@ -1,6 +1,6 @@
 import {
     Component,
-    OnInit,
+    OnInit,    
     ChangeDetectionStrategy,
     ChangeDetectorRef,
   } from '@angular/core';
@@ -18,8 +18,7 @@ import { TopNavigationModel,
   styleUrls: ['./top-shell.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavigationTopShellComponent implements OnInit {
-
+export class NavigationTopShellComponent implements OnInit{ 
   public model: TopNavigationModel;
   activeTab: TopNavigationTabs;
 
@@ -35,6 +34,7 @@ export class NavigationTopShellComponent implements OnInit {
   ngOnInit() {
     this._loggerService.info('NavigationTopShellComponent : ngOnInit');
     this.model = new TopNavigationModel();
+    
     this.fetchHomeTabsName();
   }
 
@@ -51,7 +51,8 @@ export class NavigationTopShellComponent implements OnInit {
     this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_SuccessResponse');
     this.model.navigationTabs = JSON.parse(JSON.stringify(successResponse));
     this.activeTab = this.model.navigationTabs[0];
-    this._changeDetectorRef.detectChanges();
+   if(!this._changeDetectorRef['destroyed'])
+   this._changeDetectorRef.detectChanges();
     }, (errorResponse) => {
       this._loggerService.info('NavigationTopShellComponent : navigationService.fetchTabsName_ErrorResponse');
     });

@@ -149,3 +149,19 @@
     padding-left: 10px;
 }
 
+.navbar-wrapper{
+    display: flex;
+    align-items: center;
+}
+
+.navbar-header{
+    width: 100%;
+}
+
+.location-header-wrapper{
+width: 100%;
+}
+
+.navbar-left{
+    display: flex;
+}
