@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Hypr
             {
                 response.Headers.Remove(name);
             }
-            response.AddHeader(name, value);
+            response.Headers.Add(name, value);
             
 
             return Task.FromResult(Enumerable.Empty<WalkResult>());

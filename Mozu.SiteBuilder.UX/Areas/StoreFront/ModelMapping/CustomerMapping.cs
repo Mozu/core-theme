@@ -49,10 +49,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.ModelMapping
             CreateMap<UX.Models.Customers.CustomerGroup, CustomerGroup>();
 
             CreateMap<PurchaseOrder, UX.Models.Customers.CustomerPurchaseOrderAccount>()
-                .ForMember(x => x.PaymentTerms, opt => opt.ResolveUsing(dc => dc.CustomerPurchaseOrderPaymentTerms))
+                .ForMember(x => x.PaymentTerms, opt => opt.MapFrom(dc => dc.CustomerPurchaseOrderPaymentTerms))
                 ;
             CreateMap<UX.Models.Customers.CustomerPurchaseOrderAccount, PurchaseOrder>()
-                .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, opt => opt.ResolveUsing(x => x.PaymentTerms))
+                .ForMember(dc => dc.CustomerPurchaseOrderPaymentTerms, opt => opt.MapFrom(x => x.PaymentTerms))
                 .ForMember(dc => dc.OverdraftAllowance, opt => opt.Ignore())
                 .ForMember(dc => dc.OverdraftAllowanceType, opt => opt.Ignore())
                 .ForMember(dc => dc.AuditInfo, opt => opt.Ignore())

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNetCore.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
@@ -67,6 +68,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         private readonly ICookieProvider _cookies;
         private readonly IAuthenticationHelper _authenticationHelper;
         private readonly ISettings _settings;
+        private readonly Microsoft.Extensions.Configuration.IConfiguration _config;
 
         private const string FORCE_THEME_COOKIE_NAME = "SBTHEME";
 
@@ -78,12 +80,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Tablet
         }
 
-        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper)
+        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config)
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
             _cookies = cookies;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
+            _config = config;
             //SuppressMissingContextRedirect = true;
         }
 
@@ -114,11 +117,12 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
         public Task<HttpResponseMessage> Api(string url)
         {
-            var service = _settings.Resources.FirstOrDefault(x => url.IndexOf(x.Path, StringComparison.OrdinalIgnoreCase) == 0);
-            _client = _client ?? new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
+            var resource = _config.GetSection("mozu:routes").GetChildren()
+                .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).FirstOrDefault(x => url.IndexOf(x, StringComparison.OrdinalIgnoreCase) == 0);
+            _client ??= new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
 
-            this.Request.RequestUri = new Uri(service.BaseUrl + this.Request.RequestUri.PathAndQuery.Substring(4));
-            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out var vals) && vals.Count() > 0)
+            this.Request.RequestUri = new Uri(resource + this.Request.RequestUri.PathAndQuery.Substring(4));
+            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out var vals) && vals.Any())
             {
                 this.Request.Method = new HttpMethod(vals.First());
             }
@@ -170,14 +174,24 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             if (mode == ThemeMode.Auto)
             {
                 _cookies.RemoveCookie(FORCE_THEME_COOKIE_NAME);
-                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME) { Expires = DateTime.Now.AddDays(-1D) });
+                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, null, new CookieOptions { Expires = DateTime.Now.AddDays(-1D) });
             }
             else
             {
-                if (mode == ThemeMode.Desktop) themeName = (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id;
-                if (mode == ThemeMode.Mobile) themeName = (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id;
-                if (mode == ThemeMode.Tablet) themeName = (SiteContext.GeneralSettings.TabletTheme ?? new ThemeSelection()).Id;
-                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, new HttpCookie(FORCE_THEME_COOKIE_NAME, themeName));
+                switch (mode)
+                {
+                    case ThemeMode.Desktop:
+                        themeName = (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id;
+                        break;
+                    case ThemeMode.Mobile:
+                        themeName = (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id;
+                        break;
+                    case ThemeMode.Tablet:
+                        themeName = (SiteContext.GeneralSettings.TabletTheme ?? new ThemeSelection()).Id;
+                        break;
+                }
+
+                _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, themeName, new CookieOptions());
             }
             return new RedirectResult(redir ?? "/");
         }
@@ -217,9 +231,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 sb.AppendLine();
             }
             sb.AppendLine();
-            sb.AppendLine("server vars");
-            sb.AppendFormat("{0}:{1}", "manchine name", this.HttpContext.Server.MachineName);
-            sb.AppendLine();
+            //sb.AppendLine("server vars");
+            //sb.AppendFormat("{0}:{1}", "manchine name", this.HttpContext.Server.MachineName);
+            //sb.AppendLine();
             sb.AppendFormat("{0}:{1}", "version", this.GetType().Assembly.GetName().Version);
 
             sb.AppendLine("</pre>");
@@ -270,7 +284,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             var endPosition = (queryPosition > -1) ? queryPosition : redir.Length;
                             redir = redir.Substring(0, endPosition) + "?" + string.Join("&", qstring.AllKeys.Select(key => key + "=" + qstring[key]).ToArray());
                         }
-                            break;
+                        break;
 
                     }
                 case "editing":
@@ -362,26 +376,29 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
             var doHostnameRedirect = _settings.AppSettings("ReverseProxy") == "true" && !string.IsNullOrEmpty(newHostname);
 
-            if (!string.IsNullOrEmpty(transfer))
-            {
-                var redirUrl = "~/" + Uri.UnescapeDataString(transfer).TrimStart('/');
+            // todo:cole look into a rewrite of this functionality
+            //if (!string.IsNullOrEmpty(transfer))
+            //{
+            //    var redirUrl = "~/" + Uri.UnescapeDataString(transfer).TrimStart('/');
 
-                var writableContext = (SiteBuilderApiContext)SbApiContext;
-                var headers = new NameValueCollection();
+            //    var writableContext = (SiteBuilderApiContext)SbApiContext;
+            //    var headers = new NameValueCollection
+            //    {
+            //        [Headers.TENANT] = site.TenantId.ToString(),
+            //        [Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString(),
+            //        [Headers.CATALOG] = site.CatalogId.ToString(),
+            //        [Headers.SITE] = site.Id.ToString(),
+            //        [Headers.LOCALE] = site.DefaultLocaleCode,
+            //        [Headers.CURRENCY] = site.DefaultCurrencyCode,
+            //        [Headers.DATA_VIEW_MODE] = viewMode.ToString()
+            //    };
 
-                headers[Headers.TENANT] = site.TenantId.ToString();
-                headers[Headers.MASTER_CATALOG] = site.MasterCatalogId.ToString();
-                headers[Headers.CATALOG] = site.CatalogId.ToString();
-                headers[Headers.SITE] = site.Id.ToString();
-                headers[Headers.LOCALE] = site.DefaultLocaleCode;
-                headers[Headers.CURRENCY] = site.DefaultCurrencyCode;
-                headers[Headers.DATA_VIEW_MODE] = viewMode.ToString();
-                
-                return new TransferResult(redirUrl)
-                {
-                    Headers = headers
-                };
-            }
+
+            //    return new TransferResult(redirUrl)
+            //    {
+            //        Headers = headers
+            //    };
+            //}
             SiteContext.Save(site: site.Id, masterCatalog: site.MasterCatalogId, tenant: site.TenantId, isEditMode: false, dataViewMode: viewMode, cookieProvider: _cookies, catalogid: site.CatalogId.Value, locale: site.DefaultLocaleCode, currency: site.DefaultCurrencyCode, isAdminMode: isAdminMode);
 
             var uri = CreateRedirectUrl(redir, newHostname, doHostnameRedirect);

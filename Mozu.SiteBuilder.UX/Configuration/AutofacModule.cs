@@ -40,15 +40,15 @@ namespace Mozu.SiteBuilder.UX.Configuration
     public class AutofacModule : IDependencyConfigurator
     {
         public string ApiBaseUri { get; set; }
-        class SbApiContextBuilder : IApiContextBuilder
-        {
+        //class SbApiContextBuilder : IApiContextBuilder
+        //{
 
-            public IApiContext BuildApiContext(IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
-            {
-                return (IApiContext)request.GetDependencyScope().GetService(typeof(IApiContext));
+        //    public IApiContext BuildApiContext(IApiContext apiContext, System.Net.Http.HttpRequestMessage request)
+        //    {
+        //        return (IApiContext)request.GetDependencyScope().GetService(typeof(IApiContext));
 
-            }
-        }
+        //    }
+        //}
 
         //class BurrowsConumerScope : ILifetimeScope , IDisposer
         //{
@@ -103,7 +103,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             configure.AddScoped<IApiContext, SiteBuilderApiContext>();
             configure.AddScoped<ISiteBuilderApiContext, SiteBuilderApiContext>();
-            configure.AddScoped<IApiContextBuilder, SbApiContextBuilder>();
+            //configure.AddScoped<IApiContextBuilder, SbApiContextBuilder>();
             //builder.RegisterType<Mozu.SiteBuilder.Mvc.Security.AuthenticationHelper>().InstancePerHttpRequest();
             //builder.RegisterType<ServiceClientMessageHandler>().As<IServiceClientMessageHandler>().InstancePerRequest();
 
@@ -157,7 +157,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
             //builder.RegisterType<GeneralSettingsWebApiClient>().As<IGeneralSettingsWebApiClient>().InstancePerRequest();
 
             // set up a MemoryCache just for us
-            builder.Register(c => new System.Runtime.Caching.MemoryCache("sfcache")).Named<System.Runtime.Caching.ObjectCache>("sfcache").SingleInstance();
+            configure.AddMemoryCache();
             // builder.RegisterType<Mozu.SiteBuilder.UX.Caching.StorefrontCache>()
             //     .WithParameter(
             //         // when parameter is a type of ObjectCache
@@ -170,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             // add these two logging context providers for loggers provided by the DI framework.
             configure.AddScoped<ILoggingContextProvider, CurrentRequestLoggingContextProvider>();
-            builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
+            //builder.RegisterType<ApplicationNameLoggingContextProvider>().As<ILoggingContextProvider>().WithParameter("applicationName", ApplicationConstants.APPLICATION_NAME).InstancePerLifetimeScope();
 
             configure.AddScoped<VisitEventPublisher>();
             configure.AddSingleton<CacheItemsInvalidConsumer>();
@@ -178,10 +178,21 @@ namespace Mozu.SiteBuilder.UX.Configuration
 
             // Register a MassTransit/Burrows IPublisher for visits.
             // The rabbitMQ connectionstring is used to recieve control messages sent to our application by MassTransit.
-            configure.AddSingleton<IPublishEndpoint>(c => c.Resolve<ISettings>().CreatePublisher("SiteBuilderOutgoingMessageQueue", "Mozu.SiteBuilder.UX"));;
-            builder.Register(c => new Microsoft.Extensions.Caching.Memory.MemoryCache()).As<System.Runtime.Caching.ObjectCache>().SingleInstance();
-            configure.AddScoped<IHttpErrorResponseGenerator, SiteBuilderHttpErrorResponseGenerator>();
-            builder.RegisterType<HttpErrorResponseGenerator>();
+            configure.AddMozuBus("SiteBuilderMessageQueue", (cfg, host, settings, provider, mtCfg) =>
+            {
+                var format = provider.GetService<ISettings>()
+                    .ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
+                var conString = string.Format(format, Guid.NewGuid().ToString("N"));
+                cfg.ReceiveEndpoint(host, conString, e =>
+                {
+                    // A new consumer is created per message. Let MassTransit resolve the consumer from Autofac
+                    // so it can properly maintain lifetime scope and clean up resources when it's done.
+                    e.Consumer<CacheItemsInvalidConsumer>(provider);
+                    e.Consumer<SiteBuilderContextInvalidatorConsumer>(provider);
+                });
+            });
+            //configure.AddScoped<IHttpErrorResponseGenerator, SiteBuilderHttpErrorResponseGenerator>();
+            //builder.RegisterType<HttpErrorResponseGenerator>();
             configure.AddScoped<AMDModuleProvider>();
             configure.AddScoped<LessLogger>();
             configure.AddScoped<ILogger, LessLogger>();
@@ -199,40 +210,40 @@ namespace Mozu.SiteBuilder.UX.Configuration
             configure.AddSingleton<Consumes<ISearchTuningRuleEvent>.All, CacheItemsInvalidConsumer>();
             configure.AddSingleton<Consumes<ISearchSettingsEvent>.All, CacheItemsInvalidConsumer>();
             configure.AddSingleton<SiteBuilderContextInvalidatorConsumer>();
-            builder
-              .Register(c =>
-              {
-                  var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
-                  var conString = string.Format(format, Guid.NewGuid().ToString("N"));
-                  var cacheInvalidator = c.Resolve<CacheItemsInvalidConsumer>();
-                  //var lifeTimeScope = c.Resolve<ILifetimeScope>();
-                  //var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator, ComponentRegistry = lifeTimeScope.ComponentRegistry };
+            //builder
+            //  .Register(c =>
+            //  {
+            //      var format = c.Resolve<ISettings>().ConnectionStrings("SiteBuilderIncomingMessageQueueFormatString");
+            //      var conString = string.Format(format, Guid.NewGuid().ToString("N"));
+            //      var cacheInvalidator = c.Resolve<CacheItemsInvalidConsumer>();
+            //      //var lifeTimeScope = c.Resolve<ILifetimeScope>();
+            //      //var burrowsScope = new BurrowsConumerScope() { Thing = cacheInvalidator, ComponentRegistry = lifeTimeScope.ComponentRegistry };
 
-                  var factory = ServiceBusFactory.New(sbc =>
-                  sbc
-                    .Configure(conString, subs => subs.Consumer<CacheItemsInvalidConsumer>(() => cacheInvalidator))
-                    .SetConcurrentConsumerLimit(2)
+            //      var factory = ServiceBusFactory.New(sbc =>
+            //      sbc
+            //        .Configure(conString, subs => subs.Consumer<CacheItemsInvalidConsumer>(() => cacheInvalidator))
+            //        .SetConcurrentConsumerLimit(2)
 
-                  );
-
-
-                  return factory;
-              })
-
-              .AutoActivate();
-            builder
-            .Register(c =>
-            {
-                var consumer = c.Resolve<SiteBuilderContextInvalidatorConsumer>();
-                var settings = c.Resolve<ISettings>();
-                return settings.CreatePublisher("SiteBuilderMessageQueue", "Mozu.Sitebuilder.Mvc", subscriptionSource =>
-                {
-                    subscriptionSource.Consumer<SiteBuilderContextInvalidatorConsumer>(() => consumer);
-                    // subscriptionSource.Consumer<>
-                }, new MessageBusSettings() { ConcurrentConsumerLimit = 2 });
+            //      );
 
 
-            }).AutoActivate();
+            //      return factory;
+            //  })
+
+            //  .AutoActivate();
+            //builder
+            //.Register(c =>
+            //{
+            //    var consumer = c.Resolve<SiteBuilderContextInvalidatorConsumer>();
+            //    var settings = c.Resolve<ISettings>();
+            //    return settings.CreatePublisher("SiteBuilderMessageQueue", "Mozu.Sitebuilder.Mvc", subscriptionSource =>
+            //    {
+            //        subscriptionSource.Consumer<SiteBuilderContextInvalidatorConsumer>(() => consumer);
+            //        // subscriptionSource.Consumer<>
+            //    }, new MessageBusSettings() { ConcurrentConsumerLimit = 2 });
+
+
+            //}).AutoActivate();
         }
     }
 }

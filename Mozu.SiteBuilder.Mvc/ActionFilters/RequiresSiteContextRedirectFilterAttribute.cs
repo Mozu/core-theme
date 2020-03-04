@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Mozu.Core;
@@ -15,7 +16,7 @@ using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Core.Logging;
-using Mozu.SiteBuilder.Mvc.ActionResults;
+using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
 
 
 namespace Mozu.SiteBuilder.Mvc.ActionFilters

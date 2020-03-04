@@ -60,7 +60,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var scheme = PageContext.IsSecure ? "https://" : "http://";
             var prefixedDomain = scheme + nakedDomain + _siteContext.SiteSubdirectory;
             this.HttpContext.Response.ContentType = "text/xml";
-            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            var writer = XmlTextWriter.Create(HttpContext.Response.Body);
 
             writer.WriteStartElement("sitemapindex", NS);
             writer.WriteStartElement("sitemap", NS);
@@ -138,7 +138,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
-            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            var writer = XmlTextWriter.Create(this.HttpContext.Response.Body);
             writer.WriteStartElement("urlset", NS);
             writer.WriteStartElement("url", NS);
             writer.WriteElementString("loc", NS, domain);
@@ -174,7 +174,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
-            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            var writer = XmlTextWriter.Create(this.HttpContext.Response.Body);
             writer.WriteStartElement("urlset", NS);
 
             while (true)
@@ -213,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             // resp.Content.
             this.HttpContext.Response.ContentType = "text/xml";
-            var writer = XmlTextWriter.Create(this.HttpContext.Response.OutputStream);
+            var writer = XmlTextWriter.Create(this.HttpContext.Response.Body);
             writer.WriteStartElement("urlset", NS);
             var offset = 0;
             var startIndex = page * PageSize;

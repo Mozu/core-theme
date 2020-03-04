@@ -4,9 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="Web.config" />
+    <Content Remove="Web.Release.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Areas\Misc\Views\Testing\SiteList.aspx" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- use latest known package of mozu.core.prime -->
     <PackageReference Include="dotless" Version="1.6.7" />
     <PackageReference Include="Mozu.Core.Prime" Version="1.2005.6" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mozu.SiteBuilder.Mvc\Mozu.SiteBuilder.Mvc.csproj">
@@ -17,5 +25,8 @@
       <Project>{fe9da6f5-3477-48a3-8314-572ce5c308fb}</Project>
       <Name>Mozu.SiteBuilder.UX.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\Misc\Views\Testing\" />
   </ItemGroup>
 </Project>

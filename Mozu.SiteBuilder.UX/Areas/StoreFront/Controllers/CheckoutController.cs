@@ -372,7 +372,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
             {
-                this.HttpContext.Response.AddHeader("X-Frame-Options", "sameorigin");
+                this.HttpContext.Response.Headers.Add("X-Frame-Options", "sameorigin");
             }
 
             return View("checkout", jOrder);

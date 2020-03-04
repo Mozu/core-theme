@@ -28,6 +28,7 @@ using ProductSearchResult = Mozu.ProductRuntime.Contracts.ProductSearchResult;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.Core.Actions;
 using Mozu.Core.Expressions;
+using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc.Caching;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Helpers;
@@ -171,8 +172,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             categoryId = categoryId.GetValueOrDefault(-1) < 1 ? null : categoryId;
             if (useUrlParams.GetValueOrDefault(false))
             {
-                string itemsPerPageParam = HttpRequestBase.QueryString["pageSize"];
-                string startIndexParam = HttpRequestBase.QueryString["startIndex"];
+                string itemsPerPageParam = HttpRequestBase.Query["pageSize"];
+                string startIndexParam = HttpRequestBase.Query["startIndex"];
                 itemsPerPage = string.IsNullOrWhiteSpace(itemsPerPageParam) ? Convert.ToInt32(SiteContext.ThemeSettings["defaultPageSize"]) : Convert.ToInt32(itemsPerPageParam);
                 startIdx = string.IsNullOrWhiteSpace(startIndexParam) ? 0 : Convert.ToInt32(startIndexParam);
             }
@@ -213,7 +214,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (includeFacets.GetValueOrDefault(false) && categoryId.HasValue)
             {
-                string facetValueFilter = HttpRequestBase.QueryString["facetValueFilter"];
+                string facetValueFilter = HttpRequestBase.Query["facetValueFilter"];
                 var pcDC = await (await _searchClient.Search(query: "*:*", filter: filter, startIndex: startIdx, pageSize: itemsPerPage, sortBy: sortBy, facetTemplate: "categoryId:" + categoryId, facetHierValue: "categoryId:" + categoryId, facetHierDepth: "categoryId:2", facetValueFilter: facetValueFilter, responseOptions: responseOptions)).ReadAsAsync();
                 var pc = Mapper.Map<UX.Models.StoreFront.Catalog.ProductSearchResult>(pcDC);
                 pc.Init(true, this.PageContext.Search);
@@ -311,7 +312,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.Warn(ex);
+                    _logger.Warn(ex.Message);
                     _storeFrontCache.Set(key, 0);
                 }
                    
@@ -419,7 +420,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var feedUrl = new Uri(PageContext.Url);
-            int.TryParse(HttpRequestBase.QueryString["startIndex"], out startIdx);
+            int.TryParse(HttpRequestBase.Query["startIndex"], out startIdx);
 
             // Get Results and populate feed
             var result = await ProductListing(categoryId, sortBy, startIdx, itemsPerPage, null, false, false);

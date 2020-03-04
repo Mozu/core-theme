@@ -9,6 +9,7 @@ using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
@@ -321,11 +322,10 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 }
                 else
                 {
-                    using (var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    {
-                        using (var rdr = GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8))
-                        {
-                            var ser = GlobalConfiguration.Configuration.Formatters.JsonFormatter.CreateJsonSerializer();
+                    await using var stream = await res.ResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                        var jmtf = new JsonMediaTypeFormatter();
+                        using var rdr = jmtf.CreateJsonReader(typeof(ProductSearchResult), stream, Encoding.UTF8);
+                            var ser = jmtf.CreateJsonSerializer();
                             pc = ser.Deserialize<ProductSearchResult>(rdr);
                             pc.Init(true, productListingState);
                             if (productCodesFilters != null && productCodesFilters.Length > 0 && pc.Items != null)
@@ -335,8 +335,6 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                                     .Select(x => pc.Items.FirstOrDefault(y => y.ProductCode.Equals(x, StringComparison.OrdinalIgnoreCase)))
                                     .Where(x => x != null).ToList();
                             }
-                        }
-                    }
                 }
                 if (cacheResults  && !res.HasException)
                 {

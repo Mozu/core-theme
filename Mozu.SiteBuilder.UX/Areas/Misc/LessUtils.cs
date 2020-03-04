@@ -133,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
 
             var parser = new Parser
             {
-                Importer = new Importer(reader, true, false, false)
+                Importer = new Importer(reader, true, null, false, false)
             };
 
             Ruleset tree = null;

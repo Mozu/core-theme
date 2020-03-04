@@ -150,7 +150,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (this.SiteContext.CheckoutSettings.VisaCheckout.IsEnabled)
             {
-                this.HttpContext.Response.AddHeader("X-Frame-Options", "SAMEORIGIN");
+                this.HttpContext.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
                 this.PageContext.VisaCheckoutButtonUrl = _settings.AppSettings("VisaCheckoutButtonUrl");
                 this.PageContext.VisaCheckoutJavaScriptSdkUrl = _settings.AppSettings("VisaCheckoutJavaScriptSdkUrl");
             }

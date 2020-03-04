@@ -20,7 +20,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                     opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl))
                         ? "/p/" + x.ProductCode
                         : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))
-                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(NavigationNodeType.Product))
+                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Product))
                 ;
 
             CreateMap<Mozu.ProductRuntime.Contracts.Product, SimpleRuntimeNavigationNode>()
@@ -28,7 +28,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))//"/product/" + x.ProductCode))
-                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(NavigationNodeType.Product))
+                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Product))
                 //.ForMember(dest => dest.IsLeaf, opt => opt.MapFrom(true))
               //  .As<IRuntimeNavigationNode>()
                 ;
@@ -38,7 +38,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.SEOContent == null || string.IsNullOrEmpty(x.SEOContent.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.SEOContent.SEOFriendlyUrl + "/p/" + x.ProductCode))//"/product/" + x.ProductCode))
-                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(NavigationNodeType.Product))
+                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Product))
                 //.ForMember(dest => dest.IsLeaf, opt => opt.MapFrom(true))
              //   .As<IRuntimeNavigationNode>()
                 ;
@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.OriginalId, op => op.MapFrom(x => x.ProductCode))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.ProductName))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.SEOFriendlyUrl)) ? "/p/" + x.ProductCode : "/" + x.Content.SEOFriendlyUrl + "/p/" + x.ProductCode))
-                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(NavigationNodeType.Product))
+                .ForMember(dest => dest.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Product))
              //   .As<IRuntimeNavigationNode>()
                 ;
 
@@ -61,7 +61,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 //.ForMember(d => d.ParentId, opt => opt.ResolveUsing(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.Slug)) ? "/c/" + x.Id :"/"+ x.Content.Slug + "/c/" + x.CategoryId ))
-                .ForMember(d => d.NodeType, opt => opt.MapFrom(NavigationNodeType.Category))
+                .ForMember(d => d.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Category))
                 .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Index))
                 //.ForMember(d => d.IsLeaf, opt => opt.MapFrom(false))
             //    .As<IRuntimeNavigationNode>()
@@ -74,7 +74,7 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                 .ForMember(d => d.ParentId, opt => opt.MapFrom(x => x.ParentCategoryId.HasValue ? JoinParts("category", x.ParentCategoryId.Value) : null))
                 .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Content.Name))
                 .ForMember(d => d.Url, opt => opt.MapFrom(x => (x.Content == null || string.IsNullOrEmpty(x.Content.Slug)) ? "/c/" + x.Id : "/" + x.Content.Slug + "/c/" + x.Id))
-                .ForMember(d => d.NodeType, opt => opt.MapFrom(NavigationNodeType.Category))
+                .ForMember(d => d.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Category))
                 .ForMember(d => d.Index, opt => opt.MapFrom(x => x.Sequence))
                 .ForMember(d => d.IsLeaf, opt => opt.MapFrom(c => false))
                 ;
@@ -83,13 +83,13 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalDocumentListName, opt => opt.MapFrom(x => x.ListFQN))
-               .ForMember(d => d.ParentId, opt => opt.MapFrom((string)null))
+               .ForMember(d => d.ParentId, opt => opt.MapFrom(v => (string)null))
                .ForMember(d => d.Name, opt => opt.MapFrom(x =>
                    x.Get<string>("link_title", null).GetNullIfWhiteSpace() ??
                    x.Get<string>("title", null).GetNullIfWhiteSpace() ??
                    x.Name))
                .ForMember(d => d.Url, opt => opt.MapFrom(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
-               .ForMember(d => d.NodeType, opt => opt.MapFrom(NavigationNodeType.Page))
+               .ForMember(d => d.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.MapFrom(d => -1))
                .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentTypeFQN == "blog" || x.DocumentTypeFQN == "page"))
                ;
@@ -99,10 +99,10 @@ namespace Mozu.SiteBuilder.Mvc.Models.Mapping
                .ForMember(d => d.Id, opt => opt.MapFrom(x => JoinParts("page", x.ListFQN, x.Id)))
                .ForMember(d => d.OriginalId, opt => opt.MapFrom(x => x.Id))
                .ForMember(d => d.OriginalDocumentListName, opt => opt.MapFrom(x => x.ListFQN))
-               .ForMember(d => d.ParentId, opt => opt.MapFrom((string)null))
+               .ForMember(d => d.ParentId, opt => opt.MapFrom(v => (string)null))
                .ForMember(d => d.Name, opt => opt.MapFrom(x => x.Name))
                .ForMember(d => d.Url, opt => opt.MapFrom(x => string.Equals(x.ListFQN, "pages@mozu", StringComparison.OrdinalIgnoreCase) ? "/" + x.Name : "/" + x.ListFQN + "/" + x.Name))
-               .ForMember(d => d.NodeType, opt => opt.MapFrom(NavigationNodeType.Page))
+               .ForMember(d => d.NodeType, opt => opt.MapFrom(v => NavigationNodeType.Page))
                .ForMember(d => d.Index, opt => opt.MapFrom(d => -1))
              //  .ForMember(d => d.IsLeaf, opt => opt.MapFrom(x => x.DocumentTypeFQN == "blog"))
               // .As<IRuntimeNavigationNode>()

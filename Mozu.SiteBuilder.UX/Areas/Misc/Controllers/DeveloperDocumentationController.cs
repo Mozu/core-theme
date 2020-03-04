@@ -28,24 +28,22 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         //
         // GET: /Misc/DeveloperDocumentation/
-        [System.Web.Http.HttpGet]
-        public ActionResult Tags()
-        {
-            var itemInfos = BuildTagInfos();
+        //[System.Web.Http.HttpGet]
+        //public ActionResult Tags()
+        //{
+        //    var itemInfos = BuildTagInfos();
 
-            ViewData.Model = itemInfos;
-            ViewData["itemtype"] = "Filters";
-            return new Mozu.SiteBuilder.Mvc.ActionResults.RazorViewResult()
-            {
-                Model = itemInfos,
-                ViewData = ViewData,
+        //    ViewData.Model = itemInfos;
+        //    ViewData["itemtype"] = "Filters";
+        //    return new RazorViewResult()
+        //    {
+        //        Model = itemInfos,
+        //        ViewData = ViewData,
 
-                ViewName = "list"
-            };
+        //        ViewName = "list"
+        //    };
+        //}
 
-
-
-        }
         public class DjangoItemInfo
         {
             public string TagName
@@ -75,45 +73,45 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// </summary>
         /// <
         /// <returns></returns>
-        [System.Web.Http.HttpGet]
-        public ActionResult Filters()
-        {
+        //[System.Web.Http.HttpGet]
+        //public ActionResult Filters()
+        //{
 
-            var summaries = GetSummeries(this.HttpContext);
-            var itemInfos = new List<DjangoItemInfo>();
-            var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
-            var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
+        //    var summaries = GetSummeries(this.HttpContext);
+        //    var itemInfos = new List<DjangoItemInfo>();
+        //    var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
+        //    var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
 
-            foreach (var installedFilter in _templateManagerProvider.Filters)
-            {
+        //    foreach (var installedFilter in _templateManagerProvider.Filters)
+        //    {
 
-                var tt = installedFilter.Value.GetType();
-                var att = (NDjango.Interfaces.NameAttribute)tt.GetCustomAttributes(nameAttType, false).FirstOrDefault();
-                var descriptionAttribute = (NDjango.ParserNodes.DescriptionAttribute)tt.GetCustomAttributes(descAttType, false).FirstOrDefault();
-                var typeLookup = tt.FullName.Replace("+", ".");
-                itemInfos.Add(new DjangoItemInfo()
-                {
-                    TagName = installedFilter.Key,
-                    Description = descriptionAttribute == null ? null : descriptionAttribute.Description,
+        //        var tt = installedFilter.Value.GetType();
+        //        var att = (NDjango.Interfaces.NameAttribute)tt.GetCustomAttributes(nameAttType, false).FirstOrDefault();
+        //        var descriptionAttribute = (NDjango.ParserNodes.DescriptionAttribute)tt.GetCustomAttributes(descAttType, false).FirstOrDefault();
+        //        var typeLookup = tt.FullName.Replace("+", ".");
+        //        itemInfos.Add(new DjangoItemInfo()
+        //        {
+        //            TagName = installedFilter.Key,
+        //            Description = descriptionAttribute == null ? null : descriptionAttribute.Description,
 
-                    Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
-                    DocUrl = tt.FullName.IndexOf("Mozu") == -1 ? "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedFilter.Key : null
+        //            Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
+        //            DocUrl = tt.FullName.IndexOf("Mozu") == -1 ? "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedFilter.Key : null
 
-                });
+        //        });
 
 
-            }
-            ViewData.Model = itemInfos;
-            ViewData["itemtype"] = "Filters";
-            return new Mozu.SiteBuilder.Mvc.ActionResults.RazorViewResult()
-            {
-                Model = itemInfos,
-                ViewData = ViewData,
+        //    }
+        //    ViewData.Model = itemInfos;
+        //    ViewData["itemtype"] = "Filters";
+        //    return new Mozu.SiteBuilder.Mvc.ActionResults.RazorViewResult()
+        //    {
+        //        Model = itemInfos,
+        //        ViewData = ViewData,
 
-                ViewName = "list"
-            };
-            //("documentation/tags", tagInfos);
-        }
+        //        ViewName = "list"
+        //    };
+        //    //("documentation/tags", tagInfos);
+        //}
 
         private static Dictionary<string, string> _assumblyTypeSummeries = null;
         /// <summary>
@@ -123,41 +121,41 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// <code>i like fudge</code>
         /// <param name="context"></param>
         /// <returns></returns>
-        static Dictionary<string, string> GetSummeries(HttpContext context)
-        {
-            if (_assumblyTypeSummeries != null)
-            {
-                return _assumblyTypeSummeries;
-            }
-            var xmlFiles = new string[] { "NDjangoFilters.NDjangoExtension40.xml", "NDjango.Core40.xml", "Mozu.SiteBuilder.UX.xml", "Mozu.SiteBuilder.Mvc.xml" };
-            var dic = new Dictionary<string, string>();
-            foreach (var xmlFile in xmlFiles)
-            {
-                var fullPath = context.Request.MapPath("~/bin/" + xmlFile);
-                if (!System.IO.File.Exists(fullPath))
-                {
-                    throw new FileNotFoundException("documentation file missing " + xmlFile, xmlFile);
-                }
-                var xdoc = XDocument.Load(fullPath);
+        //static Dictionary<string, string> GetSummeries(HttpContext context)
+        //{
+        //    if (_assumblyTypeSummeries != null)
+        //    {
+        //        return _assumblyTypeSummeries;
+        //    }
+        //    var xmlFiles = new string[] { "NDjangoFilters.NDjangoExtension40.xml", "NDjango.Core40.xml", "Mozu.SiteBuilder.UX.xml", "Mozu.SiteBuilder.Mvc.xml" };
+        //    var dic = new Dictionary<string, string>();
+        //    foreach (var xmlFile in xmlFiles)
+        //    {
+        //        var fullPath = context.Request.MapPath("~/bin/" + xmlFile);
+        //        if (!System.IO.File.Exists(fullPath))
+        //        {
+        //            throw new FileNotFoundException("documentation file missing " + xmlFile, xmlFile);
+        //        }
+        //        var xdoc = XDocument.Load(fullPath);
 
-                var kvps = xdoc.Root.Element("members").Elements("member").Where(mem => ((string)mem.Attribute("name")).StartsWith("T:")).Select(
-                    mem => new KeyValuePair<string, string>(
-                        mem.Attribute("name").Value.Substring(2),
-                        ToHtmlString(mem.Element("summary")
-                        )
-                        ));
-                var items = kvps.Where(x => dic.ContainsKey(x.Key)).ToList();
-                if (items.Any())
-                {
-                    throw new Exception(string.Join(" ", items));
-                }
-                dic.AddRange(kvps);
+        //        var kvps = xdoc.Root.Element("members").Elements("member").Where(mem => ((string)mem.Attribute("name")).StartsWith("T:")).Select(
+        //            mem => new KeyValuePair<string, string>(
+        //                mem.Attribute("name").Value.Substring(2),
+        //                ToHtmlString(mem.Element("summary")
+        //                )
+        //                ));
+        //        var items = kvps.Where(x => dic.ContainsKey(x.Key)).ToList();
+        //        if (items.Any())
+        //        {
+        //            throw new Exception(string.Join(" ", items));
+        //        }
+        //        dic.AddRange(kvps);
 
-            }
-            return _assumblyTypeSummeries = dic;
+        //    }
+        //    return _assumblyTypeSummeries = dic;
 
 
-        }
+        //}
 
 
         static string ToHtmlString(XElement elm)
@@ -195,47 +193,47 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         }
 
-        private List<DjangoItemInfo> BuildTagInfos()
-        {
+        //private List<DjangoItemInfo> BuildTagInfos()
+        //{
 
 
-            var summaries = GetSummeries(this.HttpContext);
-            var tagInfos = new List<DjangoItemInfo>();
-            var baseDynamicTagType = typeof(DynamicTagBase);
-            var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
-            var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
-            var dtags = baseDynamicTagType.Assembly.GetTypes().Where(x => !x.IsAbstract && baseDynamicTagType.IsAssignableFrom(x)).ToList();
-
-
-
-
-            foreach (var installedTag in _templateManagerProvider.Tags)
-            {
-                var tt = installedTag.Value.GetType();
-                if (tt.GetCustomAttributes(typeof(ObsoleteAttribute), true).FirstOrDefault() != null)
-                {
-                    continue;
-                }
-                var att = (NDjango.Interfaces.NameAttribute)tt.GetCustomAttributes(nameAttType, false).FirstOrDefault();
-                var descriptionAttribute = (NDjango.ParserNodes.DescriptionAttribute)tt.GetCustomAttributes(descAttType, false).FirstOrDefault();
-
-
-                var typeLookup = tt.FullName.Replace("+", ".");
-
-                var item = new DjangoItemInfo()
-                {
-                    Description = descriptionAttribute != null ? descriptionAttribute.Description : null,
-                    TagName = installedTag.Key,
-                    Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
-                    DocUrl = "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedTag.Key
-                };
+        //    var summaries = GetSummeries(this.HttpContext);
+        //    var tagInfos = new List<DjangoItemInfo>();
+        //    var baseDynamicTagType = typeof(DynamicTagBase);
+        //    var nameAttType = typeof(NDjango.Interfaces.NameAttribute);
+        //    var descAttType = typeof(NDjango.ParserNodes.DescriptionAttribute);
+        //    var dtags = baseDynamicTagType.Assembly.GetTypes().Where(x => !x.IsAbstract && baseDynamicTagType.IsAssignableFrom(x)).ToList();
 
 
 
-                tagInfos.Add(item);
-            }
-            return tagInfos.OrderBy(x => x.TagName).ToList();
-        }
+
+        //    foreach (var installedTag in _templateManagerProvider.Tags)
+        //    {
+        //        var tt = installedTag.Value.GetType();
+        //        if (tt.GetCustomAttributes(typeof(ObsoleteAttribute), true).FirstOrDefault() != null)
+        //        {
+        //            continue;
+        //        }
+        //        var att = (NDjango.Interfaces.NameAttribute)tt.GetCustomAttributes(nameAttType, false).FirstOrDefault();
+        //        var descriptionAttribute = (NDjango.ParserNodes.DescriptionAttribute)tt.GetCustomAttributes(descAttType, false).FirstOrDefault();
+
+
+        //        var typeLookup = tt.FullName.Replace("+", ".");
+
+        //        var item = new DjangoItemInfo()
+        //        {
+        //            Description = descriptionAttribute != null ? descriptionAttribute.Description : null,
+        //            TagName = installedTag.Key,
+        //            Summary = summaries.ContainsKey(typeLookup) ? summaries[typeLookup] : null,
+        //            DocUrl = "https://docs.djangoproject.com/en/1.3/ref/templates/builtins/#" + installedTag.Key
+        //        };
+
+
+
+        //        tagInfos.Add(item);
+        //    }
+        //    return tagInfos.OrderBy(x => x.TagName).ToList();
+        //}
 
 
 

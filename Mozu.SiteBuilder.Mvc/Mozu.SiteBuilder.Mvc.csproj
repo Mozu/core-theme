@@ -34,6 +34,7 @@
     <PackageReference Include="Mozu.Tenant.Contracts" Version="1.1942.0-dotnetcore.42" />
     <PackageReference Include="NDjangoParser40" Version="1.2008.0-dotnetcore.2" />
     <PackageReference Include="NDjangoParserFilters40" Version="1.2008.0-dotnetcore.2" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

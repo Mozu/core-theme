@@ -26,11 +26,13 @@ using System.Threading;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Linq.Expressions;
+using System.Net.Http.Formatting;
 using Microsoft.Extensions.Logging;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Api;
 using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Api.Client.Exceptions;
+using Mozu.Core.Api.ErrorHandler;
 using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
@@ -52,13 +54,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private readonly IPageContext _pageContext;
         private readonly VisitEventPublisher _visitPublisher;
         readonly ISiteContext _siteContext;
-        IHttpErrorResponseGenerator _errorGenerator;
+        IErrorResultConverterCollection _errorGenerator;
         readonly Lazy<ICaptchaClient> _captchaClient;
         ILogger _logger;
 
         public AuthController(IAuthenticationHelper authenticationHelper, ICustomerAccountWebApiClient customerAccountWebApiClient, IOrderWebApiClient orderWebApiClient, IAuthTicketWebApiClient authTicketWebApiClient, ICookieProvider cookieProvider, ISiteBuilderApiContext  apiContext, IPageContext pageContext, VisitEventPublisher visitPublisher,
             ISiteContext siteContext,
-            IHttpErrorResponseGenerator errorGenerator,
+            IErrorResultConverterCollection errorGenerator,
            Lazy<ICaptchaClient> captchaClient,
            ILogger logger)
         {
@@ -142,7 +144,11 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             resp = null;
             str = (str ?? "").Trim();
             if (str == HttpUtility.HtmlEncode(str)) return false;
-            resp = _errorGenerator.GenerateErrorResponse(this.Request, new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"));
+            var errorObj = _errorGenerator.ConvertExceptionToError(new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"), true);
+            resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter())
+            }; 
             return true;
         }
 

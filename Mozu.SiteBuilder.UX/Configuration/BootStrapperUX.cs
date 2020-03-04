@@ -134,7 +134,7 @@
 //        {
 //            base.InitializeAutoMapperProfiles(exp);
 //        }
-
+            // todo:cole refactor
 //        protected override void AddFilters(HttpConfiguration httpConfiguration,  Core.Api.Routing.ReflectedControllerIndex controllers)
 //        {
 

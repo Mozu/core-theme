@@ -83,7 +83,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
 
             if (pageWithUrl)
             {
-                if (int.TryParse(request["pageSize"], out int tmp))
+                if (int.TryParse(request.Query["pageSize"], out int tmp))
                 {
                     pageSize = tmp;
                 }
@@ -96,7 +96,7 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                     pageSize = 15;
                 }
 
-                if (int.TryParse(request["startIndex"], out tmp))
+                if (int.TryParse(request.Query["startIndex"], out tmp))
                 {
                     startIndex = tmp;
                 }

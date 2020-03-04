@@ -40,7 +40,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                     fileName = "mozu-javascript-sdk.min.js";
                     break;
             }
-            return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("js-sdk-build-dir"),fileName), "text/javascript");
+            return File(System.IO.Path.Combine(MozuConfigurationManager.Settings.AppSettings("js-sdk-build-dir"),fileName), "text/javascript");
         }
           [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "require")]
@@ -48,7 +48,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var fileName = mode == "debug" ? "mozu-require.debug.js" : "mozu-require.min.js";
 
-            return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("require-js-build-dir"), fileName), "text/javascript");
+            return File(System.IO.Path.Combine(MozuConfigurationManager.Settings.AppSettings("require-js-build-dir"), fileName), "text/javascript");
         }
           [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "hyprlive")]
@@ -56,7 +56,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         {
             var fileName = mode == "debug" ? "mozu-hyprlive.debug.js" : "mozu-hyprlive.min.js";
 
-            return File(System.IO.Path.Combine(MozuConfigurationManager.AppSettings("hyprlive-build-dir"), fileName), "text/javascript");
+            return File(System.IO.Path.Combine(MozuConfigurationManager.Settings.AppSettings("hyprlive-build-dir"), fileName), "text/javascript");
         }
 
     }

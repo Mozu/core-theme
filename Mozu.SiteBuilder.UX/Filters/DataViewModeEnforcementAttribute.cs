@@ -55,7 +55,7 @@ namespace Mozu.SiteBuilder.UX.Filters
                 return await ShowTheOriginalRequest(apiContext, viewMode, continuation);
             }
 
-            var loginAppHelper = new LoginAppRouteHelper(resolver.Resolve<ISettings>().LoginPath);
+            var loginAppHelper = new LoginAppRouteHelper(resolver.Resolve<IMozuSettings>().Domains.GetValue<string>("login", "/login"));
             // else we are in a locked-down state. Is there an admin logged in?
             if (!HasAdminCookie(adminToken))
             {
