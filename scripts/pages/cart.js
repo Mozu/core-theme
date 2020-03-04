@@ -48,26 +48,30 @@ define(['modules/api',
                 window.onVisaCheckoutReady = initVisaCheckout;
                 require([pageContext.visaCheckoutJavaScriptSdkUrl], initVisaCheckout);
             }
-            //Update currency rate for BF.
-            var currencyRate = pageContext.currencyRateInfo.rate;
-            var currencySymbol = pageContext.currencyInfo.symbol; 
-            var discountThresholdMesssages = this.model.attributes.discountThresholdMessages;
-            //check if threshold message is available
-            if(discountThresholdMesssages){
-              for(var p = 0; p < discountThresholdMesssages.length; p++){
-                var self = discountThresholdMesssages[p];
-                if(self.message){
-                  var msg = self.message.split(" ");
-                  for(var q=0; q< msg.length; q++){
-                    if(msg[q].indexOf("$") !== -1){
-                      var price = msg[q].replace("$", "");
-                      price = parseInt(price,10) * currencyRate;
-                      msg[q] = currencySymbol + price.toFixed(2);
+            //Check if BF is enabled
+            var isBfEnabled = this.getCookie('currency_country_code');
+            if(isBfEnabled && isBfEnabled !== "US"){
+              //Update currency rate for BF.
+              var currencyRate = pageContext.currencyRateInfo.rate;
+              var currencySymbol = pageContext.currencyInfo.symbol;
+              var discountThresholdMesssages = this.model.attributes.discountThresholdMessages;
+              //check if threshold message is available
+              if(discountThresholdMesssages){
+                for(var p = 0; p < discountThresholdMesssages.length; p++){
+                  var self = discountThresholdMesssages[p];
+                  if(self.message){
+                    var msg = self.message.split(" ");
+                    for(var q=0; q< msg.length; q++){
+                      if(msg[q].indexOf("$") !== -1){
+                        var price = msg[q].replace("$", "");
+                        price = parseInt(price,10) * currencyRate;
+                        msg[q] = currencySymbol + price.toFixed(2);
+                      }
                     }
+                    self.messaage = msg.join(" ");
                   }
-                  self.messaage = msg.join(" ");
+                  this.model.attributes.discountThresholdMessages[p] = self.messaage;
                 }
-                this.model.attributes.discountThresholdMessages[p] = self.messaage;
               }
             }
             
@@ -371,7 +375,15 @@ define(['modules/api',
         ],
         handleEnterKey: function () {
             this.addCoupon();
+        },
+        getCookie: function(cookiename) 
+        {
+          // Get name followed by anything except a semicolon
+          var cookiestring=RegExp(cookiename+"=[^;]+").exec(document.cookie);
+          // Return everything after the equal sign, or an empty string if the cookie name not found
+          return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
         }
+
     });
 
   function renderVisaCheckout(model) {
