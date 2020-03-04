@@ -263,7 +263,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// </summary>
         [HttpGet]
         [AddUnifiedCookieFilter]
-        public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null)
+        public async Task<HttpResponseMessage> PackingSlip(string orderId, int shipmentNumber, [FromUri(Name = "t")]string token = null, bool displayExternalId = false)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
             var shipment = (await _fulfillmentProxyClient.CloneWithoutUserClaims().GetShipment(shipmentNumber)).ReadAsSync();
@@ -288,11 +288,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             PopulateShipmentDetails(dcShipment, order);
 
             ViewData["order"] = order;
+            ViewData["displayExternalId"] = displayExternalId;
             return await RenderWithContext(template, shipment);
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> PickWave(int pickWaveNumber, bool printPickWave, bool printPackingLists, bool printSingleOrderSheets)
+        public async Task<HttpResponseMessage> PickWave(int pickWaveNumber, bool printPickWave, bool printPackingLists, bool printSingleOrderSheets, bool displayExternalId = false)
         {
             var fulfillmentProxyClient = _fulfillmentProxyClient.CloneWithoutUserClaims();
             var pickWave = (await fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
@@ -323,12 +324,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["printPickwave"] = printPickWave;
             ViewData["printPackingSlips"] = printPackingLists;
             ViewData["printPickSheets"] = printSingleOrderSheets;
+            ViewData["displayExternalId"] = displayExternalId;
 
             return await RenderWithContext(template, pickWave);
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> OrderPickSheets(int pickWaveNumber)
+        public async Task<HttpResponseMessage> OrderPickSheets(int pickWaveNumber, bool displayExternalId = false)
         {
             var fulfillmentProxyClient = _fulfillmentProxyClient.CloneWithoutUserClaims();
             var pickWave = (await fulfillmentProxyClient.GetPickWave(pickWaveNumber)).ReadAsAsync().Result;
@@ -355,7 +357,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Could not find order pick sheet template for the current Theme.");
             }
-
+            ViewData["displayExternalId"] = displayExternalId;
             return await RenderWithContext(template, shipments);
         }
 

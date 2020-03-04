@@ -48,13 +48,22 @@ namespace Mozu.SiteBuilder.UX.Admin.Configuration
             routes.MapHttpRoute("packing slip", "s-{siteId}/orderdetails/{orderId}/shipments/{shipmentNumber}",
                                 new { action = "Deets", controller = "OrderDetails" });
 
+            routes.MapHttpRoute("packing slip externalId", "s-{siteId}/orderdetails/{orderId}/shipments/{shipmentNumber}/{displayExternalId}",
+                    new { action = "Deets", controller = "OrderDetails" });
+
             routes.MapHttpRoute("transfer packing slip", "s-{siteId}/orderdetails/{orderId}/transfers/{shipmentNumber}",
                                 new { action = "Transfer", controller = "OrderDetails" });
 
             routes.MapHttpRoute("pick wave", "s-{siteId}/pickwave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}",
                                 new { action = "PickWave", controller = "OrderDetails" });
 
+            routes.MapHttpRoute("pick wave externalId", "s-{siteId}/pickwave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}/{displayExternalId}",
+                                new { action = "PickWave", controller = "OrderDetails" });
+
             routes.MapHttpRoute("order pick sheet", "s-{siteId}/orderpicksheets/{pickWaveNumber}",
+                                new { action = "OrderPickSheets", controller = "OrderDetails" });
+
+            routes.MapHttpRoute("order pick sheet externalId", "s-{siteId}/orderpicksheets/{pickWaveNumber}/{displayExternalId}",
                                 new { action = "OrderPickSheets", controller = "OrderDetails" });
 
             routes.Add("scripts/{*.pathInfo}", new IgnoreRoute("scripts/{*.pathInfo}"));

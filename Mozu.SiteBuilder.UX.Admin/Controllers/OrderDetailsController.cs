@@ -31,7 +31,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         /// on storefront and sends a 302 redirects to storefront.
         /// </summary>
         [HttpGet]
-        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber)
+        public HttpResponseMessage Deets(int siteId, string orderId, int shipmentNumber, Boolean displayExternalId = false)
         {
             var claim = CreateLimitedUserClaimsForOrder(orderId);
             string tok = claim.ToAccessToken();
@@ -41,6 +41,8 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
             {
                 destinationUrl += "/shipments/" + shipmentNumber;
             }
+            if (displayExternalId)
+                destinationUrl += "/" + displayExternalId;
 
             destinationUrl += "?t=" + HttpUtility.UrlEncode(tok);
 
@@ -50,13 +52,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage PickWave(int siteId, int pickWaveNumber, Boolean printPickWave = true, Boolean printPackingLists = false, Boolean printSingleOrderSheets = false)
+        public HttpResponseMessage PickWave(int siteId, int pickWaveNumber, Boolean printPickWave = true, Boolean printPackingLists = false, Boolean printSingleOrderSheets = false, Boolean displayExternalId = false)
         {
             if (pickWaveNumber <= 0) {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            string destinationUrl = $"/back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}";
+            string destinationUrl;
+            if(displayExternalId)
+                destinationUrl = $"/back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}/{displayExternalId}";
+            else
+                destinationUrl = $"/back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}";
 
             var resp = Request.CreateResponse(HttpStatusCode.Found);
             resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
@@ -64,14 +70,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage OrderPickSheets(int siteId, int pickWaveNumber)
+        public HttpResponseMessage OrderPickSheets(int siteId, int pickWaveNumber, Boolean displayExternalId = false)
         {
             if (pickWaveNumber <= 0) {
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
-
-            string destinationUrl = "/back-office/order-pick-sheets/" + pickWaveNumber;
-
+            string destinationUrl;
+            if (displayExternalId)
+                destinationUrl = "/back-office/order-pick-sheets/" + pickWaveNumber + "/" + displayExternalId;
+            else
+                destinationUrl = "/back-office/order-pick-sheets/" + pickWaveNumber;
+            
             var resp = Request.CreateResponse(HttpStatusCode.Found);
             resp.Headers.Location = new Uri("/_gosite/" + siteId + "?environment=standalone&redir=" + HttpUtility.UrlEncode(destinationUrl), UriKind.Relative);
             return resp;
