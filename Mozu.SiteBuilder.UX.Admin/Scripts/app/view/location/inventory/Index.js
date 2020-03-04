@@ -157,7 +157,7 @@ Ext.define('Taco.view.location.inventory.Index', {
                     },
                     {
                         xtype: 'menucheckitem',
-                        text: 'Amol',
+                        text: 'Add',
                         itemId: 'adjustmentModeAdd',
                         group: 'adjustmentMode',
                         checked: true
