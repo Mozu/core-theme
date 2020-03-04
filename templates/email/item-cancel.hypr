@@ -10,24 +10,24 @@
         <thead>
             <tr>
                 <td bgcolor="#666666"><font color="#ffffff">{{ labels.product }}</font></td>
+				<td bgcolor="#666666"><font color="#ffffff">{{ labels.productCode }}</font></td>
+				<td bgcolor="#666666"><font color="#ffffff">{{ labels.qty }}</font></td>
                 <td align="right" bgcolor="#666666"><font color="#ffffff">{{ labels.subtotal }}</font></td>
             </tr>
         </thead>
-        {% for item in model.items %}
+        {% for item in model.canceledItems %}
             <tbody class="mz-ordersummary-lineitems">
               <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">
-                      {{ item.product.name }}
-                      {% if item.product.productUsage == 'Bundle' %}
-                      <dl class="mz-propertylist">
-                        {% for bundledProduct in item.product.bundledProducts %}
-                        <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                        <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                        {% endfor %}
-                      </dl>s
-                      {% endif %}
+                      {{ item.name }}
                     </td>
-                    <td align="right"> {% include "modules/common/email-item-price" %}</td>
+					<td>
+                      {{ item.productCode }}
+                    </td>
+					<td>
+                      {{ item.quantity }}
+                    </td>
+                    <td align="right"> {{ item.unitPrice|currency }}</td>
                 </tr>
             </tbody>
         {% endfor %}

@@ -97,10 +97,10 @@
       "title": "Order Cancel"
     },
     {
-      "id": "item.cancelled",
+      "id": "shipment.itemscanceled",
       "properties": {},
       "template": "email/item-cancel",
-      "title": "Item Cancel"
+      "title": "Shipment Item Canceled"
     },
     {
       "id": "checkout.changed",
