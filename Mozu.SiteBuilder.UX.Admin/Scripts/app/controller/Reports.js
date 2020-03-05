@@ -3,10 +3,10 @@
 Ext.define('Taco.controller.Reports', {
     extend: 'Taco.core.Controller',
     requires: [
-        'Taco.view.report.Split'
+        'Taco.view.report.ReportView'
     ],
-    indexView: 'Taco.view.report.Split',
+    indexView: 'Taco.view.report.ReportView',
     theme: function () {
-        //this.createContentView('Taco.view.report.Theme');
+        
     }
 });

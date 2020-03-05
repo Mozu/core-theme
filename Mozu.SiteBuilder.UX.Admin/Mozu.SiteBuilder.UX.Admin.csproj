@@ -1099,8 +1099,7 @@
     <Content Include="Scripts\app\view\publishing\modal\PublishSetPicker.js" />
     <Content Include="Scripts\app\view\publishing\Split.js" />
     <Content Include="Scripts\app\view\react\Index.js" />
-    <Content Include="Scripts\app\view\report\ReportList.js" />
-    <Content Include="Scripts\app\view\report\Split.js" />
+    <Content Include="Scripts\app\view\report\ReportView.js" />
     <Content Include="Scripts\app\view\returns\Edit.js" />
     <Content Include="Scripts\app\view\returns\Index.js" />
     <Content Include="Scripts\app\view\order\widget\ReturnInternalNotesGrid.js" />
@@ -1202,9 +1201,6 @@
     <Content Include="Scripts\app\view\product\variant\Modal.js" />
     <Content Include="Scripts\app\view\product\variant\Options.js" />
     <Content Include="Scripts\app\view\product\widget\ProductBundleGrid.js" />
-    <Content Include="Scripts\app\view\report\Header.js" />
-    <Content Include="Scripts\app\view\report\Index.js" />
-    <Content Include="Scripts\app\view\report\SidebarList.js" />
     <Content Include="Scripts\app\view\settings\localization\modal\Attributes.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductVariants.js" />
     <Content Include="Scripts\app\view\settings\localization\ProductProperties.js" />
