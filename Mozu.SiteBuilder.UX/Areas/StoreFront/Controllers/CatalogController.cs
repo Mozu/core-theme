@@ -88,7 +88,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.ProductDetailsAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> ProductDetail(string productCode, string vpc = null)
+        public async Task<ActionResult> ProductDetail(string productCode, string vpc = null)
         {
             var productResponse = await _productClient.GetProduct(productCode, vpc, 
                 "Categories,Properties,Options", PageContext.IsEditMode, supressOutOfStock404: true).ConfigureAwait(false);
@@ -334,7 +334,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CategoryAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [HttpHead]
         [HttpGet]
-        public async Task<HttpResponseMessage> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
+        public async Task<ActionResult> Category(int? categoryId = null, string categoryCode=null, string variationId = "")
         {
 
             var catTree = ( _categoryTreeProvider.GetAllCategories());
@@ -405,7 +405,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> CategoryFeed(int? categoryId = null)
+        public async Task<ActionResult> CategoryFeed(int? categoryId = null)
         {
             var itemsPerPage = 10;
             var startIdx = 0;

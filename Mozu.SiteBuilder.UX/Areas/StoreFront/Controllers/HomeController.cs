@@ -49,7 +49,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         
       
         [System.Web.Http.HttpGet]
-        public new HttpResponseMessage NotFound()
+        public new ActionResult NotFound()
         {
             return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Page not found.");
             //PageContext.CmsContext = new CmsPageContext()
@@ -67,13 +67,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             //return this.View("404");
         }
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> SeoProcessor(string url = null)
+        public async Task<ActionResult> SeoProcessor(string url = null)
         {
             return this.Request.CreateResponse();
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> GoogleSiteVerification(string hash)
+        public async Task<ActionResult> GoogleSiteVerification(string hash)
         {
             var webToolsRepository = LifetimeScope.Resolve<IWebToolsRepository>();
             var resp = await webToolsRepository.GetWebMasterToolsFile($"google{hash}.html");

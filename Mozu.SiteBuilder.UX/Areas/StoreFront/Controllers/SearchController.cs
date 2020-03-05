@@ -28,6 +28,7 @@ using System.Net.Http.Headers;
 using System.IO;
 using System.Net;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -55,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.SearchIndexAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
-        [HttpGet]
-        public async Task<HttpResponseMessage> Index(
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Index(
             string query = null, 
             int? categoryId = null, 
             string categoryCode = null , 
@@ -176,7 +177,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(System.Net.HttpStatusCode.OK, View(searchPageType, pc));
         }
 
-        HttpResponseMessage CreateDebugResponse (string debugTxt)
+        ActionResult CreateDebugResponse (string debugTxt)
         {
             var jsonPfn =Request.GetQueryNameValuePairs().Where(kvp => kvp.Key.Equals("json.wrf", StringComparison.OrdinalIgnoreCase)).Select(kvp=> kvp.Value).FirstOrDefault();
 
@@ -337,7 +338,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
         }
 
-        [ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
+        [System.Web.Http.ModelBinding.ModelBinder(typeof(AdvancdSearchParamterModelBinder))]
         public class AdvancedSearchParamaters
         {
 

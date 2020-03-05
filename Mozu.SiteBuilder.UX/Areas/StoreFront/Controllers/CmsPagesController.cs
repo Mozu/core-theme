@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Content.Contracts;
 using Mozu.Core.Actions;
 using Mozu.Core.Expressions;
@@ -49,9 +49,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _expressionEvaluator = expressionEvaluator;
         }
 
-        [HttpHead]
-        [HttpGet]
-        public async Task<HttpResponseMessage> ContentIndex(string documentListName, string listView = null)
+        [System.Web.Http.HttpHead]
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> ContentIndex(string documentListName, string listView = null)
         {
             var redirect = _customRouteHandler.RedirectWithContext(Request, FancyRoute.CmsList,
                 () => new Dictionary<string, object> {{"listName", documentListName}, {"listView", listView}});
@@ -100,13 +100,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, view);
         }
 
-        [HttpHead]
-        [HttpGet]
+        [System.Web.Http.HttpHead]
+        [System.Web.Http.HttpGet]
         //[SbActionExtensionFilter(ActionFilterConstants.CmsPageBeforeAction,
         //    ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(ActionFilterConstants.CmsPageAfterAction,
         //    ActionExtensionExecutionTypes.AfterController)]
-        public async Task<HttpResponseMessage> Page(string documentListName, string documentName, string variationId = "")
+        public async Task<ActionResult> Page(string documentListName, string documentName, string variationId = "")
         {
             PageContext.CmsContext = new CmsPageContext
             {

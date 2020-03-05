@@ -9,7 +9,7 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
     {
     }
 
-    public class ViewResultBase : ActionResult/*, Mozu.Core.Actions.Contracts.Http.IViewResult server side JS*/
+    public class ViewResultBase : Microsoft.AspNetCore.Mvc.ActionResult/*, Mozu.Core.Actions.Contracts.Http.IViewResult server side JS*/
     {
         private ViewDataDictionary _viewDataDictionary;
         [JsonIgnore]
@@ -17,11 +17,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         {
             get => _viewDataDictionary ??= new ViewDataDictionary();
             set => _viewDataDictionary = value;
-        }
-
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
-        {
-            throw new NotImplementedException();
         }
 
         public string ViewName { get; set; }

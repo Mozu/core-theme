@@ -13,7 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using CartItem = Mozu.SiteBuilder.UX.Models.StoreFront.Commerce.CartItem;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
@@ -29,8 +29,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _hyprViewEngine = hyprViewEngine;
         }
 
-        [HttpGet]
-        public async Task<HttpResponseMessage> Index(string templateId)
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Index(string templateId)
         {
            
             var pageType = SiteContext.Theme.PageTypes.FirstOrDefault(x => x.Id == templateId);

@@ -9,6 +9,7 @@ using Mozu.ProductRuntime.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc.Navigation;
 using System.Xml;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.UX.Controllers;
 using Mozu.SiteBuilder.UX.Models.StoreFront.Catalog;
 using Mozu.SiteBuilder.UX.Filters;
@@ -46,7 +47,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> Index()
+        public async Task<ActionResult> Index()
         {
             var cursor = (await _productSearchWebApiClient
                 .CloneWithoutUserClaims()
@@ -127,7 +128,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> Categories()
+        public async Task<ActionResult> Categories()
         {
             // var primaryNavTask = _gandalf.GetTreeNavigation();
             //var domainTask = GetSitePrimaryDomain();
@@ -165,7 +166,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> ProductBatch(string page)
+        public async Task<ActionResult> ProductBatch(string page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();
@@ -204,7 +205,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> Products(int page)
+        public async Task<ActionResult> Products(int page)
         {
             var prefixDomain = GetPrefixedSitePrimaryDomain();
             var nakedDomain = GetNakedSitePrimaryDomain();

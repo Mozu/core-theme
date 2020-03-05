@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Orders;
@@ -51,8 +51,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         //todo:hyper  remiplement auth att.
         // [SiteBuilderAuthorize()]
-        [HttpGet]
-        public async Task<HttpResponseMessage> Index()
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Index()
         {
             var userClaims = _apiContext.UserClaims;
             string orderId = null;

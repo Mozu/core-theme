@@ -139,7 +139,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //
         // GET: /StoreFront/Email/
         [HttpGet]
-        public async Task<HttpResponseMessage> Preview(string id)
+        public async Task<ActionResult> Preview(string id)
         {
             var emailTemplate = SiteContext.Theme.EmailTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(id));
             var queryStringParams = Request.GetQueryNameValuePairs();
@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> Render(EmailNotification notification)
+        public async Task<ActionResult> Render(EmailNotification notification)
         {
             User user = null;
             var emailTypeInfo = g_emailTypeInfos.FirstOrDefault(x => string.Equals(x.Topic, notification.Topic, StringComparison.OrdinalIgnoreCase));

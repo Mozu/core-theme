@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
@@ -11,7 +10,6 @@ using Mozu.Customer.Contracts;
 using Mozu.Customer.Contracts.Clients;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using Mozu.SiteBuilder.Mvc.Security;
 using Mozu.SiteBuilder.UX.Controllers;
@@ -27,6 +25,8 @@ using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using System.Linq.Expressions;
 using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.Core.Exceptions;
 using Mozu.Core.Api;
@@ -37,6 +37,8 @@ using Mozu.Core.Logging;
 using Mozu.Core.Settings;
 using Newtonsoft.Json.Linq;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
+using RedirectResult = Microsoft.AspNetCore.Mvc.RedirectResult;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 {
@@ -131,7 +133,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (
                 HasInvalidCharecters(accountInfo.Account?.FirstName, "firstName", out var ret) ||
                 HasInvalidCharecters(accountInfo.Account?.LastName, "lastName", out ret) ||
-                 HasInvalidCharecters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
+                HasInvalidCharecters(accountInfo.Account?.EmailAddress, "emailAddress", out ret) ||
                 HasInvalidCharecters(accountInfo.Account?.UserName, "userName", out ret) 
                 )
             {
@@ -139,16 +141,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             return (await LoginAndTrack(() => _customerAccountWebApiClient.AddAccountAndLogin(accountInfo))).ResponseMessage;
         }
-        bool  HasInvalidCharecters(string str, string fieldName, out HttpResponseMessage resp)
+
+        bool HasInvalidCharecters(string str, string fieldName, out HttpResponseMessage resp)
         {
             resp = null;
             str = (str ?? "").Trim();
             if (str == HttpUtility.HtmlEncode(str)) return false;
             var errorObj = _errorGenerator.ConvertExceptionToError(new VaeMissingOrInvalidParameterException(fieldName, "contains invalid characters"), true);
-            resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter())
-            }; 
+            resp = new HttpResponseMessage(HttpStatusCode.BadRequest) { Content = new ObjectContent(errorObj.GetType(), errorObj, new JsonMediaTypeFormatter())};
             return true;
         }
 
@@ -164,7 +164,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 Password = password,
             }));
         }
-      
             
         protected async Task<ServiceClientResponse<StreamContent>> DoResetPassword(ResetPasswordInfo info)
         {
@@ -194,23 +193,21 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
-        public HttpResponseMessage LogOut(string returnUrl = null, bool saveUserId = false)
+        public IActionResult LogOut(string returnUrl = null, bool saveUserId = false)
         {
             DoLogout(saveUserId);
-
-            var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
+            //var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
            
-            //redir.Headers.AddCookies(
-            //    HttpContext.Response.Cookies.AllKeys.Select(x=> HttpContext.Response.Cookies[x]).Select(x=> new CookieHeaderValue(x.Name, x.Value ){Expires =x.Expires,Secure=x.Secure }));
+            ////redir.Headers.AddCookies(
+            ////    HttpContext.Response.Cookies.AllKeys.Select(x=> HttpContext.Response.Cookies[x]).Select(x=> new CookieHeaderValue(x.Name, x.Value ){Expires =x.Expires,Secure=x.Secure }));
             
-            redir.Headers.Location = MakeRedirectUri(returnUrl);
-            return redir;
-
+            //redir.Headers.Location = MakeRedirectUri(returnUrl);
+            return new RedirectResult(returnUrl);
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
         public ActionResult Login(string returnUrl = null)
         {
@@ -286,36 +283,39 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public string token { get;  set; }
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> CreateAccount(CustomerAccountAndAuthInfo authInfo)
-         {
-             var res = await DoCreateAccount(authInfo);
-             if (res.IsSuccessStatusCode)
-             {
-                 return res;
-             }
-             return Request.CreateResponse(HttpStatusCode.Unauthorized, new
-             {
-                Message = $"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again."
-             });
+        public async Task<IActionResult> CreateAccount(CustomerAccountAndAuthInfo authInfo)
+        {
+            var res = await DoCreateAccount(authInfo);
+            if (res.IsSuccessStatusCode)
+            {
+                return new OkResult();
+            }
+
+            return new ForbidResult($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
         }
 
-        [AcceptVerbs("OPTIONS", "POST")]
+        [System.Web.Http.AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
+        public async Task<IActionResult> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
             if (Request.Method.Method == "OPTIONS")
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return new OkResult();
             }
+
             var res = await DoCreateAccount(authInfo);
 
-             return res;
-         }
+            if (res.IsSuccessStatusCode)
+            {
+                return new OkResult();
+            }
 
+            return new ForbidResult($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
+        }
 
-       Task<CaptchResponse> ValidateToken( string token)
+        Task<CaptchResponse> ValidateToken( string token)
         {
             var captchaEnabled = _siteContext.ThemeSettings.Get<bool>("recaptchaEnabled", false);
             var secret = _siteContext.ThemeSettings.Get<string>("__recaptchaSecrete", null);
@@ -325,10 +325,12 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
             return _captchaClient.Value.Validate(token, secret, _apiContext.RequestCancellationToken);
         }
+
         public interface ICaptchaClient
         {
             Task<CaptchResponse> Validate(string token, string secret, CancellationToken cancellationToken);
         }
+
         public class CaptchaClient: ICaptchaClient
         {
             readonly ISettings _settings;
@@ -396,7 +398,6 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         }
         public class CaptchResponse
         {
-
             public bool? NoOp { get; set; }
             public bool? success { get; set; }
             public DateTime challenge_ts { get; set; }
@@ -418,7 +419,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> Login(LoginDetails details)
+        public async Task<IActionResult> Login(LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
             {
@@ -440,17 +441,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var res = await DoLogin(email, password, token);
 
-            if (res.ResponseMessage.IsSuccessStatusCode)
+            if (!res.ResponseMessage.IsSuccessStatusCode) return LoginFailed(email);
+
+            if (string.IsNullOrEmpty(returnUrl))
             {
-                var redir = Request.CreateResponse(statusCode: HttpStatusCode.Redirect);
-                if (string.IsNullOrEmpty(returnUrl))
-                {
-                    returnUrl = this.SiteContext.SiteSubdirectory + "/myaccount";
-                }
-                redir.Headers.Location = MakeRedirectUri(returnUrl);
-                return redir;
+                returnUrl = SiteContext.SiteSubdirectory + "/myaccount";
             }
-            return LoginFailed(email);
+            return new RedirectResult(returnUrl);
         }
 
         string GetLabel(string id, string defaultValue)
@@ -458,12 +455,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return _siteContext.Labels.TryGetValue(id, out var val) ? val : defaultValue;
         }
 
-        private HttpResponseMessage LoginFailed(string email = null, string code = null)
+        private ActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
             FourHundredMessageHandler.BypassErrorHandler(this.Request);
-            return  Request.CreateResponse(HttpStatusCode.Unauthorized,
-                View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
+            return new ForbidResult(errorMsg); 
+            //Request.CreateResponse(HttpStatusCode.Unauthorized,
+            //    View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
         }
 
         private string GetLoginFailureMessage(string email, string errorCode = null)
@@ -493,9 +491,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
-        public async Task<object> AjaxLogin(LoginDetails details)
+        public async Task<IActionResult> AjaxLogin(LoginDetails details)
         {
             if (string.IsNullOrWhiteSpace(details?.email))
             {
@@ -518,10 +516,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (res.ResponseMessage.IsSuccessStatusCode)
             {
-                return new
-                {
-                    Message = $"Logged in as {HttpUtility.HtmlEncode(email)}."
-                };
+                return new OkObjectResult($"Logged in as {HttpUtility.HtmlEncode(email)}.");
             }
             var errorCode = default(string);
             if ( res.ReadException() is ApiWebClientException ex)
@@ -532,14 +527,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             return AjaxLoginFailure(email, errorCode);
         }
 
-        private object AjaxLoginFailure(string email=null, string errorCode = null)
+        private ActionResult AjaxLoginFailure(string email=null, string errorCode = null)
         {
-
             var errorMsg = GetLoginFailureMessage(email, errorCode);
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, new
-            {
-                Message = errorMsg
-            });
+            return new ForbidResult(errorMsg);
         }
 
         public class OrderDetails
@@ -552,7 +543,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> AnonymousOrderLogin(OrderDetails details)
+        public async Task<IActionResult> AnonymousOrderLogin(OrderDetails details)
         {
             var orderNumber = details?.orderNumber;
             var email = details?.email;
@@ -561,19 +552,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             if (string.IsNullOrEmpty(orderNumber))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new
-                {
-                    Message = "Order Number is required."
-                });
+                return new BadRequestObjectResult("Order Number is required.");
             }
 
             // make sure one of the three challenges are provided
             if (string.IsNullOrEmpty(email) && string.IsNullOrEmpty(billingZipCode) && string.IsNullOrEmpty(billingPhoneNumber))
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, new
-                {
-                    Message = "Verification field required."
-                });
+                return new BadRequestObjectResult("Verification field required.");
             }
 
             // The form field is intended to possibly match to two order fields: orderNumber or
@@ -591,19 +576,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var res = await _orderWebApiClient.CloneWithoutUserClaims().GetOrders(filter: idFilter);
             if (res.HasException)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new
+                return new ObjectResult(new
                 {
-                    Message = "An unknown error occured, please try again."
-                });
+                    statusCode = (int) HttpStatusCode.InternalServerError,
+                    message = "An unknown error occured, please try again."
+                }) {StatusCode = (int) HttpStatusCode.InternalServerError};
             }
 
             var orders = res.ReadAsSync().Items;
             if (orders == null || !orders.Any())
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound, new
-                {
-                    Message = "anonOrderNumberMissing"
-                });
+                return new NotFoundObjectResult("anonOrderNumberMissing");
             }
 
             if (!string.IsNullOrEmpty(email))
@@ -648,10 +631,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var profileToken = _authenticationHelper.GetProfileToken();
             _authenticationHelper.SaveStoreFrontAccessToken(userClaims.ToAccessToken(), profileToken, DateTime.Now.AddMinutes(20));
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return new OkResult();
         }
 
-        private HttpResponseMessage GenerateInvalidChallengeResponse()
+        private ActionResult GenerateInvalidChallengeResponse()
         {
             return Request.CreateResponse(HttpStatusCode.BadRequest, new
             {
@@ -659,23 +642,31 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             });
         }
 
-        [HttpPost, HttpOptions]
+        [System.Web.Http.HttpPost, System.Web.Http.HttpOptions]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> AjaxResetPassword(ResetPasswordInfo info)
+        public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
          {
             if (Request.Method.Method == "OPTIONS")
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return new OkResult();
 
             var res = await DoResetPassword(info);
 
-             return res.ResponseMessage;
-         }
+            if (res.ResponseMessage.IsSuccessStatusCode)
+                return new OkResult();
 
-        [HttpGet]
+            return new ObjectResult(new
+                {
+                    statusCode = (int)HttpStatusCode.InternalServerError,
+                    message = res.ResponseMessage.ReasonPhrase
+                })
+                { StatusCode = (int)HttpStatusCode.InternalServerError };
+        }
+
+        [System.Web.Http.HttpGet]
         [SslOnlyActionFilter]
-        public async Task<ActionResult> ResetPassword(string t, string u)
+        public async Task<IActionResult> ResetPassword(string t, string u)
         {
-            if (this.PageContext != null && this.PageContext.User != null && this.PageContext.User.IsAuthenticated)
+            if (PageContext?.User != null && this.PageContext.User.IsAuthenticated)
             {
                 return new RedirectResult(string.IsNullOrEmpty(this.SiteContext.SiteSubdirectory) ? "/" : this.SiteContext.SiteSubdirectory);
             }
@@ -717,16 +708,13 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
              public object[] messages { get; set; }
          }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         [SslOnlyActionFilter]
-        public async Task<HttpResponseMessage> ResetPassword(ResetPasswordConfirmDetails info)
+        public async Task<IActionResult> ResetPassword(ResetPasswordConfirmDetails info)
         {
-            if (this.PageContext != null && this.PageContext.User != null && this.PageContext.User.IsAuthenticated)
+            if (PageContext?.User != null && this.PageContext.User.IsAuthenticated)
             {
-                var redir = this.Request.CreateResponse(statusCode: System.Net.HttpStatusCode.Redirect);
-
-                redir.Headers.Location = MakeRedirectUri();
-                return redir;
+                return new RedirectResult(MakeRedirectUri().ToString());
             }
 
             var template = this.SiteContext.Theme.PageTypes.Where(x => x.Id == "Reset_Password").Select(x => x.Template).FirstOrDefault("Reset-Password");
@@ -746,14 +734,14 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
                 // Throw an error!
                 info.done = false;
                 info.messages = new object[] { new {message = "Passwords must match."}};
-                return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+                return View("Reset-Password", info);
             }
 
             var res = await DoResetPasswordConfirm(info);
             var ex = res.ReadException();
             info.done = res.ResponseMessage.IsSuccessStatusCode;
             info.messages = ex== null ? new object[0] : new object[] { new { message = ex.Message } };
-            return Request.CreateResponse(HttpStatusCode.OK, View("Reset-Password", info));
+            return View("Reset-Password", info);
         }
     }
 
@@ -842,10 +830,17 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _cookieProvider = cookieProvider;
         }
 
-        [HttpPost]
-        public async Task<HttpResponseMessage> Pants(HttpRequestMessage request)
+        [System.Web.Http.HttpPost]
+        public async Task<IActionResult> Pants(HttpRequestMessage request)
         {
-            return await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, this.SbApiContext, _authenticationHelper, "/", true);
+            var res = await Mvc.Auth.LoginCookieHelper.SetAdminUserCookie(request, _cookieProvider, this.SbApiContext, _authenticationHelper, "/", true);
+            if (res.IsSuccessStatusCode) return new OkResult();
+            return new ObjectResult(new
+                {
+                    statusCode = (int)HttpStatusCode.InternalServerError,
+                    message = res.ReasonPhrase
+                })
+                { StatusCode = (int)HttpStatusCode.InternalServerError };
         }
     }
 

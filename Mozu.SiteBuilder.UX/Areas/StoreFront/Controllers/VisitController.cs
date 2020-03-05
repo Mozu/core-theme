@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Mozu.Core.Logging;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -45,8 +46,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public HttpResponseMessage TrackingPixel([FromUri(Name="r")]string visitId)
+        [System.Web.Http.HttpGet]
+        public ActionResult TrackingPixel([FromUri(Name="r")]string visitId)
         {
             // try to parse the visitor id from the query string.
             var visitIdFromArg = Guid.Empty;
@@ -88,12 +89,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Returns a 1x1 transparant gif.
         /// </summary>
-        private HttpResponseMessage Pixel()
+        private static ActionResult Pixel()
         {
-            var pixelResponse = new HttpResponseMessage(HttpStatusCode.OK);
-            pixelResponse.Content = new ByteArrayContent(PIXEL_BYTES);
-            pixelResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("image/gif");
-            return pixelResponse;
+            return new FileContentResult(PIXEL_BYTES, new MediaTypeHeaderValue("image/gif"));
         }
     }
 }

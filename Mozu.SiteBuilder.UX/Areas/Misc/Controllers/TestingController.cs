@@ -41,7 +41,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         public Core.Caching.ICacheProvider CacheProvider { get; }
 
         [HttpGet()]
-        public async Task<HttpResponseMessage> Redis()
+        public async Task<ActionResult> Redis()
         {
            var cache = CacheProvider.GetCache(SitebuilderContextCacheRepository.CacheName, new ApiContext() { TenantId = 1 });
             var key = $"HealthCheck-{Environment.MachineName}";
@@ -55,9 +55,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var gotit = (await cache.GetAsync<string>(key).ConfigureAwait(false))?.Item;
             if ( data == gotit)
             {
-                return new HttpResponseMessage(HttpStatusCode.OK);
+                return new ActionResult(HttpStatusCode.OK);
             }
-            return new HttpResponseMessage(HttpStatusCode.NotFound);
+            return new ActionResult(HttpStatusCode.NotFound);
 
 
         }
@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [RefreshStoreFrontUserAuthTicketFilter]
         [AcceptVerbs("POST")]
-        public HttpResponseMessage RefreshAPiContextHeaders()
+        public ActionResult RefreshAPiContextHeaders()
         {
             var resp = Request.CreateResponse(HttpStatusCode.OK);
             resp.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
@@ -101,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [AcceptVerbs("GET")]
-        public HttpResponseMessage CoolDownUser()
+        public ActionResult CoolDownUser()
         {
             this.SbApiContext.UserClaims.Expiration = DateTime.Now.AddDays(-1);
             _authenticationHelper.SaveStoreFrontAccessToken(this.SbApiContext.UserClaims.ToAccessToken(), this.PageContext.UserProfile.ToToken());
@@ -115,7 +115,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         static HttpClient _client;
 
         [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
-        public Task<HttpResponseMessage> Api(string url)
+        public Task<ActionResult> Api(string url)
         {
             var resource = _config.GetSection("mozu:routes").GetChildren()
                 .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).FirstOrDefault(x => url.IndexOf(x, StringComparison.OrdinalIgnoreCase) == 0);
@@ -197,7 +197,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage Visit(string id = null)
+        public ActionResult Visit(string id = null)
         {
             if (int.TryParse(id, out var accountId))
             {

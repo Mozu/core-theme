@@ -77,7 +77,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartBeforeAction, executionType: ActionExtensionExecutionTypes.BeforeController)]
         //[SbActionExtensionFilter(actionId: ActionFilterConstants.CartAfterAction, executionType: ActionExtensionExecutionTypes.AfterController)]
         [System.Web.Http.HttpGet]
-        public async Task<HttpResponseMessage> Index()
+        public async Task<ActionResult> Index()
         {
             var redirect =  _customRouteHandler.RedirectWithContext(Request, FancyRoute.Cart);
             if (redirect != null) return redirect;

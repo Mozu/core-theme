@@ -92,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
 
         [System.Web.Http.HttpPost]
-        public async Task<HttpResponseMessage> Index(string id = null, HttpRequestMessage requestMessage = null)
+        public async Task<ActionResult> Index(string id = null, HttpRequestMessage requestMessage = null)
         {
             if (id == null)
             {

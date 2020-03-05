@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.CommerceRuntime.Contracts.Fulfillment;
@@ -55,8 +56,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Order summary, a.k.a. "Print Order".
         /// </summary>
-        [HttpGet]
-        public async Task<HttpResponseMessage> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> OrderSummary(string orderId, [FromUri(Name="t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
 
@@ -185,8 +186,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Packing Slip.
         /// </summary>
-        [HttpGet]
-        public async Task<HttpResponseMessage> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> PackingSlip(string orderId, string packageId, [FromUri(Name = "t")]string token = null)
         {
             var order = await GetOrderWithCustomToken(orderId, token);
             var package = order != null && order.Packages != null ? order.Packages.FirstOrDefault(p => p.Id == packageId) : null;
@@ -210,8 +211,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// <summary>
         /// Preview of 'order summary' page from sitebuilder.
         /// </summary>
-        [HttpGet]
-        public async Task<HttpResponseMessage> Preview(string templateid)
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Preview(string templateid)
         {
             var template = SiteContext.Theme.BackOfficeTemplates.FirstOrDefault(x => x.Id.EqualsIgnoreCase(templateid));
             if (template == null)
@@ -239,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         /// Takes a template, smooshes it with any page settings stored in CMS
         /// and returns the renderable result.
         /// </summary>
-        private Task<HttpResponseMessage> RenderWithContext(PageTypeDefinition template, object model)
+        private Task<ActionResult> RenderWithContext(PageTypeDefinition template, object model)
         {
             PageContext.CmsContext = new CmsPageContext()
             {
@@ -261,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
         private HttpResponseException TokenExpiredException()
         {
-            var resp = new HttpResponseMessage(HttpStatusCode.NotFound);
+            var resp = new ActionResult(HttpStatusCode.NotFound);
             resp.Content = new StringContent("Aw, poop! Your access to this page has expired. Please re-request this resource from admin.");
             return new HttpResponseException(resp);
         }

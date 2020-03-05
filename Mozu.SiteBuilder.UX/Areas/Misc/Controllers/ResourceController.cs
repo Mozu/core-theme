@@ -80,7 +80,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Stylesheets(string pathinfo, bool? debug = false, string dv = null)
+        public ActionResult Stylesheets(string pathinfo, bool? debug = false, string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
 
@@ -91,7 +91,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
         [HttpGet]
-        public HttpResponseMessage Less(string pathinfo= null , bool? debug = false)
+        public ActionResult Less(string pathinfo= null , bool? debug = false)
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
             var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
@@ -130,7 +130,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [HttpGet]
-        public HttpResponseMessage CompiledScripts(string pathinfo)
+        public ActionResult CompiledScripts(string pathinfo)
         {
             var resp = Content("compiled/scripts/" + pathinfo, "text/javascript");
             if (resp.StatusCode == HttpStatusCode.NotFound)
@@ -142,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "static")]
         [HttpGet]
-        public HttpResponseMessage StaticContentShare(string relativePath)
+        public ActionResult StaticContentShare(string relativePath)
         {
             var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
             var pathPrefix = Path.IsPathRooted(sharedFolder) ? "" : @"\\";
@@ -185,7 +185,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
         [HttpGet]
-        public async Task<HttpResponseMessage> HyprContextAction(string dv = null)
+        public async Task<ActionResult> HyprContextAction(string dv = null)
         {
             await SiteContext.Init();
             SbApiContext.SetDataMode(Convert(dv));
@@ -229,7 +229,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
+        public ActionResult Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
         {
             if (string.IsNullOrEmpty(shimRequire) && string.IsNullOrEmpty(shimExport))
             {
@@ -240,7 +240,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "images")]
         [HttpGet]
-        public HttpResponseMessage Widget(string pathinfo)
+        public ActionResult Widget(string pathinfo)
         {
             var pos = pathinfo.IndexOf('/');
             if (pos <= -1) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
@@ -254,7 +254,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "templates")]
         [HttpGet]
-        public HttpResponseMessage Templates(string pathinfo)
+        public ActionResult Templates(string pathinfo)
         {
             return Content("templates/" + pathinfo, "text/javascript");
         }
@@ -262,7 +262,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         [ClientCacheHeaders(ConfigKey = "content")]
         [HttpGet]
         [NoCdnForce]
-        public HttpResponseMessage Misc(string pathinfo, string contentType = null)
+        public ActionResult Misc(string pathinfo, string contentType = null)
         {
             var stem = "/resources/" + pathinfo;
             if (contentType == null)
@@ -275,7 +275,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "content")]
         [HttpGet]
-        public HttpResponseMessage SiteThumbnail()
+        public ActionResult SiteThumbnail()
         {
             if (SiteContext.Theme.Thumbnail == null || string.IsNullOrEmpty(SiteContext.Theme.Thumbnail.Name))
                 return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Theme thumbnail not specified.");
@@ -289,13 +289,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "content")]
         [HttpGet]
-        public new HttpResponseMessage Content(string pathinfo, string contentType = null)
+        public new ActionResult Content(string pathinfo, string contentType = null)
         {
             var resolvedContentType = contentType ?? GetMimeType(pathinfo);
             return GetFileResult(pathinfo, resolvedContentType);
         }
 
-        HttpResponseMessage GetFileResult(string pathinfo, string contentType)
+        ActionResult GetFileResult(string pathinfo, string contentType)
         {
             var file = _pathProvider.Value.GetThemeFileInfo(pathinfo);
             return file != null ?
