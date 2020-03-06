@@ -629,9 +629,6 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
 
             var ret = new List<CarrierConfiguration>();
 
-           // var activeProviders = (await _siteShippingSettingsClient.GetActiveRateProviders()).ReadAsSync();
-
-
             foreach (var setting in settings)
             {
                
@@ -642,21 +639,7 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 }
                 
                 var dcConfig = Mapper.Map<DC.CarrierConfiguration>(setting);
-                if (dcConfig.Settings == null || dcConfig.Settings.Count == 0 || dcConfig.Settings.All(x => x == null || string.IsNullOrEmpty(x.Value )))
-                {
-                    continue;
-                }
                 var featureId = FeatureDic[dcConfig.Id];
-                //if (!activeProviders.Any(x => x.Name == featureId))
-                //{
-                //    activeProviders.Add(new Core.Api.Contracts.Feature()
-                //                            {
-                //                                Name = featureId
-                //                            });
-
-                //    activeProviders = (await _siteShippingSettingsClient.UpdateActiveRateProviders( activeProviders)).ReadAsSync();
-
-                //}
 
                 if (setting.PreviousValue != null)
                 {

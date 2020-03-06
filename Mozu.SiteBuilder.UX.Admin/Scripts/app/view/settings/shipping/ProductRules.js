@@ -41,6 +41,13 @@ Ext.define('Taco.view.settings.shipping.ProductRules', {
             tabIndex: 3,
             route: 'shipping/productRules',
             isActive: true
+        },
+
+        {
+            title: 'Carrier accounts',
+            tabIndex: 4,
+            route: 'shipping/CarrierAccounts',
+            //isActive: true
         }
     ]
 

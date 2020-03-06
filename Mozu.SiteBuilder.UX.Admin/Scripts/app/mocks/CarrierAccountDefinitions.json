@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "id": "fedex",
+      "name": "FedEx"
+    },
+    {
+      "id": "ups",
+      "name": "UPS"
+    },
+    {
+      "id": "usps",
+      "name": "USPS"
+    }
+
+  ]
+}

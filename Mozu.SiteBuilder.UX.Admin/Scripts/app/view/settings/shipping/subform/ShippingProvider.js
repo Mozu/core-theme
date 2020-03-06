@@ -84,121 +84,121 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
             });
         }
 
-        if (this.record.get('id') === 'usps') {
-            this.returnItems = Ext.widget({
-                xtype: 'formform',
-                layout: {
-                    type: 'hbox',
-                    align: 'stretch'
-                },
-                hidden: !isEnabled,
-                width: 840,
-                itemId: 'returnForm',
-                items: [
-                    {
-                        xtype: 'panel',
-                        title: 'Permit Information',
-                        width: 420,
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        padding: '0 30 0 0',
-                        items: [
-                            {
-                                xtype: 'textfield',
-                                name: 'permitnumber',
-                                fieldLabel: 'Permit Number'
-                            },
-                            {
-                                type: 'container',
-                                width: 400,
-                                layout: {
-                                    type: 'hbox',
-                                    align: 'stretch'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        name: 'permitissuingcity',
-                                        fieldLabel: 'Permit issuing PO City',
-                                        padding: '0 80 0 0' 
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        name: 'permitissuingstate',
-                                        fieldLabel: 'Permit issuing PO State',
-                                        store: this.stateStore,
-                                        valueField: 'code',
-                                        displayField: 'name'
-                                    },
-                                ]
-                            },
-                            {
-                                xtype: 'textfield',
-                                name: 'permitissuingzip5',
-                                fieldLabel: 'Permit issuing PO Zip',
-                            }
-                        ]
-                    },
-                    {
-                        xtype: 'panel',
-                        title: 'Postage Due Unit (PDU) Information',
-                        width: 420,
-                        layout: {
-                            type: 'vbox',
-                            align: 'stretch'
-                        },
-                        items: [
-                            {
-                                xtype: 'textfield',
-                                name: 'pdupobox',
-                                fieldLabel: 'PDU PO Box'
-                            },
-                            {
-                                type: 'container',
-                                width: 400,
-                                layout: {
-                                    type: 'hbox',
-                                    align: 'stretch'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        name: 'pducity',
-                                        fieldLabel: 'PDU City',
-                                        padding: '0 120 0 0'   
-                                    },
-                                    {
-                                        xtype: 'combobox',
-                                        name: 'pdustate',
-                                        fieldLabel: 'PDU State',
-                                        store: this.stateStore,
-                                        valueField: 'code',
-                                        displayField: 'name'
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'container',
-                                width: 400,
-                                layout: {
-                                    type: 'hbox',
-                                    align: 'stretch'
-                                },
-                                items: [
-                                    {
-                                        xtype: 'textfield',
-                                        name: 'pduzip5',
-                                        fieldLabel: 'PDU Zip',
-                                        padding: '0 10 0 0'   
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            })
+       // if (this.record.get('id') === 'usps') {
+            //this.returnItems = Ext.widget({
+            //    xtype: 'formform',
+            //    layout: {
+            //        type: 'hbox',
+            //        align: 'stretch'
+            //    },
+            //    hidden: !isEnabled,
+            //    width: 840,
+            //    itemId: 'returnForm',
+            //    items: [
+            //        {
+            //            xtype: 'panel',
+            //            title: 'Permit Information',
+            //            width: 420,
+            //            layout: {
+            //                type: 'vbox',
+            //                align: 'stretch'
+            //            },
+            //            padding: '0 30 0 0',
+            //            items: [
+            //                {
+            //                    xtype: 'textfield',
+            //                    name: 'permitnumber',
+            //                    fieldLabel: 'Permit Number'
+            //                },
+            //                {
+            //                    type: 'container',
+            //                    width: 400,
+            //                    layout: {
+            //                        type: 'hbox',
+            //                        align: 'stretch'
+            //                    },
+            //                    items: [
+            //                        {
+            //                            xtype: 'textfield',
+            //                            name: 'permitissuingcity',
+            //                            fieldLabel: 'Permit issuing PO City',
+            //                            padding: '0 80 0 0' 
+            //                        },
+            //                        {
+            //                            xtype: 'combobox',
+            //                            name: 'permitissuingstate',
+            //                            fieldLabel: 'Permit issuing PO State',
+            //                            store: this.stateStore,
+            //                            valueField: 'code',
+            //                            displayField: 'name'
+            //                        },
+            //                    ]
+            //                },
+            //                {
+            //                    xtype: 'textfield',
+            //                    name: 'permitissuingzip5',
+            //                    fieldLabel: 'Permit issuing PO Zip',
+            //                }
+            //            ]
+            //        },
+            //        {
+            //            xtype: 'panel',
+            //            title: 'Postage Due Unit (PDU) Information',
+            //            width: 420,
+            //            layout: {
+            //                type: 'vbox',
+            //                align: 'stretch'
+            //            },
+            //            items: [
+            //                {
+            //                    xtype: 'textfield',
+            //                    name: 'pdupobox',
+            //                    fieldLabel: 'PDU PO Box'
+            //                },
+            //                {
+            //                    type: 'container',
+            //                    width: 400,
+            //                    layout: {
+            //                        type: 'hbox',
+            //                        align: 'stretch'
+            //                    },
+            //                    items: [
+            //                        {
+            //                            xtype: 'textfield',
+            //                            name: 'pducity',
+            //                            fieldLabel: 'PDU City',
+            //                            padding: '0 120 0 0'   
+            //                        },
+            //                        {
+            //                            xtype: 'combobox',
+            //                            name: 'pdustate',
+            //                            fieldLabel: 'PDU State',
+            //                            store: this.stateStore,
+            //                            valueField: 'code',
+            //                            displayField: 'name'
+            //                        }
+            //                    ]
+            //                },
+            //                {
+            //                    type: 'container',
+            //                    width: 400,
+            //                    layout: {
+            //                        type: 'hbox',
+            //                        align: 'stretch'
+            //                    },
+            //                    items: [
+            //                        {
+            //                            xtype: 'textfield',
+            //                            name: 'pduzip5',
+            //                            fieldLabel: 'PDU Zip',
+            //                            padding: '0 10 0 0'   
+            //                        }
+            //                    ]
+            //                }
+            //            ]
+            //        }
+            //    ]
+            //})
                     // {
                     //     xtype: 'container',
                     //     width: '50%',
@@ -228,8 +228,8 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
                 // ]
             // });
 
-            this.returnItems.getForm().setValues(this.record.get("settings") || {});
-        }
+          //  this.returnItems.getForm().setValues(this.record.get("settings") || {});
+        //}
 
 
         this.configContainer = Ext.widget({
@@ -273,16 +273,163 @@ Ext.define('Taco.view.settings.shipping.subform.ShippingProvider', {
 
     beforeSave: function () {
         if (this.configFields.isDirty() || this.configContainer.isDirty()) {
-            var settings = this.configFields.getForm().getValues(false, false, false, true);
+            var settings=this.configFields.getForm().getValues(false, false, false, true);
             
-            if (this.returnItems) {
-                var returnSettings = this.returnItems.getForm().getValues(false, false, false, true);
-                settings = Ext.apply(settings, returnSettings);
-            }
+                if (settings[Object.keys(settings)[0]] === "0" && this.customFileds[0].record) {
+                    this.deleteCarrierCredentials();
+                }
+                else if (this.customFileds[0].record && settings[Object.keys(settings)[0]]!="0") {
 
-            this.record.set('settings', settings);
+                    this.updateCarrierCredentials();
+                }
+                else if (!this.customFileds[0].record && settings[Object.keys(settings)[0]] != "0") {
+                    this.insertCarrierCredentials();
+                }
+                
+          //  }
+
+            // TODO Need to remove this code.
+            //if (this.returnItems) {
+            //    var returnSettings = this.returnItems.getForm().getValues(false, false, false, true);
+            //    if (settings != undefined && settings != null) {
+            //        delete settings[Object.keys(settings)[0]];
+            //    }
+            //    settings = Ext.apply(settings, returnSettings);
+            //    issettingSet = true;
+            //}
+           
+            //if (issettingSet) {
+            //    this.record.set('settings', settings);
+            //}
 
         }
+    },
+
+    getCarrierCredentialModel: function () {
+        var me = this;
+        
+        var selectedRecord = this.configFields.getForm().getValues(false, false, false, true);
+        var carrierId = this.providerId.toLowerCase();
+        var siteId = Taco.app.context.getSiteId();
+        var model = {
+            carrierId: carrierId,
+            siteId: siteId,
+            CredentialSet: {
+                code: selectedRecord[Object.keys(selectedRecord)[0]]
+            }
+        }
+        return model;
+
+    },
+    insertCarrierCredentials: function () {
+        me = this;
+        if (this.configFields.isDirty() || this.configContainer.isDirty()) {
+           var model = this.getCarrierCredentialModel();
+
+            try {
+                data = Ext.JSON.encode(model);
+            } catch (e) {
+                Taco.app.fireEvent('setmessage', 'The JSON you are attempting to save is not in a valid format', 'error');
+                return;
+            }
+
+            Ext.Ajax.request({
+                url: '/admin/app/carriers/credentials/create',
+                method: 'POST',
+                jsonData: data,
+                success: function () {
+                    Taco.app.fireEvent('savesuccess', this);                },
+                failure: function (response) {
+                    var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
+                    var oRes = Ext.JSON.decode(response.responseText);
+                    if (oRes.message) {
+                        msg = oRes.message;
+                    }
+                    if (oRes.items && oRes.items.length) {
+                        msg = oRes.items[0].message;
+                    }
+
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+                }
+            });
+        }
+    },
+
+    updateCarrierCredentials: function () {
+        me = this;
+        if (this.configFields.isDirty() || this.configContainer.isDirty()) {
+            var model = this.getCarrierCredentialModel();
+
+            try {
+                data = Ext.JSON.encode(model);
+            } catch (e) {
+                Taco.app.fireEvent('setmessage', 'The JSON you are attempting to save is not in a valid format', 'error');
+                return;
+            }
+
+            Ext.Ajax.request({
+                url: '/admin/app/carriers/credentials/update',
+                method: 'POST',
+                jsonData: data,
+                success: function () {
+                    Taco.app.fireEvent('savesuccess', this);
+                },
+                failure: function (response) {
+                    var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
+                    var oRes = Ext.JSON.decode(response.responseText);
+                    if (oRes.message) {
+                        msg = oRes.message;
+                    }
+                    if (oRes.items && oRes.items.length) {
+                        msg = oRes.items[0].message;
+                    }
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+
+                }
+            });
+        }
+
+
+    },
+
+     deleteCarrierCredentials: function () {
+        me = this;
+        if (this.configFields.isDirty() || this.configContainer.isDirty()) {
+            // var settings = this.configFields.getForm().getValues(false, false, false, true);
+
+            var model = this.getCarrierCredentialModel();
+
+            try {
+                data = Ext.JSON.encode(model);
+            } catch (e) {
+                Taco.app.fireEvent('setmessage', 'The JSON you are attempting to save is not in a valid format', 'error');
+                return;
+            }
+
+            Ext.Ajax.request({
+                url: '/admin/app/carriers/credentials/delete',
+                method: 'POST',
+                jsonData: data,
+                success: function () {
+                    Taco.app.fireEvent('savesuccess', this);
+                },
+                failure: function (response) {
+                    var msg = 'An error occured while saving your configuration. Please ensure that it is formatted correctly.';
+                    var oRes = Ext.JSON.decode(response.responseText);
+                    if (oRes.message) {
+                        msg = oRes.message;
+                    }
+                    if (oRes.items && oRes.items.length) {
+                        msg = oRes.items[0].message;
+                    }
+                    Taco.app.fireEvent('setmessage', msg, 'error');
+
+                }
+            });
+        }
+
+
     }
+
 
 });

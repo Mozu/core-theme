@@ -40,6 +40,12 @@ Ext.define('Taco.view.settings.shipping.Zones', {
             title: 'Product Rules',
             tabIndex: 3,
             route: 'shipping/productRules'
+        },
+         {
+            title: 'Carrier Accounts',
+            tabIndex: 4,
+            route: 'shipping/CarrierAccounts',
+            //isActive: true
         }
     ],  
 

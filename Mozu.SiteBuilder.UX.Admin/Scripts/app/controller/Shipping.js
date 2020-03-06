@@ -10,12 +10,16 @@
         'Taco.view.settings.shipping.Zones',
         'Taco.view.settings.shipping.Edit',
         'Taco.view.settings.shipping.ProductRules',
+        'Taco.view.settings.shipping.CarrierAccounts',
         'Taco.view.settings.shipping.MethodsAndFees',
         'Taco.view.settings.shipping.TargetRuleEdit',
         'Taco.view.settings.shipping.ShippingMethodEditor',
         'Taco.view.settings.shipping.HandlingFeeEditor',
         'Taco.model.ProductHandlingFeeRule',
-        'Taco.model.OrderHandlingFeeRule'
+        'Taco.model.OrderHandlingFeeRule',
+        'Taco.view.settings.shipping.SelectCarrierType',
+        'Taco.view.settings.shipping.AddCarrierAccount',
+        'Taco.view.settings.shipping.CarrierAccountsGrid'
 
     ],
     stores: ['Taco.store.ShippingZones'],
@@ -135,7 +139,30 @@
     orderHandlingFeeEdit: function (id, additionalParams, appState) {
 
         this.doEdit(id, additionalParams, appState, 'Taco.view.settings.shipping.HandlingFeeEditor', Taco.model.OrderHandlingFeeRule);
-    }
+    },
 
+    carrierAccounts: function () {
+        this.confirmContext('Taco.view.settings.shipping.CarrierAccountsGrid', function () {
+            this.createContentView('Taco.view.settings.shipping.CarrierAccounts');
+        });
+    },
 
+    carrierAccountCreate: function (id, additionalParams, appState) {
+        var appStateData = {
+            domain: 'Carrier'
+        };
+        //if (additionalParams && additionalParams.duplicateSource) {
+        //    appStateData.description = additionalParams.duplicateSource.description;
+        //    appStateData.expression = additionalParams.duplicateSource.expression;
+        //}
+
+        appState = appState || {};
+        delete additionalParams.record;
+        appState.record = Ext.create('Taco.model.CarrierAccountModel', appStateData);
+        this.doCreate(id, additionalParams, appState, 'Taco.view.settings.shipping.SelectCarrierType', Taco.model.CarrierAccountModel);
+    },
+
+    CarrierAccountedit: function (CarrierId, additionalParams, appState) {
+        this.doEdit(CarrierId, additionalParams, appState, 'Taco.view.settings.shipping.EditCarrierAccount', Taco.model.CarrierAccountModel);
+    },
 });

@@ -201,6 +201,8 @@
     <Compile Include="Api\BehaviorCategoriesController.cs" />
     <Compile Include="Api\BehaviorsController.cs" />
     <Compile Include="Api\BirstTokenGenerator.cs" />
+    <Compile Include="Api\CarrierCredentialsController.cs" />
+    <Compile Include="Api\CarrierCredentialsSetController.cs" />
     <Compile Include="Api\CatalogPublishingController.cs" />
     <Compile Include="Api\CategoryController.cs" />
     <Compile Include="Api\ChannelController.cs" />
@@ -529,6 +531,7 @@
     <Compile Include="Helpers\QuoteHelpers\QuoteFilterExtensions.cs" />
     <Compile Include="Helpers\QuoteHelpers\QuoteSortExtensions.cs" />
     <Compile Include="Helpers\ProductVariationHelpers.cs\ProductVariationFilterExtensions.cs" />
+    <Compile Include="Helpers\SearchCarrierCredentialsSetHelpers\SearchCarrierCredentialsSetFilterBuilder.cs" />
     <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistFilterExtensions.cs" />
     <Compile Include="Helpers\WishlistHelpers\WishlistSortExtensions.cs" />
@@ -730,8 +733,11 @@
     <Content Include="Scripts\app\locale\ResourceLocalizer.js" />
     <Content Include="Scripts\app\model\BlockedProduct.js" />
     <Content Include="Scripts\app\model\CardGateway.js" />
+    <Content Include="Scripts\app\model\CarrierAccountDefinitions.js" />
+    <Content Include="Scripts\app\model\CarrierAccountList.js" />
+    <Content Include="Scripts\app\model\CarrierAccountModel.js" />
+    <Content Include="Scripts\app\model\CarrierCredentials.js" />
     <Content Include="Scripts\app\model\InventoryExportJob.js" />
-    <Content Include="Scripts\app\model\Owner.js" />
     <Content Include="Scripts\app\model\PaymentSettings.js" />
     <Content Include="Scripts\app\model\CustomerPurchaseOrderInfo.js" />
     <Content Include="Scripts\app\model\CustomerSet.js" />
@@ -786,7 +792,6 @@
     <Content Include="Scripts\app\model\NavigationItem2.js" />
     <Content Include="Scripts\app\model\HandlingFeeRule.js" />
     <Content Include="Scripts\app\model\ShippingInclusionRule.js" />
-    <Content Include="Scripts\app\model\Tag.js" />
     <Content Include="Scripts\app\model\TargetRule.js" />
     <Content Include="Scripts\app\model\ProductExtraValue.js" />
     <Content Include="Scripts\app\model\RedirectEntry.js" />
@@ -861,6 +866,9 @@
     <Content Include="Scripts\app\store\BehaviorCategoryRoles.js" />
     <Content Include="Scripts\app\store\BehaviorCategories.js" />
     <Content Include="Scripts\app\store\BlockedProducts.js" />
+    <Content Include="Scripts\app\store\CarrierAccountDefinitions.js" />
+    <Content Include="Scripts\app\store\CarrierAccounts.js" />
+    <Content Include="Scripts\app\store\CarrierCredentials.js" />
     <Content Include="Scripts\app\store\CouponSetGrid.js" />
     <Content Include="Scripts\app\store\CouponCodes.js" />
     <Content Include="Scripts\app\store\CustomerSet.js" />
@@ -1130,6 +1138,13 @@
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrderPaymentTermsGrid.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\PurchaseOrder.js" />
     <Content Include="Scripts\app\view\settings\paymentTypes\subform\ThirdPartyPayments.js" />
+    <Content Include="Scripts\app\view\settings\shipping\Accounts.js" />
+    <Content Include="Scripts\app\view\settings\shipping\AddCarrierAccount.js" />
+    <Content Include="Scripts\app\view\settings\shipping\AdvancedSearchForm.js" />
+    <Content Include="Scripts\app\view\settings\shipping\CarrierAccounts.js" />
+    <Content Include="Scripts\app\view\settings\shipping\CarrierAccountsGrid.js" />
+    <Content Include="Scripts\app\view\settings\shipping\EditCarrierAccount.js" />
+    <Content Include="Scripts\app\view\settings\shipping\SelectCarrierType.js" />
     <Content Include="Scripts\app\view\storeCredit\AdvancedSearchForm.js" />
     <Content Include="Scripts\app\view\storeCredit\Grid.js" />
     <Content Include="Scripts\app\view\storefrontProduct\Grid.js" />
@@ -6718,6 +6733,8 @@
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff" />
     <Content Include="Scripts\resources\fonts\fontawesome\webfonts\fa-light-300.woff2" />
     <Content Include="Scripts\app\locale\fr-CA.json" />
+    <Content Include="Scripts\app\mocks\CarrierAccountDefinitions.json" />
+    <Content Include="Scripts\app\mocks\CarrierAccountReadJson.json" />
     <None Include="SetupSenchaWorkspace.ps1" />
     <Content Include="Scripts\.sencha\app\build-impl.xml" />
     <Content Include="Scripts\.sencha\app\plugin.xml" />
