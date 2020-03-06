@@ -4,7 +4,7 @@
     <br>
     <p>{{ labels.orderWelcome }} {{ model.origin.firstName }} {{ model.origin.lastNameOrSurname }}!</p>
     <br>
-    <p>{{ labels.shipmentAssignmentBlob1 |string_format(model.orderNumber)|safe }}</p>
+    <p>{{ labels.shipmentAssignmentBlob1 |string_format(model.orderNumber, model.externalId)|safe }}</p>
 
     <table width="100%" cellpadding="1" width="100%">
         <thead>
@@ -19,6 +19,7 @@
             <tr>
                 <td>
                     <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/>
+					<b>{{ labels.externalOrderId }}</b>: {{ model.externalId }}<br/><br/>
                     <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.destination.destinationContact %}<br><br>
                     {% if model.shippingMethodName %}
                     <b>{{ labels.shippingMethod }}</b>: {{ model.shippingMethodName }}<br><br>

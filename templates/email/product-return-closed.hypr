@@ -3,10 +3,11 @@
   {% block body-content %}
 
 	<dl class="mz-orderheader">
-	<!--
 		<dt>{{ labels.orderNo }}</dt>
-		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
-		-->
+		<dd>{{ model.orderNumber }}</dd>
+
+		<dt>{{ labels.externalOrderId }}</dt>
+		<dd>{{ model.externalId }}</dd>
 
 		<dt>{{ labels.return }}</dt>
 		<dd>{{ model.returnNumber }}</dd>

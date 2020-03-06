@@ -5,7 +5,8 @@
 	<dl class="mz-orderheader">
 		<dt>{{ labels.orderNo }}</dt>
 		<dd>{{ model.orderNumber }}</dd>
-
+		<dt>{{ labels.externalOrderId }}</dt>
+		<dd>{{ model.externalId }}</dd>
 		<dt>{{ labels.orderDate }}:</dt>
 		<dd>{{ model.submittedDate }}</dd>
 	</dl>

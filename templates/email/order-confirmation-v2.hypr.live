@@ -15,7 +15,10 @@
 
   <div class="mz-table-header" style="padding:15px">
     <span style="font-size:25px">{{ labels.orderDetails }}</span>
-    <span style="font-size:15px;float:right"> {{ labels.orderNumber }}: {{ model.number }}</span>
+	<div style="font-size:14px;float:right;">
+		<span> {{ labels.orderNumber }}: {{ model.number }} </span><br/>
+		<span> {{ labels.externalOrderId }}: {{ model.externalId }}</span>
+    </div>
   </div>
   <br/>
   <!-- Purchase summaries -->
@@ -23,7 +26,10 @@
   {% for order in model.orders %}
     <div class="mz-email-section">
       <div class="mz-container-header">
-        Customer Care Number: {{ order.orderNumber }} <small><a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/><br/></small>
+        Customer Care Number: {{ order.orderNumber }} <small><a href="http://{{ domainName }}/user/order-status">{{ labels.checkOrderStatus }}</a><br/></small>
+      </div>
+	  <div class="mz-container-header">
+        Customer Care Number: {{ order.externalId }} <br/><br/>
       </div>
       <div class="mz-email-summary-container">
         {% include "modules/common/email-order-summary-v2" with items=order.items fulfillmentInfo=order.fulfillmentInfo locations=model.locations %}

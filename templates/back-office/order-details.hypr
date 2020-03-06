@@ -16,6 +16,7 @@
     </th>
     <th class="order-essentials">
         <div class="order-number"><span class="label">Order #</span><span>{{ model.orderNumber }}</span></div>
+		<div class="order-number"><span class="label">External Order #</span><span>{{ model.externalId }}</span></div>
         <div class="order-date"><span class="label">Date: </span><span>{{ model.submittedDate|date(dateFormat) }}</span></div>
     </th>
 </tr></thead>
