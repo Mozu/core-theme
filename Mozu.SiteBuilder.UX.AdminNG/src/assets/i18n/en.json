@@ -405,7 +405,8 @@
         "enablePickandPack": "Enable Pick and Pack",
         "shiptoHome": "ShiptoHome",
         "bopis": "BOPIS",
-        "blockPartialCancel": "Do not allow partial rejection from Customer Pickup step"
+        "blockPartialCancel": "Do not allow partial rejection from Customer Pickup step",
+        "unitType": "Unit Type"
       },
       "FormSections": {
         "bopis": "Buy Online Pickup in Store (BOPIS)",
@@ -416,7 +417,8 @@
         "fedexSettings": "FedEx Settings",
         "uspsSettings": "USPS Settings",
         "canadaPostSettings": "Canada Post Settings",
-        "otherSettings": "Other Settings"
+        "otherSettings": "Other Settings",
+        "packageSettings": "Package Settings"
       }
     }
 }

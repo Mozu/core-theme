@@ -8,7 +8,8 @@ import {
     CarrierSettingsModel,
     CarrierShippingType,
     ShippingMethodMappings,
-    BoxType
+    BoxType,
+    PackageSettings
 } from './config.model';
 import { FormBuilder, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Constants, ConfirmationDialogService, ConfirmationDialogNotificationCode, ConfirmationDialogNotificationType, NotificationLGActions } from '@shared';
@@ -54,6 +55,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
         this.model.LCCustomerPickupReminders = Constants.LCCustomerPickupReminders;
         this.model.LCPrintReturnLabel = Constants.LCPrintReturnLabel;
         this.model.LCDefaultPrinterType = Constants.LCDefaultPrinterType;
+        this.model.PackageSettingUnitTypes = Constants.PackageSettingUnitTypes;
 
         this.model.locationGroupConfigForm = this.fb.group({
             customerFailedToPickupAfterAction: ['', []],
@@ -96,15 +98,16 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             fedexExpress3Default: ['', []],
             fedExReturnLabelShippingTypes: ['', []],
 
-           
+
             autoPackingListPopup: ['', []],
             blockPartialStock: ['', []],
             defaultMaxNumberOfShipmentsInPickWave: ['', []],
             displayProductImagesInPickWaveDetails: ['', []],
             enablePnpForSTH: ['', []],
             enablePnpForBOPIS: ['', []],
-            blockPartialCancel: ['', []]
+            blockPartialCancel: ['', []],
 
+            packageSettingsUnitType: ['', []],
         });
 
         const locationGroupCode = this.activeRoute.snapshot.paramMap.get('locationGroupCode');
@@ -423,6 +426,9 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
                 enablePnpForSTH: lgConfigModel.enablePnpForSTH === undefined ? false : lgConfigModel.enablePnpForSTH,
                 enablePnpForBOPIS: lgConfigModel.enablePnpForBOPIS === undefined ? false : lgConfigModel.enablePnpForBOPIS,
                 blockPartialCancel: lgConfigModel.blockPartialCancel === undefined ? false : lgConfigModel.blockPartialCancel,
+
+                //PakageSettings                
+                packageSettingsUnitType: lgConfigModel.packageSettings && lgConfigModel.packageSettings.unitType || ''
             });
         }
         this._spinner.stop();
@@ -523,7 +529,7 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             this._spinner.stop();
             this._progressButtonService.stop();
             return false;
-        } 
+        }
 
         lgConfigModel.customerFailedToPickupDeadline = lgconfigForm.get(['customerFailedToPickupDeadline']).value;
         lgConfigModel.sendCustomerPickupReminder = lgconfigForm.get(['sendCustomerPickupReminder']).value;
@@ -605,13 +611,18 @@ export class LocationGroupConfigComponent implements OnInit, OnDestroy {
             this._spinner.stop();
             this._progressButtonService.stop();
             return false;
-        } 
+        }
 
         lgConfigModel.defaultMaxNumberOfShipmentsInPickWave = lgconfigForm.get(['defaultMaxNumberOfShipmentsInPickWave']).value;
         lgConfigModel.displayProductImagesInPickWaveDetails = lgconfigForm.get(['displayProductImagesInPickWaveDetails']).value;
         lgConfigModel.enablePnpForSTH = lgconfigForm.get(['enablePnpForSTH']).value;
         lgConfigModel.enablePnpForBOPIS = lgconfigForm.get(['enablePnpForBOPIS']).value;
         lgConfigModel.blockPartialCancel = lgconfigForm.get(['blockPartialCancel']).value;
+
+        //Package Settings
+        const packageSettings: PackageSettings = { unitType : "" };
+        packageSettings.unitType = lgconfigForm.get(['packageSettingsUnitType']).value;
+        lgConfigModel.packageSettings = packageSettings;
 
         // Audit Info
         lgConfigModel.auditInfo = this.model.lgConfigModel.auditInfo;

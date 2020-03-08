@@ -14,7 +14,21 @@
                     <progress-button (buttonClick)="saveLocationConfig()" class="pull-right" label="{{'SHARED.HEADER.actionButtons.locationGroups.save' | translate}}"></progress-button>
                 </div>
             </div>
-          
+
+            <div class="subform">
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.packageSettings' | translate }}</h4>
+                <div class="row nomargin">
+                    <div class="form-row col-md-5 for-no-padding">
+                        <label class="subform-label" for="packageSettingsUnitType">{{'LOCATIONGROUPCONFIG.FormLabels.unitType' | translate}}</label>
+                        <select id="packageSettingsUnitType" class="form-control" formControlName="packageSettingsUnitType">
+                            <option *ngFor="let action of model.PackageSettingUnitTypes" [ngValue]="action.data">
+                                {{ action.label }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <div class="subform">
                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.bopis' | translate }}</h4>
                 <div class="row nomargin">
@@ -50,10 +64,10 @@
 
                     <div class="col-md-1"></div>
                     <div class="form-row col-md-5 for-no-padding">
-                      <label class="subform-label nopadding">
-                        <input type="checkbox" formControlName="blockPartialCancel">
-                        {{'LOCATIONGROUPCONFIG.FormLabels.blockPartialCancel' | translate }}
-                    </label>
+                        <label class="subform-label nopadding">
+                            <input type="checkbox" formControlName="blockPartialCancel">
+                            {{'LOCATIONGROUPCONFIG.FormLabels.blockPartialCancel' | translate }}
+                        </label>
                     </div>
 
                 </div>
@@ -398,16 +412,16 @@
                     </div>
                 </div>
             </div>
-             <div class="subform">
-                 <h4>{{'LOCATIONGROUPCONFIG.FormSections.otherSettings' | translate }}</h4>
+            <div class="subform">
+                <h4>{{'LOCATIONGROUPCONFIG.FormSections.otherSettings' | translate }}</h4>
                 <div class="row nomargin">
-                    <div >
+                    <div>
                         <label class="subform-label col-md-4 nopadding">
                             <input type="checkbox" formControlName="autoPackingListPopup">
                             {{'LOCATIONGROUPCONFIG.FormLabels.autoPackingListPopup' | translate }}
                         </label>
                     </div>
-                    <div >
+                    <div>
                         <label class="subform-label col-md-4 nopadding">
                             <input type="checkbox" formControlName="blockPartialStock">
                             {{'LOCATIONGROUPCONFIG.FormLabels.blockPartialStock' | translate }}
