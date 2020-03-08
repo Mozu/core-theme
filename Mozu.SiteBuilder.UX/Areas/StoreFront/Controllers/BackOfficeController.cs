@@ -304,7 +304,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             }
 
             var shipments = new List<DCShipment>();
-            foreach (var shipmentNumber in pickWave.ShipmentNumbers) {
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers)
+            {
                 var dcShipment = (await fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
                 shipments.Add(dcShipment);
             }
@@ -312,7 +313,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
 
             var orderIds = shipments.Select(x => x.OrderId).Distinct().ToList();
             var orders = new List<DC.Order>();
-            foreach (var orderId in orderIds) {
+            foreach (var orderId in orderIds)
+            {
                 var dcOrder = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
                 orders.Add(dcOrder);
             }
@@ -333,10 +335,20 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             ViewData["pickwave"] = pickWave;
 
             var shipments = new List<DCShipment>();
-            foreach (var shipmentNumber in pickWave.ShipmentNumbers) {
+            foreach (var shipmentNumber in pickWave.ShipmentNumbers)
+            {
                 var shipment = (await fulfillmentProxyClient.GetShipment(shipmentNumber)).ReadAsSync();
                 shipments.Add(shipment);
             }
+
+            var orderIds = shipments.Select(x => x.OrderId).Distinct().ToList();
+            var orders = new List<DC.Order>();
+            foreach (var orderId in orderIds)
+            {
+                var dcOrder = (await _orderWebApiClient.GetOrder(orderId)).ReadAsSync();
+                orders.Add(dcOrder);
+            }
+            ViewData["orders"] = orders;
 
             var template = SiteContext.Theme.BackOfficeTemplates.SingleOrDefault(x => x.Id.EqualsIgnoreCase("order-pick-sheet"));
             if (template == null)
@@ -414,8 +426,10 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             else if (templateid == "order-pick-sheet")
             {
                 object model = TestDataBroker.GetFileContents(SHIPMENTS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
-                object pickwave = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();;
+                object orders = TestDataBroker.GetFileContents(ORDERS_PREVIEW_RESOURCE_NAME).FirstOrDefault();
+                object pickwave = TestDataBroker.GetFileContents(PICKWAVE_PREVIEW_RESOURCE_NAME).FirstOrDefault();
                 ViewData["pickwave"] = pickwave;
+                ViewData["orders"] = orders;
                 return await RenderWithContext(template, model);
             }
             else if (templateid == "pick-wave-print")
