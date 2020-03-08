@@ -428,6 +428,10 @@
         return false;
     },
 
+    isReassignBlocked: function () {
+        return this.shipmentRecord.shipmentType == "STH" && !Taco.user.taContext.omsEnabled;
+    },
+
     getShipmentLevelSplitMenu: function () {
         var me = this;
         var actionCancelItem = {
@@ -453,6 +457,7 @@
 
         var manualReassign = {
             text: 'Manual Reassign',
+            hidden: me.isReassignBlocked(),
             handler: function () {
                 me.openItemsReassignPopup();
             }
@@ -460,7 +465,7 @@
 
         var autoReassign = {
             text: 'Auto Reassign',
-            hidden: this.shipmentRecord.shipmentType == "BOPIS",
+            hidden: this.shipmentRecord.shipmentType == "BOPIS" || me.isReassignBlocked(),
             handler: function () {
                 me.shipmentItemAutoReassign();
             }
@@ -558,7 +563,7 @@
             model.directShip = true;
         }
 
-        if (me.shipmentRecord.location && me.shipmentRecord.location.address ) {
+        if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.requestLocation = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
                 latitude: me.shipmentRecord.location.geo ? me.shipmentRecord.location.geo.lat : '',
@@ -627,7 +632,7 @@
 
     openItemCancellationPopup: function () {
         var me = this;
-        
+
         var store = me.record.getCancellationReasons(me.shipmentRecord.shipmentType);
         store.load({
             scope: this,

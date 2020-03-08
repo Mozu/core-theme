@@ -82,7 +82,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                             (this.shipmentRecord.shipmentStatusReason ? this.getReasonDescription(this.shipmentRecord.shipmentStatusReason) : '')
                             + '</div>'
                         ],
-                        width:200
+                        width: 200
                     },
                     {
                         padding: '0 40 0 0',
@@ -106,7 +106,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                             '<span class="label">Total</span>',
                             '<div class="labelvalue">' + this.record.formatCurrency(this.shipmentRecord.total) + '</div>'
                         ]
-                    },                    
+                    },
                     {
                         flex: 1,
                         html: '',
@@ -119,7 +119,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                                 menuAlign: 'tr-br?',
                                 text: 'Reassign Shipment',
                                 itemId: 'reassignShipmentSplitButton',
-                                hidden: me.isShipmentAction(),
+                                hidden: me.isShipmentAction() || me.isReassignBlocked(),
                                 menu: [
                                     {
                                         text: 'Manual Reassign',
@@ -328,14 +328,18 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
         return false;
     },
 
+    isReassignBlocked: function () {
+        return this.shipmentRecord.shipmentType == "STH" && !Taco.user.taContext.omsEnabled;
+    },
+
     openShipmentCancellationPopUp: function () {
         var me = this;
-        
+
         var store = me.record.getCancellationReasons(me.shipmentRecord.shipmentType);
         store.load({
             scope: this,
             callback: function (records, operation, success) {
-                if (records) {                    
+                if (records) {
                     Ext.create('Taco.view.order.modal.fulfillment.ShipmentCancellation', {
                         layout: 'hbox',
                         width: 600,
@@ -382,7 +386,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                 });
             }
         });
-        
+
         if (me.shipmentRecord.location && me.shipmentRecord.location.address) {
             model.shippingAddress = {
                 postalCode: me.shipmentRecord.location.address.postalOrZipCode,
@@ -397,7 +401,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
     getBopisReassignShipmentPayload: function () {
         var me = this;
-        var shipment = me.shipmentRecord;        
+        var shipment = me.shipmentRecord;
         var model = {
             type: 'ALL',
             pickup: true,
@@ -451,7 +455,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
 
     openManualReassignShipmentModal: function () {
         var me = this;
-        
+
         if (me.shipmentRecord.shipmentType == "BOPIS") {
             var payload = me.getBopisReassignShipmentPayload();
             me.record.getInventory({
@@ -467,7 +471,7 @@ Ext.define('Taco.view.order.subform.fulfillment.Shipment', {
                         record: me.record,
                         inventoryData: json,
                         shipmentData: payload,
-                        isInventory:true,
+                        isInventory: true,
                         shipmentRecord: me.shipmentRecord,
                         listeners: {
                             saveSuccess: {
