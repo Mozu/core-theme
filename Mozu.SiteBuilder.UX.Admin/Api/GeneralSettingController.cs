@@ -171,6 +171,11 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
                 ReleaseBackorderJob = fulfillmentSettings?.FulfillmentJobSettings?.ReleaseBackorderJob
             };
 
+            currentFulfillmentSettings.FulfillerSettings = new DC.Fulfillment.FulfillerSettings()
+            {
+                EditShipment = fulfillmentSettings?.FulfillerSettings?.EditShipment ?? false
+            };
+
             var itemOut = (await _fulfillmentSettingsWebApiClient.UpdateFulfillmentSettings(currentFulfillmentSettings)).ReadAsSync();
             return Single2(itemOut);
 
