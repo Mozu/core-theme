@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
+using Mozu.Core.Configuration;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -78,13 +79,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             Tablet
         }
 
-        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config)
+        public TestingController(ISitesWebApiClient wsRepo, ICookieProvider cookies, ISettings settings, IAuthenticationHelper authenticationHelper, Microsoft.Extensions.Configuration.IConfiguration config, IHttpClientFactory clientFactory)
         {
             _wsRepo = wsRepo.CloneWithoutUserClaims();
             _cookies = cookies;
             _settings = settings;
             _authenticationHelper = authenticationHelper;
             _config = config;
+            _clientFactory = clientFactory;
             //SuppressMissingContextRedirect = true;
         }
 
@@ -106,14 +108,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return Ok("Cool.");
         }
 
-        static HttpClient _client;
+        private readonly IHttpClientFactory _clientFactory;
+        private static HttpClient _client;
 
         [System.Web.Http.AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
-        public Task<IActionResult> Api(string url)
+        public void Api(string url)
         {
             var resource = _config.GetSection("mozu:routes").GetChildren()
                 .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).FirstOrDefault(x => url.IndexOf(x, StringComparison.OrdinalIgnoreCase) == 0);
-            _client ??= new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
+
+            _client ??= _clientFactory.CreateClient();
+            _client.MaxResponseContentBufferSize = int.MaxValue;
+            _client.Timeout = new TimeSpan(0, 1, 3, 0);
 
             var reqUri = new Uri(Request.GetDisplayUrl());
 
@@ -141,7 +147,26 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
 
             Request.GetTypedHeaders().Host = new HostString(reqUri.Host);
-            return _client.SendAsync(reqMessage);
+
+            var respMessage = _client.SendAsync(reqMessage).Result;
+
+            Response.StatusCode = (int) respMessage.StatusCode;
+            foreach (var (key, value) in respMessage.Headers)
+            {
+                Response.Headers[key] = value.ToArray();
+            }
+
+            foreach (var (key, value) in respMessage.Content.Headers)
+            {
+                Response.Headers[key] = value.ToArray();
+            }
+
+            // SendAsync removes chunking from the response. This removes the header so it doesn't expect a chunked response.
+            Response.Headers.Remove("transfer-encoding");
+
+            using var responseStream = respMessage.Content.ReadAsStreamAsync().Result;
+
+            responseStream.CopyToAsync(Response.Body);
         }
 
         //[HttpGet]
@@ -176,18 +201,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
             else
             {
-                switch (mode)
+                themeName = mode switch
                 {
-                    case ThemeMode.Desktop:
-                        themeName = (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id;
-                        break;
-                    case ThemeMode.Mobile:
-                        themeName = (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id;
-                        break;
-                    case ThemeMode.Tablet:
-                        themeName = (SiteContext.GeneralSettings.TabletTheme ?? new ThemeSelection()).Id;
-                        break;
-                }
+                    ThemeMode.Desktop => (SiteContext.GeneralSettings.DesktopTheme ?? new ThemeSelection()).Id,
+                    ThemeMode.Mobile => (SiteContext.GeneralSettings.MobileTheme ?? new ThemeSelection()).Id,
+                    ThemeMode.Tablet => (SiteContext.GeneralSettings.TabletTheme ?? new ThemeSelection()).Id,
+                    _ => themeName
+                };
 
                 _cookies.SaveResponseCookie(FORCE_THEME_COOKIE_NAME, themeName, new CookieOptions());
             }
@@ -195,14 +215,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        public ActionResult Visit(string id = null)
+        public IActionResult Visit(string id = null)
         {
             if (int.TryParse(id, out var accountId))
             {
-                this.PageContext.User.AccountId = accountId;
+                PageContext.User.AccountId = accountId;
             }
 
-            var publisher = this.Request.Resolve<VisitEventPublisher>();
+            var publisher = HttpContext.RequestServices.Resolve<VisitEventPublisher>();
 
             publisher.PublishVisit(new Visit()
             {
@@ -212,7 +232,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 UserAgent = "blurf",
                 VisitorId = Guid.NewGuid().ToUrlSafeString()
             });
-            return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
+            return NotFound("page not found");
         }
 
         [System.Web.Http.HttpGet]
@@ -247,7 +267,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
         [System.Web.Http.HttpGet]
-        public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null, string variationId = "")
+        public async Task<IActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null, string variationId = "")
         {
             var res = await _wsRepo.GetSite(siteId);
             var site = res.ReadAsAsync().Result;
@@ -262,7 +282,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 case "admin-pending":
                 case "staging":
                     {
-                        var invalidator = Request.Resolve<IDirtyCacheInvalidator>();
+                        var invalidator = HttpContext.RequestServices.Resolve<IDirtyCacheInvalidator>();
                         invalidator.Invalidate();
                         viewMode = DataViewModeType.Pending;
                         domainList = domains.Where(x => x.IsSystemAssigned).Select(x => "admin-pending-view." + x.DomainName);
@@ -309,7 +329,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                             if (canImpersonate && int.TryParse(reqCustId, out var customerAccountId))
                             {
-                                var authTicket = (await Request.Resolve<IAuthTicketWebApiClient>()
+                                var authTicket = (await HttpContext.RequestServices.Resolve<IAuthTicketWebApiClient>()
                                     .CloneWithoutUserClaims()
                                     .CloneWithApiContext(ctx => ctx.SiteId = site.Id)
                                     .CreateImpersonatedAuthTicket(customerAccountId)).ReadAsSync();
@@ -323,7 +343,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                                     UserName = authTicket.CustomerAccount?.UserName
                                 };
 
-                                var authHelper = Request.Resolve<IAuthenticationHelper>();
+                                var authHelper = HttpContext.RequestServices.Resolve<IAuthenticationHelper>();
                                 authHelper.SaveStoreFrontAccessToken(authTicket.AccessToken, profile.ToToken());
                                 authHelper.ClearSessionToken();
                             }
@@ -331,7 +351,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                             {
                                 // If you were impersonating a shopper previously, but now the customer ID
                                 // is bad (e.g. "undefined") then clear out the tokens.
-                                var authHelper = Request.Resolve<IAuthenticationHelper>();
+                                var authHelper = HttpContext.RequestServices.Resolve<IAuthenticationHelper>();
                                 authHelper.ClearStorefrontTokens();
                                 authHelper.ClearSessionToken();
                             }
@@ -412,33 +432,25 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 "/" + redir;
             var redirUri = new Uri(redir, UriKind.RelativeOrAbsolute);
 
-            if (redirUri.IsAbsoluteUri || doHostnameRedirect)
-            {
-                // for an absolute url (think custom route that specifies a http schema) we must always use the resolved hostname.
-                var scheme = redirUri.IsAbsoluteUri ? redirUri.Scheme : "http";
-                var qmarkpos = redirUri.OriginalString.IndexOf('?');
-                var path = redirUri.IsAbsoluteUri ?
-                    redirUri.LocalPath :
-                    redirUri.OriginalString.Substring(0, qmarkpos != -1 ?
-                        qmarkpos :
-                        redirUri.OriginalString.Length);
-                var query = redirUri.IsAbsoluteUri ?
-                    redirUri.Query.TrimStart('?') :
-                    (qmarkpos != -1 ?
-                        redirUri.OriginalString.Substring(qmarkpos + 1) :
-                        string.Empty);
+            if (!redirUri.IsAbsoluteUri && !doHostnameRedirect) return "~" + redirUri.OriginalString;
+            // for an absolute url (think custom route that specifies a http schema) we must always use the resolved hostname.
+            var scheme = redirUri.IsAbsoluteUri ? redirUri.Scheme : "http";
+            var qmarkpos = redirUri.OriginalString.IndexOf('?');
+            var path = redirUri.IsAbsoluteUri ?
+                redirUri.LocalPath :
+                redirUri.OriginalString.Substring(0, qmarkpos != -1 ?
+                    qmarkpos :
+                    redirUri.OriginalString.Length);
+            var query = redirUri.IsAbsoluteUri ?
+                redirUri.Query.TrimStart('?') :
+                (qmarkpos != -1 ?
+                    redirUri.OriginalString.Substring(qmarkpos + 1) :
+                    string.Empty);
 
-                var builder = new UriBuilder(scheme, newHostname);
-                builder.Path = path;
-                builder.Query = query;
+            var builder = new UriBuilder(scheme, newHostname) {Path = path, Query = query};
 
-                // we use absoluteUri here instead of ToString() because ToString() mangled query string parameters.  DO NOT change this. <3 Anup!
-                return builder.Uri.AbsoluteUri;
-            }
-            else
-            {
-                return "~" + redirUri.OriginalString;
-            }
+            // we use absoluteUri here instead of ToString() because ToString() mangled query string parameters.  DO NOT change this. <3 Anup!
+            return builder.Uri.AbsoluteUri;
         }
 
         public static HttpRequestMessage CreateProxyHttpRequest(HttpContext context, Uri uri)
@@ -457,11 +469,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
 
             // Copy the request headers
-            foreach (var header in request.Headers)
+            foreach (var (key, value) in request.Headers)
             {
-                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
+                if (!requestMessage.Headers.TryAddWithoutValidation(key, value.ToArray()))
                 {
-                    requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                    requestMessage.Content?.Headers.TryAddWithoutValidation(key, value.ToArray());
                 }
             }
 

@@ -113,6 +113,8 @@ namespace Mozu.SiteBuilder.Mvc.Configuration
             builder.RegisterAllImplementedInterfaces<CmsPageRuleExpressionValidator>(ServiceLifetime.Scoped);
 
             builder.AddScoped<CmsPageRuleRelationalExpressionValidator>();
+
+            builder.AddHttpClient();
         }
 
         private static void RegisterThemeInfrastructure(IServiceCollection builder)

@@ -5,6 +5,9 @@ using Mozu.SiteBuilder.Mvc.Tags;
 using Mozu.SiteBuilder.UX.Areas.Misc.Controllers;
 using NDjango.Interfaces;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Routing;
 using NDjango.FiltersCS.Compatibility;
 
 namespace Mozu.SiteBuilder.UX.Hypr.Tags
@@ -25,22 +28,18 @@ namespace Mozu.SiteBuilder.UX.Hypr.Tags
                 var path = (string)arguments[0].Value;
 
                 var result = controller.Stylesheets(path);
-                if (result.StatusCode != HttpStatusCode.OK)
+                if (result != HttpStatusCode.OK)
                 {
                     return new[] {WalkResultHelpers.Buffer("error rendering stylesheet " + path)};
                 }
 
-                var oc = result.Content as ObjectContent<ResourceController.MozuVirtualFileResult>;
-                var fileResult = (ResourceController.MozuVirtualFileResult)oc.Value;
-                using (var stream = new System.IO.MemoryStream())
-                {
-                    fileResult.WriteFile(stream);
-                    stream.Position = 0;
-                    using (var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8))
-                    {
-                        return new[] { WalkResultHelpers.Buffer(sr.ReadToEnd()) };
-                    }
-                }
+                var oc = result as ResourceController.MozuVirtualFileResult;
+                var fileResult = oc;
+                using var stream = new System.IO.MemoryStream();
+                fileResult.WriteFile(stream);
+                stream.Position = 0;
+                using var sr = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
+                return new[] { WalkResultHelpers.Buffer(sr.ReadToEnd()) };
             }
             catch (Exception)
             {

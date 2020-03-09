@@ -68,7 +68,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         {
             message.HttpContext.Items[BypassErrorHandlerKey] = true;
         }
-        static bool ShouldBypass ( HttpRequest message)
+        static bool ShouldBypass (HttpRequest message)
         {
             return message.HttpContext.Items.ContainsKey(BypassErrorHandlerKey);
         }
@@ -78,7 +78,7 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
         {
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         
-            if (!ShouldBypass(request) && (int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
+            if (!ShouldBypass(request.HttpContext().Request) && (int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && request.Headers.Accept.Any(x => string.Equals(x.MediaType, "text/html", StringComparison.OrdinalIgnoreCase)))
             {
                 var iSiteBuilderApiContext = request.Resolve<ISiteBuilderApiContext>();
                 if (!iSiteBuilderApiContext.SiteId.HasValue)

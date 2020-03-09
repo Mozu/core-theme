@@ -10,6 +10,7 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.CommerceRuntime.Contracts.Clients;
 using Mozu.Core.Extensible.Contracts;
 using System;
+using Mozu.Core.Configuration;
 
 namespace Mozu.SiteBuilder.UX.Controllers
 {
@@ -49,7 +50,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         public async Task<List<KeyValuePair<string, string>>> GetShippableCountries()
         {
-            var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>().CloneWithoutUserClaims();
+            var shippingWebApiClient = Request.HttpContext.RequestServices.Resolve<IShippingWebApiClient>().CloneWithoutUserClaims();
 
             var result = (await (await shippingWebApiClient.GetShippableCountries().ConfigureAwait(false)).ReadAsAsync().ConfigureAwait(false)).Items;
 
@@ -64,7 +65,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         public async Task<List<KeyValuePair<string, string>>> GetBillingCountries()
         {
-            var refClient = this.Request.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient >().CloneWithoutUserClaims();
+            var refClient = Request.HttpContext.RequestServices.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient >().CloneWithoutUserClaims();
 
             var result = (await refClient.GetCountries()).ReadAsSync().Items;
 
@@ -78,7 +79,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         public async Task<List<KeyValuePair<string, string>>> GetUSBillingStates()
         {
-            var refClient = this.Request.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient>().CloneWithoutUserClaims();
+            var refClient = Request.HttpContext.RequestServices.Resolve<Mozu.Reference.Contracts.Clients.IReferenceDataWebApiClient>().CloneWithoutUserClaims();
 
             var response = (await refClient.GetCountriesWithStates()).ReadAsSync();
             var states = response.Items.Where(c => c.Code.EqualsIgnoreCase("US"))
@@ -91,7 +92,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
 
         public async Task<List<KeyValuePair<string, string>>> GetUSShippingStates()
         {
-            var shippingWebApiClient = this.Request.Resolve<IShippingWebApiClient>();
+            var shippingWebApiClient = Request.HttpContext.RequestServices.Resolve<IShippingWebApiClient>();
 
             var result = (await shippingWebApiClient.GetShippableStates().ConfigureAwait(false)).ReadAsSync();
             var states = result.Where(c => c.Code.EqualsIgnoreCase("US"))
@@ -112,7 +113,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
         // the attribute defintions are cached if we don't send in a fitler.. so get all of them then filter.. there shouldn't be that many.
         private async Task<List<Core.Extensible.Contracts.Attribute>> GetAllOrderAttributes()
         {
-            var orderAttributeWebApiClient = this.Request.Resolve<IOrderAttributeWebApiClient>();
+            var orderAttributeWebApiClient = Request.HttpContext.RequestServices.Resolve<IOrderAttributeWebApiClient>();
 
             var startIndex = 0;
             var pageSize = 100;
@@ -130,7 +131,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 {
                 }
 
-                if (interimCollection == null || interimCollection.Items == null || interimCollection.Items.Count == 0)
+                if (interimCollection?.Items == null || interimCollection.Items.Count == 0)
                     break;
 
                 targetCollection.AddRange(interimCollection.Items.ToList());
@@ -141,7 +142,7 @@ namespace Mozu.SiteBuilder.UX.Controllers
                 if (interimCollection.TotalCount <= pageSize)
                     break;
 
-                startIndex = startIndex + pageSize;
+                startIndex += pageSize;
 
                 if (startIndex > interimCollection.TotalCount)
                     break;

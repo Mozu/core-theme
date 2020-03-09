@@ -7,6 +7,7 @@
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Mozu.Core.Configuration;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
@@ -25,7 +26,6 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
     /// </summary>
     public class ClientCacheHeadersAttribute : ActionFilterAttribute
     {
-        public bool AllowMultiple => false;
         public  bool AllowCrossOrigin { get; set; }
 
         /// <summary>
@@ -51,17 +51,19 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             AllowCrossOrigin = true;
         }
 
-        public static void Set404 ( HttpRequestMessage request )
+        public static void Set404(HttpRequest request )
         {
-            request.Properties["_mz_is404"] = true;
+            request.HttpContext.Items["_mz_is404"] = true;
         }
-        public static bool Is404(HttpRequestMessage request)
+        public static bool Is404(HttpRequest request)
         {
-            return request.Properties.TryGetValue ( "_mz_is404", out var tmp) && (bool)tmp;
+            return request.HttpContext.Items.TryGetValue("_mz_is404", out var tmp) && (bool)tmp;
         }
 
-        public void OnActionExecuted(ActionExecutedContext actionExecutedContext, ISettings settings)
+        public override void OnActionExecuted(ActionExecutedContext actionExecutedContext)
         {
+            var settings = actionExecutedContext.HttpContext.RequestServices.Resolve<ISettings>();
+
             if (ConfigKey == null)
                 return;
 
@@ -71,44 +73,40 @@ namespace Mozu.SiteBuilder.Mvc.ActionFilters
             var duration = int.Parse(val);
 
 
-            if (actionExecutedContext.HttpContext.Response?.Headers != null)
+            if (actionExecutedContext.HttpContext.Response?.Headers == null) return;
+            var typedHeaders = actionExecutedContext.HttpContext.Response.GetTypedHeaders();
+            var cache = typedHeaders.CacheControl ??= new CacheControlHeaderValue();
+
+            //todo:translate request to requestmessage
+            var req = actionExecutedContext.HttpContext.Request;
+
+            if (ForceRevalidate)
             {
-                var typedHeaders = actionExecutedContext.HttpContext.Response.GetTypedHeaders();
-                var cache = typedHeaders.CacheControl ??= new CacheControlHeaderValue();
-
-                //todo:translate request to requestmessage
-                //var req = actionExecutedContext.HttpContext.Request;
-                var hrm = new HttpRequestMessage();
-
-                if (ForceRevalidate)
-                {
-                    cache.NoStore = true;
-                    cache.NoCache = true;
-                    cache.MustRevalidate = true;
-                }
-                else if (Is404(hrm) )
-                {
-                    var cacheDuration = TimeSpan.FromSeconds(600);
-
-                    cache.MaxAge = cacheDuration;
-                    cache.Public = true;
-                }
-                else
-                {
-
-                    var cacheDuration = TimeSpan.FromSeconds(duration);
-
-                    cache.MaxAge = cacheDuration;
-                    cache.Public = true;
-                }
-
-                if (AllowCrossOrigin)
-                {
-                    actionExecutedContext.HttpContext.Response.Headers["Access-Control-Allow-Origin"] = new [] {"*"};
-                }
-
-                //Access-Control-Allow-Origin
+                cache.NoStore = true;
+                cache.NoCache = true;
+                cache.MustRevalidate = true;
             }
+            else if (Is404(req) )
+            {
+                var cacheDuration = TimeSpan.FromSeconds(600);
+
+                cache.MaxAge = cacheDuration;
+                cache.Public = true;
+            }
+            else
+            {
+                var cacheDuration = TimeSpan.FromSeconds(duration);
+
+                cache.MaxAge = cacheDuration;
+                cache.Public = true;
+            }
+
+            if (AllowCrossOrigin)
+            {
+                actionExecutedContext.HttpContext.Response.Headers["Access-Control-Allow-Origin"] = new [] {"*"};
+            }
+
+            //Access-Control-Allow-Origin
             //cache.
             //cache.SetCacheability(HttpCacheability.Public);
             //cache.SetExpires(DateTime.Now.Add(cacheDuration));

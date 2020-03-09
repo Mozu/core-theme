@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc
 {
@@ -120,24 +122,16 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc
             return new Tuple<string, string>(string.Join(",", namedDeps.ToArray()), string.Join(",", args.ToArray()));
         }
 
-        public HttpResponseMessage CreateModule(HttpRequestMessage req, string pathinfo, string shimRequire, string shimExport, bool debug)
+        public IActionResult CreateModule(HttpRequest req, string pathinfo, string shimRequire, string shimExport, bool debug)
         {
             var contents = GetScriptFileContents(pathinfo);
             if (contents == null)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    RequestMessage = req,
-                    Content = new StringContent("File " + pathinfo + " not found.")
-                };
+                return new NotFoundResult();
             }
             var deps = GetAMDDeps(shimRequire);
             var module = FormatModule(deps.Item1, deps.Item2, contents, shimExport, "scripts/" + pathinfo, debug);
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                RequestMessage = req,
-                Content = new StringContent(module, Encoding.Unicode, "text/javascript")
-            };
+            return new OkObjectResult(new StringContent(module, Encoding.Unicode, "text/javascript"));
         }
     }
 }
