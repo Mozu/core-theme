@@ -165,13 +165,13 @@
       "title": "Return Has Been Updated"
     },
     {
-      "id": "transfer.created",
+      "id": "shipment.transferCreated",
       "properties": {},
       "template": "email/transfer-shipment-created",
       "title": "Transfer Shipment Created"
     },
     {
-      "id": "transfer.shipped",
+      "id": "shipment.transferShipped",
       "properties": {},
       "template": "email/transfer-shipment-shipped",
       "title": "Transfer Shipment Shipped"
