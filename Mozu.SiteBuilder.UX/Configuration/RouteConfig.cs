@@ -179,11 +179,6 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "PackingSlip" });
 
             routes.MapHttpRoute(
-               "packing slip (back office) externalId",
-               "back-office/orders/{orderId}/shipments/{shipmentNumber}/{displayExternalId}",
-               new { controller = "BackOffice", action = "PackingSlip" });
-
-            routes.MapHttpRoute(
                 "transfer packing slip (back office)",
                 "back-office/orders/{orderId}/transfers/{shipmentNumber}",
                 new { controller = "BackOffice", action = "TransferPackingSlip" });
@@ -194,19 +189,9 @@ namespace Mozu.SiteBuilder.UX.Configuration
                 new { controller = "BackOffice", action = "PickWave" });
 
             routes.MapHttpRoute(
-               "pick wave (back office) externalId",
-               "back-office/pick-wave/{pickWaveNumber}/{printPickWave}/{printPackingLists}/{printSingleOrderSheets}/{displayExternalId}",
-               new { controller = "BackOffice", action = "PickWave" });
-
-            routes.MapHttpRoute(
                "order pick sheets (back office)",
                "back-office/order-pick-sheets/{pickWaveNumber}",
                new { controller = "BackOffice", action = "OrderPickSheets" });
-
-            routes.MapHttpRoute(
-              "order pick sheets (back office) externalId",
-              "back-office/order-pick-sheets/{pickWaveNumber}/{displayExternalId}",
-              new { controller = "BackOffice", action = "OrderPickSheets" });
 
             routes.MapHttpRoute(
                 "back office (admin view) - PREVIEW",
