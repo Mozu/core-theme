@@ -2996,6 +2996,15 @@ Ext.define('Taco.model.Order', {
         Ext.Ajax.request(config);
     },
 
+    transferShipmentItems: function (config) {
+        Ext.apply(config, {
+            url: '/admin/app/order/shipment/transferredItems',
+            method: 'PUT'
+        });
+
+        Ext.Ajax.request(config);
+    },
+
     getLocationsByFilter: function (filters) {
         if (filters) {
             var me = this;

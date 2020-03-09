@@ -976,6 +976,7 @@
     <Content Include="Scripts\app\view\order\modal\EditTrackingNumberNew.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ItemsReassign.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ItemUnitTax.js" />
+    <Content Include="Scripts\app\view\order\modal\fulfillment\RequestItemTransfer.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\UpdateBackorderDate.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\ShipmentItemCancellation.js" />
     <Content Include="Scripts\app\view\order\modal\fulfillment\OrderItemQtyChange.js" />

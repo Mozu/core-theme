@@ -68,5 +68,17 @@ namespace Mozu.SiteBuilder.UX.Admin.Api
             var serviceResponse = (await _fulfillmentProxyClient.BackorderItemsUpdate(args.ShipmentNumber, args.BackorderItemsRequest)).ReadAsSync();
             return Single2(serviceResponse);
         }
+
+        public class TransferShipmentItemsArgs
+        {
+            public int? ShipmentNumber { get; set; }
+            public TransferItemsRequest TransferItemsRequest { get; set; }
+        }
+        [HttpPutRoute(UriTemplate = "shipment/transferredItems")]
+        public async Task<Response<ResourceOfShipment>> TransferShipmentItems(TransferShipmentItemsArgs args)
+        {
+            var serviceResponse = (await _fulfillmentProxyClient.TransferShipmentItems(args.ShipmentNumber, args.TransferItemsRequest)).ReadAsSync();
+            return Single2(serviceResponse);
+        }
     }
 }

@@ -66,6 +66,8 @@
 
     initComponent: function () {
         var me = this;
+        this.getQuantityForTransfer();
+
         this.store = Ext.create('Ext.data.JsonStore', {
             data: this.shipmentRecord.items,
             fields: [{
@@ -195,8 +197,12 @@
                 type: 'date',
                 useNull: true,
                 //dateFormat: 'c'
-            }
-
+                },
+                {
+                    name: 'quantityAvailToTransfer',
+                    type: 'int',
+                    defaultValue: 0
+                }
             ],
             sorters: [{
                 sorterFn: function (a, b) {
@@ -419,7 +425,7 @@
                 xtype: 'taco.menucolumn',
                 stateId: 'actionsColumn',
                 hidden: me.isShipmentAction(),
-                menuItems: me.getShipmentLevelSplitMenu(),
+                menuItems: me.getShipmentLevelSplitMenu()
             }
         ];
         this.callParent();
@@ -441,6 +447,19 @@
             text: 'Cancel Item',
             handler: function () {
                 me.openItemCancellationPopup();
+            }
+        };
+
+        var actionRequestTransfer = {
+            text: 'Request Transfer',
+            handler: function () {
+                me.openItemRequestTransferPopup();
+            },
+            listeners: {
+                beforerender: function (eOpts, a) {
+                    if (parseInt(eOpts.eventData.record.get('quantityAvailToTransfer')) <= 0)
+                        this.hide();
+                }
             }
         };
 
@@ -487,6 +506,7 @@
                 autoReassign,
                 //actionMoveToBackorder,
                 actionEditItem,
+                this.shipmentRecord.shipmentType == "BOPIS" ? actionRequestTransfer : null,
                 actionCancelItem
             ];
         }
@@ -496,6 +516,7 @@
                 autoReassign,
                 actionUpdateBackorderDate,
                 actionEditItem,
+                this.shipmentRecord.shipmentType == "BOPIS" ? actionRequestTransfer : null,
                 actionCancelItem
             ];
         }
@@ -505,6 +526,7 @@
                 autoReassign,
                 //actionMoveToBackorder,
                 actionEditItem,
+                this.shipmentRecord.shipmentType == "BOPIS" ? actionRequestTransfer : null,
                 actionCancelItem
             ];
         }
@@ -674,6 +696,28 @@
 
     },
 
+    openItemRequestTransferPopup: function () {
+        var me = this;
+        var grid = Ext.getCmp(this.id);
+        var item = grid.getSelectionModel().getSelection();
+        Ext.create('Taco.view.order.modal.fulfillment.RequestItemTransfer', {
+            layout: 'hbox',
+            width: 400,
+            height: 400,
+            record: me.record,
+            shipmentRecord: me.shipmentRecord,
+            selectedItem: item[0].data,
+            listeners: {
+                saveSuccess: {
+                    fn: function () {
+                        me.fireEvent('shipmentRefresh');
+                    },
+                    //scope: me
+                }
+            }
+        });
+    },
+
     shipmentItemAutoReassign: function (locationCode) {
         var me = this;
 
@@ -756,6 +800,36 @@
                 }
             });
         }
+    },
+
+    getQuantityForTransfer: function () {
+        if (this.shipmentRecord.shipmentType == "BOPIS") {
+            for (var i = 0; i < this.shipmentRecord.items.length; i++) {
+                if (this.shipmentRecord.transferShipmentNumbers && this.shipmentRecord.transferShipmentNumbers.length > 0) {
+                    this.shipmentRecord.items[i].quantityAvailToTransfer = this.shipmentRecord.items[i].quantity - this.getActiveQuantityFromTransferShipments(this.shipmentRecord.transferShipmentNumbers, this.shipmentRecord.items[i].productCode);
+                }
+                else {
+                    this.shipmentRecord.items[i].quantityAvailToTransfer = this.shipmentRecord.items[i].quantity;
+                }
+            }
+        }
+    },
+
+    getActiveQuantityFromTransferShipments: function (transferShipments, productCode) {
+        var quantity = 0;
+        for (var shipmentCount = 0; shipmentCount < this.record.get('shipments').length; shipmentCount++) {
+            for (var transferCount = 0; transferCount < transferShipments.length; transferCount++) {
+                if (this.record.get('shipments')[shipmentCount].number == transferShipments[transferCount]) {
+                    if (this.record.get('shipments')[shipmentCount].shipmentStatus.toLowerCase() != 'canceled') {
+                        for (var itemCount = 0; itemCount < this.record.get('shipments')[shipmentCount].items.length; itemCount++) {
+                            if (this.record.get('shipments')[shipmentCount].items[itemCount].productCode == productCode)
+                                quantity += parseInt(this.record.get('shipments')[shipmentCount].items[itemCount].quantity);
+                        }
+                    }
+                }
+            }
+        }
+        return quantity;
     },
 
     doSave: function () {
