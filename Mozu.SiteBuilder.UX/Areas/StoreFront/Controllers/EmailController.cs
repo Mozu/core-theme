@@ -576,8 +576,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             public const string OrderPickupReminder = "shipment.pickupreminder";
             //  public const string ShipmentItemBackordered = "shipment.itemBackordered";
             public const string ShipmentBackorderDateChanged = "shipment.backorderdatechanged";
-            public const string TransferShipmentCreated = "transfer.created";
-            public const string TransferShipmentShipped = "transfer.shipped";
+            public const string TransferShipmentCreated = "shipment.transferCreated";
+            public const string TransferShipmentShipped = "shipment.transferShipped";
 			public const string ShipmentItemCanceled = "shipment.itemscanceled";
             public const string ShipmentAssigned = "shipment.assigned"; 
 
