@@ -8,7 +8,6 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using Mozu.Core;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
@@ -24,7 +23,11 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.UX.Filters;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
+using NotFoundResult = Microsoft.AspNetCore.Mvc.NotFoundResult;
+using FileResult = Mozu.SiteBuilder.Mvc.ActionResults.FileResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -79,8 +82,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
-        [HttpGet]
-        public ActionResult Stylesheets(string pathinfo, bool? debug = false, string dv = null)
+        [System.Web.Http.HttpGet]
+        public IActionResult Stylesheets(string pathinfo, bool? debug = false, string dv = null)
         {
             SbApiContext.SetDataMode(Convert(dv));
 
@@ -90,22 +93,19 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "stylesheets")]
-        [HttpGet]
-        public ActionResult Less(string pathinfo= null , bool? debug = false)
+        [System.Web.Http.HttpGet]
+        public IActionResult Less(string pathinfo= null , bool? debug = false)
         {
             var res = Content("stylesheets/" + pathinfo, "text/css");
-            var oc = res.Content as ObjectContent<MozuVirtualFileResult>;
-            if (oc != null)
-            {
-                var emitDebugStylesheet = Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue("text/css"));
-                ((MozuVirtualFileResult)oc.Value).Transform = new LessTransFormer(pathinfo, debug.GetValueOrDefault(false), emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
-            }
+            if (!(res is MozuVirtualFileResult oc)) return res;
+            var emitDebugStylesheet = Request.GetTypedHeaders().Accept.Contains(new Microsoft.Net.Http.Headers.MediaTypeHeaderValue("text/css"));
+            oc.Transform = new LessTransFormer(pathinfo, debug.GetValueOrDefault(false), emitDebugStylesheet, this, _pathProvider.Value, _contentRetriever.Value).Transform;
 
             return res;
         }
 
         [ClientCacheHeaders(ConfigKey = "livetemplates")]
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public async Task<JObject> LiveTemplates(bool? debug = false)
         {
             var templates = await _templateGetter.GetAndExpandTemplates().ConfigureAwait(false);
@@ -114,26 +114,26 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return jobj;
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public ActionResult MozuReceiver(int receiverVersion)
+        public IActionResult MozuReceiver(int receiverVersion)
         {
             return File("/Assets/mozu_receiver_v" + receiverVersion + ".html", "text/html");
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [ClientCacheHeaders(ConfigKey = "receiver")]
-        public ActionResult MozuReceiver()
+        public IActionResult MozuReceiver()
         {
             return File("/Assets/mozu_receiver.html", "text/html");
         }
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
-        [HttpGet]
-        public ActionResult CompiledScripts(string pathinfo)
+        [System.Web.Http.HttpGet]
+        public IActionResult CompiledScripts(string pathinfo)
         {
             var resp = Content("compiled/scripts/" + pathinfo, "text/javascript");
-            if (resp.StatusCode == HttpStatusCode.NotFound)
+            if (resp is NotFoundResult)
             {
                 resp = Scripts(pathinfo);
             }
@@ -141,8 +141,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "static")]
-        [HttpGet]
-        public ActionResult StaticContentShare(string relativePath)
+        [System.Web.Http.HttpGet]
+        public IActionResult StaticContentShare(string relativePath)
         {
             var sharedFolder = _settings.AppSettings("SiteBuilderStaticContent");
             var pathPrefix = Path.IsPathRooted(sharedFolder) ? "" : @"\\";
@@ -151,20 +151,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             
             if (checkRequestContent(relativePath, tenantShareRoot) || !System.IO.File.Exists(fileName))
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                return NotFound();
             }
             else
             {
-                var SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var content = new StreamContent(SourceStream);
+                var ss = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var exists = Constants.MimeTypes.MimeTypesByExtension.Value.TryGetValue(Path.GetExtension(fileName), out var fileType);
-                var resp = Request.CreateResponse(HttpStatusCode.OK);
 
-                resp.Content = content;
-                resp.Content.Headers.ContentLength = SourceStream.Length;
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(exists ? fileType : "text/html");
-
-                return resp;
+                return File(ss, exists ? fileType : "text/html");
             }
         }
 
@@ -176,7 +170,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "navigation")]
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public JArray AjaxNavigation()
         {
             var nav =  _navGandalf.Value.GetTreeNavigation();
@@ -184,8 +178,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "siteContext")]
-        [HttpGet]
-        public async Task<ActionResult> HyprContextAction(string dv = null)
+        [System.Web.Http.HttpGet]
+        public async Task<IActionResult> HyprContextAction(string dv = null)
         {
             await SiteContext.Init();
             SbApiContext.SetDataMode(Convert(dv));
@@ -219,7 +213,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
           
 
 
-            return Request.CreateResponse(HttpStatusCode.OK, ctx, GetJsonMediaFormatter(ctx.GetType()));
+            return new JsonResult(ctx);
         }
         
         MediaTypeFormatter GetJsonMediaFormatter(Type t)
@@ -229,7 +223,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         [ClientCacheHeaders(ConfigKey = "scripts")]
         [System.Web.Http.HttpGet]
-        public ActionResult Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
+        public IActionResult Scripts(string pathinfo, string shimRequire = "", string shimExport = "", bool debug = false)
         {
             if (string.IsNullOrEmpty(shimRequire) && string.IsNullOrEmpty(shimExport))
             {
@@ -239,30 +233,31 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
-        [HttpGet]
-        public ActionResult Widget(string pathinfo)
+        [System.Web.Http.HttpGet]
+        public IActionResult Widget(string pathinfo)
         {
             var pos = pathinfo.IndexOf('/');
-            if (pos <= -1) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            if (pos <= -1) return new NotFoundResult();
             var widgetId = pathinfo.Substring(0, pos);
             var path = pathinfo.Substring(pos);
             var widget = SiteContext.Theme.Widgets.FirstOrDefault(x => x.Id == widgetId);
-            if (widget == null) return Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            if (widget == null) return new NotFoundResult();
             var fullPath = new FileInfo(widget.FullPath + path);
-            return fullPath.Exists ? Request.CreateResponse(HttpStatusCode.OK, new FilePathResult(fullPath.FullName, GetMimeType(pathinfo))) : Request.CreateErrorResponse(HttpStatusCode.NotFound, "not found");
+            if (!fullPath.Exists) return new NotFoundResult();
+            return new FilePathResult(fullPath.FullName, GetMimeType(pathinfo));
         }
 
         [ClientCacheHeaders(ConfigKey = "templates")]
-        [HttpGet]
-        public ActionResult Templates(string pathinfo)
+        [System.Web.Http.HttpGet]
+        public IActionResult Templates(string pathinfo)
         {
             return Content("templates/" + pathinfo, "text/javascript");
         }
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [NoCdnForce]
-        public ActionResult Misc(string pathinfo, string contentType = null)
+        public IActionResult Misc(string pathinfo, string contentType = null)
         {
             var stem = "/resources/" + pathinfo;
             if (contentType == null)
@@ -274,11 +269,11 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [HttpGet]
-        public ActionResult SiteThumbnail()
+        [System.Web.Http.HttpGet]
+        public IActionResult SiteThumbnail()
         {
             if (SiteContext.Theme.Thumbnail == null || string.IsNullOrEmpty(SiteContext.Theme.Thumbnail.Name))
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Theme thumbnail not specified.");
+                return new NotFoundObjectResult("Theme thumbnail not specified.");
 
             var stem = "/" + SiteContext.Theme.Thumbnail.Name;
             var contentType = GetMimeType(stem);
@@ -288,19 +283,18 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "content")]
-        [HttpGet]
-        public new ActionResult Content(string pathinfo, string contentType = null)
+        [System.Web.Http.HttpGet]
+        public new IActionResult Content(string pathinfo, string contentType = null)
         {
             var resolvedContentType = contentType ?? GetMimeType(pathinfo);
             return GetFileResult(pathinfo, resolvedContentType);
         }
 
-        ActionResult GetFileResult(string pathinfo, string contentType)
+        IActionResult GetFileResult(string pathinfo, string contentType)
         {
             var file = _pathProvider.Value.GetThemeFileInfo(pathinfo);
-            return file != null ?
-                Request.CreateResponse(HttpStatusCode.OK, new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever.Value, this.SbApiContext.RequestCancellationToken)) :
-                Request.CreateErrorResponse(HttpStatusCode.NotFound, "file not found");
+            if (file == null) return NotFound();
+            return new MozuVirtualFileResult(pathinfo, contentType, file, _contentRetriever.Value, this.SbApiContext.RequestCancellationToken);
         }
 
         string GetMimeType(string path)
@@ -335,18 +329,15 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 WriteFile(response.Body);
             }
 
-
             public void WriteFile(Stream outputStream)
             {
-                using (var stream = _contentRetriever.GetStream(_file, _cancellationToken))
+                using var stream = _contentRetriever.GetStream(_file, _cancellationToken);
+                var source = stream;
+                if (Transform != null)
                 {
-                    var source = stream;
-                    if (Transform != null)
-                    {
-                        source = Transform(stream, _file.VirtualPath).Result;
-                    }
-                    source.CopyTo(outputStream);
+                    source = Transform(stream, _file.VirtualPath).Result;
                 }
+                source.CopyTo(outputStream);
             }
 
             protected override async Task WriteFileAsync(HttpResponse response)

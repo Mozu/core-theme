@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 
 namespace Mozu.SiteBuilder.Mvc.ActionResults
 {
-    public abstract class FileResult : ActionResult, IActionResultAsync 
+    public abstract class FileResult : Microsoft.AspNetCore.Mvc.ActionResult 
     {
         // Fields
         private string _fileDownloadName;
@@ -36,18 +37,16 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
         public string Etag { get; set; }
         public DateTimeOffset? LastModifiedDate { get; set; }
 
-
-
-        public override void ExecuteResult(HttpRequestMessage requestMessage)
+        public override void ExecuteResult(ActionContext context)
         {
-            HttpResponse response = requestMessage.HttpContext().Response;
+            var response = context.HttpContext.Response;
             WriteHeaders(response);
             WriteFile(response);
         }
 
-        public  Task ExecuteResultAsync(HttpRequestMessage requestMessage)
+        public override Task ExecuteResultAsync(ActionContext context)
         {
-            HttpResponse response = requestMessage.HttpContext().Response;
+            var response = context.HttpContext.Response;
             WriteHeaders(response);
             return WriteFileAsync(response);
         }
@@ -162,7 +161,5 @@ namespace Mozu.SiteBuilder.Mvc.ActionResults
                 return false;
             }
         }
-
-       
     }
 }

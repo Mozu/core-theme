@@ -7,14 +7,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Client.Caching;
 using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Contexts;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.Extensions;
@@ -40,13 +40,13 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         public Core.Caching.ICacheProvider CacheProvider { get; }
 
-        [HttpGet()]
-        public async Task<ActionResult> Redis()
+        [System.Web.Http.HttpGet()]
+        public async Task<IActionResult> Redis()
         {
            var cache = CacheProvider.GetCache(SitebuilderContextCacheRepository.CacheName, new ApiContext() { TenantId = 1 });
             var key = $"HealthCheck-{Environment.MachineName}";
-            var data = DateTime.Now.ToString() +"-"+ new Random().NextDouble();
-            await cache.PutAsync<string>(
+            var data = DateTime.Now +"-"+ new Random().NextDouble();
+            await cache.PutAsync(
                 data,
                 key,
                 new List<string>() { "a" },
@@ -55,11 +55,9 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             var gotit = (await cache.GetAsync<string>(key).ConfigureAwait(false))?.Item;
             if ( data == gotit)
             {
-                return new ActionResult(HttpStatusCode.OK);
+                return Ok();
             }
-            return new ActionResult(HttpStatusCode.NotFound);
-
-
+            return NotFound();
         }
     }
     public class TestingController : ApiControllerBase
@@ -91,59 +89,59 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [RefreshStoreFrontUserAuthTicketFilter]
-        [AcceptVerbs("POST")]
-        public ActionResult RefreshAPiContextHeaders()
+        [System.Web.Http.AcceptVerbs("POST")]
+        public IActionResult RefreshAPiContextHeaders()
         {
-            var resp = Request.CreateResponse(HttpStatusCode.OK);
-            resp.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
-            resp.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
-            return resp;
+            Response.Headers.Add(Headers.USER_CLAIMS, SbApiContext.UserClaims.ToAccessToken());
+            Response.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+            return Ok();
         }
 
-        [AcceptVerbs("GET")]
-        public ActionResult CoolDownUser()
+        [System.Web.Http.AcceptVerbs("GET")]
+        public IActionResult CoolDownUser()
         {
-            this.SbApiContext.UserClaims.Expiration = DateTime.Now.AddDays(-1);
-            _authenticationHelper.SaveStoreFrontAccessToken(this.SbApiContext.UserClaims.ToAccessToken(), this.PageContext.UserProfile.ToToken());
+            SbApiContext.UserClaims.Expiration = DateTime.Now.AddDays(-1);
+            _authenticationHelper.SaveStoreFrontAccessToken(SbApiContext.UserClaims.ToAccessToken(), this.PageContext.UserProfile.ToToken());
             _authenticationHelper.SaveStoreFrontRefreshToken(null, DateTime.Now.AddDays(-1));
-            return this.Request.CreateResponse(HttpStatusCode.OK, new
-            {
-                Message = "Cool."
-            });
+            return Ok("Cool.");
         }
 
         static HttpClient _client;
 
-        [AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
-        public Task<ActionResult> Api(string url)
+        [System.Web.Http.AcceptVerbs("GET", "PUT", "DELETE", "POST", "OPTIONS")]
+        public Task<IActionResult> Api(string url)
         {
             var resource = _config.GetSection("mozu:routes").GetChildren()
                 .Select(c => _settings.AsMozuSettings().Routes.GetValue<string>(c.Key)).FirstOrDefault(x => url.IndexOf(x, StringComparison.OrdinalIgnoreCase) == 0);
             _client ??= new HttpClient() { MaxResponseContentBufferSize = int.MaxValue, Timeout = new TimeSpan(0, 1, 3, 0) };
 
-            this.Request.RequestUri = new Uri(resource + this.Request.RequestUri.PathAndQuery.Substring(4));
-            if (this.Request.Headers.TryGetValues("X-HTTP-Method-Override", out var vals) && vals.Any())
+            var reqUri = new Uri(Request.GetDisplayUrl());
+
+            var reqMessage =
+                CreateProxyHttpRequest(Request.HttpContext, new Uri(resource + reqUri.PathAndQuery.Substring(4)));
+
+            if (Request.Headers.TryGetValue("X-HTTP-Method-Override", out var vals) && !string.IsNullOrEmpty(vals))
             {
-                this.Request.Method = new HttpMethod(vals.First());
+                reqMessage.Method = new HttpMethod(vals);
             }
 
-            if (!this.Request.Headers.TryGetValues(Headers.USER_CLAIMS, out var values))
+            if (!Request.Headers.TryGetValue(Headers.USER_CLAIMS, out var values))
             {
-                Request.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
+                reqMessage.Headers.Add(Headers.USER_CLAIMS, this.SbApiContext.UserClaims.ToAccessToken());
             }
 
-            if (!this.Request.Headers.TryGetValues(Headers.APP_CLAIMS, out values))
+            if (!Request.Headers.TryGetValue(Headers.APP_CLAIMS, out values))
             {
-                Request.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
+                reqMessage.Headers.Add(Headers.APP_CLAIMS, LightweightAppClaims.CreateForPublicStorefront().ToAccessToken());
             }
 
-            if (this.Request.Content.Headers.ContentLength == 0)
+            if (Request.ContentLength == 0)
             {
-                this.Request.Content = null;
+                reqMessage.Content = null;
             }
 
-            this.Request.Headers.Host = this.Request.RequestUri.Host;
-            return _client.SendAsync(this.Request);
+            Request.GetTypedHeaders().Host = new HostString(reqUri.Host);
+            return _client.SendAsync(reqMessage);
         }
 
         //[HttpGet]
@@ -166,8 +164,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         //    return this.View("WidgetTEsting/test", this.SiteContext );
         //}
 
-        [HttpGet]
-        public ActionResult ForceTheme(string themeType = "", string redir = null)
+        [System.Web.Http.HttpGet]
+        public IActionResult ForceTheme(string themeType = "", string redir = null)
         {
             var mode = (ThemeMode)Enum.Parse(typeof(ThemeMode), themeType, true);
             var themeName = "";
@@ -196,7 +194,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return new RedirectResult(redir ?? "/");
         }
 
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public ActionResult Visit(string id = null)
         {
             if (int.TryParse(id, out var accountId))
@@ -217,7 +215,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             return this.Request.CreateErrorResponse(HttpStatusCode.NotFound, "page not found");
         }
 
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public ContentResult Echo()
         {
             var sb = new StringBuilder();
@@ -248,7 +246,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         /// Updates the sitebuildercontext and redirects the 
         /// GET: /_gosite/(siteid)?redir=...&environment=...
         /// </summary>
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> GoSite(int siteId, string redir = null, string environment = "production", string transfer = null, string variationId = "")
         {
             var res = await _wsRepo.GetSite(siteId);
@@ -441,6 +439,37 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             {
                 return "~" + redirUri.OriginalString;
             }
+        }
+
+        public static HttpRequestMessage CreateProxyHttpRequest(HttpContext context, Uri uri)
+        {
+            var request = context.Request;
+
+            var requestMessage = new HttpRequestMessage();
+            var requestMethod = request.Method;
+            if (!HttpMethods.IsGet(requestMethod) &&
+                !HttpMethods.IsHead(requestMethod) &&
+                !HttpMethods.IsDelete(requestMethod) &&
+                !HttpMethods.IsTrace(requestMethod))
+            {
+                var streamContent = new StreamContent(request.Body);
+                requestMessage.Content = streamContent;
+            }
+
+            // Copy the request headers
+            foreach (var header in request.Headers)
+            {
+                if (!requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray()) && requestMessage.Content != null)
+                {
+                    requestMessage.Content?.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                }
+            }
+
+            requestMessage.Headers.Host = uri.Authority;
+            requestMessage.RequestUri = uri;
+            requestMessage.Method = new HttpMethod(request.Method);
+
+            return requestMessage;
         }
     }
 }

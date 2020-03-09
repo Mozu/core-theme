@@ -5,17 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Content.Contracts.Clients;
 using Mozu.Core;
 using Mozu.Core.Api.Client;
 using Mozu.Core.Api.Contracts.Client;
+using Mozu.Core.Configuration;
 using Mozu.Core.Extensions;
 using Mozu.SiteBuilder.Mvc.ActionFilters;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.Controllers;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.Tenant.Contracts;
@@ -24,6 +25,10 @@ using Mozu.Core.Settings;
 using Mozu.SiteBuilder.Mvc.MessageHandler;
 using Mozu.SiteBuilder.UX.Filters;
 using Mozu.SiteSettings.General.Contracts.Clients;
+using ActionResult = Mozu.SiteBuilder.Mvc.ActionResults.ActionResult;
+using FileStreamResult = Mozu.SiteBuilder.Mvc.ActionResults.FileStreamResult;
+using NotFoundResult = Mozu.SiteBuilder.Mvc.ActionResults.NotFoundResult;
+using RedirectResult = Mozu.SiteBuilder.Mvc.ActionResults.RedirectResult;
 
 namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
@@ -54,14 +59,14 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
         Site LookupSite(int siteid)
         {
-            var client = Request.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
+            var client = Request.HttpContext.RequestServices.Resolve<ISitesWebApiClient>().CloneWithoutUserClaims();
             var siteRes = client.GetSite(siteid, false).Result;
             return siteRes.ReadAsSync();
         }
 
         Tenant.Contracts.Tenant LookupTenant(int tenant)
         {
-            var client = Request.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
+            var client = Request.HttpContext.RequestServices.Resolve<ITenantsWebApiClient>().CloneWithoutUserClaims();
             var res = client.GetTenantInternal(tenant,includeSoftDeletes:false, includeInactiveChildren:false).Result;
             return res.ReadAsSync();
         }
@@ -77,8 +82,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         }
 
         [ClientCacheHeaders(ConfigKey = "images")]
-        [HttpGet()]
-        public async Task<ActionResult> Index(
+        [System.Web.Http.HttpGet()]
+        public async Task<IActionResult> Index(
             int? tenant = null,
             int? mastercat = null,
             int? site = null,
@@ -96,7 +101,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             //todo send out appoligy letter
 
             var shouldRedirectToCdn = ShouldRedirectToCdn();
-            var isRewrite = Request.Properties.ContainsKey(SeoDelegatingHandler.IsSeoRewrite) ? (bool)Request.Properties[SeoDelegatingHandler.IsSeoRewrite]  : false;
+            var isRewrite = Request.HttpContext.Items.ContainsKey(SeoDelegatingHandler.IsSeoRewrite) && (bool)Request.HttpContext.Items[SeoDelegatingHandler.IsSeoRewrite];
 
            ApiContext context = null;
 
@@ -136,8 +141,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             });
             Guid guid;
 
+            var th = Request.GetTypedHeaders();
+
             ServiceClientResponse<StreamContent> result = null;
-            if (Request.Headers.IfModifiedSince.HasValue || shouldRedirectToCdn)
+            if (th.IfModifiedSince.HasValue || shouldRedirectToCdn)
             {
                 if (Guid.TryParse(documentId, out guid))
                 {
@@ -149,17 +156,17 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
                 
                 // we should have a lastmodified header on the HEAD request, but in some odd cases we may not.  if we don't find one then we should serve directly from the CMS.
-                if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return new NotFoundResult();
+                if (result.ResponseMessage.StatusCode == HttpStatusCode.NotFound) return NotFound();
                 if (result.HasException) throw result.ReadException();
                 if (shouldRedirectToCdn && !isRewrite && result.ResponseMessage.Content.Headers.LastModified.HasValue) return RedirectToCdn(list, documentId, result.ResponseMessage.Content.Headers.LastModified.Value);
-                if (Request.Headers.IfModifiedSince.GetValueOrDefault(DateTime.MinValue) >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return new NotModifiedResult();
+                if (th.IfModifiedSince.GetValueOrDefault(DateTime.MinValue) >= result.ResponseMessage.Content.Headers.LastModified.GetValueOrDefault(DateTimeOffset.MaxValue)) return StatusCode(304);
             }
 
-            var range = Request.Headers.Range?.Ranges?.FirstOrDefault();
-            if (range?.From.HasValue == true && string.Equals(Request.Headers.Range.Unit, "bytes", StringComparison.OrdinalIgnoreCase))
+            var range = th.Range?.Ranges?.FirstOrDefault();
+            if (range?.From.HasValue == true && string.Equals(th.Range.Unit.ToString(), "bytes", StringComparison.OrdinalIgnoreCase))
             {
-                _docRepo.Options.AdditionalHeaders = _docRepo.Options.AdditionalHeaders ?? new System.Collections.Specialized.NameValueCollection();
-                _docRepo.Options.AdditionalHeaders["Range"] = Request.Headers.Range.ToString();
+                _docRepo.Options.AdditionalHeaders ??= new System.Collections.Specialized.NameValueCollection();
+                _docRepo.Options.AdditionalHeaders["Range"] = th.Range.ToString();
             }
             
             _docRepo.Options.CompletionOption = HttpCompletionOption.ResponseHeadersRead;
@@ -168,10 +175,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 result = await _docRepo.TransformDocumentContent(
                     list,
                     documentId,
-                    width: width.HasValue ? width : size,
+                    width: width ?? size,
                     height:height,
-                    maxWidth: maxWidth.HasValue? maxWidth : max,
-                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    maxWidth: maxWidth ?? max,
+                    maxHeight: maxHeight ?? max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);
@@ -181,10 +188,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 result = await _docRepo.TransformTreeDocumentContent(
                     list,
                     documentId,
-                    width: width.HasValue ? width : size,
+                    width: width ?? size,
                     height: height,
-                    maxWidth: maxWidth.HasValue ? maxWidth : max,
-                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    maxWidth: maxWidth ?? max,
+                    maxHeight: maxHeight ?? max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);
@@ -205,7 +212,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 
                 if (result== null)
                 {
-                    return new NotFoundResult();
+                    return NotFound();
                 }
                 
             }
@@ -224,9 +231,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 }
                 throw ex;
             }
-            var ct = result.ResponseMessage.Content.Headers.ContentType != null
-                ? result.ResponseMessage.Content.Headers.ContentType.MediaType
-                : null;
+            var ct = result.ResponseMessage.Content.Headers.ContentType?.MediaType;
             if (ct == "text/json" || string.IsNullOrEmpty(ct))
             {
                 ct = "image/jpeg";
@@ -247,7 +252,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             int? quality = null)
         {
             ServiceClientResponse<StreamContent> result;
-            if (!this.Request.Headers.Accept.Any(x => x.MediaType != null && x.MediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase)))
+            var th = Request.GetTypedHeaders();
+            if (!th.Accept.Any(x => x.MediaType != null && x.MediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase)))
             {
                 return null;
             }
@@ -296,10 +302,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 result = await _docRepo.TransformDocumentContent(
                     documentListName: "files@mozu",
                     documentId: genSettings.MissingImageSubstitute,
-                    width: width.HasValue ? width : size,
+                    width: width ?? size,
                     height: height,
-                    maxWidth: maxWidth.HasValue ? maxWidth : max,
-                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    maxWidth: maxWidth ?? max,
+                    maxHeight: maxHeight ?? max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);
@@ -309,10 +315,10 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
                 result = await _docRepo.TransformTreeDocumentContent(
                     documentListName: "files@mozu",
                     documentName: genSettings.MissingImageSubstitute,
-                    width: width.HasValue ? width : size,
+                    width: width ?? size,
                     height: height,
-                    maxWidth: maxWidth.HasValue ? maxWidth : max,
-                    maxHeight: maxHeight.HasValue ? maxHeight : max,
+                    maxWidth: maxWidth ?? max,
+                    maxHeight: maxHeight ?? max,
                     crop: crop,
                     quality: quality
                     ).ConfigureAwait(false);
@@ -335,7 +341,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             }
         }
 
-        ActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp, string queryOverride = null)
+        IActionResult RedirectToCdn(string list, string documentId, DateTimeOffset timeStamp, string queryOverride = null)
         {
             var cdnHost = this._settings.AppSettings("CdnHost");
             var originalUri = new Uri(PageContext.Url);
@@ -346,9 +352,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             originalQuery["_mzts"] = timeStamp.Ticks.ToString();
             if (isLatestRequest)
             {
-                var latestRedirectUrl = new UriBuilder(originalUri);
-                latestRedirectUrl.Query = originalQuery.ToString();
-                return new RedirectResult(latestRedirectUrl.ToString(), false , TimeSpan.FromMinutes(10));
+                var latestRedirectUrl = new UriBuilder(originalUri) {Query = originalQuery.ToString()};
+                return new Microsoft.AspNetCore.Mvc.RedirectResult(latestRedirectUrl.ToString(), false);
             }
 
             var ub = new UriBuilder();
@@ -362,7 +367,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
             ub.Query = queryOverride ?? originalQuery.ToString();
 
 
-            return new RedirectResult(ub.ToString(), true);
+            return new Microsoft.AspNetCore.Mvc.RedirectResult(ub.ToString(), true);
         }
 
         string GetContentType(string fileName)

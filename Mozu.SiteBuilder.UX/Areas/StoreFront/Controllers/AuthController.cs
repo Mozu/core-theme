@@ -290,29 +290,29 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             var res = await DoCreateAccount(authInfo);
             if (res.IsSuccessStatusCode)
             {
-                return new OkResult();
+                return Ok();
             }
 
-            return new ForbidResult($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
+            return Forbid($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
         }
 
         [System.Web.Http.AcceptVerbs("OPTIONS", "POST")]
         [SslOnlyActionFilter]
         public async Task<IActionResult> AjaxCreateAccount(CustomerAccountAndAuthInfo authInfo)
          {
-            if (Request.Method.Method == "OPTIONS")
+            if (Request.Method == HttpMethod.Options.Method)
             {
-                return new OkResult();
+                return Ok();
             }
 
             var res = await DoCreateAccount(authInfo);
 
             if (res.IsSuccessStatusCode)
             {
-                return new OkResult();
+                return Ok();
             }
 
-            return new ForbidResult($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
+            return Forbid($"Login as {HttpUtility.HtmlEncode(authInfo.Account.EmailAddress)} failed. Please try again.");
         }
 
         Task<CaptchResponse> ValidateToken( string token)
@@ -458,8 +458,8 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         private ActionResult LoginFailed(string email = null, string code = null)
         {
             var errorMsg = GetLoginFailureMessage(email, code);
-            FourHundredMessageHandler.BypassErrorHandler(this.Request);
-            return new ForbidResult(errorMsg); 
+            FourHundredMessageHandler.BypassErrorHandler(Request);
+            return Forbid(errorMsg); 
             //Request.CreateResponse(HttpStatusCode.Unauthorized,
             //    View("Login", new { email, Messages = new List<object> { new { Message = errorMsg  , ErrorCode = code } } }));
         }
@@ -645,7 +645,7 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
         [System.Web.Http.HttpPost, System.Web.Http.HttpOptions]
         [SslOnlyActionFilter]
         public async Task<IActionResult> AjaxResetPassword(ResetPasswordInfo info)
-         {
+        {
             if (Request.Method.Method == "OPTIONS")
                 return new OkResult();
 
@@ -654,12 +654,9 @@ namespace Mozu.SiteBuilder.UX.Areas.StoreFront.Controllers
             if (res.ResponseMessage.IsSuccessStatusCode)
                 return new OkResult();
 
-            return new ObjectResult(new
-                {
-                    statusCode = (int)HttpStatusCode.InternalServerError,
-                    message = res.ResponseMessage.ReasonPhrase
-                })
-                { StatusCode = (int)HttpStatusCode.InternalServerError };
+            var err = _errorGenerator.ConvertExceptionToError(res.ReadException(), false);
+
+            return new ObjectResult(err) { StatusCode = (int)HttpStatusCode.InternalServerError };
         }
 
         [System.Web.Http.HttpGet]

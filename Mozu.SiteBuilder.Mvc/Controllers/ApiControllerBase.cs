@@ -11,12 +11,19 @@ using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Models.Admin.CMS;
 using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Mozu.Core.Configuration;
 using Mozu.Core.Expressions;
+using ContentResult = Mozu.SiteBuilder.Mvc.ActionResults.ContentResult;
+using FileContentResult = Mozu.SiteBuilder.Mvc.ActionResults.FileContentResult;
+using FileStreamResult = Mozu.SiteBuilder.Mvc.ActionResults.FileStreamResult;
+using PartialViewResult = Mozu.SiteBuilder.Mvc.ActionResults.PartialViewResult;
+using RedirectResult = Mozu.SiteBuilder.Mvc.ActionResults.RedirectResult;
+using ViewResult = Mozu.SiteBuilder.Mvc.ActionResults.ViewResult;
 
 namespace Mozu.SiteBuilder.Mvc.Controllers
 {
-    public class ApiControllerBase : ApiController, IHyprController
+    public class ApiControllerBase : ControllerBase, IHyprController
     {
 
         static T Resolve<T>(Lazy<IServiceProvider> s)
@@ -28,7 +35,7 @@ namespace Mozu.SiteBuilder.Mvc.Controllers
 
         public IServiceProvider LifetimeScope
         {
-            get => _lifetimeScope ??= (IServiceProvider) Request.GetDependencyScope().GetService(typeof(IServiceProvider));
+            get => _lifetimeScope ??= (IServiceProvider) Request.HttpContext.RequestServices.GetService(typeof(IServiceProvider));
             set => _lifetimeScope = value;
         }
 

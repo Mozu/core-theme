@@ -9,58 +9,47 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
 {
     
     public class JsonpMediaTypeFormatter : MediaTypeFormatter
     {
-        private readonly HttpRequestMessage _request;
+        private readonly HttpRequest _request;
         private readonly MediaTypeFormatter _jsonMediaTypeFormatter;
         private readonly string _callbackQueryParameter;
         private readonly string _callback;
         static readonly Regex _cleanCallback = new Regex("^[\\w\\.-]+$");
         public JsonpMediaTypeFormatter(MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter = "callback")
         {
-            if (jsonMediaTypeFormatter == null)
-                throw new ArgumentNullException("jsonMediaTypeFormatter");
-            if (callbackQueryParameter == null)
-                throw new ArgumentNullException("callbackQueryParameter");
+            //var bing = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
 
-
-
-            var bing = new System.Net.Http.Formatting.JsonMediaTypeFormatter();
-
-            this._jsonMediaTypeFormatter = jsonMediaTypeFormatter;
-            this._callbackQueryParameter = callbackQueryParameter;
-            this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
+            _jsonMediaTypeFormatter = jsonMediaTypeFormatter ?? throw new ArgumentNullException(nameof(jsonMediaTypeFormatter));
+            _callbackQueryParameter = callbackQueryParameter ?? throw new ArgumentNullException(nameof(callbackQueryParameter));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
             foreach (Encoding encoding in this._jsonMediaTypeFormatter.SupportedEncodings)
-                this.SupportedEncodings.Add(encoding);
-            this.MediaTypeMappings.Add((MediaTypeMapping)new UriPathExtensionMapping("jsonp", "application/json"));
+                SupportedEncodings.Add(encoding);
+            MediaTypeMappings.Add(new UriPathExtensionMapping("jsonp", "application/json"));
         }
 
-        private JsonpMediaTypeFormatter(HttpRequestMessage request, string callback, MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter)
+        private JsonpMediaTypeFormatter(HttpRequest request, string callback, MediaTypeFormatter jsonMediaTypeFormatter, string callbackQueryParameter)
             : this(jsonMediaTypeFormatter, callbackQueryParameter)
         {
-            if (request == null)
-                throw new ArgumentNullException("request");
-            if (callback == null)
-                throw new ArgumentNullException("callback");
-            this._request = request;
-            this._callback = callback;
+            _request = request ?? throw new ArgumentNullException(nameof(request));
+            _callback = callback ?? throw new ArgumentNullException(nameof(callback));
         }
 
-        public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
+        public MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequest request, MediaTypeHeaderValue mediaType)
         {
-            if (type == (Type)null)
-                throw new ArgumentNullException("type");
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
             if (request == null)
-                throw new ArgumentNullException("request");
-            string callback;
-            if (JsonpMediaTypeFormatter.IsJsonpRequest(request, this._callbackQueryParameter, out callback))
-                return (MediaTypeFormatter)new JsonpMediaTypeFormatter(request, callback, this._jsonMediaTypeFormatter, this._callbackQueryParameter);
-            else
-                return this._jsonMediaTypeFormatter.GetPerRequestFormatterInstance(type, request, mediaType);
+                throw new ArgumentNullException(nameof(request));
+            if (IsJsonpRequest(request, _callbackQueryParameter, out var callback))
+                return new JsonpMediaTypeFormatter(request, callback, _jsonMediaTypeFormatter, _callbackQueryParameter);
+            
+            return _jsonMediaTypeFormatter;
         }
 
         public override bool CanReadType(Type type)
@@ -71,7 +60,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         public override bool CanWriteType(Type type)
         {
             if (type == (Type)null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             else
                 return this._jsonMediaTypeFormatter.CanWriteType(type);
         }
@@ -79,26 +68,24 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
         public override async Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
         {
             if (type == (Type)null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             if (stream == null)
-                throw new ArgumentNullException("stream");
-            Encoding encoding = this.SelectCharacterEncoding(content == null ? (HttpContentHeaders)null : content.Headers);
-            using (StreamWriter streamWriter = new StreamWriter(stream, encoding, 4096, true))
-            {
-                streamWriter.Write(this._callback + "(");
-                streamWriter.Flush();
-                await this._jsonMediaTypeFormatter.WriteToStreamAsync(type, value, stream, content, transportContext).ConfigureAwait(false);
-                streamWriter.Write(");");
-                streamWriter.Flush();
-            }
+                throw new ArgumentNullException(nameof(stream));
+            var encoding = this.SelectCharacterEncoding(content?.Headers);
+            await using var streamWriter = new StreamWriter(stream, encoding, 4096, true);
+            streamWriter.Write(this._callback + "(");
+            streamWriter.Flush();
+            await this._jsonMediaTypeFormatter.WriteToStreamAsync(type, value, stream, content, transportContext).ConfigureAwait(false);
+            streamWriter.Write(");");
+            streamWriter.Flush();
         }
 
-        internal static bool IsJsonpRequest(HttpRequestMessage request, string callbackQueryParameter, out string callback)
+        internal static bool IsJsonpRequest(HttpRequest request, string callbackQueryParameter, out string callback)
         {
             callback = (string)null;
-            if (request == null || request.Method != HttpMethod.Get)
+            if (request == null || request.Method != HttpMethod.Get.Method)
                 return false;
-            callback = Enumerable.FirstOrDefault<string>(Enumerable.Select<KeyValuePair<string, string>, string>(Enumerable.Where<KeyValuePair<string, string>>(request.GetQueryNameValuePairs(), (Func<KeyValuePair<string, string>, bool>)(kvp => kvp.Key.Equals(callbackQueryParameter, StringComparison.OrdinalIgnoreCase))), (Func<KeyValuePair<string, string>, string>)(kvp => kvp.Value)));
+            callback = request.Query.Where((kvp => kvp.Key.Equals(callbackQueryParameter, StringComparison.OrdinalIgnoreCase))).Select(kvp => kvp.Value).FirstOrDefault();
             if (string.IsNullOrEmpty(callback))
             {
                 return false;
@@ -107,7 +94,7 @@ namespace Mozu.SiteBuilder.Mvc.MediaTypeFormatters
             //check for potential xxs
             if (!_cleanCallback.IsMatch(callback))
             {
-                throw new ArgumentException(string.Format("potentially unsafe callback {0}", callback));
+                throw new ArgumentException($"potentially unsafe callback {callback}");
             }
 
             return true;

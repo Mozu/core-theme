@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.CMS;
 using Mozu.SiteBuilder.Mvc.Contexts;
@@ -63,13 +64,13 @@ namespace Mozu.SiteBuilder.Mvc.MessageHandler
     public class FourHundredMessageHandler : DelegatingHandler
     {
         const string BypassErrorHandlerKey = "BypassFourHundredMessageHandler";
-        public static void BypassErrorHandler(HttpRequestMessage message)
+        public static void BypassErrorHandler(HttpRequest message)
         {
-            message.Properties[BypassErrorHandlerKey] = true;
+            message.HttpContext.Items[BypassErrorHandlerKey] = true;
         }
-        static bool ShouldBypass ( HttpRequestMessage message)
+        static bool ShouldBypass ( HttpRequest message)
         {
-            return message.Properties.ContainsKey(BypassErrorHandlerKey);
+            return message.HttpContext.Items.ContainsKey(BypassErrorHandlerKey);
         }
         protected override async Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,

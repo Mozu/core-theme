@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using Microsoft.AspNetCore.Mvc;
 using Mozu.SiteBuilder.Mvc;
-using Mozu.SiteBuilder.Mvc.ActionResults;
 using Mozu.SiteBuilder.Mvc.ViewEngine;
 using Mozu.SiteBuilder.UX.Controllers;
 
@@ -11,7 +10,7 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 {
     public class ScriptController : BaseApiController
 	{
-		public ActionResult Add(string scriptName)
+		public IActionResult Add(string scriptName)
 		{
             var scripts = (HashSet<string>)this.HttpContext.Items["scripts"];
 			if (scripts == null)
@@ -22,8 +21,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
 			return null;
 		}
 
-           [System.Web.Http.HttpGet]
-		public ActionResult RenderScripts()
+        [System.Web.Http.HttpGet]
+		public IActionResult RenderScripts()
 		{
             var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];
 			if (scriptsArray == null)
@@ -38,8 +37,8 @@ namespace Mozu.SiteBuilder.UX.Areas.Misc.Controllers
         // we now know to use requirejs's baseUrl to do this
         // so now these should probably be turned into a single method that selects its view based on whether "debug_all_scripts" or "load_all_scripts" was used
 
-           [System.Web.Http.HttpGet]
-        public ActionResult DebugScripts()
+        [System.Web.Http.HttpGet]
+        public IActionResult DebugScripts()
         {
             var scriptsArray = (HashSet<string>)this.HttpContext.Items["scripts"];
             if (scriptsArray == null)
