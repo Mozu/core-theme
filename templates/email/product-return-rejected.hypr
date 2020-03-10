@@ -4,10 +4,10 @@
 
 	<dl class="mz-orderheader">
 		<dt>{{ labels.orderNo }}</dt>
-		<dd>{{ model.orderNumber }}</dd>
+		<dd>{{ order.orderNumber }}</dd>
 
 		<dt>{{ labels.externalOrderId }}</dt>
-		<dd>{{ model.externalId }}</dd>
+		<dd>{{ order.externalId }}</dd>
 
 		<dt>{{ labels.return }}</dt>
 		<dd>{{ model.returnNumber }}</dd>
